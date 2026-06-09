@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2018|honda|civic",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "brochure_llm_2018__honda__civic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING",
+    "EX-L",
+    "EX-T",
+    "EX",
+    "LX-P",
+    "LX",
+    "Si"
+  ],
+  "adds_by_trim": {
+    "TOURING": [
+      "Standard Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "LED headlights with low and high beam",
+      "Automatic-dimming rearview mirror",
+      "LED Daytime Running Lights (DRL)"
+    ],
+    "EX-L": [
+      "Automatic-dimming rearview mirror",
+      "Leather-wrapped steering wheel and shift knob",
+      "Standard continuously variable transmission (CVT)",
+      "Available Honda Satellite-Linked Navigation System with voice recognition"
+    ],
+    "EX-T": [
+      "174-hp 1.5-liter turbocharged and intercooled DOHC 4-cylinder engine with direct injection",
+      "17-inch alloy wheels",
+      "Fog lights",
+      "Heated front seats"
+    ],
+    "EX": [
+      "16-inch alloy wheels",
+      "Honda LaneWatch with integrated display",
+      "7-inch Display Audio with electrostatic touch-screen",
+      "Apple CarPlay and Android Auto integration",
+      "SiriusXM Radio and HD Radio",
+      "Dual-zone automatic climate control",
+      "450-watt premium audio system with 10 speakers including subwoofer"
+    ],
+    "LX-P": [
+      "Remote engine start",
+      "Standard continuously variable transmission (CVT)",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry with push button start",
+      "Heated side mirrors"
+    ],
+    "LX": [
+      "158-hp 2.0-liter DOHC i-VTEC 4-cylinder engine",
+      "6-speed manual or available continuously variable transmission (CVT)",
+      "16-inch steel wheels with covers",
+      "160-watt audio system with 4 speakers",
+      "Available Honda Sensing suite of safety and driver-assistive features",
+      "60/40 split fold-down rear seatback"
+    ],
+    "Si": [
+      "205-hp 1.5-liter turbocharged and intercooled DOHC 4-cylinder engine with direct injection",
+      "Close-ratio 6-speed manual transmission",
+      "Helical limited-slip differential",
+      "Center-outlet exhaust system",
+      "18-inch machine-finished alloy wheels with 235/40 R18 W-rated high-performance tires",
+      "Adaptive damper system with dual-pinion variable-ratio electric power steering",
+      "One-touch power moonroof with tilt feature",
+      "Heated side mirrors and sport pedals",
+      "Leather-wrapped steering wheel and aluminum shift knob with leather",
+      "Heated front sport seats"
+    ]
+  }
+}

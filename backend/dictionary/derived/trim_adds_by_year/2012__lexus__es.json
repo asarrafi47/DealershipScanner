@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|lexus|es",
+  "year": 2012,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2012__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes Vehicle Stability Control (VSC) electronic system",
+      "Adds Includes Brake Assist system integrated with ABS",
+      "Adds Includes Smart Stop Technology for simultaneous brake and gas pedal applications",
+      "Adds Includes engine immobilizer anti-theft system with transponder key",
+      "Adds Includes supplemental restraint airbag systems (frontal, knee, side, and curtain airbags)",
+      "Adds Includes Pre-Collision System for frontal collision mitigation",
+      "Adds Includes Dynamic Radar Cruise Control assistance feature",
+      "Adds Includes Adaptive Front Lighting System for enhanced night vision",
+      "Adds Includes Lexus Enform and Safety Connect telematics with one-year trial subscription"
+    ],
+    "Premium": [
+      "Adds SiriusXM satellite radio services with complimentary trial period",
+      "Adds Navigation System with periodic update availability",
+      "Adds Lexus Personalized Settings (LPS) programming capability"
+    ],
+    "Luxury": [
+      "Adds Bluetooth connectivity with A2DP and AVRCP audio device support",
+      "Adds iPod integration capability",
+      "Adds SmartAccess keyless entry and ignition system"
+    ]
+  }
+}

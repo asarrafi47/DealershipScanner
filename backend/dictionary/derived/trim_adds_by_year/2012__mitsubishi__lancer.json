@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2012|mitsubishi|lancer",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_llm_2012__mitsubishi__lancer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Lancer RALLIART",
+    "Lancer GT",
+    "Lancer SE",
+    "Lancer ES",
+    "Lancer DE"
+  ],
+  "adds_by_trim": {
+    "Lancer RALLIART": [
+      "2.0-liter 237-horsepower MIVEC turbocharged intercooled engine",
+      "Aluminum hood with heat extractor vents",
+      "All-Wheel Control (AWC) with Tarmac/Gravel/Snow settings",
+      "Active Center Differential",
+      "Black Premium Fabric or Black Leather interior"
+    ],
+    "Lancer GT": [
+      "2.4-liter 168-horsepower MIVEC engine",
+      "18-inch alloy wheels with P215/45R18 tires",
+      "FUSE hands free Link system with USB Port",
+      "Black Sport Fabric or Black Premium Fabric interior"
+    ],
+    "Lancer SE": [
+      "All-Wheel Control (AWC)",
+      "2.4-liter 168-horsepower MIVEC engine",
+      "16-inch alloy wheels",
+      "Heated front seats and side view mirrors"
+    ],
+    "Lancer ES": [
+      "Air conditioning",
+      "Anti-theft security alarm system",
+      "Chrome grille surround",
+      "FAST-Key electronic keyless entry and starting system"
+    ],
+    "Lancer DE": [
+      "2.0-liter 148-horsepower MIVEC engine",
+      "16-inch steel wheels with full wheel covers",
+      "Power windows, door locks, and side view mirrors",
+      "140-watt CD/MP3 audio with 4 speakers",
+      "Beige Fabric interior"
+    ]
+  }
+}

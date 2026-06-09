@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|astonmartin|dbs",
+  "year": 2018,
+  "make": "Aston Martin",
+  "model": "dbs",
+  "ladder_id": "brochure_web_2018__astonmartin__dbs",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "DBS",
+    "DBS Carbon"
+  ],
+  "adds_by_trim": {
+    "DBS": [
+      "5.2L twin-turbocharged V12 engine producing 517 horsepower",
+      "8-speed automatic transmission with paddle shifters",
+      "Adaptive dynamics system with electronic power steering",
+      "Carbon fiber body panels and chassis",
+      "Leather interior with power-adjustable seats",
+      "Premium sound system with satellite radio",
+      "18-inch forged aluminum wheels with Pirelli tires",
+      "Multi-function steering wheel controls",
+      "Dual-zone automatic climate control",
+      "Xenon headlights with automatic leveling"
+    ],
+    "DBS Carbon": [
+      "Carbon fiber interior trim package throughout cabin",
+      "Unique carbon fiber wheel inserts on 18-inch wheels",
+      "Special 'Carbon Black' metallic exterior paint option",
+      "Enhanced leather and Alcantara combination upholstery",
+      "Carbon fiber accents on steering wheel and dashboard",
+      "Upgraded trim-specific badging and exterior details"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/aston-martin/dbs/"
+}

@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2011|honda|civic",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "brochure_web_2011__honda__civic",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Type R",
+    "Sport Touring Hybrid",
+    "Si",
+    "Sport Hybrid",
+    "Hybrid",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Type R": [
+      "315 hp turbocharged engine with manual transmission",
+      "Adaptive dampers",
+      "Onboard data logging capability",
+      "Track-ready performance tuning"
+    ],
+    "Sport Touring Hybrid": [
+      "10.2-inch gauge cluster and 9.0-inch touchscreen",
+      "Google Built-in apps and Google Assistant voice commands",
+      "12-speaker Bose audio system",
+      "Wireless phone charger",
+      "Heated power front seats",
+      "Rain-sensing wipers",
+      "Machine-finished wheel design",
+      "Wireless Apple CarPlay and Android Auto"
+    ],
+    "Si": [
+      "200 hp 1.5-liter turbocharged engine with six-speed manual transmission",
+      "27/37 mpg city/highway fuel economy"
+    ],
+    "Sport Hybrid": [
+      "Dark trim and black 18-inch wheels",
+      "Hybrid-specific spring and damper tuning",
+      "Four levels of regenerative braking with steering wheel paddles",
+      "Individual driving mode"
+    ],
+    "Hybrid": [
+      "200 hp hybrid powertrain with 232 lb-ft torque",
+      "50/47 mpg city/highway fuel economy",
+      "Noise reduction package",
+      "Body-colored headlamp garnish and front lower spoiler",
+      "Gray color scheme interior",
+      "Four levels of regenerative braking with steering wheel paddles",
+      "Individual driving mode"
+    ],
+    "Base": [
+      "150 hp 2.0-liter four-cylinder engine with CVT automatic",
+      "31-32/39-41 mpg city/highway fuel economy",
+      "7.0-inch gauge cluster and infotainment touchscreen",
+      "Apple CarPlay and Android Auto",
+      "Honda Sensing safety suite with automatic emergency braking",
+      "Lane keeping assist and adaptive cruise control",
+      "Blind-spot monitoring with rear cross-traffic alert",
+      "Standard front USB-C ports"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/honda/civic/"
+}

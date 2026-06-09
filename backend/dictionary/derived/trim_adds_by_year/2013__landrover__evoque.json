@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2013|landrover|evoque",
+  "year": 2013,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_llm_2013__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Pure"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "Enhanced premium interior appointments and styling details compared to Pure"
+    ],
+    "Pure": [
+      "Nine-speed automatic transmission with Drive Select and Paddle Shift",
+      "Four-wheel drive with Active Driveline and Torque Vectoring",
+      "Terrain Response system",
+      "Hill Descent Control and Hill Start Assist",
+      "18-inch five split-spoke Style 506 wheels",
+      "Pure Partial leather seating",
+      "Automatic climate control with air filtration",
+      "Heated rear windshield and rain-sensing wipers",
+      "Powered adjustable heated exterior mirrors with memory",
+      "Halogen headlamps and automatic headlamps"
+    ]
+  }
+}

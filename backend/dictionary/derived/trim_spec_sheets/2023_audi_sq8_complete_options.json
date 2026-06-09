@@ -1,0 +1,41 @@
+{
+  "ladder_id": "2023_audi_sq8_complete_options",
+  "make": "Audi",
+  "models": [
+    "SQ8",
+    "SQ8"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Premium Plus": [
+      {
+        "label": "Engine Options",
+        "value": "Petrol plug-in hybrid:"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Petrol plug-in hybrid:"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L TFSI V6; The SQ8 features 21-inch wheels with 285/45 tires, however 22- and 23-inch optio"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Petrol plug-in hybrid:"
+      },
+      {
+        "label": "Screen Size",
+        "value": "The images display various color and wheel options available for the SUV, offering a visua"
+      }
+    ]
+  }
+}

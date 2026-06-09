@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_subaru_crosstrek_complete_options",
+  "make": "Subaru",
+  "models": [
+    "Crosstrek",
+    "Crosstrek"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Wilderness": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S8); All-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel drive"
+      }
+    ]
+  }
+}

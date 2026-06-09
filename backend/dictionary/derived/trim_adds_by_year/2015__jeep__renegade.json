@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|jeep|renegade",
+  "year": 2015,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "inventory_jeep_renegade",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude"
+  ],
+  "adds_by_trim": {
+    "Trailhawk": [
+      "registered trademark of Bluetooth SIG, Inc. iPad, iPhone, iPod and iTunes are"
+    ],
+    "Limited": [
+      "registered trademark of C.R.F. Società Consortile per Azioni, used under license by Chrysler Group LLC. Bluetooth is a"
+    ],
+    "Latitude": [
+      "8.4-inch touchscreen infotainment with integrated navigation standard",
+      "Apple CarPlay and Android Auto standard",
+      "Six-speaker audio system standard",
+      "1.3-liter turbocharged I-4 engine with 177 hp and 210 lb-ft torque",
+      "Blind-spot monitoring, rear cross-traffic alert, lane departure warning, lane keep assist, automatic emergency braking",
+      "Premium package option adds auto-dimming rearview mirror, eight-way power driver seat, heated front seats, heated steering wheel, wiper deicer, roof rails, foglamps"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Trailhawk": 1,
+      "Latitude": 0
+    }
+  }
+}

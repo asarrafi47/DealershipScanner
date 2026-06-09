@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|volvo|xc90",
+  "year": 2011,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2011__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XC90 V8 AWD",
+    "XC90 3.2 AWD",
+    "XC90 3.2 FWD"
+  ],
+  "adds_by_trim": {
+    "XC90 V8 AWD": [
+      "4.4-liter V8 engine with 311 hp and 325 ft-lbs torque",
+      "Produces 71 additional horsepower compared to 3.2 engine",
+      "Delivers 89 ft-lbs more torque than 3.2 six-cylinder",
+      "Electronically controlled all-wheel drive with Instant Traction"
+    ],
+    "XC90 3.2 AWD": [
+      "Electronically controlled all-wheel drive with Instant Traction",
+      "3.2-liter inline six-cylinder with 240 hp at 6200 rpm",
+      "236 ft-lbs torque available from 1500-4500 rpm range"
+    ],
+    "XC90 3.2 FWD": [
+      "3.2-liter inline six-cylinder engine with 240 hp",
+      "24-valve dual overhead cam with Variable Cam Timing",
+      "Variable Intake System and Cam Profile Shifting",
+      "Six-speed Geartronic automatic transmission with winter setting",
+      "Power-assisted anti-lock ventilated disc brakes with EBA and EBD",
+      "McPherson front suspension with multi-link independent rear",
+      "DSTC and Roll Stability Control systems",
+      "Power-assisted rack and pinion steering with tilt and telescopic column",
+      "21 US gallon fuel tank capacity",
+      "8.6 inch ground clearance for all-road capability"
+    ]
+  }
+}

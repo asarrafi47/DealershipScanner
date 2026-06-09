@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2013,Nissan,Sentra,Sentra,1.8L I4,1.8L I4,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,27,35,30,,,,,
+2013,Nissan,Sentra,Sentra,1.8L I4,1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,30,38,33,,,,,
+2013,Nissan,Sentra,Sentra,1.8L I4 (California Emission Control System),1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,29,38,33,,,,,
+2013,Nissan,Sentra,FE,1.8L I4,1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,30,39,33,,,,,

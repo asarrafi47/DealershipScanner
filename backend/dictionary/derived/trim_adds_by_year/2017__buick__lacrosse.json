@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|buick|lacrosse",
+  "year": 2017,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2017__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LACROSSE PREMIUM",
+    "LACROSSE ESSENCE",
+    "LACROSSE PREFERRED"
+  ],
+  "adds_by_trim": {
+    "LACROSSE PREMIUM": [
+      "Heated perforated leather-appointed front seats",
+      "Power front-passenger lumbar support with 2-way adjustment",
+      "Wireless charging in center console",
+      "Articulating High-Intensity Discharge xenon headlamps with auto on/off",
+      "Power mirrors with LED indicators and auto-dimming",
+      "Driver memory settings for seat and outside mirrors",
+      "SiriusXM Satellite Radio with 3-month trial subscription"
+    ],
+    "LACROSSE ESSENCE": [
+      "Heated perforated leather-appointed front seats",
+      "Power front-passenger lumbar support with 2-way adjustment",
+      "Wireless charging in center console",
+      "Articulating High-Intensity Discharge xenon headlamps with auto on/off",
+      "Power mirrors with LED indicators and auto-dimming",
+      "Driver memory settings for seat and outside mirrors",
+      "SiriusXM Satellite Radio with 3-month trial subscription"
+    ],
+    "LACROSSE PREFERRED": [
+      "3.6L VVT DI V-6 engine with 309 hp and 268 lb-ft torque",
+      "8-speed automatic transmission with Driver Shift Control",
+      "Front-wheel drive with electronic precision shift",
+      "8-inch diagonal high-resolution color touchscreen with Buick IntelliLink",
+      "Dual-zone automatic air conditioning",
+      "Premium 8-speaker audio system",
+      "Power windows with front express-up/-down and rear express-down",
+      "Heated power-adjustable outside mirrors with integrated turn signals",
+      "18-inch Q7A aluminum wheels",
+      "Keyless push-button start with hands-free calling via Bluetooth"
+    ]
+  }
+}

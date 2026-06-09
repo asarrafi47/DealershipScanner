@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2013|lotus|elise",
+  "year": 2013,
+  "make": "Lotus",
+  "model": "Elise",
+  "ladder_id": "brochure_2013__lotus__elise",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes 6-speed manual transmission with sports-tuned ratios",
+      "Adds Features ergonomically designed lightweight seats for support and comfort",
+      "Adds LED daylight running lights and LED rear brake light cluster",
+      "Adds Includes soft-top roof as standard"
+    ],
+    "Sport": [
+      "Adds optional hardtop roof for all-season versatility"
+    ]
+  }
+}

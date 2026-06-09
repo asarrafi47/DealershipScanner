@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2012|audi|tt",
+  "year": 2012,
+  "make": "Audi",
+  "model": "TT",
+  "ladder_id": "brochure_llm_2012__audi__tt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TT RS",
+    "TTS Prestige Roadster",
+    "TTS Prestige Coupe",
+    "TTS Premium Roadster",
+    "TTS Premium Coupe",
+    "TT Prestige Roadster",
+    "TT Prestige Coupe",
+    "TT Premium Roadster",
+    "TT Premium Coupe"
+  ],
+  "adds_by_trim": {
+    "TT RS": [
+      "2.5-liter turbocharged five-cylinder TFSI engine with 360 hp and 343 lb-ft torque",
+      "Six-speed manual transmission with Audi quattro all-wheel drive",
+      "0–60 mph in 4.1 seconds with 174 mph top speed",
+      "Distinct exterior styling and performance tuning"
+    ],
+    "TTS Prestige Coupe": [
+      "2.0-liter turbocharged TFSI engine with 265 hp and 258 lb-ft torque",
+      "Enhanced performance over TT with 0–60 in 4.9 seconds and 155 mph top speed"
+    ],
+    "TTS Prestige Roadster": [
+      "Convertible roadster body style with power-retractable soft top",
+      "0–60 in 5.1 seconds, slightly slower than Coupe due to additional weight"
+    ],
+    "TTS Premium Coupe": [
+      "TTS Premium trim level with base 2.0-liter turbocharged TFSI engine"
+    ],
+    "TTS Premium Roadster": [
+      "Convertible roadster variant of TTS Premium with 0–60 in 5.1 seconds"
+    ],
+    "TT Prestige Coupe": [
+      "2.0-liter turbocharged TFSI engine with 211 hp and 258 lb-ft torque",
+      "Audi Stronic dual-clutch transmission with Audi quattro all-wheel drive",
+      "0–60 in 5.3 seconds with 130 mph top speed",
+      "Prestige trim level with enhanced standard features"
+    ],
+    "TT Prestige Roadster": [
+      "Convertible roadster body style",
+      "0–60 in 5.6 seconds with 130 mph top speed"
+    ],
+    "TT Premium Coupe": [
+      "Base 2.0-liter turbocharged TFSI engine with 211 hp",
+      "Audi Stronic dual-clutch transmission and Audi quattro all-wheel drive standard",
+      "22 city / 31 highway / 26 combined EPA fuel economy",
+      "13.1 cubic feet of cargo volume with rear seats folded"
+    ],
+    "TT Premium Roadster": [
+      "Convertible roadster configuration with 8.8 cubic feet cargo volume",
+      "Same powertrain as TT Premium Coupe with 0–60 in 5.6 seconds"
+    ]
+  }
+}

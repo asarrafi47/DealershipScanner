@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2015_ram_2500_complete_options",
+  "make": "Ram",
+  "models": [
+    "2500",
+    "2500"
+  ],
+  "year_min": 2013,
+  "year_max": 2017,
+  "source": "generated",
+  "trims": {
+    "Laramie": [
+      {
+        "label": "Engine Options",
+        "value": "6.7L V6 Turbo; Automatic 6-spd"
+      }
+    ],
+    "Big Horn": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Four-Wheel Drive"
+      }
+    ],
+    "Tradesman": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ]
+  }
+}

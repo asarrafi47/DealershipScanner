@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2019|toyota|landcruiser",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "ladder_id": "brochure_2019__toyota__landcruiser",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds 5.7-liter V8 engine",
+      "Adds Crawl Control with five low-speed settings",
+      "Adds Multi-terrain Monitor with front, rear, and side camera views on 9-inch display screen",
+      "Adds Kinetic Dynamic Suspension System (KDSS) for off-road traction",
+      "Adds heated and ventilated front seats",
+      "Adds leather-wrapped interior surfaces",
+      "Adds four-zone automatic climate control",
+      "Adds Toyota Safety Sense P bundle with Lane Departure Alert, Sway Warning System, Pre-Collision System with Pedestrian Detection, and Automatic High Beams"
+    ],
+    "Land Cruiser": [
+      "Adds Off-road Turn Assist for tighter turning radius in Crawl Control Mode"
+    ]
+  }
+}

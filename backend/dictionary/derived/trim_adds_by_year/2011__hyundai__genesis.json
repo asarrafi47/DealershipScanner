@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2011|hyundai|genesis",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "ladder_id": "brochure_llm_2011__hyundai__genesis",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Genesis 4.6",
+    "Genesis 3.8"
+  ],
+  "adds_by_trim": {
+    "Genesis 4.6": [
+      "4.6L V8 engine instead of 3.8L V6",
+      "Electro-hydraulic power steering",
+      "18-inch split-spoke Hypersilver Euroflange alloy wheels with P235/50R tires",
+      "Electronic parking brake with automatic vehicle hold",
+      "20.3-gallon fuel tank capacity",
+      "Larger 18.0mm rear stabilizer bar"
+    ],
+    "Genesis 3.8": [
+      "4-wheel independent suspension with front 5-link virtual kingpin axis",
+      "SACHS Amplitude Selective Damping gas shock absorbers front and rear",
+      "Power rack-and-pinion steering with engine-RPM-sensing",
+      "4-wheel anti-lock disc brakes",
+      "EPA fuel economy 18/27/21 city/highway/combined",
+      "19.3-gallon fuel tank capacity"
+    ]
+  }
+}

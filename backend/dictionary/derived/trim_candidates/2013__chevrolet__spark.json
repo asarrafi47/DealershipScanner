@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|chevrolet|spark",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LS",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

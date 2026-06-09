@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2021|mitsubishi|mirage",
+  "year": 2021,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2021__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "LE",
+    "CE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Specific SE trim features not detailed in provided brochure text"
+    ],
+    "LE": [
+      "Specific LE trim features not detailed in provided brochure text"
+    ],
+    "CE": [
+      "Specific CE trim features not detailed in provided brochure text"
+    ],
+    "ES": [
+      "1.2L MIVEC DOHC 3-cylinder engine",
+      "5-speed manual transmission or continuous variable transmission (CVT)",
+      "39 combined MPG for Mirage / 37 combined MPG for Mirage G4",
+      "9.2-gallon fuel capacity",
+      "ECI-MULTI fuel system",
+      "10-Year / 100,000-Mile limited warranty",
+      "17.1 cubic feet cargo capacity (Mirage) / 12.4 cubic feet (Mirage G4) with rear seats up"
+    ]
+  }
+}

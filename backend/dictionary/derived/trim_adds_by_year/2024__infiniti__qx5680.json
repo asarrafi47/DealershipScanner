@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2024|infiniti|qx5680",
+  "year": 2024,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2024__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 SENSORY",
+    "QX80 PREMIUM SELECT",
+    "QX80 LUXE"
+  ],
+  "adds_by_trim": {
+    "QX80 SENSORY": [
+      "Hydraulic Body Motion Control for improved ride stability",
+      "Vehicle speed-sensitive power steering",
+      "Adaptive Front Lighting System with auto-leveling headlights",
+      "Climate-controlled front seats",
+      "Heated second-row seats",
+      "Remote tip-up second-row seats for easy third-row entry",
+      "Quilted semi-aniline leather-appointed seating in exclusive Saddle Brown",
+      "Charcoal Burl interior trim with gradient finish",
+      "Bose Performance Series 17-speaker Premium Audio System",
+      "Advanced Climate Control with Plasmacluster technology and Grape Polyphenol filters"
+    ],
+    "QX80 PREMIUM SELECT": [
+      "Forward Emergency Braking with Pedestrian Detection",
+      "Predictive Forward Collision Warning",
+      "Backup Collision Intervention",
+      "Lane Departure Warning with haptic steering wheel feedback",
+      "Lane Departure Prevention",
+      "Blind Spot Warning and Intervention",
+      "Trailer sway control",
+      "First-row and second-row seat belt pretensioners",
+      "22-inch dark-finished aluminum-alloy wheels with 275/50R22 tires",
+      "Dark chrome exterior accents including grille, fascia, and mirror caps"
+    ],
+    "QX80 LUXE": [
+      "5.6-liter V8 engine with 400 hp and 413 lb-ft torque",
+      "7-speed automatic transmission",
+      "INFINITI InTouch 12.3-inch Interactive Display with wireless Apple CarPlay and Android Auto",
+      "Navigation with Lane Guidance, 3D building graphics, and 5-year trial",
+      "Bose 13-speaker Premium Audio System",
+      "Wireless phone charger",
+      "Remote Engine Start",
+      "20-inch aluminum-alloy wheels with 275/60R20 all-season tires",
+      "10-way power driver's seat with 2-way lumbar support",
+      "Leather-appointed seating with Charcoal Burl interior trim accents"
+    ]
+  }
+}

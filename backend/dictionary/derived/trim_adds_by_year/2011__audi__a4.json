@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2011|audi|a4",
+  "year": 2011,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_2011__audi__a4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "Sport",
+    "Limited",
+    "A4",
+    "S4"
+  ],
+  "adds_by_trim": {
+    "S4": [
+      "Adds 18-inch five-parallel-spoke S design wheels with 245/40 summer performance tires",
+      "Adds dual-exhaust quad tailpipes with signature exhaust note",
+      "Adds LED taillights with enhanced brightness and energy efficiency",
+      "Adds three-spoke sport multifunction leather-wrapped steering wheel with shift paddles",
+      "Adds S4 sport seats with lateral support, electric lumbar support, and Alcantara inserts",
+      "Adds Brushed Aluminum decorative inlays and S4 doorsill inlays",
+      "Adds Audi Sound System 180 watts with ten speakers and subwoofer",
+      "Adds Audi xenon plus headlights with LED daytime running lights"
+    ],
+    "A4": [],
+    "Limited": [],
+    "Sport": [],
+    "Premium": [
+      "Adds Bluetooth mobile phone preparation with MMI operating system integration",
+      "Adds auto-dimming interior mirror with electronic compass",
+      "Adds heated front seats with multilevel seat heating system",
+      "Adds HomeLink universal remote control for garage doors and gates"
+    ],
+    "Premium Plus": [
+      "Audi xenon plus headlights with LED daytime running lights",
+      "HomeLink and Bluetooth hands-free phone interface",
+      "Three-zone automatic climate control",
+      "LED taillights (sedan)",
+      "Rain/light sensor for automatic headlamps and wipers",
+      "17-inch ten-spoke wheels with 245/45 all-season tires (replaces 17-inch seven-spoke on Premium)"
+    ],
+    "Prestige": [
+      "18-inch five-spoke wheels with 245/40 all-season tires",
+      "Bang & Olufsen 505-watt 14-speaker audio available",
+      "Adaptive cruise control and auto-dimming heated memory mirrors available",
+      "19-inch seven-twin-spoke wheels available (S line / 19-inch Sport Package)"
+    ]
+  }
+}

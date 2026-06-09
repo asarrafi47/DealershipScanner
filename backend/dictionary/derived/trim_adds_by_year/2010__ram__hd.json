@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2010|ram|hd",
+  "year": 2010,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2010__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "H",
+    "P",
+    "T",
+    "G",
+    "A"
+  ],
+  "adds_by_trim": {
+    "H": [
+      "180-amp alternator with heavy-duty Snowplow Prep Group",
+      "Cummins turbo diesel I-6 engine option",
+      "3.42 axle ratio with Cummins diesel only",
+      "4.56 axle ratio standard",
+      "Locking tailgate",
+      "Full-size spare tire and carrier"
+    ],
+    "P": [
+      "4.10 axle ratio option with TRX 4x4",
+      "3.73 axle ratio standard",
+      "Electronic shift part-time transfer case 4x4",
+      "Front electronically disconnecting stabilizer bar"
+    ],
+    "T": [
+      "160-amp alternator standard",
+      "Manual shift part-time transfer case 4x4",
+      "Tire Pressure Monitor on 2500 models",
+      "LT245/70R17E BSW on/off-road tires 2500 option"
+    ],
+    "G": [
+      "5.7L HEMI V8 with Variable Valve Timing 2500 only",
+      "26-amp engine block heater option",
+      "6.7L Cummins turbo diesel I-6 2500/3500 option"
+    ],
+    "A": [
+      "Backup camera integrated in rearview mirror option",
+      "Advanced multistage front and supplemental side-curtain airbags",
+      "Sentry Key antitheft engine immobilizer",
+      "Automatic headlamps",
+      "Power rack-and-pinion steering 4x2 models",
+      "Four-wheel ABS disc brakes",
+      "Variable-intermittent windshield wipers",
+      "AM/FM stereo radio with CD player",
+      "Air conditioning with dual-zone temperature control"
+    ]
+  }
+}

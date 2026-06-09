@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2016|hyundai|veloster",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium",
+    "Sport",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

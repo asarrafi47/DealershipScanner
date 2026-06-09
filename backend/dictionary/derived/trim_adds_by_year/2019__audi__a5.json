@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|audi|a5",
+  "year": 2019,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_llm_2019__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS 5",
+    "S5",
+    "A5"
+  ],
+  "adds_by_trim": {
+    "RS 5": [
+      "Audi Sport® RS Carbon interior inlay with multiple leather color options",
+      "20-inch 5-arm-rotor design forged wheels in Matte Titanium finish",
+      "20-inch 5-arm-flag design forged wheels in Silver or Anthracite bi-color finish",
+      "20-inch 5-arm-peak design forged wheels in Matte Titanium bi-color finish"
+    ],
+    "S5": [
+      "Matte Brushed Aluminum or Piano Black interior inlay options",
+      "19-inch or 20-inch multi-spoke and rotor design wheels with premium finishes",
+      "Rock Gray, Nougat Brown, or dual-tone leather interior color options",
+      "Fine Nappa Leather package with contrast honeycomb stitching available"
+    ],
+    "A5": [
+      "18-inch 10-spoke-dynamic or 19-inch 5-arm-star design wheels",
+      "Aluminum Trimaran or High-gloss Burl Walnut Wood interior inlay options",
+      "Black, Gray, Rock Gray, Nougat Brown, or Atlas Beige leather interior colors",
+      "S line® sport package with specific wheel and interior configurations available",
+      "Black optic plus package with piano black inlay and titanium-finish wheels"
+    ]
+  }
+}

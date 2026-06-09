@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|maserati|granturismo",
+  "year": 2012,
+  "make": "maserati",
+  "model": "granturismo",
+  "ladder_id": "brochure_llm_2012__maserati__granturismo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GranTurismo S Automatic",
+    "GranTurismo"
+  ],
+  "adds_by_trim": {
+    "GranTurismo S Automatic": [
+      "MC Auto Shift optional super-reactive transmission mode with launch control",
+      "Gear keeper function holding gears in Manual-Sport mode to engine rev limiter",
+      "RPM indicator for ideal gear-shift timing in Auto-Sport mode",
+      "Down-shift double declutch for enhanced dynamic driving experience",
+      "Oval exhaust tailpipes with bypass valves for richer sound",
+      "Electronically controlled Skyhook suspension as standard equipment",
+      "Exhaust system valves opening at engine speeds over 3000 rpm"
+    ],
+    "GranTurismo": [
+      "Auto-adaptive transmission with four operating modes: Auto Normal, Auto Sport, Auto ICE, Manual",
+      "Stability control system (MSP) activation via SPORT button",
+      "Manual mode via gear shift lever or steering wheel paddle Active Shifting",
+      "Self-locking differential with 25% traction and 45% release lock percentages",
+      "Electronically controlled Skyhook suspension available as optional equipment",
+      "Front and rear wishbone suspension with independent design"
+    ]
+  }
+}

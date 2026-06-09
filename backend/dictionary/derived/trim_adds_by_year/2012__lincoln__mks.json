@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|lincoln|mks",
+  "year": 2012,
+  "make": "Lincoln",
+  "model": "MKS",
+  "ladder_id": "brochure_llm_2012__lincoln__mks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ECOBOOST APPEARANCE PACKAGE",
+    "ECOBOOST ULTIMATE PACKAGE: EQUIPMENT GROUP 201A",
+    "ULTIMATE PACKAGE: EQUIPMENT GROUP 102A",
+    "NAVIGATION PACKAGE: EQUIPMENT GROUP 101A"
+  ],
+  "adds_by_trim": {
+    "ECOBOOST APPEARANCE PACKAGE": [
+      "Body-color license plate accent",
+      "Chrome grille with darkened accent bars",
+      "Darkened headlamp treatment",
+      "Decklid lip spoiler with chrome insert",
+      "Modified Lincoln MKS decklid badge with red S",
+      "Ultimate seat trim with color-keyed tuxedo stripe and embroidered Lincoln Star",
+      "Unique 20-inch 10-spoke polished aluminum wheels with P245/45R20 all-season tires",
+      "Unique body-color front and rear lower fascias, side rocker panels and door cladding",
+      "Unique illuminated door sill plates with red S",
+      "Unique metallic appliqué with Lincoln MKS on instrument panel with red S"
+    ],
+    "ECOBOOST ULTIMATE PACKAGE: EQUIPMENT GROUP 201A": [
+      "Dual-panel moonroof with power sunshade",
+      "Ultimate seat trim"
+    ],
+    "ULTIMATE PACKAGE: EQUIPMENT GROUP 102A": [
+      "19-inch 10-spoke premium painted aluminum wheels",
+      "Dual-panel moonroof with power sunshade",
+      "Ultimate seat trim",
+      "Wood appliqués in fine line ebony or olive ash on all doors"
+    ],
+    "NAVIGATION PACKAGE: EQUIPMENT GROUP 101A": [
+      "Voice-activated hard drive-based Navigation System with 8-inch high-resolution LCD touch screen",
+      "Integrated SiriusXM Traffic and Travel Link with 6-month trial subscription",
+      "HD Radio Technology",
+      "Driver-configurable home screen",
+      "BLIS Blind Spot Information System with cross-traffic alert",
+      "Rear view camera",
+      "THX II Certified 5.1 Surround Audio System with 16 speakers and 10-inch subwoofer"
+    ]
+  }
+}

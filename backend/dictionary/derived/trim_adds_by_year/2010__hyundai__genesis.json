@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|hyundai|genesis",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "ladder_id": "brochure_llm_2010__hyundai__genesis",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Genesis 4.6",
+    "Genesis 3.8"
+  ],
+  "adds_by_trim": {
+    "Genesis 4.6": [
+      "4.6L V8 engine (compared to 3.8L V6)",
+      "17/25/19 MPG combined fuel economy",
+      "20.3-gallon fuel tank capacity",
+      "4,120 lbs curb weight"
+    ],
+    "Genesis 3.8": [
+      "3.8L V8 engine",
+      "18/27/21 MPG combined fuel economy",
+      "19.3-gallon fuel tank capacity",
+      "3,897 lbs curb weight",
+      "Large luxury sedan with 115.6-inch wheelbase",
+      "109.4 cubic feet passenger volume",
+      "15.9 cubic feet cargo volume",
+      "0.27 coefficient of drag aerodynamics"
+    ]
+  }
+}

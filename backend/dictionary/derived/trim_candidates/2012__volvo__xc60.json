@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2012|volvo|xc60",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "XC60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Plus",
+    "Core",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

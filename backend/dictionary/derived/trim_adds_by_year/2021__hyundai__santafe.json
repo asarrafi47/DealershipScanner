@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2021|hyundai|santafe",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2021__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "277 hp Smartstream 2.5L Turbo engine with 311 lb-ft torque",
+      "8-speed EcoShift Dual Clutch Transmission (DCT) with SHIFTRONIC",
+      "Full-color Heads-up Display",
+      "Dark chrome accent front grille",
+      "Quilted Nappa leather seating surfaces with eco-suede headliner",
+      "Premium door sill plates",
+      "HTRAC All Wheel Drive standard"
+    ],
+    "Limited": [
+      "277 hp Smartstream 2.5L Turbo engine with 311 lb-ft torque",
+      "8-speed EcoShift Dual Clutch Transmission (DCT) with SHIFTRONIC",
+      "20-inch alloy wheels",
+      "Power tilt-and-slide panoramic sunroof",
+      "10.25-inch high-resolution touchscreen navigation system",
+      "Harman Kardon premium audio system",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Parking Distance Warning – Forward and Reverse"
+    ],
+    "SEL": [
+      "Power-folding rear seats",
+      "12.3-inch digital instrument cluster display",
+      "Auto-dimming rearview mirror with HomeLink",
+      "HD Radio and SiriusXM Satellite Radio",
+      "10.25-inch high-resolution touchscreen navigation system",
+      "Wireless device charging",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Rear Cross-Traffic Collision-Avoidance Assist",
+      "Safe Exit Assist"
+    ],
+    "SE": [
+      "191 hp Smartstream 2.5L MPI/GDI engine with 181 lb-ft torque",
+      "8-speed automatic transmission with SHIFTRONIC and Predictive Logic",
+      "8-inch high-resolution touchscreen AM/FM Display Audio",
+      "Wireless Apple CarPlay and Android Auto",
+      "LED headlights and Daytime Running Lights",
+      "Forward Collision-Avoidance Assist with Pedestrian and Cyclist Detection",
+      "Lane Keeping Assist and Lane Following Assist",
+      "Rear Occupant Alert",
+      "Smart Cruise Control with Stop and Go"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|lexus|es",
+  "year": 2010,
+  "make": "lexus",
+  "model": "ES",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2020|lexus|rx",
+  "year": 2020,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_llm_2020__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RX 450hL",
+    "RX350L",
+    "RX/RXh F SPORT",
+    "RXL/RXhL",
+    "RX/RXh"
+  ],
+  "adds_by_trim": {
+    "RX 450hL": [
+      "Eight-year/100,000-mile Hybrid System Warranty",
+      "Six-passenger seating with second-row captain's chairs standard",
+      "Hybrid powertrain technology"
+    ],
+    "RX350L": [
+      "Seven-passenger second-row bench seating standard",
+      "Extended wheelbase configuration"
+    ],
+    "RX/RXh F SPORT": [
+      "F SPORT-exclusive exterior styling and trim",
+      "Performance-tuned suspension and braking",
+      "20-inch performance wheels and tires",
+      "Unique interior appointments and materials"
+    ],
+    "RXL/RXhL": [
+      "Extended wheelbase for increased cargo and passenger space",
+      "Second-row captain's chairs available"
+    ],
+    "RX/RXh": [
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Lexus Safety System+ with Pedestrian Detection System",
+      "Available hybrid and traditional gasoline powertrains",
+      "Multiple interior trim and color options including NuLuxe and semi-aniline leather"
+    ]
+  }
+}

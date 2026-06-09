@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|bmw|x3",
+  "year": 2010,
+  "make": "BMW",
+  "model": "X3",
+  "ladder_id": "generic_bmw_x3",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is under license. iPod is a registered",
+      "trademarks and trade names are those of their respective owners.",
+      "wireless remote. Even when in use, tailgate can be opened. the X3. (Optional Navigation system required.)"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Na": 3
+    }
+  }
+}

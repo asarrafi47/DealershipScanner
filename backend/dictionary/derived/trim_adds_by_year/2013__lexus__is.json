@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2013|lexus|is",
+  "year": 2013,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2013__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ISF",
+    "IS350C",
+    "IS350",
+    "IS250C",
+    "IS250"
+  ],
+  "adds_by_trim": {
+    "ISF": [
+      "5.0-liter V8 engine with 416 hp and 371 lb-ft torque",
+      "0–60 mph in 4.6 seconds",
+      "Six-speed paddle-shift-sequential automatic transmission",
+      "19 x 8.5-in front and 19 x 9.5-in rear forged-alloy BBS wheels",
+      "225/40YR19 front and 255/35YR19 rear summer tires",
+      "Four-passenger high-performance luxury sport sedan",
+      "Brembo six-piston front and two-piston rear disc brakes",
+      "16.9 gallon fuel tank capacity"
+    ],
+    "IS350C": [
+      "Retractable hardtop coupe body style",
+      "0–60 mph in 5.8 seconds",
+      "10.8 cubic feet trunk capacity with top up",
+      "3,872 lb curb weight"
+    ],
+    "IS350": [
+      "3.5-liter V6 engine with 306 hp and 277 lb-ft torque",
+      "0–60 mph in 5.6 seconds (RWD) or 5.7 seconds (AWD)",
+      "Available all-wheel drive (AWD) for IS sedan",
+      "Six-speed paddle-shift-sequential automatic transmission",
+      "Four-piston front disc brakes with 13.1-in front and 12.2-in rear ventilated discs"
+    ],
+    "IS250C": [
+      "Retractable hardtop coupe body style",
+      "0–60 mph in 8.4 seconds",
+      "11.6-in ventilated front and 12.2-in rear ventilated disc brakes",
+      "10.8 cubic feet trunk capacity with top up",
+      "3,806 lb curb weight"
+    ],
+    "IS250": [
+      "2.5-liter V6 engine with 204 hp and 185 lb-ft torque",
+      "0–60 mph in 7.9 seconds (RWD) or 8.3 seconds (AWD)",
+      "Available all-wheel drive (AWD) for IS sedan",
+      "Six-speed paddle-shift-sequential automatic transmission",
+      "11.6-in ventilated front and 11.4-in solid rear disc brakes",
+      "Five-passenger luxury sport sedan",
+      "17-in alloy wheels standard with 225/45VR17 tires",
+      "21/30/25 mpg combined rating",
+      "17.2 gallon fuel tank capacity"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2018|jaguar|xe",
+  "year": 2018,
+  "make": "Jaguar",
+  "model": "XE",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

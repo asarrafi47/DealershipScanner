@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2023|toyota|86",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "brochure_llm_2023__toyota__86",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GR86 10th Anniversary Special Edition",
+    "GR86 Premium",
+    "GR86"
+  ],
+  "adds_by_trim": {
+    "GR86 10th Anniversary Special Edition": [
+      "18-inch matte-black GR forged alloy wheels with black lug nuts",
+      "Matte-black duckbill rear spoiler with LED center high-mount stop light",
+      "GR-inspired matte-black C-pillar dual racing stripe graphic",
+      "GR cat-back dual exhaust with black chrome tips",
+      "Two-stage heated sport seats with leather-trimmed bolsters and Ultrasuede inserts with Solar Shift stripe",
+      "GR leather-trimmed manual tilt/telescopic 3-spoke sport steering wheel with Solar Shift stitching",
+      "Limited production commemorative plaque",
+      "Solar Shift contrast-stitched door panel embroidery with armrests",
+      "Solar Shift contrast-stitched floor mats and trunk mat"
+    ],
+    "GR86 Premium": [
+      "18-inch matte-black-painted alloy wheels with Michelin Pilot Sport 4 tires",
+      "Auto-leveling dual-LED headlights with Adaptive Front-Lighting System and LED rear combination lights",
+      "Color-keyed duckbill rear spoiler",
+      "Color-keyed roof with double bubble feature",
+      "Functional black front-wheel arch air outlet vent",
+      "Two-stage heated sport seats with leather-trimmed bolsters and Ultrasuede inserts; 6-way driver, 4-way passenger",
+      "GR leather-trimmed tilt/telescopic steering wheel with contrast stitching",
+      "8-speaker audio system with amplifier"
+    ],
+    "GR86": [
+      "FA24 2.4L naturally aspirated horizontally opposed 4-cylinder engine with 228 hp and 184 lb-ft torque",
+      "6-speed close-ratio manual or 6-speed automatic ECT transmission with paddle shifters",
+      "Torsen limited-slip differential",
+      "GR circuit-tuned suspension with coil springs, shock absorbers, iron front knuckles",
+      "17-inch machined-finish alloy wheels with Michelin Pilot Sport 4 tires",
+      "Sport front bucket seats with black side bolsters; 6-way driver, 4-way passenger adjustable",
+      "GR digital gauge cluster with Normal/Sport/Track modes",
+      "Dual zone automatic climate control",
+      "8-inch touchscreen with 6 speakers, Apple CarPlay, Android Auto, SiriusXM",
+      "GR86 Active Safety Suite with Pre-Collision Braking, Adaptive Cruise Control, Lane Departure Warning"
+    ]
+  }
+}

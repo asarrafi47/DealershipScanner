@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2010|dodge|nitro",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Nitro",
+  "ladder_id": "brochure_2010__dodge__nitro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "Express",
+    "Platinum",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 3.7L SOHC V6 engine",
+      "Adds advanced multistage driver and front passenger air bags with Occupant Classification System",
+      "Adds supplemental side-curtain air bags with roll-sensing technology",
+      "Adds Sentry Key antitheft engine immobilizer",
+      "Adds 6 speakers with AM/FM/CD/MP3 radio and audio input jack",
+      "Adds manually adjustable front seats",
+      "Adds 4-spoke steering wheel",
+      "Adds power windows with express-down",
+      "Adds rearview day/night mirror",
+      "Adds tire pressure monitor warning lamp"
+    ],
+    "Platinum": [
+      "Upgraded to premium cloth low-back seating surfaces",
+      "Upgraded to 4-spoke leather-wrapped steering wheel with integrated speed and audio controls",
+      "Adds power 6-way driver's seat adjustment",
+      "Adds auto-dimming rearview mirror with microphone",
+      "Adds Uconnect Phone with Voice Command",
+      "Adds power windows on driver and front passenger with express-up and down",
+      "Adds 6 cargo tie-downs"
+    ],
+    "Express": [
+      "Adds Uconnect Multimedia Media Center 730N with 30GB hard drive, 6.5-inch touch screen, CD/DVD/MP3, SIRIUS Satellite Radio, GPS Navigation, and SIRIUS traffic",
+      "Adds 8 Boston Acoustics speakers with powered subwoofer and 368-watt amplifier",
+      "Adds Trailer Tow Group with Class III receiver hitch, 4-pin wiring harness, full-size spare tire, heavy-duty engine cooling, and Trailer Sway Control"
+    ],
+    "Sport": [
+      "Adds premium two-tone instrument panel with bright bezels",
+      "Adds heated front seat surfaces",
+      "Adds ParkSense rear park assist system with display"
+    ],
+    "Premium": [
+      "Adds leather-trimmed, low-back two-tone bucket seating",
+      "Adds Security Alarm",
+      "Adds Smokers Group with cigar lighter and removable ash tray"
+    ],
+    "Limited": [
+      "Adds power sunroof with express-open and vent including overhead console",
+      "Adds Uconnect Web with Internet connection and Wi-Fi HotSpot capability",
+      "Adds Chrome Appearance Package with tubular side steps, chrome fuel filler door, chrome front fascia accent, and chrome door sill guards"
+    ]
+  }
+}

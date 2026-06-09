@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|chevrolet|equinox",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "LS",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

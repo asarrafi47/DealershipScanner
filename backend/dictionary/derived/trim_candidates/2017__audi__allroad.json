@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2017|audi|allroad",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Allroad",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

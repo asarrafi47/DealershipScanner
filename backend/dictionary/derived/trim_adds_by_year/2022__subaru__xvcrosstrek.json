@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2022|subaru|xvcrosstrek",
+  "year": 2022,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2022__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crosstrek Limited",
+    "Crosstrek Sport",
+    "Crosstrek Premium",
+    "Crosstrek"
+  ],
+  "adds_by_trim": {
+    "Crosstrek": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct-injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission or optional Lineartronic CVT with X-MODE and Hill Descent Control",
+      "EyeSight Driver Assist Technology",
+      "Active Torque Vectoring",
+      "17-inch alloy wheels",
+      "Black roof rails",
+      "6.5-inch SUBARU STARLINK Multimedia with Apple CarPlay and Android Auto",
+      "Automatic climate control with air filtration",
+      "Rear-Vision Camera and Advanced Adaptive Cruise Control"
+    ],
+    "Crosstrek Premium": [
+      "Auto-on/off headlights",
+      "Fog lights",
+      "Body-color exterior mirrors",
+      "Cloth upholstery with orange stitching and leather-wrapped steering wheel",
+      "All-Weather Package: heated exterior mirrors, dual-mode heated front seats, windshield wiper de-icer",
+      "Welcome lighting",
+      "6.5-inch SUBARU STARLINK Multimedia Plus with SiriusXM 4-month Platinum Plan",
+      "STARLINK Safety and Security enabled with Automatic Collision Notification",
+      "Cargo-area tray and cover"
+    ],
+    "Crosstrek Sport": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct-injection",
+      "Lineartronic CVT with manual-mode paddle shifters standard",
+      "Dual-function X-MODE with Hill Descent Control",
+      "Gunmetal exterior mirrors with integrated turn signals and gunmetal accents",
+      "Sport front and rear wheel arch cladding",
+      "Gray StarTex water-repellent upholstery with yellow contrast stitching",
+      "Keyless Access with Push-Button Start",
+      "Sport instrument cluster with color LCD display",
+      "Dual rear center console USB charge ports",
+      "LED rear gate light and rear-seat reminder"
+    ],
+    "Crosstrek Limited": [
+      "8.0-inch SUBARU STARLINK Multimedia Plus touchscreen with SiriusXM Travel Link",
+      "18-inch alloy wheels",
+      "LED Steering Responsive Headlights and LED fog lights",
+      "Body-color exterior mirrors with integrated turn signals",
+      "6-way power-adjustable driver seat",
+      "Leather-trimmed upholstery with orange stitching and gloss black trim on shifter",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Reverse Automatic Braking",
+      "6.3-inch color multifunction display",
+      "High-grade instrument cluster with color LCD and dual rear USB charge ports"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|cadillac|xt5",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "XT5",
+  "ladder_id": "brochure_web_2019__cadillac__xt5",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XT5 Sport",
+    "XT5 Premium Luxury",
+    "XT5 Luxury"
+  ],
+  "adds_by_trim": {
+    "XT5 Sport": [
+      "3.6-liter V-6 engine with 310 hp and 271 lb-ft torque",
+      "0-60 mph acceleration in 6.4 seconds"
+    ],
+    "XT5 Premium Luxury": [
+      "Wireless phone charging pad",
+      "Bose premium audio system",
+      "20-inch wheels",
+      "8.0-inch gauge cluster display"
+    ],
+    "XT5 Luxury": [
+      "Turbocharged 2.0-liter inline four-cylinder engine with 235 hp and 258 lb-ft torque",
+      "8.0-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "Front automatic emergency braking",
+      "Lane keep assist",
+      "Front and rear parking sensors",
+      "USB ports in both rows of seats",
+      "4.2-inch gauge cluster display",
+      "Standard FWD or available AWD"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/xt5/"
+}

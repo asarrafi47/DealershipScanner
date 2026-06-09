@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|volkswagen|touareg",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Touareg",
+  "ladder_id": "generic_volkswagen_touareg",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "GTI",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "GTI": [
+      "\u201d are registered trademarks of Volkswagen AG. \u201cCarefree Maintenance\u201d is a trademark and the Carefree Maintenance logo and \u201cSide Curtain Protection",
+      "trademark of Bluetooth SIG, Inc. \u201cBi-Xenon\u201d is a",
+      "service is available throughout the satellite",
+      "mapping of lanes, roads, streets, toll roads, highways, etc., is not possible, therefore you may encounter discrepancies between the"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "SEL": 0
+    }
+  }
+}

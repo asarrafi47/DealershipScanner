@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|ford|sporttrac",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Sport Trac",
+  "ladder_id": "brochure_2010__ford__sporttrac",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds 4.0L SOHC V6 engine",
+      "Adds 4-wheel Anti-lock Brake System (ABS)",
+      "Adds Class II trailer tow hitch receiver",
+      "Adds independent front and rear suspensions",
+      "Adds adaptive driver and front-passenger airbags",
+      "Adds AdvanceTrac with Roll Stability Control",
+      "Adds AM/FM stereo with single-CD player",
+      "Adds manual air conditioning",
+      "Adds power sideview mirrors with security approach lamps",
+      "Adds 60/40 split-folding rear seat"
+    ],
+    "Sport": [
+      "Adds leather-wrapped steering column with cruise control",
+      "Adds secondary audio controls",
+      "Adds SIRIUS Satellite Radio with 6-month subscription",
+      "Adds auxiliary audio input jack"
+    ],
+    "Limited": [
+      "Adds fog lamps"
+    ]
+  }
+}

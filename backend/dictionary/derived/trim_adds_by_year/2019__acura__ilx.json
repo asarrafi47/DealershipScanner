@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2019|acura|ilx",
+  "year": 2019,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "brochure_llm_2019__acura__ilx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A-Spec",
+    "Technology",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "A-Spec": [
+      "18 x 7.5 Shark Gray 15-Spoke aluminum-alloy wheels with 225/40 R18 high-performance all-season tires",
+      "Sport A-Spec Seats with perforated Milano premium leather and Ultrasuede-trimmed interior",
+      "LED fog lights",
+      "Decklid spoiler",
+      "Side underbody spoilers",
+      "Stainless steel sport pedals",
+      "Graphite and chrome dash trim",
+      "Machine-finished ebony headliner"
+    ],
+    "Technology": [
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with street and freeway conditions",
+      "Traffic Rerouting",
+      "AcuraLink Connected Services",
+      "Apple CarPlay and Android Auto integration",
+      "On Demand Multi-Use Display 2.0",
+      "SMS, MMS text message and email capability",
+      "Song By Voice",
+      "HD Radio",
+      "SiriusXM Satellite Radio"
+    ],
+    "Premium": [
+      "17 x 7.0 Pewter Silver metallic aluminum-alloy wheels",
+      "Sport seats with perforated Milano premium leather-trimmed interior with contrast stitching and piping",
+      "Driver's 8-way power seat with power lumbar support",
+      "Front passenger's 4-way power seat with power lumbar support",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "Acura Premium Audio System with 7 speakers including subwoofer",
+      "Apple CarPlay and Android Auto integration",
+      "HD Radio",
+      "SiriusXM Satellite Radio"
+    ],
+    "Base": [
+      "2.4-liter aluminum-alloy 4-cylinder engine with 201 horsepower and 180 lb-ft torque",
+      "8-speed dual-clutch transmission with sequential SportShift paddle shifters",
+      "Front-wheel drive",
+      "17 x 7.0 Glitter Silver machine-finished aluminum-alloy wheels with P215/45 R17 tires",
+      "MacPherson strut front and multi-link rear suspension with amplitude reactive dampers",
+      "Dual-zone automatic climate control with humidity control and air filtration",
+      "Keyless access system with Acura personalized settings",
+      "Sport seats with leatherette-trimmed interior with contrast stitching",
+      "Jewel Eye LED headlights with LED daytime running lights",
+      "Moonroof with tilt and slide function"
+    ]
+  }
+}

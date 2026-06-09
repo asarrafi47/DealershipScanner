@@ -1,0 +1,84 @@
+{
+  "catalog_key": "2015|dodge|journey",
+  "year": 2015,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2015__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "JOURNEY R/T",
+    "JOURNEY LIMITED",
+    "JOURNEY CROSSROAD",
+    "JOURNEY SXT PLUS",
+    "JOURNEY SE",
+    "JOURNEY SXT",
+    "JOURNEY AVP"
+  ],
+  "adds_by_trim": {
+    "JOURNEY R/T": [
+      "19-inch Satin Carbon aluminum wheels",
+      "Body-color grille and door handles",
+      "Leather-trimmed seats with perforated inserts and red accent stitching",
+      "Dimpled leather-wrapped shift knob and steering wheel",
+      "High-performance suspension",
+      "6 premium speakers with subwoofer and 368-watt amplifier"
+    ],
+    "JOURNEY LIMITED": [
+      "19-inch Tech Silver cast aluminum wheels",
+      "Automatic headlamps",
+      "Bright door handles and side roof rails",
+      "Leather-trimmed heated seats",
+      "Heated steering wheel",
+      "Leather-wrapped steering wheel and shift knob",
+      "Uconnect 8.4 system with 8.4-inch touchscreen and CD/DVD/MP3",
+      "Overhead console and remote start system",
+      "Power 10-way driver's seat including 4-way lumbar adjust"
+    ],
+    "JOURNEY CROSSROAD": [
+      "Unique front and rear fascias with Platinum Chrome accents",
+      "19-inch Hyper Black aluminum wheels",
+      "Gloss Black grille and fog lamp bezels",
+      "Platinum Chrome roof rails and lower side sills",
+      "Leather-trimmed seats with Sport mesh inserts",
+      "Heated front seats and heated steering wheel",
+      "Cargo compartment cover"
+    ],
+    "JOURNEY SXT PLUS": [
+      "Uconnect 8.4 system with 8.4-inch touchscreen and CD/DVD/MP3",
+      "Leather-trimmed heated seats with heated steering wheel",
+      "Leather-wrapped steering wheel and shift knob",
+      "Overhead console and interior observation mirror",
+      "Sun visors with illuminated vanity mirrors",
+      "Power 10-way driver's seat including 4-way lumbar adjust",
+      "Front-passenger forward fold-flat seat with in-seat storage"
+    ],
+    "JOURNEY SE": [
+      "17-inch aluminum wheels",
+      "Black side roof rails",
+      "LED taillamps",
+      "Deep-tint sunscreen glass"
+    ],
+    "JOURNEY SXT": [
+      "Tilt/telescoping steering column",
+      "17-inch Tech Silver aluminum wheels",
+      "Fog lamps",
+      "Cargo net and cargo compartment cover",
+      "Leather-trimmed seats with Sport mesh inserts",
+      "Uconnect 4.3S system with 4.3-inch touchscreen and CD/MP3",
+      "Dark-tinted headlamp and taillamp bezels",
+      "SiriusXM Satellite Radio with 1-year subscription"
+    ],
+    "JOURNEY AVP": [
+      "17-inch wheel covers",
+      "Power and heated mirrors with foldaway",
+      "Steering wheel-mounted audio controls",
+      "Variable/intermittent windshield wipers",
+      "Rear window wiper/washer/defroster",
+      "Air conditioning with Dual-Zone Temperature Control",
+      "Keyless Enter 'n Go with push-button start",
+      "Premium cloth low-back bucket seats",
+      "Height-adjustable driver seat",
+      "Rear reclining/fold-flat seat"
+    ]
+  }
+}

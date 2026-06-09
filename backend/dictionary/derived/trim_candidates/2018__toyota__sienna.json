@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2018|toyota|sienna",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Sienna",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "SE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Adds to or replaces features offered on SE Adds to or replaces features offered on XLE",
+      "17-in. 7-spoke machined alloy wheels with P235/60R17 tires \u2022 18-in. 10-spoke machined alloy wheels with P235/55R18 tires",
+      "Available 18-in. 10-spoke machined alloy wheels with \u2022 Projector-beam halogen headlights with auto on/off feature",
+      "P235/55RF18 tires (AWD only) and LED Daytime Running Lights (DRL)",
+      "Color-keyed heated power outside mirrors with blind spot \u2022 Color-keyed heated power outside mirrors with blind spot warning",
+      "Chrome-accented outside door handles with touch-sensor Interior",
+      "Seating for seven with premium leather-trimmed second-",
+      "Seating for up to eight \u2022 Power third-row seat (FWD only)",
+      "Leather-trimmed and multi-stage heated front seats \u2022 Premium leather-trimmed and multi-stage heated front seats",
+      "Leatherette-trimmed 60/40 Split & Stow 3rd Row\u2122 seat \u2022 Entune\u2122 3.07 Premium Audio with JBL\u00ae w/Clari-Fi,\u2122",
+      "Leather-trimmed tilt/telescopic steering wheel with audio, Dynamic Navigation20 and App Suite7",
+      "Bluetooth\u00ae14 and voice-command controls \u2022 Heated leather-trimmed tilt/telescopic steering wheel with audio,"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE with Auto Access Seat",
+      "17-in. 5-spoke alloy wheels with P235/60R17 tires \u2022 17-in. 7-spoke machined alloy wheels with P235/60R17 tires",
+      "Color-keyed heated power outside blind spot mirrors3 \u2022 Color-keyed heated power outside mirrors with blind spot",
+      "Dual power sliding side doors and power liftgate with jam protection warning indicators4",
+      "Black roof rails \u2022 Chrome-accented outside door handles with touch-sensor",
+      "Privacy glass on rear windows",
+      "Seating for up to seven",
+      "Seating for up to seven",
+      "Power-rotating lift-up seat, second-row passenger side",
+      "Power-rotating lift-up seat, second-row passenger side",
+      "Leather-trimmed and multi-stage heated front seats",
+      "Entune\u2122 3.07 Audio Plus with Connected Navigation Scout\u00ae"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Exterior Exterior Exterior",
+      "17-in. 5-spoke alloy wheels with P235/60R17 tires \u2022 Available 18-in. 10-spoke machined alloy wheels with \u2022 19-in. 6-spoke gunmetal-finish alloy wheels with P235/50R19 tires",
+      "Projector-beam halogen headlights with auto on/off feature P235/55RF18 tires (AWD only) \u2022 Projector-beam halogen headlights with smoked sport trim, auto",
+      "Power outside mirrors with blind spot mirrors3 \u2022 Color-keyed heated power outside blind spot mirrors3 on/off feature and LED Daytime Running Lights (DRL)",
+      "Windshield wiper de-icer \u2022 Dual power sliding side doors \u2022 Sport mesh front grille",
+      "Engine immobilizer42 \u2022 Black roof rails \u2022 Available color-keyed heated power outside mirrors with blind",
+      "Privacy glass on rear windows spot warning indicators4",
+      "Chrome-accented outside door handles",
+      "Seating for seven with second-row captain\u2019s chairs \u2022 Fog lights",
+      "Entune\u2122 3.07 Audio with Connected Navigation Scout\u00ae GPS \u2022 Seating for up to eight \u2022 Power liftgate with jam protection",
+      "Link App8 and App Suite7 \u2022 Entune\u2122 3.07 Audio Plus with Connected Navigation Scout\u00ae"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

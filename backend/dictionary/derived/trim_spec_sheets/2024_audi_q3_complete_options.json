@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_audi_q3_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q3",
+    "Q3"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Audi V8 (1988–1995); Electric models"
+      }
+    ],
+    "A1 Sportback Concept": [
+      {
+        "label": "Engine Options",
+        "value": "Audi V8 (1988–1995); Electric models"
+      }
+    ]
+  }
+}

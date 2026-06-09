@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2023|hyundai|santafe",
+  "year": 2023,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "2023_hyundai_santafe",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "XRT",
+    "Limited",
+    "Calligraphy"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "H-Tex heated front seats and 8-way power driver seat with lumbar",
+      "12.3-inch navigation and Digital Key 2 Premium",
+      "Optional HTRAC AWD and 4,500-lb towing with trailer brakes"
+    ],
+    "XRT": [
+      "Higher ground clearance and all-terrain tires with dark chrome C-pillar handles",
+      "Rugged interior trim and HTRAC AWD with 4,500-lb towing",
+      "12.3-inch navigation on XRT"
+    ],
+    "Limited": [
+      "Ventilated front and heated 2nd-row seats",
+      "Dual-pane sunroof and Surround View Monitor",
+      "Leather-trimmed seating and Integrated Memory System"
+    ],
+    "Calligraphy": [
+      "Quilted premium Nappa leather and driver Relaxation function",
+      "Premium finish grille and highest Santa Fe trim"
+    ],
+    "SE": [
+      "4.2-inch color LCD multi-information display",
+      "Proximity key entry with push button start and remote engine start",
+      "8-inch color touchscreen audio system",
+      "Android Auto and Apple CarPlay wired connection",
+      "Shift-by-Wire push-button gear selection",
+      "Automatic headlights with High Beam Assist",
+      "LED Daytime Running Lights",
+      "Smart Cruise Control with Stop and Go",
+      "Forward Collision-Avoidance Assist with pedestrian, cyclist and junction-turning detection",
+      "Lane Keeping Assist and Lane Following Assist"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|mitsubishi|outlandersport",
+  "year": 2020,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2020__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT 2.4",
+    "SE 2.0",
+    "SP 2.0",
+    "ES 2.0"
+  ],
+  "adds_by_trim": {
+    "GT 2.4": [
+      "2.4-liter engine (vs 2.0-liter in SE)",
+      "Additional safety systems including Blind Spot Warning and Lane Departure Warning"
+    ],
+    "SE 2.0": [
+      "Forward Collision Mitigation with Pedestrian Detection",
+      "Lane Change Assist and Rear Cross Traffic Alert"
+    ],
+    "SP 2.0": [
+      "Convenience Package"
+    ],
+    "ES 2.0": [
+      "Touchscreen with Bluetooth connectivity",
+      "USB charging port(s)",
+      "Rearview camera",
+      "Low beam and high beam LED headlights"
+    ]
+  }
+}

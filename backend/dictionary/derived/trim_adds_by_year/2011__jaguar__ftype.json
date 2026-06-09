@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2011|jaguar|ftype",
+  "year": 2011,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_2011__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds supercharged 3.0-litre V6 engine producing 380PS and 332lb ft torque",
+      "Adds high-performance hybrid system with electric motor producing 70kW and 235Nm",
+      "Adds eight-speed ZF gearbox with Quickshift changes",
+      "Adds intelligent stop/start technology for improved fuel economy",
+      "Adds new-generation Jaguar touch-screen with short-cut keys",
+      "Adds multimodal rotary controls with miniature OLED screens",
+      "Adds smartphone integration via Connect and View system",
+      "Adds aluminium construction chassis for torsional rigidity",
+      "Adds manually-adjustable composite bucket seats with carbon-fibre spine",
+      "Adds premium leather and Suedecloth cabin trim with anodised aluminium and carbon-fibre accents"
+    ],
+    "Limited": []
+  }
+}

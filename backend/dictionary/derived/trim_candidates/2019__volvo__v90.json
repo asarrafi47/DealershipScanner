@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2019|volvo|v90",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "V90",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

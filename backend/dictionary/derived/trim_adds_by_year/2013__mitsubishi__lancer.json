@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|mitsubishi|lancer",
+  "year": 2013,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_web_2013__mitsubishi__lancer",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "ES",
+    "LE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "2.4-liter I-4 engine with 168 hp and 167 lb-ft torque",
+      "All-wheel drive standard",
+      "CVT transmission",
+      "18-inch alloy wheels",
+      "Sport-tuned suspension",
+      "Heated front seats",
+      "Leather seats, steering wheel, and shift knob"
+    ],
+    "SE": [
+      "2.4-liter I-4 engine with 168 hp and 167 lb-ft torque",
+      "All-wheel drive standard",
+      "CVT transmission",
+      "18-inch alloy wheels",
+      "Sport-tuned suspension",
+      "Heated front seats",
+      "Leather seats, steering wheel, and shift knob"
+    ],
+    "LE": [
+      "2.0-liter I-4 engine with 148 hp and 145 lb-ft torque",
+      "CVT transmission",
+      "Rearview camera and display audio standard"
+    ],
+    "ES": [
+      "2.0-liter I-4 engine with 148 hp and 145 lb-ft torque",
+      "Available five-speed manual or CVT transmission",
+      "Rearview camera and display audio standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mitsubishi/lancer/"
+}

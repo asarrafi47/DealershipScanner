@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2022|toyota|sienna",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Sienna",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Hybrid engine: 2.5L 4-cylinder with 245 net hp Available All-Wheel Drive (AWD) Increased ground clearance",
+      "Electronically controlled Continuously Variable Up to 36 city/36 highway/36 combined EPA-est. mpg14 All-Wheel Drive (AWD)",
+      "Transmission (ECVT) with sequential shift mode Exterior Features 35 city/36 highway/35 combined EPA-est. mpg14",
+      "Normal, Eco, EV36 and Sport drive modes",
+      "Integrated wide-angle LED fog lights Exterior Features",
+      "Front-Wheel Drive (FWD)",
+      "Hands-free dual power sliding side doors10 Available in Cement or Midnight Black Metallic",
+      "Available All-Wheel Drive (AWD)",
+      "Power liftgate with jam protection with available Black lower grille garnish",
+      "Up to 36 city/36 highway/36 combined EPA-est. mpg14",
+      "Exterior Features Chrome-accented color-keyed outside door handles Towing hitch receiver7"
+    ],
+    "Limited": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Adds to or replaces features offered on Limited",
+      "Sport-tuned suspension Available All-Wheel Drive (AWD) Available All-Wheel Drive (AWD)",
+      "Available All-Wheel Drive (AWD) Up to 36 city/36 highway/36 combined EPA-est. mpg14 Up to 36 city/36 highway/36 combined EPA-est. mpg14",
+      "Up to 36 city/36 highway/36 combined EPA-est. mpg14 Exterior Features Exterior Features",
+      "Exterior Features LED headlights and LED-strip DRL with Signature Bi-LED projector headlights and LED-strip",
+      "LED headlights and LED-strip DRL with auto on/off feature auto on/off feature DRL with auto on/off feature",
+      "Black side rocker panels Black side rocker panels Bird\u2019s Eye View Camera49",
+      "Metallic black sport mesh front grille Dark gray metallic front grille 20-in. metallic wheels",
+      "Black heated power outside mirrors 18-in. bright wheels Rain-sensing variable windshield wipers",
+      "Rear lower bumper in black sport mesh Rear lower bumper in black with chrome accent Seating for seven",
+      "Black Sienna liftgate logo Chrome-accented Sienna liftgate logo Leather-trimmed seats",
+      "Black roof-mounted shark-fin antenna Color-keyed roof-mounted shark-fin antenna - Heated and ventilated front seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2022|lexus|nx",
+  "year": 2022,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "brochure_llm_2022__lexus__nx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NX450h+ FSPORT AWD",
+    "NX350h AWD",
+    "NX350 FSPORT AWD",
+    "NX350 AWD",
+    "NX250 AWD",
+    "NX250 FWD"
+  ],
+  "adds_by_trim": {
+    "NX450h+ FSPORT AWD": [
+      "6.6kW expedited charger for plug-in hybrid",
+      "36-mile estimated all-electric range",
+      "3.3kW onboard charger",
+      "G-meter and energy monitor displays",
+      "Lexus Interface with 14-inch touchscreen display",
+      "F SPORT Luxury Package features included",
+      "Heated steering wheel and windshield wiper de-icer",
+      "Fast-response interior heater"
+    ],
+    "NX350h AWD": [
+      "Electronically controlled Continuously Variable Transmission with paddle shifters",
+      "EV drive mode for hybrid powertrain",
+      "Hybrid fuel efficiency compared to gasoline"
+    ],
+    "NX350 FSPORT AWD": [
+      "FSPORT front seats with enhanced bolsters",
+      "FSPORT perforated leather-trimmed shift knob and steering wheel",
+      "Race-inspired paddle shifters",
+      "FSPORT front fascia and mesh grille insert",
+      "FSPORT front-fender badges",
+      "Dark Graphite Aluminum trim and aluminum pedals",
+      "20-in split-five-spoke alloy wheels with Gloss Black finish",
+      "G-meter and turbo-boost displays",
+      "2,000-lb towing capacity"
+    ],
+    "NX350 AWD": [
+      "All-wheel drive"
+    ],
+    "NX250 AWD": [
+      "Available all-wheel drive"
+    ],
+    "NX250 FWD": [
+      "Front-wheel drive",
+      "Adaptive Variable Suspension with front and rear performance dampers",
+      "Eight-speed automatic transmission with paddle shifters",
+      "Drive Mode Select with Sport, Normal and ECO modes",
+      "Lexus Interface with 9.8-inch touchscreen display",
+      "9.8-inch touchscreen with Drive Connect trial and Cloud Navigation",
+      "Wireless Apple CarPlay and Android Auto integration",
+      "Lexus Safety System+ 3.0 and backup camera with dynamic gridlines",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ]
+  }
+}

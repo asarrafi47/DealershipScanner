@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2026|nissan|kicks",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Kicks",
+  "ladder_id": "brochure_llm_2026__nissan__kicks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "17-inch machine-finished aluminum-alloy wheels",
+      "12.3-inch digital dashboard with fully digital gauges",
+      "HD Intelligent Around View Monitor",
+      "Traffic Sign Recognition",
+      "Intelligent Lane Intervention",
+      "ProPILOT Assist",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "Leatherette-appointed seat trim with sport cloth inserts and two-tone stitching",
+      "Four USB-C ports"
+    ],
+    "SV": [
+      "17-inch steel wheels with wheel covers (FWD) or 17-inch machine-finished aluminum-alloy wheels (AWD)",
+      "Automatic Temperature Control with soft-touch digital switches",
+      "Wireless charger",
+      "Remote Engine Start System with Intelligent Climate Control (FWD only)",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Body-color outside door handles",
+      "Matte chrome interior door handles",
+      "Privacy glass",
+      "Adjustable ambient interior accent lighting",
+      "NissanConnect Services powered by SiriusXM with 5-year Select and 1-year Premium trial"
+    ],
+    "S": [
+      "2.0-liter DIG DOHC 16-valve 4-cylinder engine with 141 hp",
+      "Xtronic CVT with Eco and Sport Modes",
+      "Safety Shield 360 with Intelligent Cruise Control",
+      "Rear Sonar System and Intelligent Driver Alertness",
+      "LED headlights with LED Daytime Running Lights",
+      "16-inch steel wheels with wheel covers",
+      "7-inch Advanced Drive-Assist Display",
+      "NissanConnect 12.3-inch infotainment with wireless Apple CarPlay and Android Auto",
+      "SiriusXM with 3-month subscription",
+      "AM/FM audio system with four speakers and two USB-C ports"
+    ]
+  }
+}

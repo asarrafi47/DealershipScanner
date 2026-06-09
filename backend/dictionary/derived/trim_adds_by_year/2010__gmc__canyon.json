@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|gmc|canyon",
+  "year": 2010,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "inventory_gmc_canyon",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "SLT",
+    "SLE"
+  ],
+  "adds_by_trim": {
+    "SLE": [
+      "Package; on SLE-1 Extended Cab, upper door speaker grilles, uplevel instru- High-Stance Off-Road Suspension",
+      "Z71 High-Stance Off-Road Suspension — A A driver- and passenger-side, forward-facing, color. Requires",
+      "the vehicle and trailer combination, including the weight of the driver, passengers, fuel, optional equipment and cargo in",
+      "liters (178 cu. in.) | 3.7",
+      "Sequential fuel injection",
+      "mobility offers, visit gm"
+    ],
+    "SLT": [
+      "Leather-appointed front bucket seats with 8-way power driver and 6-way power passenger adjusters",
+      "Heated driver and front passenger seats with power lumbar control",
+      "145-amp alternator with available 5.3L V-8 engine",
+      "Z71 High-Stance off-road Suspension Package standard",
+      "17-inch chrome-clad wheels with P265/70R17 on-/off-road blackwall tires",
+      "Front halogen fog lamps",
+      "Solar-ray deep-tinted glass on all windows except windshield",
+      "2 frame-mounted recovery hooks standard"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 6.0,
+    "per_trim_add_counts": {
+      "SLE": 6
+    }
+  }
+}

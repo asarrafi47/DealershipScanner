@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|ford|fusion",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_2018__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "Titanium",
+    "Sport",
+    "SE",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds SYNC 3 infotainment system with touchscreen control",
+      "Adds voice-activated controls for calls and music",
+      "Adds 2 smart-charging USB ports",
+      "Adds Siri Eyes Free compatibility with iPhone",
+      "Adds standard keyless entry keypad"
+    ],
+    "SE": [
+      "Adds SE Appearance Package with hood protector and molded splash guards",
+      "Adds smoked side window deflectors",
+      "Adds rear decklid spoiler",
+      "Adds 18-inch Magnetic-painted aluminum wheels"
+    ],
+    "Sport": [
+      "Adds sport-focused exterior styling enhancements"
+    ],
+    "Titanium": [
+      "Adds SYNC Connect remote vehicle access and control",
+      "Adds voice-guided navigation with vivid 3-D maps",
+      "Adds pinch-to-zoom touchscreen capability",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM Traffic and Travel Link with real-time updates"
+    ],
+    "Platinum": [
+      "Adds FordPass smartphone app integration",
+      "Adds SYNC AppLink for compatible mobile apps including Spotify and Pandora"
+    ],
+    "Limited": [
+      "Adds full vehicle cover as premium accessory",
+      "Adds comprehensive Ford Protect extended service plan options",
+      "Adds enhanced roadside assistance coverage"
+    ]
+  }
+}

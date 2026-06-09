@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2019|ford|ecosport",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Ecosport",
+  "ladder_id": "generic_ford_ecosport",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Titanium"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "n with other options or subject"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Titanium": 1
+    }
+  }
+}

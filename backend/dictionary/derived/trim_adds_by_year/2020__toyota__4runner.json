@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2020|toyota|4runner",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_2020__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds heated power outside mirrors with turn signal indicators",
+      "Adds Smart Key System with Push Button Start and remote illuminated entry"
+    ],
+    "Base": [],
+    "SR5": [
+      "Adds HomeLink® universal transceiver",
+      "Adds Auto-dimming rearview mirror"
+    ],
+    "TRD": [
+      "Adds Hill Start Assist Control (HAC), Multi-terrain Select and Crawl Control (CRAWL)",
+      "Adds locking rear differential",
+      "Adds TRD Off-Road external hard badges"
+    ],
+    "TRD Off-Road": [
+      "Adds overhead console with Multi-terrain Select and Crawl Control (CRAWL) switches",
+      "Adds dual zone automatic climate control with air filter and second-row vents"
+    ],
+    "TRD Pro": [
+      "Adds X-REAS Sport Enhancement Suspension",
+      "Adds TRD FOX high-performance shocks with rear remote reservoirs",
+      "Adds TRD-tuned front springs",
+      "Adds black TRD PRO external hard badges",
+      "Adds TRD-stamped aluminum front skid plate",
+      "Adds high-performance LED fog lights",
+      "Adds auto on/off headlight feature",
+      "Adds TRD all-weather floor liners and TRD shift knob"
+    ],
+    "Limited": [
+      "Adds power tilt/slide moonroof with sunshade",
+      "Adds front and rear parking assist sonar",
+      "Adds color-keyed front and rear bumpers and side rocker panels with chrome inserts, chrome door handles and chrome-accented front grille insert"
+    ]
+  }
+}

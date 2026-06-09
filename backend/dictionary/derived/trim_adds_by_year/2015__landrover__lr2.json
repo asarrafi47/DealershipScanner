@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|landrover|lr2",
+  "year": 2015,
+  "make": "landrover",
+  "model": "LR2",
+  "ladder_id": "brochure_2015__landrover__lr2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds electric sunroof with fixed rear section and electric tilting/sliding front section",
+      "Adds Terrain Response system with General Driving, Grass/Gravel/Snow, Mud and Ruts, and Sand programs",
+      "Adds Hill Descent Control (HDC) and Gradient Release Control systems",
+      "Adds passive start system with Start/Stop button",
+      "Adds in-car entertainment system with USB compatibility"
+    ],
+    "Limited": [
+      "Adds optional satellite navigation system with seven-inch color touchscreen",
+      "Adds rear view camera with predicted path overlay on center console screen",
+      "Adds Meridian Surround Sound System with multi-occupant stereo imaging"
+    ],
+    "Standard": [
+      "Adds comprehensive personalization options for exterior colors, wheels, and facia inserts",
+      "Adds extensive interior color selection with fascia insert customization",
+      "Adds Sirius Satellite Radio capability"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2018|maserati|quattroporte",
+  "year": 2018,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "2016_maserati_quattroporte_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "Auto",
+    "Mode"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "aserati Customer Service at info@m",
+      "aserati by visiting www.m"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Auto": 0,
+      "Mode": 0
+    }
+  }
+}

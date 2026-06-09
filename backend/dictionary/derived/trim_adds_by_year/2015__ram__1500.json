@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2015|ram|1500",
+  "year": 2015,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2015__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Laramie Limited": [
+      "Monotone paint with unique Limited badging",
+      "Ultra-premium instrument cluster with 7-inch TFT multiview display",
+      "Uconnect 8.4AN with navigation, SiriusXM Traffic and Travel Link",
+      "Premium Black Natura Plus heated leather 60/40 split-folding rear bench",
+      "Spray-in bedliner"
+    ],
+    "Laramie Longhorn": [
+      "Two-tone paint with White Gold Metallic lower body and running boards",
+      "Unique Laramie Longhorn badging",
+      "Chrome grille surround with chrome wave mesh inserts"
+    ],
+    "Laramie": [
+      "Premium leather front bucket seats with heating and ventilation",
+      "Full-floor center console with leather cover",
+      "Premium 10-speaker Surround Sound Audio System",
+      "Power adjustable pedals with memory",
+      "Uconnect 8.4A AM/FM/Bluetooth/Access touchscreen with SiriusXM Satellite Radio"
+    ],
+    "Sport": [
+      "5.7L HEMI V8 with 8-speed automatic transmission",
+      "Monochromatic paint with body-color front and rear fascia",
+      "Premium Sport projector headlamps with LED turn signal running lights",
+      "20-inch polished-face aluminum wheels with OWL tires",
+      "4-inch chrome-tipped dual exhaust",
+      "Locking tailgate with Premium LED Sport taillamps",
+      "Leather-trimmed 40/20/40 front bench seat with heating and ventilation",
+      "7-inch TFT premium programmable multiview display EVIC"
+    ]
+  }
+}

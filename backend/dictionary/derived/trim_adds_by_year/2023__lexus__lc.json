@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2023|lexus|lc",
+  "year": 2023,
+  "make": "Lexus",
+  "model": "LC",
+  "ladder_id": "2023_lexus_lc",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LC 500",
+    "LC 500 Convertible",
+    "LC 500h"
+  ],
+  "adds_by_trim": {
+    "LC 500 Convertible": [
+      "Power soft top and Climate Concierge with Upper Body Heating",
+      "Active roll bars and convertible-specific luxury content",
+      "471-hp V8 with same LC 500 coupe foundation"
+    ],
+    "LC 500h": [
+      "354-total-system-hp Lexus Multistage Hybrid Drive with CVT plus 4-speed auto",
+      "Electronically controlled suspension and hybrid-optimized dynamics",
+      "Semi-aniline leather front seats and Alcantara headliner available",
+      "Mark Levinson 13-speaker 915-watt Reference Surround Sound"
+    ],
+    "LC 500": [
+      "Premium unleaded gasoline engine requiring 91+ octane",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Choice of four leather interior colors: Bespoke White, Toasted Caramel, Rioja Red, Black"
+    ]
+  }
+}

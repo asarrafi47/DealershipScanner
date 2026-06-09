@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2014|porsche|918",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "918",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Carrera"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

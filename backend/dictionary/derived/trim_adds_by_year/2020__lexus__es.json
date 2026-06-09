@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2020|lexus|es",
+  "year": 2020,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_llm_2020__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ES350 FSPORT",
+    "ES300h ULTRA LUXURY",
+    "ES350 ULTRA LUXURY",
+    "ES300h LUXURY",
+    "ES350 LUXURY",
+    "ES350"
+  ],
+  "adds_by_trim": {
+    "ES350 FSPORT": [
+      "19-inch split-five-spoke alloy wheels with Dark Graphite finish",
+      "FSPORT suspension tuning",
+      "FSPORT interior details including Hadori Aluminum trim and aluminum pedals",
+      "Black headliner",
+      "FSPORT bolstered heated and ventilated front seats",
+      "Leather-trimmed shift knob and steering wheel with FSPORT logo",
+      "FSPORT exterior styling including unique front bumper and grille",
+      "LFA-inspired instrumentation"
+    ],
+    "ES350 ULTRA LUXURY": [
+      "Perforated semi-aniline leather interior trim",
+      "Power rear sunshade with manual rear-door sunshades",
+      "Power open/close trunk with kick sensor",
+      "Lateral performance dampers",
+      "Rear spoiler"
+    ],
+    "ES350 LUXURY": [
+      "14-way power-adjustable front seats",
+      "Driver's-seat power cushion extender",
+      "Perforated leather interior trim",
+      "Lateral performance dampers",
+      "Rear spoiler"
+    ],
+    "ES300h LUXURY": [
+      "Hybrid-Acoustics sound dampening",
+      "Concealed exhaust",
+      "Perforated leather interior trim",
+      "Driver's-seat power cushion extender",
+      "14-way power-adjustable front seats"
+    ],
+    "ES300h ULTRA LUXURY": [
+      "Perforated semi-aniline leather interior trim",
+      "Power rear sunshade with manual rear-door sunshades",
+      "Power open/close trunk with kick sensor",
+      "Lateral performance dampers",
+      "Rear spoiler",
+      "Wood trim with ambient lighting"
+    ],
+    "ES350": [
+      "SmartAccess with push-button Start/Stop",
+      "Drive Mode Select",
+      "Paddle shifters",
+      "Power moonroof",
+      "Lexus Multimedia System with 8.0-inch color display",
+      "Lexus 10-speaker Premium Sound System",
+      "Lexus Safety System+ 2.0 with Pre-Collision and Pedestrian Detection",
+      "Bi-LED headlamps and LED taillamps with daytime running lights",
+      "10-way power-adjustable front seats",
+      "Dual-zone climate control with interior air filters"
+    ]
+  }
+}

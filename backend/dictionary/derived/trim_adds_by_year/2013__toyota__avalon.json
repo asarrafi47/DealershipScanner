@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|toyota|avalon",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2013__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED HYBRID",
+    "XLE TOURING HYBRID",
+    "XLE PREMIUM HYBRID",
+    "HYBRID XLE",
+    "LIMITED",
+    "XLE TOURING",
+    "XLE PREMIUM",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "LIMITED HYBRID": [
+      "Advanced Technology Partial Zero Emission Vehicle (AT-PZEV) emission rating"
+    ],
+    "XLE TOURING HYBRID": [
+      "Same features as XLE TOURING but with 2.5-Liter hybrid engine producing 200 net horsepower"
+    ],
+    "XLE PREMIUM HYBRID": [
+      "Same features as XLE PREMIUM but with 2.5-Liter hybrid engine producing 200 net horsepower"
+    ],
+    "HYBRID XLE": [
+      "2.5-Liter 4-Cylinder hybrid engine with EV, ECO and Sport driving modes"
+    ],
+    "LIMITED": [
+      "Sport, ECO and Normal driving modes on 3.5-Liter V6 engine"
+    ],
+    "XLE TOURING": [
+      "Sport, ECO and Normal driving modes on 3.5-Liter V6 engine",
+      "P225/45R18 tires replacing P215/55R17"
+    ],
+    "XLE PREMIUM": [
+      "P225/45R18 tires replacing P215/55R17"
+    ],
+    "XLE": [
+      "3.5-Liter V6 DOHC 268 horsepower engine",
+      "6-speed automatic transmission with sequential shift mode",
+      "Electronic power steering with rack-and-pinion design",
+      "Power-assisted ventilated disc brakes with Star Safety System",
+      "P215/55R17 all-season tires",
+      "Electronic Direct Ignition system",
+      "Ultra Low Emission Vehicle (ULEV) rating"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2011|rollsroyce|phantom",
+  "year": 2011,
+  "make": "Rolls Royce",
+  "model": "Phantom",
+  "ladder_id": "brochure_llm_2011__rollsroyce__phantom",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Phantom Drophead Coupé",
+    "Phantom Coupé"
+  ],
+  "adds_by_trim": {
+    "Phantom Drophead Coupé": [
+      "Retractable fabric convertible roof",
+      "Reduced boot volume of 315 liters versus 395 liters",
+      "Increased unladen weight of 2620 kg due to convertible structure",
+      "Lower top speed of 150 mph versus 155 mph"
+    ],
+    "Phantom Coupé": [
+      "Fixed hardtop roof design",
+      "Larger trunk volume of 395 liters",
+      "Lighter curb weight of 2620 kg",
+      "Higher top speed of 155 mph with 250 km/h capability"
+    ]
+  }
+}

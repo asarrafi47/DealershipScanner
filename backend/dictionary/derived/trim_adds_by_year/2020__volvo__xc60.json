@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2020|volvo|xc60",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2020__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T8 Polestar Engineered",
+    "T8 e-AWD Plug-In Hybrid",
+    "T6 AWD",
+    "T5 AWD",
+    "T5 FWD"
+  ],
+  "adds_by_trim": {
+    "T8 Polestar Engineered": [
+      "2.0L supercharged and turbocharged engine with electric motor producing 415 hp",
+      "494 lb-ft maximum torque at 2,200 rpm",
+      "0-60 mph acceleration in 4.9 seconds",
+      "Electrified performance SUV engineering"
+    ],
+    "T8 e-AWD Plug-In Hybrid": [
+      "2.0L supercharged and turbocharged engine with electric motor producing 400 hp",
+      "472 lb-ft maximum torque at 2,200 rpm",
+      "0-60 mph acceleration in 5.1 seconds",
+      "All-wheel drive e-AWD powertrain"
+    ],
+    "T6 AWD": [
+      "2.0L supercharged and turbocharged engine producing 316 hp",
+      "295 lb-ft maximum torque at 2,200 rpm",
+      "0-60 mph acceleration in 5.6 seconds",
+      "All-wheel drive capability"
+    ],
+    "T5 AWD": [
+      "All-wheel drive system",
+      "0-60 mph acceleration in 6.4 seconds"
+    ],
+    "T5 FWD": [
+      "2.0L turbocharged inline 4-cylinder engine with 250 hp",
+      "258 lb-ft maximum torque at 1,500 rpm",
+      "Panoramic moonroof with LED headlights featuring Thor's Hammer design",
+      "9-inch Sensus touchscreen with Apple CarPlay and Android Auto",
+      "12.3-inch digital driver display with automatic brightness adjustment",
+      "City Safety collision avoidance with steering support and lane keeping aid",
+      "10-way power front seats with power lumbar support and driver memory",
+      "Heated front seats, Iron Ore aluminum decor inlays, interior illumination",
+      "18-inch alloy wheels, integrated roof rails in satin silk metal finish"
+    ]
+  }
+}

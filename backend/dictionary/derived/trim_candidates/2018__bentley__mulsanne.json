@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2018|bentley|mulsanne",
+  "year": 2018,
+  "make": "bentley",
+  "model": "mulsanne",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

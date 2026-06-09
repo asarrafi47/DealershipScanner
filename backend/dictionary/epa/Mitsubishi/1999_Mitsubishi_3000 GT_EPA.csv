@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,Mitsubishi,3000 GT,3000 GT,3.0L V6 (SOHC),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.0,16,21,18,,,,,
+1999,Mitsubishi,3000 GT,3000 GT,3.0L V6 (DOHC),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.0,16,22,18,,,,,
+1999,Mitsubishi,3000 GT,3000 GT,3.0L V6 (SOHC),3.0L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.0,17,22,19,,,,,
+1999,Mitsubishi,3000 GT,3000 GT,3.0L V6 (DOHC),3.0L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.0,17,23,19,,,,,
+1999,Mitsubishi,3000 GT,3000 GT,3.0L V6 (DOHC TURBO),3.0L V6 Turbo,Turbocharged,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,22,18,,,,,

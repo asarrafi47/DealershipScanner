@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2020|chevrolet|blazer",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Blazer",
+  "ladder_id": "brochure_llm_2020__chevrolet__blazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "3LT",
+    "2LT",
+    "1LT",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "Chevrolet Infotainment 3 Plus with Navigation and 8-inch HD color touchscreen",
+      "SiriusXM with 360L All Access Package with 3-month trial subscription",
+      "Bose premium 8-speaker audio system with amplifier, center speaker, and subwoofer",
+      "Two USB ports, SD card reader, and auxiliary input jack in front center storage bin",
+      "Enhanced Convenience and Driver Confidence II Package available with premium safety and comfort features"
+    ],
+    "3LT": [
+      "Chevrolet Infotainment 3 Premium with Navigation system with additional in-vehicle app memory",
+      "6-speaker audio system standard",
+      "Sound and Technology Package available with Bose premium audio and HD Surround Vision"
+    ],
+    "2LT": [
+      "SiriusXM All Access Package with 3-month trial subscription",
+      "Chevrolet Infotainment 3 system with 8-inch diagonal color touchscreen standard"
+    ],
+    "1LT": [
+      "Chevrolet Infotainment 3 system with 8-inch diagonal color touchscreen, AM/FM stereo, Bluetooth audio streaming",
+      "Apple CarPlay and Android Auto compatibility",
+      "Two USB ports on instrument panel and two charge-only USB ports on rear center console",
+      "6-speaker audio system",
+      "Chevrolet Connected Access with 10 years standard connectivity and Vehicle Diagnostics"
+    ],
+    "L": [
+      "2.5L engine standard with 193 horsepower and 188 lb.-ft. torque",
+      "High-intensity discharge headlamps",
+      "Automatic on/off headlamps with automatic delay",
+      "Manual liftgate",
+      "Body-color door handles"
+    ]
+  }
+}

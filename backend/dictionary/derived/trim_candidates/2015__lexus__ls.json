@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2015|lexus|ls",
+  "year": 2015,
+  "make": "lexus",
+  "model": "LS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Ultra Luxury",
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

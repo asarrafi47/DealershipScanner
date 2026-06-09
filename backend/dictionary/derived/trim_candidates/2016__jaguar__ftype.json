@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2016|jaguar|ftype",
+  "year": 2016,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

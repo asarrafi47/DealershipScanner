@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2018|bmw|x4",
+  "year": 2018,
+  "make": "BMW",
+  "model": "X4",
+  "ladder_id": "brochure_llm_2018__bmw__x4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "X4 M40i",
+    "X4 xDrive28i"
+  ],
+  "adds_by_trim": {
+    "X4 M40i": [
+      "3.0-liter M Performance TwinPower Turbo inline 6-cylinder engine with 355 hp and 343 lb-ft torque",
+      "0-60 mph acceleration of 4.7 seconds versus 6.0 seconds on xDrive28i",
+      "19/26/21 mpg city/highway/combined fuel economy"
+    ],
+    "X4 xDrive28i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 240 hp and 260 lb-ft torque",
+      "20/27/23 mpg city/highway/combined fuel economy",
+      "xDrive all-wheel drive system standard"
+    ]
+  }
+}

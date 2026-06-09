@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2016|volvo|xc90",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2016__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Inscription": [
+      "Focuses on craftsmanship, elegance and exclusiveness"
+    ],
+    "R-Design": [
+      "Sporty, dynamic expression with distinctive styling both inside and out"
+    ],
+    "Momentum": [
+      "High-gloss black grille with glossy chrome frame",
+      "Color-coordinated lower body moldings",
+      "Black lower outer grilles with chrome deco strip",
+      "Roof rails in matte anodized aluminum with Charcoal feet",
+      "Side window frames with high-gloss chrome finish",
+      "Matte Silver Bright metallic skid plate and dual integrated tailpipes",
+      "19-inch 10-spoke Turbine Silver Bright alloy wheels",
+      "Cross-brushed aluminum inlays",
+      "Comfort seats with leather upholstery",
+      "Hill Start Assist and Hill Descent Control"
+    ]
+  }
+}

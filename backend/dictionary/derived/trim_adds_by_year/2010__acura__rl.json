@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2010|acura|rl",
+  "year": 2010,
+  "make": "acura",
+  "model": "rl",
+  "ladder_id": "brochure_web_2010__acura__rl",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "4-Door Sedan Tech/CMBS",
+    "4-Door Sedan Tech Pkg",
+    "4-Door Sedan"
+  ],
+  "adds_by_trim": {
+    "4-Door Sedan Tech/CMBS": [
+      "Radar-based cruise control with automatic curve-following headlights"
+    ],
+    "4-Door Sedan Tech Pkg": [
+      "Technology package (specific features not detailed in brochure)"
+    ],
+    "4-Door Sedan": [
+      "3.7-liter V-6 engine with 300 horsepower and 271 lb-ft torque",
+      "Standard all-wheel drive",
+      "Five-speed paddle-shifted automatic transmission",
+      "Standard navigation system with real-time XM traffic data",
+      "10-speaker Bose stereo with six-disc DVD-Audio changer, AM/FM/XM, MP3, USB input",
+      "Bluetooth wireless connectivity",
+      "Standard sunroof",
+      "Xenon headlights with LED tail lamps",
+      "Leather upholstery and dual-zone climate control",
+      "Six standard airbags and stability/traction control"
+    ]
+  },
+  "web_source_url": "https://www.thecarconnection.com/overview/acura_rl_2010"
+}

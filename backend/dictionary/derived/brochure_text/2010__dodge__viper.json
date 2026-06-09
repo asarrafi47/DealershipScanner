@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2010|dodge|viper",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Viper",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2010_Dodge_Viper_Brochure.pdf",
+  "page_count": 28,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

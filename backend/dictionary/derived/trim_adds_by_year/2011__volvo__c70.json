@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2011|volvo|c70",
+  "year": 2011,
+  "make": "Volvo",
+  "model": "C70",
+  "ladder_id": "brochure_2011__volvo__c70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 2.5L five-cylinder turbocharged engine with 227 hp",
+      "Adds Features speed-dependent power-assisted electro-hydraulic rack and pinion steering",
+      "Adds Includes DSTC Dynamic Stability and Traction Control",
+      "Adds Features front McPherson suspension with anti-dive and anti-lift function",
+      "Adds Includes multilink independent rear suspension",
+      "Adds Includes tilt and telescopic steering column"
+    ],
+    "Limited": [
+      "Adds leather-clad steering wheel",
+      "Adds tilt and telescopic steering column"
+    ]
+  }
+}

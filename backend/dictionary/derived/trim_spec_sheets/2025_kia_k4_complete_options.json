@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2025_kia_k4_complete_options",
+  "make": "Kia",
+  "models": [
+    "K4",
+    "K4"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "The K4 was launched in Brunei on 9 April 2026. It is available in sedan and hatchback models and two trim levels offered in GLS (in 1.6-litre naturally aspirated engine with 6-speed automatic) and GT-Line (in 1.6-litre turbocharged engine with 8-speed automatic).; The K4 hatchback was unveiled for the European market on 17 September 2025. For engines, it is available with 1.0-litre T-GDi turbocharged petrol engine with and without mild hybrid assistance, and a 1.6-litre T-GDi turbocharged petrol engine."
+      }
+    ],
+    "GT-Line": [
+      {
+        "label": "Engine Options",
+        "value": "The K4 was launched in Brunei on 9 April 2026. It is available in sedan and hatchback models and two trim levels offered in GLS (in 1.6-litre naturally aspirated engine with 6-speed automatic) and GT-Line (in 1.6-litre turbocharged engine with 8-speed automatic).; The K4 hatchback was unveiled for the European market on 17 September 2025. For engines, it is available with 1.0-litre T-GDi turbocharged petrol engine with and without mild hybrid assistance, and a 1.6-litre T-GDi turbocharged petrol engine."
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "The K4 was launched in Brunei on 9 April 2026. It is available in sedan and hatchback models and two trim levels offered in GLS (in 1.6-litre naturally aspirated engine with 6-speed automatic) and GT-Line (in 1.6-litre turbocharged engine with 8-speed automatic).; The K4 hatchback was unveiled for the European market on 17 September 2025. For engines, it is available with 1.0-litre T-GDi turbocharged petrol engine with and without mild hybrid assistance, and a 1.6-litre T-GDi turbocharged petrol engine."
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "The K4 was launched in Brunei on 9 April 2026. It is available in sedan and hatchback models and two trim levels offered in GLS (in 1.6-litre naturally aspirated engine with 6-speed automatic) and GT-Line (in 1.6-litre turbocharged engine with 8-speed automatic).; The K4 hatchback was unveiled for the European market on 17 September 2025. For engines, it is available with 1.0-litre T-GDi turbocharged petrol engine with and without mild hybrid assistance, and a 1.6-litre T-GDi turbocharged petrol engine."
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "The K4 was launched in Brunei on 9 April 2026. It is available in sedan and hatchback models and two trim levels offered in GLS (in 1.6-litre naturally aspirated engine with 6-speed automatic) and GT-Line (in 1.6-litre turbocharged engine with 8-speed automatic).; The K4 hatchback was unveiled for the European market on 17 September 2025. For engines, it is available with 1.0-litre T-GDi turbocharged petrol engine with and without mild hybrid assistance, and a 1.6-litre T-GDi turbocharged petrol engine."
+      }
+    ]
+  }
+}

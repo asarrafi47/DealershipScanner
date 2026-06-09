@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2016|landrover|evoque",
+  "year": 2016,
+  "make": "landrover",
+  "model": "Evoque",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Autobiography",
+    "HSE",
+    "SE",
+    "Standard",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

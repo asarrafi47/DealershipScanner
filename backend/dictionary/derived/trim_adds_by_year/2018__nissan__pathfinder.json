@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2018|nissan|pathfinder",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2018__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch aluminum-alloy wheels",
+      "LED low-beam projector headlights",
+      "Chrome body side moldings",
+      "Dual panel panoramic moonroof",
+      "Climate-controlled front seats with heating and cooling",
+      "Power-tilt/telescoping steering column",
+      "Tow hitch receiver with 7-pin wiring harness",
+      "Bose premium audio system with 13 speakers and acoustic waveguide",
+      "Wood-tone interior trim",
+      "Memory system for driver seat, steering wheel, and outside mirrors"
+    ],
+    "SL": [
+      "8.0-inch color display with multi-touch control",
+      "SiriusXM Travel Link with 3-year complimentary trial access",
+      "RearView Monitor",
+      "Bluetooth hands-free phone system",
+      "Rear door alert",
+      "Six USB ports",
+      "Streaming audio via Bluetooth wireless technology",
+      "SiriusXM satellite radio with 3-month complimentary trial access",
+      "Automatic emergency braking",
+      "Nissan advanced air bag system"
+    ],
+    "SV": [
+      "Intelligent Auto Headlights",
+      "Fog lights",
+      "Rear Sonar System",
+      "Nissan Intelligent Key",
+      "Remote Engine Start System",
+      "8-way power adjustable driver's seat",
+      "Leather-wrapped steering wheel and shift knob",
+      "Power windows with one-touch auto-up/down front windows",
+      "Variable intermittent speed-sensitive windshield wipers",
+      "Auto-dimming rearview mirror"
+    ],
+    "S": [
+      "3.5-liter direct injection gasoline V6 engine with 284 hp and 259 lb-ft torque",
+      "Xtronic continuously variable transmission",
+      "Available Intelligent 4x4",
+      "Hill start assist",
+      "Hill descent control for 4WD",
+      "Up to 6,000 lbs maximum towing capacity",
+      "18-inch aluminum-alloy wheels",
+      "LED daytime running lights",
+      "EZ Flex seating system with latch and glide",
+      "Tri-zone automatic temperature control system"
+    ]
+  }
+}

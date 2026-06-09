@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1994,Chevrolet,Impala/Caprice,Caprice/Impala,4.3L V8 ((FFS) (MPFI)),4.3L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,8,4.3,16,24,19,,,,,
+1994,Chevrolet,Impala/Caprice,Caprice/Impala,5.7L V8 ((350 V8) (FFS) (MPFI)),5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.7,15,23,18,,,,,
+1994,Chevrolet,Impala/Caprice,Caprice/Impala Wagon,4.3L V8 ((FFS) (MPFI)),4.3L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,4.3,15,23,18,,,,,
+1994,Chevrolet,Impala/Caprice,Caprice/Impala Wagon,5.7L V8 ((350 V8) (FFS) (MPFI)),5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,8,5.7,15,23,18,,,,,

@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2012|volkswagen|beetle",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Beetle",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GTI",
+    "SE",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

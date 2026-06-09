@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2020|kia|sportage",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_2020__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 181-horsepower 2.4L Gasoline Direct Injection (GDI) engine",
+      "Adds Features Drive Mode Select with Normal, Eco, or Sport settings"
+    ],
+    "Limited": [],
+    "SX": [
+      "Adds larger front brakes for enhanced stopping power"
+    ]
+  }
+}

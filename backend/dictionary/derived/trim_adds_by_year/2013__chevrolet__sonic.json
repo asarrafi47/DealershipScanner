@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2013|chevrolet|sonic",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "ladder_id": "brochure_llm_2013__chevrolet__sonic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS1",
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "RS1": [
+      "Foglamps",
+      "Body-color door handles with chrome strip"
+    ],
+    "LTZ": [
+      "Two foglamps",
+      "Chrome-accented body-color door handles"
+    ],
+    "LT": [
+      "One foglamp",
+      "Cruise control",
+      "Driver Information Center with trip odometer and fuel range"
+    ],
+    "LS": [
+      "ECOTEC 1.4L turbocharged 4-cylinder engine",
+      "6-speed manual transmission",
+      "Single-zone manual climate control",
+      "AM/FM stereo with equalizer and auxiliary audio input",
+      "Four speakers",
+      "Body-color door handles"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Mercedes-Benz,300,D/300CD,3.0L V5 ((CALIF)) Diesel,3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Compact Cars,5,3.0,21,23,22,,,,,
+1984,Mercedes-Benz,300,D/300CD,"3.0L V5 ((DSL,TRBO)) Diesel",3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Compact Cars,5,3.0,21,24,22,,,,,
+1984,Mercedes-Benz,300,SD/380SE,"Diesel 3.0L V5 ((DSL,TRBO)) Diesel",3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Compact Cars,5,3.0,21,24,22,,,,,
+1984,Mercedes-Benz,300,SD/380SE,3.0L V5 ((CALIF)) Diesel,3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Compact Cars,5,3.0,21,23,22,,,,,
+1984,Mercedes-Benz,300,SD/380SE,3.8L V8 ((FFS)),3.8L V8 Turbo,Turbocharged,Automatic 4-spd,,Regular Gasoline,Compact Cars,8,3.8,15,17,15,,,,,
+1984,Mercedes-Benz,300,TD,"3.0L V5 ((DSL,TRBO)) Diesel",3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Midsize Station Wagons,5,3.0,21,24,22,,,,,
+1984,Mercedes-Benz,300,TD,3.0L V5 ((CALIF)) Diesel,3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Midsize Station Wagons,5,3.0,21,23,22,,,,,
+1984,Mercedes-Benz,300,D/300CD,"3.0L V5 ((DSL,TRBO) CA model) Diesel",3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Compact Cars,5,3.0,21,23,22,,,,,
+1984,Mercedes-Benz,300,SD/380SE,"Diesel 3.0L V5 ((DSL,TRBO) CA model) Diesel",3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Compact Cars,5,3.0,21,23,22,,,,,
+1984,Mercedes-Benz,300,SD/380SE,3.8L V8 ((FFS) CA model),3.8L V8 Turbo,Turbocharged,Automatic 4-spd,,Regular Gasoline,Compact Cars,8,3.8,15,17,15,,,,,
+1984,Mercedes-Benz,300,TD,"3.0L V5 ((DSL,TRBO) CA model) Diesel",3.0L V5 Turbo,Turbocharged,Automatic 4-spd,,Diesel,Midsize Station Wagons,5,3.0,21,23,22,,,,,

@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2020|toyota|4runner",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Pro": [
+      "Black rear spoiler with LED center high-mount stop light Adds to or replaces features offered on Limited \u2022 TRD Pro all-weather floor liners37",
+      "All-weather floor liners37 Exterior \u2022 Dual zone automatic climate control with air filter and",
+      "20-in. black alloy wheels second-row vents",
+      "Black exterior accents including front and rear bumper spoilers, Options",
+      "Black interior trim including steering wheel, shift knob, inner door \u2022 Sliding rear cargo deck with under-floor storage box",
+      "Black badge overlays",
+      "Low Emission Vehicle II (LEV-II) S S S S S S S S",
+      "Electronic, with Toyota Direct Ignition (TDI) S S S S S S S S",
+      "Rear-Wheel Drive (RWD) with Automatic Limited-Slip Differential (Auto LSD)54 S S \u2014 \u2014 \u2014 S S \u2014",
+      "Part-time 4WD with Active Traction Control (A-TRAC) (4x4 models only) S S S S S \u2014 \u2014 S",
+      "Full-time 4WD with Active Traction Control (A-TRAC) and Torsen\u00ae55 limited-slip center differential",
+      "Approach/departure angle (degrees) (4x2/4x4) 30/26;33/26 30/26;33/26 33/26 33/26 33/26 30/26;33/26 30/26;33/26 33/26"
+    ],
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on TRD Off-Road Adds to or replaces features offered on SR5 Premium",
+      "Exterior Features Drivetrain Drivetrain",
+      "Heated power outside mirrors with turn signal indicators \u2022 Rear-Wheel Drive (RWD) or full-time 4WD system with Active \u2022 4.0-Liter DOHC 24-Valve V6 with Dual Independent Variable",
+      "Interior Features Traction Control (A-TRAC) and Torsen\u00ae55 limited-slip center Valve Timing with intelligence (VVT-i); 270 hp @ 5600 rpm;",
+      "Smart Key System33 with Push Button Start and remote",
+      "X-REAS Sport Enhancement Suspension \u2022 Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "Exterior Features \u2022 Hill Start Assist Control (HAC),56 Multi-terrain Select",
+      "S ofTex\u00ae-trimmed31 heated front seats; 8-way power-adjustable",
+      "TRD FOX\u00ae58 high-performance shocks with rear",
+      "S ofTex\u00ae-trimmed31 40/20/40 split reclining and fold-flat \u2022 Front and rear parking assist sonar50",
+      "TRD-tuned front springs",
+      "Premium Audio with Dynamic Navigation,21 and Android Auto\u21225 chrome inserts, chrome door handles and chrome-accented \u2022 Locking rear differential"
+    ],
+    "SR5": [
+      "Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Drivetrain Exterior Features Drivetrain",
+      "4.0-Liter DOHC 24-Valve V6 with Dual Independent Variable Valve \u2022 Heated power outside mirrors with turn signal indicators \u2022 Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "Timing with intelligence (VVT-i); 270 hp @ 5600 rpm; 278 lb.-ft. Interior Features \u2022 Hill Start Assist Control (HAC),56 Multi-terrain Select and",
+      "Smart Key System33 with Push Button Start and remote",
+      "Rear-Wheel Drive (RWD) or part-time 4WD system with Active \u2022 Locking rear differential",
+      "Traction Control (A-TRAC)",
+      "S ofTex\u00ae-trimmed31 heated front seats; 8-way power-adjustable Exterior Features",
+      "Automatic Limited-Slip Differential54 (Auto LSD on 4x2 models only)",
+      "Downhill Assist Control (DAC)57 (4x4 models only) and Hill Start",
+      "Assist Control (HAC)56",
+      "S ofTex\u00ae-trimmed31 40/20/40 split reclining and fold-flat \u2022 Color-keyed front and rear bumpers with silver accents and"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

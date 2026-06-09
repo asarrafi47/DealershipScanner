@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2010|toyota|4runner",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SR5"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

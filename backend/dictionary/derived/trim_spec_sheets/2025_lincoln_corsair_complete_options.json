@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2025_lincoln_corsair_complete_options",
+  "make": "Lincoln",
+  "models": [
+    "Corsair",
+    "Corsair"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Standard": [
+      {
+        "label": "Engine Options",
+        "value": "2.3 L engine option was dropped; 2.0 L engine and plug-in The 2"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive"
+      },
+      {
+        "label": "Screen Size",
+        "value": "8-inch display"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "'buccaneer') began in May 2020. The interior features a standard 8-inch dis"
+      }
+    ]
+  }
+}

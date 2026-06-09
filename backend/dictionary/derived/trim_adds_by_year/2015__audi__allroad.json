@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2015|audi|allroad",
+  "year": 2015,
+  "make": "Audi",
+  "model": "Allroad",
+  "ladder_id": "brochure_llm_2015__audi__allroad",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium",
+    "Premium Plus"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "Dynamic steering system"
+    ],
+    "Premium Plus": [
+      "Four-cylinder turbocharged TFSI engine with 220 horsepower",
+      "Eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Ventilated front disc brakes and solid rear disc brakes",
+      "Electromechanical power steering system",
+      "Five-link front suspension with trapezoidal-link rear suspension",
+      "Fully galvanized steel unibody with multistep anti-corrosion protection",
+      "Increased ride height and widened track for all-terrain capability",
+      "Fender cladding and robust aluminum roof rails",
+      "Available leather seating with multiple color options",
+      "Decorative inlay options including aluminum, wood, and walnut finishes"
+    ],
+    "Premium": [
+      "18-inch 5-spoke design wheel with contrasting gray finish"
+    ]
+  }
+}

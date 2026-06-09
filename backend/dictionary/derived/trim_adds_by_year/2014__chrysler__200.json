@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|chrysler|200",
+  "year": 2014,
+  "make": "Chrysler",
+  "model": "200",
+  "ladder_id": "brochure_llm_2014__chrysler__200",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Premium leather seating surfaces with stitching detail",
+      "Leather-wrapped steering wheel and shift knob with chrome accents",
+      "Fog lamps for low-visibility illumination",
+      "Chrome accents and brightwork on exterior",
+      "Boston Acoustics premium speakers (six total)",
+      "Ambient LED lighting in cabin"
+    ],
+    "Touring": [
+      "Automatic temperature control",
+      "Sun visors with illuminated vanity mirrors",
+      "SiriusXM satellite radio with six premium speakers",
+      "Tire pressure monitoring display",
+      "Electronic vehicle information center with trip computer and compass",
+      "Universal garage door opener"
+    ],
+    "LX": [
+      "Standard body-color door handles",
+      "Power heated mirrors",
+      "Bifunctional halogen projector headlamps with high/low-beam capability",
+      "LED eyebrow light pipes at front",
+      "Ultra-bright LED taillamps and center high-mounted stoplamp",
+      "Four-spoke tilt/telescoping steering wheel with integrated controls",
+      "Illuminated cup holders and analog clock",
+      "Standard 17-inch wheels with front and rear suspension with stabilizer bars",
+      "Choice of 2.4L four-cylinder or 3.6L Pentastar V6 engine"
+    ]
+  }
+}

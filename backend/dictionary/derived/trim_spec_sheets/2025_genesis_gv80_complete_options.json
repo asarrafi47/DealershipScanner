@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2025_genesis_gv80_complete_options",
+  "make": "Genesis",
+  "models": [
+    "GV80",
+    "GV80"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L Smartstream G3.5 T-GDi V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "This includes smartphone integration, Bluetooth connectivity, and a premium sound system."
+      }
+    ],
+    "Advanced": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L Smartstream G3.5 T-GDi V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "This includes smartphone integration, Bluetooth connectivity, and a premium sound system."
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L Smartstream G3.5 T-GDi V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "This includes smartphone integration, Bluetooth connectivity, and a premium sound system."
+      }
+    ]
+  }
+}

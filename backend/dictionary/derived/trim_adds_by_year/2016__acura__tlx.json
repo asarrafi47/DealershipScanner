@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|acura|tlx",
+  "year": 2016,
+  "make": "acura",
+  "model": "tlx",
+  "ladder_id": "brochure_llm_2016__acura__tlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TLX V-6 SH-AWD",
+    "TLX V-6",
+    "TLX"
+  ],
+  "adds_by_trim": {
+    "TLX V-6 SH-AWD": [
+      "Super Handling All-Wheel Drive (SH-AWD) system",
+      "3.5-liter direct-injection V-6 engine with 290 horsepower",
+      "267 lb-ft torque at 4,500 rpm"
+    ],
+    "TLX V-6": [
+      "3.5-liter direct-injection V-6 engine with 290 horsepower",
+      "267 lb-ft torque at 4,500 rpm",
+      "Expanded cargo volume up to 14.3 cubic feet with Advance Package"
+    ],
+    "TLX": [
+      "2.4-liter direct-injection 4-cylinder engine with 206 horsepower",
+      "182 lb-ft torque at 4,500 rpm",
+      "Superior fuel economy at 24/35/28 city/highway/combined EPA rating",
+      "Premium unleaded 91-octane fuel recommended",
+      "AcuraWatch safety technologies",
+      "HandsFreeLink Bluetooth connectivity",
+      "AcuraLink services with free three-month trial"
+    ]
+  }
+}

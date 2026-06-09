@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2013|audi|a3",
+  "year": 2013,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_2013__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "SE",
+    "LE",
+    "A3"
+  ],
+  "adds_by_trim": {
+    "A3": [
+      "Adds 2.0T TFSI turbocharged engine with 200 hp",
+      "Adds 2.0 TDI turbocharged diesel engine with 140 hp",
+      "Adds six-speed manual transmission option",
+      "Adds six-speed S tronic dual-clutch transmission option",
+      "Adds front-wheel drive configuration",
+      "Adds quattro all-wheel drive option",
+      "Adds MacPherson strut front suspension with stabilizer bar",
+      "Adds four-link rear suspension with stabilizer bar",
+      "Adds Audi servotronic speed-sensitive power steering",
+      "Adds seating capacity for 5 passengers"
+    ],
+    "LE": [],
+    "SE": [],
+    "Sport": [],
+    "Limited": [],
+    "S line": [],
+    "Premium": [
+      "2.0-liter turbocharged clean diesel engine with 140 hp and 236 lb-ft torque",
+      "Audi S tronic dual-clutch transmission",
+      "FrontTrak front-wheel drive system"
+    ]
+  }
+}

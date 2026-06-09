@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|acura|mdx",
+  "year": 2013,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2013__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MDX with Advance Package",
+    "MDX with Technology Package",
+    "MDX"
+  ],
+  "adds_by_trim": {
+    "MDX with Advance Package": [
+      "300-hp 3.7L SOHC VTEC V-6 engine with 6-speed automatic and paddle shifters",
+      "Active Damper System sport suspension",
+      "Super Handling All-Wheel Drive (SH-AWD) with torque sensing",
+      "Exclusive 19-inch alloy wheels with P255/50 R19 tires",
+      "Collision Mitigation Braking System (CMBS)",
+      "Adaptive Cruise Control (ACC)",
+      "Blind spot information system",
+      "Heated and ventilated front seats with perforated Milano leather"
+    ],
+    "MDX with Technology Package": [
+      "Acura Navigation System with Voice Recognition",
+      "410-watt Acura/ELS Surround Premium Audio with 10 speakers and HDD storage",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "Multi-view rear camera",
+      "GPS-linked solar-sensing tri-zone automatic climate control",
+      "Song By Voice feature",
+      "USB Audio Interface with iPod integration and Bluetooth Audio",
+      "Milano premium leather-trimmed interior"
+    ],
+    "MDX": [
+      "3.7L SOHC V-6 engine with 6-speed automatic transmission",
+      "4-wheel independent suspension with MacPherson strut front",
+      "Tri-zone automatic climate control with humidity control",
+      "253-watt Premium Sound System with 6-disc CD changer and subwoofer",
+      "7-passenger seating with leather-trimmed interior",
+      "Power moonroof with tilt feature",
+      "Auto-on/off xenon HID headlights with fog lights",
+      "Bluetooth HandsFreeLink wireless telephone interface",
+      "Automatic dimming rearview mirror with rearview camera",
+      "Vehicle Stability Assist (VSA) with traction control and ABS"
+    ]
+  }
+}

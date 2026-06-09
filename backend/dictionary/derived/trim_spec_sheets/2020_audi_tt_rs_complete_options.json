@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2020_audi_tt_rs_complete_options",
+  "make": "AUDI",
+  "models": [
+    "TT RS",
+    "TT RS"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Assembly Hungary: Győr (engines and final assembly); The 1.8 L turbocharged inline-4 engine (was Assembly Hungary: Győr (engines and final assembly)); 2.5L V5 Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ],
+    "40 TFSI": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Assembly Hungary: Győr (engines and final assembly)"
+      }
+    ]
+  }
+}

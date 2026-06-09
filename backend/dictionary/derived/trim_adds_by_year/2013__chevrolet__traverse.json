@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|chevrolet|traverse",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2013__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Heated and cooled driver and front passenger seats",
+      "Side Blind Zone Alert and Rear Cross-Traffic Alert",
+      "Power-remote rear liftgate",
+      "Leather-appointed first and second rows with perforated inserts"
+    ],
+    "2LT": [
+      "Heated driver and front passenger seats",
+      "Leather-appointed first and second rows",
+      "7-passenger seating with captain's chairs in second row"
+    ],
+    "1LT": [
+      "Power-remote rear liftgate",
+      "OnStar Directions & Connections Plan with Turn-by-Turn Navigation for six months",
+      "7-passenger seating configuration available"
+    ],
+    "LS": [
+      "Manual rear liftgate",
+      "8-passenger seating with flat-folding 60/40 split-bench seats",
+      "Power-programmable door locks with rear child safety locks",
+      "Four-wheel antilock disc brakes",
+      "StabiliTrak Electronic Stability Control with Proactive Roll Avoidance"
+    ]
+  }
+}

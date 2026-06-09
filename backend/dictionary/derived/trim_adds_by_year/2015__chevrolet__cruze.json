@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2015|chevrolet|cruze",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2015__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ Diesel",
+    "LTZ",
+    "2LT",
+    "Eco",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ Diesel": [
+      "Diesel engine powertrain",
+      "Single-zone automatic climate control",
+      "4-wheel antilock disc brakes",
+      "18-inch split 5-spoke flangeless silver-painted alloy wheels"
+    ],
+    "LTZ": [
+      "Single-zone automatic climate control",
+      "4-wheel antilock disc brakes",
+      "Leather-wrapped steering wheel with Polar Silver accents",
+      "Heated front seats with three warmth settings",
+      "Driver 6-way power seat adjuster",
+      "Meridian leather seat appointments",
+      "17-inch 5-spoke flangeless aluminum wheels"
+    ],
+    "2LT": [
+      "Chevrolet MyLink 7-inch color touchscreen radio with navigation and SiriusXM trial",
+      "Rear vision camera standard",
+      "Driver 6-way power seat adjuster with manual recline",
+      "Meridian leather seat appointments"
+    ],
+    "Eco": [
+      "LED daytime running lamps",
+      "Chevrolet MyLink 7-inch color touchscreen radio with Bluetooth audio streaming",
+      "Electronic cruise control with steering wheel-mounted controls",
+      "16-inch 5-spoke machined-face aluminum wheels"
+    ],
+    "1LT": [
+      "LED daytime running lamps",
+      "Electronic cruise control with steering wheel-mounted controls",
+      "Driver 6-way power seat adjuster",
+      "Pioneer premium 250-watt 9-speaker sound system available"
+    ],
+    "LS": [
+      "OnStar Directions & Connections with Turn-by-Turn Navigation for six months",
+      "StabiliTrak Electronic Stability Control with Traction Control",
+      "AM/FM stereo with CD player and Bluetooth wireless technology",
+      "Single-zone manual climate control",
+      "Center console with sliding armrest and dual cup holders",
+      "Power-programmable door locks with rear-door child safety locks",
+      "LED daytime running lamps",
+      "Remote Keyless Entry",
+      "Tilt and telescopic steering column",
+      "16-inch steel wheels with silver-painted wheel covers"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2011|nissan|altima",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2011__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SR",
+    "2.5 S",
+    "2.5"
+  ],
+  "adds_by_trim": {
+    "3.5 SR": [
+      "3.5-liter DOHC 24-valve V6 engine with 270 hp and 258 lb-ft torque",
+      "VQ35DE engine with Continuously Variable Valve Timing Control on intake valves",
+      "Variable induction system for enhanced performance"
+    ],
+    "2.5 S": [
+      "8-way power adjustable driver's seat with manual lumbar support",
+      "Automatic on/off headlights and variable intermittent windshield wipers",
+      "Passenger-side front-window one-touch auto-up/down with auto-reverse",
+      "Dual illuminated visor vanity mirrors with sun visor extenders",
+      "Leather-wrapped steering wheel with audio controls"
+    ],
+    "2.5": [
+      "6-way manual adjustable driver's seat with seatback pocket",
+      "AM/FM/CD audio system",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags",
+      "Driver and front-passenger seat-mounted side-impact supplemental air bags",
+      "Roof-mounted curtain side-impact supplemental air bags",
+      "Vehicle Dynamic Control with Traction Control System",
+      "3-point seat belts with pretensioners and load limiters",
+      "LATCH System for child safety seats",
+      "Zone Body construction with crumple zones and energy-absorbing steering column",
+      "Tire Pressure Monitoring System with Easy-Fill Tire Alert"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2012|bentley|continental",
+  "year": 2012,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_llm_2012__bentley__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Continental GT V8 Mulliner Driving Specification",
+    "Continental GT V8 Colour Specification",
+    "Continental GT V8 Touring Specification",
+    "Continental GT V8 Convenience Specification",
+    "Continental GT V8"
+  ],
+  "adds_by_trim": {
+    "Continental GT V8 Mulliner Driving Specification": [
+      "Mulliner-exclusive interior design and trim enhancements",
+      "Premium specification package for performance-focused driving experience"
+    ],
+    "Continental GT V8 Colour Specification": [
+      "Extended exterior colour and interior hide colour options",
+      "Customizable duo-tone colour splits and veneer choices"
+    ],
+    "Continental GT V8 Touring Specification": [
+      "Through-centre console bisecting rear seat for extra stowage",
+      "Luggage flexibility and additional storage compartments",
+      "Twin front armrests and central rear hide armrest",
+      "Ski hatch and power-operated boot"
+    ],
+    "Continental GT V8 Convenience Specification": [
+      "Adaptive Cruise Control with radar sensor measuring vehicle speeds ahead",
+      "Rear-view camera for enhanced parking visibility",
+      "Valet key limiting non-authorised driver control access",
+      "Automatic speed modulation when foot off throttle pedal"
+    ],
+    "Continental GT V8": [
+      "4.0-litre twin-turbocharged V8 engine with variable displacement technology",
+      "Eight to four-cylinder adaptive operation for efficiency",
+      "Dark Fiddleback Eucalyptus veneer with clean straight-grain 3D effect",
+      "Monotone hide interior in Beluga, Newmarket Tan, Porpoise or Imperial Blue",
+      "Symmetrical fascia inspired by Bentley winged 'B' with flying buttress centre stack",
+      "Open illuminated stowage compartments in door and rear quarter trims",
+      "Cobra-head seats with integrated headrests and enhanced rear legroom",
+      "Shorter centre console emphasizing sports car cockpit feel",
+      "Eliade cloth headlining in GT variant"
+    ]
+  }
+}

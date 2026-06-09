@@ -1,0 +1,45 @@
+{
+  "ladder_id": "2014_porsche_macan_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Macan",
+    "Macan"
+  ],
+  "year_min": 2012,
+  "year_max": 2016,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim.; 3.6L V6 Twin Turbo"
+      },
+      {
+        "label": "Screen Size",
+        "value": "10.9-inch touchscreen display"
+      }
+    ],
+    "GTS": [
+      {
+        "label": "Engine Options",
+        "value": "L V6 twin-turbo"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Model Years of Production Engine &"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L Volkswagen-Audi EA839TT TFSI V6 twin-turbo; The Macan S and Macan Turbo have 0–60 mph (0–97 km/h) times of 5.2 seconds and 4"
+      },
+      {
+        "label": "Screen Size",
+        "value": "10.9-inch touchscreen display"
+      }
+    ]
+  }
+}

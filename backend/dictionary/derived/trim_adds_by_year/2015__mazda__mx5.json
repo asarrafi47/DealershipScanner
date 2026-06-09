@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2015|mazda|mx5",
+  "year": 2015,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2015__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Club",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "17-inch aluminum alloy wheels with black leather finish",
+      "Xenon HID headlights",
+      "In-dash 6-disc CD changer",
+      "Bose audio system with AudioPilot and 7 speakers",
+      "Automatic climate control",
+      "Leather-trimmed seats",
+      "Heated seats with five settings",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Bluetooth hands-free phone capability",
+      "Mazda Advanced Keyless Entry System and SiriusXM Satellite Radio"
+    ],
+    "Club": [
+      "Exclusive 17-inch aluminum alloy wheels with gunmetal finish",
+      "Black cloth seats with red stitching",
+      "Power retractable hard top",
+      "Front shock tower brace",
+      "Sport-tuned suspension with Bilstein shock absorbers and limited-slip differential",
+      "Exclusive Club model badging and side graphics",
+      "Body-colored interior decoration panel with Club graphics",
+      "Front air dam and rear diffuser",
+      "6-speed manual transmission standard"
+    ],
+    "Sport": [
+      "16-inch aluminum alloy wheels",
+      "5-speed manual transmission with short-throw shifter",
+      "Halogen fog lights",
+      "Black cloth convertible top",
+      "Cloth seats",
+      "Power windows with driver's one-touch-down feature",
+      "Leather-wrapped steering wheel",
+      "Available 6-speed Sport automatic transmission with paddle shifters",
+      "Dual front and side-impact air bags"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|hyundai|sonata",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_llm_2018__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited 2.0T",
+    "Sport 2.0T",
+    "Limited",
+    "Sport",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited 2.0T": [
+      "2.0T turbocharged engine with 245 horsepower and 260 lb-ft torque"
+    ],
+    "Sport 2.0T": [
+      "2.0T turbocharged engine with 245 horsepower and 260 lb-ft torque"
+    ],
+    "Limited": [
+      "185 horsepower and 178 lb-ft torque engine"
+    ],
+    "Sport": [
+      "185 horsepower and 178 lb-ft torque engine"
+    ],
+    "SEL": [
+      "185 horsepower and 178 lb-ft torque engine"
+    ],
+    "SE": [
+      "185 horsepower and 178 lb-ft torque",
+      "25 city / 36 highway / 29 combined MPG",
+      "18.5 gallon fuel tank",
+      "110.4 inch wheelbase",
+      "191.1 inch overall length"
+    ]
+  }
+}

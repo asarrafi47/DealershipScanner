@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2017|genesis|g80",
+  "year": 2017,
+  "make": "genesis",
+  "model": "G80",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advanced",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

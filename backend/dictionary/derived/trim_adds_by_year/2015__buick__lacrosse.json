@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2015|buick|lacrosse",
+  "year": 2015,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2015__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium II Group",
+    "Premium I Group",
+    "Leather Group",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium II Group": [
+      "3.6L VVT DI V-6 engine with E85 capability, 304 hp",
+      "Perforated and ventilated front seating",
+      "Heated leather steering wheel",
+      "Power rear sunshade",
+      "Q7N 20-inch machine-faced silver painted alloy wheels",
+      "Bose audio system",
+      "120-volt power outlet",
+      "Continuously Variable Real-Time Damping chassis with Sport Mode",
+      "HiPer Strut front suspension"
+    ],
+    "Premium I Group": [
+      "3.6L VVT DI V-6 engine with E85 capability, 304 hp",
+      "Perforated and ventilated front seating",
+      "Heated leather steering wheel",
+      "Power rear sunshade",
+      "REK 19-inch chrome alloy wheels",
+      "Bose audio system",
+      "120-volt power outlet"
+    ],
+    "Leather Group": [
+      "Leather-appointed seating throughout",
+      "Heated front seats",
+      "Heated power mirrors with LED indicators and auto-dimming driver's side",
+      "Memory settings for driver seat and outside mirrors",
+      "Rear park assist",
+      "E-Z Key passive entry system with push-button start",
+      "REP 18-inch painted aluminum wheels",
+      "Bose audio system",
+      "120-volt power outlet"
+    ],
+    "Base": [
+      "2.4L DOHC 4-cylinder with eAssist technology, 182 hp, 25/36 mpg",
+      "3.6L VVT DI V-6 available, 304 hp, 18/28 mpg FWD",
+      "Front bucket seats with cloth and leatherette trim",
+      "8-inch diagonal high-resolution color touchscreen with IntelliLink3",
+      "Dual-zone automatic climate control",
+      "7-speaker premium audio system with SiriusXM satellite radio trial",
+      "Dual-stage frontal and side-impact airbags with head curtain protection",
+      "RDL 17-inch machine-faced silver painted alloy wheels",
+      "Rear vision camera",
+      "OnStar with 4G LTE and Wi-Fi hotspot trial"
+    ]
+  }
+}

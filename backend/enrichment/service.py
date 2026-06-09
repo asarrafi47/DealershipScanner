@@ -46,6 +46,7 @@ if _backend_dir not in sys.path:
 
 from backend.db.inventory_db import get_conn, get_car_by_id
 from backend.utils.field_clean import is_effectively_empty, normalize_optional_str
+from backend.utils.safe_listing_url import normalize_listing_image_url
 from backend.vector.catalog_service import MasterCatalog
 
 logger = logging.getLogger(__name__)
@@ -270,21 +271,27 @@ def _row_has_any_image(row: dict[str, Any]) -> bool:
 def _all_gallery_urls_ordered(row: dict[str, Any]) -> list[str]:
     """All HTTP(S) image URLs in stable order (hero first, then gallery)."""
     urls: list[str] = []
+
+    def _add(raw: str) -> None:
+        safe = normalize_listing_image_url(raw)
+        if safe and safe.startswith("http") and safe not in urls:
+            urls.append(safe)
+
     main = row.get("image_url")
-    if isinstance(main, str) and main.strip().startswith("http"):
-        urls.append(main.strip())
+    if isinstance(main, str):
+        _add(main.strip())
     g = row.get("gallery")
     if isinstance(g, list):
         for u in g:
-            if isinstance(u, str) and u.strip().startswith("http") and u.strip() not in urls:
-                urls.append(u.strip())
+            if isinstance(u, str):
+                _add(u.strip())
     elif isinstance(g, str):
         try:
             arr = json.loads(g)
             if isinstance(arr, list):
                 for u in arr:
-                    if isinstance(u, str) and u.strip().startswith("http") and u.strip() not in urls:
-                        urls.append(u.strip())
+                    if isinstance(u, str):
+                        _add(u.strip())
         except (json.JSONDecodeError, TypeError):
             pass
     return urls
@@ -580,6 +587,10 @@ _GALLERY_UA = (
 def _fetch_image_b64_optimized(
     url: str, timeout: int = 25, *, referer: str | None = None
 ) -> str | None:
+    safe_url = normalize_listing_image_url(url)
+    if not safe_url or not safe_url.startswith("http"):
+        logger.debug("Image fetch blocked (unsafe URL): %s", url)
+        return None
     headers: dict[str, str] = {
         "User-Agent": _GALLERY_UA,
         "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -589,11 +600,11 @@ def _fetch_image_b64_optimized(
     if rfer.lower().startswith("http"):
         headers["Referer"] = rfer[:2000]
     try:
-        resp = requests.get(url, timeout=timeout, headers=headers)
+        resp = requests.get(safe_url, timeout=timeout, headers=headers)
         resp.raise_for_status()
         return _image_to_jpeg_b64(resp.content)
     except Exception as e:
-        logger.debug("Image fetch failed %s: %s", url, e)
+        logger.debug("Image fetch failed %s: %s", safe_url, e)
         return None
 
 

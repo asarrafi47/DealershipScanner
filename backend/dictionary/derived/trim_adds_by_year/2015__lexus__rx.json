@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2015|lexus|rx",
+  "year": 2015,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_2015__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds four-year/50,000-mile Limited Warranty",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds eight-year/100,000-mile Hybrid System Warranty",
+      "Adds six-year unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero-deductible warranty coverage across all systems"
+    ],
+    "Premium": [
+      "Adds dual-screen system with split-screen video capability",
+      "Adds SiriusXM satellite radio service",
+      "Adds Navigation System integration"
+    ],
+    "Luxury": [
+      "Adds Mark Levinson premium audio system",
+      "Adds Enform connected services integration",
+      "Adds Dynamic Radar Cruise Control system",
+      "Adds Pre-Collision System safety technology",
+      "Adds Blind Spot Monitor with visual feedback",
+      "Adds backup camera with display integration"
+    ]
+  }
+}

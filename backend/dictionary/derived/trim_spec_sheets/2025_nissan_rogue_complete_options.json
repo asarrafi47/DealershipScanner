@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2025_nissan_rogue_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Rogue",
+    "Rogue"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "SL": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S8); Front-Wheel Drive"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Nissan's ProPILOT Assist with Navi-link (Nissan's Heads-up display), available wireless ch"
+      }
+    ],
+    "SV": [
+      {
+        "label": "Engine Options",
+        "value": "The Rogue Select was offered only in the S trim level, with AWD being an option.; Rogue Hybrid"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Nissan's ProPILOT Assist with Navi-link (Nissan's Heads-up display), available wireless ch"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Rogue Hybrid"
+      }
+    ]
+  }
+}

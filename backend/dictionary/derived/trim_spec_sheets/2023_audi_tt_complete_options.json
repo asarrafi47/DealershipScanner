@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2023_audi_tt_complete_options",
+  "make": "Audi",
+  "models": [
+    "TT",
+    "TT"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; The 1.8 L turbocharged inline-4 engine"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Front-engine, all-wheel-drive (quattro)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ]
+  }
+}

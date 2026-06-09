@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2016|ford|focus",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_2016__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds 1.0L EcoBoost I-3 engine with Auto Start-Stop",
+      "Adds 2.0L Ti-VCT GDI I-4 FFV engine option",
+      "Adds 2.0L EcoBoost I-4 high-output engine option",
+      "Adds 6-speed manual and automatic transmission options",
+      "Adds Personal Safety System with dual-stage front airbags",
+      "Adds AdvanceTrac electronic stability control",
+      "Adds rear view camera",
+      "Adds 5-person seating with 60/40 split rear fold-down seat",
+      "Adds MyKey technology",
+      "Adds Tire Pressure Monitoring System"
+    ],
+    "Limited": []
+  }
+}

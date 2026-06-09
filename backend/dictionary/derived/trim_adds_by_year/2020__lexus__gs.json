@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2020|lexus|gs",
+  "year": 2020,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "brochure_llm_2020__lexus__gs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS F",
+    "GS FSPORT",
+    "GS"
+  ],
+  "adds_by_trim": {
+    "GS F": [
+      "5.0L V8 engine with 467 hp (vs. 3.5L V6 in lower trims)",
+      "Carbon fiber trim with black leather and white accent stitching",
+      "Circuit Red leather seating option",
+      "Brembo high-friction braking system",
+      "BBS forged alloy wheels",
+      "Performance-tuned suspension and powertrain"
+    ],
+    "GS FSPORT": [
+      "F Sport-specific exterior styling and badging",
+      "Sport-tuned suspension",
+      "Unique interior trim with modern design elements"
+    ],
+    "GS": [
+      "3.5L V6 engine with 311 hp",
+      "Luxurious leather or premium synthetic seating",
+      "Power-adjustable driver's seat with memory",
+      "8-inch touchscreen infotainment system",
+      "Lexus Safety System+ with Pre-Collision System",
+      "Dynamic Radar Cruise Control",
+      "Bluetooth connectivity and USB ports",
+      "Dual-zone automatic climate control",
+      "17-inch alloy wheels with all-season tires"
+    ]
+  }
+}

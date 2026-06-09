@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2020|chrysler|pacifica",
+  "year": 2020,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "ladder_id": "brochure_llm_2020__chrysler__pacifica",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Pacifica Limited Hybrid",
+    "Pacifica Touring L Plus Hybrid",
+    "Pacifica Touring L Hybrid",
+    "Pacifica Touring Hybrid",
+    "Pacifica S Red Hybrid",
+    "Pacifica Limited",
+    "Pacifica Touring L Plus",
+    "Pacifica Touring L",
+    "Pacifica Touring"
+  ],
+  "adds_by_trim": {
+    "Pacifica Limited Hybrid": [
+      "3rd-row power-folding Stow 'n Go 60/40 bench seat",
+      "8-way power front-passenger seat with Auto Advance 'n Return",
+      "Heated 2nd-row seats",
+      "Premium leather-trimmed seats",
+      "Full-length upgraded floor console",
+      "Uconnect 4C NAV with 8.4-inch display and navigation"
+    ],
+    "Pacifica Touring L Plus Hybrid": [
+      "Super Console with illuminated cup holders",
+      "8-way power front-passenger seat with Auto Advance 'n Return"
+    ],
+    "Pacifica Touring L Hybrid": [
+      "Luxury steering wheel",
+      "Power front and rear windows with 1-touch up/down"
+    ],
+    "Pacifica Touring Hybrid": [
+      "8-way power driver's seat with memory",
+      "Heated front seats",
+      "Auto Advance 'n Return driver's-side",
+      "Blind Spot Monitoring with Rear Cross-Path Detection System"
+    ],
+    "Pacifica S Red Hybrid": [
+      "Perforated leather-trimmed seats with S logo",
+      "Nappa leather-trimmed seats with S logo"
+    ],
+    "Pacifica Limited": [
+      "3rd-row power-folding Stow 'n Go 60/40 bench seat",
+      "8-way power front-passenger seat with Auto Advance 'n Return",
+      "Heated 2nd-row seats",
+      "Premium leather-trimmed seats",
+      "Full-length upgraded floor console",
+      "Uconnect 4C NAV with 8.4-inch display and navigation"
+    ],
+    "Pacifica Touring L Plus": [
+      "Super Console with illuminated cup holders",
+      "8-way power front-passenger seat with Auto Advance 'n Return"
+    ],
+    "Pacifica Touring L": [
+      "Luxury steering wheel",
+      "Power front and rear windows with 1-touch up/down"
+    ],
+    "Pacifica Touring": [
+      "8-way power driver's seat with memory",
+      "Heated front seats",
+      "Auto Advance 'n Return driver's-side",
+      "Blind Spot Monitoring with Rear Cross-Path Detection System",
+      "Advanced multistage dual-stage airbags for driver and front passenger"
+    ]
+  }
+}

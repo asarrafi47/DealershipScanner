@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2017|ford|fiesta",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_llm_2017__ford__fiesta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ST",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "ST": [
+      "Carbon-fiber gear shift knob",
+      "Over-the-top stripes",
+      "Full vehicle cover",
+      "Door-sill plates",
+      "Cargo area protector",
+      "17-inch black-painted wheels"
+    ],
+    "SE": [
+      "8-spoke black-painted machined aluminum 16-inch wheels",
+      "All-weather floor mats",
+      "Keyless entry keypad",
+      "Reverse bumper-mounted warning sensor system",
+      "Remote start systems available"
+    ]
+  }
+}

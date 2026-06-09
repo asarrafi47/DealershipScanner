@@ -1,0 +1,12 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1990,Plymouth,Colt,Colt,1.5L I4 ((FFS)),1.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,23,27,25,,,,,
+1990,Plymouth,Colt,Colt,1.5L I4 ((FFS)),1.5L I4,,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,27,33,29,,,,,
+1990,Plymouth,Colt,Colt,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,24,31,27,,,,,
+1990,Plymouth,Colt,Colt,1.6L I4 ((FFS)),1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,21,26,23,,,,,
+1990,Plymouth,Colt,Colt,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,21,26,23,,,,,
+1990,Plymouth,Colt,Vista,2.0L I4 ((FFS)),2.0L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,19,22,20,,,,,
+1990,Plymouth,Colt,Vista,2.0L I4 ((FFS)),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,20,27,22,,,,,
+1990,Plymouth,Colt,Wagon,1.5L I4 ((FFS)),1.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,23,26,25,,,,,
+1990,Plymouth,Colt,Wagon,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,24,31,27,,,,,
+1990,Plymouth,Colt,Vista 4WD,2.0L I4 ((FFS)),2.0L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.0,17,23,19,,,,,
+1990,Plymouth,Colt,Wagon 4WD,1.8L I4 ((FFS)),1.8L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,21,26,23,,,,,

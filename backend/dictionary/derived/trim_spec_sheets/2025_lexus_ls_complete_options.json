@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2025_lexus_ls_complete_options",
+  "make": "Lexus",
+  "models": [
+    "LS",
+    "LS"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: ,608 cc (281 cu in) 1UR-FSE V8; ,969 cc (303 cu in) 2UR-FSE V8 hybrid (LS 600h) (was Engine 4,292 cc (262 cu in) 3UZ-FE V8; ,608 cc (281 cu in) 1UR-FSE V8)"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Engine 4,292 cc (262 cu in) 3UZ-FE V8; ,608 cc (281 cu in) 1UR-FSE V8"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: Intel modeled the \"Internet of Things\" on what was learned from Toyota's LS 400 quality standards. Industrial significance LS 400 cutaway model displaying internal construction at the Wroughton Classic The Lexus LS marked a successful entrant of a Japanese…"
+      }
+    ]
+  }
+}

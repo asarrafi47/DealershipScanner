@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|toyota|86",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "brochure_llm_2020__toyota__86",
+  "source": "brochure_llm",
+  "trims_available": [
+    "86 Hakone Edition",
+    "86 GT",
+    "86"
+  ],
+  "adds_by_trim": {
+    "86 Hakone Edition": [
+      "Exclusive Hakone Green paint",
+      "17-inch bronze-colored twisted-spoke alloy wheels",
+      "Two-stage heated sport front seats with Black Alcantara inserts and Tan leather bolsters",
+      "Leather-trimmed steering wheel with tan contrast stitching",
+      "Leather-wrapped parking brake handle cover with tan contrast stitching",
+      "Leather gear shift boot with tan contrast stitching",
+      "Black and tan sliding center armrest with black contrast stitching",
+      "Two color-coordinated 86 debossed tan key gloves",
+      "Deep-pile trunk mat with tan 86 embossing and contrast stitched trim"
+    ],
+    "86 GT": [
+      "18-inch split-spoke alloy wheels with Michelin Pilot Sport 4 tires (manual transmission)",
+      "LED fog lights",
+      "Color-keyed heated power outside mirrors",
+      "Rear wing in matte black with aerodynamic end plates",
+      "Aerodynamic underbody panel",
+      "Two-stage heated sport front seats with Granlux suede-like inserts and leather bolsters",
+      "4.2-inch TFT Multi-Information Display with vehicle performance information",
+      "Smart Key System with Push Button Start",
+      "Dual zone automatic climate control"
+    ],
+    "86": [
+      "2.0L 4-cylinder horizontally opposed engine with 205 hp (manual) or 200 hp (automatic)",
+      "Torsen 25 limited-slip differential",
+      "17-inch twisted-spoke alloy wheels",
+      "LED projector-beam headlights with Daytime Running Lights and all-LED rear combination lights",
+      "Chrome-tipped dual exhaust",
+      "7-inch touch-screen display with 8 speakers and Clari-Fi audio",
+      "Android Auto and Apple CarPlay compatible",
+      "Sport front bucket seats with Granlux suede-like material",
+      "Auto-dimming rearview mirror with integrated backup camera"
+    ]
+  }
+}

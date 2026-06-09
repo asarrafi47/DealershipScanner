@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|buick|regal",
+  "year": 2014,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2014__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS",
+    "Premium II",
+    "Premium I"
+  ],
+  "adds_by_trim": {
+    "GS": [
+      "2.0L Turbo engine with 259 horsepower and 295 lb-ft torque",
+      "GS-specific sport seats with heated steering wheel and sport pedals",
+      "GS-specific fascias, rockers, and badging",
+      "GS-specific dual exhaust",
+      "Brembo front brakes with 4-wheel anti-lock disc",
+      "HiPer Strut front suspension",
+      "Rear lip spoiler",
+      "Satin finish surround moldings",
+      "Front and rear parking assist",
+      "Audio system with navigation and 8-inch enhanced multi-configurable cluster display"
+    ],
+    "Premium II": [
+      "Passive entry system with remote vehicle start",
+      "Push-button start",
+      "12-way power front passenger seat",
+      "Universal garage-door opener",
+      "Chrome accents on door handles",
+      "Rear parking assist",
+      "120-volt AC power outlet",
+      "Heated steering wheel",
+      "Rear seat thorax air bags",
+      "Bose premium audio system with HID bi-xenon headlamps"
+    ],
+    "Premium I": [
+      "Passive entry system with remote vehicle start",
+      "Push-button start",
+      "12-way power front passenger seat",
+      "Universal garage-door opener",
+      "Chrome accents on door handles",
+      "Rear parking assist",
+      "120-volt AC power outlet",
+      "Heated steering wheel",
+      "Rear seat thorax air bags",
+      "Bose premium audio system"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2015|audi|a8",
+  "year": 2015,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_llm_2015__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A8 L W12",
+    "A8 4.0T",
+    "A8 L 4.0T",
+    "A8 L TDI",
+    "A8 3.0T",
+    "A8 L 3.0T"
+  ],
+  "adds_by_trim": {
+    "A8 L W12": [
+      "12-cylinder engine with 500 horsepower and 463 lb-ft torque",
+      "Cylinder on demand engine efficiency technology",
+      "48-valve DOHC valvetrain",
+      "4.4 second 0-60 mph acceleration",
+      "17-inch ventilated rear disc brakes",
+      "Extended wheelbase for rear passenger legroom"
+    ],
+    "A8 4.0T": [
+      "8-cylinder engine with 435 horsepower and 444 lb-ft torque",
+      "Cylinder on demand engine efficiency technology",
+      "32-valve DOHC valvetrain",
+      "4.3 second 0-60 mph acceleration",
+      "Turbocharged TFSI fuel injection"
+    ],
+    "A8 L 4.0T": [
+      "Extended wheelbase for increased rear passenger space"
+    ],
+    "A8 L TDI": [
+      "6-cylinder turbocharged diesel engine with 240 horsepower",
+      "428 lb-ft diesel torque at 1,750 rpm",
+      "Start-stop efficiency system",
+      "Extended wheelbase for rear legroom",
+      "Superior fuel economy with TDI technology"
+    ],
+    "A8 3.0T": [
+      "6-cylinder supercharged engine with 333 horsepower",
+      "325 lb-ft torque at 2,900 rpm",
+      "Start-stop efficiency system",
+      "5.4 second 0-60 mph acceleration",
+      "TFSI supercharged fuel injection"
+    ],
+    "A8 L 3.0T": [
+      "Extended wheelbase with additional rear passenger legroom"
+    ]
+  }
+}

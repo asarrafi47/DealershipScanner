@@ -1,0 +1,88 @@
+{
+  "catalog_key": "2021|dodge|charger",
+  "year": 2021,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2021__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT REDEYE WIDEBODY",
+    "SRT HELLCAT WIDEBODY",
+    "SCAT PACK WIDEBODY",
+    "SCAT PACK",
+    "R/T",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT REDEYE WIDEBODY": [
+      "797 hp and 707 lb-ft of torque from supercharged 6.2L HEMI V8",
+      "220-mph speedometer",
+      "SRT Power Chiller system",
+      "Redeye instrument-panel badge and badging"
+    ],
+    "SRT HELLCAT WIDEBODY": [
+      "Supercharged 6.2L HEMI V8 engine with 717 hp and 650 lb-ft of torque",
+      "6-piston Brembo brakes with performance calipers",
+      "Adaptive Damping Suspension",
+      "2.62 rear axle ratio",
+      "After-run cooling system",
+      "20 by 11-inch Carbon Black aluminum wheels",
+      "Performance hood with extractors",
+      "Bi-functional HID headlamps",
+      "Laguna leather interior with Hellcat logo and premium stitching",
+      "Vented front seats and heated rear seats"
+    ],
+    "SCAT PACK WIDEBODY": [
+      "Widebody Package with 305/35ZR20 All-Season Performance tires",
+      "SRT Branded Brembo 6-piston aluminum front brake calipers",
+      "Performance shift indicator",
+      "Leather flat-bottom steering wheel",
+      "Widebody competition suspension with Adaptive Damping Suspension",
+      "20 by 11-inch Devil's Rim aluminum wheels"
+    ],
+    "SCAT PACK": [
+      "392 HEMI V8 engine with 485 hp and 475 lb-ft of torque",
+      "4-piston Brembo brakes with black-painted calipers",
+      "High-performance suspension with Launch Assist",
+      "Limited-slip differential with 3.09 rear axle ratio",
+      "Severe-Duty II cooling and engine oil cooler",
+      "20 by 9-inch Low-Gloss Granite Crystal aluminum wheels",
+      "Scat Pack Bee grille and badging",
+      "Houndstooth cloth Performance seats with Bee logo",
+      "Heated steering wheel",
+      "SRT Drive Modes and SRT Performance Pages"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 engine with 370 hp and 395 lb-ft of torque",
+      "High-speed engine controller",
+      "2.62 rear axle ratio",
+      "Active exhaust with integrated dual bright exhaust tips",
+      "20 by 8-inch Satin Carbon aluminum wheels",
+      "R/T badge",
+      "Tire service kit"
+    ],
+    "GT": [
+      "Performance suspension with 3-Mode Electronic Stability Control",
+      "20 by 8-inch Satin Carbon aluminum wheels",
+      "GT and Dodge grille badges with Performance Black grille",
+      "Performance hood, fascias and sills",
+      "Projector LED fog lamps",
+      "Rear body-color spoiler",
+      "Houndstooth cloth Performance seats",
+      "Universal garage door opener"
+    ],
+    "SXT": [
+      "3.6L 292-hp Pentastar V6 engine",
+      "8-speed automatic transmission",
+      "Touring suspension with 4-wheel ABS and ESC",
+      "17-inch painted aluminum wheels",
+      "Integrated dual bright exhaust tips",
+      "Charger decklid badge",
+      "ParkView Rear Back-Up Camera",
+      "ParkSense Rear Park Assist",
+      "Auto headlamps and daytime running lamps",
+      "7-inch reconfigurable cluster display with Uconnect 4"
+    ]
+  }
+}

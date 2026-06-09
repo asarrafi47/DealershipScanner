@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2019|toyota|usfullline",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "ladder_id": "generic_toyota_usfullline",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "driver maintain vehicle control under adverse conditions. It is not a substitute for safe driving practices. Factors including speed, road conditions, weather and",
+      "the wireless charging system, avoid placing metal objects between",
+      "system utilizing the center console’s video/audio inputs is required in order to use the split-screen function of the Dual-View",
+      "the driver by controlling acceleration and braking, allowing",
+      "system that utilizes the vehicle’s forward-facing camera and navigation",
+      "additional limitations and details. 51. Lane Tracing Assist is not a substitute for safe and attentive driving practices. See Owner’s Manual for"
+    ],
+    "XLE": [
+      "Air conditioning with dual-zone climate control",
+      "Power windows, locks, and outside mirrors",
+      "Remote keyless entry system",
+      "6.1-inch touchscreen display with Bluetooth connectivity",
+      "16-inch alloy wheels",
+      "Body-color door handles"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "XLE": 0
+    }
+  }
+}

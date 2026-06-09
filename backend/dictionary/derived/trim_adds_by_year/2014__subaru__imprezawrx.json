@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|subaru|imprezawrx",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "generic_subaru_imprezawrx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "inches Track (front/rear) 60.2",
+      "availability varies by trim level. 1 With"
+    ],
+    "Base": [
+      "availability varies by trim level."
+    ],
+    "Limited": [
+      "High-luster finish 18-inch BBS aluminum-alloy wheels",
+      "Auto-on/off headlights",
+      "9-speaker Harman Kardon premium audio system with subwoofer and 440-watt amplifier",
+      "Power-tilt/sliding moonroof",
+      "Welcome lighting"
+    ],
+    "Premium": [
+      "Optional Sport Lineartronic transmission with paddle shifters and SI-DRIVE",
+      "Trunk spoiler",
+      "Fog lights",
+      "Leather-wrapped flat-bottom steering wheel"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 2,
+      "Premium": 0,
+      "Base": 1
+    }
+  }
+}

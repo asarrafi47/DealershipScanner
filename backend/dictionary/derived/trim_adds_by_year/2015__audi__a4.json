@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|audi|a4",
+  "year": 2015,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_llm_2015__audi__a4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "Dynamic steering available",
+      "Sport suspension calibration available"
+    ],
+    "Premium Plus": [
+      "Sport suspension calibration available"
+    ],
+    "Premium": [
+      "Four-cylinder turbocharged 2.0T engine with 220 horsepower",
+      "16-valve DOHC with valvelift system",
+      "Multitronic CVT, manual, or Tiptronic automatic transmission options",
+      "Fully galvanized steel unibody with anti-corrosion protection",
+      "Five-link front and trapezoidal-link rear suspension",
+      "Ventilated front disc and solid rear disc brakes",
+      "Electromechanical power steering system",
+      "Five-passenger seating capacity"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2011|lexus|lx",
+  "year": 2011,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2011__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "F Sport Performance",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds 5.7L V8 engine with 383 hp",
+      "Adds full-time four-wheel drive with TORSEN limited-slip center differential",
+      "Adds six-speed sequential-shift automatic transmission",
+      "Adds independent double-wishbone front suspension with electronic shock absorbers",
+      "Adds four-link rear suspension with electronic shock absorbers",
+      "Adds four-wheel power-assisted disc brakes with Multi-terrain ABS",
+      "Adds Vehicle Stability Control with traction management",
+      "Adds eight-passenger seating configuration",
+      "Adds 20-inch 10-spoke alloy wheels with mud and snow-rated tires",
+      "Adds roll-sensing curtain airbags and supplemental restraint systems"
+    ],
+    "EX": [],
+    "Sport": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Safety Connect telematics services",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds airbag supplemental restraint systems",
+      "Adds Dynamic Radar Cruise Control assistance",
+      "Adds Pre-Collision System",
+      "Adds Active Headrests for whiplash reduction",
+      "Adds Brake Assist system"
+    ],
+    "Limited": [
+      "Adds Lexus Enform premium services with Destination Assist",
+      "Adds eDestination navigation service",
+      "Adds XM Radio satellite radio capability",
+      "Adds XM NavTraffic real-time traffic service",
+      "Adds XM NavWeather real-time weather service"
+    ],
+    "Premium": [
+      "Adds Wide-view Front and Side Monitor camera system",
+      "Adds backup camera with rear-area visibility"
+    ],
+    "F Sport": [
+      "Adds 22 x 9.0-inch five-spoke forged alloy wheels"
+    ],
+    "F Sport Performance": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Safety Connect telematics services",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds airbag supplemental restraint systems",
+      "Adds Dynamic Radar Cruise Control assistance",
+      "Adds Pre-Collision System",
+      "Adds Active Headrests for whiplash reduction",
+      "Adds Brake Assist system"
+    ],
+    "Luxury": [
+      "Adds Mark Levinson 19-speaker 450-watt premium audio system"
+    ]
+  }
+}

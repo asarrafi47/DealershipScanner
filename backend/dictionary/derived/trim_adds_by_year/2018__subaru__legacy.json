@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2018|subaru|legacy",
+  "year": 2018,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2018__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5i Limited",
+    "2.5i Sport",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER® engine",
+      "Lineartronic® HCVT (High-Torque CVT) with 6-speed manual-mode paddle shifters",
+      "LED Steering Responsive Headlights (SRH)",
+      "Dual bright-finish exhaust outlets",
+      "12.4-inch front brake discs"
+    ],
+    "2.5i Limited": [
+      "Leather-trimmed upholstery with distinctive stitching",
+      "10-way power adjustable driver's seat with 2-position memory",
+      "4-way power adjustable front-passenger's seat",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Harman Kardon® premium audio system with 576-watt amplifier and 12 speakers",
+      "Power moonroof"
+    ],
+    "2.5i Sport": [
+      "Keyless Access with Push-button Start",
+      "Power moonroof",
+      "Auto-dimming rearview compass mirror with HomeLink®",
+      "18-inch aluminum-alloy wheels in black with machine finish",
+      "LED fog lights",
+      "Sport grille and sport trunk spoiler",
+      "Satin silver folding side mirrors with integrated turn signals",
+      "Two-Tone Gray Cloth upholstery with contrast blue stitching",
+      "Rocker spoiler with chrome trim"
+    ],
+    "2.5i Premium": [
+      "SUBARU STARLINK™ 8.0-inch Multimedia Plus with Apple CarPlay™, Android™ Auto, Pandora® and Aha™",
+      "STARLINK™ cloud-based applications, SiriusXM® All Access Radio with Travel Link®",
+      "6 speakers with AM/FM/CD, HD Radio®, Bluetooth® audio streaming",
+      "Dual front and rear seat USB ports",
+      "17-inch aluminum-alloy wheels",
+      "10-way power adjustable driver's seat",
+      "All-Weather Package: Heated exterior mirrors, 3-mode heated front seats, windshield wiper de-icer",
+      "Dual-zone automatic climate control",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Front-passenger's auto-up/down power window"
+    ],
+    "2.5i": [
+      "175-hp 2.5-liter 4-cylinder SUBARU BOXER® engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "SUBARU STARLINK™ 6.5-inch Multimedia with Apple CarPlay™, Android™ Auto, Pandora® and Aha™",
+      "High-resolution LCD touchscreen, 4 speakers, AM/FM stereo, USB/iPod® control",
+      "Bluetooth® audio streaming and hands-free phone connectivity",
+      "Cloth upholstery",
+      "6-way manually adjustable driver's seat, 4-way manually adjustable front-passenger's seat",
+      "Lineartronic® CVT with 6-speed manual-mode paddle shifters",
+      "17-inch steel wheels with covers",
+      "Welcome lighting, driver's auto-up/down power window, rear-vision camera"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2015|toyota|highlander",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2015__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited",
+    "Limited",
+    "XLE",
+    "LE Plus",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited": [
+      "3.5-Liter V6 Hybrid engine with 280 hybrid system net hp and EV/ECO modes",
+      "Electronically controlled Continuously Variable Transmission (ECVT) with sequential shift mode",
+      "Electronic On-Demand AWD system with intelligence (AWD-i)",
+      "Power-assisted ventilated front disc brakes with Electronically Controlled Braking and regenerative braking",
+      "Energy monitor display and hybrid system power meter",
+      "Super Ultra Low Emission Vehicle (SULEV) rating with zero evaporation certification"
+    ],
+    "Limited": [
+      "19-inch 5-spoke Chromtec alloy wheels",
+      "LED Daytime Running Lights (DRL)",
+      "Blind Spot Monitor (BSM) with Rear Cross-Traffic Alert (RCTA)",
+      "Entune Premium Audio with Navigation and App Suite with 8-inch touch-screen display",
+      "Perforated leather-trimmed seats with heated and ventilated front seats and memory function",
+      "4-way power-adjustable front passenger seat",
+      "Blue LED ambient lighting",
+      "Driver Technology Package, Platinum Package with panoramic moonroof and heated steering wheel available"
+    ],
+    "XLE": [
+      "Power tilt/slide moonroof with sunshade and jam protection",
+      "Rear parking assist sonar",
+      "Chromtec roof rails",
+      "4.2-inch color LCD Multi-Information Display with turn-by-turn navigation",
+      "Seating for seven with second-row captain's chairs",
+      "Leather-trimmed seats with heated front seats",
+      "Second-row retractable window sunshades",
+      "Auto-dimming rearview mirror and HomeLink universal transceiver"
+    ],
+    "LE Plus": [
+      "18-inch split 5-spoke machined-face alloy wheels",
+      "Integrated fog lights",
+      "Flip-up rear hatch window",
+      "Adjustable power liftgate with jam protection",
+      "Entune Audio Plus with 6.1-inch high-resolution touch-screen, HD Radio and SiriusXM All Access Radio",
+      "SofTex/cloth seats with contrast stitching",
+      "8-way power-adjustable driver's seat",
+      "Three-zone automatic climate control with separate second-row control and individual temperature settings"
+    ],
+    "LE": [
+      "2.7-Liter 4-Cylinder DOHC 16-Valve engine with 185 hp standard option",
+      "3.5-Liter V6 DOHC 24-Valve engine with 270 hp available",
+      "Projector-beam halogen smoked-chrome-accent headlights",
+      "18-inch split 5-spoke alloy wheels",
+      "Windshield wiper de-icer",
+      "Color-keyed heated power outside mirrors with turn signal indicators and folding feature",
+      "Entune Audio with 6.1-inch high-resolution touch-screen, Bluetooth and voice recognition",
+      "Seating for eight with 60/40 split second and third-row fold-flat seating",
+      "Integrated backup camera with projected path",
+      "6-way adjustable driver's seat and 4-way adjustable front passenger seat"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|chevrolet|commercial",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "generic_chevrolet_commercial",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "LTZ",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "capacity (2WD)3 and a payload"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "LT": 1
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2010|mazda|5",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "5",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2010_Mazda_5_Brochure.pdf",
+  "page_count": 9,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

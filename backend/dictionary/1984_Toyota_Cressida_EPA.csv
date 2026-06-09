@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1984,Toyota,Cressida,Cressida,2.8L V6 ((FFS)),Automatic 4-spd,,Regular Gasoline,Subcompact Cars,6,2.8,18,22,19,,,,,,2.8L V6,
-1984,Toyota,Cressida,Cressida,2.8L V6 ((FFS)),Manual 5-spd,,Regular Gasoline,Subcompact Cars,6,2.8,17,21,18,,,,,,2.8L V6,
-1984,Toyota,Cressida,Wagon,2.8L V6 ((FFS)),Automatic 4-spd,,Regular Gasoline,Small Station Wagons,6,2.8,18,22,19,,,,,,2.8L V6,
-1984,Toyota,Cressida,Cressida,2.8L V6 ((FFS) CA model),Automatic 4-spd,,Regular Gasoline,Subcompact Cars,6,2.8,18,22,19,,,,,,2.8L V6,
-1984,Toyota,Cressida,Cressida,2.8L V6 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Subcompact Cars,6,2.8,17,21,18,,,,,,2.8L V6,
-1984,Toyota,Cressida,Wagon,2.8L V6 ((FFS) CA model),Automatic 4-spd,,Regular Gasoline,Small Station Wagons,6,2.8,18,22,19,,,,,,2.8L V6,

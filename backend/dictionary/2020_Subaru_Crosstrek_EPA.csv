@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2020,Subaru,Crosstrek,AWD,2.0L I4 (SIDI),Manual 6-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,22,29,25,,,,,,2.0L I4,
-2020,Subaru,Crosstrek,AWD,2.0L I4 (SIDI),Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,27,33,30,,,,,,2.0L I4,
-2020,Subaru,Crosstrek,Hybrid AWD,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline / Electricity,Small Sport Utility Vehicle 4WD,4,2.0,36,35,35,,,,,,2.0L I4,

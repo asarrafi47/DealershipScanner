@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2023|subaru|impreza",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2023__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Impreza Limited 5-Door",
+    "Impreza Sport Sedan and 5-Door",
+    "Impreza Premium Sedan and 5-Door",
+    "Impreza Sedan and 5-Door"
+  ],
+  "adds_by_trim": {
+    "Impreza Limited 5-Door": [
+      "Blind-Spot Detection and Rear Cross-Traffic Alert",
+      "Reverse Automatic Braking",
+      "17-inch alloy wheels",
+      "LED Steering Responsive Headlights",
+      "LED fog lights",
+      "6-way power-adjustable driver seat",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shifter with silver stitching"
+    ],
+    "Impreza Sport Sedan and 5-Door": [
+      "5-speed manual transmission with short throw shifter or optional Lineartronic CVT",
+      "Active Torque Vectoring",
+      "Sport-tuned suspension",
+      "18-inch alloy wheels",
+      "Body-color side rocker spoilers",
+      "LED Daytime Running Lights",
+      "Active grille shutter",
+      "Trunk spoiler (sedan)",
+      "8.0-inch STARLINK Multimedia Plus with SiriusXM and HD Radio",
+      "Sport cloth interior with red stitching and leather-wrapped steering wheel"
+    ],
+    "Impreza Premium Sedan and 5-Door": [
+      "EyeSight Driver Assist Technology",
+      "Lineartronic CVT with 7-speed manual-mode and paddle shifters",
+      "SI-DRIVE engine performance management system",
+      "16-inch alloy wheels",
+      "Halogen fog lights",
+      "Roof rails in silver finish (5-door)",
+      "Body-color exterior mirrors",
+      "All-Weather Package: heated mirrors, dual-mode heated front seats, wiper de-icer",
+      "6.5-inch STARLINK Multimedia Plus with SiriusXM and HD Radio",
+      "High-grade instrument cluster with color LCD display"
+    ],
+    "Impreza Sedan and 5-Door": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic CVT",
+      "16-inch steel wheels with covers",
+      "Cloth upholstery with carbon fiber finish interior accents",
+      "6-way manually adjustable driver seat",
+      "6.5-inch STARLINK Multimedia with Apple CarPlay and Android Auto",
+      "Rear-Vision Camera",
+      "Electronic cruise control",
+      "Manually adjustable air conditioning with air filtration"
+    ]
+  }
+}

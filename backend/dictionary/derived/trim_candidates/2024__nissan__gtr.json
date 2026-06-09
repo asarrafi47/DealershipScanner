@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2024|nissan|gtr",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "GT-R",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Nismo",
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

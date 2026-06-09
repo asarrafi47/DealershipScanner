@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2014|lotus|elise",
+  "year": 2014,
+  "make": "Lotus",
+  "model": "Elise",
+  "ladder_id": "brochure_2014__lotus__elise",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes 6 speed manual transmission with sports ratios",
+      "Adds Features Dynamic Performance Management (DPM) for enhanced stability"
+    ],
+    "Sport": [
+      "Adds selectable Sport mode to Dynamic Performance Management system"
+    ]
+  }
+}

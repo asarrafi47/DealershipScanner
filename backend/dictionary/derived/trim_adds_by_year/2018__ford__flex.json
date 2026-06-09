@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|ford|flex",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_2018__ford__flex",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds Includes SYNC 3 infotainment system with touchscreen control",
+      "Adds voice control for calls, music, and vehicle functions",
+      "Adds Includes 2 smart-charging USB ports",
+      "Adds Siri Eyes Free compatibility with paired iPhone",
+      "Adds Includes standard safety restraint coverage"
+    ],
+    "SE": [
+      "Adds SYNC AppLink compatibility for Apple CarPlay and Android Auto",
+      "Adds voice-activated navigation with turn-by-turn directions and 3-D maps",
+      "Adds SiriusXM Traffic & Travel Link with real-time traffic updates",
+      "Adds FordPass smartphone app for remote vehicle access and assistance"
+    ],
+    "SEL": [
+      "Adds leather-trimmed interior seating",
+      "Adds interior light kit",
+      "Adds protective seat covers"
+    ],
+    "Limited": [
+      "Adds NextBase Duo Cinema HD Rear Seat Entertainment system",
+      "Adds Vehicle Security System with warning sensors",
+      "Adds remote start system capability",
+      "Adds door-sill plates for enhanced interior styling"
+    ]
+  }
+}

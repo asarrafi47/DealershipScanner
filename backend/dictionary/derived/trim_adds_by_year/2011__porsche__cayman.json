@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2011|porsche|cayman",
+  "year": 2011,
+  "make": "Porsche",
+  "model": "Cayman",
+  "ladder_id": "brochure_llm_2011__porsche__cayman",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cayman S",
+    "Cayman",
+    "Cayman R"
+  ],
+  "adds_by_trim": {
+    "Cayman S": [
+      "Increased engine power compared to base Cayman",
+      "More comprehensive range of standard equipment"
+    ],
+    "Cayman R": [
+      "More radical performance enhancements over Cayman S"
+    ],
+    "Cayman": [
+      "Pure-bred mid-engine concept",
+      "Unconventional Porsche mentality embodied in design"
+    ]
+  }
+}

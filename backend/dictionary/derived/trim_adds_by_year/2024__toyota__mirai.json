@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2024|toyota|mirai",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_llm_2024__toyota__mirai",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "67 city/64 hwy/65 combined MPGe EPA rating",
+      "Premium interior appointments and upgrades"
+    ],
+    "XLE": [
+      "76 city/71 hwy/74 combined MPGe EPA rating",
+      "Base trim hydrogen fuel cell vehicle"
+    ]
+  }
+}

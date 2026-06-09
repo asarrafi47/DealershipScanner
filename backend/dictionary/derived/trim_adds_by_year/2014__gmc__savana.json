@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2014|gmc|savana",
+  "year": 2014,
+  "make": "GMC",
+  "model": "Savana",
+  "ladder_id": "generic_gmc_savana",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Wt",
+    "Ls"
+  ],
+  "adds_by_trim": {
+    "Ls": [
+      "subscriptions are continuous until you call SiriusXM to cancel. See SiriusXM Customer",
+      "information about Travel Link, visit siriusxm.com/travellink. XM",
+      "vailable, its components, systems or assemblies installed by GM. General Motors is not responsible for the safety or quality of design",
+      "irections will vehicle is assembled, we suggest that you verify that your vehicle includes the equipment you ordered or, if there are",
+      "to your intended destination. An changes, that they are acceptable to you.",
+      "a registered trademark of Google, Inc. Sirius, XM and all related marks and logos"
+    ],
+    "Wt": [
+      "subscriptions are continuous until you call SiriusXM to cancel. See SiriusXM",
+      "vehicle diagnostics, Crisis equipment and any alterations (or any effect of the alterations) to any of the parts, components, systems or assemblies",
+      "services vary with conditions.",
+      "will be made at no charge. in addition, rust-through",
+      "that your vehicle includes the equipment you ordered or, if there are changes, that they are acceptable to you.",
+      "subscriptions are continuous until you call siriusXM to cancel. see siriusXM Customer",
+      "channels, live performances and more. Tune in to live play-by-play",
+      "marks and/or service marks of General Motors, its",
+      "trademark of Twitter, inc. youTube is a registered"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 6.0,
+    "per_trim_add_counts": {
+      "Ls": 6
+    }
+  }
+}

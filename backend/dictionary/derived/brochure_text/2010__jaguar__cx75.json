@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2010|jaguar|cx75",
+  "year": 2010,
+  "make": "Jaguar",
+  "model": "C-X75",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2010_Jaguar_C-X75_Brochure.pdf",
+  "page_count": 13,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

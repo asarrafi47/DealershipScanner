@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_ford_transit_connect_complete_options",
+  "make": "Ford",
+  "models": [
+    "Transit Connect",
+    "Transit Connect"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "XL": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, front-wheel-drive (was L EcoBlue I4 turbo; Petrol plug-in hybrid:)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: L EcoBlue I4 turbo; Petrol plug-in hybrid:"
+      }
+    ]
+  }
+}

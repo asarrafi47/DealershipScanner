@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2011|jeep|patriot",
+  "year": 2011,
+  "make": "Jeep",
+  "model": "Patriot",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Latitude",
+    "Sport",
+    "Premium",
+    "Touring",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

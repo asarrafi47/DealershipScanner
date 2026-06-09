@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2020|infiniti|qx50",
+  "year": 2020,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_llm_2020__infiniti__qx50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX50 AUTOGRAPH",
+    "QX50 SENSORY",
+    "QX50 ESSENTIAL",
+    "QX50 LUXE",
+    "QX50 PURE"
+  ],
+  "adds_by_trim": {
+    "QX50 PURE": [
+      "2.0L VC-Turbo 4-cylinder engine, 268-hp at 5,600 rpm, 280 lb-ft torque",
+      "Continuously Variable Transmission with manual shift mode",
+      "Front-Wheel Drive or Intelligent All-Wheel Drive",
+      "LED automatic-on/off headlights",
+      "LED signature Daytime Running Lights",
+      "19-inch silver-painted aluminum-alloy wheels with 235/55R19 run-flat tires",
+      "Body-color manual folding and power adjustable outside mirrors",
+      "Rear privacy glass",
+      "Rear Sonar System",
+      "Leatherette seating"
+    ],
+    "QX50 LUXE": [
+      "INFINITI InTouch dual display system with 8-inch and 7-inch LCD screens",
+      "HD Radio Technology",
+      "6-speaker audio system with AM/FM radio and CD player",
+      "Apple CarPlay integration for compatible iPhone",
+      "Android Auto integration for compatible phones",
+      "Bluetooth Hands-free Phone System with audio streaming",
+      "4 USB charging ports",
+      "SiriusXM Radio with Advanced Audio features",
+      "INFINITI Intelligent Key with Push Button Ignition"
+    ],
+    "QX50 ESSENTIAL": [
+      "Power sliding/tilting panoramic moonroof and power sliding sunshade",
+      "Roof rails",
+      "Heated front seats",
+      "LED front fog lights",
+      "INFINITI InTouch Navigation with 3D building graphics and 5-year complimentary Premium Traffic and MapCare",
+      "Remote Engine Start",
+      "Automatic Collision Notification and Emergency Call",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver",
+      "SiriusXM Traffic with 3-month trial access to real-time traffic information",
+      "Electronic parking brake"
+    ],
+    "QX50 SENSORY": [
+      "Heated outside mirrors",
+      "20-inch silver-painted machine-finished aluminum-alloy wheels with 255/45R20 run-flat tires",
+      "Unique cube design I-LED headlights with LED high/low beam",
+      "Climate-controlled front seats",
+      "Leather-appointed perforated seating",
+      "Rear side window sunshades",
+      "Bose Performance Series metallic speaker grilles on tweeters",
+      "Heated leather-wrapped steering wheel",
+      "Automatic Collision Notification and Emergency Call",
+      "Around View Monitor with Moving Object Detection"
+    ],
+    "QX50 AUTOGRAPH": [
+      "20-inch dark-painted aluminum-alloy wheels with 255/45R20 run-flat tires",
+      "Semi-aniline leather-appointed perforated seating",
+      "Natural Maple Wood interior trim accents",
+      "Ultrasuede headliner and pillars",
+      "Bose Performance Series 16-speaker Premium Audio System with subwoofer",
+      "Black Ultrasuede upper door and instrument panel accents in Graphite interiors",
+      "ProPILOT Assist with Lane Keep Assist, Intelligent Cruise Control with full speed range and auto-resume",
+      "Head-Up Display",
+      "Direct Adaptive Steering",
+      "Traffic Sign Recognition"
+    ]
+  }
+}

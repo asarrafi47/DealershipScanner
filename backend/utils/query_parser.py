@@ -222,6 +222,41 @@ def _load_package_names(cache_key: str) -> tuple[str, ...]:
 
 
 # Phrases in user text → body type cue, with keywords to match against DB values
+_REAL_BODY_TYPE_WORDS = frozenset(
+    {
+        "suv",
+        "sedan",
+        "coupe",
+        "truck",
+        "pickup",
+        "van",
+        "wagon",
+        "hatchback",
+        "convertible",
+        "crossover",
+        "minivan",
+        "cab",
+        "chassis",
+        "cargo",
+    }
+)
+
+
+def _body_style_is_drivetrain_trim_label(value: str) -> bool:
+    """
+    True when ``body_style`` is a trim/drivetrain label (e.g. ``XLE AWD``), not a body type.
+    Prevents smart-search ``AWD`` from narrowing to bogus body_style facets.
+    """
+    d = (value or "").strip().lower()
+    if not d:
+        return True
+    if any(w in d for w in _REAL_BODY_TYPE_WORDS):
+        return False
+    if re.search(r"\b(awd|4wd|fwd|rwd|4x4)\b", d):
+        return True
+    return False
+
+
 _BODY_STYLE_CUES: list[tuple[re.Pattern[str], str, list[str]]] = [
     (re.compile(r"\b(suv|sport\s+utility|family\s+(?:car|vehicle|suv))\b", re.I), "SUV sport utility",
      ["suv", "sport utility", "utility vehicle"]),
@@ -262,6 +297,8 @@ def _match_body_style_filters(text: str, distinct: list[str]) -> list[str] | Non
         dlow = str(d).strip().lower()
         # Skip body_style values that are really trim names (e.g. "LIMITED", "XLE", "LE")
         if dlow in _TRIM_SKIP_ALONE:
+            continue
+        if _body_style_is_drivetrain_trim_label(d):
             continue
         if len(dlow) >= 2 and re.search(rf"(?i)\b{re.escape(dlow)}\b", low):
             if d not in seen:
@@ -680,6 +717,8 @@ def _extract_all_package_search_terms(text: str, package_names: tuple[str, ...] 
     for name in package_names:
         nlow = name.lower().strip()
         if len(nlow) >= 4 and nlow in low:
+            if len(nlow.split()) > 6 or (low and len(nlow) > max(28, int(len(low) * 0.55))):
+                continue
             core = re.sub(r"\s+package$", "", nlow).strip()
             add(core if len(core) >= 3 else nlow)
 
@@ -693,7 +732,25 @@ def _extract_all_package_search_terms(text: str, package_names: tuple[str, ...] 
         if phrase and phrase not in {"a", "the", "an"}:
             add(phrase)
 
-    return needles
+    return _prune_equipment_needles(needles, full_text=text)
+
+
+def _prune_equipment_needles(needles: list[str], *, full_text: str = "") -> list[str]:
+    """Drop redundant / query-echo needles; prefer specific package phrases."""
+    low = (full_text or "").lower()
+    out: list[str] = []
+    for n in sorted(needles, key=len, reverse=True):
+        needle = (n or "").strip().lower()
+        if len(needle) < 2 or len(needle) > 56:
+            continue
+        if re.search(r"\b(under|below|miles?|msrp)\b", needle):
+            continue
+        if low and len(needle) > 24 and needle in low and len(low) - len(needle) < 12:
+            continue
+        if any(needle != o and needle in o for o in out):
+            continue
+        out.append(needle)
+    return out
 
 
 def _extract_package_search_term(text: str, package_names: tuple[str, ...] | list[str]) -> str | None:
@@ -1169,8 +1226,10 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
     out.update(_merge_vehicle_hits(vehicle_hits))
 
     pkg_terms = _extract_all_package_search_terms(raw, package_names)
-    if pkg_terms:
-        out["packages_json_contains_list"] = pkg_terms
+    if len(pkg_terms) >= 2:
+        out["packages_json_contains_all"] = pkg_terms
+    elif len(pkg_terms) == 1:
+        out["packages_json_contains"] = pkg_terms[0]
 
     # Drop body_style values that are really fuel-type labels (e.g. "PLUG-IN HYBRID" as body_style)
     if out.get("fuel_type") and out.get("body_style"):
@@ -1183,6 +1242,15 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
         ]
         if cleaned:
             out["body_style"] = cleaned
+        else:
+            out.pop("body_style", None)
+
+    if out.get("drivetrain") and out.get("body_style"):
+        cleaned_dt = [
+            b for b in out["body_style"] if not _body_style_is_drivetrain_trim_label(b)
+        ]
+        if cleaned_dt:
+            out["body_style"] = cleaned_dt
         else:
             out.pop("body_style", None)
 

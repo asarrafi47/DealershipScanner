@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|infiniti|m",
+  "year": 2010,
+  "make": "Infiniti",
+  "model": "M",
+  "ladder_id": "brochure_llm_2010__infiniti__m",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M45x AWD",
+    "M45",
+    "M35x AWD",
+    "M35"
+  ],
+  "adds_by_trim": {
+    "M45x AWD": [
+      "325-horsepower 4.5-liter V8 engine"
+    ],
+    "M45": [
+      "325-horsepower 4.5-liter V8 engine"
+    ],
+    "M35x AWD": [
+      "Intelligent All-Wheel Drive system",
+      "5-speed automatic transmission with Drive Sport mode and manual shift"
+    ],
+    "M35": [
+      "303-horsepower 3.5-liter V6 engine",
+      "7-speed automatic transmission with Drive Sport mode, manual shift, and Downshift Rev Matching"
+    ]
+  }
+}

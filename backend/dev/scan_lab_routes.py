@@ -8,7 +8,7 @@ from typing import Any
 from flask import Blueprint, abort, jsonify, make_response, render_template, request, session, url_for
 
 from backend.dev import scan_lab as sl
-from backend.db.inventory_db import _UPDATABLE_CAR_COLUMNS, get_car_by_id
+from backend.db.inventory_db import _UPDATABLE_CAR_COLUMNS
 
 
 def _scan_lab_nav_context() -> dict[str, Any]:
@@ -66,7 +66,7 @@ def register_scan_lab_routes(dev_bp: Blueprint) -> None:
     @dev_bp.route("/scan-lab/car/<int:car_id>")
     def scan_lab_car_detail(car_id: int):
         """Full VDP under dev auth — same template as public ``/car/<id>``."""
-        car_raw = get_car_by_id(car_id, include_inactive=False)
+        car_raw = sl.get_scan_lab_car_by_id(car_id, include_inactive=False)
         if not car_raw or not sl.car_in_manifest_scope(car_raw):
             abort(404)
         from backend.main import _build_car_detail_view_context

@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|chevrolet|camaro",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_2014__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SS",
+    "RS",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 100,000-mile/5-year transferable Powertrain Limited Warranty",
+      "Adds Includes 36,000-mile/3-year New Vehicle Limited Warranty coverage",
+      "Adds Includes 2-year/24,000-mile scheduled maintenance program with oil and filter changes",
+      "Adds Includes 100,000-mile/5-year 24/7 Roadside Assistance Program",
+      "Adds Includes Courtesy Transportation Program",
+      "Adds Includes tire sealant and compressor kit for emergency tire repair"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "RS": [],
+    "SS": []
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2018|toyota|rav4",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "Adventure",
+    "SE",
+    "LE",
+    "Premium",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds to or replaces features offered on SE Adds to or replaces features offered on Limited",
+      "Powertrain Powertrain Powertrain",
+      "Available Dynamic Torque-Control AWD \u2022 Available Dynamic Torque-Control AWD \u2022 Available Dynamic Torque-Control AWD",
+      "Exterior Features Exterior Features Exterior Features",
+      "LED projector-beam headlights with auto on/off feature \u2022 18-in. 5-spoke SuperChrome alloy wheels with P235/55R18 tires \u2022 Full-body color",
+      "LED Daytime Running Lights (DRL) \u2022 Heated power outside mirrors with turn signal and blind spot \u2022 Hands-free, foot-activated power liftgate6 with jam protection",
+      "18-in. 5-spoke Sport alloy wheels with P235/55R18 tires warning indicators,5 and folding feature \u2022 Platinum badging",
+      "Black-painted heated power outside mirrors with turn Interior Features \u2022 Front and rear parking sonar3",
+      "E ntune\u2122 Premium Audio with Integrated Navigation22 and App Suite9",
+      "LED projector-beam headlights with auto on/off feature",
+      "Frameless auto-dimming rearview mirror with HomeLink\u00ae24",
+      "LED Daytime Running Lights (DRL)"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on XLE Hybrid Adds to or replaces features offered on SE Hybrid",
+      "Powertrain Exterior Features Exterior Features",
+      "2.5L 4-Cylinder Engine \u2022 LED projector-beam headlights with auto on/off feature \u2022 18-in. 5-spoke SuperChrome alloy wheels with P235/55R18 tires",
+      "CVT \u2022 LED Daytime Running Lights (DRL) \u2022 Heated power outside mirrors with turn signal and blind spot warning",
+      "194 net hp \u2022 18-in. 5-spoke Sport alloy wheels with P235/55R18 tires indicators,5 and folding feature",
+      "Electronic On-Demand AWD with intelligence (AWD-i) \u2022 Black-painted heated power outside mirrors with turn signal Interior Features",
+      "Exterior Features \u2022 E ntune\u2122 Premium Audio with Integrated Navigation22 and App Suite9",
+      "Halogen projector-beam headlights with auto on/off feature \u2022 Frameless auto-dimming rearview mirror",
+      "Integrated fog lights \u2022 E ntune\u2122 Audio Plus with Connected Navigation App17 \u2022 Leather-trimmed shift lever with silver accents",
+      "Silver-highlighted lower grille \u2022 4.2-in. TFT Multi-Information Display (MID) \u2022 4.2-in. TFT Multi-Information Display (MID)",
+      "17-in. 5-spoke alloy wheels with P225/65R17 tires \u2022 SofTex\u00ae-trimmed 8-way power-adjustable driver\u2019s seat with \u2022 SofTex\u00ae-trimmed 8-way power-adjustable driver\u2019s seat with memory",
+      "Power tilt/slide moonroof with sunshade 4-way adjustable front passenger seat with sport bolsters pocket; 4-way adjustable front passenger seat with sport bolsters"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "2.5L 4-Cylinder Engine \u2022 Available Dynamic Torque-Control AWD \u2022 Available Dynamic Torque-Control AWD",
+      "6-speed automatic transmission",
+      "Exterior Features Exterior Features",
+      "176 hp @ 6000 rpm",
+      "172 lb.-ft. @ 4100 rpm \u2022 Integrated fog lights \u2022 Halogen projector-beam headlights with black bezels and",
+      "Available Dynamic Torque-Control AWD w/center differential lock \u2022 Silver-highlighted lower grille auto on/off feature",
+      "17-in. 5-spoke alloy wheels with P225/65R17 tires \u2022 Integrated fog lights with black accents",
+      "Exterior Features \u2022 Power tilt/slide moonroof with sunshade \u2022 Unique lower valance panels and rocker panel guards",
+      "Halogen projector-beam headlights with auto on/off feature \u2022 Larger overfender flares",
+      "Power outside mirrors with folding feature and blind spot mirrors4 \u2022 Black RAV4 Adventure badging"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

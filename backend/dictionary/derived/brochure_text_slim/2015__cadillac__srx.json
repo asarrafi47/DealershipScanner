@@ -1,0 +1,11 @@
+{
+  "catalog_key": "2015|cadillac|srx",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "SRX",
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "combined_trim_pages_text": "--- page 1 ---\n2 0 1 5 S R X\ncadillac.com/srx\n\n--- page 2 ---\n2 0 1 5 S R X\ncadillac.com/srx\n\n--- page 5 ---\ncillateM\nrevliS\ntnaidaR\n/\nnoitcelloC\nmuimerP\nXRS\n\ncillateM\nrevliS\ntnaidaR\n/\nnoitcelloC\nmuimerP\nXRS\n\n--- page 22 ---\n2 0 1 5 S R X\ncadillac.com/srx"
+}

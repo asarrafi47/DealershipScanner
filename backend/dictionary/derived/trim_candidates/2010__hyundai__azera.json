@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2010|hyundai|azera",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Azera",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

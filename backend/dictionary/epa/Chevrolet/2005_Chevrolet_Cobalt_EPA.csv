@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Chevrolet,Cobalt,Cobalt,2.0L I4,2.0L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,27,23,,,,,
+2005,Chevrolet,Cobalt,Cobalt,2.2L I4,2.2L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.2,21,29,24,,,,,
+2005,Chevrolet,Cobalt,Cobalt,2.2L I4,2.2L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.2,22,31,25,,,,,

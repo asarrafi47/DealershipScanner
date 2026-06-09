@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2022|ram|1500",
+  "year": 2022,
+  "make": "ram",
+  "model": "1500",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "TRX",
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Rebel",
+    "Night Edition",
+    "Big Horn",
+    "Lone Star",
+    "Tradesman",
+    "Platinum",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

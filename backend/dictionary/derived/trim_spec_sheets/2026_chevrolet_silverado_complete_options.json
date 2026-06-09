@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_chevrolet_silverado_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Silverado",
+    "Silverado"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "ZR2": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 10-spd; Four-Wheel Drive"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Battery 0.45 kWh lithium-ion (eAssist mild hybrid)"
+      }
+    ]
+  }
+}

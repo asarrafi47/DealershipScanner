@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2016|ford|flex",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_web_2016__ford__flex",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited EcoBoost AWD",
+    "Limited AWD",
+    "Limited FWD",
+    "SEL AWD",
+    "SEL FWD",
+    "SE FWD"
+  ],
+  "adds_by_trim": {
+    "SE FWD": [
+      "Cloth seats for seven passengers",
+      "Leather-wrapped steering wheel",
+      "4.2-inch infotainment display",
+      "17-inch wheels with disc brakes at all four corners",
+      "Reverse sensors with rear camera",
+      "Keyless entry via touchpad on driver's door"
+    ],
+    "SEL FWD": [
+      "8.0-inch touchscreen with SYNC 3 infotainment system",
+      "Two USB ports integrated into infotainment",
+      "Available black roof for visual contrast",
+      "Available appearance package with black wheel and grille details",
+      "Available multi-panel glass roof with power sunshades",
+      "Available second-row bucket seats"
+    ],
+    "SEL AWD": [
+      "All-wheel drive system"
+    ],
+    "Limited FWD": [
+      "Universal garage door opener becomes standard",
+      "Premium interior appointments and styling upgrades"
+    ],
+    "Limited AWD": [
+      "All-wheel drive system"
+    ],
+    "Limited EcoBoost AWD": [
+      "Twin-turbocharged 3.5-liter V-6 engine with 365 hp and 350 lb-ft torque",
+      "15/21 mpg city/highway fuel economy"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/flex/"
+}

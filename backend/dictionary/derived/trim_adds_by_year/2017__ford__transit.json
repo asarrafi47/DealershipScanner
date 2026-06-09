@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|ford|transit",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Transit",
+  "ladder_id": "brochure_llm_2017__ford__transit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Transit Connect TITANIUM",
+    "Transit Connect XLT",
+    "Transit Connect XL",
+    "Transit XLT",
+    "Transit XL"
+  ],
+  "adds_by_trim": {
+    "Transit Connect TITANIUM": [
+      "16-inch aluminum wheels with locking wheel lugs",
+      "Premium front center closeable console with 2 cupholders"
+    ],
+    "Transit Connect XLT": [
+      "16-inch steel wheels with styled wheel covers",
+      "Optional 16-inch aluminum or 17-inch aluminum/premium black wheels",
+      "Rear cupholders (2 in 2nd row, 2 in 3rd row for LWB)"
+    ],
+    "Transit Connect XL": [
+      "2.5L Duratec I-4 engine with 6-speed SelectShift automatic",
+      "Power 4-wheel disc brakes with ABS",
+      "AdvanceTrac with RSC and Curve Control",
+      "Dual sliding side doors with rear liftgate and fixed glass",
+      "Dual front map lights and rear overhead courtesy light",
+      "Remote Keyless Entry System with 2 key fobs",
+      "Tilt/telescoping steering column"
+    ],
+    "Transit XLT": [
+      "16-inch black steel wheels with silver-styled cover",
+      "Solar tinted glass optional with RV Prep Package",
+      "Available for DRW and SRW configurations"
+    ],
+    "Transit XL": [
+      "3.7L Ti-VCT V6 engine with 6-speed SelectShift automatic",
+      "Power 4-wheel disc brakes with ABS and Hill start assist",
+      "AdvanceTrac with RSC (Roll Stability Control)",
+      "Multiple seating configurations: 8-passenger, 12-passenger, or 15-passenger",
+      "Rear view camera with trailer hitch assist",
+      "Power door locks with autolocking-on-drive feature",
+      "Remote Keyless Entry System with 2 key fobs",
+      "Tilt/telescoping steering column with power front windows"
+    ]
+  }
+}

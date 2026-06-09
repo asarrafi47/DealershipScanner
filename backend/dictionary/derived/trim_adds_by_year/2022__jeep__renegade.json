@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2022|jeep|renegade",
+  "year": 2022,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_llm_2022__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Trailhawk",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Trailhawk": [
+      "8.7 inches ground clearance with optimized approach, breakover, and departure angles",
+      "Rear-axle disconnect for enhanced off-road efficiency",
+      "2,000 lbs towing capacity when properly equipped",
+      "19.0 inches water fording depth capability",
+      "Dedicated Trailhawk suspension tuning and geometry"
+    ],
+    "Limited": [
+      "Alpine White exterior color option",
+      "Enhanced comfort and technology appointments"
+    ],
+    "Sport": [
+      "1.3L MultiAir Turbo I-4 engine with 177 hp and 210 lb-ft torque",
+      "Standard Blind Spot Monitoring and Rear Cross-Path Detection systems",
+      "LaneSense Lane Departure Warning with Lane Keep Assist",
+      "Frequency Selective Damping suspension for smooth, controlled ride",
+      "18.5 cu ft cargo volume with rear seat up, 50.8 cu ft folded"
+    ]
+  }
+}

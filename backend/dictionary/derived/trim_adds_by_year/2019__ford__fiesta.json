@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2019|ford|fiesta",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_2019__ford__fiesta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds 6.5-inch SYNC 3 touchscreen with voice-activated technology",
+      "Adds dual smart-charging USB ports",
+      "Adds SYNC 3 AppLink for compatible mobile app integration",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds voice-activated navigation with turn-by-turn directions and 3-D maps",
+      "Adds FordPass smartphone app integration",
+      "Adds Traffic and Travel Link for real-time traffic avoidance"
+    ],
+    "SE": [
+      "Upgraded to 16-inch 8-spoke Black-painted machined aluminum wheels"
+    ],
+    "Limited": []
+  }
+}

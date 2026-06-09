@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|rollsroyce|ghost",
+  "year": 2015,
+  "make": "Rolls Royce",
+  "model": "Ghost",
+  "ladder_id": "brochure_web_2015__rollsroyce__ghost",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ghost Black Badge Sedan",
+    "Ghost Extended Wheelbase Sedan",
+    "Ghost Sedan"
+  ],
+  "adds_by_trim": {
+    "Ghost Black Badge Sedan": [
+      "V-12 engine output increased to 592 hp and 664 lb-ft of torque",
+      "Transmission tuned for quicker shifts",
+      "Tighter suspension springs for more immediate response",
+      "Faster steering ratio",
+      "Short-travel brake pedal"
+    ],
+    "Ghost Extended Wheelbase Sedan": [
+      "Elongated body and wheelbase",
+      "6.7 additional inches of second-row legroom (48.0 inches total)"
+    ],
+    "Ghost Sedan": [
+      "6.75-liter twin-turbocharged V-12 engine with 563 hp and 627 lb-ft of torque",
+      "Eight-speed automatic transmission with standard all-wheel drive",
+      "12.3-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Built-in navigation system",
+      "18-speaker audio system with 1,400-watt amplifier",
+      "Front automatic emergency braking and rear cross-traffic alert",
+      "Lane departure warning, lane keep assist, and adaptive cruise control",
+      "Driver attention monitoring and 360-degree camera system",
+      "Second-row seat back entertainment displays with separate Bluetooth connectivity",
+      "Mobile app for remote vehicle access and door locking"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/rolls-royce/ghost/"
+}

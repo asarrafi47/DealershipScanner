@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2021|subaru|legacy",
+  "year": 2021,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2021__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Legacy Touring XT",
+    "Legacy Limited XT",
+    "Legacy Limited",
+    "Legacy Sport",
+    "Legacy Premium",
+    "Legacy"
+  ],
+  "adds_by_trim": {
+    "Legacy Premium": [
+      "Body-color side mirrors with integrated turn signals",
+      "Crystal Black Silica front grille",
+      "17-inch aluminum-alloy wheels",
+      "All-Weather Package with heated exterior mirrors and 3-mode heated front seats",
+      "10-way power-adjustable driver seat with lumbar support",
+      "Leather-wrapped steering wheel and shifter handle",
+      "SUBARU STARLINK 11.6-inch Multimedia Plus with Apple CarPlay and Android Auto",
+      "4G LTE Wi-Fi capability",
+      "Dual-zone automatic climate control system with air filtration"
+    ],
+    "Legacy Sport": [
+      "Sport trunk spoiler",
+      "Sport rear bumper",
+      "18-inch aluminum-alloy wheels",
+      "18-inch aluminum-alloy wheels in black metallic finish",
+      "Two-Tone Gray Cloth upholstery with red contrast stitching",
+      "SI-DRIVE Engine Performance Management",
+      "Aluminum-alloy pedal covers",
+      "Auto-dimming rearview compass mirror with HomeLink"
+    ],
+    "Legacy Limited": [
+      "260-hp 2.4-liter 4-cylinder direct-injection turbocharged SUBARU BOXER engine",
+      "Lineartronic CVT High-Torque with 8-speed manual-mode paddle shifters",
+      "Keyless Access with Push-Button Start",
+      "Leather-trimmed upholstery",
+      "LED fog lights",
+      "8-way power-adjustable front-passenger seat",
+      "Adjustable driver seat thigh support",
+      "Blind-Spot Detection with Lane Change Assist",
+      "Reverse Automatic Braking"
+    ],
+    "Legacy Limited XT": [
+      "Heated steering wheel",
+      "Two-position memory driver seat and side mirrors",
+      "Heated outboard rear seats",
+      "Harman Kardon 576-watt-equivalent premium audio system with 12 speakers",
+      "DriverFocus Distraction Mitigation System",
+      "Power moonroof",
+      "Automatic power-folding side mirrors",
+      "180-Degree Front View Monitor"
+    ],
+    "Legacy Touring XT": [
+      "Sound-insulating front door glass",
+      "Body-color door handles with chrome inserts",
+      "Crystal Black Silica finish pillar trim",
+      "Sierra Tan Nappa leather-trimmed upholstery",
+      "High-grade leather-wrapped heated steering wheel",
+      "3-mode ventilated front seats",
+      "SUBARU STARLINK 11.6-inch Navigation with 3 years of map updates and SiriusXM Traffic",
+      "SiriusXM Travel Link with CD player"
+    ],
+    "Legacy": [
+      "2.5-liter DOHC direct-injection boxer engine with 182 hp",
+      "176 lb-ft torque at 4,400 rpm",
+      "Lineartronic CVT with 8-speed manual-mode and paddle shifters",
+      "Subaru symmetrical all-wheel drive",
+      "4-wheel independent suspension with strut front and double-wishbone rear",
+      "4-wheel disc brakes with ABS and electronic brake-force distribution",
+      "Vehicle dynamics control with active torque vectoring",
+      "17 x 7.0-inch steel wheels with wheel covers",
+      "225/55 R17 all-season tires"
+    ]
+  }
+}

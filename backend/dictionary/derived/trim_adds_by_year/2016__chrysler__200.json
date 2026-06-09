@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2016|chrysler|200",
+  "year": 2016,
+  "make": "Chrysler",
+  "model": "200",
+  "ladder_id": "brochure_llm_2016__chrysler__200",
+  "source": "brochure_llm",
+  "trims_available": [
+    "200C",
+    "200S",
+    "200 Limited",
+    "200 LX"
+  ],
+  "adds_by_trim": {
+    "200C": [
+      "3.6L V6 engine optional (295 hp/262 lb-ft torque)",
+      "18-inch fully polished cast-aluminum wheel in Satin Clear",
+      "200C badge exterior styling",
+      "Leather steering wheel with paddle shifters",
+      "Heated front seats and steering wheel",
+      "Satin chrome interior accents",
+      "Customizable 7-inch driver information display",
+      "Dual-zone automatic temperature control with rear-seat HVAC ducts"
+    ],
+    "200S": [
+      "3.6L V6 engine optional (295 hp/262 lb-ft torque)",
+      "18-inch fully painted cast-aluminum wheel in Satin Carbon",
+      "200S badge exterior styling",
+      "Sport suspension",
+      "Sport seating with leather bolsters",
+      "Leather steering wheel with mounted paddle shifters",
+      "Unique blue-painted hydrographic interior trim on select colors",
+      "Uconnect 8.4 touchscreen with 6 speakers"
+    ],
+    "200 Limited": [
+      "3.6L V6 engine optional (295 hp/262 lb-ft torque)",
+      "18-inch fully painted cast-aluminum wheel in Tech Silver",
+      "LED light pipe headlamps",
+      "Black mesh lower grille with chrome surround",
+      "Heated exterior mirrors",
+      "8-way power driver's seat",
+      "Leather steering wheel",
+      "ParkView rear backup camera",
+      "Uconnect 5.0 with 6 speakers",
+      "Dual-zone automatic temperature control"
+    ],
+    "200 LX": [
+      "2.4L i-4 engine standard (184 hp/173 lb-ft torque)",
+      "17-inch cast-aluminum wheel cover fully painted in Silver",
+      "Active grille shutters",
+      "Underbody aerodynamic panels",
+      "Electronic Stability Control and traction control",
+      "Electric power steering",
+      "1-door and trunk passive entry with push-button start",
+      "17-inch wheel cover fully painted",
+      "LED taillamps",
+      "Radio 3.0 with 4 speakers"
+    ]
+  }
+}

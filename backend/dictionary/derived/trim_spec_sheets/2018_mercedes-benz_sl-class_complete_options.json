@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2018_mercedes-benz_sl-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SL-Class",
+    "SL-Class"
+  ],
+  "year_min": 2016,
+  "year_max": 2020,
+  "source": "generated",
+  "trims": {
+    "AMG SL65": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG SL63": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 550": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 450": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

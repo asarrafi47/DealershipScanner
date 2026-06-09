@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2022|kia|niro",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Niro",
+  "ladder_id": "brochure_web_2022__kia__niro",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "SX Touring",
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Touring": [
+      "Panoramic sunroof",
+      "Harman Kardon premium audio system",
+      "Leather seating surfaces",
+      "Heated front seats",
+      "Power driver seat with lumbar support",
+      "Blind spot view monitor",
+      "Smart power liftgate"
+    ],
+    "SX": [
+      "10.25-inch touchscreen display",
+      "Wireless smartphone integration",
+      "Heated steering wheel",
+      "Proximity key with push-button start",
+      "Dual automatic temperature control",
+      "8-way power driver seat"
+    ],
+    "EX": [
+      "8-inch touchscreen with navigation",
+      "Rearview camera with guidelines",
+      "Bluetooth connectivity",
+      "Auxiliary and USB audio inputs",
+      "Cruise control"
+    ],
+    "LX": [
+      "1.6L turbocharged three-cylinder engine with 180 horsepower",
+      "Six-speed automatic transmission",
+      "Front-wheel drive",
+      "Air conditioning",
+      "Power windows and locks",
+      "Tilt and telescopic steering wheel",
+      "AM/FM radio with four speakers"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/niro/"
+}

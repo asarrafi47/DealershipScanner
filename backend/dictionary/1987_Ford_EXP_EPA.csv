@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1987,Ford,EXP,EXP,1.9L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Two Seaters,4,1.9,23,29,25,,,,,,1.9L I4 Turbo,Turbocharged
-1987,Ford,EXP,EXP,1.9L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Two Seaters,4,1.9,24,34,28,,,,,,1.9L I4 Turbo,Turbocharged
-1987,Ford,EXP,EXP,1.9L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Two Seaters,4,1.9,22,31,25,,,,,,1.9L I4 Turbo,Turbocharged

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|toyota|sienna",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "inventory_toyota_sienna",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "XLE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "SiriusXM service at the end of your",
+      "HD Radio, and “Arc” logos are proprietary trademarks of iBiquity Digital Corp. 10. Always drive",
+      "subscription term selected. 23. Vehicle Stability Control (VSC) is an electronic system",
+      "in the key/fob, it can be costly to replace. If you lose a key or fob, your Toyota dealer can"
+    ],
+    "SE": [
+      "SiriusXM Customer Agreement available at www.siriusxm.com. If you decide to continue your",
+      "HD Radio™ and the HD,",
+      "subscription terms available; charges vary by",
+      "in the vehicle’s immobilizer. Because the transponder chip is embedded"
+    ],
+    "LE": [
+      ". See footnote 24 in Disclosures section. 2"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "SE": 4,
+      "LE": 0
+    }
+  }
+}

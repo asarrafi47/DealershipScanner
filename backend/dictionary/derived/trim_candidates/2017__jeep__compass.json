@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2017|jeep|compass",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Compass",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Trailhawk"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

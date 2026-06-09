@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Porsche,911,SC,3.2L V6 ((FFS)),3.2L V6 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Minicompact Cars,6,3.2,15,23,18,,,,,
+1984,Porsche,911,SC,3.2L V6 ((FFS) CA model),3.2L V6 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Minicompact Cars,6,3.2,15,23,18,,,,,

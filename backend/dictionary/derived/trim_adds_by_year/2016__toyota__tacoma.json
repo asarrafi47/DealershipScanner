@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2016|toyota|tacoma",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_llm_2016__toyota__tacoma",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "TRD Off-Road",
+    "TRD Sport",
+    "SR5",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.7-liter DOHC 16-valve 4-cylinder with 159 hp",
+      "5-speed manual transmission standard",
+      "Charcoal grille with chrome surround",
+      "16-inch styled steel wheels",
+      "Projector-beam headlights with turn signal DRL",
+      "Entune Audio with Bluetooth wireless technology",
+      "Integrated backup camera",
+      "Integrated GoPro mount on windshield",
+      "Power windows and door locks",
+      "Tire Pressure Monitor System with individual tire location alert"
+    ],
+    "SR5": [
+      "3.5-liter V6 DOHC 24-valve direct-injection Atkinson-cycle engine with 278 hp",
+      "6-speed automatic transmission standard",
+      "Dark gray grille with black surround",
+      "Chrome rear bumper",
+      "Projector-beam headlights with turn signal DRL and integrated fog lights",
+      "Variable intermittent windshield wipers",
+      "Sliding rear privacy glass",
+      "Entune Audio Plus with Connected Navigation App and 4.2-inch color MID"
+    ],
+    "TRD Sport": [
+      "Gray grille with smoked finish and chrome surround",
+      "Color-keyed overfenders and rear bumper",
+      "17-inch machined alloy wheels",
+      "Projector-beam headlights with LED DRL and integrated wide-angle fog lights",
+      "Color-keyed hood scoop",
+      "120V/400W in-deck AC power outlet",
+      "Entune Premium Audio with Integrated Navigation and 4.2-inch color MID",
+      "Smart Key System with Push Button Start",
+      "Qi-compatible wireless smartphone charging",
+      "Auto-dimming day/night rearview mirror with compass"
+    ],
+    "TRD Off-Road": [
+      "Off-road tuned suspension with Bilstein shocks",
+      "Electronically controlled locking rear differential",
+      "Multi-terrain Select and Crawl Control for 4x4 A/T",
+      "Active Traction Control for 4x4 M/T",
+      "Black overfenders",
+      "16-inch machined contrast alloy wheels",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Entune Premium Audio with Integrated Navigation"
+    ],
+    "Limited": [
+      "Double Cab configuration only",
+      "Charcoal grille with polished finish and chrome surround",
+      "Chrome-accented power outside mirrors and door handles",
+      "18-inch polished alloy wheels",
+      "Integrated fog lights with chrome bezels",
+      "Power tilt/slide moonroof",
+      "Rear parking assist sonar",
+      "Entune Premium JBL Audio with Integrated Navigation",
+      "Leather-trimmed seats",
+      "Dual zone automatic climate control"
+    ]
+  }
+}

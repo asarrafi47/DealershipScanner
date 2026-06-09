@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2021|lexus|ux",
+  "year": 2021,
+  "make": "lexus",
+  "model": "UX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

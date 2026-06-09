@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|chevrolet|silverado",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2020__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HIGH COUNTRY",
+    "LTZ",
+    "LT TRAIL BOSS",
+    "RST",
+    "LT",
+    "CUSTOM TRAIL BOSS",
+    "CUSTOM",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "HIGH COUNTRY": [
+      "5.3L EcoTec3 V8 (L84) standard engine",
+      "Available 6.2L EcoTec3 V8 and Duramax 3.0L Turbo-Diesel engines",
+      "Available Z71 Off-Road Package with skid plates"
+    ],
+    "LTZ": [
+      "5.3L EcoTec3 V8 (L84) standard engine",
+      "Available power-up/down tailgate with power lock and release",
+      "Available 6.2L EcoTec3 V8 and Duramax 3.0L Turbo-Diesel engines"
+    ],
+    "LT TRAIL BOSS": [
+      "5.3L EcoTec3 V8 (L84) standard engine",
+      "10-speed automatic transmission with Dynamic Fuel Management",
+      "Available 6.2L EcoTec3 V8 engine"
+    ],
+    "RST": [
+      "2.7L Turbo (L3B) standard engine",
+      "Available 5.3L EcoTec3 V8 and 6.2L EcoTec3 V8 engines",
+      "Available Duramax 3.0L Turbo-Diesel engine"
+    ],
+    "LT": [
+      "2.7L Turbo (L3B) standard engine",
+      "Available 5.3L EcoTec3 V8 with Dynamic Fuel Management",
+      "Available Duramax 3.0L Turbo-Diesel and 6.2L EcoTec3 V8 engines"
+    ],
+    "CUSTOM TRAIL BOSS": [
+      "Available 5.3L EcoTec3 V8 and 6.2L EcoTec3 V8 engines",
+      "Crew Cab and Standard Bed configurations only"
+    ],
+    "CUSTOM": [
+      "Available 2.7L Turbo and 5.3L EcoTec3 V8 engines",
+      "Multiple cab and bed configuration options"
+    ],
+    "WT": [
+      "4.3L EcoTec3 V6 standard engine",
+      "Available 2.7L Turbo and 5.3L EcoTec3 V8 engines",
+      "Entry-level work truck with essential features and equipment"
+    ]
+  }
+}

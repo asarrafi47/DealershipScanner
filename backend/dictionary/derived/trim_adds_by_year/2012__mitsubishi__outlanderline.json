@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2012|mitsubishi|outlanderline",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "Outlander Line",
+  "ladder_id": "brochure_web_2012__mitsubishi__outlanderline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "SE",
+    "ES",
+    "XLS",
+    "GT"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "2.4L MIVEC engine with 168 hp",
+      "5-speed manual transmission standard",
+      "Front-wheel drive",
+      "Air conditioning",
+      "Power windows and locks",
+      "60/40 split rear seats",
+      "Roof rails",
+      "16-inch steel wheels"
+    ],
+    "ES": [
+      "Continuously variable transmission (CVT) available",
+      "Upgraded cloth upholstery",
+      "Cruise control",
+      "Exterior body-colored door handles and mirrors",
+      "16-inch alloy wheels",
+      "Fog lights"
+    ],
+    "XLS": [
+      "All-Wheel Drive standard",
+      "Leather-trimmed seating surfaces",
+      "Dual-zone automatic climate control",
+      "Heated front seats",
+      "AM/FM stereo with CD and 6.5-inch display",
+      "HomeLink remote transmitter",
+      "Roof rails with crossbars",
+      "18-inch alloy wheels"
+    ],
+    "GT": [
+      "Premium leather upholstery",
+      "Moonroof",
+      "Touchscreen navigation system with backup camera",
+      "Bluetooth connectivity",
+      "XM Satellite Radio",
+      "Heated and ventilated front seats",
+      "Power liftgate",
+      "18-inch machine-finished alloy wheels"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/mitsubishi/outlander-line"
+}

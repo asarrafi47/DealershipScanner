@@ -54,6 +54,20 @@ def test_search_cars_by_make_model_pairs_empty():
     assert search_cars_by_make_model_pairs([]) == []
 
 
+def test_search_cars_by_make_model_pairs_warm_under_200ms():
+    import time
+
+    from backend.db.inventory_db import _incomplete_car_ids_for_listings
+
+    pairs = [("Toyota", "Camry"), ("Honda", "Accord")]
+    _incomplete_car_ids_for_listings()
+    t0 = time.perf_counter()
+    cars = search_cars_by_make_model_pairs(pairs, sql_limit=60)
+    elapsed = time.perf_counter() - t0
+    assert isinstance(cars, list)
+    assert elapsed < 0.2, f"warm make/model search too slow: {elapsed:.2f}s"
+
+
 def test_listings_grid_cold_build_under_one_second():
     import time
 
@@ -118,6 +132,38 @@ def test_listings_grid_serializer_has_filter_fields():
     assert out["photo_count"] == 2
     assert out["exterior_color_families"]
     assert out["interior_color_families"]
+    assert out["condition"] == "Used"
+
+
+def test_listings_inventory_condition_helpers() -> None:
+    from backend.utils.car_serialize import (
+        listings_inventory_is_new,
+        listings_inventory_is_pre_owned,
+        serialize_car_for_listings_grid,
+    )
+
+    assert listings_inventory_is_new("New")
+    assert not listings_inventory_is_pre_owned("New")
+
+    assert listings_inventory_is_pre_owned("Used")
+    assert listings_inventory_is_pre_owned("Certified Pre-Owned")
+    assert listings_inventory_is_pre_owned("Pre-Owned")
+    assert not listings_inventory_is_new("Used")
+
+    new_row = serialize_car_for_listings_grid(
+        {
+            "id": 2,
+            "title": "New 2025 Toyota Camry",
+            "year": 2025,
+            "make": "Toyota",
+            "model": "Camry",
+            "price": 30000,
+            "mileage": 0,
+            "source_url": "https://dealer.example.com/new-inventory/index.htm",
+        }
+    )
+    assert new_row["condition"] == "New"
+    assert listings_inventory_is_new(new_row["condition"])
 
 
 def test_listings_grid_serializer_includes_dealership_registry_id():

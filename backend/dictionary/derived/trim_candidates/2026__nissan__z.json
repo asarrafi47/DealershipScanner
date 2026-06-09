@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2026|nissan|z",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Z",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Nismo",
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

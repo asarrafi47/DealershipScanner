@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|buick|envision",
+  "year": 2019,
+  "make": "Buick",
+  "model": "Envision",
+  "ladder_id": "brochure_llm_2019__buick__envision",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium II",
+    "Premium",
+    "Preferred",
+    "Essence",
+    "Envision (1SV)"
+  ],
+  "adds_by_trim": {
+    "Premium II": [
+      "19-inch 12-spoke aluminum wheels with manoogian silver bright machine-faced finish",
+      "Leather-appointed seating (not available with Chili Red or Bronze Alloy Metallic)"
+    ],
+    "Premium": [
+      "19-inch 10-spoke aluminum wheels with midnight silver painted finish",
+      "Leather-appointed seating (not available with Chili Red or Bronze Alloy Metallic)"
+    ],
+    "Preferred": [
+      "18-inch 10-spoke aluminum wheels with polished finish"
+    ],
+    "Essence": [
+      "18-inch 10-spoke aluminum wheels with blade silver painted finish"
+    ],
+    "Envision (1SV)": [
+      "Light neutral cloth seating",
+      "Standard on Envision (1SV) and Preferred trim levels",
+      "Summit White exterior color standard"
+    ]
+  }
+}

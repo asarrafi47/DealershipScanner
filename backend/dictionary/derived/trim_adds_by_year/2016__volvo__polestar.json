@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2016|volvo|polestar",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "Polestar",
+  "ladder_id": "brochure_2016__volvo__polestar",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Harman Kardon Premium Sound with Bluetooth and Connected Service Booking",
+      "Adds Single DVD 7-inch IHU MCA Connect infotainment system",
+      "Adds Navigation with voice control and advanced features",
+      "Adds Automatic 6-speed AWD transmission with Polestar calibrated manual mode",
+      "Adds Polestar engine calibration with turbo charger and intercooler",
+      "Adds Polestar/Öhlins shock absorbers and chassis tuning",
+      "Adds Sport leather Polestar seats with power adjustment and heated function",
+      "Adds 20-inch Polestar performance rims with Michelin Pilot Super Sport tires",
+      "Adds Adaptive Cruise Control with City Safety and Lane Departure Warning",
+      "Adds Double pipe Polestar active exhaust system"
+    ],
+    "Premium": [
+      "Upgraded to Summum trim designation with enhanced appointments",
+      "Adds Rear spoiler Polestar with rear diffusor and splitter",
+      "Adds Heated rear seats with electric folding rear headrests",
+      "Adds Blind Spot Information System with CTRA",
+      "Adds Collision Warning with Full Auto Brake and Pedestrian detection",
+      "Adds Park Assist Camera with front and rear parking assistance",
+      "Adds Dual pipe exhaust with enhanced active tuning"
+    ]
+  }
+}

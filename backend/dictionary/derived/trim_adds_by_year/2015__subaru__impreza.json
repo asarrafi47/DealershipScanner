@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2015|subaru|impreza",
+  "year": 2015,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2015__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Sport Limited 5-door",
+    "2.0i Limited 4-door and 5-door",
+    "2.0i Sport Premium 5-door",
+    "2.0i Premium 4-door and 5-door",
+    "2.0i 4-door and 5-door"
+  ],
+  "adds_by_trim": {
+    "2.0i Sport Limited 5-door": [
+      "Leather-trimmed upholstery",
+      "Automatic climate control system",
+      "7.0-inch high-resolution LCD touchscreen with voice-activated controls",
+      "SiriusXM Satellite Radio with 4-month trial subscription",
+      "Auto-on/off headlights",
+      "Welcome lighting"
+    ],
+    "2.0i Limited 4-door and 5-door": [
+      "17-inch aluminum-alloy wheels",
+      "Fog lights",
+      "Body-color side mirrors with integrated turn signals",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shift handle",
+      "Automatic climate control system",
+      "7.0-inch high-resolution LCD touchscreen with voice-activated controls",
+      "Auto-on/off headlights",
+      "Welcome lighting"
+    ],
+    "2.0i Sport Premium 5-door": [
+      "Fog lights",
+      "17-inch aluminum-alloy wheels with gray finish",
+      "Roof rails black finish",
+      "Body-color side mirrors with integrated turn signals",
+      "Striped cloth upholstery",
+      "Leather-wrapped steering wheel and shift handle",
+      "All-Weather Package: heated exterior mirrors, dual-mode heated front seats, windshield wiper de-icer"
+    ],
+    "2.0i Premium 4-door and 5-door": [
+      "Lineartronic CVT standard with manual-mode paddle shifters",
+      "16-inch aluminum-alloy wheels",
+      "Body-color side mirrors",
+      "SUBARU STARLINK with 6.2-inch touchscreen, 6 speakers",
+      "All-Weather Package: heated exterior mirrors, dual-mode heated front seats, windshield wiper de-icer",
+      "SiriusXM Satellite Radio with 4-month trial subscription"
+    ],
+    "2.0i 4-door and 5-door": [
+      "148-hp 2.0-liter SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic CVT",
+      "15-inch steel wheels with covers",
+      "Cloth upholstery",
+      "Rear spoiler",
+      "6.2-inch LCD touchscreen with 4 speakers and Bluetooth audio streaming",
+      "Electronic cruise control",
+      "Rear-Vision Camera"
+    ]
+  }
+}

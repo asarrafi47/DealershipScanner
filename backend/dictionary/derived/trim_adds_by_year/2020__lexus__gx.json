@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2020|lexus|gx",
+  "year": 2020,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2020__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Standard seating configuration with fabric upholstery",
+      "Adds Standard safety features including backup camera"
+    ],
+    "Sport": [
+      "Upgraded to performance tires (18 or 19-inch)"
+    ],
+    "Limited": [
+      "Upgraded to premium leather seating surfaces"
+    ],
+    "Premium": [
+      "Upgraded to NuLuxe premium interior trim material",
+      "Adds carpet floor mats"
+    ],
+    "Luxury": [
+      "Upgraded to Mark Levinson premium audio system"
+    ]
+  }
+}

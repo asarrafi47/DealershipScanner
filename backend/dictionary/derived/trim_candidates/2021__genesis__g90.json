@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2021|genesis|g90",
+  "year": 2021,
+  "make": "genesis",
+  "model": "G90",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

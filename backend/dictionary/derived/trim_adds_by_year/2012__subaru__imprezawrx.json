@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2012|subaru|imprezawrx",
+  "year": 2012,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2012__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX STI",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "STI rear roof spoiler on 5-door models",
+      "STI trunk spoiler on 4-door models",
+      "Body-color power side mirrors with integrated turn signals",
+      "Performance-design front seats with STI logos and red stitching",
+      "STI-design leather-wrapped steering wheel with audio/cruise/Bluetooth controls",
+      "Alcantara and leather upholstery",
+      "DCCD and SI-DRIVE modes display",
+      "STI sport-design electroluminescent gauges with center tachometer",
+      "Footwell illumination lighting"
+    ],
+    "WRX STI": [
+      "High-intensity discharge HID low-beam headlights with halogen high-beams",
+      "STI trunk spoiler on 4-door models",
+      "STI rear roof spoiler on 5-door models",
+      "Body-color power side mirrors with integrated turn signals",
+      "Performance-design front seats with STI logos and red stitching",
+      "STI-design leather-wrapped steering wheel with audio/cruise/Bluetooth controls",
+      "STI sport-design electroluminescent gauges with center tachometer",
+      "DCCD and SI-DRIVE modes display"
+    ],
+    "WRX Limited": [
+      "Power tilt/sliding-glass moonroof",
+      "Heated front seats via All-Weather Package",
+      "Heated side mirrors and windshield wiper de-icer",
+      "Leather-trimmed upholstery",
+      "HID low-beam headlights with halogen high-beams",
+      "Trunk spoiler on 4-door models"
+    ],
+    "WRX Premium": [
+      "Power tilt/sliding-glass moonroof",
+      "Heated front seats via All-Weather Package",
+      "Heated side mirrors and windshield wiper de-icer",
+      "Leather-wrapped shifter handle",
+      "Leather-wrapped steering wheel with audio/cruise/Bluetooth controls",
+      "Fog lights on 4-door models"
+    ],
+    "WRX": [
+      "6-way manually adjustable driver seat and 4-way front passenger seat",
+      "Performance-design front seats with WRX logos and red stitching",
+      "Leather-wrapped shifter handle",
+      "Leather-wrapped steering wheel with audio/cruise/Bluetooth controls",
+      "Projector low-beam halogen and multireflector high-beam headlights",
+      "Front and rear underspoilers",
+      "Rear bumper with integrated diffuser",
+      "Exhaust system with quad stainless-steel outlets",
+      "6-speaker CD audio system with USB/iPod/Bluetooth and auxiliary jack",
+      "Automatic climate control with CFC-free air conditioning"
+    ]
+  }
+}

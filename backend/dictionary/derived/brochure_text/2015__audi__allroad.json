@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2015|audi|allroad",
+  "year": 2015,
+  "make": "Audi",
+  "model": "Allroad",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2015_Audi_Allroad_Brochure.pdf",
+  "page_count": 44,
+  "all_pages": false,
+  "trim_hint_pages": [
+    6,
+    37,
+    38
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 6,
+      "trim_hint": true,
+      "text": "Design\nWe do not follow design\ntrends. We set them.\nExceptional beauty blazes\nits own trail.\nIt may be its muscular silhouette that first captures your imagination, or maybe it\u2019s the way its increased\nride height and widened track tell a story of adventure off the beaten path. Whatever it is, you know it\ndidn\u2019t arrive here by following others. That\u2019s why it\u2019s possible to stare at the allroad\u00ae for hours and still\nnot pinpoint its most alluring feature. So let us offer some insight. Something we call the Tornado line,\na characteristic crease that lies below the window line, draws your eye along a flowing path from front\nto rear. This line, combined with the fender cladding and robust aluminum roof rails, adds to its mag-\nnetic appeal. And while it may be difficult to pin down, its beauty is a product of taking its own path.",
+      "table_lines": []
+    },
+    {
+      "page": 37,
+      "trim_hint": true,
+      "text": "Seat Selections | Interior Colors | Decorative Inlays\nStandard Seat Sport Seat\nAluminum Trigon decorative Dark Brown Walnut\nBlack leather Titanium Gray leather inlays Wood decorative inlays\nStandard, Sport Standard, Sport\nFine Grain Ash Natural Brown\nChestnut Brown leather Velvet Beige leather Wood decorative inlays\nStandard, Sport Standard\nExterior colors, interior colors and decorative inlay options will vary based on model and trim level combination. See your dealer for details.",
+      "table_lines": []
+    },
+    {
+      "page": 38,
+      "trim_hint": true,
+      "text": "Technical Specifications\nEngineering | Performance allroad\u00ae\nEngine type Four-cylinder\nEngine block/Cylinder head Cast-iron/Aluminum-alloy\nDisplacement (cc)/Bore and stroke (mm) 1,984/82.5 x 92.8\nHorsepower (@ rpm) 220 @ 4,450\u20136,000\nTorque (lb-ft @ rpm) 258 @ 1,500\u20134,300\nCompression ratio 9.6:1\n16-valve DOHC with\nValvetrain\nvalvelift system\nInduction/Fuel injection Turbocharged/TFSI\u00ae\nAcceleration (0\u201360 mph) NA\nTop track speed1 130 mph\nTransmission | Drivetrain\nEight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive\n(Gear ratios: 1st: 4.714, 2nd: 3.143, 3rd: 2.106, 4th: 1.667, 5th: 1.285, \uf06e\n6th: 1.000, 7th: 0.839, 8th: 0.667, Reverse: 3.317, Final drive: 3.076)\nBody | Suspension | Chassis\nFully galvanized steel unibody with multistep anti-corrosion protection \uf06e\nFive-link front suspension \uf06e\nTrapezoidal-link rear suspension \uf06e\nVentilated front disc/Solid rear disc brakes (in) 12.6/11.8\nElectromechanical power steering system \uf06e\nDynamic steering (Prestige) Available\nSteering ratio 15.9:1\nTurning diameter, curb-to-curb (ft) 37.7\n\uf06e Standard \u2014\u2014 Not applicable NA Information not available at time of printing",
+      "table_lines": [
+        "Engine type | Four-cylinder",
+        "Displacement (cc)/Bore and stroke (mm) | 1,984/82.5 x 92.8",
+        "Torque (lb-ft @ rpm) | 258 @ 1,500\u20134,300",
+        "Valvetrain | 16-valve DOHC with\nvalvelift system",
+        "Acceleration (0\u201360 mph) | NA",
+        "Eight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive\n(Gear ratios: 1st: 4.714, 2nd: 3.143, 3rd: 2.106, 4th: 1.667, 5th: 1.285,\n6th: 1.000, 7th: 0.839, 8th: 0.667, Reverse: 3.317, Final drive: 3.076) | \uf06e",
+        "Fully galvanized steel unibody with multistep anti-corrosion protection | \uf06e",
+        "Trapezoidal-link rear suspension | \uf06e",
+        "Electromechanical power steering system | \uf06e",
+        "Steering ratio | 15.9:1"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 6 ---\nDesign\nWe do not follow design\ntrends. We set them.\nExceptional beauty blazes\nits own trail.\nIt may be its muscular silhouette that first captures your imagination, or maybe it\u2019s the way its increased\nride height and widened track tell a story of adventure off the beaten path. Whatever it is, you know it\ndidn\u2019t arrive here by following others. That\u2019s why it\u2019s possible to stare at the allroad\u00ae for hours and still\nnot pinpoint its most alluring feature. So let us offer some insight. Something we call the Tornado line,\na characteristic crease that lies below the window line, draws your eye along a flowing path from front\nto rear. This line, combined with the fender cladding and robust aluminum roof rails, adds to its mag-\nnetic appeal. And while it may be difficult to pin down, its beauty is a product of taking its own path.\n\n--- page 37 ---\nSeat Selections | Interior Colors | Decorative Inlays\nStandard Seat Sport Seat\nAluminum Trigon decorative Dark Brown Walnut\nBlack leather Titanium Gray leather inlays Wood decorative inlays\nStandard, Sport Standard, Sport\nFine Grain Ash Natural Brown\nChestnut Brown leather Velvet Beige leather Wood decorative inlays\nStandard, Sport Standard\nExterior colors, interior colors and decorative inlay options will vary based on model and trim level combination. See your dealer for details.\n\n--- page 38 ---\nTechnical Specifications\nEngineering | Performance allroad\u00ae\nEngine type Four-cylinder\nEngine block/Cylinder head Cast-iron/Aluminum-alloy\nDisplacement (cc)/Bore and stroke (mm) 1,984/82.5 x 92.8\nHorsepower (@ rpm) 220 @ 4,450\u20136,000\nTorque (lb-ft @ rpm) 258 @ 1,500\u20134,300\nCompression ratio 9.6:1\n16-valve DOHC with\nValvetrain\nvalvelift system\nInduction/Fuel injection Turbocharged/TFSI\u00ae\nAcceleration (0\u201360 mph) NA\nTop track speed1 130 mph\nTransmission | Drivetrain\nEight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive\n(Gear ratios: 1st: 4.714, 2nd: 3.143, 3rd: 2.106, 4th: 1.667, 5th: 1.285, \uf06e\n6th: 1.000, 7th: 0.839, 8th: 0.667, Reverse: 3.317, Final drive: 3.076)\nBody | Suspension | Chassis\nFully galvanized steel unibody with multistep anti-corrosion protection \uf06e\nFive-link front suspension \uf06e\nTrapezoidal-link rear suspension \uf06e\nVentilated front disc/Solid rear disc brakes (in) 12.6/11.8\nElectromechanical power steering system \uf06e\nDynamic steering (Prestige) Available\nSteering ratio 15.9:1\nTurning diameter, curb-to-curb (ft) 37.7\n\uf06e Standard \u2014\u2014 Not applicable NA Information not available at time of printing\n\nEngine type | Four-cylinder\nDisplacement (cc)/Bore and stroke (mm) | 1,984/82.5 x 92.8\nTorque (lb-ft @ rpm) | 258 @ 1,500\u20134,300\nValvetrain | 16-valve DOHC with\nvalvelift system\nAcceleration (0\u201360 mph) | NA\nEight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive\n(Gear ratios: 1st: 4.714, 2nd: 3.143, 3rd: 2.106, 4th: 1.667, 5th: 1.285,\n6th: 1.000, 7th: 0.839, 8th: 0.667, Reverse: 3.317, Final drive: 3.076) | \uf06e\nFully galvanized steel unibody with multistep anti-corrosion protection | \uf06e\nTrapezoidal-link rear suspension | \uf06e\nElectromechanical power steering system | \uf06e\nSteering ratio | 15.9:1"
+}

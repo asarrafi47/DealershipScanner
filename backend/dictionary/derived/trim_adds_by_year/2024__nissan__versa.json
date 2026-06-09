@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2024|nissan|versa",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2024__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S",
+    "S+"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "17-inch machine-finished aluminum-alloy wheels",
+      "LED headlights with LED signature and turn signal indicators",
+      "Black-painted heated outside mirrors",
+      "8-inch NissanConnect color touchscreen display",
+      "Intelligent Cruise Control",
+      "Leather-wrapped steering wheel",
+      "Heated front seats",
+      "Prima-Tex dash trim with sport cloth seat trim",
+      "Nissan Intelligent Key with push button ignition and remote engine start",
+      "Automatic temperature control and body-color rear spoiler"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist display",
+      "7-inch NissanConnect color touchscreen with Apple CarPlay and Android Auto",
+      "Wireless smartphone charger",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Nissan Intelligent Key with push button ignition",
+      "Body-color outside mirrors and exterior door handles",
+      "Center console with armrest and storage",
+      "60/40-split fold-down rear seatbacks",
+      "Intelligent Driver Alertness and Rear Door Alert"
+    ],
+    "S+": [
+      "16-inch aluminum-alloy wheels",
+      "7-inch NissanConnect color touchscreen display",
+      "Apple CarPlay integration",
+      "Android Auto compatibility",
+      "60/40-split fold-down rear seatbacks"
+    ],
+    "S": [
+      "122-hp 1.6-liter DOHC 4-cylinder engine with 5-speed manual transmission",
+      "Available Xtronic CVT continuously variable transmission",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking, Lane Departure Warning, and High Beam Assist",
+      "RearView Monitor with 7-inch color touchscreen display",
+      "Bluetooth hands-free phone system with Siri Eyes Free",
+      "AM/FM audio with four speakers and voice recognition",
+      "Cruise control and air conditioning with in-cabin microfilter",
+      "Nissan Advanced Air Bag System with multiple supplemental airbags",
+      "V-Motion grille with chrome accents and cloth seat trim"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,Mercedes-Benz,CLA-Class,AMG CLA35 4matic,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,22,29,25,,,,,
+2025,Mercedes-Benz,CLA-Class,CLA250 4matic,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,29,,,,,
+2025,Mercedes-Benz,CLA-Class,CLA250,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,26,36,30,,,,,
+2025,Mercedes-Benz,CLA-Class,AMG CLA45 S 4matic,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,20,28,23,,,,,

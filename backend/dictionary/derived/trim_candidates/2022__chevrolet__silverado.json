@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2022|chevrolet|silverado",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "ZR2",
+    "Trail Boss",
+    "LT Trail Boss",
+    "RST",
+    "Z71",
+    "LT",
+    "Custom Trail Boss",
+    "Custom",
+    "WT",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

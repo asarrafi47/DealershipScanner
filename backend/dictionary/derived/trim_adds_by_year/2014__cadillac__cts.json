@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2014|cadillac|cts",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "CTS",
+  "ladder_id": "brochure_llm_2014__cadillac__cts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "VSPORT PREMIUM",
+    "VSPORT",
+    "PREMIUM",
+    "PERFORMANCE",
+    "LUXURY",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "VSPORT PREMIUM": [
+      "3.6L Twin Turbo V6 engine with 420 HP and 430 lb.-ft. torque",
+      "8-speed automatic transmission with performance modes and cornering control",
+      "20-way performance driver and front passenger seats with 4-way power lumbar",
+      "Bose Premium 13-speaker sound system with navigation integration"
+    ],
+    "VSPORT": [
+      "3.6L Twin Turbo V6 engine with 420 HP and 430 lb.-ft. torque",
+      "8-speed automatic transmission with performance modes and cornering control",
+      "Electronic rear limited-slip differential"
+    ],
+    "PREMIUM": [
+      "Leather seating surfaces throughout",
+      "HID headlamps with LED vertical light signatures",
+      "Adaptive Forward Lighting system",
+      "20-way power adjustable driver and front passenger seats with 4-way lumbar"
+    ],
+    "PERFORMANCE": [
+      "3.6L V6 engine with 321 HP and 275 lb.-ft. torque",
+      "Performance brake linings for enhanced stopping power",
+      "Magnesium paddle-shift controls on steering wheel",
+      "Leatherette seating surfaces"
+    ],
+    "LUXURY": [
+      "Heated and ventilated driver and front passenger seats",
+      "Driver and front passenger 12-way power seat adjustments with 4-way lumbar",
+      "Bose Premium 11-speaker sound system",
+      "Power adjustable rake and telescope steering column"
+    ],
+    "STANDARD": [
+      "2.0L Turbo Direct Injection 4-cylinder engine with 272 HP and 295 lb.-ft. torque",
+      "6-speed automatic transmission with Performance Activated Shifts",
+      "Rear-wheel drive configuration",
+      "Electronic power steering with variable effort",
+      "4-wheel independent suspension with Magnetic Ride Control",
+      "Brembo front brakes with 4-wheel vented disc and anti-lock system",
+      "StabiliTrak electronic stability control system",
+      "Projector halogen headlamps with LED vertical signatures",
+      "Keyless entry and push-button start",
+      "OnStar with one-year Directions & Connections Plan"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2022|toyota|sequoia",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Rear-Wheel Drive (RWD) Available Multi-Mode 4WD with Torsen\u00ae6 limited- Up to 13 city/17 highway/15 combined EPA-est. mpg33",
+      "Automatic Limited-Slip Differential (Auto LSD)8 slip center differential with locking feature (4x4 only) Exterior Features",
+      "Available Multi-Mode 4WD with Torsen\u00ae6 limited- Up to 13 city/17 highway/15 combined EPA-est. mpg33 Chrome auto-dimming heated power outside mirrors",
+      "Up to 7400-lb. towing capacity1 Black heated power outside mirrors Power liftgate with jam protection",
+      "Up to 13 city/17 highway/15 combined EPA-est. mpg33 Satin-black TRD Sport front door logos 20-in. machined-finish split-spoke with dark silver",
+      "Exterior Features Chrome grille surround with gloss black insert and accent",
+      "LED high- and low-beam headlights 20-in. TRD Sport black alloy wheels",
+      "LED Daytime Running Lights (DRL) Interior Features",
+      "Integrated LED fog lights Seating for up to eight",
+      "Power tilt/slide moonroof with sliding sunshade Leather-trimmed seats",
+      "Easy-clean fabric-trimmed seats - Heated front seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

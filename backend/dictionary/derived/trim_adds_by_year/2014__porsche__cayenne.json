@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|porsche|cayenne",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "brochure_2014__porsche__cayenne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Carrera",
+    "Platinum"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Adds Bi-Xenon headlights with PDLS",
+      "Adds 19-inch Cayenne Design II wheels with full-color Porsche Crest",
+      "Adds exclusive two-tone partial-leather interior in Black and Luxor Beige",
+      "Adds Porsche Crest embossed on front and outer rear seat head rests",
+      "Adds SportDesign steering wheel",
+      "Adds Power Steering Plus",
+      "Adds Porsche Communication Management (PCM) with navigation module",
+      "Adds 3.6-liter V6 engine with direct fuel injection",
+      "Adds optional Moonroof",
+      "Adds choice of BOSE Surround Sound System or Burmester High-End Surround Sound System"
+    ],
+    "Carrera": [
+      "ransport Comfort and t"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|nissan|rogue",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2021__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "ProPILOT Assist with Navi-link",
+      "Front, Rear, and Side Sonar System",
+      "Traffic Sign Recognition",
+      "Head-Up Display",
+      "Quilted Semi-aniline leather-appointed seats",
+      "Heated rear seats",
+      "Digital dashboard with fully digital gauges",
+      "9-inch NissanConnect touchscreen display",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "Bose Premium Audio System with dual-driver woofer"
+    ],
+    "SL": [
+      "19-inch aluminum-alloy wheels",
+      "LED fog lights",
+      "Motion Activated Liftgate",
+      "Dual Panel Panoramic Moonroof",
+      "Tri-Zone Automatic Temperature Control",
+      "Auto-dimming inside rearview mirror",
+      "Outside mirrors with reverse tilt-down feature",
+      "Divide-N-Hide cargo system",
+      "4-way power front-passenger seat",
+      "Memory System for driver seat and outside mirrors"
+    ],
+    "SV": [
+      "ProPILOT Assist",
+      "Intelligent Blind Spot Intervention",
+      "Intelligent Lane Intervention",
+      "Intelligent Around View Monitor",
+      "18-inch aluminum-alloy wheels",
+      "Heated outside mirrors with LED turn signal indicators",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System with Intelligent Climate Control",
+      "8-way power driver seat with 2-way power lumbar support"
+    ],
+    "S": [
+      "2.5-liter Direct Injection Gasoline 4-cylinder engine with 181 hp and 181 lb-ft torque",
+      "Available Intelligent All-Wheel Drive",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Rear Automatic Braking",
+      "Nissan Safety Shield 360",
+      "17-inch aluminum-alloy wheels"
+    ]
+  }
+}

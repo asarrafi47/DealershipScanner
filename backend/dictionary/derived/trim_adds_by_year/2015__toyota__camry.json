@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2015|toyota|camry",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_llm_2015__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE V6",
+    "XLE 4-Cylinder",
+    "XSE V6",
+    "XSE 4-Cylinder",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XLE V6": [
+      "3.5L V6 Engine with 268 hp @ 6200 rpm",
+      "21 city/31 hwy/25 combined est. mpg",
+      "LED low- and high-beam headlights with auto on/off feature",
+      "Power tilt/slide moonroof",
+      "Dual chrome-tipped exhaust",
+      "Acoustic noise-reducing front windshield"
+    ],
+    "XLE 4-Cylinder": [
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm",
+      "25 city/35 hwy/28 combined est. mpg",
+      "LED Daytime Running Lights (DRL)",
+      "17-in. alloy wheels with Super Chrome paint",
+      "Chrome-tipped exhaust",
+      "Dual zone automatic climate control with rear-seat vents",
+      "Entune™ Premium Audio with Navigation and App Suite"
+    ],
+    "XSE V6": [
+      "3.5L V6 Engine with 268 hp @ 6200 rpm",
+      "18-in. machined-face alloy wheels with black-painted finish",
+      "Leather-trimmed multi-stage heated front seats with 8-way power driver adjustment",
+      "Qi wireless charging",
+      "Sport leather-trimmed Ultrasuede multi-stage heated front seats"
+    ],
+    "XSE 4-Cylinder": [
+      "Paddle shifters on 6-speed automatic transmission",
+      "Sport-tuned shock absorbers and springs with strut tower braces",
+      "LED low- and high-beam headlights with black sport trim bezels",
+      "Power tilt/slide moonroof",
+      "Acoustic noise-reducing front windshield",
+      "Entune™ Premium Audio with Navigation and App Suite"
+    ],
+    "SE": [
+      "LED Daytime Running Lights (DRL)",
+      "17-in. alloy wheels",
+      "Dual zone automatic climate control with rear-seat vents",
+      "Entune™ Audio Plus with 6.1-in. touchscreen and SiriusXM All Access Radio"
+    ],
+    "LE": [
+      "2.5L 4-Cylinder DOHC Engine with 178 hp",
+      "6-speed electronically controlled automatic transmission",
+      "Front-wheel drive",
+      "Power-assisted ventilated front disc brakes",
+      "Electronic power steering",
+      "Star Safety System",
+      "Unitized body construction",
+      "MacPherson strut suspension with gas-filled shock absorbers"
+    ]
+  }
+}

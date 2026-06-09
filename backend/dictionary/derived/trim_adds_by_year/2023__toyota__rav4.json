@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2023|toyota|rav4",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "2023_toyota_rav4",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LE",
+    "XLE",
+    "XLE Premium",
+    "Adventure",
+    "TRD Off-Road",
+    "Limited",
+    "Hybrid LE",
+    "Hybrid XLE",
+    "Woodland Edition"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "AWD with Multi-Terrain Select and heated power mirrors with BSM indicators",
+      "Power liftgate and dual-zone climate with rear vents"
+    ],
+    "XLE Premium": [
+      "Integrated LED fog lights, 19-inch alloys, and SofTex seats with 8-way power driver seat",
+      "Power moonroof and leather-trimmed steering wheel"
+    ],
+    "Adventure": [
+      "TV-AWD with rear driveline disconnect, 3500-lb towing, and unique grille/overfenders",
+      "19-inch split-spoke matte black wheels and black roof rails"
+    ],
+    "TRD Off-Road": [
+      "TRD-tuned suspension, 18-inch matte-black TRD wheels, and Falken Wildpeak AT tires",
+      "TRD skid plate and red-accent interior stitching"
+    ],
+    "Limited": [
+      "SofTex heated seats, 10.5-inch multimedia, and 11-speaker JBL Premium Audio",
+      "12.3-inch digital MID and blue ambient lighting"
+    ],
+    "Hybrid XLE": [
+      "219-hp hybrid with electronic on-demand AWD and 41/38/39 MPG",
+      "Hybrid LE content plus XLE exterior and convenience upgrades"
+    ],
+    "Woodland Edition": [
+      "TRD-tuned suspension, bronze TRD wheels, and Falken Wildpeak AT tires",
+      "Woodland badging, mudguards, and all-weather floor mats"
+    ],
+    "LE": [
+      "Hybrid engine: 2.5L 4-Cylinder with 219 net combined hp",
+      "Electronically controlled Continuously Variable Transmission with sequential shift",
+      "Electronic On-Demand All-Wheel Drive",
+      "Drive mode dial with Normal, Eco, and Sport modes",
+      "TRAIL and EV Mode select buttons",
+      "LED projector headlights with DRL function and chrome accents",
+      "Active grille shutters",
+      "17-inch 5-spoke light gray metallic alloy wheels"
+    ],
+    "Hybrid LE": [
+      "Hybrid engine: 2.5L 4-Cylinder with 219 net combined hp",
+      "Electronically controlled Continuously Variable Transmission with sequential shift",
+      "Electronic On-Demand All-Wheel Drive",
+      "Drive mode dial with Normal, Eco, and Sport modes",
+      "TRAIL and EV Mode select buttons",
+      "LED projector headlights with DRL function and chrome accents",
+      "Active grille shutters",
+      "17-inch 5-spoke light gray metallic alloy wheels"
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2016|hyundai|tucson",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_web_2016__hyundai__tucson",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Tucson Limited AWD",
+    "Tucson Limited FWD",
+    "Tucson SEL Convenience AWD",
+    "Tucson SEL Convenience FWD",
+    "Tucson XRT AWD",
+    "Tucson XRT FWD",
+    "Tucson SEL AWD",
+    "Tucson SEL FWD",
+    "Tucson SE AWD",
+    "Tucson SE FWD"
+  ],
+  "adds_by_trim": {
+    "Tucson Limited AWD": [
+      "Standard Forward Attention Warning with infrared camera monitoring",
+      "All standard features of Limited FWD with AWD drivetrain"
+    ],
+    "Tucson Limited FWD": [
+      "Standard Forward Attention Warning driver attention monitor",
+      "Enhanced interior and exterior styling compared to SEL Convenience"
+    ],
+    "Tucson SEL Convenience AWD": [
+      "All standard features of SEL Convenience FWD with AWD drivetrain",
+      "8.3 inches ground clearance (versus FWD models)"
+    ],
+    "Tucson SEL Convenience FWD": [
+      "Convenience package features compared to base XRT FWD trim"
+    ],
+    "Tucson XRT AWD": [
+      "Exterior side cladding and tow hitch standard",
+      "H-Tex faux leather seating upholstery with leather shift knob",
+      "XRT debossing on front seatbacks",
+      "8.3 inches ground clearance standard on AWD"
+    ],
+    "Tucson XRT FWD": [
+      "Exterior side cladding and tow hitch standard",
+      "H-Tex faux leather seating upholstery with leather shift knob",
+      "XRT debossing on front seatbacks"
+    ],
+    "Tucson SEL AWD": [
+      "All standard features of SEL FWD with AWD drivetrain",
+      "8.3 inches ground clearance (versus FWD models)"
+    ],
+    "Tucson SEL FWD": [
+      "Forward Attention Warning available (optional)",
+      "Enhanced features compared to base SE trim"
+    ],
+    "Tucson SE AWD": [
+      "All standard features of SE FWD with AWD drivetrain",
+      "8.3 inches ground clearance"
+    ],
+    "Tucson SE FWD": [
+      "2.5-liter naturally aspirated inline-four with 187 hp, 178 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Standard 12.3-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto standard",
+      "Automatic emergency braking, blind-spot monitor, rear cross-traffic assist, lane keeping",
+      "Standard proximity-key entry with push-button start",
+      "Forward Attention Warning driver attention monitor available",
+      "Rear outboard passenger seatbelts with pretensioners and load limiters"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/tucson/"
+}

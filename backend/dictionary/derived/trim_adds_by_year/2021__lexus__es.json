@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2021|lexus|es",
+  "year": 2021,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2021__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ultra Luxury",
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Lexus Safety System+ 2.0 with Pre-Collision System and Pedestrian Detection",
+      "Adds Features Lane Tracing Assist",
+      "Adds Includes Lane Departure Alert with Steering Assist",
+      "Adds Road Sign Assist with forward-facing camera"
+    ],
+    "Limited": [
+      "seatbelts and are designed to inflate only under certain conditions and in certain types of severe collisions. Always wear",
+      "clearance during use. See Owner’s Manual for limitations. 38. Do not rely exclusively on the Rear Pedestrian Detection System. Visually confirm",
+      "purchased after retail vehicle delivery and installed by an authorized Lexus dealer are warranted for 12 months from date of",
+      "may not be available in all regions of the country. Lexus Interface display shown",
+      "ear seatbelts, secure children in r"
+    ],
+    "Premium": [],
+    "F Sport": [
+      "Includes ES350 and ES250 F SPORT AWD features"
+    ],
+    "Luxury": [
+      "Adds Intelligent High Beams for enhanced night vision",
+      "Adds Blind Spot Monitor with detection range",
+      "Adds Adaptive Front Lighting System"
+    ],
+    "Ultra Luxury": [
+      "Adds panorama glass roof",
+      "Adds Amazon Alexa integration via Lexus+Alexa app",
+      "Adds Apple CarPlay compatibility"
+    ]
+  }
+}

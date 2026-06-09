@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2012|hyundai|equus",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Equus",
+  "ladder_id": "brochure_llm_2012__hyundai__equus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Equus Ultimate",
+    "Equus Signature"
+  ],
+  "adds_by_trim": {
+    "Equus Ultimate": [
+      "First-class right rear seat with air cell massage system and leg support",
+      "Thermoelectric rear console refrigerator",
+      "Heated and cooled front and rear seats with 50/50 rear seat split and power reclining",
+      "Rear seat power up/down head restraints with manual tilt",
+      "Rear illuminated vanity mirrors",
+      "Power rear-side window sunshades",
+      "Rear seat entertainment with 8-inch screen, rear controller, HVAC, DVD player and audio controls",
+      "Power trunk lid",
+      "Forward-view cornering camera"
+    ],
+    "Equus Signature": [
+      "5.0-liter 32-valve DOHC V8 with Gasoline direct injection, 429 horsepower",
+      "8-speed automatic transmission with SHiFTRonic manual shift mode",
+      "Electronically controlled air suspension with continuous damping control and Sport mode",
+      "19-inch 9-spoke chrome alloy wheels with P245/45R front and P275/40R rear tires",
+      "Ultra-premium leather seating surfaces with 12-way power driver seat and massage system",
+      "Heated and cooled front seats with 60/40 heated rear seats",
+      "Lexicon 7.1 discrete logic surround sound with 17 speakers and 13-channel digital amplifier",
+      "Advanced navigation system with 8-inch display and NavTraffic with 90-day trial",
+      "Lane departure warning system with line recognition",
+      "High intensity discharge Xenon headlights with auto-leveling and adaptive front light system"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2015|ford|f150",
+  "year": 2015,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2015__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "KING RANCH®",
+    "LARIAT",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Premium leather seating and interior trim",
+      "Advanced climate control system",
+      "Enhanced lighting and ambient features",
+      "Premium sound system upgrade",
+      "Upgraded exterior styling and trim"
+    ],
+    "KING RANCH®": [
+      "King Ranch-exclusive leather and design",
+      "Premium saddle leather seating",
+      "Unique interior trim and details",
+      "Enhanced exterior styling elements",
+      "Exclusive wheels and appearance package"
+    ],
+    "LARIAT": [
+      "Premium leather seating surfaces",
+      "Upgraded interior comfort features",
+      "Enhanced technology and convenience",
+      "Leather-wrapped steering wheel",
+      "Premium audio system"
+    ],
+    "XLT": [
+      "Cloth or upgraded seating material",
+      "Enhanced comfort and convenience features",
+      "Improved interior appointments",
+      "Chrome exterior accents",
+      "Upgraded wheel design options"
+    ],
+    "XL": [
+      "100,000-mile tune-up interval under normal conditions",
+      "Active Grille Shutter System with supported engines",
+      "Power 4-wheel vented-disc brakes with ABS and EBD",
+      "Personal Safety System with dual-stage front airbags",
+      "AdvanceTrac with Roll Stability Control and Curve Control",
+      "Electric power-assisted steering rack-and-pinion",
+      "Choice of four engines: 3.5L Ti-VCT V6, 2.7L EcoBoost V6, 5.0L Ti-VCT V8, 3.5L EcoBoost V6",
+      "40/20/40 or 40/console/40 split front bucket seating",
+      "Stainless steel exhaust system major components",
+      "Individual Tire Pressure Monitoring System"
+    ]
+  }
+}

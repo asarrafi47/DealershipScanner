@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|jeep|patriot",
+  "year": 2015,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "brochure_llm_2015__jeep__patriot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Altitude",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "High Altitude": [
+      "Premium leather-trimmed seat coverings",
+      "6-way power driver's seat with manual lumbar adjuster",
+      "Automatic temperature control air conditioning",
+      "Body-color power heated manual foldaway mirrors"
+    ],
+    "Latitude": [
+      "2.4L DOHC 16V dual VVT 4-cylinder with 6-speed PowerTech automatic transaxle standard on 4x4",
+      "Body-color power heated manual foldaway mirrors",
+      "P215/60R17 BSW All-Season Touring tires with Altitude Package option",
+      "Power windows with driver's 1-touch down"
+    ],
+    "Sport": [
+      "Manual temperature control air conditioning",
+      "Premium cloth seat coverings",
+      "Front low-back reclining with rear 60/40 split-folding flat seats",
+      "Halogen fog lamps in front bumper",
+      "Electronic Stability Control",
+      "Sentry Key Theft Deterrent System",
+      "Uconnect 130 AM/FM radio with CD/MP3 capability",
+      "Speed control",
+      "Power rack and pinion steering with firm-feel"
+    ]
+  }
+}

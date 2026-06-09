@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|audi|a4",
+  "year": 2013,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_2013__audi__a4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Sport",
+    "Limited",
+    "SE",
+    "LE",
+    "A4"
+  ],
+  "adds_by_trim": {
+    "A4": [
+      "Adds 2.0T turbocharged TFSI engine with 211 horsepower",
+      "Adds five-link front suspension",
+      "Adds trapezoidal-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds fully galvanized steel unibody with multi-step anti-corrosion protection"
+    ],
+    "LE": [],
+    "SE": [],
+    "Limited": [],
+    "Sport": [
+      "Adds sport suspension calibration"
+    ],
+    "S line": [
+      "Adds S line design package"
+    ],
+    "Premium": [
+      "Adds dynamic steering"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2025|lexus|ux",
+  "year": 2025,
+  "make": "lexus",
+  "model": "UX",
+  "ladder_id": "brochure_llm_2025__lexus__ux",
+  "source": "brochure_llm",
+  "trims_available": [
+    "UX 300h F SPORT HANDLING",
+    "UX 300h F SPORT DESIGN",
+    "UX 300h PREMIUM",
+    "UX 300h"
+  ],
+  "adds_by_trim": {
+    "UX 300h F SPORT HANDLING": [
+      "Exclusive F SPORT-tuned suspension",
+      "F SPORT heated steering wheel",
+      "F SPORT shift knob"
+    ],
+    "UX 300h F SPORT DESIGN": [
+      "Exterior upgrades including color-keyed overfenders",
+      "F SPORT grille with Dark Chrome-finished surround",
+      "18-inch wheels"
+    ],
+    "UX 300h PREMIUM": [
+      "Heated and ventilated front seats",
+      "Power Rear Door with Kick Sensor"
+    ],
+    "UX 300h": [
+      "43-MPG combined fuel economy (FWD)",
+      "EV drive mode for low-speed battery-only operation",
+      "Hybrid powertrain with 196 net combined horsepower",
+      "Available FWD and AWD configurations"
+    ]
+  }
+}

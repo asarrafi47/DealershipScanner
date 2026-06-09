@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2016|chevrolet|spark",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2016__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Chrome door handles",
+      "Front foglamps with chrome rings",
+      "Chrome grille surround",
+      "Chrome liftgate trim",
+      "Chrome beltline moldings",
+      "Heated power-adjustable mirrors with manual folding",
+      "Engine block heater",
+      "Leatherette seating",
+      "Heated front seats",
+      "Keyless Access with Push-Button Start"
+    ],
+    "1LT": [
+      "Chrome grille surround",
+      "Front foglamps with chrome rings",
+      "Heated power-adjustable mirrors with body-color manual folding",
+      "Unauthorized entry theft-deterrent system",
+      "Remote Keyless Entry",
+      "Power door locks with automatic locking",
+      "Electronic cruise control with steering wheel-mounted controls",
+      "6-speaker sound system",
+      "Steering wheel-mounted phone and audio controls"
+    ],
+    "LS": [
+      "Roof-mounted antenna",
+      "Body-color door handles",
+      "Black grille",
+      "Manual-adjustable black mirrors",
+      "Halogen headlamps with automatic lamp control and daytime running lamps",
+      "Single-zone manual air conditioning with cabin air filter",
+      "3-point safety belts at all positions",
+      "Engine immobilizer theft-deterrent system",
+      "Tire Pressure Monitoring System",
+      "StabiliTrak Electronic Stability Control with Brake Assist and Traction Control"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|volvo|v60",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "V60",
+  "ladder_id": "brochure_llm_2019__volvo__v60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T8 Polestar Engineered",
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "T8 Polestar Engineered": [
+      "T8 e-AWD plug-in hybrid powertrain with 415 hp combined output",
+      "Polestar Engineered Öhlins chassis with dampers",
+      "Polestar Engineered Brembo front brakes with Öhlins gold calipers",
+      "Rear brake calipers in Öhlins gold color",
+      "19-inch Polestar Engineered 5-Y Spoke forged wheels in black chrome",
+      "Polestar Engineered front strut bar",
+      "Heated steering wheel with sport design",
+      "Gear shift paddles and crystal gear shifter",
+      "Integrated double tailpipes",
+      "Painted high gloss black grille insert with horizontal mesh pattern"
+    ],
+    "Inscription": [
+      "Contemporary luxury design with premium materials and expert craftsmanship",
+      "Charcoal perforated fine Nappa leather interior with driftwood inlays"
+    ],
+    "R-Design": [
+      "Sporty styling and precise control for dynamic performance-oriented design",
+      "20-inch 5-triple spoke matte black diamond cut alloy wheels",
+      "Sport-focused exterior design elements"
+    ],
+    "Momentum": [
+      "Dynamic contemporary style with premium appearance",
+      "Standard T6 AWD powertrain",
+      "19-inch 5-multi spoke black diamond cut alloy wheels"
+    ]
+  }
+}

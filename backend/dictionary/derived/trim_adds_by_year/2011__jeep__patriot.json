@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|jeep|patriot",
+  "year": 2011,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "brochure_llm_2011__jeep__patriot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Latitude X",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Latitude X": [
+      "Silver front and rear bumper inserts with roof cargo side rail accents",
+      "Power heated manual foldaway mirrors instead of manual foldaway",
+      "P215/60R17 all-season touring tires instead of P205/70R16",
+      "Power windows with driver's one-touch down",
+      "Leather-trimmed seat coverings",
+      "Six-way power driver's seat",
+      "Heated front seats",
+      "115-volt outlet with 150-watt capacity",
+      "Media Center 430 with 28GB hard drive and 6.5-inch touchscreen",
+      "Uconnect Voice Command with Bluetooth and Address Sync capability"
+    ],
+    "Latitude": [
+      "Silver roof cargo side rail inserts",
+      "Two halogen fog lamps in front bumper",
+      "Power heated manual foldaway mirrors",
+      "Power windows with driver's one-touch down",
+      "Deluxe cloth seat coverings",
+      "Front low-back reclining with passenger forward fold-flat and 60/40 split rear seatback",
+      "Heated front seats",
+      "115-volt outlet with 150-watt capacity",
+      "Supplemental front-seat mounted side airbags",
+      "Media Center 230 with six-CD/DVD changer capability"
+    ],
+    "Sport": [
+      "Manual temperature control air conditioning",
+      "Manual foldaway mirrors",
+      "Black roof cargo side rails",
+      "P205/70R16 all-season black sidewall tires",
+      "Manual windows",
+      "Four headliner-mounted assist handles",
+      "Carpeted load floor",
+      "Media Center 130 AM/FM/CD radio with MP3/WMA support",
+      "Four-speaker audio system",
+      "Sentry Key antitheft engine immobilizer with two encoded keys"
+    ]
+  }
+}

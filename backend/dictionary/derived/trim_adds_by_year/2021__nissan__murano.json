@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2021|nissan|murano",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2021__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLAT",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLAT": [
+      "Semi-aniline leather-appointed seats with diamond-quilted inserts",
+      "Leather-wrapped steering wheel",
+      "Heated steering wheel",
+      "Premium Bose audio system with 11 speakers and dual subwoofers",
+      "Nissan Door to Door Navigation with Premium Traffic and Travel Link"
+    ],
+    "SL": [
+      "Leather-appointed seats",
+      "Leather-wrapped shift knob",
+      "Smooth leather-wrapped steering wheel",
+      "8-inch color display with multi-touch control",
+      "SiriusXM Traffic and Travel Link with trial access"
+    ],
+    "SV": [
+      "Leatherette seats",
+      "Cloth-wrapped A-pillar",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Power outside mirrors with LED turn signal indicators",
+      "Dual Zone Automatic Temperature Control with in-cabin microfilter",
+      "NissanConnect Services powered by SiriusXM with trial access"
+    ],
+    "S": [
+      "3.5-liter DOHC 24-valve V6 engine with 260 hp and 240 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "Front-Wheel Drive or Intelligent All-Wheel Drive",
+      "LED headlights with LED Signature Daytime Running Lights",
+      "LED taillights",
+      "Chrome door handles",
+      "Silver roof rails",
+      "Cloth seat trim",
+      "Reclining rear seatbacks with center armrest",
+      "AM/FM/CD audio system with six speakers"
+    ]
+  }
+}

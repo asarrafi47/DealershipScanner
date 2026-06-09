@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2013|chevrolet|cruze",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2013__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "ECO",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Leather-wrapped steering wheel with Polar Silver accents"
+    ],
+    "2LT": [
+      "Leather-wrapped steering wheel with Polar Silver accents"
+    ],
+    "1LT": [
+      "Chrome door handles with keyless entry buttons",
+      "Foglamps"
+    ],
+    "ECO": [
+      "Tire sealant and compressor kit instead of spare tire"
+    ],
+    "LS": [
+      "Body-color door handles",
+      "Tilt and telescopic steering column",
+      "Mounted audio controls on steering wheel"
+    ]
+  }
+}

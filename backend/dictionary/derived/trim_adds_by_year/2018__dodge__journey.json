@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|dodge|journey",
+  "year": 2018,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2018__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TG",
+    "CROSSROADS",
+    "SXT",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "TG": [
+      "3.6L Pentastar V6 engine with 6-speed automatic transmission",
+      "All-wheel-drive (AWD) system standard",
+      "Performance suspension tuned for AWD",
+      "LED taillamps",
+      "Roof rack with side rails"
+    ],
+    "CROSSROADS": [
+      "3.6L Pentastar V6 engine with 6-speed automatic transmission",
+      "All-wheel-drive (AWD) system standard",
+      "Performance suspension tuned for AWD",
+      "LED taillamps"
+    ],
+    "SXT": [
+      "Fog lamps standard",
+      "Body-color foldaway power heated mirrors",
+      "Choice of suspension types including touring suspension",
+      "Larger tire options available"
+    ],
+    "ES": [
+      "2.4L Tigershark MultiAir2 engine with 4-speed automatic transmission",
+      "Front-wheel-drive base configuration",
+      "20.5-gallon fuel tank",
+      "Automatic headlamps with daytime running lamps",
+      "Electronic vehicle information center (EVIC)",
+      "Full-length floor console",
+      "Rear window defroster",
+      "Child seat anchor system (LATCH)",
+      "Tilt/telescoping steering column",
+      "Second-row in-floor storage bins"
+    ]
+  }
+}

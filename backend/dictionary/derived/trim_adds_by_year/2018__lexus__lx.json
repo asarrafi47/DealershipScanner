@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2018|lexus|lx",
+  "year": 2018,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2018__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Features Lexus Safety System+ with Pre-Collision System",
+      "Adds Pedestrian Detection System",
+      "Adds Includes Lane Departure Alert",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds Features backup camera with Multi-Terrain Monitor",
+      "Adds Includes Trailer Sway Control",
+      "Adds Hill-start Assist Control",
+      "Adds Features Crawl Control for off-road terrain",
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty with zero deductible"
+    ],
+    "Premium": [
+      "Upgraded to Mark Levinson audio system",
+      "Adds dual-screen system with split-screen DVD player functionality",
+      "Adds Includes Navigation System",
+      "Adds Panoramic View Monitor",
+      "Adds Intelligent high beams",
+      "Adds Includes Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert system"
+    ],
+    "Luxury": [
+      "Upgraded to Cabernet semi-aniline leather interior trim"
+    ]
+  }
+}

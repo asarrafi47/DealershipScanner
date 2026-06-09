@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|hyundai|elantra",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Preferred",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

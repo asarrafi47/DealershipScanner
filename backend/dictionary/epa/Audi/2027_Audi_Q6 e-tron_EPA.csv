@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2027,Audi,Q6 e-tron,quattro (19 inch Tires),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,110,97,104,,,,,
+2027,Audi,Q6 e-tron,quattro (20 inch Tires),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,103,89,96,,,,,
+2027,Audi,Q6 e-tron,SB quattro (20 inch Tires),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,103,89,96,,,,,
+2027,Audi,Q6 e-tron,Q6 Sportback e-tron quattro,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,110,97,104,,,,,

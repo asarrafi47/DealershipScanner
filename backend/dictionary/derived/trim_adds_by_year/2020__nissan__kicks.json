@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|nissan|kicks",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Kicks",
+  "ladder_id": "brochure_llm_2020__nissan__kicks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "LED headlights with LED signature accents and LED turn signal indicators",
+      "Fog lights",
+      "Rear roof spoiler",
+      "Dark chrome grille",
+      "Front and rear bumpers with body-color inserts",
+      "Prima-Tex appointed dash with contrast stitching",
+      "Silver-painted exterior door trim",
+      "Black-painted heated outside mirrors",
+      "Intelligent Around View Monitor",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist Display",
+      "NissanConnect 7-inch touchscreen display with Apple CarPlay and Android Auto",
+      "SiriusXM Radio with 3-month subscription",
+      "Rear Door Alert",
+      "Intelligent Driver Alertness",
+      "Automatic Temperature Control",
+      "Nissan Intelligent Key",
+      "Remote Engine Start System",
+      "Body-color heated outside mirrors"
+    ],
+    "S": [
+      "1.6-liter DOHC 16-valve 4-cylinder engine with 122 hp",
+      "Xtronic CVT continuously variable transmission",
+      "Hill start assist",
+      "Anti-lock Braking System with Brake Assist",
+      "Electronic Brake force Distribution",
+      "16-inch steel wheels with wheel covers",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking",
+      "Lane Departure Warning",
+      "High Beam Assist"
+    ]
+  }
+}

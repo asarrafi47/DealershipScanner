@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|scion|iq",
+  "year": 2014,
+  "make": "Scion",
+  "model": "iQ",
+  "ladder_id": "brochure_web_2014__scion__iq",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "iQ Limited",
+    "iQ",
+    "iQ Base"
+  ],
+  "adds_by_trim": {
+    "iQ Limited": [
+      "Leather-trimmed steering wheel and shift knob",
+      "Power windows and door locks",
+      "Automatic headlights with manual on-off",
+      "Rear spoiler",
+      "16-inch alloy wheels",
+      "Integrated backup camera",
+      "Bluetooth hands-free phone connectivity"
+    ],
+    "iQ": [
+      "Power steering",
+      "Air conditioning with manual controls",
+      "Cruise control",
+      "AM/FM CD audio system with 4 speakers",
+      "Tilt steering wheel"
+    ],
+    "iQ Base": [
+      "1.3L four-cylinder engine with 94 horsepower",
+      "Five-speed manual transmission",
+      "Manual windows and door locks",
+      "Manual mirrors",
+      "Front and side airbags",
+      "Electronic stability control",
+      "AM/FM radio",
+      "14-inch steel wheels with all-season tires"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/iq/"
+}

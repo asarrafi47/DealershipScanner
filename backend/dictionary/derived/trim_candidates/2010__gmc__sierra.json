@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2010|gmc|sierra",
+  "year": 2010,
+  "make": "GMC",
+  "model": "Sierra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

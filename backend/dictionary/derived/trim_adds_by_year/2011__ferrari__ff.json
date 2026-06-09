@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2011|ferrari|ff",
+  "year": 2011,
+  "make": "Ferrari",
+  "model": "FF",
+  "ladder_id": "brochure_2011__ferrari__ff",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "Base",
+    "F1"
+  ],
+  "adds_by_trim": {
+    "F1": [
+      "Adds V12 6.3L naturally aspirated engine producing 660 CV",
+      "Adds 7-speed F1 dual-clutch automatic transmission",
+      "Adds all-wheel drive system with 4RM control integration",
+      "Adds four body-hugging seats with maximum occupant comfort",
+      "Adds 450-liter boot capacity with independently folding rear seats",
+      "Adds SCM3 magnetorheological suspension control system",
+      "Adds ABS/EBD braking system with electronic stability control",
+      "Adds 20-inch alloy wheels with performance tire package",
+      "Adds refined interior with sophisticated trim and detailing",
+      "Adds on-board equipment access for all four occupants"
+    ],
+    "Base": [],
+    "LE": []
+  }
+}

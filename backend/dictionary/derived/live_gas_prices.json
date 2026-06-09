@@ -1,0 +1,422 @@
+{
+  "national": {
+    "diesel": 5.619,
+    "electricity_rate": 0.1883,
+    "mid": 4.956,
+    "premium": 5.29,
+    "region_name": "National Average",
+    "regular": 4.439
+  },
+  "source": "eia_api_v2",
+  "states": {
+    "AK": {
+      "diesel": 5.759,
+      "electricity_rate": 0.2717,
+      "mid": 5.08,
+      "premium": 5.422,
+      "region_name": "Alaska",
+      "regular": 4.55
+    },
+    "AL": {
+      "diesel": 4.595,
+      "electricity_rate": 0.1715,
+      "mid": 4.053,
+      "premium": 4.326,
+      "region_name": "Alabama",
+      "regular": 3.63
+    },
+    "AR": {
+      "diesel": 4.494,
+      "electricity_rate": 0.1363,
+      "mid": 3.964,
+      "premium": 4.231,
+      "region_name": "Arkansas",
+      "regular": 3.55
+    },
+    "AZ": {
+      "diesel": 4.962,
+      "electricity_rate": 0.1559,
+      "mid": 4.377,
+      "premium": 4.671,
+      "region_name": "Arizona",
+      "regular": 3.92
+    },
+    "CA": {
+      "diesel": 7.55,
+      "electricity_rate": 0.3335,
+      "mid": 6.66,
+      "premium": 7.108,
+      "region_name": "California",
+      "regular": 5.965
+    },
+    "CO": {
+      "diesel": 5.506,
+      "electricity_rate": 0.1674,
+      "mid": 4.857,
+      "premium": 5.184,
+      "region_name": "Colorado",
+      "regular": 4.35
+    },
+    "CT": {
+      "diesel": 5.721,
+      "electricity_rate": 0.3047,
+      "mid": 5.047,
+      "premium": 5.386,
+      "region_name": "Connecticut",
+      "regular": 4.52
+    },
+    "DC": {
+      "diesel": 6.013,
+      "electricity_rate": 0.25,
+      "mid": 5.303,
+      "premium": 5.661,
+      "region_name": "District of Columbia",
+      "regular": 4.75
+    },
+    "DE": {
+      "diesel": 5.949,
+      "electricity_rate": 0.1764,
+      "mid": 5.248,
+      "premium": 5.601,
+      "region_name": "Delaware",
+      "regular": 4.7
+    },
+    "FL": {
+      "diesel": 5.118,
+      "electricity_rate": 0.1486,
+      "mid": 4.514,
+      "premium": 4.818,
+      "region_name": "Florida",
+      "regular": 4.043
+    },
+    "GA": {
+      "diesel": 4.785,
+      "electricity_rate": 0.1501,
+      "mid": 4.22,
+      "premium": 4.505,
+      "region_name": "Georgia",
+      "regular": 3.78
+    },
+    "HI": {
+      "diesel": 6.456,
+      "electricity_rate": 0.4223,
+      "mid": 5.694,
+      "premium": 6.078,
+      "region_name": "Hawaii",
+      "regular": 5.1
+    },
+    "IA": {
+      "diesel": 4.658,
+      "electricity_rate": 0.1342,
+      "mid": 4.109,
+      "premium": 4.385,
+      "region_name": "Iowa",
+      "regular": 3.68
+    },
+    "ID": {
+      "diesel": 5.443,
+      "electricity_rate": 0.1301,
+      "mid": 4.801,
+      "premium": 5.124,
+      "region_name": "Idaho",
+      "regular": 4.3
+    },
+    "IL": {
+      "diesel": 5.19,
+      "electricity_rate": 0.1886,
+      "mid": 4.578,
+      "premium": 4.886,
+      "region_name": "Illinois",
+      "regular": 4.1
+    },
+    "IN": {
+      "diesel": 4.709,
+      "electricity_rate": 0.1785,
+      "mid": 4.153,
+      "premium": 4.433,
+      "region_name": "Indiana",
+      "regular": 3.72
+    },
+    "KS": {
+      "diesel": 4.633,
+      "electricity_rate": 0.1534,
+      "mid": 4.086,
+      "premium": 4.362,
+      "region_name": "Kansas",
+      "regular": 3.66
+    },
+    "KY": {
+      "diesel": 4.62,
+      "electricity_rate": 0.1488,
+      "mid": 4.075,
+      "premium": 4.35,
+      "region_name": "Kentucky",
+      "regular": 3.65
+    },
+    "LA": {
+      "diesel": 4.405,
+      "electricity_rate": 0.1416,
+      "mid": 3.885,
+      "premium": 4.147,
+      "region_name": "Louisiana",
+      "regular": 3.48
+    },
+    "MA": {
+      "diesel": 5.702,
+      "electricity_rate": 0.3021,
+      "mid": 5.03,
+      "premium": 5.369,
+      "region_name": "Massachusetts",
+      "regular": 4.505
+    },
+    "MD": {
+      "diesel": 5.924,
+      "electricity_rate": 0.3585,
+      "mid": 5.225,
+      "premium": 5.577,
+      "region_name": "Maryland",
+      "regular": 4.68
+    },
+    "ME": {
+      "diesel": 5.886,
+      "electricity_rate": 0.2832,
+      "mid": 5.192,
+      "premium": 5.541,
+      "region_name": "Maine",
+      "regular": 4.65
+    },
+    "MI": {
+      "diesel": 4.759,
+      "electricity_rate": 0.212,
+      "mid": 4.198,
+      "premium": 4.481,
+      "region_name": "Michigan",
+      "regular": 3.76
+    },
+    "MN": {
+      "diesel": 5.278,
+      "electricity_rate": 0.1508,
+      "mid": 4.656,
+      "premium": 4.969,
+      "region_name": "Minnesota",
+      "regular": 4.17
+    },
+    "MO": {
+      "diesel": 4.532,
+      "electricity_rate": 0.1344,
+      "mid": 3.997,
+      "premium": 4.266,
+      "region_name": "Missouri",
+      "regular": 3.58
+    },
+    "MS": {
+      "diesel": 4.367,
+      "electricity_rate": 0.163,
+      "mid": 3.852,
+      "premium": 4.111,
+      "region_name": "Mississippi",
+      "regular": 3.45
+    },
+    "MT": {
+      "diesel": 5.468,
+      "electricity_rate": 0.1348,
+      "mid": 4.823,
+      "premium": 5.148,
+      "region_name": "Montana",
+      "regular": 4.32
+    },
+    "NC": {
+      "diesel": 4.987,
+      "electricity_rate": 0.16,
+      "mid": 4.399,
+      "premium": 4.695,
+      "region_name": "North Carolina",
+      "regular": 3.94
+    },
+    "ND": {
+      "diesel": 5.519,
+      "electricity_rate": 0.1195,
+      "mid": 4.868,
+      "premium": 5.196,
+      "region_name": "North Dakota",
+      "regular": 4.36
+    },
+    "NE": {
+      "diesel": 5.57,
+      "electricity_rate": 0.131,
+      "mid": 4.913,
+      "premium": 5.243,
+      "region_name": "Nebraska",
+      "regular": 4.4
+    },
+    "NH": {
+      "diesel": 5.823,
+      "electricity_rate": 0.2692,
+      "mid": 5.136,
+      "premium": 5.482,
+      "region_name": "New Hampshire",
+      "regular": 4.6
+    },
+    "NJ": {
+      "diesel": 5.671,
+      "electricity_rate": 0.2349,
+      "mid": 5.002,
+      "premium": 5.339,
+      "region_name": "New Jersey",
+      "regular": 4.48
+    },
+    "NM": {
+      "diesel": 5.0,
+      "electricity_rate": 0.1481,
+      "mid": 4.41,
+      "premium": 4.707,
+      "region_name": "New Mexico",
+      "regular": 3.95
+    },
+    "NV": {
+      "diesel": 5.126,
+      "electricity_rate": 0.1417,
+      "mid": 4.522,
+      "premium": 4.826,
+      "region_name": "Nevada",
+      "regular": 4.05
+    },
+    "NY": {
+      "diesel": 5.706,
+      "electricity_rate": 0.2855,
+      "mid": 5.033,
+      "premium": 5.372,
+      "region_name": "New York",
+      "regular": 4.508
+    },
+    "OH": {
+      "diesel": 5.564,
+      "electricity_rate": 0.1878,
+      "mid": 4.908,
+      "premium": 5.239,
+      "region_name": "Ohio",
+      "regular": 4.396
+    },
+    "OK": {
+      "diesel": 4.456,
+      "electricity_rate": 0.1356,
+      "mid": 3.93,
+      "premium": 4.195,
+      "region_name": "Oklahoma",
+      "regular": 3.52
+    },
+    "OR": {
+      "diesel": 5.253,
+      "electricity_rate": 0.1489,
+      "mid": 4.633,
+      "premium": 4.946,
+      "region_name": "Oregon",
+      "regular": 4.15
+    },
+    "PA": {
+      "diesel": 4.873,
+      "electricity_rate": 0.2092,
+      "mid": 4.299,
+      "premium": 4.588,
+      "region_name": "Pennsylvania",
+      "regular": 3.85
+    },
+    "RI": {
+      "diesel": 5.797,
+      "electricity_rate": 0.2991,
+      "mid": 5.114,
+      "premium": 5.458,
+      "region_name": "Rhode Island",
+      "regular": 4.58
+    },
+    "SC": {
+      "diesel": 4.557,
+      "electricity_rate": 0.1645,
+      "mid": 4.019,
+      "premium": 4.29,
+      "region_name": "South Carolina",
+      "regular": 3.6
+    },
+    "SD": {
+      "diesel": 5.544,
+      "electricity_rate": 0.1429,
+      "mid": 4.89,
+      "premium": 5.22,
+      "region_name": "South Dakota",
+      "regular": 4.38
+    },
+    "TN": {
+      "diesel": 4.582,
+      "electricity_rate": 0.1508,
+      "mid": 4.042,
+      "premium": 4.314,
+      "region_name": "Tennessee",
+      "regular": 3.62
+    },
+    "TX": {
+      "diesel": 4.881,
+      "electricity_rate": 0.1639,
+      "mid": 4.305,
+      "premium": 4.595,
+      "region_name": "Texas",
+      "regular": 3.856
+    },
+    "UT": {
+      "diesel": 5.418,
+      "electricity_rate": 0.1317,
+      "mid": 4.779,
+      "premium": 5.1,
+      "region_name": "Utah",
+      "regular": 4.28
+    },
+    "VA": {
+      "diesel": 4.835,
+      "electricity_rate": 0.1705,
+      "mid": 4.265,
+      "premium": 4.552,
+      "region_name": "Virginia",
+      "regular": 3.82
+    },
+    "VT": {
+      "diesel": 5.848,
+      "electricity_rate": 0.2411,
+      "mid": 5.158,
+      "premium": 5.506,
+      "region_name": "Vermont",
+      "regular": 4.62
+    },
+    "WA": {
+      "diesel": 7.124,
+      "electricity_rate": 0.144,
+      "mid": 6.284,
+      "premium": 6.707,
+      "region_name": "Washington",
+      "regular": 5.628
+    },
+    "WI": {
+      "diesel": 4.734,
+      "electricity_rate": 0.188,
+      "mid": 4.176,
+      "premium": 4.457,
+      "region_name": "Wisconsin",
+      "regular": 3.74
+    },
+    "WV": {
+      "diesel": 5.975,
+      "electricity_rate": 0.1637,
+      "mid": 5.27,
+      "premium": 5.625,
+      "region_name": "West Virginia",
+      "regular": 4.72
+    },
+    "WY": {
+      "diesel": 5.494,
+      "electricity_rate": 0.1359,
+      "mid": 4.846,
+      "premium": 5.172,
+      "region_name": "Wyoming",
+      "regular": 4.34
+    }
+  },
+  "synced_at": "2026-06-02T20:21:36.080462+00:00"
+}

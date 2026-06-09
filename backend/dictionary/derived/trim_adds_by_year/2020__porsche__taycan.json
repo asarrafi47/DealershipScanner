@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2020|porsche|taycan",
+  "year": 2020,
+  "make": "Porsche",
+  "model": "Taycan",
+  "ladder_id": "porsche_taycan",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "4S",
+    "Carrera"
+  ],
+  "adds_by_trim": {
+    "Carrera": [
+      "market due to local restrictions and regulations. For information on standard and optional equipment, please consult your authorized Porsche dealer. All information"
+    ],
+    "4S": [
+      "Dual-motor AWD powertrain over RWD base"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Carrera": 1
+    }
+  }
+}

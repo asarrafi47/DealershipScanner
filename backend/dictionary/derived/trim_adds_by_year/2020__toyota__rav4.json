@@ -1,0 +1,87 @@
+{
+  "catalog_key": "2020|toyota|rav4",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_2020__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XSE",
+    "XLE",
+    "TRD Off-Road",
+    "TRD",
+    "Adventure",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Plug-in hybrid powertrain exclusively with 320 hp",
+      "Chassis hardware tuned for performance feel",
+      "Large 20-inch wheels with red brake calipers",
+      "Rear spoiler for sporty styling",
+      "Up to 52 miles all-electric driving range"
+    ],
+    "Premium": [],
+    "Base": [],
+    "LE": [
+      "Adds 2.5-Liter Dynamic Force 4-cylinder engine with 203 hp",
+      "Adds Direct Shift 8-speed Automatic Transmission",
+      "Adds available All-Wheel Drive (AWD) with Multi-terrain Select",
+      "Adds Stop and Start Engine System (S&S)",
+      "Adds 17-inch steel wheels with silver 6-spoke wheel covers",
+      "Adds LED Daytime Running Lights (DRL)",
+      "Adds Multi-LED headlights with Automatic High Beams",
+      "Adds LED taillights and stop lights",
+      "Adds Dual zone automatic climate control system",
+      "Adds 4.2-inch digital Multi-Information Display (MID)"
+    ],
+    "Adventure": [
+      "Halogen projector-beam headlights with black bezels and auto on/off feature",
+      "Integrated fog lights with black accents",
+      "Unique lower valance panels and rocker panel guards",
+      "Larger overfender flares",
+      "Black RAV4 Adventure badging",
+      "18-in. 5-spoke Black alloy wheels",
+      "Black roof rails",
+      "Adventure shift lever with sport bolsters and seatback pocket",
+      "Heavy-duty Adventure all-weather floor liners and cargo mats"
+    ],
+    "TRD": [],
+    "TRD Off-Road": [
+      "TRD-tuned suspension, 18-inch matte-black TRD wheels, and Falken Wildpeak AT tires",
+      "TRD skid plate and red-accent interior stitching"
+    ],
+    "XLE": [
+      "Adds Active grille shutters",
+      "Adds integrated fog lights",
+      "Adds color-keyed heated power outside mirrors with turn signal indicators and folding feature",
+      "Adds Smart Key System on front doors and liftgate with Push Button Start",
+      "Adds four USB charge ports",
+      "Adds rear cargo area cover"
+    ],
+    "XSE": [
+      "Adds sport-tuned independent MacPherson strut front suspension with stabilizer bar and blue struts",
+      "Adds sport-tuned multi-link rear suspension with stabilizer bar",
+      "Adds black-painted heated power outside mirrors with blind spot warning indicators"
+    ],
+    "XLE Premium": [
+      "Adds heated leather-trimmed steering wheel",
+      "Adds heated front seats",
+      "Adds rain-sensing variable intermittent windshield wipers with de-icer function",
+      "Adds power tilt/slide moonroof with one-touch open/close",
+      "Adds power liftgate with jam protection"
+    ],
+    "Limited": [
+      "Adds LED projector-beam headlights with chrome bezels and auto on/off feature",
+      "Adds available Dynamic Torque Vectoring All-Wheel Drive (TV-AWD) with Rear Driveline Disconnect",
+      "Adds dark gray metallic-colored hexagon-patterned front grille",
+      "Adds chrome-accented color-keyed outside door handles with front-row touch-sensor lock/unlock",
+      "Adds puddle lights"
+    ]
+  }
+}

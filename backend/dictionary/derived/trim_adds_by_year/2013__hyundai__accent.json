@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2013|hyundai|accent",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2013__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "GS",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Sport-tuned steering",
+      "Rear disc brakes",
+      "Leather-wrapped steering wheel and shift knob",
+      "Steering-wheel audio and cruise controls",
+      "Bluetooth hands-free phone system with voice recognition",
+      "Premium cloth seats",
+      "Piano Black interior accents",
+      "Sliding armrest storage box",
+      "Side mirrors with integrated turn signals",
+      "Front fog lights"
+    ],
+    "GS": [
+      "Cruise control (automatic transmission only)",
+      "14-inch steel wheels with full wheel covers"
+    ],
+    "GLS": [
+      "138 HP 1.6L Gasoline Direct Injection DOHC 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed manual or available SHIFTRONIC 6-speed automatic transmission with Active ECO system and Hillstart Assist Control",
+      "Air conditioning",
+      "Power windows and door locks",
+      "Remote keyless entry with panic alert",
+      "AM/FM/SiriusXM/CD/MP3 audio with 6 speakers",
+      "iPod/USB auxiliary input jacks",
+      "Tilt steering wheel and 6-way adjustable driver seat",
+      "60/40 split fold-down rear seatback",
+      "Active front head restraints and adjustable head restraints for all seating positions"
+    ]
+  }
+}

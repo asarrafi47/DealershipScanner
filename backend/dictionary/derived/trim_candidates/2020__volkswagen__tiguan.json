@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2020|volkswagen|tiguan",
+  "year": 2020,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SEL",
+    "R-Line",
+    "SE",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

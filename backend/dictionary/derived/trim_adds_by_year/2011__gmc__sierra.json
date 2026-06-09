@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2011|gmc|sierra",
+  "year": 2011,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2011__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "SL",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Heated leather-wrapped color-keyed steering wheel",
+      "Chrome door handles and mirror caps",
+      "18-inch chrome-clad aluminum wheels",
+      "Bose premium speaker system with woofer",
+      "Touch-screen navigation with DVD-based maps and voice prompts",
+      "Entertainment package with rear-seat DVD player and wireless headphones"
+    ],
+    "SLT": [
+      "Dual-zone automatic climate control with individual driver/passenger settings",
+      "Leather-wrapped color-keyed steering wheel",
+      "Power-adjustable rear window with sliding capability",
+      "6-disc in-dash MP3-compatible CD player with USB port",
+      "SLT Convenience Package with universal home remote and power pedals"
+    ],
+    "SLE": [
+      "SLE Preferred Package including remote vehicle starter and steering-wheel controls",
+      "Bluetooth connectivity for cell phones",
+      "AM/FM stereo with CD player and MP3 playback",
+      "Fog lamps and EZ-lift locking tailgate",
+      "Auto-dimming rearview mirror"
+    ],
+    "SL": [
+      "Steering-wheel-mounted audio controls",
+      "Leather-wrapped steering wheel",
+      "Color-keyed removable carpeted floor mats for first and second row",
+      "Power door locks with remote keyless entry",
+      "Body-colored bodyside moldings with chrome inserts"
+    ],
+    "WT": [
+      "Single-zone manual air conditioning",
+      "Rubberized vinyl floor covering",
+      "Manual day/night rearview mirror",
+      "AM/FM stereo base audio system",
+      "Black bumper top caps and chrome bumpers"
+    ]
+  }
+}

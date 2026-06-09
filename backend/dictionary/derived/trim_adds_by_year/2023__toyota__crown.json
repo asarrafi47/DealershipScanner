@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2023|toyota|crown",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Crown",
+  "ladder_id": "brochure_llm_2023__toyota__crown",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Hybrid MAX engine: 2.4-liter turbocharged with 340 combined net hp",
+      "Direct Shift-6AT 6-speed automatic transmission",
+      "Adaptive Variable Suspension (AVS) system",
+      "21-inch 10-spoke machined-finish alloy wheels with black accents",
+      "Eco, Comfort Normal, Sport S, Sport S+, and Custom drive modes",
+      "29 city/32 highway/30 combined EPA-estimated mpg"
+    ],
+    "Limited": [
+      "Quad-LED projector low- and high-beam headlights with auto on/off",
+      "Panoramic fixed-glass roof with power sunshade",
+      "Leather front seats with 8-way power-adjustable driver's seat and lumbar support",
+      "Heated and ventilated front seats",
+      "Heated rear seats",
+      "Heated leather-trimmed tilt/telescopic steering wheel with paddle shifters",
+      "Digital Key compatibility"
+    ],
+    "XLE": [
+      "2.5-liter Dynamic Force 4-Cylinder Hybrid engine with 236 combined net hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "All-Wheel Drive (AWD)",
+      "Eco, Normal, Sport drive modes",
+      "42 city/41 highway/41 combined EPA-estimated mpg",
+      "19-inch multi-spoke machined-finish two-tone alloy wheels",
+      "Bi-LED projector low- and high-beam headlights with auto on/off",
+      "LED taillights and stop lights",
+      "Fabric seats with SofTex trim and 8-way power driver's seat",
+      "12.3-inch Toyota Audio Multimedia touchscreen with wireless Apple CarPlay and Android Auto"
+    ]
+  }
+}

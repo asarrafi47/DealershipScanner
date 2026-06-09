@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2017|toyota|yaris",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_llm_2017__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Projector-beam headlights with black sport trim and LED light bar accent",
+      "LED Daytime Running Lights (DRL)",
+      "Integrated fog lights with chrome surround",
+      "Black front grille with piano-black accent",
+      "Rear spoiler",
+      "16-inch machined alloy wheels",
+      "Metallic interior trim accents with satin chrome handles",
+      "Sport fabric-trimmed front seats",
+      "Leather-trimmed tilt 3-spoke steering wheel with audio controls",
+      "Leather-trimmed shift lever"
+    ],
+    "LE": [
+      "Black front grille with chrome accent",
+      "Color-keyed power outside mirrors",
+      "15-inch alloy wheels",
+      "Integrated fog lights with chrome surround",
+      "Tilt 3-spoke steering wheel with audio controls",
+      "Remote keyless entry system",
+      "Yaris Entune Audio with 6.1-inch touchscreen, AM/FM CD, six speakers, HD Radio, USB, Bluetooth"
+    ],
+    "L": [
+      "1.5L 4-cylinder engine with 5-speed manual or 4-speed automatic transmission",
+      "30 city/36 highway/33 combined EPA-estimated mpg with manual transmission",
+      "Black front grille",
+      "Multi-reflector halogen headlights with chrome accents",
+      "Daytime Running Lights (DRL)",
+      "Color-keyed outside mirrors",
+      "15-inch steel wheels with wheel covers",
+      "Cruise control",
+      "Fabric-trimmed front seats",
+      "Star Safety System with nine airbags"
+    ]
+  }
+}

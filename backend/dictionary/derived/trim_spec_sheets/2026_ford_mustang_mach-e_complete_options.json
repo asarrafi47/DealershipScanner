@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_ford_mustang_mach-e_complete_options",
+  "make": "Ford",
+  "models": [
+    "Mustang Mach-E",
+    "Mustang Mach-E"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, rear-wheel-drive; L Coyote V8"
+      }
+    ]
+  }
+}

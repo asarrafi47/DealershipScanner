@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2014|ford|eseries",
+  "year": 2014,
+  "make": "Ford",
+  "model": "E-Series",
+  "ladder_id": "brochure_llm_2014__ford__eseries",
+  "source": "brochure_llm",
+  "trims_available": [
+    "E-150 XLT",
+    "E-150 XL",
+    "E-350 Super Duty XLT",
+    "E-350 Super Duty XL"
+  ],
+  "adds_by_trim": {
+    "E-150 XLT": [
+      "XLT side/rear door-trim panels with insulated padding and color-keyed sliding door track",
+      "Interior Upgrade Package with full-length carpeting and high-level side/rear door-trim panels",
+      "Cloth front captain's chairs with power driver's seat 6-way manual lumbar",
+      "Premium Navigation Radio System with SiriusXM Satellite Radio and HD Radio",
+      "Power Windows and Locks Group with aero-style power-adjustable sideview mirrors",
+      "Reverse Sensing System with rear step or contour bumpers",
+      "Auto-dimming rearview mirror"
+    ],
+    "E-150 XL": [
+      "Base cloth sun visors and upper B-pillar trim panels",
+      "AM/FM stereo single-CD player with MP3 capability and audio input jack",
+      "High-capacity front and rear air conditioning",
+      "16-inch aluminum wheels with chrome center caps"
+    ],
+    "E-350 Super Duty XLT": [
+      "XLT Premium Package with leather-trimmed seating and 7-passenger configuration",
+      "Four leather-trimmed captain's chairs for rows one and two, one 3-passenger rear bench",
+      "Interior Upgrade Package with full-length carpeting and high-level door trim panels",
+      "Power driver's seat 6-way with manual lumbar support",
+      "Power Windows and Locks Group and aero-style power-adjustable sideview mirrors"
+    ],
+    "E-350 Super Duty XL": [
+      "Base cloth-trimmed seating with manual sun visors",
+      "AM/FM stereo single-CD player with MP3 capability and digital clock",
+      "High-capacity front and rear air conditioning",
+      "16-inch aluminum wheels with chrome center caps"
+    ]
+  }
+}

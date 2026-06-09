@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,GMC,Acadia,FWD,2.5L I4 (SIDI),2.5L I4 Turbo,Turbocharged,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.5,21,26,23,,,,,
+2017,GMC,Acadia,FWD,3.6L V6 (SIDI),3.6L V6,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.6,18,25,21,,,,,
+2017,GMC,Acadia,AWD,2.5L I4 (SIDI),2.5L I4 Turbo,Turbocharged,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.5,21,25,23,,,,,
+2017,GMC,Acadia,AWD,3.6L V6 (SIDI),3.6L V6,,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.6,18,25,20,,,,,
+2017,GMC,Acadia,Limited FWD,3.6L V6 (SIDI),3.6L V6,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.6,15,22,18,,,,,
+2017,GMC,Acadia,Limited AWD,3.6L V6 (SIDI),3.6L V6,,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.6,15,22,17,,,,,

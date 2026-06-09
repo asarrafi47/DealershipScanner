@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2016|chevrolet|silverado",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2016__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Z71",
+    "LTZ",
+    "LT Z71",
+    "LT",
+    "Z71",
+    "Custom",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "LED headlamps with LED signature styling",
+      "LED foglamps",
+      "Power sunroof with tilt/sliding glass, express-open and wind deflector on Crew Cab",
+      "Active Noise Cancellation with 6.2L V8 engine",
+      "Wireless charging pad for compatible mobile devices",
+      "8-speed automatic transmission with Tow/Haul mode"
+    ],
+    "Z71": [
+      "Automatic locking rear differential with available Trailering Package",
+      "Electronic Autotrac with rotary dial transfer case on 4x4 models"
+    ],
+    "LTZ": [
+      "LED headlamps with LED signature styling",
+      "LED foglamps",
+      "Max Trailering Package with 9.76-inch rear axle and integrated trailer brake controller",
+      "Remote vehicle starter system",
+      "Wireless charging pad for front bucket seat models"
+    ],
+    "LT Z71": [
+      "Automatic locking rear differential standard",
+      "Max Trailering Package available with 5.3L V8 engine"
+    ],
+    "LT": [
+      "LED foglamps with available LT Convenience Package",
+      "Remote vehicle starter system with available LT Convenience Package",
+      "Rear vision camera with available LT Convenience Package",
+      "5.3L EcoTec3 V8 engine standard on Crew Cab Standard Box models"
+    ],
+    "Custom": [
+      "4.3L EcoTec3 V6 engine with 285 hp and 305 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "Rubberized vinyl floor mats front and rear"
+    ],
+    "WT": [
+      "Rear vision camera with available WT Convenience Package",
+      "Trailering Package with trailer hitch and automatic locking rear differential"
+    ]
+  }
+}

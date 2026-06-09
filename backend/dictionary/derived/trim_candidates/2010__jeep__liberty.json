@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2010|jeep|liberty",
+  "year": 2010,
+  "make": "Jeep",
+  "model": "Liberty",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

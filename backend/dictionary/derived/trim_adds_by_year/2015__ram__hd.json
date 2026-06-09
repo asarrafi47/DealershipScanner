@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|ram|hd",
+  "year": 2015,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2015__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie Limited",
+    "Laramie Longhorn",
+    "Laramie"
+  ],
+  "adds_by_trim": {
+    "Laramie Limited": [
+      "All-black premium leather interior",
+      "Monotone paint treatment",
+      "RamBox Cargo Management System",
+      "Spray-in bedliner"
+    ],
+    "Laramie Longhorn": [
+      "Two-tone paint with White Gold Metallic accents on lower body and bumpers",
+      "Unique Laramie Longhorn badging",
+      "Black bed rail caps",
+      "Spray-in bedliner"
+    ],
+    "Laramie": [
+      "Leather-trimmed heated and ventilated front bucket seats",
+      "60/40 split-folding rear bench with leather trim",
+      "Heated leather-wrapped steering wheel with wood accent",
+      "Uconnect 8.4A touchscreen with SiriusXM Satellite Radio",
+      "Premium 10-speaker Surround Sound Audio System",
+      "Two-tone paint with Bright Silver Metallic lower body",
+      "Chrome front and rear bumpers with wave grille inserts",
+      "Premium 70-mm projector headlamps and LED taillamps",
+      "18-inch polished aluminum wheels (2500/3500 SRW)"
+    ]
+  }
+}

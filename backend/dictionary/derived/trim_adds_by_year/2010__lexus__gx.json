@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|lexus|gx",
+  "year": 2010,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "2008_lexus_gx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "service, call the XM Listener Care Center. Subscriptions are governed by the XM Customer Agreement available at"
+    ],
+    "Luxury": [
+      "United States. 3. Safety Connect services will function in the",
+      "subscription. XM® Sports and Stocks is available with an XM® Radio"
+    ],
+    "Premium": [
+      "3.4-liter turbocharged V-6 engine with 349 hp and 479 lb-ft torque",
+      "10-speed automatic transmission with full-time 4WD",
+      "14.0-inch infotainment touchscreen",
+      "12.3-inch driver information display",
+      "Wireless Apple CarPlay and Android Auto",
+      "Heated and ventilated front seats",
+      "10-speaker audio system",
+      "Power liftgate",
+      "Power tilt-and-telescoping steering column",
+      "Driver's seat, steering wheel, and mirror memory"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Premium": 0,
+      "Limited": 1
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2018|buick|envision",
+  "year": 2018,
+  "make": "Buick",
+  "model": "Envision",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Essence",
+    "Preferred",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

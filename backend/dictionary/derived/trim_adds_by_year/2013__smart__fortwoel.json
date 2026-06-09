@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2013|smart|fortwoel",
+  "year": 2013,
+  "make": "Smart",
+  "model": "FortwoEl",
+  "ladder_id": "brochure_web_2013__smart__fortwoel",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cabriolet",
+    "Coupe"
+  ],
+  "adds_by_trim": {
+    "Cabriolet": [
+      "Convertible cabriolet roof design",
+      "Open-air driving experience"
+    ],
+    "Coupe": [
+      "All-electric powertrain with instant torque and no lag",
+      "Single-speed magneto-electric transmission for smooth acceleration",
+      "Tight turning radius for nimble city driving",
+      "240-volt home charging capability",
+      "100% customizable with standard colors and door panel designs",
+      "Tridion safety cell design options",
+      "Federal tax credit eligible up to $7,500"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/smart/fortwoel/"
+}

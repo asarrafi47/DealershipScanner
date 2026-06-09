@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2021|maserati|ghibli",
+  "year": 2021,
+  "make": "maserati",
+  "model": "ghibli",
+  "ladder_id": "brochure_llm_2021__maserati__ghibli",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ghibli Trofeo",
+    "Ghibli S Q4",
+    "Ghibli S",
+    "Ghibli",
+    "Ghibli Hybrid",
+    "Ghibli Diesel"
+  ],
+  "adds_by_trim": {
+    "Ghibli Trofeo": [
+      "3.8-liter V8 engine producing 580 CV and 730 Nm peak torque",
+      "0-100 km/h acceleration in 4.3 seconds",
+      "Maximum speed of 326 km/h",
+      "Enhanced sports car handling and performance tuning"
+    ],
+    "Ghibli S Q4": [
+      "All-wheel drive Q4 system for improved traction and stability",
+      "316 kW (430 CV) V6 engine with 580 Nm torque",
+      "0-100 km/h acceleration in 4.7 seconds"
+    ],
+    "Ghibli S": [
+      "316 kW (430 CV) V6 engine producing 580 Nm peak torque",
+      "0-100 km/h acceleration in 4.9 seconds",
+      "Maximum speed of 286 km/h"
+    ],
+    "Ghibli": [
+      "257 kW (350 CV) V6 engine with 500 Nm peak torque",
+      "0-100 km/h acceleration in 5.5 seconds",
+      "Maximum speed of 267 km/h",
+      "Restyled signature Trident grille for 2021",
+      "New boomerang-style taillamps inspired by Maserati 3200 GT",
+      "10.1-inch frameless HD touchscreen with Maserati Intelligent Assistant",
+      "Redesigned instrument cluster"
+    ],
+    "Ghibli Hybrid": [
+      "1998 cc V6 petrol engine with electric hybrid system producing 243 kW (330 CV)",
+      "450 Nm peak torque at 4000 rpm",
+      "0-100 km/h acceleration in 5.7 seconds",
+      "Maximum speed of 255 km/h"
+    ],
+    "Ghibli Diesel": [
+      "2987 cc V6 diesel engine producing 202 kW (275 CV)",
+      "600 Nm peak torque at 2000-2600 rpm for low-end responsiveness",
+      "0-100 km/h acceleration in 6.3 seconds",
+      "Fuel consumption of 7.8-8.3 l/100 km combined cycle"
+    ]
+  }
+}

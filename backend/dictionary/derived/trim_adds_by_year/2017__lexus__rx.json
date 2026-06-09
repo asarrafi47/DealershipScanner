@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2017|lexus|rx",
+  "year": 2017,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_2017__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Includes eight-year/100,000-mile Hybrid System Warranty"
+    ],
+    "Limited": [
+      "Adds four-year/50,000-mile Limited Warranty",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds eight-year/100,000-mile Hybrid System Warranty",
+      "Adds six-year unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero-deductible warranty coverage across all systems"
+    ],
+    "Premium": [
+      "Adds dual-screen system with split-screen video capability",
+      "Adds SiriusXM satellite radio service",
+      "Adds Navigation System integration"
+    ],
+    "F Sport": [
+      "Rioja Red leather interior trim option",
+      "F SPORT-specific exterior styling"
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2019|hyundai|tucson",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2019__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ultimate",
+    "Limited",
+    "Sport",
+    "SEL",
+    "Value",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Ultimate": [
+      "181 hp 2.4L GDI 4-cylinder engine replaces 161 hp 2.0L",
+      "8-way power front passenger seat",
+      "Leather seating surfaces",
+      "Heated steering wheel",
+      "Ventilated front seats and heated rear seats",
+      "Power tilt-and-slide panoramic sunroof",
+      "8-inch high-resolution touchscreen navigation system",
+      "Smart Cruise Control with Stop & Go",
+      "Surround View Monitor",
+      "Rain-sensing windshield wipers"
+    ],
+    "Limited": [
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "High Beam Assist",
+      "Heated front seats with 3 settings",
+      "Leather-wrapped steering wheel and shift knob",
+      "Infinity 315-Watt Premium Audio with 8 speakers and Clari-Fi Music Restoration",
+      "Wireless charging pad",
+      "Heated side mirrors",
+      "LED accent lights",
+      "Hands-free smart liftgate with auto open"
+    ],
+    "Sport": [
+      "Blind-Spot Collision Warning",
+      "Rear Cross-Traffic Collision Warning",
+      "Front foglights",
+      "Side mirrors with LED turn signal indicators",
+      "Roof side rails",
+      "Premium front and rear fascias",
+      "Bodycolor rear spoiler with LED center brake light"
+    ],
+    "SEL": [
+      "Lane Keeping Assist",
+      "Driver Attention Warning",
+      "8-way power driver seat with 2-way power lumbar support",
+      "Dual automatic temperature control with CleanAir Ionizer and auto defogger",
+      "Heated front seats",
+      "Blue Link Connected Car System",
+      "Rear seat USB charge outlet",
+      "Android Auto and Apple CarPlay"
+    ],
+    "Value": [
+      "Forward Collision-Avoidance Assist",
+      "Rear View Monitor with Parking Guidance",
+      "LED headlights and taillights",
+      "Automatic headlights",
+      "7-inch color touchscreen display audio with USB/AUX input",
+      "Proximity Key entry with push button start",
+      "Rear seat USB charge port"
+    ],
+    "SE": [
+      "161 hp 150 lb-ft 2.0L GDI 4-cylinder engine",
+      "6-speed automatic transmission with SHIFTRONIC",
+      "HTRAC All Wheel Drive and Downhill Brake Control",
+      "Drive Mode Select",
+      "Tilt-and-telescopic steering wheel with audio phone and cruise controls",
+      "Electronic Parking Brake with Automatic Vehicle Hold",
+      "Power windows with driver's auto-down",
+      "Electroluminescent Gauge Cluster with color LCD multi-information display",
+      "Reclining 60/40 split second row fold-flat seats with center armrest",
+      "Adjustable head restraints for all positions"
+    ]
+  }
+}

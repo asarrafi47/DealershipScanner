@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|hyundai|equus",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Equus",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Hyundai_Equus_Brochure.pdf",
+  "page_count": 40,
+  "all_pages": false,
+  "trim_hint_pages": [
+    38
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 38,
+      "trim_hint": true,
+      "text": "2011 EQUUS_FEatURES\nEquus Signature Equus Ultimate\nExTERioR dimEnsions Wheelbase (in) 119.9\nLength (in) 203.1\nWidth (in), excluding mirrors 74.4\nHeight (in) 58.7\nTrack (in), front / rear 63.8 / 64.1\nCoefficient of drag 0.27\nCurb weight (lbs) 4449 - 4555 4486 - 4592\ninTERioR dimEnsions Head room (in), front / rear 38.7 / 38.1\nLeg room (in), front / rear 45.1 / 38.9\nShoulder room (in), front / rear 59.1 / 58.0\nHip room (in), front / rear 55.5 / 55.1\nPassenger volume (cu ft) 109.3\nCargo volume (cu ft) 16.7\nTotal interior volume (cu ft) 126.0\nEPA size classification Large Car\nEpA milEAgE EsTimATEs / FUEl CApACiTY Fuel economy (city / highway / combined) 16 / 24 / 19 16 / 24 / 19\nFuel-tank capacity (gal) 20.3\nFuel economy estimated by EPA for comparison. While the information contained in this brochure was correct at the time of printing, specifications and equipment can change. Feature comparisons are based\non competitor information available at time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to change product specifications and equipment at any time\nwithout incurring obligations. Some vehicles are shown with optional equipment. Specifications apply to U.S. vehicles only. Please contact your Hyundai dealer for current vehicle specifications. As part of\nHyundai\u2019s commitment to a sustainable environment, this brochure is printed using paper certified by the Forest Stewardship Council. FSC certification helps ensure that the highest social and environmental\nstandards are met in the making of the paper we use, contributing to conservation, responsible management, and community level benefits for people near the forests.",
+      "table_lines": [
+        "ExTERioR dimEnsions",
+        "Length (in)",
+        "Width (in), excluding mirrors",
+        "Height (in)",
+        "Track (in), front / rear",
+        "Coefficient of drag",
+        "inTERioR dimEnsions",
+        "Leg room (in), front / rear",
+        "Shoulder room (in), front / rear",
+        "Hip room (in), front / rear",
+        "Passenger volume (cu ft)",
+        "Cargo volume (cu ft)",
+        "Total interior volume (cu ft)",
+        "EpA milEAgE EsTimATEs / FUEl CApACiTY"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 38 ---\n2011 EQUUS_FEatURES\nEquus Signature Equus Ultimate\nExTERioR dimEnsions Wheelbase (in) 119.9\nLength (in) 203.1\nWidth (in), excluding mirrors 74.4\nHeight (in) 58.7\nTrack (in), front / rear 63.8 / 64.1\nCoefficient of drag 0.27\nCurb weight (lbs) 4449 - 4555 4486 - 4592\ninTERioR dimEnsions Head room (in), front / rear 38.7 / 38.1\nLeg room (in), front / rear 45.1 / 38.9\nShoulder room (in), front / rear 59.1 / 58.0\nHip room (in), front / rear 55.5 / 55.1\nPassenger volume (cu ft) 109.3\nCargo volume (cu ft) 16.7\nTotal interior volume (cu ft) 126.0\nEPA size classification Large Car\nEpA milEAgE EsTimATEs / FUEl CApACiTY Fuel economy (city / highway / combined) 16 / 24 / 19 16 / 24 / 19\nFuel-tank capacity (gal) 20.3\nFuel economy estimated by EPA for comparison. While the information contained in this brochure was correct at the time of printing, specifications and equipment can change. Feature comparisons are based\non competitor information available at time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to change product specifications and equipment at any time\nwithout incurring obligations. Some vehicles are shown with optional equipment. Specifications apply to U.S. vehicles only. Please contact your Hyundai dealer for current vehicle specifications. As part of\nHyundai\u2019s commitment to a sustainable environment, this brochure is printed using paper certified by the Forest Stewardship Council. FSC certification helps ensure that the highest social and environmental\nstandards are met in the making of the paper we use, contributing to conservation, responsible management, and community level benefits for people near the forests.\n\nExTERioR dimEnsions\nLength (in)\nWidth (in), excluding mirrors\nHeight (in)\nTrack (in), front / rear\nCoefficient of drag\ninTERioR dimEnsions\nLeg room (in), front / rear\nShoulder room (in), front / rear\nHip room (in), front / rear\nPassenger volume (cu ft)\nCargo volume (cu ft)\nTotal interior volume (cu ft)\nEpA milEAgE EsTimATEs / FUEl CApACiTY"
+}

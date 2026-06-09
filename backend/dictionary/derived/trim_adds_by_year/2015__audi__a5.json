@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|audi|a5",
+  "year": 2015,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_llm_2015__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "Dynamic steering system",
+      "Sport suspension calibration"
+    ],
+    "Premium Plus": [
+      "Sport suspension calibration"
+    ],
+    "Premium": [
+      "Four-cylinder turbocharged TFSI engine with 220 horsepower",
+      "16-valve DOHC with valvelift system",
+      "Six-speed manual or eight-speed Tiptronic automatic transmission",
+      "quattro all-wheel drive system",
+      "Five-link front suspension with trapezoidal-link rear",
+      "Ventilated front disc and solid rear disc brakes",
+      "Electromechanical power steering system"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2010|honda|ridgeline",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

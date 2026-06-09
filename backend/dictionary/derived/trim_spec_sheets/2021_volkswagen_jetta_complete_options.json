@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2021_volkswagen_jetta_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Jetta",
+    "Jetta"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Electric vehicle (was Volkswagen had considered producing a mild hybrid version of the fifth-generation mainly for the North American market but never produced it. In 2013 Volkswagen produced a turbocharged full hybrid sixth generation offering for the…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Its ten-color customizable ambient interior lighting includes lighting across th"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Volkswagen had considered producing a mild hybrid version of the fifth-generation mainly for the North American market but never produced it. In 2013 Volkswagen produced a turbocharged full hybrid sixth generation offering for the North American market.;…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Its ten-color customizable ambient interior lighting includes lighting across th"
+      }
+    ]
+  }
+}

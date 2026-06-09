@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|audi|tt",
+  "year": 2010,
+  "make": "Audi",
+  "model": "TT",
+  "ladder_id": "generic_audi_tt",
+  "source": "manual_brochure_review",
+  "trims_available": ["2.0T", "TTS"],
+  "adds_by_trim": {
+    "TTS": [
+      "2.0L TFSI turbo — 265 hp (vs 200 hp 2.0T on base TT)",
+      "Audi magnetic ride suspension with 10 mm lowered chassis",
+      "Rear ventilated disc brakes with painted calipers and sport brake pads",
+      "S line exterior and interior with aluminum mirror housings",
+      "18-inch 5-parallel-spoke S design wheels (vs 7-arm Dynamic Design on 2.0T)"
+    ]
+  }
+}

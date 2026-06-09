@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|landrover|lr2",
+  "year": 2013,
+  "make": "landrover",
+  "model": "LR2",
+  "ladder_id": "brochure_2013__landrover__lr2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds electrochromatic rear view mirror for automatic glare minimization",
+      "Adds rain sensing wipers",
+      "Adds twin map lights in roof console",
+      "Adds panoramic sunroof with fixed rear section and electric tilting/sliding front section",
+      "Adds center console storage box",
+      "Adds six-way driver's seat adjustment",
+      "Adds Terrain Response system with four selectable programs",
+      "Adds Passive Start and Start/Stop button functionality"
+    ],
+    "Premium": [
+      "Upgraded to eight-way driver's seat adjustment",
+      "Adds driver's seat memory package"
+    ],
+    "Standard": [
+      "Adds optional DVD satellite navigation system with high definition touch-screen",
+      "Adds navigation point-of-interest database functionality"
+    ],
+    "HSE": [
+      "Upgraded to premium Alpine® Dolby® Pro Logic® II 7.1 surround sound system",
+      "Adds 480-Watt amplifier with 13 speakers and subwoofer",
+      "Adds Sirius Satellite Radio availability"
+    ]
+  }
+}

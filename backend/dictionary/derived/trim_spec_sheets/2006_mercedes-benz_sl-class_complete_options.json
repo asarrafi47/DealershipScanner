@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2006_mercedes-benz_sl-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SL-Class",
+    "SL-Class"
+  ],
+  "year_min": 2004,
+  "year_max": 2008,
+  "source": "generated",
+  "trims": {
+    "SL 65 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.4L V8 Turbo; Automatic (S5)"
+      }
+    ],
+    "SL 55 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 600": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 500": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

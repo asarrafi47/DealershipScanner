@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2011|honda|accord",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Accord",
+  "ladder_id": "inventory_honda_accord",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "Leather-Trimmed Seats/Heated Front Seats"
+    ],
+    "EX": [
+      "Rearview camera with guidelines",
+      "Adaptive Compatibility Engineering (ACE)",
+      "Vehicle Stability Assist with traction control",
+      "Forward Collision Warning",
+      "Push button start"
+    ],
+    "LX": [
+      "185-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "6-speed manual or CVT with Sport Mode",
+      "Vehicle Stability Assist with traction control",
+      "Tilt and telescopic steering column",
+      "Map lights",
+      "Driver's seat with 10-way power adjustment including lumbar support"
+    ],
+    "SE": [
+      "Black exterior design elements",
+      "Replaces previous EX trim"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix",
+    "dot_feature_matrix",
+    "inline_trim_bullet_rows"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "EX": 0,
+      "LX": 0,
+      "SE": 0
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2022|lexus|ls",
+  "year": 2022,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2022__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LS500 FSPORT EXECUTIVE PACKAGE WITH KIRIKO GLASS",
+    "LS500 FSPORT EXECUTIVE PACKAGE",
+    "LS500 FSPORT",
+    "LS500"
+  ],
+  "adds_by_trim": {
+    "LS500 FSPORT EXECUTIVE PACKAGE WITH KIRIKO GLASS": [
+      "Kiriko Glass interior door trim",
+      "Hand-pleated interior door trim"
+    ],
+    "LS500 FSPORT EXECUTIVE PACKAGE": [
+      "Power-retractable butterfly front headrests",
+      "22-way power-adjustable rear seats with butterfly headrests and multifunction massage with heat",
+      "Right-rear power recliner with sliding ottoman",
+      "20-in split-10-spoke forged alloy wheels with Black and machined finish",
+      "Mark Levinson 23-speaker 2,400-watt Reference Surround Sound with Quantum Logic Immersion"
+    ],
+    "LS500 FSPORT": [
+      "FSPORT exterior styling including front bumper, grille inserts, rear diffuser and door trim",
+      "Heated leather-trimmed steering wheel with paddle shifters",
+      "Six-piston front brake calipers with 15.7-inch ventilated discs",
+      "Four-piston rear brake calipers with 14.1-inch ventilated discs",
+      "Power-adjustable front headrests",
+      "FSPORT-tuned Adaptive Variable Suspension",
+      "FSPORT perforated leather-trimmed interior with performance-inspired instrumentation",
+      "28-way power-adjustable front seats with enhanced bolsters and perforations"
+    ],
+    "LS500": [
+      "416-hp 3.5L twin-turbo V6 with 10-speed transmission",
+      "Adaptive Variable Suspension with Drive Mode Select including Sport S+ and Custom",
+      "Lexus Teammate Advanced Drive and Advanced Park",
+      "24-inch Head-Up Display integration",
+      "20-inch split-10-spoke alloy noise-reduction wheels with Vapor Chrome finish",
+      "28-way power-adjustable driver's seat with multifunction massage and cushion extender",
+      "Quilted-stitch perforated semi-aniline leather interior trim",
+      "Lexus Safety System+ 2.5 with Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Navigation System with 12.3-inch color LCD touchscreen and Remote Touchpad",
+      "Lexus 12-speaker Premium Audio System with Apple CarPlay and Android Auto"
+    ]
+  }
+}

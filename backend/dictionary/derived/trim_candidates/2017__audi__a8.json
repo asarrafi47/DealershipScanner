@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2017|audi|a8",
+  "year": 2017,
+  "make": "Audi",
+  "model": "A8",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "L",
+    "Premium",
+    "Sport",
+    "A8",
+    "S8"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

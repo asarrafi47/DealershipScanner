@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2015|mitsubishi|outlandersport",
+  "year": 2015,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2015__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE AWC",
+    "SE FWD",
+    "ES AWC",
+    "ES FWD"
+  ],
+  "adds_by_trim": {
+    "SE AWC": [
+      "All-wheel control system (AWC) with Active Stability Control"
+    ],
+    "SE FWD": [
+      "Leather seating surfaces",
+      "8-way power adjustable driver's seat",
+      "Auto-dimming rearview mirror",
+      "Available SE Premium Package: panoramic glass roof with LED mood lighting",
+      "Available SE Premium Package: 710-watt Rockford-Fosgate premium sound system with 9 speakers and subwoofer",
+      "Available SE Touring Package: MMCS Navigation with 7-inch touchscreen, voice command, 3D mapping, real-time traffic"
+    ],
+    "ES AWC": [
+      "All-wheel control system (AWC) with Active Stability Control"
+    ],
+    "ES FWD": [
+      "Hill Start Assist, Anti-lock Braking System with Electronic Brakeforce Distribution, Active Stability Control, Traction Control Logic",
+      "Tire Pressure Monitoring System, front and rear side curtain airbags, seat-mounted side airbags, driver knee airbag",
+      "Advanced dual-stage front airbags with occupant sensors, height-adjustable front shoulder belts with pretensioner",
+      "LATCH child safety-seat anchors, child safety rear door locks, anti-theft security alarm with engine immobilizer",
+      "RISE body construction, collapsible steering column, foldable brake pedal assembly"
+    ]
+  }
+}

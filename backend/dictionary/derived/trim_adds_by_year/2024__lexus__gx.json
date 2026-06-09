@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2024|lexus|gx",
+  "year": 2024,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "2023_lexus_gx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "limitations. 11. Do not rely exclusively on the Rear Cross-Traffic Alert. Visually confirm clearance",
+      "the driver to focus on steering. See Owner’s Manual for additional limitations. 21. Downhill Assist Control is designed to help",
+      "Connect, use only if aware of circumstances",
+      "vehicle in an enclosed space or if",
+      "Connect service not available everywhere or in every vehicle. Valid in contiguous U.S. and"
+    ],
+    "Premium": [
+      "LED fog lamps and outside mirrors with puddle lamps",
+      "10-way heated and ventilated power driver seat",
+      "Heated second-row outboard seats and wireless phone charger"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 5.0,
+    "per_trim_add_counts": {
+      "Limited": 5
+    }
+  }
+}

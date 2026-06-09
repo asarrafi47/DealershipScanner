@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2025|toyota|corollahatchback",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "brochure_llm_2025__toyota__corollahatchback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "NIGHTSHADE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Dual zone automatic climate control",
+      "7-inch fully digital gauge cluster",
+      "SofTex with sport fabric insert and heated front seats with sport bolsters",
+      "Qi-compatible wireless smartphone charging",
+      "JBL Premium Audio with eight speakers and amplifier",
+      "Drive Connect with 1-year trial",
+      "30 city/38 highway/33 combined mpg rating"
+    ],
+    "NIGHTSHADE": [
+      "18-inch bronze-finished alloy wheels",
+      "Black front lower grille surround",
+      "Black heated power outside mirrors with turn signal indicators",
+      "Blackout badging",
+      "Dual chrome-colored rear diffuser accents",
+      "Enhanced cargo space"
+    ],
+    "SE": [
+      "2.0L Dynamic Force engine with 169 hp",
+      "Dynamic-Shift CVT with Normal, Eco and Sport driving modes",
+      "LED headlights and LED DRL with auto on/off",
+      "16-inch alloy wheels",
+      "Color-keyed front lower grille and rear spoiler",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Automatic climate control and Smart Key with Push Button Start",
+      "4.2-inch Multi-Information Display and premium leather-trimmed steering wheel",
+      "Paddle shifters and fabric sport seats with 60/40 split fold-down rear",
+      "Four USB-C charging ports and Electric Parking Brake with Brake Hold"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|mini|mini",
+  "year": 2019,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_llm_2019__mini__mini",
+  "source": "brochure_llm",
+  "trims_available": [
+    "John Cooper Works",
+    "Cooper S",
+    "Cooper"
+  ],
+  "adds_by_trim": {
+    "John Cooper Works": [
+      "228 hp and 258 lb-ft of torque from MINI TwinPower Turbo engine",
+      "Race-inspired power and performance",
+      "Dynamic Traction Control with Electronic Differential Lock Control standard",
+      "Available in all body styles: Hardtop 2 Door, Hardtop 4 Door, Clubman, Countryman, Convertible"
+    ],
+    "Cooper S": [
+      "189 hp and 207 lb-ft of torque from MINI TwinPower Turbo engine",
+      "More thrilling performance than Cooper",
+      "Available in all body styles: Hardtop 2 Door, Hardtop 4 Door, Clubman, Countryman, Convertible"
+    ],
+    "Cooper": [
+      "134 hp and 162 lb-ft of torque from MINI TwinPower Turbo engine",
+      "Sporty and spirited driving dynamics",
+      "Eight airbags standard on Hardtop and Clubman models; six on Convertible",
+      "Dynamic Stability Control and four-channel Anti-lock Brake System",
+      "Corner Brake Control for go-kart handling feel",
+      "LED headlights with illuminated rings",
+      "LED taillights with integrated Union Jack design",
+      "MINI Connected with intelligent services and apps",
+      "Dual-pane panoramic sunroof standard on Countryman",
+      "Available ALL4 all-wheel drive on select models"
+    ]
+  }
+}

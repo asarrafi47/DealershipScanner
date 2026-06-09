@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2019|hyundai|veloster",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Blue",
+    "Premium",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

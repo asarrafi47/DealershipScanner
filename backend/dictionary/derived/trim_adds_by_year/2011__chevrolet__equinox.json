@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2011|chevrolet|equinox",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2011__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Power-programmable rear liftgate with fixed glass",
+      "Halogen uplevel projector-style headlamps",
+      "Body-color bumpers with bright front and rear lowers standard",
+      "Front halogen foglamps",
+      "Ultrasonic Rear Parking Assist",
+      "Audio system with Rear-Seat Entertainment with dual rear eight-inch displays"
+    ],
+    "2LT": [
+      "Front halogen foglamps",
+      "Optional power-programmable rear liftgate with fixed glass",
+      "Body-color power heated manual-folding mirrors",
+      "Roof rack center rails available",
+      "Audio system with Rear-Seat Entertainment optional"
+    ],
+    "1LT": [
+      "Body-color power heated manual-folding mirrors",
+      "Roof rack side rails standard",
+      "Optional 3.0L V6 DOHC Direct Injection 264-hp engine"
+    ],
+    "LS": [
+      "2.4L ECOTEC DOHC Direct Injection 182-hp 4-cylinder engine",
+      "Eight air bags including driver, front passenger, thorax side-impact, and head-curtain",
+      "Four-wheel antilock disc brakes",
+      "StabiliTrak Electronic Stability Control System with Traction Control",
+      "Hill Start Assist",
+      "Power variable-assist electric steering",
+      "AM/FM stereo with XM Radio and six-speaker system",
+      "LATCH system and power rear door child safety locks",
+      "OnStar Directions and Connections Plan included first six months"
+    ]
+  }
+}

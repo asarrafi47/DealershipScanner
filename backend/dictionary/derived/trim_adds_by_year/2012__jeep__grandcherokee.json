@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2012|jeep|grandcherokee",
+  "year": 2012,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "jeep_grand_cherokee_wk2",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Laredo",
+    "Limited",
+    "Overland",
+    "Summit",
+    "SRT"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Quadra-Trac II active full-time 4WD with Selec-Terrain (4x4)",
+      "Uconnect 430N with navigation HDD and infrared dual-zone climate control",
+      "18-inch polished cast aluminum wheels",
+      "Heated first- and second-row leather-trimmed seats",
+      "ParkSense rear park assist and ParkView rear backup camera",
+      "CommandView dual-pane panoramic sunroof",
+      "Remote start, rain-sensitive wipers, and Keyless Enter-N-Go",
+      "Alpine premium audio system"
+    ],
+    "Overland": [
+      "Quadra-Lift air suspension with Selec-Terrain vehicle management (4x4)",
+      "Uconnect 730N navigation with Alpine premium audio",
+      "20-inch Satin Carbon wheels with Olive Ash burl real wood trim",
+      "Ventilated front seats; heated first- and second-row leather",
+      "Chrome grille, fog lamp bezels, and tow hooks",
+      "Adaptive Cruise Control and leather-wrapped heated steering wheel with wood",
+      "Power liftgate and auto high beam headlamp control"
+    ],
+    "Summit": [
+      "Overland Summit: 20-inch bright polished aluminum wheels (replaces Satin Carbon)",
+      "Black Olive Ash burl wood trim and headlamp washers",
+      "Front Park Assist with ParkSense and ParkView",
+      "Adaptive Cruise Control on steering wheel controls",
+      "Highest luxury positioning above standard Overland"
+    ],
+    "SRT": [
+      "6.4L HEMI V8 — 470 hp (2012 brochure rating)",
+      "Quadra-Trac active on-demand 4WD with Selec-Track adaptive damping",
+      "SRT performance Brembo brakes (6-piston front / 4-piston rear)",
+      "Uconnect 730N navigation; SRT heated flat-bottom steering wheel with paddle shifters",
+      "Dual heat extractors on hood; electronic limited-slip rear differential",
+      "Heated and ventilated front seats; heated second-row seats",
+      "Forward Collision Warning, Blind Spot Monitoring, and Rear Cross-Path Detection"
+    ],
+    "Laredo": [
+      "Leather-wrapped steering wheel as standard premium feature",
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Available 5.7L V8 engine with Fuel Saver Technology",
+      "8.5-inch ground clearance with 26.2-degree approach angle",
+      "Multilink rear suspension with coil springs and gas-charged shock absorbers"
+    ]
+  }
+}

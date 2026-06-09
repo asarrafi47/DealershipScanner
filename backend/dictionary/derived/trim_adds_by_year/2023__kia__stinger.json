@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2023|kia|stinger",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Stinger",
+  "ladder_id": "brochure_llm_2023__kia__stinger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT (Manual)",
+    "GT",
+    "GT-Line",
+    "LXS",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "GT (Manual)": [
+      "6-speed Manual Transmission",
+      "Michelin Pilot Sport summer tires",
+      "Harman Kardon 320-watt premium audio system with 8 speakers",
+      "Overhead LED front and rear reading lights",
+      "Power sunroof",
+      "Heated front seats"
+    ],
+    "GT": [
+      "1.6L 4-cylinder GDI Turbo engine with 201 hp and 195 lb-ft torque",
+      "7-speed Dual-Clutch Transmission with paddle shifters",
+      "Larger front disc brakes",
+      "Sport-tuned multi-link rear suspension with dual exhaust",
+      "18-inch machined-finish alloy wheels",
+      "LED multi-reflective headlights",
+      "Leather-wrapped Sport Design steering wheel with red contrast stitching",
+      "Combination cloth and SynTex seating with red contrast stitching",
+      "Rear USB charge port and A/C vent",
+      "Wireless smartphone charger and Electronic Parking Brake"
+    ],
+    "GT-Line": [
+      "17-inch alloy wheels",
+      "LED Daytime Running Lights and LED tail lights",
+      "Front LED fog lights",
+      "Sport side sills with black high-gloss accent trim",
+      "Black high-gloss rear deck lid spoiler",
+      "Black high-gloss sport grille with red inserts",
+      "60/40 split-folding rear seatback with rear center armrest and cupholder",
+      "AM/FM/HD audio unit with 6 speakers",
+      "Alloy sport pedals",
+      "10.25-inch touchscreen with Kia Connect, Navigation and modem"
+    ],
+    "LXS": [
+      "16-inch machined-finish alloy wheels",
+      "60/40 split-folding rear seatback"
+    ],
+    "LX": [
+      "2.0L 4-cylinder MPI Atkinson engine with 147 hp and 132 lb-ft torque",
+      "Intelligent Variable Transmission",
+      "4-wheel disc brakes",
+      "Projector headlights with Front Daytime Running Lights",
+      "High Beam Assist",
+      "4.2-inch Supervision meter cluster display",
+      "6-way-adjustable driver and front-passenger seats",
+      "Wireless Apple CarPlay and Android Auto with Bluetooth",
+      "Remote keyless entry with trunk opener",
+      "8-inch touchscreen with Rear View Monitor and Parking Guidance"
+    ]
+  }
+}

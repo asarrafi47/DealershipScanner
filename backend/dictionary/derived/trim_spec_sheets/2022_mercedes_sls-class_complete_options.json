@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2022_mercedes_sls-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "SLS-Class",
+    "SLS-Class"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "SLS AMG Coupé Electric Drive 2013 N/A 9"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front mid-engine, rear-wheel-drive; Engine 6.2 L M159 V8"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "SLS AMG Coupé Electric Drive 2013 N/A 9; V 60 kWh (220 MJ) lithium-ion battery 600 kW; 805 hp (816 PS)"
+      }
+    ]
+  }
+}

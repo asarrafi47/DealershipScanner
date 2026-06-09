@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2021|hyundai|venue",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Venue",
+  "ladder_id": "brochure_web_2021__hyundai__venue",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Built-in navigation system",
+      "Wireless charging pad",
+      "Wired Apple CarPlay and Android Auto only (no wireless connectivity)"
+    ],
+    "SEL": [
+      "Automatic climate control",
+      "Keyless entry with push-button start",
+      "Leather-wrapped steering wheel and shift knob",
+      "Chrome exterior details",
+      "17-inch alloy wheels",
+      "Back-seat USB ports",
+      "Blind-spot monitoring and rear cross-traffic alert"
+    ],
+    "SE": [
+      "1.6-liter I-4 engine producing 121 hp and 113 lb-ft of torque",
+      "CVT automatic transmission, front-wheel drive",
+      "8.0-inch infotainment touchscreen",
+      "Apple CarPlay and Android Auto connectivity",
+      "Six-speaker audio system",
+      "Two front USB ports",
+      "Front automatic emergency braking",
+      "Automatic high-beams",
+      "Lane keep assist",
+      "Basic cruise control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/venue/"
+}

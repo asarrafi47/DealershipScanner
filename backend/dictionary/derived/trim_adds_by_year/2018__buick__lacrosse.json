@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2018|buick|lacrosse",
+  "year": 2018,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_web_2018__buick__lacrosse",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "LaCrosse AWD Avenir",
+    "LaCrosse FWD Avenir",
+    "LaCrosse AWD Premium",
+    "LaCrosse FWD Sport Touring",
+    "LaCrosse FWD Premium",
+    "LaCrosse AWD Essence",
+    "LaCrosse FWD Essence",
+    "LaCrosse FWD Preferred",
+    "LaCrosse FWD"
+  ],
+  "adds_by_trim": {
+    "LaCrosse AWD Avenir": [
+      "All-wheel drive powertrain"
+    ],
+    "LaCrosse FWD Avenir": [
+      "Black mesh grille",
+      "Panoramic moonroof",
+      "Satellite navigation",
+      "Wireless smartphone charging",
+      "Air ionizer standard"
+    ],
+    "LaCrosse AWD Premium": [
+      "All-wheel drive powertrain"
+    ],
+    "LaCrosse FWD Sport Touring": [
+      "310 hp V-6 engine with nine-speed automatic",
+      "Black mesh grille",
+      "Rear spoiler",
+      "Body-color fender vents",
+      "19-inch black aluminum wheels"
+    ],
+    "LaCrosse FWD Premium": [
+      "Heated steering wheel",
+      "Heads-up display",
+      "Front seats with heating, ventilation, and massage function",
+      "Rear cross-traffic alert"
+    ],
+    "LaCrosse AWD Essence": [
+      "All-wheel drive 3.6L V-6 engine with nine-speed automatic"
+    ],
+    "LaCrosse FWD Essence": [
+      "Heated leather seats",
+      "Driver-side memory seating",
+      "Auto-dimming rearview mirror",
+      "Articulating headlights"
+    ],
+    "LaCrosse FWD Preferred": [
+      "Power tilt and telescoping steering wheel",
+      "Cargo net"
+    ],
+    "LaCrosse FWD": [
+      "2.5L four-cylinder eAssist mild hybrid with 194 hp",
+      "Six-speed automatic transmission, front-wheel drive",
+      "Dual-zone automatic climate control",
+      "18-inch alloy wheels",
+      "8-way power front leatherette seats",
+      "HID headlights",
+      "4G LTE mobile hotspot",
+      "8.0-inch touchscreen with Apple CarPlay and Android Auto"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/buick/lacrosse/"
+}

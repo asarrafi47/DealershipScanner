@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2018|kia|sorento",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2018__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "SX",
+    "EX",
+    "LX",
+    "L"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "19-inch chrome-finish alloy wheels",
+      "Premium Nappa leather seat trim",
+      "Ventilated front seats",
+      "2nd-row heated outboard seats",
+      "Heated steering wheel",
+      "10-way power-adjustable driver's seat with lumbar",
+      "Memory driver's seat and mirror positions",
+      "Black high-gloss interior trim",
+      "Stainless-steel sill plate with illuminated scuff trim"
+    ],
+    "SX": [
+      "3.3L Gasoline Direct Injection V6 engine with 290 horsepower",
+      "19-inch machined-finish alloy wheels",
+      "7-passenger seating standard",
+      "Leather seat trim",
+      "Panoramic sunroof with power sunshade",
+      "Rear LED combination taillights",
+      "Low-profile chrome roof rails"
+    ],
+    "EX": [
+      "2.0L Turbo Gasoline Direct Injection 4-cylinder engine with 240 horsepower",
+      "18-inch alloy wheels",
+      "Leather seat trim",
+      "Infinity premium surround-sound audio with 10 speakers and HD Radio",
+      "Dual-zone automatic temperature control",
+      "Rear Park Assist System",
+      "Blind-Spot Detection with Lane-Change Assist"
+    ],
+    "LX": [
+      "Optional 3.3L Gasoline Direct Injection V6 engine with 290 horsepower",
+      "Optional 7-passenger seating configuration",
+      "Available DynamaxTM fully active all-wheel drive",
+      "Reclining 2nd-row seats"
+    ],
+    "L": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine with 185 horsepower",
+      "5-passenger seating",
+      "17-inch tires with alloy wheels",
+      "Cloth seats with YES Essentials fabric treatment",
+      "40/20/40 split-folding 2nd-row seats",
+      "6-speed Sportmatic transmission",
+      "Rear-Camera Display",
+      "AM/FM/CD/MP3/SiriusXM audio system",
+      "Bluetooth wireless technology"
+    ]
+  }
+}

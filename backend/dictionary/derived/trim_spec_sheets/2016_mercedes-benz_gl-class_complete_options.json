@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2016_mercedes-benz_gl-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GL-Class",
+    "GL-Class"
+  ],
+  "year_min": 2014,
+  "year_max": 2018,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG GL63": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

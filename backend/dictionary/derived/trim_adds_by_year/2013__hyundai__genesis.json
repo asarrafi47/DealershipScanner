@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2013|hyundai|genesis",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "ladder_id": "brochure_llm_2013__hyundai__genesis",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5.0 R-SPEC",
+    "3.8 PREMIUM PACKAGE TECHNOLOGY PACKAGE",
+    "3.8 PREMIUM PACKAGE",
+    "3.8"
+  ],
+  "adds_by_trim": {
+    "5.0 R-SPEC": [
+      "429 HP 5.0L Gasoline Direct Injection DOHC V8 engine with D-CVVT",
+      "Sport-tuned suspension calibration",
+      "Electro-Hydraulic Power Steering",
+      "19-inch premium machined finish alloy wheels with P235/45R19 tires",
+      "Unique headlamps with dark chrome inserts",
+      "Chrome lower body side moldings",
+      "R-Spec badging and floormats"
+    ],
+    "3.8 PREMIUM PACKAGE TECHNOLOGY PACKAGE": [
+      "Hyundai Blue Link telematics system standard",
+      "Ultimate Navigation system with 8-inch display",
+      "Front and rear parking assistance system",
+      "Lexicon 7.1 Discrete audio system with 17 speakers and HD Radio",
+      "6-disc DVD changer",
+      "Cooled driver seat and heated rear seats",
+      "Smart Cruise Control and Lane Departure Warning System",
+      "Driver Information System with multimedia controller",
+      "Color TFT LCD electroluminescent gauge cluster",
+      "HID Xenon adaptive auto-cornering headlights"
+    ],
+    "3.8 PREMIUM PACKAGE": [
+      "DVD navigation system with 7-inch touchscreen and Navtraffic",
+      "Rearview camera",
+      "Lexicon Surround Sound audio with 14 speakers",
+      "Power tilt-and-slide glass sunroof",
+      "Power tilt-and-telescopic steering wheel",
+      "18-inch Hyper Silver split-spoke alloy wheels with 235/50R18 tires",
+      "Auto defogging windshield with rain-sensing wipers",
+      "Power-folding outside mirrors"
+    ],
+    "3.8": [
+      "333 HP 3.8L Gasoline Direct Injection DOHC V6 engine with D-CVVT",
+      "8-speed automatic transmission with SHIFTRONIC",
+      "Front and rear independent 5-link suspension with SACHS Amplitude Selective Damping",
+      "17-inch alloy wheels with P225/55R17 tires",
+      "Proximity key entry with push-button start",
+      "Leather seating surfaces with heated power front seats",
+      "Dual automatic temperature control",
+      "Leather-wrapped steering wheel and dash trim inserts",
+      "Steering-wheel-mounted audio phone and cruise controls",
+      "AM/FM/SiriusXM/CD/MP3 audio system with 7 speakers"
+    ]
+  }
+}

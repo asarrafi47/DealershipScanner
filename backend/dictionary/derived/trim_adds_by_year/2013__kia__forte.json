@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|kia|forte",
+  "year": 2013,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_llm_2013__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Forte Eco"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "173-hp 2.4L engine (vs. 156-hp 2.0L on LX/EX)",
+      "17-inch alloy wheels with sport-tuned suspension",
+      "Paddle shifters for manual gear changes",
+      "Metal pedals and metal-finish interior accents",
+      "Glowing red LCD supervision gauges",
+      "Available leather package with heated front seats",
+      "Available power sunroof with tilt feature",
+      "Available Technology Package with voice-command navigation system"
+    ],
+    "EX": [
+      "156-hp 2.0L engine with continuously variable valve timing",
+      "Available automatic climate control",
+      "Available power-folding outside mirrors",
+      "Available push-button start with smart key remote"
+    ],
+    "LX": [
+      "156-hp 2.0L engine with continuously variable valve timing",
+      "60/40 split-folding rear seats",
+      "Six airbags and Electronic Stability Control standard",
+      "Bluetooth wireless technology and USB/auxiliary input jacks",
+      "SiriusXM satellite radio capability"
+    ],
+    "Forte Eco": [
+      "6-speed automatic transmission optimized for fuel economy",
+      "Smart alternator and Electric Power steering system",
+      "Silica tires for improved fuel efficiency",
+      "EcoMinder feature with icon indicating optimum fuel economy achievement",
+      "27 city/37 highway mpg fuel economy rating"
+    ]
+  }
+}

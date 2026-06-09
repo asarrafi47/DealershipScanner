@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2024|lexus|nx",
+  "year": 2024,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "brochure_llm_2024__lexus__nx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NX 450h+ F SPORT HANDLING AWD",
+    "NX 350 F SPORT HANDLING AWD",
+    "NX 450h+ AWD",
+    "NX 350h AWD",
+    "NX 350 AWD",
+    "NX 250 FWD/AWD"
+  ],
+  "adds_by_trim": {
+    "NX 450h+ F SPORT HANDLING AWD": [
+      "F SPORT heated perforated leather-trimmed steering wheel",
+      "3.3-kW onboard charger for plug-in hybrid"
+    ],
+    "NX 350 F SPORT HANDLING AWD": [
+      "Adaptive Variable Suspension with front and rear performance dampers",
+      "10-inch Head-Up Display",
+      "Color-matched wheel fenders",
+      "F SPORT heated front seats with enhanced bolsters",
+      "F SPORT front fascia and mesh grille insert",
+      "F SPORT 20-inch split-five-spoke alloy wheels with Gloss Black finish",
+      "F SPORT perforated leather-trimmed steering wheel and gear shifter",
+      "Rain-sensing windshield wipers",
+      "Aluminum door trim",
+      "Heated steering wheel"
+    ],
+    "NX 450h+ AWD": [
+      "EV drive mode",
+      "3.3-kW onboard charger for plug-in hybrid"
+    ],
+    "NX 350h AWD": [
+      "Active Noise Control",
+      "Active Sound Control"
+    ],
+    "NX 350 AWD": [
+      "All-wheel drive"
+    ],
+    "NX 250 FWD/AWD": [
+      "Front-wheel drive standard with available all-wheel drive",
+      "18-inch 15-spoke alloy wheels with Dark Gray and machined finish",
+      "Drive Mode Select with Sport, Normal and ECO modes",
+      "Lexus Interface with 9.8-inch touchscreen display",
+      "Safety Connect with up to 10-year trial",
+      "Service Connect with up to 10-year trial",
+      "Wi-Fi Connect with up to 30-day/3GB trial",
+      "Drive Connect with Cloud Navigation and Intelligent Assistant",
+      "Lexus app with Remote Connect trial and vehicle start",
+      "Wireless Apple CarPlay and Android Auto compatibility"
+    ]
+  }
+}

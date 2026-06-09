@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|volkswagen|jetta",
+  "year": 2017,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "inventory_volkswagen_jetta",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "GLI",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "trademarks of Volkswagen Group of America, Inc. MuddyBuddy and CARGOTECH\u00ae are registered"
+    ],
+    "GLI": [
+      "trademark of Dr. Ing. h.c. F. Porsche AG. \u201cMojoMats\u00ae \u201d and \u201cMonster Mats\u00ae \u201d are registered"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Base": 0
+    }
+  }
+}

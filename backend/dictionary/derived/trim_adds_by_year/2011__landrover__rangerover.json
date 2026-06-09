@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|landrover|rangerover",
+  "year": 2011,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_llm_2011__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Autobiography",
+    "Supercharged",
+    "HSE with Lux",
+    "HSE"
+  ],
+  "adds_by_trim": {
+    "Autobiography": [
+      "Ultimate expression of personal luxury, style and individuality"
+    ],
+    "Supercharged": [
+      "20-inch 10-spoke alloy wheels (Style 11)",
+      "Supercharged LR-V8 engine for enhanced performance"
+    ],
+    "HSE with Lux": [
+      "20-inch V-spoke alloy wheels (Style 9)",
+      "Luxury interior enhancements"
+    ],
+    "HSE": [
+      "19-inch twin 7-spoke alloy wheels (Style 8)",
+      "Naturally aspirated LR-V8 engine",
+      "Adaptive Cruise Control with radar and progressive deceleration",
+      "Forward Alert and Emergency Brake Assist systems",
+      "Up to 19-speaker audio system with 1,200 watts",
+      "Premium leather and real wood veneer interiors",
+      "Standard cruise control",
+      "Advanced terrain management technology"
+    ]
+  }
+}

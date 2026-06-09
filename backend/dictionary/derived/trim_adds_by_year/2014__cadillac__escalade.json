@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2014|cadillac|escalade",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_2014__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Luxury",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes standard powertrain with 417 lb.-ft. torque",
+      "Adds Features OnStar services with wireless connectivity",
+      "Adds Includes Courtesy Transportation Program"
+    ],
+    "SE": [],
+    "Premium": [
+      "22\" 7-spoke premium painted wheels with chrome inserts",
+      "Rear-seat entertainment system with 9\" screen and Blu-ray playback"
+    ],
+    "Limited": [],
+    "Luxury": [
+      "6.2L V-8 engine with 420 hp and 460 lb-ft of torque",
+      "55.0-inch dual digital display spanning dashboard",
+      "19-speaker AKG Studio sound system standard",
+      "Super Cruise hands-free driving technology",
+      "5G Wi-Fi hotspot with HD streaming",
+      "126-color LED ambient lighting",
+      "Full-color head-up display",
+      "Adaptive air suspension",
+      "10-speed automatic transmission",
+      "Seating for up to eight passengers with bench seat option"
+    ],
+    "Platinum": [
+      "Adds Rear Seat Entertainment System"
+    ]
+  }
+}

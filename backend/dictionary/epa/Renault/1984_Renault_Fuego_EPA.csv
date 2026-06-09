@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Renault,Fuego,Fuego,"1.6L I4 ((FFS,TRBO))",1.6L I4,,Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,1.6,21,29,24,,,,,
+1984,Renault,Fuego,Fuego,2.2L I4 ((FFS)),2.2L I4,,Automatic 3-spd,,Regular Gasoline,Subcompact Cars,4,2.2,18,22,19,,,,,
+1984,Renault,Fuego,Fuego,2.2L I4 ((FFS)),2.2L I4,,Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,2.2,20,28,23,,,,,
+1984,Renault,Fuego,Fuego,"1.6L I4 ((FFS,TRBO) CA model)",1.6L I4,,Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,1.6,21,29,24,,,,,
+1984,Renault,Fuego,Fuego,2.2L I4 ((FFS) CA model),2.2L I4,,Automatic 3-spd,,Regular Gasoline,Subcompact Cars,4,2.2,18,22,19,,,,,
+1984,Renault,Fuego,Fuego,2.2L I4 ((FFS) CA model),2.2L I4,,Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,2.2,20,28,23,,,,,

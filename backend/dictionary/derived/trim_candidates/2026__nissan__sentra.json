@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2026|nissan|sentra",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Sentra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SV",
+    "SR",
+    "S",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

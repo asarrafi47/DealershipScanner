@@ -1,0 +1,87 @@
+{
+  "catalog_key": "2013|honda|civic",
+  "year": 2013,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "brochure_llm_2013__honda__civic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CIVIC Si",
+    "CIVIC EX-L",
+    "CIVIC EX",
+    "CIVIC Hybrid",
+    "CIVIC Natural Gas",
+    "CIVIC HF",
+    "CIVIC LX"
+  ],
+  "adds_by_trim": {
+    "CIVIC Si": [
+      "201-hp, 2.4-liter DOHC i-VTEC 4-cylinder engine",
+      "Close-ratio 6-speed manual transmission",
+      "Helical limited-slip differential",
+      "17-inch alloy wheels",
+      "Deep-bolstered sport seats with red stitching",
+      "360-watt AM/FM/CD premium audio system with 7 speakers and subwoofer",
+      "Red backlit gauges with sequential rev-limit indicator tachometer",
+      "Aluminum shift knob and textured aluminum pedals",
+      "Body-colored decklid spoiler and chrome exhaust finisher"
+    ],
+    "CIVIC EX-L": [
+      "4-wheel disc brakes",
+      "16-inch alloy wheels",
+      "Fog lights",
+      "Heated side mirrors with auto-on/off headlights",
+      "Leather-wrapped steering wheel",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "One-touch power moonroof with tilt feature"
+    ],
+    "CIVIC EX": [
+      "Automatic climate control",
+      "Cruise control",
+      "Illuminated steering wheel-mounted controls",
+      "Center console with sliding armrest and storage compartment",
+      "Map lights",
+      "12-volt power outlet in front and center console",
+      "Standard 5-speed automatic transmission on Sedan"
+    ],
+    "CIVIC Hybrid": [
+      "1.5-liter i-VTEC 4-cylinder engine with Integrated Motor Assist IMA",
+      "Permanent-magnet electric motor",
+      "Continuously variable transmission CVT",
+      "Forward Collision Warning FCW system",
+      "Lane Departure Warning LDW system",
+      "44/44/44 mpg EPA combined fuel economy",
+      "Lithium-ion battery",
+      "Automatic climate control"
+    ],
+    "CIVIC Natural Gas": [
+      "110-hp, 1.8-liter i-VTEC 4-cylinder engine",
+      "5-speed automatic transmission",
+      "AT-PZEV CARB emissions rating",
+      "Deep-bolstered sport seats with red stitching",
+      "360-watt AM/FM/CD premium audio system with subwoofer",
+      "Exterior temperature indicator"
+    ],
+    "CIVIC HF": [
+      "140-hp, 1.8-liter i-VTEC 4-cylinder engine",
+      "5-speed automatic transmission",
+      "29/41/33 mpg EPA fuel economy ratings",
+      "15-inch lightweight alloy wheels",
+      "Tire Repair Kit with 24-hour roadside assistance",
+      "Rear decklid spoiler"
+    ],
+    "CIVIC LX": [
+      "140-hp, 1.8-liter i-VTEC 4-cylinder engine",
+      "5-speed manual or 5-speed automatic transmission",
+      "Air conditioning with air filtration system",
+      "Rearview camera with guidelines",
+      "Power windows and door locks",
+      "Six airbags with side curtain airbags and rollover sensor",
+      "Vehicle Stability Assist VSA with traction control",
+      "ABS with Electronic Brake Distribution",
+      "15-inch wheels with full covers",
+      "360-watt AM/FM/CD premium audio system with 7 speakers and subwoofer"
+    ]
+  }
+}

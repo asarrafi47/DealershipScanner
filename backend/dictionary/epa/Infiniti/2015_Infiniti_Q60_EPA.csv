@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Infiniti,Q60,Convertible,3.7L V6,3.7L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,
+2015,Infiniti,Q60,Convertible,3.7L V6,3.7L V6 Twin Turbo,Twin Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,16,24,19,,,,,
+2015,Infiniti,Q60,Q60,3.7L V6,3.7L V6 Twin Turbo,Twin Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,17,25,20,,,,,
+2015,Infiniti,Q60,Q60,3.7L V6,3.7L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,19,27,22,,,,,
+2015,Infiniti,Q60,AWD,3.7L V6,3.7L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,

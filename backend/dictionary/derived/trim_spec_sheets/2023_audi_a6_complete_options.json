@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_audi_a6_complete_options",
+  "make": "Audi",
+  "models": [
+    "A6",
+    "A6"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L 12V/30V V6; L 32V V8"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Audio System Layout",
+        "value": "15 speaker"
+      }
+    ]
+  }
+}

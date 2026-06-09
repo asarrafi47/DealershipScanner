@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2015|smart|fortwoel",
+  "year": 2015,
+  "make": "Smart",
+  "model": "FortwoEl",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

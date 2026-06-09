@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2013_volkswagen_golf_gti_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Golf GTI",
+    "Golf GTI"
+  ],
+  "year_min": 2011,
+  "year_max": 2015,
+  "source": "generated",
+  "trims": {
+    "R": [
+      {
+        "label": "Audio System Layout",
+        "value": "8-speaker system; 8-speaker system; [Brochure] 8-speaker system | [Brochure] 8-speaker system | [Backfilled from 2012]"
+      }
+    ],
+    "GTI": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

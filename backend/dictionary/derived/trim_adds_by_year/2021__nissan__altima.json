@@ -1,0 +1,85 @@
+{
+  "catalog_key": "2021|nissan|altima",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2021__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SR VC-TURBO",
+    "SR",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Standard Intelligent All-Wheel Drive",
+      "Intelligent Around View Monitor",
+      "19-inch aluminum-alloy wheels",
+      "Auto-dimming inside rearview mirror",
+      "HomeLink Universal Transceiver",
+      "Interior accent lighting",
+      "Memory system for driver's seat and outside mirrors"
+    ],
+    "SR VC-TURBO": [
+      "236-hp 2.0-liter Variable Compression Turbo engine",
+      "Paddle shifters with manual shift mode",
+      "Dark chrome V-Motion grille",
+      "Body-color door handles",
+      "Black outside mirrors",
+      "Charcoal rear diffuser",
+      "Dual chrome exhaust finishers",
+      "Sport-tuned suspension on FWD models"
+    ],
+    "SR": [
+      "Paddle shifters with manual shift mode",
+      "Sport-tuned suspension on FWD models",
+      "19-inch aluminum-alloy wheels",
+      "Dark chrome V-Motion grille",
+      "Body-color door handles",
+      "Black outside mirrors",
+      "Charcoal rear diffuser",
+      "Dual chrome exhaust finishers",
+      "Sport cloth seat trim",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SL": [
+      "Electronic parking brake",
+      "ProPILOT Assist",
+      "Intelligent Lane Intervention",
+      "Automatic brake hold",
+      "Traffic Sign Recognition",
+      "17-inch aluminum-alloy wheels",
+      "LED fog lights",
+      "Power sliding glass moonroof",
+      "Acoustic laminated glass",
+      "Dual Zone Automatic Temperature Control"
+    ],
+    "SV": [
+      "Available Intelligent All-Wheel Drive",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Rear Automatic Braking",
+      "Rear Sonar System",
+      "Active Ride Control",
+      "Intelligent Trace Control",
+      "17-inch aluminum-alloy wheels",
+      "LED projector headlights with LED signature Daytime Running Lights",
+      "7-inch Advanced Drive-Assist Display"
+    ],
+    "S": [
+      "2.5-liter DIG DOHC 16-valve 4-cylinder engine",
+      "Xtronic CVT transmission",
+      "Front-wheel drive",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Intelligent Forward Collision Warning",
+      "RearView Monitor",
+      "16-inch steel wheels with wheel covers",
+      "7-inch touchscreen display",
+      "Nissan Advanced Air Bag System with ten air bags"
+    ]
+  }
+}

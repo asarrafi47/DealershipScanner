@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2015|honda|fit",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Fit",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2015_Honda_Fit_Brochure.pdf",
+  "page_count": 41,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|kia|optima",
+  "year": 2012,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2012__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX Turbo",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "Turbocharged GDI I4 engine with 274 horsepower and 22 city/34 hwy mpg",
+      "6-speed Sportmatic transmission for sportier driving experience",
+      "Paddle shifters to shift gears without removing hands from wheel",
+      "Red-tinted mood lamps on front doors",
+      "Voice-command navigation system with real-time SiriusXM Traffic",
+      "Premium Infinity sound system available"
+    ],
+    "EX Turbo": [
+      "Turbocharged GDI I4 engine with 274 horsepower and 22 city/34 hwy mpg",
+      "6-speed Sportmatic transmission for sportier driving experience"
+    ],
+    "EX": [
+      "Three-point seat belts for all five seating positions",
+      "Height-adjustable front seat belt anchors with pretensioners",
+      "Dual front airbags and front-seat-mounted side airbags",
+      "Side curtain airbags with advanced sensor system",
+      "Tire-pressure monitoring system with warning light",
+      "LATCH system for easier child seat installation",
+      "Steel-reinforced body with reinforced door beams and A/B pillars",
+      "Push-button Smart Key remote start available",
+      "Bluetooth wireless technology for hands-free phone use",
+      "USB/auxiliary jacks for MP3 audio devices"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2012|infiniti|qx5680",
+  "year": 2012,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2012_Infiniti_QX56-80_Brochure.pdf",
+  "page_count": 6,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

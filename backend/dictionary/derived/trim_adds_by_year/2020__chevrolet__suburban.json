@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|chevrolet|suburban",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "2020_chevrolet_suburban_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sl",
+    "Tl"
+  ],
+  "adds_by_trim": {
+    "Tl": [
+      "plates, rubber floor",
+      "Gloss Black sport grille with",
+      "body-color door handles and headlamp accents, and Black bowtie emblems, mirror caps, beltline",
+      ", power-retractable assist steps, Black roof rack cross rails, polished exhaust tip, Mahogany",
+      "compatible iPhone and data plan rates apply.",
+      "limitations and information. 11 To avoid the risk of injury, never use recovery hooks to tow a vehicle. See the Owner’s Manual for more information.",
+      "Chevrolet ownership experience.",
+      "your vehicle programs. Visit chevrolet.com to build and price, find a vehicle, request trademarks of Sirius XM Radio Inc."
+    ],
+    "Sl": [
+      "Base model with standard features including seating for up to nine"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 8.0,
+    "per_trim_add_counts": {
+      "Tl": 8
+    }
+  }
+}

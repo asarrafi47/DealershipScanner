@@ -1,0 +1,92 @@
+{
+  "catalog_key": "2023|nissan|altima",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2023__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR VC-TURBO Premium Package",
+    "SR VC-TURBO",
+    "SR Premium Package",
+    "SR",
+    "SL",
+    "SV Premium Package",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.5-liter Direct Injection Gasoline engine with Xtronic CVT",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "16-inch steel wheels with wheel covers",
+      "7-inch touchscreen display with Voice Recognition",
+      "Bluetooth hands-free phone system",
+      "Six-speaker audio system",
+      "Nissan Advanced Air Bag System"
+    ],
+    "SV": [
+      "Available Intelligent All-Wheel Drive",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "8-way power adjustable driver's seat",
+      "7-inch Advanced Drive-Assist Display",
+      "8-inch NissanConnect color display with multi-touch control",
+      "Two USB-A ports and two USB-C ports",
+      "SiriusXM Radio"
+    ],
+    "SV Premium Package": [
+      "ProPILOT Assist and Intelligent Lane Intervention",
+      "Active Ride Control and Intelligent Trace Control",
+      "Power sliding glass moonroof",
+      "12.3-inch color display with Nissan Door to Door Navigation",
+      "SiriusXM Traffic and Travel Link",
+      "Wi-Fi Hotspot and wireless charger",
+      "Heated front seats and leather-wrapped steering wheel"
+    ],
+    "SL": [
+      "ProPILOT Assist and Intelligent Lane Intervention",
+      "Intelligent Around View Monitor",
+      "19-inch machine-finished aluminum-alloy wheels",
+      "Power sliding glass moonroof with acoustic laminated glass",
+      "Dual Zone Automatic Temperature Control",
+      "12.3-inch NissanConnect display with Navigation",
+      "Wireless Apple CarPlay and Android Auto"
+    ],
+    "SR": [
+      "Paddle shifters with manual shift mode",
+      "Sport-tuned suspension",
+      "19-inch machine-finished SR aluminum-alloy wheels",
+      "Dark chrome V-Motion grille and black outside mirrors",
+      "Sport Cloth seat trim",
+      "Silver geometric interior trim accents"
+    ],
+    "SR VC-TURBO": [
+      "2.0-liter Variable Compression Turbo engine",
+      "Electronic parking brake and ProPILOT Assist",
+      "Intelligent Around View Monitor",
+      "19-inch aluminum-alloy wheels with rear spoiler",
+      "Sport Leather-appointed seats",
+      "Bose Premium Audio System with nine speakers and active noise cancellation"
+    ],
+    "SR VC-TURBO Premium Package": [
+      "Power sliding glass moonroof",
+      "4-way power adjustable front-passenger's seat",
+      "Sport Leather-appointed seats with carbon-fiber look trim",
+      "12.3-inch display with Nissan Door to Door Navigation",
+      "SiriusXM Traffic and Travel Link",
+      "Wi-Fi Hotspot and wireless charger"
+    ],
+    "SR Premium Package": [
+      "Paddle shifters with manual shift mode",
+      "19-inch Aluminum-alloy wheels",
+      "Dark chrome V-Motion grille",
+      "Body-color door handles",
+      "Black outside mirrors",
+      "Charcoal rear diffuser",
+      "Dual chrome exhaust finishers",
+      "Leather-wrapped steering wheel and shift knob"
+    ]
+  }
+}

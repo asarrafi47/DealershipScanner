@@ -1,0 +1,65 @@
+{
+  "ladder_id": "2021_jeep_renegade_complete_options",
+  "make": "Jeep",
+  "models": [
+    "Renegade",
+    "Renegade"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L GSE T3 I3 turbo; L FIRE I4 turbo (was Automatic 9-spd; All-Wheel Drive)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: The Sound Group adds the Uconnect 5.0BT AM/FM stereo with USB, iPod, and 3.5-mil; Uconnect 5.0BT AM (was Uconnect 5.0BT AM)"
+      },
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "Adds Subwoofer: subwoofer"
+      },
+      {
+        "label": "Subwoofer",
+        "value": "subwoofer"
+      }
+    ],
+    "Trailhawk": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Automatic 9-spd; All-Wheel Drive (was L GSE T3 I3 turbo); Automatic 9-spd"
+      }
+    ],
+    "Altitude": [
+      {
+        "label": "Engine Options",
+        "value": "L GSE T3 I3 turbo"
+      }
+    ],
+    "Latitude": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L GSE T3 I3 turbo (was L GSE T3 I3 turbo; L GSE T4 I4 turbo)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: L GSE T3 I3 turbo; L GSE T4 I4 turbo"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: Uconnect 5.0BT AM"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: And/or could include more \"optional\" things like heated seats."
+      }
+    ]
+  }
+}

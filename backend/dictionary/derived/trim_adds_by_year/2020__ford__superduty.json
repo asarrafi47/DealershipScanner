@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|ford|superduty",
+  "year": 2020,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_2020__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "King Ranch",
+    "Tremor",
+    "XLT",
+    "XL",
+    "Active",
+    "Base",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper coverage",
+      "Adds Includes 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion perforation coverage",
+      "Adds Includes 5-year/100,000-mile diesel engine coverage when applicable"
+    ],
+    "Base": [],
+    "Active": [],
+    "XL": [
+      "Work-ready base trim with electronic-locking rear differential (FX4)",
+      "Transfer case and fuel tank skid plates (FX4 Off-Road Package)",
+      "Hill Descent Control (FX4 Off-Road Package)",
+      "Off-road-tuned shocks for low-speed crawling capability",
+      "Electronic shift-on-the-fly 4WD with manual-locking front hubs"
+    ],
+    "XLT": [
+      "Adds XLT Value Package option",
+      "Adds 5\" black step bars",
+      "Adds hood deflector",
+      "Adds side window deflectors",
+      "Adds hard-folding tonneau cover",
+      "Adds heavy-duty splash guards",
+      "Adds chrome front tow hooks",
+      "Adds LED fog lamps",
+      "Adds rear wheel-well liners"
+    ],
+    "Tremor": [],
+    "King Ranch": [
+      "Ultimate Trailer Tow Camera System with voice-activated touchscreen navigation",
+      "Intelligent Access with push-button start",
+      "Remote tailgate release",
+      "Java interior with genuine Khaya wood accents",
+      "Available on F-250 SRW, F-350 SRW, F-350 DRW, F-450 DRW in Crew Cab"
+    ],
+    "Limited": [
+      "Fully loaded trim level with premium amenities"
+    ]
+  }
+}

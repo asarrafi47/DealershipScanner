@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2010|mazda|tribute",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "Tribute",
+  "ladder_id": "brochure_llm_2010__mazda__tribute",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport",
+    "i"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "3.0L DOHC 24-valve V6 engine with 240 hp",
+      "Leather-trimmed seats",
+      "Power sliding-glass moonroof with one-touch open/close",
+      "Dual heated power remote outside mirrors",
+      "Heated front seats",
+      "Auto-dimming rearview mirror with compass and HomeLink",
+      "SIRIUS Satellite Radio receiver with 6-month subscription",
+      "190-watt AM/FM in-dash 6-disc CD changer with 7 speakers"
+    ],
+    "Touring": [
+      "6-way power-adjustable driver's seat with lumbar support and seat height adjustment",
+      "Steering-wheel-mounted audio controls",
+      "Roof rack with cross bars",
+      "Retractable cargo cover",
+      "Privacy-tint rear glass",
+      "Front seatback map pockets",
+      "Overhead console with dual storage bins"
+    ],
+    "Sport": [
+      "190-watt AM/FM in-dash 6-disc CD changer with 7 speakers and automatic level control",
+      "Steering-wheel-mounted audio controls",
+      "Roof rack with cross bars standard",
+      "Auto-dimming rearview mirror with compass"
+    ],
+    "i": [
+      "2.5L DOHC 16-valve 4-cylinder engine with 171 hp",
+      "5-speed manual overdrive transmission option",
+      "100-watt AM/FM/CD stereo with 4 speakers",
+      "Auxiliary-audio input jack",
+      "Red-on-silver gauges with Ice Blue nighttime illumination",
+      "Dual vanity mirrors with covers",
+      "Front map lights and cargo-area light",
+      "Reclining front bucket seats",
+      "Roll Stability Control and Dynamic Stability Control",
+      "Advanced dual front air bags with side-impact air curtains"
+    ]
+  }
+}

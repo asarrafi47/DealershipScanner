@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|gmc|commercial",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Commercial",
+  "ladder_id": "generic_gmc_commercial",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Gmc",
+    "Cng"
+  ],
+  "adds_by_trim": {
+    "Cng": [
+      "Cab | long Box | 2Wd | 4Wd Crew Cab | standard Box | 2Wd | 4Wd Crew",
+      "l V-8 | duramax diesel",
+      "Cab | long Box | 2Wd | 4Wd | Crew Cab | standard Box | 2Wd | 4Wd | Crew",
+      "and available Snow Plow Prep Package. 55,600 lbs with available Snow Plow Prep Package. 65,200 lbs with available Snow Plow Prep Package. 76,000 lbs with available Snow Plow Prep Package. 8Maximum payload",
+      "weight ratings are calculated assuming a base vehicle, except for any option(s) necessary to achieve the rating, plus driver. The",
+      "48002 | 52007 | 5200 | 56007 | 5200 | 56004 | 5200 | 56007 | 5600 | 56007",
+      "7050 | 9375-9825 | 9375-9825",
+      "regular | extended Cab | Crew Cab",
+      "aximum trailer weight your vehicle can tow. See your GMC dealer for additional details.",
+      "SieRRa | 3500Hd Series Chassis Cab",
+      "regular Cab | 60\" and 84\" Cab-to-axle | 2Wd | 4Wd Crew Cab | 60\" Cab-to-axle | 2Wd | 4Wd",
+      "4400-5200 | 4400 | 4800"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 12.0,
+    "per_trim_add_counts": {
+      "Cng": 12
+    }
+  }
+}

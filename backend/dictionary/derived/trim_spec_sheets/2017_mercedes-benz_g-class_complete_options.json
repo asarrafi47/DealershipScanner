@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2017_mercedes-benz_g-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "G-Class",
+    "G-Class"
+  ],
+  "year_min": 2015,
+  "year_max": 2019,
+  "source": "generated",
+  "trims": {
+    "AMG G65": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG G63": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2018|lexus|gx",
+  "year": 2018,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2018__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 4.6L V8 engine",
+      "Adds Includes TORSEN differential",
+      "Adds Includes Crawl Control system",
+      "Adds Includes Downhill Assist Control",
+      "Adds Includes Hill-start Assist Control",
+      "Adds Includes Pre-Collision System",
+      "Adds Includes Blind Spot Monitor",
+      "Adds Includes Rear Cross-Traffic Alert",
+      "Adds Includes Lane Departure Alert",
+      "Adds Includes Intelligent high beams"
+    ],
+    "Limited": [
+      "Adds Includes four-year/50,000-mile Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Features Intuitive Parking Assist system",
+      "Adds Includes Navigation System",
+      "Adds Features Crawl Control for off-road terrain",
+      "Adds Includes Downhill Assist Control and Hill-start Assist Control",
+      "Adds Features Trailer Sway Control system",
+      "Adds Includes single-disc DVD player with dual-screen capability"
+    ],
+    "Premium": [
+      "Adds Dynamic Radar Cruise Control",
+      "Adds Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert system",
+      "Adds Pre-Collision System with frontal collision detection",
+      "Adds Driver Attention Monitor",
+      "Adds Wide-view Front and Side Monitor system",
+      "Adds backup camera",
+      "Upgraded to Mark Levinson premium audio system",
+      "Adds Bluetooth hands-free phone system with HD Radio capability",
+      "Adds Enform Safety Connect services with remote vehicle access"
+    ],
+    "F Sport": [
+      "Adds 18-inch performance tires"
+    ],
+    "Luxury": [
+      "Adds second-row captain's chairs option",
+      "Adds Mark Levinson premium audio system",
+      "Adds dual-screen system with DVD player",
+      "Adds Navigation System",
+      "Adds HD Radio Technology",
+      "Adds Bluetooth connectivity",
+      "Adds Driver Attention Monitor",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds Intuitive Parking Assist",
+      "Adds Wide-view Front and Side Monitor system"
+    ]
+  }
+}

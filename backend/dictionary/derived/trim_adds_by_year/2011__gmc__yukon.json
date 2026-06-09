@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2011|gmc|yukon",
+  "year": 2011,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "brochure_llm_2011__gmc__yukon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali Hybrid",
+    "Denali",
+    "SLT",
+    "SLE",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "Denali Hybrid": [
+      "6.0L V8 VVT Hybrid engine with Active Fuel Management",
+      "High-voltage management power electronics module",
+      "Regenerative braking system",
+      "Magnetic Ride Control with road-sensing electronically controlled shock absorbers",
+      "Heated and cooled perforated leather-appointed seats on first and second rows with 12-way power adjusters",
+      "2-position driver memory seat feature"
+    ],
+    "Denali": [
+      "6.2L V8 VVT engine with Active Fuel Management and E85 capable",
+      "Heated and cooled perforated leather-appointed seats on first and second rows",
+      "12-way power front seat adjusters with power lumbar control",
+      "20-inch polished aluminum wheels available",
+      "SLT Chrome Package with chrome door handles, mirror caps, and grille"
+    ],
+    "SLT": [
+      "Vortec 5.3L V8 VVT FlexFuel engine with Active Fuel Management",
+      "Leather-appointed heated seats on first and second rows",
+      "10-way power front seat adjusters with power lumbar control",
+      "2-position driver memory seat feature",
+      "Automatic rear level control air suspension on half-ton models",
+      "Available Sun, Entertainment & Destination Package with power sunroof and navigation"
+    ],
+    "SLE": [
+      "Front bucket seats with 6-way power driver and passenger adjusters",
+      "Premium cloth seating with reclining second-row seats",
+      "Center fold-down armrest with storage",
+      "Optional SLE Exterior Appearance Package with front fog lamps and recovery hooks",
+      "Available Convenience Package with power-adjustable pedals and rear parking assist"
+    ],
+    "XL": [
+      "40/20/40 front split-bench seating with 6-way power driver adjuster",
+      "Premium cloth seating material",
+      "Center fold-down armrest with storage and lockable storage compartments",
+      "Vortec 5.3L V8 standard engine",
+      "Heavy-duty maintenance-free battery with 730 cold-cranking amps"
+    ]
+  }
+}

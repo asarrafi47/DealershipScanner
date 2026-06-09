@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2015|infiniti|qx70",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "QX70",
+  "ladder_id": "brochure_llm_2015__infiniti__qx70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX70 3.7 AWD with Sport Package",
+    "QX70 3.7 AWD with Deluxe Touring Package",
+    "QX70 3.7 AWD with Premium Package",
+    "QX70 3.7 AWD",
+    "QX70 3.7"
+  ],
+  "adds_by_trim": {
+    "QX70 3.7 AWD with Sport Package": [
+      "21 x 9.5-inch 6-spoke dark finish aluminum-alloy wheels with 265/45R21 all-season tires"
+    ],
+    "QX70 3.7 AWD with Deluxe Touring Package": [
+      "20 x 8.0-inch 5-spoke aluminum-alloy wheels with 265/50R20 all-season tires",
+      "Quilted leather-appointed seating",
+      "Climate-controlled front seats",
+      "Contrast-stitched sport front seats with manual thigh extension",
+      "Outside mirror with reverse tilt-down feature",
+      "Power tilt and telescopic steering column",
+      "Aluminum roof rails"
+    ],
+    "QX70 3.7 AWD with Premium Package": [
+      "8-inch WVGA color touch-screen Infiniti Hard Drive Navigation System with Lane Guidance and 3-D building graphics",
+      "Infiniti Voice Recognition for audio, navigation, and vehicle information systems",
+      "NavTraffic with Real-Time Traffic information",
+      "NavWeather with Real-Time Weather and 3-day forecast",
+      "Around View Monitor with Moving Object Detection and Front and Rear Sonar System",
+      "Single in-dash CD/DVD player",
+      "Streaming audio via Bluetooth wireless technology",
+      "Dual occupant memory system for driver's seat, outside mirrors and steering wheel linked to individual Intelligent Keys",
+      "Entry/exit assist for driver's seat and steering wheel"
+    ],
+    "QX70 3.7 AWD": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "3.7-liter 24-valve V6 engine with 325 hp and 267 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control and Downshift Rev Matching"
+    ],
+    "QX70 3.7": [
+      "3.7-liter 24-valve V6 engine with 325 hp and 267 lb-ft torque",
+      "Rear-wheel drive",
+      "7-speed automatic transmission with Adaptive Shift Control and manual shift mode",
+      "HID bi-functional xenon headlights with Adaptive Front Lighting System",
+      "Integrated front fog lights",
+      "Leather-appointed seating with heated front seats",
+      "10-way power driver's seat with 2-way power lumbar support",
+      "8-way power front-passenger's seat",
+      "Dual Zone Automatic Temperature Control system",
+      "Infiniti Hard Drive Navigation System with 7-inch color display and Lane Guidance"
+    ]
+  }
+}

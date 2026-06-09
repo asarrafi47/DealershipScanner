@@ -30,10 +30,11 @@ See [TLS_PINNING.md](TLS_PINNING.md). Release builds pin certificate DER hashes 
 
 ## Validation checklist
 
-- [ ] Manual: login native → Dashboard WebView logged in
-- [ ] Manual: native register → signed in on phone; same email/password on website shows saved cars
-- [ ] Manual: external link opens Safari
-- [ ] Manual: redirect to evil.com blocked in WebView
-- [x] `pytest backend/tests/test_mobile_auth_api.py -q`
-- [x] `pytest backend/tests/test_safe_listing_url.py -q`
-- [ ] Release archive: HTTPS base URL only; pins current for production cert
+Server-side controls below are covered by automated pytest; device-only flows still need manual runs before release.
+
+- [ ] Manual (device): login native → Dashboard WebView logged in
+- [ ] Manual (device): native register → signed in on phone; same credentials on website show saved cars
+- [ ] Manual (device): external link opens Safari
+- [ ] Manual (device): redirect to evil.com blocked in WebView
+- [x] Server auth + image URL policy: `pytest backend/tests/test_mobile_auth_api.py backend/tests/test_safe_listing_url.py -q`
+- [ ] Release archive: HTTPS base URL only; TLS pins match production cert (see [TLS_PINNING.md](TLS_PINNING.md))

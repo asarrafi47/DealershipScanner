@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2016|mitsubishi|outlander",
+  "year": 2016,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_web_2016__mitsubishi__outlander",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Outlander Platinum Edition S-AWC",
+    "Outlander SEL S-AWC",
+    "Outlander Trail Edition S-AWC",
+    "Outlander SEL FWD",
+    "Outlander SE S-AWC",
+    "Outlander SE FWD",
+    "Outlander ES S-AWC",
+    "Outlander ES FWD"
+  ],
+  "adds_by_trim": {
+    "Outlander Platinum Edition S-AWC": [
+      "Premium trim positioning above SEL with enhanced luxury features"
+    ],
+    "Outlander SEL S-AWC": [
+      "Dual 12.3-inch digital displays (instrument cluster and infotainment)",
+      "Three-zone automatic climate control",
+      "Leather upholstery",
+      "Heated and ventilated front seats",
+      "Heated second-row seats",
+      "Heated steering wheel",
+      "Panoramic moonroof",
+      "360-degree camera"
+    ],
+    "Outlander Trail Edition S-AWC": [
+      "Off-road focused trim with specialized styling and capabilities"
+    ],
+    "Outlander SEL FWD": [
+      "Front-wheel drive variant of SEL with same features as SEL S-AWC"
+    ],
+    "Outlander SE S-AWC": [
+      "All-wheel drive variant with Super All-Wheel Control (S-AWC)"
+    ],
+    "Outlander SE FWD": [
+      "Mid-level trim with enhanced features over ES"
+    ],
+    "Outlander ES S-AWC": [
+      "All-wheel drive variant with Super All-Wheel Control (S-AWC)"
+    ],
+    "Outlander ES FWD": [
+      "12.3-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "7.0-inch gauge cluster display",
+      "Front-row USB-C ports",
+      "Front and rear automatic emergency braking",
+      "Rear cross-traffic alert",
+      "Blind-spot monitoring",
+      "Automatic high-beams",
+      "2.5-liter four-cylinder engine producing 181 hp and 181 lb-ft torque",
+      "CVT automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mitsubishi/outlander/"
+}

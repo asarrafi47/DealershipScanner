@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2024|toyota|bz4x",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "bZ4X",
+  "ladder_id": "brochure_llm_2024__toyota__bz4x",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited AWD",
+    "Limited FWD",
+    "XLE AWD",
+    "XLE FWD"
+  ],
+  "adds_by_trim": {
+    "Limited AWD": [
+      "All-wheel drive system"
+    ],
+    "Limited FWD": [
+      "Premium trim level with enhanced features"
+    ],
+    "XLE AWD": [
+      "All-wheel drive system"
+    ],
+    "XLE FWD": [
+      "Base FWD model with standard EV features and technology"
+    ]
+  }
+}

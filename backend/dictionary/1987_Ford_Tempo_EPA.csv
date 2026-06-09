@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1987,Ford,Tempo,Tempo,2.3L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,19,25,22,,,,,,2.3L I4 Turbo,Turbocharged
-1987,Ford,Tempo,Tempo,2.3L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,22,31,25,,,,,,2.3L I4 Turbo,Turbocharged
-1987,Ford,Tempo,Tempo,2.3L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,19,28,22,,,,,,2.3L I4 Turbo,Turbocharged
-1987,Ford,Tempo,AWD,2.3L I4 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,18,22,19,,,,,,2.3L I4 Turbo,Turbocharged

@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2016|chevrolet|cruze",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2016__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT",
+    "LS",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Body-color door handles with chrome strip",
+      "Heated power-adjustable mirrors with turn signal indicators",
+      "IntelliBeam high beam assist",
+      "Halogen projector-style headlamps with automatic control",
+      "Compound crank rear suspension with Z-link",
+      "Single-zone automatic climate control",
+      "Remote vehicle starter system with automatic transmission",
+      "Leather-wrapped heated steering wheel",
+      "Power tilt/sliding sunroof (requires Sun and Sound with Navigation Package)",
+      "Wireless device charging (requires Enhanced Convenience Package)"
+    ],
+    "LT": [
+      "Halogen projector-style headlamps with automatic exterior lamp control and delay",
+      "LED daytime running lamps",
+      "Electronic cruise control with Set and Resume Speed and steering wheel controls",
+      "4.2-inch diagonal color Driver Information Center display",
+      "Power tilt/sliding sunroof (requires Sun and Sound Package)",
+      "Steering wheel-mounted audio and phone controls"
+    ],
+    "LS": [
+      "Carpeted front and rear floor mats",
+      "Floor-mounted center console with sliding armrest (manual transmission) or fixed armrest (automatic)",
+      "6-speed automatic transmission with overdrive and stop/start technology"
+    ],
+    "L": [
+      "1.4L DOHC turbocharged 4-cylinder engine with 153 hp and 177 lb-ft torque",
+      "6-speed manual transmission",
+      "Power electric-assisted rack-mounted steering",
+      "Front independent MacPherson struts with rear compound crank suspension",
+      "10 air bags including driver/passenger frontal and side-impact",
+      "4-wheel antilock disc brakes with Duralife corrosion-resistant rotors",
+      "StabiliTrak Electronic Stability Control with traction control",
+      "Power-programmable door locks with rear-door child safety locks",
+      "Remote keyless entry",
+      "Solar absorbing glass"
+    ]
+  }
+}

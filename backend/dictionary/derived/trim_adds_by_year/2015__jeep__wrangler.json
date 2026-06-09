@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2015|jeep|wrangler",
+  "year": 2015,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "inventory_jeep_wrangler",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Rubicon",
+    "Sahara"
+  ],
+  "adds_by_trim": {
+    "Rubicon": [
+      "service is available only to those at least 18 and older in the 48 contiguous U.S.A. and DC. Our Sirius satellite",
+      "Alpine logo are registered trademarks of",
+      "registered trademarks of Dana Corporation. Garmin and the Garmin logo are"
+    ],
+    "Limited": [
+      "services or their use. Our satellite",
+      "registered trademark of Bluetooth SIG, Inc. Dana and Trac-Lok are"
+    ],
+    "Sahara": [
+      "Fold and Tumble removable rear bench seat",
+      "18-inch chrome/polished wheels with all-season tires",
+      "Silver grille inserts",
+      "High-clearance front fender flares",
+      "Leather-trimmed seats with Sahara logo and tungsten stitching",
+      "17-inch aluminum painted/polished wheels exclusive to Sport S"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.5,
+    "per_trim_add_counts": {
+      "Rubicon": 3,
+      "Sahara": 0
+    }
+  }
+}

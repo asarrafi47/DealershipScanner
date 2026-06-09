@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2013|smart|fortwo",
+  "year": 2013,
+  "make": "Smart",
+  "model": "Fortwo",
+  "ladder_id": "brochure_llm_2013__smart__fortwo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "passion",
+    "pure"
+  ],
+  "adds_by_trim": {
+    "passion": [
+      "175/55 R15 rear wheels and tires (vs. 155/60 R15 on pure)"
+    ],
+    "pure": [
+      "3-cylinder 999cc in-line engine with 70 hp",
+      "68 lb.-ft. torque at 4,500 rpm",
+      "Automated manual 5-speed transmission",
+      "Rear engine, rear-wheel drive",
+      "34/38 mpg city/highway fuel consumption",
+      "90 mph maximum speed",
+      "0-60 mph in 12.8 seconds",
+      "155/60 R15 front and rear wheels and tires",
+      "Electronic brake force distribution with hydraulic brake assist",
+      "4-year/50,000-mile limited warranty"
+    ]
+  }
+}

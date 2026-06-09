@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2012|bmw|x6",
+  "year": 2012,
+  "make": "BMW",
+  "model": "X6",
+  "ladder_id": "2012_bmw_x6_epa",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "BMW Accessories, please see your authorized BMW center or visit"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Na": 1
+    }
+  }
+}

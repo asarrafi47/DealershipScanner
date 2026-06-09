@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_mazda_cx-50_complete_options",
+  "make": "Mazda",
+  "models": [
+    "CX-50",
+    "CX-50"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Preferred": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Only one engine option is available: a 2.0 Skyactiv-G petrol engine. Taiwan; Only one engine option is available: a 2.0 Skyactiv-G petrol engine. Taiwan The second-generation CX-5 was launched in Taiwan on 10 April 2017, with five variants: Sky-G…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Initial models were available with either a 2.0 L petrol engine or a diesel engi; Initial models were available with either a 2.0 L petrol engine or a diesel engine, with front-wheel drive and all-wheel drive as options (FWD was only available with a…"
+      }
+    ]
+  }
+}

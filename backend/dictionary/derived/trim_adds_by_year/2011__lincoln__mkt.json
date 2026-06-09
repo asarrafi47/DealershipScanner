@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2011|lincoln|mkt",
+  "year": 2011,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_2011__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 3.5L EcoBoost V6 engine",
+      "Adds 20-inch polished aluminum wheels"
+    ],
+    "Limited": [
+      "Upgraded to 3.7L Duratec V6 engine",
+      "Adds 20-inch polished aluminum wheels as optional upgrade"
+    ],
+    "Standard": [
+      "Upgraded to 3.7L Duratec V6 engine as standard",
+      "Replaces wheels with 19-inch premium painted aluminum"
+    ]
+  }
+}

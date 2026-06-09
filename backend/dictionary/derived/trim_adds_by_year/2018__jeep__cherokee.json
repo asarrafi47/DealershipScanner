@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|jeep|cherokee",
+  "year": 2018,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_2018__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Overland",
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Advanced Front Air Bags certified to U.S. Federal regulations",
+      "Adds Bluetooth Hands-Free Profile connectivity",
+      "Adds SiriusXM audio and data services capability",
+      "Adds electronic driver assistance systems",
+      "Adds Electronic Stability Control (ESC)"
+    ],
+    "Latitude": [
+      "Adds Uconnect Access mobile services with 9-1-1 Emergency Call button",
+      "Adds Roadside Assistance Service direct-dial access",
+      "Adds ParkView rearview camera system"
+    ],
+    "Trailhawk": [
+      "Adds 2-speed Power Transfer Unit (PTU) with rear locking axle",
+      "Adds low-range 4x4 capability",
+      "Adds Jeep Selec-Terrain with 5 settings (Auto, Snow, Sport, Sand/Mud, Rock)"
+    ],
+    "Limited": [
+      "Adds Uconnect Access with remote vehicle start",
+      "Adds Uconnect 8.4 Navigation unit",
+      "Adds SiriusXM Guardian mobile app integration",
+      "Adds ParkView and ParkSense parking assistance"
+    ],
+    "Overland": [
+      "Adds CommandView panoramic power sunroof",
+      "Adds premium Alpine audio system",
+      "Adds Wi-Fi Hotspot capability",
+      "Adds Voice Text Reply messaging feature",
+      "Adds Jeep Active Drive II with Jeep Active Lock"
+    ]
+  }
+}

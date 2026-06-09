@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2025_toyota_prius_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Prius",
+    "Prius"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Safety T Ambient lighting is standard on XLE HEV and XSE PHEV trims."
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: \"Toyota Adds to Prius Lineup With Smallest Hybrid\".; In comparison to the LE trim level, this one comes standard with some enticing u"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: In comparison to the LE trim level, this one comes standard with some enticing upgrades, such as keyless entry, heated front seats, and upholstery made of synthetic leather."
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: The entry-level LE includes LED headlights, six USB-C ports, a six-speaker sound system, and a Wi-Fi hotspot."
+      }
+    ]
+  }
+}

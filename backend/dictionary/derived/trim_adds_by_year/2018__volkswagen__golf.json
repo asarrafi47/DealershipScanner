@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2018|volkswagen|golf",
+  "year": 2018,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "brochure_web_2018__volkswagen__golf",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Golf 1.4T TSI Auto",
+    "Golf 1.4T TSI Manual"
+  ],
+  "adds_by_trim": {
+    "Golf 1.4T TSI Auto": [
+      "Eight-speed automatic transmission (vs. six-speed manual)",
+      "29/35 mpg city/highway EPA rating (vs. 28/36 with manual)"
+    ],
+    "Golf 1.4T TSI Manual": [
+      "1.4-liter turbocharged four-cylinder engine producing 147 hp and 184 lb-ft torque",
+      "Six-speed manual transmission",
+      "Forward collision warning with automatic emergency braking",
+      "Blind-spot monitoring and rear cross-traffic alert",
+      "Rain-sensing windshield wipers",
+      "6.5-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Bluetooth connectivity and Wi-Fi hotspot capability",
+      "Six-speaker audio system",
+      "22.8 cubic feet cargo space (53.7 cubic feet with folded rear seats)"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/golf/"
+}

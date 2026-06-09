@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2016|alfaromeo|4c",
+  "year": 2016,
+  "make": "alfa romeo",
+  "model": "4c",
+  "ladder_id": "brochure_llm_2016__alfaromeo__4c",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4C Spider",
+    "4C Coupe"
+  ],
+  "adds_by_trim": {
+    "4C Spider": [
+      "Convertible body style with retractable soft top",
+      "Sport seats in Black leather trim with accent stitching available",
+      "Sport seats in Black/Tobacco leather trim with accent stitching available"
+    ],
+    "4C Coupe": [
+      "Coupe body style with fixed roof",
+      "Sport seats in Black fabric with accent stitching standard",
+      "Sport seats in Black leather trim with accent stitching optional",
+      "Sport seats in Black/Tobacco leather trim with accent stitching optional"
+    ]
+  }
+}

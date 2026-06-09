@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2013|audi|q7",
+  "year": 2013,
+  "make": "Audi",
+  "model": "Q7",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium",
+    "S line",
+    "Limited",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

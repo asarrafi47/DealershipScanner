@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2018|infiniti|qx5680",
+  "year": 2018,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2018__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 4WD",
+    "QX80 2WD"
+  ],
+  "adds_by_trim": {
+    "QX80 4WD": [
+      "INFINITI All-Mode 4WD with computer-controlled transfer case offering Auto, 4H, and 4L settings"
+    ],
+    "QX80 2WD": [
+      "5.6-liter V8 engine with 400 horsepower",
+      "7-speed automatic transmission with Adaptive Shift Control",
+      "Snow and Tow driving modes",
+      "Hill start assist and Trailer Sway Control",
+      "Integrated Class IV tow hitch with 7-pin wiring harness and 8,500 lbs towing capacity",
+      "20-inch aluminum-alloy wheels with 275/60R20 H-rated all-season tires",
+      "Leather-appointed seating with 10-way power driver's seat and 2-way power lumbar support",
+      "Heated front seats and heated leather-wrapped steering wheel",
+      "INFINITI InTouch Navigation with 8-inch LCD touchscreen, Lane Guidance, and Voice Recognition",
+      "Bose 13-speaker Premium Sound System with dual subwoofers and SiriusXM Satellite Radio"
+    ]
+  }
+}

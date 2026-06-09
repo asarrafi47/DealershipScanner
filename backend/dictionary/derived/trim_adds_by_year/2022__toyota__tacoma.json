@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2022|toyota|tacoma",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_2022__toyota__tacoma",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "Limited",
+    "SR5",
+    "SR",
+    "TRD",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Vehicle Stability Control",
+      "Adds Includes Brake Assist system",
+      "Adds Includes Smart Stop Technology",
+      "Adds Includes engine immobilizer anti-theft system",
+      "Adds Includes airbag supplemental restraint systems",
+      "Adds Includes active front headrests"
+    ],
+    "TRD": [
+      "XtraCab RWD lifted front suspension with 32-inch BFG all-terrain tires",
+      "17-inch TRD wheels and electronically locking rear differential"
+    ],
+    "SR": [
+      "2.7-liter DOHC 4-cylinder engine with 159 hp standard",
+      "6-speed manual or automatic transmission options",
+      "One-piece frame with fully boxed front sub-frame",
+      "Variable-assist power rack-and-pinion steering",
+      "Power-assisted ventilated front disc brakes with rear drum brakes"
+    ],
+    "SR5": [
+      "3.5-liter V6 Direct-Injection engine standard with 278 hp",
+      "6-speed automatic transmission standard",
+      "Auto LSD (Automatic Limited-Slip Differential) on rear wheels"
+    ],
+    "Limited": [
+      "Long bed option (225.5-inch overall length, 140.6-inch wheelbase)",
+      "60.5 or 73.7-inch bed length options",
+      "38.3-inch rear head room versus 34.9-inch on TRD Off-Road"
+    ],
+    "TRD Sport": [
+      "TRD sport-tuned suspension",
+      "75.2-inch overall width versus 74.4-inch on SR5"
+    ],
+    "TRD Off-Road": [
+      "Replaces chrome rear bumper with color-keyed rear bumper"
+    ],
+    "TRD Pro": [
+      "2.5-inch FOX Internal Bypass coil-overs with rear remote reservoir shocks",
+      "TRD Pro cat-back exhaust",
+      "71.6-inch overall height versus 70.6-inch on Limited",
+      "64/64.2-inch front/rear track versus 63/63.2-inch on Limited"
+    ]
+  }
+}

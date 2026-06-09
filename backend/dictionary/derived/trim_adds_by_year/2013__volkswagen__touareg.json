@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2013|volkswagen|touareg",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "Touareg",
+  "ladder_id": "brochure_llm_2013__volkswagen__touareg",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Exec",
+    "Hybrid Lux",
+    "Hybrid Sport",
+    "Exec",
+    "Lux",
+    "Sport with Navigation",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Hybrid Exec": [
+      "3.0L V6 380-hp hybrid bi-fuel powerplant",
+      "19-inch Everest alloy wheels with low-rolling-resistance tires",
+      "Panoramic power sunroof",
+      "LED taillights",
+      "Heated rear seats",
+      "Power-adjustable steering column with memory",
+      "20-inch alloy wheels with anti-theft wheel locks"
+    ],
+    "Hybrid Lux": [
+      "Vienna leather seating surfaces",
+      "12-way power front seats with driver and passenger memory",
+      "Power-adjustable lumbar support",
+      "Metal scuff plates on door sills",
+      "Aluminum appearance pedals",
+      "19-inch alloy wheels with anti-theft wheel locks"
+    ],
+    "Hybrid Sport": [
+      "3.0L V6 380-hp hybrid powerplant",
+      "V6 Sport with Navigation features included",
+      "RNS-850 navigation system with 8-inch color touchscreen"
+    ],
+    "Exec": [
+      "3.0L V6 240-hp TDI Clean Diesel engine with 4MOTION all-wheel drive",
+      "19-inch Everest alloy wheels with low-rolling-resistance tires",
+      "Panoramic power sunroof",
+      "LED taillights",
+      "Heated rear seats",
+      "Power-adjustable steering column with memory",
+      "20-inch alloy wheels with anti-theft wheel locks"
+    ],
+    "Lux": [
+      "Vienna leather seating surfaces",
+      "12-way power front seats with driver and passenger memory",
+      "Power-adjustable lumbar support",
+      "Metal scuff plates on door sills",
+      "Aluminum appearance pedals",
+      "19-inch alloy wheels with anti-theft wheel locks"
+    ],
+    "Sport with Navigation": [
+      "RNS-850 navigation system with 8-inch color touchscreen",
+      "HD Radio and SD memory card reader"
+    ],
+    "Sport": [
+      "3.6L V6 280-hp FSI engine with 4MOTION all-wheel drive",
+      "8-speed automatic transmission",
+      "18-inch Karakum alloy wheels with all-season tires",
+      "Bi-Xenon high-intensity headlights with LED Daytime Running Lights and Adaptive Front-lighting System",
+      "Climatronic dual-zone automatic climate control",
+      "Leather-wrapped multi-function steering wheel with premium instrument cluster",
+      "RCD-550 sound system with 6.5-inch touchscreen and 8 speakers",
+      "V-Tex leatherette seating surfaces",
+      "Remote power tailgate with closing assist"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,BMW,i7,xDrive60 Sedan (19 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,87,92,89,,,,,
+2023,BMW,i7,xDrive60 Sedan (20 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,81,85,83,,,,,
+2023,BMW,i7,xDrive60 Sedan (21 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,85,89,87,,,,,

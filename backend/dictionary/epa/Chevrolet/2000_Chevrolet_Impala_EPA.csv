@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2000,Chevrolet,Impala,Impala,3.4L V6,3.4L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.4,17,29,21,,,,,
+2000,Chevrolet,Impala,Impala,3.8L V6,3.8L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.8,17,27,21,,,,,
+2000,Chevrolet,Impala,Impala,3.8L V6,3.8L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.8,17,27,21,,,,,

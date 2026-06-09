@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2014|nissan|murano",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2014__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE Platinum Edition Package",
+    "SL",
+    "SV",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE Platinum Edition Package": [
+      "Nissan Hard Drive Navigation System with 7-inch VGA touch-screen and voice recognition",
+      "NavTraffic and NavWeather by SiriusXM",
+      "Zagat Survey restaurant reviews",
+      "Blind Spot Warning System (BSW)",
+      "Lane Departure Warning (LDW)",
+      "Moving Object Detection (MOD)",
+      "20-inch 7-spoke aluminum-alloy wheels",
+      "Rear bumper protector",
+      "Platinum Edition badging"
+    ],
+    "SL": [
+      "Dual Panel Moonroof with power retractable sunshades",
+      "Heated outside mirrors with memory position",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Leather-appointed seats with driver's seat memory position",
+      "Heated front seats",
+      "Bose audio system with nine speakers plus dual subwoofers",
+      "Power-return rear seatbacks and power liftgate"
+    ],
+    "SV": [
+      "Bluetooth Hands-free Phone System",
+      "Vehicle Information Center with 7-inch QVGA monitor",
+      "RearView Monitor",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming rearview mirror with digital compass",
+      "8-way power driver's seat and 4-way power front-passenger's seat",
+      "Leather-wrapped steering wheel with illuminated audio controls",
+      "SiriusXM Satellite Radio",
+      "Black roof rails",
+      "Automatic on/off headlights with fog lights"
+    ],
+    "LE": [
+      "20-inch aluminum-alloy wheels",
+      "High Intensity Discharge (HID) bi-functional xenon projector headlights",
+      "Silver-accented roof rails",
+      "Heated steering wheel",
+      "Power-tilt and power-telescoping steering column with memory position",
+      "Wood tone trim",
+      "Heated rear seats",
+      "60/40 split fold-down rear seatbacks with cargo area-accessible releases"
+    ],
+    "S": [
+      "Intuitive All-Wheel Drive (AWD) or Front-Wheel Drive (FWD)",
+      "18-inch aluminum-alloy wheels",
+      "LED taillights",
+      "Dual Zone Automatic Temperature Control (ATC)",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "60/40 split fold-down rear seatbacks with cargo area-accessible releases",
+      "In-dash 6-CD changer with MP3 CD capability and auxiliary audio input jack",
+      "Six standard air bags",
+      "Vehicle Dynamic Control (VDC) with Traction Control System (TCS)",
+      "6-way manual driver's seat with manual lumbar support"
+    ]
+  }
+}

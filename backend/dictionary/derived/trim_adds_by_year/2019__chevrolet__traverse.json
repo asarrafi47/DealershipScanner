@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2019|chevrolet|traverse",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2019__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "LT Premier",
+    "LT Leather",
+    "LT Cloth",
+    "L"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "LED D-Optic bi-function projector-beam headlamps",
+      "Power hands-free liftgate with Chevrolet emblem projection",
+      "Heated power-adjustable mirrors with auto-dimming driver side",
+      "SkyScape power tilt-sliding sunroof standard",
+      "2.0L turbocharged 4-cylinder engine option (257 hp, 295 lb-ft torque)",
+      "Forward Automatic Braking and Forward Collision Alert standard",
+      "Lane Keep Assist with Lane Departure Warning standard",
+      "8-inch Navigation touchscreen with Chevrolet Infotainment System",
+      "Bose premium 10-speaker sound system with RichBass woofer",
+      "Power-folding third-row 60/40 split-bench seat"
+    ],
+    "Premier": [
+      "Second-row captain's chairs with heated seats",
+      "Leather-appointed first and second rows with perforated inserts",
+      "20-inch Gloss Black-painted aluminum wheels with Red accents",
+      "Rear Camera Mirror with inside rearview auto-dimming",
+      "Surround Vision with bird's-eye view",
+      "Heated steering wheel"
+    ],
+    "LT Premier": [
+      "Available all-wheel-drive with automatic locking rear differential",
+      "Low Speed Forward Automatic Braking available on FWD",
+      "Lane Change Alert with Side Blind Zone Alert and Rear Cross Traffic Alert",
+      "20-inch Argent Metallic machined-face aluminum wheels"
+    ],
+    "LT Leather": [
+      "8-inch Chevrolet Infotainment System with motorized power up/down",
+      "20-inch Dark Android-painted aluminum wheels",
+      "Leather-appointed first and second rows",
+      "Driver 8-way power seat with power lumbar control"
+    ],
+    "LT Cloth": [
+      "4.2-inch enhanced multi-color Driver Information Center display",
+      "Rear Park Assist standard",
+      "Lane Change Alert with Side Blind Zone Alert and Rear Cross Traffic Alert standard",
+      "7-passenger seating with second-row captain's chairs",
+      "Universal Home Remote programmable",
+      "Remote vehicle starter system",
+      "Roof rails",
+      "Heated power-adjustable body-color mirrors with turn signal indicators"
+    ],
+    "L": [
+      "3.6L DOHC V6 with Direct Injection (310 hp, 266 lb-ft torque)",
+      "9-speed automatic transmission",
+      "Tri-zone automatic climate control",
+      "Rear vision camera standard",
+      "Rear Seat Reminder",
+      "Teen Driver technology",
+      "3.5-inch monochromatic Driver Information Center display",
+      "7-inch Chevrolet Infotainment System with AM/FM stereo and Bluetooth audio streaming",
+      "4-wheel antilock disc brakes",
+      "18-inch Bright Silver-painted aluminum wheels"
+    ]
+  }
+}

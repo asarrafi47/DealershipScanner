@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|lexus|gs",
+  "year": 2010,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "brochure_2010__lexus__gs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Vehicle Stability Control (VSC) and Vehicle Dynamics Integrated Management (VDIM)",
+      "Adds Features backup camera with rearward visibility",
+      "Adds Includes Pre-Collision System for frontal collision mitigation"
+    ],
+    "Limited": [
+      "Canada. Please see your Lexus dealer",
+      "installed by an authorized Lexus dealer."
+    ],
+    "Premium": [],
+    "Luxury": [
+      "Canada. No Safety Connect services will function outside of the United States in countries other than",
+      "installation or for the balance of the new-car or Certified Pre-Owned (CPO) warranty in force at the date of"
+    ]
+  }
+}

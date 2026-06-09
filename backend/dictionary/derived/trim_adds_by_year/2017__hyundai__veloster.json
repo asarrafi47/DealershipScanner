@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|hyundai|veloster",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_llm_2017__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Veloster Turbo",
+    "Value Edition",
+    "Veloster"
+  ],
+  "adds_by_trim": {
+    "Veloster Turbo": [
+      "18-inch alloy wheels",
+      "Projector headlights with LED accents",
+      "Chrome-tipped dual exhaust tips",
+      "Available black leather seating with vivid orange accent trim",
+      "Alloy sport pedals",
+      "High-gloss black accents on console, dash, and doors",
+      "Seven-speed Dual Clutch Transmission",
+      "Available 7-inch touchscreen navigation system with Apple CarPlay and Android Auto"
+    ],
+    "Value Edition": [
+      "18-inch 5-spoke alloy wheels with painted inserts",
+      "Panoramic sunroof standard",
+      "Dimension Premium Audio with external amp, 8 speakers, and 8-inch subwoofer",
+      "7-inch touchscreen navigation with junction view lane guidance and split-screen display",
+      "Apple CarPlay and Android Auto integration",
+      "Hyundai Blue Link connected car features",
+      "Six-speed Dual Clutch Transmission standard"
+    ],
+    "Veloster": [
+      "17-inch alloy wheels",
+      "Leather-wrapped steering wheel and shifter",
+      "15.5 cubic feet cargo space with rear seats up",
+      "34.7 cubic feet cargo space with rear seats folded",
+      "Wide and low rear hatch opening",
+      "60/40 split-folding rear seats",
+      "Three-door design",
+      "Driver-oriented interior inspired by motorcycle design",
+      "Choice of two torque-rich, eco-efficient engines"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2023|infiniti|qx60",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2023__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX60 AUTOGRAPH",
+    "QX60 SENSORY",
+    "QX60 LUXE",
+    "QX60 PURE"
+  ],
+  "adds_by_trim": {
+    "QX60 PURE": [
+      "3.5-liter V6 engine with 295 hp and 270 lb-ft torque",
+      "9-speed automatic transmission with manual-mode paddle shifters",
+      "Front-Wheel Drive or INFINITI Intelligent All-Wheel Drive",
+      "18-inch charcoal metallic machine-finished aluminum-alloy wheels with 255/60R18 all-season tires",
+      "LED automatic on/off headlights",
+      "Tri-Zone Automatic Temperature Control System with microfilter",
+      "7-passenger seating capacity with 60:40-split folding seats",
+      "10 cup holders and 4 bottle holders",
+      "6 USB charging ports including 2 Type-C and 4 Type-A",
+      "Rain-sensing front windshield wipers"
+    ],
+    "QX60 LUXE": [
+      "SiriusXM Radio with Advanced Audio Features and 3-month trial access",
+      "Power rear liftgate",
+      "Intelligent Key with push button ignition and seat memory",
+      "Rear air vents in headliner-mounted and 2nd and 3rd-row outboard positions",
+      "Rear heater ducts under 1st-row seats and on 3rd-row RH lower trim panel",
+      "Auto-dimming outside mirrors",
+      "Rear passenger manual sunshades"
+    ],
+    "QX60 SENSORY": [
+      "20-inch dark silver machine-finished aluminum-alloy wheels with 255/50R20 all-season tires",
+      "Silver roof rails",
+      "Silver Metallic Weave interior trim accents",
+      "Climate-controlled front seats",
+      "Smooth grain leather-wrapped steering wheel",
+      "4-way passenger power lumbar",
+      "Heated second-row seats outboard only",
+      "3rd-row seat power return",
+      "3rd-row USB Type-A port",
+      "Power tilting and telescoping steering column"
+    ],
+    "QX60 AUTOGRAPH": [
+      "20-inch charcoal metallic machine-finished aluminum-alloy wheels with 255/50R20 all-season tires",
+      "Chrome body side moldings",
+      "Dark gray front and rear bumper accents",
+      "Black Obsidian contrast roof",
+      "Black roof rails",
+      "6,000-lb maximum towing capacity with transmission oil cooler and tow hitch receiver",
+      "Trailer sway control",
+      "10.8-inch Head-Up Display",
+      "Smart Rearview Mirror with auto-leveling function"
+    ]
+  }
+}

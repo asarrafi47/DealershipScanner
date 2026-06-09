@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|toyota|highlander",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Highlander",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Adds to or replaces features offered on Limited",
+      "Hybrid Synergy Drive\u00ae badges",
+      "EV39/ECO Modes",
+      "Energy monitor display",
+      "Hybrid system power meter",
+      "SAFETY AND CONVENIENCE (continued) LE PLUS XLE LIMITED LIMITED LE PLUS XLE LIMITED LIMITED",
+      "Safety Connect\u00ae33 \u2014 includes Emergency Assistance, Stolen Pre-Collision System (PCS)34 with Dynamic Radar Cruise",
+      "Vehicle Locator, Roadside Assistance and Automatic Collision Control (DRCC)17 \u2014 \u2014 \u2014 P P",
+      "Notification. Available by subscription. \u2014 \u2014 \u2014 P P Lane Departure Alert (LDA)35 with Auto High Beams (AHB)36 \u2014 \u2014 \u2014 P P",
+      "Driver Technology Package \u2014 includes Safety Connect,\u00ae33 Second-row captain\u2019s chairs \u2014 leather second-row captain\u2019s",
+      "Pre-Collision System (PCS)34 with Dynamic Radar Cruise chairs with folding side table with two cup holders \u2014 \u2014 O S S",
+      "Control (DRCC),17 Lane Departure Alert (LDA)35 with Auto Rear-seat Blu-ray Disc\u2122 entertainment system with 9-in. display,"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE Plus Adds to or replaces features offered on XLE",
+      "Exterior Features Exterior Features Exterior Features Exterior Features",
+      "P rojector-beam halogen smoked-chrome-accent \u2022 18-in. split 5-spoke machined-face alloy wheels \u2022 P ower tilt/slide moonroof with sunshade and \u2022 19-in. 5-spoke Chromtec\u00ae alloy wheels",
+      "18-in. split 5-spoke alloy wheels \u2022 Flip-up rear hatch window \u2022 Chromtec\u00ae roof rails \u2022 LED Daytime Running Lights (DRL)",
+      "Windshield wiper de-icer \u2022 Adjustable power liftgate with jam protection Interior Features \u2022 B lind Spot Monitor (BSM)30 and Rear Cross-Traffic",
+      "C olor-keyed heated power outside mirrors with Alert (RCTA)31",
+      "E ntune\u2122 Audio Plus with Connected Navigation App12 and App Suite12 and 8-in. high-resolution touch- Interior Features",
+      "Interior Features \u2022 SofTex\u00ae/cloth seats with contrast stitching screen display \u2022 Seating for seven with second-row captain\u2019s chairs",
+      "Seating for eight \u2022 8-way power-adjustable driver\u2019s seat \u2022 4 .2-in. color LCD Multi-Information Display (MID) with \u2022 E ntune\u2122 Premium JBL\u00ae Audio with Integrated",
+      "Soft-touch in-dash shelf with easy cable management \u2022 T hree-zone automatic climate control with separate turn-by-turn navigation15 Navigation15 and App Suite:12 8-in. high-resolution",
+      "2 4.5-liter soft-touch roll-top center console with second-row control panel and individual temperature \u2022 Leather-trimmed seats with heated front seats touch-screen display",
+      "S econd- and third-row 60/40 split, sliding and reclining \u2022 Auto-dimming rearview mirror ventilated front seats and memory function on"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

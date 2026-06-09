@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|infiniti|g",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "G",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Infiniti_G_Brochure.pdf",
+  "page_count": 4,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

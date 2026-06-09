@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2016|hyundai|tucson",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

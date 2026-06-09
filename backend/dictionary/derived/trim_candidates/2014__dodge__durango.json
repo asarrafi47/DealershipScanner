@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2014|dodge|durango",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Durango",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Citadel",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

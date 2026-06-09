@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2019|bmw|8series",
+  "year": 2019,
+  "make": "BMW",
+  "model": "8 Series",
+  "ladder_id": "brochure_2019__bmw__8series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M850i",
+    "M Sport",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds BMW Live Cockpit Professional digital display and control functions",
+      "Adds leather-wrapped M sport steering wheel",
+      "Adds Multi-function front seats in Extended Merino Leather",
+      "Adds glass-accented shifter",
+      "Adds 20\" M V-spoke wheels with high-performance tires",
+      "Adds iDrive 7.0 System",
+      "Adds multiple exterior color options",
+      "Adds Extended Merino Leather upholstery selections"
+    ],
+    "M Sport": [
+      "Adds BMW Laserlight technology headlights",
+      "Adds Harman Kardon Surround Sound Audio System",
+      "Adds M Technology Package with Armrests and 20\" V Spoke Jet Black wheels",
+      "Adds Extended Shadowline Trim",
+      "Adds interior trim options in Stainless Steel Fabric, Fineline Copper Wood, and Ash Grain Grey-Metallic Wood"
+    ],
+    "M850i": [
+      "Adds BMW Individual Composition package with Anthracite Alcantara Headliner and Piano Black interior trim",
+      "Adds 20\" BMW Individual V Spoke Orbit Grey wheels",
+      "Adds Comfort Seating Package with front ventilated and heated front seats",
+      "Adds Driving Assistance Plus Package with Active Cruise Control, Active Lane Keeping Assistant, and Automatic Lane Changing",
+      "Adds Active Driving Assistant Pro with Evasion Aid and Front Cross Traffic Alert",
+      "Adds Remote Engine Start",
+      "Adds Cooling and High Performance Tire Package",
+      "Adds Mobility Kit",
+      "Adds Chrome Line Exterior option"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|honda|insight",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Insight",
+  "ladder_id": "generic_honda_insight",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "California Air Resources Board (CARB) are available in"
+    ],
+    "LX": [
+      "Brake Assist system",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Remote entry system",
+      "Projector-beam halogen headlights with blue-tinted chrome bezels",
+      "LED brake lights",
+      "Automatic headlight control",
+      "160-watt AM/FM/CD audio system with 4 speakers",
+      "USB Audio Interface",
+      "Driver and passenger vanity mirrors"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "LX": 0
+    }
+  }
+}

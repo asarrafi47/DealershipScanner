@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|hyundai|accent",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_web_2018__hyundai__accent",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Heated front seats"
+    ],
+    "SEL": [
+      "7.0-inch touchscreen with Android Auto and Apple CarPlay",
+      "Six-speaker sound system",
+      "Automatic headlights",
+      "Foglights",
+      "Dual USB charge ports",
+      "Driver's blind-spot mirror"
+    ],
+    "SE": [
+      "5.0-inch central touchscreen",
+      "Four-speaker sound system",
+      "1.6-liter four-cylinder engine with 120 hp and 113 lb-ft torque",
+      "Six-speed manual or CVT automatic transmission",
+      "Front-wheel drive",
+      "Immobilizer standard on all trims"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/accent/"
+}

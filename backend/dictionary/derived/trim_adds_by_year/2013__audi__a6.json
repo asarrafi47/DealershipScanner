@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2013|audi|a6",
+  "year": 2013,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_2013__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "LT",
+    "Sport",
+    "SE",
+    "A6"
+  ],
+  "adds_by_trim": {
+    "A6": [
+      "Adds 2.0T turbocharged TFSI engine with 211 horsepower",
+      "Adds Audi multitronic continuously variable transmission with front-wheel drive",
+      "Adds five-link front suspension",
+      "Adds trapezoidal-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds Audi ultra lightweight aluminum exterior body panels"
+    ],
+    "SE": [],
+    "Sport": [],
+    "LT": [],
+    "Limited": [],
+    "S line": [],
+    "Premium": [
+      "Adds Sport suspension calibration"
+    ]
+  }
+}

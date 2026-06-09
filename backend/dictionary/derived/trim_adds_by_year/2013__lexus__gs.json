@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2013|lexus|gs",
+  "year": 2013,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "generic_lexus_gs",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Luxury": [
+      "Canada. No Safety Connect services will function outside of the United States in countries other than",
+      "installation or for the balance of the new-car or Certified Pre-Owned (CPO) warranty in force at the date of"
+    ],
+    "Limited": [
+      "Canada. Please see your Lexus dealer",
+      "installed by an authorized Lexus dealer."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Premium": 0,
+      "Limited": 2
+    }
+  }
+}

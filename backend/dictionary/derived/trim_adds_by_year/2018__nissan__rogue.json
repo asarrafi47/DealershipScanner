@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|nissan|rogue",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2018__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Siri Eyes Free integration",
+      "18-inch aluminum-alloy wheels",
+      "Intelligent Cruise Control",
+      "SiriusXM Satellite Radio",
+      "Fog lights",
+      "Heated leather-wrapped steering wheel with memory system",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "NIssanConnect Services powered by SiriusXM",
+      "Bose Premium Audio System with nine speakers and dual subwoofers",
+      "Intelligent Around View Monitor with Automatic Emergency Braking and Pedestrian Detection"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels",
+      "Intelligent Auto Headlights",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Roof rails",
+      "Motion Activated Liftgate",
+      "Rear privacy glass",
+      "Chrome outside door handles",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System with Intelligent Climate Control"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine",
+      "Xtronic CVT with Sport Mode Shifter and Eco Mode",
+      "Available Intelligent All-Wheel Drive",
+      "Hill start assist with Intelligent Trace Control and Active Ride Control",
+      "17-inch steel wheels with wheel covers",
+      "LED Daytime Running Lights",
+      "Power outside mirrors",
+      "7.0-inch color touch-screen monitor with Apple CarPlay and Android Auto",
+      "Advanced Drive-Assist Display",
+      "Bluetooth Hands-free Phone System with streaming audio"
+    ]
+  }
+}

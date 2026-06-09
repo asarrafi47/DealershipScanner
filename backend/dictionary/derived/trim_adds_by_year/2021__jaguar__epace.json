@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2021|jaguar|epace",
+  "year": 2021,
+  "make": "Jaguar",
+  "model": "E-Pace",
+  "ladder_id": "brochure_2021__jaguar__epace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 296HP 4-cylinder MHEV engine",
+      "Adds Configurable and Adaptive Dynamics",
+      "Adds Active Driveline",
+      "Adds Head-up Display",
+      "Adds powered tailgate",
+      "Adds Keyless Entry",
+      "Adds Black Exterior Pack",
+      "Adds 20-inch Diamond Turned wheels"
+    ],
+    "Limited": []
+  }
+}

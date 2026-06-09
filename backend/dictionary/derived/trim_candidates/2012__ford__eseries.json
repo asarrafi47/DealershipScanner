@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2012|ford|eseries",
+  "year": 2012,
+  "make": "Ford",
+  "model": "E-Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

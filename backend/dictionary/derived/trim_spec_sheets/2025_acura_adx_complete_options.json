@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2025_acura_adx_complete_options",
+  "make": "Acura",
+  "models": [
+    "ADX",
+    "ADX"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Advance": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L L15BE DOHC VTEC Turbo I4"
+      }
+    ],
+    "Technology": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L L15BE DOHC VTEC Turbo I4"
+      }
+    ],
+    "A-Spec": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L L15BE DOHC VTEC Turbo I4"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Overview Rear view The ADX was unveiled on 14 November 2024 and was released in early 2025 for the 2025 model year. Its standard powertrain is a variant of the turbocharged 1.5-liter VTEC 4-cylinder engine from the Integra, producing 190 hp (140 kW) at 6,000 rpm and 179 lb⋅ft…; Engine"
+      }
+    ]
+  }
+}

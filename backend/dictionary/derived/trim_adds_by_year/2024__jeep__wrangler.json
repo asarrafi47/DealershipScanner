@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2024|jeep|wrangler",
+  "year": 2024,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2024__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon 392",
+    "Rubicon",
+    "Sport S",
+    "Willys",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Rubicon 392": [
+      "6.4L V8 SRT HEMI Multi-Displacement System engine with 8-speed automatic",
+      "Nappa leather-trimmed seats with Rubicon 392 logos and Sepia accents",
+      "Premium-wrapped, heated steering wheel with paddle shifters",
+      "8-way power heated driver and front-passenger seats with 4-way lumbar",
+      "Functional hood scoop and Rubicon 392 suspension",
+      "WARN 8,000-lb capacity winch and 35-inch BFGoodrich Off-Road tires",
+      "17-inch Bronze Beadlock-capable machined wheels",
+      "Integrated Off-Road Camera and auto-dimming rearview mirror",
+      "Uconnect 5 NAV with 12.3-inch touchscreen"
+    ],
+    "Rubicon": [
+      "Heavy-duty Dana M220 wide rear axle with antispin differential",
+      "35-inch tire suspension and 4.56:1 axle ratio",
+      "Factory 1.5-inch lift with Rubicon suspension",
+      "Steel front and rear bumpers with bronze tow hooks",
+      "Molded-in-color Rubicon highline fender flares",
+      "Antilock 4-wheel disc performance brakes",
+      "Selec-Trac full-time Four-Wheel Drive system",
+      "Selec-Speed Control"
+    ],
+    "Sport S": [
+      "18-inch Gray-painted machined wheels",
+      "P255/70R18 Bridgestone Dueler All-Season tires",
+      "7-inch Thin Film Transistor color cluster display",
+      "Unique front and rear bumpers with Silver bezels and Silver grille inserts",
+      "12-way power premium McKinley leather-trimmed seats",
+      "Uconnect 5 with 12.3-inch touchscreen",
+      "Automatic LED headlamps, fog lamps, taillamps and daytime running lamps"
+    ],
+    "Willys": [
+      "Heavy-duty Dana 44 axles with E-locker rear axle",
+      "4.10 rear axle ratio and rock protection sill rails",
+      "Off-Road Plus Mode and Xtreme 35-inch Tire Package available",
+      "LT285/70R17 Off-Road tires with 17-inch Black-painted wheels",
+      "Willys hood decal and suspension upgrades",
+      "Safety Group with Automatic High-Beam Headlamp Control and LED taillamps"
+    ],
+    "Sport": [
+      "2.0L Turbo I-4 engine with Engine Stop/Start Technology and 8-speed automatic",
+      "240-amp alternator and advanced electrical upgrades",
+      "Four-Wheel Drive with Advanced Brake Assist",
+      "Security alarm and Class II hitch receiver",
+      "Remote keyless entry and deep-tint sunscreen windows",
+      "Front LED fog lamps and LED premium reflector headlamps",
+      "Jeep Trail Rated Kit",
+      "17-inch Black-painted wheels with off-road tires available"
+    ]
+  }
+}

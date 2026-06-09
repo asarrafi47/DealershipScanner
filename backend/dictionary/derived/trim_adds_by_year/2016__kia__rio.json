@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2016|kia|rio",
+  "year": 2016,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_llm_2016__kia__rio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XS",
+    "XE",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XS": [
+      "17-inch alloy wheels",
+      "Sport-tuned suspension",
+      "LED front accent lights",
+      "LED taillights",
+      "Power sunroof with tilt",
+      "Power-folding outside mirrors with turn-signal indicators",
+      "Projection headlights on 5-Door"
+    ],
+    "XE": [
+      "15-inch alloy wheels",
+      "Projection front fog lights",
+      "Black mesh radiator grille with chrome surround",
+      "Heated outside mirrors",
+      "6-speed Sportmatic transmission available"
+    ],
+    "XL": [
+      "6-speed manual transmission (Sedan only)",
+      "Multi-reflector headlights",
+      "Body-color exterior door handles",
+      "Locking fuel-filler door",
+      "Dual body-color power mirrors",
+      "Front variable intermittent windshield wipers",
+      "Heated rear glass with timer",
+      "Tinted windows",
+      "Rear window wiper and washer (5-Door)",
+      "Power door locks"
+    ]
+  }
+}

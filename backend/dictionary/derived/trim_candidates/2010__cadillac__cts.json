@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2010|cadillac|cts",
+  "year": 2010,
+  "make": "Cadillac",
+  "model": "CTS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

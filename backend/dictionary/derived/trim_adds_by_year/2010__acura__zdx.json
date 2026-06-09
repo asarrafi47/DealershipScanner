@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|acura|zdx",
+  "year": 2010,
+  "make": "acura",
+  "model": "zdx",
+  "ladder_id": "generic_acura_zdx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Advance": [
+      "NavWeather™ subscription. ZDX with Technology Package includes 90 days of XM"
+    ],
+    "Sport": [
+      "NavWeather is only available in select markets. 5 The USB"
+    ],
+    "Technology": [
+      "Acura Navigation System with Voice Recognition and multi-view rear camera",
+      "Acura/ELS Surround 435-watt Premium Audio System with 10 speakers and HDD media storage",
+      "In-dash CD and DVD-Audio player with Dolby Pro Logic II",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "Keyless Access System with smart entry and pushbutton ignition",
+      "GPS-linked solar-sensing dual-zone adaptive climate control",
+      "Song By Voice feature",
+      "Perforated Milano Premium Leather-trimmed interior"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Technology": 0,
+      "Sport": 1
+    }
+  }
+}

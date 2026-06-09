@@ -8,23 +8,15 @@ sync request lifecycle — no asyncio.run() gymnastics required.
 
 Strategy
 ────────
-1. Open a stealth-configured Chromium context (headless=True, spoofed UA,
-   realistic viewport, navigator.webdriver hidden).
-2. Navigate to Brave Search (https://search.brave.com/search?q={query}).
-   Brave is significantly more lenient with headless Chromium than DDG/Google.
-3. Wait for 'networkidle' so JS-rendered result cards are fully in the DOM.
-4. Collect ALL <a href> links on the page; keep only those that:
-     a. start with "http"
-     b. whose domain is not in the blocklist (brave.com, google.com, etc.)
-   Take the first 3 survivors — layout-change-immune, no fragile CSS classes.
-5. Navigate to the best result page; wait for domcontentloaded.
-6. Extract text: try semantic containers (article → main → …) first.
-   If none yield ≥ 200 chars, read body.innerText directly then drop lines
-   with fewer than 10 words (kills navbars, footers, button labels).
-7. Strip bare URLs / markdown noise, return the first 2 000 chars + source URL.
+1. Search DuckDuckGo HTML (``html.duckduckgo.com``) via plain HTTP — no CAPTCHA for
+   batch/headless use. Fall back to Brave Search + Playwright when DDG returns nothing.
+2. For each organic result URL, fetch page text via HTTP first (fast). If too short,
+   open with headless Chromium and extract semantic main content.
+3. Apply host blocklist + optional ``WEB_RESEARCH_ALLOWED_HOSTS`` on every URL.
+4. Return the first result with ≥ 80 chars of cleaned editorial text.
 
-All failures are printed to stdout AND logged — the caller always degrades
-gracefully to the inventory-only system prompt.
+Brave Search alone often shows a bot-verification page to headless Chromium; DDG HTML
+is the primary path as of 2026.
 """
 
 from __future__ import annotations
@@ -34,8 +26,11 @@ import os
 import random
 import re
 import time
+import urllib.error
+import urllib.request
+from html import unescape
 from typing import NamedTuple
-from urllib.parse import urlparse, quote_plus
+from urllib.parse import parse_qs, quote_plus, unquote, urlparse
 
 from backend.utils.outbound_url import destination_host_blocked as _destination_host_blocked
 
@@ -50,12 +45,24 @@ _USER_AGENT = (
 )
 
 _LAUNCH_ARGS = [
-    "--no-sandbox",
     "--disable-setuid-sandbox",
     "--disable-dev-shm-usage",
     "--disable-blink-features=AutomationControlled",
     "--window-size=1440,900",
 ]
+
+
+def _playwright_launch_args() -> list[str]:
+    """Chromium flags; --no-sandbox only when PLAYWRIGHT_NO_SANDBOX=1 (e.g. some containers)."""
+    args = list(_LAUNCH_ARGS)
+    if (os.environ.get("PLAYWRIGHT_NO_SANDBOX") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    ):
+        return ["--no-sandbox", *args]
+    return args
 
 _CONTEXT_HEADERS = {
     "Accept": (
@@ -79,6 +86,29 @@ _CONTEXT_HEADERS = {
 # they are fully present before we scan for links.
 
 _SEARCH_URL = "https://search.brave.com/search?q={query}&source=web"
+_DDG_HTML_URL = "https://html.duckduckgo.com/html/?q={query}"
+
+
+def _slug_for_url(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
+
+
+def direct_trim_guide_urls(year: int, make: str, model: str) -> list[str]:
+    """
+    Known URL patterns for trim/spec guides — no search engine required.
+
+    Used first because Brave/DuckDuckGo often CAPTCHA headless or scripted clients.
+    """
+    mk = _slug_for_url(make)
+    md = _slug_for_url(model)
+    if not mk or not md or year < 1980:
+        return []
+    return [
+        f"https://www.motortrend.com/cars/{mk}/{md}/",
+        f"https://www.caranddriver.com/{mk}/{md}",
+        f"https://www.carwow.co.uk/{mk}/{md}/{year}/specifications",
+        f"https://www.motorpoint.co.uk/guides/{mk}-{md}-models-and-trim-levels-explained",
+    ]
 
 # ── Link blocklist ────────────────────────────────────────────────────────
 #
@@ -163,6 +193,88 @@ def href_is_acceptable_result(
     return True
 
 
+def duckduckgo_html_result_links(
+    query: str,
+    *,
+    allowed_hosts: frozenset[str] | None,
+    max_results: int = 5,
+) -> list[str]:
+    """Return de-duplicated organic URLs from DuckDuckGo's static HTML results page."""
+    url = _DDG_HTML_URL.format(query=quote_plus(query))
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": _USER_AGENT,
+            "Accept": "text/html,application/xhtml+xml",
+            "Accept-Language": "en-US,en;q=0.9",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        logger.warning("[WebResearcher] DuckDuckGo HTML search failed: %s", exc)
+        return []
+
+    if _is_duckduckgo_bot_page(html):
+        logger.warning("[WebResearcher] DuckDuckGo bot verification page — skipping")
+        return []
+
+    found: list[str] = []
+    for m in re.finditer(r'href="(//duckduckgo\.com/l/\?[^"]+)"', html):
+        href = "https:" + m.group(1)
+        try:
+            qs = parse_qs(urlparse(href).query)
+            target = unquote(qs.get("uddg", [""])[0]).strip()
+        except Exception:
+            continue
+        if (
+            target
+            and href_is_acceptable_result(target, allowed_hosts=allowed_hosts)
+            and target not in found
+        ):
+            found.append(target)
+            if len(found) >= max_results:
+                break
+    logger.debug("[WebResearcher] duckduckgo links=%d query_len=%d", len(found), len(query))
+    return found
+
+
+def fetch_page_text_http(url: str, *, timeout_sec: int = 20) -> tuple[str, str]:
+    """
+    Fetch *url* with urllib and return ``(title, plain_text)``.
+
+    Strips scripts/styles/tags; not suitable for heavy JS SPAs but fast for guides.
+    """
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": _USER_AGENT,
+            "Accept": "text/html,application/xhtml+xml",
+            "Accept-Language": "en-US,en;q=0.9",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout_sec) as resp:
+        html = resp.read().decode("utf-8", errors="replace")
+    title_m = re.search(r"<title[^>]*>(.*?)</title>", html, flags=re.I | re.S)
+    title = unescape(re.sub(r"\s+", " ", title_m.group(1))).strip() if title_m else ""
+    html = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.I | re.S)
+    html = re.sub(r"<style[^>]*>.*?</style>", " ", html, flags=re.I | re.S)
+    text = re.sub(r"<[^>]+>", " ", html)
+    text = unescape(re.sub(r"\s+", " ", text)).strip()
+    return title, text
+
+
+def _is_brave_bot_page(body_text: str) -> bool:
+    low = (body_text or "").lower()[:800]
+    return "verifying you're not a bot" in low or "quick check before you continue" in low
+
+
+def _is_duckduckgo_bot_page(html: str) -> bool:
+    low = (html or "").lower()[:4000]
+    return "unfortunately, bots use duckduckgo" in low or "anomaly-modal" in low
+
+
 # ── Content extraction: semantic selectors (priority order) ───────────────
 
 _CONTENT_SELECTORS = [
@@ -225,7 +337,7 @@ class WebResearcher:
         try:
             browser = playwright.chromium.launch(
                 headless=True,
-                args=_LAUNCH_ARGS,
+                args=_playwright_launch_args(),
             )
         except Exception as exc:
             msg = str(exc)
@@ -359,120 +471,172 @@ class WebResearcher:
 
         return ""
 
-    # ── public API ────────────────────────────────────────────────────────
+    def _collect_search_candidates(
+        self,
+        query: str,
+        *,
+        year: int = 0,
+        make: str = "",
+        model: str = "",
+        max_results: int = 8,
+    ) -> list[str]:
+        allow = self._effective_allowed_hosts()
+        candidates: list[str] = []
 
-    def search_and_summarize(self, query: str) -> ResearchResult | None:
-        """
-        Search Brave for *query*, navigate to the first high-quality organic
-        result, and return a ResearchResult or None on any failure.
-        """
+        if year and make and model:
+            for url in direct_trim_guide_urls(year, make, model):
+                if href_is_acceptable_result(url, allowed_hosts=allow) and url not in candidates:
+                    candidates.append(url)
+            if candidates:
+                logger.info("[WebResearcher] direct guide urls=%d", len(candidates))
+
+        if len(candidates) < max_results:
+            for url in duckduckgo_html_result_links(
+                query, allowed_hosts=allow, max_results=max_results
+            ):
+                if url not in candidates:
+                    candidates.append(url)
+            if candidates and not year:
+                logger.info("[WebResearcher] duckduckgo candidates=%d", len(candidates))
+
+        if len(candidates) < 2:
+            for url in self._brave_search_links(query, max_results=max_results):
+                if url not in candidates:
+                    candidates.append(url)
+
+        return candidates[:max_results]
+
+    def _brave_search_links(self, query: str, *, max_results: int = 5) -> list[str]:
         try:
             from playwright.sync_api import sync_playwright
         except ImportError:
-            logger.error(
-                "playwright package not installed; run: pip install playwright && python -m playwright install chromium"
-            )
-            return None
+            return []
 
         search_url = _SEARCH_URL.format(query=quote_plus(query))
-        logger.info(
-            "[WebResearcher] starting | query_len=%d allowed_hosts=%s",
-            len(query),
-            "env"
-            if self._allowed_result_hosts is None
-            else "override",
-        )
-        logger.debug("[WebResearcher] search_url=%s", search_url)
-
         with sync_playwright() as pw:
             browser, ctx = self._make_context(pw)
             try:
                 page = ctx.new_page()
-
-                # ── 1. Load Brave Search results ──────────────────────────
-                logger.debug("[WebResearcher] loading Brave search results …")
                 try:
                     page.goto(
                         search_url,
                         wait_until="domcontentloaded",
                         timeout=self.timeout_ms,
                     )
-
-                    # Wait for network to go idle (JS-rendered results settle)
                     try:
-                        page.wait_for_load_state(
-                            "networkidle",
-                            timeout=12_000,
-                        )
-                        logger.debug("[WebResearcher] networkidle reached")
+                        page.wait_for_load_state("networkidle", timeout=12_000)
                     except Exception:
-                        # networkidle can time out on busy pages; continue anyway
-                        delay = random.uniform(1.5, 2.5)
-                        logger.debug(
-                            "[WebResearcher] networkidle timed out; waiting %.1fs", delay
-                        )
-                        time.sleep(delay)
-
+                        time.sleep(random.uniform(1.0, 2.0))
                 except Exception as exc:
                     logger.warning("[WebResearcher] Brave Search navigation failed: %s", exc)
-                    return None
-
-                # ── 2. Collect organic result URLs ────────────────────────
-                candidates = self._find_result_links(page, max_results=3)
-                logger.debug("[WebResearcher] candidates=%d", len(candidates))
-
-                if not candidates:
-                    logger.warning("[WebResearcher] No acceptable result links (query_len=%d)", len(query))
-                    return None
-
-                result_url   = candidates[0]
-                result_title = ""
-                logger.info("[WebResearcher] selected host=%s", urlparse(result_url).hostname or "")
-
-                # ── 3. Navigate to the result page ────────────────────────
-                result_page = ctx.new_page()
+                    return []
                 try:
-                    result_page.goto(
-                        result_url,
-                        wait_until="domcontentloaded",
-                        timeout=self.timeout_ms,
-                    )
-                    # Brief pause for lazy-loaded content
-                    time.sleep(random.uniform(0.8, 1.4))
-                    result_title = result_page.title() or ""
-                    logger.debug("[WebResearcher] page title len=%d", len(result_title))
-                except Exception as exc:
-                    logger.warning(
-                        "[WebResearcher] Result page navigation failed for %s: %s",
-                        result_url,
-                        exc,
-                    )
-                    return None
-
-                # ── 4. Extract + clean text ───────────────────────────────
-                raw_text = self._extract_content(result_page)
-                clean    = self._clean_text(raw_text)
-                logger.debug("[WebResearcher] extracted raw_chars=%d", len(clean))
-
-                if len(clean) < 80:
-                    logger.warning(
-                        "[WebResearcher] Content too short (%d chars) at %s",
-                        len(clean),
-                        result_url,
-                    )
-                    return None
-
-                snippet = clean[: self.max_text_chars]
-                logger.info("[WebResearcher] success chars=%d", len(snippet))
-                return ResearchResult(
-                    text=snippet,
-                    url=result_url,
-                    title=result_title,
-                )
-
+                    body = page.inner_text("body") or ""
+                except Exception:
+                    body = ""
+                if _is_brave_bot_page(body):
+                    logger.warning("[WebResearcher] Brave bot verification page — skipping")
+                    return []
+                return self._find_result_links(page, max_results=max_results)
             finally:
                 try:
                     ctx.close()
                     browser.close()
                 except Exception:
                     pass
+        return []
+
+    def _fetch_with_playwright(self, result_url: str) -> tuple[str, str]:
+        from playwright.sync_api import sync_playwright
+
+        with sync_playwright() as pw:
+            browser, ctx = self._make_context(pw)
+            try:
+                page = ctx.new_page()
+                page.goto(
+                    result_url,
+                    wait_until="domcontentloaded",
+                    timeout=self.timeout_ms,
+                )
+                time.sleep(random.uniform(0.6, 1.2))
+                title = page.title() or ""
+                raw_text = self._extract_content(page)
+                return title, raw_text
+            finally:
+                try:
+                    ctx.close()
+                    browser.close()
+                except Exception:
+                    pass
+        return "", ""
+
+    def _result_from_page(self, result_url: str, title: str, raw_text: str) -> ResearchResult | None:
+        filtered = self._filter_short_lines(raw_text.strip()) if raw_text else ""
+        clean = self._clean_text(filtered)
+        if len(clean) < 80:
+            logger.debug(
+                "[WebResearcher] content too short (%d chars) at %s",
+                len(clean),
+                result_url,
+            )
+            return None
+        snippet = clean[: self.max_text_chars]
+        logger.info(
+            "[WebResearcher] success host=%s chars=%d",
+            urlparse(result_url).hostname or "",
+            len(snippet),
+        )
+        return ResearchResult(text=snippet, url=result_url, title=title)
+
+    # ── public API ────────────────────────────────────────────────────────
+
+    def search_and_summarize(
+        self,
+        query: str,
+        *,
+        year: int = 0,
+        make: str = "",
+        model: str = "",
+    ) -> ResearchResult | None:
+        """
+        Search for *query*, fetch the first useful organic result page, and return
+        cleaned text or None on failure.
+
+        When *year*, *make*, and *model* are provided, tries direct automotive guide
+        URLs before search engines (avoids CAPTCHA on Brave/DuckDuckGo).
+        """
+        logger.info(
+            "[WebResearcher] starting | query_len=%d ymm=%s allowed_hosts=%s",
+            len(query),
+            f"{year} {make} {model}".strip() if year else "",
+            "env" if self._allowed_result_hosts is None else "override",
+        )
+
+        candidates = self._collect_search_candidates(
+            query, year=year, make=make, model=model, max_results=8
+        )
+        if not candidates:
+            logger.warning("[WebResearcher] No search result links (query_len=%d)", len(query))
+            return None
+
+        for result_url in candidates:
+            logger.info("[WebResearcher] trying host=%s", urlparse(result_url).hostname or "")
+
+            try:
+                title, raw_text = fetch_page_text_http(result_url)
+                out = self._result_from_page(result_url, title, raw_text)
+                if out:
+                    return out
+            except (urllib.error.URLError, OSError, TimeoutError) as exc:
+                logger.debug("[WebResearcher] HTTP fetch failed for %s: %s", result_url, exc)
+
+            try:
+                title, raw_text = self._fetch_with_playwright(result_url)
+                out = self._result_from_page(result_url, title, raw_text)
+                if out:
+                    return out
+            except Exception as exc:
+                logger.debug("[WebResearcher] Playwright fetch failed for %s: %s", result_url, exc)
+
+        logger.warning("[WebResearcher] All candidates failed (query_len=%d)", len(query))
+        return None

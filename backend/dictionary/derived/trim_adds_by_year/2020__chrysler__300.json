@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|chrysler|300",
+  "year": 2020,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2020__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C",
+    "300S",
+    "300 Limited",
+    "300 Touring L",
+    "300 Touring"
+  ],
+  "adds_by_trim": {
+    "300C": [
+      "5.7L HEMI V8 engine with Multi-Displacement System and interactive Deceleration Fuel Shut-Off",
+      "160-mph speedometer",
+      "Real natural-pore Mocha wood interior accents",
+      "Nappa luxury perforated and quilted leather-trimmed bucket seats",
+      "Premium Poltrona leather-wrapped instrument panel, door upper, and console panels"
+    ],
+    "300S": [
+      "300S Premium Group 2 with heated rear seats, ventilated front seats, power tilt/telescoping steering column with memory, and heated steering wheel",
+      "LED driver's and front-passenger lower front footwell lamps",
+      "LED-illuminated front and rear map pockets",
+      "LED-illuminated rear cup holders",
+      "Memory settings for 2 drivers for seat, steering column, mirrors, and radio",
+      "Power Backlight Sunshade",
+      "Nappa leather-trimmed sport bucket seats with perforated inserts and accent stitching",
+      "Dual-pane panoramic full-power sunroof with 1-touch open/close",
+      "Uconnect 4C NAV with 8.4-inch display and SiriusXM Traffic Plus and Travel Link"
+    ],
+    "300 Limited": [
+      "Real Black Olive Ash burl wood interior accents",
+      "Nappa perforated leather-trimmed bucket seats",
+      "Heated front and rear seats",
+      "Rear 60/40 split-folding rear bench seat with armrest, cup holders and storage"
+    ],
+    "300 Touring L": [
+      "Luxury front and rear floor mats",
+      "Luxury leather-wrapped steering wheel",
+      "Real Black Olive Ash burl wood interior accents",
+      "Nappa leather-trimmed sport bucket seats"
+    ],
+    "300 Touring": [
+      "3.6L Pentastar V6 engine with 8-speed automatic transmission",
+      "Front and rear floor mats",
+      "Charcoal Wood Hydrographic interior accents",
+      "8-way power driver's seat with 4-way power lumbar adjust",
+      "Cloth bucket seats",
+      "Rear 60/40 split-folding rear bench seat with armrest and cup holders",
+      "6 speakers with Uconnect 4C 8.4-inch display and Apple CarPlay and Android Auto",
+      "140-mph speedometer",
+      "Manual tilt/telescoping steering column"
+    ]
+  }
+}

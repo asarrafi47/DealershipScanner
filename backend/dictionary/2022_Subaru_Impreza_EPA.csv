@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2022,Subaru,Impreza,4-Door,2.0L I4 (SIDI),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,23,31,26,,,,,,2.0L I4,
-2022,Subaru,Impreza,4-Door,2.0L I4 (SIDI),Automatic (AV-S7),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,28,36,32,,,,,,2.0L I4,
-2022,Subaru,Impreza,Sport 4-Door,2.0L I4 (SIDI),Automatic (AV-S7),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,27,36,30,,,,,,2.0L I4,
-2022,Subaru,Impreza,5-Door,2.0L I4 (SIDI),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,24,31,26,,,,,,2.0L I4,
-2022,Subaru,Impreza,5-Door,2.0L I4 (SIDI),Automatic (AV-S7),All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,28,36,31,,,,,,2.0L I4,
-2022,Subaru,Impreza,Sport 5-Door,2.0L I4 (SIDI),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,22,30,25,,,,,,2.0L I4,
-2022,Subaru,Impreza,Sport 5-Door,2.0L I4 (SIDI),Automatic (AV-S7),All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,27,35,30,,,,,,2.0L I4,

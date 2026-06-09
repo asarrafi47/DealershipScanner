@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_mercedes_gla-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "GLA-Class",
+    "GLA-Class"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "L OM651 turbo I4; There's also a diverse selection of individual options and Genuine Mercedes-Benz Accessories that help you equip your GLA for your ever-changing life, from every day to epic moments."
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "L OM651 turbo I4; There's also a diverse selection of individual options and Genuine Mercedes-Benz Accessories that help you equip your GLA for your ever-changing life, from every day to epic moments."
+      }
+    ]
+  }
+}

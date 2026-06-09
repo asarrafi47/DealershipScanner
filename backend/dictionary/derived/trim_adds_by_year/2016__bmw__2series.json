@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2016|bmw|2series",
+  "year": 2016,
+  "make": "BMW",
+  "model": "2 Series",
+  "ladder_id": "brochure_llm_2016__bmw__2series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M235i",
+    "228i"
+  ],
+  "adds_by_trim": {
+    "M235i": [
+      "M Performance TwinPower Turbo 3.0-liter 320-hp engine with 0-60 in 4.6 seconds",
+      "Estoril Blue Metallic, Diamond Black/Coral Red, and Moonlight Black exclusive exterior colors",
+      "Coral Red Dakota Leather and Brown with silver effects exclusive interior trim options"
+    ],
+    "228i": [
+      "2.0-liter 240-hp TwinPower Turbo engine with 0-60 in 5.4 seconds",
+      "Lightweight aluminum front suspension with 4-wheel ventilated disc brakes",
+      "Dynamic Traction Control and available Track Handling Package with Variable Sport Steering"
+    ]
+  }
+}

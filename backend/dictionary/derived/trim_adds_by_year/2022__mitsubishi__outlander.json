@@ -1,0 +1,91 @@
+{
+  "catalog_key": "2022|mitsubishi|outlander",
+  "year": 2022,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2022__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL Launch Edition",
+    "SEL Touring Package",
+    "SEL",
+    "SE Launch Edition",
+    "SE Tech Package",
+    "SE",
+    "ES Convenience Package",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SEL Launch Edition": [
+      "Aniline premium leather appointed seating",
+      "Rear door sunshades",
+      "Ground Logo Illumination",
+      "Launch Edition Badge",
+      "Dynamic Shield Illumination",
+      "Chrome Hood Badge",
+      "3-month Audible subscription",
+      "6-month Amazon Prime Music subscription",
+      "Amazon Echo Auto"
+    ],
+    "SEL Touring Package": [
+      "Heated steering wheel",
+      "Synthetic leather door insert with quilting",
+      "Semi-aniline leather appointed seating",
+      "10.8-inch Head-Up Display",
+      "BOSE premium sound system with 10 speakers",
+      "Power panoramic sunroof",
+      "Rear door pull-up sunshade"
+    ],
+    "SEL": [
+      "Body-colored front and rear bumper lower accents",
+      "Power folding side mirrors",
+      "Side mirrors with position memory and reverse auto tilt",
+      "Front door accent with LED interior illumination",
+      "Synthetic leather door insert with quilting",
+      "8-way power adjustable driver seat with memory",
+      "4-way power adjustable passenger seat",
+      "Heated rear seats",
+      "Leather appointed seating surfaces",
+      "12.3-inch full digital driver display"
+    ],
+    "SE Launch Edition": [
+      "Ground Logo Illumination",
+      "Launch Edition Badge",
+      "Dynamic Shield Illumination",
+      "Chrome Hood Badge",
+      "3-month Audible subscription",
+      "6-month Amazon Prime Music subscription",
+      "Amazon Echo Auto"
+    ],
+    "SE Tech Package": [
+      "12.3-inch full digital driver display",
+      "BOSE premium sound system with 10 speakers",
+      "Power panoramic sunroof",
+      "Auto-dimming rearview mirror"
+    ],
+    "SE": [
+      "LED front fog lights",
+      "Heated door mirrors",
+      "Handsfree power remote liftgate",
+      "Synthetic leather seating surface",
+      "Heated front seats"
+    ],
+    "ES Convenience Package": [
+      "20-inch two-tone alloy wheels",
+      "255/45 R20 all-season tires",
+      "Mitsubishi Connect with Safeguard and Remote Services with 24-month trial"
+    ],
+    "ES": [
+      "2.5L MIVEC DOHC 4-cylinder direct-injection engine",
+      "11 SRS airbags",
+      "Forward Collision Mitigation",
+      "Blind Spot Warning with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Rear Automatic Emergency Braking",
+      "7-passenger seating",
+      "18-inch alloy wheels",
+      "Push button start",
+      "8-inch Smartphone Link Display Audio with SiriusXM 3-month trial"
+    ]
+  }
+}

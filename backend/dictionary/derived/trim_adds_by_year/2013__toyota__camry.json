@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2013|toyota|camry",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_web_2013__toyota__camry",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Sportier styling and design compared to XLE",
+      "Available two-tone exterior color schemes",
+      "Premium Plus package with traffic jam assist, front cross-traffic alert, lane change assist, and 360-degree camera"
+    ],
+    "SE": [
+      "Sportier version of the sedan compared to XLE"
+    ],
+    "XLE": [
+      "12.3-inch digital instrument cluster",
+      "12.3-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "Microsuede-trimmed seats",
+      "Power panoramic roof available",
+      "Available 10.0-inch head-up display"
+    ],
+    "LE": [
+      "Standard 7.0-inch digital instrument cluster",
+      "8.0-inch infotainment display with Apple CarPlay and Android Auto",
+      "Standard wireless charging with five USB-A and USB-C ports",
+      "Standard Toyota Safety Sense 3.0 suite with pre-collision alert, automatic emergency braking, and adaptive cruise control",
+      "Standard blind-spot monitoring with rear cross-traffic alert",
+      "Standard push-button start and dual-climate control",
+      "Embossed woven fabric seats inspired by ocean waves design"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/camry/"
+}

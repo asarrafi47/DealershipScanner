@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1996,Mercury,Tracer,Tracer,1.8L I4 ((FFS)),1.8L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,20,27,22,,,,,
+1996,Mercury,Tracer,Tracer,1.8L I4 ((FFS)),1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,22,28,24,,,,,
+1996,Mercury,Tracer,Tracer,1.9L I4 ((FFS)),1.9L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,22,29,25,,,,,
+1996,Mercury,Tracer,Tracer,1.9L I4 ((FFS)),1.9L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,26,35,30,,,,,
+1996,Mercury,Tracer,Wagon,1.9L I4 ((FFS)),1.9L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,22,29,25,,,,,
+1996,Mercury,Tracer,Wagon,1.9L I4 ((FFS)),1.9L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,26,35,30,,,,,

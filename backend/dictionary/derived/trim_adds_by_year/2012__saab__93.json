@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2012|saab|93",
+  "year": 2012,
+  "make": "Saab",
+  "model": "9-3",
+  "ladder_id": "brochure_llm_2012__saab__93",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Independence",
+    "Aero",
+    "Turbo4"
+  ],
+  "adds_by_trim": {
+    "Independence": [
+      "18-inch alloy wheels with high-performance summer tires",
+      "Parchment leather-appointed sport seats with body-color coordinated accents and stitching",
+      "Carbon-fiber effect interior trim",
+      "Leather instrument panel and brake handle with coordinated stitching",
+      "Lowered, sport-tuned chassis",
+      "Four wheel disc brakes, ventilated front and rear",
+      "Power front seats with driver side memory (standard)",
+      "Power folding, auto-dimming outside mirrors (standard)",
+      "Rear park assist (standard)",
+      "Amber orange metallic exterior color"
+    ],
+    "Aero": [
+      "Bi-Xenon cornering headlights",
+      "Exposed twin exhaust tailpipes",
+      "Sport front and rear fascias",
+      "17-inch 5-spoke twist alloy wheels",
+      "Black leather-appointed sport seats with parchment accents",
+      "Graphite-fiber effect interior trim",
+      "Lowered, sport-tuned chassis",
+      "Four wheel disc brakes, ventilated front and rear",
+      "11-speaker, 300-watt audio system with 6-CD changer radio",
+      "onStar Directions and Connections with 6 months of service (standard)"
+    ],
+    "Turbo4": [
+      "17-inch 5-spoke turbine alloy wheels",
+      "Halogen projector beam headlights",
+      "Four wheel disc brakes with ventilated front",
+      "Black leather-appointed seats",
+      "Titanium metallic interior trim",
+      "2.0L turbocharged 4-cylinder engine producing 220 hp",
+      "6-speed manual transmission (standard)",
+      "2.0L turbocharged 4-cylinder engine with 220 hp at 5,300 rpm and 258 lb-ft torque"
+    ]
+  }
+}

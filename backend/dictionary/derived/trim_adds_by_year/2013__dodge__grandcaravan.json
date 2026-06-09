@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2013|dodge|grandcaravan",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2013__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "Crew",
+    "SXT",
+    "SE",
+    "AVP"
+  ],
+  "adds_by_trim": {
+    "R/T": [
+      "Unique premium leather-trimmed perforated seats with red accent stitching",
+      "All-black interior including headliner and doors",
+      "Unique satin silver instrument panel trim",
+      "Unique monochromatic exterior appearance with body-color grille and door handles",
+      "Unique 17-inch satin carbon aluminum wheels",
+      "Unique performance-tuned suspension",
+      "Infinity 9 speakers with amplifier and 506-watt subwoofer"
+    ],
+    "Crew": [
+      "Leather-wrapped shift knob",
+      "SiriusXM satellite radio with 1-year subscription",
+      "Electronic Vehicle Information Center (EVIC)",
+      "3-zone automatic temperature control",
+      "Rear overhead console",
+      "Rear removable rechargeable flashlight",
+      "Interior LED ambient lighting",
+      "Power 8-way driver seat with 2-way power lumbar",
+      "Leather-wrapped steering wheel with audio controls",
+      "Universal garage door opener and remote start"
+    ],
+    "SXT": [
+      "17-inch tech silver aluminum wheels",
+      "Fog lamps",
+      "Bright window trim belt molding",
+      "Stow 'n place roof rack with bright side roof rails",
+      "UConnect 430 with 6.5-inch touchscreen and ParkView rear backup camera",
+      "Interior LED ambient lighting",
+      "Power 8-way driver seat with 2-way power lumbar",
+      "Leather-wrapped steering wheel with audio controls"
+    ],
+    "SE": [
+      "2nd-row bucket seats with super stow 'n go fold-in-floor operation",
+      "Air conditioning with 3-zone manual temperature control",
+      "Mini floor console with cup holders",
+      "UConnect 430 with 6.5-inch touchscreen and CD/DVD/MP3 radio",
+      "17-inch aluminum wheels"
+    ],
+    "AVP": [
+      "3.6L 283-horsepower Pentastar V6 with variable valve timing",
+      "6-speed automatic transmission with electronic range select",
+      "2nd-row folding, reclining, removable bench seats",
+      "2nd-row storage tubs with concealed storage",
+      "3rd-row stow 'n go with tailgate seats",
+      "Electronic stability control with all-speed traction control",
+      "7 advanced airbags including front, side-curtain, and driver knee blocker",
+      "4-wheel antilock disc brakes",
+      "16-inch wheel covers",
+      "UConnect 130 AM/FM/CD/MP3 radio with 4 speakers"
+    ]
+  }
+}

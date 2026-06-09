@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|acura|zdx",
+  "year": 2013,
+  "make": "acura",
+  "model": "zdx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Technology",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

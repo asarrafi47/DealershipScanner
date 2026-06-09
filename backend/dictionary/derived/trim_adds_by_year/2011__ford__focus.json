@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|ford|focus",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_llm_2011__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SES",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.0L Duratec I-4 engine with 140 hp",
+      "4-wheel Anti-Lock Brake System (ABS)",
+      "European-inspired independent front and rear suspension",
+      "Power front disc/rear drum brakes",
+      "5-person seating with front bucket seats and rear 60/40 split-fold seats",
+      "Air conditioning",
+      "AM/FM stereo with single-CD player and MP3 capability",
+      "Auxiliary audio input jack",
+      "Tilt steering column",
+      "Full-length center floor console with padded armrest"
+    ],
+    "SES": [],
+    "SEL": [
+      "4-wheel disc brakes",
+      "16-inch aluminum wheels",
+      "Body-color exterior mirrors with integrated turn signal indicators",
+      "6-speaker audio system",
+      "Fog lamps with chrome surrounds",
+      "Automatic headlamps",
+      "Steering wheel with secondary audio controls",
+      "Power front and rear windows with one-touch-down driver's side",
+      "Dual-zone electronic automatic temperature control",
+      "MyKey owner controls feature"
+    ],
+    "SE": [
+      "Body-color exterior door handles and mirrors",
+      "Front and rear floor mats",
+      "16-inch steel wheels with silver-painted wheel covers",
+      "MyFord driver-connect technology",
+      "SYNC voice-activated communications and entertainment system",
+      "Interior ambient lighting",
+      "Leather-wrapped steering wheel",
+      "Power front and rear windows with one-touch-up/down on all windows"
+    ]
+  }
+}

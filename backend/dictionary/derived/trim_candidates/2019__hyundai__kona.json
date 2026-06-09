@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2019|hyundai|kona",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Kona",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

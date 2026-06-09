@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|audi|q3",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Q3",
+  "ladder_id": "2017_audi_q3_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "S line",
+    "Technik",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Technik": [
+      "connect services as well as General legal notice about the equipment Audi"
+    ],
+    "S line": [
+      "connections, for both the Audi"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Technik": 1,
+      "Sport": 0
+    }
+  }
+}

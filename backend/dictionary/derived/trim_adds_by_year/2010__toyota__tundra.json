@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2010|toyota|tundra",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2010__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4x2 CrewMax Ltd w/5.7-Liter V8 6-Speed Auto",
+    "4x2 CrewMax Ltd w/4.6-Liter V8 6-Speed Auto",
+    "4x2 CrewMax Tundra w/5.7-Liter V8 6-Speed Auto",
+    "4x2 CrewMax Tundra w/4.6-Liter V8 6-Speed Auto"
+  ],
+  "adds_by_trim": {
+    "4x2 CrewMax Ltd w/5.7-Liter V8 6-Speed Auto": [
+      "5.7L DOHC 32V i-FORCE V8 engine with 381 hp and 401 lb.-ft. torque",
+      "4.100 rear differential ratio with 10.5-inch ring gear"
+    ],
+    "4x2 CrewMax Ltd w/4.6-Liter V8 6-Speed Auto": [
+      "Ltd trim designation indicating higher equipment level versus base Tundra"
+    ],
+    "4x2 CrewMax Tundra w/5.7-Liter V8 6-Speed Auto": [
+      "5.7L DOHC 32V i-FORCE V8 engine with 381 hp and 401 lb.-ft. torque",
+      "4.100 rear differential ratio with 10.5-inch ring gear"
+    ],
+    "4x2 CrewMax Tundra w/4.6-Liter V8 6-Speed Auto": [
+      "4.6L DOHC 32V i-FORCE V8 engine with 310 hp and 327 lb.-ft. torque",
+      "6-speed electronically controlled transmission with ECT-i and sequential shift mode",
+      "Automatic Limited-Slip Differential (Auto LSD)",
+      "Power-assisted 4-wheel Anti-lock Brake System (ABS)",
+      "Rack-and-pinion hydraulic power steering with 18.1 ratio"
+    ]
+  }
+}

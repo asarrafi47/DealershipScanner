@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2012|volkswagen|tiguan",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_llm_2012__volkswagen__tiguan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Tiguan SEL",
+    "Tiguan SE",
+    "Tiguan S"
+  ],
+  "adds_by_trim": {
+    "Tiguan SEL": [
+      "RNS 510 navigation system with 6.5-inch color touchscreen, 30GB hard disk, SD card reader",
+      "SiriusXM Traffic with 3-month trial subscription",
+      "19-inch Savannah alloy wheels with all-season tires",
+      "Power-sliding panoramic sunroof (12.7 sq. ft.)",
+      "12-way power adjustable driver seat with memory function",
+      "Heated front seats",
+      "Leather seating surfaces with 4-way lumbar support",
+      "Chrome applications to exterior side window frames",
+      "Silver roof rails",
+      "Trailer hitch preparation with wiring, bumper, and crossbar"
+    ],
+    "Tiguan SE": [
+      "6-speed automatic transmission with Tiptronic and Sport mode",
+      "18-inch New York alloy wheels with all-season tires",
+      "8-way manual passenger seat with adjustable lumbar support and fold-flat function",
+      "Premium VIII sound system with built-in 6-disc CD changer, SD card reader, and MDI with iPod cable",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "Power-operated heated side mirrors with integrated turn signals",
+      "Leather-wrapped shift knob and multi-function steering wheel"
+    ],
+    "Tiguan S": [
+      "2.0L 200-hp TSI engine with 6-speed manual transmission",
+      "16-inch steel wheels with all-season tires and anti-theft locks",
+      "Climatic manual climate control",
+      "8-way manual driver and passenger seats with adjustable lumbar support",
+      "8-speaker sound system with MP3/WMA CD player, AM/FM radio, AUX-in, Bluetooth, and HD Radio",
+      "Cruise control, Electronic Stability Control (ESC), Anti-lock Braking System (ABS), Anti-Slip Regulation (ASR)",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Power-operated heated side mirrors with integrated turn signals",
+      "Halogen headlights with Adaptive Front-lighting System (AFS)",
+      "Roof Storage System"
+    ]
+  }
+}

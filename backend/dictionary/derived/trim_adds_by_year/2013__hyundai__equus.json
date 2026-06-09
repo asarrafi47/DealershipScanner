@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|hyundai|equus",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Equus",
+  "ladder_id": "brochure_llm_2013__hyundai__equus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EQUUS ULTIMATE",
+    "EQUUS SIGNATURE"
+  ],
+  "adds_by_trim": {
+    "EQUUS ULTIMATE": [
+      "Rear-seat entertainment system with 8-inch display",
+      "Power 50/50 split rear seats with reclining function",
+      "Cooled rear seats",
+      "First-class right rear seat with integrated leg support and massage",
+      "Thermoelectric rear console refrigerator",
+      "Power rear-seat head restraints with manual tilt adjustment",
+      "Power rear side-window sunshades",
+      "Illuminated rear-seat vanity mirrors",
+      "Forward-view cornering camera",
+      "Power open/close trunk access"
+    ],
+    "EQUUS SIGNATURE": [
+      "429 HP 5.0L Gasoline Direct Injection DOHC Tau V8 engine",
+      "8-speed automatic transmission with SHIFTRONIC",
+      "Electronically controlled air suspension with Continuous Damping Control",
+      "Premium leather seats and microfiber suede headliner",
+      "12-way power adjustable driver seat with lumbar support and massage",
+      "Heated and cooled front seats",
+      "Lexicon 7.1 Discrete surround-sound audio system with 17 speakers",
+      "Premium navigation system with integrated Driver Information System",
+      "9-airbag safety system including advanced dual front and side-curtain airbags",
+      "Xenon High Intensity Discharge automatic headlights with LED turn indicators"
+    ]
+  }
+}

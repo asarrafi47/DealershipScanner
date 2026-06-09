@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|gmc|savana",
+  "year": 2012,
+  "make": "GMC",
+  "model": "Savana",
+  "ladder_id": "brochure_llm_2012__gmc__savana",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "TL": [
+      "Power windows and door locks",
+      "Remote keyless entry with 2 transmitters",
+      "Chrome front and rear bumpers with grille and halogen composite headlamps",
+      "Chrome outside rearview mirrors, power-operated and heated",
+      "Power seat adjuster for driver and front passenger (6-way)",
+      "Leather-wrapped steering wheel with mounted audio controls"
+    ],
+    "SL": [
+      "8-passenger or 12-passenger seating configuration",
+      "Sliding passenger-side door available",
+      "Power-operated heated outside rearview mirrors with Convenience Package",
+      "Ultrasonic rear park assist with audible warning",
+      "LATCH child seat anchor system",
+      "Head curtain side-impact air bags for first, second and third-row outboard occupants"
+    ]
+  }
+}

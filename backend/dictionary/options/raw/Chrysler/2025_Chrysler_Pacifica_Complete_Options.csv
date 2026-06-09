@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,Chrysler,Pacifica,Pacifica,3.6L V6,3.6L V6,,Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.6,19,28,22,,,,,
+2025,Chrysler,Pacifica,AWD,3.6L V6,3.6L V6,,Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Minivan - 4WD,6,3.6,17,25,20,,,,,
+2025,Chrysler,Pacifica,Hybrid,Plug-in Hybrid 3.6L V6 (PHEV),3.6L V6,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline / Electricity,Minivan - 2WD,6,3.6,29,30,30,,,,,

@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2018|toyota|tundra",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2018__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1794 Edition",
+    "Platinum",
+    "Limited",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "1794 Edition": [
+      "Western-themed interior with brown premium perforated leather-trimmed seats",
+      "Wood-style trim including steering wheel and shift knob",
+      "Chrome billet-style grille with chrome front bumper endcaps",
+      "1794 Edition badging",
+      "Unique floor mats",
+      "Available in CrewMax only"
+    ],
+    "Platinum": [
+      "20-inch alloy wheels",
+      "Black honeycomb-style grille with color-keyed grille surround",
+      "Color-keyed bumpers",
+      "Chrome heated auto-dimming and power-folding mirrors",
+      "Front and rear parking assist sonar",
+      "Black premium perforated leather-trimmed seats",
+      "Heated and ventilated front seats",
+      "Power tilt/telescopic steering wheel with memory system",
+      "Entune Premium JBL Audio with Integrated Navigation and App Suite",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert"
+    ],
+    "Limited": [
+      "LED headlights",
+      "20-inch machined-finish alloy wheels",
+      "Chrome heated outside mirrors",
+      "Silver billet-style grille with chrome surround",
+      "Deck rail system",
+      "Leather-trimmed front bucket seats with center console",
+      "Heated front seats with power driver and passenger seating",
+      "Power sliding rear window",
+      "Dual zone automatic climate control",
+      "Auto-dimming rearview mirror with compass and HomeLink universal transceiver"
+    ],
+    "SR5": [
+      "Gray honeycomb-style grille with chrome surround",
+      "Chrome front and rear bumper endcaps",
+      "Halogen fog lights",
+      "Entune Audio Plus with Connected Navigation App and 7-inch touch-screen",
+      "HD Radio Technology and SiriusXM Satellite Radio",
+      "Rear under-seat storage tray in Double Cab",
+      "Integrated Trailer Brake Controller with 5.7L V8"
+    ],
+    "SR": [
+      "Gray honeycomb-style grille with gray surround",
+      "18-inch styled steel wheels",
+      "LED Daytime Running Lights",
+      "Front and rear mudguards",
+      "Towing hitch receiver with 4.6L V8 only",
+      "40/20/40 split fold-down front bench seat",
+      "Power windows and door locks",
+      "4.2-inch Multi-Information Display",
+      "Entune Audio with 6.1-inch touch-screen",
+      "Integrated backup camera and Bluetooth wireless technology"
+    ]
+  }
+}

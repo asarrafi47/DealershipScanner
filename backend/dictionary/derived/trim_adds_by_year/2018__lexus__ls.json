@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2018|lexus|ls",
+  "year": 2018,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2018__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LS500h",
+    "LS500"
+  ],
+  "adds_by_trim": {
+    "LS500h": [
+      "Hybrid powertrain with enhanced horsepower versus 2018 LS Hybrid line",
+      "Eight-year/100,000-mile Hybrid System Warranty with zero deductible"
+    ],
+    "LS500": [
+      "3.5-liter twin-turbo engine",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Lexus Safety System+ Pre-Collision System",
+      "Dynamic Radar Cruise Control",
+      "Lane Departure Alert with Lane Keep Assist",
+      "Mark Levinson premium audio system",
+      "Lexus Enform Wi-Fi with 4G LTE connectivity"
+    ]
+  }
+}

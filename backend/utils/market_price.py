@@ -35,11 +35,21 @@ def _inventory_db_mtime() -> float:
 
 
 def _trim_key(make: str | None, model: str | None, trim: str | None) -> tuple[str, str, str]:
-    return (
-        str(make or "").strip().lower(),
-        str(model or "").strip().lower(),
-        str(trim or "").strip().lower(),
-    )
+    mk = str(make or "").strip().lower()
+    md = str(model or "").strip().lower()
+    tr_raw = str(trim or "").strip()
+    if not tr_raw:
+        return mk, md, ""
+    if mk == "bmw":
+        from backend.enrichment.trim_ladder_knowledge import (
+            drivetrain_merge_display_name,
+            preserve_trim_label,
+        )
+
+        preserved = preserve_trim_label(tr_raw, make or "", model)
+        label = drivetrain_merge_display_name(preserved or tr_raw, make or "", model) or preserved or tr_raw
+        return mk, md, label.strip().lower()
+    return mk, md, tr_raw.lower()
 
 
 def mileage_band(mileage: Any) -> str:

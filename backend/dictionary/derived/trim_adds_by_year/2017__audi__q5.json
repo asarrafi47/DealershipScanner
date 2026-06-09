@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|audi|q5",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2017__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SQ5",
+    "Q5 3.0T",
+    "Q5 2.0T Premium Plus",
+    "Q5 2.0T Premium"
+  ],
+  "adds_by_trim": {
+    "SQ5": [
+      "21-inch Audi Sport double-spoke star design wheels standard",
+      "Titanium Gray Perforated Milano leather S Sport seats",
+      "S Sport seats with ventilated capability",
+      "Exclusive exterior colors: Dayona Gray pearl, Sepang Blue pearl",
+      "Carbon Atlas or Layered Aluminum/Black Wood interior inlays"
+    ],
+    "Q5 3.0T": [
+      "3.0T engine (vs 2.0T)",
+      "Available 20-inch and 21-inch Audi Sport wheel options",
+      "Glacier White metallic and Monsoon Gray metallic colors",
+      "Dark Brown Walnut Wood or Fine Grain Ash Natural Brown Wood inlays"
+    ],
+    "Q5 2.0T Premium Plus": [
+      "20-inch 5-arm design wheels standard",
+      "Jet Black leather with Lunar Silver Alcantara contrast stitching available",
+      "Titanium Gray leather seat option",
+      "Brushed Aluminum interior inlay",
+      "S Sport seats available"
+    ],
+    "Q5 2.0T Premium": [
+      "18-inch 5-spoke V design wheels standard",
+      "Black leather standard seats",
+      "Black Perforated Milano leather ventilated seat option",
+      "Black Fine Nappa leather available",
+      "Black/Lunar Silver Fine Nappa leather option",
+      "Aluminum Satellite interior inlay standard",
+      "Basic exterior color palette: Brilliant Black, Ibis White, Cuvee Silver metallic"
+    ]
+  }
+}

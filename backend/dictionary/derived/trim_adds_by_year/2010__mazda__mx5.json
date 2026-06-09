@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|mazda|mx5",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "generic_mazda_mx5",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Sport & Touring: Black Cloth",
+      "Grand Touring: Dune Beige Leather"
+    ],
+    "Sport": [
+      "Grand Touring: Havana Brown Leather"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "Limited": 0,
+      "Touring": 2
+    }
+  }
+}

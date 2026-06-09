@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2011|ford|explorer",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_web_2011__ford__explorer",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Platinum",
+    "ST",
+    "ST-Line",
+    "Tremor",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "14-speaker Bang & Olufsen audio system",
+      "Upscale interior appointments and materials"
+    ],
+    "ST": [
+      "10-speaker Bang & Olufsen audio system",
+      "Sport-focused tuning and handling"
+    ],
+    "ST-Line": [
+      "10-speaker Bang & Olufsen audio system"
+    ],
+    "Tremor": [
+      "Off-road suspension with 8.6 inches ground clearance",
+      "Limited-slip rear differential for improved traction",
+      "Revised bumpers with better approach and departure angles",
+      "Steel underbody skidplates",
+      "18-inch all-terrain tires",
+      "Available metallic gold accents on wheels, grille, tow hooks, and badges",
+      "Contrast seat stitching"
+    ],
+    "Active": [
+      "18-inch wheels with LED headlights and taillights",
+      "Black side mirror caps and black roof rails",
+      "Cloth seat upholstery with power-adjustable driver's seat",
+      "13.2-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "12.3-inch digital gauge cluster display",
+      "Amazon Alexa connectivity and Google Assistant voice commands",
+      "Eight USB ports across three rows",
+      "Ford Co-Pilot360 driver-assist and active safety suite",
+      "Configurable second-row seats as bench or individual captain's chairs"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/explorer/"
+}

@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2021|lexus|es",
+  "year": 2021,
+  "make": "lexus",
+  "model": "ES",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Ultra Luxury",
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

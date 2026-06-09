@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2012|bmw|x5",
+  "year": 2012,
+  "make": "BMW",
+  "model": "X5",
+  "ladder_id": "brochure_2012__bmw__x5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds iDrive Control Display with Condition-Based Service monitoring",
+      "Adds BMW Assist Safety Plan with TeleService telematics",
+      "Adds Bluetooth hands-free calling system",
+      "Adds BMW Navigation system with turn-by-turn directions",
+      "Adds New Vehicle Limited Warranty covering 4 years"
+    ],
+    "SE": [
+      "Upgraded to BMW Mobile Office feature for text and email transfer to iDrive Display",
+      "Adds Calendar and To-do List functionality on iDrive screen",
+      "Adds Google Maps destination integration with turn-by-turn routing"
+    ],
+    "Limited": [
+      "Upgraded to comprehensive BMW Maintenance Program with flexible service intervals",
+      "Adds unlimited-mileage corrosion and rust perforation warranty"
+    ],
+    "Premium": [
+      "Adds BMW Assist Convenience Plan with optional premium coverage enhancements",
+      "Adds Stolen Vehicle Recovery service",
+      "Adds BMW Virtual Center access available 24 hours daily"
+    ]
+  }
+}

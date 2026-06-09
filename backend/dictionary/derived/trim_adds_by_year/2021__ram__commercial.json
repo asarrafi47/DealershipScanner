@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2021|ram|commercial",
+  "year": 2021,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_2021__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Tradesman": [
+      "Adds Pentastar V6 engine with standard eTorque mild-hybrid technology",
+      "Adds 48-volt battery and motor generator system",
+      "Adds Stop/Start technology for idle efficiency",
+      "Adds Regenerative Braking energy recovery system",
+      "Adds conventional tailgate operation"
+    ],
+    "Limited": [
+      "Adds available HEMI V8 engine option with eTorque compatibility",
+      "Adds available Multifunction Tailgate with 60/40-split swing-away doors and 2,000-lb load rating",
+      "Adds available class-exclusive Active-Level Four-Corner Air Suspension system",
+      "Adds five-mode suspension operation: two Off-Road Heights, Aero Mode, Normal Ride Height, and Entry/Exit Mode",
+      "Adds Electric Power Boost for optimized efficiency and supplemental torque"
+    ]
+  }
+}

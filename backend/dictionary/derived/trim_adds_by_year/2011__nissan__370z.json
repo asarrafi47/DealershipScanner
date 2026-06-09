@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|nissan|370z",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2011__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "370Z® NISMO",
+    "370Z® TOURING",
+    "370Z®"
+  ],
+  "adds_by_trim": {
+    "370Z® NISMO": [
+      "350 hp @ 7,400 rpm (vs. 332 hp base)",
+      "276 lb-ft torque (vs. 270 lb-ft base)",
+      "19\" x 9.5\" front and 19\" x 10.5\" rear NISMO forged alloy wheels",
+      "245/40YR19 front and 285/35YR rear Yokohama ADVAN Sport tires",
+      "NISMO-tuned suspension with increased spring, dampening, stabilizer rates",
+      "NISMO reinforced 3-point front strut tower brace",
+      "NISMO front and rear performance body dampers",
+      "NISMO-embroidered cloth seats with signature red stitching",
+      "NISMO smooth leather-wrapped steering wheel and shift knob",
+      "NISMO plaque of authenticity with serial number"
+    ],
+    "370Z® TOURING": [
+      "Nissan Hard Drive Navigation System with 7.0\" VGA touch-screen monitor",
+      "Voice recognition with XM NavTraffic and XM NavWeather",
+      "Zagat Survey restaurant reviews",
+      "RearView Monitor",
+      "9.3 GB Music Box hard drive for digital music storage",
+      "USB connection port for iPod interface and compatible devices",
+      "Streaming audio via Bluetooth wireless technology",
+      "DVD video playback capability",
+      "Leather-appointed sport seats with synthetic suede inserts",
+      "Power heated seats with driver lumbar support"
+    ],
+    "370Z®": [
+      "VQ37VHR 3.7-liter DOHC 24-valve V6 engine producing 332 hp",
+      "270 lb-ft torque at 5,200 rpm",
+      "6-speed close-ratio manual transmission standard",
+      "Carbon-fiber composite driveshaft",
+      "12.6\" vented front and 12.6\" vented rear brake discs",
+      "4-wheel Anti-lock Braking System with Electronic Brake force Distribution",
+      "18\" aluminum-alloy wheels with Yokohama ADVAN Sport tires",
+      "2-link double-wishbone front suspension with aluminum subframe",
+      "4-link aluminum-alloy rear suspension",
+      "Vehicle-speed-sensitive power steering"
+    ]
+  }
+}

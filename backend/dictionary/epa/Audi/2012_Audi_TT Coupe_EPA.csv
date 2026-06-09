@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Audi,TT Coupe,quattro,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,31,26,,,,,
+2012,Audi,TT Coupe,TT RS Coupe,2.5L V5 (SIDI),2.5L V5 Turbo,Turbocharged,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,5,2.5,18,25,20,,,,,

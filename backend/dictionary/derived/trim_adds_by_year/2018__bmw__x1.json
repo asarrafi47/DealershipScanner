@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2018|bmw|x1",
+  "year": 2018,
+  "make": "BMW",
+  "model": "X1",
+  "ladder_id": "brochure_llm_2018__bmw__x1",
+  "source": "brochure_llm",
+  "trims_available": [
+    "xDrive28i",
+    "sDrive28i"
+  ],
+  "adds_by_trim": {
+    "xDrive28i": [
+      "All-wheel drive system",
+      "0-60 mph in 6.3 seconds (vs. 6.6 seconds)",
+      "Slightly reduced fuel economy: 22/31/25 mpg (vs. 23/32/26 mpg)"
+    ]
+  }
+}

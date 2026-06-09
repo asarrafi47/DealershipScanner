@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2022|ford|transitconnect",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_llm_2022__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TITANIUM",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "TITANIUM": [
+      "Voice-Activated Touchscreen Navigation System standard",
+      "Dual-zone electronic automatic temperature control available",
+      "Heated first-row seats available",
+      "Power-folding heated sideview mirrors available",
+      "Wireless phone charging available",
+      "MyKey technology available"
+    ],
+    "XLT": [
+      "Voice-Activated Touchscreen Navigation System standard",
+      "Dual-zone electronic automatic temperature control available",
+      "Heated first-row seats available",
+      "Power-folding heated sideview mirrors available",
+      "Wireless phone charging available",
+      "MyKey technology available",
+      "Ebony seating with manual lumbar support on driver seat",
+      "Fold-flat front-passenger seat back",
+      "Cruise control standard",
+      "SYNC 3 with 6.5-inch LCD touchscreen standard"
+    ],
+    "XL": [
+      "SYNC 3 with 6.5-inch LCD touchscreen standard",
+      "2 smart-charging USB ports standard",
+      "Apple CarPlay and Android Auto compatibility available",
+      "Voice-Activated Touchscreen Navigation System optional",
+      "Available SiriusXM with 3-month All Access trial",
+      "Cruise control available",
+      "FordPass Connect with 4G LTE Wi-Fi hotspot capability available"
+    ]
+  }
+}

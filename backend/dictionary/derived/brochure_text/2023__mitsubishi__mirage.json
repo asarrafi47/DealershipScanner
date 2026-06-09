@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2023|mitsubishi|mirage",
+  "year": 2023,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2023_Mitsubishi_Mirage_Brochure.pdf",
+  "page_count": 33,
+  "all_pages": false,
+  "trim_hint_pages": [
+    23
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 23,
+      "trim_hint": true,
+      "text": "THE 2023 MIRAGE & MIRAGE G4 > 06 TRIMS\nES / LE / BE / SE\n> K E Y FEAT URES\n> ENGINE > FUEL ECONOMY\n1.2L MIVEC DOHC 3-cylinder 39 Combined MPG for Mirage2\n37 Combined MPG for Mirage G43\n> FRONT TRANSMISSION > FUEL CAPACITY\nContinuous Variable 9.2 gallons\nTransmission (CVT)\n> DIMENSIONS > FUEL SYSTEM\n151.4\" L / 65.6\" W / 59.4\" H for Mirage ECI-MULTI\n169.5\u201dL / 65.7\u201dW / 59.2\u201dH for Mirage G4\n> CARGO CAPACITY > POWERTRAIN\nLIMITED WARRANTY\n17.1 / 47.0 cubic feet* for Mirage\n12.6 cubic feet* for Mirage G4 10-Year / 100,000-Mile\n*Rear seats up/down.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 23 ---\nTHE 2023 MIRAGE & MIRAGE G4 > 06 TRIMS\nES / LE / BE / SE\n> K E Y FEAT URES\n> ENGINE > FUEL ECONOMY\n1.2L MIVEC DOHC 3-cylinder 39 Combined MPG for Mirage2\n37 Combined MPG for Mirage G43\n> FRONT TRANSMISSION > FUEL CAPACITY\nContinuous Variable 9.2 gallons\nTransmission (CVT)\n> DIMENSIONS > FUEL SYSTEM\n151.4\" L / 65.6\" W / 59.4\" H for Mirage ECI-MULTI\n169.5\u201dL / 65.7\u201dW / 59.2\u201dH for Mirage G4\n> CARGO CAPACITY > POWERTRAIN\nLIMITED WARRANTY\n17.1 / 47.0 cubic feet* for Mirage\n12.6 cubic feet* for Mirage G4 10-Year / 100,000-Mile\n*Rear seats up/down."
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2012|mazda|mx5",
+  "year": 2012,
+  "make": "Mazda",
+  "model": "MX-5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Select",
+    "Sport",
+    "Platinum",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

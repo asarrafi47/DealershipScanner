@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2010|toyota|sequoia",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_llm_2010__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Available only with 5.7-liter V8 engine option",
+      "Higher MSRP positioning ($55,680–$58,905 vs. Limited $48,640–$51,865)"
+    ],
+    "Limited": [
+      "Available only with 5.7-liter V8 engine",
+      "Toyota Electronic Modulated Suspension (H-TEMS) on 4x4 models",
+      "Higher MSRP than SR5 ($48,640–$51,865)"
+    ],
+    "SR5": [
+      "Choice of 4.6-liter or 5.7-liter V8 engine",
+      "6-speed electronically controlled automatic transmission with ECT-i",
+      "Power-assisted rack-and-pinion steering with variable flow control",
+      "4-wheel Anti-lock Brake System with Electronic Brake-force Distribution",
+      "Vehicle Stability Control and Traction Control standard",
+      "Available 4x2 or 4x4 with multi-mode 4-wheel drive and locking center differential on 4x4",
+      "Reinforced body-on-frame construction"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|chevrolet|volt",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "brochure_llm_2018__chevrolet__volt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Leather-appointed seating",
+      "Heated rear outboard seats",
+      "8-speaker Bose premium sound system with Richbass woofer",
+      "Chevrolet MyLink Radio with Navigation including GPS and SiriusXM NavTraffic",
+      "SiriusXM Travel Link with 3-month trial subscription",
+      "SiriusXM NavTraffic with 3-month trial subscription"
+    ],
+    "LT": [
+      "Rear 60/40 split-folding seatback",
+      "Premium cloth seating",
+      "Heated driver and front passenger seats with auto-heated activation",
+      "6-speaker sound system",
+      "Chevrolet MyLink 8-inch touchscreen radio with AM/FM/SiriusXM and Apple CarPlay",
+      "OnStar Basic Plan for five years with remote start and door lock features",
+      "OnStar 4G LTE with Wi-Fi hotspot for seven devices including 3-month data trial",
+      "SiriusXM Satellite Radio All Access Package with 3-month trial",
+      "Two USB ports in front storage bin"
+    ]
+  }
+}

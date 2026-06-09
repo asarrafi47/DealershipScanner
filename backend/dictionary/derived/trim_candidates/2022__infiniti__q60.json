@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2022|infiniti|q60",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "Q60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxe",
+    "Pure",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

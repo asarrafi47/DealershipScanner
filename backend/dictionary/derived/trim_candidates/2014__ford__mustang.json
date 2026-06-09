@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2014|ford|mustang",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Mustang",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Sport",
+    "SE",
+    "Premium",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

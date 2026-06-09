@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2021|jeep|grandcherokee",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "brochure_llm_2021__jeep__grandcherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Trackhawk",
+    "SRT",
+    "Limited",
+    "Laredo",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Trackhawk": [
+      "6.2L supercharged V8 engine with 707 horsepower and 645 lb-ft torque",
+      "Adaptive electronic transmission control with 7 drive modes including Track and Valet",
+      "15.75 x 1.42 Brembo 6-piston fixed caliper rotors front and rear",
+      "SLA independent front suspension with aluminum components and Bilstein ADS",
+      "Multilink rear suspension with Bilstein ADS and independent upper links",
+      "67.9-inch height at roof rail and 65.7/64.8-inch track dimensions"
+    ],
+    "SRT": [
+      "5.7L V8 engine with 475 horsepower and 390 lb-ft torque with Fuel Saver Technology",
+      "Adaptive electronic transmission with driver-interactive manual control via paddle shifters",
+      "15.0 x 1.34 two-piece aluminum performance rotors with Brembo 6-piston calipers",
+      "SLA independent front suspension with aluminum clevis and Bilstein ADS",
+      "Multilink rear suspension with Bilstein ADS and independent upper control arms",
+      "3.07:1 axle ratio and SRT-tuned electric steering"
+    ],
+    "Limited": [
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Variable valve timing for improved performance and fuel efficiency",
+      "13 x 1.3 vented disc front brakes and 13 x 0.55 rear disc brakes",
+      "Short and long-arm independent front suspension with gas-charged twin-tube coil-over shocks",
+      "Multilink rear suspension with Bilstein Adaptive Damping and aluminum components",
+      "10.8-inch ground clearance and 36.1-degree approach angle for off-road capability"
+    ],
+    "Laredo": [
+      "Base 3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "8-speed transmission with electronically modulated torque converter clutch and Eco Mode",
+      "4-channel, 4-wheel antilock brake system with electronic stability control",
+      "Independent front and rear suspension with coil springs and hollow stabilizer bars",
+      "24.6-gallon fuel tank capacity for extended driving range",
+      "Uniframe construction with welded and bonded body panels and frame members"
+    ],
+    "Sport": [
+      "Base powertrain and suspension options with standard features for entry-level trim"
+    ]
+  }
+}

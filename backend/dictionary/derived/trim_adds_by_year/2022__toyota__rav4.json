@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2022|toyota|rav4",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_web_2022__toyota__rav4",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "GR Sport",
+    "Limited",
+    "XSE",
+    "Woodland",
+    "LE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "GR Sport": [
+      "PHEV powertrain exclusively with 320 hp",
+      "Chassis hardware tuned for performance feel",
+      "Large 20-inch wheels with red brake calipers",
+      "Rear spoiler for sporty styling",
+      "98 mpg-e combined fuel economy estimate"
+    ],
+    "Limited": [
+      "12.9-inch infotainment touchscreen",
+      "Nine-speaker JBL premium sound system"
+    ],
+    "XSE": [
+      "12.9-inch infotainment touchscreen",
+      "Nine-speaker JBL premium sound system",
+      "107 mpg-e combined fuel economy estimate on PHEV variant"
+    ],
+    "Woodland": [
+      "All-terrain tires with increased ride height",
+      "Rigid Industries integrated LED fog lamps",
+      "Standard AWD powertrain",
+      "Built-in roof rail cross bars",
+      "Standard rear trailer hitch",
+      "4Runner-inspired front bumper styling"
+    ],
+    "LE": [
+      "Cloth seat upholstery",
+      "Automatic climate control",
+      "Multiple USB-C ports distributed around cabin"
+    ],
+    "SE": [
+      "12.3-inch reconfigurable driver display",
+      "10.5-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "LED headlights and taillights",
+      "Cloth seat upholstery",
+      "Automatic climate control",
+      "Six-speaker sound system",
+      "48/42 mpg city/highway on hybrid FWD variant"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/rav4/"
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2019|jaguar|xe",
+  "year": 2019,
+  "make": "Jaguar",
+  "model": "XE",
+  "ladder_id": "brochure_llm_2019__jaguar__xe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRESTIGE",
+    "PREMIUM",
+    "XE"
+  ],
+  "adds_by_trim": {
+    "PRESTIGE": [
+      "18-inch or 19-inch alloy wheels",
+      "Grained leather seats",
+      "Front seats with 4-way power lumbar support",
+      "Heated front seats",
+      "Dark Satin Brushed Aluminum interior finishers",
+      "Heated soft grain leather sport steering wheel",
+      "Power steering column with memory function",
+      "Metal treadplates with Jaguar script",
+      "Ambient interior lighting"
+    ],
+    "PREMIUM": [
+      "17-inch or 18-inch alloy wheels",
+      "Meridian sound system upgrade",
+      "Memory function with 2 settings for driver seat and mirrors",
+      "Auto-dimming, power fold, heated door mirrors",
+      "Garage Door Opener HomeLink",
+      "Split-fold rear seat 40:20:40 configuration",
+      "Navigation Pro with InControl Apps",
+      "InControl Protect Pro services and Wi-Fi hotspot",
+      "InControl Remote connectivity"
+    ],
+    "XE": [
+      "17-inch alloy wheels",
+      "Halogen headlights",
+      "Luxtec seats",
+      "10-way front seat power adjustment",
+      "Gloss Black interior finisher",
+      "All Surface Progress Control with memory",
+      "Electric tilt and slide glass moonroof",
+      "Chrome window surround",
+      "Soft grain leather steering wheel",
+      "Rear View Camera"
+    ]
+  }
+}

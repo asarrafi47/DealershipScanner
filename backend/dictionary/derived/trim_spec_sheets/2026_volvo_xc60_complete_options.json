@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_volvo_xc60_complete_options",
+  "make": "Volvo",
+  "models": [
+    "XC60",
+    "XC60"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "B5": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ],
+    "T8": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); All-Wheel Drive"
+      }
+    ]
+  }
+}

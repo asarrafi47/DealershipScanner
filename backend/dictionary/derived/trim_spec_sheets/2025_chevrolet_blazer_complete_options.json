@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2025_chevrolet_blazer_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Blazer",
+    "Blazer"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Electric motor Permanent magnet motor; kWh AWD: 279 mi (449 km)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Electric motor Permanent magnet motor; kWh AWD: 279 mi (449 km)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: [Brochure] Bose audio"
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|infiniti|fx",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "FX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

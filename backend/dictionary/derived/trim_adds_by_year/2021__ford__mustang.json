@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2021|ford|mustang",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_2021__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds base infotainment system",
+      "Adds standard seating surfaces",
+      "Adds standard wheel package",
+      "Adds EcoBoost or V8 powertrain options",
+      "Adds core safety restraint systems"
+    ],
+    "GT": [
+      "Adds available Performance Package",
+      "Adds rear spoiler",
+      "Adds hood vents",
+      "Adds Pony grille insert"
+    ],
+    "Limited": [
+      "Adds carbon fiber gear shift knob",
+      "Adds side and quarter window scoops",
+      "Adds park lamp curtains",
+      "Adds wheel center caps and wheel lock kit",
+      "Adds full vehicle covers and floor liners"
+    ]
+  }
+}

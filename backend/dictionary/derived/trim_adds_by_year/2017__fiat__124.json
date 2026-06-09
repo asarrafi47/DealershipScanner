@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|fiat|124",
+  "year": 2017,
+  "make": "Fiat",
+  "model": "124",
+  "ladder_id": "brochure_llm_2017__fiat__124",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Abarth",
+    "Lusso",
+    "Classic"
+  ],
+  "adds_by_trim": {
+    "Abarth": [
+      "1.4L MultiAir Turbo I4 164 hp (vs. 160 hp)",
+      "17-inch Gun Metal aluminum wheels",
+      "6-speed AISIN Automatic transmission with paddle shifters—Optional",
+      "Aluminum-accent Sport pedals",
+      "Perforated leather-wrapped Sport steering wheel",
+      "Front and rear Bilstein selective damping shock absorbers",
+      "Performance-tuned with Sport Mode Selector",
+      "Matte Gray instrument panel accents",
+      "Mechanical limited-slip differential",
+      "Front strut tower brace"
+    ],
+    "Lusso": [
+      "17-inch premium Silver aluminum wheels",
+      "AM/FM radio with Bluetooth and 7-inch display",
+      "Automatic Temperature Control (ATC)",
+      "Perforated leather-trimmed heated seats",
+      "Multimedia Control Knob",
+      "Piano Black instrument panel accents",
+      "Rain-sensitive wipers",
+      "Remote Proximity Entry with Push-button Start",
+      "Sport front and rear fascias",
+      "Sport-tuned quad bright-tip exhaust"
+    ],
+    "Classic": [
+      "1.4L MultiAir Turbo I4 160 hp with 6-speed Manual transmission",
+      "16-inch Silver aluminum wheels",
+      "AM/FM Bluetooth radio with 3-inch display and four speakers",
+      "Bifunctional projector halogen headlamps",
+      "Body-color A-Pillar header, side sill and door handles",
+      "Body-color power exterior mirrors",
+      "Day/night rearview mirror",
+      "Dual-tip stainless exhaust",
+      "Front double-wishbone suspension",
+      "Leather-wrapped steering wheel with audio controls"
+    ]
+  }
+}

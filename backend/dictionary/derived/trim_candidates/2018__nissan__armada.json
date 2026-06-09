@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2018|nissan|armada",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Armada",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Limited",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

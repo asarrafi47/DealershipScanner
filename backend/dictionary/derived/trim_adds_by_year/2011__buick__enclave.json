@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|buick|enclave",
+  "year": 2011,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2011__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CXL",
+    "CX"
+  ],
+  "adds_by_trim": {
+    "CXL": [
+      "20-inch chrome-clad aluminum wheels (vs 19-inch machined aluminum)",
+      "9-spoke chrome-clad aluminum wheel option",
+      "Compact steel spare wheel standard"
+    ],
+    "CX": [
+      "3.6L VVT V-6 direct injection engine with 288 hp and 270 lb-ft torque",
+      "EPA-estimated 17 city / 24 highway MPG (FWD) or 16 city / 22 highway (AWD)",
+      "19-inch 15-spoke machined aluminum wheels standard",
+      "Tire sealant and inflator kit",
+      "Seating capacity of 2/2/3 or 2/3/3 configuration",
+      "22-gallon fuel tank",
+      "115 cubic feet cargo volume with all rows folded"
+    ]
+  }
+}

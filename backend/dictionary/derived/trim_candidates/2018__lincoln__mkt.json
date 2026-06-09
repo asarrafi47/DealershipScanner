@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2018|lincoln|mkt",
+  "year": 2018,
+  "make": "Lincoln",
+  "model": "MKT",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Reserve",
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

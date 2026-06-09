@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2019|ford|transit",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Transit",
+  "ladder_id": "brochure_llm_2019__ford__transit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "350 HD DRW",
+    "350 SRW",
+    "250 SRW",
+    "150 SRW"
+  ],
+  "adds_by_trim": {
+    "350 HD DRW": [
+      "Dual rear wheels for maximum payload capacity and stability",
+      "High roof height option with 12 to 15 passenger capacity",
+      "Highest GVWR rating at 10,360 lbs with 4,640 lbs payload",
+      "Maximum towing up to 7,500 lbs with Power Stroke diesel engine"
+    ],
+    "350 SRW": [
+      "Long wheelbase extended (LWB-EL) 148-inch configuration available",
+      "Up to 15 passenger capacity with high roof configuration",
+      "GVWR rating increased to 10,360 lbs with 4,570 lbs payload",
+      "Towing capacity up to 7,100 lbs with diesel engine option"
+    ],
+    "250 SRW": [
+      "Mid-range wheelbase and roof configurations for balanced capacity",
+      "GVWR rating of 9,500 lbs with 4,070 lbs payload capacity",
+      "Multiple configuration options with regular and long wheelbases",
+      "Towing ratings up to 6,700 lbs with EcoBoost engine"
+    ],
+    "150 SRW": [
+      "3.7L Ti-VCT V6 engine as standard across all configurations",
+      "Regular wheelbase 130-inch option with low or mid-roof heights",
+      "Seating capacities from 5 to 10 passengers depending on configuration",
+      "Base GVWR of 8,600 lbs with 3,670 lbs payload capacity"
+    ]
+  }
+}

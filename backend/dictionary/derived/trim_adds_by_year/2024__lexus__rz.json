@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2024|lexus|rz",
+  "year": 2024,
+  "make": "lexus",
+  "model": "RZ",
+  "ladder_id": "brochure_llm_2024__lexus__rz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RZ 450e Luxury",
+    "RZ 450e Premium",
+    "RZ 300e"
+  ],
+  "adds_by_trim": {
+    "RZ 450e Luxury": [
+      "Higher electric output and performance compared to RZ 300e",
+      "220-mile EPA estimated range with 18-inch wheels"
+    ],
+    "RZ 450e Premium": [
+      "Premium positioning above RZ 450e Luxury trim level",
+      "220-mile EPA estimated range with 18-inch wheels"
+    ],
+    "RZ 300e": [
+      "266-mile EPA estimated driving range with 18-inch wheels",
+      "Base electric vehicle powertrain for RZ lineup"
+    ]
+  }
+}

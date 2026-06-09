@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_mercedes_gle-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "GLE-Class",
+    "GLE-Class"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "With its diverse configurations, potent engine options, and advanced safety and; With its diverse configurations, potent engine options, and advanced safety and technology features, the GLE-Class caters to the most discerning drivers."
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "With its diverse configurations, potent engine options, and advanced safety and; With its diverse configurations, potent engine options, and advanced safety and technology features, the GLE-Class caters to the most discerning drivers."
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2023|infiniti|qx55",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "QX55",
+  "ladder_id": "2023_infiniti_qx55",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Luxe",
+    "Essential",
+    "Sensory"
+  ],
+  "adds_by_trim": {
+    "Essential": [
+      "Includes Luxe standard features plus Essential trim equipment",
+      "Coupe-crossover premium content step above Luxe"
+    ],
+    "Sensory": [
+      "Includes Essential plus Sensory luxury and technology package",
+      "Highest QX55 trim in 2025 brochure"
+    ],
+    "Luxe": [
+      "2.0L VC-Turbo 4-cylinder engine with Continuously Variable Transmission",
+      "Paddle shifters",
+      "INFINITI Intelligent All-Wheel Drive",
+      "20-inch dark-painted and machine-finished aluminum-alloy wheels with run-flat tires",
+      "LED automatic-on/off headlights with signature daytime running lights and fog lights",
+      "Body-color door handles with chrome accent and LED welcome light",
+      "Black roof rails with acoustic front-row side window glass",
+      "Dual zone automatic climate control with rear seat vents",
+      "Electronic parking brake with Remote Engine Start",
+      "Power moonroof with power rear liftgate and Intelligent Key push button ignition"
+    ]
+  }
+}

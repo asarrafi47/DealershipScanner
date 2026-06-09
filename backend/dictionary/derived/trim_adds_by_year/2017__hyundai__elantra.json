@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2017|hyundai|elantra",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2017__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Eco"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Lane Departure Warning with Lane Keep Assist",
+      "Blind Spot Detection and Lane Change Assist (standard)",
+      "Rear Cross-traffic Alert",
+      "Ultimate Package available"
+    ],
+    "SE": [
+      "Blind Spot Detection and Lane Change Assist (available)"
+    ],
+    "Eco": [
+      "Blind Spot Detection and Lane Change Assist (standard)",
+      "Superior fuel economy"
+    ]
+  }
+}

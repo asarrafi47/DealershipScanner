@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2012|toyota|rav4",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "2013_toyota_rav4_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "61.4/61.4 (V6: 61.8/61.8)"
+    ],
+    "Limited": [
+      "XM services require a subscription after 90-day trial period. Subscriptions governed by XM Customer Agreement available at xmradio.com. If you decide to continue your",
+      "ed by their manufacturer, not Toyota. 19. Availability and accuracy of the information provid",
+      "into the ignition switch or bring a Smart Key fob"
+    ],
+    "Sport": [
+      "Sport-tuned suspension with springs and shock absorbers",
+      "Blackout sport-trim halogen headlamps with auto-off",
+      "17-inch 5-spoke alloy wheels with P225/65R17 tires",
+      "Integrated fog lamps"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Premium": 1,
+      "Sport": 0
+    }
+  }
+}

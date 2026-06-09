@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2019|landrover|rangeroversport",
+  "year": 2019,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2019__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVR",
+    "Autobiography",
+    "Supercharged Dynamic",
+    "HST",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SVR": [
+      "Information not provided in brochure excerpt"
+    ],
+    "Autobiography": [
+      "Information not provided in brochure excerpt"
+    ],
+    "Supercharged Dynamic": [
+      "V8 Supercharged engine with 567 hp and 4.3 second 0-60 acceleration"
+    ],
+    "HST": [
+      "P400 3.0L Ingenium In-line 6-cylinder with MHEV technology standard",
+      "21-inch 9-spoke Style 9001 wheels with Gloss Black finish",
+      "Optional 22-inch 5 split-spoke Style 5086 wheels exclusive to HST",
+      "Fully Gloss Black hood, side vents, tailgate appliqué, and script",
+      "Gloss Black door handle surrounds and HST tailgate badging",
+      "Duo Tone perforated Windsor leather seats with suedecloth bolsters",
+      "16-way heated and cooled front seats with heated rear seats",
+      "Premium LED headlights with signature DRL and Auto High Beam Assist",
+      "Meridian Surround Sound System with 18 speakers and 825W subwoofer"
+    ],
+    "HSE": [
+      "Information not provided in brochure excerpt"
+    ],
+    "SE": [
+      "Base model with standard features including climate control and driver assistance systems"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2019|ford|superduty",
+  "year": 2019,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_llm_2019__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LARIAT",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Fully loaded trim level with premium amenities"
+    ],
+    "LARIAT": [
+      "LARIAT Sport Package on 4x4 Crew Cab with blacked-out exterior trim",
+      "Black-painted aluminum wheels",
+      "1,000-watt B&O PLAY Premium Audio System by HARMAN",
+      "FordPass Connect 4G LTE Wi-Fi hotspot (up to 10 devices)"
+    ],
+    "XLT": [
+      "XLT Value Package available with accessory options"
+    ],
+    "XL": [
+      "Work-ready base trim with electronic-locking rear differential (FX4)",
+      "Transfer case and fuel tank skid plates (FX4 Off-Road Package)",
+      "Hill Descent Control (FX4 Off-Road Package)",
+      "Off-road-tuned shocks for low-speed crawling capability",
+      "Electronic shift-on-the-fly 4WD with manual-locking front hubs"
+    ]
+  }
+}

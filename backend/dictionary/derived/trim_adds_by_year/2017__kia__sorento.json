@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2017|kia|sorento",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2017__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SXL",
+    "SX",
+    "EX",
+    "LX",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SXL": [
+      "Premium Nappa leather seat trim",
+      "2nd-row heated outboard seats",
+      "Ventilated front seats",
+      "19-inch chrome-finish alloy wheels",
+      "Front & rear stainless-steel accent plates",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Surround-View Monitor"
+    ],
+    "SX": [
+      "19-inch machined-finish alloy wheels",
+      "Panoramic sunroof with power sunshade",
+      "Power-folding outside mirrors with turn-signal indicators",
+      "Electronic parking brake",
+      "Advanced Smart Cruise Control",
+      "Autonomous Emergency Braking",
+      "Forward Collision Warning System"
+    ],
+    "EX": [
+      "18-inch alloy wheels",
+      "Roof rails with chrome finish",
+      "Front LED fog lights",
+      "Leather-trimmed 1st and 2nd-row seats",
+      "Heated front seats",
+      "Dual-zone automatic temperature control with auto defog and ionizer",
+      "UVO eServices 8-inch touchscreen with navigation and SiriusXM"
+    ],
+    "LX": [
+      "Roof rails with silver finish",
+      "HID headlights with Auto-Leveling & Dynamic Bending Light",
+      "Illuminated door-handle pockets",
+      "Acoustic glass front windshield and side windows",
+      "Rear-Camera Display",
+      "Rear Park Assist System",
+      "UVO eServices 7-inch touchscreen with Apple CarPlay & Android Auto"
+    ],
+    "L": [
+      "17-inch alloy wheels and tires",
+      "Clear lens projection headlights",
+      "6-speed electronically controlled Sportmatic transmission",
+      "Drive Mode Select",
+      "Cruise control",
+      "AM/FM/CD/MP3/SiriusXM audio system",
+      "Bluetooth wireless technology"
+    ]
+  }
+}

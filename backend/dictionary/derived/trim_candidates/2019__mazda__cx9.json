@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2019|mazda|cx9",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "CX-9",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Signature",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

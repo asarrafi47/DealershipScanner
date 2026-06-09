@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|chevrolet|cruze",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2012__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS",
+    "ECO"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Outside power-adjustable heated manual-folding body-color mirrors",
+      "Chrome door handles with keyless entry buttons",
+      "Keyless access with keyless push-button start",
+      "Ambient LED backlighting on center instrument panel"
+    ],
+    "2LT": [
+      "Foglamps",
+      "RS Appearance Package with unique fascias, rocker moldings, rear spoiler, and uplevel instrument cluster",
+      "Rear Park Assist"
+    ],
+    "1LT": [
+      "Cruise control steering wheel-mounted",
+      "Outside power-adjustable manual-folding body-color mirrors",
+      "Remote Keyless Entry"
+    ],
+    "LS": [
+      "Halogen composite headlamps with Automatic Exterior Lamp Control",
+      "Acoustic laminated windshield with Solar-Ray light tinting",
+      "Black grille insert with chrome surround",
+      "Electric rear window defogger",
+      "Center console with sliding armrest, storage, and dual cup holders",
+      "Driver Information Center with oil life, tire pressure monitors, and outside temperature display",
+      "Carpeted front and rear floor mats",
+      "ECOTEC 1.8L DOHC 4-cylinder engine with 138 horsepower"
+    ],
+    "ECO": [
+      "Unique front fascia air dam and lower front grille air shutter for improved aerodynamics",
+      "Tire sealant and compressor kit instead of standard jack and spare tire"
+    ]
+  }
+}

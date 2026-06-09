@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2016|buick|envision",
+  "year": 2016,
+  "make": "Buick",
+  "model": "Envision",
+  "ladder_id": "brochure_llm_2016__buick__envision",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM II",
+    "PREMIUM I"
+  ],
+  "adds_by_trim": {
+    "PREMIUM II": [
+      "Audio System with Navigation featuring 8\" touchscreen, GPS, CD, MP3, SD card reader, 2 USB ports",
+      "Articulating HID projector-beam headlamps with IntelliBeam auto high-beam and automatic leveling",
+      "Head-Up Display (HUD)",
+      "Automatic Park Assist for parallel and perpendicular parking",
+      "Driver-adjustable thigh support with ventilated and cooled front seats",
+      "Driver Confidence Package: Adaptive Cruise Control, Surround Vision Camera, Front Automatic Braking",
+      "Panoramic tilt-sliding moonroof"
+    ],
+    "PREMIUM I": [
+      "2.0L Turbo DOHC SIDI engine with VVT and 252 hp",
+      "Intelligent Twin-Clutch All-Wheel Drive with automatic locking rear differential",
+      "6-speed automatic transmission with Driver Shift Control",
+      "Perforated leather-appointed seat trim with heated front and rear outboard seats",
+      "Tri-zone automatic climate control with active noise cancellation",
+      "8\" IntelliLink touchscreen with AM/FM, CD, MP3, auxiliary, SD card, 2 USB ports",
+      "Bose premium 7-speaker system with amplifier",
+      "10 airbags including knee and roof rail protection",
+      "Forward Collision Alert, Lane Keep Assist, Lane Departure Warning, Rear Cross Traffic Alert",
+      "OnStar 4G and built-in Wi-Fi hotspot for up to 7 devices with 3GB data trial"
+    ]
+  }
+}

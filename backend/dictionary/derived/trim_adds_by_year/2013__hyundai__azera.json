@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|hyundai|azera",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_llm_2013__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology Package",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Technology Package": [
+      "Panoramic tilt-and-slide sunroof with power rear window sunshade",
+      "Manual rear side window sunshades",
+      "Power tilt-and-telescopic steering wheel with audio, Bluetooth and cruise controls",
+      "Ventilated front seats",
+      "Integrated Memory System for power driver seat, mirrors and steering column",
+      "Driver seat cushion extension",
+      "Interior Ambient Lighting",
+      "550-Watt Infinity AM/FM/SiriusXM/CD/MP3 Logic 7 Surround Sound with 14 speakers",
+      "High Intensity Discharge HID Xenon headlights",
+      "19-inch Hyper Silver alloy wheels"
+    ],
+    "Standard": [
+      "293 HP 3.3L Gasoline Direct Injection DOHC V6 with Dual Continuously Variable Valve Timing",
+      "6-speed SHIFTRONIC automatic transmission",
+      "Active ECO System",
+      "SACHS Amplitude Selective Damper suspension",
+      "Proximity key entry with push-button start",
+      "Dual zone automatic temperature control",
+      "Premium leather seating surfaces",
+      "Heated front and rear seats",
+      "Power driver and front passenger seats",
+      "Leather steering wheel and shift knob"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|jeep|gladiator",
+  "year": 2022,
+  "make": "Jeep",
+  "model": "Gladiator",
+  "ladder_id": "brochure_2022__jeep__gladiator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Overland",
+    "High Altitude",
+    "Limited",
+    "Rubicon",
+    "Mojave",
+    "Willys",
+    "Altitude"
+  ],
+  "adds_by_trim": {
+    "Altitude": [
+      "Adds Uconnect Phone with Bluetooth hands-free capability",
+      "Adds SiriusXM satellite radio with three-month trial",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM Guardian connected services with 12-month complimentary trial",
+      "Adds remote vehicle start capability",
+      "Adds Wi-Fi hotspot functionality",
+      "Adds Alexa integration compatibility"
+    ],
+    "Willys": [
+      "Mid-range trim positioning between Big Bear and Mojave"
+    ],
+    "Mojave": [
+      "Performance hood, trail-tuned suspension for off-road dirt and sand driving"
+    ],
+    "Rubicon": [
+      "registered trademarks of Dana Corporation. Facebook is a"
+    ],
+    "Limited": [
+      "registered trademarks of Bridgestone Corporation. Dana and Trac-Lok are"
+    ],
+    "High Altitude": [],
+    "Overland": [
+      "registered trademark of Bluetooth SIG, Inc. Bridgestone and any Bridgestone products or service names are trademarks or"
+    ]
+  }
+}

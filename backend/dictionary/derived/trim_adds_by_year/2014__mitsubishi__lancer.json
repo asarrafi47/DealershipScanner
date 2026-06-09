@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2014|mitsubishi|lancer",
+  "year": 2014,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_llm_2014__mitsubishi__lancer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RALLIART",
+    "GT",
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "RALLIART": [
+      "Aluminum hood with heat extractor vent",
+      "Rear Ralliart bumper",
+      "Dual exhaust with finisher",
+      "Chrome side lower door molding",
+      "18-inch alloy wheels with P215/45R18 tires",
+      "Leather-wrapped sport steering wheel with silver accent",
+      "Leather-wrapped shift knob with shift boot (TC-SST)",
+      "Aluminum pedals",
+      "Gloss black I/P and front door accents with center console trim",
+      "Hill Start Assist (HSA)"
+    ],
+    "GT": [
+      "Bi-xenon HID headlights with leveling control and daytime running lights",
+      "Fog lights",
+      "Rear wing spoiler",
+      "Sport front grille and bumper",
+      "18-inch alloy wheels",
+      "Sport fabric seating surfaces",
+      "Leather-wrapped steering wheel with silver accent",
+      "Automatic climate control",
+      "Full-color LCD multi-information display"
+    ],
+    "SE": [
+      "Roof carrier plug-in accommodation",
+      "AWC badge",
+      "6-inch touch panel display audio system",
+      "SiriusXM Satellite Radio with 3-month prepaid subscription",
+      "Voice-activated Bluetooth hands-free phone system"
+    ],
+    "ES": [
+      "Halogen headlights with auto-off control",
+      "Auto on/off headlight control",
+      "Power side view mirrors with color-keyed design",
+      "Rear window defroster with timer",
+      "6-way adjustable driver's seat",
+      "4-way adjustable front passenger seat",
+      "Manual climate control",
+      "140-watt AM/FM/CD/MP3 audio system with 4 speakers",
+      "Monochromatic multi-information display",
+      "Steering wheel-mounted audio and cruise controls"
+    ]
+  }
+}

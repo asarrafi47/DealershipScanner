@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|mazda|mx5",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2016__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA MX-5 MIATA GRAND TOURING",
+    "MAZDA MX-5 MIATA CLUB",
+    "MAZDA MX-5 MIATA SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA MX-5 MIATA GRAND TOURING": [
+      "17-inch aluminum alloy wheels with Dark Silver finish",
+      "Auto on/off headlights with Adaptive Front-lighting System and High Beam Control",
+      "LED Daytime running lights",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Leather-trimmed sport seats with heated seats (three settings)",
+      "Heated side mirrors and auto-dimming driver's-side mirror",
+      "Rain-sensing windshield wipers",
+      "Automatic climate control",
+      "Navigation system",
+      "Blind Spot Monitoring, Rear Cross Traffic Alert, Lane Departure Warning System"
+    ],
+    "MAZDA MX-5 MIATA CLUB": [
+      "17-inch aluminum alloy wheels with Dark Gunmetal finish and 205/45 R17 high performance tires",
+      "MAZDA CONNECT Infotainment system with 7-inch full-color touch-screen display",
+      "Bose Surround Sound audio system with AudioPilot 2 (9 speakers including headrest-mounted)",
+      "Multifunction Commander control and HD Radio",
+      "Aha, Pandora, and Stitcher internet radio integration",
+      "SiriusXM Satellite Radio with 4-month trial subscription",
+      "Sport-tuned suspension with Bilstein shock absorbers and limited-slip differential (MT models)",
+      "Painted black front air dam and rear lip spoiler (MT models)",
+      "Black cloth seats with red stitching",
+      "Dual USB audio input ports"
+    ],
+    "MAZDA MX-5 MIATA SPORT": [
+      "SKYACTIV-G 2.0L DOHC 16-valve 4-cylinder engine with 155 hp and 148 lb-ft torque",
+      "6-speed SKYACTIV-MT manual or 6-speed Sport automatic transmission with paddle shifters",
+      "16-inch aluminum alloy wheels with 195/50 R16 high performance tires",
+      "LED headlights and Daytime running lights",
+      "Black-painted power side mirrors and black cloth convertible top with glass rear window",
+      "Power windows with one-touch-down and Leather-wrapped steering wheel",
+      "Bluetooth hands-free phone and audio streaming with 6-speaker AM/FM/CD system",
+      "Dual front and side-impact air bags with ABS and Electronic Brakeforce Distribution",
+      "Double-wishbone front suspension and independent multilink rear suspension",
+      "Black cloth sport seats"
+    ]
+  }
+}

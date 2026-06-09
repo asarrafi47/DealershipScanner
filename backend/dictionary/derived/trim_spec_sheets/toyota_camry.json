@@ -1,0 +1,40 @@
+{
+  "ladder_id": "toyota_camry",
+  "make": "Toyota",
+  "models": [
+    "Camry"
+  ],
+  "year_min": 2025,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Base hybrid trim; Automatic (AV-S6)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S6); All-Wheel Drive"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S6); All-Wheel Drive"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Premium audio available"
+      }
+    ],
+    "XSE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S6); All-Wheel Drive"
+      }
+    ]
+  }
+}

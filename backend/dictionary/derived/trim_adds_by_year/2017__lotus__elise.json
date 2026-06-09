@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2017|lotus|elise",
+  "year": 2017,
+  "make": "Lotus",
+  "model": "Elise",
+  "ladder_id": "brochure_web_2017__lotus__elise",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Elise Cup 250",
+    "Elise Sport 220"
+  ],
+  "adds_by_trim": {
+    "Elise Sport 220": [
+      "3.5L supercharged V6 engine producing 220 horsepower",
+      "Six-speed manual transmission",
+      "Independent double-wishbone suspension front and rear",
+      "Ventilated disc brakes with ABS",
+      "Power steering",
+      "Air conditioning",
+      "Body-color bumpers and door handles",
+      "16-inch forged aluminum wheels with performance tires"
+    ],
+    "Elise Cup 250": [
+      "3.5L supercharged V6 engine upgraded to 250 horsepower",
+      "Enhanced suspension tuning for track performance",
+      "Larger diameter front brake rotors for increased stopping power",
+      "Cup-specific aerodynamic bodywork and splitter",
+      "Lightweight forged aluminum wheels",
+      "Cup-spec performance tires",
+      "Reinforced roll cage for structural rigidity"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/elise/"
+}

@@ -19,6 +19,9 @@ def _fresh_app(monkeypatch: pytest.MonkeyPatch, tmp_path, **env):
     if flask_env == "production":
         monkeypatch.setenv("SECRET_KEY", "pytest-secret-key-do-not-use-in-deployment")
         monkeypatch.setenv("ADMIN_PASSWORD", "pytest-admin-bootstrap-do-not-use-in-deployment")
+        from conftest import apply_production_credential_encryption_env
+
+        apply_production_credential_encryption_env(monkeypatch)
     for k, v in env.items():
         monkeypatch.setenv(k, v)
     import backend.main as main
@@ -67,6 +70,54 @@ def test_sticker_preview_requires_premium_when_billing_on(monkeypatch: pytest.Mo
     client = main.app.test_client()
     rv = client.get("/car/7/window-sticker-preview.png")
     assert rv.status_code == 403
+
+
+def test_sticker_preview_requires_login_in_production_when_billing_off(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    main = _fresh_app(
+        monkeypatch,
+        tmp_path,
+        FLASK_ENV="production",
+        BILLING_STRIPE_ENABLED="0",
+    )
+    car = {
+        "id": 7,
+        "vin": "1C6RRFFG4NN401203",
+        "make": "Ram",
+        "inactive": 0,
+        "gallery": [],
+    }
+    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: car)
+
+    from pathlib import Path
+
+    fake_pdf = tmp_path / "sticker.pdf"
+    fake_pdf.write_bytes(b"%PDF-1.4")
+    fake_png = tmp_path / "sticker.png"
+    fake_png.write_bytes(b"\x89PNG\r\n\x1a\n")
+
+    monkeypatch.setattr(
+        "backend.enrichment.window_sticker_service.window_sticker_visual_local_path",
+        lambda *_a, **_k: fake_pdf,
+    )
+    monkeypatch.setattr(
+        "backend.enrichment.window_sticker_service.ensure_window_sticker_for_car",
+        lambda *_a, **_k: None,
+    )
+    monkeypatch.setattr(
+        "backend.enrichment.window_sticker_service.ensure_sticker_preview_png",
+        lambda _path: fake_png,
+    )
+
+    client = main.app.test_client()
+    rv = client.get("/car/7/window-sticker-preview.png")
+    assert rv.status_code == 403
+
+    with client.session_transaction() as sess:
+        sess["user_id"] = 99
+    rv2 = client.get("/car/7/window-sticker-preview.png")
+    assert rv2.status_code == 200
 
 
 def test_car_chat_requires_login_in_production_when_billing_off(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
@@ -130,3 +181,47 @@ def test_car_chat_daily_limit_is_per_user(monkeypatch: pytest.MonkeyPatch, tmp_p
         body = rv2.get_json()
         assert body is not None
         assert body.get("error") == "user_chat_limit_reached"
+
+
+def test_car_page_hides_ask_ai_for_guests(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    main = _fresh_app(
+        monkeypatch,
+        tmp_path,
+        BILLING_STRIPE_ENABLED="1",
+    )
+    car = {
+        "id": 55,
+        "vin": "1C6RRFFG4NN401299",
+        "make": "Ram",
+        "model": "1500",
+        "year": 2024,
+        "title": "2024 Ram 1500",
+        "trim": "Big Horn",
+        "price": 45000,
+        "mileage": 10000,
+        "dealer_id": "demo",
+        "inactive": 0,
+        "gallery": [],
+        "history_highlights": [],
+    }
+    monkeypatch.setattr(main, "get_car_by_id", lambda *_a, **_k: car)
+    monkeypatch.setattr(
+        main,
+        "prepare_car_detail_context",
+        lambda _raw: {
+            "verified_specs": {},
+            "gallery_images": [],
+            "packages_panel_has_content": False,
+        },
+    )
+    monkeypatch.setattr(main, "_session_has_paid_access", lambda: False)
+    monkeypatch.setattr(main, "_viewer_sees_premium_features", lambda: False)
+
+    with main.app.test_client() as client:
+        rv = client.get("/car/55")
+
+    assert rv.status_code == 200
+    html = rv.get_data(as_text=True)
+    assert "car-tab-ask" not in html
+    assert "Ask AI" not in html
+    assert "car_chat.js" not in html

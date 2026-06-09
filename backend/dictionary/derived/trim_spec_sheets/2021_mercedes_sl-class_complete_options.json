@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2021_mercedes_sl-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "SL-Class",
+    "SL-Class"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The 1994 R129 introduced a minor cosmetic and technical updates; revised engine; L 190 hp (142 kW) I6 (was The 1994 R129 introduced a minor cosmetic and technical updates; revised engine; 2004 pre-facelift SL 350 In 2006, R230 received a minor cosmetic…"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "The 1994 R129 introduced a minor cosmetic and technical updates; revised engine; 2004 pre-facelift SL 350 In 2006, R230 received a minor cosmetic update and rev"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Additionally, standard equipment included an adaptive windscreen wipe/wash syste"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: The 1994 R129 introduced a minor cosmetic and technical updates; revised engine; 2004 pre-facelift SL 350 In 2006, R230 received a minor cosmetic update and rev"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: Additionally, standard equipment included an adaptive windscreen wipe/wash syste"
+      }
+    ]
+  }
+}

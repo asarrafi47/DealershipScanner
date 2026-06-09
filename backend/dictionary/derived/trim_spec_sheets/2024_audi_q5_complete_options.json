@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2024_audi_q5_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q5",
+    "Q5"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "S line": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      }
+    ],
+    "L Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      }
+    ]
+  }
+}

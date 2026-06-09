@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2012|honda|crz",
+  "year": 2012,
+  "make": "Honda",
+  "model": "CR-Z",
+  "ladder_id": "generic_honda_crz",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "California and states that have adopted",
+      "details. 10 3-Year/36,000-Mile Limited"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "EX": 2
+    }
+  }
+}

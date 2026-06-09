@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|chevrolet|corvette",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "ZR1",
+    "Z06",
+    "Custom",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

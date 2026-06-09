@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2022|infiniti|qx5680",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_web_2022__infiniti__qx5680",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Luxe",
+    "Sensory",
+    "Essential"
+  ],
+  "adds_by_trim": {
+    "Luxe": [
+      "Premium leather-appointed seating with heating and cooling",
+      "Bose Premium Sound System with 16 speakers",
+      "Power panoramic moonroof",
+      "Heated steering wheel",
+      "Lexicon premium leather door panels",
+      "Automatic climate control with rear controls",
+      "HomeLink universal transceiver"
+    ],
+    "Sensory": [
+      "ProAssist Plus safety package with adaptive cruise control",
+      "All-around 360-degree camera system",
+      "Blind Spot Warning with Intervention",
+      "Intelligent brake assist system",
+      "Rear sonar system",
+      "Hands-free power liftgate",
+      "Power steering tilt and telescoping"
+    ],
+    "Essential": [
+      "5.6-liter V8 engine with 400 horsepower",
+      "Seven-seat three-row configuration standard",
+      "Intelligent 4WD transmission",
+      "10.8-inch display with Apple CarPlay and Android Auto",
+      "Bluetooth connectivity and hands-free calling",
+      "Rear view monitor camera",
+      "Drive-assist display cluster with trip computer",
+      "Aluminum roof rails and roof side rails",
+      "Integrated backup sonar",
+      "Single-zone automatic climate control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/qx56-80/"
+}

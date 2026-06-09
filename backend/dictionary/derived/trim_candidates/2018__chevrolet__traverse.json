@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2018|chevrolet|traverse",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "RS",
+    "L",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

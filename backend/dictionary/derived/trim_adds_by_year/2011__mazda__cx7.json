@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2011|mazda|cx7",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "CX-7",
+  "ladder_id": "brochure_llm_2011__mazda__cx7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-7s Grand Touring",
+    "CX-7i Grand Touring",
+    "CX-7s Touring",
+    "CX-7i Touring",
+    "CX-7i Sport",
+    "CX-7s SV",
+    "CX-7i"
+  ],
+  "adds_by_trim": {
+    "CX-7s Grand Touring": [
+      "2.3L DISI turbocharged engine with 244 hp and 258 lb-ft torque",
+      "Compact navigation system with touchscreen display",
+      "Electroluminescent gauges with blue indirect lighting",
+      "Antitheft perimeter alarm system",
+      "Auto-dimming rearview mirror with HomeLink and compass"
+    ],
+    "CX-7i Grand Touring": [
+      "Mazda Advanced Keyless Entry & Start System",
+      "Retractable cargo cover standard",
+      "Auto-dimming rearview mirror with compass"
+    ],
+    "CX-7s Touring": [
+      "Power sliding-glass moonroof with one-touch open/close",
+      "Retractable cargo cover standard",
+      "Fog lights standard",
+      "Rear roof spoiler standard",
+      "Privacy-tint rear glass standard"
+    ],
+    "CX-7i Touring": [
+      "Leather-wrapped steering wheel and shift knob",
+      "Fully automatic climate control with cabin air filter",
+      "Bose Premium Centerpoint Surround System with 9 speakers"
+    ],
+    "CX-7i Sport": [
+      "Leather-wrapped steering wheel and shift knob",
+      "Bose Premium Centerpoint Surround System with 9 speakers"
+    ],
+    "CX-7s SV": [
+      "2.5L DOHC 16-valve 4-cylinder engine with 161 hp and 161 lb-ft torque",
+      "Power door locks with 2-stage unlocking",
+      "Remote keyless entry with retractable key",
+      "Cruise control with steering-wheel-mounted controls"
+    ],
+    "CX-7i": [
+      "8-way power-adjustable driver seat with adjustable auto up/down windows",
+      "Multiport electronic fuel injection",
+      "Dual front 12V power points",
+      "Front and rear cup holders with rear-seat center armrest",
+      "60/40 split fold-down rear seatback with adjustable headrests"
+    ]
+  }
+}

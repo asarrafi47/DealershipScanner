@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2021|volkswagen|arteon",
+  "year": 2021,
+  "make": "Volkswagen",
+  "model": "Arteon",
+  "ladder_id": "brochure_llm_2021__volkswagen__arteon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL Premium R-Line®",
+    "SEL R-Line®",
+    "2.0T SE"
+  ],
+  "adds_by_trim": {
+    "SEL Premium R-Line®": [
+      "Harman Kardon® premium 700W digital sound system with center speaker and subwoofer",
+      "Area View overhead camera system",
+      "Park Assist automated parking steering",
+      "Power opening and closing rear hatch with hands-free Easy Open and Easy Close",
+      "Rear-zone climate control panel in second row",
+      "Extended IQ.DRIVE® with Travel Assist semi-automated driving assistance"
+    ],
+    "SEL R-Line®": [
+      "Park Distance Control with Maneuver Braking front and rear",
+      "Light Assist high beam control for headlights",
+      "Active Side Assist blind spot monitor",
+      "Remote engine start feature with key fob",
+      "Wireless inductive charger for compatible devices",
+      "Auto-dimming interior and driver's side exterior rearview mirrors"
+    ],
+    "2.0T SE": [
+      "Volkswagen Digital Cockpit configurable digital instrument display",
+      "Keyless access KESSY® for all doors and rear hatch with push-button start",
+      "MIB3 Discover Media 8-inch touchscreen with navigation and HD Radio",
+      "VW App-Connect® smartphone integration with Apple CarPlay and Android Auto",
+      "SiriusXM with 360L and three-month All Access trial",
+      "Dual front, side, and knee airbags with side curtain protection head impact airbags",
+      "Hill Hold Control and Cruise Control",
+      "Tire Pressure Monitoring System and anti-theft alarm with vehicle immobilizer"
+    ]
+  }
+}

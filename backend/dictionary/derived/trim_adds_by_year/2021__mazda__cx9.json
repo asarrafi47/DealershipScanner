@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|mazda|cx9",
+  "year": 2021,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2021__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-9 SIGNATURE",
+    "CX-9 GRAND TOURING",
+    "CX-9 CARBON EDITION",
+    "CX-9 TOURING"
+  ],
+  "adds_by_trim": {
+    "CX-9 SIGNATURE": [
+      "i-Activ AWD with Off-road Traction Assist",
+      "20-inch alloy wheels with Brilliant Silver finish",
+      "Nappa leather-trimmed seats in Deep Chestnut or Parchment",
+      "Quilting and piping on 1st- and 2nd-row seats",
+      "Genuine Santos Rosewood interior inlays",
+      "Genuine Aluminum trim with unique design",
+      "Signature AWD badge",
+      "Windshield-projected Active Driving Display",
+      "360° View Monitor with front and rear parking sensors",
+      "Traffic Sign Recognition System"
+    ],
+    "CX-9 GRAND TOURING": [
+      "Power sliding-glass moonroof with sunshade",
+      "20-inch alloy wheels with Silver Metallic finish",
+      "Hands-free Rear Power Liftgate",
+      "Adaptive Front-lighting System",
+      "LED fog lights",
+      "Automatic power folding side mirrors",
+      "Aluminum roof rails with Satin Chrome finish",
+      "Color-matched interior accents",
+      "Leather-wrapped steering wheel with unique stitching",
+      "Navigation System"
+    ],
+    "CX-9 CARBON EDITION": [
+      "Exclusive Polymetal Gray Metallic paint",
+      "20-inch alloy wheels with Black Metallic finish",
+      "Black automatic power folding side mirrors",
+      "Gloss Black front grille",
+      "Power sliding-glass moonroof with sunshade",
+      "Aluminum roof rails with Satin Chrome finish",
+      "Bright finish lower body trim",
+      "Windshield wiper de-icer",
+      "Paddle shifters",
+      "7-inch LCD Meter Display"
+    ],
+    "CX-9 TOURING": [
+      "Mazda Advanced Keyless Entry System",
+      "Leather-trimmed seats on 1st- and 2nd-row outboard seating",
+      "6-way power-adjustable front passenger seat",
+      "2nd-row Easy Slide-and-Tilt bench seat",
+      "2nd-row center folding armrest with integrated storage and cup holders",
+      "Two USB charging ports",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Rear Power Liftgate with programmable height adjustment",
+      "Dual illuminated vanity mirrors",
+      "Adaptive Front-lighting System"
+    ]
+  }
+}

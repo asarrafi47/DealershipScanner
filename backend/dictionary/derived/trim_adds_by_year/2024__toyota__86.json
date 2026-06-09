@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2024|toyota|86",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "brochure_llm_2024__toyota__86",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GR86 TRUENO Edition",
+    "GR86 Premium",
+    "GR86"
+  ],
+  "adds_by_trim": {
+    "GR86 TRUENO Edition": [
+      "18-inch black-metallic-painted alloy wheels with Michelin Pilot Sport 4 tires",
+      "MacPherson strut front suspension and multi-link rear suspension with SACHS dampers",
+      "Brembo 4-piston front disc brakes with 12.8-inch ventilated rotors",
+      "Gloss-black duckbill rear spoiler with LED center high-mount stop light",
+      "AE86-inspired two-tone black hood and side panel graphic",
+      "Front and rear TRUENO badging",
+      "Two-stage heated sport seats with red leather-trimmed bolsters and Ultrasuede inserts",
+      "Leather-trimmed TRUENO shift lever and knob with red contrast stitching",
+      "Red contrast-stitched armrests with red leather door panel insert",
+      "GR86 TRUENO Edition limited-production commemorative plaque"
+    ],
+    "GR86 Premium": [
+      "18-inch matte-black-painted alloy wheels with Michelin Pilot Sport 4 tires",
+      "Adaptive Front-Lighting System (AFS) on auto-leveling dual LED headlights",
+      "Color-keyed duckbill rear spoiler",
+      "Two-stage heated sport seats with leather-trimmed bolsters",
+      "8-inch touchscreen GR86 Audio with eight speakers and amplifier"
+    ],
+    "GR86": [
+      "FA24 2.4L naturally aspirated horizontally-opposed 4-cylinder with 228 hp and 184 lb-ft torque",
+      "6-speed short-throw close-ratio manual transmission or 6-speed electronically controlled automatic with paddle shifters",
+      "Torsen limited-slip differential",
+      "GR circuit-tuned coil springs, shock absorbers, and iron front knuckles",
+      "Auto-leveling dual LED headlights with DRL and LED rear combination lights",
+      "17-inch machined-finish alloy wheels",
+      "Black heated power outside mirrors",
+      "Dual chrome-tipped exhaust",
+      "Sport front bucket seats with black side bolsters and 6-way adjustable driver seat",
+      "GR digital gauge cluster with Normal/Sport/Track modes"
+    ]
+  }
+}

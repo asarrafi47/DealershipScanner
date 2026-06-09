@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2019|jaguar|fpace",
+  "year": 2019,
+  "make": "Jaguar",
+  "model": "F-Pace",
+  "ladder_id": "brochure_llm_2019__jaguar__fpace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S",
+    "R-SPORT",
+    "PORTFOLIO",
+    "PRESTIGE",
+    "PREMIUM",
+    "F-PACE"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "3.0L V6 Supercharged engine with 380 hp and 332 lb-ft torque",
+      "5.1 second 0-60 mph acceleration",
+      "155 mph top speed"
+    ],
+    "R-SPORT": [
+      "2.0L 4-cylinder 296 hp turbocharged gas engine available",
+      "5.8 second 0-60 mph acceleration with 296 hp engine",
+      "145 mph top speed with 296 hp engine"
+    ],
+    "PORTFOLIO": [
+      "2.0L 4-cylinder 296 hp turbocharged gas engine available"
+    ],
+    "PRESTIGE": [
+      "2.0L 4-cylinder 296 hp turbocharged gas engine available"
+    ],
+    "PREMIUM": [
+      "2.0L 4-cylinder 180 hp turbocharged diesel engine",
+      "2.0L 4-cylinder 247 hp turbocharged gas engine",
+      "2.0L 4-cylinder 296 hp turbocharged gas engine available"
+    ],
+    "F-PACE": [
+      "2.0L 4-cylinder 180 hp turbocharged diesel engine",
+      "2.0L 4-cylinder 247 hp turbocharged gas engine",
+      "8-speed automatic transmission",
+      "33.5 cubic feet trunk volume",
+      "8.4 inch ground clearance"
+    ]
+  }
+}

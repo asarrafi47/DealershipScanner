@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2011|lexus|is",
+  "year": 2011,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2011__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS F",
+    "IS 350 C",
+    "IS 250 C",
+    "IS 350",
+    "IS 350 AWD",
+    "IS 250 AWD",
+    "IS 250 A/T RWD",
+    "IS 250 M/T RWD"
+  ],
+  "adds_by_trim": {
+    "IS F": [
+      "5.0-liter V8 engine with 416 horsepower and 371 lb-ft torque",
+      "Eight-speed Sport Direct-Shift automatic transmission with paddle shifters and manual mode",
+      "TORSEN torque-sensing limited-slip rear differential",
+      "0-60 mph in 4.6 seconds, 170 mph top speed",
+      "16/23/18 mpg city/highway/combined fuel economy"
+    ],
+    "IS 350 C": [
+      "Retractable hardtop convertible design with four-passenger seating",
+      "3.5-liter V8 engine with 306 horsepower and 277 lb-ft torque",
+      "5.8-second 0-60 mph acceleration, 141 mph top speed",
+      "20/27/22 mpg city/highway/combined fuel economy"
+    ],
+    "IS 250 C": [
+      "Retractable hardtop convertible with four-passenger seating",
+      "2.5-liter V6 engine with 204 horsepower and 185 lb-ft torque",
+      "Available six-speed manual transmission option"
+    ],
+    "IS 350": [
+      "3.5-liter V6 engine with 306 horsepower and 277 lb-ft torque",
+      "5.6-second 0-60 mph acceleration, 144 mph top speed",
+      "Five-passenger luxury sport sedan configuration",
+      "20/27/22 mpg city/highway/combined fuel economy"
+    ],
+    "IS 350 AWD": [
+      "Full-time all-wheel drive system",
+      "5.7-second 0-60 mph acceleration with AWD",
+      "34.8-foot turning circle"
+    ],
+    "IS 250 AWD": [
+      "Full-time all-wheel drive system",
+      "8.3-second 0-60 mph acceleration with AWD",
+      "34.8-foot turning circle"
+    ],
+    "IS 250 A/T RWD": [
+      "2.5-liter V6 engine with 204 horsepower and 185 lb-ft torque",
+      "Seven-point-nine-second 0-60 mph acceleration",
+      "21/30/24 mpg city/highway/combined fuel economy",
+      "Rear-wheel drive configuration"
+    ],
+    "IS 250 M/T RWD": [
+      "Six-speed manual transmission option",
+      "19/27/22 mpg city/highway/combined fuel economy"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2021|ford|transitconnect",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_2021__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 15.8-gallon fuel tank",
+      "Adds 80-amp-hr heavy-duty battery",
+      "Adds electric power-assisted steering",
+      "Adds front-wheel drive (FWD)",
+      "Adds full-size spare wheel and tire",
+      "Adds independent MacPherson-strut front suspension with twist-beam rear",
+      "Adds Torque Vectoring Control",
+      "Adds Ford Co-Pilot360 technology suite with autolamp, hill start assist, pre-collision assist with automatic emergency braking, rain-sensing wipers, rear view camera, side-wind stabilization",
+      "Adds FordPass Connect with 4G LTE Wi-Fi hotspot capability",
+      "Adds driver and front-passenger front airbags with front-seat side airbags and safety canopy side-curtain airbags"
+    ],
+    "XLT": [
+      "Adds overhead front storage shelf with grab handles",
+      "Adds tilt/telescoping steering column",
+      "Adds configurable daytime running lamps",
+      "Adds easy fuel capless fuel filler",
+      "Adds sideview mirrors with integrated blind spot mirrors"
+    ],
+    "Limited": [
+      "Adds premium upfit options and accessories"
+    ]
+  }
+}

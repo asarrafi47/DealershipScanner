@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Ford,F-150 Lightning,4WD Extended Range,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,78,63,70,,,,,
+2023,Ford,F-150 Lightning,Platinum 4WD,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,73,60,66,,,,,
+2023,Ford,F-150 Lightning,4WD,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,76,61,68,,,,,

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2025|lexus|rc",
+  "year": 2025,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "generic_lexus_rc",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "F Sport": [
+      "Services require account registration through the Lexus app and acceptance of the Connected"
+    ],
+    "Sport": [
+      "Services’ vehicle-generated data collection, use, sharing and retention practices and agreements, see https://www.lexus.com/privacy. The"
+    ],
+    "Limited": [
+      "Services Terms of Use and Master Data Consent. Data charges may apply. For Lexus Interface"
+    ],
+    "Premium": [
+      "Premium Triple-Beam LED headlamps",
+      "Power moonroof",
+      "Orange Metallic Brembo brake calipers",
+      "Torque Vectoring Differential",
+      "Leather-trimmed interior with driver's-seat memory",
+      "Heated and ventilated front seats",
+      "Heated steering wheel"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.6666666666666666,
+    "per_trim_add_counts": {
+      "Premium": 0,
+      "Limited": 1,
+      "Sport": 1
+    }
+  }
+}

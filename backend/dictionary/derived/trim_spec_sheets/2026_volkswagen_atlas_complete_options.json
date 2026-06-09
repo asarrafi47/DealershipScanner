@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2026_volkswagen_atlas_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Atlas",
+    "Atlas"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "SEL": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

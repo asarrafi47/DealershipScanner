@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2019|maserati|quattroporte",
+  "year": 2019,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_llm_2019__maserati__quattroporte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Quattroporte GTS",
+    "Quattroporte",
+    "Quattroporte S Q4",
+    "Quattroporte S",
+    "Quattroporte Diesel"
+  ],
+  "adds_by_trim": {
+    "Quattroporte GTS": [
+      "3.8-liter V8 engine producing 530 CV (390 kW) and 650 Nm peak torque",
+      "0-100 km/h acceleration in 4.7 seconds",
+      "Maximum speed of 310 km/h",
+      "34 m stopping distance (100-0 km/h)"
+    ],
+    "Quattroporte": [
+      "3.0-liter turbocharged V6 petrol engine producing 430 CV (316 kW) and 580 Nm torque",
+      "0-100 km/h acceleration in 5.0 seconds",
+      "Maximum speed of 288 km/h",
+      "GranLusso and GranSport trim options available"
+    ],
+    "Quattroporte S Q4": [
+      "All-wheel drive (Q4) system for enhanced traction in challenging conditions",
+      "3.0-liter V6 petrol engine producing 430 CV with all-wheel drive capability"
+    ],
+    "Quattroporte S": [
+      "3.0-liter V6 petrol engine producing 430 CV (316 kW) and 580 Nm torque",
+      "0-100 km/h acceleration in 5.0 seconds",
+      "80-liter fuel tank capacity",
+      "Maximum speed of 288 km/h"
+    ],
+    "Quattroporte Diesel": [
+      "3.0-liter turbocharged V6 diesel engine producing 275 CV (202 kW) and 600 Nm torque",
+      "0-100 km/h acceleration in 6.4 seconds",
+      "Maximum speed of 252 km/h",
+      "Excellent fuel efficiency with 7.3-7.5 l/100 km combined cycle consumption",
+      "ZF eight-speed automatic transmission with five operating modes",
+      "Mechanical Limited-Slip Differential for enhanced traction",
+      "Auto-adaptive transmission software that adjusts shift patterns to driving style"
+    ]
+  }
+}

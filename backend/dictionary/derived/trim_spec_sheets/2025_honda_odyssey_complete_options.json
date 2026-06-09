@@ -1,0 +1,55 @@
+{
+  "ladder_id": "2025_honda_odyssey_complete_options",
+  "make": "Honda",
+  "models": [
+    "Odyssey",
+    "Odyssey"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: e-CVT (hybrid); The first facelift of the fifth-generation Odyssey was introduced in the Chinese market in July 2018, updating the front end with a redesigned front bumper. The Odyssey Sport Hybrid based on the Japanese market Absolute grade was…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: In February 2007, the S grade was reinstated along with the S Aero Package, the M grade was equipped with 16-inch aluminium wheels, and the L grade was equipped with a voice recognition Honda HDD navigation system with a rear camera and a progressive…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: In August 2007, the K Package based on the L grade with genuine leather-wrapped; That includes multiple seating configurations, Magic Slide® 2nd-row seats and in (was Watch heads turn at the new Odyssey Sport trim, now with 19-inch wheels plus…"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, front-wheel-drive; European sales were hampered by the absences of both a manual transmission as well as a diesel engine option. (was e-CVT (hybrid); The first facelift of the fifth-generation Odyssey was introduced in the Chinese…; Automatic (S10)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: 420 Audio/Information Screen Summary of Contents for Honda ODYSSEY 2023 Page 1 Owner's Man; 420 Audio/Information Screen Summary of Contents for Honda ODYSSEY 2023 Page 1 Owner's Manual 2023 ODYSSEY... (was In February 2007, the S grade was reinstated…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: Watch heads turn at the new Odyssey Sport trim, now with 19-inch wheels plus sporty interior and ...; Woodgrain trim was standard on all models, while in VG/VZ V6 models leather and (was In August 2007, the K Package based on the L grade with…"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: e-CVT (hybrid); The first facelift of the fifth-generation Odyssey was introduced in the Chinese market in July 2018, updating the front end with a redesigned front bumper. The Odyssey Sport Hybrid based on the Japanese market Absolute grade was launched in…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: In February 2007, the S grade was reinstated along with the S Aero Package, the M grade was equipped with 16-inch aluminium wheels, and the L grade was equipped with a voice recognition Honda HDD navigation system with a rear camera and a progressive commander.; At…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: In August 2007, the K Package based on the L grade with genuine leather-wrapped; That includes multiple seating configurations, Magic Slide® 2nd-row seats and in"
+      }
+    ]
+  }
+}

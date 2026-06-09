@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2012|ram|1500",
+  "year": 2012,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2012__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie Limited",
+    "Laramie Long Horn",
+    "Laramie",
+    "Sport",
+    "Big Horn",
+    "Outdoorsman",
+    "Express",
+    "Regular",
+    "SLT",
+    "ST",
+    "Dart"
+  ],
+  "adds_by_trim": {
+    "Laramie Limited": [
+      "Power multifunction heated auto-dimming folding chrome mirrors with position memory",
+      "Luxury package with overhead console and universal garage door opener"
+    ],
+    "Laramie Long Horn": [
+      "20 x 9-inch polished forged aluminum wheels with silver painted pockets",
+      "Distinctive Long Horn design accents"
+    ],
+    "Laramie": [
+      "Power heated auto-dimming folding black mirrors with exterior courtesy lamps",
+      "Leather-appointed seating with premium comfort features",
+      "Dual-zone temperature control air conditioning"
+    ],
+    "Sport": [
+      "5.7L Hemi V8 with VVT and Fuel Saver Technology",
+      "Aggressive dual rear exhaust with sport sound",
+      "Sport-themed exterior styling with body-color accents",
+      "22-inch polished aluminum wheels on Regular Cab 4x2 models"
+    ],
+    "Big Horn": [
+      "Premium cloth seating with 10-way power driver seat",
+      "20-inch painted aluminum wheels",
+      "Class IV trailer hitch receiver",
+      "Chrome appearance package upgrade options"
+    ],
+    "Outdoorsman": [
+      "3.55 or 3.92 axle ratio with antispin rear differential on 4x4",
+      "Off-road capable suspension geometry",
+      "Tubular chrome side steps",
+      "Skid plates for transfer case and front suspension protection"
+    ],
+    "Express": [
+      "Power door locks as standard equipment",
+      "Front and rear body-color fascia",
+      "17-inch painted cast aluminum wheels"
+    ],
+    "Regular": [
+      "Power rack-and-pinion steering",
+      "Front and rear heavy-duty shock absorbers",
+      "Front and rear stabilizer bars",
+      "Locking removable tailgate with lift assist"
+    ],
+    "SLT": [
+      "Standard mechanical features with reliable foundation"
+    ],
+    "ST": [
+      "Entry-level comfort features with standard powertrain options"
+    ],
+    "Dart": [
+      "Base model with essential truck functionality"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Subaru,Outback,Legacy AWD,2.5L I4,2.5L I4,,Manual 6-spd,All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,19,26,22,,,,,
+2012,Subaru,Outback,Legacy AWD,2.5L I4,2.5L I4,,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,22,30,25,,,,,
+2012,Subaru,Outback,Legacy AWD,2.5L I4,2.5L I4,,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.5,18,25,21,,,,,
+2012,Subaru,Outback,Legacy AWD,3.6L V6,3.6L V6,,Automatic (S5),All-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,18,24,20,,,,,
+2012,Subaru,Outback,Outback Wagon AWD,2.5L I4,2.5L I4,,Manual 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.5,19,26,22,,,,,
+2012,Subaru,Outback,Outback Wagon AWD,2.5L I4,2.5L I4,,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.5,21,28,24,,,,,
+2012,Subaru,Outback,Outback Wagon AWD,3.6L V6,3.6L V6,,Automatic (S5),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.6,18,24,20,,,,,

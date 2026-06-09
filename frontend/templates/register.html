@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
 </head>
 <body class="lp-body">
 
@@ -74,6 +75,5 @@
 
     </div>
 
-    <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

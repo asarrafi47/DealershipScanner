@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2018|nissan|murano",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Murano",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

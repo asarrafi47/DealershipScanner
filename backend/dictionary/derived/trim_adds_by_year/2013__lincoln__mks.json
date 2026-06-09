@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|lincoln|mks",
+  "year": 2013,
+  "make": "Lincoln",
+  "model": "MKS",
+  "ladder_id": "brochure_llm_2013__lincoln__mks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Elite Package",
+    "Premium Package"
+  ],
+  "adds_by_trim": {
+    "Elite Package": [
+      "Active park assist",
+      "Lane Keeping System",
+      "Multicontour front seats with Active Motion",
+      "Heated rear outboard seats",
+      "Wood appliqués in brown swirl walnut or Prussian burl on doors and center console"
+    ],
+    "Premium Package": [
+      "20-inch premium painted aluminum wheels with chrome inserts and all-season tires",
+      "Voice-activated Navigation System with SD card storage and integrated SiriusXM Traffic",
+      "Adaptive cruise control and collision warning with brake support",
+      "Dual-panel moonroof with power sunshade",
+      "Intelligent AWD",
+      "THX II Certified Audio System with 16 speakers and 700 watts power",
+      "HD Radio Technology",
+      "Heated steering wheel",
+      "Power-adjustable pedals with memory",
+      "Power rear sunshade"
+    ]
+  }
+}

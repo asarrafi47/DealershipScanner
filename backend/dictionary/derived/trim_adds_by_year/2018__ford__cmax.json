@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2018|ford|cmax",
+  "year": 2018,
+  "make": "Ford",
+  "model": "C-Max",
+  "ladder_id": "brochure_2018__ford__cmax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "SE",
+    "Active",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds SYNC 3 infotainment system",
+      "Adds voice-activated navigation with turn-by-turn directions",
+      "Adds SiriusXM Traffic and Travel Link with 5-year complimentary service",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds FordPass smartphone app with fuel pricing and parking services"
+    ],
+    "Active": [
+      "Adds keyless entry keypad",
+      "Adds remote start systems",
+      "Adds reverse warning sensor systems"
+    ],
+    "SE": [
+      "Adds roof-mounted crossbars with THULE cargo box",
+      "Adds side window deflectors by EGR",
+      "Adds Aeroskin hood protector",
+      "Adds rear bumper protector",
+      "Adds splash guards and molded splash guards by Lund",
+      "Adds carpeted floor mats",
+      "Adds door-sill plates"
+    ],
+    "Platinum": [
+      "Adds roof-mounted bike carrier",
+      "Adds cargo area protector",
+      "Adds cargo organizers and protectors",
+      "Adds rear seat entertainment system",
+      "Adds vehicle security system"
+    ],
+    "Limited": [
+      "Adds full vehicle cover",
+      "Adds all-weather floor mats",
+      "Adds Bullfrog portable Bluetooth speakers",
+      "Adds hood protector",
+      "Adds ash cup and coin holders",
+      "Adds racks and carriers",
+      "Adds wheel lock kit",
+      "Adds first aid and roadside assistance kits",
+      "Adds interior light kit",
+      "Adds tablet cradle"
+    ]
+  }
+}

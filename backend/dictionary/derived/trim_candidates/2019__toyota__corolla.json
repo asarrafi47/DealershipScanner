@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2019|toyota|corolla",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Limited",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

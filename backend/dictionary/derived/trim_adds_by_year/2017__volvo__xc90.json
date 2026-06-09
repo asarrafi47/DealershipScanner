@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2017|volvo|xc90",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2017__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Excellence",
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Excellence": [
+      "T8 Twin Engine plug-in hybrid powertrain standard",
+      "Four individual seats instead of standard seating",
+      "Refrigerator with Orrefors crystal glasses",
+      "Premium Bowers & Wilkins sound system",
+      "21-inch 8-spoke Silver Bright alloy wheels",
+      "Bright chromed B and C-pillar cappings",
+      "Chrome lower door moldings with Excellence logo",
+      "All Inscription exterior and interior equipment included as standard"
+    ],
+    "Inscription": [
+      "Comfort seats with perforated Nappa leather upholstery",
+      "Linear walnut wood inlays",
+      "Matte silver-colored grille with waterfall theme and glossy chrome frame",
+      "Color-coordinated lower body moldings with high-gloss chrome strip",
+      "Side window frames with high-gloss chrome finish",
+      "Matte Silver Bright metallic skid plate with dual integrated tailpipes",
+      "20-inch 10-spoke Diamond Cut/Tinted Silver alloy wheels"
+    ],
+    "R-Design": [
+      "Sports fabric and fine Nappa leather upholstery",
+      "Metal mesh inlays standard with optional carbon fiber",
+      "Sporty styling and design focus"
+    ],
+    "Momentum": [
+      "Cross Brushed Aluminum inlays standard",
+      "Vinyl and leather upholstery options",
+      "Choice of charcoal or blond interior colors",
+      "Optional Dark Flame Birch wood inlays"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|mazda|mx5",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "MX-5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

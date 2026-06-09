@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2024|dodge|durango",
+  "year": 2024,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2024__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT®",
+    "SRT® 392",
+    "R/T",
+    "CITADEL",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT®": [
+      "6.2L Supercharged HEMI® V8 engine with 710 horsepower",
+      "Red Brembo® brakes with 2-piece front rotors",
+      "Competition suspension tuning",
+      "SRT Hellcat exterior badges",
+      "Heated SRT flat-bottom performance steering wheel with paddle shifters",
+      "SRT Performance Pages Plus and SRT Drive Modes"
+    ],
+    "SRT® 392": [
+      "6.4L 392 HEMI® V8 engine with 475 horsepower",
+      "Brembo® 6-piston brakes with performance tuning",
+      "Bilstein® adaptive damping suspension",
+      "392 fender badge and performance rear spoiler",
+      "Heated SRT flat-bottom performance steering wheel with SRT paddle shifters",
+      "SRT Performance Pages Plus and SRT Drive Modes"
+    ],
+    "R/T": [
+      "5.7L HEMI® V8 engine",
+      "Performance steering and sport suspension with rear load-leveling",
+      "Performance hood with HEMI fender badge",
+      "SmartBeam™ HID headlamps with LED auxiliary low beams",
+      "Uconnect® 5 NAV with 10.1-inch touchscreen",
+      "Alpine® Premium Audio System with 9 speakers and subwoofer",
+      "ParkSense® Front Park Assist with LED Amber turn signals",
+      "2nd-row Captain's Chairs available"
+    ],
+    "CITADEL": [
+      "3.6L V6 engine with Engine Stop/Start technology standard",
+      "Wrapped instrument panel with accent stitching",
+      "Crypto Sweep hydro wheels with laser etch and liquid titanium speaker trims",
+      "Platinum chrome door handles, grille, and mirrors",
+      "Power sunroof",
+      "Ventilated front seats and Dinamica suede headliner",
+      "Full-Speed Forward Collision Warning Plus with Active Braking",
+      "Adaptive Cruise Control with Stop and Advanced Brake Assist"
+    ],
+    "GT": [
+      "Dual exhaust with bright tips",
+      "Leather flat-bottom steering wheel",
+      "Power liftgate with remote start system",
+      "Delete roof rails option",
+      "7-passenger seating standard"
+    ],
+    "SXT": [
+      "3.6L Pentastar® V6 engine",
+      "Uconnect® 4 with 8.4-inch touchscreen",
+      "7-inch TFT cluster with full-color graphics",
+      "Standard performance-inspired cockpit with driver-focused ergonomic design"
+    ]
+  }
+}

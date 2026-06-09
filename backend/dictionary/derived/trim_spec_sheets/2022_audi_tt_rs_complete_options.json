@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2022_audi_tt_rs_complete_options",
+  "make": "Audi",
+  "models": [
+    "TT RS",
+    "TT RS"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; The 1.8 L turbocharged inline-4 engine"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ]
+  }
+}

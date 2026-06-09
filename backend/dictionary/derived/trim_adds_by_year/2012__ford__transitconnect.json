@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2012|ford|transitconnect",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_llm_2012__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT PREMIUM WAGON",
+    "XLT TAXI PACKAGE",
+    "XLT WAGON",
+    "XLT VAN",
+    "XL VAN"
+  ],
+  "adds_by_trim": {
+    "XLT PREMIUM WAGON": [
+      "Rear wheelhouse covers and beltline trim",
+      "Repositioned 2nd-row seat for more leg room",
+      "Rear-quarter flip-open windows with privacy glass",
+      "3rd-row flip-open windows with solar-tinted glass"
+    ],
+    "XLT TAXI PACKAGE": [
+      "Repositioned 2nd-row seat and heavy-duty battery",
+      "Rear air/heat blower with passenger controls",
+      "Grab handle on B-pillar",
+      "Roof access hole pre-wired for taxi light",
+      "Solar-tinted glass throughout"
+    ],
+    "XLT WAGON": [
+      "2nd-row manual 60/40 split-fold 3-passenger cloth seat",
+      "Storage pocket in passenger-side rear cargo door",
+      "AM/FM stereo with single-CD player and 4 speakers",
+      "Center console with multiple cupholders and stowage",
+      "Carpeted flooring in 2nd row; vinyl in cargo area",
+      "Chrome hood appliqué",
+      "Body-color door handles and bumpers",
+      "Front fog lamps",
+      "Platinum grille and body-color mirrors"
+    ],
+    "XLT VAN": [
+      "AM/FM stereo with single-CD player and 2 speakers",
+      "Cruise control",
+      "Dual front map lights",
+      "Power windows, locks, and sideview mirrors",
+      "Remote Keyless Entry System with 2 key fobs",
+      "Defroster package with rear-window defroster",
+      "Heated sideview mirrors",
+      "XLT badge"
+    ],
+    "XL VAN": [
+      "2.0L DOHC Duratec I-4 engine with 4-speed automatic transmission",
+      "Front-wheel drive with 15.4-gallon fuel tank",
+      "Manual climate controls and air conditioning",
+      "Driver's seat with manual 6-way adjustment and armrest",
+      "Front-passenger seat with manual 4-way adjustment",
+      "Manual door locks and manually operated windows",
+      "15-inch steel wheels with 6-spoke covers",
+      "AdvanceTrac with Roll Stability Control and dual front airbags",
+      "Anti-Lock Brakes and Tire Pressure Monitoring System"
+    ]
+  }
+}

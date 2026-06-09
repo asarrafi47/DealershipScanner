@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2022|lotus|emira",
+  "year": 2022,
+  "make": "Lotus",
+  "model": "Emira",
+  "ladder_id": "brochure_2022__lotus__emira",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds soft-trimmed interior surfaces with British craftsmanship",
+      "Adds bespoke flat-bottom sports steering wheel with Satin Chrome and integrated controls",
+      "Adds 10.25-inch centrally mounted touchscreen with 12.3-inch driver display",
+      "Adds Android Auto and Apple CarPlay compatibility",
+      "Adds KEF audio system with Uni-Q technology",
+      "Adds ergonomic cabin design with central cup holders and phone storage",
+      "Adds door bins accommodating 500ml bottles",
+      "Adds performance-oriented seats with lateral support",
+      "Adds combined luggage capacity of 359 liters"
+    ],
+    "Premium": []
+  }
+}

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2011,Jaguar,XK,XK,5.0L V8 (SIDI),5.0L V8 Turbo,Turbocharged,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,16,24,19,,,,,
+2011,Jaguar,XK,Convertible,5.0L V8 (SIDI),5.0L V8 Turbo,Turbocharged,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,15,22,17,,,,,
+2011,Jaguar,XK,Convertible,5.0L V8 (SIDI),5.0L V8 Turbo,Turbocharged,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,16,22,18,,,,,
+2011,Jaguar,XK,XK,5.0L V8 (SIDI),5.0L V8 Turbo,Turbocharged,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,15,22,17,,,,,

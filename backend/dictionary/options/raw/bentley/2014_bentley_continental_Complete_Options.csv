@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2014,bentley,continental,GT,FFV 6.0L V12 (FFV),6.0L V12 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline / E85,Compact Cars,12,6.0,12,21,15,,,,,
+2014,bentley,continental,GTC,FFV 6.0L V12 (FFV),6.0L V12 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline / E85,Subcompact Cars,12,6.0,12,20,15,,,,,
+2014,bentley,continental,GTC,4.0L V8 (SIDI),4.0L V8 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,14,23,17,,,,,
+2014,bentley,continental,GT,4.0L V8 (SIDI),4.0L V8 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,8,4.0,14,24,18,,,,,

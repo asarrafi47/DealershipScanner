@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2020|cadillac|xt6",
+  "year": 2020,
+  "make": "Cadillac",
+  "model": "XT6",
+  "ladder_id": "brochure_llm_2020__cadillac__xt6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Luxury",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Premium Luxury": [
+      "Elevated Premium Luxury interior color decor",
+      "Authentic exotic wood interior accents",
+      "20\" 12-Spoke alloy wheels with Diamond Cut/Android finish",
+      "Available 20\" Ultra Bright machined wheels with Pearl Nickel pockets",
+      "Available 20\" polished wheels",
+      "Available 20\" Midnight Grey dealer-installed wheels",
+      "Available Platinum Package with Opus Semi-Aniline leather and microsuede headliner"
+    ],
+    "Sport": [
+      "Interior Sport elements with carbon fiber accents and decor",
+      "Uniquely styled exterior with high-gloss black appointments",
+      "20\" 12-Spoke alloy wheels with Pearl Nickel finish",
+      "Available 21\" 12-Spoke alloy wheels with Diamond Cut/Android finish",
+      "Available Platinum Package with performance suspension upgrade"
+    ]
+  }
+}

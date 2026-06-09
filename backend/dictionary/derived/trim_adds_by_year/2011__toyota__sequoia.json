@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|toyota|sequoia",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "inventory_toyota_sequoia",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Platinum",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "weight of any cargo, occupants and available equipment. Calculated with new SAE J2807 method. 8. Cargo and load capacity limited by",
+      "trademarks owned by Bluetooth SIG, Inc. and any use of such marks by Toyota is under license. Other",
+      "information provided by the navigation system or any XM services mentioned (if installed) are dependent upon many factors. Use common sense when relying on",
+      "avigation updates available at additional cost. See your N",
+      "Controls, Inc. 20. Vehicle Stability",
+      ". Do not put objects in front of an AB or around the seatback",
+      "tire pressure is critically low. For optimal tire wear and performance,",
+      "in the vehicle’s immobilizer. Because the transponder chip is embedded"
+    ],
+    "Limited": [
+      "HD Radio™ and the HD,"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Limited": 0
+    }
+  }
+}

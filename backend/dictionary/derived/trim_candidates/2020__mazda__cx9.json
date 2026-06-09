@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2020|mazda|cx9",
+  "year": 2020,
+  "make": "Mazda",
+  "model": "CX-9",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Signature",
+    "Premium",
+    "Sport",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

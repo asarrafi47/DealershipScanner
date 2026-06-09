@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2015|ford|superduty",
+  "year": 2015,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "King Ranch",
+    "Lariat",
+    "FX4",
+    "XLT",
+    "SE",
+    "XL",
+    "Premium",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

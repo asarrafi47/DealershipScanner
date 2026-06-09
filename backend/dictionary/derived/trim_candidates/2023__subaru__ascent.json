@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2023|subaru|ascent",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Ascent",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring",
+    "Limited",
+    "Onyx Edition",
+    "Premium",
+    "Base",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

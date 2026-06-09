@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2019|chevrolet|malibu",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2019__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "HYBRID",
+    "LT",
+    "SR",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "2.0L turbocharged engine with 250 hp and 260 lb-ft torque",
+      "9-speed automatic transmission with overdrive",
+      "Perforated leather-appointed seats",
+      "8-inch HD color touchscreen with Navigation and SiriusXM NavTraffic",
+      "Heated and ventilated front seats",
+      "Heated rear outboard seats",
+      "6-way power passenger seat adjuster with lumbar control",
+      "Charge-only USB port on rear of center console"
+    ],
+    "HYBRID": [
+      "1.8L DOHC 4-cylinder with hybrid electric propulsion system",
+      "2-motor hybrid electric drive unit transmission",
+      "High-resolution color driver information center",
+      "8-inch HD color touchscreen with in-vehicle apps"
+    ],
+    "LT": [
+      "Dual-zone automatic climate control",
+      "8-inch HD color touchscreen with in-vehicle apps",
+      "SiriusXM Radio All Access Package with 3-month trial",
+      "Leather-wrapped shift knob",
+      "Leather-wrapped steering wheel with audio and cruise controls",
+      "8-way power driver seat with lumbar control",
+      "Heated front seats",
+      "Body-color antenna"
+    ],
+    "SR": [
+      "Dual-zone automatic climate control",
+      "Power sunroof with express-open and additional fixed skylight",
+      "Leather-wrapped shift knob",
+      "Leather-wrapped steering wheel with audio and cruise controls"
+    ],
+    "SL": [
+      "USB port in center stack",
+      "Teen Driver technology"
+    ],
+    "L": [
+      "Single-zone manual climate control",
+      "Monochromatic driver information center display",
+      "10 airbags with passenger sensing system",
+      "1.5L turbocharged engine with 163 hp and 184 lb-ft torque",
+      "Continuously variable transmission",
+      "8-inch color touchscreen infotainment with Bluetooth and Apple CarPlay",
+      "Chevrolet Connected Access with 10 years standard connectivity",
+      "Premium cloth seats"
+    ]
+  }
+}

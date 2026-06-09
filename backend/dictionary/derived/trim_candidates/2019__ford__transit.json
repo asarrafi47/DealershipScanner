@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2019|ford|transit",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Transit",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

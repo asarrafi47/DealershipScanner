@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2016|nissan|pathfinder",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2016__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch aluminum-alloy wheels",
+      "Dual panorama moonroof",
+      "Tow hitch receiver",
+      "Nissan Hard Drive Navigation System with 8.0-inch VGA touchscreen and voice recognition",
+      "navTraffic and navWeather provided by SiriusXM",
+      "Around View Monitor",
+      "Bose audio system with 13 speakers and DVD video playback",
+      "Streaming audio via Bluetooth wireless technology",
+      "Climate-controlled front seats",
+      "Power-tilt/telescoping steering column with position memory"
+    ],
+    "SL": [
+      "Chrome body side moldings",
+      "Power liftgate",
+      "Heated outside mirrors with reverse tilt-down feature",
+      "Wood-tone interior trim",
+      "120-volt AC power outlet",
+      "Stainless steel kick plates",
+      "Heated steering wheel",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Leather-appointed seats and door trim with heated front and rear seats"
+    ],
+    "SV": [
+      "Smart Auto Headlights",
+      "Fog lights",
+      "7.0-inch QVGA color Information Center display",
+      "RearView Monitor",
+      "Rear Sonar System",
+      "Individual tire pressure display",
+      "Bluetooth Hands-Free Phone System",
+      "Nissan Intelligent Key with Remote Engine Start System",
+      "8-way power adjustable driver's seat",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver"
+    ],
+    "S": [
+      "260-hp 3.5-liter V6 engine with Xtronic CVT",
+      "Available All-Mode 4x4-i intuitive 4WD system",
+      "Hill start assist and hill descent control",
+      "18-inch aluminum-alloy wheels",
+      "Roof rails",
+      "Tri-Zone Automatic Temperature Control",
+      "Advanced Drive-Assist Display",
+      "Remote keyless entry with push button ignition",
+      "7-passenger seating with EZ Flex Seating System",
+      "AM/FM/in-dash 6-CD audio system with six speakers"
+    ]
+  }
+}

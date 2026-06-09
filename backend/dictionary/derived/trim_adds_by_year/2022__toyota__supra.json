@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2022|toyota|supra",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Supra",
+  "ladder_id": "brochure_llm_2022__toyota__supra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A91-CF Edition",
+    "3.0 Premium",
+    "3.0",
+    "2.0"
+  ],
+  "adds_by_trim": {
+    "A91-CF Edition": [
+      "Carbon-fiber front splitter and canards",
+      "Carbon-fiber side rockers and rear canards",
+      "Carbon-fiber duckbill rear spoiler",
+      "19-in. forged-aluminum twin-spoke wheels with matte-black finish",
+      "Black/Red Alcantara-trimmed/leather-trimmed heated sport seats with red stitching"
+    ],
+    "3.0 Premium": [
+      "14-way heated power-adjustable sport seats with driver's-seat memory and 4-way lumbar",
+      "Sport pedals",
+      "Full-color Head-Up Display (HUD)",
+      "12-speaker JBL HiFi Surround Sound system (500W)",
+      "8.8-in. touchscreen with Supra Command featuring touchpad control with navigation",
+      "Wireless Apple CarPlay compatible with voice recognition",
+      "Supra Connect with Automatic Emergency Calling, Roadside Assistance, Remote-Control Lock/Ventilation",
+      "Qi-compatible wireless smartphone charging tray with light indicator",
+      "Driver Assist Package: Full-Speed Dynamic Radar Cruise Control, Blind Spot Monitor with Rear Cross-Traffic Alert, Parking Sensors"
+    ],
+    "3.0": [
+      "3.0L twin-scroll single-turbo DOHC 24-valve inline 6-cylinder engine with 382 hp and 368 lb.-ft. torque",
+      "Active rear sport differential",
+      "19-in. forged-aluminum twin-spoke wheels with dual-tone finish",
+      "Matte-black auto-folding, heated outside mirrors with memory function",
+      "14-way power-adjustable sport seats with driver's-seat memory and 4-way lumbar",
+      "Carbon-fiber interior trim",
+      "10-speaker HiFi sound system (205W)",
+      "8.8-in. display screen with Supra Command and full touchscreen navigation",
+      "Full-Speed Dynamic Radar Cruise Control, Blind Spot Monitor with Rear Cross-Traffic Alert, Parking Sensors with Emergency Braking"
+    ],
+    "2.0": [
+      "2.0L twin-scroll single-turbo 4-cylinder engine with 255 hp and 295 lb.-ft. torque",
+      "Active exhaust",
+      "Launch Control",
+      "8-speed automatic transmission with paddle shifters",
+      "High-performance Michelin Pilot Super Sport summer tires (F: 255/40 ZR18; R: 275/40 ZR18)",
+      "6-lens auto-leveling LED headlights with three low-beam and three high-beam",
+      "Built-in rear spoiler",
+      "Gloss-black auto-folding, heated outside mirrors with memory function",
+      "18-in. cast-aluminum 10-spoke wheels with dual-tone finish",
+      "8-way manual sport seats with 4-way lumbar and 2-way bolster adjustment"
+    ]
+  }
+}

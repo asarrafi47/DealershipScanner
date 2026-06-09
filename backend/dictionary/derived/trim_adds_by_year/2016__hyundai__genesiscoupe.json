@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|hyundai|genesiscoupe",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "ladder_id": "brochure_llm_2016__hyundai__genesiscoupe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2016 GENESIS COUPE ULTIMATE",
+    "2016 GENESIS COUPE R-SPEC",
+    "2016 GENESIS COUPE 3.8"
+  ],
+  "adds_by_trim": {
+    "2016 GENESIS COUPE ULTIMATE": [
+      "Leather seating surfaces and heated front seats",
+      "Power driver seat slide and power lumbar support",
+      "360-Watt Infinity premium audio system with 10 speakers",
+      "Navigation system with 7-inch touchscreen and XM NavTraffic 90-day trial",
+      "Hyundai Blue Link connected car system",
+      "Metalgrain and chrome interior accents",
+      "Aluminum pedals",
+      "Power tilt-and-slide glass sunroof",
+      "High Intensity Discharge Xenon headlights",
+      "Rear parking sensors"
+    ],
+    "2016 GENESIS COUPE R-SPEC": [
+      "Track-tuned suspension with low-velocity control dampers",
+      "Torsen limited-slip differential",
+      "Brembo braking system",
+      "Front camber adjustment bolt",
+      "Black leather bolster with black cloth insert seats",
+      "More aggressive seat bolsters",
+      "R-Spec badging",
+      "19-inch alloy wheels with summer tires",
+      "Illuminated door sill plates",
+      "Aero wiper blades and rear spoiler"
+    ],
+    "2016 GENESIS COUPE 3.8": [
+      "348 hp 3.8L Gasoline Direct Injection V6 engine with Dual CVVT",
+      "6-speed close-ratio manual or 8-speed SHIFTRONIC automatic transmission with paddle shifters",
+      "Sport-tuned suspension and strut brace",
+      "Proximity key entry with push-button start",
+      "Power windows with auto-down/up and power door locks",
+      "Automatic temperature control with outside temperature display",
+      "Electroluminescent gauge cluster with trip computer and information display",
+      "Tilt-and-telescopic leather-wrapped steering wheel",
+      "6-inch color display and AM/FM/SiriusXM/CD/MP3 audio system with 6 speakers",
+      "6-airbag safety system with Electronic Stability Control and 4-wheel disc ABS"
+    ]
+  }
+}

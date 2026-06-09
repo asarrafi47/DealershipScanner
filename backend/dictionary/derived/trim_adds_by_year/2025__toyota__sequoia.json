@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2025|toyota|sequoia",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "2025_toyota_sequoia",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SR5",
+    "Limited",
+    "Platinum",
+    "1794 Edition",
+    "TRD Pro",
+    "Capstone"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "20-inch gray machined alloy wheels and premium LED headlights",
+      "Heated and ventilated front seats and leather-trimmed massaging seats",
+      "12.3-inch digital meter and 14-inch Toyota Audio Multimedia"
+    ],
+    "Platinum": [
+      "Dark-chrome mesh grille and leather massaging seats with contrast stitching",
+      "Panoramic View Monitor and Qi wireless charging",
+      "Highest comfort-oriented Sequoia before specialty trims"
+    ],
+    "1794 Edition": [
+      "1794 Edition badges and American walnut wood-grain interior trim",
+      "Premium Saddle Tan massaging leather seats",
+      "Western-themed luxury trim over Limited"
+    ],
+    "TRD Pro": [
+      "Electronically controlled locking rear differential with MTS, Crawl Control, and DAC",
+      "TRD Pro FOX Internal Bypass suspension and 18-inch matte-black BBS forged wheels",
+      "Black TOYOTA heritage grille with integrated LED light bar",
+      "TRD aluminum skid plate and red-striped leather shift knob"
+    ],
+    "Capstone": [
+      "22-inch dark-chrome machined wheels and semi-aniline massaging leather",
+      "Automatic power-extending running boards and 10-inch Head-Up Display",
+      "Capstone premium contrast stitching — flagship Sequoia trim"
+    ],
+    "SR5": [
+      "i-FORCE MAX Twin-Turbo V6 Hybrid with 437 hp and 583 lb.-ft. torque",
+      "10-speed Electronically Controlled automatic transmission with intelligence (ECT-i)",
+      "Selectable driving and TOW/HAUL modes",
+      "Towing hitch receiver and wiring harness with 4-pin/7-pin connector",
+      "Integrated Trailer Brake Control (ITBC)",
+      "RWD or 4WDemand part-time 4WD",
+      "18-inch silver-painted alloy wheels",
+      "LED headlights with Daytime Running Lights (DRL)",
+      "LED fog lights",
+      "12.3-inch digital meter with selectable gauge display screens"
+    ]
+  }
+}

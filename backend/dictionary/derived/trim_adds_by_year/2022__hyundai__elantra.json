@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2022|hyundai|elantra",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2022__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Elantra Hybrid Limited",
+    "Elantra N Line",
+    "Elantra Limited",
+    "Elantra SE"
+  ],
+  "adds_by_trim": {
+    "Elantra Hybrid Limited": [
+      "Hybrid powertrain",
+      "Ventilated front seats",
+      "10.25-inch digital instrument cluster under single glass cover",
+      "Largest navigation screen in compact car class",
+      "Dual automatic temperature controls",
+      "Dynamic Voice Recognition with conversational commands",
+      "Best-in-class interior volume"
+    ],
+    "Elantra N Line": [
+      "N Line analog gauge cluster",
+      "Sport steering wheel",
+      "Sport seats with red contrast stitching"
+    ],
+    "Elantra Limited": [
+      "Power tilt-and-slide sunroof",
+      "Hands-free smart trunk release",
+      "Available ambient lighting with 64 color customization",
+      "Available Hyundai Bluelink app with remote pre-heat/pre-cool",
+      "Class-exclusive Digital Key via compatible Android smartphone",
+      "Adjustable cupholders"
+    ],
+    "Elantra SE": [
+      "2.0L I-4 Atkinson Cycle engine (147 hp / 132 lb-ft) with Smartstream IVT",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Lane Keeping Assist and Lane Following Assist",
+      "Blind-Spot Collision Warning and Rear Cross-Traffic Collision-Avoidance Assist",
+      "Dual LED projector-type headlights with High Beam Assist",
+      "8.0-inch Display Audio with wireless Android Auto and Apple CarPlay",
+      "Cloth seating surfaces with 6-way adjustable driver seat",
+      "Rearview camera, Drive Mode Select, and 4-wheel disc brakes"
+    ]
+  }
+}

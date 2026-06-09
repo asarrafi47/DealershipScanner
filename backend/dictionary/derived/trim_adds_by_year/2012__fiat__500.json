@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2012|fiat|500",
+  "year": 2012,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_web_2012__fiat__500",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "500e",
+    "Abarth",
+    "Lounge",
+    "Pop"
+  ],
+  "adds_by_trim": {
+    "500e": [
+      "All-electric powertrain with 111 hp and 147 lb-ft torque",
+      "15-inch wheels",
+      "7.0-inch instrument cluster display",
+      "5.0-inch infotainment screen with navigation system",
+      "SiriusXM satellite radio",
+      "Rear parking sensors",
+      "Audible pedestrian warning system",
+      "Automatic climate control",
+      "Heated front seats and heated side mirrors"
+    ],
+    "Abarth": [
+      "More powerful 1.4-liter turbo-four producing 160 hp and 170 lb-ft torque",
+      "16-inch Hyper Black alloy wheels",
+      "High-performance braking system with red brake calipers",
+      "Dual chrome exhaust tips",
+      "Performance-tuned suspension (hatchback) or high-performance tuned suspension (cabrio)",
+      "Black performance top on cabrio model",
+      "Three-mode electronic stability control system",
+      "Performance high-back cloth seats with seat-belt pass-through",
+      "Turbo boost gauge, leather-wrapped shift knob and instrument panel, flat-bottom Abarth steering wheel"
+    ],
+    "Lounge": [
+      "16-inch Tech Silver alloy wheels",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Chrome mirror caps",
+      "Automatic climate control",
+      "SiriusXM satellite radio",
+      "Fixed glass roof on hatchback model",
+      "Auto-dimming rearview mirror"
+    ],
+    "Pop": [
+      "1.4-liter turbocharged engine producing 135 hp and 150 lb-ft torque",
+      "16-inch semi-gloss alloy wheels",
+      "Heated and power side mirrors",
+      "5.0-inch touchscreen with six-speaker Alpine audio system and Bluetooth",
+      "7.0-inch instrument cluster display",
+      "Foglights",
+      "Adjustable front cloth seats",
+      "Spoiler on hatchback model",
+      "Leather-wrapped steering wheel",
+      "Rearview camera and rear sensors on cabrio model"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/fiat/500/"
+}

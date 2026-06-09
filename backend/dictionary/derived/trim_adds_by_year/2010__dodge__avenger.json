@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|dodge|avenger",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Avenger",
+  "ladder_id": "brochure_2010__dodge__avenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "Express"
+  ],
+  "adds_by_trim": {
+    "Express": [
+      "Adds Media Center 130 AM/FM/CD radio with MP3 support",
+      "Adds manual air conditioning",
+      "Adds four speakers",
+      "Adds premium cloth front bucket seats",
+      "Adds power driver one-touch down windows",
+      "Adds rearview day/night mirror",
+      "Adds tire pressure monitoring warning",
+      "Adds remote keyless illuminated entry",
+      "Adds floor console with sliding armrest",
+      "Adds 18-inch aluminum wheels with 3.5L V6 engine"
+    ],
+    "Sport": [
+      "Adds leather-wrapped shift knob",
+      "Adds leather-wrapped steering wheel with audio controls",
+      "Adds power front windows with one-touch up/down"
+    ],
+    "Premium": [
+      "Adds automatic temperature control",
+      "Adds heated driver and front passenger seats",
+      "Adds power 8-way driver seat",
+      "Adds fold-flat passenger seatback with integrated storage",
+      "Adds leather-trimmed bucket seats",
+      "Adds tire pressure monitoring display",
+      "Adds universal garage door opener"
+    ],
+    "Limited": [
+      "Adds GPS navigation with SiriusXM Traffic",
+      "Adds uConnect Phone integration",
+      "Adds remote start system",
+      "Adds Boston Acoustics six speaker sound system",
+      "Adds automatic headlamps",
+      "Adds 18-inch chrome-clad wheels available with 3.5L V6 engine"
+    ]
+  }
+}

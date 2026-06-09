@@ -1,0 +1,73 @@
+{
+  "ladder_id": "2025_chevrolet_35004500_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "35004500",
+    "35004500"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "High Country": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS)"
+      }
+    ],
+    "LTZ": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      }
+    ],
+    "ZR2": [
+      {
+        "label": "Engine Options",
+        "value": "L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS); Battery 0.45 kWh lithium-ion (eAssist mild hybrid)"
+      }
+    ],
+    "Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      }
+    ],
+    "LT Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      }
+    ],
+    "RST": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      }
+    ],
+    "Custom Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS); L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      }
+    ],
+    "Custom": [
+      {
+        "label": "Engine Options",
+        "value": "LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS); L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      }
+    ],
+    "WT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS)"
+      }
+    ]
+  }
+}

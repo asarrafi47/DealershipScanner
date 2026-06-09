@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2019|toyota|tundra",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2019__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD PRO",
+    "1794 EDITION",
+    "PLATINUM",
+    "LIMITED",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "TRD PRO": [
+      "TRD coil-spring front suspension with 2-inch lift and TRD FOX shock absorbers with piggyback reservoirs",
+      "TRD FOX rear shock absorbers with piggyback reservoirs",
+      "TRD dual black-chrome-tipped stainless steel exhaust system",
+      "4WD as standard (4WDemand part-time 4WD with electronically controlled transfer case)",
+      "Overall height increased to 77.2 inches on 4x4 models"
+    ],
+    "1794 EDITION": [
+      "5.7L V8 engine standard (381 hp, 401 lb-ft torque)",
+      "38.0-gallon fuel tank standard",
+      "9,400-pound maximum towing capacity (4x2) and 8,800 pounds (4x4)"
+    ],
+    "PLATINUM": [
+      "5.7L V8 engine standard (381 hp, 401 lb-ft torque)",
+      "38.0-gallon fuel tank standard",
+      "9,400-pound maximum towing capacity (4x2) and 8,800 pounds (4x4)"
+    ],
+    "LIMITED": [
+      "5.7L V8 engine standard (381 hp, 401 lb-ft torque)",
+      "38.0-gallon fuel tank standard",
+      "10,100-pound maximum towing capacity (4x2) and 9,100 pounds (4x4)"
+    ],
+    "SR5": [
+      "5.7L V8 engine available as option (381 hp, 401 lb-ft torque)",
+      "38.0-gallon fuel tank available as option",
+      "10,200-pound maximum towing capacity with 5.7L (4x2) and 9,900 pounds (4x4)"
+    ],
+    "SR": [
+      "4.6L V8 engine standard (310 hp, 327 lb-ft torque)",
+      "6-speed electronically controlled automatic transmission with ECT-i",
+      "Electronic Toyota Direct Ignition (TDI) system",
+      "Heavy-duty battery and heavy-duty alternator standard",
+      "Standard stainless steel exhaust system",
+      "Rear-Wheel Drive standard with Automatic Limited-Slip Differential"
+    ]
+  }
+}

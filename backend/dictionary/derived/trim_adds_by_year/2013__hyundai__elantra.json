@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2013|hyundai|elantra",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2013__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELANTRA SEDAN LIMITED",
+    "ELANTRA COUPE SE",
+    "ELANTRA GT STYLE",
+    "ELANTRA GT TECH",
+    "ELANTRA GT TOUCH & GO",
+    "ELANTRA COUPE GS",
+    "ELANTRA SEDAN GLS"
+  ],
+  "adds_by_trim": {
+    "ELANTRA SEDAN LIMITED": [
+      "Power tilt-and-slide glass sunroof with sunshade",
+      "Black chrome grille accents",
+      "Power side mirrors with integrated turn signal indicators",
+      "Heated front and rear leather seats",
+      "Power 6-way adjustable driver seat with lumbar support",
+      "17-inch Euroflange alloy wheels"
+    ],
+    "ELANTRA COUPE SE": [
+      "Sport-tuned suspension",
+      "Side mirror turn signal indicators",
+      "Leather seats, steering wheel, and shift knob",
+      "Integrated rear spoiler and piano black front grille",
+      "Aluminum sport pedals",
+      "Power tilt-and-slide glass sunroof",
+      "17-inch alloy wheels"
+    ],
+    "ELANTRA GT STYLE": [
+      "360-Watt AM/FM/SiriusXM/CD/MP3 premium audio with 6 speakers",
+      "Panoramic tilt-and-slide sunroof",
+      "Navigation system with 7-inch touchscreen and rearview camera",
+      "Leather seating surfaces",
+      "Integrated side mirror turn signal indicators",
+      "Dual automatic temperature control with automatic defogging",
+      "Power driver seat with lumbar support",
+      "17-inch alloy wheels"
+    ],
+    "ELANTRA GT TECH": [
+      "360-Watt AM/FM/SiriusXM/CD/MP3 premium audio system with 6 speakers",
+      "Navigation system with 7-inch touchscreen and rearview camera",
+      "Dual automatic temperature control with automatic defogging system",
+      "Automatic headlights",
+      "Power driver seat with lumbar support"
+    ],
+    "ELANTRA GT TOUCH & GO": [
+      "Sport-tuned suspension",
+      "Proximity key entry with push-button start",
+      "Leather-wrapped steering wheel and shift knob",
+      "Aluminum sport pedals",
+      "One-touch driver auto-up window",
+      "17-inch alloy wheels"
+    ],
+    "ELANTRA COUPE GS": [
+      "148-HP 1.8L DOHC 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed manual or automatic transmission with SHIFTRONIC and Active ECO System",
+      "Bluetooth hands-free phone system with voice recognition and audio streaming",
+      "Heated front seats and cloth insert door trim",
+      "Tilt-and-telescopic steering wheel with cruise, audio, and phone controls",
+      "Front fog lights, daytime running lights, and bodycolor front grille",
+      "16-inch alloy wheels and dual chrome exhaust tips"
+    ],
+    "ELANTRA SEDAN GLS": [
+      "148-HP 1.8L DOHC 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed manual transmission or available 6-speed automatic with SHIFTRONIC and Active ECO",
+      "Motor Driven Power Steering",
+      "172-Watt AM/FM/SiriusXM/CD/MP3 audio system with 6 speakers",
+      "Air conditioning with solar glass and windshield shade band",
+      "Tilt-and-telescopic steering wheel with cruise control",
+      "Remote keyless entry, power door locks and windows",
+      "6-airbag safety system with advanced dual front airbags",
+      "16-inch alloy wheels"
+    ]
+  }
+}

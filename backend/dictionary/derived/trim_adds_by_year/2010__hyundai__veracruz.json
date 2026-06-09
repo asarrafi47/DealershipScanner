@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|hyundai|veracruz",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Veracruz",
+  "ladder_id": "brochure_llm_2010__hyundai__veracruz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Leather seating surfaces",
+      "Power front passenger seat",
+      "Heated front seats",
+      "Power tilt-and-slide sunroof",
+      "Infinity CD changer audio with subwoofer",
+      "Dual-zone automatic temperature control with AQS",
+      "Memory settings",
+      "Power tilt-telescopic steering wheel",
+      "Proximity key with immobilizer",
+      "Auto-dimming interior mirror with HomeLink"
+    ],
+    "GLS": [
+      "3.8-liter V6 engine with CVVT",
+      "All-Wheel Drive or Front-Wheel Drive options",
+      "6-speed automatic transmission with SHIFTRONIC",
+      "Electronic Stability Control with Traction Control",
+      "ABS with EBD and Brake Assist",
+      "Advanced dual front airbags with Occupant Classification System and side-curtain airbags",
+      "Active front head restraints",
+      "Power driver seat",
+      "Roof rack side rails",
+      "Backup warning system"
+    ]
+  }
+}

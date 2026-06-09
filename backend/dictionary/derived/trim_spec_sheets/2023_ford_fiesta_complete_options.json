@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_ford_fiesta_complete_options",
+  "make": "Ford",
+  "models": [
+    "Fiesta",
+    "Fiesta"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "ST-Line": [
+      {
+        "label": "Engine Options",
+        "value": "1.6L I4 Turbo; Manual 6-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel drive; The 2011 Fiesta was one of the five finalists for the 2011 Green Car of the Year awarded by the Green Car Journal in November 2010, competing with two plug-in electric vehicles, the Nissan Leaf and the Chevrolet Volt (the winner), and two hybrid electric vehicles."
+      }
+    ]
+  }
+}

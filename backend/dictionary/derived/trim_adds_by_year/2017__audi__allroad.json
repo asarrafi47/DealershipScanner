@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2017|audi|allroad",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Allroad",
+  "ladder_id": "brochure_llm_2017__audi__allroad",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "18-inch 5-spoke design wheel with contrasting gray finish"
+    ],
+    "Premium Plus": [
+      "18-inch 5-spoke design wheel with contrasting gray finish"
+    ],
+    "Premium": [
+      "18-inch 5-spoke design wheel with contrasting gray finish"
+    ]
+  }
+}

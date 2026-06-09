@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2017|nissan|gtr",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2017__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO",
+    "PREMIUM"
+  ],
+  "adds_by_trim": {
+    "NISMO": [
+      "NISMO-tuned 600-hp twin-turbocharged V6 engine",
+      "NISMO-tuned suspension system",
+      "NISMO-tuned 17.3-mm hollow rear stabilizer bar",
+      "NISMO black 20-inch super-lightweight RAYS forged-alloy wheels",
+      "NISMO aerodynamic body design with carbon-fiber front/rear fascia and side sills",
+      "Carbon-fiber trunk lid",
+      "Titanium exhaust with exhaust sound control",
+      "NISMO Recaro leather-appointed front seats with red synthetic suede inserts",
+      "NISMO Alcantara-wrapped steering wheel and gauge hood",
+      "NISMO tachometer"
+    ],
+    "PREMIUM": [
+      "3.8-liter twin-turbocharged V6 engine",
+      "Dual-clutch 6-speed transmission",
+      "ATTESA E-TS All-Wheel Drive system",
+      "20-inch super-lightweight RAYS forged-alloy wheels",
+      "Dunlop SP Sport MAXX GT600 DSST CTT high-performance run-flat tires",
+      "Nissan/Brembo braking system",
+      "Bilstein DampTronic suspension system",
+      "Advanced Vehicle Dynamic Control with three driver-selectable modes",
+      "Multi-LED headlights with signature lighting",
+      "NissanConnect with Navigation and 8.0-inch multi-touch color monitor"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2019|nissan|murano",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2019__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch dark hyper silver aluminum-alloy wheels",
+      "Power panoramic moonroof with one-touch open/close",
+      "Climate-controlled front seats (heated and cooled)",
+      "Semi-aniline leather-appointed seats with diamond-quilted inserts",
+      "Contrast micro-piping for seat, door, and console inserts",
+      "Power-tilt and power-telescoping steering column with memory",
+      "Automatic emergency braking with pedestrian detection",
+      "Intelligent lane intervention",
+      "High beam assist",
+      "Traffic sign recognition and rear automatic braking"
+    ],
+    "SL": [
+      "20-inch machine-finished aluminum-alloy wheels",
+      "Silver roof rails",
+      "Motion activated liftgate",
+      "Driver's seat and outside mirrors position memory",
+      "Leather-appointed seats and heated front and rear seats",
+      "Heated steering wheel with adjustable ambient LED lighting",
+      "Nissan door to door navigation with premium traffic",
+      "Intelligent around view monitor",
+      "SiriusXM traffic and travel link"
+    ],
+    "SV": [
+      "Black roof rails",
+      "Remote engine start with intelligent climate control",
+      "10-way power driver's seat with 2-way power lumbar",
+      "4-way power front-passenger's seat",
+      "Leather-wrapped steering wheel and shift knob",
+      "Auto-dimming rearview mirror and HomeLink transceiver",
+      "Blind spot warning and rear cross traffic alert",
+      "Premium package option with Bose audio and moonroof"
+    ],
+    "S": [
+      "260-hp 3.5-liter V6 engine with Xtronic CVT",
+      "18-inch machine-finished aluminum-alloy wheels",
+      "LED headlights with signature daytime running lights",
+      "Intelligent forward collision warning and automatic emergency braking",
+      "NissanConnect 8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Voice recognition for audio and navigation",
+      "Hands-free text messaging assistant",
+      "SiriusXM radio with 3-month complimentary trial access",
+      "Intelligent driver alertness and advanced drive-assist display"
+    ]
+  }
+}

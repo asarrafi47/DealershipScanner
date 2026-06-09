@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2019|ford|explorer",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_llm_2019__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Sport",
+    "Limited",
+    "XLT",
+    "Explorer"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Luxurious leather trim interior",
+      "Limited Luxury Package design option"
+    ],
+    "Sport": [
+      "XLT Sport Appearance Package",
+      "Performance-focused styling"
+    ],
+    "Limited": [
+      "Limited Luxury Package with new design",
+      "Enhanced leather trim options"
+    ],
+    "XLT": [
+      "XLT Desert Copper Package design option",
+      "Range of durable fabric and leather trim choices",
+      "Seating for up to 7 people"
+    ],
+    "Explorer": [
+      "Choice of 3 engines including 365-horsepower 3.5L EcoBoost",
+      "Ford Co-Pilot360 Technology with Adaptive Cruise Control and Forward Collision Warning with Brake Support",
+      "Intelligent 4WD with Terrain Management System",
+      "SYNC 3 voice-activated technology with 8-inch touchscreen",
+      "Smart-charging USB ports",
+      "FordPass Connect with 4G LTE Wi-Fi hotspot",
+      "Apple CarPlay and Android Auto compatibility",
+      "Voice-activated navigation with turn-by-turn directions"
+    ]
+  }
+}

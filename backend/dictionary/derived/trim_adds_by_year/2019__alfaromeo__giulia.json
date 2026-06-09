@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2019|alfaromeo|giulia",
+  "year": 2019,
+  "make": "alfa romeo",
+  "model": "giulia",
+  "ladder_id": "brochure_llm_2019__alfaromeo__giulia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GIULIA SPORT",
+    "GIULIA"
+  ],
+  "adds_by_trim": {
+    "GIULIA SPORT": [
+      "Front and rear sport fascias",
+      "18-inch Sport aluminum wheels with 225/45R18 run-flat all-season performance tires",
+      "Gloss Black window surrounds",
+      "Colored brake calipers (Red/Black/Yellow)",
+      "8.8-inch display with 3D navigation",
+      "Harman Kardon Premium Audio System",
+      "Heated rear seats"
+    ],
+    "GIULIA": [
+      "All-aluminum 2.0L turbocharged 4-cylinder engine with 280 hp and 306 lb-ft of torque",
+      "8-speed automatic transmission",
+      "Rear-Wheel Drive (RWD) or Q4 All-Wheel Drive (AWD) available",
+      "17-inch Bright 10-spoke aluminum wheels with 225/50R17 run-flat all-season performance tires",
+      "Bi-xenon headlamps with LED Daytime Running Lights and LED taillamps",
+      "Leather trim seats with 10-way power front seats and 4-way power lumbar support",
+      "Back-Up Camera with dynamic grid lines and Rear Park Sensors",
+      "Dual-zone climate control",
+      "6.5-inch display with 2D navigation",
+      "8-speaker audio system with SiriusXM Radio 12-month trial"
+    ]
+  }
+}

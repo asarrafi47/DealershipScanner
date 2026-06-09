@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2011|ford|expedition",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2011__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Expedition EL",
+    "Expedition"
+  ],
+  "adds_by_trim": {
+    "Expedition EL": [
+      "3rd-row 60/40 split-fold-flat-to-floor bench seat",
+      "Cargo Management System",
+      "Extended wheelbase 131.0 inches vs 119.0 inches",
+      "Extended length 221.3 inches vs 206.5 inches",
+      "Increased maximum cargo volume 130.8 cu. ft. vs 108.3 cu. ft.",
+      "3.73 rear axle ratio vs 3.31 ratio"
+    ],
+    "Expedition": [
+      "5.4L 3-valve V8 FFV engine with 310 hp and 365 lb-ft torque",
+      "6-speed automatic transmission with tow/haul mode",
+      "4-wheel independent suspension with coil-over shocks",
+      "AdvanceTrac with Roll Stability Control",
+      "Dual-stage front airbags and Safety Canopy System with 3-row side-curtain airbags",
+      "3rd-row storage bins",
+      "1st-row bucket seats with 2nd-row 40/20/40 split seat and CenterSlide",
+      "Automatic headlamps with rainlamp and fog lamps",
+      "Class IV trailer tow receiver and front tow hooks on 4x4",
+      "MyKey owner controls feature and SecuriLock Passive Anti-Theft System"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2020|ram|1500",
+  "year": 2020,
+  "make": "ram",
+  "model": "1500",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Tradesman",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

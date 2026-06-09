@@ -82,7 +82,7 @@ def main(base: str = BASE) -> int:
         page.wait_for_load_state("networkidle", timeout=30000)
         page.screenshot(path=str(DEBUG / "03_listings_filtered.png"), full_page=False)
 
-        # Pill spam then ensure grid still renders
+        # Pill spam then ensure grid still renders (allow client render after navigation)
         triggers = page.locator(".pill-trigger:visible")
         for i in range(min(triggers.count(), 8)):
             for _ in range(5):
@@ -90,6 +90,10 @@ def main(base: str = BASE) -> int:
                     triggers.nth(i).click(timeout=300, force=True)
                 except PlaywrightError:
                     pass
+        try:
+            page.wait_for_selector('a[href^="/car/"]', timeout=12_000)
+        except PlaywrightError:
+            page.wait_for_timeout(1500)
         cards = page.locator('a[href^="/car/"]')
         n_cards = cards.count()
         if n_cards == 0:
@@ -120,7 +124,23 @@ def main(base: str = BASE) -> int:
             title = page.title()
             if "Sarrafi" not in title and str(car_id) not in title:
                 note("warn", "car", f"unexpected title: {title}")
-            if page.locator(".car-chat-section, #car-chat-section").count() == 0:
+            access = page.evaluate(
+                """() => {
+                    const el = document.getElementById('car-page-access-json');
+                    if (!el || !el.textContent) return null;
+                    try { return JSON.parse(el.textContent); } catch { return null; }
+                }"""
+            )
+            has_chat = page.locator("#car-chat-section").count() > 0
+            billing_on = bool(access and access.get("billing_stripe_enabled"))
+            premium_ui = bool(access and access.get("show_premium_features"))
+            if not has_chat and billing_on and not premium_ui:
+                note(
+                    "info",
+                    "car",
+                    "ask tab hidden for guest (billing on; login/premium required)",
+                )
+            elif not has_chat:
                 note("error", "car", "missing chat section")
             # Spam save / gallery buttons
             for sel in ["#car-chat-send", ".primary-button", "button"]:

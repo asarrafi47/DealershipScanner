@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|infiniti|m",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "M",
+  "ladder_id": "brochure_llm_2013__infiniti__m",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M56x",
+    "M56",
+    "M37x Hybrid",
+    "M37x AWD",
+    "M37"
+  ],
+  "adds_by_trim": {
+    "M56x": [
+      "5.6-liter 32-valve V8 engine with 420 hp and 417 lb-ft torque",
+      "Direct Injection Gasoline (DIG) technology with VVEL and CVTCS",
+      "Intelligent All-Wheel Drive (AWD) system",
+      "17.8-gallon fuel capacity",
+      "Estimated 16/23 mpg city/highway fuel economy"
+    ],
+    "M56": [
+      "5.6-liter 32-valve V8 engine with 420 hp and 417 lb-ft torque",
+      "Direct Injection Gasoline (DIG) technology with VVEL and CVTCS",
+      "Rear-wheel drive configuration",
+      "36.7-foot turning diameter",
+      "11.3 cubic feet cargo volume"
+    ],
+    "M37x Hybrid": [
+      "3.5-liter V6 with Infiniti Direct Response Hybrid system and lithium-ion battery",
+      "50 kW electric motor with 360 hp net system power",
+      "Hybrid-Electric Power Steering (H-EPS)",
+      "Estimated 27/32 mpg city/highway fuel economy",
+      "17.8-gallon fuel capacity"
+    ],
+    "M37x AWD": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "3.7-liter 24-valve V6 engine with 330 hp and 270 lb-ft torque",
+      "Curb weight 4,059 lbs",
+      "Estimated 17/24 mpg city/highway fuel economy"
+    ],
+    "M37": [
+      "3.7-liter 24-valve V6 engine with 330 hp and 270 lb-ft torque",
+      "VVEL and CVTCS variable valve control systems",
+      "7-speed automatic transmission with Adaptive Shift Control and manual shift mode",
+      "Vehicle-speed-sensitive power steering",
+      "Infiniti Drive Mode Selector with Standard, Sport, Snow, and Eco modes"
+    ]
+  }
+}

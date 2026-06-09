@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2018,Lexus,LS,500h,Hybrid 3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (AV-S10),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.5,25,33,28,,,,,
+2018,Lexus,LS,500h AWD,Hybrid 3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (AV-S10),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.5,23,31,26,,,,,
+2018,Lexus,LS,500,3.4L V6 (SIDI & PFI),3.4L V6,,Automatic (S10),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.4,19,30,23,,,,,
+2018,Lexus,LS,500 AWD,3.4L V6 (SIDI & PFI),3.4L V6,,Automatic (S10),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.4,18,27,21,,,,,

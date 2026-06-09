@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2013|toyota|venza",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Venza",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "LE",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2016|jaguar|ftype",
+  "year": 2016,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_llm_2016__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F-TYPE R",
+    "F-TYPE S",
+    "F-TYPE"
+  ],
+  "adds_by_trim": {
+    "F-TYPE R": [
+      "3.0L V6 supercharged engine with increased horsepower over S model",
+      "Premium leather interior with twin needle stitching standard",
+      "Performance Seats in Premium leather as standard equipment",
+      "Enhanced lateral support during rapid cornering"
+    ],
+    "F-TYPE S": [
+      "3.0L V6 380 HP supercharged engine versus base 340 HP",
+      "Jaguar High Performance Braking System",
+      "Configurable Dynamic Mode",
+      "Switchable Active Sport Exhaust",
+      "19-inch Propeller Alloy Wheels",
+      "Adaptive Dynamics available",
+      "Sport Suspension with enhanced tuning"
+    ],
+    "F-TYPE": [
+      "3.0L V6 340 HP supercharged engine",
+      "Jaguar Performance Braking System",
+      "18-inch Vela Alloy Wheels",
+      "Sport Suspension",
+      "Sport Exhaust",
+      "Dynamic Mode available",
+      "Standard metallic pedals",
+      "770W Meridian sound system",
+      "Standard powered tailgate"
+    ]
+  }
+}

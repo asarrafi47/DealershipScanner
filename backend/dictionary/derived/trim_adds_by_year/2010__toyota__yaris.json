@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2010|toyota|yaris",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_2010__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Standard P175/65R14 all-season tires",
+      "Adds Standard temporary spare tire"
+    ],
+    "Limited": [
+      "Upgraded to P185/60R15 available premium tires",
+      "Adds Power Package with Brake Assist",
+      "Adds iPod compatibility integration"
+    ]
+  }
+}

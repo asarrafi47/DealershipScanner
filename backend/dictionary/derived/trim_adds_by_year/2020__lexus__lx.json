@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2020|lexus|lx",
+  "year": 2020,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "2018_lexus_lx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "e Bluetooth-enabled phone must first be paired.",
+      "lexus.com/privacyvts/. See Owner’s Manual for additional limitations and details. The",
+      "trial period expires, enrollment in a paid subscription is required to access the service.",
+      "conditions and in certain",
+      "vehicle, or the remainder of any applicable"
+    ],
+    "Premium": [
+      "Ventilated front seats",
+      "Head-up display",
+      "Interior ambient lighting",
+      "Adaptive suspension",
+      "Third-row seat option"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 5.0,
+    "per_trim_add_counts": {
+      "Limited": 5
+    }
+  }
+}

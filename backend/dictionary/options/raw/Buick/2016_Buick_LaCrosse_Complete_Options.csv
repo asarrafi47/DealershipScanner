@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Buick,LaCrosse,AWD,FFV 3.6L V6 (SIDI; FFV),3.6L V6,,Automatic (S6),All-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,3.6,17,26,20,,,,,
+2016,Buick,LaCrosse,LaCrosse,FFV 3.6L V6 (SIDI; FFV),3.6L V6,,Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,3.6,18,28,21,,,,,
+2016,Buick,LaCrosse,LaCrosse,3.6L V6 (SIDI),3.6L V6,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,18,28,21,,,,,
+2016,Buick,LaCrosse,eAssist,Hybrid 2.4L I4 (SIDI; eAssist),2.4L I4,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,24,35,28,,,,,

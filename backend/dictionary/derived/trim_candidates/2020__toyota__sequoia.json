@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2020|toyota|sequoia",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Sport",
+    "TRD",
+    "SE",
+    "LE",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds to or replaces features on SR5 Adds to or replaces features on SR5 Adds to or replaces features on Limited",
+      "Exterior Exterior Exterior Exterior",
+      "LED high- and low-beam headlights with \u2022 Satin-black TRD Sport front door logos \u2022 Chrome auto-dimming heated power outside \u2022 Chrome auto-dimming heated power outside",
+      "Integrated LED fog lights \u2022 20-in. TRD Sport black alloy wheels signal indicators and memory features, turn signal indicators",
+      "Color-keyed heated power outside mirrors \u2022 TRD Sport performance-tuned Bilstein\u00ae2 shocks \u2022 Power liftgate42 with jam protection and puddle lights",
+      "18-in. alloy wheels \u2022 TRD Sport performance-tuned sway bars \u2022 20-in. alloy wheels \u2022 20-in. diamond-cut-finish alloy wheels",
+      "Power tilt/slide moonroof with sliding sunshade Interior Interior Interior",
+      "Interior \u2022 7-passenger seating with easy-clean fabric- \u2022 Premium Audio with Dynamic Navigation24 \u2022 Premium Audio with Dynamic Navigation,24 JBL\u00ae",
+      "Automatic three-zone front and rear climate trimmed front seats and second-row captain\u2019s and 7-in. touch-screen display w/Clari-Fi,\u00ae29 and 7.0-in. touch-screen display",
+      "Optitron instrumentation with speedometer 4-way adjustable front passenger seat 10-way power-adjustable driver\u2019s seat; 6-way 9-in. display, two wireless headphones,37",
+      "Easy-clean fabric-trimmed 40/20/40 split, adjustable front passenger seat, power Bluetooth\u00ae13 hands-free phone controls, power-adjustable front passenger seat",
+      "Multi-function center console with two Dynamic Navigation24 with up to 3-year trial,26 Departure Alert (LDA)31 controls chairs and multi-function center console"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2010|audi|q7",
+  "year": 2010,
+  "make": "Audi",
+  "model": "Q7",
+  "ladder_id": "brochure_llm_2010__audi__q7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "Audi MMI Navigation plus system with rearview camera and front/rear acoustic sensors",
+      "Audi adaptive air suspension with electronically controlled damping",
+      "Automatic four-zone climate control with additional cooling capacity",
+      "Audi xenon plus headlights with automatic self-leveling and LED daytime running lights",
+      "Panorama sunroof",
+      "Power adjustable, auto-dimming and heated side mirrors with integrated LED turn signals",
+      "Luxury six-seat configuration option",
+      "BOSE Surround Sound with AudioPilot noise compensation",
+      "Adaptive cruise control maintaining preset distance from vehicle ahead",
+      "S line exterior package available"
+    ],
+    "Premium Plus": [
+      "Audi MMI operating system controlling audio, climate and car setup",
+      "Audi parking system plus with rearview camera and front/rear acoustic warning sensors",
+      "Audi xenon plus headlights with automatic self-leveling and LED daytime running lights",
+      "Power adjustable, auto-dimming and heated side mirrors with integrated LED turn signals",
+      "Voice control system for mobile phone, audio and navigation",
+      "Eight-color driver information display",
+      "Four-spoke multifunction leather-wrapped heated steering wheel",
+      "Warm Weather Package, Cold Weather Package and Luxury Package available"
+    ],
+    "Premium": [
+      "3.6L V6 or turbodiesel engine with Tiptronic automatic transmission and Dynamic Shift Program",
+      "Quattro permanent all-wheel drive with torque-sensing center differential",
+      "Double-wishbone front and four-link rear suspension with coil springs",
+      "Twelve-way power front seats with four-way lumbar adjustment and six-step heating",
+      "Second-row 40/20/40 split-folding and third-row 50/50 split-folding bench seats",
+      "Audi seven-channel DSP extended sound system with six-disc CD changer",
+      "SIRIUS Satellite Radio with three-month trial subscription",
+      "Power open/close tailgate with programmable opening angle",
+      "Dual-stage airbags for driver/front passenger with seat-mounted side thorax airbags",
+      "Electronic Stabilization Program with rollover mitigation and off-road mode"
+    ]
+  }
+}

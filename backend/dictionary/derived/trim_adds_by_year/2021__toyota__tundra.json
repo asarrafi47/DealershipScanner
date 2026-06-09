@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2021|toyota|tundra",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2021__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1974 Edition",
+    "Platinum",
+    "Limited",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "1974 Edition": [
+      "TRD FOX shock absorbers with piggyback reservoirs front and rear",
+      "2-inch suspension lift with TRD coil-spring double-wishbone front suspension",
+      "4WDemand part-time 4WD standard"
+    ],
+    "Platinum": [
+      "38.0-gallon fuel tank standard",
+      "CrewMax body style with full rear seat legroom and hiproom"
+    ],
+    "Limited": [
+      "38.0-gallon fuel tank standard",
+      "CrewMax body style available"
+    ],
+    "SR5": [
+      "38.0-gallon fuel tank available",
+      "Double Cab or CrewMax body styles"
+    ],
+    "SR": [
+      "5.7-liter 381 hp DOHC V8 engine standard",
+      "6-speed electronically controlled automatic transmission with sequential shift",
+      "Independent double-wishbone front suspension with nitrogen shock absorbers",
+      "Live axle multi-leaf rear suspension with nitrogen shock absorbers",
+      "Power-assisted rack-and-pinion steering",
+      "13.9-inch ventilated front and 13.6-inch rear disc brakes",
+      "Electronic Direct Ignition system with heavy-duty battery",
+      "Rear-Wheel Drive standard with optional 4WDemand 4WD",
+      "All-season tires with full-size spare"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2020|toyota|yaris",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_llm_2020__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "LED auto on/off headlights",
+      "LED Daytime Running Lights integrated into headlights",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Automatic climate control",
+      "Leatherette-trimmed sport front bucket seats",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel"
+    ],
+    "LE": [
+      "Fog lights",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Rear spoiler",
+      "16-inch dark gray split-spoke alloy wheels with P185/60R16 tires"
+    ],
+    "L": [
+      "Halogen headlights",
+      "Daytime Running Lights integrated into headlights",
+      "Color-keyed power outside mirrors",
+      "15-inch styled steel wheels with P185/65R15 tires",
+      "Chrome-tipped exhaust",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "7-inch touch-screen display with integrated backup camera",
+      "Fabric-trimmed sport front bucket seats",
+      "60/40 split fold-down rear seats",
+      "Tilt/telescopic 3-spoke steering wheel"
+    ]
+  }
+}

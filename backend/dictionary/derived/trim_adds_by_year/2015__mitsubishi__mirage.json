@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2015|mitsubishi|mirage",
+  "year": 2015,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_web_2015__mitsubishi__mirage",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Mirage SE CVT",
+    "Mirage Ralliart CVT",
+    "Mirage Black Edition CVT",
+    "Mirage LE CVT",
+    "Mirage ES CVT"
+  ],
+  "adds_by_trim": {
+    "Mirage SE CVT": [
+      "Lane keeping system",
+      "Automatic headlights",
+      "Rain-sensing wipers"
+    ],
+    "Mirage Ralliart CVT": [
+      "No specific features documented in brochure"
+    ],
+    "Mirage Black Edition CVT": [
+      "No specific features documented in brochure"
+    ],
+    "Mirage LE CVT": [
+      "Standard automatic headlights",
+      "Rain-sensing wipers",
+      "Driver's seat armrest"
+    ],
+    "Mirage ES CVT": [
+      "1.2-liter inline three-cylinder engine with 78 hp and 74 lb-ft torque",
+      "CVT automatic transmission",
+      "7.0-inch central touchscreen",
+      "Apple CarPlay and Android Auto compatibility",
+      "Four speakers",
+      "Automatic emergency braking with pedestrian detection",
+      "Five-seat capacity",
+      "10-year/100,000-mile powertrain warranty",
+      "Two years or 30,000 miles complimentary limited maintenance"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mitsubishi/mirage/"
+}

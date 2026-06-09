@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|hyundai|palisade",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Palisade",
+  "ladder_id": "brochure_llm_2020__hyundai__palisade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL Premium Package",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "20-inch alloy wheels",
+      "Dark Brown/Beige Nappa leather seating",
+      "Black/Black Nappa leather seating option"
+    ],
+    "SEL Premium Package": [
+      "20-inch alloy wheels option",
+      "Light Beige leather seating",
+      "Black leather seating",
+      "Gray leather seating"
+    ],
+    "SEL": [
+      "18-inch alloy wheels",
+      "Gray cloth or black leather interior options",
+      "One-touch sliding 2nd-row seats",
+      "Power-folding/reclining 3rd-row seating available",
+      "Hands-free smart liftgate available",
+      "Dual sunroof available",
+      "Wireless device charging available"
+    ],
+    "SE": [
+      "3.8L GDI V6 engine with 291 horsepower",
+      "8-speed automatic transmission with paddle shifters",
+      "Drive Mode Select (Comfort, Eco, Sport, Snow modes)",
+      "HTRAC All Wheel Drive available",
+      "5,000-pound towing capacity",
+      "Up to 86.4 cubic feet usable cargo space",
+      "7 or 8-passenger seating capacity",
+      "Hyundai SmartSense safety technologies standard",
+      "18-inch alloy wheels standard",
+      "Black or gray cloth interior"
+    ]
+  }
+}

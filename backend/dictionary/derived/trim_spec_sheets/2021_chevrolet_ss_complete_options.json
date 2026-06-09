@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2021_chevrolet_ss_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "SS",
+    "SS"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "SS": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Rear-Wheel Drive"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Chevrolet HHR: 2.0 L (120 cu in) turbocharged Ecotec LNF I4 producing 260 hp (194 kW) 2008–2010"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Super Sport SS 396 logo on a Chevrolet Chevelle Product type Performance cars; Chevrolet SSR: 6.0 L (370 cu in) LS2 V8"
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|infiniti|q60",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "Q60",
+  "ladder_id": "brochure_llm_2022__infiniti__q60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q60 RED SPORT 400",
+    "Q60 LUXE",
+    "Q60 PURE"
+  ],
+  "adds_by_trim": {
+    "Q60 LUXE": [
+      "Power sliding/tinted glass moonroof with sliding sunshade",
+      "Semi-aniline leather-appointed seats",
+      "Driver's seat power lumbar and side bolsters",
+      "Heated front seats and steering wheel",
+      "Aluminum accented sport pedals",
+      "Front and Rear Sonar System",
+      "Intelligent Cruise Control (Full-Speed Range)",
+      "Distance Control Assist",
+      "Bose Performance Series Audio 13-speaker stereo with Bose CenterPoint",
+      "HomeLink Universal Transceiver"
+    ],
+    "Q60 RED SPORT 400": [
+      "3.0-liter twin-turbocharged V6 engine 400 hp @ 6,400 rpm, 350 lb-ft @ 1,600–5,200 rpm",
+      "Dynamic Digital Suspension",
+      "Sport brakes with red finish calipers",
+      "20-inch staggered aluminum-alloy sport wheels",
+      "Red S exterior badging",
+      "Unique dual exhaust tips with brushed satin finish",
+      "Steering wheel-mounted paddle shifters",
+      "Black-painted front grille surround, fender vent and side mirrors",
+      "Genuine Matte Black Carbon Fiber interior trim",
+      "Exclusive Dark Chrome interior accents"
+    ],
+    "Q60 PURE": [
+      "3.0-liter twin-turbocharged V6 engine with 300 hp and 295 lb-ft torque",
+      "7-speed automatic transmission with manual shift mode and downshift rev matching",
+      "Rack electronic power steering",
+      "Rear-wheel drive or INFINITI Intelligent All-Wheel Drive",
+      "LED automatic-on/off headlights with signature daytime running lights",
+      "LED signature taillights and front fog lights",
+      "19-inch aluminum-alloy wheels with 255/40R19 run-flat all-season tires",
+      "RearView monitor",
+      "Anti-lock braking system with brake assist",
+      "Leatherette seating with brushed aluminum interior trim"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2013|nissan|gtr",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2013__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Black Edition",
+    "Premium Edition"
+  ],
+  "adds_by_trim": {
+    "Premium Black Edition": [
+      "Special black super-lightweight forged-alloy RAYS® wheels (20\" x 9.5\" front, 20\" x 10.5\" rear)",
+      "Black/Red Recaro® leather-appointed front seats with synthetic suede inserts",
+      "Black/Red interior treatment",
+      "Dry carbon-fiber rear spoiler"
+    ],
+    "Premium Edition": [
+      "VR38DETT 3.8-liter twin-turbocharged V6 with 545 hp and 463 lb-ft torque",
+      "ATTESA E-TS® All-Wheel Drive with electronic traction control",
+      "Dual-clutch 6-speed transmission with paddle shifters and three driver modes",
+      "Nissan/Brembo® 4-wheel disc braking system with 6-piston front/4-piston rear calipers",
+      "Bilstein® DampTronic® suspension with three selectable modes",
+      "Super-lightweight forged-alloy RAYS® wheels with Dunlop performance run-flat tires",
+      "HID auto-on/off headlights, LED daytime running lights, and LED taillights",
+      "Leather-appointed front seats with 8-way power driver's seat and heated seats",
+      "Nissan Hard Drive Navigation System with voice recognition and RearView Monitor",
+      "Nissan Intelligent Key® with Push Button Ignition and Bluetooth® hands-free system"
+    ]
+  }
+}

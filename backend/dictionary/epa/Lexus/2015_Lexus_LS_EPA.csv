@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Lexus,LS,460,4.6L V8 (SIDI & PFI),4.6L V8,,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.6,16,24,19,,,,,
+2015,Lexus,LS,460 AWD,4.6L V8 (SIDI & PFI),4.6L V8,,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.6,16,23,18,,,,,
+2015,Lexus,LS,460 L,4.6L V8 (SIDI & PFI),4.6L V8,,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.6,16,24,19,,,,,
+2015,Lexus,LS,460 L AWD,4.6L V8 (SIDI & PFI),4.6L V8,,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.6,16,23,18,,,,,
+2015,Lexus,LS,600h L,Hybrid 5.0L V8 (SIDI & PFI),5.0L V8,,Automatic (AV-S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,19,23,20,,,,,

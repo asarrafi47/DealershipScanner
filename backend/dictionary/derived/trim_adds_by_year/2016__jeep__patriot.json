@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2016|jeep|patriot",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "brochure_llm_2016__jeep__patriot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Freedom Drive II Off-Road Group",
+    "Freedom Drive I",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Freedom Drive II Off-Road Group": [
+      "2.4L DOHC 16V Dual VVT I-4 engine with 172 hp and 165 lb-ft torque",
+      "Continuously Variable Automatic Transaxle II Low (CVT2L) with low range for off-road",
+      "Off-Road mode with 19:1 crawl ratio",
+      "Hill Descent Control (HDC) for steep descents",
+      "Trail Rated 4WD system with LOCK mode and Off-Road mode",
+      "19 inches water fording capability with additional electrical and body seals",
+      "High air-intake location for water fording",
+      "All-Weather Capability Group with tow hooks, engine block heater, all-season floor mats",
+      "Daytime running headlamps and All-Terrain tires with 17-inch aluminum wheels"
+    ],
+    "Freedom Drive I": [
+      "Active full-time 4WD capability with Electronically Controlled Coupling (ECC)",
+      "Electronically Controlled Coupling constantly monitors wheel slippage and transfers torque",
+      "50/50 front/rear LOCK mode for tough low-speed control conditions"
+    ],
+    "Sport": [
+      "2.0L DOHC 16V Dual VVT I-4 engine producing 158 hp and 141 lb-ft torque",
+      "Five-speed manual transmission standard",
+      "EPA-estimated 30 mpg highway and 23 mpg city on 4x2",
+      "Over 400 miles range on single 13.6-gallon fuel tank",
+      "Optional six-speed automatic transmission with AutoStick manual control",
+      "Optional Continuously Variable Transaxle II (CVT2) with AutoStick shifter",
+      "Optional 2.4L DOHC 16V Dual VVT I-4 engine with 172 hp and 165 lb-ft torque"
+    ]
+  }
+}

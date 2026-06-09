@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|acura|rlx",
+  "year": 2015,
+  "make": "acura",
+  "model": "rlx",
+  "ladder_id": "brochure_llm_2015__acura__rlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance Package",
+    "Tech/Krell Audio Package",
+    "Tech Package",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Advance Package": [
+      "19-inch noise-reducing aluminum-alloy wheels with P245/40 R19 tires",
+      "Premium audio system upgrade",
+      "Enhanced interior appointments"
+    ],
+    "Tech/Krell Audio Package": [
+      "Krell premium audio system",
+      "19-inch noise-reducing aluminum-alloy wheels with P245/40 R19 tires"
+    ],
+    "Tech Package": [
+      "Navigation system integration",
+      "AcuraLink next-generation connectivity"
+    ],
+    "Base": [
+      "3.5L direct injection i-VTEC V-6 engine producing 310 hp",
+      "6-speed automatic transmission with Sequential SportShift paddle shifters",
+      "4-wheel independent double-wishbone suspension with Agile Handling Assist",
+      "4-wheel disc brakes with ABS and Electronic Brake Distribution",
+      "18-inch noise-reducing aluminum-alloy wheels with P245/45 R18 tires",
+      "Precision All-Wheel Steer system",
+      "Lane Keeping Assist System",
+      "Keyless entry system",
+      "Touch screen controls with acuralink technology",
+      "Road noise reduction system"
+    ]
+  }
+}

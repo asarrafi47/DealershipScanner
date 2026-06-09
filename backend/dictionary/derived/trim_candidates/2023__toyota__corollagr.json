@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2023|toyota|corollagr",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla GR",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on Core Edition Adds to or replaces features offered on Circuit Edition",
+      "G16E-GTS Engine | 1.6L turbo 3-cylinder Front and rear Torsen\u00ae7 limited-slip differentials (LSD) 300 hp,44 295 lb.-ft. of torque",
+      "GR-FOUR All-Wheel Drive (AWD) system with three Exterior Features High-performance Michelin\u00ae Pilot\u00ae Sport Cup 2",
+      "Gloss-black front grille with GR badge, functional",
+      "Hood bulge and functional gloss-black air vents Gloss-black front grille with GR badge, functional",
+      "Drive Modes: Eco, Normal, Sport and Custom",
+      "Forged carbon-fiber roof",
+      "Gloss-black front fender vent and GR badge Hood bulge and functional gloss-black air vents",
+      "Gloss-black sporty rear spoiler Forged carbon-fiber roof",
+      "GR sport-tuned suspension",
+      "Gloss-black rear bumper lower cover with Gloss-black front fender vent and GR badge",
+      "High-performance Michelin\u00ae Pilot\u00ae Sport 4"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

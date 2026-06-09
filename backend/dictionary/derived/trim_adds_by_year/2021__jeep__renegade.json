@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2021|jeep|renegade",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_2021__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 1.3L engine with 9-speed automatic transmission",
+      "Adds standard Uconnect Phone with Bluetooth connectivity",
+      "Adds Apple CarPlay and Android Auto compatibility",
+      "Adds SiriusXM Guardian 12-month trial subscription",
+      "Adds front collision warning system",
+      "Adds remote vehicle start capability",
+      "Adds SOS emergency button and roadside assistance",
+      "Adds vehicle finder and theft alarm notification"
+    ],
+    "Sport": [
+      "Upgraded to 3.734 axle ratio for improved performance"
+    ],
+    "Latitude": [
+      "Upgraded to 3.734 axle ratio for improved performance"
+    ],
+    "Trailhawk": [
+      "Adds water fording capability with off-road optimization"
+    ],
+    "Limited": [
+      "Upgraded to 2.4L engine with enhanced fuel efficiency",
+      "Adds Amazon Alexa integration with Uconnect system",
+      "Adds family drive alerts connected services",
+      "Adds Send & Go navigation feature",
+      "Adds Wi-Fi hotspot with 3-month/1GB trial subscription"
+    ]
+  }
+}

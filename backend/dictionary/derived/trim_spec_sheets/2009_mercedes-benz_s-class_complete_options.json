@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2009_mercedes-benz_s-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "S-Class",
+    "S-Class"
+  ],
+  "year_min": 2007,
+  "year_max": 2011,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "6.0L V12 Turbo; Automatic (S5)"
+      }
+    ],
+    "S550": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "S600": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V12 Turbo; Automatic 5-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2019|nissan|gtr",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2019__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO",
+    "TRACK EDITION",
+    "PREMIUM",
+    "PURE"
+  ],
+  "adds_by_trim": {
+    "NISMO": [
+      "NISMO-tuned 3.8L twin-turbocharged V6 with 600 hp",
+      "NISMO aerodynamic body design with carbon-fiber front/rear fascia and side sills",
+      "Carbon-fiber trunk lid",
+      "NISMO tachometer",
+      "NISMO Recaro leather-appointed front seats with red synthetic suede inserts",
+      "NISMO Alcantara-wrapped steering wheel and gauge hood",
+      "NISMO Black/Red interior treatment"
+    ],
+    "TRACK EDITION": [
+      "NISMO black 20-inch super-lightweight RAYS forged-alloy wheels",
+      "Dunlop SP Sport MAXX GT600 DSST CTT high-performance run-flat tires",
+      "Dry carbon-fiber rear spoiler",
+      "Body bonding to key spot welds",
+      "Black/Red interior treatment",
+      "Black/Red Recaro leather-appointed front seats",
+      "NISMO-tuned 17.3 mm hollow rear stabilizer bar"
+    ],
+    "PREMIUM": [
+      "Titanium exhaust with exhaust sound control",
+      "Bose audio system with 11 speakers including dual subwoofers",
+      "Active Noise Cancellation and Active Sound Enhancement",
+      "NISMO-tuned 17.3 mm hollow rear stabilizer bar",
+      "Body bonding to key spot welds",
+      "NISMO black 20-inch super-lightweight RAYS forged-alloy wheels"
+    ],
+    "PURE": [
+      "3.8-liter twin-turbocharged V6 engine with 565 hp",
+      "Dual-clutch 6-speed transmission with paddle shifters",
+      "ATTESA E-TS all-wheel drive with independent rear-mounted transaxle",
+      "Multi-LED headlights with signature lighting",
+      "NissanConnect 8-inch touchscreen display with Apple CarPlay",
+      "Nissan Navigation System with SiriusXM Services",
+      "Nissan/Brembo braking system with 15.35-inch front and 15.0-inch rear rotors",
+      "Bilstein DampTronic suspension system with VDC three driver-selectable modes",
+      "Leather-appointed front seats with synthetic suede inserts",
+      "AM/FM/CD audio system with six speakers"
+    ]
+  }
+}

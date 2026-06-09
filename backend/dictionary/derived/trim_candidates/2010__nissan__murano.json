@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|nissan|murano",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Murano",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

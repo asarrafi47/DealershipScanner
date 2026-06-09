@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2010|chevrolet|silverado",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "SS",
+    "Z71",
+    "LT",
+    "Custom",
+    "LS",
+    "WT",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

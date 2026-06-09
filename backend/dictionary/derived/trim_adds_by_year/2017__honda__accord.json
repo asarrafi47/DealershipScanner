@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2017|honda|accord",
+  "year": 2017,
+  "make": "Honda",
+  "model": "Accord",
+  "ladder_id": "brochure_2017__honda__accord",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L",
+    "Sport",
+    "EX",
+    "LX",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [],
+    "SE": [
+      "Adds rain-sensing windshield wipers",
+      "Adds auto high-beam headlights",
+      "Adds black leather-trimmed seats with red stitching",
+      "Adds special edition badging"
+    ],
+    "LX": [
+      "Upgraded to 17-inch alloy wheels",
+      "Adds LED Daytime Running Lights (DRL)",
+      "Adds LED fog lights",
+      "Adds leather-wrapped steering wheel",
+      "Adds aluminum pedals",
+      "Upgraded to 10-way power driver's seat adjustment with lumbar support",
+      "Adds 60/40 split fold-down rear seatback with center armrest"
+    ],
+    "EX": [
+      "Upgraded to 17-inch alloy wheels",
+      "Adds Honda LaneWatch",
+      "Adds one-touch power moonroof with tilt feature",
+      "Adds Smart Entry with push button start",
+      "Adds heated power side mirrors with integrated turn indicators",
+      "Adds 360-watt premium audio system with 7 speakers including subwoofer"
+    ],
+    "Sport": [
+      "Upgraded to 189-hp 2.4-liter i-VTEC 4-cylinder engine",
+      "Upgraded to 19-inch alloy wheels",
+      "Adds LED Daytime Running Lights (DRL)",
+      "Adds LED fog lights",
+      "Replaces standard seating with black leather-trimmed seats with red stitching",
+      "Adds heated front seats",
+      "Adds auto high-beam headlights"
+    ],
+    "EX-L": [
+      "Upgraded to continuously variable transmission (CVT) with Sport Mode as standard",
+      "Adds automatic-dimming rearview mirror",
+      "Upgraded to 2-position memory driver's seat",
+      "Replaces standard seating with leather-trimmed seats",
+      "Adds heated front seats",
+      "Upgraded to 360-watt premium audio system with 7 speakers including subwoofer",
+      "Adds Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "Adds standard Honda Sensing suite of safety and driver-assistive features"
+    ]
+  }
+}

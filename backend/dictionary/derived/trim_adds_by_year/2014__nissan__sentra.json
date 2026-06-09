@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2014|nissan|sentra",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2014__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "FE+ SV",
+    "S",
+    "FE+ S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "17-inch Split 7-spoke aluminum-alloy wheels",
+      "4.3-inch color display for audio system",
+      "SiriusXM Satellite Radio",
+      "Bluetooth Hands-free Phone System",
+      "USB connection port",
+      "Leather-wrapped steering wheel",
+      "Maple wood-tone interior trim",
+      "Sliding front armrest",
+      "Dual Zone Automatic Temperature Control",
+      "TPMS with Easy-Fill Tire Alert"
+    ],
+    "SR": [
+      "17-inch Forked 5-spoke aluminum-alloy wheels",
+      "Fog lights",
+      "Sport front and rear fascias with sport grille",
+      "Chrome exhaust finisher",
+      "Premium Sport cloth seat trim",
+      "Sport silver interior trim",
+      "Rear spoiler with integrated brake light"
+    ],
+    "SV": [
+      "Standard Xtronic CVT transmission",
+      "Illuminated steering wheel-mounted cruise and audio controls",
+      "AM/FM/CD audio system with six speakers",
+      "Maple wood-tone interior trim",
+      "Heated mirrors with LED turn signals",
+      "Vehicle Security System",
+      "Nissan Intelligent Key with Push Button Ignition"
+    ],
+    "FE+ SV": [
+      "Rear spoiler",
+      "Special low rolling resistance tires",
+      "Underbody and rear tire aerodynamic deflectors"
+    ],
+    "S": [
+      "Trip computer and outside temperature display",
+      "Air conditioning with in-cabin microfilter",
+      "AM/FM/CD audio system with four speakers and auxiliary audio input jack",
+      "Fine Vision electroluminescent gauges",
+      "Tire Pressure Monitoring System",
+      "Six standard air bags including roof-mounted curtain side-impact"
+    ],
+    "FE+ S": [
+      "1.8-liter 4-cylinder engine",
+      "6-speed manual transmission or Xtronic CVT transmission",
+      "Eco and Sport drive modes",
+      "Anti-lock Braking System",
+      "Vehicle Dynamic Control with Traction Control System",
+      "Halogen headlights with LED accent lights",
+      "LED taillights",
+      "Power windows and door locks"
+    ]
+  }
+}

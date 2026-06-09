@@ -17,6 +17,9 @@ class DealerCandidate:
     dealer_website_url: str = ""
     website_url: str = ""
     osm_id: str | None = None
+    google_place_id: str | None = None
+    google_rating: float | None = None
+    google_review_count: int | None = None
     source_dmv: bool = False
     source_osm: bool = False
     source_web: bool = False
@@ -37,4 +40,7 @@ class DealerCandidate:
             "source_osm": self.source_osm,
             "source_web": self.source_web,
             "osm_id": self.osm_id or "",
+            "google_place_id": (self.google_place_id or "").strip() or None,
+            "google_rating": self.google_rating,
+            "google_review_count": self.google_review_count,
         }

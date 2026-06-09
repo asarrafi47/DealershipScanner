@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2022|buick|encore",
+  "year": 2022,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_2022__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Preferred",
+    "Limited",
+    "Premium",
+    "LT",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds Includes standard safety features foundation",
+      "Adds Standard seating surfaces and interior trim",
+      "Adds Standard powertrain configuration"
+    ],
+    "LE": [],
+    "LT": [],
+    "Premium": [
+      "Adds available Side Blind Zone Alert",
+      "Adds available Rear Cross Traffic Alert",
+      "Adds available Forward Collision Alert",
+      "Adds available Lane Departure Warning",
+      "Adds available Front and Rear Park Assist",
+      "Adds available Rainsense Wipers"
+    ],
+    "Limited": [
+      "Adds available OnStar Safety & Security Plan",
+      "Adds available OnStar Guardian App",
+      "Adds available Emergency-Certified Advisors",
+      "Adds available Automatic Crash Response",
+      "Adds available Roadside Assistance",
+      "Adds available Theft Alarm Notification",
+      "Adds available Stolen Vehicle Assistance"
+    ],
+    "Preferred": [
+      "Adds available Apple CarPlay compatibility",
+      "Adds available Android Auto compatibility",
+      "Adds available Wi-Fi Hotspot"
+    ]
+  }
+}

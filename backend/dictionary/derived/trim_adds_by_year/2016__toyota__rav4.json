@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2016|toyota|rav4",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_llm_2016__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "LED projector-beam headlights with auto on/off feature",
+      "LED Daytime Running Lights (DRL)",
+      "18-in. 5-spoke SuperChrome alloy wheels with P235/55R18 tires",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Entune™ Premium Audio with Integrated Navigation and App Suite",
+      "Dynamic Radar Cruise Control (DRCC)",
+      "Leather-trimmed shift lever with silver accents",
+      "SofTex®-trimmed 8-way power-adjustable driver's seat with memory and lumbar support",
+      "Driver and front passenger heated seats",
+      "Blind Spot Monitor (BSM) and Rear Cross-Traffic Alert (RCTA)"
+    ],
+    "SE": [
+      "LED projector-beam headlights with auto on/off feature",
+      "LED Daytime Running Lights (DRL)",
+      "18-in. 5-spoke sport alloy wheels with P235/55R18 tires",
+      "Black-painted heated power outside mirrors with turn signal indicators",
+      "Entune™ Premium Audio with Integrated Navigation and App Suite"
+    ],
+    "XLE": [
+      "Halogen projector-beam headlights with auto on/off feature",
+      "Integrated fog lights",
+      "Silver-highlighted lower grille",
+      "17-in. 5-spoke alloy wheels with P225/65R17 tires",
+      "Power tilt/slide moonroof with sunshade",
+      "Height-adjustable power liftgate with jam protection",
+      "4.2-in. TFT Multi-Information Display (MID)",
+      "Frameless auto-dimming rearview mirror",
+      "Dual zone automatic climate control with air filter",
+      "Tilt/telescopic leather-trimmed steering wheel with advanced voice recognition and Bluetooth"
+    ],
+    "LE": [
+      "2.5L 4-Cylinder Engine with 176 hp and 172 lb.-ft. torque",
+      "6-speed automatic transmission",
+      "Available Dynamic Torque-Control AWD",
+      "Projector-beam headlights with auto-off feature",
+      "Front and rear skid plates",
+      "Power outside mirrors with folding feature and blind spot mirrors",
+      "Roof rails",
+      "17-in. wide-vent steel wheels with wheel covers and P225/65R17 tires",
+      "Automatic Limited-Slip Differential (Auto LSD)",
+      "Backup camera with projected path"
+    ]
+  }
+}

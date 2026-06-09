@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2018|nissan|gtr",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2018__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO",
+    "TRACK EDITION",
+    "PREMIUM",
+    "PURE"
+  ],
+  "adds_by_trim": {
+    "NISMO": [
+      "NISMO-tuned 600-hp 3.8L twin-turbocharged V6 engine with 481 lb-ft torque",
+      "NISMO aerodynamic body design with carbon-fiber front/rear fascia and side sills",
+      "NISMO-tuned suspension system",
+      "Carbon-fiber trunk lid",
+      "NISMO tachometer",
+      "NISMO Recaro leather-appointed front seats with red synthetic suede inserts",
+      "NISMO Alcantara-wrapped steering wheel and gauge hood",
+      "NISMO Black/Red interior treatment"
+    ],
+    "TRACK EDITION": [
+      "NISMO black 20-inch super-lightweight RAYS forged-alloy wheels",
+      "Dunlop SP Sport MAXX GT600 DSST CTT (NR1) high-performance run-flat tires",
+      "Dry carbon-fiber rear spoiler",
+      "Black/Red interior treatment",
+      "Black/Red Recaro leather-appointed front seats",
+      "NISMO-tuned 17.3mm hollow rear stabilizer bar",
+      "Body bonding to key spot welds"
+    ],
+    "PREMIUM": [
+      "Titanium exhaust with exhaust sound control",
+      "Bose audio system with 11 speakers including dual subwoofers",
+      "Active Noise Cancellation and Active Sound Enhancement",
+      "NISMO-tuned 17.3mm hollow rear stabilizer bar",
+      "NISMO black 20-inch super-lightweight RAYS forged-alloy wheels",
+      "Dunlop SP Sport MAXX GT600 DSST CTT (NR1) high-performance run-flat tires"
+    ],
+    "PURE": [
+      "3.8-liter twin-turbocharged V6 engine with 565 hp and 467 lb-ft torque",
+      "Dual-clutch 6-speed transmission with paddle shifters",
+      "ATTESA E-TS All-Wheel Drive with independent rear-mounted transaxle",
+      "20-inch super-lightweight RAYS forged-alloy wheels",
+      "Dunlop SP Sport MAXX GT600 DSST high-performance run-flat tires",
+      "Nissan/Brembo braking system with 6-piston front and 4-piston rear calipers",
+      "Bilstein DampTronic suspension system",
+      "Advanced Vehicle Dynamic Control (VDC) with three driver-selectable modes",
+      "Multi-LED headlights with signature lighting",
+      "Nissan Navigation System, NissanConnect Services, and Apple CarPlay"
+    ]
+  }
+}

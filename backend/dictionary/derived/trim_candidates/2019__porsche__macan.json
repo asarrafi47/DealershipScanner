@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2019|porsche|macan",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "Macan",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

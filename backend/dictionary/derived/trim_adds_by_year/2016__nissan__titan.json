@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2016|nissan|titan",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_llm_2016__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM RESERVE",
+    "PRO-4X",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM RESERVE": [
+      "20-inch dark chrome-clad aluminum-alloy wheels with all-season tires",
+      "Dark and satin chrome-finished grille and door handles",
+      "Two-tone exterior paint with chrome-tipped exhaust finisher",
+      "Climate-controlled front seats with heating and cooling function",
+      "Heated rear seats and premium leather-appointed seats with Platinum Reserve logo",
+      "Heated leather-wrapped steering wheel with wood-tone insert",
+      "Premium open-pore wood-tone interior trim with dark chrome accents",
+      "Around View Monitor with Moving Object Detection",
+      "Metallic kick plate finisher with Platinum Reserve logo"
+    ],
+    "PRO-4X": [
+      "Switch-operated 2-speed transfer case for 4WD capability",
+      "Hill descent control and electronic locking rear differential",
+      "Bilstein off-road performance shocks",
+      "18-inch dark-finished aluminum-alloy wheels with all-terrain tires",
+      "Transfer case and lower radiator skid plates",
+      "Spray-on bedliner"
+    ],
+    "SL": [
+      "Optional 20-inch aluminum-alloy wheels with all-season tires",
+      "LED headlights and daytime running lights",
+      "Fog lights and running boards",
+      "Chrome exterior trim and auto-dimming driver's outside mirror",
+      "Front and rear sonar system",
+      "Utili-track Channel System with four tie-down cleats and dampened assist locking tailgate",
+      "NissanConnect with Navigation and Mobile Apps 7.0-inch touchscreen",
+      "Blind Spot Warning and Rear Cross Traffic Alert"
+    ],
+    "SV": [
+      "Oil pan and fuel tank skid plates on 4x4 models",
+      "Front tow hooks and power heated extendable tow mirrors with turn signals and puddle lights",
+      "Advanced Drive-Assist Display with 5.0-inch display and electroluminescent gauges",
+      "SiriusXM Satellite Radio with 36-month trial period",
+      "Trailer sway control, trailer brake controller, and trailer light check function",
+      "Class IV tow hitch receiver with 4-pin and 7-pin wiring harness",
+      "Integrated gooseneck hitch"
+    ],
+    "S": [
+      "5.6-liter 32-valve V8 engine with 7-speed automatic transmission (late availability)",
+      "17-inch styled steel wheels with all-season tires",
+      "Easy Clean vinyl flooring",
+      "40/20/40 split bench front seat with flip-down center seat and column shifter",
+      "Remote keyless entry with push button ignition and Nissan Intelligent Key",
+      "Remote engine start system with intelligent climate control",
+      "Dual zone automatic temperature control with manual sliding back window",
+      "Six cup holders and eight bottle holders",
+      "AM/FM/CD audio system with 5.0-inch color display and Bluetooth connectivity",
+      "Vehicle Dynamic Control with Traction Control System"
+    ]
+  }
+}

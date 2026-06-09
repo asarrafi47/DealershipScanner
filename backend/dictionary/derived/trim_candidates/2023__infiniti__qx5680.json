@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2023|infiniti|qx5680",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sensory",
+    "Luxe",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

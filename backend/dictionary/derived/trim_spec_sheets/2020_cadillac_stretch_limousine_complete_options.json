@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2020_cadillac_stretch_limousine_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Stretch Limousine",
+    "Stretch Limousine"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "(6.0L) V8 Series 60S Fleetwood – 133 in wheelbase Series 62 – 129.5 in wheelbase: (6.0L) V8 Series 60S Fleetwood – 133 in wheelbase Series 62 – 129.5 in wheelbase Eldorado – 129.5 in wheelbase Offered 4 door Sedan Seville option Series 70 E"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "(6.0L) V8 Series 60S Fleetwood – 133 in wheelbase Series 62 – 129.5 in wheelbase; Here you will find information on Cadillac trim levels, packages, equipment grou"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The Cadillac XTS 70″ features dual TV monitors on the side panels of the vehicle, wood tri"
+      }
+    ]
+  }
+}

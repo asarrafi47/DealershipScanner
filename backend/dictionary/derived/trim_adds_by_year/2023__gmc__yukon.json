@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2023|gmc|yukon",
+  "year": 2023,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "2023_gmc_yukon",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SLE",
+    "SLT",
+    "AT4",
+    "Denali",
+    "Denali Ultimate"
+  ],
+  "adds_by_trim": {
+    "SLT": [
+      "Perforated leather appointments and 20-inch wheels vs SLE",
+      "Enhanced driver information and comfort features"
+    ],
+    "AT4": [
+      "Off-road suspension, 2-speed transfer case, and AT4 exterior",
+      "20-inch AT tires and skid plate protection"
+    ],
+    "Denali": [
+      "Denali interior with wood trim and premium audio",
+      "Power-retractable steps and MultiPro tailgate available"
+    ],
+    "Denali Ultimate": [
+      "6.2L V8 standard path with ultimate luxury interior and Super Cruise available",
+      "Highest Yukon trim in 2024 brochure"
+    ],
+    "SLE": [
+      "5.3L V8 engine with 10-speed automatic transmission standard",
+      "Available Max Trailering Package with ProGrade Trailering System",
+      "Available AutoTrac 2-speed transfer case on 4WD models",
+      "Up to 8,400 lbs maximum trailering capacity (2WD with Max Trailering)",
+      "Available 6.2L V8 engine or 3.0L Duramax Turbo Diesel options"
+    ]
+  }
+}

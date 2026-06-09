@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2015|nissan|juke",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Juke",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "Nismo",
+    "SV",
+    "S",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

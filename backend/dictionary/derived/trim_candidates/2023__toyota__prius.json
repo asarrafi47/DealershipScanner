@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2023|toyota|prius",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Prius",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features: Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "Timing with intelligence (VVT-i), 150 hp @ 6000 rpm, Valve Timing with intelligence (VVT-i), 150 hp Valve Timing with intelligence (VVT-i), 150 hp",
+      "Hybrid system net power: 194 hp H ybrid system net power: 196 hp H ybrid system net power: 194 hp",
+      "Electronically controlled Continuously Variable E lectronically controlled Continuously E lectronically controlled Continuously",
+      "Transmission (ECVT) Variable Transmission (ECVT) Variable Transmission (ECVT)",
+      "Front-Wheel Drive (FWD) E lectronic On-Demand All-Wheel Drive (AWD) F ront-Wheel Drive (FWD)",
+      "Independent MacPherson strut front suspension with I ndependent MacPherson strut front I ndependent MacPherson strut front",
+      "Electric Power Steering (EPS); power-assisted E lectric Power Steering (EPS); power-assisted E lectric Power Steering (EPS); power-",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED projector low- and high-beam headlights, Bi-LED projector low- and high-beam headlights, B i-LED projector low- and high-beam headlights,",
+      "Automatic High Beams (AHB)35 and auto-off Automatic High Beams (AHB)35 and auto-off Automatic High Beams (AHB)35 and auto on/off",
+      "LED Daytime Running Lights (DRL) with on/off feature L ED Daytime Running Lights (DRL) with on/off feature L ED Daytime Running Lights (DRL) with on/off feature"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on LE AWD Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE AWD",
+      "Timing with intelligence (VVT-i), 150 hp @ 6000 rpm, 139 Valve Timing with intelligence (VVT-i), 150 hp Valve Timing with intelligence (VVT-i), 150 hp",
+      "H ybrid system net power: 196 hp H ybrid system net power: 194 hp H ybrid system net power: 196 hp",
+      "E lectronically controlled Continuously Variable E lectronically controlled Continuously E lectronically controlled Continuously",
+      "Transmission (ECVT) Variable Transmission (ECVT) Variable Transmission (ECVT)",
+      "E lectronic On-Demand All-Wheel Drive (AWD) F ront-Wheel Drive (FWD) E lectronic On-Demand All-Wheel Drive (AWD)",
+      "I ndependent MacPherson strut front suspension with I ndependent MacPherson strut front I ndependent MacPherson strut front",
+      "E lectric Power Steering (EPS); power-assisted E lectric Power Steering (EPS); power- E lectric Power Steering (EPS); power-",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED projector low- and high-beam headlights, Fixed glass roof F ixed glass roof",
+      "Automatic High Beams (AHB)35 and auto on/off L ED Daytime Running Lights (DRL) with on/off feature L ED Daytime Running Lights (DRL) with on/off feature",
+      "LED Daytime Running Lights (DRL) with on/off feature L ED taillights and stop lights L ED taillights and stop lights"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

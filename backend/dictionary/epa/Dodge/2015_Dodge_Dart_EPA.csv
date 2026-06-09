@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Dodge,Dart,Dart,1.4L I4,1.4L I4,,Automatic (AM6),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,1.4,27,36,30,,,,,
+2015,Dodge,Dart,Dart,FFV 2.0L I4 (FFV),2.0L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,4,2.0,24,33,27,,,,,
+2015,Dodge,Dart,Dart,2.4L I4,2.4L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,23,34,27,,,,,
+2015,Dodge,Dart,Dart,2.0L I4,2.0L I4,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,25,35,29,,,,,
+2015,Dodge,Dart,Dart,2.4L I4,2.4L I4,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,22,34,27,,,,,
+2015,Dodge,Dart,Aero,1.4L I4,1.4L I4,,Automatic (AM6),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,1.4,28,38,32,,,,,
+2015,Dodge,Dart,Aero,1.4L I4,1.4L I4,,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,1.4,28,39,32,,,,,
+2015,Dodge,Dart,GT,2.4L I4,2.4L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,22,31,25,,,,,
+2015,Dodge,Dart,GT,2.4L I4,2.4L I4,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,23,33,26,,,,,

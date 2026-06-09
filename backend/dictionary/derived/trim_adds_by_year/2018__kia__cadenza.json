@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|kia|cadenza",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Cadenza",
+  "ladder_id": "brochure_llm_2018__kia__cadenza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TECHNOLOGY",
+    "PREMIUM",
+    "LIMITED"
+  ],
+  "adds_by_trim": {
+    "TECHNOLOGY": [
+      "8-inch touchscreen with Apple CarPlay and Android Auto (vs. 7-inch base)",
+      "Front LED fog lights",
+      "LED headlights with High-Beam Assist",
+      "19-inch alloy wheels (vs. 18-inch base)",
+      "UVO eServices Infotainment System"
+    ],
+    "PREMIUM": [
+      "Blind Spot Detection with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Rear Park Assist System",
+      "Harman Kardon 630-watt premium audio with Clari-Fi and 12 speakers",
+      "Smart Welcome with power-folding mirrors and illuminated door handles",
+      "Panoramic sunroof with power sunshade",
+      "LED interior lighting",
+      "HomeLink and compass",
+      "UVO eServices Infotainment System"
+    ],
+    "LIMITED": [
+      "19-inch dark satin alloy wheels (vs. standard 19-inch on Premium)",
+      "Additional premium features and styling enhancements"
+    ]
+  }
+}

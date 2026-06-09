@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|porsche|boxster",
+  "year": 2015,
+  "make": "Porsche",
+  "model": "Boxster",
+  "ladder_id": "brochure_web_2015__porsche__boxster",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Boxster S",
+    "Boxster"
+  ],
+  "adds_by_trim": {
+    "Boxster S": [
+      "6-speed manual transmission (base has 5-speed)",
+      "Larger anti-roll bars for enhanced handling",
+      "Upgraded tires for improved cornering and steering response",
+      "6 additional horsepower from VarioCam system",
+      "Enhanced low-end torque and throttle response"
+    ],
+    "Boxster": [
+      "VarioCam system allowing 40-degree intake cam angle adjustment",
+      "8 additional horsepower compared to previous generation",
+      "Improved low-end punch and throttle response",
+      "Reduced fuel consumption and lower emissions",
+      "Springs and dampers upgraded from previous S model",
+      "Heated glass rear window in convertible top",
+      "12-second convertible top operation",
+      "5-speed manual transmission standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/boxster/"
+}

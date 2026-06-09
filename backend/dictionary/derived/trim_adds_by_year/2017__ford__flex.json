@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2017|ford|flex",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_2017__ford__flex",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "8.0-inch touchscreen with SYNC 3 infotainment system",
+      "Two USB ports integrated into infotainment",
+      "Available black roof for visual contrast",
+      "Available appearance package with black wheel and grille details",
+      "Available multi-panel glass roof with power sunshades",
+      "Available second-row bucket seats"
+    ],
+    "Limited": [
+      "Adds leather-trimmed interior seating",
+      "Adds protective seat covers"
+    ]
+  }
+}

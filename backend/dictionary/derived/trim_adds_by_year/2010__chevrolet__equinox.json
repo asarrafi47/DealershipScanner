@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|chevrolet|equinox",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "inventory_chevrolet_equinox",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "LTZ",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "services require vehicle electrical system (including battery), wireless",
+      "chevy.com/warranty IMPORTANT WORDS ABOUT THIS CATALOG. We have tried to make this catalog comprehensive (1-800-950-2438) or visit"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Limited": 0
+    }
+  }
+}

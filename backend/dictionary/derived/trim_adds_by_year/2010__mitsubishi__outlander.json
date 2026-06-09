@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|mitsubishi|outlander",
+  "year": 2010,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2010__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "XLS",
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "3.0-liter V6 engine with 230 hp and 215 lb-ft torque",
+      "6-speed Sportronic automatic transmission with paddle shifters and Idle Neutral Logic",
+      "Standard Super All-Wheel Control (S-AWC) system",
+      "Xenon HID headlamps with auto on/off functionality",
+      "Blackout front grille",
+      "Full-color LCD multi-information display",
+      "Automatic climate control"
+    ],
+    "XLS": [
+      "3.0-liter V6 engine with 230 hp and 215 lb-ft torque",
+      "6-speed Sportronic automatic transmission with paddle shifters",
+      "Xenon HID headlamps as package option",
+      "Compact stowable third-row seat standard",
+      "FUSE Hands-free Link System with voice commands and Bluetooth",
+      "Automatic climate control"
+    ],
+    "SE": [
+      "18-inch alloy wheels",
+      "CVT transmission with paddle shifters",
+      "Fog lights with chrome surround",
+      "Front grille with chrome surround",
+      "Full-color LCD multi-information display",
+      "FAST-Key electronic keyless entry and starting system"
+    ],
+    "ES": [
+      "2.4-liter DOHC 16-valve 4-cylinder engine with 168 hp and 167 lb-ft torque",
+      "Continuously Variable Transmission (CVT)",
+      "Reinforced Impact Safety Evolution (RISE) unibody construction",
+      "Six airbags including front and curtain airbags",
+      "Active Stability Control and Anti-lock Braking System",
+      "Power windows, mirrors and door locks",
+      "16-inch steel wheels with full covers"
+    ]
+  }
+}

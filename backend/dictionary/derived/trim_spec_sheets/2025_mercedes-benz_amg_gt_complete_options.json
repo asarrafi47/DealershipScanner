@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2025_mercedes-benz_amg_gt_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "AMG GT",
+    "AMG GT"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 4.0 L M178 (Mercedes-AMG) twin-turbocharged V8; L M159 V8 (AMG GT3)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "mming interior and exterior mirrors and reverts to the basic light-weight 4-speaker audio system that the GT comes with"
+      }
+    ]
+  }
+}

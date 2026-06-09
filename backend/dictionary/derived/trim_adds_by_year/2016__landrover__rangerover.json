@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|landrover|rangerover",
+  "year": 2016,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_2016__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 254 HP Turbocharged V6 Diesel engine",
+      "Adds Ventilated disc brakes with 13.78-inch front and rear diameters",
+      "Adds Electric Park Brake (EPB) integrated into brake caliper",
+      "Adds 27.7-gallon fuel tank capacity",
+      "Adds Diesel Particulate Filter (DPF)"
+    ],
+    "Limited": [
+      "Upgraded to 340 HP Supercharged V6 gasoline engine"
+    ],
+    "Standard": [
+      "Upgraded to 380 HP Supercharged V6 gasoline engine"
+    ],
+    "HSE": [
+      "Upgraded to 550 HP Supercharged V8 engine (SVAUTOBIOGRAPHY)",
+      "Adds deployable side steps with automatic deployment via door opening or key fob activation",
+      "Adds noble plated mirror caps for exterior styling enhancement"
+    ]
+  }
+}

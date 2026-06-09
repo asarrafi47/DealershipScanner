@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|dodge|avenger",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Avenger",
+  "ladder_id": "brochure_llm_2011__dodge__avenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Avenger Lux",
+    "Avenger Heat",
+    "Avenger MainStreet",
+    "Avenger Express"
+  ],
+  "adds_by_trim": {
+    "Avenger Lux": [
+      "3.6L Pentastar V6 Flex Fuel Engine optional upgrade",
+      "6-speed AutoStick transmission optional upgrade",
+      "18-inch chrome-clad aluminum wheels and tires",
+      "Remote start system standard",
+      "HomeLink Universal Garage Door Opener",
+      "Heated front seats standard",
+      "Power windows with one-touch up/down on front windows",
+      "Media Center 730N or 430N optional upgrades"
+    ],
+    "Avenger Heat": [
+      "3.6L Pentastar V6 Flex Fuel Engine standard",
+      "6-speed AutoStick transmission with Tip Start standard",
+      "18-inch aluminum wheels and tires",
+      "Decklid spoiler",
+      "Dual bright exhaust tips",
+      "Projector fog lamps with automatic headlamps"
+    ],
+    "Avenger MainStreet": [
+      "Body-color, power, heated mirrors",
+      "17-inch aluminum wheels",
+      "Tire Pressure Monitoring Display",
+      "6-speed AutoStick transmission with Tip Start",
+      "Cold Weather Group with remote start and heated seats optional"
+    ],
+    "Avenger Express": [
+      "Power windows with driver's side one-touch",
+      "Air conditioning and air filtration system",
+      "Floor console with fore/aft sliding armrest and dual storage",
+      "Premium front and rear floor mats",
+      "Media Center 130 CD/MP3 radio with four speakers",
+      "Advanced multistage driver and front-passenger air bags",
+      "Supplemental side-curtain and front-seat mounted air bags",
+      "Manual adjustable lumbar support"
+    ]
+  }
+}

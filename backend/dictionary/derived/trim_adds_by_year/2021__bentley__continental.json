@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2021|bentley|continental",
+  "year": 2021,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_llm_2021__bentley__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Continental GT Mulliner (V8)",
+    "Continental GT Speed"
+  ],
+  "adds_by_trim": {
+    "Continental GT Mulliner (V8)": [
+      "Electric 20-way front seats with heating and memory versus 12-way",
+      "Eight duo-tone interior color combinations versus unique Speed colourway",
+      "Diamond Milled technical finish to centre console with Grand Black veneer and chrome",
+      "Breitling clock versus Bentley analogue clock",
+      "Hide covered seat belt buckles versus black",
+      "Interior mood lighting",
+      "Personalised key presentation box",
+      "Deep pile carpets with micro piping and Bentley fasteners",
+      "22-inch Mulliner alloy wheel polished and painted versus Speed silver painted",
+      "Quad oval exhaust finishers versus two oval"
+    ],
+    "Continental GT Speed": [
+      "Front vented 420 x 40 mm disc brakes with 10 piston Bentley branded callipers",
+      "Rear vented 380 x 30 mm disc brakes with 4 piston Bentley branded callipers",
+      "Three chamber air suspension with Continuous Damping Control",
+      "Electronic all-wheel steering",
+      "Bentley Dynamic Ride System with drive dynamics mode",
+      "12.3-inch high-resolution capacitive touchscreen with HDD navigation and Apple CarPlay",
+      "10-speaker Bentley audio system with 650 watts power",
+      "22-inch Speed silver painted wheels with Pirelli summer tires",
+      "Full LED matrix headlamps with high-beam assist and supplementary LED tail lamps",
+      "Four-zone climate control and cruise control"
+    ]
+  }
+}

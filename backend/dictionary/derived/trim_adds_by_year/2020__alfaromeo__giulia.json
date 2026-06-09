@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2020|alfaromeo|giulia",
+  "year": 2020,
+  "make": "alfa romeo",
+  "model": "giulia",
+  "ladder_id": "brochure_llm_2020__alfaromeo__giulia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GIULIA TI SPORT",
+    "GIULIA TI",
+    "GIULIA SPORT",
+    "GIULIA"
+  ],
+  "adds_by_trim": {
+    "GIULIA": [
+      "All-aluminum 2.0L turbocharged 4-cylinder engine with 280 hp and 306 lb-ft torque",
+      "8-speed automatic transmission with Rear-Wheel Drive (RWD)",
+      "Q4 All-Wheel Drive (AWD) available with Dynamic, Natural, Cold Weather modes",
+      "17-inch Bright 10-spoke aluminum wheels with 225/50R17 run-flat all-season tires",
+      "Bi-xenon headlamps with LED daytime running lamps and LED taillamps",
+      "Dual-mode quad exhaust tips",
+      "Leather-trimmed seats with 10-way power front seats and 4-way lumbar support",
+      "8.8-inch touchscreen display with Apple CarPlay, Android Auto, Bluetooth, SiriusXM 12-month trial",
+      "8-speaker audio system with 4 USB outlets",
+      "Full-Speed Forward Collision Warning, rear back-up camera with dynamic grid lines, rear park sensors"
+    ],
+    "GIULIA SPORT": [
+      "Front and rear sport fascias",
+      "Gloss Black window surrounds",
+      "Colored brake calipers (Red/Black/Yellow options)",
+      "Mid-level Audio System with subwoofer",
+      "8.8-inch touchscreen with navigation",
+      "Active Blind Spot with Rear Park Sensors",
+      "Wireless charging pad",
+      "Dual-zone climate control",
+      "7-inch Thin Film Transistor (TFT) cluster display with dynamic display controller"
+    ],
+    "GIULIA TI": [
+      "18-inch Dark double Y-spoke aluminum wheels with 225/45R18 run-flat all-season tires",
+      "Nero Edizione Package option available",
+      "Dynamic Package option with Cold Weather Package"
+    ],
+    "GIULIA TI SPORT": [
+      "Sport Interior Package offered on Ti Sport trim"
+    ]
+  }
+}

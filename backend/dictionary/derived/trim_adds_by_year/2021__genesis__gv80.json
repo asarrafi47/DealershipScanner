@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2021|genesis|gv80",
+  "year": 2021,
+  "make": "genesis",
+  "model": "GV80",
+  "ladder_id": "brochure_llm_2021__genesis__gv80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5T Prestige",
+    "2.5T Prestige",
+    "2.5T"
+  ],
+  "adds_by_trim": {
+    "3.5T Prestige": [
+      "3.5T engine with premium fuel rating producing higher horsepower",
+      "Forward Attention Warning (FAW) with infrared eye-position monitoring",
+      "Third-row cargo volume of 11.6 cubic feet"
+    ],
+    "2.5T Prestige": [
+      "Available on AWD variant",
+      "Blind-Spot View Monitor (BVM) with live blind-spot display",
+      "Blind-Spot Collision-Avoidance Assist (BCA) with automatic braking"
+    ],
+    "2.5T": [
+      "2.5T turbocharged engine",
+      "Smart Cruise Control (SCC) for highway use",
+      "Parking Collision-Avoidance Assist (PCA-R) in reverse",
+      "Rear Cross-Traffic Collision-Avoidance Assist (RCCA)",
+      "Lane Following Assist (LFA) with lane centering capability",
+      "Safe Exit Assist (SEA) for rear occupant detection",
+      "Remote Smart Parking Assist (RSPA)",
+      "Proximity-key smart trunk operation",
+      "Qi wireless smartphone charging",
+      "Near Field Communication (NFC) digital smartphone key compatibility"
+    ]
+  }
+}

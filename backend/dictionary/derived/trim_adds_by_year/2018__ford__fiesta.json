@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2018|ford|fiesta",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_llm_2018__ford__fiesta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ST",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "ST": [
+      "Carbon-fiber gear shift knob",
+      "ST all-weather floor mats",
+      "ST cargo area protector",
+      "ST door-sill plates"
+    ],
+    "SE": [
+      "All-weather floor mats",
+      "Keyless entry keypad",
+      "Bodyside graphics",
+      "Custom graphics and trim kits",
+      "16-inch 8-spoke black-painted machined aluminum wheels"
+    ]
+  }
+}

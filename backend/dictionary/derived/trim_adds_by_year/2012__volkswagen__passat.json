@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2012|volkswagen|passat",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Passat",
+  "ladder_id": "brochure_llm_2012__volkswagen__passat",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V6 SEL Premium",
+    "V6 SE with Navigation",
+    "TDI SE with Sunroof and Navigation",
+    "TDI SE with Sunroof",
+    "2.5L SE",
+    "2.5L S"
+  ],
+  "adds_by_trim": {
+    "V6 SEL Premium": [
+      "Leather seating surfaces with Dinamica inserts on comfort sport seats",
+      "8-way power front seats with power lumbar and memory",
+      "Hard drive, 8-speaker in-dash 6-disc CD changer, SD card reader",
+      "3.6L V6 engine with 280 hp and 258 lbs/ft torque"
+    ],
+    "V6 SE with Navigation": [
+      "RNS 315 navigation system with 5 inch color touchscreen",
+      "Media Device Interface with iPod cable",
+      "3.6L V6 engine with 280 hp and 258 lbs/ft torque",
+      "6-speed automatic transmission with Tiptronic and Sport mode"
+    ],
+    "TDI SE with Sunroof and Navigation": [
+      "18 inch alloy wheels",
+      "RNS 315 navigation system with 5 inch color touchscreen",
+      "Media Device Interface with iPod cable",
+      "Halogen foglights with low-speed corner-illuminating feature",
+      "6-speed DSG automatic transmission with Tiptronic and Sport mode"
+    ],
+    "TDI SE with Sunroof": [
+      "Power tilting and sliding sunroof",
+      "6-speed automatic DSG transmission with Tiptronic and Sport mode"
+    ],
+    "2.5L SE": [
+      "2.5L 170-hp 5-cylinder engine",
+      "Climatronic dual-zone automatic climate control",
+      "Multi-function steering wheel with Coming and Leaving Home feature",
+      "Bluetooth technology",
+      "6-speaker sound system with MP3 and WMA CD player",
+      "Halogen headlights with daytime running lights",
+      "Power tilting and sliding sunroof"
+    ],
+    "2.5L S": [
+      "16 inch steel wheels with wheel covers",
+      "60/40-split folding rear seats",
+      "Cloth seating surfaces",
+      "Electromechanical power steering",
+      "6-speaker AM/FM radio with AUX-in for portable audio",
+      "Standard halogen headlights with power windows and locks"
+    ]
+  }
+}

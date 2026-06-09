@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2014|acura|tsx",
+  "year": 2014,
+  "make": "acura",
+  "model": "tsx",
+  "ladder_id": "brochure_llm_2014__acura__tsx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V-6 Sedan",
+    "Performance Technology Package",
+    "Special Edition",
+    "TSX Sedan",
+    "Sport Wagon"
+  ],
+  "adds_by_trim": {
+    "V-6 Sedan": [
+      "280-hp, 3.5-liter, 24-valve, SOHC VTEC V-6 engine",
+      "18-inch aluminum-alloy wheels with P235/45 R18 high-performance tires",
+      "Active Sound Control system",
+      "5-speed automatic transmission with Sequential SportShift paddle shifters"
+    ],
+    "Performance Technology Package": [
+      "Acura Navigation System with Voice Recognition and rearview camera",
+      "Acura/ELS Surround Premium Audio System with hard disk drive and 10 speakers",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "GPS-linked, solar-sensing, dual-zone automatic climate control",
+      "Song By Voice voice command system"
+    ],
+    "Special Edition": [
+      "Aggressive front corner spoilers, unique rear bumper fascia, and side sills",
+      "Unique color 17-inch aluminum-alloy wheels",
+      "Close-ratio 6-speed manual transmission available",
+      "Exclusive ebony Lux Suede-trimmed interior with red accents",
+      "Red contrast stitching on seats, steering wheel, shifter, and armrest",
+      "Red instrument illumination and ambient cabin lighting",
+      "Silver-colored Sequential SportShift paddle shifters",
+      "Aluminum sport pedals and ebony headliner"
+    ],
+    "TSX Sedan": [
+      "201-hp, 2.4-liter, 16-valve, DOHC i-VTEC 4-cylinder engine",
+      "5-speed automatic transmission with Sequential SportShift paddle shifters",
+      "17-inch aluminum-alloy wheels with P225/50 R17 high-performance tires",
+      "Dual-zone automatic climate control with air filtration",
+      "Bluetooth HandsFreeLink wireless telephone interface",
+      "Sport seats with perforated leather-trimmed interior and contrast stitching",
+      "Heated, power-adjustable front seats",
+      "Power moonroof with tilt feature",
+      "Auto-on/off xenon HID headlights and fog lights",
+      "Acura Premium Sound System with 7 speakers and subwoofer"
+    ],
+    "Sport Wagon": [
+      "Remote-Linked, Power-Operated Tailgate",
+      "Retractable cargo area cover",
+      "66.2 cubic feet cargo volume behind first row",
+      "Extended wheelbase and length for additional cargo space"
+    ]
+  }
+}

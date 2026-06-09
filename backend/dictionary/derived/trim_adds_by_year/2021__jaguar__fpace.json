@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2021|jaguar|fpace",
+  "year": 2021,
+  "make": "Jaguar",
+  "model": "F-Pace",
+  "ladder_id": "brochure_llm_2021__jaguar__fpace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "P550 SVR",
+    "P400 MHEV",
+    "P340 MHEV",
+    "P250"
+  ],
+  "adds_by_trim": {
+    "P550 SVR": [
+      "SVR performance tuning and enhancement"
+    ],
+    "P400 MHEV": [
+      "Mild hybrid electric vehicle (MHEV) powertrain technology"
+    ],
+    "P340 MHEV": [
+      "Mild hybrid electric vehicle (MHEV) powertrain technology"
+    ],
+    "P250": [
+      "Refined hood with precision-engineered front grille inspired by signature monogram pattern",
+      "Distinguished front-end design",
+      "21.66-gallon fuel tank capacity",
+      "Diesel Particulate Filter (DPF) standard"
+    ]
+  }
+}

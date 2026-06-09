@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2015|nissan|370z",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2015__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO® Tech",
+    "NISMO®",
+    "Touring",
+    "Sport Tech",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "NISMO® Tech": [
+      "NISMO®-tuned suspension with increased spring, dampening, and stabilizer rates",
+      "NISMO® reinforced 3-point front strut tower brace",
+      "NISMO® front and rear performance body dampers",
+      "NISMO® aerodynamic body design with front/rear fascia, spoiler, side sills",
+      "Ripple-control shock absorbers"
+    ],
+    "NISMO®": [
+      "NISMO®-tuned free-flow dual exhaust with H-pipe configuration",
+      "NISMO®-tuned suspension with increased spring, dampening, and stabilizer rates",
+      "NISMO® reinforced 3-point front strut tower brace",
+      "NISMO® front and rear performance body dampers",
+      "NISMO® aerodynamic body design with front/rear fascia, spoiler, side sills"
+    ],
+    "Touring": [
+      "Nissan Hard Drive Navigation System with 7-inch VGA touch-screen monitor",
+      "NavTraffic® and NavWeather® provided by SiriusXM",
+      "RearView Monitor",
+      "Body-color dual power heated outside mirrors",
+      "Rear window defroster"
+    ],
+    "Sport Tech": [
+      "Nissan Hard Drive Navigation System with 7-inch VGA touch-screen monitor",
+      "NavTraffic® and NavWeather® provided by SiriusXM",
+      "RearView Monitor",
+      "Sport-tuned shock absorbers"
+    ],
+    "Sport": [
+      "High Intensity Discharge (HID) bi-functional xenon headlights",
+      "LED Daytime Running Lights",
+      "LED taillights",
+      "Front chin aero deflector",
+      "Body-color rear spoiler",
+      "Aluminum hood, doors and hatch",
+      "3-point front strut tower brace",
+      "Sport-tuned shock absorbers"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2011|ford|superduty",
+  "year": 2011,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_web_2011__ford__superduty",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "King Ranch",
+    "Lariat",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "King Ranch": [
+      "King Ranch leather-trimmed interior with distinctive embroidery and unique cabin styling",
+      "Power adjustable pedals with memory function",
+      "Heated and cooled front bucket seats",
+      "Wood-grain interior trim accents",
+      "Unique King Ranch exterior badging and grille design",
+      "Premium audio system",
+      "Dual-zone automatic temperature control"
+    ],
+    "Lariat": [
+      "Heated front seats",
+      "Leather-trimmed steering wheel and shift knob",
+      "Integrated trailer brake controller",
+      "Rear parking sensors",
+      "Bed partitions and tie-downs",
+      "Chrome front bumper",
+      "Unique Lariat badging and grille"
+    ],
+    "XLT": [
+      "Cloth 40/20/40 split front bench seat",
+      "Power windows, locks, and mirrors",
+      "Cruise control",
+      "Air conditioning",
+      "AM/FM stereo with CD and auxiliary input",
+      "Unique XLT badging",
+      "Chrome appearance package elements"
+    ],
+    "XL": [
+      "Manual windows and locks",
+      "Vinyl bench seat",
+      "Air conditioning",
+      "AM/FM stereo",
+      "Basic instrumentation and controls",
+      "Steel wheels with wheel covers",
+      "Work-oriented trim with minimal luxury features"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/superduty/"
+}

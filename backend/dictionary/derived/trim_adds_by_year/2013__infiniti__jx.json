@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2013|infiniti|jx",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "JX",
+  "ladder_id": "brochure_web_2013__infiniti__jx",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "JX35",
+    "JX",
+    "Base JX"
+  ],
+  "adds_by_trim": {
+    "JX35": [
+      "3.5L V6 engine with 265 horsepower and 248 lb-ft torque",
+      "Premium leather seating surfaces throughout interior",
+      "Bose premium audio system with 13 speakers",
+      "Dual-pane panoramic moonroof",
+      "Heated and cooled front seats with power adjustments",
+      "Navigation system with 7-inch dual display",
+      "Around View Monitor with motion detection",
+      "Blind Spot Warning and Blind Spot Intervention",
+      "20-inch alloy wheels"
+    ],
+    "JX": [
+      "3.5L V6 engine with 265 horsepower",
+      "8-passenger seating capacity",
+      "Leather-appointed seating",
+      "Power moonroof",
+      "Dual 7-inch display with navigation",
+      "Heated front seats",
+      "Intelligent Around View Monitor",
+      "18-inch alloy wheels",
+      "Bluetooth hands-free phone system"
+    ],
+    "Base JX": [
+      "3.5L V6 engine producing 265 horsepower",
+      "8-passenger seating with cloth upholstery",
+      "Integrated backup camera system",
+      "Auxiliary audio input jack",
+      "Front wheel drive",
+      "Dual-zone automatic climate control",
+      "Power windows, locks, and side mirrors",
+      "17-inch steel wheels with wheel covers",
+      "Intelligent Key push-button start"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/jx/"
+}

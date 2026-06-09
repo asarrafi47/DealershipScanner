@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2011|volvo|s40",
+  "year": 2011,
+  "make": "Volvo",
+  "model": "S40",
+  "ladder_id": "brochure_2011__volvo__s40",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes five-cylinder in-line engine with double overhead camshafts and 20 valves",
+      "Adds Features five-speed Geartronic automatic transmission with front-wheel drive",
+      "Adds manual gear shifting capability for engine braking assistance",
+      "Adds Includes McPherson front suspension with anti-dive and anti-lift function",
+      "Adds multilink independent rear suspension with front and rear stabilizer bars",
+      "Adds Includes Dynamic Stability and Traction Control (DSTC) system",
+      "Adds Features power-assisted anti-lock disc brakes with ABS, ventilated front discs, and Emergency Brake Assistance (EBA)"
+    ],
+    "Limited": [
+      "Upgraded to 2.5-liter five-cylinder turbocharged engine with 227 horsepower",
+      "Adds light-pressure turbocharger with dual-charge air coolers (Intercoolers)"
+    ]
+  }
+}

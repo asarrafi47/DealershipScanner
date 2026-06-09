@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2021|porsche|taycan",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "Taycan",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2021_Porsche_Taycan_Brochure.pdf",
+  "page_count": 29,
+  "all_pages": false,
+  "trim_hint_pages": [
+    3
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 3,
+      "trim_hint": true,
+      "text": "The models featured in this publication are approved for road use in Germany. Some items of equipment are available as extra-cost options only. The availability of models and options may\nvary from market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult your Porsche Centre. All information regarding\nconstruction, features, design, performance, dimensions, weight and running costs is correct to the best of our knowledge at the time of going to print (08/2019). Porsche reserves the right\nto alter specifications, equipment and delivery scopes without notice. Colours may differ from those illustrated. Errors and omissions excepted. More information in various languages is\navailable at www.porsche.com/BEV",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 3 ---\nThe models featured in this publication are approved for road use in Germany. Some items of equipment are available as extra-cost options only. The availability of models and options may\nvary from market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult your Porsche Centre. All information regarding\nconstruction, features, design, performance, dimensions, weight and running costs is correct to the best of our knowledge at the time of going to print (08/2019). Porsche reserves the right\nto alter specifications, equipment and delivery scopes without notice. Colours may differ from those illustrated. Errors and omissions excepted. More information in various languages is\navailable at www.porsche.com/BEV"
+}

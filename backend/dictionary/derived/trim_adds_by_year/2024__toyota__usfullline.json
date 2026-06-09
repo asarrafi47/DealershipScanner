@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2024|toyota|usfullline",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "ladder_id": "brochure_web_2024__toyota__usfullline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Leather-trimmed seats with power adjustment",
+      "8-inch touchscreen with Toyota Safety Sense 2.5+",
+      "Blind spot monitor with rear cross-traffic alert",
+      "Power liftgate with auto-open feature",
+      "Alloy wheels, upgraded interior trim",
+      "Entune Premium Audio system with six speakers"
+    ],
+    "LE": [
+      "7-inch touchscreen with Apple CarPlay and Android Auto",
+      "Toyota Safety Sense 2.5+ pre-collision system",
+      "Rear-view camera, power windows and locks",
+      "Air conditioning, steering wheel audio controls",
+      "Upgraded fabric upholstery versus base L trim"
+    ],
+    "L": [
+      "2.5L four-cylinder 203-horsepower engine",
+      "Eight-speed automatic transmission",
+      "Front-wheel drive standard",
+      "Power steering, basic fabric seating surfaces",
+      "Manual windows and locks on certain versions",
+      "Standard safety features including dual airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/us-fullline/"
+}

@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2019|audi|q3",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Q3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "S line",
+    "Technik",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

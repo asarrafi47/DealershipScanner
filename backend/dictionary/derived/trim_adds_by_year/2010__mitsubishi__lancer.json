@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2010|mitsubishi|lancer",
+  "year": 2010,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_llm_2010__mitsubishi__lancer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RALLIART",
+    "GTS",
+    "ES",
+    "DE"
+  ],
+  "adds_by_trim": {
+    "RALLIART": [
+      "2.0-liter turbocharged and intercooled engine with 237 hp and 253 lb-ft torque",
+      "6-speed Twin-Clutch Sportronic Shift transmission with paddle shifters",
+      "RALLIART-tuned suspension with 22mm front stabilizer bar",
+      "All-Wheel Control (AWC) system",
+      "Aluminum hood with heat extractor vents",
+      "Dual exhaust with chrome tip",
+      "11.6-inch ventilated front disc brakes with 2-piston calipers",
+      "FAST-Key electronic keyless entry and starting system standard",
+      "Full-color LCD multi-information display",
+      "Automatic climate control"
+    ],
+    "GTS": [
+      "168 hp 2.0-liter engine with 167 lb-ft torque",
+      "11.6-inch ventilated front disc brakes",
+      "21mm rear stabilizer bar",
+      "18-inch alloy wheels with P215/45R18 summer tires",
+      "Xenon HID headlamps and fog lights standard",
+      "Rear spoiler standard",
+      "Full-color LCD multi-information display",
+      "Automatic climate control",
+      "CVT with paddle shifters available"
+    ],
+    "ES": [
+      "152 hp 2.0-liter engine with 146 lb-ft torque",
+      "18-inch alloy wheels with P215/45R18 tires",
+      "Multi-link rear suspension with 18mm stabilizer bar",
+      "Fog lights available as package",
+      "Front grille with chrome surround",
+      "Rear spoiler available as package",
+      "Color-keyed folding power side-view mirrors and door handles",
+      "Bluetooth hands-free phone system with voice command"
+    ],
+    "DE": [
+      "152 hp 2.0-liter DOHC 16-valve engine with MIVEC",
+      "5-speed manual or continuously variable transmission",
+      "MacPherson strut front suspension with 20mm stabilizer bar",
+      "Multi-link rear suspension",
+      "10.9-inch ventilated front disc brakes",
+      "16-inch steel wheels with full covers and P205/60R16 tires",
+      "Power windows, mirrors, and door locks",
+      "Manual air conditioning",
+      "140-watt CD/MP3 audio system",
+      "Seven airbags and RISE unibody construction"
+    ]
+  }
+}

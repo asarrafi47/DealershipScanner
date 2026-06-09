@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_bmw_i7_complete_options",
+  "make": "BMW",
+  "models": [
+    "i7",
+    "i7"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "xDrive60": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "eDrive50": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

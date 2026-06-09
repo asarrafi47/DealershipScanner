@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2019|infiniti|qx50",
+  "year": 2019,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_web_2019__infiniti__qx50",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "QX50 SPORT AWD",
+    "QX50 LUXE AWD",
+    "QX50 PURE AWD"
+  ],
+  "adds_by_trim": {
+    "QX50 SPORT AWD": [
+      "Stylish dark exterior accents and upgraded lighting",
+      "12-speaker premium Bose audio system",
+      "360-degree camera",
+      "Heated steering wheel",
+      "Front seats with heating and ventilation"
+    ],
+    "QX50 LUXE AWD": [
+      "Higher trim levels with 12-speaker or 16-speaker Bose audio",
+      "Available heated and cooled seats",
+      "Available heated steering wheel with power tilting and telescoping",
+      "Available ambient lighting"
+    ],
+    "QX50 PURE AWD": [
+      "Standard all-wheel drive",
+      "7.0-inch digital gauge cluster display",
+      "Dual central touchscreens (8.0-inch and 7.0-inch)",
+      "Apple CarPlay and Android Auto compatibility",
+      "Wireless phone charger",
+      "Power front seats",
+      "Remote start",
+      "Power liftgate",
+      "Six-speaker audio system",
+      "Automatic emergency braking with pedestrian detection, blind-spot monitoring, lane departure warning and intervention, adaptive cruise control, rear emergency braking, automatic high-beams, and ProPilot Assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/qx50/"
+}

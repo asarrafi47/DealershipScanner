@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Toyota,Corolla,Sport,1.6L I4 ((FFS) CA model),1.6L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,30,26,,,,,
+1985,Toyota,Corolla,Corolla,1.6L I4 ((FFS) CA model),1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,24,29,26,,,,,
+1985,Toyota,Corolla,Sport,1.6L I4 ((FFS)),1.6L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,31,26,,,,,
+1985,Toyota,Corolla,Sport,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,25,31,27,,,,,
+1985,Toyota,Corolla,Sport,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,26,24,,,,,
+1985,Toyota,Corolla,Corolla,1.6L I4 ((FFS)),1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,24,29,26,,,,,
+1985,Toyota,Corolla,Corolla,1.6L I4 ((FFS)),1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,24,31,27,,,,,
+1985,Toyota,Corolla,Corolla,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,26,33,29,,,,,
+1985,Toyota,Corolla,Corolla,Diesel 1.8L I4 Diesel,1.8L I4,,Automatic 3-spd,Front-Wheel Drive,Diesel,Compact Cars,4,1.8,29,33,31,,,,,
+1985,Toyota,Corolla,Corolla,Diesel 1.8L I4 Diesel,1.8L I4,,Manual 5-spd,Front-Wheel Drive,Diesel,Compact Cars,4,1.8,32,42,36,,,,,

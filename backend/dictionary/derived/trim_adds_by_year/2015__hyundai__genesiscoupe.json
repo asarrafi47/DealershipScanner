@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|hyundai|genesiscoupe",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "ladder_id": "brochure_llm_2015__hyundai__genesiscoupe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ULTIMATE",
+    "R-SPEC"
+  ],
+  "adds_by_trim": {
+    "ULTIMATE": [
+      "Track-tuned suspension",
+      "Torsen® limited-slip differential",
+      "Brembo® braking system",
+      "Front camber adjustment bolt"
+    ],
+    "R-SPEC": [
+      "6-speed close-ratio manual transmission with carbon synchronizers",
+      "Leather seating surfaces and heated front seats",
+      "Power driver seat slide and power lumbar support",
+      "360-Watt Infinity® premium audio system with 10 speakers",
+      "Navigation system with 7-inch touchscreen and XM NavTraffic®",
+      "Hyundai Blue Link telematics",
+      "Black leather bolster with black cloth insert seats",
+      "More aggressive seat bolsters",
+      "19-inch alloy wheels with summer tires",
+      "High Intensity Discharge Xenon headlights"
+    ]
+  }
+}

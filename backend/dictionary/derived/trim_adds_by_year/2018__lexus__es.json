@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2018|lexus|es",
+  "year": 2018,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_llm_2018__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ES350",
+    "ES300h"
+  ],
+  "adds_by_trim": {
+    "ES350": [
+      "3.5L V6 engine with 268 horsepower",
+      "Panorama glass roof available",
+      "8-year/100,000-mile Hybrid System Warranty (ES300h only)"
+    ],
+    "ES300h": [
+      "Atkinson-cycle engine with Lexus Hybrid Drive",
+      "Total system horsepower specification",
+      "EV mode operation at low speeds",
+      "8-year/unlimited-mileage Corrosion Perforation Warranty"
+    ]
+  }
+}

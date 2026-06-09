@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2018|hyundai|ioniq",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "ladder_id": "brochure_web_2018__hyundai__ioniq",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ioniq Hybrid Limited",
+    "Ioniq Plug-In Hybrid SEL",
+    "Ioniq Hybrid SEL",
+    "Ioniq Plug-In Hybrid SE",
+    "Ioniq Hybrid SE",
+    "Ioniq Hybrid Blue"
+  ],
+  "adds_by_trim": {
+    "Ioniq Hybrid Limited": [
+      "Top trim level with premium positioning above SEL"
+    ],
+    "Ioniq Plug-In Hybrid SEL": [
+      "45-kW electric motor and 8.9-kWh battery for plug-in hybrid capability",
+      "119 mpg-e EPA rating"
+    ],
+    "Ioniq Hybrid SEL": [
+      "Higher trim positioning above SE with additional comfort upgrades"
+    ],
+    "Ioniq Plug-In Hybrid SE": [
+      "45-kW electric motor and 8.9-kWh battery for plug-in hybrid capability",
+      "119 mpg-e EPA rating",
+      "Standard adaptive cruise control with stop-and-go capability"
+    ],
+    "Ioniq Hybrid SE": [
+      "Heated side mirrors",
+      "LED daytime running lights",
+      "10-way power driver's seat with lumbar support",
+      "Heated front seats",
+      "Blue Link connected car system",
+      "Blind-spot monitoring with rear cross-traffic alert"
+    ],
+    "Ioniq Hybrid Blue": [
+      "1.6-liter four-cylinder engine with 32-kW electric motor",
+      "1.6-kWh battery",
+      "Six-speed dual-clutch automatic transmission",
+      "139 hp hybrid system",
+      "58/60 mpg city/highway fuel economy",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane keep assist",
+      "Automatic high-beams",
+      "8.0-inch touchscreen with wireless Android Auto and Apple CarPlay",
+      "4.2-inch instrument cluster display"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/ioniq/"
+}

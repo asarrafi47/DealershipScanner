@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|volkswagen|tiguan",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_llm_2013__volkswagen__tiguan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "19\" Savannah alloy wheels with all-season tires",
+      "Climatronic dual-zone automatic climate control",
+      "Keyless access with push-button start"
+    ],
+    "SE": [
+      "6-speed automatic transmission with Tiptronic and Sport mode",
+      "18\" New York alloy wheels with all-season tires",
+      "Power-operated folding heated side mirrors with memory",
+      "RNS 315 navigation system with 5\" color touchscreen",
+      "Rearview camera"
+    ],
+    "S": [
+      "2.0L TSI turbocharged engine with 200 hp and 207 lbs/ft torque",
+      "6-speed manual transmission",
+      "16\" steel wheels with anti-theft wheel locks",
+      "Climatic manual climate control",
+      "8-speaker sound system with CD player and AM/FM radio",
+      "Anti-theft alarm system and immobilizer theft-deterrent",
+      "Driver and front passenger front and side thorax airbags",
+      "Side Curtain Protection head airbags front and rear",
+      "Electronic Stability Control, Anti-Slip Regulation, and Electronic Differential Lock"
+    ]
+  }
+}

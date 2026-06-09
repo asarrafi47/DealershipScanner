@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2022|ford|broncosport",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Bronco Sport",
+  "ladder_id": "brochure_2022__ford__broncosport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds SYNC 3 infotainment system with 8-inch LCD touchscreen",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds wireless phone connection",
+      "Adds smart-charging USB ports",
+      "Adds FordPass Connect with complimentary remote start/stop and vehicle status features",
+      "Adds voice command capability with Siri and Google integration"
+    ],
+    "Active": [
+      "Adds voice-activated SYNC AppLink for smartphone app control",
+      "Adds Ford+Alexa voice integration"
+    ],
+    "Sport": [
+      "Adds available touchscreen navigation system",
+      "Adds available wireless charging pad"
+    ],
+    "Limited": [
+      "Adds 4G LTE Wi-Fi hotspot capability with FordPass Connect"
+    ]
+  }
+}

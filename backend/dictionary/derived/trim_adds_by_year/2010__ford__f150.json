@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|ford|f150",
+  "year": 2010,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "2010_ford_f150",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "XL",
+    "STX",
+    "XLT",
+    "FX4",
+    "Lariat"
+  ],
+  "adds_by_trim": {
+    "STX": [
+      "STX Décor Package: 18-inch machined aluminum wheels and chrome tubular running boards on SuperCab",
+      "Upgraded appearance vs work-focused XL"
+    ],
+    "XLT": [
+      "Power equipment and chrome accents vs STX",
+      "18-inch chrome-clad or machined wheels; SecuriCode keypad available",
+      "Trailer tow mirrors and navigation/SYNC options available",
+      "FX2 Sport Package: 18-inch wheels and sport suspension available"
+    ],
+    "FX4": [
+      "Electronic Shift-On-The-Fly 4WD with skid plates and off-road tuned suspension",
+      "18-inch polished aluminum off-road wheels; FX4 Luxury Package content available",
+      "Hill descent and transfer case upgrades vs XLT 4x4"
+    ],
+    "Lariat": [
+      "Lariat Chrome Package: 20-inch chrome-clad wheels and premium chrome trim",
+      "Heated leather power seats with memory; dual-zone climate",
+      "PowerScope telescoping trailer tow mirrors and Sony/nav options",
+      "Highest mainstream trim before King Ranch/Platinum/Harley variants"
+    ],
+    "XL": [
+      "3.7L Ti-VCT 4-valve V6 FFV engine",
+      "17-inch machined aluminum wheels",
+      "P255/65R17 OWL all-season tires or P265/70R17 all-terrain tires",
+      "40/20/40 split cloth front seat with manual driver lumbar",
+      "AM/FM stereo with single-CD player and clock",
+      "Cruise control",
+      "Power door locks and windows with front one-touch-up/-down",
+      "Body-color front and rear bumpers with body-color grille",
+      "Power sideview mirrors",
+      "Remote Keyless Entry System with 2 integrated keyhead transmitters"
+    ]
+  }
+}

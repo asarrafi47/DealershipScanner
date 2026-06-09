@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2017|dodge|grandcaravan",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Citadel",
+    "R/T",
+    "GT",
+    "Limited",
+    "SXT",
+    "Sport",
+    "SE",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

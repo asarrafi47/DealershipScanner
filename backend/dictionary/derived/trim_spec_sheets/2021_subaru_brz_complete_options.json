@@ -1,0 +1,47 @@
+{
+  "ladder_id": "2021_subaru_brz_complete_options",
+  "make": "Subaru",
+  "models": [
+    "BRZ",
+    "BRZ"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: the engine bore and stroke is 86mm x 86mm (was Layout Front-engine, rear-wheel-drive)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Options not available to all markets include a Bose sound system upgrade."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, rear-wheel-drive (was Layout Front-engine, rear-wheel-drive; the engine bore and stroke is 86mm x 86mm)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, rear-wheel-drive; the engine bore and stroke is 86mm x 86mm"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: The tS model features an improved suspension setup, 18 inch silver BBS wheels, S"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: The top-of-the-range GT Limited adds leather and Alcantara seating and a rear sp; The top-of-the-range GT Limited adds leather and Alcantara seating and a rear spoiler."
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: Options not available to all markets include a Bose sound system upgrade."
+      }
+    ]
+  }
+}

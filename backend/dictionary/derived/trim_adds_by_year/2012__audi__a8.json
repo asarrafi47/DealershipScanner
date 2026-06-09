@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2012|audi|a8",
+  "year": 2012,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_llm_2012__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A8 L W12",
+    "A8 L",
+    "A8"
+  ],
+  "adds_by_trim": {
+    "A8 L W12": [
+      "6.3-liter W12 engine producing 500 hp and 463 lb-ft torque",
+      "0-60 mph acceleration in 4.4 seconds",
+      "12.2 quart engine oil capacity"
+    ],
+    "A8 L": [
+      "Extended wheelbase at 122.9 inches for increased rear legroom of 42.9 inches",
+      "Rear head room of 39.1 inches",
+      "Interior volume of 121.9 cubic feet",
+      "Overall length extended to 207.4 inches"
+    ],
+    "A8": [
+      "4.2-liter DOHC V8 FSI engine with 372 hp and 328 lb-ft torque",
+      "Eight-speed Tiptronic automatic transmission with Audi quattro all-wheel drive",
+      "0-60 mph acceleration in 5.7 seconds",
+      "EPA fuel economy of 18 city/28 highway/21 combined",
+      "130 mph top speed"
+    ]
+  }
+}

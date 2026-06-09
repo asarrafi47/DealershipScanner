@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2019|honda|odyssey",
+  "year": 2019,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2019__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE",
+    "TOURING",
+    "EX-L Navi/RES",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "LX": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "9-speed automatic transmission with Shift-By-Wire and paddle shifters",
+      "18-inch light silver alloy wheels",
+      "Honda Sensing suite of safety and driver-assistive features",
+      "Blind Spot Information System with Cross Traffic Monitor",
+      "Tri-zone automatic climate control with humidity control and air filtration",
+      "Beige, Gray or Mocha fabric seats",
+      "Seating for 7 with driver's 8-way power seat adjustment",
+      "8-inch Display Audio with Apple CarPlay and Android Auto integration"
+    ],
+    "EX": [
+      "Remote engine start",
+      "18-inch machine-finished alloy wheels",
+      "LED Daytime Running Lights and fog lights",
+      "Multi-angle rearview camera with dynamic guidelines",
+      "Heated power side mirrors with integrated turn indicators",
+      "Auto-on/off headlights with WiperLink",
+      "Heated front seats",
+      "Power sliding doors",
+      "Seating for 8 with multi-function 2nd-row center seat"
+    ],
+    "EX-L": [
+      "Beige, Gray or Mocha leather-trimmed seats",
+      "19-inch machine-finished alloy wheels",
+      "LED headlights and fog lights",
+      "Rain-sensing windshield wipers",
+      "Power folding side mirrors with memory-linked tilt-down",
+      "Acoustic windshield",
+      "Electric parking brake with automatic brake hold",
+      "Driver's seat with 12-way power adjustment and lumbar support",
+      "Leather-wrapped steering wheel"
+    ],
+    "EX-L Navi/RES": [
+      "Advanced Rear Entertainment System with 10.2-inch screen and Blu-ray player",
+      "12-volt power outlets in front, 3rd row, and cargo area",
+      "CabinTalk in-car PA system broadcast through headphones",
+      "HomeLink remote system",
+      "Automatic-dimming rearview mirror",
+      "Power tailgate with programmable height",
+      "HDMI Interface for streaming apps"
+    ],
+    "TOURING": [
+      "10-speed automatic transmission with Shift-By-Wire and paddle shifters",
+      "One-touch power moonroof with tilt feature",
+      "Blue ambient LED lighting",
+      "Ventilated front seats",
+      "HondaVAC with 115-volt 150-watt power outlet in front console",
+      "CabinWatch rear seat monitor",
+      "Hands-free access power tailgate",
+      "Honda Satellite-Linked Navigation System with voice recognition",
+      "Multi-zone audio",
+      "550-watt premium audio system with 11 speakers and subwoofer"
+    ],
+    "ELITE": [
+      "Heated steering wheel",
+      "2.5-amp charging ports in center console and two in 2nd row",
+      "Wireless phone charger",
+      "HondaLink subscription services with mobile hotspot capability"
+    ]
+  }
+}

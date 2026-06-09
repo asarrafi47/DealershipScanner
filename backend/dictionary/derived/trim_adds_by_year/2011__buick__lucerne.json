@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|buick|lucerne",
+  "year": 2011,
+  "make": "Buick",
+  "model": "Lucerne",
+  "ladder_id": "generic_buick_lucerne",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Base",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "general motors never place a rear-facing infant restraint in the front goodwrench.com."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Limited": 1
+    }
+  }
+}

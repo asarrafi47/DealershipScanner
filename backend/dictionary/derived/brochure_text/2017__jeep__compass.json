@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2017|jeep|compass",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Compass",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2017_Jeep_Compass_Brochure.pdf",
+  "page_count": 5,
+  "all_pages": false,
+  "trim_hint_pages": [
+    5
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 5,
+      "trim_hint": true,
+      "text": "(800) 925-JEEP JEEP.COM\n\u00a92016 FCA US LLC. All Rights Reserved. Jeep, the Jeep grille, Compass, Trailhawk and Trail Rated are registered trademarks of FCA US LLC. CarPlay and iPhone are registered trademarks of Apple Inc. iHeartRadio is\na registered trademark of Clear Channel. Sirius, XM and all related marks and logos are trademarks of SiriusXM Radio Inc. YouTube and the YouTube logo are trademarks of Google Inc. This brochure is a publication\nof FCA US LLC. All product illustrations and specifications are based upon current information at the time of publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\nobligation, in prices, specifications, colors and materials, and to change or discontinue models, which are considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n74-383-2761",
+      "table_lines": [
+        "(800) 925-JEEP\n\u00a92016 FCA US LLC. All Rights Reserved. Jeep, the Jeep grille, Compass, Trailhawk and Trail Rated are regi\na registered trademark of Clear Channel. Sirius, XM and all related marks and logos are trademarks of Siri\nof FCA US LLC. All product illustrations and specifications are based upon current information at the time\nobligation, in prices, specifications, colors and materials, and to change or discontinue models, which ar\n74-38 | JEEP.COM\nstered trademarks of FCA US LLC. CarPlay and iPhone are registered trademarks of Apple Inc. iHeartRadio is\nusXM Radio Inc. YouTube and the YouTube logo are trademarks of Google Inc. This brochure is a publication\nof publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\ne considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n3-2761"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 5 ---\n(800) 925-JEEP JEEP.COM\n\u00a92016 FCA US LLC. All Rights Reserved. Jeep, the Jeep grille, Compass, Trailhawk and Trail Rated are registered trademarks of FCA US LLC. CarPlay and iPhone are registered trademarks of Apple Inc. iHeartRadio is\na registered trademark of Clear Channel. Sirius, XM and all related marks and logos are trademarks of SiriusXM Radio Inc. YouTube and the YouTube logo are trademarks of Google Inc. This brochure is a publication\nof FCA US LLC. All product illustrations and specifications are based upon current information at the time of publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\nobligation, in prices, specifications, colors and materials, and to change or discontinue models, which are considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n74-383-2761\n\n(800) 925-JEEP\n\u00a92016 FCA US LLC. All Rights Reserved. Jeep, the Jeep grille, Compass, Trailhawk and Trail Rated are regi\na registered trademark of Clear Channel. Sirius, XM and all related marks and logos are trademarks of Siri\nof FCA US LLC. All product illustrations and specifications are based upon current information at the time\nobligation, in prices, specifications, colors and materials, and to change or discontinue models, which ar\n74-38 | JEEP.COM\nstered trademarks of FCA US LLC. CarPlay and iPhone are registered trademarks of Apple Inc. iHeartRadio is\nusXM Radio Inc. YouTube and the YouTube logo are trademarks of Google Inc. This brochure is a publication\nof publication approval. FCA US LLC reserves the right to make changes from time to time, without notice or\ne considered necessary to the purpose of product improvement or for reasons of design and/or marketing.\n3-2761"
+}

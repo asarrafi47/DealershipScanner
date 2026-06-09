@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|chevrolet|commercial",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "brochure_llm_2018__chevrolet__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Z71",
+    "LT",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "Z71": [
+      "Standard automatic locking rear differential",
+      "Standard underseat storage",
+      "Standard GearOn Accessory System availability"
+    ],
+    "LT": [
+      "Standard underseat storage",
+      "Available full-color Driver Information Center",
+      "Available Chevrolet MyLink 8-inch touchscreen display",
+      "Available automatic locking rear differential"
+    ],
+    "WT": [
+      "Standard underseat storage",
+      "Standard 150-amp alternator",
+      "4-wheel antilock disc brakes with Duralife rotors",
+      "Available automatic locking rear differential on Extended Cab models",
+      "Available electric power steering and StabiliTrak Electronic Stability Control"
+    ]
+  }
+}

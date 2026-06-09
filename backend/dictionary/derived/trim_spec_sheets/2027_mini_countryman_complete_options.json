@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2027_mini_countryman_complete_options",
+  "make": "MINI",
+  "models": [
+    "Countryman",
+    "Countryman"
+  ],
+  "year_min": 2025,
+  "year_max": 2029,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L Prince turbocharged I4 (Cooper S); L BMW N47 diesel I4 (Cooper D and One D)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      }
+    ]
+  }
+}

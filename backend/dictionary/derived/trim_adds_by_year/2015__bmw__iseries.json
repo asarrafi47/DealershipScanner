@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|bmw|iseries",
+  "year": 2015,
+  "make": "BMW",
+  "model": "i Series",
+  "ladder_id": "brochure_llm_2015__bmw__iseries",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Tera World",
+    "Giga World",
+    "Mega World"
+  ],
+  "adds_by_trim": {
+    "Tera World": [
+      "Dalbergia Brown Full Natural Leather upholstery",
+      "19-inch or 20-inch Turbine Double Spoke optional wheels",
+      "20-inch Style 430 summer tires available"
+    ],
+    "Giga World": [
+      "Cassia Natural Leather and Carum Spice Gray Wool Cloth upholstery",
+      "19-inch Style 429 Turbine Double Spoke optional wheels",
+      "20-inch Style 430 summer tires available"
+    ],
+    "Mega World": [
+      "Carum Spice Gray SensaTec and Carum Spice Gray Cloth upholstery",
+      "19-inch Style 427 Star Spoke wheels with all-season tires",
+      "Coach-style doors hinged at outer edges",
+      "No center pillar for wide side access",
+      "DC Fast Charging (SAE Combo) port standard",
+      "Two complimentary ChargeNow cards for public charging network access",
+      "BMW i Home Charging Station available with installation services",
+      "BMW ConnectedDrive services with remote charging monitoring",
+      "BMW i Remote App for battery and charging status monitoring"
+    ]
+  }
+}

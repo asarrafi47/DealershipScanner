@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2014|landrover|lr2",
+  "year": 2014,
+  "make": "landrover",
+  "model": "LR2",
+  "ladder_id": "brochure_2014__landrover__lr2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds panoramic sunroof with fixed rear section and electric tilting/sliding front section",
+      "Adds Terrain Response system with four selectable programs",
+      "Adds Hill Descent Control and Gradient Release Control",
+      "Adds Passive Start and Start/Stop Button functionality",
+      "Adds interior color customization with facia inserts"
+    ],
+    "Limited": [
+      "Adds optional satellite navigation system with seven-inch color touchscreen",
+      "Adds optional rear view camera with predictive path lines",
+      "Adds Meridian Surround Sound System audio option",
+      "Adds Sirius Satellite Radio availability"
+    ],
+    "Standard": [
+      "Adds comprehensive accessory package including seat back stowage",
+      "Adds optional ski bag and storage solutions",
+      "Adds emergency traction aids and winter preparedness items",
+      "Adds towing and recovery equipment options"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Rolls-Royce,Wraith,Wraith,6.6L V12 (SIDI),6.6L V12 Twin Turbo,Twin Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,12,6.6,12,18,14,,,,,
+2021,Rolls-Royce,Wraith,Black Badge,6.6L V12 (SIDI),6.6L V12 Twin Turbo,Twin Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,12,6.6,12,18,14,,,,,

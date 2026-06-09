@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2017|lincoln|mkc",
+  "year": 2017,
+  "make": "Lincoln",
+  "model": "MKC",
+  "ladder_id": "brochure_llm_2017__lincoln__mkc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RESERVE",
+    "SELECT",
+    "PREMIERE"
+  ],
+  "adds_by_trim": {
+    "RESERVE": [
+      "BLIS (Blind Spot Information System) with cross-traffic alert standard",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link standard",
+      "Panoramic Vista Roof with power sunshade",
+      "Power-tilt/-telescoping steering column with memory feature"
+    ],
+    "SELECT": [
+      "BLIS (Blind Spot Information System) with cross-traffic alert standard",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link standard",
+      "Power-tilt/-telescoping steering column with memory feature",
+      "Configurable daytime running lamps"
+    ],
+    "PREMIERE": [
+      "4-way power front-passenger seat",
+      "Autofold sideview mirrors with turn signal indicators and auto-dimming driver's side",
+      "Hands-Free Liftgate",
+      "Embedded modem for MyLincoln Mobile app use",
+      "Universal garage door opener",
+      "Genuine wood accents on instrument panel and door panels"
+    ]
+  }
+}

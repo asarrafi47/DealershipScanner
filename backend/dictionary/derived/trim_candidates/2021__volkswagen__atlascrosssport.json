@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2021|volkswagen|atlascrosssport",
+  "year": 2021,
+  "make": "Volkswagen",
+  "model": "Atlas Cross Sport",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SEL Premium",
+    "SEL",
+    "R-Line",
+    "SE",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport",
+    "EX",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

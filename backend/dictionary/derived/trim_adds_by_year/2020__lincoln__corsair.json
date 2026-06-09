@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2020|lincoln|corsair",
+  "year": 2020,
+  "make": "Lincoln",
+  "model": "Corsair",
+  "ladder_id": "brochure_web_2020__lincoln__corsair",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Corsair Reserve",
+    "Corsair Premiere"
+  ],
+  "adds_by_trim": {
+    "Corsair Reserve": [
+      "Higher trim level with enhanced luxury appointments",
+      "Available Collection III package with BlueCruise hands-free driving system",
+      "Heated rear seats with Collection III package",
+      "Panoramic sunroof with Collection III package",
+      "Head-up display with Collection III package",
+      "14-speaker Revel premium audio system with Collection III package"
+    ],
+    "Corsair Premiere": [
+      "Turbocharged 2.0-liter inline four-cylinder engine with 250 hp and 275 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "13.2-inch infotainment touchscreen with built-in navigation",
+      "Wireless Apple CarPlay and Android Auto connectivity",
+      "12.3-inch digital gauge cluster display",
+      "Lincoln Co-Pilot360 driver assist and active safety suite",
+      "Front automatic emergency braking, blind-spot monitoring, and adaptive cruise control",
+      "Nine-speaker audio system",
+      "Available AWD and front-wheel drive options"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/corsair/"
+}

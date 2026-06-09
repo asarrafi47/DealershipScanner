@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2018|bmw|3series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "3 Series",
+  "ladder_id": "brochure_llm_2018__bmw__3series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "340i xDrive",
+    "340i",
+    "330i xDrive",
+    "330i",
+    "328d xDrive",
+    "328d",
+    "320i xDrive",
+    "320i"
+  ],
+  "adds_by_trim": {
+    "340i xDrive": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 330 hp and 330 lb-ft torque",
+      "0-60 mph in 4.6 seconds (4.7 with manual transmission)",
+      "21/31/25 mpg combined fuel economy (19/29/23 with manual)"
+    ],
+    "340i": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 320 hp and 330 lb-ft torque",
+      "0-60 mph in 4.8 seconds (4.9 with manual transmission)",
+      "21/32/25 mpg combined fuel economy (19/29/23 with manual)"
+    ],
+    "330i xDrive": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 248 hp and 258 lb-ft torque",
+      "0-60 mph in 5.5 seconds",
+      "23/33/26 mpg combined fuel economy (23/32/26 with manual)"
+    ],
+    "330i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 248 hp and 258 lb-ft torque",
+      "0-60 mph in 5.5 seconds (5.6 with manual transmission)",
+      "23/34/27 mpg combined fuel economy (21/32/25 with manual)"
+    ],
+    "328d xDrive": [
+      "2.0-liter TwinPower Turbo Diesel inline 4-cylinder engine with 248 hp and 258 lb-ft torque",
+      "0-60 mph in 7.3 seconds",
+      "Diesel fuel economy (TBD as published)"
+    ],
+    "328d": [
+      "2.0-liter TwinPower Turbo Diesel inline 4-cylinder engine with 180 hp and 280 lb-ft torque",
+      "0-60 mph in 7.4 seconds",
+      "Diesel fuel economy (TBD as published)"
+    ],
+    "320i xDrive": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 180 hp and 200 lb-ft torque",
+      "All-wheel drive capability",
+      "23/35/27 mpg combined fuel economy"
+    ],
+    "320i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 180 hp and 200 lb-ft torque",
+      "0-60 mph in 7.1 seconds",
+      "23/35/27 mpg combined fuel economy"
+    ]
+  }
+}

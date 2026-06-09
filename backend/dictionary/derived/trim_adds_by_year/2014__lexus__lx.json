@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2014|lexus|lx",
+  "year": 2014,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2014__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds four-year/50,000-mile Lexus Limited Warranty",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds backup camera system",
+      "Adds Wide-view Front and Side Monitor system",
+      "Adds Pre-Collision System",
+      "Adds Crawl Control for low-speed terrain",
+      "Adds Trailer Sway Control",
+      "Adds Adaptive Front Lighting System",
+      "Adds Smart Stop Technology"
+    ],
+    "Limited": [
+      "Adds Wide-view Side Monitor system",
+      "Adds dual-screen video system with split-screen function",
+      "Adds Mark Levinson premium audio system",
+      "Adds Enform app connectivity services",
+      "Adds Dynamic Radar Cruise Control"
+    ],
+    "Premium": [
+      "Adds Navigation System with SiriusXM and HD Radio services",
+      "Adds SmartAccess keyless entry system",
+      "Adds engine immobilizer anti-theft system",
+      "Upgraded to 20-inch performance tires"
+    ]
+  }
+}

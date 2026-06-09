@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2019|lexus|nx",
+  "year": 2019,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "brochure_llm_2019__lexus__nx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NX300 F SPORT",
+    "NX300",
+    "NX300h AWD"
+  ],
+  "adds_by_trim": {
+    "NX300 F SPORT": [
+      "F SPORT-specific exterior styling and design elements"
+    ],
+    "NX300": [
+      "2.0-liter turbocharged engine",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Eight-year/100,000-mile Hybrid System Warranty"
+    ],
+    "NX300h AWD": [
+      "Hybrid powertrain with all-wheel drive capability"
+    ]
+  }
+}

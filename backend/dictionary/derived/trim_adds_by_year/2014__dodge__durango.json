@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2014|dodge|durango",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2014__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Citadel",
+    "R/T",
+    "Limited",
+    "Rallye",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "Citadel": [
+      "3.6L Pentastar V6 standard, 295 hp and 260 lb-ft of torque",
+      "5.7L HeMI V8 available, 360 hp and 390 lb-ft of torque",
+      "Premium Nappa leather-trimmed seats with perforated inserts and accent stitching",
+      "Heated and ventilated front seats, heated 1st- and 2nd-row seats",
+      "Heated perforated leather-wrapped steering wheel",
+      "Auto High-Beam Headlamp Control and power tilt/telescoping steering column",
+      "Power 12-way driver and 12-way front-passenger seats with 4-way lumbar adjust"
+    ],
+    "R/T": [
+      "5.7L HeMI V8 with Fuel Saver Technology, 360 hp and 390 lb-ft of torque",
+      "20-inch Hyper Black aluminum wheels",
+      "HID headlamps with High Beam Control and leveling system",
+      "Capri leather-trimmed seats with perforated inserts and R/T embroidery",
+      "Power 12-way driver seat with 4-way lumbar adjust",
+      "Ventilated front seats, heated 1st- and 2nd-row seats",
+      "Performance steering and suspension with 20 mm lower ride height",
+      "Blind Spot Monitoring and Rear Cross-Path detection"
+    ],
+    "Limited": [
+      "20-inch polished aluminum wheels",
+      "Uconnect 8.4-inch Media Center with premium navigation",
+      "9 Alpine speakers with 506-watt amplifier",
+      "Power liftgate and power sunroof",
+      "Rain-sensing wipers",
+      "Power 12-way front-passenger seat"
+    ],
+    "Rallye": [
+      "3.6L Pentastar V6, 295 hp and 260 lb-ft of torque",
+      "20-inch Hyper Black aluminum wheels",
+      "Dark-tinted headlamp bezels and body-color performance front fascia",
+      "LED daytime running lights",
+      "Bright roof rack rails with integrated stowable crossbars",
+      "Leather-wrapped steering wheel and auto-dimming rearview mirror",
+      "Uconnect 8.4-inch Media Center with Bluetooth and SiriusXM"
+    ],
+    "SXT": [
+      "3.6L Pentastar 24V VVT V6, 290 hp and 260 lb-ft of torque",
+      "18-inch Tech Silver aluminum wheels",
+      "Projector headlamps and fog lamps",
+      "LED Racetrack taillamps",
+      "7-passenger premium cloth seating with fold-flat front-passenger seat",
+      "60/40 fold-and-tumble 2nd-row reclining seat and 50/50 split-folding 3rd-row",
+      "3-Zone Automatic Temperature Control",
+      "Tilt/telescoping steering wheel with cruise and audio controls",
+      "7-inch customizable TFT display and Uconnect 5-inch touchscreen"
+    ]
+  }
+}

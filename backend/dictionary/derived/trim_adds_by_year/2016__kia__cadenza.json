@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2016|kia|cadenza",
+  "year": 2016,
+  "make": "Kia",
+  "model": "Cadenza",
+  "ladder_id": "brochure_llm_2016__kia__cadenza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Technology",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "19-inch chrome alloy wheels",
+      "Unique radiator grille",
+      "HID headlights with Dynamic Bending Light",
+      "Panoramic sunroof with power-retractable sunshade",
+      "Surround-View Monitor",
+      "Power rear-window sunshade",
+      "Steering-wheel-mounted paddle shifters"
+    ],
+    "Technology": [
+      "19-inch alloy wheels",
+      "HID headlights with Dynamic Bending Light",
+      "Panoramic sunroof with power-retractable sunshade",
+      "Dual-zone automatic temperature control with rear vents",
+      "Rear Park Assist System",
+      "Auto rain-sensing wipers",
+      "Windshield wiper de-icer",
+      "Blind-Spot Detection with Lane-Change Assist"
+    ],
+    "LX": [
+      "3.3L V6 GDI engine with 293 hp",
+      "6-speed Sportmatic transmission",
+      "18-inch alloy wheels",
+      "Front LED fog lights",
+      "Rear LED taillights with perimeter approach lighting",
+      "Acoustic front windshield",
+      "Infinity surround-sound audio system with 12 speakers",
+      "Bluetooth wireless technology",
+      "Rear-Camera Display",
+      "Electronic parking brake with Auto Hold"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2022|genesis|g90",
+  "year": 2022,
+  "make": "genesis",
+  "model": "G90",
+  "ladder_id": "generic_genesis_g90",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "detection area for at least 3 seconds. Radio transmitters and other vehicle smart keys may"
+    ],
+    "Limited": [
+      "detect all vehicles, pedestrians within 40 inches of the"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Premium": 1
+    }
+  }
+}

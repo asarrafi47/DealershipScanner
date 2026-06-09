@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2013|jeep|grandcherokee",
+  "year": 2013,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT",
+    "Summit",
+    "Overland",
+    "Trailhawk",
+    "Limited",
+    "Laredo",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

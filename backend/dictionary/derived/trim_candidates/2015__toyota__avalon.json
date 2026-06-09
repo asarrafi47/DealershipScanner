@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|toyota|avalon",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Avalon",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "LE",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Premium Adds to or replaces features offered on XLE Touring",
+      "Powertrain Powertrain Powertrain Powertrain",
+      "3 .5-liter V6 engine \u2022 3.5-liter V6 engine \u2022 3.5-liter V6 engine \u2022 3.5-liter V6 engine",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "2 68 hp @ 6200 rpm \u2022 2 68 hp @ 6200 rpm \u2022 268 hp @ 6200 rpm \u2022 2 68 hp @ 6200 rpm",
+      "21 city/31 hwy/24 combined est. mpg33 \u2022 21 city/31 hwy/24 combined est. mpg33 \u2022 21 city/31 hwy/24 combined est. mpg33 \u2022 21 city/31 hwy/24 combined est. mpg33",
+      "Exterior Features Exterior Features Exterior Features Exterior Features",
+      "17-in. silver-painted alloy wheels \u2022 Power tilt/slide moonroof with sliding sunshade \u2022 18-in. anthracite-painted alloy wheels \u2022 18-in. silver-painted alloy wheels",
+      "Q uadrabeam halogen headlights with auto on/off \u2022 Smart Key System17 on front doors and trunk \u2022 Wide-angle fog lights \u2022 H igh Intensity Discharge (HID) Quadrabeam headlights with",
+      "Dual chrome-tipped integrated exhaust \u2022 C olor-keyed heated, auto-dimming power outside mirrors",
+      "S mart Key System17 on driver\u2019s-side front door \u2022 E ntune\u2122 Premium Audio with Navigation12 and with turn signal indicators, puddle lights and manual folding",
+      "C olor-keyed heated, power outside mirrors with Bundle3 (7-in. high-resolution touch-screen with \u2022 Rain-sensing wipers"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

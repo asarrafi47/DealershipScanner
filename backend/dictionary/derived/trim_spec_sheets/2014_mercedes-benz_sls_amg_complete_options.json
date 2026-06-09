@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2014_mercedes-benz_sls_amg_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SLS AMG",
+    "SLS AMG"
+  ],
+  "year_min": 2012,
+  "year_max": 2016,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "6.2L V8 Turbo; Automatic (AM7)"
+      }
+    ],
+    "GT Roadster": [
+      {
+        "label": "Engine Options",
+        "value": "6.2L V8 Turbo; Automatic (AM7)"
+      }
+    ]
+  }
+}

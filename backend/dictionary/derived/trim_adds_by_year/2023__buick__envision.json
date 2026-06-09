@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2023|buick|envision",
+  "year": 2023,
+  "make": "Buick",
+  "model": "Envision",
+  "ladder_id": "brochure_llm_2023__buick__envision",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Envision Avenir",
+    "Envision Essence Sport Touring",
+    "Envision Essence"
+  ],
+  "adds_by_trim": {
+    "Envision Avenir": [
+      "20-inch aluminum wheels with Pearl Nickel finish",
+      "Signature Avenir grille with Black Ice chrome finish",
+      "Premium LED taillamps with unique clear lenses",
+      "Diamond-perforated quilting on leather-appointed front seats",
+      "Textured wood-tone accents on door panels"
+    ],
+    "Envision Essence Sport Touring": [
+      "20-inch aluminum wheels with dark finish",
+      "Distinctive dark-finish accents on grille, window trim, and roof rails",
+      "Unique alloy sport pedals",
+      "Red accent stitching on front head restraints and floor mats",
+      "Embroidered ST logo on front head restraints and floor mats"
+    ],
+    "Envision Essence": [
+      "Advanced 2.0L Turbo ECOTEC engine with electronic precision shift",
+      "Buick Driver Confidence suite with six safety features standard",
+      "Available 10.2-inch diagonal touch-screen infotainment system",
+      "QuietTuning technology for refined cabin experience",
+      "Dual-winged center console design"
+    ]
+  }
+}

@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1990,Mazda,323 Protege,323/323 Protege,1.6L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,23,30,25,,,,,,1.6L I4,
-1990,Mazda,323 Protege,323/323 Protege,1.6L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,25,33,28,,,,,,1.6L I4,
-1990,Mazda,323 Protege,323/323 Protege,1.8L I4 (BPE (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,21,29,24,,,,,,1.8L I4,
-1990,Mazda,323 Protege,323/323 Protege,1.8L I4 (BPE (FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,19,24,21,,,,,,1.8L I4,
-1990,Mazda,323 Protege,323/323 Protege,1.8L I4 (BPD (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,21,26,23,,,,,,1.8L I4,
-1990,Mazda,323 Protege,323/323 Protege,1.8L I4 (BPE (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,24,33,27,,,,,,1.8L I4,
-1990,Mazda,323 Protege,323/323 Protege,1.8L I4 (BPD (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,22,28,24,,,,,,1.8L I4,
-1990,Mazda,323 Protege,323/323 Protege,1.8L I4 (BPE (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,21,26,23,,,,,,1.8L I4,

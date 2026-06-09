@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|lexus|lx",
+  "year": 2019,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2019__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 5.7L V8 engine",
+      "Adds Features Hill-start Assist Control",
+      "Adds Includes Trailer Sway Control system",
+      "Adds Lexus Safety System+ with Pre-Collision System"
+    ],
+    "EX": [],
+    "Limited": [
+      "Adds Cabernet semi-aniline leather interior trim option"
+    ],
+    "Premium": [
+      "Adds Mark Levinson premium audio system",
+      "Adds Intelligent High Beams system",
+      "Adds Includes Dynamic Radar Cruise Control",
+      "Adds Lane Departure Alert system",
+      "Adds Panoramic View Monitor",
+      "Adds Includes Multi-Terrain Monitor"
+    ]
+  }
+}

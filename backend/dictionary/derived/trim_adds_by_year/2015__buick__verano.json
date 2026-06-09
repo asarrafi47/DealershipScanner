@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2015|buick|verano",
+  "year": 2015,
+  "make": "Buick",
+  "model": "Verano",
+  "ladder_id": "brochure_llm_2015__buick__verano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TURBO GROUP",
+    "LEATHER GROUP",
+    "CONVENIENCE GROUP",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "TURBO GROUP": [
+      "2.0L Turbo DOHC engine with 250 hp and 260 lb-ft torque",
+      "6-speed manual transmission option",
+      "Dual stainless steel exhaust with chrome tips",
+      "Aluminum sport pedals",
+      "All Convenience Group safety and comfort features",
+      "Audio system with navigation and 7-inch touchscreen",
+      "Power tilt-sliding sunroof with sunshade",
+      "WQN 18-inch split-spoke alloy wheels"
+    ],
+    "LEATHER GROUP": [
+      "Premium grade leather-appointed seating",
+      "E-Z Key passive entry system with push-button start",
+      "Heated leather-wrapped steering wheel",
+      "Bose premium audio system with 9 speakers",
+      "Audio system with navigation and 7-inch touchscreen",
+      "Power tilt-sliding sunroof with sunshade",
+      "RVI 18-inch machine-faced alloy wheels",
+      "Chrome accent door handles"
+    ],
+    "CONVENIENCE GROUP": [
+      "Forward collision alert and lane departure warning",
+      "Auto-dimming inside rearview mirror",
+      "Heated outside power mirrors with adaptive remote operation",
+      "Ultrasonic rear parking assist",
+      "Rear cross traffic alert and side blind zone alert",
+      "Universal home remote with 3-channel programmable garage-door opener",
+      "Heated driver and front-passenger seats with adaptive remote activation",
+      "Fog lamps",
+      "RVI 18-inch machine-faced alloy wheels"
+    ],
+    "Base": [
+      "2.4L DOHC 4-cylinder SIDI engine with 180 hp",
+      "6-speed automatic transmission with driver shift control",
+      "Front-wheel drive with StabiliTrak stability control",
+      "10 airbags including side-impact and knee airbags",
+      "AM/FM stereo with 7-inch touchscreen and CD player",
+      "Dual-zone air conditioning",
+      "Buick IntelliLink smartphone control via voice activation",
+      "Power windows, locks, and adjustable mirrors",
+      "Rear vision camera",
+      "OnStar 5-year basic plan with 6 months directions and connections"
+    ]
+  }
+}

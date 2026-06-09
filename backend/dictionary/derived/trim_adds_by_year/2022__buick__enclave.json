@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2022|buick|enclave",
+  "year": 2022,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2022__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Envision Avenir",
+    "Envision Essence"
+  ],
+  "adds_by_trim": {
+    "Envision Avenir": [
+      "20-inch aluminum wheels with Pearl Nickel finish",
+      "Signature Avenir grille with Black Ice chrome finish",
+      "Premium LED taillamps with unique clear lenses",
+      "Diamond-perforated quilting on leather-appointed front seats",
+      "Textured wood-tone accents on door panels",
+      "Massaging driver seat"
+    ],
+    "Envision Essence": [
+      "Advanced 2.0L Turbo ECOTEC engine",
+      "Electronic Precision Shift with active twin clutch",
+      "Drive Mode Selector",
+      "QuietTuning technology",
+      "Dual-winged center console",
+      "Air Quality Indicator with Microfilter Technology",
+      "Buick Driver Confidence suite standard with Forward Collision Alert, Lane Keep Assist, Lane Departure Warning, Front Pedestrian Braking, Following Distance Indicator, IntelliBeam auto high beams"
+    ]
+  }
+}

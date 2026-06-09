@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|bmw|x5",
+  "year": 2011,
+  "make": "BMW",
+  "model": "X5",
+  "ladder_id": "2011_bmw_x5_epa",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Na": 1
+    }
+  }
+}

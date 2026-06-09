@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2017|volkswagen|cc",
+  "year": 2017,
+  "make": "Volkswagen",
+  "model": "CC",
+  "ladder_id": "generic_volkswagen_cc",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Volkswagen logo, \u201cCar-Net,\u201d \u201cCC,\u201d \u201cDSG,\u201d \u201cTSI,\u201d and \u201c4MOTION\u201d are registered trademarks of",
+      ", and other points of interest. Changes in street names, construction zones, traffic flow, points of interest"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

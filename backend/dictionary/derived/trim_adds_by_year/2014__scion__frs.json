@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|scion|frs",
+  "year": 2014,
+  "make": "Scion",
+  "model": "FR-S",
+  "ladder_id": "brochure_2014__scion__frs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 2.0L 4-cylinder Boxer engine with 200 HP",
+      "Adds 6-speed manual or 6-speed automatic transmission with paddle shifters",
+      "Adds air conditioning with rear window defogger",
+      "Adds power windows with one-touch auto up/down",
+      "Adds power door locks with remote keyless entry",
+      "Adds Bluetooth and HD Radio with USB/iPod connectivity",
+      "Adds 8-speaker audio system",
+      "Adds 17-inch alloy wheels",
+      "Adds advanced airbag system with side-mounted and curtain airbags",
+      "Adds Star Safety System with VSC, traction control, and ABS"
+    ],
+    "Premium": [],
+    "Limited": []
+  }
+}

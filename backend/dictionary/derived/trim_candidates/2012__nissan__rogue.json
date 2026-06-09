@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2012|nissan|rogue",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Rogue",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SV",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

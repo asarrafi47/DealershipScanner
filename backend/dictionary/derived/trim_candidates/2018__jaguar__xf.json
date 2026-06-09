@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2018|jaguar|xf",
+  "year": 2018,
+  "make": "Jaguar",
+  "model": "XF",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

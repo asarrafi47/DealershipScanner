@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|chevrolet|silverado",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2013__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Bose 7-speaker sound system",
+      "Rear vision camera",
+      "Auto-dimming rearview mirror",
+      "Power-adjustable pedals via Convenience Package",
+      "Rear Park Assist via Convenience Package",
+      "Universal Home Remote via Convenience Package"
+    ],
+    "LT": [
+      "AM/FM stereo with CD/MP3 player and USB port",
+      "Interior Plus Package with 6-way power driver seat",
+      "Steering wheel-mounted audio controls",
+      "Bluetooth wireless technology",
+      "Dual-zone automatic climate controls",
+      "EZ Lift locking tailgate",
+      "Halogen foglamps"
+    ],
+    "LS": [
+      "Power door locks with Remote Keyless Entry",
+      "Power windows with driver express-down feature",
+      "AM/FM stereo with CD/MP3 player",
+      "17-inch chrome-styled steel wheels",
+      "Chrome grille surround"
+    ],
+    "WT": [
+      "Cloth 40/20/40 front split-bench seat with manual recliners",
+      "Fold-down center armrest with storage",
+      "Lumbar support",
+      "Base engine and transmission options"
+    ]
+  }
+}

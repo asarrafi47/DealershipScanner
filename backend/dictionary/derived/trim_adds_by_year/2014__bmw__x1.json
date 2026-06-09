@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|bmw|x1",
+  "year": 2014,
+  "make": "BMW",
+  "model": "X1",
+  "ladder_id": "2014_bmw_x1_epa",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is under license. iPhone, iPad and iPod are registered trademarks of Apple Inc.",
+      "Drive\uea02\uea08i | X\uea01 xDrive\uea03\uea05i",
+      "cylinder | TwinPower Turbo Inline / | TwinPower Turbo Inline / | TwinPower Turbo Inline \uea06 /",
+      "\uea02 % / \uea05%%%-\uea06\uea05%% | \uea03%% / \uea05\uea08%%",
+      "igures are for comparison purposes only. Your actual",
+      "mileage will most likely be lower."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 6.0,
+    "per_trim_add_counts": {
+      "Na": 6
+    }
+  }
+}

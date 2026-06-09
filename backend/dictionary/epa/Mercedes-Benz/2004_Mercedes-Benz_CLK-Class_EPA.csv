@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2004,Mercedes-Benz,CLK-Class,CLK320,3.2L V6,3.2L V6 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.2,18,24,20,,,,,
+2004,Mercedes-Benz,CLK-Class,CLK320 (Cabriolet),3.2L V6,3.2L V6 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.2,18,24,20,,,,,
+2004,Mercedes-Benz,CLK-Class,CLK500,5.0L V8,5.0L V8 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,15,21,17,,,,,
+2004,Mercedes-Benz,CLK-Class,CLK500 (Cabriolet),5.0L V8,5.0L V8 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,15,21,17,,,,,
+2004,Mercedes-Benz,CLK-Class,CLK55 AMG,5.4L V8,5.4L V8 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.4,14,20,16,,,,,
+2004,Mercedes-Benz,CLK-Class,CLK55 AMG (Cabriolet),5.4L V8,5.4L V8 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.4,14,20,16,,,,,

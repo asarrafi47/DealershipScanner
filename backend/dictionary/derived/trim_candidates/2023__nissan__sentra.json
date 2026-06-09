@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2023|nissan|sentra",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Sentra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SV",
+    "SR",
+    "Midnight Edition",
+    "S",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

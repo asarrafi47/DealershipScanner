@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_mercedes_gle-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "GLE-Class",
+    "GLE-Class"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "E-ACTIVE BODY CONTROL (ABC®) (DC7PKG) Optional on GLE 450 4MATIC Option Price: $8,100 (includes cost of AIRMATIC) Requires AIRMATIC® suspension (489), Tire diameter 790 (wheel size 20\" or larger) E-ACTIVE BODY CONTROL is an all-new suspension system powered in part by the 48V…; E-ACTIVE BODY CONTROL: Combining the 48-volt technology of the GLE 450 with the newly developed optional air suspension, E-ACTIVE BODY CONTROL provides unparalleled ride comfort and can even actively lean the GLE into bends ..."
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "E-ACTIVE BODY CONTROL (ABC®) (DC7PKG) Optional on GLE 450 4MATIC Option Price: $8,100 (includes cost of AIRMATIC) Requires AIRMATIC® suspension (489), Tire diameter 790 (wheel size 20\" or larger) E-ACTIVE BODY CONTROL is an all-new suspension system powered in part by the 48V…; E-ACTIVE BODY CONTROL: Combining the 48-volt technology of the GLE 450 with the newly developed optional air suspension, E-ACTIVE BODY CONTROL provides unparalleled ride comfort and can even actively lean the GLE into bends ..."
+      }
+    ]
+  }
+}

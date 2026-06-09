@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2018|chevrolet|impala",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2018__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "TL",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "3.6L DOHC V6 engine with 305 hp and 264 lb-ft torque",
+      "Dual-outlet exhaust with bright tips integrated into fascia",
+      "Heated power-adjustable mirrors with chrome caps and turn signal indicators",
+      "Adaptive Cruise Control with Forward Automatic Braking",
+      "120-volt power outlet on rear of center console"
+    ],
+    "TL": [
+      "Heated power-adjustable mirrors with body-color caps and turn signal indicators",
+      "Lower auxiliary LED daytime running lamps",
+      "Dual-zone automatic climate control",
+      "Floor console with covered storage compartment",
+      "OnStar Guidance Plan with Automatic Crash Response and Turn-by-Turn Navigation"
+    ],
+    "SL": [
+      "2.5L ECOTEC 4-cylinder engine with 197 hp and 191 lb-ft torque",
+      "Single-outlet hidden exhaust system",
+      "Power-adjustable manual-folding black mirrors",
+      "Single-zone electronic air conditioning",
+      "Floor console with storage compartment",
+      "Integrated daytime running lamps in headlamps",
+      "4-wheel antilock disc brakes with Panic Brake Assist",
+      "10 air bags with Passenger Sensing System"
+    ]
+  }
+}

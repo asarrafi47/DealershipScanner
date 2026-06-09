@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2018|jeep|wrangler",
+  "year": 2018,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2018__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon",
+    "Sahara",
+    "Sport S",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Rubicon": [
+      "Rock-Trac 4x4 system with Tru-Lok front/rear locking differentials",
+      "Front sway bar disconnect system",
+      "Dana axles with electronic locking differentials",
+      "Unique front and rear bumpers with gray bezels",
+      "Leather-trimmed seats with Rubicon embroidered logo",
+      "Modular Seatback Jeep Utility Grid System",
+      "17-inch aluminum Mid-Gloss Black wheels with polished lip"
+    ],
+    "Sahara": [
+      "Fold and Tumble removable rear bench seat",
+      "18-inch chrome/polished wheels with all-season tires",
+      "Silver grille inserts",
+      "High-clearance front fender flares",
+      "Leather-trimmed seats with Sahara logo and tungsten stitching",
+      "17-inch aluminum painted/polished wheels exclusive to Sport S"
+    ],
+    "Sport S": [
+      "Side steps",
+      "17-inch aluminum painted/polished wheels",
+      "Remote Start System",
+      "Keyless Enter 'n Go proximity entry",
+      "8-speaker sound system with overhead sound bar",
+      "Deep-tint rear and quarter windows"
+    ],
+    "Sport": [
+      "3.6L Pentastar V6 engine with 6-speed manual transmission",
+      "Command-Trac 4x4 system with 3.45 axle ratio and locking differentials",
+      "Fold and Tumble removable rear bench seat",
+      "18-inch Genuine Chrysler aluminum wheels",
+      "Sunrider Soft Top in black vinyl",
+      "Full-framed removable doors",
+      "Uconnect 3 with 5-inch touchscreen and Bluetooth",
+      "8-speaker sound system with overhead sound bar",
+      "Electronic Stability Control and Trailer Sway Control",
+      "ParkView Rear Back-Up Camera"
+    ]
+  }
+}

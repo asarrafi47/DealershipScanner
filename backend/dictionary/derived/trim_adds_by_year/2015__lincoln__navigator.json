@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|lincoln|navigator",
+  "year": 2015,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_llm_2015__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Navigator L",
+    "Navigator"
+  ],
+  "adds_by_trim": {
+    "Navigator L": [
+      "Cargo Management system"
+    ],
+    "Navigator": [
+      "Keyless entry with push-button start and 2 key fob transmitters",
+      "Leather- and wood-trimmed steering wheel with audio and cruise controls",
+      "Memory settings for driver seat, mirrors, pedals, and steering column",
+      "Message center with compass and overhead console with map lights",
+      "Power-adjustable brake and accelerator pedals with memory",
+      "Power rear quarter windows",
+      "Remote start system",
+      "SYNC with MyLincoln Touch voice-activated connectivity, 8-inch touchscreen, dual 4.2-inch color LCD screens, dual USB ports, SD card reader",
+      "Universal garage door opener",
+      "110-volt power outlet and dual-zone automatic temperature control"
+    ]
+  }
+}

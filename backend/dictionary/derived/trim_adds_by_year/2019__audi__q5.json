@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2019|audi|q5",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2019__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SQ5",
+    "Prestige",
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "SQ5": [
+      "High-gloss Gray Oak Wood interior inlay standard",
+      "Matte Brushed Aluminum Carbon interior inlay optional",
+      "Rotor Gray Alcantara leather with Anthracite contrast stitching available",
+      "Atlas Rock Gray Perforated leather available",
+      "20-inch 5-arm-rotor Audi Sport wheels with Anthracite finish standard",
+      "20-inch 5-double-spoke-star design wheels partly polished optional",
+      "20-inch 5-arm-off-road design wheels Matte Titanium optional"
+    ],
+    "Prestige": [
+      "High-gloss Burl Walnut Wood interior inlay standard",
+      "18-inch 5-double-spoke dynamic design wheels standard",
+      "19-inch 5-arm-wing design wheels standard"
+    ],
+    "Premium Plus": [
+      "Aluminum Rhombus interior inlay optional",
+      "19-inch 5-arm-wing design wheels standard",
+      "20-inch 5-segment-spoke design wheels optional"
+    ],
+    "Premium": [
+      "Black Fine Nappa leather with Rock Gray contrast stitching standard",
+      "18-inch 5-double-spoke dynamic design wheels standard"
+    ]
+  }
+}

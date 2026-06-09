@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2017|lotus|evora",
+  "year": 2017,
+  "make": "Lotus",
+  "model": "Evora",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|ford|escape",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Escape",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "Active",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

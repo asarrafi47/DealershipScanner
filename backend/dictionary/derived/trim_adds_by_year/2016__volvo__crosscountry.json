@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2016|volvo|crosscountry",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "Cross Country",
+  "ladder_id": "brochure_2016__volvo__crosscountry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Electronic Climate Control with Pollen filter",
+      "Adds 250 hp 5-cylinder Turbocharged engine",
+      "Adds 6-speed Geartronic automatic transmission with Sport Mode",
+      "Adds Electronically controlled AWD with Instant Traction",
+      "Adds City Safety low speed collision avoidance system",
+      "Adds 8-way power adjustable driver and passenger seats with lumbar support",
+      "Adds Leather steering wheel with Silk metal inlays",
+      "Adds LED daytime running lights",
+      "Adds Electronic Skid Control and Advanced Stability Control",
+      "Adds Bluetooth handsfree and Audio streaming"
+    ],
+    "SE": [
+      "Adds Active dual xenon headlights with headlight washers",
+      "Adds Heated front seats",
+      "Adds Sensus Navigation with mapcare",
+      "Adds Volvo Sensus Connect with integrated modem and 7-inch screen",
+      "Adds SiriusXM Satellite radio with 6-month subscription"
+    ],
+    "Sport": [
+      "Adds 19-inch Bor alloy wheels",
+      "Adds Speed sensitive steering",
+      "Adds Honeycomb grille",
+      "Adds Side scuff plates",
+      "Adds Skidplate front and rear"
+    ],
+    "Premium": [
+      "Adds Harman Kardon Premium Sound System",
+      "Adds Keyless Drive",
+      "Adds Heated and electrically adjustable exterior mirrors",
+      "Adds Power retractable exterior mirrors",
+      "Adds Metallic Paint option",
+      "Adds Urbane wood inlay or Piano Black wood inlay"
+    ]
+  }
+}

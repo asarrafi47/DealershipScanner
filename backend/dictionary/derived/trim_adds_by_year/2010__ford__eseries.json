@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2010|ford|eseries",
+  "year": 2010,
+  "make": "Ford",
+  "model": "E-Series",
+  "ladder_id": "brochure_llm_2010__ford__eseries",
+  "source": "brochure_llm",
+  "trims_available": [
+    "E-350 SUPER DUTY XLT",
+    "E-350 SUPER DUTY XL",
+    "E-150 XLT",
+    "E-150 XL"
+  ],
+  "adds_by_trim": {
+    "E-350 SUPER DUTY XLT": [
+      "6.8L V10 engine with 5-speed automatic TorqShift transmission",
+      "225-amp alternator",
+      "High-capacity air conditioning front and rear",
+      "XLT Premium Package with leather-trimmed captain's chairs",
+      "6-way power driver seat with manual lumbar support"
+    ],
+    "E-350 SUPER DUTY XL": [
+      "6.8L V10 engine with 5-speed automatic TorqShift transmission",
+      "225-amp alternator",
+      "High-capacity air conditioning front and rear"
+    ],
+    "E-150 XLT": [
+      "5.4L V8 FFV engine with 4-speed automatic overdrive transmission",
+      "155-amp alternator",
+      "Air conditioning high-capacity front and rear",
+      "XLT Premium Package with leather-trimmed captain's chairs",
+      "6-way power driver seat with manual lumbar support"
+    ],
+    "E-150 XL": [
+      "4.6L V8 FFV engine with 4-speed automatic overdrive transmission",
+      "Air conditioning front only",
+      "16-inch steel wheels with sport wheel covers",
+      "Tilt steering wheel",
+      "Interval windshield wipers",
+      "AdvanceTrac with Roll Stability Control",
+      "Power 4-wheel disc brakes with Anti-lock Brake System",
+      "Tire Pressure Monitoring System"
+    ]
+  }
+}

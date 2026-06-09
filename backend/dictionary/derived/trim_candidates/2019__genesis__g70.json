@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2019|genesis|g70",
+  "year": 2019,
+  "make": "genesis",
+  "model": "G70",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

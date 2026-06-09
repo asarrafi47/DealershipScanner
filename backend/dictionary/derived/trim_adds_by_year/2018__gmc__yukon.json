@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2018|gmc|yukon",
+  "year": 2018,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "brochure_2018__gmc__yukon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali Ultimate",
+    "Denali",
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds SiriusXM Satellite Radio with 3 trial months of service",
+      "Adds Includes Pro Grade Protection Plan with two maintenance visits",
+      "Adds 3-year/36,000-mile Bumper-to-Bumper Limited Warranty",
+      "Adds 5-year/60,000-mile Powertrain Limited Warranty",
+      "Adds Includes 24-Hour Roadside Assistance",
+      "Adds Courtesy Transportation at participating dealers",
+      "Adds Includes Travel Benefits and trip routing service",
+      "Adds OnStar connectivity and emergency services link"
+    ],
+    "SE": [],
+    "Premium": [],
+    "Limited": [],
+    "Pro": [],
+    "SLE": [
+      "5.3L V8 engine with 10-speed automatic transmission",
+      "StabiliTrak Electronic Stability Control",
+      "3.23 axle ratio and Max Trailering Package",
+      "LED signature headlamps and taillamps",
+      "LED fog lamps",
+      "Rainsense windshield wipers",
+      "8-inch digital driver information center",
+      "Tri-zone automatic climate controls",
+      "Automatic Emergency Braking and Forward Collision Alert",
+      "Lane Keep Assist with Lane Departure Warning"
+    ],
+    "SLT": [
+      "Perforated leather seating surfaces on first and second rows",
+      "Heated and ventilated driver and front-passenger seats",
+      "Heated second-row outboard seats",
+      "Second-row 60/40 split power-release bench seat",
+      "Heated leather-wrapped steering wheel",
+      "Power-tilt and -telescoping steering column",
+      "Bose 9-Speaker audio system",
+      "Panoramic sunroof",
+      "High Definition Surround Vision camera system",
+      "Rear Pedestrian Alert safety system"
+    ],
+    "Denali": [
+      "6.2-liter V-8 engine (420 hp, 460 lb-ft torque)",
+      "Second-row executive seating option available",
+      "Luxury-focused interior and exterior styling"
+    ],
+    "Denali Ultimate": [
+      "24-inch machined wheels",
+      "22-speaker Bose sound system",
+      "Open-pore wood interior with laser-etched topographical patterns",
+      "Heated, ventilated, and massaging second-row executive seats",
+      "6.2-liter V-8 engine (420 hp, 460 lb-ft torque)"
+    ]
+  }
+}

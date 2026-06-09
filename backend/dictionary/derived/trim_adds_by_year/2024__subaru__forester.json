@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2024|subaru|forester",
+  "year": 2024,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "2024_subaru_forester",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Base",
+    "Premium",
+    "Sport",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Panoramic moonroof and 10-way power driver seat",
+      "SUBARU STARLINK 11.6-inch Multimedia Plus with wireless CarPlay/Android Auto",
+      "Leather-wrapped steering wheel and All-Weather Package content"
+    ],
+    "Sport": [
+      "19-inch bronze-finish wheels and gray Sport StarTex upholstery",
+      "Dual-function X-MODE and SI-DRIVE Sport mode",
+      "Bronze exterior accents and sport badging"
+    ],
+    "Limited": [
+      "Leather-trimmed upholstery and heated/ventilated front seats",
+      "Harman Kardon premium audio and Hands-Free Power Rear Gate",
+      "Heated outboard rear seats and DriverFocus Distraction Mitigation"
+    ],
+    "Touring": [
+      "Includes Limited plus Harman Kardon 11-speaker navigation system",
+      "Sport Sharp (S#) SI-DRIVE mode on Touring trim path",
+      "Highest Forester trim in 2025 brochure"
+    ]
+  }
+}

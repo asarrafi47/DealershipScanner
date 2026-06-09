@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2023|ram|promaster",
+  "year": 2023,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2023__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cutaway",
+    "Windowed Van",
+    "Cargo Van",
+    "Sales"
+  ],
+  "adds_by_trim": {
+    "Cutaway": [
+      "Premium heavy-duty suspension (3500 models only)",
+      "Taillamp extension wiring",
+      "Temporary spare tire mount",
+      "Daytime running lamps standard"
+    ],
+    "Windowed Van": [
+      "Touring suspension",
+      "Hinged rear doors with fixed glass and deep-tint sunscreen",
+      "Right side fixed window with deep-tint sunscreen glass",
+      "Rear window defroster",
+      "Left side second-row fixed window with deep-tint sunscreen"
+    ],
+    "Cargo Van": [
+      "Heavy-duty suspension (2500/3500)",
+      "Light-duty suspension (118-inch wheelbase 1500 models)",
+      "Medium-duty suspension (136-inch wheelbase 1500 models)",
+      "260-degree-opening rear doors standard",
+      "Right side door with fixed window optional",
+      "Cargo area incandescent lighting"
+    ],
+    "Sales": [
+      "3.6L Pentastar V6 with 9-speed automatic transmission",
+      "180-amp alternator",
+      "95-amp battery",
+      "24-gallon fuel tank",
+      "Electronic park brake",
+      "Electric power steering",
+      "Electronic stability control",
+      "Push-button start",
+      "16-inch silver-painted steel wheels with center cap"
+    ]
+  }
+}

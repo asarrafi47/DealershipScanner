@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2021|hyundai|sonata",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_2021__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "N Line",
+    "Blue",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Smartstream 2.5L Turbo GDI/MPI 4-Cylinder engine with 290 hp",
+      "Adds Features LED headlights and LED taillights",
+      "Adds Includes 10.25-inch high-resolution touchscreen navigation system",
+      "Adds Bose 12-speaker premium audio system",
+      "Adds Includes Apple CarPlay and Android Auto compatibility",
+      "Adds Features Bluetooth hands-free phone system",
+      "Adds Includes Blue Link Connected Car System (3 years complimentary)",
+      "Adds Features forward collision-avoidance assist with pedestrian and cyclist detection"
+    ],
+    "Premium": [],
+    "Blue": [
+      "Adds 8-inch display audio system with Apple CarPlay and Android Auto",
+      "Adds standard Bluetooth connectivity with dual phone simultaneous connection",
+      "Adds electronic gear shift buttons with intuitive placement",
+      "Adds climate control system with three airflow intensity levels",
+      "Adds remote engine start and cabin temperature preset to 72 degrees via key fob"
+    ],
+    "N Line": [
+      "Adds paddle shifters to transmission",
+      "Replaces standard suspension with sport-tuned suspension",
+      "Adds Drive Mode Select with Normal/Custom/Sport/Sport+ modes",
+      "Adds quad-outlet dual exhaust system",
+      "Adds electronic parking brake with automatic vehicle hold",
+      "Adds N unique front and rear fascia design",
+      "Adds rear spoiler",
+      "Adds N unique sport front seats with Nappa leather and Dinamica suede"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2014|nissan|rogue",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2014__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Leather-appointed seats",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "Quick Comfort heated front seats",
+      "Bose audio system with nine speakers including two woofers",
+      "18-inch aluminum-alloy wheels",
+      "Fog lights",
+      "Around View Monitor",
+      "Power liftgate"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels",
+      "Smart Auto Headlights",
+      "Roof rails",
+      "Rear privacy glass",
+      "NissanConnect Apps",
+      "Dual Zone Automatic Temperature Control"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine",
+      "Xtronic CVT Continuously Variable Transmission",
+      "Available Intuitive All-Wheel Drive",
+      "Active Trace Control, Active Engine Braking, Active Ride Control",
+      "17-inch steel wheels with wheel covers",
+      "LED Daytime Running Lights",
+      "Power outside mirrors with LED turn signal indicators",
+      "AM/FM/CD audio system with 5-inch color display",
+      "Bluetooth Hands-free Phone System",
+      "Nissan Advanced Air Bag System"
+    ]
+  }
+}

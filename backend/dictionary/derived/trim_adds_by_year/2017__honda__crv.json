@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2017|honda|crv",
+  "year": 2017,
+  "make": "Honda",
+  "model": "CR-V",
+  "ladder_id": "brochure_llm_2017__honda__crv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "TOURING": [
+      "Rain-sensing windshield wipers",
+      "Roof rails",
+      "LED headlights with low and high beam",
+      "Dual chrome exhaust finishers",
+      "330-watt premium audio system with 9 speakers and subwoofer",
+      "Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "SiriusXM Radio"
+    ],
+    "EX-L": [
+      "Power tailgate with programmable height",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic-dimming rearview mirror",
+      "Electric parking brake with automatic brake hold",
+      "18-inch alloy wheels",
+      "Driver's seat with two-position memory",
+      "Leather-trimmed seats",
+      "Passenger's seat with 4-way power adjustment",
+      "HD Radio",
+      "Available Honda Satellite-Linked Navigation System"
+    ],
+    "EX": [
+      "190-hp 1.5-liter turbocharged and intercooled DOHC 4-cylinder engine with direct injection",
+      "Remote engine start",
+      "Honda Sensing suite of safety and driver-assistive features",
+      "Auto-on/off headlights with auto high-beam",
+      "Blind spot information system with cross traffic monitor",
+      "LED Daytime Running Lights",
+      "Fog lights",
+      "Heated body-colored power side mirrors with integrated turn indicators"
+    ],
+    "LX": [
+      "184-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "Continuously variable transmission",
+      "Eco Assist System",
+      "Available Real Time AWD with dynamic Intelligent Control System",
+      "Hill start assist",
+      "17-inch alloy wheels",
+      "Six airbags",
+      "Multi-angle rearview camera with guidelines",
+      "Remote entry system",
+      "Tilt and telescopic steering column"
+    ]
+  }
+}

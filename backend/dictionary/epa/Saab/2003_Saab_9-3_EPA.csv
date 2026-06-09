@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,Saab,9-3,Convertible,2.0L I4 (B205R),2.0L I4,,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,18,27,21,,,,,
+2003,Saab,9-3,Convertible,2.0L I4 (B205R),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,29,23,,,,,
+2003,Saab,9-3,Sport Sedan,2.0L I4 (B207L),2.0L I4,,Automatic 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,19,28,23,,,,,
+2003,Saab,9-3,Sport Sedan,2.0L I4 (B207L),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,20,29,23,,,,,
+2003,Saab,9-3,Sport Sedan,2.0L I4 (B207R),2.0L I4,,Automatic 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,27,21,,,,,
+2003,Saab,9-3,Sport Sedan,2.0L I4 (B207R),2.0L I4,,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,19,28,22,,,,,

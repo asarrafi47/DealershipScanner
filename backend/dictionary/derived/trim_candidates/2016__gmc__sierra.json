@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2016|gmc|sierra",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Sierra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali Ultimate",
+    "Denali",
+    "SLT",
+    "Elevation",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium",
+    "LT",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

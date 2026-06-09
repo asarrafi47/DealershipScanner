@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2012|subaru|impreza",
+  "year": 2012,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2012__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Sport Limited",
+    "2.0i Sport Premium",
+    "2.0i Limited",
+    "2.0i Premium",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "2.0i Sport Limited": [
+      "Auto-on/off headlights",
+      "Body-color folding side mirrors",
+      "Body-color door handles with chrome accents",
+      "6-speaker single-CD audio with 4.3-inch LCD, HD Radio, USB/iPod control",
+      "Automatic climate control system",
+      "17-inch alloy wheels",
+      "Leather-trimmed upholstery"
+    ],
+    "2.0i Sport Premium": [
+      "Auto-on/off headlights",
+      "Heated side mirrors and windshield wiper de-icer",
+      "Heated front seats",
+      "Center console with adjustable armrest lid",
+      "6-speaker single-CD audio with 4.3-inch LCD, HD Radio, USB/iPod control"
+    ],
+    "2.0i Limited": [
+      "Body-color folding side mirrors",
+      "Body-color door handles",
+      "Heated side mirrors and windshield wiper de-icer",
+      "Heated front seats",
+      "Center console with adjustable armrest lid",
+      "Leather-trimmed steering wheel",
+      "Leather-wrapped automatic transmission shifter handle",
+      "6-speaker single-CD audio system with USB/iPod control",
+      "Automatic climate control system"
+    ],
+    "2.0i Premium": [
+      "Body-color folding side mirrors",
+      "Body-color door handles",
+      "Heated side mirrors and windshield wiper de-icer",
+      "Heated front seats",
+      "Center console with adjustable armrest lid",
+      "Electronic cruise control",
+      "3-spoke steering wheel with audio and cruise controls",
+      "6-speaker single-CD audio with USB/iPod control and Bluetooth"
+    ],
+    "2.0i": [
+      "Subaru Symmetrical All-Wheel Drive",
+      "Subaru Boxer engine with 4-wheel ABS and EBD",
+      "Vehicle Dynamics Control and Traction Control System",
+      "Tire Pressure Monitoring System",
+      "Daytime Running Lights",
+      "Dual-stage deployment airbags and side-curtain airbags",
+      "6-way driver and 4-way passenger manual seat adjustment",
+      "60/40-split flat-folding rear seatback",
+      "4-speaker single-CD audio system",
+      "Manually adjustable tilt/telescoping steering column"
+    ]
+  }
+}

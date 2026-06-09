@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2012|toyota|avalon",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_web_2012__toyota__avalon",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Avalon Hybrid Limited",
+    "Avalon Touring",
+    "Avalon Limited",
+    "Avalon Hybrid XSE Nightshade",
+    "Avalon Hybrid XLE",
+    "Avalon XLE"
+  ],
+  "adds_by_trim": {
+    "Avalon Hybrid Limited": [
+      "Hybrid powertrain: 2.5L four-cylinder with dual electric motors, 215 hp combined output",
+      "CVT automatic transmission with front-wheel drive",
+      "Exceptional fuel economy: 43/43-44 mpg city/highway",
+      "Genuine wood trim interior accents for premium feel"
+    ],
+    "Avalon Touring": [
+      "Adaptive variable suspension for sharp handling",
+      "Engine sound enhancement",
+      "Gloss black exterior accents",
+      "Heated rear seats",
+      "Aluminum pedal covers"
+    ],
+    "Avalon Limited": [
+      "Genuine wood trim throughout interior",
+      "Plush comfort-oriented ride quality"
+    ],
+    "Avalon Hybrid XSE Nightshade": [
+      "Black grille, black rear spoiler, and black window trim",
+      "LED headlights with smoked chrome bezels",
+      "Aluminum interior trim",
+      "Aluminum pedal covers",
+      "Sport-tuned suspension"
+    ],
+    "Avalon Hybrid XLE": [
+      "Hybrid powertrain: 2.5L four-cylinder with dual electric motors, 215 hp combined output",
+      "CVT automatic transmission with front-wheel drive",
+      "Exceptional fuel economy: 43/43-44 mpg city/highway"
+    ],
+    "Avalon XLE": [
+      "3.5L V-6 engine with 301 hp and 267 lb-ft of torque",
+      "Eight-speed automatic transmission with front-wheel drive",
+      "Fuel economy: 22/31-32 mpg city/highway",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane departure alert with steering assist",
+      "Adaptive cruise control",
+      "Blind-spot monitor and rear cross-traffic alert",
+      "9.0-inch touchscreen with Apple CarPlay and Android Auto",
+      "Eight-speaker sound system",
+      "Soft-touch interior materials with premium feel"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/avalon/"
+}

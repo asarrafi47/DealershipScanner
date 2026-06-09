@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|bentley|mulsanne",
+  "year": 2014,
+  "make": "bentley",
+  "model": "mulsanne",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2014_bentley_mulsanne_Brochure.pdf",
+  "page_count": 19,
+  "all_pages": false,
+  "trim_hint_pages": [
+    19
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 19,
+      "trim_hint": true,
+      "text": "Bentley motors limited, pyms lane, Crewe, Cheshire, Cw1 3pl, england. www.Bentleymotors.com\nthe models presented in this brochure include optional specifications. specifications, standard equipment, options, fabrics, and colours are\nsubject to change without notice. Your Bentley dealer will always have the latest information. the name \u2018Bentley\u2019 and the \u2018B\u2019 wings design\nare registered trademarks of Bentley motors limited. Bentley motors limited acknowledges the rights of third parties in other trademarks.\nthe models shown may include european and non-european specifications. \u00a9 2014 Bentley motors limited. printed in england.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 19 ---\nBentley motors limited, pyms lane, Crewe, Cheshire, Cw1 3pl, england. www.Bentleymotors.com\nthe models presented in this brochure include optional specifications. specifications, standard equipment, options, fabrics, and colours are\nsubject to change without notice. Your Bentley dealer will always have the latest information. the name \u2018Bentley\u2019 and the \u2018B\u2019 wings design\nare registered trademarks of Bentley motors limited. Bentley motors limited acknowledges the rights of third parties in other trademarks.\nthe models shown may include european and non-european specifications. \u00a9 2014 Bentley motors limited. printed in england."
+}

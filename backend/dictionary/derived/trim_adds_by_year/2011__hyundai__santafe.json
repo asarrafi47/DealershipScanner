@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2011|hyundai|santafe",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2011__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "3.5L DOHC V6 engine with Continuously Variable Valve Timing",
+      "Leather seating surfaces",
+      "Heated front seats",
+      "Infinity Logic 7® AM/FM/XM®/MP3 surround-sound audio system with subwoofer and 6-disc CD changer",
+      "Dual-zone automatic temperature control with CleanAir Ionizer and outside temperature display",
+      "Power tilt-and-slide sunroof",
+      "Chrome accent exterior door and liftgate handles",
+      "Deluxe metal accent door scuff plates",
+      "HomeLink® Integrated Transceiver"
+    ],
+    "SE": [
+      "18-inch Euroflange alloy wheels",
+      "Bodycolor rear spoiler with integrated LED rear brake light",
+      "Driver seat with power-adjustable lumbar support",
+      "Leather and cloth seating surfaces",
+      "Auto-dimming interior mirror with compass",
+      "Roof rack cross rails",
+      "Bodycolor exterior mirrors",
+      "Fog lights",
+      "Leather-wrapped steering wheel and shift knob",
+      "Windshield wiper de-icer"
+    ],
+    "GLS": [
+      "2.4L DOHC 4-cylinder or 3.5L V6 engine with Continuously Variable Valve Timing",
+      "6-speed manual transmission with 2.4L or 6-speed automatic transmission with SHIFTRONIC® with 3.5L",
+      "17-inch alloy wheels",
+      "Electronic Stability Control with Traction Control System",
+      "Anti-lock Braking System with Electronic Brake-force Distribution and Brake Assist",
+      "Six airbag safety system with dual advanced front airbags, side airbags, and roll-over sensing side curtain airbags",
+      "Active front seat head restraints",
+      "Tire Pressure Monitoring System",
+      "Air conditioning with cabin air filtration system and second-row air vents",
+      "AM/FM/XM®/CD/MP3 6-speaker audio system with iPod®/USB auxiliary jacks"
+    ]
+  }
+}

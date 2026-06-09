@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2020|toyota|supra",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Supra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "3.0 Premium",
+    "3.0",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|bentley|flyingspur",
+  "year": 2014,
+  "make": "bentley",
+  "model": "flying spur",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "LE",
+    "W12"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

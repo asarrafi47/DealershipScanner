@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|toyota|sequoia",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_llm_2013__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "LIMITED",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Electronic Modulated Air Suspension with Adaptive Variable Suspension (AVS) system",
+      "20-inch diamond-cut-finish alloy wheels with P275/55R20 tires",
+      "Chrome auto-dimming heated power mirrors with power folding, reverse tilt-down, memory, turn signals, and puddle lights",
+      "Perforated leather-trimmed heated and ventilated front seats with 12-way power driver adjustment and power thigh/lumbar support",
+      "7-passenger seating with second-row captain's chairs and multi-function center console",
+      "Leather-trimmed 40/20/40 split second-row seat with one-touch third-row access",
+      "Rear-seat Blu-ray Disc player entertainment system with 9-inch display and wireless headphones",
+      "Premium HDD Navigation with Entune and JBL 14-speaker system with HD Radio and iTunes Tagging"
+    ],
+    "LIMITED": [
+      "Front coil-spring independent double-wishbone suspension with gas-filled shocks and hollow stabilizer bar",
+      "20-inch alloy wheels with P275/55R20 tires",
+      "Chrome auto-dimming heated power mirrors with power folding and turn signal indicators",
+      "Leather-trimmed heated front seats with 10-way power driver adjustment and 4-way passenger adjustment",
+      "8-passenger seating with leather trim or 7-passenger with second-row captain's chairs",
+      "Leather-trimmed 40/20/40 split second-row seat with one-touch third-row access",
+      "JBL Synthesis AM/FM 6-disc CD changer with 14 speakers and SiriusXM Radio compatibility",
+      "Display Navigation with Entune 6.1-inch touchscreen, integrated backup camera, and Bluetooth connectivity"
+    ],
+    "SR5": [
+      "5.7-Liter i-FORCE V8 with 381 hp and 401 lb-ft torque with VVT-i technology",
+      "6-speed electronically controlled automatic transmission with sequential shift and TOW/HAUL mode",
+      "Multi-reflector halogen headlights with auto-off and headlight cleaners",
+      "Daytime Running Lights with on/off feature and integrated fog lights",
+      "Three-zone automatic climate control with air filter",
+      "Multi-Information Display with outside temperature, compass, and fuel economy data",
+      "8-passenger seating with easy-clean fabric-trimmed seats and 8-way power driver adjustment",
+      "Easy-clean fabric-trimmed 40/20/40 split second-row seat with one-touch third-row access",
+      "AM/FM CD player with MP3/WMA playback, eight speakers, SiriusXM Radio with Bluetooth connectivity",
+      "Power tilt/slide moonroof with sliding sunshade and running boards with front and rear mudguards"
+    ]
+  }
+}

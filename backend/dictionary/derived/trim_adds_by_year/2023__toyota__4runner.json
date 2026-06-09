@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2023|toyota|4runner",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2023__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "40th Anniversary Special Edition",
+    "TRD Off-Road Premium",
+    "TRD Off-Road",
+    "SR5 Premium",
+    "TRD Sport",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "40th Anniversary Special Edition": [
+      "Bronze-colored 17-inch alloy wheels with heritage TOYOTA front grille",
+      "Bronze-colored 40th Anniversary rear exterior badge and emblem overlays",
+      "Unique racing-inspired tri-color striped graphics on exterior",
+      "SofTex-trimmed seats with bronze-colored accent stitching",
+      "40th Anniversary Special Edition logo embossed on driver and front passenger headrests",
+      "40th Anniversary interior emblem on dashboard"
+    ],
+    "TRD Off-Road Premium": [
+      "Premium Audio with Dynamic Navigation and Destination Assist",
+      "SiriusXM with 3-month Platinum Plan and HD Radio",
+      "Auto-dimming rearview mirror",
+      "TRD red lettering on driver and front passenger headrests"
+    ],
+    "TRD Off-Road": [
+      "Part-time 4WD with Multi-Terrain Select and Crawl Control",
+      "Locking rear differential",
+      "17-inch 7-spoke alloy wheels with black-painted accents",
+      "Color-keyed front and rear bumpers with silver accents and hood scoop",
+      "TRD Off-Road external hard badges",
+      "Overhead console with MTS and CRAWL switches",
+      "TRD shift knob and TRD Off-Road floor mats",
+      "Audio Plus with 8.0-inch touchscreen and eight speakers"
+    ],
+    "SR5 Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "8-way power-adjustable driver seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "40/20/40 split reclining and fold-flat second-row seat",
+      "Auto-dimming rearview mirror",
+      "TRD shift knob and TRD Sport carpet floor mats",
+      "Premium Audio with Dynamic Navigation and Destination Assist",
+      "SiriusXM with 3-month Platinum Plan and HD Radio",
+      "Connected Services trials including Safety Connect and Wi-Fi Connect"
+    ],
+    "TRD Sport": [
+      "Available part-time 4WD system with Active Traction Control",
+      "X-REAS Sport Enhancement Suspension",
+      "Color-keyed TRD hood scoop",
+      "TRD Sport badge on C-pillars",
+      "LED headlights, LED fog lights, and LED taillights",
+      "Skid plates on engine, front suspension, and fuel tank",
+      "17-inch 6-spoke alloy wheels",
+      "TRD gray lettering on driver and front passenger headrests",
+      "Premium Audio with Dynamic Navigation, eight speakers, and Android Auto/Apple CarPlay compatibility"
+    ],
+    "SR5": [
+      "4.0-liter V6 with 270 hp and 5-speed automatic transmission",
+      "Rear-wheel drive standard with available part-time 4WD and A-TRAC",
+      "Automatic limited-slip differential",
+      "Hill Start Assist Control and Downhill Assist Control",
+      "Up to 16 city/19 highway/17 combined EPA mpg",
+      "LED headlights, fog lights, and taillights",
+      "Skid plates on engine and front suspension",
+      "SofTex-trimmed seats with 8-way power-adjustable driver seat",
+      "40/20/40 split reclining second-row seat",
+      "8.0-inch touchscreen audio with Android Auto, Apple CarPlay, and SiriusXM"
+    ]
+  }
+}

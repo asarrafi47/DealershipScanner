@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|nissan|altima",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2017__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SL",
+    "2.5 SL",
+    "2.5 SV",
+    "2.5 S"
+  ],
+  "adds_by_trim": {
+    "3.5 SL": [
+      "3.5-liter engine (versus 2.5-liter)",
+      "NissanConnect with Navigation and 7.0-inch color touchscreen",
+      "Nissan Voice Recognition for navigation and audio",
+      "Predictive Forward Collision Warning (PFCW)",
+      "Forward Emergency Braking (FEB)",
+      "Intelligent Cruise Control (ICC)"
+    ],
+    "2.5 SL": [
+      "Power sliding glass moonroof with one-touch open/close and tilt",
+      "Auto-dimming inside rearview mirror with digital compass",
+      "HomeLink Universal Transceiver",
+      "Mood lighting",
+      "Rear passenger air conditioning vents",
+      "Passenger-side front-window one-touch auto-up/down with auto-reverse",
+      "LED headlights with integrated signature and smoked headlight housing"
+    ],
+    "2.5 SV": [
+      "Power sliding glass moonroof with one-touch open/close and tilt",
+      "Manual folding outside mirrors with LED turn signal indicators",
+      "LED headlights with integrated signature color",
+      "NissanConnect Services powered by SiriusXM"
+    ],
+    "2.5 S": [
+      "6-way power driver's seat",
+      "Heated cloth front seats",
+      "Heated outside mirrors",
+      "Heated steering wheel"
+    ]
+  }
+}

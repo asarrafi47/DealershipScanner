@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2025_chevrolet_orlando_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Orlando",
+    "Orlando"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "LTZ": [
+      {
+        "label": "Engine Options",
+        "value": "The diesel engine for the Korean market was updated in 2015 to meet the government's Euro 6 requirement. All diesel Chevrolet Orlandos sold in Korea were equipped with a 1.6-litre inline-four CDTi engine outsourced from Opel.; Engines"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Rear view Sales Year Europe Canada South Korea China 2010 42 2011 19,938 2012 22,752 7,199 2013 13,424 2,339 2014 2,925 1,339 20,696 2015 44 31 19,686 2016 2 12,881 2017 8,067 2018 1 2,171 11,80 The LT and LTZ models offer rear parking sensors and, on LTZ trims, optional…"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "The diesel engine for the Korean market was updated in 2015 to meet the government's Euro 6 requirement. All diesel Chevrolet Orlandos sold in Korea were equipped with a 1.6-litre inline-four CDTi engine outsourced from Opel.; Engines"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Rear view Sales Year Europe Canada South Korea China 2010 42 2011 19,938 2012 22,752 7,199 2013 13,424 2,339 2014 2,925 1,339 20,696 2015 44 31 19,686 2016 2 12,881 2017 8,067 2018 1 2,171 11,80 The LT and LTZ models offer rear parking sensors and, on LTZ trims, optional…"
+      }
+    ]
+  }
+}

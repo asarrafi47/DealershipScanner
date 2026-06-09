@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2021|landrover|rangeroversport",
+  "year": 2021,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_2021__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds All Wheel Drive (AWD) as standard driveline",
+      "Adds Automatic transmission",
+      "Adds 24.1-gallon fuel tank capacity",
+      "Adds core safety and driver assistance technologies",
+      "Adds dynamic SUV performance capability"
+    ],
+    "Limited": [
+      "Upgraded to expanded fuel tank capacity of 27.6 gallons",
+      "Adds engine option flexibility with multiple powertrain choices"
+    ],
+    "Standard": [
+      "Adds enhanced capability features"
+    ],
+    "HSE": [
+      "Adds stylish design touches and distinctive interpretation",
+      "Upgraded to sportier design cues with muscular stance",
+      "Adds host of advanced technologies for improved driving experience",
+      "Adds personalization and collection-exclusive features",
+      "Adds premium capability enhancements across all systems"
+    ]
+  }
+}

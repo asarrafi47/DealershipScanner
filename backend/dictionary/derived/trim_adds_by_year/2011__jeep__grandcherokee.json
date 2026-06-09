@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|jeep|grandcherokee",
+  "year": 2011,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "jeep_grand_cherokee_wk2",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Laredo",
+    "Limited",
+    "Overland"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Quadra-Trac II active 4WD with Selec-Terrain (replaces Quadra-Trac I on 4x4)",
+      "Uconnect Media Center 430N with Garmin navigation and 6.5-inch touchscreen",
+      "SmartBeam bi-xenon HID headlamps with auto-leveling",
+      "Heated first- and second-row seats with Capri leather trim",
+      "Remote start, rain-sensing wipers, and Keyless Enter-N-Go",
+      "CommandView dual-pane panoramic sunroof",
+      "Alpine premium audio system available",
+      "Uconnect Phone"
+    ],
+    "Overland": [
+      "Quadra-Lift four-corner air suspension with Selec-Terrain (4x4)",
+      "20-inch Satin Carbon painted wheels (replaces 18-inch on Limited)",
+      "Media Center 730N navigation with SIRIUS Traffic",
+      "Alpine premium audio system and infrared dual-zone climate control",
+      "Power liftgate and ventilated front seats with heated front and rear seats",
+      "Heated power tilt/telescoping steering wheel with real wood trim",
+      "ParkSense rear park assist and ParkView rear backup camera",
+      "CommandView dual-pane panoramic sunroof",
+      "Exclusive Overland badge on liftgate"
+    ],
+    "Laredo": [
+      "Leather-wrapped steering wheel as standard premium feature",
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Available 5.7L V8 engine with Fuel Saver Technology",
+      "8.5-inch ground clearance with 26.2-degree approach angle",
+      "Multilink rear suspension with coil springs and gas-charged shock absorbers"
+    ]
+  }
+}

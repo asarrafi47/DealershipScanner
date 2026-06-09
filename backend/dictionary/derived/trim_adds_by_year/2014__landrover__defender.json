@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2014|landrover|defender",
+  "year": 2014,
+  "make": "landrover",
+  "model": "Defender",
+  "ladder_id": "brochure_2014__landrover__defender",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds standard steel wheels with Michelin Latitude Cross on-road tyres",
+      "Adds nine core body style options including Station Wagon, Hard Top, Pick Up, and Double Cab Pick Up",
+      "Adds customizable exterior colour coatings designed for tough working environments",
+      "Adds interior trim combinations for practicality and comfort",
+      "Adds Land Rover Approved Accessories including roof carriers and specialist fitment options"
+    ],
+    "Standard": [
+      "Upgraded to alloy wheel options with dual finish and black sawtooth styling",
+      "Adds Heavy Duty chassis and suspension platform availability",
+      "Adds eleven conversion platforms beyond nine core body styles",
+      "Adds premium tyre options including Goodyear Wrangler MT/R HD and Continental ContiCrossContact AT",
+      "Adds enhanced interior trim options with stylish, durable finishes including luxury touches"
+    ]
+  }
+}

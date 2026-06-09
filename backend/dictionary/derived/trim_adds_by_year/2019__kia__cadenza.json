@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|kia|cadenza",
+  "year": 2019,
+  "make": "Kia",
+  "model": "Cadenza",
+  "ladder_id": "brochure_llm_2019__kia__cadenza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TECHNOLOGY",
+    "PREMIUM",
+    "LIMITED"
+  ],
+  "adds_by_trim": {
+    "TECHNOLOGY": [
+      "8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Qi wireless charging pad",
+      "Blind Spot Detection with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Rear Park Assist System"
+    ],
+    "PREMIUM": [
+      "19-inch alloy wheels instead of 18-inch",
+      "Front LED fog lights",
+      "LED headlights with High-Beam Assist",
+      "Harman Kardon 630-watt premium audio with QuantumLogic surround sound",
+      "LED interior lighting",
+      "Smart Welcome with power-folding mirrors and illuminated door handles",
+      "HomeLink and compass"
+    ],
+    "LIMITED": [
+      "19-inch dark satin alloy wheels",
+      "Panoramic sunroof with power sunshade",
+      "3.3L GDI V6 engine with 290 hp"
+    ]
+  }
+}

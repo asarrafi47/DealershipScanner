@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2013|gmc|savana",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Savana",
+  "ladder_id": "generic_gmc_savana",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Rear",
+    "Wt"
+  ],
+  "adds_by_trim": {
+    "Wt": [
+      "subscriptions are continuous until you call SiriusXM to cancel. See SiriusXM",
+      "vehicle diagnostics, Crisis equipment and any alterations (or any effect of the alterations) to any of the parts, components, systems or assemblies",
+      "services vary with conditions.",
+      "will be made at no charge. in addition, rust-through",
+      "that your vehicle includes the equipment you ordered or, if there are changes, that they are acceptable to you.",
+      "subscriptions are continuous until you call siriusXM to cancel. see siriusXM Customer",
+      "channels, live performances and more. Tune in to live play-by-play",
+      "marks and/or service marks of General Motors, its",
+      "trademark of Twitter, inc. youTube is a registered"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 9.0,
+    "per_trim_add_counts": {
+      "Wt": 9
+    }
+  }
+}

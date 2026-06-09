@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2021|landrover|rangerover",
+  "year": 2021,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_2021__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Ventilated disc brakes front and rear",
+      "Adds Electric Park Brake integrated into brake caliper",
+      "Adds All Wheel Drive powertrain",
+      "Adds Automatic transmission",
+      "Adds Selective Catalytic Reduction Filter and Gasoline Particulate Filter"
+    ],
+    "Standard": [
+      "Adds optional P400e PHEV powertrain with 398 HP and electric motor capability",
+      "Adds optional P360 MHEV powertrain with 355 HP",
+      "Adds optional P400 MHEV powertrain with 395 HP"
+    ]
+  }
+}

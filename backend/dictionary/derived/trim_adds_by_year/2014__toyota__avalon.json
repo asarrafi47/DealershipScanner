@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|toyota|avalon",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2014__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED HYBRID",
+    "XLE TOURING HYBRID",
+    "XLE PREMIUM HYBRID",
+    "HYBRID XLE",
+    "LIMITED",
+    "XLE TOURING",
+    "XLE PREMIUM",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "LIMITED HYBRID": [
+      "Hybrid system with 200 hp net power and EV mode"
+    ],
+    "XLE TOURING HYBRID": [
+      "Sport, ECO, and Normal driving modes for hybrid system"
+    ],
+    "XLE PREMIUM HYBRID": [
+      "No additional features compared to XLE TOURING HYBRID"
+    ],
+    "HYBRID XLE": [
+      "2.5-liter 4-cylinder hybrid engine with EV, ECO, and Sport modes"
+    ],
+    "LIMITED": [
+      "Sport, ECO, and Normal driving modes for V6 engine"
+    ],
+    "XLE TOURING": [
+      "Sport, ECO, and Normal driving modes for 3.5-liter V6"
+    ],
+    "XLE PREMIUM": [
+      "P225/45R18 all-season tires in place of P215/55R17"
+    ],
+    "XLE": [
+      "3.5-liter V6 with 268 hp and 248 lb-ft torque",
+      "6-speed automatic transmission with sequential shift mode",
+      "Front-wheel drive with electric power steering",
+      "Power-assisted ventilated disc brakes with Star Safety System",
+      "MacPherson strut suspension front and rear",
+      "Electronic direct ignition system",
+      "P215/55R17 all-season radial tires",
+      "17.0-gallon fuel tank capacity"
+    ]
+  }
+}

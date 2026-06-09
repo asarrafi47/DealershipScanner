@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|toyota|sienna",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Sienna",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Hybrid engine: 2.5L 4-cylinder with 245 net hp Available All-Wheel Drive (AWD) Sport-tuned suspension",
+      "Electronically controlled Continuously Variable Up to 36 city/36 highway/36 combined EPA-est. mpg34 Available All-Wheel Drive (AWD)",
+      "Transmission (ECVT) with sequential shift mode Exterior Features Up to 36 city/36 highway/36 combined EPA-est. mpg34",
+      "Normal, ECO, EV65 and Sport drive modes",
+      "Integrated wide-angle LED fog lights Exterior Features",
+      "Front-Wheel Drive (FWD)",
+      "Hands-free dual power sliding side doors9 LED headlights and LED-strip DRL with auto on/off feature",
+      "Available All-Wheel Drive (AWD)",
+      "Power liftgate with jam protection with available Black side rocker panels",
+      "Up to 36 city/36 highway/36 combined EPA-est. mpg34",
+      "Exterior Features Chrome-accented color-keyed outside door handles Black heated power outside mirrors"
+    ],
+    "Limited": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on Limited",
+      "Available All-Wheel Drive (AWD) Available All-Wheel Drive (AWD)",
+      "Up to 36 city/36 highway/36 combined EPA-est. mpg34 Up to 36 city/36 highway/36 combined EPA-est. mpg",
+      "Exterior Features Exterior Features",
+      "LED headlights and LED-strip DRL with Signature Bi-LED projector headlights and LED-strip",
+      "Black side rocker panels Bird\u2019s Eye View Camera44",
+      "Dark gray metallic front grille 20-in. metallic wheels",
+      "Chrome roof rails Interior Features",
+      "Rear lower bumper in black with chrome accent",
+      "Chrome-accented Sienna liftgate logo",
+      "Leather-trimmed seats",
+      "Color-keyed roof-mounted shark-fin antenna - Heated and ventilated front seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

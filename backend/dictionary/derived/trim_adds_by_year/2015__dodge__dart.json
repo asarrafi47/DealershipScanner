@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2015|dodge|dart",
+  "year": 2015,
+  "make": "Dodge",
+  "model": "Dart",
+  "ladder_id": "brochure_2015__dodge__dart",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE",
+    "Express",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [],
+    "Express": [],
+    "SE": [
+      "Upgraded to 2.0L Tigershark 4-cylinder engine",
+      "Adds 10 air bags including dual-stage adaptive-venting frontal, front-seat side-mounted pelvic and thorax, rear-seat side-mounted pelvic, front and rear side curtain, and driver and front-passenger knee bolster air bags",
+      "Adds Reactive front head restraints",
+      "Adds Electronic Stability Control (ESC)",
+      "Adds 4-wheel antilock disc brakes",
+      "Adds Brake Assist and Hill Start Assist",
+      "Adds Tire Inflator Kit",
+      "Adds Folding rear seat",
+      "Adds Soft-touch IP",
+      "Adds Premium cluster with tachometer"
+    ],
+    "Sport": [],
+    "SXT": [
+      "Upgraded to 2.4L 184-hp Tigershark 4-cylinder with MultiAir 2 engine",
+      "Adds power windows",
+      "Adds 16-inch aluminum wheels",
+      "Adds automatic headlamps",
+      "Adds LED racetrack taillamp",
+      "Adds body-color door handles",
+      "Adds power body-color mirrors",
+      "Adds speed-sensitive power door locks",
+      "Adds remote keyless entry",
+      "Adds cruise control"
+    ],
+    "Premium": [
+      "Adds Uconnect Voice Command with Bluetooth Streaming Audio",
+      "Adds steering wheel-mounted audio controls",
+      "Adds 60/40 split-folding rear seat with trunk pass-through",
+      "Adds rear armrest with storage and cup holders",
+      "Adds Touring suspension"
+    ],
+    "Limited": [
+      "Adds 17-inch Satin Silver aluminum wheels",
+      "Adds projector fog lamps",
+      "Adds integrated dual exhaust with bright tips",
+      "Adds Uconnect 8.4 system with 8.4-inch touchscreen, iPod Control, remote USB port and SiriusXM Satellite Radio",
+      "Adds power, heated mirrors with supplemental signals",
+      "Adds Keyless Enter 'n Go with push-button start",
+      "Adds power 10-way driver's seat",
+      "Adds Dual-Zone Automatic Temperature Control",
+      "Adds 7-inch reconfigurable digital gauge cluster",
+      "Adds leather-wrapped steering wheel"
+    ],
+    "GT": [
+      "Adds 18-inch Gloss Black aluminum wheels",
+      "Adds dark headliner",
+      "Adds black crosshair with black mask grille surround accent stitching",
+      "Adds Sedoso cloth with Light Tungsten seat stitching",
+      "Adds black fog lamp spear and bezel",
+      "Adds black mirrors",
+      "Adds leather-wrapped shifter",
+      "Adds accent stitching on IP brow and center armrest",
+      "Adds sport suspension with frequency-sensing dampening shocks"
+    ]
+  }
+}

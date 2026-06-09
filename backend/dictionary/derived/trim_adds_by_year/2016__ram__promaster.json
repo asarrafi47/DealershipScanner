@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2016|ram|promaster",
+  "year": 2016,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2016__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cutaway Chassis",
+    "Cargo Van",
+    "Windowed Van",
+    "Cab Chassis"
+  ],
+  "adds_by_trim": {
+    "Cargo Van": [
+      "260-degree-opening rear doors with fixed glass",
+      "Right-side door with fixed glass",
+      "Rear cargo lamps",
+      "Cargo partition options with or without sliding window",
+      "Floor cargo tie-down rings"
+    ],
+    "Windowed Van": [
+      "260-degree-opening rear doors with no glass",
+      "Right-side door with no glass",
+      "Rear window defroster",
+      "Rear assist handles",
+      "Rear window guards"
+    ],
+    "Cab Chassis": [
+      "96-inch extended mirrors with power heated mirrors",
+      "Power-adjustable and power-folding heated mirrors",
+      "Front and rear roof clearance lamps",
+      "Extended wiring for taillamps",
+      "Rear bumper extension step"
+    ],
+    "Cutaway Chassis": [
+      "Heavy-duty suspension option for 2500/3500 models with 136-inch or 159-inch wheelbase",
+      "Motor Home Suspension Package available for 3500 models",
+      "Extended wiring for taillamps",
+      "Rear cargo lamps",
+      "Cargo tie-down rings on floor and side-wall",
+      "Full-side wall panels option",
+      "Rear window defroster with rear-hinged doors and fixed glass",
+      "Wood floor in rear cargo area"
+    ]
+  }
+}

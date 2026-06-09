@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2017|kia|optima",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2017__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Limited",
+    "SX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Limited": [
+      "Full-grain Nappa leather-trimmed front and rear seats",
+      "Satin chrome and black gloss interior accents"
+    ],
+    "SX": [
+      "Available Harman Kardon premium 630-watt 10-speaker audio system with Clari-Fi",
+      "Available paddle shifters for 6-speed Sportmatic transmission",
+      "Available electronic parking brake with Auto Hold feature",
+      "Available push-button Smart Key remote engine start",
+      "Available Smart Welcome door-handle and power-folding mirror lighting",
+      "Available heated steering wheel with D-shaped leather wrapping",
+      "Sport-tuned suspension for greater responsiveness",
+      "Available ambient front-door mood lamps"
+    ],
+    "LX": [
+      "Cloth seats treated with CleanTex anti-soiling technology",
+      "Flip-down rear-seat armrest with dual cup holders",
+      "60/40 split-folding rear seats",
+      "LED overhead reading lights",
+      "Bluetooth wireless technology for audio streaming and phone connectivity",
+      "Available rapid-charge USB charging ports with 5-amp output",
+      "Choice of three GDI engines: 185-hp 2.4L, 178-hp 1.6L Turbo, or 245-hp 2.0L Turbo",
+      "7-speed dual-clutch transmission or 6-speed Sportmatic transmission options"
+    ]
+  }
+}

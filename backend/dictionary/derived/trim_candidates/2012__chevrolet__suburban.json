@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2012|chevrolet|suburban",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "Z71",
+    "LT",
+    "Custom",
+    "LS",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

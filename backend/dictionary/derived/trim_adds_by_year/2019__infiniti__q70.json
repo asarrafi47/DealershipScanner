@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2019|infiniti|q70",
+  "year": 2019,
+  "make": "Infiniti",
+  "model": "Q70",
+  "ladder_id": "brochure_web_2019__infiniti__q70",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Q70L 3.7",
+    "Q70L 5.6",
+    "Q70 3.7",
+    "Q70 5.6"
+  ],
+  "adds_by_trim": {
+    "Q70L 5.6": [
+      "5.6L V8 engine with 420 hp replacing 3.7L V6",
+      "All-wheel drive standard",
+      "Sport-tuned suspension"
+    ],
+    "Q70L 3.7": [
+      "Extended wheelbase for rear passenger legroom",
+      "Rear seat entertainment system with dual screens",
+      "Heated and ventilated rear seats"
+    ],
+    "Q70 5.6": [
+      "5.6L V8 engine with 420 hp replacing 3.7L V6",
+      "All-wheel drive standard",
+      "Sport-tuned suspension"
+    ],
+    "Q70 3.7": [
+      "3.7L V6 engine with 330 hp",
+      "Rear-wheel drive",
+      "InfinityTouch 8-inch touchscreen with navigation",
+      "Adaptive Suspension Control with dual-mode operation",
+      "Premium leather appointed interior",
+      "Power steering with progressive response",
+      "Bluetooth connectivity and voice recognition",
+      "Dual-zone automatic temperature control",
+      "Bose premium audio system with 11 speakers"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/q70/"
+}

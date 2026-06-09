@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2014|fiat|500",
+  "year": 2014,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2014__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Turbo",
+    "Lounge",
+    "Sport",
+    "Pop"
+  ],
+  "adds_by_trim": {
+    "Turbo": [
+      "1.4L MultiAir Turbocharged engine with 135 horsepower and twin intercoolers",
+      "Performance four-wheel disc brake system with 11.1-inch vented-front rotors",
+      "Rosso-painted brake calipers",
+      "Semi-metallic brake linings",
+      "Performance-designed front fascia with body-color surround and intercooler nostrils",
+      "Performance-designed rear fascia with lower diffuser",
+      "120-amp alternator"
+    ],
+    "Lounge": [
+      "Automatic temperature control",
+      "Auto-dimming rearview mirror",
+      "Parksense Rear Park Assist system",
+      "TomTom Navigation system with 4.3-inch touch-screen",
+      "Front-passenger assist handle",
+      "Rear cargo shelf panel"
+    ],
+    "Sport": [
+      "Body-color sill with sport styling",
+      "Sport-designed front fascia with honeycomb grilles",
+      "Sport-designed rear fascia with honeycomb grilles",
+      "Fog lamps",
+      "Sport-tuned front shock absorbers and springs",
+      "Sport-tuned rear shock absorbers and springs",
+      "195/45R16 XL All-season Performance tires",
+      "Alpine premium audio system with six speakers and 276-watt amplifier",
+      "Sport mode with unique throttle calibration"
+    ],
+    "Pop": [
+      "1.4L MultiAir Turbocharged inline four-cylinder engine with 101 horsepower",
+      "Five-speed manual transmission",
+      "Electronic Throttle Control",
+      "Electronic Stability Control with ABS and Traction Control",
+      "Electric Power steering with variable-speed assisted sensitivity",
+      "MacPherson front suspension with stabilizer bar",
+      "Bi-halogen projector headlamps",
+      "AM/FM/CD/MP3/WMA Radio with auxiliary input jack",
+      "BLUE&ME Hands-Free Communication with Bluetooth and eco:Drive Application"
+    ]
+  }
+}

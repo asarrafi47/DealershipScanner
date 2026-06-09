@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|jaguar|xk",
+  "year": 2013,
+  "make": "Jaguar",
+  "model": "XK",
+  "ladder_id": "brochure_llm_2013__jaguar__xk",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XKR-S",
+    "XKR",
+    "XK"
+  ],
+  "adds_by_trim": {
+    "XKR-S": [
+      "5.0L V8 Supercharged engine producing 404kW (exclusive to XKR-S)",
+      "Performance seats standard with individually fine-tuned lumbar support and sculpted side bolsters"
+    ],
+    "XKR": [
+      "5.0L V8 Supercharged engine delivering 375kW",
+      "Choice of Luxury or Performance interior theme",
+      "Performance seats available as option"
+    ],
+    "XK": [
+      "5.0L V8 engine",
+      "16-way adjustable Luxury seats standard with heating and cooling",
+      "Twin-stitched soft grain leather upholstery",
+      "Choice of Luxury or Performance interior theme",
+      "LED daytime running lights with bi-function HID Xenon headlamps",
+      "All-LED tail lamps",
+      "Aluminium body construction in Coupé and Convertible bodystyles"
+    ]
+  }
+}

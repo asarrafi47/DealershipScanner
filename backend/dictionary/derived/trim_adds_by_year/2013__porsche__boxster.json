@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2013|porsche|boxster",
+  "year": 2013,
+  "make": "Porsche",
+  "model": "Boxster",
+  "ladder_id": "brochure_llm_2013__porsche__boxster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Boxster S",
+    "Boxster"
+  ],
+  "adds_by_trim": {
+    "Boxster S": [
+      "19-inch Boxster S wheels with full-colour Porsche Crest wheel centre",
+      "Sport Chrono Package including dynamic gearbox mounts and stopwatch",
+      "Porsche Torque Vectoring (PTV) with mechanically locking rear differential",
+      "Sports exhaust system",
+      "Bi-Xenon headlights with Porsche Dynamic Light System (PDLS)"
+    ],
+    "Boxster": [
+      "18-inch or 19-inch Cayman wheels",
+      "Porsche Doppelkupplung (PDK) transmission available",
+      "Porsche Active Suspension Management (PASM) available",
+      "Two-zone automatic climate control",
+      "Cruise control with HomeLink programmable garage door opener"
+    ]
+  }
+}

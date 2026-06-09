@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2019|volvo|xc40",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "XC40",
+  "ladder_id": "brochure_llm_2019__volvo__xc40",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Inscription": [
+      "Sensus Navigation Pro standard",
+      "Panoramic moonroof standard",
+      "8-way power passenger seat standard",
+      "Perforated fine Nappa leather/Nubuck upholstery standard",
+      "Orrefors crystal gearshift knob standard",
+      "Sport chassis standard"
+    ],
+    "R-Design": [
+      "Sport steering wheel with gearshift paddles",
+      "19-inch 5-spoke black diamond cut alloy wheels standard",
+      "Sport chassis standard",
+      "Sensus Navigation Pro standard"
+    ],
+    "Momentum": [
+      "12.3-inch digital driver display",
+      "Volvo On Call for 4 years included",
+      "Complimentary factory scheduled maintenance 3 years/36,000 miles",
+      "9-inch Sensus Connect infotainment system with touchscreen",
+      "Bluetooth connectivity with audio streaming",
+      "Apple CarPlay and Android smartphone integration",
+      "LED headlights with Thor's Hammer daytime running lights",
+      "18-inch alloy wheels with all-season tires standard",
+      "Automatic climate control",
+      "Leather steering wheel and key fob"
+    ]
+  }
+}

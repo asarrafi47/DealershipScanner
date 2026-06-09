@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|bmw|5series",
+  "year": 2014,
+  "make": "BMW",
+  "model": "5 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Luxury Line",
+    "Modern Line",
+    "Limited",
+    "Touring",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

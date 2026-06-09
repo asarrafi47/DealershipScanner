@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2019|toyota|tacoma",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "Limited",
+    "SR5",
+    "SR",
+    "TRD",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

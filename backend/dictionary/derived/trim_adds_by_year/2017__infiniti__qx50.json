@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2017|infiniti|qx50",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_llm_2017__infiniti__qx50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX50 AWD",
+    "QX50 RWD"
+  ],
+  "adds_by_trim": {
+    "QX50 AWD": [
+      "Intelligent All-Wheel Drive system for enhanced traction and handling"
+    ],
+    "QX50 RWD": [
+      "3.7-liter V6 engine with 325 horsepower and 267 lb-ft torque",
+      "Electronically controlled 7-speed automatic transmission with manual shift mode",
+      "Vehicle-speed-sensitive power steering with 37.2-foot turning diameter",
+      "Independent double-wishbone front suspension with stabilizer bar",
+      "Independent multi-link rear suspension with stabilizer bar",
+      "Front and rear ventilated disc brakes with 4-wheel ABS",
+      "18-inch aluminum-alloy wheels with 225/55R18 all-season tires",
+      "Leather-appointed seating with 8-way power driver's seat and lumbar support",
+      "Dual-zone automatic temperature control with climate system",
+      "Power sliding tinted glass moonroof with one-touch auto-open and close"
+    ]
+  }
+}

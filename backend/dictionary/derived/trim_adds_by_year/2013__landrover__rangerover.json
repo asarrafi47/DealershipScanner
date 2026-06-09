@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2013|landrover|rangerover",
+  "year": 2013,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_llm_2013__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AUTOBIOGRAPHY",
+    "SUPERCHARGED",
+    "HSE",
+    "RANGE ROVER"
+  ],
+  "adds_by_trim": {
+    "AUTOBIOGRAPHY": [
+      "Ultimate luxury trim level positioning"
+    ],
+    "SUPERCHARGED": [
+      "5.0L V8 Supercharged engine"
+    ],
+    "HSE": [
+      "5.0L V8 engine"
+    ],
+    "RANGE ROVER": [
+      "Base Range Rover model"
+    ]
+  }
+}

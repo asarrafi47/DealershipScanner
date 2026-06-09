@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2015|cadillac|cts",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "CTS",
+  "ladder_id": "brochure_llm_2015__cadillac__cts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "VSPORT",
+    "PREMIUM",
+    "PERFORMANCE",
+    "LUXURY",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "VSPORT": [
+      "3.6L Twin Turbo Direct-Injection V6 engine with 420 hp and 430 lb.-ft. torque",
+      "8-speed automatic with performance modes including cornering control and fast-off",
+      "Rear electronic Limited-Slip Differential (eLSD)",
+      "Magnetic Ride Control suspension",
+      "Adaptive Forward Lighting headlamps",
+      "20-way performance driver and front passenger seats",
+      "Magnesium paddle-shift controls on steering wheel"
+    ],
+    "PREMIUM": [
+      "Integrated navigation with CUE voice and text guidance",
+      "Ambient lighting on instrument panel and doors",
+      "Heated and ventilated driver and front passenger seats",
+      "Heated rear outboard seating positions",
+      "Full leather seating surfaces",
+      "Heated steering wheel rim",
+      "Power-adjustable rake and telescope steering column"
+    ],
+    "PERFORMANCE": [
+      "3.6L Direct-Injection V6 engine with 321 hp and 275 lb.-ft. torque standard",
+      "8-speed automatic transmission standard",
+      "60/40 split-folding rear seatback",
+      "Leather-wrapped steering wheel",
+      "Integrated navigation available"
+    ],
+    "LUXURY": [
+      "12-way power driver and front passenger seat adjustments with 4-way lumbar",
+      "Heated and ventilated front seating",
+      "60/40 split-folding rear seatback standard",
+      "Leather seating surfaces standard",
+      "Leather-wrapped steering wheel standard",
+      "HID headlamps with LED vertical light signatures"
+    ],
+    "STANDARD": [
+      "2.0L Turbo Direct-Injection 4-cylinder engine with 272 hp and 295 lb.-ft. torque",
+      "6-speed automatic transmission with Performance Activated Shifts",
+      "Rear-wheel drive standard",
+      "4-wheel independent suspension with MacPherson struts and five-link rear",
+      "Brembo front disc brakes with antilock braking system",
+      "ZF variable-effort power steering",
+      "Projector halogen headlamps with LED vertical signatures",
+      "17-inch aluminum wheels",
+      "Leatherette seating",
+      "5-passenger seating with front bucket seats"
+    ]
+  }
+}

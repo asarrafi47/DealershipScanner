@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2021|lexus|ux",
+  "year": 2021,
+  "make": "lexus",
+  "model": "UX",
+  "ladder_id": "brochure_2021__lexus__ux",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes Six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Includes Eight-year/100,000-mile Hybrid System Warranty",
+      "Adds Features zero deductible across all warranties"
+    ],
+    "Limited": [
+      "Adds Qi wireless charging for mobile devices"
+    ],
+    "Premium": [
+      "Adds Amazon Alexa integration with Lexus+Alexa app"
+    ],
+    "Luxury": [
+      "Adds Alloy wheels with Gloss Black and machined finish",
+      "Adds Alloy wheel locks",
+      "Adds All-weather cargo mat",
+      "Adds All-weather floor liners",
+      "Adds Carpet cargo mat",
+      "Adds Carpet floor mats",
+      "Adds Door edge film by 3M",
+      "Adds Door edge guards",
+      "Adds Emergency assistance kit",
+      "Adds Qi wireless charging capability"
+    ]
+  }
+}

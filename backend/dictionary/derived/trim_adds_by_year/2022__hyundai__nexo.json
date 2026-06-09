@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2022|hyundai|nexo",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Nexo",
+  "ladder_id": "brochure_llm_2022__hyundai__nexo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NEXO Limited",
+    "NEXO Blue"
+  ],
+  "adds_by_trim": {
+    "NEXO Limited": [
+      "Power tilt-and-slide wide sunroof",
+      "Surround View Monitor and Blind-Spot View Monitor",
+      "Rain-sensing windshield wipers",
+      "Hands-free smart liftgate with auto open and adjustable height",
+      "Krell premium audio system with 8 speakers",
+      "Roof side rails"
+    ],
+    "NEXO Blue": [
+      "161 hp fuel cell powertrain with 291 lb-ft torque",
+      "10.25-inch digital instrument cluster display",
+      "12.3-inch touchscreen navigation with Apple CarPlay and Android Auto",
+      "Proximity key entry with push button start",
+      "LED headlights and taillights with Daytime Running Lights",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Lane Following Assist",
+      "Heated front seats and heated steering wheel",
+      "8-way power driver seat with lumbar support"
+    ]
+  }
+}

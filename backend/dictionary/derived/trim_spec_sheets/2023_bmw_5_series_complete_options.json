@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_bmw_5_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "5 Series",
+    "5 Series"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "540i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "530i": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2014|porsche|boxster",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "Boxster",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GTS",
+    "Carrera"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Toyota,bZ,(energy capacity 200 Ah),EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,144,117,130,,,,,
+2026,Toyota,bZ,LIMITED (energy capacity 200 Ah),EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,134,111,123,,,,,
+2026,Toyota,bZ,AWD,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,131,109,120,,,,,
+2026,Toyota,bZ,AWD LIMITED,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,128,105,117,,,,,
+2026,Toyota,bZ,(energy capacity 191 Ah),EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,143,119,131,,,,,
+2026,Toyota,bZ,LIMITED (energy capacity 191 Ah),EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,138,113,125,,,,,
+2026,Toyota,bZ,Woodland AWD 235/60R18,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,127,107,117,,,,,
+2026,Toyota,bZ,Woodland AWD 235/65R18,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,117,100,109,,,,,

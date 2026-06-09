@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2017|jaguar|ftype",
+  "year": 2017,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_llm_2017__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F-TYPE SVR",
+    "F-TYPE R",
+    "F-TYPE S",
+    "F-TYPE PREMIUM",
+    "F-TYPE"
+  ],
+  "adds_by_trim": {
+    "F-TYPE SVR": [
+      "Special Vehicle Operations engineering and performance enhancements",
+      "Advanced aerodynamics with carbon fiber components",
+      "Lightweight technologies for improved performance",
+      "Enhanced chassis and suspension tuning"
+    ],
+    "F-TYPE R": [
+      "Supercharged V6 engine with increased power and torque output",
+      "Enhanced performance capabilities and dynamic driving features"
+    ],
+    "F-TYPE S": [
+      "3.0-liter V6 supercharged petrol engine with 380 horsepower",
+      "Increased torque and acceleration compared to base F-TYPE"
+    ],
+    "F-TYPE PREMIUM": [
+      "Panoramic glass roof standard with manually sliding black-out blind",
+      "Full-width panoramic glass roof with 99 percent light-blocking capability"
+    ],
+    "F-TYPE": [
+      "3.0-liter V6 supercharged petrol engine with 340 horsepower",
+      "332 lb-ft torque with 6-speed manual or automatic transmission",
+      "Aluminum roof providing lightweight sports car aesthetics",
+      "Lightweight aluminum architecture for performance and efficiency",
+      "Advanced chassis and suspension system",
+      "Performance braking system"
+    ]
+  }
+}

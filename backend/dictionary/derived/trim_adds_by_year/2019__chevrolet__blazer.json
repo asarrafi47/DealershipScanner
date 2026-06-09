@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2019|chevrolet|blazer",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Blazer",
+  "ladder_id": "brochure_llm_2019__chevrolet__blazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "Blazer V6 (Leather)",
+    "Blazer V6 (Cloth)",
+    "Blazer (Cloth)"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "Perforated leather-appointed seats with sueded microfiber inserts",
+      "Ventilated driver and front passenger seats, heated rear outboard seats",
+      "Power tilt and telescopic steering column",
+      "Chevrolet Infotainment 3 Premium with Navigation and additional in-vehicle app memory",
+      "Bose premium 8-speaker audio system with amplifier and subwoofer",
+      "Wireless charging for compatible mobile devices",
+      "21-inch Pearl Nickel-painted aluminum wheels with panoramic sunroof"
+    ],
+    "RS": [
+      "Perforated leather-appointed seating surfaces",
+      "8-way power front passenger seat adjuster",
+      "Chevrolet Infotainment 3 Premium with Navigation",
+      "Bose premium 8-speaker audio system with subwoofer",
+      "HD Surround Vision and Rear Camera Mirror",
+      "Adaptive Cruise Control – Advanced with Forward Automatic Braking and Lane Keep Assist",
+      "IntelliBeam headlamps and Safety Alert Seat",
+      "21-inch Gloss Black-painted aluminum wheels with panoramic sunroof"
+    ],
+    "Blazer V6 (Leather)": [
+      "Illuminated vanity mirrors on visors",
+      "6-way power front passenger seat adjuster",
+      "8-way power driver seat adjuster",
+      "Heated driver and front passenger seats",
+      "Chevrolet Infotainment 3 system with 8-inch touchscreen and Apple CarPlay/Android Auto",
+      "SiriusXM Radio All Access with 3-month trial subscription",
+      "Universal Home Remote with programmable garage door opener",
+      "20-inch Bright-painted aluminum wheels with panoramic sunroof option"
+    ],
+    "Blazer V6 (Cloth)": [
+      "8-way power driver seat adjuster replacing 6-way manual",
+      "Illuminated vanity mirrors on visors",
+      "Chevrolet Infotainment 3 system with 8-inch touchscreen and Apple CarPlay/Android Auto",
+      "SiriusXM Radio All Access with 3-month trial subscription",
+      "Universal Home Remote with programmable garage door opener"
+    ],
+    "Blazer (Cloth)": [
+      "6-way manual driver seat adjuster",
+      "4-way manual front passenger seat adjuster",
+      "Driver and front passenger vanity mirrors with covers",
+      "Manual tilt and telescopic steering column",
+      "Leather-wrapped 3-spoke steering wheel",
+      "Chevrolet Infotainment 3 system with 8-inch color touchscreen and AM/FM stereo",
+      "6-speaker audio system",
+      "USB Type-A and Type-C ports on instrument panel",
+      "Chevrolet Connected Access with 10 years of standard connectivity"
+    ]
+  }
+}

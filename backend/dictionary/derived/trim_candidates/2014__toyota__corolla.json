@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2014|toyota|corolla",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "LE",
+    "Limited",
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Tech Audio \u2013 includes AM/FM CD player, four USB 2.0 port1 with iPod\u00ae2 connectivity and Adds to or replaces features offered on Eco Mixed Media seats with sport bolsters and sport fabric",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel",
+      "Fabric-trimmed seats Automatic climate control",
+      "LE Eco with audio, Multi-Information Display and Bluetooth\u00ae3",
+      "Tilt/telescopic steering wheel with audio and S Plus"
+    ],
+    "S": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "LED low-beam headlights with halogen high beams Heated power outside mirrors Rear deck spoiler Rear deck spoiler",
+      "LED Daytime Running Lights (DRL) with on/off feature Entune\u2122 Audio \u2013 includes the Entune\u21224 Multimedia Integrated fog lights",
+      "Power outside mirrors Bundle with 6.1-in. touch-screen display, AM/FM Heated power outside mirrors with turn signal",
+      "Bluetooth\u00ae3 hands-free phone controls LE Plus Adds to or replaces features offered on Eco Plus",
+      "Power door locks with automatic locking feature SofTex\u00ae-trimmed heated front seats Adds to or replaces features offered on S",
+      "Power windows with driver-side one-touch up/down Adds to or replaces features offered on LE 8-way power-adjustable driver\u2019s seat",
+      "Center console with storage compartment 16-in. alloy wheels 4-way adjustable front passenger seat with 17-in. alloy wheels",
+      "Two front and two rear cup holders S Premium",
+      "Adds to or replaces features offered on S Plus",
+      "Adds to or replaces features offered on LE Plus",
+      "SofTex\u00ae-trimmed heated front seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

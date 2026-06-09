@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2011|audi|a4",
+  "year": 2011,
+  "make": "Audi",
+  "model": "A4",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "Sport",
+    "Limited",
+    "A4",
+    "S4"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

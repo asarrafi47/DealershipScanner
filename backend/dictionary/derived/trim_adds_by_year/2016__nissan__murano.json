@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2016|nissan|murano",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2016__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch machine-finished aluminum-alloy wheels",
+      "LED headlights",
+      "Heated rear seats",
+      "Power-return rear seatbacks",
+      "Heated steering wheel",
+      "Power-tilt and power-telescoping steering column with memory",
+      "8-way power driver's seat with power lumbar support",
+      "4-way power front-passenger seat",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SL": [
+      "Silver roof rails",
+      "Adjustable ambient interior lighting",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Premium Bose Audio System with 11 speakers and dual subwoofers",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Around View Monitor with Moving Object Detection",
+      "Driver Attention Alert",
+      "Leather-appointed seats",
+      "Heated front seats"
+    ],
+    "SV": [
+      "Fog lights",
+      "Black roof rails",
+      "NissanConnect with Navigation and 8.0-inch multi-touch color monitor",
+      "Voice Recognition for audio and navigation",
+      "SiriusXM Traffic and Travel Link",
+      "HD Radio interface",
+      "Remote Engine Start with Intelligent Climate Control"
+    ],
+    "S": [
+      "260-hp 3.5-liter V6 engine",
+      "Xtronic CVT transmission with All-Wheel Drive or Front-Wheel Drive",
+      "Vehicle Dynamic Control with Traction Control System",
+      "18-inch machine-finished wheels",
+      "Automatic on/off headlights and LED Daytime Running Lights",
+      "LED taillights",
+      "Dual Zone Automatic Temperature Control with in-cabin microfilter",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "6-way manual driver's seat and 60/40 split fold-down rear seatbacks",
+      "RearView Monitor with AM/FM/CD audio and SiriusXM capability"
+    ]
+  }
+}

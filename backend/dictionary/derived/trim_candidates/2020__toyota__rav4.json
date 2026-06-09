@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2020|toyota|rav4",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XSE",
+    "XLE",
+    "TRD Off-Road",
+    "TRD",
+    "Adventure",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds to or replaces features offered on Adventure",
+      "18-in. 6-spoke matte-black TRD flow-formed alloy wheels",
+      "Falken\u00ae WILDPEAK all-terrain tires",
+      "LED Daytime Running Lights (DRL)",
+      "Integrated LED fog lights",
+      "Unique color-keyed upper and black lower front bumper, larger",
+      "TRD-tuned independent MacPherson strut front suspension with",
+      "Power tilt/slide moonroof with one-touch open/close",
+      "Power liftgate with jam protection",
+      "Black RAV4 and TRD Off-Road badging",
+      "Red-painted coil springs",
+      "SofTex\u00ae-trimmed10 front seats with red accents and stitching,"
+    ],
+    "XLE Premium": [
+      "Adds to or replaces features offered on LE Hybrid Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Premium",
+      "Exterior Features Exterior Features Powertrain",
+      "LED Daytime Running Lights (DRL) accent lighting \u2022 19-in. multi-spoke super chrome-finished alloy wheels with \u2022 Dynamic Torque Vectoring All-Wheel Drive (TV-AWD) with",
+      "LED projector-beam headlights with chrome bezels, 235/55R19 tires Rear Driveline Disconnect",
+      "Automatic High Beams (AHB)2 and auto on/off feature \u2022 Power tilt/slide moonroof with one-touch open/close \u2022 Multi-terrain Select (MUD & SAND, ROCK & DIRT, and SNOW modes)",
+      "Integrated fog lights \u2022 Power liftgate with jam protection \u2022 3500-lb. towing capacity66",
+      "Color-keyed outside door handles with front-row Interior Features Exterior Features",
+      "S ofTex\u00ae-trimmed10 seats; 8-way power-adjustable \u2022 19-in. split 5-spoke alloy wheels with matte-black accents",
+      "Color-keyed heated power outside mirrors with turn signal",
+      "Interior Features \u2022 Leather-trimmed tilt/telescopic 3-spoke steering wheel \u2022 Active grille shutters",
+      "Fabric-trimmed seats with embossed polygon-design seat with silver accent and controls for audio, Multi-Information \u2022 Unique raised roof rails",
+      "Smart Key System16 on front doors and liftgate with Push Departure Alert (LDA)14 and Lane Tracing Assist (LTA)15 Interior Features"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "2.5-Liter Dynamic Force 4-cylinder engine \u2022 Hybrid 2.5-Liter Dynamic Force 4-cylinder engine \u2022 Available All-Wheel Drive (AWD) with Multi-terrain Select",
+      "Direct Shift 8-speed Automatic Transmission \u2022 Electronically Controlled Continuously Variable \u2022 Stop and Start Engine System (S&S)61",
+      "203 hp @ 6600 rpm, 184 lb.-ft. @ 5000 rpm Transmission (ECVT) with sequential shift mode Exterior Features",
+      "Available All-Wheel Drive (AWD) with Multi-terrain Select \u2022 219 combined net hp",
+      "17-in. 5-spoke silver alloy wheels with 225/65R17 tires",
+      "SPORT, ECO and NORMAL drive modes \u2022 Electronic On-Demand All-Wheel Drive (AWD)",
+      "Integrated fog lights",
+      "Stop and Start Engine System (S&S)61 (AWD only) \u2022 Drive mode dial with SPORT, ECO and NORMAL modes \u2022 Color-keyed heated power outside mirrors with turn signal",
+      "Exterior Features \u2022 TRAIL and EV Mode63 select buttons and blind spot warning indicators,5 and folding feature",
+      "17-in. steel wheels with silver 6-spoke Exterior Features Interior Features"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

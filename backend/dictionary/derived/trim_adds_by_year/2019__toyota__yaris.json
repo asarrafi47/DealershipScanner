@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2019|toyota|yaris",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_llm_2019__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "LED auto on/off headlights",
+      "LED Daytime Running Lights integrated into headlights",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Color-keyed heated power outside mirrors with LED turn signal indicators",
+      "16-inch dark gray split-spoke alloy wheels with P185/60R16 tires",
+      "Rear spoiler",
+      "Automatic climate control",
+      "Leatherette sport front bucket seats",
+      "Smart Key System with Push Button Start",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel with audio, cruise, phone controls"
+    ],
+    "LE": [
+      "Fog lights",
+      "Color-keyed power outside mirrors",
+      "7-inch touch-screen display with integrated backup camera",
+      "Fabric-trimmed sport front bucket seats",
+      "60/40 split fold-down rear seats",
+      "Normal and Sport driving modes",
+      "Tilt/telescopic 3-spoke steering wheel",
+      "Multi-function in-key remote keyless entry",
+      "Two USB ports"
+    ],
+    "L": [
+      "Sporty front fascia with gloss-black mesh-pattern grille",
+      "Halogen headlights",
+      "Daytime Running Lights integrated into headlights",
+      "Color-keyed power outside mirrors",
+      "15-inch styled steel wheels with P185/65R15 tires",
+      "Chrome-tipped exhaust",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "Low-Speed Pre-Collision System",
+      "Active Safety System with Dynamic Stability Control, Traction Control, Brake Assist, Electronic Brake-force Distribution, Anti-lock Brake System, Brake Override System"
+    ]
+  }
+}

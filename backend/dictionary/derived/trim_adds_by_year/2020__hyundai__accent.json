@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2020|hyundai|accent",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2020__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "17-inch alloy wheels (versus 15-inch on SEL)",
+      "LED headlights, LED daytime running lights, and LED taillights",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "6-way adjustable driver seat with height adjustment",
+      "Power tilt-and-slide sunroof",
+      "Heated side mirrors with driver blind spot mirror",
+      "Hands-free smart trunk release"
+    ],
+    "SEL": [
+      "7-inch color touchscreen AM/FM/SiriusXM/MP3 audio system with 6 speakers",
+      "Smartstream Intelligent Variable Transmission with SHIFTRONIC control",
+      "Android Auto and Apple CarPlay compatibility",
+      "Blue Link Connected Car System (3 years complimentary)",
+      "One-touch triple turn signal",
+      "Automatic headlights",
+      "Front foglights",
+      "15-inch alloy wheels"
+    ],
+    "SE": [
+      "Smartstream 1.6L 4-cylinder engine with 120 hp and 113 lb-ft torque",
+      "6-speed manual transmission",
+      "5-inch color touchscreen display audio system with smartphone/USB and MP3 inputs",
+      "Rearview camera with dynamic guidelines",
+      "Motor-driven power steering",
+      "Ventilated front disc brakes and rear disc brakes",
+      "Sliding sunvisors with dual vanity mirrors",
+      "One-touch driver's auto-up window",
+      "Center console storage with sliding armrest",
+      "Cabin air filter"
+    ]
+  }
+}

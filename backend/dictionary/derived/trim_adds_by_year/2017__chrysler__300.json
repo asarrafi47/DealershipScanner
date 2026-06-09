@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|chrysler|300",
+  "year": 2017,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2017__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C",
+    "300S",
+    "300 Limited"
+  ],
+  "adds_by_trim": {
+    "300C": [
+      "Optional 5.7L HEMI V8 8-speed automatic transmission (RWD)",
+      "Premium leather-trimmed bucket seats",
+      "Heated and ventilated front seats",
+      "Heated second-row seats",
+      "Wood/leather heated steering wheel",
+      "Chrome mirrors and door handles",
+      "Chrome headlamp bezels",
+      "Chrome LED taillamps",
+      "Bright Chrome surround with Granite Crystal grille",
+      "Uconnect 8.4 with Navigation and 6 premium speakers with 276-watt amplifier"
+    ],
+    "300S": [
+      "Optional 5.7L HEMI V8 8-speed automatic transmission (RWD)",
+      "Performance-tuned suspension",
+      "Gloss Black DLO surround molding with Black accent Chrysler wing badge",
+      "Headlamps with Black bezels",
+      "LED fog lamps",
+      "Black LED taillamps with Black Chrome surround and Gloss Black grille",
+      "20-inch Alloy Edition Hyper Black wheels (RWD) or 19-inch Dark Bronze (AWD)",
+      "Performance leather-trimmed seats",
+      "Beats Audio premium speakers with subwoofer and 552-watt amplifier",
+      "Steering-wheel paddle shifters, Remote Start System, Universal Garage Door Opener"
+    ],
+    "300 Limited": [
+      "3.6L Pentastar VVT V6 with 8-speed automatic transmission (RWD/AWD)",
+      "Leather-trimmed bucket seats with power driver/passenger seats and 4-way lumbar",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "Uconnect 8.4 AM/FM Radio with 6 speakers, Bluetooth Streaming Audio, SiriusXM",
+      "Automatic projector headlamps with LED Daytime Running Lamps and Chrome LED taillamps",
+      "Body-color mirror caps and door handles with dual exhaust bright tips",
+      "Keyless Enter 'n Go with Remote Proximity Entry",
+      "Dual-Zone Automatic Temperature Control with speed control",
+      "ParkView Rear Back-Up Camera, 18-inch or 19-inch Cast-Aluminum wheels"
+    ]
+  }
+}

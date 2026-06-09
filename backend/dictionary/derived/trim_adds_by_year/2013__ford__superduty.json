@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|ford|superduty",
+  "year": 2013,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_llm_2013__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "6.2L SOHC 2-valve Gas V8 Flex Fuel E85-capable engine",
+      "6.7L Power Stroke V8 Turbo Diesel B20-capable engine",
+      "Integrated trailer brake controller (SRW)",
+      "17-inch 6-spoke cast-aluminum wheels (SRW)",
+      "4-way adjustable driver and right-front-passenger head restraints",
+      "40/20/40 split front seat with center under-seat lockable storage and 12-volt powerpoint",
+      "60/40 split flip-up/fold-down rear bench seat with bag hooks and dual integrated cupholders",
+      "AM/FM stereo with digital clock, 2 speakers and 3-button message center controls",
+      "Ford SYNC voice-activated in-vehicle connectivity system with SYNC AppLink",
+      "Power windows with front one-touch-down feature"
+    ],
+    "XL": [
+      "97,500-mile tune-up interval (gas engine)",
+      "Battery saver",
+      "Conventional spare tire/wheel/jack with underframe carrier",
+      "Power steering",
+      "Front and rear stabilizer bar",
+      "Stainless steel exhaust system (major components)",
+      "TorqShift heavy-duty 6-speed SelectShift Automatic transmission",
+      "Trailer hitch receiver with 12.5K to 18.5K capacity options",
+      "Trailer sway control",
+      "40/20/40 split front seat with armrest, cupholders and storage"
+    ]
+  }
+}

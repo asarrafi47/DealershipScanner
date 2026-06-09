@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2014|bentley|flyingspur",
+  "year": 2014,
+  "make": "bentley",
+  "model": "flying spur",
+  "ladder_id": "brochure_llm_2014__bentley__flyingspur",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Flying Spur V8 Mulliner",
+    "Flying Spur V8"
+  ],
+  "adds_by_trim": {
+    "Flying Spur V8 Mulliner": [
+      "Optional 21-inch 5-spoke alloy wheels painted or polished",
+      "Electric glass sunroof with solar cells for additional cooling",
+      "Knurled sports gear lever",
+      "Sports drilled foot pedals",
+      "Embroidered Bentley wings on front and rear headrests",
+      "Column-mounted paddle switches for tiptronic gear selection",
+      "Bright boot finisher",
+      "Choice of 13 additional hide colours beyond base options",
+      "Choice of 3 duo colour splits for interior"
+    ],
+    "Flying Spur V8": [
+      "4.0-litre twin-turbocharged V8 engine with 500 bhp",
+      "8-speed automatic transmission with permanent all-wheel drive",
+      "Front touchscreen 8-inch infotainment with navigation and Bluetooth",
+      "Bi-xenon projector headlamps with LED signature day running lights",
+      "Full LED rear lamps with ellipse-within-ellipse effect",
+      "Front vented disc brakes 405x36mm, rear 335x22mm",
+      "Adaptive cruise control with rear view camera",
+      "Electric glass tilt and slide sunroof",
+      "20-inch 5-spoke alloy wheels",
+      "Dark Fiddleback Eucalyptus veneer on fascia and door waistrails"
+    ]
+  }
+}

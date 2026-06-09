@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|mazda|rx8",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "RX-8",
+  "ladder_id": "brochure_llm_2010__mazda__rx8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RX-8 R3",
+    "RX-8 Grand Touring",
+    "RX-8 Sport"
+  ],
+  "adds_by_trim": {
+    "RX-8 R3": [
+      "Sport-tuned suspension with Bilstein shock absorbers",
+      "Torque-sensing conical limited-slip differential",
+      "Recaro front sport seats with leather side bolsters",
+      "Unique sport front bumper",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Gray/Black cloth and leather interior trim",
+      "Xenon self-leveling low-beam headlights"
+    ],
+    "RX-8 Grand Touring": [
+      "Power sliding-glass moonroof",
+      "Automatic climate control",
+      "Leather-trimmed seats and leather-wrapped parking brake handle",
+      "Mazda Advanced Keyless Entry & Start System",
+      "Bluetooth hands-free phone capability",
+      "In-dash 6-disc CD changer standard",
+      "Rain-sensing variable-intermittent front windshield wipers",
+      "Fog lights",
+      "DVD-based navigation system with 7-inch LCD touch screen optional"
+    ],
+    "RX-8 Sport": [
+      "Dynamic Stability Control (DSC) with Traction Control System",
+      "Tire-Pressure Monitoring System (TPMS)",
+      "3-point seat belts for all seating positions",
+      "Rear-seat LATCH child-safety-seat anchors",
+      "Antitheft alarm system with engine immobilizer",
+      "Aluminum hood and rear doors",
+      "Flip-open rear quarter windows",
+      "LED taillights",
+      "Dual body-color power remote outside mirrors"
+    ]
+  }
+}

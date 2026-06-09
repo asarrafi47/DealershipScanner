@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_ford_ranger_complete_options",
+  "make": "Ford",
+  "models": [
+    "Ranger",
+    "Ranger"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Tremor": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: 2.3L I4 Turbo; Automatic (S10) (was Offered through the 1981 model year, the Ranger trim served as the mid-level to); 2.3L I4 Turbo"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Offered through the 1981 model year, the Ranger trim served as the mid-level to"
+      }
+    ]
+  }
+}

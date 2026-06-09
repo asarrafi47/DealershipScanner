@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2017|landrover|rangerover",
+  "year": 2017,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_llm_2017__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVAutobiography Long Wheelbase",
+    "SVAutobiography",
+    "Autobiography",
+    "Supercharged",
+    "HSE",
+    "Range Rover"
+  ],
+  "adds_by_trim": {
+    "SVAutobiography Long Wheelbase": [
+      "SVAutobiography Long Wheelbase perforated Semi-Aniline leather seats with quilted pattern",
+      "Power rear side window sunblinds",
+      "Extended wheelbase configuration"
+    ],
+    "SVAutobiography": [
+      "Perforated Semi-Aniline leather seats with quilted pattern",
+      "Autobiography script badging",
+      "Quad tailpipes"
+    ],
+    "Autobiography": [
+      "Perforated Semi-Aniline leather seats",
+      "Autobiography script badging",
+      "Dynamic Response system",
+      "Quad tailpipes"
+    ],
+    "Supercharged": [
+      "V8 Supercharged engine",
+      "Dynamic Response system available",
+      "Quad tailpipes"
+    ],
+    "HSE": [
+      "Perforated Oxford leather seats",
+      "Power rear side window sunblinds on Long Wheelbase models",
+      "Dynamic Response system available"
+    ],
+    "Range Rover": [
+      "Grained leather seats",
+      "8-speed automatic transmission",
+      "Two-speed transfer case with high/low range",
+      "Electronic cross-linked air suspension with access, normal, off-road, and extended height modes",
+      "Hill descent control and electronic traction control",
+      "Twin tailpipes",
+      "Anti-lock braking system with electronic brake-force distribution",
+      "Rear LATCH/ISOFIX child safety anchors"
+    ]
+  }
+}

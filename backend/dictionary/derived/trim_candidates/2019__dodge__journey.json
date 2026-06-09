@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2019|dodge|journey",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Journey",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Platinum",
+    "Touring",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

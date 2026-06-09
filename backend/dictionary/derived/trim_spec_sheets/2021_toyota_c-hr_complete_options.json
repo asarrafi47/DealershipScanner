@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2021_toyota_c-hr_complete_options",
+  "make": "Toyota",
+  "models": [
+    "C-HR",
+    "C-HR"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Toyota C-HR 1.8 Hybrid (ZYX20, Europe)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "8.0-inch console display"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "The European model received the 2.0-litre M20A-FXS hybrid engine option for the; The European model received the 2.0-litre M20A-FXS hybrid engine option for the first time."
+      },
+      {
+        "label": "Screen Size",
+        "value": "8.0-inch console display"
+      }
+    ]
+  }
+}

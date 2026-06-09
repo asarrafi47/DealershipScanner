@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2017|lexus|ct",
+  "year": 2017,
+  "make": "lexus",
+  "model": "CT",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "F Sport",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

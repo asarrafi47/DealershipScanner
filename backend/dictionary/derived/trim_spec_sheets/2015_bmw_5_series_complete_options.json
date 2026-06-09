@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2015_bmw_5_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "5 Series",
+    "5 Series"
+  ],
+  "year_min": 2013,
+  "year_max": 2017,
+  "source": "generated",
+  "trims": {
+    "550i": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "535i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "528i": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

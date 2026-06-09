@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2012|lotus|evora",
+  "year": 2012,
+  "make": "Lotus",
+  "model": "Evora",
+  "ladder_id": "brochure_2012__lotus__evora",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 6-speed manual transmission with sports-tuned ratios",
+      "Adds Dynamic Performance Management (DPM) stability control system",
+      "Adds Bi-Xenon headlamps with LED rear brake cluster",
+      "Adds lightweight magnesium steering wheel",
+      "Adds choice of 18\"/19\" or 19\"/20\" alloy wheels with Pirelli P-Zero tyres"
+    ],
+    "Sport": [
+      "Adds 6-speed IPS automatic transmission with steering wheel-mounted paddle shifters",
+      "Adds integrated rear spoiler with functional and aesthetic design",
+      "Adds free-flowing exhaust system with bypass valve opening at higher speeds",
+      "Adds sport button activation for exhaust valve control and enhanced exhaust note"
+    ]
+  }
+}

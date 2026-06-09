@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2015|lexus|gs",
+  "year": 2015,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "brochure_2015__lexus__gs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Lexus Delivery Specialist service with personalized feature orientation",
+      "Adds Lexus Technology Specialist support via camera-enabled iPad apps",
+      "Adds four-year/50,000-mile Limited Warranty with zero deductible",
+      "Adds six-year/70,000-mile Powertrain Warranty with zero deductible",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty"
+    ],
+    "Limited": [
+      "Canada. Please see your Lexus dealer",
+      "installed by an authorized Lexus dealer."
+    ],
+    "Premium": []
+  }
+}

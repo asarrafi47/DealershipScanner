@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2017|hyundai|ioniq",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2017_Hyundai_Ioniq_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [
+    4
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 4,
+      "trim_hint": true,
+      "text": "2017 IoNIq HYbrID\n1 Claim based on a comparison of specifications on manufacturer websites. 2 EPA estimate for combined\ncity/highway MPG for comparison only. Mileage may vary with options, driving conditions, driving habits\nand the vehicle\u2019s condition.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 4 ---\n2017 IoNIq HYbrID\n1 Claim based on a comparison of specifications on manufacturer websites. 2 EPA estimate for combined\ncity/highway MPG for comparison only. Mileage may vary with options, driving conditions, driving habits\nand the vehicle\u2019s condition."
+}

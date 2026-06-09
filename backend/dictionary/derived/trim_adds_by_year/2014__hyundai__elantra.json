@@ -1,0 +1,85 @@
+{
+  "catalog_key": "2014|hyundai|elantra",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2014__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Elantra GT Tech Package",
+    "Elantra GT Style Package",
+    "Elantra GT",
+    "Elantra Coupe Technology Package",
+    "Elantra Coupe",
+    "Elantra Sedan Limited",
+    "Elantra Sedan SE"
+  ],
+  "adds_by_trim": {
+    "Elantra GT Tech Package": [
+      "Panoramic tilt-and-slide sunroof",
+      "7-inch touchscreen navigation system with rearview camera",
+      "Dual automatic temperature control",
+      "Automatic headlights"
+    ],
+    "Elantra GT Style Package": [
+      "Sport-tuned suspension and steering",
+      "Proximity key entry with push-button start",
+      "Leather seating surfaces",
+      "Leather-wrapped steering wheel and shift knob",
+      "Power driver seat with lumbar support",
+      "Aluminum sport pedals",
+      "Side mirrors with integrated turn signals",
+      "One-touch driver auto-up window",
+      "Under-floor storage",
+      "Blue Link telematics system and LED taillights with 17-inch alloy wheels"
+    ],
+    "Elantra GT": [
+      "173 HP 2.0L Gasoline Direct Injection 4-cylinder engine with Dual CVVT",
+      "6-speed manual or automatic transmission with SHIFTRONIC and Active ECO",
+      "Motor Driven Power Steering with Driver Selectable Steering Mode",
+      "7-airbag safety system including driver knee airbag",
+      "Front fog lights and Daytime Running Lights",
+      "16-inch alloy wheels"
+    ],
+    "Elantra Coupe Technology Package": [
+      "Power tilt-and-slide glass sunroof",
+      "7-inch touchscreen navigation system with rearview camera",
+      "360-Watt premium audio with digital external amplifier",
+      "Projector headlights with LED accents",
+      "Automatic headlights"
+    ],
+    "Elantra Coupe": [
+      "173 HP 2.0L Gasoline Direct Injection 4-cylinder engine with Dual CVVT",
+      "6-speed automatic transmission with SHIFTRONIC and Active ECO",
+      "Sport-tuned suspension and steering",
+      "Leather-wrapped steering wheel and shift knob",
+      "Front fog lights and Daytime Running Lights",
+      "Piano black front grille with chrome surround",
+      "17-inch alloy wheels"
+    ],
+    "Elantra Sedan Limited": [
+      "Projector headlights with LED accents",
+      "LED taillights",
+      "Black chrome grille accents with chrome beltline molding and chrome door handles",
+      "Power 6-way adjustable driver seat with lumbar support",
+      "Leather-wrapped steering wheel and shift knob",
+      "Heated front and rear leather seats",
+      "One-touch driver auto-up window",
+      "Front aluminum entrance sills",
+      "Blue Link telematics system",
+      "Side mirrors with integrated turn signal and 17-inch alloy wheels"
+    ],
+    "Elantra Sedan SE": [
+      "145 HP 1.8L 4-cylinder engine with Dual CVVT",
+      "6-speed manual or automatic transmission with SHIFTRONIC and Active ECO",
+      "Motor Driven Power Steering with Driver Selectable Steering Mode",
+      "6-airbag safety system with advanced dual front airbags",
+      "Vehicle Stability Management System with Electronic Stability and Traction Control",
+      "4-wheel disc Anti-lock Braking System with Brake Assist",
+      "Hillstart Assist Control and Tire Pressure Monitoring System",
+      "AM/FM/SiriusXM/CD/MP3 audio with 6 speakers and iPod/USB auxiliary input",
+      "Daytime Running Lights with dual heated power side mirrors",
+      "15-inch alloy wheels"
+    ]
+  }
+}

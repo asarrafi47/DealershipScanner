@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2018|rollsroyce|phantom",
+  "year": 2018,
+  "make": "Rolls Royce",
+  "model": "Phantom",
+  "ladder_id": "brochure_llm_2018__rollsroyce__phantom",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PHANTOM EXTENDED WHEELBASE",
+    "PHANTOM"
+  ],
+  "adds_by_trim": {
+    "PHANTOM EXTENDED WHEELBASE": [
+      "Extended wheelbase: 3772 mm vs 3552 mm for increased rear passenger legroom",
+      "Vehicle length 5982 mm (235.5 in) compared to 5762 mm on standard Phantom",
+      "Slightly slower acceleration 0-60 mph at 5.2 sec vs 5.1 sec due to added weight",
+      "Unladen weight 2610 kg vs 2560 kg for standard Phantom"
+    ],
+    "PHANTOM": [
+      "6.7L twin-turbocharged V12 engine producing 453 horsepower",
+      "8-speed automatic transmission with manual shift capability",
+      "Power steering with active damping suspension system",
+      "Leather interior with hand-stitched details throughout cabin",
+      "Dual-zone automatic climate control with individual rear controls",
+      "Burl walnut wood trim accents on dashboard and door panels",
+      "Premium sound system with multiple speakers and subwoofers",
+      "Navigation system with 8-inch display screen",
+      "Xenon headlights with adaptive high-beam control",
+      "22-inch multi-spoke alloy wheels with Dunlop run-flat tires"
+    ]
+  }
+}

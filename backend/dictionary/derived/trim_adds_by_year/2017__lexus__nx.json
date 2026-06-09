@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2017|lexus|nx",
+  "year": 2017,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "brochure_2017__lexus__nx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes Four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes Six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Includes Eight-year/100,000-mile Hybrid System Warranty",
+      "Adds Features zero-deductible warranty coverage across all warranty programs"
+    ],
+    "Premium": [
+      "Higher trim than base NX 350 AWD"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2013|scion|xd",
+  "year": 2013,
+  "make": "Scion",
+  "model": "xD",
+  "ladder_id": "brochure_web_2013__scion__xd",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "xD 5dr HB Auto (Natl)",
+    "xD 5dr HB Man (Natl)"
+  ],
+  "adds_by_trim": {
+    "xD 5dr HB Auto (Natl)": [
+      "Four-speed automatic transmission"
+    ],
+    "xD 5dr HB Man (Natl)": [
+      "128-hp 1.8-liter I-4 engine with 125 lb-ft torque",
+      "Five-speed manual transmission",
+      "6.1-inch touch-screen audio system with Bluetooth standard",
+      "HD radio",
+      "USB ports and steering wheel audio controls",
+      "27/33 mpg city/highway fuel economy rating"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/xd/"
+}

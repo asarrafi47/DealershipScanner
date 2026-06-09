@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2015|honda|civic",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "brochure_llm_2015__honda__civic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CIVIC Si",
+    "CIVIC EX-L",
+    "CIVIC EX",
+    "CIVIC SE",
+    "CIVIC LX"
+  ],
+  "adds_by_trim": {
+    "CIVIC Si": [
+      "205-hp 2.4-liter DOHC i-VTEC 4-cylinder engine",
+      "Push button start",
+      "Honda Satellite-Linked Navigation System with voice recognition, HD Digital Traffic, multi-angle rearview camera",
+      "HD Radio and SiriusXM Radio",
+      "Honda LaneWatch"
+    ],
+    "CIVIC EX-L": [
+      "8-way power driver's seat (Sedan)",
+      "Leather-trimmed seats",
+      "Heated front seats and side mirrors",
+      "Leather-wrapped steering wheel"
+    ],
+    "CIVIC EX": [
+      "17-inch alloy wheels",
+      "Fog lights",
+      "Automatic climate control",
+      "Honda LaneWatch",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry system with push button start",
+      "Auto-on/off headlights",
+      "Multi-reflector halogen headlights with auto-off",
+      "Body-colored power side mirrors with Expanded View Driver's Mirror"
+    ],
+    "CIVIC SE": [
+      "16-inch alloy wheels",
+      "Rearview camera with dynamic guidelines",
+      "7-inch Display Audio with high-resolution WVGA touchscreen and customizable feature settings",
+      "Security system with remote entry and trunk release"
+    ],
+    "CIVIC LX": [
+      "143-hp 1.8-liter i-VTEC 4-cylinder engine",
+      "ULEV-2/PZEV CARB emissions rating",
+      "Eco Assist system",
+      "Six airbags with Side Curtain Airbags and Rollover Sensor",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Power windows and door locks",
+      "Tilt and telescopic steering column",
+      "Cruise control",
+      "Bluetooth HandsFreeLink with SMS text message function"
+    ]
+  }
+}

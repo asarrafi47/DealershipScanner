@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2020|porsche|718",
+  "year": 2020,
+  "make": "Porsche",
+  "model": "718",
+  "ladder_id": "brochure_llm_2020__porsche__718",
+  "source": "brochure_llm",
+  "trims_available": [
+    "718 Boxster GTS 4.0",
+    "718 Cayman GTS 4.0"
+  ],
+  "adds_by_trim": {
+    "718 Boxster GTS 4.0": [
+      "Convertible bodystyle with retractable soft top",
+      "4.0-liter naturally aspirated flat-six engine",
+      "GT sports steering wheel with Alcantara® rim",
+      "Standard Sports seats Plus with Alcantara® and leather combination",
+      "GTS-embroidered headrests",
+      "Extensive Alcantara® interior trim with GTS package",
+      "Race-track-approved Alcantara® on gear lever",
+      "Choice of all-electric or adaptive Sports seats Plus",
+      "Optional full bucket seats for motorsport experience"
+    ],
+    "718 Cayman GTS 4.0": [
+      "Fixed-roof coupe bodystyle",
+      "4.0-liter naturally aspirated flat-six engine",
+      "GT sports steering wheel with Alcantara® rim",
+      "Standard Sports seats Plus with Alcantara® and leather combination",
+      "GTS-embroidered headrests",
+      "Extensive Alcantara® interior trim with GTS package",
+      "Race-track-approved Alcantara® on gear lever",
+      "Choice of all-electric or adaptive Sports seats Plus",
+      "Optional full bucket seats for motorsport experience"
+    ]
+  }
+}

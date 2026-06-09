@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2023|jeep|wrangler",
+  "year": 2023,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2023__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon",
+    "Sahara",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Rubicon": [
+      "3.6L Pentastar V6 engine with mild-hybrid eTorque assist and 8-speed automatic transmission",
+      "Rock-Trac 4x4 system with electronic locking differentials",
+      "Dana M210 wide front axle with 4.88 axle ratio",
+      "33-inch off-road tires with full-size spare tire",
+      "17-inch Black Beadlock-capable wheels",
+      "Integrated Off-Road Camera with Rock-Trac system display",
+      "Rock rails and high-clearance front fender flares",
+      "Maddox-embossed cloth seats with Rubicon Red accent stitching",
+      "Power dome hood with Rubicon decal and front/rear tow hooks",
+      "Advanced Safety Group with Full-Speed Forward Collision Warning Plus and Adaptive Cruise Control"
+    ],
+    "Sahara": [
+      "3.6L Pentastar V6 engine with mild-hybrid eTorque assist and 8-speed automatic transmission",
+      "Selec-Trac 4x4 system",
+      "18-inch polished aluminum wheels with painted Granite Crystal spokes",
+      "P255/70R18 Bridgestone Dueler all-season tires",
+      "Integrated Off-Road Camera and Sky One-Touch Power Top",
+      "Soulmate cloth seats with Sahara logo and tonal stitching",
+      "Premium McKinley trimmed seat option with Light Tungsten accent stitching",
+      "Unique front and rear bumpers with Silver bezels and Silver grille inserts",
+      "Technology Group with 7-inch display and SiriusXM radio",
+      "Safety Group with Blind Spot Monitoring and ParkSense Rear Park Assist"
+    ],
+    "Sport": [
+      "2.0L Turbo I-4 engine with Engine Stop/Start Technology and 8-speed automatic transmission",
+      "Selec-Trac 4x4 system",
+      "18-inch polished aluminum wheels with painted Granite Crystal spokes",
+      "P255/70R18 Bridgestone Dueler all-season tires",
+      "Automatic halogen headlamps and fog lamps",
+      "Soulmate cloth seats with Sahara logo and tonal stitching",
+      "Grillz dash mid-panel",
+      "Trac-Lok limited-slip differential",
+      "7-inch full-color Driver Information Display",
+      "Unique front and rear bumpers with Silver bezels"
+    ]
+  }
+}

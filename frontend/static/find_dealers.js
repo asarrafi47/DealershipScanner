@@ -82,7 +82,10 @@
             lines.push('<span class="find-dealers-badge find-dealers-badge--google">Found via Google</span>');
         }
         if (d.website_url) {
-            lines.push('<a href="' + escapeAttr(d.website_url) + '" target="_blank" rel="noopener noreferrer">Website</a>');
+            const href = safeHttpHref(d.website_url);
+            if (href) {
+                lines.push('<a href="' + escapeAttr(href) + '" target="_blank" rel="noopener noreferrer">Website</a>');
+            }
         }
         if (d.registry_id && d.listing_count > 0) {
             lines.push('<a href="/listings?dealer_registry_id=' + encodeURIComponent(d.registry_id) + '">View inventory</a>');
@@ -98,6 +101,12 @@
 
     function escapeAttr(s) {
         return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+    }
+
+    function safeHttpHref(url) {
+        const u = String(url || "").trim();
+        if (/^https?:\/\//i.test(u)) return u;
+        return "";
     }
 
     function formatAddress(d) {
@@ -243,7 +252,17 @@
             const resp = await fetch("/api/dealer-locator?" + params.toString(), {
                 headers: { Accept: "application/json" },
             });
-            const data = await resp.json();
+            const ct = (resp.headers.get("content-type") || "").toLowerCase();
+            let data;
+            if (ct.includes("application/json")) {
+                data = await resp.json();
+            } else {
+                throw new Error(
+                    resp.ok
+                        ? "Unexpected server response. Try again or use ZIP / city search."
+                        : "Dealer search failed on the server. Try again in a moment."
+                );
+            }
             if (!resp.ok || !data.ok) {
                 const err = data.error || "Search failed.";
                 if (err === "location_not_found") {
@@ -251,6 +270,9 @@
                 }
                 if (err === "rate_limited") {
                     throw new Error("Too many searches. Please wait a minute and try again.");
+                }
+                if (err === "login_required") {
+                    throw new Error("Sign in to search with Google Places results, or use ZIP / city search.");
                 }
                 throw new Error(err);
             }

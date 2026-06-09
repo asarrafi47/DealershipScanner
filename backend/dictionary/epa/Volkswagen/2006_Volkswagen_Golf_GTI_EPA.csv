@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Volkswagen,Golf/GTI,Golf,Diesel 1.9L I4 Diesel,1.9L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Diesel,Compact Cars,4,1.9,31,40,34,,,,,
+2006,Volkswagen,Golf/GTI,Golf,Diesel 1.9L I4 Diesel,1.9L I4 Turbo,Turbocharged,Automatic (S5),Front-Wheel Drive,Diesel,Compact Cars,4,1.9,28,40,32,,,,,
+2006,Volkswagen,Golf/GTI,Golf,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,27,24,,,,,
+2006,Volkswagen,Golf/GTI,Golf,2.0L I4,2.0L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,29,24,,,,,
+2006,Volkswagen,Golf/GTI,GTI,1.8L I4,1.8L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,21,29,24,,,,,
+2006,Volkswagen,Golf/GTI,GTI,1.8L I4,1.8L I4 Turbo,Turbocharged,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,19,27,22,,,,,
+2006,Volkswagen,Golf/GTI,GTI,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,22,29,25,,,,,
+2006,Volkswagen,Golf/GTI,GTI,2.0L I4,2.0L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,21,29,24,,,,,

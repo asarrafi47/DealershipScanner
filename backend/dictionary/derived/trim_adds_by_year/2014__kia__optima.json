@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|kia|optima",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2014__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SX Turbo",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Turbocharged 2.0L GDI I4 engine with 274 horsepower",
+      "Advanced safety systems including dual front and side curtain airbags",
+      "High-intensity discharge (HID) headlights with available LED accent lamps",
+      "Available LED fog lights and rear taillights"
+    ],
+    "SX Turbo": [
+      "Turbocharged 2.0L GDI I4 engine delivering 274 horsepower",
+      "UVO eServices infotainment system with rear-camera display",
+      "Infinity audio system with 8 speakers and HD Radio technology",
+      "Panoramic sunroof with black gloss B pillar",
+      "Driver's seat memory and power-folding outside mirrors",
+      "Ventilated front seats and heated front seats with heated rear seat cushions",
+      "Heated steering wheel"
+    ],
+    "EX": [
+      "UVO eServices infotainment system with rear-camera display",
+      "Infinity audio system with 8 speakers and HD Radio technology",
+      "Panoramic sunroof with black gloss B pillar",
+      "Driver's seat memory and power-folding outside mirrors",
+      "Ventilated front seats and heated front seats with heated rear seat cushions",
+      "Heated steering wheel"
+    ],
+    "LX": [
+      "192-horsepower 2.4L Gasoline Direct Injection (GDI) engine",
+      "Standard six-speed Sportmatic transmission with manual shifting capability",
+      "Four-wheel independent suspension with MacPherson struts and multi-link rear design",
+      "UVO eServices infotainment system with rear-camera display",
+      "10-way power-adjustable driver's seat",
+      "Auto-dimming rearview mirror with HomeLink and compass",
+      "Bluetooth wireless technology for streaming audio",
+      "Dual front and side curtain airbags for safety protection"
+    ]
+  }
+}

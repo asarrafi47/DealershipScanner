@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2019|lincoln|navigator",
+  "year": 2019,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Select",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

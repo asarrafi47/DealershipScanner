@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|toyota|corolla",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "inventory_toyota_corolla",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "LE",
+    "Limited",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "ervices (TFS)† is a leading provider of automotive financial s"
+    ],
+    "Sport": [
+      "ervices is a service mark for Toyota Motor Credit Corporation and Toyota Motor Insurance S"
+    ],
+    "Limited": [
+      "ervices, offering an extensive line of †Toyota Financial S"
+    ],
+    "S": [
+      "Sport Package: sport-tuned appearance and available 16-inch alloy wheels",
+      "Rear decklid spoiler",
+      "Available JBL 6-disc audio with Bluetooth (requires Power Package)"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.6666666666666666,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Sport": 1,
+      "S": 0
+    }
+  }
+}

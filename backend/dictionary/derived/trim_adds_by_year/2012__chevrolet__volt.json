@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2012|chevrolet|volt",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "brochure_llm_2012__chevrolet__volt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Trim Package",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium Trim Package": [
+      "Perforated leather-appointed seat trim with color accents",
+      "Leather-wrapped steering wheel",
+      "Heated driver and front-passenger seats with auto-heat function",
+      "Premium door trim with layered graphics"
+    ],
+    "Base": [
+      "Lithium-ion 16 kWh propulsion battery with thermal management",
+      "149 hp electric Voltec drive with 273 lb-ft torque",
+      "1.4L range extender engine with 83 hp",
+      "Dual-stage frontal and side-impact airbags with head-curtain protection",
+      "StabiliTrak electronic stability control with regenerative braking",
+      "Four-wheel antilock disc brakes with electro-hydraulic power",
+      "7-inch LCD digital reconfigurable instrument cluster",
+      "Single-zone automatic climate control",
+      "Bluetooth wireless technology for compatible phones",
+      "OnStar Directions & Connections for three years"
+    ]
+  }
+}

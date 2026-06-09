@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2010,Mitsubishi,Lancer,Lancer,2.0L I4 (PR),2.0L I4,,Automatic (AM6),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,17,25,20,,,,,
+2010,Mitsubishi,Lancer,Lancer,2.4L I4,2.4L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,20,28,23,,,,,
+2010,Mitsubishi,Lancer,Lancer,2.0L I4,2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,31,25,,,,,
+2010,Mitsubishi,Lancer,Lancer,2.4L I4,2.4L I4,,Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,22,29,25,,,,,
+2010,Mitsubishi,Lancer,Lancer,2.0L I4,2.0L I4,,Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,30,26,,,,,
+2010,Mitsubishi,Lancer,Evolution,2.0L I4 (PR),2.0L I4,,Automatic (AM6),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,17,22,19,,,,,
+2010,Mitsubishi,Lancer,Evolution,2.0L I4 (PR),2.0L I4,,Manual 5-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,16,22,18,,,,,
+2010,Mitsubishi,Lancer,Sportback,2.0L I4 (PR),2.0L I4,,Automatic (AM6),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,17,25,20,,,,,
+2010,Mitsubishi,Lancer,Sportback,2.4L I4,2.4L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.4,20,27,22,,,,,
+2010,Mitsubishi,Lancer,Sportback,2.4L I4,2.4L I4,,Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.4,21,27,23,,,,,

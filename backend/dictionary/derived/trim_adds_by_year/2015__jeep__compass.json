@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2015|jeep|compass",
+  "year": 2015,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_2015__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "High Altitude",
+    "Latitude",
+    "Altitude",
+    "Sport",
+    "Premium",
+    "Touring",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 2.0L DOHC 16V dual VVT 4-cylinder engine with 158 hp",
+      "Adds 5-speed manual transaxle with overdrive",
+      "Adds front-wheel-drive (2WD) with constant-velocity joints",
+      "Adds 4-wheel antilock drum brakes on front disc, rear drum",
+      "Adds power rack and pinion steering with firm-feel",
+      "Adds manual temperature control air conditioning",
+      "Adds halogen headlamps",
+      "Adds manual foldaway mirrors",
+      "Adds P205/70R16 BSW All-Season tires",
+      "Adds 4 passenger assist handles"
+    ],
+    "LE": [
+      "Upgraded to continuously variable automatic transaxle II (CVT2) option",
+      "Adds bifunctional halogen projector headlamps",
+      "Adds body-color grille with chrome accents and chrome mesh",
+      "Adds P215/55R18 BSW All-Season Performance tires option",
+      "Adds power windows with driver's 1-touch down option"
+    ],
+    "SE": [
+      "Upgraded to 2.4L DOHC 16V dual VVT 4-cylinder engine with 172 hp option",
+      "Adds 6-speed PowerTech automatic transaxle option",
+      "Adds automatic temperature control air conditioning",
+      "Adds black bezels on headlamps",
+      "Adds body-color liftgate appliqué and front door handles option"
+    ],
+    "Touring": [
+      "Adds Freedom Drive I active full-time 4-wheel drive option",
+      "Adds projector fog lamps in front bumper",
+      "Adds body-color power-heated mirrors with manual folding option",
+      "Adds carpeted load floor in cargo area"
+    ],
+    "Premium": [
+      "Adds CVT2L continuously variable automatic transaxle option",
+      "Adds P215/60R17 BSW All-Season Touring tires standard on 4x4 with High Altitude Package"
+    ],
+    "Sport": [
+      "Adds CVT2 transaxle standard for 2.0L with Sport trim",
+      "Adds 5-speed manual transaxle standard for Sport 2.4L 4WD",
+      "Adds 6-speed automatic transaxle standard for Sport 2.4L models"
+    ],
+    "Altitude": [],
+    "Latitude": [
+      "Adds remote start available on Latitude models with automatic transaxles",
+      "Adds 6-speed PowerTech automatic transaxle standard on Latitude 4x4",
+      "Adds P215/65R17 OWL All-Terrain tires available with 2.4L engine"
+    ],
+    "High Altitude": [
+      "Adds P215/60R17 BSW All-Season Touring tires standard on 4x4",
+      "Adds Freedom Drive II active full-time 4WD with Hill Descent Control option"
+    ],
+    "Limited": [
+      "Upgraded to Freedom Drive II active full-time 4WD with selectable LOCK and Off-Road mode option",
+      "Adds CVT2L continuously variable automatic transaxle standard in Freedom Drive II Off-Road Group",
+      "Adds P215/65R17 OWL All-Terrain tires in Freedom Drive II Off-Road Group",
+      "Adds full-size spare tire in Trailer Tow Prep and Freedom Drive II Off-Road Groups"
+    ]
+  }
+}

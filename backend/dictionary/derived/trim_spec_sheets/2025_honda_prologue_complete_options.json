@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_honda_prologue_complete_options",
+  "make": "Honda",
+  "models": [
+    "Prologue",
+    "Prologue"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Elite": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

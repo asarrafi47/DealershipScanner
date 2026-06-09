@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2021|subaru|imprezawrx",
+  "year": 2021,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

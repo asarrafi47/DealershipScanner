@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|chrysler|300",
+  "year": 2015,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2015__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C Platinum",
+    "300C",
+    "300S",
+    "Limited",
+    "300"
+  ],
+  "adds_by_trim": {
+    "300C Platinum": [
+      "Platinum chrome surround with luxury black grille",
+      "Platinum door handles",
+      "Platinum exterior mirror finish",
+      "Premium Nappa leather-wrapped door armrest, bolster, and console armrest",
+      "Poltro Premium leather-wrapped instrument panel and cluster brow"
+    ],
+    "300C": [
+      "Bright chrome surround with granite crystal grille",
+      "Nappa luxury perforated leather-trimmed bucket seats",
+      "Black olive ash burl real wood interior accents",
+      "Natural-pore mocha real wood interior accents"
+    ],
+    "300S": [
+      "Sport Nappa leather-trimmed bucket seats",
+      "Matte carbon hydrographic interior accents",
+      "Liquid chrome wing badge with black accent",
+      "Liquid chrome wing badge with blue accent",
+      "Panoramic full-power sunroof with one-touch open/close"
+    ],
+    "Limited": [
+      "Satin chrome interior accents",
+      "Piano black interior accents",
+      "Charcoal wood hydrographic interior accents",
+      "Heated front seats included with leather-trimmed bucket",
+      "Rear 60/40 split-folding rear bench with armrest"
+    ],
+    "300": [
+      "3.6L Pentastar V6 with 8-speed automatic transmission",
+      "Electric power steering",
+      "4-wheel independent comfort suspension",
+      "Dual-zone automatic temperature control with humidity sensor",
+      "Rear window defrost and power door locks"
+    ]
+  }
+}

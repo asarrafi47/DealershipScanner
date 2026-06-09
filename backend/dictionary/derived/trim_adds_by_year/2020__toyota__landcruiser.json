@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2020|toyota|landcruiser",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "ladder_id": "generic_toyota_landcruiser",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Toyota Accessories purchased after the new vehicle purchase the coverage is 12 months, regardless",
+      "Accessories purchased at the time of the new vehicle purchase, the Toyota"
+    ],
+    "Land Cruiser": [
+      "5.7L V8 with 381 hp and 401 lb-ft torque",
+      "8-speed electronically controlled automatic transmission",
+      "Full-time 4WD with Active Traction Control and Torsen limited-slip differential",
+      "Multi-Terrain Select and Crawl Control systems",
+      "Kinetic Dynamic Suspension System",
+      "Projector-beam LED headlights",
+      "18-inch split-spoke alloy wheels with dark housing",
+      "Seating for eight with 40/20/40 split second-row and 50/50 third-row seats",
+      "Four-zone automatic climate control",
+      "9-inch touchscreen with 14 JBL speakers and integrated navigation"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "Limited": 2
+    }
+  }
+}

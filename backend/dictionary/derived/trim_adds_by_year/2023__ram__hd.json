@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2023|ram|hd",
+  "year": 2023,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2023__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Longhorn Limited",
+    "Power Wagon",
+    "Rebel",
+    "Laramie",
+    "Big Horn/Lone Star",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Longhorn Limited": [
+      "Chrome tow hooks included",
+      "Chrome Bumper Package included"
+    ],
+    "Power Wagon": [
+      "WARN 12,000-lb front electric winch with gas engine",
+      "Electronically locking front and rear differentials",
+      "Electronic disconnecting front stabilizer bar",
+      "Ram Articulink front suspension",
+      "Power Wagon-specific skid plates",
+      "Performance-tuned Bilstein shocks front and rear"
+    ],
+    "Rebel": [
+      "Manual shift-on-the-fly transfer case",
+      "Fuel tank skid plate on gas engine models",
+      "Power Wagon Package features included"
+    ],
+    "Laramie": [
+      "Electronic shift-on-the-fly transfer case with X2 Group",
+      "Electronic Stability Control and safety systems"
+    ],
+    "Big Horn/Lone Star": [
+      "31-gallon fuel tank on Crew Cab and Mega Cab 6'4\" box",
+      "Standard 3-link front suspension"
+    ],
+    "Tradesman": [
+      "Power-assisted 4-wheel antilock brakes",
+      "Electronic Stability Control with Brake Assist",
+      "Hill Start Assist and Traction Control",
+      "Electronic Roll Mitigation and Trailer Sway Damping",
+      "Ready Alert Braking and mechanical park brake",
+      "Keyless push-button start",
+      "Power recirculating ball steering",
+      "Diesel exhaust brake on diesel engines"
+    ]
+  }
+}

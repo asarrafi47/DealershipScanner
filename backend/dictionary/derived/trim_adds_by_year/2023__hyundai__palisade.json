@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2023|hyundai|palisade",
+  "year": 2023,
+  "make": "Hyundai",
+  "model": "Palisade",
+  "ladder_id": "2023_hyundai_palisade",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "XRT",
+    "Limited",
+    "Calligraphy"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "H-Tex seating, heated front seats, and 12.3-inch display with navigation",
+      "Blind-Spot View Monitor and Highway Driving Assist"
+    ],
+    "XRT": [
+      "XRT rugged exterior with dark chrome accents and all-terrain tires",
+      "HTRAC AWD and elevated ground clearance vs SEL"
+    ],
+    "Limited": [
+      "Ventilated front seats and heated 2nd-row seats",
+      "Dual-pane sunroof and leather-trimmed seating",
+      "Integrated Memory System and surround view monitor"
+    ],
+    "Calligraphy": [
+      "Quilted premium Nappa leather and driver Relaxation function",
+      "Calligraphy premium grille and highest Palisade trim"
+    ],
+    "SE": [
+      "3.8L GDI V6 engine with 291 hp and 262 lb-ft torque with Idle Stop & Go",
+      "8-speed automatic transmission with SHIFTRONIC manual-shift mode and paddle shifters",
+      "HTRAC All Wheel Drive with AWD lock and Downhill Brake Control",
+      "Forward and Reverse Parking Distance Warning with Rear View Monitor and Parking Guidance",
+      "Forward Collision-Avoidance Assist, Lane Keeping Assist, and Blind-Spot Collision-Avoidance Assist",
+      "Rear Cross-Traffic Collision-Avoidance Assist with Safe Exit Assist",
+      "Smart Cruise Control with Stop & Go and Highway Driving Assist",
+      "8-inch AM/FM/HD Radio Display Audio with 5 USB charge ports and wireless Apple CarPlay/Android Auto",
+      "LED Daytime Running Lights with automatic on/off headlights",
+      "20-inch alloy wheels with multi-link independent rear suspension"
+    ]
+  }
+}

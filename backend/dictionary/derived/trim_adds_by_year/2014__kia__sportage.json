@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|kia|sportage",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_llm_2014__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "XE",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "2.0L Gasoline Direct Injection turbocharged 4-cylinder engine",
+      "Bar-style front grille",
+      "Rear LED taillights",
+      "LED daytime running lights",
+      "Leather seat trim",
+      "Ventilated front seats",
+      "Aluminum scuff plates"
+    ],
+    "XE": [
+      "18-inch tires with alloy wheels",
+      "Chrome exterior door handles",
+      "Chrome front grille",
+      "Power-folding outside mirrors with turn-signal indicators",
+      "Infinity premium audio with 6 speakers and HD Radio Technology",
+      "Rear-Camera Display",
+      "Back-Up Warning System",
+      "Push-button start with Smart Key",
+      "Power windows with driver's one-touch auto up and down",
+      "Power-adjustable driver's seat with lumbar support"
+    ],
+    "XL": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine",
+      "Xenon HID headlights with auto leveling",
+      "Mesh-style front grille",
+      "Power tilt/sliding panoramic sunroof",
+      "Roof rails",
+      "Rear spoiler",
+      "Chrome dual-outlet exhaust finish",
+      "Front fog lights",
+      "UVO eServices infotainment system with voice recognition and SiriusXM",
+      "Trip computer"
+    ]
+  }
+}

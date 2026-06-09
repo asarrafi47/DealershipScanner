@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2022|chevrolet|suburban",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2022__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "Z71",
+    "RST",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "6.2L EcoTec3 V8 engine with Dynamic Fuel Management",
+      "22-inch Sterling Silver-painted wheels",
+      "Exclusive grille with Galvano inserts and Godric accents",
+      "Heated and ventilated front seats with perforated leather seating surfaces",
+      "15-inch diagonal multi-color Head-Up Display",
+      "Rear Camera Mirror with safety features"
+    ],
+    "Premier": [
+      "20-inch polished-finish aluminum wheels",
+      "Power-release second-row bucket seats",
+      "Power-folding third-row seat",
+      "Bose Centerpoint Surround Sound 10-speaker system",
+      "Lane Change Alert with Side Blind Zone Alert and Rear Cross Traffic Alert",
+      "Rear Pedestrian Alert and HD Surround Vision"
+    ],
+    "Z71": [
+      "Autotrac 2-speed active transfer case with Hill Descent Control",
+      "Heavy-duty air filter and front skid plate with Galvano finish",
+      "20-inch machined-aluminum wheels with all-terrain tires",
+      "Red recovery hooks and gloss Black beltline moldings",
+      "Black tubular assist steps",
+      "Magnetic Ride Control suspension"
+    ],
+    "RST": [
+      "RST-specific Black sport grille with Black Ice chrome exterior trim",
+      "Black Chevrolet bowtie emblems and RST-specific badging",
+      "22-inch bright machined high-gloss Black-painted aluminum wheels",
+      "Black lower front fascia with gloss Black accent trim",
+      "RST-specific Jet Black interior with Victory Red stitching",
+      "Gloss Black beltline moldings and Black Ice chrome finish liftgate appliqué"
+    ],
+    "LT": [
+      "Hands-free programmable power liftgate with Chevrolet emblem projection",
+      "Leather-appointed front and second-row seats",
+      "12-inch diagonal multi-color enhanced Driver Information Center",
+      "Inside rearview auto-dimming mirror and Universal Home Remote",
+      "Chevrolet Infotainment 3 Premium system with 10.2-inch diagonal color touch-screen",
+      "Google built-in compatibility and 9-speaker Bose sound system",
+      "Wireless charging pad for compatible mobile devices"
+    ],
+    "LS": [
+      "5.3L EcoTec3 V8 engine with Dynamic Fuel Management",
+      "Premium Smooth Ride suspension with 18-inch Bright Silver-painted aluminum wheels",
+      "Body-color mirror caps and door handles with Black lower fascia with chrome accents",
+      "Black assist steps with chrome strip and Bright roof rack side rails",
+      "LED headlamps, taillamps and daytime running lamps",
+      "Remote vehicle starter system and 10-way power driver-seat adjuster with lumbar control",
+      "Fold-flat second- and third-row seats and tri-zone automatic climate controls",
+      "Chevrolet Infotainment 3 system with 8-inch diagonal color touch-screen",
+      "Chevy Safety Assist and HD Rear Vision Camera"
+    ]
+  }
+}

@@ -244,10 +244,16 @@ _FEATURE_SECTION_INTRO = re.compile(
     r"|options?\s+(?:include|includes|such\s+as|like|are)"
     r"|standard\s+features?\s+include"
     r"|highlights?\s+(?:include|includes|such\s+as|like|are)"
-    r"|this\s+(?:vehicle|car|suv|sedan|truck|coupe)\s+(?:features|includes|offers|comes\s+with|is\s+equipped)"
+    r"|this\s+(?:\d{4}\s+)?(?:[\w\s\-/]+?\s+)?(?:is\s+)?(?:well\s+equipped|features|includes|offers|comes\s+with|is\s+equipped)"
+    r"|well\s+equipped\s+and\s+includes?\s+these\s+features"
+    r"|includes?\s+these\s+features\s+and\s+benefits"
     r"|interior\s+features?"
     r"|exterior\s+features?"
     r")"
+)
+
+_DEALER_INTRO_SENTENCE = re.compile(
+    r"(?i)^this\s+\d{4}\s+.+?\b(?:well\s+equipped|includes?\s+these\s+features|features\s+and\s+benefits)\b[^.]*\.?\s*"
 )
 
 _FEATURE_KEYWORD_RE = re.compile(
@@ -284,13 +290,59 @@ def _is_plausible_feature_clause(s: str) -> bool:
     return False
 
 
+def strip_dealer_description_intro(text: str) -> str:
+    """Remove marketing lead-ins like 'This 2023 … well equipped and includes these features…'."""
+    t = " ".join(str(text or "").split()).strip()
+    if not t:
+        return t
+    t = _DEALER_INTRO_SENTENCE.sub("", t).strip()
+    t = re.sub(
+        r"(?i)^(?:features?\s+and\s+benefits|equipment\s+includes?|standard\s+equipment)\s*[:\-.]?\s*",
+        "",
+        t,
+    ).strip()
+    return t
+
+
 def _split_feature_clauses(text: str) -> list[str]:
-    """Split comma/semicolon/and lists into individual feature clauses."""
+    """Split comma/semicolon/and lists into individual feature clauses (respects parentheses)."""
     if not text or not str(text).strip():
         return []
-    work = re.sub(r"\s+", " ", str(text).strip())
+    work = strip_dealer_description_intro(str(text).strip())
+    work = re.sub(r"\s+", " ", work)
     work = re.sub(r"(?i)\b(?:including|such\s+as|like)\s+", "", work)
-    parts = re.split(r",\s*|\;\s*|\s+\band\s+(?=[A-Z0-9\"'])", work)
+    parts: list[str] = []
+    depth = 0
+    buf: list[str] = []
+    i = 0
+    while i < len(work):
+        ch = work[i]
+        if ch == "(":
+            depth += 1
+            buf.append(ch)
+        elif ch == ")":
+            depth = max(0, depth - 1)
+            buf.append(ch)
+        elif depth == 0 and ch in ",;":
+            part = "".join(buf).strip().strip(".")
+            if part:
+                parts.append(part)
+            buf = []
+        elif depth == 0 and work[i : i + 5].lower() == " and ":
+            part = "".join(buf).strip().strip(".")
+            nxt = work[i + 5 : i + 6]
+            if part and nxt and (nxt.isupper() or nxt.isdigit() or nxt in "\"'("):
+                parts.append(part)
+                buf = []
+                i += 4
+            else:
+                buf.append(ch)
+        else:
+            buf.append(ch)
+        i += 1
+    tail = "".join(buf).strip().strip(".")
+    if tail:
+        parts.append(tail)
     out: list[str] = []
     for p in parts:
         s = p.strip().strip(".")
@@ -522,6 +574,7 @@ def extract_listing_description(
         year_int = None
 
     norm = normalize_listing_description(description or "")
+    norm = strip_dealer_description_intro(norm) or norm
     interior, exterior = _extract_interior_exterior(norm)
     packages_raw, standalone = _split_package_blocks(norm)
     prose_features = _extract_prose_features(norm)

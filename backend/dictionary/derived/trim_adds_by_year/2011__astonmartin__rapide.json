@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|astonmartin|rapide",
+  "year": 2011,
+  "make": "Aston Martin",
+  "model": "rapide",
+  "ladder_id": "brochure_2011__astonmartin__rapide",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 1000-watt Bang & Olufsen BeoSound audio system with 15 speakers",
+      "Adds heated front and rear leather seats",
+      "Adds dual-zone climate control system with front and rear sectors",
+      "Adds 20-inch forged aluminium wheels with Bridgestone Potenza S001 tyres",
+      "Adds Bilstein continuously adaptive damping suspension with Normal and Sport modes",
+      "Adds Dynamic Stability Control, Anti-lock Braking System, and Electronic Brakeforce Distribution",
+      "Adds dual-cast floating brake discs combining cast aluminium and cast iron",
+      "Adds Electronic Park Brake with drive away release feature",
+      "Adds eight airbags including dual-stage front and Door-Mounted Inflatable Curtains"
+    ],
+    "Limited": [
+      "Adds seat cooling for front and rear passengers"
+    ]
+  }
+}

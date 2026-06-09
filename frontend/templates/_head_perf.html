@@ -1,0 +1,3 @@
+{# Shared head hints for faster first paint and navigation. #}
+<link rel="preload" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}" as="style">
+<script src="{{ url_for('static', filename='nav_perf.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

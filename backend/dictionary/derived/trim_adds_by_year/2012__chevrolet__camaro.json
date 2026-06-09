@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2012|chevrolet|camaro",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2012__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2SS",
+    "1SS",
+    "2LT",
+    "1LT",
+    "2LS",
+    "1LS"
+  ],
+  "adds_by_trim": {
+    "2SS": [
+      "6.2L V8 engine with 426 hp (manual) or 400 hp (automatic)",
+      "Brembo four-piston calipers and vented discs on all four corners",
+      "Four-wheel independent performance suspension",
+      "20-inch Bright Silver-painted aluminum wheels",
+      "Dual-outlet stainless steel exhaust with polished tips"
+    ],
+    "1SS": [
+      "6.2L V8 engine with 426 hp (manual) or 400 hp (automatic)",
+      "Four-wheel independent performance suspension",
+      "SS-specific front and rear fascias with unique grille and diffuser",
+      "20-inch Polished or Midnight Silver-painted aluminum wheels"
+    ],
+    "2LT": [
+      "Leather-appointed heated front seats with power recline",
+      "Boston Acoustics premium 245-watt nine-speaker audio system",
+      "Head-Up Display",
+      "SiriusXM Satellite Radio with twelve-month trial",
+      "19-inch Bright Silver-painted aluminum wheels",
+      "Universal Home Remote three-channel programmable",
+      "Inside rearview auto-dimming mirror"
+    ],
+    "1LT": [
+      "RS Package with 20-inch Midnight Silver wheels and HID headlamps with LED halos",
+      "Leather-wrapped steering wheel and shift knob",
+      "Power-folding convertible top with acoustical foam",
+      "Tonneau cover",
+      "Fogamps integral in front fascia",
+      "Boston Acoustics premium 245-watt audio system",
+      "19-inch Polished-aluminum wheels"
+    ],
+    "2LS": [
+      "6-speed automatic transmission with TAPshift controls",
+      "45th Anniversary Special Edition Package with special badging and embroidered seats",
+      "Hockey or Rally stripe packages available"
+    ],
+    "1LS": [
+      "3.6L V6 engine with 323 hp and 278 lb.-ft. torque with Direct Injection",
+      "6-speed manual transmission standard",
+      "Front Sport bucket seats with folding rear seat and trunk pass-through",
+      "Power windows with Express-Up/-Down functionality",
+      "Remote Keyless Entry",
+      "Power steering with variable-ratio",
+      "OnStar with Directions and Connections for six months",
+      "AM/FM stereo with CD player and MP3 playback"
+    ]
+  }
+}

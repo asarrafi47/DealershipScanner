@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|honda|crz",
+  "year": 2016,
+  "make": "Honda",
+  "model": "CR-Z",
+  "ladder_id": "brochure_llm_2016__honda__crz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L NAVI",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L NAVI": [
+      "Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Heated side mirrors",
+      "High-Intensity Discharge (HID) headlights with fog lights",
+      "360-watt premium audio system with 7 speakers including subwoofer",
+      "HD Radio"
+    ],
+    "EX": [
+      "LED Daytime Running Lights (DRL)",
+      "Honda LaneWatch camera display",
+      "Leather-wrapped steering wheel",
+      "Aluminum shift knob with leather trim on 6-speed manual transmission",
+      "Textured aluminum pedals",
+      "Illuminated driver and front passenger vanity mirrors",
+      "Ambient console lighting",
+      "Electric parking brake",
+      "Hill start assist",
+      "Advanced Compatibility Engineering (ACE) body structure"
+    ],
+    "LX": [
+      "1.5-liter i-VTEC 4-cylinder engine with Integrated Motor Assist IMA (130 horsepower)",
+      "6-speed manual transmission or continuously variable transmission with paddle shifters (available)",
+      "3-mode drive system (Sport/Normal/ECON)",
+      "Plus Sport System",
+      "Eco Assist system with traction control",
+      "Vehicle Stability Assist (VSA)",
+      "Multi-angle rearview camera with dynamic guidelines",
+      "Smart Entry with push button start",
+      "7-inch Display Audio touch-screen",
+      "Bluetooth HandsFreeLink and audio streaming with Pandora compatibility"
+    ]
+  }
+}

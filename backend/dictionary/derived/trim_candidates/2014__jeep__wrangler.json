@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2014|jeep|wrangler",
+  "year": 2014,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Rubicon",
+    "Sahara",
+    "Willys",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

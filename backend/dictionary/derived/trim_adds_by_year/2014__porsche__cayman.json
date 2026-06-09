@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|porsche|cayman",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "Cayman",
+  "ladder_id": "brochure_llm_2014__porsche__cayman",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cayman S",
+    "Cayman"
+  ],
+  "adds_by_trim": {
+    "Cayman S": [
+      "More powerful engine with increased performance",
+      "Sport-tuned suspension and chassis enhancements",
+      "Sportier exterior styling and design cues",
+      "Enhanced braking performance capability",
+      "Upgraded interior appointment options available"
+    ],
+    "Cayman": [
+      "3.4-liter flat-six engine with 275 horsepower",
+      "Six-speed manual transmission standard",
+      "Porsche Ceramic Composite Brakes optional",
+      "Bi-Xenon headlights with Porsche Dynamic Light System optional",
+      "Porsche Communication Management with navigation available",
+      "Multiple leather interior package options",
+      "Bose and Burmester premium audio systems available",
+      "SportDesign steering wheel available",
+      "ParkAssist front and rear parking assistance optional",
+      "Electrically folding exterior mirrors with courtesy lighting"
+    ]
+  }
+}

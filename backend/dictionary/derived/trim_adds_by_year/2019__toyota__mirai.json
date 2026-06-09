@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2019|toyota|mirai",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_web_2019__toyota__mirai",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "Advanced"
+  ],
+  "adds_by_trim": {
+    "Advanced": [
+      "Pre-Collision System with pedestrian detection",
+      "Adaptive cruise control with lane-keeping assist",
+      "Panoramic moonroof",
+      "Premium leather-trimmed seats with heating and ventilation",
+      "Heated steering wheel",
+      "Mark Levinson Premium Surround Sound 14-speaker system",
+      "Triple-beam LED headlights with auto-leveling",
+      "19-inch dark-gray aluminum alloy wheels"
+    ],
+    "Limited": [
+      "8-inch touchscreen with Toyota Safety Sense standard",
+      "Bluetooth audio and hands-free phone connectivity",
+      "Backup camera with dynamic gridlines",
+      "Automatic climate control",
+      "Power windows, locks, and mirrors",
+      "17-inch aluminum alloy wheels",
+      "Toyota Safety Sense 2.0 suite with adaptive cruise control",
+      "Entune 3.0 infotainment system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/mirai/"
+}

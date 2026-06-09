@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2021|hyundai|elantra",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "N Line",
+    "Blue"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

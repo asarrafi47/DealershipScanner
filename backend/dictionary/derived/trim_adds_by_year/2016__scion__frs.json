@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2016|scion|frs",
+  "year": 2016,
+  "make": "Scion",
+  "model": "FR-S",
+  "ladder_id": "brochure_web_2016__scion__frs",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "FR-S 2dr Cpe Auto Release Series 2.0",
+    "FR-S 2dr Cpe Man Release Series 2.0",
+    "FR-S 2dr Cpe Auto",
+    "FR-S 2dr Cpe Man"
+  ],
+  "adds_by_trim": {
+    "FR-S 2dr Cpe Auto Release Series 2.0": [
+      "Release Series 2.0 exclusive designation and styling"
+    ],
+    "FR-S 2dr Cpe Man Release Series 2.0": [
+      "Release Series 2.0 exclusive designation and styling"
+    ],
+    "FR-S 2dr Cpe Auto": [
+      "Six-speed automatic transmission instead of manual"
+    ],
+    "FR-S 2dr Cpe Man": [
+      "2.0-liter flat-four engine with 200 hp and 151 lb-ft torque",
+      "Six-speed manual transmission",
+      "Rearview camera",
+      "Seven-inch touchscreen infotainment system with voice command",
+      "Pioneer audio system with Bluetooth connectivity",
+      "USB port",
+      "17-inch alloy wheels",
+      "Fold-flat rear seats",
+      "Dual front airbags, front-side airbags, side curtain airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/fr-s/"
+}

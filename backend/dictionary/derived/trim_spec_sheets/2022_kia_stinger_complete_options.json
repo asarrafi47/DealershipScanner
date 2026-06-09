@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2022_kia_stinger_complete_options",
+  "make": "Kia",
+  "models": [
+    "Stinger",
+    "Stinger"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6"
+      }
+    ],
+    "GT-Line": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6"
+      }
+    ]
+  }
+}

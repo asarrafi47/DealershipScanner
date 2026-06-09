@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2018|toyota|yarisia",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Yaris iA",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,55 @@
+{
+  "ladder_id": "jeep_gladiator",
+  "make": "Jeep",
+  "models": [
+    "Gladiator",
+    "Gladiator Pickup"
+  ],
+  "year_min": 2020,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "3.6 L V6 engine"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Uconnect 3 with 5-inch display (2020–2021); Uconnect 4 7.0 standard on later years"
+      }
+    ],
+    "Sport S": [
+      {
+        "label": "Engine Options",
+        "value": "3.6 L V6 engine"
+      },
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "Available Trailer Tow and Safety groups"
+      }
+    ],
+    "Overland": [
+      {
+        "label": "Screen Size",
+        "value": "Uconnect 4C 8.4 with navigation on later model years"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather-trimmed seats and premium interior"
+      }
+    ],
+    "Rubicon": [
+      {
+        "label": "Engine Options",
+        "value": "L Hurricane 4 EVO turbo I4 (gasoline) (2027–)"
+      }
+    ],
+    "High Altitude": [
+      {
+        "label": "Interior Materials",
+        "value": "Leather seating and premium audio standard"
+      }
+    ]
+  }
+}

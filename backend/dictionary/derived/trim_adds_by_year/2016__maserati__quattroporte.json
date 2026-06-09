@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2016|maserati|quattroporte",
+  "year": 2016,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_web_2016__maserati__quattroporte",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "GTS",
+    "S",
+    "S Q4"
+  ],
+  "adds_by_trim": {
+    "S Q4": [
+      "All-wheel drive system with intelligent torque distribution",
+      "Adaptive air suspension tuned for AWD dynamics",
+      "Upgraded traction and stability control programming",
+      "Standard all-season tires optimized for AWD performance"
+    ],
+    "S": [
+      "3.0L twin-turbocharged V6 engine with 404 horsepower",
+      "8-speed automatic transmission with paddle shifters",
+      "Premium leather upholstery throughout interior",
+      "12.3-inch digital instrument cluster with customizable displays",
+      "Bowers & Wilkins premium 15-speaker sound system",
+      "Power-adjustable heated leather front seats with memory",
+      "Dual-zone automatic climate control with rear vents",
+      "Xenon HID headlights with dynamic leveling"
+    ],
+    "GTS": [
+      "Base trim with 3.0L twin-turbocharged V6 and 404 hp",
+      "Premium leather seating surfaces",
+      "Power windows, locks, and mirrors with memory settings",
+      "Dual-zone automatic climate control",
+      "8.4-inch touchscreen infotainment system",
+      "Bluetooth connectivity for phone and audio streaming",
+      "Keyless entry and push-button start"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/quattroporte/"
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2022|mazda|cx9",
+  "year": 2022,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_2022__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Power sliding-glass moonroof with sunshade",
+      "20-inch alloy wheels with Silver Metallic finish",
+      "Hands-free Rear Power Liftgate",
+      "Adaptive Front-lighting System",
+      "LED fog lights",
+      "Automatic power folding side mirrors",
+      "Aluminum roof rails with Satin Chrome finish",
+      "Color-matched interior accents",
+      "Leather-wrapped steering wheel with unique stitching",
+      "Navigation System"
+    ],
+    "Signature": [
+      "Adds 2nd-row captain's chairs with center console",
+      "Adds leather-wrapped steering wheel with unique stitching",
+      "Adds larger dual exhaust pipes",
+      "Adds LED signature grille accent lighting",
+      "Adds genuine Santos Rosewood interior inlays",
+      "Adds genuine Aluminum trim with unique design",
+      "Adds quilting and piping on 1st- and 2nd-row seats"
+    ]
+  }
+}

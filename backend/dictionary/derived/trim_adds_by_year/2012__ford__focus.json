@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2012|ford|focus",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_llm_2012__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "17-inch sport aluminum wheels",
+      "SYNC with MyFord Touch 8-inch center stack touch screen",
+      "Rear spoiler (4-door only)",
+      "Black headlamp surrounds",
+      "Intelligent Access with push-button start",
+      "Sirius Satellite Radio",
+      "Sony Audio System with 10 speakers including subwoofer",
+      "HD Radio with iTunes tagging",
+      "Sport seats",
+      "Piano Black fog lamp surrounds with chrome accents"
+    ],
+    "SEL": [
+      "4-wheel disc brakes",
+      "16-inch aluminum wheels",
+      "Body-color exterior mirrors with integrated turn signal indicators",
+      "6-speaker audio system",
+      "Fog lamps with chrome surrounds",
+      "Automatic headlamps",
+      "Steering wheel with secondary audio controls",
+      "Power front and rear windows with one-touch-down driver's side",
+      "Dual-zone electronic automatic temperature control",
+      "MyKey owner controls feature"
+    ],
+    "SE": [
+      "Body-color exterior door handles and mirrors",
+      "Front and rear floor mats",
+      "16-inch steel wheels with silver-painted wheel covers",
+      "MyFord driver-connect technology",
+      "SYNC voice-activated communications and entertainment system",
+      "Interior ambient lighting",
+      "Leather-wrapped steering wheel",
+      "Power front and rear windows with one-touch-up/down on all windows"
+    ],
+    "S": [
+      "Front disc/rear drum brakes with Anti-Lock Brake System",
+      "Manual air conditioning",
+      "AM/FM stereo with single-CD player and 4 speakers",
+      "15-inch steel wheels with silver-painted wheel covers",
+      "Integrated blind spot mirrors",
+      "Tilt/telescoping steering wheel",
+      "Power front windows with one-touch-down driver's side feature"
+    ]
+  }
+}

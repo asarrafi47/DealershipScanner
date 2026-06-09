@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2011|mini|mini",
+  "year": 2011,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_llm_2011__mini__mini",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MINI COOPER S COUNTRYMAN ALL4",
+    "MINI COOPER S COUNTRYMAN",
+    "MINI COOPER COUNTRYMAN"
+  ],
+  "adds_by_trim": {
+    "MINI COOPER S COUNTRYMAN ALL4": [
+      "ALL4 all-wheel drive system"
+    ],
+    "MINI COOPER S COUNTRYMAN": [
+      "Turbocharged, intercooled direct-injected 1.6-liter engine with 181 HP and 177 lb-ft torque",
+      "0-60 MPH in 7.0 seconds",
+      "Available ALL4 all-wheel drive"
+    ],
+    "MINI COOPER COUNTRYMAN": [
+      "Naturally aspirated 1.6-liter engine with 121 HP and 118 lb-ft torque",
+      "0-60 MPH in 9.8 seconds",
+      "Four doors with ample cargo space up to 40 cubic feet",
+      "CD audio system with AM/FM HD radio and 1-year SIRIUS satellite radio",
+      "6 speakers with auxiliary input-ready capability",
+      "17-inch standard alloy wheels with all-season or performance run-flat tires",
+      "Unique center rail",
+      "6-speed manual transmission standard with optional 6-speed Aisin automatic"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Mercedes-Benz,CLA-Class,AMG CLA45 S 4matic,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,20,28,23,,,,,
+2026,Mercedes-Benz,CLA-Class,CLA250 4matic,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,29,,,,,
+2026,Mercedes-Benz,CLA-Class,CLA250,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,26,36,30,,,,,
+2026,Mercedes-Benz,CLA-Class,AMG CLA35 4matic,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,22,29,25,,,,,
+2026,Mercedes-Benz,CLA-Class,CLA250 Plus with EQ Tech,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,112,105,109,,,,,
+2026,Mercedes-Benz,CLA-Class,CLA250 Plus with EQ Tech (R22),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,127,124,126,,,,,
+2026,Mercedes-Benz,CLA-Class,CLA350 4matic with EQ Tech,EV Electricity,EV Electricity,,Automatic (A2),All-Wheel Drive,Electricity,Compact Cars,,,120,115,118,,,,,

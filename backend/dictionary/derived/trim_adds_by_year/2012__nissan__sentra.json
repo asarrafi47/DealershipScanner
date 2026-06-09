@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2012|nissan|sentra",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2012__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE-R Spec V",
+    "SE-R",
+    "2.0 SL",
+    "2.0 SR",
+    "2.0 S",
+    "2.0"
+  ],
+  "adds_by_trim": {
+    "SE-R Spec V": [
+      "200 hp engine versus 177 hp on SE-R",
+      "180 lb-ft torque versus 172 lb-ft on SE-R",
+      "6-speed manual transmission with dual-mass flywheel",
+      "12.6-inch vented front disc brakes versus 11.7 inches on SE-R",
+      "Sport-tuned suspension with lowered height and sport-tuned shocks",
+      "Trunk-mounted V-brace reinforces chassis",
+      "Reinforced upper cowl",
+      "225/45WR17 summer performance tires",
+      "Electronic Brake force Distribution (EBD)",
+      "Helical limited-slip differential"
+    ],
+    "SE-R": [
+      "QR25DE 2.5-liter DOHC 16-valve 4-cylinder engine with 177 hp",
+      "172 lb-ft torque",
+      "Xtronic CVT with steering-wheel-mounted paddle shifters",
+      "11.7-inch vented front disc brakes with 11.5-inch rear disc",
+      "Sport-tuned springs and shocks",
+      "17-inch aluminum-alloy wheels with 225/45VR17 all-season tires",
+      "25.0 mm front stabilizer bar",
+      "Twin pod meters with oil pressure gauge and G-meter"
+    ],
+    "2.0 SL": [
+      "Navigation System with 5-inch color touchscreen and xm NavTraffic",
+      "Power sliding glass moonroof with tilt feature",
+      "Dual illuminated visor vanity mirrors",
+      "Rockford Fosgate eight-speaker system with dual 8-inch subwoofers",
+      "Rearview monitor",
+      "16-inch 8-spoke aluminum-alloy wheels",
+      "Leather-appointed seats with heated front seats"
+    ],
+    "2.0 SR": [
+      "16-inch 7-spoke aluminum-alloy wheels",
+      "Special Edition aluminum-alloy wheels option with unique badging"
+    ],
+    "2.0 S": [
+      "Xtronic CVT standard transmission",
+      "16-inch steel wheels with wheel covers",
+      "Nissan Intelligent Key keyless entry and ignition",
+      "Remote trunk release via Nissan Intelligent Key",
+      "Bluetooth Hands-free phone system",
+      "Leather-wrapped steering wheel",
+      "Cargo nets and hooks"
+    ],
+    "2.0": [
+      "MR20DE 2.0-liter DOHC 16-valve 4-cylinder engine with 140 hp",
+      "147 lb-ft torque",
+      "6-speed manual transmission standard",
+      "Xtronic CVT optional",
+      "15-inch steel wheels with wheel covers",
+      "205/60HR15 tires",
+      "Front independent strut and rear torsion beam suspension",
+      "11.02-inch vented front disc and rear drum brakes",
+      "Anti-lock Braking System with Electronic Brake force Distribution"
+    ]
+  }
+}

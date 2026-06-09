@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|ford|flex",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Flex",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

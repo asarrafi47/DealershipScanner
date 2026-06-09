@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2014|audi|tt",
+  "year": 2014,
+  "make": "Audi",
+  "model": "TT",
+  "ladder_id": "brochure_2014__audi__tt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds four-cylinder turbocharged engine with 211 horsepower",
+      "Adds six-speed Audi s tronic dual-clutch transmission",
+      "Adds Audi quattro all-wheel drive",
+      "Adds 16-valve DOHC valvetrain",
+      "Adds MacPherson strut front suspension",
+      "Adds four-link rear suspension",
+      "Adds sport suspension calibration",
+      "Adds Audi ultra lightweight technology with ASF aluminum construction",
+      "Adds electromechanical power steering system",
+      "Adds ventilated front and solid rear disc brakes"
+    ],
+    "Limited": [],
+    "S line": [
+      "Upgraded to Audi s line sport suspension calibration"
+    ],
+    "Premium": [
+      "TTS Premium trim level with base 2.0-liter turbocharged TFSI engine"
+    ]
+  }
+}

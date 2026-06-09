@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import posixpath
+import secrets
 import subprocess
 import sys
 import threading
@@ -78,10 +79,8 @@ def _safe_manifest_next_url(next_url: str, *, default: str) -> str:
 
 
 def _dev_console_secret_required_block(*, api: bool):
-    """Production with DEV_CONSOLE=1 must set DEV_CONSOLE_SECRET (SEC-081). Returns response or None."""
-    from backend.utils.runtime_env import is_production_env
-
-    if not dev_console_enabled() or not is_production_env() or _secret_configured():
+    """DEV_CONSOLE=1 requires DEV_CONSOLE_SECRET in every environment (SEC-092)."""
+    if not dev_console_enabled() or _secret_configured():
         return None
     if api:
         return jsonify({"ok": False, "error": "dev_console_secret_required"}), 404
@@ -122,14 +121,14 @@ def dev_login():
     if not dev_console_enabled():
         return render_template("dev_disabled.html"), 200
     if not _secret_configured():
-        return redirect(url_for("dev_console.dev_home"))
+        return render_template("dev_disabled.html"), 200
     if _session_ok():
         return redirect(url_for("dev_console.dev_home"))
     error = None
     if request.method == "POST":
         provided = (request.form.get("secret") or "").strip()
         expected = (os.environ.get("DEV_CONSOLE_SECRET") or "").strip()
-        if provided and provided == expected:
+        if provided and expected and secrets.compare_digest(provided, expected):
             session["dev_console_ok"] = True
             raw_next = request.args.get("next") or url_for("dev_console.dev_home")
             nxt = _safe_manifest_next_url(raw_next, default=url_for("dev_console.dev_home"))

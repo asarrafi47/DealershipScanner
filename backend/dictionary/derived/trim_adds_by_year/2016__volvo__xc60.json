@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2016|volvo|xc60",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2016__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "PROXIMITY",
+    "PREMIER",
+    "T6 R-Design",
+    "T6",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "12V power outlet in cargo area",
+      "Accent lighting",
+      "Active high beam",
+      "Adaptive Cruise Control with queue assist",
+      "Adaptive digital TFT display",
+      "Auto dimming exterior mirrors",
+      "Auto dimming interior mirror",
+      "Cargo cover",
+      "Collision warning with full auto brake",
+      "Cyclist detection with full auto brake"
+    ],
+    "PROXIMITY": [
+      "Keyless Drive",
+      "Lane Departure Warning",
+      "Power operated tailgate with programmable memory",
+      "Power panoramic laminated glass moonroof",
+      "Power retractable exterior mirrors",
+      "Private locking",
+      "Rear park assist camera",
+      "Road Sign Information"
+    ],
+    "PREMIER": [
+      "Heated front seats",
+      "Interior Air Quality System (IAQS)",
+      "Leather seating surfaces",
+      "Silver roof rails",
+      "Silver side window trim",
+      "Tinted rear seat and cargo area windows"
+    ],
+    "T6 R-Design": [
+      "R-Design exterior trim",
+      "R-Design dual exhaust with polished tips",
+      "20-inch Ixion II alloy wheels",
+      "302 hp turbocharged and supercharged 4-cylinder engine",
+      "Paddle shifters with sport mode",
+      "T6 R-Design sport chassis"
+    ],
+    "T6": [
+      "300 hp turbocharged 6-cylinder engine with AWD",
+      "6-speed Geartronic automatic transmission with AWD",
+      "18-inch Leda alloy wheels standard"
+    ],
+    "T5": [
+      "240 hp turbocharged 4-cylinder Drive-E engine",
+      "8-speed Geartronic automatic transmission",
+      "18-inch Pan alloy wheels",
+      "Active dual xenon headlights with headlight washers",
+      "40/20/40 split-folding rear seat",
+      "Heated and electrical adjustable exterior mirrors with memory",
+      "Integrated roof rails",
+      "Rear seat ventilation outlets"
+    ]
+  }
+}

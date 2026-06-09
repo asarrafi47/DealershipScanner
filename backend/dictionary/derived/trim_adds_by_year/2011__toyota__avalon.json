@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|toyota|avalon",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2011__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "AVALON"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Heated front seats with variable heat setting",
+      "Driver's seat and outside mirrors memory systems",
+      "8-way power passenger seat with power lumbar support"
+    ],
+    "AVALON": [
+      "3.5-Liter DOHC 24-Valve V6 with Dual Independent VVT-i, 268 hp",
+      "6-speed Electronically Controlled automatic transmission with ECT-i and sequential shift",
+      "Front-wheel drive with MacPherson strut suspension",
+      "Variable-assist power rack-and-pinion steering",
+      "Power-assisted ventilated front and solid rear disc brakes with ABS and EBD",
+      "Vehicle Stability Control (VSC) with Traction Control (TRAC)",
+      "JBL Synthesis AM/FM 6-disc CD changer with MP3/WMA, 660W, 12 speakers and subwoofer",
+      "XM Radio with 90-day trial subscription and auxiliary audio jack",
+      "iPod connectivity and hands-free phone capability via Bluetooth wireless technology",
+      "P215/55R17 all-season steel-belted radial tires with full-size alloy spare"
+    ]
+  }
+}

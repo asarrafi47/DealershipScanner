@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2015|gmc|canyon",
+  "year": 2015,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2015__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Canyon",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "SLT": [
+      "8-inch touchscreen with navigation and SiriusXM (3-month trial)",
+      "Leather-appointed front bucket seats",
+      "Tilt and telescopic steering column",
+      "Leather-wrapped steering wheel with mounted audio controls",
+      "Multicolor driver information center with personalization",
+      "Auto-dimming inside rearview mirror",
+      "Chrome door handles and beltline moldings",
+      "Chrome heated power-adjustable outside mirrors with spotter mirror",
+      "Front fog lamps",
+      "Body-color door handles"
+    ],
+    "SLE": [
+      "4.2-inch color display with IntelliLink and Bluetooth streaming audio",
+      "Cloth front bucket seats",
+      "Forward-folding flat rear seats with under-seat storage (Extended Cab)",
+      "Driver 4-way power seat adjuster with manual recline",
+      "Single-zone manual climate control",
+      "Remote keyless entry with Canyon Convenience Package",
+      "Electronic cruise control with Canyon Convenience Package",
+      "Rear-window electric defogger with Canyon Convenience Package",
+      "Color-keyed carpeting and floor mats",
+      "6-speed automatic transmission standard"
+    ],
+    "Canyon": [
+      "4.2-inch color display with AM/FM and USB/auxiliary",
+      "Electronic cruise control available with Canyon Convenience Package",
+      "Rear-window electric defogger available with Canyon Convenience Package",
+      "Remote keyless entry available with Canyon Convenience Package",
+      "EZ-Lift and Lower Tailgate available with Canyon Convenience Package"
+    ],
+    "SL": [
+      "6-speed manual transmission standard on Extended Cab 2WD models",
+      "Heavy-duty maintenance-free battery with rundown protection",
+      "Electronic traction control",
+      "StabiliTrak stability control with Trailer Sway Control",
+      "4-wheel antilock 4-wheel disc brakes with Duralife rotors",
+      "Vinyl front bucket seats",
+      "Single-zone manual climate control",
+      "Full-length vinyl floor covering",
+      "Jet Black door release handles",
+      "Projector-type headlamps with signature lighting"
+    ]
+  }
+}

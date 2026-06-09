@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|landrover|velar",
+  "year": 2019,
+  "make": "landrover",
+  "model": "Velar",
+  "ladder_id": "brochure_llm_2019__landrover__velar",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R-Dynamic HSE",
+    "R-Dynamic SE",
+    "Range Rover Velar S",
+    "Range Rover Velar"
+  ],
+  "adds_by_trim": {
+    "R-Dynamic HSE": [
+      "380 HP gas engine with 155 mph top speed",
+      "Premium LED headlights with signature DRL",
+      "20-inch 10-spoke style 1032 wheels standard",
+      "R-Dynamic exterior design package"
+    ],
+    "R-Dynamic SE": [
+      "340 HP gas engine with 145 mph top speed",
+      "20-inch 7 split-spoke style 7014 wheels with gloss black finish standard",
+      "R-Dynamic styling cues and exterior design"
+    ],
+    "Range Rover Velar S": [
+      "18-inch 15-spoke style 1022 wheels standard",
+      "LED headlights with power wash and auto high beam assist",
+      "Premium interior finishers"
+    ],
+    "Range Rover Velar": [
+      "247 HP gas engine with 135 mph top speed",
+      "18-inch 10-spoke style 1021 wheels standard",
+      "LED headlights and fundamental infotainment systems"
+    ]
+  }
+}

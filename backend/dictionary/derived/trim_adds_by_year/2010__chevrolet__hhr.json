@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|chevrolet|hhr",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "HHR",
+  "ladder_id": "brochure_2010__chevrolet__hhr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS",
+    "LS",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 100,000 mile/5-year transferable Powertrain Limited Warranty",
+      "Adds 24/7 Roadside Assistance Program with emergency towing and lockout service",
+      "Adds Includes Courtesy Transportation Program for extended warranty repairs",
+      "Adds OnStar services with GPS and emergency connectivity",
+      "Adds Includes Passenger Sensing System for safety restraints"
+    ],
+    "Limited": [],
+    "LS": [
+      "Panel van configuration with no rear-door exterior handles or windows",
+      "Two interior switches for rear doors",
+      "Unfinished cargo space designed for small businesses"
+    ],
+    "RS": [
+      "Adds dealer-installed bumper cover protector",
+      "Adds roof rack side rails",
+      "Adds spoiler",
+      "Adds available 17-inch wheels from Chevy Accessories"
+    ]
+  }
+}

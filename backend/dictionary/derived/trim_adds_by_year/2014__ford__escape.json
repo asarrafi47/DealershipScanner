@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|ford|escape",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2014__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "10-way power driver's seat with 6-way manual front-passenger seat",
+      "Rear seat with recline and center armrest",
+      "Unique cloth seats",
+      "8 cupholders",
+      "SYNC with MyFord Touch featuring 4.2-inch configurable display and 8-inch LCD touchscreen",
+      "Dual-zone electronic automatic temperature control",
+      "9 speakers with media hub and 2 USB ports",
+      "110-volt power outlet",
+      "Reverse Sensing System and perimeter alarm",
+      "17-inch Sparkle Silver-painted aluminum wheels"
+    ],
+    "S": [
+      "2.5L Duratec I-4 engine with active grille shutters",
+      "6-way manual driver's seat and 4-way manual front-passenger seat",
+      "Cloth seats",
+      "6 cupholders",
+      "AM/FM stereo with single-CD player, MP3 capability, and 6 speakers",
+      "SYNC with MyFord voice-activated connectivity and 4.2-inch color LCD display",
+      "17-inch steel wheels with Sparkle Silver-painted covers and P235/55R17 tires",
+      "Automatic headlamps",
+      "Remote Keyless Entry System with SecuriCode invisible keypad",
+      "Chrome beltline moldings and body-color door handles"
+    ]
+  }
+}

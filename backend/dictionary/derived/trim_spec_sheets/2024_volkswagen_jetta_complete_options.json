@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2024_volkswagen_jetta_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Jetta",
+    "Jetta"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "1.5L I4 Turbo; Automatic (S8)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Its ten-color customizable ambient interior lighting includes lighting across th"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: 1.5L I4 Turbo; Automatic (S8); 1.5L I4 Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Its ten-color customizable ambient interior lighting includes lighting across th"
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2013|hyundai|santafe",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2013__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SANTA FE SPORT 2.0T",
+    "SANTA FE SPORT"
+  ],
+  "adds_by_trim": {
+    "SANTA FE SPORT 2.0T": [
+      "264-HP 2.0L direct injection twin-scroll turbo 4-cylinder engine",
+      "Proximity key entry with push-button start",
+      "Electroluminescent gauge cluster with color LCD trip computer",
+      "Chrome dual-tip exhaust",
+      "Trailer prep package",
+      "Infinity Logic 7 surround-sound premium audio system with 12 speakers",
+      "Heated steering wheel",
+      "Rear side-window sunshades",
+      "Panoramic sunroof with navigation system and 8-inch touchscreen"
+    ],
+    "SANTA FE SPORT": [
+      "190-HP 2.4L direct injection 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed automatic transmission with SHIFTRONIC",
+      "Driver Selectable Steering Mode with Comfort, Normal, and Sport settings",
+      "Remote keyless entry system with alarm",
+      "Power driver seat with 4-way lumbar support",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "Roof side rails and fog lights",
+      "Automatic headlight control",
+      "4.3-inch touchscreen color audio display with rearview camera"
+    ]
+  }
+}

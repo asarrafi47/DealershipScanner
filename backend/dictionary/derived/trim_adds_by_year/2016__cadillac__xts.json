@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2016|cadillac|xts",
+  "year": 2016,
+  "make": "Cadillac",
+  "model": "XTS",
+  "ladder_id": "brochure_web_2016__cadillac__xts",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XTS 3.6L V6 Turbo Vsport AWD Platinum",
+    "XTS 3.6L V6 AWD Platinum",
+    "XTS 3.6L V6 FWD Platinum",
+    "XTS 3.6L V6 AWD Premium Luxury",
+    "XTS 3.6L V6 FWD Premium Luxury",
+    "XTS 3.6L V6 AWD Luxury",
+    "XTS 3.6L V6 FWD Luxury",
+    "XTS 3.6L V6 FWD"
+  ],
+  "adds_by_trim": {
+    "XTS 3.6L V6 Turbo Vsport AWD Platinum": [
+      "410-hp twin-turbocharged V-6 engine with forced induction"
+    ],
+    "XTS 3.6L V6 AWD Platinum": [
+      "Rear seat radio controls in center console",
+      "All-wheel-drive configuration"
+    ],
+    "XTS 3.6L V6 FWD Platinum": [
+      "Rear seat radio controls in center console"
+    ],
+    "XTS 3.6L V6 AWD Premium Luxury": [
+      "Magnetic Ride Control with electric current adjusting shock absorber stiffness",
+      "All-wheel-drive configuration"
+    ],
+    "XTS 3.6L V6 FWD Premium Luxury": [
+      "Magnetic Ride Control with electric current adjusting shock absorber stiffness"
+    ],
+    "XTS 3.6L V6 AWD Luxury": [
+      "All-wheel-drive configuration"
+    ],
+    "XTS 3.6L V6 FWD Luxury": [
+      "Heated seats"
+    ],
+    "XTS 3.6L V6 FWD": [
+      "304-hp naturally aspirated V-6 engine",
+      "Brembo front brakes",
+      "LED lighting front and rear",
+      "Apple CarPlay and Android Auto compatibility",
+      "Active noise cancellation with three microphones in headliner",
+      "Six-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/xts/"
+}

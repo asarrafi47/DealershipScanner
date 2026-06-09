@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|kia|telluride",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Telluride",
+  "ladder_id": "brochure_llm_2020__kia__telluride",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "20-inch alloy wheels with black finish",
+      "LED headlights with High Beam Assist",
+      "LED fog lights",
+      "Dual sunroof with rear fixed glass",
+      "Nappa leather seat trim",
+      "Heated and ventilated 2nd-row seats",
+      "Heated steering wheel",
+      "110-Volt Inverter",
+      "Surround View Monitor",
+      "Self-leveling rear suspension and Prestige Package features"
+    ],
+    "EX": [
+      "20-inch alloy wheels with machine finish",
+      "Single sunroof",
+      "Acoustic front door windows",
+      "Leather seat trim",
+      "Dual-zone automatic temperature control",
+      "Rear automatic temperature control",
+      "Smart Power Liftgate",
+      "Rear side-window sunshades",
+      "Rear View Monitor with Dynamic Parking Guidance"
+    ],
+    "S": [
+      "18-inch alloy wheels with machine finish",
+      "Silver-painted skid plate",
+      "Satin chrome roof rails",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "10-inch AM/FM/SiriusXM audio touchscreen",
+      "Harman Kardon 630-watt premium audio with QuantumLogic surround"
+    ],
+    "LX": [
+      "3.8L GDI V6 engine with 291 hp",
+      "8-speed automatic transmission with Active On-Demand AWD",
+      "18-inch alloy wheels",
+      "LED Daytime Running Lights and acoustic front windshield",
+      "8-passenger seating with 60/40 split-folding 2nd-row bench",
+      "Push-button start with Smart Key",
+      "Drive Mode Select and Electronic Parking Brake",
+      "Rear View Monitor with Dynamic Parking Guidance",
+      "Dual front advanced airbags and full suite of safety features"
+    ]
+  }
+}

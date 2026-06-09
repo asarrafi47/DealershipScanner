@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2011_bmw_5_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "5 Series",
+    "5 Series"
+  ],
+  "year_min": 2009,
+  "year_max": 2013,
+  "source": "generated",
+  "trims": {
+    "550i": [
+      {
+        "label": "Engine Options",
+        "value": "4.8L V8 Twin Turbo; Manual 6-spd"
+      }
+    ],
+    "535i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "528i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

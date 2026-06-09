@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2022|dodge|challenger",
+  "year": 2022,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2022__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT SUPER STOCK",
+    "SRT HELLCAT®",
+    "R/T SCAT PACK",
+    "SCAT PACK WIDEBODY",
+    "GT",
+    "SXT",
+    "SXT ALL-WHEEL DRIVE (AWD)"
+  ],
+  "adds_by_trim": {
+    "SRT SUPER STOCK": [
+      "Supercharged 6.2L high-output engine — 808 hp and 707 lb-ft of torque",
+      "Performance-tuned asymmetrical limited-slip differential with 3.09 final drive ratio",
+      "SRT Power Chiller®",
+      "18 by 11-inch Low-Gloss Granite wheels with 315/40R18 Nitto NT05R Drag Radials",
+      "14.2-inch vented rotors",
+      "Launch Control and Torque Reserve"
+    ],
+    "SRT HELLCAT®": [
+      "Supercharged 6.2L HEMI® V8 engine — 717 hp and 656 lb-ft of torque",
+      "6-piston Brembo® front brakes",
+      "Competition Adaptive Damping Suspension",
+      "After-run cooling system",
+      "Conical cold-air intake and aluminum dual-scoop hood",
+      "Demonic Red Performance seats with red seat belts",
+      "SRT Hellcat interior/exterior badges"
+    ],
+    "R/T SCAT PACK": [
+      "392 HEMI® V8 engine — 485 hp and 475 lb-ft of torque",
+      "4-piston Brembo® brakes at all corners",
+      "High-performance suspension",
+      "Launch Assist and Line Lock",
+      "20 by 9-inch Low-Gloss Granite Crystal aluminum wheels",
+      "Forward-facing 392 Bee fender badges",
+      "Aluminum Performance hood with dual heat extractors"
+    ],
+    "SCAT PACK WIDEBODY": [
+      "Brembo® 6-piston front brake calipers",
+      "Adaptive Damping Suspension",
+      "20 by 11-inch Devil's Rim aluminum wheels with 305 Pirelli All-Season tires",
+      "3.09 rear axle ratio",
+      "Widebody fender flares"
+    ],
+    "GT": [
+      "Sport suspension, performance brakes, and performance steering",
+      "20 by 8-inch Satin Carbon aluminum wheels",
+      "Performance hood and splitter",
+      "Projector fog lamps",
+      "ParkSense® Rear Park Assist System",
+      "Performance 4-bump steering wheel with paddle shifters"
+    ],
+    "SXT": [
+      "3.6L Pentastar® V6 engine — 303 hp and 268 lb-ft of torque",
+      "TorqueFlite® 8-speed automatic transmission",
+      "Performance suspension",
+      "4-wheel Antilock Brake System and Electronic Stability Control",
+      "18 by 7.5-inch Satin Carbon aluminum wheels",
+      "7-inch TFT configurable cluster display",
+      "Uconnect® 4 with 7-inch touchscreen, Apple CarPlay/Android Auto"
+    ],
+    "SXT ALL-WHEEL DRIVE (AWD)": [
+      "AWD System with live-axle disconnect",
+      "AWD suspension",
+      "19 by 7.5-inch Satin Carbon aluminum wheels with 235 All-Season Performance tires"
+    ]
+  }
+}

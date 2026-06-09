@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2019|ford|ranger",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Ranger",
+  "ladder_id": "brochure_2019__ford__ranger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Lariat",
+    "Sport",
+    "FX4",
+    "XLT",
+    "Active",
+    "Base",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 2.3L EcoBoost engine with best-in-class max payload",
+      "Adds fully boxed high-strength-steel frame with direct-mount steel front and rear bumpers",
+      "Adds Ford Co-Pilot360 Technology with Pre-Collision Assist and Automatic Emergency Braking",
+      "Adds Pedestrian Detection as standard",
+      "Adds SYNC 3 voice-activated technology with 8-inch touchscreen",
+      "Adds 4G LTE Wi-Fi hotspot capability for up to 10 devices",
+      "Adds SuperCab or SuperCrew configuration options",
+      "Adds 6 in-bed tie-downs"
+    ],
+    "Base": [],
+    "Active": [],
+    "XLT": [
+      "Adds availability of Bed Utility Package with rugged drop-in bedliner and 12V in-bed powerpoint"
+    ],
+    "FX4": [
+      "Adds FX4 Off-Road Package with 47.6:1 crawl ratio",
+      "Adds Terrain Management System",
+      "Adds Trail Control electronic-locking rear axle functionality"
+    ],
+    "Sport": [],
+    "Lariat": [
+      "8-way power heated front seats with leather seating front and rear",
+      "Leather-wrapped steering wheel, shift knob, and door-trim inserts",
+      "Dual 4.2-inch productivity screens in instrument cluster",
+      "Intelligent Access with push-button start",
+      "Auto-dimming rearview mirror",
+      "Universal garage door opener",
+      "LED headlamps, fog lamps, cargo lamp and taillamps",
+      "Power-folding sideview mirrors with power heated glass and turn signals",
+      "18-inch Machined Aluminum wheels with Stealth Gray-Painted Pockets",
+      "Rain-Sensing Windshield Wipers with wiper de-icer"
+    ],
+    "Limited": [
+      "Adds FordPass Connect smartphone app integration for remote vehicle control",
+      "Adds remote lock, unlock, and start capability via FordPass app",
+      "Adds fuel range and vehicle location tracking via FordPass app",
+      "Adds fuel station finder with price comparison and parking reservation features",
+      "Adds Apple Watch compatibility for remote vehicle control"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "ladder_id": "2020_mercedes-benz_s-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "S-Class",
+    "S-Class"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG S63": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG S65": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "S450": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "S560": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic 9-spd"
+      }
+    ],
+    "S650": [
+      {
+        "label": "Engine Options",
+        "value": "6.0L V12 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

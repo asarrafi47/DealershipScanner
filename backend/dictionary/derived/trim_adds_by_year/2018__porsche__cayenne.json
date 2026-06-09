@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2018|porsche|cayenne",
+  "year": 2018,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "brochure_web_2018__porsche__cayenne",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Cayenne Turbo E-Hybrid",
+    "Cayenne GTS",
+    "Cayenne S E-Hybrid",
+    "Cayenne S",
+    "Cayenne E-Hybrid",
+    "Cayenne"
+  ],
+  "adds_by_trim": {
+    "Cayenne Turbo E-Hybrid": [
+      "4.0-liter turbocharged V-8 with electric motor producing 729 hp and 700 lb-ft torque",
+      "3.5-second 0-60 mph acceleration (manufacturer estimated)"
+    ],
+    "Cayenne GTS": [
+      "4.0-liter turbocharged V-8 engine with 493 hp and 487 lb-ft torque",
+      "Adaptive air suspension with 10mm lower ride height than other air suspension models",
+      "Torque vectoring for enhanced road-focused performance",
+      "Front axle pivot bearings from Cayenne Coupe Turbo GT for improved cornering",
+      "Water-cooled transfer case from Cayenne Coupe Turbo GT",
+      "Model-specific black logos on sides and rear with larger front air ducts",
+      "Smoked headlights and taillights with red brake calipers",
+      "Sport Design package with gloss black rocker panels and window surrounds",
+      "Gray 21-inch wheels with adaptive rear spoiler",
+      "Dark bronze finished Sport Exhaust System"
+    ],
+    "Cayenne S E-Hybrid": [
+      "3.0-liter turbocharged V-6 with electric motor producing 512 hp and 553 lb-ft torque",
+      "4.4-second 0-60 mph acceleration (manufacturer estimated)"
+    ],
+    "Cayenne S": [
+      "4.0-liter turbocharged V-8 engine with 468 hp and 442 lb-ft torque",
+      "4.7-second 0-60 mph acceleration (manufacturer estimated)"
+    ],
+    "Cayenne E-Hybrid": [
+      "3.0-liter turbocharged V-6 with electric motor producing 463 hp and 479 lb-ft torque",
+      "4.6-second 0-60 mph acceleration (manufacturer estimated)"
+    ],
+    "Cayenne": [
+      "3.0-liter turbocharged V-6 engine with 348 hp and 368 lb-ft torque",
+      "12.3-inch central display with 12.6-inch digital cluster",
+      "Apple CarPlay and wireless phone charger",
+      "Soft-close doors and ambient lighting",
+      "360-degree camera with active parking support",
+      "Lane keep assist, rear cross-traffic alert, front and rear parking sensors",
+      "Active speed limiter",
+      "Eight-speed automatic transmission with all-wheel drive"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/cayenne/"
+}

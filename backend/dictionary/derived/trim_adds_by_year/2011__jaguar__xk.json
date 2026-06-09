@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2011|jaguar|xk",
+  "year": 2011,
+  "make": "Jaguar",
+  "model": "XK",
+  "ladder_id": "brochure_llm_2011__jaguar__xk",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5.0L V8 Supercharged Convertible",
+    "5.0L V8 Supercharged Coupe",
+    "5.0L V8 Convertible",
+    "5.0L V8 Coupe"
+  ],
+  "adds_by_trim": {
+    "5.0L V8 Supercharged Convertible": [
+      "5.0L supercharged V8 engine with 510 hp and 461 lb-ft torque",
+      "0-60 mph acceleration in 4.6 seconds"
+    ],
+    "5.0L V8 Supercharged Coupe": [
+      "5.0L supercharged V8 engine with 510 hp and 461 lb-ft torque",
+      "0-60 mph acceleration in 4.6 seconds"
+    ],
+    "5.0L V8 Convertible": [
+      "Convertible body style with 7.1 cu-ft trunk volume with roof down",
+      "Retractable soft-top roof system"
+    ],
+    "5.0L V8 Coupe": [
+      "5.0L naturally aspirated V8 engine with 385 hp and 380 lb-ft torque",
+      "11.7 cu-ft trunk volume",
+      "6-speed automatic transmission"
+    ]
+  }
+}

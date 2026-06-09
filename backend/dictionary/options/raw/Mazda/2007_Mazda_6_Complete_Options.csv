@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2007,Mazda,6,6,2.3L I4,2.3L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,21,29,24,,,,,
+2007,Mazda,6,6,2.3L I4 (MAZDA6 T/C),2.3L I4,,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.3,17,23,19,,,,,
+2007,Mazda,6,6,2.3L I4,2.3L I4,,Automatic (S5),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,21,28,23,,,,,
+2007,Mazda,6,6,3.0L V6,3.0L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,17,25,20,,,,,
+2007,Mazda,6,6,3.0L V6,3.0L V6,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,17,25,20,,,,,
+2007,Mazda,6,Sport Wagon,3.0L V6,3.0L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,6,3.0,17,25,20,,,,,
+2007,Mazda,6,Sport Wagon,3.0L V6,3.0L V6,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,6,3.0,17,25,20,,,,,

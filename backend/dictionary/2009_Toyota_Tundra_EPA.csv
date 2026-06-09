@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2009,Toyota,Tundra,2WD,4.0L V6,Automatic (S5),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.0,15,19,16,,,,,,4.0L V6,
-2009,Toyota,Tundra,2WD,4.7L V8,Automatic (S5),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,4.7,14,17,15,,,,,,4.7L V8,
-2009,Toyota,Tundra,2WD,5.7L V8,Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.7,14,18,16,,,,,,5.7L V8,
-2009,Toyota,Tundra,4WD,4.7L V8,Automatic (S5),All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,4.7,13,16,15,,,,,,4.7L V8,
-2009,Toyota,Tundra,4WD,5.7L V8,Automatic (S6),All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.7,13,17,14,,,,,,5.7L V8,
-2009,Toyota,Tundra,4WD,FFV 5.7L V8 (RNG=400),Automatic (S6),All-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.7,13,17,15,,,,,,5.7L V8,

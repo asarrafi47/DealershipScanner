@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2019|nissan|leaf",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2019__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL PLUS",
+    "SL",
+    "SV PLUS",
+    "SV",
+    "S PLUS",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL PLUS": [
+      "Electronic parking brake",
+      "ProPILOT Assist advanced driver assistance",
+      "High Beam Assist automatic headlight control"
+    ],
+    "SL": [
+      "Portable charge cable 120V/240V",
+      "LED headlights with LED signature Daytime Running Lights",
+      "Heated outside mirrors with integrated LED turn signal indicators",
+      "Intelligent Around View Monitor surround-view camera system",
+      "8-way power adjustable driver seat with 2-way lumbar support",
+      "Leather-appointed seats",
+      "Heated front seats and heated steering wheel",
+      "Bose Energy Efficient Series Premium Audio System seven speakers",
+      "Blind Spot Warning and Rear Cross Traffic Alert"
+    ],
+    "SV PLUS": [
+      "62 kWh lithium-ion battery with 160 kW motor 214 hp 250 lb-ft",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Fog lights",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "Intelligent Cruise Control"
+    ],
+    "SV": [
+      "Quick Charge port DC fast charging",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Fog lights",
+      "NissanConnect 7-inch touchscreen with Nissan Navigation System",
+      "Apple CarPlay and Android Auto smartphone integration",
+      "SiriusXM Traffic and Travel Link with 3-month trial",
+      "Intelligent Cruise Control"
+    ],
+    "S PLUS": [
+      "62 kWh lithium-ion battery with 160 kW motor 214 hp 250 lb-ft",
+      "High-output Quick Charge port DC fast charging",
+      "Portable charge cable 120V/240V",
+      "16-inch aluminum-alloy wheels",
+      "NissanConnect 8-inch touchscreen display",
+      "Apple CarPlay and Android Auto smartphone integration",
+      "Intelligent Forward Collision Warning"
+    ],
+    "S": [
+      "40 kWh lithium-ion battery with 110 kW motor 147 hp 236 lb-ft",
+      "6.6 kW onboard Level 2 charger",
+      "e-Pedal one-pedal driving capability",
+      "16-inch steel wheels",
+      "Aerodynamic underbody panels and rear diffuser",
+      "7-inch information display in gauge cluster",
+      "Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Start",
+      "SiriusXM Radio with 3-month complimentary trial",
+      "Automatic Emergency Braking"
+    ]
+  }
+}

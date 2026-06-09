@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2011|saab|95",
+  "year": 2011,
+  "make": "Saab",
+  "model": "9-5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

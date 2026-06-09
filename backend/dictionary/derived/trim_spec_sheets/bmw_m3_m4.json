@@ -1,0 +1,37 @@
+{
+  "ladder_id": "bmw_m3_m4",
+  "make": "BMW",
+  "models": [
+    "M3",
+    "M4",
+    "M3 Competition",
+    "M4 Competition"
+  ],
+  "year_min": 2014,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M Competition": [
+      {
+        "label": "Engine Options",
+        "value": "20 hp power increase and M Competition suspension; Revised chassis bushings for track performance"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Carbon fiber interior trim and M Competition exhaust"
+      }
+    ],
+    "M Sport": [
+      {
+        "label": "Interior Materials",
+        "value": "Race-derived aero kit and carbon bucket seats"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "S55/S58 twin-turbo inline-6"
+      }
+    ]
+  }
+}

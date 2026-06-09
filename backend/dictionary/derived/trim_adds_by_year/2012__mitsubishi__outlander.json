@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2012|mitsubishi|outlander",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2012__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Outlander GT (S-AWC)",
+    "Outlander GT (2WD)",
+    "Outlander SE",
+    "Outlander ES"
+  ],
+  "adds_by_trim": {
+    "Outlander GT (S-AWC)": [
+      "Super All-Wheel Control (S-AWC) system",
+      "6-speed Sportronic automatic transmission with Idle Neutral Logic",
+      "3.0-liter 230-horsepower MIVEC V6 engine"
+    ],
+    "Outlander GT (2WD)": [
+      "3.0-liter 230-horsepower MIVEC V6 engine",
+      "6-speed automatic transmission with Idle Neutral Logic"
+    ],
+    "Outlander SE": [
+      "Available All-Wheel Control",
+      "Compact stowable third row seat",
+      "18-inch alloy wheels"
+    ],
+    "Outlander ES": [
+      "2.4-liter 168-horsepower MIVEC 4-cylinder engine",
+      "Continuously Variable Transmission",
+      "Flap-Fold Tailgate"
+    ]
+  }
+}

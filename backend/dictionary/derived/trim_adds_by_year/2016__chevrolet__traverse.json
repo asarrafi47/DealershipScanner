@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|chevrolet|traverse",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2016__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Power-folding, power-adjustable, heated body-color mirrors with auto-dimming and Side Blind Zone Alert",
+      "Power liftgate with remote control",
+      "7-passenger seating with second-row captain's chairs"
+    ],
+    "2LT": [
+      "Heated power-adjustable body-color mirrors with turn signal indicators",
+      "Power liftgate with remote control",
+      "7-passenger seating with second-row captain's chairs",
+      "Rear-Seat Entertainment System with DVD player and wireless headphones"
+    ],
+    "1LT": [
+      "Power windows with driver express-up/-down and passenger express-down",
+      "3-channel programmable universal home remote with garage door opener"
+    ],
+    "LS": [
+      "Manual-folding power-adjustable black mirrors",
+      "Manual rear liftgate",
+      "Power windows with driver express-down",
+      "8-passenger seating with 60/40 split-bench seats",
+      "OnStar Basic Plan for five years"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|chevrolet|spark",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2019__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL2",
+    "TL1",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "TL2": [
+      "Chrome door handles and liftgate trim",
+      "LED signature daytime running lamps",
+      "Projector-type halogen headlamps",
+      "Heated power-adjustable body-color mirrors"
+    ],
+    "TL1": [
+      "LED signature daytime running lamps",
+      "Projector-type halogen headlamps",
+      "Heated power-adjustable body-color mirrors"
+    ],
+    "SL": [
+      "ECOTEC 1.4L DOHC 4-cylinder MFI engine",
+      "Power electric steering",
+      "Front MacPherson struts suspension",
+      "Rear compound crank suspension",
+      "5-speed manual transmission",
+      "1 driver and front passenger frontal airbags with knee airbags",
+      "Seat-mounted side-impact and roof rail-mounted head-curtain airbags",
+      "Passenger Sensing System for front passenger",
+      "Chrome-surround grille",
+      "Halogen headlamps with automatic exterior lamp control"
+    ]
+  }
+}

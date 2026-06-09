@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2011|chevrolet|cruze",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2011__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "ECO",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "18-inch split five-spoke silver-painted alloy wheels",
+      "Leather-appointed front and rear seating",
+      "Single-zone automatic climate control",
+      "Four-wheel disc brakes",
+      "Chrome door handles",
+      "Power-adjustable heated manual-folding body-color mirrors",
+      "Power sunroof with sliding capability",
+      "RS Appearance Package with unique fascias and rear spoiler"
+    ],
+    "2LT": [
+      "17-inch five-spoke flangeless machined-face alloy wheels",
+      "Heated front seats with three warmth settings",
+      "Six-way power-adjustable driver seat",
+      "USB port and steering wheel-mounted audio controls standard",
+      "GPS navigation system with hard drive and 7-inch display",
+      "Power sunroof with sliding capability"
+    ],
+    "1LT": [
+      "16-inch five-spoke machined-face alloy wheels",
+      "Carpeted floor mats front and rear",
+      "Remote vehicle starter system",
+      "RS Appearance Package with unique fascias and rear spoiler",
+      "Automatic Connectivity Plus Cruise Package with Bluetooth and USB"
+    ],
+    "ECO": [
+      "1.4L Turbo ECOTEC engine with water-cooled bearings",
+      "17-inch 15-spoke forged-aluminum wheels with ultra-low-rolling-resistance tires",
+      "Manual transmission with ECO gear set",
+      "Unique front fascia and lower front grille air shutter"
+    ],
+    "LS": [
+      "1.8L DOHC ECOTEC engine with Variable Valve Timing",
+      "16-inch steel wheels with silver-painted wheel covers",
+      "Five-passenger seating with front bucket seats",
+      "AM/FM stereo with CD player and MP3 playback",
+      "Air bags with Passenger Sensing System and StabiliTrak stability control",
+      "Power steering and 12-volt auxiliary power outlets",
+      "Rear window electric defogger and daytime running lamps"
+    ]
+  }
+}

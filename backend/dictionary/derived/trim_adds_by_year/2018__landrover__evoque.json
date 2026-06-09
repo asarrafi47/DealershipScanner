@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|landrover|evoque",
+  "year": 2018,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_llm_2018__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Autobiography",
+    "HSE Dynamic",
+    "HSE",
+    "Landmark Edition",
+    "SE Premium",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Autobiography": [
+      "Massaging front seats with five intensity settings controlled via touchscreen",
+      "Configurable Ambient Interior Lighting with ten color options standard"
+    ],
+    "HSE Dynamic": [
+      "Adaptive Dynamics system for enhanced handling and cornering performance"
+    ],
+    "HSE": [
+      "Configurable Ambient Interior Lighting with ten color options standard",
+      "Heated front seats standard"
+    ],
+    "Landmark Edition": [
+      "Electric memory seats standard",
+      "Heated front seats standard"
+    ],
+    "SE Premium": [
+      "Perforated grained leather seat material",
+      "Electric memory seats standard",
+      "Heated front seats standard",
+      "Powered panoramic roof standard on five-door body style"
+    ],
+    "SE": [
+      "Grained leather seat material",
+      "9-speed automatic transmission with 4WD",
+      "Active Driveline system",
+      "All Terrain Progress Control",
+      "Torque Vectoring by Braking",
+      "Hill Descent Control and Hill Start Assist"
+    ]
+  }
+}

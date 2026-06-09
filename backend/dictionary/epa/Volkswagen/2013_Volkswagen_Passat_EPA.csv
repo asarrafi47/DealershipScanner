@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2013,Volkswagen,Passat,Passat,Diesel 2.0L I4 Diesel,2.0L I4 Turbo,Turbocharged,Automatic (AM-S6),Front-Wheel Drive,Diesel,Midsize Cars,4,2.0,30,40,34,,,,,
+2013,Volkswagen,Passat,Passat,3.6L V6 (SIDI),3.6L V6 Turbo,Turbocharged,Automatic (AM-S6),Front-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.6,20,28,23,,,,,
+2013,Volkswagen,Passat,Passat,2.5L V5,2.5L V5 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.5,22,32,26,,,,,
+2013,Volkswagen,Passat,Passat,2.5L V5,2.5L V5 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.5,22,31,25,,,,,

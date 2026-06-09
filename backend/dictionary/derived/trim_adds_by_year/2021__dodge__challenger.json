@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2021|dodge|challenger",
+  "year": 2021,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2021__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat Widebody",
+    "SRT Hellcat",
+    "SRT 392 Widebody",
+    "SRT 392",
+    "R/T",
+    "GT",
+    "GT AWD",
+    "SXT",
+    "SXT AWD"
+  ],
+  "adds_by_trim": {
+    "SRT Hellcat Widebody": [
+      "220-mph primary speedometer",
+      "SRT multistage driver and front-passenger airbags",
+      "SRT Performance leather-wrapped flat-bottom heated steering wheel",
+      "SRT Performance Pages with configurable drive modes",
+      "Harman Kardon 18-speaker 900-watt audio system"
+    ],
+    "SRT Hellcat": [
+      "220-mph primary speedometer",
+      "SRT multistage driver and front-passenger airbags",
+      "SRT Performance leather-wrapped flat-bottom heated steering wheel",
+      "SRT Performance Pages with configurable drive modes",
+      "Harman Kardon 18-speaker 900-watt audio system"
+    ],
+    "SRT 392 Widebody": [
+      "200-mph primary speedometer",
+      "SRT Performance Pages with configurable drive modes",
+      "Harman Kardon 18-speaker 900-watt audio system",
+      "Performance shift indicator"
+    ],
+    "SRT 392": [
+      "180-mph primary speedometer",
+      "SRT Performance Pages",
+      "Harman Kardon 18-speaker 900-watt audio system"
+    ],
+    "R/T": [
+      "Performance 4-bump leather-wrapped steering wheel with Blacktop Package",
+      "Steering paddle shifters with automatic transmission",
+      "Uconnect 4C with 8.4-inch display and SiriusXM",
+      "6 premium Alpine speakers with 276-watt amplifier"
+    ],
+    "GT": [
+      "Performance 4-bump leather-wrapped steering wheel",
+      "Steering paddle shifters with automatic transmission",
+      "Uconnect 4C with 8.4-inch display and SiriusXM"
+    ],
+    "GT AWD": [
+      "All-Wheel Drive system",
+      "Performance 4-bump leather-wrapped steering wheel",
+      "Steering paddle shifters with automatic transmission"
+    ],
+    "SXT": [
+      "Uconnect 4 with 7-inch touchscreen and Bluetooth",
+      "Leather-wrapped steering wheel with vehicle controls",
+      "Universal garage door opener",
+      "6 standard speakers"
+    ],
+    "SXT AWD": [
+      "Leather-wrapped steering wheel with vehicle controls",
+      "Six-speaker sound system standard",
+      "Uconnect 4 with 7-inch touchscreen and Apple CarPlay standard",
+      "P235/55R18 All-Season Performance tires standard"
+    ]
+  }
+}

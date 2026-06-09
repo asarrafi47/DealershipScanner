@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2016|lincoln|mkz",
+  "year": 2016,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_llm_2016__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Reserve",
+    "Select",
+    "Premiere"
+  ],
+  "adds_by_trim": {
+    "Reserve": [
+      "Leather-wrapped steering wheel with genuine wood accent in brown swirl walnut or Prussian burl",
+      "Power-tilt/-telescoping steering column",
+      "110-volt power outlet (standard on MKZ Reserve)",
+      "Summer Tire Handling Package with 19-inch polished aluminum wheels and sport-tuned suspension (optional)",
+      "Brown Swirl Walnut Wood Trim Package (standard with Ebony interior)"
+    ],
+    "Select": [
+      "Ambient lighting",
+      "Heated steering wheel",
+      "Leather-wrapped steering wheel",
+      "Power-tilt/-telescoping steering column",
+      "BLIS with cross-traffic alert",
+      "Configurable daytime running lamps",
+      "LED accent lamps",
+      "Power-open and close trunk lid (optional)"
+    ],
+    "Premiere": [
+      "110-volt power outlet standard on all MKZ Hybrid models",
+      "All-weather floor mats",
+      "Rear view camera",
+      "60/40 split-fold-flat spring-assisted rear seat",
+      "Lincoln luxury soft-touch-trimmed seats in ebony"
+    ]
+  }
+}

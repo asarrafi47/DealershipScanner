@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2017|ford|fusion",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "generic_ford_fusion",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "class is Midsize Plug-In Hybrid"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "SE": 1
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2022|ford|escape",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2022__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "Ebony and Sandstone leather-trimmed interior",
+      "Available Titanium Elite Package",
+      "19-inch Machined-Face Ebony-Painted Aluminum wheels",
+      "Available Titanium Premium Package"
+    ],
+    "SEL": [
+      "19-inch wheel options with Luster Nickel-Painted Aluminum finish",
+      "Available Stealth AWD Package",
+      "Available Stealth Package",
+      "ActiveX material upholstery with enhanced durability"
+    ],
+    "SE": [
+      "8-inch LCD touchscreen with SYNC 3",
+      "Apple CarPlay and Android Auto compatibility",
+      "Available Voice-Activated Touchscreen Navigation System with SiriusXM Traffic",
+      "SiriusXM 3-month trial subscription",
+      "2 smart-charging USB ports",
+      "18-inch Machined-Face Aluminum wheel options available",
+      "Available SE Sport Appearance Package"
+    ],
+    "S": [
+      "4.2-inch LCD screen technology",
+      "SYNC with AppLink control",
+      "1 smart-charging USB port",
+      "17-inch Steel wheel with Sparkle Silver-Painted Covers standard",
+      "Dark Earth Gray Cloth interior"
+    ]
+  }
+}

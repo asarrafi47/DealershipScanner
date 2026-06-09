@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2010,Nissan,Versa,Versa,1.6L I4,1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,26,33,28,,,,,
+2010,Nissan,Versa,Versa,1.6L I4,1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,26,34,29,,,,,
+2010,Nissan,Versa,Versa,1.8L I4,1.8L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,24,32,27,,,,,
+2010,Nissan,Versa,Versa,1.8L I4,1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,28,34,30,,,,,
+2010,Nissan,Versa,Versa,1.8L I4,1.8L I4,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,26,31,28,,,,,

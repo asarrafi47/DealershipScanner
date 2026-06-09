@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2025|hyundai|santacruz",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Santa Cruz",
+  "ladder_id": "2025_hyundai_santacruz",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "XRT",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "H-Tex seating, heated front seats, and 12.3-inch touchscreen",
+      "Proximity key and wireless phone charger"
+    ],
+    "XRT": [
+      "XRT off-road appearance with dark trim and rugged wheels",
+      "HTRAC AWD and increased utility content"
+    ],
+    "Limited": [
+      "Leather-trimmed seats and Bose premium audio",
+      "Integrated Memory System and highest Santa Cruz trim"
+    ],
+    "SE": [
+      "2.5L GDI/MPI engine with 191 hp and 181 lb-ft torque",
+      "8-speed automatic transmission with SHIFTRONIC",
+      "Drive Mode Select and self-leveling multi-link rear suspension",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Blind-Spot Collision-Avoidance Assist and Rear Cross-Traffic Collision-Avoidance Assist",
+      "8.0-inch Display Audio with AM/FM/HD Radio, Android Auto, and Apple CarPlay",
+      "Projector-type LED headlights with LED Daytime Running Lights and LED taillights",
+      "Rearview camera and Black H-Tex seating surfaces",
+      "Sheet molded composite bed with sidewall and underbed storage",
+      "3,500-lb towing capacity"
+    ]
+  }
+}

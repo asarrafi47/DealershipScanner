@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|nissan|nv",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_llm_2015__nissan__nv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "Exterior Appearance Package with chrome grille and body-color bumpers",
+      "Body-color outside mirrors and rear door finisher",
+      "Split 5-spoke wheel covers"
+    ],
+    "S": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with 131 hp and 139 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "11.1-inch front vented disc brakes with 4-wheel ABS",
+      "Vehicle Dynamic Control with Traction Control System",
+      "Dual-stage supplemental front airbags with seat belt sensors",
+      "Driver and passenger seat-mounted side-impact airbags",
+      "Roof-mounted curtain side-impact airbags with rollover sensor",
+      "Tire Pressure Monitoring System",
+      "Nissan Vehicle Immobilizer System",
+      "Remote keyless entry"
+    ]
+  }
+}

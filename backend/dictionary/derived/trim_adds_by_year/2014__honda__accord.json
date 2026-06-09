@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2014|honda|accord",
+  "year": 2014,
+  "make": "Honda",
+  "model": "Accord",
+  "ladder_id": "brochure_llm_2014__honda__accord",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Honda Satellite-Linked Navigation System standard",
+      "HondaLink Real-Time Traffic service"
+    ],
+    "EX-L": [
+      "Honda Satellite-Linked Navigation System available"
+    ],
+    "LX": [
+      "Bluetooth connectivity",
+      "USB Audio Interface for MP3/WMA/AAC files",
+      "Pandora compatibility on compatible smartphones",
+      "SiriusXM satellite radio with trial subscription",
+      "HomeLink universal remote system",
+      "Lane Departure Warning system",
+      "Forward Collision Warning system",
+      "Adaptive Cruise Control"
+    ],
+    "EX": [
+      "17-inch alloy wheels",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry keyless system",
+      "Heated, body-colored power side mirrors with integrated turn indicators and Expanded View Driver's Mirror",
+      "Honda LaneWatch driver's side mirror camera",
+      "Engine Start/Stop button",
+      "Power windows with auto-up/down for driver and front passenger",
+      "160-watt AM/FM/CD audio system with 6 speakers"
+    ]
+  }
+}

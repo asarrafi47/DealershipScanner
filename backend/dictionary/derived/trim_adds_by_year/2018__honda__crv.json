@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2018|honda|crv",
+  "year": 2018,
+  "make": "Honda",
+  "model": "CR-V",
+  "ladder_id": "brochure_llm_2018__honda__crv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "TOURING": [
+      "Hands-free access power tailgate",
+      "Roof rails",
+      "LED headlights with low and high beam",
+      "Dual chrome exhaust finishers",
+      "330-watt premium audio system with 9 speakers and subwoofer",
+      "Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic"
+    ],
+    "EX-L": [
+      "Power tailgate with programmable height",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic-dimming rearview mirror",
+      "Driver's seat with two-position memory",
+      "Leather-trimmed seats",
+      "Passenger's seat with 4-way power adjustment",
+      "Available Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "One-touch power moonroof with tilt feature",
+      "Fog lights",
+      "Heated front seats"
+    ],
+    "EX": [
+      "190-hp 1.5-liter turbocharged and intercooled DOHC 4-cylinder engine with direct injection",
+      "Remote engine start",
+      "18-inch alloy wheels",
+      "Eco Assist system",
+      "Honda Sensing suite of safety and driver-assistive features",
+      "Auto-on/off headlights with auto high-beam",
+      "Blind spot information system with cross traffic monitor",
+      "Rear privacy glass",
+      "Fin-type roof-mounted antenna",
+      "Heated, body-colored power side mirrors with integrated turn indicators"
+    ],
+    "LX": [
+      "184-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection DOHC",
+      "Continuously variable transmission",
+      "Electric parking brake with automatic brake hold",
+      "Available Real Time AWD with dynamic Intelligent Control System",
+      "Hill start assist",
+      "17-inch alloy wheels",
+      "Six airbags",
+      "LED Daytime Running Lights",
+      "Remote entry system",
+      "Smart Entry with Walk Away Auto Lock and push button start"
+    ]
+  }
+}

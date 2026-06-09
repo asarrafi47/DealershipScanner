@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|toyota|sequoia",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "SR5",
+    "E85",
+    "N/A"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2022|landrover|evoque",
+  "year": 2022,
+  "make": "landrover",
+  "model": "Evoque",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Autobiography",
+    "HSE",
+    "Standard",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

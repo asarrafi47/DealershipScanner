@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|ford|transitconnect",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "generic_ford_transitconnect",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "SE",
+    "XL",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "(cid:2) Crew ChiefTM (not available with in-dash computer) optional. Vehicles shown may contain optional equipment.",
+      "(cid:2) Tool LinkTM (requires in-dash computer; not available with Cargo features and/or production variability. Following release of"
+    ],
+    "XL": [
+      "(cid:2) All-weather floor mats (front)",
+      "(cid:2) Premium carpeted floor mats (front)"
+    ],
+    "XLT": [
+      "(cid:2) AM/FM stereo with single-CD, audio input jack and 2 speakers"
+    ],
+    "Premium": [
+      "Rear wheelhouse covers and beltline trim",
+      "Repositioned 2nd-row seat for more leg room",
+      "Rear-quarter flip-open windows with privacy glass",
+      "3rd-row flip-open windows with solar-tinted glass"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 6,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "XLT": 1,
+      "SE": 0,
+      "XL": 2,
+      "Premium": 0,
+      "LE": 2
+    }
+  }
+}

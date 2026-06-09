@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2019|ram|promaster",
+  "year": 2019,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2019__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cab/Cutaway 2TA",
+    "Chassis Cab 2TA",
+    "Windowed Van 2TA",
+    "Van 2TA"
+  ],
+  "adds_by_trim": {
+    "Cab/Cutaway 2TA": [
+      "3.6L Pentastar V6 with 6-speed automatic transmission",
+      "Electronic Stability Control (ESC)",
+      "Power steering with speed limiter",
+      "Full-size spare tire",
+      "Halogen headlamps and R-A-M grille in silver",
+      "16-inch silver painted steel wheels",
+      "Manually controlled air conditioning with heat",
+      "4-way manually adjustable driver and front-passenger bucket seats",
+      "UConnect 3 with 5-inch display and media hub",
+      "Advanced dual front air bags and supplemental safety systems"
+    ],
+    "Chassis Cab 2TA": [
+      "Premium heavy-duty suspension (3500 models)",
+      "Wide exterior 96-inch mirrors with power heated option",
+      "Rear-door storage net included with Interior Convenience Group",
+      "Wide exterior mirrors with power-adjustable heated capability",
+      "Optional leather-wrapped steering wheel"
+    ],
+    "Windowed Van 2TA": [
+      "Left-side and right-side fixed glass windows with deep-tint sunscreen",
+      "Window defroster for rear doors with glass",
+      "Optional left-side fixed window on 136-inch WB",
+      "Optional right-side fixed window with deep-tint sunscreen",
+      "Rear-wall window and additional window defroster capability"
+    ],
+    "Van 2TA": [
+      "260-degree-opening rear doors",
+      "Cargo partition with optional sliding window",
+      "Floor cargo tie-downs and side wall tie-downs",
+      "Incandescent cargo-area lighting",
+      "Optional LED cargo-area lighting",
+      "Interior Convenience Group with locking glove box and storage options",
+      "Optional spray-on floor liner by Mopar",
+      "Optional wood floor in rear"
+    ]
+  }
+}

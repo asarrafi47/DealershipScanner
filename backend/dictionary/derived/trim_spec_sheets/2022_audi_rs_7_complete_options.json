@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_audi_rs_7_complete_options",
+  "make": "Audi",
+  "models": [
+    "RS 7",
+    "RS 7"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "For instance the base Audi A4 (B8) engine is the 2.0 TFSI turbo four-cylinder, a; A6 I4 — V6 2.0 — 3.0 L. 163 — 340 PS 9.3 — 5.1 sec. 145–155 mph (233–249 km/h)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: For instance the base Audi A4 (B8) engine is the 2.0 TFSI turbo four-cylinder, a; A6 I4 — V6 2.0 — 3.0 L. 163 — 340 PS 9.3 — 5.1 sec. 145–155 mph (233–249 km/h)"
+      }
+    ]
+  }
+}

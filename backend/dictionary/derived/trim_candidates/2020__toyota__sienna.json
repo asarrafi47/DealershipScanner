@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2020|toyota|sienna",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Sienna",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "SE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Adds to or replaces features offered on SE Adds to or replaces features offered on XLE",
+      "Exterior Features Exterior Features",
+      "17-in. 7-spoke machined alloy wheels with P235/60R17 tires \u2022 18-in. 10-spoke machined alloy wheels with P235/55R18 tires",
+      "Available 18-in. 10-spoke machined alloy wheels with \u2022 Available 18-in. 10-spoke machined alloy wheels with",
+      "P235/55RF18 tires (AWD only) P235/55RF18 tires (AWD only)",
+      "Color-keyed heated power outside mirrors with blind spot \u2022 Projector-beam halogen headlights with auto on/off feature",
+      "Chrome-accented outside door handles with touch-sensor \u2022 Color-keyed heated power outside mirrors with blind spot",
+      "Interior Features \u2022 Dual moonroof with front power tilt/slide and power rear slide",
+      "Seating for up to eight Interior Features",
+      "Leather-trimmed and multi-stage heated front seats \u2022 Seating for up to seven with premium leather-trimmed",
+      "Leatherette-trimmed 60/40 Split & Stow 3rd Row\u00ae seat second-row captain\u2019s chairs and available lounge seating28",
+      "Leather-trimmed tilt/telescopic steering wheel with audio, \u2022 Power third-row seat (FWD only)"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE with Auto Access Seat",
+      "Exterior Features Exterior Features",
+      "17-in. 5-spoke alloy wheels with P235/60R17 tires \u2022 17-in. 7-spoke machined alloy wheels with P235/60R17 tires",
+      "Color-keyed heated power outside mirrors \u2022 Color-keyed heated power outside mirrors with",
+      "Dual power sliding side doors and power liftgate \u2022 Chrome-accented outside door handles with touch-sensor",
+      "Black roof rails Interior Features",
+      "Privacy glass on rear windows",
+      "Seating for up to seven",
+      "Interior Features \u2022 Power-rotating lift-up seat, second-row passenger side",
+      "Seating for up to seven \u2022 Leather-trimmed and multi-stage heated front seats",
+      "Power-rotating lift-up seat, second-row passenger side \u2022 Leatherette-trimmed 60/40 Split & Stow 3rd Row\u00ae seat",
+      "Audio Plus \u2014 includes 7-in. touch-screen \u2022 Leather-trimmed tilt/telescopic steering wheel with audio,"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Exterior Features Exterior Features Exterior Features",
+      "17-in. 5-spoke alloy wheels with P235/60R17 tires \u2022 Available 18-in. 10-spoke machined alloy wheels with \u2022 19-in. 6-spoke gunmetal-finish alloy wheels with",
+      "Projector-beam halogen headlights with auto on/off feature P235/55RF18 tires (AWD only) P235/50R19 tires",
+      "Black power outside mirrors with integrated blind spot mirrors2 \u2022 Color-keyed heated power outside mirrors with \u2022 Available 18-in. 6-spoke gunmetal-finish alloy wheels with",
+      "Windshield wiper de-icer integrated blind spot mirrors2 P235/55RF18 tires (AWD only)",
+      "Color-keyed rear spoiler with LED center high-mount stop \u2022 Dual power sliding side doors with jam protection \u2022 Projector-beam halogen headlights with smoked chrome trim,",
+      "Roof-mounted shark-fin antenna \u2022 Privacy glass on rear windows \u2022 Sport mesh front grille",
+      "Available color-keyed heated power outside mirrors with",
+      "Interior Features Interior Features",
+      "Seating for seven with second-row captain\u2019s chairs \u2022 Seating for up to eight \u2022 Chrome-accented outside door handles",
+      "Audio \u2014 includes 7-in. touch-screen \u2022 Easy-clean fabric-trimmed seats \u2022 Fog lights"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

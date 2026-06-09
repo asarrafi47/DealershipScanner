@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|chevrolet|volt",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "brochure_llm_2019__chevrolet__volt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT",
+    "TL"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "8-speaker Bose premium sound system with Richbass woofer",
+      "Chevrolet Infotainment 3 Plus System with Navigation and 8-inch HD touchscreen",
+      "Power Convenience Package with leather-appointed seats and 6-way power driver seat",
+      "Driver Confidence 2 Package with Lane Change Alert, Forward Collision Alert, Lane Keep Assist"
+    ],
+    "LT": [
+      "Chevrolet Infotainment 3 Plus System with 8-inch HD touchscreen, Apple CarPlay, Android Auto",
+      "Comfort Package with automatic heated driver and passenger seats",
+      "LT Driver Confidence Package with Lane Change Alert and Rear Park Assist"
+    ],
+    "TL": [
+      "6-speaker sound system",
+      "Auxiliary audio input jack",
+      "Chevrolet Connected Access with 10 years of standard connectivity",
+      "myChevrolet Mobile App with 5 years of EV Mobile Commands",
+      "SiriusXM Radio All Access Package with 3-month trial subscription"
+    ]
+  }
+}

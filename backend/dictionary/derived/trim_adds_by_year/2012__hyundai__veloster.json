@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2012|hyundai|veloster",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_2012__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [],
+    "Blue": [
+      "Adds 18-inch stylish alloy wheels"
+    ],
+    "Limited": [
+      "Upgraded to leatherette seating surfaces"
+    ]
+  }
+}

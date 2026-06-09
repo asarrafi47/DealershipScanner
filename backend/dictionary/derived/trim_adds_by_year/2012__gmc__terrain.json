@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2012|gmc|terrain",
+  "year": 2012,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_2012__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds OnStar Directions & Connections Plan (6 months standard)",
+      "Adds Automatic Crash Response",
+      "Adds Stolen Vehicle Assistance",
+      "Adds Roadside Assistance",
+      "Adds Remote Door Unlock",
+      "Adds OnStar Vehicle Diagnostics",
+      "Adds SiriusXM Satellite Radio (3 trial months standard)",
+      "Adds Hands-Free Calling capability"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "SLE": [
+      "Premium cloth seating",
+      "8-way power driver seat adjuster with manual fore/aft and power lumbar",
+      "Leather-wrapped steering wheel with mounted audio and cruise controls",
+      "Single-zone automatic air conditioning with climate control",
+      "Pioneer premium 8-speaker system with subwoofer and amplifier",
+      "Heated driver and front passenger seats with convenience package"
+    ],
+    "SLT": [
+      "Adds available touch-screen navigation system with XM NavTraffic"
+    ]
+  }
+}

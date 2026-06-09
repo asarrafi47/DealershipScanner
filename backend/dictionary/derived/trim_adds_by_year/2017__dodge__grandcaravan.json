@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|dodge|grandcaravan",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2017__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SXT",
+    "SE PLUS",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "Performance-tuned suspension",
+      "Bright stow 'n place roof rack",
+      "Bright belt molding",
+      "Body-color grille",
+      "Load-leveling and height control suspension with Trailer Tow Group"
+    ],
+    "SXT": [
+      "Touring-tuned suspension",
+      "Power sliding doors",
+      "Power liftgate",
+      "Automatic headlamps with daytime running lamps",
+      "Foldaway power heated body-color mirrors",
+      "Load-leveling and height control suspension with Trailer Tow Group"
+    ],
+    "SE PLUS": [
+      "Fog lamps",
+      "Headlamps with black bezels",
+      "Sunscreen glass",
+      "Black body-color door handles and fascias",
+      "225/65R17 BSW all-season tires"
+    ],
+    "SE": [
+      "3.6L Pentastar flex fuel V6 with 6-speed automatic transmission",
+      "160-amp alternator and 730-amp maintenance-free battery",
+      "4-wheel antilock brakes with heavy-duty discs",
+      "Rear defroster",
+      "20-gallon fuel tank",
+      "Heavy-duty engine cooling",
+      "Speed control with tip start",
+      "Remote keyless illuminated entry system with Sentry Key immobilizer",
+      "3-zone manual temperature control air conditioning",
+      "Power door locks and tilt/telescoping steering column"
+    ]
+  }
+}

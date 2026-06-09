@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2010|honda|fit",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Fit",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

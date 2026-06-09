@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2021|maserati|levante",
+  "year": 2021,
+  "make": "maserati",
+  "model": "levante",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2021_maserati_levante_Brochure.pdf",
+  "page_count": 60,
+  "all_pages": false,
+  "trim_hint_pages": [
+    2,
+    13,
+    35,
+    48,
+    49
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 2,
+      "trim_hint": true,
+      "text": "An enduring legacy | 6 Endless possibilities | 8 A distinctive invitation | 20 High-powered Luxury | 26\nHistory of character Discover the Levante Experience something truly Maserati Connect and\nCollection unique in a world of Safety ADAS\nstandardized choices\nFuoriserie | 42 Technical specifications | 48 A world of possibilities | 52\nYour Maserati tailor-made Specifications overview of all\nto your unique personality Levante versions\n2",
+      "table_lines": []
+    },
+    {
+      "page": 13,
+      "trim_hint": true,
+      "text": "Levante-Accept no Boundaries\n430 264 5.2 V6 AWD 580\nHP km/h sec Nm\nMax power Max speed Acceleration Engine layout Traction Max torque\nS version technical specifications.\n13",
+      "table_lines": []
+    },
+    {
+      "page": 35,
+      "trim_hint": true,
+      "text": "The purposeful ambience of the cabin is another aspect that creates a strong\npoint of difference for Maserati. Three lavish interior trims add to the appeal of\nthis sanctuary for the driver, and further increase the options for personalisation.\nThe first one is the Regimental open pore, a open-pore wooden veneer inspired\nby textures found in the fashion industry and revered by the leading couturiers of\nMilan. The second one is the Matt carbon fibre weave, inspired by the Levante\nTrofeo with its host of exterior carbon fibre features, the 3D effect of the weave\npattern adds to the dynamic credentials inside. The last one is the High-gloss\nmetal weave: this stylish new trim is created by using metallic meshes, and is\ninspired by contemporary architecture; the elegant chevron weave pattern adds\nto the sporty feel of the cabin.\n35",
+      "table_lines": []
+    },
+    {
+      "page": 48,
+      "trim_hint": true,
+      "text": "Technical specifications\n48",
+      "table_lines": []
+    },
+    {
+      "page": 49,
+      "trim_hint": true,
+      "text": "Technical specifications\n49",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\nAn enduring legacy | 6 Endless possibilities | 8 A distinctive invitation | 20 High-powered Luxury | 26\nHistory of character Discover the Levante Experience something truly Maserati Connect and\nCollection unique in a world of Safety ADAS\nstandardized choices\nFuoriserie | 42 Technical specifications | 48 A world of possibilities | 52\nYour Maserati tailor-made Specifications overview of all\nto your unique personality Levante versions\n2\n\n--- page 13 ---\nLevante-Accept no Boundaries\n430 264 5.2 V6 AWD 580\nHP km/h sec Nm\nMax power Max speed Acceleration Engine layout Traction Max torque\nS version technical specifications.\n13\n\n--- page 35 ---\nThe purposeful ambience of the cabin is another aspect that creates a strong\npoint of difference for Maserati. Three lavish interior trims add to the appeal of\nthis sanctuary for the driver, and further increase the options for personalisation.\nThe first one is the Regimental open pore, a open-pore wooden veneer inspired\nby textures found in the fashion industry and revered by the leading couturiers of\nMilan. The second one is the Matt carbon fibre weave, inspired by the Levante\nTrofeo with its host of exterior carbon fibre features, the 3D effect of the weave\npattern adds to the dynamic credentials inside. The last one is the High-gloss\nmetal weave: this stylish new trim is created by using metallic meshes, and is\ninspired by contemporary architecture; the elegant chevron weave pattern adds\nto the sporty feel of the cabin.\n35\n\n--- page 48 ---\nTechnical specifications\n48\n\n--- page 49 ---\nTechnical specifications\n49"
+}

@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2020|subaru|legacy",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2020__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Legacy Touring XT",
+    "Legacy Limited XT",
+    "Legacy Sport",
+    "Legacy Limited",
+    "Legacy Premium",
+    "Legacy"
+  ],
+  "adds_by_trim": {
+    "Legacy Touring XT": [
+      "2.4-liter turbocharged engine with 260 hp and 277 lb-ft torque",
+      "High-torque Lineartronic CVT transmission",
+      "18 x 7.5-inch aluminum-alloy wheels with black machine finish",
+      "225/50 R18 all-season tires"
+    ],
+    "Legacy Limited XT": [
+      "2.4-liter turbocharged engine with 260 hp and 277 lb-ft torque",
+      "High-torque Lineartronic CVT transmission",
+      "18 x 7.5-inch aluminum-alloy wheels with black machine finish",
+      "225/50 R18 all-season tires"
+    ],
+    "Legacy Sport": [
+      "Auto start-stop system",
+      "18 x 7.5-inch aluminum-alloy wheels with black metallic finish",
+      "225/50 R18 all-season tires",
+      "SI-DRIVE performance management system standard"
+    ],
+    "Legacy Limited": [
+      "18 x 7.5-inch aluminum-alloy wheels with black machine finish",
+      "225/50 R18 all-season tires"
+    ],
+    "Legacy Premium": [
+      "17 x 7.5-inch aluminum-alloy wheels with black machine finish option",
+      "Alloy wheel package available"
+    ],
+    "Legacy": [
+      "2.5-liter DOHC direct-injection boxer engine with 182 hp",
+      "176 lb-ft torque at 4,400 rpm",
+      "Lineartronic CVT with 8-speed manual-mode and paddle shifters",
+      "Subaru symmetrical all-wheel drive",
+      "4-wheel independent suspension with strut front and double-wishbone rear",
+      "4-wheel disc brakes with ABS and electronic brake-force distribution",
+      "Vehicle dynamics control with active torque vectoring",
+      "17 x 7.0-inch steel wheels with wheel covers",
+      "225/55 R17 all-season tires"
+    ]
+  }
+}

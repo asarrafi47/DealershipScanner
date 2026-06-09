@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2020|lexus|ls",
+  "year": 2020,
+  "make": "lexus",
+  "model": "LS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "LT",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

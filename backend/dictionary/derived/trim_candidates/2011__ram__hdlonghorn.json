@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|ram|hdlonghorn",
+  "year": 2011,
+  "make": "ram",
+  "model": "HD Longhorn",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Laramie Longhorn",
+    "Laramie",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

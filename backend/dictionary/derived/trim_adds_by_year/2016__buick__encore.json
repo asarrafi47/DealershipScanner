@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2016|buick|encore",
+  "year": 2016,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2016__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM GROUP",
+    "LEATHER GROUP",
+    "SPORT TOURING GROUP",
+    "CONVENIENCE GROUP",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "PREMIUM GROUP": [
+      "1.4L Turbo engine with Start/Stop technology, 153 hp and 177 lb-ft torque",
+      "Leather-appointed seating in Ebony, Titanium, or Saddle",
+      "6-way power passenger seat with manual recline and power lumbar",
+      "Heated steering wheel",
+      "Heated seats for driver and front passenger",
+      "Memory seat for driver seat position",
+      "Bose Premium 7-speaker audio system with amplifier",
+      "Navigation system",
+      "RV8 18-inch 7-spoke chromed aluminum wheels",
+      "Power tilt-sliding moonroof"
+    ],
+    "LEATHER GROUP": [
+      "Leather-appointed seating in Ebony, Titanium, or Saddle",
+      "6-way power passenger seat with manual recline and power lumbar",
+      "Heated steering wheel",
+      "Heated seats for driver and front passenger",
+      "Memory seat for driver seat position",
+      "Bose Premium 7-speaker audio system with amplifier",
+      "RV8 18-inch 7-spoke chromed aluminum wheels"
+    ],
+    "SPORT TOURING GROUP": [
+      "1.4L Turbo engine with Start/Stop technology, 153 hp and 177 lb-ft torque",
+      "Rear Cross Traffic Alert and Side Blind Zone Alert",
+      "Remote vehicle start",
+      "Fog lamps",
+      "Dual-zone automatic climate control",
+      "Auto-dimming inside rearview mirror",
+      "120-volt power outlet on rear center console",
+      "Rainsense wipers with front and rear park assist",
+      "Forward Collision Alert and Lane Departure Warning",
+      "Cargo net and rear carpeted cargo mat"
+    ],
+    "CONVENIENCE GROUP": [
+      "Rear Cross Traffic Alert and Side Blind Zone Alert",
+      "Remote vehicle start",
+      "Fog lamps",
+      "Dual-zone automatic climate control",
+      "Auto-dimming inside rearview mirror",
+      "120-volt power outlet on rear center console"
+    ],
+    "BASE": [
+      "1.4L Turbo engine with variable valve timing, 138 hp and 148 lb-ft torque",
+      "6-speed automatic transmission with Driver Shift Control",
+      "Front-wheel drive with StabiliTrak stability control and traction control",
+      "5-passenger seating with cloth and leatherette trim",
+      "6-way power driver seat with manual recline and power lumbar support",
+      "Buick IntelliLink 7-inch touchscreen with AM/FM, CD, USB, and Bluetooth",
+      "6-speaker audio system with SiriusXM satellite radio trial",
+      "10 standard air bags including front, knee, thorax, and side-curtain bags",
+      "OnStar with 4G LTE and built-in Wi-Fi hotspot",
+      "Rear vision camera with 18-inch 5-spoke cast aluminum wheels"
+    ]
+  }
+}

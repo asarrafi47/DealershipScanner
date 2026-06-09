@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2012|kia|forte",
+  "year": 2012,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_llm_2012__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "173-hp 2.4L engine with CVVT (vs. 156-hp on LX/EX)",
+      "Paddle shifters for manual gear changes without hand removal from wheel",
+      "Leather Package with heated front seats and leather trim (available)",
+      "Metal pedals and metal-finish interior accents",
+      "Sport-tuned suspension on 5-door models",
+      "Available 6-speed Sportmatic transmission with manual-shift mode on 5-door",
+      "Supervision gauges with glowing red LCD lighting",
+      "Stunning interior sport styling throughout cabin"
+    ],
+    "EX": [
+      "Power sunroof with tilt function (available)",
+      "156-hp engine with CVVT"
+    ],
+    "LX": [
+      "Seating for five with ample headroom and legroom",
+      "60/40 split-folding rear seats",
+      "14.7 cubic feet trunk space on sedan",
+      "Continuously variable valve timing (CVVT) engine management",
+      "Dual front airbags with advanced sensor system",
+      "Front-seat-mounted side airbags and side curtain airbags",
+      "Active front headrests and seat-belt pretensioners",
+      "Tire-pressure monitoring system",
+      "LATCH system for child seat installation",
+      "High-strength steel-reinforced body with reinforced doors and pillars"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_bmw_7_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "7 Series",
+    "7 Series"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "760i": [
+      {
+        "label": "Engine Options",
+        "value": "6.6L V12 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "740i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

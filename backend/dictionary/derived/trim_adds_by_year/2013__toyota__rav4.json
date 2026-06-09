@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|toyota|rav4",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_llm_2013__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Projector-beam headlights with auto on/off feature",
+      "18-inch alloy wheels with P235/55R18 tires",
+      "Color-keyed heated power outside mirrors with blind spot warning indicators",
+      "Adjustable power liftgate with jam protection",
+      "Power tilt/slide moonroof with sunshade",
+      "Integrated fog lights",
+      "Auto-dimming rearview mirror",
+      "SofTex®-trimmed 8-way power-adjustable driver's seat with memory and lumbar support",
+      "Driver and front passenger heated seats",
+      "Leather-trimmed steering wheel with voice recognition controls"
+    ],
+    "XLE": [
+      "Integrated fog lights",
+      "17-inch alloy wheels with P225/65R17 tires",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Power tilt/slide moonroof with sunshade",
+      "Dual zone automatic climate control with air filter",
+      "Fabric-trimmed 6-way adjustable driver's seat with sport bolsters",
+      "Power windows with driver auto up/down and jam protection",
+      "Washer-linked variable intermittent windshield wipers",
+      "Roof rails standard",
+      "Chrome-accented grille with silver-highlighted lower grille"
+    ],
+    "LE": [
+      "2.5-liter 4-cylinder DOHC 16-valve engine with 176 hp",
+      "6-speed electronically controlled automatic transmission",
+      "Front-wheel drive with automatic limited-slip differential",
+      "Projector-beam headlights",
+      "Daytime running lights",
+      "17-inch wide-vent steel wheels with wheel covers",
+      "Power-assisted ventilated front disc brakes with Star Safety System",
+      "Backup camera with guidelines",
+      "Display Audio with 6.1-inch touchscreen and Bluetooth hands-free",
+      "Fabric-trimmed 6-way adjustable driver's seat"
+    ]
+  }
+}

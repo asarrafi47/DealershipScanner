@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2023_ford_mustang_mach-e_complete_options",
+  "make": "Ford",
+  "models": [
+    "Mustang Mach-E",
+    "Mustang Mach-E"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: The car can be customized in coupe or convertible forms, as well as in GT or EcoBoost versions. Shelby GT350R (2015–2020) A further enhanced and even more limited edition of the GT350 with an \"R\" package (GT350R) was introduced by Ford in 2015, with only 37…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: Inside is high-contrast red stitching, Shelby GT350R badging and the D-shaped steering wheel fitted with a red center mark at the top. One optional feature for the GT350R was the GT350R Technology Package, which adds the Ford SYNC 3 multimedia infotainment system,…"
+      }
+    ]
+  }
+}

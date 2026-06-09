@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2020|jaguar|xf",
+  "year": 2020,
+  "make": "Jaguar",
+  "model": "XF",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

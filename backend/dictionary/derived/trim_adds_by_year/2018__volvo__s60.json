@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2018|volvo|s60",
+  "year": 2018,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2018__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S60 R-Design",
+    "S60 Inscription",
+    "S60 Cross Country",
+    "S60 Dynamic"
+  ],
+  "adds_by_trim": {
+    "S60 R-Design": [
+      "302 hp Supercharged and Turbocharged Drive-E engine",
+      "19-inch Ixion Diamond Cut/Black alloy wheels",
+      "R-Design leather sport seats and steering wheel",
+      "Front and rear R-Design bumpers with diffuser",
+      "Lowered sport chassis",
+      "Exclusive blue adaptive digital TFT display",
+      "Unique aluminum inlay and sport pedals",
+      "Matte silver mirror caps"
+    ],
+    "S60 Inscription": [
+      "3 inches extra rear seat legroom and increased wheelbase",
+      "Premier or Platinum trim level options",
+      "Rear park assist camera and parking sensors",
+      "Sensus navigation with MapCare",
+      "Inscription door sill moldings",
+      "18-inch Titania Diamond Cut/Black alloy wheels",
+      "Black mirror caps",
+      "Leather seating surfaces"
+    ],
+    "S60 Cross Country": [
+      "7.9 inches ground clearance",
+      "Hill descent control and roll stability control",
+      "Front and rear black fender extensions",
+      "Rugged body cladding and side scuff plates",
+      "Front and rear skid plates",
+      "Rear side window sunblinds",
+      "Power rear window sunblind",
+      "Honeycomb grill"
+    ],
+    "S60 Dynamic": [
+      "Active dual xenon headlights",
+      "Sport seats with leather upholstery",
+      "Power moonroof",
+      "Electronically controlled AWD",
+      "Lowered sport chassis",
+      "18-inch Tucan Diamond Cut/Black alloy wheels",
+      "Side window frames in black rubber",
+      "Milled aluminum inlay"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2019|lexus|rx",
+  "year": 2019,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_llm_2019__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RX350 FSPORT",
+    "RX350L",
+    "RX350"
+  ],
+  "adds_by_trim": {
+    "RX350 FSPORT": [
+      "F SPORT exclusive exterior and interior styling",
+      "Performance-tuned suspension and handling"
+    ],
+    "RX350L": [
+      "Third-row seating with extended wheelbase",
+      "Seven-passenger second-row bench seating standard"
+    ],
+    "RX350": [
+      "3.5-liter Atkinson-cycle V6 engine with 295 horsepower",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "LSS+ safety suite with Pre-Collision System",
+      "Lexus Safety System+ with Pedestrian Detection",
+      "Dynamic Radar Cruise Control"
+    ]
+  }
+}

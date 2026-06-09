@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2021|bentley|bentayga",
+  "year": 2021,
+  "make": "bentley",
+  "model": "bentayga",
+  "ladder_id": "brochure_llm_2021__bentley__bentayga",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Bentayga V8",
+    "Bentayga Hybrid"
+  ],
+  "adds_by_trim": {
+    "Bentayga V8": [
+      "V8 powertrain with enhanced performance dynamics",
+      "Standard foot pedals instead of hybrid-specific components",
+      "Bentley 'B' wing vent styling element",
+      "Full suite of standard driver assistance features without hybrid-specific modes",
+      "Standard My Bentley Connected Car services including find my car and roadside assistance"
+    ],
+    "Bentayga Hybrid": [
+      "Hybrid powertrain with plug-in electric capability",
+      "Hybrid exterior badging to distinguish model variant",
+      "E-charging connected car service for battery management",
+      "My Car Statistics and My Battery Charge monitoring via connected services",
+      "My Cabin Comfort climate control settings for hybrid efficiency",
+      "On-board cable stowage for charging cable organization"
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "catalog_key": "2016|jeep|grandcherokee",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "jeep_grand_cherokee_wk2",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Laredo",
+    "Limited",
+    "Overland",
+    "Trailhawk",
+    "High Altitude",
+    "Summit",
+    "SRT"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Quadra-Trac II active full-time 4WD (replaces Quadra-Trac I on 4x4)",
+      "Uconnect 8.4 touchscreen (replaces Uconnect 5.0)",
+      "Bi-xenon HID headlamps with LED fog lamps and LED taillamps",
+      "Premium Alpine surround sound — 506W, 9 speakers + subwoofer",
+      "18-inch polished aluminum wheels with Capri leather seating",
+      "Heated 1st- and 2nd-row leather-trimmed seats",
+      "Power tilt/telescoping steering wheel and power driver/passenger seats",
+      "Power liftgate",
+      "Selec-Terrain traction management (4x4)",
+      "Acoustic windshield"
+    ],
+    "Trailhawk": [
+      "Trail Rated 4x4 with Rock mode, Selec-Speed, and red tow hooks",
+      "Trailhawk Nappa leather with suede inserts and red stitching",
+      "Off-road skid plates and Quadra-Drive II 4WD",
+      "18-inch wheels with all-terrain tire package",
+      "8.4-inch Uconnect NAV with Trailhawk-themed interior"
+    ],
+    "Overland": [
+      "Quadra-Lift four-corner air suspension with Selec-Terrain",
+      "Harman Kardon 825W premium audio with 19 speakers (replaces Alpine)",
+      "20-inch polished aluminum wheels with Mineral Gray pockets",
+      "Ventilated front seats; heated 1st- and 2nd-row leather",
+      "Remote start and rain-sensing windshield wipers",
+      "Power heated chrome mirrors with memory and courtesy lighting",
+      "Uconnect 8.4 NAV",
+      "CommandView dual-pane panoramic sunroof",
+      "Open-pore Zebrano wood interior inserts",
+      "LED fog lamps, chrome tow hooks, and bright roof rails",
+      "Blind Spot Monitoring with rear cross-path detection"
+    ],
+    "High Altitude": [
+      "High Altitude Edition dark chrome exterior accents and gloss black fascias",
+      "20-inch aluminum wheels with black finish",
+      "Bi-xenon HID headlamps with black headlamp bezels",
+      "High-Gloss Black Zebrano wood inserts",
+      "Harman Kardon 825W 19-speaker system with black finish",
+      "Quadra-Lift air suspension with Selec-Terrain (4x4)"
+    ],
+    "Summit": [
+      "20-inch full-polished aluminum wheels with Satin Clear Coat",
+      "Perforated Natura Plus leather with Nappa bolsters and real open-pore wood on instrument panel",
+      "Summit backlit sill plates and acoustic 2nd-row glass",
+      "Active noise cancellation and suede-like premium headliner",
+      "Forward Collision Warning Plus with Active Braking and Adaptive Cruise Control (ACC Stop)",
+      "Front Park Assist with ParkSense rear park assist",
+      "Bi-xenon HID with headlamp washers, signature DRL, and cornering technology",
+      "Premium Berber carpet floor mats"
+    ],
+    "SRT": [
+      "6.4L HEMI V8 — 475 hp with Fuel Saver Technology",
+      "Quadra-Trac active on-demand 4WD with electronic limited-slip rear differential",
+      "Selec-Track adaptive damping (Track / Sport / Auto / Snow / Tow)",
+      "Launch control and customizable drive modes",
+      "SRT high-performance Brembo brakes (6-piston front / 4-piston rear)",
+      "Bilstein adaptive performance suspension with dual exhaust (black tips)",
+      "SRT flat-bottom heated steering wheel with paddle shifters",
+      "Auto-leveling bi-xenon headlamps and dual hood heat extractors",
+      "SRT 20-inch forged / Black Vapor / Polished Goliath wheel choices",
+      "Laguna leather performance seats (optional; requires CommandView panoramic)"
+    ],
+    "Laredo": [
+      "Leather-wrapped steering wheel as standard premium feature",
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Available 5.7L V8 engine with Fuel Saver Technology",
+      "8.5-inch ground clearance with 26.2-degree approach angle",
+      "Multilink rear suspension with coil springs and gas-charged shock absorbers"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2018|audi|a5",
+  "year": 2018,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_llm_2018__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S5",
+    "A5 Prestige",
+    "A5 Premium Plus",
+    "A5 Premium",
+    "A5"
+  ],
+  "adds_by_trim": {
+    "S5": [
+      "19-inch 5-parallel-spoke design wheels with gray/polished finish standard",
+      "Audi Sport 18-inch 5 double-spoke-star design wheels available",
+      "Additional exterior color options: Mythos Black metallic, Tango Red metallic, Daytona Gray pearl"
+    ],
+    "A5 Prestige": [
+      "Glacier White metallic exterior color available",
+      "Monsoon Gray metallic exterior color available",
+      "19-inch multi-spoke design wheels with gray/polished finish available"
+    ],
+    "A5 Premium Plus": [
+      "Florett Silver metallic exterior color available",
+      "Matador Red metallic exterior color available",
+      "Monsoon Gray metallic exterior color available on S line models"
+    ],
+    "A5 Premium": [
+      "Glacier White metallic exterior color available on S line models",
+      "19-inch 5-parallel-spoke design wheels with gray/polished finish available"
+    ],
+    "A5": [
+      "18-inch 10-spoke-dynamic design wheels standard",
+      "18-inch 5-arm-star design wheels standard",
+      "Brilliant Black and Ibis White exterior colors standard",
+      "Florett Silver metallic exterior color available",
+      "Multiple wheel and tire options available by trim level and package"
+    ]
+  }
+}

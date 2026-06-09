@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2022|ram|1500",
+  "year": 2022,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2022__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Laramie",
+    "Big Horn/Lone Star",
+    "Rebel",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Harman Kardon 19-speaker premium audio system",
+      "Uconnect 5 NAV with 12-inch display",
+      "Leather-wrapped steering wheel with real wood accents",
+      "Dual-pane power-operated sunroof on Crew Cab",
+      "Rear underseat storage bins with removable liners",
+      "360° Surround-View Camera System",
+      "ParkView rear backup camera with dynamic grid lines"
+    ],
+    "Laramie": [
+      "Leather-wrapped perforated steering wheel with accent stitching",
+      "Alpine 10-speaker audio system",
+      "Uconnect 5 NAV with 8.4-inch display",
+      "Front-seat wireless charging pad",
+      "Heated leather-wrapped steering wheel"
+    ],
+    "Big Horn/Lone Star": [
+      "Uconnect 5 with 8.4-inch display",
+      "Leather-wrapped steering wheel",
+      "Six-speaker radio system",
+      "Power-sliding rear backlight with defroster",
+      "Rear underseat storage bins"
+    ],
+    "Rebel": [
+      "Rebel 12 equipment package with 12-inch Uconnect 5 NAV display",
+      "Harman Kardon 19-speaker premium audio system",
+      "Alpine 10-speaker audio system option",
+      "Leather/suede-wrapped flat-bottom perforated steering wheel with paddle shifters"
+    ],
+    "Tradesman": [
+      "Uconnect 3 with 5-inch display",
+      "Six-speaker audio system",
+      "Cruise control",
+      "Power windows and door locks",
+      "Rear backup camera with ParkView system",
+      "Electronic stability control and all-speed traction control",
+      "Keyless push-button start",
+      "Power-assisted four-wheel antilock disc brakes"
+    ]
+  }
+}

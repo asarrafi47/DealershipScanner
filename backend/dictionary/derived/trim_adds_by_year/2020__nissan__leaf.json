@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2020|nissan|leaf",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2020__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL PLUS",
+    "SV PLUS",
+    "SV",
+    "S PLUS",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "40 kWh lithium-ion battery with 110 kW motor, 147 hp, 236 lb-ft torque",
+      "6.6 kW onboard charger with portable trickle-charge cable (120-V)",
+      "NissanConnect 8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Automatic Emergency Braking with Pedestrian Detection and Intelligent Forward Collision Warning",
+      "Intelligent Lane Intervention and Intelligent Blind Spot Intervention",
+      "Rear Cross Traffic Alert, RearView Monitor, Rear Automatic Braking, High Beam Assist",
+      "Nissan Intelligent Key with Push Button Start and Rear Door Alert",
+      "SiriusXM Radio with 3-month subscription, AM/FM with four speakers",
+      "16-inch steel wheels with covers and 7-inch information display"
+    ],
+    "S PLUS": [
+      "62 kWh lithium-ion battery with 160 kW motor, 214 hp, 250 lb-ft torque",
+      "Quick Charge port - 100 kW DC fast charging",
+      "Portable charge cable (120-V/240-V)",
+      "16-inch aluminum-alloy wheels and front bumper chin spoiler"
+    ],
+    "SV": [
+      "Quick Charge port - 50 kW replacing 100 kW fast charging",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Fog lights and leather-wrapped steering wheel",
+      "Intelligent Cruise Control and Nissan Door to Door Navigation with Premium Traffic"
+    ],
+    "SV PLUS": [
+      "NissanConnect EV & Services powered by SiriusXM with 3-year trial access",
+      "SiriusXM Traffic and Travel Link with 3-month trial access",
+      "AM/FM audio system upgraded to six speakers"
+    ],
+    "SL PLUS": [
+      "ProPILOT Assist and Intelligent Around View Monitor with 360-degree camera",
+      "Intelligent Driver Alertness monitoring system",
+      "LED headlights with LED signature Daytime Running Lights",
+      "Heated outside mirrors with integrated LED turn signal indicators",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver and removable cargo cover",
+      "8-way power adjustable driver's bucket seat with 2-way adjustable lumbar support",
+      "Heated front seats and heated steering wheel",
+      "Bose Energy Efficient Series Premium Audio System with seven speakers"
+    ]
+  }
+}

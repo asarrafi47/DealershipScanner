@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|mazda|cx5",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2019__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "Grand Touring Reserve",
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Signature": [
+      "Standard i-Activ AWD all-wheel drive",
+      "Skyactiv-G 2.5T Dynamic Pressure Turbo engine with 250 hp"
+    ],
+    "Grand Touring Reserve": [
+      "Standard i-Activ AWD all-wheel drive",
+      "Enhanced fuel efficiency and performance tuning"
+    ],
+    "Grand Touring": [
+      "Available i-Activ AWD all-wheel drive option"
+    ],
+    "Touring": [
+      "Available i-Activ AWD all-wheel drive option"
+    ],
+    "Sport": [
+      "Skyactiv-G 2.5L DOHC 16-valve 4-cylinder engine with 187 hp",
+      "Front-wheel drive standard",
+      "6-speed Skyactiv-Drive automatic transmission with manual-shift and Sport modes",
+      "Skyactiv-Vehicle Dynamics with G-Vectoring Control Plus",
+      "Hill Launch Assist",
+      "i-Activsense safety suite with Blind Spot Monitoring and Rear Cross Traffic Alert",
+      "360-degree View Monitor",
+      "Lane Departure Warning System and Lane-Keep Assist",
+      "Adaptive Front-Lighting System with High Beam Control"
+    ]
+  }
+}

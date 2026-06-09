@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2016|ford|transit",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Transit",
+  "ladder_id": "brochure_llm_2016__ford__transit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "Charcoal cloth 2-way manual driver and front-passenger seats with manual recline and lumbar support",
+      "AM/FM stereo with single-CD player, 4-inch display and 8 speakers (4 front, 4 rear)",
+      "Rear dome light with map lights and theater-dimming feature",
+      "10-passenger seating option on RWB or 15-passenger option on LWB",
+      "Windows all-around with 2nd-row driver-side flip-open glass and fixed 60/40 passenger-side door glass"
+    ],
+    "XL": [
+      "Pewter vinyl seats with 8-passenger standard seating on RWB or 12-passenger on LWB",
+      "AM/FM stereo with single-CD player, 4-inch multifunction display and 6 speakers (2 front, 4 rear)",
+      "Carpeted flooring front and rear",
+      "Cruise control with message center (full trip computer and engine-hour meter)",
+      "Vinyl sun visors with illuminated vanity mirrors and digital clock",
+      "SecuriLock Passive Anti-Theft System",
+      "16-inch black steel wheels with silver-styled covers or 16-inch silver steel wheels with black hubcaps",
+      "Full-size spare wheel and tire"
+    ]
+  }
+}

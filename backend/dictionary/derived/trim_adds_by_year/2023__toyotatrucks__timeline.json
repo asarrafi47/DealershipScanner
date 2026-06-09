@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2023|toyotatrucks|timeline",
+  "year": 2023,
+  "make": "ToyotaTrucks",
+  "model": "Timeline",
+  "ladder_id": "brochure_web_2023__toyotatrucks__timeline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "SR5",
+    "SR",
+    "SR5 Access Cab",
+    "SR Access Cab",
+    "Regular Cab SR5",
+    "Regular Cab SR"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Leather-trimmed seats with power adjustment and lumbar support",
+      "8-inch touchscreen with Toyota Safety Sense 2.5",
+      "Blind spot monitor with rear cross-traffic alert",
+      "LED headlights and fog lights",
+      "Power moonroof",
+      "Heated front seats",
+      "JBL Premium Audio System with 8 speakers",
+      "Chrome exterior trim",
+      "Power rear window"
+    ],
+    "SR5": [
+      "SiriusXM satellite radio (3-month trial)",
+      "7-inch touchscreen infotainment system",
+      "Backup camera with dynamic gridlines",
+      "Bluetooth connectivity",
+      "Push-button start",
+      "Integrated roof rails",
+      "Fog lights",
+      "Privacy glass"
+    ],
+    "SR": [
+      "Manual windows and locks",
+      "Basic 4.2-inch instrument cluster display",
+      "Cloth upholstery",
+      "Power steering and brakes",
+      "Air conditioning",
+      "AM/FM stereo with single CD player"
+    ],
+    "SR5 Access Cab": [
+      "Access cab configuration vs Double Cab",
+      "Smaller rear door opening",
+      "Reduced rear legroom"
+    ],
+    "SR Access Cab": [
+      "Access cab body style",
+      "Reduced rear seating space compared to Double Cab"
+    ],
+    "Regular Cab SR5": [
+      "Regular cab configuration with standard bed",
+      "Two-door configuration"
+    ],
+    "Regular Cab SR": [
+      "Basic Regular Cab SR features",
+      "No rear seats"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyotatrucks/timeline/"
+}

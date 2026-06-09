@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2013|volkswagen|cc",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "CC",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GTI",
+    "R-Line",
+    "SE",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

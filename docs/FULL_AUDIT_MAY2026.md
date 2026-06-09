@@ -22,13 +22,7 @@ Headless browser test via `/register` → dashboard:
 | `role = general_user` | Pass |
 | `is_premium = 0` | Pass |
 
-**Demo account (still valid):**
-
-- Email: `demo_free@example.com`
-- Username: `demo_free`
-- Password: `Demo-Free-Test-9!`
-
-Create new accounts at `/register` with any unused email; duplicate email/username shows the expected error.
+**Demo account:** Removed from this doc (May 2026 audit). Use `/register` with a fresh email for local E2E; do not commit or publish test passwords.
 
 ### Registration code path (healthy)
 

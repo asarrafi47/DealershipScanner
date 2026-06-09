@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2021_chevrolet_blazer_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Blazer",
+    "Blazer"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Premier": [
+      {
+        "label": "Engine Options",
+        "value": "The Blazer L and 1LT trim levels were dropped—these models were only available with FWD and the 2.5L inline-4 LCV engine. This marks the discontinuation of the 2.5L inline-4 engine for the Blazer lineup, as this engine is not offered with any other Blazer configurations.; Trim levels available are Tela (which replaces the L), Piel (which replaces the"
+      }
+    ],
+    "RS": [
+      {
+        "label": "Engine Options",
+        "value": "The Blazer L and 1LT trim levels were dropped—these models were only available with FWD and the 2.5L inline-4 LCV engine. This marks the discontinuation of the 2.5L inline-4 engine for the Blazer lineup, as this engine is not offered with any other Blazer configurations.; Trim levels available are Tela (which replaces the L), Piel (which replaces the"
+      },
+      {
+        "label": "Screen Size",
+        "value": "10-inch infotainment screen"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "The Blazer L and 1LT trim levels were dropped—these models were only available with FWD and the 2.5L inline-4 LCV engine. This marks the discontinuation of the 2.5L inline-4 engine for the Blazer lineup, as this engine is not offered with any other Blazer configurations.; Trim levels available are Tela (which replaces the L), Piel (which replaces the"
+      },
+      {
+        "label": "Screen Size",
+        "value": "10-inch infotainment screen"
+      }
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2022|hyundai|sonata",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_llm_2022__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ltd Blue",
+    "Ltd",
+    "N Line",
+    "SEL+",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Ltd Blue": [
+      "Solar roof panel",
+      "Matrix-type LED headlights",
+      "Highway Driving Assist",
+      "Ambient LED interior lighting with 64 adjustable colors",
+      "Leatherette-wrapped dashboard"
+    ],
+    "Ltd": [
+      "Integrated Memory System for driver seat and side mirrors",
+      "Leather seating surfaces and heated steering wheel",
+      "Ventilated front seats",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Remote Smart Parking Assist",
+      "Full color Heads-up Display",
+      "Parking Collision-Avoidance Assist – Rear",
+      "Front and rear parking sensors",
+      "Rain-sensing wipers"
+    ],
+    "N Line": [
+      "290 hp/311 lb-ft Smartstream 2.5L Turbo engine",
+      "N 8-speed Wet Dual Clutch Transmission",
+      "Sport-tuned suspension",
+      "N Line front and rear fascia",
+      "Quad-outlet dual exhaust system",
+      "N unique sport front seats and aluminum pedals",
+      "N Line leather-wrapped sport steering wheel"
+    ],
+    "SEL+": [
+      "1.6L Turbo GDI 4-cylinder engine with 180 hp/195 lb-ft",
+      "Dinamica microfiber seat inserts and aluminum pedals",
+      "SHIFTRONIC steering wheel paddle shifters",
+      "Gloss black side mirrors",
+      "10.25-inch high-resolution touchscreen navigation system",
+      "Dynamic Voice Recognition",
+      "Highway Driving Assist",
+      "Bose 12-speaker premium audio system"
+    ],
+    "SEL": [
+      "Floor console-mounted rear seat vents",
+      "8-way power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "LED interior lighting",
+      "Auto-dimming rearview mirror",
+      "Hidden LED Daytime Running Lights",
+      "Sport front and rear fascia",
+      "Sport twin-tipped single exhaust",
+      "Bodycolor/chrome touch sensor door handles",
+      "Power tilt-and-slide panoramic sunroof"
+    ],
+    "SE": [
+      "191 hp/181 lb-ft Smartstream 2.5L MPI/GDI 4-cylinder engine",
+      "Smartstream 8-speed automatic transmission",
+      "Electronic Parking Brake with Automatic Vehicle Hold",
+      "Drive Mode Select",
+      "LED headlights",
+      "LED taillights",
+      "Acoustic-laminated windshield and solar control glass",
+      "Heated side mirrors with LED turn signal indicators",
+      "60/40 split-folding rear seats",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection"
+    ]
+  }
+}

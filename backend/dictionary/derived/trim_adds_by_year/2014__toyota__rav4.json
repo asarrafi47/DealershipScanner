@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2014|toyota|rav4",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_web_2014__toyota__rav4",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "GR Sport",
+    "Limited",
+    "XSE",
+    "Woodland",
+    "LE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "GR Sport": [
+      "PHEV powertrain with 320 hp and tuned chassis for performance",
+      "20-inch wheels with red brake calipers",
+      "Rear spoiler for sporty styling",
+      "98 mpg-e combined fuel economy estimate"
+    ],
+    "Limited": [
+      "12.9-inch infotainment touchscreen",
+      "Nine-speaker JBL premium sound system"
+    ],
+    "XSE": [
+      "107 mpg-e combined fuel economy on PHEV models",
+      "Available dual wireless charging pads"
+    ],
+    "Woodland": [
+      "Standard AWD with additional rear electric motor",
+      "All-terrain tires with increased ride height",
+      "Rigid Industries integrated LED fog lamps",
+      "Built-in roof rail cross bars",
+      "Standard rear trailer hitch",
+      "4Runner-inspired front bumper styling"
+    ],
+    "LE": [
+      "Stepped-up interior and exterior styling versus SE"
+    ],
+    "SE": [
+      "12.3-inch reconfigurable driver display",
+      "10.5-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "LED headlights and taillights",
+      "Cloth seat upholstery",
+      "Automatic climate control with digital controls",
+      "Multiple USB-C ports throughout cabin",
+      "Hybrid powertrain: 2.5L I-4 with electric motor (226 hp FWD, 236 hp AWD)",
+      "Six-speaker base sound system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/rav4/"
+}

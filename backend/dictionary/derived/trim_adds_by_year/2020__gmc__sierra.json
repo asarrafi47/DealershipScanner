@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|gmc|sierra",
+  "year": 2020,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "2018_gmc_sierra_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "AT4",
+    "Gmc",
+    "Ii10"
+  ],
+  "adds_by_trim": {
+    "Ii10": [
+      "Android Auto is a trademark of Google LLC. 6App functionality and features vary with vehicle equipment and trim level. Data connections may be required."
+    ],
+    "AT4": [
+      "Android 5.0 or higher. Data plan rates apply."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Gmc": 0,
+      "Ii10": 1
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2026|nissan|armada",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2026__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM RESERVE",
+    "NISMO",
+    "PLATINUM",
+    "PRO-4X",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM RESERVE": [
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "Rear Automatic Braking, High Beam Assist",
+      "Class IV tow hitch receiver with 7-pin wiring harness",
+      "Trailer brake controller",
+      "Remote Engine Start System with Intelligent Climate Control"
+    ],
+    "NISMO": [
+      "NISMO-tuned 460-horsepower 3.5-liter twin-turbo V6 engine",
+      "Intelligent 4WD with 2-speed transfer case and eight Drive and Terrain Modes",
+      "NISMO-tuned electric power steering and electronic air suspension",
+      "22-inch NISMO RAYS forged-alloy wheels",
+      "Exclusive NISMO exterior styling and Panoramic moonroof",
+      "Motion Activated Liftgate, HomeLink Universal Transceiver",
+      "12-way power driver's and front passenger's seats",
+      "NISMO quilted Ultrasuede and leather sport seats",
+      "14.3-inch digital dashboard with eight USB-C ports"
+    ],
+    "PLATINUM": [
+      "22-inch machine-finished aluminum-alloy wheels",
+      "Rear LED light bar and body-color running boards",
+      "Biometric Cooling and windshield wiper deicer",
+      "Side mirrors with puddle lights and Panoramic moonroof",
+      "Motion Activated Liftgate, HomeLink Universal Transceiver",
+      "Customizable multi-color ambient lighting",
+      "12-way power driver's and passenger's seats with 4-way lumbar support",
+      "Climate-controlled front seats and heated outboard second-row seats",
+      "Quilted leather seats in first and second rows",
+      "Intelligent Dash Cam and 14.3-inch touchscreen"
+    ],
+    "PRO-4X": [
+      "Intelligent 4WD with 2-speed transfer case",
+      "Electronic locking rear differential",
+      "Eight Drive and Terrain Modes with electronic air suspension",
+      "20-inch black-painted aluminum-alloy wheels with 275/65R20 all-terrain tires",
+      "Off-road front bumper with tow hooks and metal skid plate",
+      "Black overfender and black exterior accents",
+      "PRO-4X embroidered quilted leather seats with Lava Red contrast stitching",
+      "3D Enhanced Intelligent Around View Monitor"
+    ],
+    "SL": [
+      "Drive and Terrain Mode Selector with five modes",
+      "Available Intelligent 4WD with 2-speed transfer case",
+      "ProPILOT Assist 1.0 with Automatic Emergency Braking and Pedestrian Detection",
+      "Safety Shield with Lane Departure Warning and Blind Spot Warning",
+      "3D Enhanced Intelligent Around View Monitor",
+      "18-inch aluminum-alloy wheels",
+      "Class IV tow hitch receiver with 7-pin wiring harness",
+      "Tri-Zone Automatic Temperature Control and Remote Engine Start System"
+    ],
+    "SV": [
+      "3.5-liter V6 engine with 460 horsepower",
+      "ProPILOT Assist 1.0 and Safety Shield 360 suite",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "Rear Automatic Braking and High Beam Assist",
+      "12.3-inch digital dashboard with fully digital gauges",
+      "NissanConnect 12.3-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "Wireless charging, Massaging front seats, Aluminum sport pedals"
+    ]
+  }
+}

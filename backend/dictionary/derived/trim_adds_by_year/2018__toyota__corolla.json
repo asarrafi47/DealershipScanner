@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2018|toyota|corolla",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2018__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE",
+    "SE",
+    "SE 6MT",
+    "LE Premium",
+    "LE Eco",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Multi-LED headlights with LED accent lights",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "7-inch high-resolution touch-screen Entune Audio Plus with Connected Navigation",
+      "SofTex-trimmed front seats with 8-way power-adjustable driver's seat",
+      "Driver and front passenger heated seats",
+      "4.2-inch color TFT Multi-Information Display",
+      "Smart Key System with Push Button Start",
+      "Leather-trimmed steering wheel"
+    ],
+    "SE": [
+      "1.8L 4-Cylinder Engine with 132 hp",
+      "28 city/35 hwy/31 combined mpg",
+      "Sporty front fascia with gloss-black mesh-pattern grille",
+      "17-inch machined alloy wheels with black-painted accents",
+      "Rear spoiler with LED backup lights",
+      "Color-keyed heated power mirrors with turn signal indicators",
+      "Chrome-tipped exhaust",
+      "SofTex-trimmed front sport seats with premium fabric inserts"
+    ],
+    "SE 6MT": [
+      "6-speed manual transmission",
+      "27 city/35 hwy/30 combined mpg"
+    ],
+    "LE Premium": [
+      "Entune Audio Plus with Connected Navigation App",
+      "16-inch machined 15-spoke alloy wheels",
+      "Bumper-integrated LED Daytime Running Lights",
+      "Power tilt/slide moonroof with sliding sunshade available"
+    ],
+    "LE Eco": [
+      "1.8L 4-Cylinder Engine with Valvematic and 140 hp",
+      "30 city/40 hwy/34 combined mpg",
+      "Rear spoiler",
+      "Multi-LED headlights with LED accent lights",
+      "Premium Package available with Navigation and alloy wheels"
+    ],
+    "LE": [
+      "Color-keyed heated power outside mirrors",
+      "16-inch wide-vent steel wheels",
+      "6-way adjustable driver's seat and 4-way passenger seat",
+      "3.5-inch monochrome TFT Multi-Information Display",
+      "Integrated backup camera with projected path",
+      "Toyota Safety Sense P with Pre-Collision and DRCC"
+    ],
+    "L": [
+      "1.8L 4-Cylinder Engine with 132 hp and CVTi-S transmission",
+      "28 city/36 hwy/32 combined mpg",
+      "Bi-LED headlights with integrated LED Daytime Running Lights",
+      "15-inch styled steel wheels",
+      "Entune Audio with 6.1-inch touch-screen and six speakers",
+      "Tilt/telescopic steering wheel with audio controls",
+      "6-way adjustable driver's seat",
+      "60/40 split fold-down rear seat",
+      "Toyota Safety Sense P with Pre-Collision and DRCC",
+      "Eight airbags"
+    ]
+  }
+}

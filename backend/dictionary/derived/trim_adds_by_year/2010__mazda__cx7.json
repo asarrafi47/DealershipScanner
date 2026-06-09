@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2010|mazda|cx7",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "CX-7",
+  "ladder_id": "brochure_llm_2010__mazda__cx7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-7s Grand Touring",
+    "CX-7s Touring",
+    "CX-7i Sport",
+    "CX-7i SV"
+  ],
+  "adds_by_trim": {
+    "CX-7s Grand Touring": [
+      "2.3L DISI turbocharged engine with 244 hp and 258 lb-ft torque",
+      "Antitheft perimeter alarm",
+      "Mazda Advanced Keyless Entry & Start System",
+      "Fully automatic climate control standard",
+      "Compact navigation system",
+      "Electroluminescent gauges with blue indirect lighting",
+      "Blue indirect interior lighting",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Black sand leather upholstery",
+      "SIRIUS Satellite Radio with subscription included"
+    ],
+    "CX-7s Touring": [
+      "2.3L DISI turbocharged engine with 244 hp and 258 lb-ft torque",
+      "Rearview camera standard",
+      "Color Multi Information Display with rearview camera",
+      "Fully automatic climate control available",
+      "Black sand leather upholstery",
+      "Retractable cargo cover standard"
+    ],
+    "CX-7i Sport": [
+      "Leather-wrapped steering wheel and shift knob",
+      "Remote keyless entry with retractable key",
+      "Multi Information Display with trip computer"
+    ],
+    "CX-7i SV": [
+      "2.5L DOHC 16-valve 4-cylinder engine with 161 hp",
+      "Advanced dual front air bags and side-impact air curtains",
+      "LATCH rear-seat child-safety-seat anchors",
+      "Tire-Pressure Monitoring System",
+      "Engine-immobilizer antitheft system",
+      "Illuminated remote keyless entry with panic button",
+      "Tilt/telescopic steering wheel",
+      "Cruise control with steering-wheel-mounted controls",
+      "CFC-free air conditioning with cabin air filter",
+      "Black cloth upholstery"
+    ]
+  }
+}

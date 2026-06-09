@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|gmc|savana",
+  "year": 2015,
+  "make": "GMC",
+  "model": "Savana",
+  "ladder_id": "brochure_llm_2015__gmc__savana",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL",
+    "SL",
+    "TW"
+  ],
+  "adds_by_trim": {
+    "TL": [
+      "12-passenger or 15-passenger seating configuration (3500 extended-wheelbase)",
+      "Enhanced-Technology Glass on rearmost side windows",
+      "Padded visors with vanity mirrors illuminated on passenger side",
+      "Rear auxiliary heater standard on 3500 extended-wheelbase models",
+      "Convenience Package with tilt-wheel and cruise control standard"
+    ],
+    "SL": [
+      "8-passenger or 12-passenger seating configuration",
+      "Sliding passenger-side door available",
+      "Power-operated heated outside rearview mirrors with Convenience Package",
+      "Ultrasonic rear park assist with audible warning",
+      "LATCH child seat anchor system",
+      "Head curtain side-impact air bags for first, second and third-row outboard occupants"
+    ],
+    "TW": [
+      "2-passenger seating configuration",
+      "Front reclining bucket seats with vinyl trim",
+      "3 roof-mounted LED cargo lamps",
+      "Power seat adjuster for driver only",
+      "Heavy-duty automatic locking rear differential",
+      "Tow/Haul mode selector",
+      "External transmission oil cooler on 2500 and 3500 models"
+    ]
+  }
+}

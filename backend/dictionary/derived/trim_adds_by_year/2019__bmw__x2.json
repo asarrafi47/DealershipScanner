@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2019|bmw|x2",
+  "year": 2019,
+  "make": "BMW",
+  "model": "X2",
+  "ladder_id": "brochure_llm_2019__bmw__x2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport X",
+    "M Sport",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "M Sport X": [
+      "M rear spoiler fitted to tailgate emphasizing athletic silhouette and reducing lift",
+      "Satin Aluminium exterior trim with window recess covers and C-pillar embellisher",
+      "High-gloss Black B-pillar, mirror triangles, mirror cover panel and frame",
+      "LED headlights with cornering lights and efficient bi-LED low and high-beam"
+    ],
+    "M Sport": [
+      "M rear spoiler fitted to tailgate emphasizing athletic silhouette and reducing lift",
+      "LED headlights with cornering lights and efficient bi-LED low and high-beam",
+      "High-gloss Shadowline exterior trim with Black details on frame surrounds and C-pillars"
+    ],
+    "Sport": [
+      "High-gloss Shadowline exterior trim with Black details on frame surrounds and C-pillars"
+    ],
+    "SE": [
+      "Chrome BMW Kidney grille with Black slats",
+      "Front halogen headlights with LED daytime driving lights and manual high beam throw control",
+      "Two-part LED rear lights with dynamic brake lights",
+      "Comfort Access for keyless front door and tailgate entry",
+      "90mm single-flow round exhaust tailpipes with Chrome finishers",
+      "Electric panoramic glass roof with slide, lift functions, sunblind and wind deflector",
+      "Automatic tailgate operation with electric opening and closing"
+    ]
+  }
+}

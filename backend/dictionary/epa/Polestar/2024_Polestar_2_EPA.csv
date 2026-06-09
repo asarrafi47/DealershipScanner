@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Polestar,2,Dual Motor (19 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,112,100,106,,,,,
+2024,Polestar,2,Dual Motor (20 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,108,96,102,,,,,
+2024,Polestar,2,Dual Motor Performance Pack,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,100,90,95,,,,,
+2024,Polestar,2,Single Motor (19 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,124,106,115,,,,,
+2024,Polestar,2,Single Motor (20 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,119,102,111,,,,,

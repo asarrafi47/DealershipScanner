@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2019|honda|insight",
+  "year": 2019,
+  "make": "Honda",
+  "model": "Insight",
+  "ladder_id": "brochure_llm_2019__honda__insight",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "TOURING": [
+      "Leather-trimmed seats with Ivory, Black or Black/Mocha color options",
+      "17-inch alloy wheels",
+      "Side mirrors with LED turn indicators",
+      "Rain-sensing windshield wipers",
+      "LED fog lights",
+      "HomeLink® remote system",
+      "Dual-zone automatic climate control system",
+      "One-touch power moonroof with tilt feature",
+      "Leather-wrapped steering wheel",
+      "Automatic-dimming rearview mirror"
+    ],
+    "EX": [
+      "Ivory, Black or Black/Mocha fabric seat color options",
+      "Remote engine start",
+      "Honda LaneWatch™ with rearview camera",
+      "Smart entry with Walk Away Auto Lock®",
+      "8-inch Display Audio with high-resolution touch-screen",
+      "180-watt audio system with 8 speakers",
+      "Heated front seats",
+      "Driver's seat with 8-way power adjustment",
+      "Front passenger's seat with 4-way power adjustment",
+      "450-watt premium audio system with 10 speakers including subwoofer"
+    ],
+    "LX": [
+      "1.5-liter Atkinson cycle 4-cylinder engine with electric motor",
+      "151 total-system horsepower",
+      "Honda Sensing® suite of safety and driver-assistive features",
+      "Electronic continuously variable transmission with Shift-By-Wire and Sport mode",
+      "3-mode drive system ECON/Sport/EV",
+      "16-inch alloy wheels",
+      "LED headlights with auto-on/off and auto high-beam",
+      "LED Daytime Running Lights, turn indicators, taillights and brake lights",
+      "Push button start with tilt and telescopic steering column",
+      "160-watt audio system with 6 speakers and Bluetooth® HandsFreeLink®"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Porsche,928,S,4.7L V8 ((FFS)),4.7L V8 Turbo,Turbocharged,Automatic 4-spd,,Regular Gasoline,Minicompact Cars,8,4.7,14,18,15,,,,,
+1984,Porsche,928,S,4.7L V8 ((FFS)),4.7L V8 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Minicompact Cars,8,4.7,13,20,15,,,,,
+1984,Porsche,928,S,4.7L V8 ((FFS) CA model),4.7L V8 Turbo,Turbocharged,Automatic 4-spd,,Regular Gasoline,Minicompact Cars,8,4.7,14,18,15,,,,,
+1984,Porsche,928,S,4.7L V8 ((FFS) CA model),4.7L V8 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Minicompact Cars,8,4.7,13,20,15,,,,,

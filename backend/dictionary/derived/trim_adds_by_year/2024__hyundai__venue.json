@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2024|hyundai|venue",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Venue",
+  "ladder_id": "brochure_llm_2024__hyundai__venue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ltd",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Ltd": [
+      "LED headlights and LED taillights",
+      "LED Daytime Running Lights",
+      "Roof-colored dual power side mirrors with heated functionality",
+      "Two-tone roof available in select colors",
+      "8.0-inch Navigation system with SiriusXM Satellite Radio",
+      "Wireless phone charger",
+      "Bluelink+ Connected Car System",
+      "Forward Collision-Avoidance Assist with Pedestrian and Cyclist Detection",
+      "Blind-Spot Collision Warning and Rear Cross-Traffic Collision Warning"
+    ],
+    "SEL": [
+      "Chrome accent front grille",
+      "Four-wheel disc brakes",
+      "Roof side rails",
+      "Proximity Key with push button start",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic temperature control",
+      "Drive Mode Select including Snow mode",
+      "Power tilt-and-slide sunroof",
+      "One-touch driver's auto-up window",
+      "Hidden cargo-area storage compartment"
+    ],
+    "SE": [
+      "121 hp 1.6L Smartstream Dual Port Injection 4-cylinder engine",
+      "Smartstream Intelligent Variable Transmission with SHIFTRONIC",
+      "Motor-Driven Power Steering",
+      "Front and rear skid plate accents",
+      "Automatic headlights",
+      "Bodycolor exterior door handles",
+      "4.2-inch Digital instrument cluster",
+      "Rearview camera",
+      "Tilt-and-telescopic steering wheel with audio and cruise controls",
+      "6-way adjustable driver seat with height adjustment"
+    ]
+  }
+}

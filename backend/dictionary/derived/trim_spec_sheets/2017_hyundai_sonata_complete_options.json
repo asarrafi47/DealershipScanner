@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2017_hyundai_sonata_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Sonata",
+    "Sonata"
+  ],
+  "year_min": 2015,
+  "year_max": 2019,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2022_chevrolet_blazer_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Blazer",
+    "Blazer"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "RS": [
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: 10-inch infotainment screen (was On the interior, all trims come standard with a larger 10-inch infotainment scre; On the interior, all trims come standard with a larger 10-inch infotainment screen (up from 8 inches on the pre-facelift version).)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: On the interior, all trims come standard with a larger 10-inch infotainment scre; On the interior, all trims come standard with a larger 10-inch infotainment screen (up from 8 inches on the pre-facelift version)."
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: The Blazer L and 1LT trim levels were dropped—these models were only available with FWD and the 2.5L inline-4 LCV engine. This marks the discontinuation of the 2.5L inline-4 engine for the Blazer lineup, as this engine is not offered with any other Blazer…"
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|mazda|cx5",
+  "year": 2017,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_2017__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adds MAZDA CONNECT infotainment system with full-color display",
+      "Adds multifunction Commander control on center console",
+      "Adds Bluetooth connectivity for calls and audio streaming",
+      "Adds Pandora and HD Radio integration",
+      "Adds SMS Text Message Audio Delivery and Reply functionality"
+    ],
+    "Limited": [
+      "Adds available Mazda Navigation System with intelligent voice commands",
+      "Adds advanced lane guidance with step-by-step audio directions",
+      "Adds i-ACTIVSENSE safety suite with Blind Spot Monitoring",
+      "Adds Rear Cross Traffic Alert",
+      "Adds Smart City Brake Support and Smart Brake Support",
+      "Adds Mazda Radar Cruise Control with Distance Recognition",
+      "Adds Traffic Sign Recognition"
+    ],
+    "Sport": [
+      "Adds Lane Departure Warning System",
+      "Adds Lane Keep Assist with automatic steering correction",
+      "Adds High Beam Control for automatic headlight adjustment"
+    ]
+  }
+}

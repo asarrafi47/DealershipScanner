@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2013|nissan|versa",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2013__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1.6 SL",
+    "1.6 SV",
+    "1.6 S Plus",
+    "1.6 S"
+  ],
+  "adds_by_trim": {
+    "1.6 SL": [
+      "15-inch aluminum-alloy wheels replacing steel wheels",
+      "Fog lights",
+      "MP3/WMA CD playback capability",
+      "Interface System for iPod®",
+      "Steering wheel-mounted audio controls",
+      "Variable intermittent windshield wipers",
+      "Front map light",
+      "Passenger visor vanity mirror",
+      "60/40 split fold-down rear seats",
+      "Nissan Vehicle Immobilizer System"
+    ],
+    "1.6 SV": [
+      "Driver's seat armrest",
+      "Passenger seatback pocket",
+      "Upgraded cloth seat trim",
+      "Cloth door trim accent",
+      "Silver interior trim accents",
+      "Chrome inside door handles",
+      "Dual power body-color outside mirrors",
+      "Remote keyless entry with Integrated Key",
+      "Power door locks with auto-locking features",
+      "Power windows with driver's one-touch auto-down"
+    ],
+    "1.6 S Plus": [
+      "Standard Xtronic CVT continuously variable transmission",
+      "Rear tire air deflectors",
+      "Rear spoiler",
+      "Nissan Intelligent Key® with Push Button Ignition",
+      "Remote trunk release via Nissan Intelligent Key®",
+      "Bluetooth® Hands-free Phone System"
+    ],
+    "1.6 S": [
+      "1.6-liter DOHC 4-cylinder engine with 109 hp",
+      "5-speed manual or 4-speed automatic transmission",
+      "15-inch steel wheels with full wheel covers",
+      "Air conditioning",
+      "Six standard air bags with Vehicle Dynamic Control",
+      "AM/FM/CD audio system with auxiliary audio input jack",
+      "Trip computer with tachometer",
+      "Anti-lock Braking System with Electronic Brake force Distribution"
+    ]
+  }
+}

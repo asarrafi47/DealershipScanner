@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2021|nissan|leaf",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Leaf",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SV",
+    "Premium",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|honda|civic",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "2010_honda_civic",
+  "source": "manual_brochure_review",
+  "trims_available": ["DX", "LX", "EX", "EX-L", "Si"],
+  "adds_by_trim": {
+    "LX": [
+      "Air conditioning with air-filtration (replaces DX)",
+      "Power door locks and windows with auto-up/down driver window",
+      "16-inch alloy wheels (replaces 15-inch covers on DX)",
+      "Security system with remote entry",
+      "Cruise control and center console with armrest"
+    ],
+    "EX": [
+      "16-inch alloy wheels and rear decklid spoiler",
+      "One-touch power moonroof with tilt",
+      "Steering-wheel audio controls and 60/40 split-fold rear seatback",
+      "Vehicle Stability Assist and exterior temperature indicator"
+    ],
+    "EX-L": [
+      "Leather-trimmed seats and perforated leather-wrapped steering wheel",
+      "Heated front seats and heated side mirrors",
+      "350-watt premium 7-speaker audio with subwoofer",
+      "Navigation with Bluetooth and XM available"
+    ],
+    "Si": [
+      "197-hp 2.0L DOHC i-VTEC engine with close-ratio 6-speed manual",
+      "17-inch alloys, 4-wheel disc brakes, and helical limited-slip differential",
+      "Sport seats with red stitching, textured pedals, and rear wing spoiler",
+      "350-watt premium audio; VSA and heated mirrors"
+    ]
+  }
+}

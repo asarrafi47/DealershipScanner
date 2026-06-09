@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|jaguar|rcollection",
+  "year": 2011,
+  "make": "Jaguar",
+  "model": "R Collection",
+  "ladder_id": "brochure_llm_2011__jaguar__rcollection",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XKR Supercharged Convertible",
+    "XKR Supercharged Coupe",
+    "XFR Supercharged Sedan"
+  ],
+  "adds_by_trim": {
+    "XKR Supercharged Convertible": [
+      "Retractable soft-top convertible roof with 7.1 cubic feet trunk space when lowered",
+      "5.0-liter supercharged V8 producing 510 horsepower and 461 lb-ft torque",
+      "6-speed automatic transmission with 4.6-second 0-60 mph acceleration"
+    ],
+    "XKR Supercharged Coupe": [
+      "Fixed coupe body with 11.7 cubic feet trunk volume",
+      "5.0-liter supercharged V8 producing 510 horsepower and 461 lb-ft torque",
+      "6-speed automatic transmission with 4.6-second 0-60 mph acceleration"
+    ],
+    "XFR Supercharged Sedan": [
+      "Four-door sedan configuration with 17.7 cubic feet trunk space",
+      "5.0-liter supercharged V8 producing 510 horsepower and 461 lb-ft torque",
+      "6-speed automatic transmission with 4.7-second 0-60 mph acceleration",
+      "23 highway mpg fuel economy rating"
+    ]
+  }
+}

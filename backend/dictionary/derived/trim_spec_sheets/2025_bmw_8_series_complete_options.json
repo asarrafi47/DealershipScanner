@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_bmw_8_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "8 Series",
+    "8 Series"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "M850i": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "840i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

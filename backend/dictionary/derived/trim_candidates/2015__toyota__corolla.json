@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2015|toyota|corolla",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "LE",
+    "Limited",
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Power windows with driver-side one-touch up/down Adds to or replaces features offered on LE",
+      "Two front and two rear cup holders Power tilt/slide moonroof with sliding sunshade S Premium",
+      "LE Premium Entune\u2122 Premium Audio with Navigation9 and App",
+      "Suite10 \u2013 includes the Entune\u2122 Multimedia"
+    ],
+    "Sport": [
+      "Tech Audio \u2013 includes AM/FM CD player, four USB 2.0 port1 with iPod\u00ae2 connectivity and control, Adds to or replaces features offered on Eco Mixed media seats with sport bolsters and sport",
+      "Fabric-trimmed seats Piano-black center stack and Bluetooth\u00ae4 hands-free phone voice-"
+    ],
+    "S": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "LED low-beam headlights with halogen high beams Heated power outside mirrors Rear spoiler Rear spoiler",
+      "LED Daytime Running Lights (DRL) Entune\u2122 Audio \u2013 includes the Entune\u2122 Multimedia Integrated fog lights",
+      "Power outside mirrors Bundle5 with 6.1-in. touch-screen display, AM/FM Heated power outside mirrors with turn signal",
+      "Tilt/telescopic steering wheel with audio and Adds to or replaces features offered on Eco Plus S Plus",
+      "Bluetooth\u00ae4 hands-free phone controls",
+      "SofTex\u00ae-trimmed heated front seats",
+      "Power door locks with automatic locking feature Adds to or replaces features offered on S",
+      "Adds to or replaces features offered on S Plus",
+      "Bundle5 with 6.1-in. high-resolution touch-screen",
+      "Adds to or replaces features offered on LE Plus",
+      "SofTex\u00ae-trimmed heated front seats speakers, auxiliary audio jack, USB 2.0 port1 8-way power-adjustable driver\u2019s seat"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

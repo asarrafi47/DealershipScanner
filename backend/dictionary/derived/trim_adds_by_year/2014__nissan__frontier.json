@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2014|nissan|frontier",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2014__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "PRO-4X",
+    "DESERT RUNNER",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "PRO-4X embroidered leather-appointed seats",
+      "8-way power adjustable driver's seat",
+      "4-way power adjustable front-passenger's seat",
+      "Heated front seats and outside mirrors",
+      "Rear fold-down center armrest",
+      "Power sliding glass moonroof",
+      "Roof rack with crossbars",
+      "NissanConnect with Navigation, 5.8-inch color touch-screen, voice recognition",
+      "NavTraffic and NavWeather capability",
+      "Pandora radio and Bluetooth streaming audio"
+    ],
+    "PRO-4X": [
+      "All-terrain V6 engine capability",
+      "Enhanced ground clearance at rear differential",
+      "Off-road optimized approach and departure angles",
+      "Vehicle Security System with Security+Plus extended service plan coverage"
+    ],
+    "DESERT RUNNER": [
+      "All-terrain V6 engine",
+      "Enhanced approach and departure angles for off-road capability",
+      "Vehicle Security System"
+    ],
+    "SV": [
+      "Dual Zone Automatic Temperature Control",
+      "RearView Monitor",
+      "Rear Sonar System",
+      "Auto-dimming rearview mirror with digital compass and outside temperature display",
+      "Fog lights",
+      "Vehicle Security System"
+    ],
+    "S": [
+      "Air conditioning",
+      "AM/FM/CD audio system",
+      "In-cabin microfilter",
+      "Carpeted floor mats",
+      "Sliding bed extender",
+      "Tow hitch receiver Class IV",
+      "Utili-track Channel System with 4 tie-down cleats",
+      "Six speakers on King Cab models"
+    ]
+  }
+}

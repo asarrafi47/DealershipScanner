@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2011|infiniti|m",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "M",
+  "ladder_id": "brochure_llm_2011__infiniti__m",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M56x AWD",
+    "M56",
+    "M37x AWD",
+    "M37"
+  ],
+  "adds_by_trim": {
+    "M56x AWD": [
+      "Intelligent All-Wheel Drive (AWD) system"
+    ],
+    "M56": [
+      "420-horsepower 5.6-liter V8 engine",
+      "Infiniti Hard Drive Navigation System with 8-inch WVGA color touch-screen display",
+      "Infiniti Voice Recognition for audio, navigation, and vehicle information systems",
+      "XM NavTraffic with Real-Time Traffic information",
+      "XM NavWeather with Real-Time Weather and 3-day forecast",
+      "Zagat Restaurant Guide",
+      "Bose 2-channel, 10-speaker Premium Audio system with AM/FM/CD/DVD and MP3 playback",
+      "9.3GB Music Box hard drive with streaming audio via Bluetooth",
+      "Climate-controlled front seats",
+      "Heated steering wheel"
+    ],
+    "M37x AWD": [
+      "Intelligent All-Wheel Drive (AWD) system"
+    ],
+    "M37": [
+      "330-horsepower 3.7-liter V6 engine",
+      "Electronically controlled 7-speed automatic transmission with manual shift mode",
+      "Downshift Rev Matching",
+      "Intelligent Cruise Control (Full-Speed Range)",
+      "Lane Departure Warning (LDW) and Lane Departure Prevention (LDP)",
+      "Distance Control Assist (DCA)",
+      "Intelligent Brake Assist (IBA) with Forward Collision Warning (FCW)",
+      "Blind Spot Warning (BSW) and Blind Spot Intervention (BSI) Systems",
+      "Front Pre-Crash Seat Belts",
+      "Active Trace Control with Eco Pedal and Adaptive Front Lighting System (AFS)"
+    ]
+  }
+}

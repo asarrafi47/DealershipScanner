@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|honda|crv",
+  "year": 2014,
+  "make": "Honda",
+  "model": "CR-V",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|jaguar|xf",
+  "year": 2011,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_llm_2011__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XFR",
+    "XF Supercharged",
+    "XF"
+  ],
+  "adds_by_trim": {
+    "XFR": [
+      "5.0L V8 supercharged engine producing 510 HP and 461 lb-ft torque",
+      "0-60 mph acceleration in 4.7 seconds",
+      "20D Nevis alloy wheels",
+      "Curb weight 4,306 lbs with gross vehicle weight rating 5,225 lbs"
+    ],
+    "XF Supercharged": [
+      "5.0L V8 supercharged engine producing 470 HP and 424 lb-ft torque",
+      "0-60 mph acceleration in 4.9 seconds",
+      "Ivory Softgrain leather seats with Truffle Softgrain leather and ivory contrast stitching",
+      "Knurled Aluminum with Rich Oak Veneer interior trim",
+      "18D Cygnus alloy wheels",
+      "Curb weight 4,306 lbs with gross vehicle weight rating 5,225 lbs"
+    ],
+    "XF": [
+      "5.0L V8 naturally aspirated engine producing 385 HP and 380 lb-ft torque",
+      "0-60 mph acceleration in 5.5 seconds",
+      "Top speed 121 mph",
+      "16 city / 23 highway / 19 combined mpg fuel economy",
+      "Curb weight 4,067 lbs with gross vehicle weight rating 5,071 lbs"
+    ]
+  }
+}

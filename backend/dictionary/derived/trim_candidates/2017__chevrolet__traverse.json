@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2017|chevrolet|traverse",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premier",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

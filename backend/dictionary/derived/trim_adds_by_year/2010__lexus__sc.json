@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2010|lexus|sc",
+  "year": 2010,
+  "make": "lexus",
+  "model": "SC",
+  "ladder_id": "brochure_web_2010__lexus__sc",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "SC 430",
+    "SC 430 Pebble Beach Edition"
+  ],
+  "adds_by_trim": {
+    "SC 430": [
+      "4.3L V8 engine producing 288 horsepower",
+      "8-speed automatic transmission",
+      "Retractable hardtop convertible",
+      "Lexus Mark Levinson Premium Surround Sound system with 12 speakers",
+      "Power windows, locks, and mirrors with memory settings",
+      "Automatic air conditioning with dual zones",
+      "Wood and leather steering wheel",
+      "Perforated leather-trimmed seats",
+      "Xenon HID headlights",
+      "17-inch alloy wheels with performance tires"
+    ],
+    "SC 430 Pebble Beach Edition": [
+      "Exclusive Pebble Beach exterior paint color",
+      "Unique badging and trim identification",
+      "Premium leather upholstery with contrast stitching",
+      "Special interior appointments and accents",
+      "Limited production special edition designation"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/lexus/sc"
+}

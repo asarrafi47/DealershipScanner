@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2023|gmc|acadia",
+  "year": 2023,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "2023_gmc_acadia",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SLE",
+    "SLT",
+    "AT4",
+    "Denali"
+  ],
+  "adds_by_trim": {
+    "SLT": [
+      "ProGrade trailering and upgraded infotainment",
+      "Heated front seats and power liftgate"
+    ],
+    "AT4": [
+      "AT4 off-road appearance with dark accents",
+      "AWD with off-road tuned suspension"
+    ],
+    "Denali": [
+      "Denali luxury trim with premium audio and leather",
+      "Highest Acadia trim in 2023 brochure"
+    ]
+  }
+}

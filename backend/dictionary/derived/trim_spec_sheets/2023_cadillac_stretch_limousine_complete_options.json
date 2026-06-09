@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_cadillac_stretch_limousine_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Stretch Limousine",
+    "Stretch Limousine"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "(6.0L) V8 Series 60S Fleetwood – 133 in wheelbase Series 62 – 129.5 in wheelbase"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "ELR 2013 2016 Delta II 1 Compact luxury plug-in hybrid coupe; Model A – 72 in wheelbase single-cylinder engine"
+      }
+    ]
+  }
+}

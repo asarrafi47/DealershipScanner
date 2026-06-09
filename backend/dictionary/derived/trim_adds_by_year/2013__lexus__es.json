@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2013|lexus|es",
+  "year": 2013,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2013__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Eight-year/100,000-mile Hybrid System Warranty",
+      "Adds Six-year/70,000-mile Powertrain Warranty",
+      "Adds Six-year unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero deductible on all warranties"
+    ],
+    "Premium": [
+      "Adds SiriusXM satellite radio services with complimentary trial period",
+      "Adds Navigation System with periodic update availability",
+      "Adds Lexus Personalized Settings (LPS) programming capability"
+    ]
+  }
+}

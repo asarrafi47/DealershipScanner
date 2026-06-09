@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1991,Ford,Escort,Escort,1.8L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,21,27,23,,,,,,1.8L I4 Turbo,Turbocharged
-1991,Ford,Escort,Escort,1.8L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,23,29,25,,,,,,1.8L I4 Turbo,Turbocharged
-1991,Ford,Escort,Escort,1.9L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,22,30,25,,,,,,1.9L I4 Turbo,Turbocharged
-1991,Ford,Escort,Escort,1.9L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,25,33,28,,,,,,1.9L I4 Turbo,Turbocharged
-1991,Ford,Escort,FS,1.9L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,27,37,30,,,,,,1.9L I4 Turbo,Turbocharged
-1991,Ford,Escort,Wagon,1.9L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,22,30,25,,,,,,1.9L I4 Turbo,Turbocharged
-1991,Ford,Escort,Wagon,1.9L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,25,33,28,,,,,,1.9L I4 Turbo,Turbocharged

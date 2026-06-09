@@ -1,0 +1,35 @@
+{
+  "ladder_id": "ram_hd_chassis",
+  "make": "Ram",
+  "models": [
+    "4500",
+    "5500",
+    "3500",
+    "3500 HD",
+    "Ram 4500",
+    "Ram 5500"
+  ],
+  "year_min": 2019,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Interior Materials",
+        "value": "Top luxury chassis trim with premium interior and safety tech."
+      }
+    ],
+    "Laramie": [
+      {
+        "label": "Screen Size",
+        "value": "Leather seating, chrome accents, and upgraded Uconnect."
+      }
+    ],
+    "Tradesman": [
+      {
+        "label": "Interior Materials",
+        "value": "Work-focused trim with vinyl or cloth seats and halogen lighting."
+      }
+    ]
+  }
+}

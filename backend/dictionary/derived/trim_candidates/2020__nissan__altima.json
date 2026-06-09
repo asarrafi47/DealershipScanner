@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2020|nissan|altima",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Altima",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "SR",
+    "S",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

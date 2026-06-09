@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2012|lexus|rx",
+  "year": 2012,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_2012__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds four-year/50,000-mile Lexus Limited Warranty",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds eight-year/100,000-mile Hybrid System Warranty",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero deductible on all warranties"
+    ],
+    "Premium": [
+      "Adds Bluetooth audio connectivity with A2DP and AVRCP support",
+      "Adds backup camera system",
+      "Adds SiriusXM satellite radio capability"
+    ],
+    "Luxury": [
+      "Adds dual-screen Rear-Seat Entertainment System with six-disc DVD changer",
+      "Adds Wide-view Side Monitor system",
+      "Adds Lexus Enform telematics with Destination Assist and eDestination services",
+      "Adds Safety Connect emergency services",
+      "Adds Adaptive Front Lighting System",
+      "Adds intelligent high-beam headlamps",
+      "Adds Pre-Collision System",
+      "Adds Mark Levinson premium audio system",
+      "Adds Vehicle Dynamics Integrated Management (VDIM)"
+    ]
+  }
+}

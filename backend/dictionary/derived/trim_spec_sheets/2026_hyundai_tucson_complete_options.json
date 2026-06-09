@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_hyundai_tucson_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Tucson",
+    "Tucson"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Blue": [
+      {
+        "label": "Engine Options",
+        "value": "1.6L I4 Turbo; Automatic (AM-S6)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front engine, front-wheel-drive; The 2.0-litre diesel engine, available outside of North America, meets the Euro-"
+      }
+    ]
+  }
+}

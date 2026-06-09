@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|toyota|mirai",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_web_2017__toyota__mirai",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "Advanced"
+  ],
+  "adds_by_trim": {
+    "Advanced": [
+      "Premium triple-beam LED headlights with automatic high-beam switching",
+      "Panoramic moonroof with power sunshade",
+      "Premium Lexus-brand 17-speaker surround sound audio system",
+      "Heated and ventilated leather front seats with lumbar support",
+      "Power rear sunshade",
+      "Rear seat heating",
+      "Pre-collision system with adaptive cruise control",
+      "Lane departure alert with steering assist",
+      "Adaptive dynamic radar cruise control"
+    ],
+    "Limited": [
+      "Hydrogen fuel cell powertrain with 312-mile EPA range",
+      "8-inch touchscreen with Entune infotainment system",
+      "Bluetooth connectivity with music streaming",
+      "Integrated backup camera with guidelines",
+      "Power windows, locks, and mirrors",
+      "Toyota Safety Sense suite: collision warning, adaptive cruise control",
+      "Dual-zone automatic climate control",
+      "Leather-trimmed steering wheel and shift knob",
+      "17-inch alloy wheels with all-season tires"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/mirai/"
+}

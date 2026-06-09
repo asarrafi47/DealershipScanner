@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2020|acura|mdx",
+  "year": 2020,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_2020__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "A-Spec",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds AcuraWatch safety suite with Collision Mitigation Braking System (CMBS)",
+      "Adds Lane Keeping Assist System (LKAS) and Lane Departure Warning (LDW)",
+      "Adds Adaptive Cruise Control (ACC) with Low-Speed Follow",
+      "Adds rearview camera with display",
+      "Adds HandsFreeLink smartphone integration",
+      "Adds Maintenance Minder system",
+      "Adds Vehicle Stability Assist (VSA)",
+      "Adds Super Handling All-Wheel Drive (SH-AWD) capability"
+    ],
+    "A-Spec": [
+      "A-Spec trim-specific grille treatment on front fascia",
+      "Updated 20-inch wheel designs",
+      "A-Spec exterior styling details"
+    ],
+    "Technology": [
+      "Adds AcuraLink mobile app with real-time roadside assistance",
+      "Adds on-demand multi-use display system"
+    ],
+    "Advance": [
+      "Adds Total Luxury Care (TLC) program with 24-hour Acura Concierge service",
+      "Adds comprehensive trip-interruption benefits including alternative transportation and lodging",
+      "Adds ELS Studio premium audio system"
+    ]
+  }
+}

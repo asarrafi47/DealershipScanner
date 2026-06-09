@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2016|mitsubishi|lancer",
+  "year": 2016,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_llm_2016__mitsubishi__lancer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SEL",
+    "SE 2.4L",
+    "ES 2.4L",
+    "ES 2.0L"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "18-inch alloy wheels",
+      "Power glass sunroof with tilt and slide",
+      "Rear wing spoiler standard",
+      "Auto on/off headlights",
+      "Rain-sensing windshield wipers",
+      "Leather seating surfaces",
+      "Leather-wrapped steering wheel with silver accent",
+      "Leather-wrapped shift knob",
+      "Auto-dimming rearview mirror",
+      "710-watt Rockford-Fosgate premium sound system with 10-in. dual-voice coil subwoofer"
+    ],
+    "SEL": [
+      "16-inch machine finish 2-tone alloy wheels",
+      "Heated front seats",
+      "Leather seating surfaces",
+      "Leather-wrapped steering wheel with silver accent",
+      "Leather-wrapped shift knob",
+      "Auto-dimming rearview mirror",
+      "MMCS Navigation system with 7-inch high-definition touch panel",
+      "710-watt Rockford-Fosgate premium sound system with 10-in. dual-voice coil subwoofer"
+    ],
+    "SE 2.4L": [
+      "16-inch machine finish 2-tone alloy wheels",
+      "2.4L engine",
+      "Roof carrier plug-in accommodation",
+      "Heated front seats",
+      "FAST-Key passive entry system with panic alarm",
+      "SiriusXM Satellite Radio with 3-month subscription",
+      "Digital HD Radio",
+      "Rearview camera system",
+      "6.1-inch touch panel display audio system"
+    ],
+    "ES 2.4L": [
+      "2.4L engine",
+      "16-inch 10-spoke alloy wheels"
+    ],
+    "ES 2.0L": [
+      "2.0L CVT engine",
+      "LED daytime running lights",
+      "Fog lights",
+      "Side air dams",
+      "Color-keyed folding power side view mirrors with turn indicators",
+      "Heated side view mirrors",
+      "Sport front grille and bumper",
+      "Rear window defroster with timer",
+      "Color LCD multi-information display",
+      "140-watt AM/FM/CD/MP3 audio system with 4 speakers"
+    ]
+  }
+}

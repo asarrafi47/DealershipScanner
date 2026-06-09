@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Subaru,Impreza Outback Sport,Impreza AWD,2.0L I4,2.0L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,24,33,28,,,,,
+2012,Subaru,Impreza Outback Sport,Impreza AWD,2.0L I4,2.0L I4,,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,27,35,30,,,,,
+2012,Subaru,Impreza Outback Sport,Impreza AWD,2.5L I4,2.5L I4,,Manual 5-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.5,19,25,21,,,,,
+2012,Subaru,Impreza Outback Sport,Impreza AWD,2.5L I4,2.5L I4,,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.5,17,23,19,,,,,
+2012,Subaru,Impreza Outback Sport,Impreza Wagon/Outback Sport AWD,2.0L I4,2.0L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,24,33,27,,,,,
+2012,Subaru,Impreza Outback Sport,Impreza Wagon/Outback Sport AWD,2.0L I4,2.0L I4,,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,27,35,30,,,,,
+2012,Subaru,Impreza Outback Sport,Impreza Wagon/Outback Sport AWD,2.5L I4,2.5L I4,,Manual 5-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.5,19,25,21,,,,,
+2012,Subaru,Impreza Outback Sport,Impreza Wagon/Outback Sport AWD,2.5L I4,2.5L I4,,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.5,17,23,19,,,,,

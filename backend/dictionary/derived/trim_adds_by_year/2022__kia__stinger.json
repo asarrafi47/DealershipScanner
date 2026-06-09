@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|kia|stinger",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Stinger",
+  "ladder_id": "brochure_llm_2022__kia__stinger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT2",
+    "GT1",
+    "T-GDI"
+  ],
+  "adds_by_trim": {
+    "GT2": [
+      "3.3L Twin Turbo GDI V6 engine with 368 hp",
+      "19-inch alloy wheels",
+      "LED projection headlights",
+      "7-inch color TFT LCD Supervision meter cluster with sport gauges",
+      "15-speaker Harman Kardon premium audio system",
+      "Interior LED mood lighting with multi-color selection",
+      "Auto-dimming outside mirrors",
+      "Smart Power Trunk",
+      "Nappa leather-trimmed seats with Chain-volume design",
+      "16-way power-adjustable driver's seat with width-adjusting side bolsters and seat extension"
+    ],
+    "GT1": [
+      "3.3L Twin Turbo GDI V6 engine with 368 hp",
+      "19-inch alloy wheels",
+      "8-way power-adjustable front passenger seat",
+      "Interior LED mood lighting with multi-color selection"
+    ],
+    "T-GDI": [
+      "2.5L Turbo GDI 4-cylinder engine with 300 hp",
+      "8-speed Automatic Transmission",
+      "Launch Control system",
+      "18-inch alloy wheels",
+      "9-speaker AM/FM/HD radio audio system",
+      "4.2-inch TFT LCD Supervision meter cluster",
+      "Leather seat trim",
+      "12-way power-adjustable driver's seat",
+      "8-way power-adjustable front passenger seat",
+      "Heated front seats"
+    ]
+  }
+}

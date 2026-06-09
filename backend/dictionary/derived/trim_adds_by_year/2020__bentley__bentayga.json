@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2020|bentley|bentayga",
+  "year": 2020,
+  "make": "bentley",
+  "model": "bentayga",
+  "ladder_id": "brochure_2020__bentley__bentayga",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adds Includes choice of seven standard paint colours",
+      "Adds Features Eliade upper trim",
+      "Adds passive anti-roll bars",
+      "Adds Includes seven-seat specification with electrically folding seats in third row",
+      "Adds ESP Off-Road features with roll-over mitigation"
+    ],
+    "Limited": [
+      "Adds access to 56 additional exterior paint colours and duotone paints",
+      "Adds bespoke colour matching service"
+    ]
+  }
+}

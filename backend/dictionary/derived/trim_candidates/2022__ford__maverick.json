@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2022|ford|maverick",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Maverick",
+  "status": "draft",
+  "quality": "none",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "no_text",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_text_extracted"
+  ]
+}

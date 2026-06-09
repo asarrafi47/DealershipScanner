@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2015|ford|cmax",
+  "year": 2015,
+  "make": "Ford",
+  "model": "C-Max",
+  "ladder_id": "brochure_llm_2015__ford__cmax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "C-MAX Energi",
+    "C-MAX Hybrid"
+  ],
+  "adds_by_trim": {
+    "C-MAX Energi": [
+      "Plug-in hybrid powertrain with all-electric driving capability",
+      "8-year/100,000-mile hybrid/electric unique component coverage"
+    ],
+    "C-MAX Hybrid": [
+      "Hybrid powertrain for improved fuel efficiency",
+      "8-year/100,000-mile hybrid/electric unique component coverage"
+    ]
+  }
+}

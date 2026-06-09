@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2019|bentley|bentayga",
+  "year": 2019,
+  "make": "bentley",
+  "model": "bentayga",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

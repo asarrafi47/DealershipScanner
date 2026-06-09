@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2014|kia|sedona",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Sedona",
+  "ladder_id": "brochure_llm_2014__kia__sedona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ex",
+    "Lx"
+  ],
+  "adds_by_trim": {
+    "Ex": [
+      "Navigation system with voice guidance",
+      "Rain-sensing windshield wiper system",
+      "P235/60R17 tires (optional on Lx, standard on Ex)"
+    ],
+    "Lx": [
+      "3.5L V6 engine with 269 hp and 246 lb-ft torque",
+      "6-speed Sportmatic transmission with manual shift capability",
+      "4-wheel disc brakes with ABS",
+      "Bluetooth wireless technology for hands-free cell phone use",
+      "Rear-camera display system",
+      "Back-up warning system with sonar sensor",
+      "USB/auxiliary jacks for MP3 audio players",
+      "SiriusXM satellite radio with 140+ channels",
+      "Power windows, door locks, and outside mirrors",
+      "Roof rails for cargo carrying"
+    ]
+  }
+}

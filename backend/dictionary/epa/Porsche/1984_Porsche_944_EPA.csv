@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Porsche,944,944,2.5L I4 ((FFS)),2.5L I4 Turbo,Turbocharged,Automatic 3-spd,,Regular Gasoline,Minicompact Cars,4,2.5,17,21,18,,,,,
+1984,Porsche,944,944,2.5L I4 ((FFS)),2.5L I4 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Minicompact Cars,4,2.5,18,25,20,,,,,
+1984,Porsche,944,944,2.5L I4 ((FFS) CA model),2.5L I4 Turbo,Turbocharged,Automatic 3-spd,,Regular Gasoline,Minicompact Cars,4,2.5,16,20,17,,,,,
+1984,Porsche,944,944,2.5L I4 ((FFS) CA model),2.5L I4 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Minicompact Cars,4,2.5,17,24,20,,,,,

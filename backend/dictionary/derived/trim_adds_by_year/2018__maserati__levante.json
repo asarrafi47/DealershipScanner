@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2018|maserati|levante",
+  "year": 2018,
+  "make": "maserati",
+  "model": "levante",
+  "ladder_id": "brochure_2018__maserati__levante",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes Maserati Stability Program (MSP) with adaptive handling control",
+      "Adds Features Anti-Lock Braking System (ABS) and Electronic Brakeforce Distribution (EBD)",
+      "Adds Includes Brake Assistance System (BAS) for emergency stopping power",
+      "Adds Hill Holder function for uphill launches",
+      "Adds Features LED taillights for enhanced visibility",
+      "Adds Includes six air bags: dual-stage front, side torso/hip, and side curtain bags",
+      "Adds Tire Pressure Monitoring System (TPMS) standard across all models"
+    ],
+    "Sport": [
+      "Upgraded to Adaptive Front Lighting System (AFS) with intelligent beam modes"
+    ],
+    "Touring": [],
+    "Premium": [],
+    "Limited": []
+  }
+}

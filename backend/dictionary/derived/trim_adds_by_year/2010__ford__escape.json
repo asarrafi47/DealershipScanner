@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|ford|escape",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "2010_ford_escape",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "XLS",
+    "XLT",
+    "Limited",
+    "Hybrid",
+    "Hybrid Limited"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "6-speed automatic transmission (replaces 5-speed manual on XLS)",
+      "16-inch bright machined-aluminum wheels",
+      "Auto-dimming mirror, automatic headlamps, and front fog lamps",
+      "Premium cloth 6-way power driver seat",
+      "MyKey owner controls and Ford SYNC available",
+      "Sport Appearance Package available (XLT exclusive)"
+    ],
+    "Limited": [
+      "Premium leather-trimmed heated front seats",
+      "Chrome grilles, fog lamps, and ambient lighting",
+      "Moon & Tune Package: power moonroof and 320-watt 7-speaker audio",
+      "Active Park Assist available",
+      "Available 3.0L Flex Fuel V6 with 6-speed automatic"
+    ],
+    "Hybrid": [
+      "2.5L Atkinson-cycle I-4 with electric motor — 177 net hp",
+      "Regenerative braking and 330-volt NiMH battery pack",
+      "110-volt AC power outlet",
+      "EPA-leading SUV fuel economy (34 mpg city FWD)"
+    ],
+    "Hybrid Limited": [
+      "Leather-trimmed heated front seats (replaces cloth on Hybrid)",
+      "Ambient lighting and premium Hybrid Limited convenience",
+      "Navigation with Power & Efficiency coaching screen available"
+    ],
+    "XLS": [
+      "5-speed manual transmission standard (2.5L I-4 engine)"
+    ]
+  }
+}

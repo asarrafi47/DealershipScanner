@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2010|suzuki|grandvitara",
+  "year": 2010,
+  "make": "Suzuki",
+  "model": "Grand Vitara",
+  "ladder_id": "brochure_llm_2010__suzuki__grandvitara",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XSPORT",
+    "SPECIAL EDITION",
+    "PREMIUM",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "17-inch alloy wheels (4-cylinder) or 18-inch alloy wheels (V6)",
+      "Leather-trimmed seating surfaces with heated front seats",
+      "Black wood interior trim appliqué",
+      "Heated outside mirrors",
+      "7-speaker AM/FM/CD audio with subwoofer and speed-sensing volume control (V6)",
+      "HomeLink wireless control system (V6)",
+      "Interior woodgrain trim color coordinated",
+      "SmartPass keyless start and entry"
+    ],
+    "XSPORT": [
+      "4-Mode 4WD with 2-speed transfer case (V6 only)",
+      "3.2-liter DOHC V6 engine, 230-hp and 213 lb-ft torque",
+      "17-inch alloy wheels (V6) or 16-inch alloy wheels (4-cylinder)",
+      "Sunroof and roof rails",
+      "Foglamps",
+      "Leather-wrapped steering wheel",
+      "Hill Hold Control (HHC) and Hill Descent Control (HDC)",
+      "7-speaker AM/FM/CD audio with subwoofer (V6)"
+    ],
+    "SPECIAL EDITION": [
+      "16-inch alloy wheels",
+      "Privacy glass",
+      "4-speaker AM/FM/6-disc CD changer with aux jack and speed-sensing volume control",
+      "MSN Direct services with real-time traffic and gas finder"
+    ],
+    "PREMIUM": [
+      "Single-Mode 4WD available",
+      "Privacy glass",
+      "Heated side mirrors",
+      "Cruise control"
+    ],
+    "BASE": [
+      "2.4-liter DOHC 4-cylinder engine, 166-hp and 162 lb-ft torque",
+      "Rear-Wheel Drive standard",
+      "16-inch steel wheels",
+      "Automatic multi-reflector halogen headlamps",
+      "Variable intermittent front and rear wipers",
+      "Power side mirrors",
+      "TRIP touchscreen GPS navigation",
+      "Automatic climate control with pollen filter",
+      "4-speaker AM/FM/CD audio",
+      "60/40 split reclining and folding rear seat"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2014|audi|r8",
+  "year": 2014,
+  "make": "Audi",
+  "model": "R8",
+  "ladder_id": "brochure_llm_2014__audi__r8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R8 V10 plus",
+    "R8 V10",
+    "R8 V8"
+  ],
+  "adds_by_trim": {
+    "R8 V10 plus": [
+      "550 horsepower ten-cylinder engine (up from 525 hp)",
+      "398 lb-ft torque (up from 391 lb-ft)",
+      "3.7/3.3 second 0-60 mph with manual/S tronic transmission",
+      "198/197 mph top speed with manual/S tronic transmission",
+      "R8 V10 plus sport suspension calibration",
+      "Standard Audi ceramic front and rear brakes (14.9/14.0 inches)"
+    ],
+    "R8 V10": [
+      "525 horsepower ten-cylinder engine (up from 430 hp)",
+      "391 lb-ft torque (up from 317 lb-ft)",
+      "3.8/3.4 second 0-60 mph with manual/S tronic transmission",
+      "196/195 mph top speed with manual/S tronic transmission",
+      "40-valve DOHC five-liter engine"
+    ],
+    "R8 V8": [
+      "430 horsepower eight-cylinder FSI engine",
+      "317 lb-ft torque with 32-valve DOHC valvetrain",
+      "4.4/4.2 second 0-60 mph with manual/S tronic transmission",
+      "188/186 mph top speed with manual/S tronic transmission",
+      "Audi ultra lightweight ASF aluminum construction",
+      "Double wishbone front and rear suspension with magnetic ride",
+      "Audi quattro all-wheel drive system",
+      "Two-seater sports car configuration"
+    ]
+  }
+}

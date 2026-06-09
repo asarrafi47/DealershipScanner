@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2022|chevrolet|bolt",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "ladder_id": "brochure_llm_2022__chevrolet__bolt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "17-inch machined-face aluminum wheels (vs. silver-painted)",
+      "Leather-appointed seating surfaces",
+      "Heated front seats",
+      "8-way power driver seat with 2-way power lumbar control",
+      "Heated leather-wrapped steering wheel",
+      "Rear Cross Traffic Alert",
+      "Rear Park Assist",
+      "HD Surround Vision",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Available Adaptive Cruise Control"
+    ],
+    "1LT": [
+      "17-inch silver-painted aluminum wheels",
+      "DC Fast Charging capable with 11.5-kW charging module",
+      "HD Rear Vision Camera",
+      "Chevy Safety Assist with automatic emergency braking and lane keep assist",
+      "Cloth front bucket seats",
+      "Remote vehicle starter system",
+      "10.2-inch diagonal color touchscreen",
+      "Wireless Apple CarPlay and Android Auto compatibility",
+      "Keyless Open and Start",
+      "6-speaker audio system with SiriusXM 3-month trial"
+    ]
+  }
+}

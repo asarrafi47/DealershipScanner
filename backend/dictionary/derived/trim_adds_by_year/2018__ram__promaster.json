@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|ram|promaster",
+  "year": 2018,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2018__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cutaway",
+    "Cargo Van",
+    "Chassis Cab"
+  ],
+  "adds_by_trim": {
+    "Cutaway": [
+      "Rear doors with 260-degree opening and fixed glass",
+      "Rear door storage net",
+      "Extended taillamp wiring"
+    ],
+    "Cargo Van": [
+      "Rear doors with 260-degree opening and no glass",
+      "Right-side door with fixed window and grate",
+      "Left-side door with fixed window and grate"
+    ],
+    "Chassis Cab": [
+      "3.6L Pentastar V6 with variable valve timing and 6-speed automatic transmission",
+      "180-amp or 220-amp alternator options",
+      "800-amp maintenance-free battery with auxiliary power connector",
+      "24-gallon fuel tank with auxiliary fuel tap",
+      "Full-size spare tire with temporary spare tire mount option",
+      "Power steering with electronic stability control",
+      "Halogen headlamps with daytime running lamps option",
+      "Manual-adjustable exterior mirrors with 96-inch wide option",
+      "UConnect 3 infotainment with 5-inch display and media hub",
+      "Advanced driver and front-passenger airbags with supplemental side-curtain airbags"
+    ]
+  }
+}

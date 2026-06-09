@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2023|lexus|gx",
+  "year": 2023,
+  "make": "lexus",
+  "model": "GX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

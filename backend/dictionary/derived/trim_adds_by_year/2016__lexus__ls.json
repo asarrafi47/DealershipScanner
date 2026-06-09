@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|lexus|ls",
+  "year": 2016,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2016__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LSh",
+    "LS F SPORT",
+    "LS LWB",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LSh": [
+      "Semi-aniline leather and Alcantara headliner upgrade",
+      "Four-zone Climate Concierge with rear overhead ducts and air purifier",
+      "Power-adjustable rear seats with memory and two-way power lumbar support",
+      "Right-rear power recliner with ottoman and shiatsu massage",
+      "Rear-Seat Entertainment System with Blu-ray/DVD player and 9.0-inch screen",
+      "Leather-trimmed instrument panel and glovebox door",
+      "Rear seat-mounted side airbags (SRS)",
+      "Power rear and rear-door sunshades"
+    ],
+    "LS F SPORT": [
+      "F SPORT exterior styling with front bumper, grille inserts, and rear diffuser",
+      "19-inch split-10-spoke forged alloy wheels by BBS",
+      "Brembo six-piston front brake calipers with 14.8-inch ventilated discs",
+      "TORSEN limited-slip rear differential (RWD)",
+      "F SPORT-tuned lowered Adaptive Variable Air Suspension",
+      "Variable Gear-Ratio Steering (VGRS)",
+      "Black leather interior with white perforations and black headliner",
+      "F SPORT bolstered front seats with embossed headrests",
+      "Paddle shifters",
+      "Aluminum pedals and interior trim"
+    ],
+    "LS LWB": [
+      "Extended wheelbase for increased rear legroom",
+      "Power trunk open/close",
+      "All-Weather Package with windshield wiper de-icer and headlamp washers",
+      "Enhanced interior heater for faster heat output in cold weather"
+    ],
+    "LS": [
+      "4.6-liter V8 engine",
+      "Front-seat Climate Concierge with climate-comfort front seats",
+      "Semi-aniline leather and Alcantara interior",
+      "Power rear sunshade",
+      "18-inch split-five-spoke alloy wheels"
+    ]
+  }
+}

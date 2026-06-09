@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|nissan|armada",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2018__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch machine-finished tinted aluminum-alloy wheels",
+      "Tri-Zone Entertainment System with dual 7.0-inch monitors, DVD player, wireless headphones",
+      "Rear air conditioning with rear controls",
+      "Climate controlled front seats with heating and cooling",
+      "Intelligent Cruise Control (ICC)",
+      "Predictive Forward Collision Warning (PFCW)",
+      "Forward Emergency Braking (FEB)",
+      "Lane Departure Warning (LDW) and Lane Departure Prevention (LDP)",
+      "Blind Spot Warning (BSW) and Blind Spot Intervention (BSI)",
+      "Backup Collision Intervention (BCI)"
+    ],
+    "SL": [
+      "20-inch machine-finished aluminum-alloy wheels with P275/60R20 tires",
+      "Fog lights",
+      "Power folding chrome outside mirrors with puddle lights and auto-dimming",
+      "Front and Rear Sonar System with eight sensors",
+      "Power liftgate",
+      "Remote Engine Start System",
+      "Around View Monitor with Moving Object Detection (MOD)",
+      "Auto-dimming inside rearview mirror",
+      "HomeLink Universal Transceiver",
+      "Rain-sensing wipers"
+    ],
+    "SV": [
+      "390-hp Endurance 5.6-liter V8 engine",
+      "7-speed automatic transmission with Tow/Haul Mode",
+      "Standard 2WD or available all-mode 4WD with 2-speed transfer case",
+      "13.8-inch front and rear vented disc brakes",
+      "4-wheel Anti-lock Braking System (ABS) with Electronic Brake force Distribution",
+      "Hill start assist",
+      "Independent double-wishbone suspension with auto-leveling rear suspension",
+      "18-inch aluminum-alloy wheels with P265/70R18 all-season tires",
+      "Tow hitch receiver",
+      "Nissan Hard Drive Navigation System with 8.0-inch touch-screen and Voice Recognition"
+    ]
+  }
+}

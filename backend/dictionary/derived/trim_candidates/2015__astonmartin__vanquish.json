@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2015|astonmartin|vanquish",
+  "year": 2015,
+  "make": "Aston Martin",
+  "model": "vanquish",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

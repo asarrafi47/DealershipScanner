@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2026_bmw_x6_complete_options",
+  "make": "BMW",
+  "models": [
+    "X6",
+    "X6"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "M Competition": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "M60i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "xDrive40i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "BMW ActiveHybrid technology offers the driver three significant options: to driv; L V8 turbo (petrol)"
+      }
+    ]
+  }
+}

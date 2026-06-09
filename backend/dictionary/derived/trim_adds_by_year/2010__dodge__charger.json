@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2010|dodge|charger",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "2010_dodge_charger",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "Rallye",
+    "R/T",
+    "SRT8"
+  ],
+  "adds_by_trim": {
+    "Rallye": [
+      "3.5L High Output V6 with touring suspension and rear stabilizer bar",
+      "Fog lamps and heated exterior power mirrors",
+      "Power adjustable pedals and 18-inch painted aluminum wheels",
+      "Body-color rear spoiler and illuminated front cup holders",
+      "SIRIUS Satellite Radio and eight-way power driver seat"
+    ],
+    "R/T": [
+      "5.7L HEMI VVT V8 with Multi-Displacement System (replaces 3.5L V6)",
+      "Performance-tuned steering, suspension, and ESC calibration",
+      "18-inch aluminum or chrome-clad wheels with rear spoiler",
+      "Heated leather-trimmed seats and leather steering wheel with audio controls",
+      "Power adjustable pedals and electronic vehicle information center",
+      "Dual exhaust and automatic headlamps"
+    ],
+    "SRT8": [
+      "6.1L SRT HEMI V8 with Hemi Orange engine block",
+      "Brembo Performance four-piston brakes and 20-inch forged aluminum wheels",
+      "Functional hood scoop, front fascia brake ducts, and lowered performance suspension",
+      "Bolstered leather-trimmed seats with SRT calibration and 180-mph speedometer",
+      "Remote start, Keyless Go, and SRT High-Performance KICKER audio (SRT Option Group II)",
+      "Xenon HID headlamps available (Premium Appearance Group)"
+    ],
+    "SE": [
+      "3.6L Pentastar VVT V6 engine with 292 horsepower",
+      "5-speed AutoStick transmission",
+      "27 mpg highway fuel economy",
+      "17-inch aluminum wheels",
+      "LED rear taillamps",
+      "Dual rear exhaust with bright tips",
+      "Premium cloth seating",
+      "4.3-inch Uconnect Touch touchscreen with CD/MP3 and six speakers",
+      "Electronic Stability Control with Hill Start Assist and Ready Alert Braking",
+      "Seven standard air bags and four-wheel disc antilock brakes"
+    ]
+  }
+}

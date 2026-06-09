@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2020|cadillac|xt5",
+  "year": 2020,
+  "make": "Cadillac",
+  "model": "XT5",
+  "ladder_id": "brochure_llm_2020__cadillac__xt5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Premium Luxury",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "3.6L V6 engine with 310 hp and 271 lb-ft of torque",
+      "Sport Control All-Wheel Drive (AWD) System",
+      "Real-time damping suspension chassis",
+      "Performance suspension",
+      "20-inch 12-spoke alloy wheels with Pearl Nickel finish",
+      "High-gloss black exterior accents and clear lens taillamps",
+      "Body-color door handles",
+      "Bose Performance Series 14-speaker system",
+      "Rear Camera Mirror available"
+    ],
+    "Premium Luxury": [
+      "3.6L V6 engine available (vs. 2.0L Turbo standard on Luxury)",
+      "UltraView Power Sunroof",
+      "Wireless charging for compatible mobile devices",
+      "Cargo management system with adjustable fence and retractable shade",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "20-inch 6-split-spoke alloy wheels with Polished/Android finish",
+      "Bose Performance Series 14-speaker system available"
+    ],
+    "Luxury": [
+      "2.0L Turbo four-cylinder engine with 237 hp and 258 lb-ft of torque",
+      "Automatic Emergency Braking",
+      "Forward Collision Alert",
+      "Safety Alert Seat",
+      "Front and Rear Park Assist",
+      "Rotary controller with jog functionality",
+      "18-inch multi-spoke alloy wheels with Bright Silver finish"
+    ]
+  }
+}

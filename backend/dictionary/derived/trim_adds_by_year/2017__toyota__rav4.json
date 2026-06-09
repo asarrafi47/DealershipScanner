@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2017|toyota|rav4",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_llm_2017__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited Hybrid",
+    "SE Hybrid",
+    "XLE Hybrid",
+    "SE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited Hybrid": [
+      "18-inch 5-spoke SuperChrome alloy wheels with P235/55R18 tires",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed 8-way power-adjustable driver's seat with memory function",
+      "Dynamic Radar Cruise Control (DRCC)",
+      "Leather-trimmed shift lever with silver accents"
+    ],
+    "SE Hybrid": [
+      "LED projector-beam headlights with auto on/off feature",
+      "LED Daytime Running Lights (DRL)",
+      "18-inch 5-spoke sport alloy wheels with P235/55R18 tires",
+      "Black-painted heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed 8-way power-adjustable driver's seat with power lumbar support",
+      "Driver and front passenger heated seats",
+      "Entune Audio Plus with Connected Navigation App"
+    ],
+    "XLE Hybrid": [
+      "Halogen projector-beam headlights with auto on/off feature",
+      "Integrated fog lights",
+      "Silver-highlighted lower grille",
+      "17-inch 5-spoke alloy wheels with P225/65R17 tires",
+      "Power tilt/slide moonroof with sunshade",
+      "Height-adjustable power liftgate with jam protection",
+      "Dual zone automatic climate control with air filter",
+      "Tilt/telescopic leather-trimmed steering wheel with audio controls and Bluetooth"
+    ],
+    "SE": [
+      "LED projector-beam headlights with auto on/off feature",
+      "LED Daytime Running Lights (DRL)",
+      "18-inch 5-spoke sport alloy wheels with P235/55R18 tires",
+      "Black-painted heated power outside mirrors with turn signal indicators",
+      "Steering wheel-mounted paddle shifters",
+      "SofTex-trimmed 8-way power-adjustable driver's seat with power lumbar support",
+      "Driver and front passenger heated seats",
+      "Entune Audio Plus with Connected Navigation App"
+    ],
+    "XLE": [
+      "Integrated fog lights",
+      "Silver-highlighted lower grille",
+      "17-inch 5-spoke alloy wheels with P225/65R17 tires",
+      "Power tilt/slide moonroof with sunshade",
+      "Dual zone automatic climate control with air filter",
+      "Tilt/telescopic leather-trimmed steering wheel with audio and Bluetooth",
+      "Fabric-trimmed 6-way adjustable driver's seat with sport bolsters"
+    ],
+    "LE": [
+      "2.5L 4-cylinder engine with 176 hp and 172 lb-ft torque",
+      "6-speed automatic transmission",
+      "Available Dynamic Torque-Control AWD",
+      "Halogen projector-beam headlights with auto on/off feature",
+      "Power outside mirrors with folding feature and blind spot mirrors",
+      "Roof rails",
+      "17-inch wide-vent steel wheels with wheel covers and P225/65R17 tires",
+      "4.2-inch TFT Multi-Information Display",
+      "Backup camera with projected path",
+      "Entune Audio with Bluetooth hands-free phone controls"
+    ]
+  }
+}

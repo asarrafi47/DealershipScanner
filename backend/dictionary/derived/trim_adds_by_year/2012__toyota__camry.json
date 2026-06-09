@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2012|toyota|camry",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_web_2012__toyota__camry",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "12.3-inch digital instrument cluster",
+      "12.3-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "Sportier styling compared to XLE",
+      "Available Premium Plus package with traffic jam assist and 360-degree camera"
+    ],
+    "SE": [
+      "Sportier exterior and interior styling compared to XLE"
+    ],
+    "XLE": [
+      "12.3-inch digital instrument cluster",
+      "12.3-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "Microsuede-trimmed seats",
+      "Power panoramic roof",
+      "Available Premium Plus package with traffic jam assist and 360-degree camera"
+    ],
+    "LE": [
+      "7.0-inch digital instrument cluster",
+      "8.0-inch infotainment display with wireless Apple CarPlay and Android Auto",
+      "Standard wireless charging",
+      "Five USB-A and USB-C ports",
+      "Embossed woven fabric seats inspired by ocean waves",
+      "Standard Toyota Safety Sense 3.0 with pre-collision alert and automatic emergency braking",
+      "Standard blind-spot monitoring with rear cross-traffic alert",
+      "Standard dual-climate control with rear air vents",
+      "Standard push-button start"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/camry/"
+}

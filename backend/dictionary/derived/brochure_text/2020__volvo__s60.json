@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2020|volvo|s60",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "S60",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2020_Volvo_S60_Brochure.pdf",
+  "page_count": 31,
+  "all_pages": false,
+  "trim_hint_pages": [
+    18,
+    26
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 18,
+      "trim_hint": true,
+      "text": "VOLVO S60 YOUR CHOICE \u2013 TRIM LEVELS | 33\nT4 Inscription\nVolvo S60 Inscription\nContemporary luxury, with beautiful\nmaterials and expert craftsmanship.\nCREATE THE SWEDISH DYNAMIC SEDAN OF YOUR CHOICE.\nOur approach in everything we do is to always put people first. as you want it, the luxurious S60 inscription.\nThis also includes allowing you the freedom to create a Volvo Whatever you prefer, you can rest assure there\u2019s a Volvo S60\nthat matches your style and fits perfectly into your life. for you. Read on, and see what your new S60 will look like.\nTo ensure you get your new Volvo S60 exactly as personal\nNB. The trim levels may vary from country to country.\nPlease talk to your Volvo Car dealer for the latest information.",
+      "table_lines": []
+    },
+    {
+      "page": 26,
+      "trim_hint": true,
+      "text": "VOLVO S60 FACTS AND FIGURES | 3\n945\n1019\n11779977 1005\n1431 1431\n1074 895\n1603\n848 2872 1041 1850\n4761 2040\n1431\n1603 1425 1384 1603 1850 2040\n1603\n1850\n2040\nPlease note: Some of the information in this brochure may be incorrect due to changes in product specifications that may have occurred since printing. Some of the equipment\ndescribed or shown may now only be available at extra cost. Before ordering, please ask your Volvo Cars dealer for the latest information. The manufacturer reserves the right to\nmake changes at any time and without notice to prices, colours, materials, specifications and models.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 18 ---\nVOLVO S60 YOUR CHOICE \u2013 TRIM LEVELS | 33\nT4 Inscription\nVolvo S60 Inscription\nContemporary luxury, with beautiful\nmaterials and expert craftsmanship.\nCREATE THE SWEDISH DYNAMIC SEDAN OF YOUR CHOICE.\nOur approach in everything we do is to always put people first. as you want it, the luxurious S60 inscription.\nThis also includes allowing you the freedom to create a Volvo Whatever you prefer, you can rest assure there\u2019s a Volvo S60\nthat matches your style and fits perfectly into your life. for you. Read on, and see what your new S60 will look like.\nTo ensure you get your new Volvo S60 exactly as personal\nNB. The trim levels may vary from country to country.\nPlease talk to your Volvo Car dealer for the latest information.\n\n--- page 26 ---\nVOLVO S60 FACTS AND FIGURES | 3\n945\n1019\n11779977 1005\n1431 1431\n1074 895\n1603\n848 2872 1041 1850\n4761 2040\n1431\n1603 1425 1384 1603 1850 2040\n1603\n1850\n2040\nPlease note: Some of the information in this brochure may be incorrect due to changes in product specifications that may have occurred since printing. Some of the equipment\ndescribed or shown may now only be available at extra cost. Before ordering, please ask your Volvo Cars dealer for the latest information. The manufacturer reserves the right to\nmake changes at any time and without notice to prices, colours, materials, specifications and models."
+}

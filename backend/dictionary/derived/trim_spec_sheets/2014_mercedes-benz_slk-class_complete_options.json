@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2014_mercedes-benz_slk-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SLK-Class",
+    "SLK-Class"
+  ],
+  "year_min": 2012,
+  "year_max": 2016,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SLK 55 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SLK 350": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SLK 250": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

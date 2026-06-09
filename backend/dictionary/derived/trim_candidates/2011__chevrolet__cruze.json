@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|chevrolet|cruze",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "RS",
+    "LS",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

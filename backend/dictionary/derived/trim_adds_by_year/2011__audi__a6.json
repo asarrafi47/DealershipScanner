@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2011|audi|a6",
+  "year": 2011,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_llm_2011__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S6",
+    "A6 Prestige",
+    "A6 Premium Plus",
+    "A6 Premium"
+  ],
+  "adds_by_trim": {
+    "S6": [
+      "5.2L V10 FSI engine with 435 hp and 406 lb-ft torque",
+      "S6 sport suspension calibration",
+      "Tiptronic automatic transmission",
+      "Dynamic exterior styling with aggressive front fascia and unique grille"
+    ],
+    "A6 Prestige": [
+      "4.2L V8 engine option",
+      "Premium leather upholstery and interior appointments",
+      "Advanced MMI infotainment system with navigation"
+    ],
+    "A6 Premium Plus": [
+      "Enhanced comfort and convenience option packages",
+      "Sport suspension calibration available",
+      "Expanded MMI functionality and connectivity features"
+    ],
+    "A6 Premium": [
+      "3.2L V6 FSI engine with 255 hp",
+      "Multitronic Continuously Variable Transmission",
+      "quattro permanent all-wheel drive with torque-sensing center differential",
+      "Advanced dual-stage airbags and Sideguard head curtain airbags",
+      "Electronic Stabilization Program and Anti-lock Brake System",
+      "Servotronic speed-sensitive power steering",
+      "Electromechanical parking brake with Audi hill hold assist"
+    ]
+  }
+}

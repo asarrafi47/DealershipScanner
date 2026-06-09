@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2022|hyundai|santafe",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2022__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "Dark chrome accent front grille",
+      "Premium door trim and ambient LED interior lighting",
+      "Quilted Nappa premium leather seating with eco-suede headliner",
+      "Memory driver seat with heated steering wheel",
+      "Power-folding side mirrors",
+      "All-wheel drive with HTRAC and Downhill Brake Control",
+      "Power windows with auto-down/up all four doors"
+    ],
+    "Limited": [
+      "10.25-inch high-resolution color touchscreen navigation display",
+      "Harman Kardon 12-speaker premium audio with QuantumLogic Surround",
+      "Ventilated front seats and heated second-row seats",
+      "Memory driver seat with heated steering wheel",
+      "Power-folding side mirrors",
+      "Remote Smart Parking Assist",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Parking Distance Warning forward and reverse"
+    ],
+    "XRT": [
+      "XRT unique front and rear fascias",
+      "10.25-inch high-resolution color touchscreen navigation display",
+      "Harman Kardon 12-speaker premium audio with QuantumLogic Surround"
+    ],
+    "SEL": [
+      "Leather-trimmed seating surfaces",
+      "Heated front seats",
+      "8-way power driver seat with 2-way power lumbar support",
+      "8-way power front passenger seat",
+      "Leather-wrapped steering wheel",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Heated side mirrors and roof side rails",
+      "Side mirrors with LED turn signal indicators and approach lights",
+      "Acoustic-laminated front side windows",
+      "10.25-inch high-resolution color touchscreen navigation display"
+    ],
+    "SE": [
+      "4.2-inch color LCD multi-information display",
+      "Proximity key entry with push button start and remote engine start",
+      "8-inch color touchscreen audio system",
+      "Android Auto and Apple CarPlay wired connection",
+      "Shift-by-Wire push-button gear selection",
+      "Automatic headlights with High Beam Assist",
+      "LED Daytime Running Lights",
+      "Smart Cruise Control with Stop and Go",
+      "Forward Collision-Avoidance Assist with pedestrian, cyclist and junction-turning detection",
+      "Lane Keeping Assist and Lane Following Assist"
+    ]
+  }
+}

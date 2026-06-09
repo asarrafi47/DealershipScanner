@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1985,Chevrolet,C20 Pickup,2WD,5.7L V8 ((350 V8) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.7,11,15,12,,,,,,5.7L V8,
-1985,Chevrolet,C20 Pickup,2WD,Diesel 6.2L V8 (CA model) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks,8,6.2,15,20,17,,,,,,6.2L V8,
-1985,Chevrolet,C20 Pickup,2WD,4.3L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,4.3,15,17,16,,,,,,4.3L V6,
-1985,Chevrolet,C20 Pickup,2WD,4.3L V6,Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,4.3,14,17,15,,,,,,4.3L V6,
-1985,Chevrolet,C20 Pickup,2WD,5.0L V8 ((GM-CHEV)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.0,14,17,15,,,,,,5.0L V8,
-1985,Chevrolet,C20 Pickup,2WD,5.0L V8 ((GM-CHEV)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.0,11,14,12,,,,,,5.0L V8,
-1985,Chevrolet,C20 Pickup,2WD,Diesel 6.2L V8 Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks,8,6.2,17,22,19,,,,,,6.2L V8,
-1985,Chevrolet,C20 Pickup,2WD,Diesel 6.2L V8 Diesel,Manual 4-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks,8,6.2,16,18,17,,,,,,6.2L V8,

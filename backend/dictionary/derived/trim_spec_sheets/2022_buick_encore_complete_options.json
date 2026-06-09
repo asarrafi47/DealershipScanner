@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2022_buick_encore_complete_options",
+  "make": "Buick",
+  "models": [
+    "Encore",
+    "Encore"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Preferred": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L B14XFT I4 turbo; The 2020 Buick Encore GX will feature the turbocharged 1.3L (L3T) engine as stan (was Engine; All trims except for the mid-level Preferred trim were discontinued, and the Pre)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: Take advantage of both advanced infotainment and natural lighting when you choos; Take advantage of both advanced infotainment and natural lighting when you choose this Encore GX package. (was Description: Used 2020 Buick Encore Sport Touring with…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine; All trims except for the mid-level Preferred trim were discontinued, and the Pre (was L B14XFT I4 turbo; The 2020 Buick Encore GX will feature the turbocharged 1.3L (L3T) engine as stan)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: Description: Used 2020 Buick Encore Sport Touring with All-Wheel Drive, Preferred Equipment Package, Remote Start, Keyless Entry, Fog Lights, Spoiler, Roof Rails, Blind Spot Monitor, 18 Inch Wheels, Alloy Wheels, and Heated Mirrors 1st owner purchased on…"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L B14XFT I4 turbo; The 2020 Buick Encore GX will feature the turbocharged 1.3L (L3T) engine as stan"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: Take advantage of both advanced infotainment and natural lighting when you choos; Take advantage of both advanced infotainment and natural lighting when you choose this Encore GX package."
+      }
+    ]
+  }
+}

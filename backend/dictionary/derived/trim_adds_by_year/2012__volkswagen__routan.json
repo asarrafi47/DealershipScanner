@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2012|volkswagen|routan",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Routan",
+  "ladder_id": "brochure_llm_2012__volkswagen__routan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Routan SEL Premium",
+    "Routan SEL",
+    "Routan SE",
+    "Routan S"
+  ],
+  "adds_by_trim": {
+    "Routan SEL Premium": [
+      "2nd- and 3rd-row 9-inch LCD video screens with dual DVD-playing capability and wireless headphones",
+      "CD/DVD player with touchscreen interface and 30GB hard drive with USB input",
+      "17-inch alloy wheels with all-season tires",
+      "Power-adjustable floor pedals with memory feature",
+      "Tire Pressure Monitoring System with individual tire pressure monitoring"
+    ],
+    "Routan SEL": [
+      "Rain-sensing windshield wipers",
+      "Leather seating surfaces",
+      "3-zone automatic climate control system",
+      "Power-adjustable pedals",
+      "Heated first- and second-row seating",
+      "Power-folding third-row seats",
+      "Power sunroof",
+      "Power liftgate with floodlight",
+      "Keyless access with push-button start and remote start",
+      "Automatic headlights"
+    ],
+    "Routan SE": [
+      "Power liftgate with floodlight",
+      "Power-operated sliding side doors",
+      "Touchscreen navigation system with SiriusXM Traffic and Travel Link with 1-year trial",
+      "Quad halogen headlights with Daytime Running Lights",
+      "8-way power driver seat with adjustable lumbar support",
+      "Power, heated driver and passenger side mirrors with body color and chrome finish",
+      "Rearview camera system with on-screen display"
+    ],
+    "Routan S": [
+      "3.6L 283-hp V6 engine with 6-speed automatic transmission",
+      "16-inch steel wheels with covers and all-season tires",
+      "4-way manually adjustable driver and front passenger seats",
+      "Sliding removable second-row captain's chairs with folding backrests",
+      "Third-row fold-in-floor 60/40-split bench seat with folding headrests",
+      "Second-row in-floor storage tubs",
+      "Manually operated sliding side doors",
+      "Privacy glass and Daytime Running Lights",
+      "6-speaker sound system with AM/FM radio, MP3-compatible CD player, and AUX-in",
+      "Leather-wrapped steering wheel and shift knob with audio controls"
+    ]
+  }
+}

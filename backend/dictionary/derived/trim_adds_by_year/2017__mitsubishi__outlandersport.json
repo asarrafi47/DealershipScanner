@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2017|mitsubishi|outlandersport",
+  "year": 2017,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2017__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "Sel",
+    "Se",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "Auto-dimming rearview mirror with HomeLink universal LED illumination",
+      "Center slide-adjustable armrest",
+      "2.4L engine (vs. 2.0L on ES)"
+    ],
+    "Sel": [
+      "Center slide-adjustable armrest",
+      "2.4L engine (vs. 2.0L on ES)"
+    ],
+    "Se": [
+      "2.4L engine (vs. 2.0L on ES)"
+    ],
+    "ES": [
+      "One-touch Start/Stop engine switch",
+      "Cruise control",
+      "Power door locks and side view mirrors",
+      "Power windows with driver's side auto up/down",
+      "Day/night rearview mirror",
+      "12-volt accessory outlets (x2)",
+      "Center console box with armrest and cup holders (x2)",
+      "Instrument panel lower-center storage",
+      "Front door storage pockets with bottle holders",
+      "Glove box"
+    ]
+  }
+}

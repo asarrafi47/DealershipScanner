@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|toyota|yaris",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_llm_2018__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Projector-beam headlights with black sport trim and LED light bar accent",
+      "Integrated fog lights with chrome surround",
+      "Sporty front fascia with piano-black mesh grille and chrome accent",
+      "Rear spoiler",
+      "16-inch machined alloy wheels with dark accents",
+      "Sport fabric-trimmed front seats",
+      "Leather-trimmed tilt 3-spoke steering wheel with audio controls",
+      "Leather-trimmed shift lever",
+      "Entune Audio Plus with Connected Navigation App, 7-inch touchscreen, SiriusXM trial",
+      "Toyota Safety Sense C with Pre-Collision System, Lane Departure Alert, Automatic High Beams"
+    ],
+    "LE": [
+      "Color-keyed power outside mirrors",
+      "15-inch machined alloy wheels",
+      "LED Daytime Running Lights",
+      "Cruise control",
+      "Remote keyless entry system",
+      "4-speed automatic transmission standard"
+    ],
+    "L": [
+      "Bold front fascia with grille and chrome accents",
+      "Multi-reflector halogen headlights with chrome accents",
+      "Daytime Running Lights",
+      "Color-keyed outside mirrors",
+      "15-inch styled steel wheels",
+      "Metallic interior trim accents with satin chrome handles",
+      "Entune Audio with 6.1-inch touchscreen, AM/FM CD, six speakers, Bluetooth, Siri Eyes Free",
+      "Integrated backup camera with projected path display",
+      "Fabric-trimmed front seats",
+      "6-way adjustable driver seat, 4-way adjustable passenger seat with seatback pocket"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2010|chrysler|ptcruiser",
+  "year": 2010,
+  "make": "Chrysler",
+  "model": "PT Cruiser",
+  "ladder_id": "brochure_2010__chrysler__ptcruiser",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Features AM/FM stereo with CD player and changer controls",
+      "Adds auxiliary input jack for audio connectivity",
+      "Adds Includes 4 speakers sound system",
+      "Adds advanced multistage air bags for driver and front passenger with Occupant Classification System",
+      "Adds driver-side inflatable knee blocker",
+      "Adds supplemental side seat mounted air bags for front outboard occupants",
+      "Adds Includes illuminated entry system",
+      "Adds remote keyless entry with 2 transmitters"
+    ],
+    "S": [
+      "Adds SIRIUS Satellite Radio with one-year subscription",
+      "Adds security alarm",
+      "Adds Sentry Key antitheft engine immobilizer",
+      "Adds tire pressure monitoring warning lamp",
+      "Adds low-speed traction control"
+    ],
+    "Premium": [
+      "Adds UConnect Multimedia system integration"
+    ],
+    "Limited": [
+      "Adds convenience group with premium Stain Repel seat fabric",
+      "Adds heated front seats",
+      "Adds fold-flat front-passenger seat",
+      "Adds UConnect Web Wi-Fi HotSpot capability"
+    ]
+  }
+}

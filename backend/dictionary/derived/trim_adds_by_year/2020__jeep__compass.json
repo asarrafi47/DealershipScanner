@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2020|jeep|compass",
+  "year": 2020,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_2020__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 2.4L Tigershark MultiAir2 I-4 engine with 180 horsepower",
+      "Adds 6-speed automatic transmission",
+      "Adds MacPherson strut front suspension with coil springs",
+      "Adds Chapman strut rear suspension with coil springs",
+      "Adds electric power rack and pinion steering",
+      "Adds front vented disc brakes and rear solid disc brakes",
+      "Adds Jeep Active Drive 4WD system on 4x4 models",
+      "Adds 7-slot iconic Jeep grille design"
+    ],
+    "Sport": [
+      "2.4L Tigershark MultiAir 2 engine with 180 horsepower and 175 lb-ft torque",
+      "6-speed manual transmission standard",
+      "27.2 cubic feet cargo volume with rear seats up",
+      "7.8 inches ground clearance"
+    ],
+    "Latitude": [
+      "6-speed automatic transmission standard on FWD models",
+      "6-speed manual transmission standard on 4x4 models",
+      "Jeep Active Drive single-speed 4WD on 4x4"
+    ],
+    "Trailhawk": [
+      "Upgraded to 9-speed automatic transmission",
+      "Upgraded to Jeep Active Drive Low single-speed 4WD system",
+      "Adds increased approach angle of 30.3 degrees",
+      "Adds increased breakover angle of 24.4 degrees",
+      "Adds increased departure angle of 33.6 degrees"
+    ],
+    "Limited": [
+      "Adds upscale chrome on grille surrounds and badging",
+      "Adds chrome roof rail inserts",
+      "Adds chrome fog lamp bezels",
+      "Adds chrome lower front and rear accents",
+      "Adds unique chrome door trim accent molding",
+      "Adds standard Black roof",
+      "Upgraded to 9-speed automatic transmission",
+      "Adds rich selection of interior comfort and connectivity options"
+    ]
+  }
+}

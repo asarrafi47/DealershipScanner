@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2014|lexus|es",
+  "year": 2014,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2014__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Includes SmartAccess keyless entry system",
+      "Adds Includes backup camera"
+    ],
+    "Luxury": [
+      "Adds Intelligent high-beams system",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds SiriusXM satellite radio capability",
+      "Adds HD Radio technology",
+      "Adds Enform app services and connected vehicle features"
+    ]
+  }
+}

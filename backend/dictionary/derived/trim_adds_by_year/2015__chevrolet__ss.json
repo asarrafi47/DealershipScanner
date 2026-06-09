@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|chevrolet|ss",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "SS",
+  "ladder_id": "brochure_2015__chevrolet__ss",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SS",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "vehicles, find financial tools or track"
+    ],
+    "Limited": [
+      "Upgraded to heated and ventilated driver and front passenger seats",
+      "Adds power-adjustable driver and front passenger seats with 10-way control and lumbar",
+      "Adds SiriusXM Satellite Radio with 12-month subscription",
+      "Adds OnStar with 4G LTE and mobile Wi-Fi hotspot capability"
+    ],
+    "SS": [
+      "Adds power sunroof with express-open functionality",
+      "Adds remote vehicle starter system",
+      "Adds transmission oil cooler"
+    ]
+  }
+}

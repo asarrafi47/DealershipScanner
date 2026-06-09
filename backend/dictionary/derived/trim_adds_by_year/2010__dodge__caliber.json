@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2010|dodge|caliber",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Caliber",
+  "ladder_id": "brochure_llm_2010__dodge__caliber",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Uptown",
+    "Rush",
+    "Heat",
+    "Mainstreet",
+    "Express"
+  ],
+  "adds_by_trim": {
+    "Uptown": [
+      "2.0L DOHC 16V i-4 with Dual VVT and Continuously Variable Automatic transmission",
+      "17-inch 5-spoke chrome-plated aluminum wheels",
+      "Autostick feature on CVT transmission",
+      "Color-keyed instrument panel and shifter trim",
+      "Power 6-way driver seat",
+      "Heated front seats"
+    ],
+    "Rush": [
+      "2.4L DOHC 16V i-4 with Dual VVT engine option",
+      "18-inch chrome-clad cast aluminum wheels",
+      "Performance-tuned power rack-and-pinion steering",
+      "Sport-tuned suspension",
+      "Autostick feature on CVT transmission"
+    ],
+    "Heat": [
+      "Satin silver interior accents on instrument panel and shifter trim",
+      "Heated front seats included",
+      "Power 6-way driver seat",
+      "Fog lamps"
+    ],
+    "Mainstreet": [
+      "Premium cloth fabric with color-keyed inserts",
+      "Bright body-side molding",
+      "Bright grille",
+      "Fog lamps"
+    ],
+    "Express": [
+      "2.0L DOHC 16V i-4 with 5-speed manual transmission",
+      "15-inch steel wheels with silver painted wheel covers",
+      "P205/70R15 all-season tires",
+      "Power front disc and rear drum brakes with ABS",
+      "Standard-tuned suspension"
+    ]
+  }
+}

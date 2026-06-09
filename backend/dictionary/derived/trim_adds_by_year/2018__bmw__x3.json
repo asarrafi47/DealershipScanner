@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|bmw|x3",
+  "year": 2018,
+  "make": "BMW",
+  "model": "X3",
+  "ladder_id": "brochure_llm_2018__bmw__x3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "X3 xDrive35i",
+    "X3 xDrive28i",
+    "X3 xDrive28d",
+    "X3 sDrive28i"
+  ],
+  "adds_by_trim": {
+    "X3 xDrive35i": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 300 hp and 300 lb-ft torque",
+      "0-60 mph in 5.3 seconds"
+    ],
+    "X3 xDrive28i": [
+      "xDrive all-wheel drive system versus rear-wheel drive on sDrive28i",
+      "19/26/21 city/highway/combined mpg"
+    ],
+    "X3 xDrive28d": [
+      "2.0-liter TwinPower Turbo Diesel inline 4-cylinder engine with 180 hp and 280 lb-ft torque",
+      "0-60 mph in 7.8 seconds"
+    ],
+    "X3 sDrive28i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 240 hp and 260 lb-ft torque",
+      "0-60 mph in 6.2 seconds",
+      "21/28/24 city/highway/combined mpg"
+    ]
+  }
+}

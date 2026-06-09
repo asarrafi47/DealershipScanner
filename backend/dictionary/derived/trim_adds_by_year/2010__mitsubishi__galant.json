@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|mitsubishi|galant",
+  "year": 2010,
+  "make": "Mitsubishi",
+  "model": "Galant",
+  "ladder_id": "brochure_llm_2010__mitsubishi__galant",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "18-inch alloy wheels replacing 16-inch steel wheels",
+      "Parabolic fog lights",
+      "Color-keyed door handles and side-view mirrors",
+      "Color-keyed trunk lip spoiler",
+      "Heated side-view mirrors",
+      "Chrome exhaust tip",
+      "Automatic climate control",
+      "Sport-wrapped steering wheel and shift knob",
+      "Steering wheel-mounted audio controls",
+      "8-way power adjustable driver's seat"
+    ],
+    "ES": [
+      "2.4-liter 4-cylinder MIVEC engine with 160 horsepower",
+      "4-speed Sportronic transmission with INVECS-II adaptive shift control",
+      "MacPherson strut front and multilink rear suspension",
+      "Advanced dual-stage front airbags with side and curtain airbags",
+      "Active Stability Control",
+      "Theft-deterrent alarm system",
+      "Power side-view mirrors, windows and door locks",
+      "140-watt Mitsubishi AM/FM/CD/MP3 audio system",
+      "In-glass antenna",
+      "Auto-off halogen headlamps with black bezels"
+    ]
+  }
+}

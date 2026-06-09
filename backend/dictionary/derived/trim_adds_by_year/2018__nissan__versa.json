@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|nissan|versa",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2018__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "16-inch machine-finished split 5-spoke aluminum-alloy wheels with P195/55HR16 tires",
+      "Fog lights",
+      "Dual power outside mirrors with LED turn signals",
+      "Rear roof spoiler",
+      "Sport side sills",
+      "Suede-like seat fabric with color accents and stitching",
+      "Leather-wrapped sport steering wheel",
+      "Variable intermittent flat-blade windshield wipers",
+      "Rear-seat fold-down center armrest with cup holders",
+      "Nissan Intelligent Key with Push Button Ignition"
+    ],
+    "SV": [
+      "5.0-inch Color Display Audio with premium AM/FM/CD system",
+      "SiriusXM Satellite Radio",
+      "Hands-free Text Messaging assistant",
+      "Streaming audio via Bluetooth wireless technology",
+      "RearView Monitor",
+      "Upgraded Fine Vision electroluminescent gauges with trip computer and outside temperature display",
+      "Integrated Key with remote keyless entry",
+      "Power windows and door locks",
+      "Cruise control",
+      "USB connection port for iPod interface and compatible devices"
+    ],
+    "S": [
+      "1.6-liter DOHC 16-valve 4-cylinder engine with 109 hp",
+      "Xtronic CVT transmission",
+      "Active grille shutter",
+      "15-inch steel wheels with wheel covers and P185/65HR15 tires",
+      "Dual power outside mirrors",
+      "Bluetooth Hands-free Phone System",
+      "Air conditioning",
+      "Fine Vision electroluminescent gauges",
+      "4-wheel Anti-lock Braking System with Vehicle Dynamic Control",
+      "Nissan Advanced Air Bag System"
+    ]
+  }
+}

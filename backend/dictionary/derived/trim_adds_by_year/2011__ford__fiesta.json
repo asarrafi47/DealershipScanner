@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2011|ford|fiesta",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_web_2011__ford__fiesta",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Fiesta ST",
+    "Fiesta ST-Line",
+    "Fiesta SE",
+    "Fiesta S"
+  ],
+  "adds_by_trim": {
+    "Fiesta ST": [
+      "1.6L turbocharged I-4 engine with 197 hp and 202 lb-ft torque",
+      "Six-speed manual transmission (exclusive to ST)",
+      "Sport-tuned suspension",
+      "Four-wheel disc brakes",
+      "Summer tires on 17-inch wheels",
+      "0-60 acceleration of 6.4 seconds"
+    ],
+    "Fiesta ST-Line": [
+      "Body-color trim on rocker panels and rear fascia",
+      "Black roof and spoiler",
+      "Dark 16-inch wheels",
+      "Larger grille from ST",
+      "Red-stitched seats",
+      "Metallic pedal covers"
+    ],
+    "Fiesta SE": [
+      "Available six-speed dual-clutch automatic transmission",
+      "27/37 mpg city/highway with dual-clutch automatic"
+    ],
+    "Fiesta S": [
+      "1.6L I-4 engine with 120 hp and 112 lb-ft torque",
+      "Five-speed manual transmission standard",
+      "Display screen with Ford SYNC infotainment system",
+      "Rear camera",
+      "Power door locks",
+      "Five cupholders",
+      "Tire pressure monitoring system",
+      "15-inch steel wheels with silver hubcaps",
+      "Chrome grille trim",
+      "Capless fuel filler"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/fiesta/"
+}

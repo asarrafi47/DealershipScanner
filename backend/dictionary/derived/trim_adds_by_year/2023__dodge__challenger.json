@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2023|dodge|challenger",
+  "year": 2023,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2023__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T SCAT PACK",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "Sport suspension",
+      "Performance brakes",
+      "Performance steering",
+      "GT bright grille badge",
+      "Performance hood and splitter",
+      "ParkSense Rear Park Assist System",
+      "Performance 4-bump steering wheel",
+      "Paddle shifters",
+      "Universal garage door opener",
+      "Remote Start System"
+    ],
+    "SXT": [
+      "3.6L Pentastar V6 engine with 303 hp and 268 lb-ft torque",
+      "TorqueFlite 8-speed automatic transmission",
+      "Performance suspension",
+      "Sport Mode",
+      "7-inch TFT configurable cluster display",
+      "Uconnect 4 with 7-inch touchscreen and Apple CarPlay/Android Auto",
+      "10-way power driver seat with 4-way lumbar adjust",
+      "6 airbags",
+      "Keyless Enter 'n Go with push-button start",
+      "6-speaker audio system"
+    ],
+    "R/T SCAT PACK": [
+      "392 HEMI® V8 engine — 485 hp and 475 lb-ft of torque",
+      "4-piston Brembo® brakes at all corners",
+      "High-performance suspension",
+      "Launch Assist and Line Lock",
+      "20 by 9-inch Low-Gloss Granite Crystal aluminum wheels",
+      "Forward-facing 392 Bee fender badges",
+      "Aluminum Performance hood with dual heat extractors"
+    ]
+  }
+}

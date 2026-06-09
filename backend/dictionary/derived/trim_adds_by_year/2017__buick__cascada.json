@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|buick|cascada",
+  "year": 2017,
+  "make": "Buick",
+  "model": "Cascada",
+  "ladder_id": "brochure_llm_2017__buick__cascada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT TOURING",
+    "PREMIUM"
+  ],
+  "adds_by_trim": {
+    "SPORT TOURING": [
+      "7-inch high-resolution color touchscreen navigation with GPS",
+      "Sport alloy pedals",
+      "Leather-wrapped 3-spoke sport steering wheel",
+      "Magic Black interior trim decor",
+      "20-inch RQ9 aluminum wheels with sterling silver finish",
+      "Front and rear air deflectors",
+      "Forward Collision Alert and Lane Departure Warning",
+      "Front and rear park assist with rainsense wipers",
+      "Fog lamps with articulating HID headlamps and tunnel detection"
+    ],
+    "PREMIUM": [
+      "7-inch diagonal color LCD display with IntelliLink infotainment system",
+      "AM/FM stereo with MP3 CD player and auxiliary input",
+      "Remote vehicle starter system with remote keyless entry",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for up to 7 devices",
+      "SiriusXM satellite radio with 3 trial months included",
+      "Premium 7-speaker audio system with Bluetooth connectivity",
+      "Dual-zone automatic climate control",
+      "Heated front sport bucket seats with perforated leather trim",
+      "8-way power driver and front-passenger seat adjusters with lumbar",
+      "Black power-folding convertible top with acoustic and thermal insulation"
+    ]
+  }
+}

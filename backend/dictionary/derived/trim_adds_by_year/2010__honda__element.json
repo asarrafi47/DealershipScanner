@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2010|honda|element",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Element",
+  "ladder_id": "brochure_llm_2010__honda__element",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Element SC",
+    "Element EX",
+    "Element LX"
+  ],
+  "adds_by_trim": {
+    "Element LX": [
+      "2.4-Liter 16-Valve DOHC i-VTEC Engine",
+      "120-Watt AM/FM/CD audio system with 4 speakers and clock",
+      "Removable flip-up rear seats",
+      "Water-resistant FXC fabric front seat upholstery",
+      "Air conditioning with air-filtration system",
+      "Front, front side and side curtain airbags with rollover sensor",
+      "Vehicle Stability Assist with traction control, ABS, electronic brake distribution and brake assist",
+      "Available Real Time 4-Wheel Drive"
+    ],
+    "Element EX": [
+      "270-Watt AM/FM/CD audio system with 7 speakers including subwoofer",
+      "MP3 and auxiliary input jack",
+      "Center console with removable cooler",
+      "Water-resistant FXC fabric front and rear seat upholstery",
+      "16-inch alloy wheels",
+      "Available Honda Satellite-Linked Navigation System with voice recognition and rearview camera",
+      "XM Radio",
+      "USB audio interface with Navigation"
+    ],
+    "Element SC": [
+      "4-wheel independent suspension with stiffer springs and dampers",
+      "Larger sway bars and lower ride height",
+      "18-inch alloy wheels and low-profile tires",
+      "SC-exclusive front grille, bumper and headlights",
+      "SC-exclusive seat fabric with black carpeting and gloss piano-black interior trim"
+    ]
+  }
+}

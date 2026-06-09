@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2024|hyundai|santacruz",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Santa Cruz",
+  "ladder_id": "brochure_llm_2024__hyundai__santacruz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XRT",
+    "Night",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "2.5L Turbo engine with 281 hp and 311 lb-ft torque",
+      "8-speed Wet Dual Clutch Transmission with paddle shifters",
+      "Forward Collision-Avoidance Assist with Pedestrian, Cyclist, and Junction-Turning Detection",
+      "Intelligent Speed Limit Assist and Navigation-based Smart Cruise Control with Curve Control",
+      "Highway Driving Assist and Blind-Spot View Monitor with Surround View Monitor",
+      "Bose premium audio system and Digital Key",
+      "Leather-trimmed seats with ventilated front seats and heated steering wheel",
+      "Ambient interior lighting and bodycolor door handles",
+      "Rain-sensing windshield wipers",
+      "10.25-inch navigation system"
+    ],
+    "XRT": [
+      "2.5L Turbo engine with 281 hp and 311 lb-ft torque",
+      "8-speed Wet Dual Clutch Transmission with paddle shifters",
+      "Integrated lockable tonneau cover",
+      "Wider fender cladding and black lower door accents",
+      "Satin black exterior door handles and side mirror covers",
+      "10.25-inch navigation system and Dynamic Voice Recognition",
+      "10.25-inch digital instrument cluster"
+    ],
+    "Night": [
+      "Dark front and rear lower fascias",
+      "Dark chrome accent front grille and tailgate handle trim",
+      "Gloss black side mirror covers and door handles",
+      "Dark 20-inch alloy wheels",
+      "Roof side rails and power tilt-and-slide sunroof",
+      "Rear sliding glass window with defroster",
+      "HTRAC All-Wheel Drive"
+    ],
+    "SEL": [
+      "10.25-inch navigation system",
+      "Dynamic Voice Recognition",
+      "Roof side rails and power tilt-and-slide sunroof",
+      "Rear sliding glass window with defroster",
+      "8-way power driver seat with 2-way power lumbar support",
+      "Heated front seats",
+      "Proximity Key with push button start and key fob remote engine start",
+      "Heated side mirrors with LED turn signal indicators",
+      "Dual automatic temperature control and auto-defogging windshield",
+      "SiriusXM Satellite Radio, wireless phone charger, and Bluelink+ Connected Car System"
+    ],
+    "SE": [
+      "2.5L GDI/MPI engine with 191 hp and 181 lb-ft torque",
+      "8-speed automatic transmission with SHIFTRONIC",
+      "Drive Mode Select and self-leveling multi-link rear suspension",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Blind-Spot Collision-Avoidance Assist and Rear Cross-Traffic Collision-Avoidance Assist",
+      "8.0-inch Display Audio with AM/FM/HD Radio, Android Auto, and Apple CarPlay",
+      "Projector-type LED headlights with LED Daytime Running Lights and LED taillights",
+      "Rearview camera and Black H-Tex seating surfaces",
+      "Sheet molded composite bed with sidewall and underbed storage",
+      "3,500-lb towing capacity"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2020|acura|tlx",
+  "year": 2020,
+  "make": "acura",
+  "model": "tlx",
+  "ladder_id": "2018_acura_tlx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "A-Spec"
+  ],
+  "adds_by_trim": {
+    "Technology": [
+      "registered trademark of Panasonic Corporation of North America. All rights reserved. GRAMMY is a"
+    ],
+    "Advance": [
+      "registered trademarks of Apple Inc. ELS Studio is a"
+    ],
+    "A-Spec": [
+      "19 x 8.5 Shark Gray Interwoven aluminum-alloy wheels",
+      "255 / 40 R19 High-Performance All-Season tires",
+      "Decklid Spoiler",
+      "LED Fog Lights"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Technology": 1,
+      "A-Spec": 0
+    }
+  }
+}

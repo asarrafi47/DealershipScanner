@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2020|chevrolet|trax",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Trax",
+  "ladder_id": "brochure_llm_2020__chevrolet__trax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "TL": [
+      "Body-color door handles with chrome accent (requires LT Convenience Package)",
+      "Keyless Open and Start (requires LT Convenience Package)",
+      "3-spoke leather-wrapped steering wheel with cruise, audio and phone controls (requires LT Convenience Package)",
+      "6-way power driver seat adjuster with power lumbar control (requires LT Convenience Package)",
+      "Power sunroof with sunshade (requires Sun and Sound Package)",
+      "Bose premium 7-speaker audio system with Richbass woofer (requires Sun and Sound Package)",
+      "Heated driver and front passenger seats",
+      "SiriusXM All Access Package with 3-month trial subscription"
+    ],
+    "SL": [
+      "6-speaker audio system",
+      "Remote Keyless Entry with panic alarm",
+      "3-spoke steering wheel with audio and phone interface controls",
+      "4-way manual driver seat adjuster with power lumbar control",
+      "Rear Vision Camera",
+      "Multiple airbags including frontal, knee, side-impact and head-curtain",
+      "LATCH system for child restraints",
+      "1 month OnStar Safety & Security Plan coverage"
+    ]
+  }
+}

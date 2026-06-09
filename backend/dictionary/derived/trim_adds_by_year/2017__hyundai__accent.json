@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2017|hyundai|accent",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_2017__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Electronic Stability Control (ESC)",
+      "Adds Traction Control System",
+      "Adds Supplemental Restraint System (SRS) with airbags",
+      "Adds 3-point seatbelt system"
+    ],
+    "SE": [
+      "Adds available features not standard on Sport trim"
+    ],
+    "Limited": [
+      "Adds premium tier equipment over SE trim"
+    ]
+  }
+}

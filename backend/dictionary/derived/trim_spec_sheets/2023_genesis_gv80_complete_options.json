@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_genesis_gv80_complete_options",
+  "make": "Genesis",
+  "models": [
+    "GV80",
+    "GV80"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L Smartstream G3.5 T-GDi V6"
+      }
+    ],
+    "Advanced": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L Smartstream G3.5 T-GDi V6"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; L Smartstream G3.5 T-GDi V6"
+      }
+    ]
+  }
+}

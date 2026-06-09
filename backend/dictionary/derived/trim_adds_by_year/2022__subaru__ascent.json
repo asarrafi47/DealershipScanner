@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2022|subaru|ascent",
+  "year": 2022,
+  "make": "Subaru",
+  "model": "Ascent",
+  "ladder_id": "brochure_llm_2022__subaru__ascent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ascent Touring",
+    "Ascent Limited",
+    "Ascent Onyx Edition",
+    "Ascent Premium",
+    "Ascent"
+  ],
+  "adds_by_trim": {
+    "Ascent Premium": [
+      "5,000-lb towing capacity",
+      "18-inch aluminum-alloy wheels in gray with machine finish",
+      "8-way power-adjustable driver seat",
+      "Leather-wrapped steering wheel and shift lever",
+      "Second-row climate controls",
+      "4G LTE Wi-Fi capability",
+      "SUBARU STARLINK 8.0-inch multimedia plus with Apple CarPlay and Android Auto"
+    ],
+    "Ascent Onyx Edition": [
+      "20-inch aluminum-alloy wheels in gloss black finish",
+      "Gloss black grille and surround",
+      "LED fog lights",
+      "Black-accented LED steering responsive headlights",
+      "Privacy glass",
+      "Crystal Black Silica exterior mirrors and roof spoiler",
+      "Black chrome exterior tailgate trim",
+      "Black badging"
+    ],
+    "Ascent Limited": [
+      "20-inch aluminum-alloy wheels in dark gray with machine finish",
+      "LED fog lights with gloss black finishers",
+      "Lower door cladding with chrome accents",
+      "Power rear gate with vehicle lock button",
+      "Leather-trimmed upholstery",
+      "10-way power-adjustable driver seat with 2-position memory",
+      "4-way power-adjustable front-passenger seat",
+      "Blind-spot detection with lane change assist and rear cross-traffic alert",
+      "Reverse automatic braking"
+    ],
+    "Ascent Touring": [
+      "Panoramic power moonroof",
+      "Automatic power-folding exterior mirrors with satin chrome",
+      "Heated exterior mirrors, windshield wiper de-icer and 3-mode heated front seats",
+      "Java brown or slate black leather-trimmed upholstery",
+      "Upgraded leather steering wheel",
+      "3-mode ventilated front seats",
+      "Woodgrain-patterned matte finish accent trim",
+      "Rain-sensing wipers",
+      "Dual-mode heated second-row seats",
+      "Smart rear-view mirror with 180-degree front view monitor"
+    ],
+    "Ascent": [
+      "260-hp Direct-Injection Turbocharged SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 8-speed manual-mode paddle shifters",
+      "X-MODE with Hill Descent Control",
+      "18-inch aluminum-alloy wheels with silver finish",
+      "LED Steering Responsive Headlights with High Beam Assist",
+      "SUBARU STARLINK 6.5-inch Multimedia Plus with Apple CarPlay and Android Auto",
+      "EyeSight Driver Assist Technology",
+      "Tri-zone automatic climate control system",
+      "Rear-Vision Camera"
+    ]
+  }
+}

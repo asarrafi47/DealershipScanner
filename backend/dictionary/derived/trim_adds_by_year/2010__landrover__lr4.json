@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2010|landrover|lr4",
+  "year": 2010,
+  "make": "landrover",
+  "model": "LR4",
+  "ladder_id": "brochure_2010__landrover__lr4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds full-color Infotainment Touchscreen on center console",
+      "Adds 5 inch TFT-LED instrument panel display with personalization menu",
+      "Adds thumb controls on steering wheel for display and audio functions",
+      "Adds analogue clock accent to interior",
+      "Adds integrated audio and navigation controls"
+    ],
+    "Standard": [
+      "Upgraded to 480-watt harman/kardon audio system with HD Radio",
+      "Adds Sirius Satellite Radio option",
+      "Upgraded to premium LOGIC7 system with theatre-style audio quality"
+    ]
+  }
+}

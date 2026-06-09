@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2019|infiniti|qx5680",
+  "year": 2019,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2019__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 LIMITED 4WD",
+    "QX80 LUXE 4WD",
+    "QX80 LUXE"
+  ],
+  "adds_by_trim": {
+    "QX80 LIMITED 4WD": [
+      "INFINITI All-Mode 4WD with computer-controlled transfer case (Auto, 4H, 4L)",
+      "Dark machine-finished 22-inch forged aluminum wheels",
+      "Stainless steel running board caps with rubber grips and INFINITI Welcome Lighting",
+      "Satin chrome exterior trim including roof rails and crossbars",
+      "Unique LIMITED front and rear bumper lower finish",
+      "Two-tone semi-aniline leather/Alcantara seats with quilting and contrast piping",
+      "Matte Silver Open Pore Ash Wood trim",
+      "Black Ultrasuede headliner and A-, B-, C-pillar trim",
+      "Chrome interior door handle finishers and radiant illuminated kick plates"
+    ],
+    "QX80 LUXE 4WD": [
+      "INFINITI All-Mode 4WD with computer-controlled transfer case (Auto, 4H, 4L modes)"
+    ],
+    "QX80 LUXE": [
+      "5.6-liter V8 engine with 400 horsepower",
+      "7-speed automatic transmission with Adaptive Shift Control",
+      "Snow and Tow driving modes with hill start assist",
+      "Rear automatic self-leveling suspension and Trailer Sway Control",
+      "Class IV integrated tow hitch with 8,500 lbs towing capacity",
+      "Forward Emergency Braking with Pedestrian Detection",
+      "Predictive Forward Collision Warning and Remote Engine Start System",
+      "20-inch aluminum-alloy wheels with 275/60R20 H-rated all-season tires",
+      "10-way power driver seat with 2-way lumbar and heated leather steering wheel",
+      "INFINITI InTouch Navigation with 8-inch LCD touchscreen and voice recognition"
+    ]
+  }
+}

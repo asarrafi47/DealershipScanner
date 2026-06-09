@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2021|lexus|lx",
+  "year": 2021,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "2019_lexus_lx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "compatible with all mobile phones, MP3/WMA players and like",
+      ". Service may vary by vehicle and region. See usage precautions and service limitations in Owner’s Manual, and",
+      "lexus.com/privacyvts/. The Safety Connect trial period is at no extra cost and",
+      "on the last time data was collected from the vehicle and is not",
+      "Connect renewal will be included when Safety",
+      "Destination Assist depends on an operative telematics device, a cellular connection,",
+      "tion required after trial. Services subject to change at any time without notice. Terms of Use apply. Data charges may apply. See Owner’s Manual and lexus.com/enform for",
+      "certain types of severe collisions. To decrease the risk of injury from an inflating airbag, always wear seatbelts and sit upright in the middle of the seat as far back as possible. Do not put objects in",
+      "services applicable for new Lexus vehicle registered owners and",
+      "vehicle’s condition and how/where you drive. See",
+      "e coverage is 12 months for the parts and labor, regardless of mileage,",
+      "purchase for coverage and conditions. 51. Warranty honored at all Lexus dealerships nationwide"
+    ],
+    "Premium": [
+      "Ventilated front seats",
+      "Head-up display",
+      "Interior ambient lighting",
+      "Adaptive suspension",
+      "Third-row seat option"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 12.0,
+    "per_trim_add_counts": {
+      "Limited": 12
+    }
+  }
+}

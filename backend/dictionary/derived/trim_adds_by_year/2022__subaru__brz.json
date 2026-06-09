@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2022|subaru|brz",
+  "year": 2022,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2022__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Limited": [
+      "18-inch aluminum-alloy wheels with Michelin Pilot Sport 4 summer-performance tires",
+      "LED Steering Responsive Headlights",
+      "Ultrasuede and leather-trimmed upholstery",
+      "Aluminum-alloy sill cover inserts",
+      "Brin Naub instrument cluster meter visor",
+      "8 speakers with 2-channel amplifier",
+      "Dual-mode heated front seats",
+      "STARLINK Safety and Security with Advanced Automatic Collision Notification and Remote Engine Start",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Reverse Automatic Braking"
+    ],
+    "BRZ Premium": [
+      "228-hp 2.4-liter SUBARU BOXER engine with DAVCS",
+      "Close-ratio 6-speed manual transmission or 6-speed automatic with paddle shifters and rev-matching downshift",
+      "Sport-tuned independent suspension with double-wishbone rear",
+      "Multi-spoke 17-inch aluminum-alloy wheels",
+      "Auto-on/off LED headlights and taillights with functional front bumper vents",
+      "7.0-inch customizable digital gauge cluster with Normal, Sport, and Track display modes",
+      "Leather-wrapped steering wheel with audio and display controls",
+      "SUBARU STARLINK 8.0-inch multimedia system with Apple CarPlay and Android Auto",
+      "EyeSight Driver Assist Technology and High Beam Assist",
+      "Keyless Access with Push-Button Start"
+    ]
+  }
+}

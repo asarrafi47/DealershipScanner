@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2024_chevrolet_trailblazer_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Trailblazer",
+    "Trailblazer"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "RS": [
+      {
+        "label": "Engine Options",
+        "value": "2022 Chevrolet Trailblazer Specs, Features & Options Here's everything you need; 2022 Chevy Trailblazer trim levels breakdown of the MSRP, standard equipment, an"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "2022 Chevrolet Trailblazer Specs, Features & Options Here's everything you need; 2022 Chevy Trailblazer trim levels breakdown of the MSRP, standard equipment, an"
+      }
+    ],
+    "LS": [
+      {
+        "label": "Engine Options",
+        "value": "2022 Chevrolet Trailblazer Specs, Features & Options Here's everything you need; 2022 Chevy Trailblazer trim levels breakdown of the MSRP, standard equipment, an"
+      }
+    ]
+  }
+}

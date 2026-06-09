@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2016|rollsroyce|wraith",
+  "year": 2016,
+  "make": "Rolls Royce",
+  "model": "Wraith",
+  "ladder_id": "brochure_llm_2016__rollsroyce__wraith",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Black Badge",
+    "Wraith"
+  ],
+  "adds_by_trim": {
+    "Black Badge": [
+      "0-60 mph acceleration in 4.3 seconds versus 4.4 seconds",
+      "0-100 km/h acceleration in 4.5 seconds versus 4.6 seconds",
+      "820 Nm torque at 1700-4500 rpm versus 800 Nm at 1500-5500 rpm"
+    ],
+    "Wraith": [
+      "V12 engine with 624 bhp and 632 PS power output",
+      "800 Nm torque at 1500-5500 rpm",
+      "4.4 second 0-60 mph acceleration",
+      "Twin exhausts with striking profile silhouette",
+      "Rear-hinged coach doors",
+      "2:1 proportions of wheel to roof height",
+      "Long overhang beyond rear wheels",
+      "Deeply recessed vertical front grille",
+      "Fastback design with elegant proportions"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2016|infiniti|qx70",
+  "year": 2016,
+  "make": "Infiniti",
+  "model": "QX70",
+  "ladder_id": "brochure_llm_2016__infiniti__qx70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport Package",
+    "Deluxe Touring Package",
+    "QX70"
+  ],
+  "adds_by_trim": {
+    "Sport Package": [
+      "21 x 9.5-inch 6-spoke dark finish aluminum-alloy wheels with 265/45R21 tires",
+      "Solid magnesium paddle shifters",
+      "Contrast-stitched sport style front and rear seats",
+      "Driver's seat with 4-way power bolster adjustment",
+      "Climate-controlled front seats",
+      "Aluminum pedals",
+      "Dark headlights, mirror housings, grille, fog light trim, and tailgate trim"
+    ],
+    "Deluxe Touring Package": [
+      "20 x 8.0-inch 5-spoke aluminum-alloy wheels with 265/50R20 tires",
+      "Maple interior accents",
+      "Quilted leather-appointed seats",
+      "Climate-controlled front seats",
+      "Aluminum pedals",
+      "Rear cargo cover"
+    ],
+    "QX70": [
+      "3.7-liter 24-valve V6 engine with 325 hp and 267 lb-ft torque",
+      "7-speed automatic transmission with manual shift mode and Downshift Rev Matching",
+      "Automatic on/off HID bi-functional xenon headlights with integrated fog lights",
+      "Power sliding tinted glass moonroof with one-touch auto-open/close",
+      "Power rear liftgate with electric closure assist",
+      "Infiniti Intelligent Key with push button ignition",
+      "Dual Zone Automatic Temperature Control with rear-seat heating and cooling vents",
+      "Vehicle-speed-sensitive power steering with 36.7-foot turning diameter",
+      "12.6 x 1.3-inch front and 12.1 x 0.6-inch rear ventilated disc brakes with ABS",
+      "18 x 8.0-inch split 5-spoke aluminum wheels with 265/60R18 all-season tires"
+    ]
+  }
+}

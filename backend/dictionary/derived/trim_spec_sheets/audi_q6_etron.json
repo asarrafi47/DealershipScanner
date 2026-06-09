@@ -1,0 +1,36 @@
+{
+  "ladder_id": "audi_q6_etron",
+  "make": "Audi",
+  "models": [
+    "Q6 e-tron",
+    "Q6 Sportback e-tron",
+    "SQ6 e-tron"
+  ],
+  "year_min": 2024,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "Top Q6 e-tron equipment level"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior materials"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Audio System Layout",
+        "value": "Enhanced audio and comfort features"
+      }
+    ],
+    "Ultra": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

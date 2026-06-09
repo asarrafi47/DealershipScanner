@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2012|ford|explorer",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_llm_2012__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "20-inch painted aluminum wheels with P255/50R20 all-season tires",
+      "Body-color grille and power-folding heated sideview mirrors",
+      "Rear view camera",
+      "1st-row heated bucket seats with 10-way power driver's seat and memory",
+      "Leather-trimmed seating surfaces",
+      "MyFord Touch with 8-inch LCD touchscreen, 2 USB ports, and SD card reader",
+      "Power-adjustable pedals with memory",
+      "Sony audio system with 12 speakers and HD Radio",
+      "Dual-zone electronic automatic temperature control",
+      "Universal garage door opener"
+    ],
+    "XLT": [
+      "18-inch painted aluminum wheels with P245/60R18 all-season tires",
+      "Automatic headlamps and fog lamps",
+      "Gloss Black center stack accents with satin silver grille",
+      "Leather-wrapped steering wheel and shift knob",
+      "Heated sideview mirrors with LED turn signal indicators",
+      "110-volt power outlet",
+      "MyFord with 4.2-inch color LCD display and media hub",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "Ford SYNC voice-activated connectivity system with USB port",
+      "Auto-dimming rearview mirror"
+    ],
+    "Standard": [
+      "3.5L Ti-VCT V6 engine with 290 horsepower and 255 lb.-ft. torque",
+      "6-speed SelectShift Automatic transmission",
+      "Four-wheel disc Anti-Lock Brake System with traction and trailer sway control",
+      "Personal Safety System with dual-stage front airbags and side-curtain airbags",
+      "AdvanceTrac with Roll Stability Control and Curve Control",
+      "Three-row seating with 60/40 and 50/50 split fold-flat seats",
+      "Remote Keyless Entry System with 2 transmitter remotes",
+      "Air conditioning with auxiliary rear controls",
+      "Power windows, power door locks, and rear-window defroster",
+      "Steering wheel-mounted cruise and audio controls with MyFord display"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Kia,EV6,Long Range RWD,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,134,101,117,,,,,
+2024,Kia,EV6,Standard Range RWD,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,136,100,117,,,,,
+2024,Kia,EV6,AWD GT,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,88,77,83,,,,,
+2024,Kia,EV6,Long Range AWD (19 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,120,98,109,,,,,
+2024,Kia,EV6,Long Range AWD (20 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,106,86,96,,,,,

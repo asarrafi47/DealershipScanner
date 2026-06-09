@@ -1,0 +1,45 @@
+{
+  "ladder_id": "2022_toyota_highlander_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Highlander",
+    "Highlander"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L 3MZ-FE V6; CVT (Hybrid) (was More standard features are now equipped on all trim levels, with the base model)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: A DVD-based navigation system was introduced to the Highlander for the 2006 mode"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: The unibody was slightly modified behind the second row seats to include a depre"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: More standard features are now equipped on all trim levels, with the base model (was More standard features are now equipped on all trim levels, with the base model; Hill Start Assist Control (HAC) is also standard which prevents rolling backward)"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: More standard features are now equipped on all trim levels, with the base model; Hill Start Assist Control (HAC) is also standard which prevents rolling backward (was Front-engine, front-wheel-drive; L 1MZ-FE V6)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Front-engine, front-wheel-drive; L 1MZ-FE V6"
+      }
+    ]
+  }
+}

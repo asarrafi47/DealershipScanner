@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2018|chevrolet|silverado",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2018__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HIGH COUNTRY",
+    "LTZ",
+    "LT Z71",
+    "LT",
+    "CUSTOM",
+    "SL",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "HIGH COUNTRY": [
+      "LED headlamps with LED signature daytime running lamps",
+      "Front and rear park assist with obstacle detection and audible warning",
+      "5.3L EcoTec3 V8 or 6.2L EcoTec3 V8 engine options",
+      "8-speed automatic transmission"
+    ],
+    "LTZ": [
+      "LED headlamps with LED signature daytime running lamps",
+      "5.3L EcoTec3 V8 standard engine",
+      "LTZ Plus Package with Bose premium 7-speaker sound system",
+      "Power-adjustable pedals and heated leather-wrapped steering wheel",
+      "Front and rear park assist"
+    ],
+    "LT Z71": [
+      "5.3L EcoTec3 V8 engine",
+      "Automatic locking rear differential",
+      "Max Trailering Package available"
+    ],
+    "LT": [
+      "LT Convenience Package with 10-way power driver seat",
+      "Remote vehicle starter system",
+      "Rear-window defogger and 110-volt power outlet",
+      "Dual-zone climate control on Crew Cab and Double Cab models"
+    ],
+    "CUSTOM": [
+      "Custom Convenience Package with remote locking tailgate",
+      "Remote Keyless Entry",
+      "Rear-window defogger",
+      "Color-keyed carpeting with rubberized vinyl floor mats"
+    ],
+    "SL": [
+      "WT Convenience Package with deep-tinted glass",
+      "110-volt power outlet and Remote Keyless Entry",
+      "Remote locking tailgate",
+      "Outside heated power-adjustable mirrors"
+    ],
+    "WT": [
+      "4.3L EcoTec3 V6 engine with 285 hp and 305 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "Cargo box tie-downs",
+      "Spray-on black bedliner with bowtie logo"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2010|dodge|challenger",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Challenger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "R/T",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

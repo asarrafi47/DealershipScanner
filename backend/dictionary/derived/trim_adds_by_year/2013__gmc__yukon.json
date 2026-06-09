@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2013|gmc|yukon",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "2011_gmc_yukon_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Els",
+    "Tls"
+  ],
+  "adds_by_trim": {
+    "Tls": [
+      "and air ducts \u25cf \u25cf \u25cf \u25cf \u25cf",
+      "AM/FM stereo with MP3-compatible CD/DVD",
+      "ections Plan6 \u25cf \u25cf \u25cf \u25cf \u25cf"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Tls": 3
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|bentley|mulsanne",
+  "year": 2013,
+  "make": "bentley",
+  "model": "mulsanne",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "XLE",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

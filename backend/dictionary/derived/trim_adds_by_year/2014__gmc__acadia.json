@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2014|gmc|acadia",
+  "year": 2014,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_llm_2014__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT-2",
+    "SLT-1",
+    "SLE-2",
+    "SLE-1"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Perforated leather-appointed seating in first and second rows",
+      "Heated and cooled front seats",
+      "8-way power front passenger seat with standard power recline",
+      "Power tilt and telescopic steering wheel",
+      "Leather-wrapped steering wheel with mahogany wood trim and audio controls",
+      "Signature Denali grille and Denali-specific front/rear body-color fascias",
+      "Premium Denali-specific carpeted floor mats for all three rows",
+      "Premium acoustical package",
+      "Illuminated front sill plate",
+      "Head-Up display with digital multifunction readouts"
+    ],
+    "SLT-2": [
+      "Leather-appointed seating in first and second rows",
+      "8-way power driver seat with 2-position memory and power recline",
+      "8-way power front passenger seat",
+      "Power tilt and telescopic steering wheel",
+      "High-intensity discharge projector low-beam headlamps with halogen high beams",
+      "Technology Package with cargo area audio system controls",
+      "Universal Home Remote 3-channel programmable with garage-door opener"
+    ],
+    "SLT-1": [
+      "Leather-appointed seating in first and second rows",
+      "8-way power driver seat with power recline and lumbar control",
+      "Variable effort steering",
+      "Universal Home Remote 3-channel programmable with garage-door opener",
+      "Color Touch Radio with IntelliLink instead of standard CD player radio"
+    ],
+    "SLE-2": [
+      "8-way power driver seat with power recline and lumbar control",
+      "2-way power front passenger seat",
+      "Heated front seats",
+      "Tri-zone air conditioning with individual climate settings and second/third-row controls",
+      "Color Touch Radio with IntelliLink and 6.5-inch touchscreen",
+      "Remote vehicle start",
+      "Auto-dimming inside rearview mirror"
+    ],
+    "SLE-1": [
+      "3.6L direct-injection V-6 VVT engine with 288 hp and 270 lb-ft torque",
+      "6-speed automatic transmission with overdrive",
+      "4-wheel antilock disc brakes",
+      "Front and rear independent suspension",
+      "StabiliTrak stability and traction control",
+      "Premium Cloth seating with 4-way manual driver and 2-way front passenger buckets",
+      "7-passenger seating with captain's chairs and Smart Slide second row",
+      "5-gauge instrumentation with driver information center",
+      "Rear-vision camera system",
+      "Ultrasonic rear parking assist"
+    ]
+  }
+}

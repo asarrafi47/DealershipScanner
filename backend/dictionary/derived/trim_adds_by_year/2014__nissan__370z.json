@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|nissan|370z",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2014__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO®",
+    "TOURING",
+    "370Z®"
+  ],
+  "adds_by_trim": {
+    "NISMO®": [
+      "350 hp, 276 lb-ft torque 3.7L V6 with SynchroRev Match",
+      "19-inch NISMO forged alloy wheels by RAYS",
+      "Bridgestone Potenza S001 high-performance Y-rated tires",
+      "Euro-tuned sport shock absorbers",
+      "Nissan sport brakes: 14.0-inch 4-piston front, 13.8-inch 2-piston rear",
+      "NISMO-tuned free-flow dual exhaust with H-pipe configuration",
+      "Viscous limited-slip rear differential",
+      "NISMO Alcantara/leather-wrapped steering wheel and shift knob",
+      "NISMO signature red interior stitching with embroidered cloth seats",
+      "NISMO reinforced front strut tower brace and aerodynamic body design"
+    ],
+    "TOURING": [
+      "Leather-appointed power heated seats with synthetic suede inserts",
+      "Ventilated leather-appointed power heated and cooling seats",
+      "Driver's adjustable lumbar support",
+      "Bose audio system with eight speakers including dual subwoofers",
+      "SiriusXM Satellite Radio",
+      "Bluetooth Hands-free Phone System",
+      "Auto-dimming rearview mirror",
+      "HomeLink Universal Transceiver",
+      "Aluminum-trimmed pedals"
+    ],
+    "370Z®": [
+      "332 hp, 270 lb-ft torque 3.7L V6",
+      "6-speed manual or 7-speed automatic transmission",
+      "18-inch aluminum-alloy wheels",
+      "Yokohama ADVAN Sport high-performance W-rated tires",
+      "High Intensity Discharge HID bi-functional xenon headlights",
+      "LED Daytime Running Lights",
+      "LED illuminated Z side marker emblems",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Six standard air bags"
+    ]
+  }
+}

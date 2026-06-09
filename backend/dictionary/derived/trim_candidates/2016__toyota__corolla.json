@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2016|toyota|corolla",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "LE",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "EX",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Fabric-trimmed seats Adds to or replaces features offered on LE"
+    ],
+    "LT": [
+      "E ntune\u2122 Audio \u2013 includes the Entune\u2122 Multimedia \u2022 Cruise control Adds to or replaces features offered on Eco",
+      "Bundle5 (6.1-in. touch-screen display, AM/FM CD \u2022 R emote keyless entry system \u2022 16-in. alloy wheels",
+      "Adds to or replaces features offered on LE Plus \u2022 P ower tilt/slide moonroof with sliding sunshade",
+      "C enter console with storage compartment \u2013 4-way adjustable front passenger seat with Bundle5 (6.1-in. high-resolution touch-screen with",
+      "1 2V auxiliary power outlet seatback pocket split-screen display, AM/FM CD player, six speakers,",
+      "T wo front and two rear cup holders \u2022 Smart Key System19 with Push Button Start auxiliary audio jack, USB 2.0 port6 with iPod\u00ae7",
+      "Power tilt/slide moonroof with sliding sunshade connectivity and control, advanced voice recognition,8",
+      "Entune\u2122 Premium Audio with Integrated Navigation15 hands-free phone capability, phone book access and",
+      "Bundle5 (6.1-in. high-resolution touch-screen with split- Siri\u00ae Eyes Free,11 Entune\u00ae App Suite,12 HD Radio,\u212214",
+      "Entune\u00ae App Suite,12 HD Radio,\u212214 HD predictive traffic",
+      "SiriusXM All Access Radio13 with 3-month complimentary",
+      "Entune\u2122 services is subscription-free. See"
+    ],
+    "S": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "1.8L 4-Cyl. Engine \u2022 1.8L 4-Cyl. Engine \u2022 1 .8L 4-Cyl. Engine with Valvematic technology",
+      "6 -speed manual or available 4-speed automatic \u2022 C ontinuously Variable Transmission (CVT) \u2022 C ontinuously Variable Transmission (CVT)",
+      "LED low-beam headlights with halogen high beams \u2022 H eated power outside mirrors \u2022 Rear spoiler",
+      "LED Daytime Running Lights (DRL) \u2022 Integrated backup camera17",
+      "Power outside mirrors \u2022 Automatic climate control LE Eco Plus",
+      "15-in. steel wheels \u2022 Piano-black center stack",
+      "6 0/40 split fold-down rear seat \u2013 8-way power-adjustable driver\u2019s seat",
+      "T ilt/telescopic steering wheel with audio and LE Premium \u2013 4-way adjustable front passenger seat with",
+      "Bluetooth\u00ae10 hands-free phone controls",
+      "Smart Key System19 with Push Button Start",
+      "P ower door locks with automatic locking feature"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

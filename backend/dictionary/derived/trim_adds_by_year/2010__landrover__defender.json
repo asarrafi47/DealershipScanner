@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|landrover|defender",
+  "year": 2010,
+  "make": "landrover",
+  "model": "Defender",
+  "ladder_id": "brochure_llm_2010__landrover__defender",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "S",
+    "E"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Anti-Roll Bar, Front & Rear (standard on 90 wheelbase with Boost Alloy Wheel)"
+    ],
+    "S": [
+      "Anti-Roll Bar, Front & Rear (fitted as standard with heavy duty suspension on 110 wheelbase)"
+    ],
+    "E": [
+      "2.4 Litre Diesel engine with 360 Nm torque at 2,000 rpm",
+      "90 kW power at 3,500 rpm",
+      "Permanent four-wheel drive",
+      "Dual-range transmission",
+      "Locking centre differential",
+      "Six-speed manual transmission"
+    ]
+  }
+}

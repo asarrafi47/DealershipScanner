@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2014|buick|encore",
+  "year": 2014,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2014__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Group",
+    "Leather Group",
+    "Convenience Group",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium Group": [
+      "Dual-zone automatic climate control",
+      "Auto-dimming inside rearview mirror",
+      "120-volt power outlet on rear center console",
+      "Leather-appointed seating in Ebony, Titanium, or Saddle",
+      "Heated steering wheel",
+      "6-way power passenger seat with manual recline and power lumbar",
+      "Heated driver and front passenger seats",
+      "Memory seat for driver position",
+      "Bose Premium 7-speaker audio system with amplifier",
+      "Rainsense wipers, front and rear park assist, forward collision alert, lane departure warning"
+    ],
+    "Leather Group": [
+      "Dual-zone automatic climate control",
+      "Auto-dimming inside rearview mirror",
+      "120-volt power outlet on rear center console",
+      "Leather-appointed seating in Ebony, Titanium, or Saddle",
+      "Heated steering wheel",
+      "6-way power passenger seat with manual recline and power lumbar",
+      "Heated driver and front passenger seats",
+      "Memory seat for driver position"
+    ],
+    "Convenience Group": [
+      "All-weather floor mats, front and rear",
+      "Cargo net with custom-molded splash guards",
+      "Rear cross traffic alert",
+      "Side blind zone alert",
+      "Remote vehicle start",
+      "Fog lamps",
+      "Dual-zone automatic climate control",
+      "Auto-dimming inside rearview mirror",
+      "120-volt power outlet on rear center console"
+    ],
+    "Base": [
+      "1.4L turbo engine with 138 horsepower and variable valve timing",
+      "6-speed automatic transmission with driver shift control",
+      "Front-wheel drive standard",
+      "10 standard air bags including driver and front-passenger frontal, door, knee, thorax, and side-curtain",
+      "Buick IntelliLink 7-inch touchscreen with AM/FM stereo, CD, USB, auxiliary audio, and Bluetooth",
+      "SiriusXM satellite radio with 3 trial months",
+      "OnStar 6 months of Directions & Connections Plan",
+      "6-speaker audio system",
+      "Single-zone manual climate control",
+      "Power steering with variable effort and electric control"
+    ]
+  }
+}

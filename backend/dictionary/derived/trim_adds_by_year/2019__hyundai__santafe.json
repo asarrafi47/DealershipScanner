@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2019|hyundai|santafe",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_web_2019__hyundai__santafe",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "21-inch wheels",
+      "Nappa leather interior trim",
+      "Front seat thigh extensions",
+      "Second-row captain's chairs",
+      "Head-up display"
+    ],
+    "Limited": [
+      "20-inch wheels with street tires",
+      "Rain-sensing wipers",
+      "Leather upholstery",
+      "Power-folding mirrors",
+      "Six-way power front seats with four-way lumbar support and driver memory",
+      "Heated second-row seats",
+      "Bose premium audio system",
+      "360-degree camera"
+    ],
+    "XRT": [
+      "All-terrain tires on 18-inch wheels",
+      "Dark glossy exterior accents",
+      "H-Tex faux leather interior",
+      "Voice recognition",
+      "Power front seats with two-way lumbar support",
+      "1.3 inches extra ground clearance",
+      "Towing package for 4,500 pounds maximum capacity"
+    ],
+    "SEL": [
+      "12.3-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "12.3-inch instrument cluster display"
+    ],
+    "SE": [
+      "2.5-liter turbocharged four-cylinder engine with 277 hp and 311 lb-ft torque",
+      "Dual-clutch eight-speed automatic transmission",
+      "Front-wheel drive standard, all-wheel drive available",
+      "SmartSense active driver assistance systems",
+      "Blind-spot and rear cross-traffic monitoring",
+      "Adaptive cruise control with stop-and-go functionality",
+      "Automatic emergency braking",
+      "Lane keeping system",
+      "4.2-inch instrument cluster display"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/santa-fe/"
+}

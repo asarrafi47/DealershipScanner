@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2015|landrover|defender",
+  "year": 2015,
+  "make": "landrover",
+  "model": "Defender",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

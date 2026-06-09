@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2015|acura|rlx",
+  "year": 2015,
+  "make": "acura",
+  "model": "rlx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "Base",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

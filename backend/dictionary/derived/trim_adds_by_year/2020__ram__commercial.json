@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|ram|commercial",
+  "year": 2020,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "generic_ram_commercial",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Join",
+    "In"
+  ],
+  "adds_by_trim": {
+    "In": [
+      "Based on the average of VIO vs. New Registrations for each model year using IHS Markit Data as of September 1, 2019 for Model Years 1988 \u2013 2019. 3",
+      "3\u20135 pickup-based conventional cab chassis. This system is a driver convenience system, not a substitute for active driver involvement. The driver must remain aware of traffic conditions and be prepared to use the brakes to avoid collisions. 15 Based on Class",
+      "proceeding. 18 Never operate the vehicle with the seats reclined to the extent that the seat belts are not secure and flat against your torso. 19 SiriusXM Radio, SiriusXM Traffic Plus and SiriusXM Travel Link each require a subscription sold",
+      "purchased within the United States and Puerto Rico. Services can only be used where cellular coverage is available. See Uconnect and SiriusXM Guardian Terms of Service for complete service limitations. 22 Remote Vehicle Start is not available on all vehicles. You are responsible",
+      "remote services. See Terms of Service for service limitations. 23 Three-month/1GB trial included with the purchase or lease of a new vehicle. Upon expiration of the trial period, purchase of a subscription is required. WiFi Hotspot",
+      "not a substitute for active driver involvement. The driver must remain aware of traffic conditions and be prepared to use the brakes to avoid collisions. 32 Always check visually for vehicles prior to changing",
+      "Always be aware of your surroundings. 34",
+      "conditions. Always wear your seat belt and obey posted speed limits. 39 Class is Small Commercial Van segment. EPA-estimated 28 hwy mpg, 2.4L automatic 9-speed transmission. Actual mileage may",
+      "FCA US LLC. Chrysler Capital is a",
+      "registered trademark of C.R.F. Societ\u00e0 Consortile per Azioni, used under license by FCA US LLC.",
+      "is a registered trademark of Cummins, Inc. AISIN"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 11.0,
+    "per_trim_add_counts": {
+      "In": 11
+    }
+  }
+}

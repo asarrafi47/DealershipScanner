@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|ford|explorer",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_llm_2014__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT with Equipment Group 202A",
+    "XLT with Equipment Group 201A",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "XLT with Equipment Group 202A": [
+      "Leather-trimmed seating surfaces",
+      "10-way power heated driver's seat",
+      "6-way power heated front-passenger seat",
+      "Auto-dimming rearview mirror",
+      "Premium Audio System with 9 speakers",
+      "Rear view camera",
+      "Dual-zone electronic automatic temperature control",
+      "MyFord Drive Coach with voice activation",
+      "SYNC Services for Traffic, Directions and Information",
+      "8-inch LCD touchscreen center stack with 2 USB ports and SD card reader"
+    ],
+    "XLT with Equipment Group 201A": [
+      "Auto-dimming rearview mirror",
+      "Premium Audio System with 9 speakers",
+      "Rear view camera",
+      "Dual-zone electronic automatic temperature control",
+      "MyFord Drive Coach with voice activation",
+      "SYNC Services for Traffic, Directions and Information",
+      "Two 4.2-inch LCD configurable displays in instrument cluster",
+      "8-inch LCD touchscreen in center stack with media hub and 2 USB ports"
+    ],
+    "XLT": [
+      "3.5L Ti-VCT V6 engine standard",
+      "6-speed SelectShift automatic transmission",
+      "Front-wheel drive",
+      "1st-row bucket seats with 6-way power driver's seat and manual lumbar",
+      "Leather-wrapped steering wheel and shift knob",
+      "AM/FM stereo with single CD player and 6 speakers",
+      "MyFord with 4.2-inch color LCD display",
+      "18-inch painted aluminum wheels with all-season tires",
+      "Remote Keyless Entry System with 2 integrated keyhead remotes",
+      "Reverse Sensing System"
+    ]
+  }
+}

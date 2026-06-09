@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2014|toyota|sequoia",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_web_2014__toyota__sequoia",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Capstone",
+    "1794 Edition",
+    "TRD Pro",
+    "Platinum",
+    "Limited",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "Capstone": [
+      "Top-tier luxury positioning in full Sequoia lineup"
+    ],
+    "1794 Edition": [
+      "Walnut wood-grain interior accents",
+      "20-inch wheels",
+      "Second-row captain's chairs",
+      "Panoramic roof",
+      "Tow Tech package with antenna and Wi-Fi trailer camera",
+      "Heated, ventilated, and massaging seats (trim-specific version)",
+      "1794 badging"
+    ],
+    "TRD Pro": [
+      "Off-road ready tuning and capability",
+      "Mudbath paint option",
+      "TRD Pro exterior styling"
+    ],
+    "Platinum": [
+      "Massaging front seats standard",
+      "Premium interior appointments"
+    ],
+    "Limited": [
+      "Enhanced comfort and convenience features over SR5"
+    ],
+    "SR5": [
+      "Hybrid powertrain: 3.4L twin-turbocharged V-6 with electric motor (437 hp, 583 lb-ft torque)",
+      "10-speed automatic transmission with standard RWD or available 4WD",
+      "12.3-inch digital gauge display",
+      "8.0-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "Eight-speaker audio system",
+      "Eight airbags and Toyota Safety Sense (automatic emergency braking, blind-spot monitoring, lane keep assist, adaptive cruise control)",
+      "Bench seat or captain's chairs available in second row"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/sequoia/"
+}

@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2010|volvo|xc90",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_2010__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds three-point safety belt system",
+      "Adds three-way catalytic converter with oxygen sensor",
+      "Adds four-year/50,000-mile new car warranty",
+      "Adds complimentary four-year On Call roadside assistance membership",
+      "Adds complimentary factory scheduled maintenance for first 3 years or 36,000 miles"
+    ],
+    "Premium": [],
+    "Limited": []
+  }
+}

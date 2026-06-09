@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|audi|allroad",
+  "year": 2016,
+  "make": "Audi",
+  "model": "Allroad",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

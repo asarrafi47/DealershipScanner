@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|astonmartin|one77",
+  "year": 2012,
+  "make": "Aston Martin",
+  "model": "one-77",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2012_Aston Martin_one-77_Brochure.pdf",
+  "page_count": 27,
+  "all_pages": false,
+  "trim_hint_pages": [
+    27
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 27,
+      "trim_hint": true,
+      "text": "one-77 SPeCIFICATIonS ASTon MARTIn GAYDon\nFront mid-mounted\nEngine\n7.3 litre naturally aspirated V12\nDry sump lubrication system\n>700 bhp (710 PS, 522 kw)\n>750 Nm (553 lb ft)\nRear mid-mounted\nTransmission\n6 speed Automated Manual Transmission with Auto Shift Manual/\nSelect Shift Manual (ASM/SSM) electro-hydraulic control system\nTwo door sports coupe with two seats\nBody\nLeft or right hand drive\nCarbon fibre monocoque body structure\nHand crafted aluminium exterior body panels\nActive aerodynamics with deployable rear spoiler\nSuspension Front and rear, pushrod actuated, adaptive ride height suspension\nBrakes Carbon Ceramic Matrix braking system\nDynamic Stability Control and traction control system",
+      "table_lines": [
+        "ASTon MARTIn GAYDon",
+        "Engine | Front mid-mounted",
+        "7.3 litre naturally aspirated V12",
+        "Dry sump lubrication system",
+        ">700 bhp (710 PS, 522 kw)",
+        ">750 Nm (553 lb ft)",
+        "Transmission | Rear mid-mounted",
+        "6 speed Automated Manual Transmission with Auto Shift Manual/\nSelect Shift Manual (ASM/SSM) electro-hydraulic control system",
+        "Body | Two door sports coupe with two seats",
+        "Left or right hand drive",
+        "Carbon fibre monocoque body structure",
+        "Hand crafted aluminium exterior body panels",
+        "Active aerodynamics with deployable rear spoiler",
+        "Suspension | Front and rear, pushrod actuated, adaptive ride height suspension",
+        "Brakes | Carbon Ceramic Matrix braking system",
+        "Dynamic Stability Control and traction control system"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 27 ---\none-77 SPeCIFICATIonS ASTon MARTIn GAYDon\nFront mid-mounted\nEngine\n7.3 litre naturally aspirated V12\nDry sump lubrication system\n>700 bhp (710 PS, 522 kw)\n>750 Nm (553 lb ft)\nRear mid-mounted\nTransmission\n6 speed Automated Manual Transmission with Auto Shift Manual/\nSelect Shift Manual (ASM/SSM) electro-hydraulic control system\nTwo door sports coupe with two seats\nBody\nLeft or right hand drive\nCarbon fibre monocoque body structure\nHand crafted aluminium exterior body panels\nActive aerodynamics with deployable rear spoiler\nSuspension Front and rear, pushrod actuated, adaptive ride height suspension\nBrakes Carbon Ceramic Matrix braking system\nDynamic Stability Control and traction control system\n\nASTon MARTIn GAYDon\nEngine | Front mid-mounted\n7.3 litre naturally aspirated V12\nDry sump lubrication system\n>700 bhp (710 PS, 522 kw)\n>750 Nm (553 lb ft)\nTransmission | Rear mid-mounted\n6 speed Automated Manual Transmission with Auto Shift Manual/\nSelect Shift Manual (ASM/SSM) electro-hydraulic control system\nBody | Two door sports coupe with two seats\nLeft or right hand drive\nCarbon fibre monocoque body structure\nHand crafted aluminium exterior body panels\nActive aerodynamics with deployable rear spoiler\nSuspension | Front and rear, pushrod actuated, adaptive ride height suspension\nBrakes | Carbon Ceramic Matrix braking system\nDynamic Stability Control and traction control system"
+}

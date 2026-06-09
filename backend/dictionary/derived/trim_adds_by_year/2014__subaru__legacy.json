@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2014|subaru|legacy",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2014__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5i Limited",
+    "2.5i Sport",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine with Dual Active Valve Control System",
+      "5-speed automatic transmission with manual-mode paddle shifters",
+      "Dual bright-finish exhaust outlets",
+      "12.4-inch front brake discs (vs. 11.6 inches on 2.5i trims)",
+      "Ventilated front and rear brakes"
+    ],
+    "2.5i Limited": [
+      "Fog lights",
+      "Leather-trimmed upholstery",
+      "Woodgrain-patterned accent interior trim",
+      "Dual-zone automatic climate control system with center console rear vents",
+      "9-speaker Harman Kardon premium audio system with subwoofer and 440-watt amplifier",
+      "Electroluminescent gauges with LCD color display"
+    ],
+    "2.5i Sport": [
+      "18-inch aluminum-alloy wheels with gray machine finish",
+      "Fog lights",
+      "Carbon fiber-patterned accent interior trim",
+      "Power tilt/sliding-glass moonroof",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Rear-Vision Camera"
+    ],
+    "2.5i Premium": [
+      "17-inch aluminum-alloy wheels",
+      "Body-color side mirrors",
+      "Bright-finish exhaust outlet",
+      "10-way power adjustable driver's seat with 4-way power adjustable front-passenger seat",
+      "Leather-wrapped steering wheel and shifter handle",
+      "6-speaker single-CD audio system with 4.3-inch LCD display, HD Radio, USB, SiriusXM, Bluetooth audio",
+      "Driver's auto-up/down power window",
+      "All-Weather Package",
+      "Rear-Vision Camera"
+    ],
+    "2.5i": [
+      "173-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive standard",
+      "6-speed manual transmission or optional Lineartronic CVT with manual-mode paddle shifters",
+      "16-inch steel wheels with covers",
+      "Cloth upholstery with silver metallic interior trim",
+      "6-way manually adjustable driver's seat with 4-way manually adjustable front-passenger seat",
+      "4-speaker single-CD audio system with Bluetooth, 3.5-mm auxiliary jack, USB/iPod control",
+      "Manually adjustable CFC-free air conditioning with air filtration",
+      "Auto-on/off headlights"
+    ]
+  }
+}

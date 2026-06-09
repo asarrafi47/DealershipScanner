@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2025|nissan|armada",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Armada",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum Reserve",
+    "Platinum",
+    "SL",
+    "Pro-4X",
+    "SV",
+    "Limited",
+    "Premium",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

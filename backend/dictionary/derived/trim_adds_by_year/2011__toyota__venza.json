@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|toyota|venza",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Venza",
+  "ladder_id": "generic_toyota_venza",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Bluetooth SIG, Inc. and any use of such marks by Toyota is under license. Other trademarks and trade names are those of their respective owners. The",
+      "Toyota vehicles. Performance will vary based on phone software version, coverage and your wireless carrier. Phones are warranted by their manufacturer, not",
+      "ervices mentioned (if installed) are dependent upon many factors. Use common sense when relying on information provided. S",
+      "severe collisions: frontal and knee ABs typically inflate in frontal collisions; side and side curtain ABs in side collisions; Roll-Sensing Curtain ABs at a",
+      "Smart Key fob into the vehicle, the key transmits an electronic code to the vehicle. The engine will only start if the code in the transponder chip inside the key or",
+      "equipment. Do not exceed any Weight Ratings and follow all instructions in your Owner\u2019s Manual. The maximum you can tow depends on the total weight of any cargo, occupants and available",
+      "the Toyota Rewards Visa\u00ae adds even more value to doing the things you love. conditions and restrictions apply and are fully described in",
+      "participating Toyota dealers and 1 point for every $1 spent everywhere else Visa is accepted.*",
+      "Services is a service mark for Toyota Motor Credit Corporation and Toyota Motor Insurance",
+      "nancial Services (TFS)\u2020 is a leading provider of automotive fi",
+      "vehicle cannot be part of a rental or commercial fleet, or a livery or taxi"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Premium": 0
+    }
+  }
+}

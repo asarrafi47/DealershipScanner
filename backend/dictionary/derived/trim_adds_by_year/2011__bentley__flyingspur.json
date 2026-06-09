@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2011|bentley|flyingspur",
+  "year": 2011,
+  "make": "bentley",
+  "model": "flying spur",
+  "ladder_id": "brochure_llm_2011__bentley__flyingspur",
+  "source": "brochure_llm",
+  "trims_available": [
+    "flying spur speed",
+    "flying spur"
+  ],
+  "adds_by_trim": {
+    "flying spur speed": [
+      "Twin-turbocharged W12 engine with 600bhp/610PS and 750Nm torque",
+      "0-60mph acceleration in 4.5 seconds (0-100km/h in 4.8 seconds)",
+      "Top speed of 200mph (322km/h)",
+      "Overall height reduced to 1388mm (54.6in)"
+    ],
+    "flying spur": [
+      "Twin-turbocharged W12 engine with 552bhp/560PS and 650Nm torque",
+      "0-60mph acceleration in 4.9 seconds (0-100km/h in 5.2 seconds)",
+      "Top speed of 194mph (312km/h)",
+      "ZF 6-speed automatic transmission with continuous all-wheel drive",
+      "20-inch wheels",
+      "90-litre fuel tank",
+      "16.6mpg combined fuel consumption"
+    ]
+  }
+}

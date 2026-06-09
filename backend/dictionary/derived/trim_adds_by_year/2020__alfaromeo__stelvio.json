@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|alfaromeo|stelvio",
+  "year": 2020,
+  "make": "alfa romeo",
+  "model": "stelvio",
+  "ladder_id": "brochure_llm_2020__alfaromeo__stelvio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "STELVIO SPORT",
+    "STELVIO"
+  ],
+  "adds_by_trim": {
+    "STELVIO SPORT": [
+      "19-inch Sport 5-hole aluminum wheels with 235/55R19 performance tires",
+      "8.8-inch touchscreen with navigation",
+      "Heated rear seats",
+      "Hands-free power liftgate",
+      "Trailer-tow hitch",
+      "Compact spare tire",
+      "Engine block heater",
+      "Wireless charging",
+      "Gloss Black window surrounds and roof rails",
+      "Colored brake calipers in Red/Black/Yellow options"
+    ],
+    "STELVIO": [
+      "280 hp 2.0L turbocharged 4-cylinder engine with 306 lb-ft torque",
+      "8-speed automatic transmission",
+      "Rear-Wheel Drive standard, Q4 AWD available",
+      "18-inch Bright 5-spoke aluminum wheels with 235/60R18 run-flat all-season tires",
+      "Leather-trimmed seats with 10-way power front and 4-way lumbar support",
+      "8.8-inch touchscreen with Bluetooth, Apple CarPlay, Android Auto, SiriusXM Radio",
+      "Dual-zone climate control with stop/start technology",
+      "Back-up camera with dynamic grid lines",
+      "Bi-xenon headlamps with adaptive forward lighting and LED DRLs",
+      "Hill Start Assist and Hill Descent Control"
+    ]
+  }
+}

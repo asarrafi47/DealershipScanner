@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2012|chevrolet|silverado",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2012__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Custom Leather-appointed heated and cooled 10-way power-adjustable front bucket seats with memory",
+      "Power-sliding sunroof with Express-Open feature",
+      "Vortec 5.3L V8 engine standard with 315 hp",
+      "Hydra-Matic 6-speed automatic transmission",
+      "20-inch chrome-clad aluminum wheels",
+      "AM/FM stereo with in-dash six-disc CD/MP3 changer and USB port",
+      "Rear-seat DVD entertainment system",
+      "Touch-screen navigation radio",
+      "NavTraffic capability"
+    ],
+    "LT": [
+      "Premium Cloth 40/20/40 split-bench front seat with manual lumbar and lockable underseat storage",
+      "Vortec 4.8L V8 engine standard with 302 hp",
+      "Hydra-Matic 4-speed automatic transmission",
+      "Power windows with driver Express-Down feature",
+      "17-inch aluminum wheels",
+      "AM/FM stereo with CD/MP3 player and USB port",
+      "Rear vision camera system with rearview mirror display",
+      "Remote vehicle starter system",
+      "SiriusXM Satellite Radio with three trial months"
+    ],
+    "LS": [
+      "Cloth 40/20/40 split-bench front seat with manual lumbar and fold-down center armrest",
+      "Power door locks with Remote Keyless Entry",
+      "17-inch chrome styled-steel wheels",
+      "AM/FM stereo with CD/MP3 player",
+      "SiriusXM Satellite Radio with three trial months"
+    ],
+    "WT": [
+      "Vinyl 40/20/40 split-bench front seat with recliners and fold-down center armrest",
+      "Vortec 4.3L V6 engine with 195 hp and 260 lb-ft torque",
+      "Hydra-Matic 4-speed automatic transmission",
+      "17-inch steel wheels",
+      "AM/FM stereo",
+      "SiriusXM Satellite Radio"
+    ]
+  }
+}

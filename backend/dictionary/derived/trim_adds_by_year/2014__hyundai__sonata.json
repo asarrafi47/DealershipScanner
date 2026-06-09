@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|hyundai|sonata",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_llm_2014__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SONATA LIMITED",
+    "SONATA SE",
+    "SONATA GLS"
+  ],
+  "adds_by_trim": {
+    "SONATA LIMITED": [
+      "Piano Black or Woodgrain interior accents",
+      "Auto-dimming rearview mirror with compass and HomeLink",
+      "Panoramic sunroof",
+      "8-inch touchscreen navigation system with voice commands and rearview camera",
+      "400-Watt Infinity AM/FM/SiriusXM/CD/MP3 audio system with 8 speakers and subwoofer",
+      "High Intensity Discharge Xenon headlights",
+      "LED taillights",
+      "18-inch Hyper Silver alloy wheels"
+    ],
+    "SONATA SE": [
+      "190 HP 2.4L or 274 HP 2.0L turbo Gasoline Direct Injection engine options",
+      "6-speed SHIFTRONIC automatic transmission with steering-wheel-mounted paddle shifters on 2.0T",
+      "Sport-tuned suspension and steering",
+      "Power tilt-and-slide sunroof",
+      "Blind Spot Detection System",
+      "Leather seating surfaces with ventilated driver seat",
+      "Heated front and rear seats",
+      "Dual automatic temperature control",
+      "Premium door sill scuff plates",
+      "360-Watt Dimension AM/FM/SiriusXM/CD/MP3 audio system with 6 speakers and subwoofer"
+    ],
+    "SONATA GLS": [
+      "190 HP 2.4L Gasoline Direct Injection DOHC 4-cylinder engine with D-CVVT",
+      "6-speed SHIFTRONIC automatic transmission with steering-wheel-mounted paddle shifters",
+      "6-airbag safety system with advanced dual front airbags and Occupant Classification System",
+      "Active front head restraints",
+      "Tire Pressure Monitoring System",
+      "16-inch aluminum alloy wheels",
+      "Daytime Running Lights",
+      "Bodycolor front grille and chrome window beltline moldings",
+      "Dual-zone automatic temperature control",
+      "Heated front seats with power driver seat and lumbar support"
+    ]
+  }
+}

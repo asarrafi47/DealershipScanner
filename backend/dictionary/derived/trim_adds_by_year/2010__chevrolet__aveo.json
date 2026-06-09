@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2010|chevrolet|aveo",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Aveo",
+  "ladder_id": "generic_chevrolet_aveo",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "services require vehicle electrical system (including battery), wireless"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "LE": 0
+    }
+  }
+}

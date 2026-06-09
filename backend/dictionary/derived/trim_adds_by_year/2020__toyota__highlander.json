@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2020|toyota|highlander",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2020__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "LED projector headlights with Adaptive Front-Lighting System, auto leveling, LED-strip DRL",
+      "20-inch alloy wheels with temporary spare",
+      "Rear lower bumper accent",
+      "Power panoramic view moonroof with sunshade and one-touch open/close with jam protection",
+      "Leather-trimmed front and second-row seats with heated and ventilated front seats",
+      "Seat memory function",
+      "Heated steering wheel",
+      "10-inch color Head-Up Display (HUD)",
+      "Premium Audio with Dynamic Navigation, JBL with Clari-Fi, 12.3-inch touchscreen, Android Auto and Apple CarPlay"
+    ],
+    "Limited": [
+      "Color-keyed heated power outside mirrors with puddle lights, integrated Highlander logo, turn signal, blind spot warning indicators, memory feature",
+      "Rain-sensing washer-linked variable intermittent windshield wipers",
+      "High-output LED fog lights",
+      "20-inch chrome wheels with temporary spare",
+      "Height-adjustable hands-free power liftgate with jam protection",
+      "Rear bumper scuff plate",
+      "10-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Heated steering wheel",
+      "Bird's Eye View Camera with dynamic gridlines"
+    ],
+    "XLE": [
+      "Power tilt/slide moonroof with sunshade",
+      "Roof rails",
+      "18-inch machined-finish alloy wheels with temporary spare",
+      "LED projector headlights with LED-strip DRL and Automatic High Beams",
+      "Qi-compatible wireless smartphone charging",
+      "Auto-dimming rearview mirror with HomeLink universal transceiver",
+      "SofTex-trimmed front and second-row seats with heated front seats",
+      "7-inch color LCD Multi-Information Display (MID)",
+      "Second-row sunshades"
+    ],
+    "LE": [
+      "3.5-Liter V6 DOHC 24-Valve D-4S Injection engine with 295 hp",
+      "Direct Shift 8-speed automatic transmission",
+      "ULEV-III emission rating",
+      "Front-Wheel Drive standard",
+      "Power-assisted ventilated 13.3-inch front disc and solid rear disc brakes with Star Safety System",
+      "Independent MacPherson strut front suspension with stabilizer bar",
+      "Multi-link rear suspension with stabilizer bar",
+      "Electric Power Steering",
+      "Toyota Safety Sense 2.0 (TSS 2.0)",
+      "Eight airbags"
+    ]
+  }
+}

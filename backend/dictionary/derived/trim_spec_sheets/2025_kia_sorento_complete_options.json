@@ -1,0 +1,83 @@
+{
+  "ladder_id": "2025_kia_sorento_complete_options",
+  "make": "Kia",
+  "models": [
+    "Sorento",
+    "Sorento"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "SX Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "Three powertrain options are available: 2.2-litre CRDi turbocharged diesel, 1.6-"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon audio; [Brochure] Harman Kardon audio"
+      }
+    ],
+    "SX": [
+      {
+        "label": "Engine Options",
+        "value": "Three powertrain options are available: 2.2-litre CRDi turbocharged diesel, 1.6-"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon audio; [Brochure] Harman Kardon audio"
+      }
+    ],
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "The 1.6-litre Plug-in Hybrid petrol was added to the lineup in October 2021, for the GT Line grade."
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2009–present)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon audio; [Brochure] Harman Kardon audio"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2009–present); A plug-in hybrid variation and additional petrol engine options are also being p"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon audio; [Brochure] Harman Kardon audio"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive; The Base and LX both come standard with the 2.4-litre straight-4 175 hp (130 kW)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon audio; [Brochure] Harman Kardon audio"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive (2002–2009); Front-engine, front-wheel-drive (2009–present)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "12.3-inch curved display"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon audio; [Brochure] Harman Kardon audio"
+      }
+    ]
+  }
+}

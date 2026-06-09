@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2011|kia|sorento",
+  "year": 2011,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_web_2011__kia__sorento",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "X-Pro Prestige AWD",
+    "X-Line SX Prestige AWD",
+    "X-Line SX AWD",
+    "SX",
+    "X-Line EX AWD",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "X-Pro Prestige AWD": [
+      "Lockable all-wheel drive",
+      "BF Goodrich all-terrain tires",
+      "17-inch wheels",
+      "Molded skid plate accents",
+      "4,000-pound towing capacity",
+      "Roadrider Brown and Jungle Green exclusive paint colors",
+      "Olive Brown and Sage rugged upholstery"
+    ],
+    "X-Line SX Prestige AWD": [
+      "Prestige trim level upgrades over X-Line SX AWD"
+    ],
+    "X-Line SX AWD": [
+      "X-Line cosmetic exterior styling",
+      "All-wheel drive standard"
+    ],
+    "SX": [
+      "SX trim level features over EX"
+    ],
+    "X-Line EX AWD": [
+      "X-Line cosmetic exterior styling",
+      "All-wheel drive standard"
+    ],
+    "EX": [
+      "EX trim level features over S"
+    ],
+    "S": [
+      "S trim level features over LX base"
+    ],
+    "LX": [
+      "2.5-liter inline four-cylinder engine with 191 hp and 181 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Front-wheel drive standard, all-wheel drive available",
+      "12.3-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "4.0-inch gauge cluster display",
+      "Drive Wise suite with blind-spot monitoring and front emergency braking",
+      "Rear cross-traffic collision-avoidance assist and lane keeping assistance",
+      "Adaptive cruise control and speed limit assistance"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/sorento/"
+}

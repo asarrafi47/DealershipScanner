@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2021|porsche|panamera",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "Panamera",
+  "ladder_id": "brochure_llm_2021__porsche__panamera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Panamera Turbo S Sport Turismo",
+    "Panamera GTS"
+  ],
+  "adds_by_trim": {
+    "Panamera Turbo S Sport Turismo": [
+      "21-inch 911 Turbo Design wheels II"
+    ],
+    "Panamera GTS": [
+      "Carmine Red exterior color option"
+    ]
+  }
+}

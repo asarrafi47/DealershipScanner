@@ -1697,6 +1697,8 @@ def known_oem_engine_from_car(car: dict[str, Any]) -> dict[str, Any]:
 
 _CDJR_MAKES = frozenset({"jeep", "chrysler", "dodge", "ram"})
 
+CDJR_OEM_STICKER_MIN_YEAR = 2018
+
 _IPACKET_STICKER_URL_RE = re.compile(
     r"https?://(?:djapi\.)?autoipacket\.com/v2/sticker-puller/download/[A-HJ-NPR-Z0-9]{11,17}(?:\?[^\s\"'<>]+)?",
     re.IGNORECASE,
@@ -2273,6 +2275,22 @@ def is_cdjr_stellantis_car(car: dict[str, Any]) -> bool:
     return make in _CDJR_MAKES
 
 
+def cdjr_oem_window_sticker_eligible(car: dict[str, Any]) -> bool:
+    """
+    CDJR/Stellantis vehicles with a public OEM Monroney PDF (model year 2018+).
+    """
+    if not is_cdjr_stellantis_car(car):
+        return False
+    vnorm = _vin_norm(str(car.get("vin") or ""))
+    if not vnorm or not get_window_sticker_url(vnorm):
+        return False
+    try:
+        year = int(car.get("year") or 0)
+    except (TypeError, ValueError):
+        return False
+    return year >= CDJR_OEM_STICKER_MIN_YEAR
+
+
 def car_listing_sticker_urls(car: dict[str, Any]) -> list[str]:
     """Sticker URLs supplied on the dealer listing (field or gallery image)."""
     out: list[str] = []
@@ -2341,6 +2359,9 @@ def show_window_sticker_panel(car: dict[str, Any], ctx: dict[str, Any] | None = 
     """
     Show Packages & window sticker only when we have (or can display) real sticker data.
     """
+    if cdjr_oem_window_sticker_eligible(car):
+        return True
+
     from backend.enrichment.window_sticker_service import window_sticker_has_visual
 
     ctx = ctx or {}
@@ -2370,8 +2391,8 @@ def show_window_sticker_ui(car: dict[str, Any]) -> bool:
 
 
 def should_auto_fetch_oem_window_sticker(car: dict[str, Any]) -> bool:
-    """Post-scan OEM PDF fetch is limited to Stellantis / CDJR."""
-    return is_cdjr_stellantis_car(car)
+    """Post-scan OEM PDF fetch is limited to CDJR/Stellantis 2018+ with a public Monroney URL."""
+    return cdjr_oem_window_sticker_eligible(car)
 
 
 def oem_sticker_parsing_skip_claude(vin: str | None) -> bool:

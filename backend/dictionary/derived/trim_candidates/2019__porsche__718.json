@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2019|porsche|718",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "718",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo",
+    "Carrera",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

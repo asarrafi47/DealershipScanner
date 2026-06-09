@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2014|subaru|brz",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "BRZ",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

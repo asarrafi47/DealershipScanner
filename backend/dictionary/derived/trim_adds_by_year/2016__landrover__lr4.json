@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2016|landrover|lr4",
+  "year": 2016,
+  "make": "landrover",
+  "model": "LR4",
+  "ladder_id": "brochure_2016__landrover__lr4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Standard": [
+      "Adds Includes 3.0L V6 Supercharged engine",
+      "Adds Features Terrain Response® driving technology",
+      "Adds Includes Hill Descent Control (HDC®)",
+      "Adds Alpine sunroof as standard",
+      "Adds Includes seven-seat seating capacity",
+      "Adds Features Windsor leather seats",
+      "Adds Includes driver assistance features",
+      "Adds on-road and towing driving aids"
+    ],
+    "HSE": [
+      "Adds full-length bright finish roof rails",
+      "Adds Narvik Black mirror caps",
+      "Adds Narvik Black grill vanes and fender vents",
+      "Adds Landmark badging throughout vehicle"
+    ]
+  }
+}

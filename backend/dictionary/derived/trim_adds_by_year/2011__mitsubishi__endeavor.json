@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|mitsubishi|endeavor",
+  "year": 2011,
+  "make": "Mitsubishi",
+  "model": "Endeavor",
+  "ladder_id": "brochure_llm_2011__mitsubishi__endeavor",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "18-inch alloy wheels with P255/55R18 tires",
+      "Power Glass Sunroof",
+      "Automatic climate control",
+      "Steering wheel-mounted audio controls and cruise control",
+      "Leather seating surfaces",
+      "Heated front seats",
+      "Cargo Cover",
+      "Touch-screen navigation system with rear-view backup camera",
+      "650-watt Rockford Acoustic Design premium audio with SIRIUS Satellite Radio",
+      "All-wheel Control (AWC) available as option"
+    ],
+    "LS": [
+      "3.8-liter V6 SOHC 24-valve engine with 225 hp and 255 lb-ft torque",
+      "4-speed Sportronic transmission with INVECS-II adaptive shift control",
+      "17-inch alloy wheels with P235/65R17 tires",
+      "Parabolic fog lights",
+      "Color-keyed door handles and side-view mirrors",
+      "Tubular roof rails with rear privacy glass",
+      "Advanced dual-stage front airbags with side and curtain airbags",
+      "Active Stability Control and theft-deterrent alarm",
+      "Power side-view mirrors, windows and door locks",
+      "140-watt Mitsubishi AM/FM/CD/MP3 audio system and Bluetooth handsfree phone"
+    ]
+  }
+}

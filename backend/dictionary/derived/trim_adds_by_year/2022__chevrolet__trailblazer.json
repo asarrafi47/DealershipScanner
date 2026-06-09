@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2022|chevrolet|trailblazer",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Trailblazer",
+  "ladder_id": "brochure_llm_2022__chevrolet__trailblazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS",
+    "ACTIV",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "RS": [
+      "Camaro-inspired front grille",
+      "18-inch high-gloss Black machined-aluminum wheels",
+      "Dual-outlet exhaust with round polished tips",
+      "Black Chevrolet bowtie emblems",
+      "Sporty Jet Black cloth and leatherette seating with Red accents",
+      "Heated leather-wrapped flat-bottom steering wheel",
+      "Leather-wrapped shift knob with RS logo"
+    ],
+    "ACTIV": [
+      "ECOTEC 1.3L Turbo engine",
+      "Silver-painted front and rear fascias and roof rails",
+      "Special shocks and sport terrain tires",
+      "LED fog lamps",
+      "Functional skid plate",
+      "Dual-outlet exhaust with trapezoidal polished tips",
+      "Titanium chrome-plated front and rear fascias with bold side cladding"
+    ],
+    "LT": [
+      "LED fog lamps",
+      "Heated power-adjustable mirrors with body-color caps",
+      "Heated front seats",
+      "Remote vehicle starter system",
+      "Keyless Open and Start",
+      "Electronic cruise control",
+      "Leatherette seating surfaces",
+      "Heated leather-wrapped steering wheel and leather-wrapped shift knob"
+    ],
+    "LS": [
+      "ECOTEC 1.2L Turbo engine (FWD) or 1.3L Turbo with Driver Mode Selector (AWD)",
+      "17-inch Silver-painted aluminum wheels",
+      "Medium Ash Gray or Jet Black cloth interior",
+      "Wireless Apple CarPlay compatibility",
+      "Wireless Android Auto compatibility",
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen",
+      "6-speaker audio system",
+      "Single-zone automatic air conditioning",
+      "8-way power driver seat with 2-way power lumbar control"
+    ]
+  }
+}

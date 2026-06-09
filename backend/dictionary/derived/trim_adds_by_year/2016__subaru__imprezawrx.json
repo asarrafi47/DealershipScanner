@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2016|subaru|imprezawrx",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2016__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX STI",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "High-luster finish 18-inch BBS aluminum-alloy wheels",
+      "Auto-on/off headlights",
+      "Leather-trimmed upholstery",
+      "8-way power adjustable driver's seat",
+      "SUBARU STARLINK 7.0-inch Multimedia Navigation System with 9 Harman Kardon speakers",
+      "Keyless Access with Push-button Start and pin-code vehicle access",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert"
+    ],
+    "WRX STI": [
+      "305-hp turbocharged 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Driver Controlled Center Differential (DCCD) All-Wheel Drive",
+      "Front and rear limited-slip differentials",
+      "6-speed close-ratio manual transmission",
+      "Brembo performance brake system",
+      "High-performance STI sport-tuned suspension",
+      "18-inch aluminum-alloy wheels",
+      "STI trunk spoiler",
+      "LED low-beam headlights",
+      "Fog lights"
+    ],
+    "WRX Limited": [
+      "LED low-beam headlights",
+      "Auto-on/off headlights",
+      "Leather-trimmed upholstery",
+      "8-way power adjustable driver's seat",
+      "Welcome lighting"
+    ],
+    "WRX Premium": [
+      "Optional Sport Lineartronic Transmission with paddle shifters and SI-DRIVE",
+      "18-inch aluminum-alloy wheels",
+      "Fog lights"
+    ],
+    "WRX": [
+      "268-hp twin scroll turbocharged 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission",
+      "Sport-tuned suspension",
+      "17-inch aluminum-alloy wheels",
+      "Low profile trunk spoiler",
+      "Power-tilt/sliding moonroof",
+      "Cloth upholstery",
+      "All-Weather Package",
+      "Leather-wrapped flat-bottom steering wheel"
+    ]
+  }
+}

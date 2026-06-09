@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2018|bmw|1series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "1 Series",
+  "ladder_id": "brochure_llm_2018__bmw__1series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M140i Shadow Edition",
+    "M140i",
+    "M Sport Shadow Edition",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "M140i Shadow Edition": [
+      "18\" M light alloy Double-spoke style 436 M wheels in Orbit Grey with 245/35 R18 tyres"
+    ],
+    "M140i": [
+      "18\" M light alloy Double-spoke style 436 M wheels in Ferric Grey with 245/35 R18 tyres"
+    ],
+    "M Sport Shadow Edition": [
+      "18\" M light alloy Double-spoke style 719 M wheels Bicolour Jet Black with 245/35 R18 run-flat tyres"
+    ],
+    "Sport": [
+      "17\" light alloy Double-spoke style 655 wheels with 225/45 R17 run-flat tyres"
+    ],
+    "SE": [
+      "16\" light alloy Star-spoke style 654 wheels with 205/55 R16 tyres"
+    ]
+  }
+}

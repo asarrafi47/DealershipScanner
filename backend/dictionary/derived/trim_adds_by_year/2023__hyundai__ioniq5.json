@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2023|hyundai|ioniq5",
+  "year": 2023,
+  "make": "Hyundai",
+  "model": "Ioniq 5",
+  "ladder_id": "brochure_llm_2023__hyundai__ioniq5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IONIQ 5 Limited",
+    "IONIQ 5 SEL",
+    "IONIQ 5 SE"
+  ],
+  "adds_by_trim": {
+    "IONIQ 5 Limited": [
+      "Premium Head-up Display with Augmented Reality functions",
+      "Remote Smart Parking Assist",
+      "2nd-row Vehicle-to-Load (V2L) two-way onboard charger",
+      "Premium door sill plates and sliding center console",
+      "Vision Roof panoramic sunroof with sunshade",
+      "Projector-type LED headlights with premium front LED accent lighting",
+      "Premium gloss black exterior accents",
+      "Rear roof spoiler with center LED brake light",
+      "8-way power front passenger seat",
+      "Ventilated front seats and rear side-window sunshades"
+    ],
+    "IONIQ 5 SEL": [
+      "Heated steering wheel and ambient LED interior lighting",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Power-folding side mirrors",
+      "Hands-free smart liftgate with auto open",
+      "Hyundai Digital Key and wireless device charging",
+      "2nd-row air conditioning vents",
+      "Driver seat with Relaxation Function and Integrated Memory System",
+      "Parking Distance Warning Forward & Reverse"
+    ],
+    "IONIQ 5 SE": [
+      "Single-Motor Rear Wheel Drive with 168 hp / 258 lb-ft or Dual-Motor All-Wheel Drive with 320 hp / 446 lb-ft",
+      "58 kWh or 77.4 kWh lithium-ion battery options",
+      "Ultra-fast 800V/350 kW charging system",
+      "Parametric pixel LED headlights and taillights",
+      "Flush door handles with automatic extend/retract",
+      "12.3-inch digital instrument cluster and touchscreen navigation",
+      "Blind-Spot Collision-Avoidance Assist and Forward Collision-Avoidance Assist",
+      "8-way power driver seat with heated front seats",
+      "Bluelink Connected Car System with Remote Charge Access",
+      "Vision Roof panoramic sunroof standard on all trims"
+    ]
+  }
+}

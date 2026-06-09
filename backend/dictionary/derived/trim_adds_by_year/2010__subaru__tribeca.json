@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|subaru|tribeca",
+  "year": 2010,
+  "make": "Subaru",
+  "model": "Tribeca",
+  "ladder_id": "brochure_llm_2010__subaru__tribeca",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Touring",
+    "3.6R Limited",
+    "3.6R Premium"
+  ],
+  "adds_by_trim": {
+    "3.6R Touring": [
+      "High Intensity Discharge (HID) low-beam headlights with multireflector halogen high-beams",
+      "Body-color side sills and front/rear lower bumper area",
+      "Power tilt/sliding-glass moonroof",
+      "Raised roof rails, silver-finish, 150 lbs capacity",
+      "Auto-dimming rearview mirror with integrated back-up camera in 3.5-inch display"
+    ],
+    "3.6R Limited": [
+      "Leather-trimmed upholstery",
+      "2-position driver's seat memory",
+      "Silver metallic trim on dashboard, doors and center console",
+      "HomeLink remote transmitter with 3 memory settings",
+      "385-watt 10-speaker Harman Kardon premium audio system with amplifier, subwoofer, MP3/WMA playback and Bluetooth wireless phone capability",
+      "Rear-vision camera",
+      "Raised roof rails, black-finish, 150 lbs capacity"
+    ],
+    "3.6R Premium": [
+      "8-way power driver's seat and 4-way power front-passenger's seat with manually adjustable lumbar support",
+      "3-stage heated front seats",
+      "Premium cloth upholstery",
+      "100-watt 6-speaker audio system with single-disc CD player and MP3 capability",
+      "XM or SIRIUS Satellite Radio capability",
+      "Subaru Symmetrical All-Wheel Drive, SUBARU BOXER engine and comprehensive safety systems"
+    ]
+  }
+}

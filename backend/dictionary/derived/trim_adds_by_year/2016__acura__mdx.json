@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2016|acura|mdx",
+  "year": 2016,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2016__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MDX SH-AWD with Advance and Entertainment Packages",
+    "MDX SH-AWD with Advance Package",
+    "MDX SH-AWD with Technology, Entertainment and AcuraWatch Plus Packages",
+    "MDX SH-AWD with Technology and Entertainment Packages",
+    "MDX SH-AWD with Technology and AcuraWatch Plus Packages",
+    "MDX SH-AWD with Technology Package",
+    "MDX SH-AWD with AcuraWatch Plus",
+    "MDX SH-AWD",
+    "MDX with Technology and Entertainment and AcuraWatch Plus Packages",
+    "MDX with Technology and Entertainment Packages",
+    "MDX with Technology and AcuraWatch Plus Packages",
+    "MDX with Advance and Entertainment Packages",
+    "MDX with Advance Package",
+    "MDX with Technology Package",
+    "MDX with AcuraWatch Plus",
+    "MDX"
+  ],
+  "adds_by_trim": {
+    "MDX SH-AWD with Advance and Entertainment Packages": [
+      "Super Handling All-Wheel Drive (SH-AWD) with Advance Package features"
+    ],
+    "MDX SH-AWD with Advance Package": [
+      "Premium Advance Package features over base SH-AWD model"
+    ],
+    "MDX SH-AWD with Technology, Entertainment and AcuraWatch Plus Packages": [
+      "Technology Package, Entertainment Package, and AcuraWatch Plus safety features"
+    ],
+    "MDX SH-AWD with Technology and Entertainment Packages": [
+      "Technology Package and Entertainment Package features"
+    ],
+    "MDX SH-AWD with Technology and AcuraWatch Plus Packages": [
+      "Technology Package and AcuraWatch Plus safety suite"
+    ],
+    "MDX SH-AWD with Technology Package": [
+      "Technology Package features over base SH-AWD model"
+    ],
+    "MDX SH-AWD with AcuraWatch Plus": [
+      "AcuraWatch Plus safety features: CMBS, LKAS, Road Departure Mitigation, ACC"
+    ],
+    "MDX SH-AWD": [
+      "Super Handling All-Wheel Drive (SH-AWD) system"
+    ],
+    "MDX with Technology and Entertainment and AcuraWatch Plus Packages": [
+      "Technology Package, Entertainment Package, and AcuraWatch Plus safety features"
+    ],
+    "MDX with Technology and Entertainment Packages": [
+      "Technology Package and Entertainment Package features"
+    ],
+    "MDX with Technology and AcuraWatch Plus Packages": [
+      "Technology Package and AcuraWatch Plus safety suite"
+    ],
+    "MDX with Advance and Entertainment Packages": [
+      "Advance Package and Entertainment Package features"
+    ],
+    "MDX with Advance Package": [
+      "Premium Advance Package features over base FWD model"
+    ],
+    "MDX with Technology Package": [
+      "Technology Package features over base FWD model"
+    ],
+    "MDX with AcuraWatch Plus": [
+      "AcuraWatch Plus safety features: CMBS, LKAS, Road Departure Mitigation, ACC"
+    ],
+    "MDX": [
+      "3.5L V-6 engine with 290 hp, 24-valve SOHC i-VTEC, Drive-by-Wire throttle"
+    ]
+  }
+}

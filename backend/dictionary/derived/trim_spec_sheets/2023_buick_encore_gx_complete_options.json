@@ -1,0 +1,41 @@
+{
+  "ladder_id": "2023_buick_encore_gx_complete_options",
+  "make": "Buick",
+  "models": [
+    "Encore GX",
+    "Encore GX"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Avenir": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: While the new I3 engines are available in several GM models in China, these are the first three-cylinder engines in a GM car in North America since the 2000 Chevrolet Metro.; SPORT TOURINGOverflowing with attitude, the Sport Touring Package is the…"
+      }
+    ],
+    "Sport Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: It is positioned between the smaller Buick Encore and the midsize Buick Envision, but it does not replace the Buick Encore in the North American market. The Encore GX includes several standard safety assistance features, such as automatic emergency…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: While the new I3 engines are available in several GM models in China, these are the first three-cylinder engines in a GM car in North America since the 2000 Chevrolet Metro.; SPORT TOURINGOverflowing with attitude, the Sport Touring Package is the…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Rear view Interior Buick Encore GX with the Sport Touring package Rear vie; Rear view Interior Buick Encore GX with the Sport Touring package Rear view North America In North America, the Encore GX was introduced at the Los Angeles Auto Show in November…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: It is positioned between the smaller Buick Encore and the midsize Buick Envision, but it does not replace the Buick Encore in the North American market. The Encore GX includes several standard safety assistance features, such as automatic emergency braking,…"
+      }
+    ]
+  }
+}

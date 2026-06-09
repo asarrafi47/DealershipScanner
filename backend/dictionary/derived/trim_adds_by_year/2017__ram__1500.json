@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2017|ram|1500",
+  "year": 2017,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2017__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LONGHORN®",
+    "LARAMIE®",
+    "REBEL®",
+    "TRADESMAN® ECODIESEL HFE",
+    "TRADESMAN®"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "5.7L HEMI V8 or 3.0L EcoDiesel engine options",
+      "Limited leather bucket seats",
+      "Premium wood/leather-wrapped steering wheel",
+      "Body-color full front fascia and rear bumper",
+      "Chrome wheel-to-wheel side steps",
+      "20-inch polished aluminum wheels",
+      "Limited cluster with 7-inch Driver Information Display"
+    ],
+    "LONGHORN®": [
+      "Premium filigree leather bucket seats",
+      "Laramie Longhorn interior accents and badges",
+      "Heated second-row seats",
+      "Uconnect 8.4 touchscreen with premium Navigation",
+      "LED Bed Lighting",
+      "Accent-color front and rear bumpers with lower accent two-tone paint"
+    ],
+    "LARAMIE®": [
+      "5.7L HEMI V8 or 3.0L EcoDiesel engine options",
+      "Power 10-way memory driver and 6-way passenger seats",
+      "Leather-trimmed 40/20/40 bench seat",
+      "Dual-Zone Automatic Temperature Control",
+      "Premium II 10-speaker audio system with subwoofer",
+      "Heated steering wheel and ventilated front seats",
+      "Instrument-panel woodgrain bezel",
+      "20-inch chrome-clad aluminum wheels"
+    ],
+    "REBEL®": [
+      "3.6L Pentastar V6, 5.7L HEMI V8, or 3.0L EcoDiesel engine options",
+      "Unique Rebel premium cloth bucket seats with embossed tread",
+      "Heated leather-wrapped steering wheel with Red accent stitching",
+      "Unique Rebel interior and door trim panels",
+      "Premium LED taillamps and bifunctional projector chrome headlamps",
+      "Front Bilstein monotube performance shocks and rear air suspension",
+      "17-inch unique Rebel aluminum wheels with Matte Black pockets"
+    ],
+    "TRADESMAN® ECODIESEL HFE": [
+      "3.0L EcoDiesel V6 engine for High Fuel Efficiency",
+      "Tri-folding tonneau cover",
+      "Wheel-to-wheel side steps",
+      "20-inch aluminum wheels",
+      "Active Grille Shutters for improved efficiency",
+      "HFE badge"
+    ],
+    "TRADESMAN®": [
+      "3.6L Pentastar V6, 5.7L HEMI V8, or 3.0L EcoDiesel engine options",
+      "Heavy-duty vinyl 40/20/40 split bench seat with front armrest",
+      "Manual air conditioning",
+      "3.5-inch Driver Information Display",
+      "3.0 AM/FM radio with six-speaker audio system",
+      "Media Hub with audio jack and USB port",
+      "Class IV hitch receiver",
+      "17-inch steel wheels with P265/70R17 All-Season tires"
+    ]
+  }
+}

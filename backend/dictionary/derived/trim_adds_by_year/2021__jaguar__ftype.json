@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2021|jaguar|ftype",
+  "year": 2021,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_llm_2021__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "P575",
+    "P380",
+    "P300"
+  ],
+  "adds_by_trim": {
+    "P575": [
+      "5.0-liter V8 engine with 575 hp and 516 lb-ft torque",
+      "0-60 mph acceleration in 3.5 seconds",
+      "Maximum speed of 186 mph",
+      "All-wheel drive capability"
+    ],
+    "P380": [
+      "3.0-liter V6 engine with 380 hp and 339 lb-ft torque",
+      "0-60 mph acceleration in 4.9 seconds",
+      "Maximum speed of 171 mph",
+      "All-wheel drive capability"
+    ],
+    "P300": [
+      "2.0-liter turbocharged inline-4 engine with 296 hp and 295 lb-ft torque",
+      "0-60 mph acceleration in 5.4 seconds",
+      "Maximum speed of 155 mph",
+      "Rear-wheel drive or all-wheel drive options",
+      "16.64-gallon fuel tank capacity"
+    ]
+  }
+}

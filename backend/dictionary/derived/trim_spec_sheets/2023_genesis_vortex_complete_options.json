@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2023_genesis_vortex_complete_options",
+  "make": "Genesis",
+  "models": [
+    "Vortex",
+    "Vortex"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine; L Smartstream G3.5 T-GDi V6 (was Mauna Red and Barossa Burgundy (glossy/matte) were added to the exterior, while Urban Brown and Vanilla Beige two-tone colors were added to the standard design model. United States In the United States, it was…"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Mauna Red and Barossa Burgundy (glossy/matte) were added to the exterior, while Urban Brown and Vanilla Beige two-tone colors were added to the standard design model. United States In the United States, it was launched in November 2020 for the 2021 model year.…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: About 2021 GENESIS Vortex Window Sticker The 2021 GENESIS Vortex window sticker, also known as the Monroney Label, is a federally mandated document that displays the vehicle's key information including MSRP, standard equipment, optional features, fuel economy…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Multiple configuration options allow customization for axle weight, interior lay; Multiple configuration options allow customization for axle weight, interior layout, appliances, and exterior styling—tailoring each RV to your specific needs."
+      }
+    ]
+  }
+}

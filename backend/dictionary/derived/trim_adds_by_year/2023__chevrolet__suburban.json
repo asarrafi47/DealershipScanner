@@ -1,0 +1,90 @@
+{
+  "catalog_key": "2023|chevrolet|suburban",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2023__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "Z71",
+    "RST",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "6.2L EcoTec3 V8 engine with dual exhaust and dual twin tips",
+      "22-inch Sterling Silver-painted wheels",
+      "Chrome door handles with body-color strip",
+      "Exclusive grille with Galvano inserts",
+      "Front skid plate with Galvano finish",
+      "Galvano finish liftgate appliqué and bright sill plates",
+      "Power-release second-row bucket seats",
+      "Heated and ventilated front seats with perforated leather",
+      "Automatic heated steering wheel",
+      "15-inch diagonal multi-color Head-Up Display"
+    ],
+    "Premier": [
+      "6.2L EcoTec3 V8 engine",
+      "Autotrac 2-speed active transfer case and Magnetic Ride Control",
+      "Hill Descent Control",
+      "20-inch machined-aluminum wheels with Galvano accents",
+      "Body-color mirror caps",
+      "Full-feature outside mirrors with chrome caps",
+      "Power-folding third-row seat",
+      "Power-sliding center console",
+      "Heated second-row bucket seats",
+      "Bose Centerpoint Surround Sound 10-speaker system"
+    ],
+    "Z71": [
+      "Autotrac 2-speed active transfer case",
+      "Magnetic Ride Control",
+      "Hill Descent Control",
+      "Heavy-duty air filter",
+      "20-inch polished-finish aluminum wheels with all-terrain tires",
+      "High approach angle front fascia",
+      "Red recovery hooks",
+      "Gloss Black beltline moldings and black tubular assist steps",
+      "Black Chevrolet bowtie emblems and badging",
+      "Black roof rack side rails"
+    ],
+    "RST": [
+      "RST-specific Black sport grille",
+      "Black Ice chrome exterior trim",
+      "RST-specific badging",
+      "22-inch bright machined high-gloss Black-painted aluminum wheels",
+      "Black front fascia with gloss Black accent trim",
+      "Black roof rack side rails and assist steps with gloss Black accents",
+      "Gloss Black beltline moldings",
+      "Black Ice chrome finish liftgate appliqué",
+      "RST-specific Jet Black interior with Victory Red stitching",
+      "9-speaker Bose sound system"
+    ],
+    "LT": [
+      "Hands-free programmable power liftgate with Chevrolet emblem projection",
+      "Bright front and rear sill plates",
+      "Leather-appointed front and second-row seats",
+      "Heated front bucket seats with driver memory",
+      "12-inch diagonal multi-color enhanced Driver Information Center",
+      "Inside rearview auto-dimming mirror",
+      "Universal Home Remote",
+      "Chevrolet Infotainment 3 Premium system with 10.2-inch touchscreen and Google built-in",
+      "9-speaker Bose sound system",
+      "Wireless charging pad for compatible mobile devices"
+    ],
+    "LS": [
+      "5.3L EcoTec3 V8 engine",
+      "Premium Smooth Ride suspension",
+      "18-inch Bright Silver-painted aluminum wheels",
+      "Body-color mirror caps and door handles",
+      "Black lower fascia with chrome accents",
+      "Black assist steps with chrome strip",
+      "Bright roof rack side rails",
+      "LED headlamps, taillamps and daytime running lamps",
+      "Remote vehicle starter system",
+      "10-way power driver-seat adjuster with power lumbar control"
+    ]
+  }
+}

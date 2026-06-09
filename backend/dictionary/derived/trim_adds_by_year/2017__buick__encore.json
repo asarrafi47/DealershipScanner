@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2017|buick|encore",
+  "year": 2017,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2017__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM",
+    "ESSENCE",
+    "PREFERRED II",
+    "SPORT TOURING",
+    "PREFERRED"
+  ],
+  "adds_by_trim": {
+    "PREMIUM": [
+      "Bose Premium 7-speaker audio system with amplifier",
+      "Buick IntelliLink radio with Navigation and 8-inch color touchscreen",
+      "LED headlamps",
+      "Available 1.4L Turbo with SIDI and Start/Stop technology",
+      "Available all-wheel-drive system"
+    ],
+    "ESSENCE": [
+      "Bose Premium 7-speaker audio system with amplifier",
+      "Buick IntelliLink radio with Navigation and 8-inch color touchscreen",
+      "Dual-zone automatic climate control",
+      "6-way power passenger seat with manual recline and power lumbar",
+      "Inside rearview auto-dimming mirror",
+      "Heated driver and front-passenger seats",
+      "Technical memory seat for driver position",
+      "Available 1.4L Turbo with SIDI and Start/Stop technology"
+    ],
+    "PREFERRED II": [
+      "Leather-appointed seating in Ebony, Shale, or Brandy",
+      "Rainsense wipers",
+      "Forward Collision Alert",
+      "Lane Departure Warning",
+      "Available 1.4L Turbo with SIDI and Start/Stop technology"
+    ],
+    "SPORT TOURING": [
+      "Remote vehicle start",
+      "Rear cross traffic alert",
+      "Side blind zone alert",
+      "Front and rear park assist",
+      "Sport-specific 18-inch Midnight Silver aluminum alloy wheels",
+      "Sport-integrated rear spoiler",
+      "Available all-wheel-drive system"
+    ],
+    "PREFERRED": [
+      "Rear cargo cover, stowable and removable",
+      "Color-keyed floor mats, front and rear",
+      "Heated steering wheel",
+      "Available all-wheel-drive system",
+      "Available oil pan heater",
+      "Standard 1.4L Turbo engine with variable valve timing"
+    ]
+  }
+}

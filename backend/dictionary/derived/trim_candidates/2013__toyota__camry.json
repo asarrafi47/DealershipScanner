@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2013|toyota|camry",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

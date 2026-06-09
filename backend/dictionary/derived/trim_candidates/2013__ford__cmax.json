@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|ford|cmax",
+  "year": 2013,
+  "make": "Ford",
+  "model": "C-Max",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "Active"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

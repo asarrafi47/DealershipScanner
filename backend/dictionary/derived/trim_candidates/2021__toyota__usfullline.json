@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2021|toyota|usfullline",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "1794",
+    "Platinum",
+    "Limited",
+    "XLE Premium",
+    "TRD Pro",
+    "XSE",
+    "XLE",
+    "TRD Off-Road",
+    "TRD",
+    "Adventure",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

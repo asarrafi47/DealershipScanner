@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2011|porsche|911",
+  "year": 2011,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_web_2011__porsche__911",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Turbo S",
+    "Turbo",
+    "Carrera GTS",
+    "Carrera S",
+    "Carrera"
+  ],
+  "adds_by_trim": {
+    "Carrera": [
+      "3.6L flat-six engine with 345 hp",
+      "Manual or PDK automatic transmission",
+      "19-inch wheels",
+      "Porsche Stability Management system",
+      "Dual front airbags and side curtain airbags",
+      "AM/FM radio with single-disc CD player",
+      "Air conditioning with automatic climate control"
+    ],
+    "Carrera S": [
+      "3.8L flat-six engine with 385 hp and 330 lb-ft torque",
+      "Larger 19-inch sport wheels",
+      "Sport suspension with 10mm lower ride height",
+      "Bi-xenon headlights",
+      "Porsche Communication Management infotainment system"
+    ],
+    "Carrera GTS": [
+      "3.8L flat-six engine with 408 hp",
+      "Lightweight bucket seats with Alcantara trim",
+      "Unique GTS exterior styling and ducktail spoiler",
+      "Sport chassis with revised suspension tuning",
+      "18-way power-adjustable sport seats"
+    ],
+    "Turbo": [
+      "3.6L turbocharged flat-six engine with 500 hp",
+      "All-wheel drive system",
+      "Adaptive aerodynamics with active rear spoiler",
+      "20-inch turbo-design wheels",
+      "Enhanced cooling and performance braking"
+    ],
+    "Turbo S": [
+      "3.6L turbocharged flat-six engine with 530 hp",
+      "Sport exhaust with variable bypass valve",
+      "Upgraded suspension and anti-roll bars",
+      "Exclusive Turbo S exterior design elements",
+      "Enhanced dynamic engine mounts"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/911/"
+}

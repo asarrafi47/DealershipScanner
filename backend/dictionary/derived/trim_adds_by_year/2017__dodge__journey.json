@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|dodge|journey",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2017__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "Crossroads Plus",
+    "Crossroads",
+    "SXT",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "3.6L Pentastar V6 engine with 6-speed automatic transmission standard",
+      "AWD system available",
+      "Performance suspension",
+      "Dual-Zone Automatic Temperature Control with humidity sensor",
+      "Auto-dimming rearview mirror with microphone",
+      "Front and rear swiveling LED lamps",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "Crossroads Plus": [
+      "3-Zone temperature control with Flexible Seating Group",
+      "Front-passenger Flip 'n Stow in-seat storage with premium cloth seats"
+    ],
+    "Crossroads": [
+      "P225/55R19 all-season touring tires",
+      "Body-color foldaway power heated mirrors"
+    ],
+    "SXT": [
+      "3.6L V6 engine option with 6-speed automatic transmission",
+      "Fog lamps",
+      "LED taillamps on AWD models",
+      "Dual-Zone Automatic Temperature Control available",
+      "Front-passenger footwell LED lamps"
+    ],
+    "SE": [
+      "2.4L Tigershark MultiAir2 I4 engine with 4-speed automatic transmission",
+      "Manual rearview day/night mirror",
+      "Compact spare tire",
+      "Variable intermittent windshield and rear window wipers",
+      "Full-length floor console",
+      "LATCH child seat anchor system",
+      "Child Seat Anchor System"
+    ]
+  }
+}

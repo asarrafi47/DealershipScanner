@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|volvo|c70",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "C70",
+  "ladder_id": "brochure_llm_2012__volvo__c70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premier Plus",
+    "Premier"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Navigation System with Map Care",
+      "Premium Sound System with 2x8 subwoofers and 2x130 watt amplifier",
+      "Rear Park Assist"
+    ],
+    "Premier Plus": [
+      "Rear Park Assist",
+      "Automatically dimmed inner rear-view mirror",
+      "Rain sensor with compass"
+    ],
+    "Premier": [
+      "Keyless Drive technology to unlock and start without key",
+      "HomeLink Integrated Garage Door Opener",
+      "Digital Compass"
+    ]
+  }
+}

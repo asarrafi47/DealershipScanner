@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2024|toyota|bz4x",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "bZ4X",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features Adds to or replaces features offered on XLE",
+      "AC synchronous electric generator AC synchronous electric generator",
+      "Total system power output: 201 hp (FWD); 214 hp (AWD) Total system power output: 201 hp (FWD); 214 hp (AWD)",
+      "Total system max torque: 196 lb.-ft. (FWD); Total system max torque: 196 lb.-ft. (FWD);",
+      "Zero Emission Vehicle (ZEV) Zero Emission Vehicle (ZEV)",
+      "Front-Wheel Drive (FWD) Front-Wheel Drive (FWD)",
+      "Available All-Wheel Drive (AWD) Available All-Wheel Drive (AWD)",
+      "X-MODE with Snow/Dirt, Deep Snow/Mud, X-MODE with Snow/Dirt, Deep Snow/Mud,",
+      "Regenerative braking with Boost and Eco drive modes Regenerative braking with Boost and Eco drive modes",
+      "EPA-estimated range (mi.): 252 (FWD); 228 (AWD)2 EPA-estimated range (mi.): 236 (FWD); 222 (AWD)2",
+      "Exterior Features Exterior Features",
+      "Bi-LED projector low- and high-beam headlights Multi-LED headlights"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

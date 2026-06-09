@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2016|ford|f150",
+  "year": 2016,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2016__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "LIMITED",
+    "KING RANCH",
+    "LARIAT",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Brochure does not specify PLATINUM-specific features vs LIMITED"
+    ],
+    "LIMITED": [
+      "Brochure does not specify LIMITED-specific features vs KING RANCH"
+    ],
+    "KING RANCH": [
+      "Brochure does not specify KING RANCH-specific features vs LARIAT"
+    ],
+    "LARIAT": [
+      "Brochure does not specify LARIAT-specific features vs XLT"
+    ],
+    "XLT": [
+      "Brochure does not specify XLT-specific features vs XL"
+    ],
+    "XL": [
+      "100,000-mile tune-up interval under normal driving conditions",
+      "Active Grille Shutter System with select engines",
+      "Fully boxed steel frame with fail-safe engine cooling",
+      "Hill start assist and AdvanceTrac with Roll Stability Control",
+      "Personal Safety System with dual-stage front airbags and pretensioners",
+      "Front-seat side airbags and Safety Canopy System for all rows",
+      "LATCH system and trailer sway control",
+      "Autolamp headlamps with rainlamp feature and configurable daytime running lamps",
+      "Lockable and removable tailgate with stake-bed pockets",
+      "Stainless steel exhaust system with 23-gallon fuel tank"
+    ]
+  }
+}

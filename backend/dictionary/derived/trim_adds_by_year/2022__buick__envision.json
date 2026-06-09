@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2022|buick|envision",
+  "year": 2022,
+  "make": "Buick",
+  "model": "Envision",
+  "ladder_id": "brochure_llm_2022__buick__envision",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Avenir",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Avenir": [
+      "Distinctive grille, rear fascia, and taillamps",
+      "20-inch aluminum wheels with Pearl Nickel finish",
+      "Unique clear taillamps",
+      "Available enhanced-design LED headlamps",
+      "Available Rich Garnet Metallic exterior paint",
+      "Unique diamond-quilted theme design in all three rows",
+      "Distinctive piping on seating surfaces",
+      "Piano Black and Agallocha wood-tone accents",
+      "Available Ebony-themed cabin"
+    ],
+    "Premium": [
+      "310-hp 3.6L V6 engine",
+      "Advanced 9-speed automatic transmission",
+      "Innovative five-link rear suspension",
+      "Three rows of premium seating",
+      "Wireless smartphone charging",
+      "Buick Driver Confidence Plus with Automatic Emergency Braking standard",
+      "Smart Slide second-row seating",
+      "60/40 split-folding third-row seats",
+      "Hands-free power liftgate with LED logo projection",
+      "97.4 cubic feet of max cargo space"
+    ]
+  }
+}

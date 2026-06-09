@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2017|audi|a4",
+  "year": 2017,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_llm_2017__audi__a4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "Audi virtual cockpit with 12.3-inch LCD fully digital instrument cluster",
+      "8.3-inch MMI center infotainment/navigation display",
+      "MMI navigation plus with voice control system",
+      "Bang & Olufsen 3D Sound System with 19 speakers and 16-channel amplifier",
+      "INRIX XD Traffic capability",
+      "Audi connect CARE assistance and security services"
+    ],
+    "Premium Plus": [
+      "7.0-inch color MMI center infotainment display",
+      "MMI touch with handwriting-recognition technology",
+      "SiriusXM Satellite Radio with 90-day trial subscription",
+      "Audi connect CARE assistance and security services"
+    ],
+    "Premium": [
+      "5.0-inch monochrome driver information system",
+      "Voice control system",
+      "7.0-inch MMI center infotainment display",
+      "Audi sound system with ten speakers and single CD player",
+      "HD Radio Technology",
+      "SDXC card slots with 64GB operating capacity",
+      "Audi music interface with two USB ports",
+      "BLUETOOTH streaming audio and wireless technology preparation",
+      "Garage door opener HomeLink",
+      "Apple CarPlay and Google Android Auto smartphone integration"
+    ]
+  }
+}

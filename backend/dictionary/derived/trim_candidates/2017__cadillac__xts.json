@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2017|cadillac|xts",
+  "year": 2017,
+  "make": "Cadillac",
+  "model": "XTS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Sport Platinum",
+    "Premium Luxury",
+    "Luxury",
+    "Sport",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2022|chevrolet|blazer",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Blazer",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "Custom",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|subaru|brz",
+  "year": 2017,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2017__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Series.Yellow",
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Series.Yellow": [
+      "Brembo® performance braking system with 4-piston front and dual-piston rear calipers",
+      "SACHS® performance dampers and shock absorbers",
+      "12.8-inch front and 12.4-inch rear brake discs",
+      "17 x 7.5-inch multi-spoke aluminum-alloy wheels with black finish",
+      "Exclusive Charlesite Yellow paint",
+      "Black-painted side mirrors and black badging",
+      "Leather-wrapped steering wheel with yellow stitching",
+      "Door trim and center console knee pads with yellow stitching",
+      "Shift boot and parking brake with yellow stitching",
+      "Alcantara® and leather-trimmed front seats with yellow-embroidered BRZ logo"
+    ],
+    "BRZ Limited": [
+      "LED fog lights",
+      "Alcantara® and leather-trimmed upholstery",
+      "Center console and lower door knee pads with red stitching",
+      "Instrument cluster meter visor with red stitching",
+      "4.2-inch color multifunction display",
+      "Heated front seats and side mirrors",
+      "Dual-zone automatic digital climate control",
+      "Keyless Access with Push-button Start",
+      "Antitheft security system"
+    ],
+    "BRZ Premium": [
+      "205-hp 2.0-liter 4-cylinder SUBARU BOXER® engine with direct injection",
+      "Close-ratio 6-speed manual transmission with Incline Start Assist",
+      "Sport-tuned suspension",
+      "Multi-spoke 17-inch aluminum-alloy wheels",
+      "LED headlights",
+      "Trunk spoiler",
+      "Cloth upholstery",
+      "Leather-wrapped steering wheel with audio and Bluetooth® controls",
+      "Sport-design gauges with multifunction display",
+      "Manually adjustable air conditioning system"
+    ]
+  }
+}

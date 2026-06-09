@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2020|toyota|sienna",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2020__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XLE",
+    "SE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "18-inch 10-spoke machined alloy wheels with P235/55R18 tires",
+      "Projector-beam halogen headlights with LED Daytime Running Lights"
+    ],
+    "XLE": [
+      "17-inch 7-spoke machined alloy wheels with P235/60R17 tires",
+      "Color-keyed heated power outside mirrors with blind spot warning indicators",
+      "Available 18-inch 10-spoke machined alloy wheels with P235/55RF18 tires (AWD only)"
+    ],
+    "SE": [
+      "19-inch 6-spoke gunmetal-finish alloy wheels with P235/50R19 tires",
+      "Projector-beam halogen headlights with smoked chrome trim and LED Daytime Running Lights",
+      "Sport mesh front grille",
+      "Chrome-accented outside door handles",
+      "Fog lights",
+      "Power liftgate with jam protection",
+      "Sport instrumentation with 4.2-inch color TFT Multi-Information Display",
+      "SE Premium Package with BSM, RCTA, rear parking assist sonar, and Premium Audio"
+    ],
+    "LE": [
+      "Color-keyed rear spoiler with LED center high-mount stop light and concealed intermittent rear wiper",
+      "Roof-mounted shark-fin antenna",
+      "Dual power sliding side doors with jam protection",
+      "Black roof rails",
+      "Privacy glass on rear windows",
+      "8-way power-adjustable driver's seat",
+      "40/20/40 second-row seat with tip-up and long-slide feature and stowable center seat",
+      "Perforated leather-trimmed and multi-stage heated front seats",
+      "Second- and third-row sunshades",
+      "LE Preferred Package with BSM, RCTA, Smart Key System, and Power moonroof"
+    ],
+    "L": [
+      "3.5-liter V6 DOHC engine with 296 hp and 263 lb-ft torque",
+      "8-speed Direct Shift automatic transmission with ECT-i",
+      "Front-wheel drive",
+      "17-inch 5-spoke alloy wheels with P235/60R17 tires",
+      "Projector-beam halogen headlights with auto on/off feature",
+      "Black power outside mirrors with integrated blind spot mirrors",
+      "Windshield wiper de-icer",
+      "Seating for seven with second-row captain's chairs",
+      "7-inch touch-screen audio with Bluetooth and Apple CarPlay compatibility",
+      "Three-zone automatic climate control with rear digital control panel"
+    ]
+  }
+}

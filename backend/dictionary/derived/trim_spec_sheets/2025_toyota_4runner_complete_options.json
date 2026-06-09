@@ -1,0 +1,55 @@
+{
+  "ladder_id": "2025_toyota_4runner_complete_options",
+  "make": "Toyota",
+  "models": [
+    "4Runner",
+    "4Runner"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "In the United States, the 4Runner carried over the same engine options from the; The optional 4WD systems were full-time on V8 models while \"Multi-Mode\" or part-"
+      }
+    ],
+    "TRD Pro": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive; Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru"
+      }
+    ],
+    "TRD Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive; Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru"
+      }
+    ],
+    "TRD": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive; Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru"
+      }
+    ],
+    "SR5": [
+      {
+        "label": "Engine Options",
+        "value": "The optional 4WD systems were full-time on V8 models while \"Multi-Mode\" or part-"
+      }
+    ],
+    "SR": [
+      {
+        "label": "Engine Options",
+        "value": "Power output 96–100 hp (97–101 PS; 72–75 kW); In the United States, the 4Runner carried over the same engine options from the"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive; Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru"
+      }
+    ]
+  }
+}

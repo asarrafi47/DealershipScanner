@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2008,BMW,Z4,3.0i,3.0L V6,3.0L I6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,18,28,21,,,,,
+2008,BMW,Z4,3.0i,3.0L V6,3.0L I6 Turbo,Turbocharged,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,19,28,22,,,,,
+2008,BMW,Z4,3.0si,3.0L V6,3.0L I6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,18,28,21,,,,,
+2008,BMW,Z4,3.0si,3.0L V6,3.0L I6 Turbo,Turbocharged,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,19,28,22,,,,,
+2008,BMW,Z4,Coupe,3.0L V6,3.0L I6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,18,28,21,,,,,
+2008,BMW,Z4,Coupe,3.0L V6,3.0L I6 Turbo,Turbocharged,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,19,28,22,,,,,
+2008,BMW,Z4,M Coupe,3.2L V6 (MOTORSPORT),3.2L I6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.2,15,23,18,,,,,
+2008,BMW,Z4,M Roadster,3.2L V6 (MOTORSPORT),3.2L I6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.2,15,23,18,,,,,

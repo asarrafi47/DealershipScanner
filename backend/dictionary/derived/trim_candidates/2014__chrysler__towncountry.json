@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2014|chrysler|towncountry",
+  "year": 2014,
+  "make": "Chrysler",
+  "model": "Town & Country",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

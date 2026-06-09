@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2016|ford|cmax",
+  "year": 2016,
+  "make": "Ford",
+  "model": "C-Max",
+  "ladder_id": "generic_ford_cmax",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "coverage, and 5-year/unlimited-mile corrosion (perforation)"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Active": 1
+    }
+  }
+}

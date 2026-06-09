@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2024|mitsubishi|eclipsecross",
+  "year": 2024,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "SEL",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

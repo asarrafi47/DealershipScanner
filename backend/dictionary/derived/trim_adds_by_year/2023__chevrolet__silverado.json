@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2023|chevrolet|silverado",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "2021_chevrolet_silverado_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "RST",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "RST": [
+      "includes Front and Rear Park",
+      "t storage compartments",
+      "e Package II; RST and LT",
+      "driver’s responsibility to operate the vehicle in a safe manner. Read the vehicle Owner’s Manual for important feature limitations and information. 2 Not compatible with all devices. 3 The system",
+      "wireless charging technology and others require a special adaptor/back cover. To check for phone or other device compatibility, see my.chevrolet.com/learn or consult your carrier.",
+      "Package (available in Arkansas,",
+      "Package, Super Cruise 4",
+      "speed automatic transmission",
+      "lb.-ft. of torque @ 4100 rpm",
+      "Displacement: 5328 cc (325 cu. in.)",
+      "Bore and stroke: 96.01 mm x 92 mm (3.78 in. x 3.62 in.)",
+      "Max payload rating: 2,140 lbs.1 , 4"
+    ],
+    "LT": [
+      "2.7L Turbo (L3B) standard engine",
+      "Available 5.3L EcoTec3 V8 with Dynamic Fuel Management",
+      "Available Duramax 3.0L Turbo-Diesel and 6.2L EcoTec3 V8 engines"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "LT": 0
+    }
+  }
+}

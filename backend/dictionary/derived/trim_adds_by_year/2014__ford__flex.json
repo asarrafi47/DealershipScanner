@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2014|ford|flex",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_llm_2014__ford__flex",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "18-inch painted aluminum wheels with P235/60R18 BSW tires",
+      "Bright stainless steel beltline",
+      "Fog lamps with bright bezels",
+      "Dual-zone electronic automatic temperature control",
+      "Premium Audio System with 7 speakers",
+      "Remote Start System",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "San Macassar wood-appearance appliqués on instrument panel and door-trim panels"
+    ],
+    "SE": [
+      "7-passenger seating with 1st-row heated bucket seats",
+      "6-way power driver's seat with 2-way manual front-passenger seat",
+      "Ford SYNC voice-activated, in-vehicle connectivity system",
+      "MyFord Touch with two 4.2-inch configurable LCD displays and 8-inch LCD touch screen",
+      "Single-zone air conditioning with 2nd and 3rd-row adjustable vents",
+      "17-inch painted aluminum wheels with P235/60R17 BSW tires",
+      "Auto headlamps with halogen and wipers-activated capability",
+      "Body-color-painted door handles with chrome grille",
+      "AM/FM stereo and single-CD player with MP3 capability and 6 speakers",
+      "Universal garage door opener"
+    ]
+  }
+}

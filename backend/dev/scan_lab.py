@@ -15,24 +15,25 @@ import sys
 import threading
 import time
 import uuid
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from backend.db.inventory_db import (
-    DB_PATH,
-    get_car_by_id,
+    _UPDATABLE_CAR_COLUMNS,
+    _parse_car_gallery,
+    _parse_car_history_highlights,
     list_scan_runs,
-    update_car_row_partial,
 )
 from backend.db.inventory_db import _placeholders as sql_placeholders
-from backend.db.inventory_db import db_conn, get_conn
 
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DEFAULT_MANIFEST_REL = "workspace/manifest_92694_25mi.json"
+DEFAULT_SCAN_LAB_INVENTORY_DB_REL = "workspace/inventory_92694.db"
 DEFAULT_ZIP = "92694"
 DEFAULT_RADIUS_MI = 25
 
@@ -71,6 +72,36 @@ def default_manifest_path() -> Path:
     if not p.is_absolute():
         p = PROJECT_ROOT / p
     return p
+
+
+def scan_lab_inventory_db_path() -> Path:
+    """92694 / scan-lab inventory is isolated from production ``inventory.db``."""
+    raw = (
+        os.environ.get("SCAN_LAB_INVENTORY_DB_PATH") or DEFAULT_SCAN_LAB_INVENTORY_DB_REL
+    ).strip()
+    p = Path(raw)
+    if not p.is_absolute():
+        p = PROJECT_ROOT / p
+    return p
+
+
+@contextmanager
+def scan_lab_db_conn():
+    """SQLite connection to the scan-lab inventory file (not production)."""
+    import sqlite3
+
+    path = scan_lab_inventory_db_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(path), timeout=60.0)
+    try:
+        conn.execute("PRAGMA busy_timeout = 60000")
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 
 def load_manifest(path: Path | None = None) -> list[dict[str, Any]]:
@@ -112,7 +143,7 @@ def manifest_lab_config() -> dict[str, Any]:
         "dealer_ids": manifest_dealer_ids(manifest),
         "zip_code": (os.environ.get("SCAN_LAB_ZIP") or DEFAULT_ZIP).strip(),
         "radius_miles": int(os.environ.get("SCAN_LAB_RADIUS_MI") or DEFAULT_RADIUS_MI),
-        "inventory_db_path": str(DB_PATH),
+        "inventory_db_path": str(scan_lab_inventory_db_path()),
     }
 
 
@@ -151,7 +182,7 @@ def inventory_summary_for_manifest(
     incomplete_ids = _incomplete_id_set()
 
     if dealer_ids:
-        with db_conn() as conn:
+        with scan_lab_db_conn() as conn:
             conn.row_factory = None
             cur = conn.cursor()
             cur.execute(
@@ -323,7 +354,7 @@ def list_scan_lab_cars(
         )
         params.extend([like, like, like])
 
-    with db_conn() as conn:
+    with scan_lab_db_conn() as conn:
         conn.row_factory = None
         cur = conn.cursor()
         cur.execute(f"SELECT COUNT(*) FROM cars WHERE {where}", tuple(params))
@@ -353,8 +384,31 @@ def car_in_manifest_scope(car: dict[str, Any]) -> bool:
     return bool(did) and did in set(manifest_lab_config()["dealer_ids"])
 
 
+def get_scan_lab_car_by_id(car_id: int, *, include_inactive: bool = True) -> dict[str, Any] | None:
+    """Load a full car row from the scan-lab inventory file (not production ``inventory.db``)."""
+    import sqlite3
+
+    with scan_lab_db_conn() as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        if include_inactive:
+            cur.execute("SELECT * FROM cars WHERE id = ?", (car_id,))
+        else:
+            cur.execute(
+                "SELECT * FROM cars WHERE id = ? AND (COALESCE(listing_active, 1) = 1)",
+                (car_id,),
+            )
+        row = cur.fetchone()
+    if not row:
+        return None
+    car = dict(row)
+    _parse_car_gallery(car)
+    _parse_car_history_highlights(car)
+    return car
+
+
 def get_scan_lab_car_row(car_id: int) -> dict[str, Any] | None:
-    raw = get_car_by_id(car_id)
+    raw = get_scan_lab_car_by_id(car_id)
     if not raw:
         return None
     from backend.utils.car_serialize import redact_sensitive_car_row
@@ -365,9 +419,22 @@ def get_scan_lab_car_row(car_id: int) -> dict[str, Any] | None:
 def patch_scan_lab_car(car_id: int, fields: dict[str, Any]) -> bool:
     if not fields:
         return False
-    if not get_car_by_id(car_id):
+    if not get_scan_lab_car_by_id(car_id):
         return False
-    update_car_row_partial(car_id, fields)
+    sets: list[str] = []
+    vals: list[Any] = []
+    for k, raw in fields.items():
+        if k not in _UPDATABLE_CAR_COLUMNS:
+            continue
+        if k == "gallery" and isinstance(raw, list):
+            raw = json.dumps(raw)
+        sets.append(f"{k} = ?")
+        vals.append(raw)
+    if not sets:
+        return False
+    vals.append(car_id)
+    with scan_lab_db_conn() as conn:
+        conn.execute(f"UPDATE cars SET {', '.join(sets)} WHERE id = ?", vals)
     invalidate_scan_lab_summary_cache()
     return True
 
@@ -396,6 +463,7 @@ def _run_manifest_scan_job(job_id: str, manifest_path: Path) -> None:
 
     env = os.environ.copy()
     env["DEALERS_MANIFEST_PATH"] = str(resolved_manifest)
+    env["INVENTORY_DB_PATH"] = str(scan_lab_inventory_db_path())
     env.update(MAC_MINI_LITE_ENV)
     env.pop("ANTHROPIC_API_KEY", None)
 
@@ -487,8 +555,7 @@ def active_scan_lab_job() -> dict[str, Any] | None:
 
 def db_table_counts() -> dict[str, int]:
     counts: dict[str, int] = {}
-    conn = get_conn()
-    try:
+    with scan_lab_db_conn() as conn:
         cur = conn.cursor()
         for table in ("cars", "dealerships", "scan_runs", "dealer_scan_profile"):
             try:
@@ -496,6 +563,4 @@ def db_table_counts() -> dict[str, int]:
                 counts[table] = int(n)
             except Exception:
                 counts[table] = -1
-    finally:
-        conn.close()
     return counts

@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2021_volkswagen_tiguan_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Tiguan",
+    "Tiguan"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "R-Line": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Hybrid drivetrain Plug-in hybrid (eHybrid) (was Front-engine, front-wheel-drive; L TSI I4 eHybrid)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel-drive; L TSI I4 eHybrid (was Front-engine, all-wheel-drive; Hybrid drivetrain Plug-in hybrid (eHybrid))"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: VW USA Tiguan SE interior in Titan Black, featuring: 10-way power driver's seat w/ power l; On the interior, there is a new steering wheel as well as a standard 8-inch digi"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, all-wheel-drive; Hybrid drivetrain Plug-in hybrid (eHybrid)"
+      }
+    ]
+  }
+}

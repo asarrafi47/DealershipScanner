@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2016|ford|escape",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "inventory_ford_escape",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "coverage, and 5-year/unlimited-mile corrosion (perforation)"
+    ],
+    "Limited": [
+      "coverage, 5-year/60,000-mile safety restraint"
+    ],
+    "Active": [
+      "1.5-liter turbo inline three-cylinder engine with standard FWD",
+      "8.0-inch touchscreen infotainment center",
+      "Fully digital instrument cluster",
+      "Wireless Apple CarPlay and Android Auto",
+      "Co-Pilot360 driver assists with automatic emergency braking",
+      "Blind-spot monitoring and rear cross-traffic alert",
+      "Lane keep assist and automatic high-beams",
+      "Tire repair kit"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "Active": 0
+    }
+  }
+}

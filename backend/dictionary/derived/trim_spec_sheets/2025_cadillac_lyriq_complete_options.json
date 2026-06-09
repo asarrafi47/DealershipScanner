@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2025_cadillac_lyriq_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Lyriq",
+    "Lyriq"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "–515 hp (242–384 kW; 330–522 PS)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "–515 hp (242–384 kW; 330–522 PS)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Electric motor Permanent magnet synchronous AC"
+      }
+    ]
+  }
+}

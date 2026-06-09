@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|mazda|2",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "2",
+  "ladder_id": "brochure_llm_2011__mazda__2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA2 TOURING",
+    "MAZDA2 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA2 TOURING": [
+      "Cruise control with steering-wheel-mounted controls",
+      "Steering-wheel-mounted audio controls",
+      "6-speaker audio system",
+      "Trip computer",
+      "Leather-wrapped steering wheel",
+      "Touring-style cloth upholstery with red piping",
+      "15-inch alloy wheels",
+      "Body-color rear roof spoiler",
+      "Fog lights",
+      "Chrome exhaust tip"
+    ],
+    "MAZDA2 SPORT": [
+      "1.5-liter DOHC 16-valve 4-cylinder engine with VVT (100 hp, 98 lb-ft torque)",
+      "Air conditioning",
+      "Power windows with driver's one-touch auto-down",
+      "Power door locks",
+      "Dual body-color power remote outside mirrors",
+      "3 AM/FM/CD/MP3 4-speaker audio system",
+      "Auxiliary-audio input jack",
+      "Tilt steering wheel",
+      "Remote keyless entry",
+      "Center console with storage tray"
+    ]
+  }
+}

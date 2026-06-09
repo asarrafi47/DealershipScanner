@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2013|subaru|legacy",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2013__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "3.6R",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "3.6L SUBARU BOXER engine with increased horsepower",
+      "Dual bright-finish exhaust outlets",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "4-way power front-passenger's seat",
+      "Leather-trimmed upholstery",
+      "Woodgrain-patterned accent trim on doors and console",
+      "Analog speedometer with LCD color display and EyeSight system functions",
+      "Dual-zone automatic digital climate control system"
+    ],
+    "3.6R": [
+      "3.6L SUBARU BOXER engine",
+      "Dual bright-finish exhaust outlets",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "Leather-trimmed upholstery",
+      "Woodgrain-patterned accent trim on doors and console",
+      "LCD color display with eco fuel economy gauge",
+      "Dual-zone automatic digital climate control system"
+    ],
+    "2.5i Limited": [
+      "Body-color folding side mirrors replacing black folding mirrors",
+      "Single bright-finish exhaust outlet",
+      "Leather-wrapped shifter handle",
+      "Leather-wrapped 3-spoke steering wheel with audio and Bluetooth controls",
+      "440-watt 9-speaker Harman Kardon premium audio system with HD Radio",
+      "Analog speedometer with LCD color display"
+    ],
+    "2.5i Premium": [
+      "Body-color folding side mirrors",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "Heated front seats and windshield wiper de-icer (All-Weather Package)",
+      "Heated side mirrors (All-Weather Package)",
+      "6-speaker single-CD audio system with Bluetooth audio streaming",
+      "Driver's auto up/down power window",
+      "Leather-wrapped 3-spoke steering wheel with audio and Bluetooth"
+    ],
+    "2.5i": [
+      "2.5L SUBARU BOXER engine with Subaru Symmetrical All-Wheel Drive",
+      "4-wheel antilock brakes with Electronic Brake-force Distribution",
+      "Vehicle Dynamics Control and Traction Control System",
+      "Dual-stage deployment driver and front-passenger front airbags",
+      "Side-curtain airbags and seat-mounted front side-impact airbags",
+      "Height-adjustable front seat head restraints",
+      "6-way manually adjustable driver's seat",
+      "4-speaker single-CD audio system with Bluetooth and USB/iPod control",
+      "Manually adjustable CFC-free air-conditioning system",
+      "Digital trip computer with fuel economy and ambient temperature"
+    ]
+  }
+}

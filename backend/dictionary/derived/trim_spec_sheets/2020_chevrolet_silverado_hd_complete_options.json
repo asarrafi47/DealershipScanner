@@ -1,0 +1,89 @@
+{
+  "ladder_id": "2020_chevrolet_silverado_hd_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Silverado HD",
+    "Silverado HD"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "High Country": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS) (was L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS))"
+      }
+    ],
+    "LTZ": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS) (was L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS); Battery 0.45 kWh lithium-ion (eAssist mild hybrid))"
+      }
+    ],
+    "ZR2": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS); Battery 0.45 kWh lithium-ion (eAssist mild hybrid) (was L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS))"
+      }
+    ],
+    "SS": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS) (was L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)); Automatic 6-spd"
+      }
+    ],
+    "Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS) (was L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS))"
+      }
+    ],
+    "LT Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS) (was L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS))"
+      }
+    ],
+    "RST": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS) (was L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS))"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS) (was LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS); L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS))"
+      }
+    ],
+    "Custom": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS); L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS) (was L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS))"
+      }
+    ],
+    "WT": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS) (was For the battery electric model, see Chevrolet Silverado EV.)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: For the battery electric model, see Chevrolet Silverado EV. (was Battery 0.45 kWh lithium-ion (eAssist mild hybrid))"
+      },
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "Adds Maximum Towing Capacity: Advanced trailering technologies designed to make a long day of towing easy."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Battery 0.45 kWh lithium-ion (eAssist mild hybrid)"
+      }
+    ]
+  }
+}

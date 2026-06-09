@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2010|suzuki|equator",
+  "year": 2010,
+  "make": "Suzuki",
+  "model": "Equator",
+  "ladder_id": "brochure_llm_2010__suzuki__equator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crew Cab RMZ-4",
+    "Crew Cab Sport",
+    "Crew Cab Base",
+    "Extended Cab Sport",
+    "Extended Cab Premium",
+    "Extended Cab Base"
+  ],
+  "adds_by_trim": {
+    "Crew Cab RMZ-4": [
+      "4.0-liter V6 engine with 261 hp standard",
+      "4WD with 2-speed transfer case standard",
+      "Dana 44 rear axle with electronic locking differential",
+      "Underbody skid plates for oil pan, transfer case, fuel tank",
+      "Bilstein performance shocks with BFGoodrich Rugged Trail tires",
+      "Foglamps",
+      "Driver's seat height adjustment and lumbar support",
+      "Leather-wrapped steering wheel with integrated audio controls",
+      "Rockford Fosgate 9-speaker premium audio system",
+      "Optional Bluetooth hands-free communication and power sunroof"
+    ],
+    "Crew Cab Sport": [
+      "4.0-liter V6 engine standard",
+      "4WD with 2-speed transfer case optional",
+      "Vehicle Dynamic Control (VDC) with Hill Hold and Hill Descent Control",
+      "Active Limited Slip Traction Control",
+      "Spray-on bedliner with integrated tie-down system",
+      "Cruise control",
+      "Power door locks and power windows with auto down",
+      "Remote keyless entry",
+      "Engine immobilizer"
+    ],
+    "Crew Cab Base": [
+      "Crew cab with four full doors and 5-foot bed",
+      "4.0-liter V6 engine available",
+      "5-speed automatic transmission",
+      "AM/FM/CD 6-speaker audio",
+      "Air conditioning standard",
+      "Reclining front bucket seats with center console",
+      "Dual front and rear cup holders"
+    ],
+    "Extended Cab Sport": [
+      "4.0-liter V6 engine standard",
+      "Vehicle Dynamic Control with Hill Hold and Hill Descent Control",
+      "Active Limited Slip Traction Control",
+      "17-inch alloy wheels",
+      "Spray-on bedliner with integrated tie-down system",
+      "Front map light",
+      "Cruise control",
+      "Power door locks and power windows",
+      "Remote keyless entry"
+    ],
+    "Extended Cab Premium": [
+      "5-speed automatic transmission standard",
+      "17-inch alloy wheels",
+      "Air conditioning standard",
+      "AM/FM/CD 4-speaker audio",
+      "Cruise control",
+      "Power door locks and power windows with auto down",
+      "Remote keyless entry"
+    ],
+    "Extended Cab Base": [
+      "2.5-liter 4-cylinder or 4.0-liter V6 engine options",
+      "5-speed manual or automatic transmission",
+      "Extended cab with 90-degree access doors and 6-foot bed",
+      "Fully boxed ladder frame construction",
+      "Independent front suspension with stabilizer bar",
+      "Overslung multi-leaf rear suspension",
+      "4-Wheel ABS with Electronic Brake-Force Distribution",
+      "Dual-stage front airbags and side-curtain airbags",
+      "Detachable tailgate and rear chrome bumper"
+    ]
+  }
+}

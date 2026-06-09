@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2010|suzuki|kizashi",
+  "year": 2010,
+  "make": "Suzuki",
+  "model": "Kizashi",
+  "ladder_id": "brochure_llm_2010__suzuki__kizashi",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLS",
+    "GTS",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SLS": [
+      "Leather-appointed interior",
+      "3-stage heated front seats",
+      "4-way power front passenger seat",
+      "HomeLink universal garage door opener",
+      "Automatic dimming headlamps",
+      "Exterior heated mirrors",
+      "Auto day/night mirror inside",
+      "Automatic rain-sensing wipers",
+      "Rear sonar parking assist",
+      "Black leather interior option"
+    ],
+    "GTS": [
+      "6-speed manual transmission FWD only",
+      "1-touch sunroof",
+      "Steering wheel paddle shifters CVT only",
+      "425-watt Rockford Fosgate 10-speaker audio system with subwoofer",
+      "18-inch alloy wheels",
+      "Foglamps"
+    ],
+    "SE": [
+      "Continuously Variable automatic Transmission CVT",
+      "215/55-17 Dunlop all-season tires",
+      "10-way power driver seat",
+      "3-position driver memory seat",
+      "Cruise control",
+      "Leather-wrapped steering wheel shift knob and parking brake lever"
+    ],
+    "S": [
+      "6MT FWD base transmission",
+      "Electronic Stability Program with FWD or i-VSP with AWD",
+      "Bosch anti-lock braking system with electronic brake-force distribution",
+      "Dual front advanced airbags with supplemental restraint system",
+      "Side-impact and side-curtain airbags",
+      "Vehicle security system alarm with engine immobilizer",
+      "60/40 split-folding locking rear seats",
+      "Rear center armrest with pass-through",
+      "Trunk cargo restraint hooks",
+      "Remote trunk release with valet lockout switch"
+    ]
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "catalog_key": "2014|subaru|forester",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2014__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0XT Touring",
+    "2.0XT Premium",
+    "2.5i Touring",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "2.5i": [
+      "170-hp 2.5-liter SUBARU BOXER® engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission or optional Lineartronic® CVT",
+      "17-inch styled steel wheels",
+      "Cloth upholstery",
+      "6-way manually adjustable driver's seat",
+      "4-speaker single-CD audio system with Bluetooth® and USB/iPod® control",
+      "Manually adjustable CFC-free air conditioning with air filtration",
+      "7 airbags"
+    ],
+    "2.5i Premium": [
+      "17-inch aluminum-alloy wheels",
+      "Panoramic moonroof",
+      "Raised roof rails with black finish",
+      "10-way power adjustable driver's seat",
+      "Reclining rear seatbacks",
+      "6-speaker single-CD audio system with HD Radio™ and Bluetooth®",
+      "Enhanced color multifunction display",
+      "Rear-Vision Camera",
+      "Driver's auto up/down power window",
+      "All-Weather Package"
+    ],
+    "2.5i Limited": [
+      "Subaru Symmetrical All-Wheel Drive X-MODE™ with Hill Descent Control",
+      "Lineartronic® CVT standard",
+      "Fog lights",
+      "Rear spoiler",
+      "Auto-on/off headlights",
+      "Leather-trimmed upholstery",
+      "Automatic climate control system",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Removable cargo-area tray",
+      "Power rear gate with automatic close and height memory"
+    ],
+    "2.5i Touring": [
+      "Body-color side mirrors with integrated turn signals",
+      "High-resolution 6.1-inch touch-screen voice-activated GPS navigation with 8 Harman Kardon speakers",
+      "Subaru STARLINK™ system with Aha™ infotainment smartphone integration",
+      "SiriusXM™ Satellite Radio with NavTraffic®",
+      "Bluetooth® audio streaming and hands-free phone connectivity",
+      "3.5-mm auxiliary jack",
+      "Analog gauges with LCD display and electroluminescent lighting",
+      "Dual-zone automatic climate control system",
+      "One-touch folding rear seatbacks",
+      "All-Weather Package"
+    ],
+    "2.0XT Premium": [
+      "250-hp turbocharged 2.0-liter SUBARU BOXER® engine",
+      "Subaru Symmetrical All-Wheel Drive X-MODE™ with Hill Descent Control",
+      "Lineartronic® CVT with manual-mode paddle shifters",
+      "Sport-tuned suspension",
+      "SI-DRIVE performance management system",
+      "18-inch aluminum-alloy wheels",
+      "Panoramic moonroof",
+      "Raised roof rails with black finish",
+      "Cloth upholstery",
+      "10-way power adjustable driver's seat"
+    ],
+    "2.0XT Touring": [
+      "Fog lights",
+      "Body-color side mirrors with integrated turn signals",
+      "Leather-trimmed upholstery",
+      "High-resolution 6.1-inch touch-screen voice-activated GPS navigation with 8 Harman Kardon speakers",
+      "Subaru STARLINK™ system with Aha™ infotainment smartphone integration",
+      "SiriusXM™ Satellite Radio with NavTraffic® and SMS text messaging",
+      "Bluetooth® audio streaming and hands-free phone connectivity",
+      "3.5-mm auxiliary jack",
+      "Analog gauges with LCD display and electroluminescent lighting",
+      "All-Weather Package"
+    ]
+  }
+}

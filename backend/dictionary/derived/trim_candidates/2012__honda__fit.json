@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2012|honda|fit",
+  "year": 2012,
+  "make": "Honda",
+  "model": "Fit",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

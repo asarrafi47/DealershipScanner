@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2011|audi|q7",
+  "year": 2011,
+  "make": "Audi",
+  "model": "Q7",
+  "ladder_id": "brochure_llm_2011__audi__q7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q7 3.0 TDI",
+    "Q7 3.0T"
+  ],
+  "adds_by_trim": {
+    "Q7 3.0T": [
+      "Lower bumper and door trim in contrast paint (not available on TDI)",
+      "S line exterior package available as option"
+    ],
+    "Q7 3.0 TDI": [
+      "2.967cc turbocharged TDI diesel engine with 240 horsepower",
+      "406 lb-ft torque at 1,750 rpm",
+      "19 city / 28 highway / 22 combined EPA fuel economy",
+      "6.0 gallon AdBlue® fluid capacity",
+      "Ultra-low sulfur diesel fuel requirement"
+    ]
+  }
+}

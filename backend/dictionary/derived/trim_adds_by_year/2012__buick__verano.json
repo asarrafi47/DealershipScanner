@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|buick|verano",
+  "year": 2012,
+  "make": "Buick",
+  "model": "Verano",
+  "ladder_id": "brochure_llm_2012__buick__verano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Leather",
+    "Convenience"
+  ],
+  "adds_by_trim": {
+    "Leather": [
+      "Auto-dimming inside rearview mirror with adaptive remote operation",
+      "Driver 6-way power seat with manual recline",
+      "Heated outside power mirrors, body-color with adaptive remote operation",
+      "Ultrasonic rear parking assist",
+      "Leather-appointed seating, premium grade",
+      "Heated driver and front passenger seats",
+      "Heated, leather-wrapped steering wheel",
+      "Bose premium audio 9-speaker system with 7-channel digital amplification",
+      "Audio system with navigation, 7-inch color touch-screen, GPS, CD/MP3, USB, SD card reader",
+      "Power tilt-sliding sunroof with sunshade"
+    ],
+    "Convenience": [
+      "Auto-dimming inside rearview mirror with adaptive remote operation",
+      "Driver 6-way power seat with manual recline",
+      "Heated outside power mirrors, body-color with adaptive remote operation",
+      "Ultrasonic rear parking assist",
+      "Passive entry system with push-button start",
+      "Bose premium audio 9-speaker system with 7-channel digital amplification",
+      "Audio system with navigation, 7-inch color touch-screen, GPS, CD/MP3, USB, SD card reader",
+      "Power tilt-sliding sunroof with sunshade"
+    ]
+  }
+}

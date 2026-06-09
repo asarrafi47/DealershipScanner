@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2013|audi|q5",
+  "year": 2013,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2013__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q5 3.0T",
+    "Q5 2.0T",
+    "Q5 hybrid"
+  ],
+  "adds_by_trim": {
+    "Q5 3.0T": [
+      "Supercharged 2.995L six-cylinder engine with 272 hp and 295 lb-ft torque",
+      "0–60 mph acceleration in 6.0 seconds",
+      "Adaptive damping suspension with Audi S line package",
+      "Dynamic steering system"
+    ],
+    "Q5 2.0T": [
+      "Turbocharged 1.984L four-cylinder engine with 211 hp and 258 lb-ft torque",
+      "0–60 mph acceleration in 7.0 seconds"
+    ],
+    "Q5 hybrid": [
+      "54-hp water-cooled three-phase hybrid AC electric motor and generator",
+      "266-volt 72-cell lithium-ion hybrid system battery",
+      "0–60 mph acceleration in 6.8 seconds",
+      "Start-stop efficiency system for improved fuel economy"
+    ]
+  }
+}

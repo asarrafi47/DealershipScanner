@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2013|audi|a7",
+  "year": 2013,
+  "make": "Audi",
+  "model": "A7",
+  "ladder_id": "brochure_2013__audi__a7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "SE",
+    "A7"
+  ],
+  "adds_by_trim": {
+    "A7": [
+      "Adds 3.0T supercharged TFSI engine with 310 hp",
+      "Adds eight-speed Tiptronic automatic transmission",
+      "Adds Audi quattro all-wheel drive",
+      "Adds aluminum-alloy exterior body panels with steel frame",
+      "Adds five-link front suspension with trapezoidal-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds start-stop efficiency system",
+      "Adds variable valve timing 24-valve DOHC engine",
+      "Adds seating capacity for 4 or 5 passengers"
+    ],
+    "SE": [],
+    "Sport": [
+      "Adds Sport suspension calibration",
+      "Adds 19-inch Sport package wheels"
+    ],
+    "Limited": [],
+    "S line": [],
+    "Premium": [
+      "Adds 20-inch Sport package wheels",
+      "Adds Cold Weather package",
+      "Adds Driver Assistance package",
+      "Adds Innovation package"
+    ]
+  }
+}

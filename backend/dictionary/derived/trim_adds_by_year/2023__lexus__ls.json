@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2023|lexus|ls",
+  "year": 2023,
+  "make": "Lexus",
+  "model": "LS",
+  "ladder_id": "2023_lexus_ls",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LS 500",
+    "LS 500 F SPORT",
+    "LS 500h"
+  ],
+  "adds_by_trim": {
+    "LS 500 F SPORT": [
+      "F SPORT-tuned suspension and F SPORT exterior and interior styling",
+      "28-way driver seat with massage on equipped packages",
+      "Dynamic Handling Package content available on F SPORT"
+    ],
+    "LS 500h": [
+      "Multi-stage hybrid system with enhanced efficiency vs LS 500",
+      "Hybrid luxury sedan powertrain in 2025 LS lineup"
+    ],
+    "LS 500": [
+      "416-hp 3.5L twin-turbo V6 with 10-speed transmission",
+      "Adaptive Variable Suspension with Drive Mode Select including Sport S+ and Custom",
+      "Lexus Teammate Advanced Drive and Advanced Park",
+      "24-inch Head-Up Display integration",
+      "20-inch split-10-spoke alloy noise-reduction wheels with Vapor Chrome finish",
+      "28-way power-adjustable driver's seat with multifunction massage and cushion extender",
+      "Quilted-stitch perforated semi-aniline leather interior trim",
+      "Lexus Safety System+ 2.5 with Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Navigation System with 12.3-inch color LCD touchscreen and Remote Touchpad",
+      "Lexus 12-speaker Premium Audio System with Apple CarPlay and Android Auto"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2018|toyota|corolla",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Limited",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Adds to or replaces features offered on SE",
+      "1.8L 4-Cylinder Engine with 132 hp @ 6000 rpm",
+      "Continuously Variable Transmission with intelligence and",
+      "28 city/35 hwy/31 combined est. mpg34",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Interior Features machined alloy wheel with dark accents wheel with black-painted accents",
+      "Entune\u2122 Audio Plus with Connected Navigation App9 \u2014 includes",
+      "Entune\u2122 Multimedia Bundle2 (7-in. high-resolution touch-screen",
+      "Navigation Scout\u00ae GPS Link App,9 Siri\u00ae Eyes Free,8 SiriusXM\u00ae",
+      "Satellite Radio10 with 3-month complimentary SiriusXM All Access",
+      "HD Radio\u212212 Traffic and Weather in major metro areas",
+      "SofTex\u00ae-trimmed front seats with 8-way power-adjustable driver\u2019s"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE Adds to or replaces features offered on SE",
+      "Powertrain Powertrain Powertrain",
+      "1.8L 4-Cylinder Engine with Valvematic technology \u2022 1.8L 4-Cylinder Engine with 132 hp @ 6000 rpm \u2022 1.8L 4-Cylinder Engine with 132 hp @ 6000 rpm",
+      "Continuously Variable Transmission with intelligence and Shift Mode (CVTi-S) \u2022 27 city/35 hwy/30 combined est. mpg34",
+      "Shift Mode (CVTi-S) \u2022 28 city/35 hwy/31 combined est. mpg34",
+      "30 city/40 hwy/34 combined est. mpg35",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Multi-LED headlights with LED accent lights \u2022 Roof-mounted antenna",
+      "Rear spoiler \u2022 Bumper-integrated LED Daytime Running Lights (DRL)",
+      "15-in. styled steel wheels \u2022 Rear combination taillights with LED backup lights",
+      "Entune\u2122 Audio Plus with Connected Navigation App9 \u2014 includes",
+      "Options and Packages \u2022 Sporty front fascia with gloss-black, mesh-pattern grille"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "1.8L 4-Cylinder Engine with 132 hp @ 6000 rpm \u2022 1.8L 4-Cylinder Engine with 132 hp @ 6000 rpm \u2022 1.8L 4-Cylinder Engine with 132 hp @ 6000 rpm",
+      "Continuously Variable Transmission with intelligence and \u2022 Continuously Variable Transmission with intelligence and \u2022 Continuously Variable Transmission with intelligence and",
+      "Shift Mode (CVTi-S) Shift Mode (CVTi-S) Shift Mode (CVTi-S)",
+      "28 city/36 hwy/32 combined est. mpg34 \u2022 28 city/36 hwy/32 combined est. mpg34 \u2022 28 city/36 hwy/32 combined est. mpg34",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED headlights \u2022 Color-keyed heated power outside mirrors \u2022 Multi-LED headlights with LED accent lights",
+      "Headlight-integrated LED Daytime Running Lights (DRL) \u2022 16-in. wide-vent steel wheels \u2022 Bumper-integrated LED Daytime Running Lights (DRL)",
+      "Bold front fascia with piano-black grille Interior Features \u2022 Power tilt/slide moonroof with sliding sunshade",
+      "15-in. styled steel wheels \u2022 16-in. machined alloy wheels with dark accents",
+      "Automatic climate control with dust and pollen filter and"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

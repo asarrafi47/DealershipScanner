@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2021_mercedes-benz_s-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "S-Class",
+    "S-Class"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG S63": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "S560": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

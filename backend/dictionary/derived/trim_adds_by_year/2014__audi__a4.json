@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2014|audi|a4",
+  "year": 2014,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_web_2014__audi__a4",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "S line Prestige 45 TFSI quattro",
+    "Prestige 40 TFSI quattro",
+    "S line Premium Plus 45 TFSI quattro",
+    "Premium Plus 40 TFSI quattro",
+    "S line Premium 45 TFSI quattro",
+    "Premium 40 TFSI quattro"
+  ],
+  "adds_by_trim": {
+    "S line Prestige 45 TFSI quattro": [
+      "261 hp and 273 lb-ft torque 2.0L turbo engine",
+      "S Line Plus package with red brake calipers and dark chrome exhaust finishers",
+      "19-inch two-tone five-spoke-flag design wheels",
+      "Carbon inlays and S Line steering wheel badge",
+      "Black trim for Audi rings, model badge, mirror housings, side sill blades, rear spoiler"
+    ],
+    "Prestige 40 TFSI quattro": [
+      "201 hp and 236 lb-ft torque base 2.0L turbo engine"
+    ],
+    "S line Premium Plus 45 TFSI quattro": [
+      "261 hp and 273 lb-ft torque 2.0L turbo engine",
+      "S Line interior package with stainless steel pedal caps and leather/Dinamica seats"
+    ],
+    "Premium Plus 40 TFSI quattro": [
+      "Navigation Plus package standard",
+      "Rear USB ports in available Convenience package"
+    ],
+    "S line Premium 45 TFSI quattro": [
+      "261 hp and 273 lb-ft torque 2.0L turbo engine",
+      "S Line interior package with stainless steel pedal caps and leather/Dinamica seats",
+      "S Line Plus package available for A4 45 midgrade models"
+    ],
+    "Premium 40 TFSI quattro": [
+      "201 hp and 236 lb-ft torque 2.0L turbo engine",
+      "Heated steering wheel standard",
+      "10.1-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "10 speakers",
+      "Adaptive cruise control, automatic emergency braking, automatic high-beams, lane keeping",
+      "Black exterior trim and 18-inch five-arm trapezoid design wheels for A4 45 models",
+      "Standard remote engine start",
+      "HomeLink buttons integrated into rearview mirror"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/audi/a4/"
+}

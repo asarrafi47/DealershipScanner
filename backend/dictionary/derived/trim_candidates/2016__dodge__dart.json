@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2016|dodge|dart",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Dart",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack",
+    "R/T",
+    "GT",
+    "Limited",
+    "SXT",
+    "Sport",
+    "SE",
+    "Express",
+    "Touring",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

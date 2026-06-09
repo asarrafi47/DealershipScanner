@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|lotus|evora",
+  "year": 2019,
+  "make": "Lotus",
+  "model": "Evora",
+  "ladder_id": "brochure_web_2019__lotus__evora",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Evora 400",
+    "Evora 400 Sport"
+  ],
+  "adds_by_trim": {
+    "Evora 400": [
+      "3.5L supercharged V6 engine producing 400 hp",
+      "Six-speed manual transmission",
+      "Leather upholstery on seats and steering wheel",
+      "Dual-zone automatic climate control",
+      "Power windows, locks, and mirrors",
+      "Premium audio system",
+      "Xenon headlights",
+      "Michelin Pilot Sport tires on 19-inch alloy wheels"
+    ],
+    "Evora 400 Sport": [
+      "Sports suspension tuning with lower ride height",
+      "Adjustable dampers for handling optimization",
+      "Forged lightweight wheels",
+      "Sport seats with enhanced bolstering",
+      "Unique interior trim details",
+      "Enhanced aerodynamic bodywork",
+      "Michelin Pilot Sport Cup 2 tires"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/evora/"
+}

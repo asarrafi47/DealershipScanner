@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2012|kia|sedona",
+  "year": 2012,
+  "make": "Kia",
+  "model": "Sedona",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "EX",
+    "LX",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,3 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Kia,Telluride,"Wheelbase 2,900 mm (114.2 in)","Front-engine, front-wheel-drive",Transmission 8-speed A8LF1 automatic,,Predecessor Kia Mohave/Borrego,"and Canada, the Telluride is offered in four trim levels: LX, S, EX, and SX.","and Canada, the Telluride is offered in four trim levels: LX, S, EX, and SX. The latter is offered with an optional ""SX Prestige Package,"" which include several premium features. Since 2021, Kia has offered a ""Premium Package"" on the EX trim.",,
-,,,,"a b Furlong, Karl (March 12, 2026). ""The Kia Telluride V6 Is Dead — And It's Not Coming Back"". Autoblog.",,,,,,,
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Kia,Telluride,[Brochure Summary],,,,,,,,,,,,,,,,Harman Kardon audio | Nappa; NAPPA seating,[Brochure] Harman Kardon audio | Nappa; NAPPA seating

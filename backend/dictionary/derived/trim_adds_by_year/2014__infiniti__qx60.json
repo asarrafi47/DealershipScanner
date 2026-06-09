@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2014|infiniti|qx60",
+  "year": 2014,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_2014__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Touring": [
+      "Upgraded to 20-inch split 5-spoke aluminum-alloy wheels with all-season tires",
+      "Adds Bose 13-speaker Premium Sound system with AM/FM/CD/DVD",
+      "Adds heated front seats",
+      "Adds heated steering wheel",
+      "Adds power moonroof with auto-open/close and sunshade",
+      "Adds power rear liftgate"
+    ],
+    "Premium": [
+      "Adds climate-controlled front seats",
+      "Adds heated second-row outboard seats",
+      "Adds dual-occupant memory system for driver's seat, steering wheel and mirrors",
+      "Adds entry/exit assist for driver's seat and steering wheel",
+      "Adds 2-way power lumbar support for driver's seat",
+      "Adds remote engine start functionality"
+    ],
+    "Limited": [
+      "Upgraded to Bose Cabin Surround 15-speaker sound system with digital 5.1-channel decoding",
+      "Adds Around View Monitor with Moving Object Detection and Front/Rear Sonar System",
+      "Adds Infiniti Drive Mode Selector for Standard, Sport, Snow and Eco modes",
+      "Adds automatic-on/off HID bi-functional xenon headlights"
+    ]
+  }
+}

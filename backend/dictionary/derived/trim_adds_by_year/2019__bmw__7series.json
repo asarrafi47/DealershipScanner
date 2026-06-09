@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|bmw|7series",
+  "year": 2019,
+  "make": "BMW",
+  "model": "7 Series",
+  "ladder_id": "brochure_2019__bmw__7series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Executive",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes iDrive 6.0 system with Gesture Control",
+      "Adds Features standard WiFi Hotspot connectivity",
+      "Adds Includes wood trim interior options"
+    ],
+    "Executive": [
+      "Adds premium color-matched interior combinations",
+      "Adds Includes Interior Design Package"
+    ],
+    "M Sport": [
+      "Adds Panoramic Sky Lounge LED Roof",
+      "Adds Includes M Sport steering wheel with thick-rimmed design",
+      "Adds illuminated V-12 door sills",
+      "Adds aluminum pedals",
+      "Adds Includes Multi-contour seats",
+      "Adds Extended Ambient Lighting",
+      "Adds M Sport Package with style-specific wheels"
+    ]
+  }
+}

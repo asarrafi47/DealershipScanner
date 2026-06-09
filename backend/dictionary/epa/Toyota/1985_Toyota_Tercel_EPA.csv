@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Toyota,Tercel,Tercel,1.5L I4 ((FFS) CA model),1.5L I4,,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,30,35,32,,,,,
+1985,Toyota,Tercel,Tercel,1.5L I4 ((FFS) CA model),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,26,34,29,,,,,
+1985,Toyota,Tercel,Wagon 2WD,1.5L I4 ((FFS) CA model),1.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,25,28,26,,,,,
+1985,Toyota,Tercel,Wagon 2WD,1.5L I4 ((FFS) CA model),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,26,35,29,,,,,
+1985,Toyota,Tercel,Wagon 4WD,1.5L I4 ((FFS) CA model),1.5L I4,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,22,24,23,,,,,
+1985,Toyota,Tercel,Tercel,1.5L I4 ((FFS)),1.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,26,29,27,,,,,
+1985,Toyota,Tercel,Tercel,1.5L I4 ((FFS)),1.5L I4,,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,30,35,32,,,,,
+1985,Toyota,Tercel,Tercel,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,26,34,29,,,,,
+1985,Toyota,Tercel,Wagon 2WD,1.5L I4 ((FFS)),1.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,25,29,26,,,,,
+1985,Toyota,Tercel,Wagon 2WD,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,26,33,29,,,,,
+1985,Toyota,Tercel,Wagon 4WD,1.5L I4 ((FFS)),1.5L I4,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,21,23,22,,,,,
+1985,Toyota,Tercel,Wagon 4WD,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,23,29,26,,,,,

@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2020|genesis|g90",
+  "year": 2020,
+  "make": "genesis",
+  "model": "G90",
+  "ladder_id": "brochure_llm_2020__genesis__g90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5.0 ULTIMATE",
+    "3.3T PREMIUM"
+  ],
+  "adds_by_trim": {
+    "5.0 ULTIMATE": [
+      "5.0L engine with premium fuel requirement",
+      "8.5/9.7 quarts oil capacity (RWD/AWD)",
+      "7.5 quarts engine coolant capacity"
+    ],
+    "3.3T PREMIUM": [
+      "3.3T turbocharged engine",
+      "7.7 quarts engine oil capacity",
+      "5.5 quarts engine coolant capacity"
+    ]
+  }
+}

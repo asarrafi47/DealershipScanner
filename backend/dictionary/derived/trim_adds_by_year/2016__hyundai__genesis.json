@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2016|hyundai|genesis",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "ladder_id": "brochure_llm_2016__hyundai__genesis",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Genesis 5.0 Ultimate",
+    "Genesis 3.8 Ultimate",
+    "Genesis 3.8 Tech Package",
+    "Genesis 3.8 Signature Package",
+    "Genesis 3.8 Standard Equipment"
+  ],
+  "adds_by_trim": {
+    "Genesis 5.0 Ultimate": [
+      "407/420 hp 5.0L Gasoline Direct Injection V8 engine with Dual Continuously Variable Valve Timing",
+      "19-inch alloy wheels with P245/40R19 front and P275/35R19 rear tires",
+      "Quad exhaust tips",
+      "Illuminated door sill plates",
+      "Deletes power rear sunshade and manual rear side sunshades"
+    ],
+    "Genesis 3.8 Ultimate": [
+      "Genuine matte-finish wood trim and aluminum trim",
+      "Power panoramic sunroof",
+      "Heads-up Display",
+      "Integrated Memory System",
+      "Power tilt-and-telescopic steering wheel with premium 9.2-inch DIS navigation"
+    ],
+    "Genesis 3.8 Tech Package": [
+      "Premium leather seating surfaces",
+      "Leather-wrapped steering wheel with haptic feedback",
+      "Power driver seat cushion extender and side bolster",
+      "7-inch color LCD multi-information display",
+      "Lane Departure Warning and Lane Keep Assist",
+      "Smart Cruise Control with stop/start",
+      "Automatic Emergency Braking",
+      "Electronic Parking Brake with automatic vehicle hold",
+      "Pre-safety seatbelt and High Beam Assist",
+      "Front and rear parking sensors"
+    ],
+    "Genesis 3.8 Signature Package": [
+      "Power panoramic sunroof",
+      "Heads-up Display",
+      "Premium 9.2-inch touchscreen DIS navigation with HD display",
+      "Lexicon 14-speaker Discrete Logic 7 Surround Sound Audio System",
+      "Ventilated front seats",
+      "Power trunk lid",
+      "Blind Spot Detection and Rear Cross-traffic Alert",
+      "Rearview camera with parking guidelines",
+      "Power rear windshield sunshade and manual rear side window sunshades",
+      "LED fog lights and auto-dimming side mirrors"
+    ],
+    "Genesis 3.8 Standard Equipment": [
+      "311 hp 3.8L Gasoline Direct Injection V6 engine with Dual Continuously Variable Valve Timing",
+      "8-speed SHIFTRONIC automatic transmission with paddle shifters",
+      "Front and rear independent 5-link suspension",
+      "Proximity key entry with push-button start",
+      "Leather seating surfaces",
+      "12-way power heated front seats with power lumbar support",
+      "Leather-wrapped steering wheel with tilt-and-telescopic adjustment",
+      "Dual automatic temperature control",
+      "8-inch touchscreen navigation system",
+      "AM/FM HD Radio SiriusXM CD MP3 audio system with 7 speakers"
+    ]
+  }
+}

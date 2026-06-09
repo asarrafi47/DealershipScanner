@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2020|hyundai|tucson",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_web_2020__hyundai__tucson",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Tucson Limited AWD",
+    "Tucson Limited FWD",
+    "Tucson SEL Convenience AWD",
+    "Tucson SEL Convenience FWD",
+    "Tucson XRT AWD",
+    "Tucson XRT FWD",
+    "Tucson SEL AWD",
+    "Tucson SEL FWD",
+    "Tucson SE AWD",
+    "Tucson SE FWD"
+  ],
+  "adds_by_trim": {
+    "Tucson SE FWD": [
+      "2.5-liter naturally aspirated inline-four engine with 187 hp and 178 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "12.3-inch standard infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto standard",
+      "Automatic emergency braking, blind-spot monitor, rear cross-traffic assist, lane keeping",
+      "Proximity-key entry with push-button start",
+      "Forward Attention Warning driver attention monitor",
+      "Standard 38.7 cubic feet cargo space with seats up"
+    ],
+    "Tucson SE AWD": [
+      "All-wheel drive with 8.3 inches ground clearance"
+    ],
+    "Tucson SEL FWD": [
+      "Revised center stack with more audio and HVAC physical controls",
+      "Redesigned center console, steering wheel, and door panel trim pieces"
+    ],
+    "Tucson SEL AWD": [
+      "All-wheel drive with 8.3 inches ground clearance"
+    ],
+    "Tucson XRT FWD": [
+      "Exterior side cladding and tow hitch standard",
+      "H-Tex faux leather seating upholstery",
+      "Leather shift knob",
+      "XRT debossing on front seatbacks"
+    ],
+    "Tucson XRT AWD": [
+      "All-wheel drive configuration"
+    ],
+    "Tucson SEL Convenience FWD": [
+      "Wireless phone charger in updated center console"
+    ],
+    "Tucson SEL Convenience AWD": [
+      "All-wheel drive configuration"
+    ],
+    "Tucson Limited FWD": [
+      "Forward Attention Warning standard on N Line and Limited models",
+      "Available 12.3-inch digital gauge cluster display",
+      "Available 12.0-inch color head-up display",
+      "Parking sensors, 360-degree camera, and blind-spot monitor video feed available"
+    ],
+    "Tucson Limited AWD": [
+      "All-wheel drive configuration"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/tucson/"
+}

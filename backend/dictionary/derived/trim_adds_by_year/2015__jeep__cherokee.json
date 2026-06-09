@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|jeep|cherokee",
+  "year": 2015,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_llm_2015__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "TRAILHAWK",
+    "LATITUDE",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "HID headlamps packaged with Luxury Group",
+      "Power liftgate packaged with Luxury Group",
+      "Leather-trimmed seating with Nappa leather seat inserts and bolsters",
+      "Premium ventilated leather-trimmed seating with Nappa leather and Axis II perforations",
+      "Memory system for radio station presets, driver seat and mirrors",
+      "3.2L V6 VVT Pentastar engine with Stop-Start feature and dual rear exhaust"
+    ],
+    "TRAILHAWK": [
+      "Jeep Active Drive Lock 2-speed 4WD with rear locker",
+      "Off-road lifted suspension packaged with 4WD 9-speed transmission",
+      "17-inch Trailhawk polished/painted off-road aluminum wheels with OWL all-terrain tires",
+      "Off-road fascias with rear fascia skid plate appliqué",
+      "Selec-Terrain floor dial with up to five traction control settings",
+      "Off-road wheel flares",
+      "Premium ventilated leather-trimmed seating with Nappa leather and Red accent stitching"
+    ],
+    "LATITUDE": [
+      "Jeep Active Drive II 2-speed 4WD capability",
+      "Accent-color grille surround",
+      "Roof rails in bright or accent-color",
+      "CommandView Dual-Pane Panoramic Sunroof with full power front and fixed rear",
+      "Dual-Zone Automatic Temperature Control with humidity sensor and premium air filter",
+      "Power 8-way driver seat with 4-way lumbar adjuster"
+    ],
+    "SPORT": [
+      "2.4L I-4 TigerShark MultiAir 2 engine with 9-speed transmission",
+      "Power-locking fuel filler door",
+      "Bifunctional halogen projector headlamps with LED daytime running lamps",
+      "Automatic headlamps with headlamps-off time delay",
+      "Manual 6-way driver and passenger front seats",
+      "Front-passenger forward fold-flat seat with under-cushion storage",
+      "10 total airbags with advanced multistage and supplemental systems",
+      "Electronic Stability Control with all-speed traction control and Brake Assist"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2024_nissan_rogue_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Rogue",
+    "Rogue"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SL": [
+      {
+        "label": "Engine Options",
+        "value": "The Rogue Select was offered only in the S trim level, with AWD being an option.; Rogue Hybrid"
+      }
+    ],
+    "SV": [
+      {
+        "label": "Engine Options",
+        "value": "The Rogue Select was offered only in the S trim level, with AWD being an option.; Rogue Hybrid"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Rogue Hybrid"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S8); Front-Wheel Drive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_mercedes-benz_gls-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLS-Class",
+    "GLS-Class"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "GLS580": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic 9-spd"
+      }
+    ],
+    "GLS450": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

@@ -87,6 +87,15 @@ backend/dictionary/csv_out_cleaned_main/
 backend/dictionary/csv_out_rejected_main/
 backend/dictionary/csv_out_needs_cleaning_main/
 
+# Brochure PDF staging (moved from backend/dictionary/tmp_brochures)
+backend/data/brochures/
+backend/dictionary/tmp_brochures/
+
+# Dictionary catalog artifacts (regenerated)
+backend/dictionary/index/manifest.json
+backend/dictionary/index/dictionary_catalog.db
+backend/dictionary/curated/trim_ladders_merged.json
+
 # Local image caches / downloads
 car_images/
 car_window_stickers/

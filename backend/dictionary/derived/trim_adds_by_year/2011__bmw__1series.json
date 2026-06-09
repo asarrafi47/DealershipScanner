@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|bmw|1series",
+  "year": 2011,
+  "make": "BMW",
+  "model": "1 Series",
+  "ladder_id": "brochure_llm_2011__bmw__1series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "135i",
+    "128i"
+  ],
+  "adds_by_trim": {
+    "135i": [
+      "Standard Xenon Adaptive Headlights with dynamic auto-leveling and electromechanical cornering control",
+      "Standard two-way power glass moonroof with remote and one-touch operation",
+      "Standard retractable high-intensity headlight washers",
+      "Standard Star Spoke Style 264 18-inch light alloy wheels with 215/40 front and 245/35 rear performance tires",
+      "Adaptive Brake Lights that increase illuminated area during emergency braking"
+    ],
+    "128i": [
+      "Standard Star Spoke Style 256 17-inch light alloy wheels with 205/50 run-flat all-season tires",
+      "Optional Xenon Adaptive Headlights available (standard on 135i)",
+      "Optional two-way power glass moonroof with remote and one-touch operation",
+      "Cold Weather Package with heated front seats, heated steering wheel, and high-intensity headlight washers",
+      "Convenience Package with Comfort Access keyless entry, rear Park Distance Control, and anti-theft alarm"
+    ]
+  }
+}

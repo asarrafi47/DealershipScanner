@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2017|buick|cascada",
+  "year": 2017,
+  "make": "Buick",
+  "model": "Cascada",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport Touring",
+    "Select",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

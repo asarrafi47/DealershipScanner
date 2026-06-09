@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2024|toyota|4runner",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SE",
+    "LE",
+    "SR5",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Rear-Wheel Drive (RWD) X-REAS Sport Enhancement Suspension Hill Start Assist Control (HAC)2 and available",
+      "Automatic Limited-Slip Differential Hill Start Assist Control (HAC)2 and available Downhill Assist Control (DAC)32",
+      "Downhill Assist Control (DAC)32 Up to 16 city/19 highway/17 combined EPA-est.mpg33",
+      "Available part-time 4WD system with",
+      "Active Traction Control (A-TRAC) Up to 16 city/19 highway/17 combined EPA-est. mpg33 Exterior Features",
+      "Hill Start Assist Control (HAC)2 and available Exterior Features Heated power outside mirrors with turn signal indicators",
+      "Downhill Assist Control (DAC)32",
+      "Color-keyed TRD hood scoop Interior Features",
+      "Up to 16 city/19 highway/17 combined EPA-est. mpg33",
+      "SofTex\u00ae-trimmed8 seats",
+      "Interior Features - Heated front seats"
+    ],
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on SR5 Adds to or replaces features offered on TRD Off-Road Adds to or replaces features offered on SR5 Premium",
+      "Part-time 4WD system with Active Traction Part-time 4WD system with Active Traction Available full-time 4WD system with Active Traction",
+      "Control (A-TRAC) Control (A-TRAC) Control (A-TRAC) and Torsen\u00ae45 limited-slip center",
+      "Hill Start Assist Control (HAC)2 and Multi-Terrain Hill Start Assist Control (HAC)2 and Multi-Terrain differential with locking feature",
+      "Select (MTS) and Crawl Control (CRAWL)1 Select (MTS) and Crawl Control (CRAWL)1 X-REAS Sport Enhancement Suspension",
+      "Locking rear differential Locking rear differential Up to 16 city/19 highway/17 combined EPA-est. mpg33",
+      "Up to 16 city/19 highway/17 combined EPA-est. mpg33 Up to 16 city/19 highway/17 combined EPA-est. mpg33 Exterior Features",
+      "Exterior Features Exterior Features Power tilt/slide moonroof with sunshade",
+      "SofTex\u00ae-trimmed8 seats",
+      "Heated front seats",
+      "8-way power-adjustable driver\u2019s seat with",
+      "Interior Features power lumbar support Interior Features"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

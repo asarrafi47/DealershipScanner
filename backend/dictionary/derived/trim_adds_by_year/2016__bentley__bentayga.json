@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2016|bentley|bentayga",
+  "year": 2016,
+  "make": "bentley",
+  "model": "bentayga",
+  "ladder_id": "brochure_2016__bentley__bentayga",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adds 12-cylinder engine with class-leading performance",
+      "Adds electrically retracting tow bar integrated behind rear bumper",
+      "Adds handcrafted lacquered veneer fascia",
+      "Adds exquisitely tailored compact seat bolsters and shoulders",
+      "Adds Bentley's hands-free tailgate system",
+      "Adds easy-load boot function with load assist tray",
+      "Adds aerodynamic roof box compatibility",
+      "Adds tailored storage solutions for skiing, fishing, and diving pursuits"
+    ],
+    "Limited": []
+  }
+}

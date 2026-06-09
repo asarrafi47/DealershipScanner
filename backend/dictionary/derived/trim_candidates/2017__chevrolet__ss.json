@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2017|chevrolet|ss",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "SS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SS",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

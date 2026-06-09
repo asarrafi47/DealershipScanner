@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|volvo|v70",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "V70",
+  "ladder_id": "brochure_2010__volvo__v70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 3.2-liter in-line six-cylinder engine with 235 hp",
+      "Adds Features power-assisted anti-lock disc brakes with ABS",
+      "Adds Includes front suspension with spring struts and independent rear suspension",
+      "Adds Standard Dynamic Stability and Traction Control system",
+      "Adds Includes three-way catalytic converter with heated oxygen sensor",
+      "Adds Features variable valve timing and variable intake system technology"
+    ],
+    "Limited": [
+      "Adds Optimized Hydraulic Brakes (OHB) system",
+      "Adds Hydraulic Brake Assist (HBA)",
+      "Adds Ready Alert Brakes (RAB) technology",
+      "Adds Fading Brake Support (FBS)",
+      "Adds Electronic Brake Distribution (EBD) between front and rear brakes",
+      "Adds Power Parking Brake (PPB) for steep gradient assistance"
+    ]
+  }
+}

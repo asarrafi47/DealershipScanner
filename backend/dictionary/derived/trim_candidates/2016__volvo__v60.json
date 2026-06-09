@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2016|volvo|v60",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "V60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Premium",
+    "Touring",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

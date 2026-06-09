@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2018|astonmartin|lagonda",
+  "year": 2018,
+  "make": "Aston Martin",
+  "model": "lagonda",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

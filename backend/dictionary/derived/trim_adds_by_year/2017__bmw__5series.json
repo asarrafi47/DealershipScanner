@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|bmw|5series",
+  "year": 2017,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "brochure_llm_2017__bmw__5series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BMW 540i xDrive Sedan",
+    "BMW 540i Sedan",
+    "BMW 530i xDrive Sedan",
+    "BMW 530i Sedan"
+  ],
+  "adds_by_trim": {
+    "BMW 540i xDrive Sedan": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 335 hp and 332 lb-ft torque",
+      "0-60 mph in 4.7 seconds with xDrive all-wheel drive",
+      "Enhanced performance over 530i models with superior acceleration and handling"
+    ],
+    "BMW 540i Sedan": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 335 hp and 332 lb-ft torque",
+      "0-60 mph in 4.9 seconds",
+      "Increased horsepower and torque compared to 530i rear-wheel drive model"
+    ],
+    "BMW 530i xDrive Sedan": [
+      "xDrive all-wheel drive system",
+      "0-60 mph in 5.8 seconds with intelligent traction control"
+    ],
+    "BMW 530i Sedan": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 248 hp and 258 lb-ft torque",
+      "0-60 mph in 6.0 seconds",
+      "Multiple interior trim options including wood and aluminum finishes",
+      "Multiple upholstery choices in SensaTec, Dakota Leather, and Nappa Leather",
+      "Available packages: Cold Weather, Lighting, M Sport, Luxury Seating, Driver Assistance, Luxury, Dynamic Handling, Driver Assistance Plus"
+    ]
+  }
+}

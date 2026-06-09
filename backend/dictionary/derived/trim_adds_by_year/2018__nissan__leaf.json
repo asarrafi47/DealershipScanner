@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|nissan|leaf",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2018__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Portable charge cable (120 V/240 V)",
+      "LED headlights with LED signature Daytime Running Lights",
+      "Heated outside mirrors",
+      "Outside mirrors with integrated LED turn signal indicators",
+      "Intelligent Around View® Monitor",
+      "Intelligent Driver Alertness",
+      "Removable cargo cover",
+      "8-way power adjustable driver's bucket seat with 2-way adjustable lumbar",
+      "Leather-appointed seats",
+      "Heated front seats"
+    ],
+    "SV": [
+      "Quick Charge port",
+      "17-inch Machine-finished aluminum-alloy wheels",
+      "Fog lights",
+      "7.0-inch multi-touch control color display",
+      "Nissan Navigation System",
+      "NissanConnect® EV & Services powered by SiriusXM®",
+      "Nissan Voice Recognition for navigation and audio",
+      "Apple CarPlay™",
+      "Android Auto™",
+      "SiriusXM® Traffic and Travel Link with 3-month complimentary trial access"
+    ],
+    "S": [
+      "110 kW AC synchronous electric motor with 147 hp and 236 lb-ft torque",
+      "40 kWh lithium-ion battery",
+      "6.6 kW onboard charger",
+      "Portable trickle-charge cable (120 V)",
+      "Intelligent Trace Control",
+      "Active Ride Control",
+      "Hill Hold Assist",
+      "16-inch Steel wheels",
+      "Automatic on/off headlights",
+      "Aerodynamic underbody panels and rear diffuser"
+    ]
+  }
+}

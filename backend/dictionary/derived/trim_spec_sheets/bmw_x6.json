@@ -1,0 +1,37 @@
+{
+  "ladder_id": "bmw_x6",
+  "make": "BMW",
+  "models": [
+    "X6",
+    "X6 M",
+    "X6 M60i",
+    "X6 xDrive40i"
+  ],
+  "year_min": 2015,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M Competition": [
+      {
+        "label": "Engine Options",
+        "value": "617 hp twin-turbo V8"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Coupe-SUV M styling and bucket seats"
+      }
+    ],
+    "M60i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "523 hp twin-turbo V8 with mild hybrid; 3.0L I6 Turbo"
+      }
+    ],
+    "xDrive40i": [
+      {
+        "label": "Engine Options",
+        "value": "375 hp turbocharged inline-six with xDrive AWD"
+      }
+    ]
+  }
+}

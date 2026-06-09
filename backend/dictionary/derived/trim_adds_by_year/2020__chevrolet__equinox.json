@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2020|chevrolet|equinox",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2020__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "LED headlamps with automatic high beam control",
+      "Power programmable hands-free power liftgate",
+      "LED taillamps",
+      "Body-color roof-mounted antenna",
+      "Manual single-zone air conditioning removed; automatic dual-zone climate control standard"
+    ],
+    "LT": [
+      "Fog lamps with Confidence and Convenience Package",
+      "Bright roof rails standard with 2.0L engine or available with panoramic sunroof on 1.5L",
+      "Solar-absorbing deep-tinted glass behind front doors",
+      "High-intensity discharge HID headlamps",
+      "HD Rear Vision Camera with Infotainment Package",
+      "Automatic dual-zone climate control with Confidence and Convenience Package",
+      "Leather-wrapped steering wheel with Confidence and Convenience Package"
+    ],
+    "SL": [
+      "Solar-absorbing deep-tinted glass behind front doors with LS Convenience Package"
+    ],
+    "L": [
+      "Chevrolet Infotainment 3 System with 7-inch color touch-screen and AM/FM stereo",
+      "Bluetooth wireless technology and voice command pass-through",
+      "6-speaker audio system",
+      "17-inch painted-aluminum wheels",
+      "Chevrolet Connected Access with Vehicle Diagnostics and Smart Driver",
+      "2 charge-only USB ports on rear of center console",
+      "Built-in 4G LTE Wi-Fi connectivity"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2024|hyundai|ioniq6",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Ioniq 6",
+  "ladder_id": "brochure_llm_2024__hyundai__ioniq6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Wide sunroof",
+      "Premium door sill plates and aluminum pedals",
+      "Rear-seat Vehicle-to-Load (V2L) two-way onboard charger",
+      "Remote Smart Parking Assist 2",
+      "Power-folding side mirrors",
+      "Premium gloss black exterior accents",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Ventilated front seats and heated steering wheel",
+      "8-way power front passenger seat with power lumbar support",
+      "Integrated Memory System for driver seat"
+    ],
+    "SEL": [
+      "Dual-color ambient LED interior lighting",
+      "Auto-dimming rearview mirror with HomeLink®",
+      "Digital Key 2 Touch and wireless phone charger",
+      "H-Tex™ seating surfaces",
+      "Forward Collision-Avoidance Assist with Pedestrian/Cyclist Detection and Junction Turning/Crossing Detection",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Highway Driving Assist 2"
+    ],
+    "SE": [
+      "12.3-inch digital instrument cluster",
+      "12.3-inch navigation system",
+      "Proximity Key with push button start",
+      "Leather-wrapped tilt-and-telescopic steering wheel",
+      "Bose® premium audio with 8 speakers",
+      "SiriusXM® Satellite Radio and HD Radio™",
+      "Apple CarPlay® and Android Auto™",
+      "Bluetooth® multiple device connection",
+      "Bluelink+ Connected Car System with Remote Charge Access",
+      "8-way power driver seat and heated front seats"
+    ]
+  }
+}

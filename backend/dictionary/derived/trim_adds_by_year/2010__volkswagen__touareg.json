@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2010|volkswagen|touareg",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Touareg",
+  "ladder_id": "brochure_web_2010__volkswagen__touareg",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Executive",
+    "Wolfsburg Edition",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Executive": [
+      "10-speaker Dynaudio premium stereo system"
+    ],
+    "Wolfsburg Edition": [
+      "Replaces mid-level Lux model in 2017 lineup"
+    ],
+    "Sport": [
+      "Standard adaptive cruise control with automated emergency braking",
+      "Blind-spot monitoring with front and rear parking sensors",
+      "Standard heated steering wheel with leather wrap and contrasting stitching",
+      "8.0-inch touchscreen infotainment system with navigation",
+      "SiriusXM satellite radio with Bluetooth phone and audio streaming",
+      "280-hp 3.6-liter V-6 engine with eight-speed automatic transmission",
+      "All-wheel drive standard with Sport and Manual transmission modes",
+      "Supple suspension with firm steering for highway and cornering confidence"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/volkswagen/touareg"
+}

@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2014|audi|a5",
+  "year": 2014,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_2014__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Sport",
+    "Limited",
+    "A5",
+    "S5"
+  ],
+  "adds_by_trim": {
+    "S5": [
+      "3.0-liter supercharged TFSI V6 engine producing 333 horsepower and 325 lb-ft torque",
+      "0-60 mph acceleration in 4.9-5.3 seconds",
+      "Top track speed of 155 mph",
+      "18-inch 5-parallel-spoke S design wheels with silver finish",
+      "Optional sport differential with torque vectoring and electrohydraulic multiplate clutch"
+    ],
+    "A5": [
+      "Adds 2.0T turbocharged TFSI four-cylinder engine with 211 horsepower",
+      "Adds five-link front suspension with sport calibration",
+      "Adds trapezoidal-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds fully galvanized steel unibody with multistep anti-corrosion protection"
+    ],
+    "Limited": [],
+    "Sport": [
+      "Adds sport suspension calibration"
+    ],
+    "S line": [],
+    "Premium": [
+      "18-inch 10-spoke-V design wheels",
+      "245/40 all-season tires"
+    ],
+    "Premium Plus": [
+      "Adds sport suspension calibration"
+    ],
+    "Prestige": [
+      "Adds dynamic steering",
+      "Adds sport suspension calibration"
+    ]
+  }
+}

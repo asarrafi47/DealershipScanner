@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2019_toyota_camry_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Camry",
+    "Camry"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ]
+  }
+}

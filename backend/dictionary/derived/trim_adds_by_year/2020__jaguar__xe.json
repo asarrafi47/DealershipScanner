@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2020|jaguar|xe",
+  "year": 2020,
+  "make": "Jaguar",
+  "model": "XE",
+  "ladder_id": "brochure_web_2020__jaguar__xe",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XE R-Dynamic S AWD",
+    "XE S AWD",
+    "XE S RWD"
+  ],
+  "adds_by_trim": {
+    "XE R-Dynamic S AWD": [
+      "296-hp turbo-four engine (versus 247-hp)",
+      "Standard all-wheel drive",
+      "Black 18-inch wheels",
+      "R-Dynamic body kit with sport styling",
+      "Upsized front brakes",
+      "Chrome shift paddles",
+      "Aluminum interior trim",
+      "Sport seats with contrast stitching"
+    ],
+    "XE S AWD": [
+      "All-wheel drive (versus rear-wheel drive)"
+    ],
+    "XE S RWD": [
+      "247-hp 2.0-liter turbocharged four-cylinder",
+      "Rear-wheel drive with torque vectoring",
+      "Silver-finish 18-inch wheels",
+      "LED headlights and taillights",
+      "Heated side mirrors with rain-sensing wipers",
+      "Ambient interior lighting and auto-dimming rear view mirror",
+      "Leather-wrapped steering wheel and leather upholstery",
+      "10.0-inch touchscreen with Apple CarPlay and Android Auto",
+      "Auto emergency braking, front/rear parking sensors, lane-keep assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jaguar/xe/"
+}

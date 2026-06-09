@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2012|mini|mini",
+  "year": 2012,
+  "make": "Mini",
+  "model": "Mini",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

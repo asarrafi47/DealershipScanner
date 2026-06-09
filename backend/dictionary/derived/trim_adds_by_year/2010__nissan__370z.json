@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2010|nissan|370z",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2010__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "370Z™ NISMO",
+    "370Z™ TOURING",
+    "370Z™"
+  ],
+  "adds_by_trim": {
+    "370Z™ NISMO": [
+      "350 hp @ 7,400 rpm (18 hp increase over base)",
+      "276 lb-ft torque @ 5,200 rpm (6 lb-ft increase)",
+      "NISMO-tuned suspension with increased spring, dampening, stabilizer rates",
+      "NISMO reinforced 3-point front strut tower brace",
+      "NISMO front and rear performance body dampers",
+      "19\" x 9.5\" front and 19\" x 10.5\" rear NISMO forged alloy wheels",
+      "245/40YR19 front and 285/35YR rear Yokohama ADVAN Sport tires",
+      "NISMO embroidered cloth seats with signature red stitching",
+      "NISMO smooth leather-wrapped steering wheel and shift knob",
+      "NISMO plaque of authenticity with serial number"
+    ],
+    "370Z™ TOURING": [
+      "Hard Drive Navigation System with 7-inch VGA touch-screen and voice recognition",
+      "XM NavTraffic and XM NavWeather with Zagat Survey restaurant reviews",
+      "9.3 GB Music Box hard drive for digital music storage and playback",
+      "USB connectivity with iPod compatibility",
+      "Streaming audio via Bluetooth wireless technology",
+      "DVD playback capability",
+      "Leather-appointed sport seats with synthetic suede inserts",
+      "Synthetic suede door panel inserts",
+      "Heated seats",
+      "Deletes in-dash 6-CD changer"
+    ],
+    "370Z™": [
+      "332 hp @ 7,000 rpm VQ37VHR 3.7-liter DOHC V6 engine",
+      "270 lb-ft torque @ 5,200 rpm",
+      "6-speed close-ratio manual transmission",
+      "Carbon-fiber composite driveshaft",
+      "Front and rear stabilizer bars with 3-point front strut tower brace",
+      "12.6\" vented front and rear brake discs with 4-wheel ABS",
+      "18\" x 8.0\" front and 18\" x 9.0\" rear aluminum-alloy wheels",
+      "225/50WR18 front and 245/45WR18 rear Yokohama ADVAN Sport tires",
+      "Cloth seat trim with 8-way adjustable driver seat",
+      "Nissan Advanced Air Bag System with dual front and side-impact bags"
+    ]
+  }
+}

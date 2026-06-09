@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2022|nissan|murano",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Murano",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Midnight Edition",
+    "S",
+    "Limited",
+    "Premium",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

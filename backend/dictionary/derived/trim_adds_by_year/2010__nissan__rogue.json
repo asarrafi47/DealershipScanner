@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2010|nissan|rogue",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2010__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL AWD Premium Package",
+    "SL Leather Package",
+    "SL Moonroof Package",
+    "SL FWD Premium Package",
+    "360° Value Package",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL AWD Premium Package": [
+      "All-Wheel Drive (AWD) instead of FWD",
+      "High Intensity Discharge (HID) xenon headlights with manual headlight levelizer",
+      "Leather-appointed seats with heated front seats",
+      "6-way power adjustable driver's seat with power lumbar support",
+      "Driver's one-touch auto-up power window",
+      "Leather-wrapped steering wheel and shift knob",
+      "Heated outside mirrors with timer",
+      "Auto-dimming rearview mirror"
+    ],
+    "SL Leather Package": [
+      "Leather-appointed seats with heated front seats",
+      "6-way power adjustable driver's seat with power lumbar support",
+      "Driver's one-touch auto-up power window",
+      "Leather-wrapped steering wheel and shift knob",
+      "Heated outside mirrors with timer",
+      "Auto-dimming rearview mirror",
+      "Requires SL Premium Package"
+    ],
+    "SL Moonroof Package": [
+      "Power sliding glass moonroof with one-touch open/close and tilt feature"
+    ],
+    "SL FWD Premium Package": [
+      "17-inch 5-spoke aluminum-alloy wheels with P225/60R17 all-season tires",
+      "Nissan Intelligent Key keyless entry and ignition system",
+      "Fog lights",
+      "Tow hitch pre-wiring",
+      "Bluetooth Hands-free Phone System",
+      "Digital Bose audio system with AM/FM in-dash 6-CD changer and eight speakers",
+      "MP3/WMA CD playback capability with Radio Data System (RDS)",
+      "XM Satellite Radio capability",
+      "Speed-sensitive audio volume and steering-wheel-mounted audio controls",
+      "Retractable cargo cover and rear foldable cargo organizer"
+    ],
+    "360° Value Package": [
+      "16-inch aluminum-alloy wheels",
+      "In-mirror RearView Monitor",
+      "Auto-dimming rearview mirror",
+      "Chrome grille finisher",
+      "Rear spoiler",
+      "Rear privacy glass"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine with 170 hp and 175 lb-ft torque",
+      "Xtronic CVT (Continuously Variable Transmission)",
+      "Front-Wheel Drive (FWD) standard with optional All-Wheel Drive (AWD)",
+      "Independent strut front suspension with independent multi-link rear suspension",
+      "4-wheel vented disc brakes with ABS and Electronic Brake force Distribution",
+      "Vehicle-speed-sensitive electric power steering",
+      "16-inch steel wheels with wheel covers and P215/70R16 all-season tires"
+    ]
+  }
+}

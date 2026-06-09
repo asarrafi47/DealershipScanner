@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2022|nissan|rogue",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Rogue",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "Nismo",
+    "SV",
+    "S",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

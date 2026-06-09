@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2013|nissan|juke",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Juke",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SV",
+    "Midnight Edition",
+    "S",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

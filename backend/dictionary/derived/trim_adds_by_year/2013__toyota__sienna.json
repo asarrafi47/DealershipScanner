@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|toyota|sienna",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "inventory_toyota_sienna",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "XLE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "ubscription terms available; charges vary by s",
+      "ressure should be checked regularly with a gauge; do not rely solely on the monitor system. See your Owner’s Manual"
+    ],
+    "SE": [
+      "ubscription available only with new vehicle purchase of Safety Connect® -equipped vehicles. Additional s",
+      "ressure is critically low. For optimal tire wear and performance, tire p"
+    ],
+    "LE": [
+      ". See footnote 24 in Disclosures section. 2"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "SE": 2,
+      "LE": 0
+    }
+  }
+}

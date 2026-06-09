@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2014|nissan|gtr",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2014__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Track Edition",
+    "Black Edition",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Track Edition": [
+      "Blue/Gray leather-appointed front seats with high-grip inserts",
+      "Exclusively developed track-tuned suspension",
+      "Special black super-lightweight RAYS® forged-alloy wheels"
+    ],
+    "Black Edition": [
+      "Black/Red Recaro® leather-appointed front seats with high-grip inserts",
+      "Super-lightweight RAYS® forged-alloy wheels"
+    ],
+    "Premium": [
+      "VR38DETT 3.8-liter twin-turbocharged V6 with 545 horsepower and 463 lb-ft torque",
+      "ATTESA E-TS® all-wheel drive with independent rear-mounted transaxle",
+      "Dual-clutch 6-speed transmission with three driver-selectable modes",
+      "Double-wishbone front and multi-link rear suspension with Bilstein® DampTronic®",
+      "Leather-appointed front seats with synthetic suede inserts",
+      "8-way power driver's seat with heated function",
+      "Bose® AM/FM/CD audio with 11 speakers and dual subwoofers",
+      "SiriusXM satellite radio capability",
+      "Super-lightweight RAYS® forged-alloy 20-inch wheels",
+      "Dunlop® SP Sport MAXX GT600 performance run-flat tires"
+    ]
+  }
+}

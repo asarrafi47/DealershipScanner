@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2021|nissan|maxima",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2021__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "40TH ANNIVERSARY EDITION",
+    "PLATINUM",
+    "SR",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "40TH ANNIVERSARY EDITION": [
+      "40th Anniversary Edition gloss black 19\" x 8.0\" aluminum-alloy wheels",
+      "40th Anniversary Edition leather-wrapped steering wheel with contrast stitching",
+      "Satin Bronze faceted interior trim",
+      "White gauge faces",
+      "40th Anniversary Edition semi-aniline leather seats with diamond-quilted inserts and embossing",
+      "Heated rear seats",
+      "40th Anniversary Edition badge"
+    ],
+    "PLATINUM": [
+      "19\" x 8.0\" Machine-finished aluminum-alloy wheels",
+      "Power-tilt/telescoping steering column",
+      "LED headlights with LED signature Daytime Running Lights",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Taillights with integrated LED signature",
+      "Rear-window power sunshade",
+      "Intelligent Auto Headlights",
+      "Memory System for driver's seat, steering wheel and outside mirrors",
+      "Chrome quad-tipped exhaust finishers",
+      "Dual Zone Automatic Temperature Control with rear vents"
+    ],
+    "SR": [
+      "Paddle shifters",
+      "Sport-tuned suspension with retuned dampers, stiffer springs and larger front stabilizer bar",
+      "Intelligent Lane Intervention",
+      "Intelligent Around View Monitor",
+      "Driver's seat manual thigh support extension",
+      "Front-passenger's seat power lifter",
+      "Climate-controlled front seats heated and cooled",
+      "Heated steering wheel",
+      "Premium Ascot Leather-appointed seats with dynamic diamond-quilted Alcantara inserts",
+      "Premium Ascot Leather-wrapped steering wheel with Alcantara inserts"
+    ],
+    "SV": [
+      "3.5-liter DOHC 24-valve V6 engine with 300 hp and 261 lb-ft of torque",
+      "Continuously Variable Valve Timing Control System on intake and exhaust valves",
+      "Xtronic CVT with Drive Mode Selector",
+      "Intelligent Cruise Control and Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "Rear Automatic Braking and RearView Monitor with Rear Sonar System",
+      "Vehicle Dynamic Control with Traction Control System and Active Ride Control",
+      "High Beam Assist, Traffic Sign Recognition, Intelligent Driver Alertness",
+      "18\" x 8.0\" Machine-finished aluminum-alloy wheels with LED headlights and LED signature Daytime Running Lights"
+    ]
+  }
+}

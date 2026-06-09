@@ -1,0 +1,41 @@
+{
+  "ladder_id": "2021_chevrolet_cruze_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Cruze",
+    "Cruze"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Premier": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Automatic (S6); Front-Wheel Drive (was Since late 2011, Chinese market models have been available with a turbocharged 1.6-liter engine with a six-speed manual transmission.); Automatic (S6)"
+      }
+    ],
+    "RS": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Since late 2011, Chinese market models have been available with a turbocharged 1.6-liter engine with a six-speed manual transmission. (was Layout Front-engine, front-wheel drive; L Ecotec turbo I4)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, front-wheel drive; L Ecotec turbo I4 (was Since late 2011, Chinese market models have been available with a turbocharged 1.6-liter engine with a six-speed manual transmission.)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: The seats, transmission, tires, and audio options are quickly apparent from the RPO descri; The seats, transmission, tires, and audio options are quickly apparent from the RPO descriptions."
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Since late 2011, Chinese market models have been available with a turbocharged 1.6-liter engine with a six-speed manual transmission."
+      }
+    ]
+  }
+}

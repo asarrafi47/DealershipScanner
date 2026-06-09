@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2016|subaru|legacy",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2016__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER® engine",
+      "Lineartronic® HCVT (High-Torque CVT) with 6-speed manual-mode paddle shifters",
+      "HID low-beam headlights",
+      "Dual bright-finish exhaust outlets",
+      "12.4-inch front and 11.8-inch rear brake discs"
+    ],
+    "2.5i Limited": [
+      "Premium audio system with 12 Harman Kardon GreenEdge® speakers and subwoofer",
+      "Harman Kardon 576-watt equivalent GreenEdge® amplifier",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "All-Weather Package with heated exterior mirrors, 3-mode heated front seats, dual mode heated rear seats, windshield wiper de-icer",
+      "18-inch machine finish two-tone aluminum-alloy wheels",
+      "Fog lights",
+      "Woodgrain-patterned matte finish accent trim",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver's seat with 2-position memory and 4-way power adjustable front-passenger's seat"
+    ],
+    "2.5i Premium": [
+      "SUBARU STARLINK™ 7.0\" Multimedia Plus system with Pandora®, iHeartRadio®, STITCHER, and Aha™ integration",
+      "Dual-zone automatic climate control system",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Driver's and front-passenger's auto-up/down power windows",
+      "17-inch aluminum-alloy wheels with silver finish",
+      "All-Weather Package with heated exterior mirrors, 3-mode heated front seats, windshield wiper de-icer"
+    ],
+    "2.5i": [
+      "175-hp 2.5-liter 4-cylinder SUBARU BOXER® engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "SUBARU STARLINK™ 6.2\" Multimedia system with Pandora®, iHeartRadio®, STITCHER, and Aha™ integration",
+      "Lineartronic® CVT with 6-speed manual-mode paddle shifters",
+      "17-inch steel wheels with covers",
+      "Cloth upholstery",
+      "6-way manually adjustable driver's seat and 4-way manually adjustable front-passenger's seat",
+      "STARLINK™ Safety Plus enabled with Automatic Collision Notification and Emergency Assistance"
+    ]
+  }
+}

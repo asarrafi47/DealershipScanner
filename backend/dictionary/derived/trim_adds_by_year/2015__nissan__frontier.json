@@ -1,0 +1,87 @@
+{
+  "catalog_key": "2015|nissan|frontier",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_2015__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "Pro-4X",
+    "SV",
+    "S",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds 2.5-liter 4-cylinder engine",
+      "Adds 5-speed manual transmission",
+      "Adds 15-inch steel wheels with mud-and-snow-rated all-season tires",
+      "Adds Active Brake Limited Slip (ABLS)",
+      "Adds 4-wheel Anti-lock Braking System (ABS)",
+      "Adds full-length, fully boxed ladder frame",
+      "Adds AM/FM/CD audio system",
+      "Adds air conditioning",
+      "Adds six standard air bags",
+      "Adds Vehicle Dynamic Control (VDC)"
+    ],
+    "S": [
+      "Upgraded to 261-hp 4.0-liter DOHC 24-valve V6 engine",
+      "Upgraded to 6-speed manual transmission",
+      "Upgraded to 16-inch steel wheels with P265/70R16 mud-and-snow-rated tires",
+      "Adds Bluetooth Hands-free Phone System",
+      "Adds illuminated steering wheel-mounted audio controls",
+      "Adds cruise control",
+      "Adds Crew Cab configuration with four full-size doors and seating for five"
+    ],
+    "SV": [
+      "Upgraded to 16-inch aluminum-alloy wheels with P265/70R16 tires",
+      "Adds body-color front bumper",
+      "Adds bed rail caps",
+      "Adds NissanConnect with Mobile Apps",
+      "Adds hands-free text messaging assistant",
+      "Adds AM/FM/CD audio system with 5.0-inch color display",
+      "Adds SiriusXM Satellite Radio",
+      "Adds USB connection port for iPod interface",
+      "Adds remote keyless entry",
+      "Adds tilt steering column"
+    ],
+    "Pro-4X": [
+      "Adds Bilstein off-road performance shocks",
+      "Adds electronic locking rear differential",
+      "Adds clutch start/cancel (MT only)",
+      "Adds skid plates",
+      "Upgraded to 16-inch aluminum-alloy wheels with P265/75R16 mud-and-snow-rated all-terrain tires",
+      "Adds Nissan Navigation System with 5.8-inch color touch-screen monitor and voice recognition",
+      "Adds RearView Monitor and Rear Sonar System",
+      "Adds auto-dimming rearview mirror",
+      "Adds multi-function trip computer",
+      "Adds Dual Zone Automatic Temperature Control"
+    ],
+    "SL": [
+      "Upgraded to 5-speed automatic transmission",
+      "Upgraded to 18-inch aluminum-alloy wheels with P265/60R18 mud-and-snow-rated tires",
+      "Adds Rockford Fosgate-powered audio system",
+      "Adds RearView Monitor and Rear Sonar System",
+      "Adds Dual Zone Automatic Temperature Control",
+      "Adds auto-dimming rearview mirror with HomeLink Universal Transceiver",
+      "Adds leather-appointed seats",
+      "Adds 8-way power adjustable driver's seat",
+      "Adds 4-way power adjustable front-passenger's seat",
+      "Adds leather-wrapped steering wheel"
+    ],
+    "Platinum": [
+      "Adds Nissan Navigation System with 5.8-inch color touch-screen monitor and voice recognition",
+      "Adds SiriusXM Traffic and Travel Link",
+      "Adds streaming audio via Bluetooth wireless technology",
+      "Adds automatic on/off headlights and fog lights",
+      "Adds Utili-track Channel System",
+      "Adds factory-applied spray-on bedliner",
+      "Adds satin chrome grille and body-color rear bumper",
+      "Adds PRO-4X embroidered cloth seat trim",
+      "Adds heated front seats",
+      "Adds white-faced gauges"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|toyota|landcruiser",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

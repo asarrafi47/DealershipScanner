@@ -1,0 +1,51 @@
+{
+  "ladder_id": "audi_a4",
+  "make": "Audi",
+  "models": [
+    "A4",
+    "A4 Sedan",
+    "A4 allroad",
+    "A5",
+    "A5 Sportback",
+    "A5 Coupe",
+    "S4",
+    "S5 Sportback"
+  ],
+  "year_min": 2017,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior trim"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Interior Materials",
+        "value": "Heated front seats"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Bang & Olufsen audio available"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Screen Size",
+        "value": "MMI navigation plus"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather seating surfaces"
+      }
+    ],
+    "S line": [
+      {
+        "label": "Interior Materials",
+        "value": "S line interior accents"
+      }
+    ]
+  }
+}

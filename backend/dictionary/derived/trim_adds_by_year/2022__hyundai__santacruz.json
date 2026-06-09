@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2022|hyundai|santacruz",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Santa Cruz",
+  "ladder_id": "brochure_web_2022__hyundai__santacruz",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited",
+    "XRT",
+    "SEL Activity",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Turbocharged 2.5-liter engine with 281 hp and 311 lb-ft torque",
+      "Eight-speed dual-clutch automatic transmission",
+      "Standard all-wheel drive",
+      "New towing drive mode for 2025",
+      "5,000-pound towing capacity"
+    ],
+    "XRT": [
+      "XRT-specific front and rear bumper fascia designs with increased approach angles",
+      "Front tow hooks",
+      "18-inch trim-specific wheels with 245/60R18 all-terrain tires",
+      "360-degree camera",
+      "Blind-spot view monitor",
+      "XRT logos on front upper seatbacks",
+      "Wider fender cladding",
+      "Black exterior accents and trim-specific badging"
+    ],
+    "SEL Activity": [
+      "Turbocharged 2.5-liter engine with 281 hp and 311 lb-ft torque",
+      "Eight-speed dual-clutch automatic transmission",
+      "Standard all-wheel drive",
+      "5,000-pound towing capacity"
+    ],
+    "SEL": [
+      "Standard SmartSense safety suite with blind-spot monitoring",
+      "Automatic emergency braking and lane keep assist",
+      "Rear occupant alert"
+    ],
+    "SE": [
+      "2.5-liter naturally aspirated four-cylinder engine with 191 hp and 181 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Front-wheel or all-wheel drive options",
+      "Wireless Apple CarPlay and Android Auto",
+      "Over-the-air software and firmware updates",
+      "SmartSense safety suite standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/santa-cruz/"
+}

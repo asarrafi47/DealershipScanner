@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2022|chevrolet|equinox",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2022__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "Outside heated power-adjustable body-color manual-folding mirrors with integrated turn signal indicators",
+      "18-inch machined-face wheels",
+      "Hands-free power liftgate with Chevrolet emblem projection",
+      "Fog lamps",
+      "Leather-appointed seating",
+      "Heated leather-wrapped steering wheel",
+      "Memory settings for driver seat and outside rearview mirrors",
+      "Chevrolet Infotainment 3 Plus system with 8-inch diagonal color touch-screen",
+      "Wireless charging for compatible mobile devices"
+    ],
+    "RS": [
+      "Blacked-out grille and surround with Red RS badging and Black Chevrolet bowtie emblems",
+      "19-inch Dark Android-painted wheels",
+      "Programmable power liftgate",
+      "Leather-wrapped steering wheel",
+      "Unique RS interior with Red stitching and Black Ice chrome accents",
+      "Dual-zone automatic climate control",
+      "Front and Rear Park Assist with Lane Change Alert and Side Blind Zone Alert",
+      "Rear Cross Traffic Alert"
+    ],
+    "LT": [
+      "Body-color mirror caps",
+      "Deep-tinted rear glass",
+      "Bright lower window trim",
+      "Available bright roof rails",
+      "8-way power driver seat with power lumbar control",
+      "Second-row mechanical seat release levers in cargo area",
+      "Programmable power liftgate",
+      "LED taillamps",
+      "Remote vehicle starter system available"
+    ],
+    "LS": [
+      "LED headlamps",
+      "Wireless Apple CarPlay and wireless Android Auto compatibility",
+      "Outside heated power-adjustable manual-folding mirrors",
+      "Chevrolet Infotainment 3 system with 7-inch diagonal color touch-screen",
+      "USB ports and auxiliary input jack",
+      "Teen Driver technology",
+      "12-volt auxiliary power outlets in front storage bin and rear cargo area"
+    ]
+  }
+}

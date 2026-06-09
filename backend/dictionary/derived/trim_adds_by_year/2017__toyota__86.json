@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2017|toyota|86",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "generic_toyota_86",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "inflate only under certain conditions and in certain types of severe collisions: typically, frontal and knee airbags",
+      "ressure Monitor alerts the driver when tire p",
+      "octane rating of 93 or higher. If premium fuel is not used, performance will decrease. If unleaded gasoline with an",
+      "vehicles to match customer interest and thus they typically are built with popular options and Some"
+    ],
+    "Sport": [
+      "inflate in side collisions and roll-sensing curtain airbags",
+      "ressure should be checked regularly with a gauge; do not rely solely on the monitor system. See Owner\u2019s Manual for",
+      "octane rating of 91 (95 RON) may be used with no"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.5,
+    "per_trim_add_counts": {
+      "Premium": 0,
+      "Sport": 3
+    }
+  }
+}

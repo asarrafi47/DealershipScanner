@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|ford|explorer",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_llm_2020__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ST",
+    "LIMITED",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "ST": [
+      "3.0L EcoBoost V6 engine with 400 hp and 415 lb-ft torque",
+      "10-speed SelectShift automatic transmission",
+      "Sport-tuned suspension with Terrain Management System and 7 drive modes",
+      "12.3-inch digital instrument cluster",
+      "Active Park Assist 2.0",
+      "Leather-trimmed 1st and 2nd-row seats with micro-perforated inserts",
+      "Sport-style steering wheel with ST logo and paddle shifters",
+      "High-gloss black ST grille with red logo and blackout headlamp/taillamp treatment",
+      "Quad chrome exhaust tips"
+    ],
+    "LIMITED": [
+      "Bright silver-painted grille",
+      "Leather trim with accent stitching",
+      "Ford Co-Pilot360 Technology with 360-degree camera and split-view display",
+      "Wireless charging pad for mobile devices",
+      "PowerFold 3rd-row seat",
+      "2nd-row sunblinds",
+      "Heated outboard 2nd-row seats",
+      "B&O Sound System with 12 high-performance speakers",
+      "Hands-free foot-activated liftgate"
+    ],
+    "XLT": [
+      "2.3L EcoBoost I-4 engine with auto start-stop technology",
+      "10-speed SelectShift automatic transmission",
+      "10-way power driver's seat and 4-way power front-passenger seat",
+      "Leather-wrapped steering wheel",
+      "E-Z Entry 2nd-row captain's chairs with step-over center console",
+      "Dual smart-charging USB ports in 2nd row",
+      "6.5-inch LCD productivity screen in instrument cluster",
+      "SecuriCode invisible keypad",
+      "Power-folding heated sideview mirrors with autofold and LED turn signal indicators"
+    ]
+  }
+}

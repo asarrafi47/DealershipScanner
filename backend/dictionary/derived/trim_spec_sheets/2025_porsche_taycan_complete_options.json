@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2025_porsche_taycan_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Taycan",
+    "Taycan"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Turbo S": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo S trim.; EV Electricity"
+      }
+    ],
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim.; EV Electricity"
+      }
+    ],
+    "GTS": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A2)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A2)"
+      }
+    ]
+  }
+}

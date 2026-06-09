@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2014|honda|odyssey",
+  "year": 2014,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2014__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring Elite",
+    "Touring",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Touring Elite": [
+      "High-Intensity Discharge (HID) headlights with auto-on/off",
+      "Honda DVD Ultrawide Rear Entertainment System with HDMI technology",
+      "Blind-spot information system (BSI)",
+      "HondaVAC with 650-Watt AM/FM/CD premium audio system, 12 speakers with subwoofer and 5.1 surround",
+      "Driver's seat with 10-way power adjustment including power lumbar support and two-position memory",
+      "3rd-row folding center armrest"
+    ],
+    "Touring": [
+      "18-inch alloy wheels",
+      "Fog lights",
+      "Memory-linked side mirrors",
+      "Power tailgate",
+      "Honda Satellite-Linked Navigation System with voice recognition, FM Traffic, hard disk drive (HDD), 16-GB audio memory and multi-angle rearview camera",
+      "HD Radio"
+    ],
+    "EX-L": [
+      "Forward Collision Warning (FCW)",
+      "Lane Departure Warning (LDW)",
+      "One-touch power moonroof with tilt feature",
+      "Honda Satellite-Linked Navigation System with voice recognition, FM Traffic, hard disk drive (HDD), 16-GB audio memory and multi-angle rearview camera",
+      "Honda LaneWatch",
+      "Push Button Start",
+      "Leather-trimmed interior",
+      "Heated front seats"
+    ],
+    "EX": [
+      "17-inch alloy wheels",
+      "Power sliding doors",
+      "Programmable remote entry system with Smart Entry security system",
+      "One-Motion 60/40 Split 3rd-Row Magic Seat",
+      "Tri-zone automatic climate control system with humidity control and air-filtration",
+      "Heated power side mirrors",
+      "Honda LaneWatch",
+      "Honda DVD Rear Entertainment System with 115-volt power outlet (available)",
+      "Pandora compatibility",
+      "Bluetooth streaming audio and USB Audio Interface"
+    ],
+    "LX": [
+      "248-hp 3.5-liter i-VTEC V-6 engine",
+      "6-speed automatic transmission",
+      "EPA mileage ratings: 19 city/28 highway/22 combined mpg",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Dual-stage, multiple-threshold front airbags (SRS)",
+      "Three-row side curtain airbags with rollover sensor",
+      "Tilt and telescopic steering column",
+      "Driver's seat with 8-way power adjustment",
+      "Front passenger's seat with 4-way power adjustment"
+    ]
+  }
+}

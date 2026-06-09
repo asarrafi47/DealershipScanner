@@ -1,0 +1,61 @@
+{
+  "ladder_id": "2020_honda_pilot_complete_options",
+  "make": "Honda",
+  "models": [
+    "Pilot",
+    "Pilot"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Elite": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: 3.5-liter V6 engine has direct-injection and a start-stop (was Engine 3.5 L J35Z4 V6)"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine 3.5 L J35Z4 V6 (was L J35Z1 V6 (2006+ FWD))"
+      }
+    ],
+    "EX-L": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L J35Z1 V6 (2006+ FWD) (was The revised 3.5-liter V6 engine has direct-injection and a start-stop system (on)"
+      }
+    ],
+    "TrailSport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The revised 3.5-liter V6 engine has direct-injection and a start-stop system (on (was L J35Z1 V6 (2006+ FWD))"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L J35Z1 V6 (2006+ FWD) (was 3.5 L J35Z4 V6 Transmission 10-speed automatic The VP)"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: 3.5 L J35Z4 V6 Transmission 10-speed automatic The VP (was Engine 3.5 L J35A4 V6 (2003-2005); L J35Z1 V6 (2006+ FWD))"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine 3.5 L J35A4 V6 (2003-2005); L J35Z1 V6 (2006+ FWD) (was Engine 3.5 L J35A4 V6 (2003-2005))"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Engine 3.5 L J35A4 V6 (2003-2005)"
+      }
+    ]
+  }
+}

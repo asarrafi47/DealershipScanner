@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2025|toyota|camry",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_llm_2025__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "XLE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Dual LED projector headlights with Automatic High Beams and auto on/off",
+      "Premium LED combination taillights",
+      "Color-keyed sport mesh front grille",
+      "19-inch black and smoke-gray-finished alloy wheels",
+      "Leather-trimmed seats",
+      "Heated 8-way power-adjustable front seats",
+      "12.3-inch digital gauge cluster with selectable gauges",
+      "Smart Key System on front doors and trunk with Push Button Start",
+      "Front Cross-Traffic Alert, Lane Change Assist, and Panoramic View Monitor",
+      "Front and Rear Parking Assist with Automatic Braking and Rear Cross-Traffic Braking"
+    ],
+    "XLE": [
+      "Dual LED projector headlights with Automatic High Beams and auto on/off",
+      "Premium LED combination taillights",
+      "Dark metallic gray horizontal bar front grille",
+      "18-inch two-tone multi-spoke machined and black-finished alloy wheels",
+      "Leather- and microfiber-trimmed seats",
+      "Heated 8-way power-adjustable front seats",
+      "12.3-inch digital gauge cluster with selectable gauges",
+      "Smart Key System on front doors and trunk with Push Button Start"
+    ],
+    "SE": [
+      "Bi-LED projector low- and high-beam headlights with Automatic High Beams and auto on/off",
+      "LED combination taillights with bulb turn signal and reverse light",
+      "Black sport mesh front grille",
+      "18-inch multi-spoke black-finished alloy wheels",
+      "SofTex and fabric-trimmed seats",
+      "8-way power-adjustable driver's seat",
+      "12.3-inch digital gauge cluster with selectable gauges",
+      "Smart Key System on front doors and trunk with Push Button Start"
+    ],
+    "LE": [
+      "2.5L 4-cylinder gas/electric hybrid with 225 net combined horsepower",
+      "Available electronic on-demand all-wheel drive with 232 net combined horsepower",
+      "Electronically controlled continuously variable transmission with sequential shift mode",
+      "Normal, Eco, EV3, and Sport drive modes",
+      "Bi-LED projector low- and high-beam headlights with Automatic High Beams",
+      "LED combination taillights with bulb turn signal and reverse light",
+      "Black horizontal bar front grille",
+      "16-inch 10-spoke silver-painted alloy wheels",
+      "Dual zone automatic climate control with air filter and humidity sensor",
+      "6-way manual-adjustable driver's seat and 60/40 split fold-down rear seat"
+    ]
+  }
+}

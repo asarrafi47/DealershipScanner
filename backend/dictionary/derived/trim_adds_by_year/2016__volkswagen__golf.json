@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2016|volkswagen|golf",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "2016_volkswagen_golf_gti_epa",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Mats\u00ae \u201d and \u201cMonster"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

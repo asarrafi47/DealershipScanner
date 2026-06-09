@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2013|subaru|outback",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2013__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "3.6L SUBARU BOXER engine (vs. 2.5L)",
+      "Leather-trimmed upholstery",
+      "Woodgrain-patterned accent trim on doors and console",
+      "10-way power adjustable driver's seat with lumbar support",
+      "4-way power adjustable front-passenger seat",
+      "Leather-wrapped 3-spoke steering wheel with audio/Bluetooth/cruise control"
+    ],
+    "2.5i Limited": [
+      "10-way power adjustable driver's seat with lumbar support",
+      "4-way power adjustable front-passenger seat",
+      "Body-color folding side mirrors",
+      "Retractable/removable cargo-area cover",
+      "Leather-wrapped 3-spoke steering wheel with audio/Bluetooth/cruise control",
+      "6-speaker single-CD audio system with USB/iPod/Bluetooth/auxiliary jack"
+    ],
+    "2.5i Premium": [
+      "Heated front seats (All-Weather Package)",
+      "Windshield wiper de-icer and heated side mirrors (All-Weather Package)",
+      "Driver's auto up/down power window",
+      "Silver metallic trim on doors and console",
+      "Leather-wrapped shifter handle",
+      "440-watt 9-speaker Harman Kardon premium audio with 4.3-inch LCD display"
+    ],
+    "2.5i": [
+      "2.5L SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-way manually adjustable driver's seat",
+      "4-way manually adjustable front-passenger seat",
+      "Cloth upholstery",
+      "4-speaker single-CD audio system with USB/iPod/Bluetooth/auxiliary jack",
+      "Projector-beam headlights with multireflector high-beam",
+      "Roof rails with retractable and adjustable cross bars",
+      "65/35-split flat-folding rear seatback",
+      "Reclining rear seats"
+    ]
+  }
+}

@@ -1,9 +1,11 @@
 import os
 import secrets
 import sqlite3
+import threading
 import time
+from functools import lru_cache
 
-from backend.db.password_hash import hash_password, verify_or_legacy
+from backend.db.password_hash import hash_password, password_needs_rehash, verify_or_legacy
 from backend.db.users_sqlite import DB_PATH, get_users_conn
 from backend.utils.roles import ROLE_ADMIN
 from backend.utils.runtime_env import is_production_env
@@ -11,6 +13,80 @@ from backend.utils.runtime_env import is_production_env
 
 def get_conn():
     return get_users_conn()
+
+
+@lru_cache(maxsize=1)
+def _users_select_columns() -> tuple[str, ...]:
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users)")
+    cols = [r[1] for r in cursor.fetchall()]
+    conn.close()
+    want = ["id", "username", "email"]
+    for extra in (
+        "role",
+        "dealer_id",
+        "dealership_registry_id",
+        "org_id",
+        "totp_enabled",
+        "mfa_phone",
+        "is_premium",
+        "google_sub",
+    ):
+        if extra in cols:
+            want.append(extra)
+    return tuple(want)
+
+
+def _user_dict_from_row(row: tuple, want: tuple[str, ...]) -> dict:
+    out: dict = {}
+    for i, k in enumerate(want):
+        out[k] = row[i]
+    out["id"] = int(out["id"])
+    if "dealership_registry_id" in out and out["dealership_registry_id"] is not None:
+        try:
+            out["dealership_registry_id"] = int(out["dealership_registry_id"])
+        except (TypeError, ValueError):
+            out["dealership_registry_id"] = None
+    if "role" not in out or out["role"] is None:
+        out["role"] = "dealer_staff"
+    if "totp_enabled" in out:
+        out["totp_enabled"] = bool(out["totp_enabled"])
+    if "totp_secret" in out and out["totp_secret"] is None:
+        out["totp_secret"] = ""
+    if "mfa_phone" in out and out["mfa_phone"] is None:
+        out["mfa_phone"] = ""
+    if "is_premium" in out:
+        out["is_premium"] = bool(out["is_premium"])
+    return out
+
+
+def _schedule_password_rehash(user_id: int, password: str, stored_hash: str) -> None:
+    """Upgrade weak hashes without blocking the login response."""
+
+    expected = (stored_hash or "").strip()
+    if not expected:
+        return
+
+    def _run() -> None:
+        h = hash_password(password)
+        for attempt in range(6):
+            try:
+                conn = get_conn()
+                cur = conn.cursor()
+                cur.execute(
+                    "UPDATE users SET password = ? WHERE id = ? AND password = ?",
+                    (h, user_id, expected),
+                )
+                conn.commit()
+                conn.close()
+                return
+            except sqlite3.OperationalError as ex:
+                if "locked" not in str(ex).lower() or attempt >= 5:
+                    return
+                time.sleep(0.08 * (attempt + 1))
+
+    threading.Thread(target=_run, name=f"pw-rehash-{user_id}", daemon=True).start()
 
 
 def _env_admin_set_clause(cursor: sqlite3.Cursor) -> str:
@@ -233,6 +309,7 @@ def init_users_db():
 
     conn.commit()
     conn.close()
+    _users_select_columns.cache_clear()
 
     try:
         from backend.db.user_history_db import ensure_car_history_table
@@ -308,24 +385,9 @@ def get_user_by_login(login_input: str) -> dict | None:
     li = (login_input or "").strip()
     if not li:
         return None
+    want = _users_select_columns()
     conn = get_conn()
     cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(users)")
-    cols = [r[1] for r in cursor.fetchall()]
-    want = ["id", "username", "email"]
-    for extra in (
-        "role",
-        "dealer_id",
-        "dealership_registry_id",
-        "org_id",
-        "totp_enabled",
-        "totp_secret",
-        "mfa_phone",
-        "is_premium",
-        "google_sub",
-    ):
-        if extra in cols:
-            want.append(extra)
     cursor.execute(
         f"SELECT {', '.join(want)} FROM users WHERE lower(username) = lower(?) OR lower(email) = lower(?)",
         (li, li),
@@ -334,26 +396,32 @@ def get_user_by_login(login_input: str) -> dict | None:
     conn.close()
     if not row:
         return None
-    out: dict = {}
-    for i, k in enumerate(want):
-        out[k] = row[i]
-    out["id"] = int(out["id"])
-    if "dealership_registry_id" in out and out["dealership_registry_id"] is not None:
-        try:
-            out["dealership_registry_id"] = int(out["dealership_registry_id"])
-        except (TypeError, ValueError):
-            out["dealership_registry_id"] = None
-    if "role" not in out or out["role"] is None:
-        out["role"] = "dealer_staff"
-    if "totp_enabled" in out:
-        out["totp_enabled"] = bool(out["totp_enabled"])
-    if "totp_secret" in out and out["totp_secret"] is None:
-        out["totp_secret"] = ""
-    if "mfa_phone" in out and out["mfa_phone"] is None:
-        out["mfa_phone"] = ""
-    if "is_premium" in out:
-        out["is_premium"] = bool(out["is_premium"])
-    return out
+    return _user_dict_from_row(row, want)
+
+
+def authenticate_app_user(login_input: str, password: str) -> dict | None:
+    """Verify credentials and return the user row, or None."""
+    li = (login_input or "").strip()
+    if not li or not password:
+        return None
+    want = _users_select_columns()
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute(
+        f"SELECT {', '.join(want)}, password FROM users WHERE lower(username) = lower(?) OR lower(email) = lower(?)",
+        (li, li),
+    )
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        return None
+    stored = row[-1]
+    if not verify_or_legacy(password, stored):
+        return None
+    user = _user_dict_from_row(row[:-1], want)
+    if password_needs_rehash(stored):
+        _schedule_password_rehash(int(user["id"]), password, stored)
+    return user
 
 
 def get_user_profile(user_id: int) -> dict | None:
@@ -435,23 +503,8 @@ def check_user(login_input, password):
         return False
     uid, _u, _e, stored = row
     ok = verify_or_legacy(password, stored)
-    if ok and not stored.startswith("$2"):
-        h = hash_password(password)
-        for attempt in range(6):
-            try:
-                conn2 = get_conn()
-                cur2 = conn2.cursor()
-                cur2.execute(
-                    "UPDATE users SET password = ? WHERE id = ?",
-                    (h, uid),
-                )
-                conn2.commit()
-                conn2.close()
-                break
-            except sqlite3.OperationalError as ex:
-                if "locked" not in str(ex).lower() or attempt >= 5:
-                    raise
-                time.sleep(0.08 * (attempt + 1))
+    if ok and password_needs_rehash(stored):
+        _schedule_password_rehash(int(uid), password, stored)
     return ok
 
 

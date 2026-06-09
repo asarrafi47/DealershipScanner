@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2020|volkswagen|atlas",
+  "year": 2020,
+  "make": "Volkswagen",
+  "model": "Atlas",
+  "ladder_id": "brochure_web_2020__volkswagen__atlas",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SEL Premium R-Line",
+    "Peak Edition SE with Technology",
+    "SEL",
+    "SE with Technology",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL Premium R-Line": [
+      "Updated seat upholstery with premium materials",
+      "Four-way lumbar support in front seats",
+      "Massaging function in front seats"
+    ],
+    "Peak Edition SE with Technology": [
+      "18-inch wheels with all-terrain tires",
+      "Rugged-styled bumpers and body cladding",
+      "Roof rails for additional cargo capacity"
+    ],
+    "SEL": [
+      "Heated seats in first two rows",
+      "Six USB-C ports throughout vehicle",
+      "Power-operated hands-free tailgate",
+      "Panoramic sunroof",
+      "Ventilated front seats",
+      "Heated steering wheel",
+      "Head-up display",
+      "Adaptive cruise control",
+      "AWD standard"
+    ],
+    "SE with Technology": [
+      "12.0-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "Wireless charging pad",
+      "10.2-inch digital gauge cluster"
+    ],
+    "SE": [
+      "Turbocharged 2.0-liter inline four-cylinder engine producing 269 hp",
+      "273 lb-ft of torque",
+      "Eight-speed automatic transmission",
+      "Front-wheel drive standard",
+      "Front automatic emergency braking",
+      "Side and rear cross-traffic alert",
+      "Blind-spot monitoring",
+      "Lane keep assist",
+      "Seating for up to seven passengers"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/atlas/"
+}

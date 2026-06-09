@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|rollsroyce|ghost",
+  "year": 2012,
+  "make": "Rolls Royce",
+  "model": "Ghost",
+  "ladder_id": "brochure_llm_2012__rollsroyce__ghost",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ghost Extended Wheelbase",
+    "Ghost"
+  ],
+  "adds_by_trim": {
+    "Ghost Extended Wheelbase": [
+      "Extended wheelbase of 3465 mm versus standard 3295 mm for increased rear legroom",
+      "Vehicle length extended to 5569 mm versus standard 5399 mm",
+      "Turning circle increased to 14.0 m versus standard 13.4 m"
+    ],
+    "Ghost": [
+      "V12 engine with 563 bhp and 420 kW at 5250 rpm",
+      "Direct injection fuel management with premium unleaded fuel requirement",
+      "780 Nm torque at 1500 rpm",
+      "Top speed of 250 km/h with 4.7 second 0-60 mph acceleration",
+      "Soft full-grain leather interior with natural wood veneers",
+      "Deep tufted Blenheim carpets throughout cabin",
+      "Cashmere-blend roof lining",
+      "Rear-hinged coach doors opening to 83 degrees",
+      "Low sill height for graceful entry and exit",
+      "Optional panorama sunroof available"
+    ]
+  }
+}

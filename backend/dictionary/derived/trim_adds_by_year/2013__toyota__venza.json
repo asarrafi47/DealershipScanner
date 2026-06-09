@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|toyota|venza",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Venza",
+  "ladder_id": "brochure_llm_2013__toyota__venza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "3.5-liter V6 engine standard (268 hp, 246 lb-ft torque)",
+      "Cargo volume 68.6/30.1 cubic feet (reduced from XLE's 70.2/34.4)"
+    ],
+    "XLE": [
+      "3.5-liter V6 engine available option",
+      "Head room without panoramic roof standard (39.6/39.3 inches)"
+    ],
+    "LE": [
+      "2.7-liter 4-cylinder DOHC 16-valve engine standard (181 hp, 182 lb-ft torque)",
+      "6-speed electronically controlled automatic transmission with sequential shift",
+      "Front-wheel drive standard with available all-wheel drive",
+      "Electric power steering with 40.7-foot turning circle diameter",
+      "Power-assisted ventilated disc brakes with Star Safety System",
+      "All-season steel-belted radial tires standard",
+      "17.7-gallon fuel tank capacity",
+      "1000-pound towing capacity standard (3500 with Tow Prep Package)"
+    ]
+  }
+}

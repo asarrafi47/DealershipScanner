@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2021|buick|envision",
+  "year": 2021,
+  "make": "Buick",
+  "model": "Envision",
+  "ladder_id": "brochure_2021__buick__envision",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Essence",
+    "Limited",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "Adds Includes 9-speed automatic transmission",
+      "Adds Features premium soft-touch interior materials",
+      "Adds Includes QuietTuning technology for cabin noise reduction",
+      "Adds Standard safety features and core infotainment system"
+    ],
+    "Premium": [
+      "Adds available 10.2-inch diagonal touch-screen infotainment system",
+      "Adds available Head-Up Display",
+      "Adds available In-Vehicle Air Ionizer with Air Quality Indicator"
+    ],
+    "Limited": [
+      "Adds massaging driver seat feature",
+      "Adds heated leather-wrapped steering wheel"
+    ],
+    "Essence": [
+      "Buick Infotainment System with 8-inch diagonal color touchscreen and navigation",
+      "Lane keep assist with lane departure warning",
+      "Rear cross traffic alert",
+      "In-vehicle air ionizer"
+    ]
+  }
+}

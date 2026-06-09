@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2015|porsche|cayenne",
+  "year": 2015,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "brochure_llm_2015__porsche__cayenne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cayenne Turbo S",
+    "Cayenne Turbo",
+    "Cayenne GTS",
+    "Cayenne S E-Hybrid",
+    "Cayenne S Diesel",
+    "Cayenne S",
+    "Cayenne Diesel",
+    "Cayenne"
+  ],
+  "adds_by_trim": {
+    "Cayenne Turbo S": [
+      "21-inch 911 Turbo Design wheels with wheel arch extensions as standard",
+      "20-inch RS Spyder Design wheels available as no-cost option",
+      "Monochrome black interior package (high-gloss) as no-cost option",
+      "Comfort memory package (14-way) as no-cost option",
+      "Adaptive sports seats with comfort memory package (18-way) standard"
+    ],
+    "Cayenne Turbo": [
+      "21-inch Cayenne Sport Classic wheels with wheel arch extensions",
+      "21-inch Cayenne SportEdition wheels with wheel arch extensions as standard",
+      "Monochrome black interior package (high-gloss) as no-cost option",
+      "Comfort memory package (14-way) as no-cost option"
+    ],
+    "Cayenne GTS": [
+      "Exclusive high-performance engine variant",
+      "20-inch Cayenne SportDesign II wheels standard",
+      "Wheel spacers on rear axle, 17 mm available",
+      "Sport-tuned suspension and handling enhancements"
+    ],
+    "Cayenne S E-Hybrid": [
+      "Plug-in hybrid powertrain with electric motor integration",
+      "Auxiliary climate control (cooling and heating) standard",
+      "4-zone climate control not available"
+    ],
+    "Cayenne S Diesel": [
+      "Diesel engine powertrain variant",
+      "Premium features matching Cayenne S gasoline variant"
+    ],
+    "Cayenne S": [
+      "Enhanced engine performance over base Cayenne",
+      "19-inch Cayenne Design II wheels available as no-cost option",
+      "Bi-Xenon main headlights with Porsche Dynamic Light System (PDLS) standard"
+    ],
+    "Cayenne Diesel": [
+      "Diesel engine powertrain variant",
+      "18-inch Cayenne wheels available as no-cost option"
+    ],
+    "Cayenne": [
+      "18-inch Cayenne wheels standard or as no-cost option",
+      "Gasoline engine powertrain",
+      "ParkAssist (front and rear) with reversing camera available",
+      "Adaptive cruise control with Porsche Active Safe (PAS) available",
+      "Lane Departure Warning and Lane Change Assist systems available",
+      "Porsche Entry & Drive keyless entry system available",
+      "Comfort lighting package and automatic dimming mirrors available",
+      "Panoramic roof system and electric sunroof options available"
+    ]
+  }
+}

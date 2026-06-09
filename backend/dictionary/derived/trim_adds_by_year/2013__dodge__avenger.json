@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|dodge|avenger",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Avenger",
+  "ladder_id": "brochure_llm_2013__dodge__avenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AVENGER R/T",
+    "AVENGER SXT",
+    "AVENGER SE"
+  ],
+  "adds_by_trim": {
+    "AVENGER R/T": [
+      "3.6L 283-horsepower Pentastar V6 engine standard",
+      "6-speed automatic transmission",
+      "Unique performance seats with high-leather bolsters and red accent stitching",
+      "Unique instrument panel with satin carbon pockets and center tachometer",
+      "Sport-tuned suspension with performance power steering",
+      "Body-color rear spoiler",
+      "Dual rear exhaust with bright tips",
+      "Red LED ambient lighting",
+      "18-inch polished aluminum wheels",
+      "uconnect 430 with 6.5-inch touch screen and CD/DVD/MP3 radio"
+    ],
+    "AVENGER SXT": [
+      "6-speed automatic transmission replaces 4-speed on I-4 model",
+      "3.6L 283-horsepower Pentastar V6 engine option",
+      "Projector fog lamps",
+      "Power 8-way driver's seat",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic Temperature Control (ATC)",
+      "Electronic Vehicle Information Center (EVIC) with trip computer",
+      "Dual rear exhaust with bright tips on V6",
+      "uconnect 430 with 6.5-inch touch screen and CD/DVD/MP3 radio",
+      "17-inch aluminum wheels"
+    ],
+    "AVENGER SE": [
+      "2.4L 173-horsepower DOHC 16V I-4 with 4-speed automatic transmission",
+      "Optional 3.6L 283-horsepower Pentastar V6 with 6-speed automatic",
+      "uconnect 130 AM/FM/CD/MP3 radio with 4 speakers",
+      "SiriusXM Satellite Radio with 1-year subscription",
+      "Premium cloth seats",
+      "60/40 split-folding rear seat",
+      "Driver's seat-height adjuster and lumbar adjust",
+      "Steering wheel-mounted cruise and audio controls",
+      "6 airbags including advanced multistage front and side-curtain airbags",
+      "Air conditioning and 4-wheel antilock disc brakes with traction control"
+    ]
+  }
+}

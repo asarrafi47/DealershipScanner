@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2013|buick|regal",
+  "year": 2013,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2013__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium III",
+    "Premium II",
+    "Premium I",
+    "GS",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium III": [
+      "19-inch alloy 9-spoke machined wheels",
+      "Rear parking assist",
+      "120-volt AC power outlet",
+      "Heated steering wheel on turbo models",
+      "Thorax rear seat air bags on turbo models",
+      "Harman Kardon premium audio system",
+      "Bi-xenon HID headlamps"
+    ],
+    "Premium II": [
+      "18-inch alloy 13-spoke wheels on turbo models",
+      "Rear parking assist",
+      "120-volt AC power outlet",
+      "Heated steering wheel on turbo models",
+      "Thorax rear seat air bags on turbo models",
+      "Harman Kardon premium audio system",
+      "Bi-xenon HID headlamps"
+    ],
+    "Premium I": [
+      "Passive entry system",
+      "Remote vehicle start system",
+      "Push-button start",
+      "12-way power front passenger seat",
+      "Universal garage door opener",
+      "Chrome accents on door handles",
+      "18-inch alloy 13-spoke wheels on turbo only"
+    ],
+    "GS": [
+      "2.0L EcoTec GS Turbo with 270 horsepower and 295 lb-ft torque",
+      "Interactive drive control system",
+      "GS-specific fascias and rockers",
+      "GS-specific dual exhaust",
+      "GS-specific badging",
+      "GS sport seats, steering wheel, and sport pedals",
+      "Brembo front brakes with 4-wheel anti-lock disc",
+      "Hyperstrut front suspension"
+    ],
+    "Base": [
+      "2.4L EcoTec with eAssist technology, 182 horsepower, 172 lb-ft torque",
+      "6-speed automatic transmission with driver shift control",
+      "Front-wheel drive",
+      "Leather-appointed heated front bucket seats with 12-way power driver adjustment",
+      "Dual-zone automatic climate control",
+      "Dual-stage frontal and side-impact air bags with head curtain side-impact",
+      "7-speaker AM/FM/SiriusXM stereo with MP3, CD, USB, AUX, and Intellilink 7-inch touchscreen",
+      "Power windows, door locks, mirrors with heated function",
+      "Halogen headlamps and fog lamps with automatic on/off",
+      "17-inch alloy 9-spoke painted wheels"
+    ]
+  }
+}

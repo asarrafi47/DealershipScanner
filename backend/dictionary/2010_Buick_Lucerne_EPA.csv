@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2010,Buick,Lucerne,Lucerne,4.6L V8,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,8,4.6,15,22,18,,,,,,4.6L V8,
-2010,Buick,Lucerne,Lucerne,3.9L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.9,17,26,20,,,,,,3.9L V6,
-2010,Buick,Lucerne,Lucerne,FFV 3.9L V6 (FFV),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Large Cars,6,3.9,17,26,20,,,,,,3.9L V6,

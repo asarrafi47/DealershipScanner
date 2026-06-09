@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2022|infiniti|q50",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_2022__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sensory",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds wireless Apple CarPlay® integration",
+      "Adds Android Auto™ compatible phone integration",
+      "Adds Bose® Performance Series Audio",
+      "Adds leather-appointed seats",
+      "Adds Intelligent Cruise Control with automatic braking and acceleration",
+      "Adds Blind Spot Warning",
+      "Adds Lane Departure Warning",
+      "Adds Predictive Forward Collision Warning",
+      "Adds Backup Collision Intervention",
+      "Adds Around View® Monitor with Moving Object Detection"
+    ],
+    "Sensory": [
+      "Upgraded to navigation with 3D graphics",
+      "Adds real-time traffic information",
+      "Adds memory system for personalized driver settings with over 200 stored configurations"
+    ]
+  }
+}

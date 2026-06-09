@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2014|hyundai|veloster",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_llm_2014__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "VELOSTER TURBO TECH PACKAGE",
+    "VELOSTER TURBO R-SPEC",
+    "VELOSTER TURBO BASE",
+    "VELOSTER STYLE PACKAGE PLUS",
+    "VELOSTER BASE"
+  ],
+  "adds_by_trim": {
+    "VELOSTER TURBO TECH PACKAGE": [
+      "7-inch touchscreen navigation system with XM NavTraffic",
+      "Dual automatic temperature control",
+      "Leather seating surfaces with power-adjustable lumbar support"
+    ],
+    "VELOSTER TURBO R-SPEC": [
+      "450-Watt Dimension premium audio with external amp and subwoofer",
+      "Sport-tuned suspension and steering",
+      "R-Spec badge and floor mats",
+      "Sport Shifter"
+    ],
+    "VELOSTER TURBO BASE": [
+      "201-HP 1.6L twin-scroll turbo DOHC engine",
+      "6-speed manual or dual-clutch automatic transmission with paddle shifters",
+      "Torque Vectoring Control and Hillstart Assist Control",
+      "17-inch alloy wheels",
+      "Front projector headlights with LED accents"
+    ],
+    "VELOSTER STYLE PACKAGE PLUS": [
+      "Power panoramic tilt-and-slide sunroof",
+      "7-inch touchscreen navigation with XM NavTraffic",
+      "18-inch alloy wheels with chrome accents",
+      "Ground effects body kit",
+      "Turn signal indicators on side mirrors",
+      "Proximity key entry with push-button start",
+      "Dual automatic temperature control",
+      "115V power outlet"
+    ],
+    "VELOSTER BASE": [
+      "138-HP 1.6L Gasoline Direct Injection DOHC engine",
+      "6-speed manual transmission with Continuously Variable Valve Timing",
+      "7-inch LCD multimedia touchscreen with AM/FM/SiriusXM/CD/MP3",
+      "Bluetooth hands-free phone with voice recognition",
+      "Pandora internet radio and Gracenote Music ID",
+      "Rearview camera and backup warning sensors",
+      "Blue Link telematics system",
+      "Six-airbag safety system with Electronic Stability Control",
+      "4-wheel disc anti-lock braking system"
+    ]
+  }
+}

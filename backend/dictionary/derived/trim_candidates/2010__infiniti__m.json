@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|infiniti|m",
+  "year": 2010,
+  "make": "Infiniti",
+  "model": "M",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2011|saab|94x",
+  "year": 2011,
+  "make": "Saab",
+  "model": "9-4X",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Saab_9-4X_Brochure.pdf",
+  "page_count": 5,
+  "all_pages": false,
+  "trim_hint_pages": [
+    5
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 5,
+      "trim_hint": true,
+      "text": "saabusa.com\nUS Art. No. 94PREBRO Printed in U.S.A. Copyright Saab Automobile AB, Trollh\u00e4ttan, Sweden, 2010. This paper contains post-consumer recycled material and\nhas earned the Mixed Sources label as designated by the Forest Stewardship Council. Please recycle. Particulars and illustrations in this brochure are based on the information\nthat was valid at the time of final editing (October 2010). The model range, technical specifications, services and equipment may vary from one market to another and may\nbe altered without prior notice. Pictures may show cars fitted with optional extra equipment. Please consult your Saab dealer for the latest information.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 5 ---\nsaabusa.com\nUS Art. No. 94PREBRO Printed in U.S.A. Copyright Saab Automobile AB, Trollh\u00e4ttan, Sweden, 2010. This paper contains post-consumer recycled material and\nhas earned the Mixed Sources label as designated by the Forest Stewardship Council. Please recycle. Particulars and illustrations in this brochure are based on the information\nthat was valid at the time of final editing (October 2010). The model range, technical specifications, services and equipment may vary from one market to another and may\nbe altered without prior notice. Pictures may show cars fitted with optional extra equipment. Please consult your Saab dealer for the latest information."
+}

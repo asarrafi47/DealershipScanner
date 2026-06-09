@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2023|toyota|86",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "86",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds to or replaces features offered on GR86 Adds to or replaces features offered on GR86 Premium",
+      "FA24 2.4L naturally aspirated horizontally opposed FA24 2.4L naturally aspirated horizontally opposed FA24 2.4L naturally aspirated horizontally opposed",
+      "S hort-throw 6-speed close-ratio manual transmission S hort-throw 6-speed close-ratio manual transmission S hort-throw 6-speed close-ratio manual transmission",
+      "Transmission (ECT) with paddle shifters Transmission (ECT) with paddle shifters Transmission (ECT) with paddle shifters",
+      "Torsen\u00ae4 limited-slip differential Torsen\u00ae4 limited-slip differential Torsen\u00ae4 limited-slip differential",
+      "GR circuit-tuned coil springs, shock absorbers, GR circuit-tuned coil springs, shock absorbers, GR circuit-tuned coil springs, shock absorbers,",
+      "Exterior Features Exterior Features Exterior Features",
+      "Michelin\u00ae Pilot\u00ae Sport 4 tires3 with black lug nuts",
+      "Auto-leveling dual-LED headlights and turn signal",
+      "LED stop light and backup light",
+      "GR-inspired matte-black C-pillar dual racing stripe graphic",
+      "Black heated power outside mirrors Interior Features GR cat-back dual exhaust with black chrome tips"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

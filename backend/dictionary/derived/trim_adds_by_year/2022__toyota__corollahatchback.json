@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2022|toyota|corollahatchback",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "brochure_llm_2022__toyota__corollahatchback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE Nightshade Edition",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Available 6-speed Intelligent Manual Transmission (iMT)",
+      "Up to 30 city/38 highway/33 combined EPA-est. mpg"
+    ],
+    "SE Nightshade Edition": [
+      "18-in. black alloy wheels",
+      "Black front lower grille surround",
+      "Integrated LED fog lights"
+    ],
+    "SE": [
+      "2.0L 4-Cylinder Dynamic Force Engine with 168 hp",
+      "Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "Normal and Sport driving modes",
+      "Available 6-speed Intelligent Manual Transmission (iMT)",
+      "Front-Wheel Drive (FWD)",
+      "Up to 32 city/41 highway/35 combined EPA-est. mpg"
+    ]
+  }
+}

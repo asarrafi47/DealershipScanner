@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2015|kia|forte",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_llm_2015__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "1.6L turbocharged gasoline direct injection engine with 201 horsepower",
+      "Sport suspension with larger front brakes",
+      "18-inch alloy wheels",
+      "Leather seat trim",
+      "Ventilated driver's seat",
+      "Heated front seats",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Heated steering wheel",
+      "Navigation system with SiriusXM Traffic"
+    ],
+    "EX": [
+      "2.0L gasoline direct injection engine with 173 horsepower",
+      "17-inch alloy wheels",
+      "HID headlights with LED accent lights and taillights",
+      "Heated front seats",
+      "6-way adjustable driver's seat",
+      "Leather-wrapped steering wheel and gearshift knob"
+    ],
+    "LX": [
+      "1.8L multi-point injection engine with 145 horsepower",
+      "6-speed manual or Sportmatic transmission",
+      "Air conditioning with tilt and telescopic steering column",
+      "AM/FM CD MP3 SiriusXM audio system with four speakers",
+      "Bluetooth wireless technology",
+      "Cloth seat trim",
+      "Power door locks and windows",
+      "Remote keyless entry",
+      "Electronic stability control and traction control"
+    ]
+  }
+}

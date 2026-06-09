@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2024|subaru|impreza",
+  "year": 2024,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2024__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Impreza RS",
+    "Impreza Sport",
+    "Impreza"
+  ],
+  "adds_by_trim": {
+    "Impreza RS": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "18-inch alloy wheels in dark gray finish",
+      "Crystal Black Silica side rocker spoilers and exterior mirrors with fog light trim",
+      "RS cloth upholstery with red accents and stitching",
+      "Leather-wrapped steering wheel and shifter handle with red stitching",
+      "Gunmetal interior accent trim and RS instrument cluster",
+      "RS front dash trim"
+    ],
+    "Impreza Sport": [
+      "LED fog lights",
+      "18-inch alloy wheels in dark gray with machine finish",
+      "Larger front disc brakes and rear stabilizer bar",
+      "Body-color exterior mirrors with integrated turn signals",
+      "Active grille shutter",
+      "Keyless Access with Push-Button Start",
+      "Sport cloth upholstery with 8-speed manual-mode paddle shifters",
+      "Sport instrument cluster and SI-DRIVE engine performance management system",
+      "11.6-inch SUBARU STARLINK Multimedia Plus with wireless Apple CarPlay and Android Auto"
+    ],
+    "Impreza": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with low mode and Auto Start-Stop System",
+      "Auto-on/off LED Steering Responsive Headlights with High Beam Assist",
+      "Black folding exterior mirrors and 16-inch steel wheels with covers",
+      "Cloth upholstery with 6-way manual driver and 4-way manual passenger seats",
+      "7.0-inch SUBARU STARLINK Dual Multimedia with Apple CarPlay, Android Auto, and SiriusXM",
+      "Dual-zone automatic climate control with dynamic ventilation",
+      "EyeSight Driver Assist Technology with Pre-Collision Braking and Adaptive Cruise Control",
+      "8 airbags including dual-stage driver and passenger, side curtain, and rollover sensor"
+    ]
+  }
+}

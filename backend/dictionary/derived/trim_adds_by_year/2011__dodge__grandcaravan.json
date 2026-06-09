@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2011|dodge|grandcaravan",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2011__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GRAND CARAVAN R/T",
+    "GRAND CARAVAN CREW",
+    "GRAND CARAVAN MAINSTREET",
+    "GRAND CARAVAN EXPRESS"
+  ],
+  "adds_by_trim": {
+    "GRAND CARAVAN EXPRESS": [
+      "3.6L Pentastar V6 Flex Fuel engine with 6-speed automatic transmission",
+      "Electronic Stability Control and 4-wheel ABS brakes",
+      "Black foldaway power heated mirrors with black belt molding",
+      "16-inch wheel covers and body-color door handles",
+      "Remote keyless entry and tire pressure monitoring",
+      "Speed control and rear defroster",
+      "Fuel optimizer calibration"
+    ],
+    "GRAND CARAVAN MAINSTREET": [
+      "Body-color foldaway power heated mirrors replacing black mirrors",
+      "16-inch aluminum wheels and tires replacing wheel covers",
+      "Power front and second-row windows with one-touch up/down on front"
+    ],
+    "GRAND CARAVAN CREW": [
+      "Bright belt molding replacing black belt molding",
+      "Dual power sliding side doors as standard equipment",
+      "Fog lamps and bright Stow 'N Place Roof Rack side rails",
+      "17-inch aluminum wheels and tires replacing 16-inch wheels"
+    ],
+    "GRAND CARAVAN R/T": [
+      "Performance-tuned suspension for enhanced handling and responsiveness",
+      "17-inch polished aluminum wheels and tires replacing standard aluminum wheels",
+      "Body-color grille for distinctive exterior appearance"
+    ]
+  }
+}

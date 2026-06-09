@@ -1,0 +1,80 @@
+{
+  "catalog_key": "2013|hyundai|genesiscoupe",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "ladder_id": "brochure_llm_2013__hyundai__genesiscoupe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.8 TRACK",
+    "3.8 GRAND TOURING",
+    "2.0T PREMIUM",
+    "3.8 R-SPEC",
+    "2.0T R-SPEC",
+    "2.0T"
+  ],
+  "adds_by_trim": {
+    "3.8 TRACK": [
+      "Track-tuned suspension with Torsen limited-slip differential",
+      "19-inch alloy wheels with summer tires",
+      "Brembo braking system",
+      "High Intensity Discharge Xenon headlights",
+      "Front camber adjustment bolt",
+      "Aluminum pedals",
+      "Aero wiper blades",
+      "Rear spoiler"
+    ],
+    "3.8 GRAND TOURING": [
+      "8-speed automatic transmission with SHIFTRONIC",
+      "360-Watt Infinity premium audio system with HD Radio and ten speakers",
+      "Navigation system with 7-inch touchscreen and NavTraffic",
+      "Backup warning system",
+      "Hyundai Blue Link telematics system",
+      "Leather seating surfaces with heated front seats",
+      "Power driver seat with power lumbar support",
+      "Automatic temperature control",
+      "Proximity key entry and electronic push-button start",
+      "Power tilt-and-slide glass sunroof"
+    ],
+    "2.0T PREMIUM": [
+      "360-Watt Infinity premium audio system with HD Radio and ten speakers",
+      "Navigation system with 7-inch touchscreen and NavTraffic",
+      "Hyundai Blue Link telematics system",
+      "Power driver seat with power lumbar support",
+      "Automatic temperature control",
+      "Proximity key entry and electronic push-button start",
+      "Electrochromic auto-dimming rearview mirror with compass",
+      "HomeLink integrated transceiver",
+      "Power tilt-and-slide glass sunroof"
+    ],
+    "3.8 R-SPEC": [
+      "348 HP 3.8L Gasoline Direct Injection DOHC V6 engine",
+      "Track-tuned suspension with low-velocity control dampers",
+      "19-inch alloy wheels with summer tires",
+      "Brembo braking system",
+      "Torsen limited-slip differential",
+      "Red leather seat bolsters with red cloth inserts"
+    ],
+    "2.0T R-SPEC": [
+      "Track-tuned suspension with low-velocity control dampers",
+      "19-inch alloy wheels with summer tires",
+      "Brembo braking system",
+      "Torsen limited-slip differential",
+      "Red leather seat bolsters with red cloth inserts",
+      "R-Spec badging",
+      "Front camber adjustment bolt"
+    ],
+    "2.0T": [
+      "274 HP 2.0L Turbo DOHC 4-cylinder engine with DCVVT",
+      "6-speed close-ratio manual transmission or 8-speed automatic with SHIFTRONIC",
+      "Sport-tuned suspension with strut brace and low-velocity control dampers",
+      "18-inch alloy wheels with P225/45VR18 and P245/45VR18 tires",
+      "Electroluminescent gauge cluster with trip computer and information display",
+      "Steering wheel audio and cruise controls",
+      "AM/FM/Sirius XM/CD/MP3 audio system with 6 speakers",
+      "Bluetooth hands-free phone system with streaming audio",
+      "Black cloth seats with seatbelt guide and front seatback pockets",
+      "6-airbag safety system with Electronic Stability Control"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2018|hyundai|tucson",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2018_Hyundai_Tucson_Brochure.pdf",
+  "page_count": 7,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "pages": [
+    {
+      "page": 6,
+      "trim_hint": false,
+      "text": "Ultimate Package\nLimited Standard Features plus:\n+ Power tilt-and-slide panoramic sunroof\n+ Rear parking sensors\n+ HID headlights with Dynamic Bending Light\n+ Automatic Emergency Braking with Pedestrian Detection\n+ Lane Departure Warning\n+ Electroluminescent Gauge Cluster with 4.2\u02ddcolor LCD multi-info display\n+ Ventilated front seats\n+ Heated rear seats",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 6 ---\nUltimate Package\nLimited Standard Features plus:\n+ Power tilt-and-slide panoramic sunroof\n+ Rear parking sensors\n+ HID headlights with Dynamic Bending Light\n+ Automatic Emergency Braking with Pedestrian Detection\n+ Lane Departure Warning\n+ Electroluminescent Gauge Cluster with 4.2\u02ddcolor LCD multi-info display\n+ Ventilated front seats\n+ Heated rear seats"
+}

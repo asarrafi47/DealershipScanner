@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2013|suzuki|kizashi",
+  "year": 2013,
+  "make": "Suzuki",
+  "model": "Kizashi",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

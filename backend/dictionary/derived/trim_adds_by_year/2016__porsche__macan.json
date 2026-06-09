@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2016|porsche|macan",
+  "year": 2016,
+  "make": "Porsche",
+  "model": "Macan",
+  "ladder_id": "brochure_llm_2016__porsche__macan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Macan Turbo",
+    "Macan S",
+    "Macan S Diesel"
+  ],
+  "adds_by_trim": {
+    "Macan Turbo": [
+      "Turbo engine with enhanced performance compared to Macan S"
+    ],
+    "Macan S": [
+      "S engine with increased power over Macan S Diesel",
+      "Gasoline powertrain instead of diesel"
+    ],
+    "Macan S Diesel": [
+      "Diesel engine option for improved fuel efficiency",
+      "Two-zone automatic climate control standard",
+      "Cruise control standard",
+      "Two-zone automatic climate control",
+      "Alarm system with ultrasonic interior surveillance",
+      "Comfort memory package with 14-way electric seat adjustment"
+    ]
+  }
+}

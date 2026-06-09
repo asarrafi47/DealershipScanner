@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2011|smart|fortwo",
+  "year": 2011,
+  "make": "Smart",
+  "model": "Fortwo",
+  "ladder_id": "brochure_llm_2011__smart__fortwo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Stylish",
+    "Purist"
+  ],
+  "adds_by_trim": {
+    "Stylish": [
+      "Passion-themed exterior styling and design elements",
+      "Enhanced interior appointments compared to Purist base model"
+    ],
+    "Purist": [
+      "Pure design approach with essential smart fortwo features",
+      "Tridion safety cell in black standard",
+      "Crystal white, rally red, or deep black body color options"
+    ]
+  }
+}

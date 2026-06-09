@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|nissan|armada",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2017__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch machine-finished tinted aluminum-alloy wheels",
+      "Tri-Zone Entertainment System with dual 7.0-inch monitors and DVD player",
+      "Power sliding moonroof with one-touch open/close",
+      "Rear air conditioning with rear controls",
+      "Climate controlled front seats with heating and cooling",
+      "Intelligent Cruise Control (ICC)",
+      "Predictive Forward Collision Warning (PFCW)",
+      "Forward Emergency Braking (FEB)",
+      "Lane Departure Warning (LDW)",
+      "Lane Departure Prevention (LDP)"
+    ],
+    "SL": [
+      "20-inch machine-finished aluminum-alloy wheels with P275/60R20 tires",
+      "Fog lights",
+      "Power folding chrome outside mirrors with turn signal indicators",
+      "Auto-dimming outside mirrors with heated function and puddle lights",
+      "Front and Rear Sonar System with eight sensors",
+      "Power liftgate",
+      "Remote Engine Start System",
+      "Around View Monitor with Moving Object Detection (MOD)",
+      "Leather-appointed seats",
+      "Power third-row 60/40 split fold-down bench seat"
+    ],
+    "SV": [
+      "390-hp Endurance 5.6-liter V8 engine",
+      "7-speed automatic transmission with Tow/Haul Mode",
+      "2WD standard or available all-mode 4WD with 2-speed transfer case",
+      "13.8-inch front and rear vented disc brakes",
+      "4-wheel Anti-lock Braking System (ABS)",
+      "Independent double-wishbone suspension with auto-leveling rear suspension",
+      "18-inch aluminum-alloy wheels with P265/70R18 all-season tires",
+      "LED low-beam headlights with integrated signature",
+      "Nissan Hard Drive Navigation System with 8.0-inch touchscreen",
+      "Bose Audio System with SiriusXM Satellite Radio"
+    ]
+  }
+}

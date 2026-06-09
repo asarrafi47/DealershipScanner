@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|volvo|xc60",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "XC60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Core",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

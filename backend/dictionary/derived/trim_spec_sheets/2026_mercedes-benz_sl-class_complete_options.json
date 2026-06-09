@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2026_mercedes-benz_sl-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SL-Class",
+    "SL-Class"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG SL63": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG SL55": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG SL43": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "SL 680": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

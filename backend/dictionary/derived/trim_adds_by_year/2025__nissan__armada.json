@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2025|nissan|armada",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2025__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM RESERVE",
+    "PLATINUM",
+    "PRO-4X",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM RESERVE": [
+      "Massaging front seats",
+      "Premium leather-wrapped steering wheel",
+      "Head-Up Display",
+      "Driver seat-mounted front-center supplemental air bag"
+    ],
+    "PLATINUM": [
+      "3D Enhanced Intelligent Around View Monitor",
+      "Intelligent Rear View Mirror",
+      "LED fog lights",
+      "Side mirrors with puddle lights",
+      "Second-row fold-down captain's chairs with armrests and LATCH AND GLIDE",
+      "Biometric Cooling",
+      "Second-row center console with cup holders",
+      "Windshield wiper deicer",
+      "Customizable multi-color ambient lighting",
+      "12-way power driver's and passenger's seats with 4-way power lumbar support"
+    ],
+    "PRO-4X": [
+      "Intelligent 4WD with 2-speed transfer case",
+      "Electronic locking rear differential",
+      "Off-road front bumper with tow hooks and metal skid plate",
+      "Drive and Terrain Mode Selector with eight modes",
+      "Black overfenders",
+      "Black exterior accents",
+      "PRO-4X embroidered quilted leather-appointed seats first and second rows",
+      "Lava Red contrast interior stitching",
+      "PRO-4X carpeted floor mats",
+      "14.3-inch digital dashboard with fully digital gauges"
+    ],
+    "SL": [
+      "Drive and Terrain Mode Selector with five modes",
+      "ProPILOT Assist 1.1",
+      "HD Enhanced Intelligent Around View Monitor",
+      "Hill descent control",
+      "20-inch machine-finished aluminum-alloy wheels",
+      "120-volt AC power outlet",
+      "Heated front seats",
+      "EZ FLEX Seating System",
+      "Klipsch Premium Audio System",
+      "Wireless charger"
+    ],
+    "SV": [
+      "ProPILOT Assist 1.0",
+      "Safety Shield 360 with automatic emergency braking, pedestrian detection, lane departure warning, blind spot warning, rear cross traffic alert, rear automatic braking, high beam assist",
+      "18-inch aluminum-alloy wheels",
+      "Class IV tow hitch receiver with 7-pin wiring harness",
+      "Tri-Zone automatic temperature control",
+      "Rear LED light bar",
+      "Drive and Terrain Mode Selector with five modes",
+      "Third-row 60/40-split fold-down bench seat with power recline and one-touch folding",
+      "NissanConnect Services with in-vehicle data and Wi-Fi 3-month trial",
+      "Google built-in, Alexa built-in, connected garage door opener with myQ, SiriusXM 360L"
+    ]
+  }
+}

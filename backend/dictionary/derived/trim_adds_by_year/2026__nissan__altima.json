@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2026|nissan|altima",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2026__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "Paddle shifters with manual shift mode",
+      "Sport-tuned suspension",
+      "Active Ride Control",
+      "Intelligent Trace Control",
+      "19-inch machine-finished aluminum-alloy wheels",
+      "Gloss black V-Motion grille",
+      "Gloss black rear diffuser",
+      "Sport cloth seat trim",
+      "Leatherette-wrapped steering wheel and leather-wrapped shift knob"
+    ],
+    "SV": [
+      "2.5-liter Direct Injection Gasoline engine",
+      "Front-Wheel Drive",
+      "Xtronic CVT transmission",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning and Blind Spot Warning",
+      "Rear Cross Traffic Alert and Rear Automatic Braking",
+      "RearView Monitor",
+      "LED projector headlights with LED signature daytime running lights",
+      "17-inch machine-finished aluminum-alloy wheels"
+    ]
+  }
+}

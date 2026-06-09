@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|mazda|mx5",
+  "year": 2022,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "2024_mazda_mx-5_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "vailable exterior colors, some a",
+      "apply. Third-party interface providers are solely responsible for their product functionality and third-party terms and privacy statements",
+      "are trademarks of Google LLC. Apple CarPlay, iPhone and Siri",
+      "limitations to the operation and detection of the system. Please see your Owner’s Manual for further details. 9 Always check your mirrors. Be aware of the traffic around you. There are",
+      "steering with double pinion electric power assist Tilt and telescopic",
+      "hird-party interface providers are solely responsible for their product functionality and t"
+    ],
+    "Touring": [
+      "Leather-trimmed seats with available Red Nappa and Sport Tan options",
+      "Automatic climate control instead of manual air conditioning",
+      "Mazda Navigation System with 7-inch touchscreen",
+      "SiriusXM Traffic and Travel Link Services",
+      "Auto-dimming rearview mirror with HomeLink and High Beam Control",
+      "Body-colored heated power side mirrors",
+      "Auto-dimming driver's side mirror",
+      "Adaptive Front-lighting System",
+      "Rain-sensing windshield wipers",
+      "Doorsill trim plates with bright metallic interior accents"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Touring": 0
+    }
+  }
+}

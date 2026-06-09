@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2016|mazda|3",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2016__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mazda3 s",
+    "Mazda3 i"
+  ],
+  "adds_by_trim": {
+    "Mazda3 s": [
+      "SKYACTIV-G 2.5L engine with 184 hp and 185 lb-ft torque",
+      "11.61-inch vented front disc brakes versus 11.02-inch",
+      "18 x 7.0 inch wheels with P215/45 R18 all-season tires",
+      "SKYACTIV-Drive 6-speed automatic with Sport mode and manual-shift mode"
+    ],
+    "Mazda3 i": [
+      "SKYACTIV-G 2.0L DOHC 4-cylinder engine with 155 hp and 150 lb-ft torque",
+      "SKYACTIV-MT 6-speed manual or SKYACTIV-Drive 6-speed automatic transmission",
+      "11.02-inch vented front disc brakes",
+      "16 x 6.5 inch steel wheels with P205/60 R16 all-season tires",
+      "Power rack-and-pinion steering with electric power assist",
+      "Four-wheel independent MacPherson strut front and multilink rear suspension",
+      "6 standard airbags, ABS, Electronic Brakeforce Distribution, Brake Assist",
+      "MAZDA CONNECT infotainment with 7-inch touchscreen, Bluetooth, and internet radio",
+      "Push Button Start, remote keyless entry, rearview camera",
+      "Air conditioning, power windows, power door locks, cruise control"
+    ]
+  }
+}

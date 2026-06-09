@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2014|landrover|lr4",
+  "year": 2014,
+  "make": "landrover",
+  "model": "LR4",
+  "ladder_id": "brochure_2014__landrover__lr4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes customizable exterior color options"
+    ],
+    "Limited": [],
+    "Standard": [
+      "Adds Seat Back Stowage system with multiple compartments for rear seat storage"
+    ],
+    "HSE": [
+      "Adds Premium Seat Back Stowage with soft touch interior lining and magnetic button clasps"
+    ]
+  }
+}

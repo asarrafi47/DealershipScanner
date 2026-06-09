@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2015_mercedes-benz_sl-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SL-Class",
+    "SL-Class"
+  ],
+  "year_min": 2013,
+  "year_max": 2017,
+  "source": "generated",
+  "trims": {
+    "SL 65 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "4.7L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 63 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "4.7L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 550": [
+      {
+        "label": "Engine Options",
+        "value": "4.7L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 400": [
+      {
+        "label": "Engine Options",
+        "value": "4.7L V8 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

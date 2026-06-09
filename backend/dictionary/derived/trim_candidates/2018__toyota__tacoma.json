@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2018|toyota|tacoma",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "Limited",
+    "SR5",
+    "SR",
+    "TRD",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on TRD Sport Adds to or replaces features offered on TRD Off-Road",
+      "Drivetrain Drivetrain Drivetrain",
+      "3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp \u2022 3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp \u2022 3.5-Liter DOHC V6 direct-injection Atkinson-cycle: 6-speed manual",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD \u2022 V6 Tow Package38 \u2022 Hill Start Assist Control (HAC)37 (A/T only)",
+      "V6 Tow Package38 \u2022 Automatic Limited-Slip Differential (Auto LSD)41 \u2022 V6 Tow Package38",
+      "Hill Start Assist Control (HAC)37 (A/T only) \u2022 Hill Start Assist Control (HAC)37 (A/T only) Off-Road Performance",
+      "Off-Road Performance Exterior Features",
+      "TRD Pro cat-back exhaust",
+      "Off-road-tuned suspension with Bilstein\u00ae shocks \u2022 Charcoal grille with polished finish and chrome surround \u2022 TRD-tuned off-road suspension with 2.5-in. FOX Internal Bypass",
+      "Electronically controlled locking rear differential \u2022 Chrome-accented power outside mirrors with turn signal indicators shocks with rear remote reservoirs",
+      "Multi-terrain Select and Crawl Control (CRAWL)36 (4x4 A/T only) \u2022 Chrome-accented door handles \u2022 TRD-tuned front coil springs and rear leaf springs",
+      "Active Traction Control (A-TRAC) (4x4 M/T only) \u2022 Color-keyed overfenders \u2022 Electronically controlled locking rear differential"
+    ],
+    "SR5": [
+      "Adds to or replaces features offered on SR Adds to or replaces features offered on SR5",
+      "Drivetrain Drivetrain Drivetrain",
+      "2.7-Liter DOHC 16-Valve 4-Cylinder with VVT-i; 159 hp @ 5200 rpm; \u2022 2.7-Liter DOHC 16-Valve 4-Cylinder with VVT-i; 159 hp @ 5200 rpm; \u2022 3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp",
+      "3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp @ 6000 rpm; 265 lb.-ft. @ 4600 rpm: 6-speed automatic transmission \u2022 Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD \u2022 Automatic Limited-Slip Differential (Auto LSD)41 \u2022 Hill Start Assist Control (HAC)37 (A/T only)",
+      "V6 Tow Package38 \u2022 Hill Start Assist Control (HAC)37 (A/T only) Exterior Features",
+      "Automatic Limited-Slip Differential (Auto LSD)41",
+      "Hill Start Assist Control (HAC)37 (A/T only) \u2022 Gray grille with smoked finish and chrome surround",
+      "Charcoal grille with chrome surround \u2022 Color-keyed overfenders and rear bumper",
+      "Chrome rear bumper \u2022 17-in. machined alloy wheels",
+      "Dark gray grille with black surround \u2022 Projector-beam headlights with turn Daytime Running Lights \u2022 Projector-beam headlights with LED Daytime Running Lights (DRL)",
+      "Color-keyed power outside mirrors (DRL) and integrated fog lights and integrated wide-angle fog lights"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

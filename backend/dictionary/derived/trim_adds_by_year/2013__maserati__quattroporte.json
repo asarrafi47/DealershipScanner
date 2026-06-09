@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2013|maserati|quattroporte",
+  "year": 2013,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_web_2013__maserati__quattroporte",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "GTS",
+    "S",
+    "SQ4"
+  ],
+  "adds_by_trim": {
+    "SQ4": [
+      "All-wheel drive system replacing rear-wheel drive",
+      "Sport-tuned all-wheel drive with electronic torque management"
+    ],
+    "S": [
+      "4.7L dual-turbocharged V8 engine with 430 horsepower",
+      "Premium Bose surround sound audio system",
+      "Heated and cooled leather seats",
+      "Xenon adaptive headlights with LED daytime running lights",
+      "Wood and leather steering wheel",
+      "Premium interior trim with open-pore wood accents"
+    ],
+    "GTS": [
+      "4.2L naturally aspirated V8 engine with 400 horsepower",
+      "Eight-speaker Bose audio system",
+      "Leather-appointed interior seating",
+      "Dual-zone automatic climate control",
+      "Aluminum interior trim details",
+      "Power-adjustable front seats with memory functions",
+      "8-inch touchscreen infotainment system with navigation"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/quattroporte/"
+}

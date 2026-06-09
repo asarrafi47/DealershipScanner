@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|honda|fit",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Fit",
+  "ladder_id": "brochure_llm_2010__honda__fit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FIT sport",
+    "FIT"
+  ],
+  "adds_by_trim": {
+    "FIT sport": [
+      "Steering wheel-mounted paddle shifters on 5-speed automatic transmission models",
+      "16-inch alloy wheels replacing 15-inch steel wheels",
+      "Power windows, door locks, and side mirrors",
+      "Tire Pressure Monitoring System",
+      "Vehicle Stability Assist with traction control on navigation model",
+      "Security system with remote entry",
+      "Fog lights",
+      "Body-colored underbody kit and rear roofline spoiler",
+      "Chrome exhaust finisher",
+      "Cruise control with illuminated steering wheel-mounted controls"
+    ],
+    "FIT": [
+      "1.5-liter i-VTEC 4-cylinder engine with 5-speed manual or automatic transmission",
+      "15-inch steel wheels with full covers",
+      "Driver and front passenger active head restraints",
+      "Advanced Compatibility Engineering body structure",
+      "6 airbags",
+      "ABS with Electronic Brake Distribution",
+      "Daytime Running Lights",
+      "Tilt and telescopic steering column",
+      "60/40 split 2nd-row Magic Seat with underseat storage",
+      "10 beverage holders"
+    ]
+  }
+}

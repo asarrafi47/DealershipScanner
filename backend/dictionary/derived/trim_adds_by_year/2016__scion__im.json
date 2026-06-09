@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2016|scion|im",
+  "year": 2016,
+  "make": "Scion",
+  "model": "iM",
+  "ladder_id": "brochure_web_2016__scion__im",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "iM 5dr HB CVT",
+    "iM 5dr HB Man"
+  ],
+  "adds_by_trim": {
+    "iM 5dr HB CVT": [
+      "Continuously variable automatic transmission (CVT) with seven pre-programmed steps",
+      "Manual control capability for CVT transmission",
+      "Sport mode with adjusted shift points and accelerator responsiveness",
+      "Improved fuel economy: 30/37 mpg city/highway versus 27/36 manual"
+    ],
+    "iM 5dr HB Man": [
+      "1.8-liter I-4 engine rated 137 hp and 126 lb-ft torque",
+      "Six-speed manual transmission",
+      "17-inch wheels with 225/45R/17 tires",
+      "Six-speaker Pioneer sound system",
+      "Seven-inch infotainment touchscreen with rearview camera",
+      "4.2-inch TFT display",
+      "Dual-zone climate control",
+      "Four-wheel independent suspension with double-wishbone rear layout",
+      "High-strength body construction",
+      "Electric power steering"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/im/"
+}

@@ -1,0 +1,85 @@
+{
+  "catalog_key": "2023|toyota|corollacross",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla Cross",
+  "ladder_id": "brochure_llm_2023__toyota__corollacross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid XSE",
+    "Hybrid SE",
+    "Hybrid S",
+    "XLE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Hybrid XSE": [
+      "LED fog lights",
+      "18-inch sport alloy wheels with black-painted machined finish",
+      "SofTex-trimmed seating with 10-way power-adjustable driver's seat and lumbar support",
+      "Heated front seats",
+      "Leather shift knob",
+      "Front automatic dual zone air conditioning",
+      "7-inch fully digital gauge cluster",
+      "Ambient lighting",
+      "Tonneau cover"
+    ],
+    "Hybrid SE": [
+      "LED projector low- and high-beam headlights, LED front turn signals, and LED taillights",
+      "Heated power outside mirrors with turn signal and blind spot warning indicators",
+      "17-inch silver-colored sport alloy wheels",
+      "Black roof rails",
+      "Rear privacy glass",
+      "Rear windshield wiper",
+      "Qi-compatible wireless smartphone charging",
+      "Four total USB-C charging outlets",
+      "Leather-trimmed steering wheel with sport paddle shifters"
+    ],
+    "Hybrid S": [
+      "Sport styling with sport front grille, front/rear bumpers, and smoked front Toyota emblem with all-black badging",
+      "Color-keyed rear spoiler",
+      "Color-keyed outside door handles",
+      "LED projector low- and high-beam headlights and LED stop lights",
+      "Heated power outside mirrors",
+      "17-inch silver-colored sport alloy wheels",
+      "Overhead console with maplights",
+      "Four total USB-C charging outlets",
+      "8-inch Toyota Audio Multimedia touchscreen with wireless Android Auto and Apple CarPlay"
+    ],
+    "XLE": [
+      "LED projector low- and high-beam headlights, LED front turn signals, and LED taillights",
+      "LED fog lights",
+      "18-inch alloy wheels with black-painted machined finish",
+      "Black grille with metallic paint surround",
+      "SofTex-trimmed seating with 10-way power-adjustable driver's seat and lumbar support",
+      "Heated front seats",
+      "Satin-finish door handles",
+      "Leather shift knob",
+      "Front automatic dual zone air conditioning"
+    ],
+    "LE": [
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators",
+      "17-inch silver-colored alloy wheels",
+      "Black roof rails",
+      "Rear privacy glass",
+      "Rear windshield wiper",
+      "Qi-compatible wireless smartphone charging",
+      "Smart Key System with Push Button Start",
+      "Leather-trimmed steering wheel",
+      "Four total USB-C charging outlets"
+    ],
+    "L": [
+      "2.0-Liter 4-Cylinder engine with 169 horsepower",
+      "Continuously Variable Transmission (CVT)",
+      "Front-Wheel Drive (FWD) or available All-Wheel Drive (AWD)",
+      "31 city/33 highway/32 combined MPG (FWD)",
+      "Color-keyed rear spoiler and outside door handles",
+      "LED projector low and high-beam headlights and LED stop lights",
+      "Heated power outside mirrors",
+      "17-inch steel wheels with silver wheel covers",
+      "Fabric-trimmed seating with 60/40 split fold-flat second-row seats",
+      "Overhead console with maplights, air conditioning, 4.2-inch Multi-Information Display, and two USB-C outlets"
+    ]
+  }
+}

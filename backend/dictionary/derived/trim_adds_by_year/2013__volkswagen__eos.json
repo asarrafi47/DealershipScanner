@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|volkswagen|eos",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "Eos",
+  "ladder_id": "brochure_llm_2013__volkswagen__eos",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology",
+    "Executive",
+    "Lux",
+    "Sport",
+    "Komfort"
+  ],
+  "adds_by_trim": {
+    "Technology": [
+      "RNS 510 navigation system with 6.5-inch color touchscreen",
+      "SiriusXM Traffic with 4-year subscription"
+    ],
+    "Executive": [
+      "18-inch Kansas alloy wheels with all-season tires",
+      "Electronic Stability Control (ESC) and Anti-slip Regulation (ASR)",
+      "Electronic Brake-pressure Distribution (EBD)"
+    ],
+    "Lux": [
+      "18-inch Vicenza alloy wheels with all-season tires",
+      "Sport suspension",
+      "Black painted exterior mirrors",
+      "Steering wheel-mounted paddle shifters"
+    ],
+    "Sport": [
+      "Brushed aluminum appearance pedal covers",
+      "Bi-Xenon high-intensity headlights with LED DRL and AFS"
+    ],
+    "Komfort": [
+      "2.0L TSI 200-hp turbocharged 4-cylinder engine with 6-speed DSG transmission",
+      "17-inch Michigan alloy wheels with all-season tires",
+      "Power retracting hardtop roof with heated rear glass",
+      "Power panoramic sunroof with tinted glass and manual sunshade",
+      "Climatronic dual-zone automatic climate control with pollen filter",
+      "12-way power-adjustable driver seat with 4-way lumbar support",
+      "Halogen headlights with LED rear marker and turn signal lights",
+      "Power-operated heated side mirrors with integrated turn signals"
+    ]
+  }
+}

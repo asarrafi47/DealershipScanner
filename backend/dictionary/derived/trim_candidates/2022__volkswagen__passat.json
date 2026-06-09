@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2022|volkswagen|passat",
+  "year": 2022,
+  "make": "Volkswagen",
+  "model": "Passat",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "R-Line",
+    "SE",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2016|mitsubishi|outlander",
+  "year": 2016,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

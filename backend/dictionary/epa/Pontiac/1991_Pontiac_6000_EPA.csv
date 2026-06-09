@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1991,Pontiac,6000,6000,2.5L I4 ((FFS)),2.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,19,28,22,,,,,
+1991,Pontiac,6000,6000,3.1L V6 ((FFS)),3.1L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,18,25,20,,,,,
+1991,Pontiac,6000,6000,3.1L V6 ((FFS)),3.1L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,17,28,20,,,,,
+1991,Pontiac,6000,Wagon,2.5L I4 ((FFS)),2.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.5,18,26,21,,,,,
+1991,Pontiac,6000,Wagon,3.1L V6 ((FFS)),3.1L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.1,17,28,20,,,,,

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2019_mercedes-benz_cls-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "CLS-Class",
+    "CLS-Class"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG CLS53": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2017|jeep|patriot",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "brochure_llm_2017__jeep__patriot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LATITUDE",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "LATITUDE": [
+      "115-volt and 12-volt auxiliary power outlets",
+      "Automatic halogen headlamps",
+      "Heated front premium cloth seats",
+      "Rear 60/40 split-folding and reclining seats",
+      "Front-seat height-adjuster shoulder belt",
+      "Speed-sensitive power door locks",
+      "Remote Keyless/Illuminated Entry",
+      "P215/60R17 BSW All-Season Touring tires standard",
+      "Air conditioning with automatic temperature controls",
+      "Remote start with automatic transaxles"
+    ],
+    "SPORT": [
+      "Compact spare tire",
+      "12-volt auxiliary power outlet",
+      "Premium cloth seats",
+      "Rear 60/40 split-folding seats",
+      "Carpeted cargo area load floor",
+      "Base steering wheel with mounted cruise controls",
+      "Tilt steering column",
+      "Sliding sun visors with mirrors",
+      "Outside temperature display in odometer",
+      "Rearview auto-dimming mirror with microphone"
+    ]
+  }
+}

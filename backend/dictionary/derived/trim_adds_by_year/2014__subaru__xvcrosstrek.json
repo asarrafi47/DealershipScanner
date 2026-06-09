@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2014|subaru|xvcrosstrek",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2014__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Touring",
+    "Hybrid",
+    "2.0i Limited",
+    "2.0i Premium"
+  ],
+  "adds_by_trim": {
+    "Hybrid Touring": [
+      "Power tilt/sliding-glass moonroof",
+      "Leather-trimmed upholstery",
+      "High-resolution 6.1-inch touch-screen voice-activated GPS navigation system",
+      "Integrated audio system with 6 speakers and Subaru STARLINK™ system",
+      "SiriusXM® Satellite Radio with NavTraffic®",
+      "SMS text messaging capability",
+      "Bluetooth® audio streaming and hands-free phone connectivity"
+    ],
+    "Hybrid": [
+      "Subaru Hybrid System with EV mode, regenerative braking, auto start-stop technology",
+      "Body-color side mirrors with integrated turn signals",
+      "Body-color door handles with chrome accents",
+      "Silver metallic interior trim",
+      "Enhanced color multifunction display",
+      "Leather-wrapped steering wheel with silver stitching",
+      "L.E.D. taillights",
+      "Keyless Access & Start"
+    ],
+    "2.0i Limited": [
+      "Leather-wrapped 3-spoke steering wheel",
+      "Leather-trimmed upholstery",
+      "Automatic climate control system",
+      "6-speaker single-CD audio system with 4.3-inch LCD display and HD Radio®",
+      "Auto-on/off headlights",
+      "Rear-Vision Camera"
+    ],
+    "2.0i Premium": [
+      "148-hp 2.0-liter 4-cylinder SUBARU BOXER® engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic® CVT with paddle shifters",
+      "Fog lights",
+      "17-inch aluminum-alloy wheels",
+      "Roof rails with black finish",
+      "Cloth upholstery",
+      "6-speaker single-CD audio system with USB port and Bluetooth® connectivity",
+      "6-way manually adjustable driver's seat and 4-way front-passenger's seat",
+      "Cargo-area tray and All-Weather Package"
+    ]
+  }
+}

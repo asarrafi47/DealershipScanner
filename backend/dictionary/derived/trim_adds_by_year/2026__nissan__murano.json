@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2026|nissan|murano",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2026__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "241-hp 2.0-liter VC-Turbo engine with 260 lb-ft torque",
+      "Intelligent All-Wheel Drive with 9-speed automatic transmission",
+      "ProPILOT Assist with Intelligent Forward Collision Warning and Automatic Emergency Braking",
+      "Lane Departure Warning, Intelligent Lane Intervention, Blind Spot Warning",
+      "Intelligent Blind Spot Intervention and Rear Cross Traffic Alert",
+      "Rear Automatic Braking and Front/Rear Sonar System",
+      "RearView Monitor and Hill start assist",
+      "20-inch Gloss black aluminum-alloy wheels with gloss black aero covers",
+      "LED headlights with LED Daytime Running Lights and LED taillights",
+      "12.3-inch Digital dashboard with fully digital gauges"
+    ],
+    "SL": [
+      "HD Enhanced Intelligent Around View Monitor",
+      "20-inch Gloss black aluminum-alloy wheels with Gun Metallic aero covers",
+      "Panoramic moonroof",
+      "Power tilting and heated outside mirrors with integrated turn signals",
+      "Gun Metallic rear diffuser",
+      "Auto-dimming rearview mirror with customizable multi-color ambient lighting",
+      "Bose Premium Audio System with 10 speakers",
+      "NissanConnect Services powered by SiriusXM with 5-year and 1-year trial access",
+      "Wi-Fi Hotspot with 1-year Premium package trial",
+      "Google built-in with Enhanced Voice Recognition"
+    ],
+    "PLATINUM": [
+      "21-inch Machine-finished aluminum-alloy wheels with Gun Metallic aero covers",
+      "Power tilting and folding heated outside mirrors with integrated turn signals",
+      "Gloss black bumper accents",
+      "Motion Activated Liftgate",
+      "12-way power driver's seat with 4-way power lumbar support",
+      "10-way power passenger's seat with 4-way power lumbar support",
+      "Climate-controlled front seats with heated and ventilated functions",
+      "Heated rear outboard seats and massaging front seats",
+      "Quilted semi-aniline leather-appointed seats",
+      "Head-Up Display and rain-sensing windshield wipers"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2019|nissan|kicks",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Kicks",
+  "ladder_id": "brochure_llm_2019__nissan__kicks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "LED headlights with LED signature accents",
+      "Fog lights",
+      "Rear roof spoiler",
+      "Dark chrome front grille accent",
+      "Front and rear bumpers with body-color inserts",
+      "Silver-painted exterior door trim",
+      "Black painted outside mirrors with integrated turn signals",
+      "Intelligent Around View Monitor",
+      "Leather-wrapped steering wheel and shift knob",
+      "Sport seat fabric with color accents and stitching"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist Display",
+      "NissanConnect 7-inch touch-screen display with Apple CarPlay and Android Auto",
+      "SiriusXM Radio with 3-month complimentary trial access",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Automatic Temperature Control",
+      "Nissan Intelligent Key with Remote Engine Start System",
+      "Heated side mirrors",
+      "Painted outside mirrors and body-color door handles"
+    ],
+    "S": [
+      "1.6L DOHC 16-valve 4-cylinder engine producing 122 horsepower",
+      "Xtronic CVT continuously variable transmission",
+      "Hill start assist and Vehicle Dynamic Control with Traction Control",
+      "Anti-lock Braking System with Brake Assist and Electronic Brake force Distribution",
+      "16-inch steel wheels with wheel covers",
+      "Remote keyless entry with Push Button Start",
+      "Power windows and door locks with Smart Auto Headlights",
+      "7-inch touch-screen display with RearView Monitor",
+      "Bluetooth Hands-free Phone System and Siri Eyes Free",
+      "AM/FM audio system with six speakers and USB connection ports"
+    ]
+  }
+}

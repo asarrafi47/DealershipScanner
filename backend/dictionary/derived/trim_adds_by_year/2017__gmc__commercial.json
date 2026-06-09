@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2017|gmc|commercial",
+  "year": 2017,
+  "make": "GMC",
+  "model": "Commercial",
+  "ladder_id": "brochure_2017__gmc__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Limited",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 6-Speed Manual transmission",
+      "Adds 4.10 axle ratio",
+      "Adds 16-inch standard wheels",
+      "Adds 21-gallon fuel tank capacity"
+    ],
+    "S": [
+      "Adds 8-Speed Automatic transmission availability with V-6"
+    ],
+    "Limited": [],
+    "SLE": [
+      "Adds 3.42 axle ratio availability for V-6 and Diesel engines"
+    ],
+    "SLT": [
+      "6.2L EcoTec3 V-8 engine option with Hydra-Matic 8-speed automatic transmission",
+      "Quiet full-size pickup cabin",
+      "Lasting comfort seats",
+      "Generous storage options",
+      "Technology to keep you connected, informed and entertained",
+      "Available Forward Collision Alert and Lane Departure Warning",
+      "Available EZ-Lift and Lower Tailgate",
+      "Available Safety Alert Driver Seat",
+      "Available under-rail box lights",
+      "CornerStep rear bumper"
+    ],
+    "Denali": [
+      "6.2L EcoTec3 V-8 engine with Hydra-Matic 8-speed automatic transmission"
+    ]
+  }
+}

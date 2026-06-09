@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2012|ferrari|f12",
+  "year": 2012,
+  "make": "Ferrari",
+  "model": "F12",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "F1"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

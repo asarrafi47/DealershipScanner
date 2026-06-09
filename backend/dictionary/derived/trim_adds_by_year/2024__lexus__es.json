@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2024|lexus|es",
+  "year": 2024,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "2022_lexus_es_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "seatbelts and are designed to inflate only under certain conditions and in certain types of severe collisions. Always wear",
+      "clearance during use. See Owner\u2019s Manual for limitations. 38. Do not rely exclusively on the Rear Pedestrian Detection System. Visually confirm",
+      "purchased after retail vehicle delivery and installed by an authorized Lexus dealer are warranted for 12 months from date of",
+      "may not be available in all regions of the country. Lexus Interface display shown",
+      "ear seatbelts, secure children in r"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "SE": 0
+    }
+  }
+}

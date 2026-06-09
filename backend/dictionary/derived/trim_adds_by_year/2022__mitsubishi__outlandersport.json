@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2022|mitsubishi|outlandersport",
+  "year": 2022,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2022__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.4 GT SPECIAL EDITION",
+    "2.4 GT",
+    "2.0 SE SPECIAL EDITION",
+    "2.0 SE",
+    "2.0 LE",
+    "2.0 ES",
+    "2.0 S"
+  ],
+  "adds_by_trim": {
+    "2.4 GT SPECIAL EDITION": [
+      "GT Special Edition badge",
+      "2.4L MIVEC DOHC engine (vs 2.0L in SE Special Edition)"
+    ],
+    "2.4 GT": [
+      "2.4-liter MIVEC DOHC 4-cylinder engine",
+      "Black roof rails",
+      "Black headliner and pillars",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Genuine leather seating",
+      "4-Way power driver seat",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert"
+    ],
+    "2.0 SE SPECIAL EDITION": [
+      "SE Special Edition badge",
+      "18-inch two-tone alloy wheels",
+      "Power Folding Mirrors",
+      "Side mirror indicators",
+      "Vanity mirrors with illumination",
+      "Combination soft touch seating surfaces"
+    ],
+    "2.0 SE": [
+      "Gloss black and satin silver grille accents",
+      "Heated front seats",
+      "FAST-Key Entry System",
+      "Push button start",
+      "Synthetic leather/suede seats",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert"
+    ],
+    "2.0 LE": [
+      "8.0-inch Smartphone-link Display Audio",
+      "18-inch black painted alloy wheels",
+      "Black side mirrors",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "Black fabric seating surfaces with red stitch",
+      "Apple CarPlay and Android Auto",
+      "SiriusXM with 3-month all access trial",
+      "2x rear USB ports"
+    ],
+    "2.0 ES": [
+      "18-inch two-tone alloy wheels",
+      "Fog lights",
+      "LED Headlights"
+    ],
+    "2.0 S": [
+      "5-passenger seating",
+      "7-inch display audio",
+      "Electric power steering",
+      "Automatic headlights",
+      "Forward Collision Mitigation with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Heated power side mirrors",
+      "Active Stability Control",
+      "Automatic High Beam",
+      "Rear view camera"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2017|honda|hrv",
+  "year": 2017,
+  "make": "Honda",
+  "model": "HR-V",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX",
+    "SE",
+    "Limited",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

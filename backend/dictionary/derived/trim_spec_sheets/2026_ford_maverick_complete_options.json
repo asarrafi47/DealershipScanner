@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_ford_maverick_complete_options",
+  "make": "Ford",
+  "models": [
+    "Maverick",
+    "Maverick"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Lariat": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid drivetrain Parallel hybrid; The top-tier (Lariat) trim adds features to the mid-level trim, including Active"
+      }
+    ],
+    "Tremor": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 8-spd"
+      }
+    ]
+  }
+}

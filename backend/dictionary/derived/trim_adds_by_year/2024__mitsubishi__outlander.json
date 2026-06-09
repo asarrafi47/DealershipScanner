@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2024|mitsubishi|outlander",
+  "year": 2024,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "2024_mitsubishi_outlander",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "ES",
+    "SE",
+    "SEL",
+    "SEL Premium"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds to ES: upgraded convenience and technology content per 2024 EPA trim ladder",
+      "Available Super All-Wheel Control with Drive Mode Selector"
+    ],
+    "SEL": [
+      "Adds to SE: premium seating and driver-assist upgrades",
+      "Available MI-PILOT Assist with adaptive cruise and lane keep",
+      "Available Bose sound system and wireless Apple CarPlay/Android Auto"
+    ],
+    "SEL Premium": [
+      "Featured brochure trim with White Diamond/Black Roof and Saddle Tan leather",
+      "Triple-zone climate, memory seats, and available Head-Up Display",
+      "Seven-passenger seating with 30.6 cu ft cargo behind folded third row"
+    ],
+    "ES": [
+      "2.5L MIVEC DOHC 4-cylinder direct-injection engine",
+      "7-passenger seating capacity",
+      "18-inch alloy wheels",
+      "Forward Collision Mitigation",
+      "Blind Spot Warning with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Rear Automatic Emergency Braking",
+      "Push-button start",
+      "Apple CarPlay and Android Auto",
+      "Front USB ports"
+    ]
+  }
+}

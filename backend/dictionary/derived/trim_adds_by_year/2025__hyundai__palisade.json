@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2025|hyundai|palisade",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Palisade",
+  "ladder_id": "brochure_llm_2025__hyundai__palisade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Calligraphy",
+    "Calligraphy Night Edition",
+    "Limited",
+    "SEL Premium",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "Black Nappa Leather or Beige Nappa Leather interior seating",
+      "20-inch alloy wheels",
+      "Access to Calligraphy-exclusive exterior colors including Robust Emerald"
+    ],
+    "Calligraphy Night Edition": [
+      "Black Premium Combination interior option"
+    ],
+    "Limited": [
+      "Black Leather or Beige Leather interior seating",
+      "20-inch alloy wheels"
+    ],
+    "SEL Premium": [
+      "Black H-Tex or Gray H-Tex interior material",
+      "20-inch alloy wheels"
+    ],
+    "XRT": [
+      "20-inch alloy wheels"
+    ],
+    "SEL": [
+      "Black Cloth or Gray Cloth interior options",
+      "Upgrade path to H-Tex or leather interiors"
+    ],
+    "SE": [
+      "18-inch alloy wheels",
+      "Black Cloth or Gray Cloth cloth interior seating"
+    ]
+  }
+}

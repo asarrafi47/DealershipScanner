@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2024|jeep|grandcherokee",
+  "year": 2024,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Summit",
+    "High Altitude",
+    "Overland",
+    "Trailhawk",
+    "Limited",
+    "Laredo",
+    "Altitude",
+    "Platinum",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

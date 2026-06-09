@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|nissan|nv",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_llm_2016__nissan__nv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "NissanConnect with Navigation and Mobile Apps with 5.8-inch color touchscreen",
+      "Nissan Voice Recognition for audio and navigation",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "SiriusXM Traffic and Travel Link",
+      "Hands-free text messaging assistant",
+      "Streaming audio via Bluetooth wireless technology",
+      "Dual power heated outside mirrors",
+      "Body-color bumpers and outside mirrors",
+      "Chrome grille",
+      "RearView Monitor"
+    ],
+    "S": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with 131 hp and 139 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "11.1-inch front vented disc brakes with 4-wheel ABS",
+      "Vehicle Dynamic Control with Traction Control System",
+      "Dual-stage supplemental front airbags with seat belt sensors",
+      "Driver and passenger seat-mounted side-impact airbags",
+      "Roof-mounted curtain side-impact airbags with rollover sensor",
+      "Tire Pressure Monitoring System",
+      "Nissan Vehicle Immobilizer System",
+      "Remote keyless entry"
+    ]
+  }
+}

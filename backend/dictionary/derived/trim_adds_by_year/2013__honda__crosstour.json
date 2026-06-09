@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|honda|crosstour",
+  "year": 2013,
+  "make": "Honda",
+  "model": "Crosstour",
+  "ladder_id": "brochure_llm_2013__honda__crosstour",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L V-6",
+    "EX V-6",
+    "EX-L",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX-L V-6": [
+      "V-6 engine (19 city/28 highway/22 combined mpg for 4WD)",
+      "Leather-trimmed seats with heated front seats",
+      "Driver's seat 10-way power adjustment with two-position memory and power lumbar support",
+      "Hard Disk Drive navigation system with 16-GB audio memory",
+      "Song By Voice control with navigation"
+    ],
+    "EX V-6": [
+      "V-6 engine (20 city/30 highway/23 combined mpg for 2WD)",
+      "Audio Touch-Screen interface",
+      "Pandora Internet Radio compatibility",
+      "Bluetooth streaming audio"
+    ],
+    "EX-L": [
+      "Driver's seat 10-way power adjustment with two-position memory and power lumbar support",
+      "Leather-trimmed seats with heated front seats",
+      "Hard Disk Drive navigation system with 16-GB audio memory",
+      "Song By Voice control with navigation",
+      "XM Radio with complimentary trial subscription"
+    ],
+    "EX": [
+      "360-Watt AM/FM/6-Disc in-dash audio system with 7 speakers and subwoofer",
+      "Driver's seat 10-way power adjustment with power lumbar support",
+      "Front passenger seat with 4-way power adjustment",
+      "Center console with sliding armrest and storage compartment",
+      "Easy fold-down 60/40 split rear seatback with center armrest",
+      "MP3 and auxiliary input jack",
+      "USB audio interface for digital music players",
+      "Three 12-volt power outlets",
+      "Hidden removable utility box"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|kia|stinger",
+  "year": 2019,
+  "make": "Kia",
+  "model": "Stinger",
+  "ladder_id": "brochure_llm_2019__kia__stinger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "3.3L V6 engine with 365 horsepower and 4.7-second 0-60 time",
+      "8-inch touchscreen with Premium Navigation",
+      "Harman Kardon premium audio surround-sound system with 15 speakers",
+      "LED headlights and rear turn signals",
+      "All-wheel drive capability",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Smart Cruise Control with Stop & GO",
+      "Lane Keeping Assist and Lane Departure Warning",
+      "Driver Attention Warning",
+      "High Beam Assist and Rain Sensing Wipers"
+    ],
+    "Premium": [
+      "2.0L Twin Scroll Turbo 4-cylinder engine with 255 horsepower and 260 lb.-ft. torque",
+      "7-inch touchscreen with UVO eServices",
+      "Leather seat trim with heated front seats",
+      "2-way power-adjustable driver's seat with lumbar support",
+      "8-way power-adjustable front passenger seat",
+      "Dual-zone automatic temperature control",
+      "Push-button start with Smart Key",
+      "Rear-Camera Display",
+      "Front and Rear Park Assist System",
+      "Blind Spot Collision Warning, Lane Change Assist, and Rear Cross Traffic Collision Warning"
+    ]
+  }
+}

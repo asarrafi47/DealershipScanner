@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2019|acura|nsx",
+  "year": 2019,
+  "make": "acura",
+  "model": "nsx",
+  "ladder_id": "brochure_web_2019__acura__nsx",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Type R",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Type R": [
+      "Carbon fiber body panels including front fender, door, and rear wing",
+      "Forged aluminum wheels, 20-inch, dark gray finish",
+      "Brembo carbon-ceramic brake rotors with red calipers",
+      "Exclusive Type R interior trim and badging",
+      "Enhanced aerodynamics with larger front splitter and rear diffuser",
+      "Exclusive Pearl White Multi-Coat or Nouvelle Blue Metallic paint options"
+    ],
+    "Base": [
+      "3.5L twin-turbocharged V6 engine producing 573 horsepower",
+      "9-speed dual-clutch automatic transmission",
+      "All-wheel drive with Super Handling All-Wheel Drive (SH-AWD)",
+      "Power adjustable and heated leather seats with 16-way adjustment",
+      "8-inch infotainment display with Apple CarPlay and Android Auto compatibility",
+      "LED headlights and taillights with Adaptive Driving Beam technology",
+      "Brembo brakes with red calipers and 20-inch forged aluminum wheels",
+      "AcuraWatch safety suite with collision mitigation braking and adaptive cruise control",
+      "Panoramic sunroof with power shade",
+      "Premium ELS surround sound audio system with 16 speakers"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/acura/nsx/"
+}

@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2016|kia|sedona",
+  "year": 2016,
+  "make": "Kia",
+  "model": "Sedona",
+  "ladder_id": "brochure_llm_2016__kia__sedona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Limited",
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Limited": [
+      "Dual sunroof with dual sliding sunshades",
+      "Premium two-tone Nappa leather seat trim for first and second row",
+      "Reclining second-row first-class lounge seats with aviation-style headrests",
+      "Adjustable armrests and footrests on second-row seats",
+      "Driver's memory seat and mirrors system for two drivers",
+      "12-way power-adjustable driver's seat"
+    ],
+    "SX": [
+      "Heated steering wheel"
+    ],
+    "LX": [
+      "Advanced standard safety systems including Electronic Stability Control",
+      "Traction Control System",
+      "Electronic Brake-Force Distribution",
+      "Brake Assist System",
+      "Cornering Brake Control",
+      "Hill-Start Assist Control",
+      "Available Smart Cruise Control",
+      "Available Blind-Spot Detection with Lane-Change Assist",
+      "2015 Top Safety Pick award from IIHS",
+      "NHTSA 5-Star Overall Crash Safety Rating"
+    ],
+    "EX": [
+      "Two-tone Nappa leather seat trim available",
+      "Reclining second-row first-class lounge seats with sliding and adjustability",
+      "Aviation-style contoured headrests with adjustable armrests and footrests"
+    ]
+  }
+}

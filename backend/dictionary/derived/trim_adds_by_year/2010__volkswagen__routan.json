@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|volkswagen|routan",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Routan",
+  "ladder_id": "brochure_web_2010__volkswagen__routan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Routan SEL Premium",
+    "Routan SEL w/Navigation",
+    "Routan SE w/RSE & Navigation",
+    "Routan SE w/RSE",
+    "Routan SE",
+    "Routan S"
+  ],
+  "adds_by_trim": {
+    "Routan SEL Premium": [
+      "Blind Spot Monitoring",
+      "Rear Cross Path Detection backup radar sensors"
+    ],
+    "Routan SEL w/Navigation": [
+      "Navigation system",
+      "Keyless entry with push-button start",
+      "Rain sensing windshield wipers"
+    ],
+    "Routan SE w/RSE & Navigation": [
+      "Rear-seat entertainment system",
+      "Navigation package with keyless entry and rain sensing wipers"
+    ],
+    "Routan SE w/RSE": [
+      "Rear-seat entertainment system"
+    ],
+    "Routan SE": [
+      "Upgraded interior appointments compared to base S model"
+    ],
+    "Routan S": [
+      "3.6-liter Pentastar V-6 engine producing 283 hp and 260 lb-ft torque",
+      "6-speed automatic transmission",
+      "Seven-passenger seating capacity",
+      "Under-floor storage between first and second rows",
+      "Fold-flat second row captain's chairs",
+      "13-15 cup holders throughout interior",
+      "144.4 cubic feet cargo space with rows folded",
+      "European-tuned suspension",
+      "Seven airbags including front, side, and curtain airbags",
+      "ABS, traction control, and electronic stability control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/routan/"
+}

@@ -1,0 +1,28 @@
+{
+  "ladder_id": "cadillac_xt4",
+  "make": "Cadillac",
+  "models": [
+    "XT4"
+  ],
+  "year_min": 2019,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Premium Luxury": [
+      {
+        "label": "Screen Size",
+        "value": "Advanced driver assistance and navigation"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Enhanced luxury interior and comfort features"
+      }
+    ],
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L turbocharged 4-cylinder engine"
+      }
+    ]
+  }
+}

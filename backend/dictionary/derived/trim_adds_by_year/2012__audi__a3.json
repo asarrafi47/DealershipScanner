@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|audi|a3",
+  "year": 2012,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_llm_2012__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A3 Premium Plus TDI",
+    "A3 Premium TDI",
+    "A3 Premium Plus",
+    "A3 Premium"
+  ],
+  "adds_by_trim": {
+    "A3 Premium Plus TDI": [
+      "2.0-liter turbocharged clean diesel engine with 140 hp and 236 lb-ft torque",
+      "Audi S tronic dual-clutch transmission",
+      "FrontTrak front-wheel drive system"
+    ],
+    "A3 Premium TDI": [
+      "2.0-liter turbocharged clean diesel engine with 140 hp and 236 lb-ft torque",
+      "Audi S tronic dual-clutch transmission",
+      "FrontTrak front-wheel drive system"
+    ],
+    "A3 Premium Plus": [
+      "2.0-liter turbocharged TFSI gasoline engine with 200 hp and 207 lb-ft torque",
+      "Available Audi S tronic dual-clutch transmission option",
+      "Available Audi quattro all-wheel drive system"
+    ],
+    "A3 Premium": [
+      "2.0-liter turbocharged TFSI gasoline engine with 200 hp and 207 lb-ft torque",
+      "Available six-speed manual transmission or Audi S tronic dual-clutch transmission",
+      "FrontTrak front-wheel drive system standard"
+    ]
+  }
+}

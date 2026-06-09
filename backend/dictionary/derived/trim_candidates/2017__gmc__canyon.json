@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2017|gmc|canyon",
+  "year": 2017,
+  "make": "GMC",
+  "model": "Canyon",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

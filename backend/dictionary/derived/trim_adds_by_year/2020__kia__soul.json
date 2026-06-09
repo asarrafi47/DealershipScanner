@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|kia|soul",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2020__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT-LINE TURBO",
+    "GT-LINE",
+    "X-LINE EX",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "GT-LINE TURBO": [
+      "Turbocharged engine for increased performance",
+      "18-inch alloy wheels with black spoke design"
+    ],
+    "GT-LINE": [
+      "18-inch alloy wheels"
+    ],
+    "X-LINE EX": [
+      "18-inch alloy wheels with black spoke design"
+    ],
+    "EX": [
+      "17-inch alloy wheels",
+      "Apple CarPlay and Android Auto compatibility"
+    ],
+    "S": [
+      "16-inch alloy wheels"
+    ],
+    "LX": [
+      "16-inch steel wheels",
+      "Standard infotainment system",
+      "Bluetooth wireless technology connectivity",
+      "UVO link with complimentary 1-year subscription",
+      "SiriusXM satellite radio with 3-month trial"
+    ]
+  }
+}

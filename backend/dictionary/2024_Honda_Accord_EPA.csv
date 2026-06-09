@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2024,Honda,Accord,Hybrid Sport/Touring,Hybrid 2.0L I4 (SIDI; Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,46,41,44,,,,,,2.0L I4,
-2024,Honda,Accord,Accord,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.5,29,37,32,,,,,,1.5L I4 Turbo,Turbocharged
-2024,Honda,Accord,Hybrid,Hybrid 2.0L I4 (SIDI; Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,51,44,48,,,,,,2.0L I4,

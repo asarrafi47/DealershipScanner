@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2015,smart,fortwo,coupe,1.0L I3,Automatic (AM5),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,1.0,34,38,36,,,,,,1.0L I3,
-2015,smart,fortwo,cabriolet,1.0L I3,Automatic (AM5),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,1.0,34,38,36,,,,,,1.0L I3,
-2015,smart,fortwo,electric drive convertible,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Two Seaters,,,122,93,107,,,,,,EV Electricity,
-2015,smart,fortwo,electric drive coupe,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Two Seaters,,,122,93,107,,,,,,EV Electricity,

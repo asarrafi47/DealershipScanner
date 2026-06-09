@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|ford|transitconnect",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_2020__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "Active",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 8-speed SelectShift automatic transmission",
+      "Adds 15.8-gallon fuel tank",
+      "Adds 80-amp-hr heavy-duty battery",
+      "Adds EcoMode and EcoCoach technologies",
+      "Adds Auto Start-Stop Technology",
+      "Adds Ford Co-Pilot360 safety technology suite",
+      "Adds AdvanceTrac with Roll Stability Control and Curve Control",
+      "Adds Torque Vectoring Control",
+      "Adds Safety Canopy side-curtain airbags"
+    ],
+    "Active": [
+      "Adds SYNC 3 infotainment system with responsive touchscreen",
+      "Adds voice control functionality",
+      "Adds 2 smart-charging USB ports",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM Traffic & Travel Link (complimentary for 5 years)"
+    ],
+    "XLT": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper warranty coverage",
+      "Adds Includes 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion perforation coverage"
+    ],
+    "Limited": []
+  }
+}

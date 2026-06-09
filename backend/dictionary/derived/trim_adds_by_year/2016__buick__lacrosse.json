@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2016|buick|lacrosse",
+  "year": 2016,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2016__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM II GROUP",
+    "PREMIUM I GROUP",
+    "LEATHER GROUP",
+    "LACROSSE GROUP"
+  ],
+  "adds_by_trim": {
+    "PREMIUM II GROUP": [
+      "Ultra Luxury Package with semi-aniline perforated full-leather seating in Sangria and Tamo Ash wood trim",
+      "Front ventilated leather seats with sueded micro-fiber accents",
+      "Leather-wrapped center console and door armrests",
+      "Power moonroof, oversized",
+      "Driver Confidence Package 2 with advanced safety features"
+    ],
+    "PREMIUM I GROUP": [
+      "8-Way power front passenger seat adjustment",
+      "Heated power mirrors with LED indicators and auto-dimming driver's side",
+      "Rear park assist system",
+      "Memory settings for driver seat and outside mirrors",
+      "E-Z Key passive entry system with push-button start",
+      "Leather-appointed perforated and ventilated front seats",
+      "Heated leather steering wheel",
+      "Power rear sunshade",
+      "Bose audio system",
+      "120-volt power outlet"
+    ],
+    "LEATHER GROUP": [
+      "18-inch 10-spoke aluminum wheels",
+      "Cargo net",
+      "8-Way power front passenger seat adjustment",
+      "Heated power mirrors with LED indicators and auto-dimming driver's side",
+      "Rear park assist system",
+      "Memory settings for driver seat and outside mirrors",
+      "E-Z Key passive entry system with push-button start",
+      "Leather-appointed perforated and ventilated front seats",
+      "Heated leather steering wheel",
+      "Power rear sunshade"
+    ],
+    "LACROSSE GROUP": [
+      "3.6L VVT direct-injection V-6 engine with E85 capability and 304 horsepower",
+      "18-inch 10-spoke aluminum wheels",
+      "Cargo net",
+      "8-Way power front passenger seat adjustment",
+      "Heated power mirrors with LED indicators and auto-dimming driver's side",
+      "Rear park assist system",
+      "Memory settings for driver seat and outside mirrors",
+      "E-Z Key passive entry system with push-button start",
+      "Bose audio system",
+      "Power rear sunshade"
+    ]
+  }
+}

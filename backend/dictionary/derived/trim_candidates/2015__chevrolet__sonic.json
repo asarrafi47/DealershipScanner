@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2015|chevrolet|sonic",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "RS",
+    "LT",
+    "Custom",
+    "LS",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

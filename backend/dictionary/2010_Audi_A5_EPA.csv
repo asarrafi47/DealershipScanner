@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2010,Audi,A5,Cabriolet,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,30,26,,,,,,2.0L I4 Turbo,Turbocharged
-2010,Audi,A5,Cabriolet quattro,2.0L I4,Automatic (S6),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,26,23,,,,,,2.0L I4 Turbo,Turbocharged
-2010,Audi,A5,quattro,2.0L I4,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,30,25,,,,,,2.0L I4 Turbo,Turbocharged
-2010,Audi,A5,quattro,2.0L I4,Automatic (S6),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,21,27,23,,,,,,2.0L I4 Turbo,Turbocharged
-2010,Audi,A5,quattro,3.2L V6,Automatic (S6),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.2,18,27,21,,,,,,3.2L V6 Turbo,Turbocharged

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2022|hyundai|nexo",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Nexo",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Blue",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

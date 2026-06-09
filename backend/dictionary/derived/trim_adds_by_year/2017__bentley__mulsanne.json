@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2017|bentley|mulsanne",
+  "year": 2017,
+  "make": "bentley",
+  "model": "mulsanne",
+  "ladder_id": "brochure_llm_2017__bentley__mulsanne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MULLINER DRIVING SPECIFICATION",
+    "ENTERTAINMENT SPECIFICATION",
+    "COMFORT SPECIFICATION",
+    "PREMIER SPECIFICATION",
+    "The Mulsanne"
+  ],
+  "adds_by_trim": {
+    "MULLINER DRIVING SPECIFICATION": [
+      "21-inch Radiance alloy wheel by Mulliner",
+      "Diamond quilted seats, doors and rear quarter inserts",
+      "Indented headlining",
+      "Knurled finish to organ stops",
+      "Knurled sports gear lever",
+      "Coined finish to interior door handles",
+      "Handcrafted by Bentley Mulliner vertical treadplates",
+      "Drilled alloy sports foot pedals",
+      "Sports tuned suspension and steering"
+    ],
+    "ENTERTAINMENT SPECIFICATION": [
+      "Naim for Bentley premium audio system",
+      "Bentley Theatre rear seat entertainment with twin 10.4-inch electrically-deployed tablets",
+      "Bentley GPS tracking system preparation or full fitment"
+    ],
+    "COMFORT SPECIFICATION": [
+      "Seat ventilation and massage function to front and rear seats",
+      "Two rear headrests with adjustable wings",
+      "Super-soft Alcantara headrest cushions",
+      "Twin loose comfort bolsters",
+      "Personalised embroidery to headrests"
+    ],
+    "PREMIER SPECIFICATION": [
+      "Bright stainless steel door pillar finisher",
+      "Flying B radiator mascot",
+      "Jewel fuel filler cap",
+      "Frosted glass refrigerated bottle cooler with bespoke crystal champagne flutes",
+      "Illuminated cocktail cabinet with bespoke crystal decanters and tumblers by Mulliner",
+      "Curtains to rear cabin in black or ivory",
+      "Veneered media drawer and minor gauges panel",
+      "Remote-controlled garage door opener",
+      "Two city umbrellas"
+    ],
+    "The Mulsanne": [
+      "8-inch high-resolution colour touch-screen with Apple CarPlay support",
+      "Central Multi Media Interface rotary controller with convenience keys",
+      "60GB hard drive with 20GB personal storage, DVD drive, dual SD card readers",
+      "Integrated satellite navigation with seven-digit postcode entry and active traffic information",
+      "Mulsanne audio system with 14 speakers and two subwoofers across six channels",
+      "4G telephone system with Bluetooth wireless connectivity and WiFi Hotspot",
+      "Hand-selected leather to all trimmed surfaces",
+      "Double wishbone front suspension and multi-link rear suspension",
+      "Intelligent driver and front passenger airbags with deactivation",
+      "Three-point seat belts with pyrotechnic pre-tensioners and force limiters"
+    ]
+  }
+}

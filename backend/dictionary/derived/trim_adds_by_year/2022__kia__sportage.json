@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2022|kia|sportage",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_web_2022__kia__sportage",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "X-Pro Prestige",
+    "X-Pro",
+    "X-Line",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "X-Pro Prestige": [
+      "Top trim level with all available premium features"
+    ],
+    "X-Pro": [
+      "Standard all-wheel drive",
+      "Gloss black accents and black badges"
+    ],
+    "X-Line": [
+      "Standard all-wheel drive",
+      "Gloss black accents and black badges"
+    ],
+    "EX": [
+      "Available Premium package with panoramic sunroof and hands-free liftgate"
+    ],
+    "LX": [
+      "2.5-liter naturally aspirated four-cylinder engine producing 187 hp",
+      "Eight-speed automatic transmission",
+      "12.3-inch fully digital touchscreen with navigation",
+      "Apple CarPlay and Android Auto compatibility",
+      "Front automatic emergency braking",
+      "Lane keep assist and lane following assistance",
+      "Automatic high-beams and reverse parking distance warning"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/sportage/"
+}

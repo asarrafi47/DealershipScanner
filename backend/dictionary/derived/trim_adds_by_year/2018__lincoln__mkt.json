@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2018|lincoln|mkt",
+  "year": 2018,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_llm_2018__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RESERVE",
+    "PREMIERE"
+  ],
+  "adds_by_trim": {
+    "RESERVE": [
+      "Twin-turbocharged 3.5-liter V6 with 365 hp and 350 lb-ft torque (vs. 3.7L naturally aspirated)",
+      "3rd-row 50/50 split one-touch PowerFold bench seat with tailgate feature",
+      "BLIS blind spot information system with cross-traffic alert",
+      "Heated steering wheel",
+      "THX II certified audio system with 14 speakers, subwoofer, 700 watts, 14-channel amplifier",
+      "Elite Equipment Group: voice-activated touchscreen navigation with pinch-to-zoom, HD Radio, SiriusXM Traffic and Travel Link with 6-year subscription"
+    ],
+    "PREMIERE": [
+      "3.7-liter Ti-VCT 24-valve V6 with 303 hp and 279 lb-ft torque",
+      "Front-wheel drive or intelligent all-wheel drive",
+      "Lincoln Drive Control with adaptive suspension",
+      "Standard seating for up to 7 passengers with fold-and-tumble bucket seats"
+    ]
+  }
+}

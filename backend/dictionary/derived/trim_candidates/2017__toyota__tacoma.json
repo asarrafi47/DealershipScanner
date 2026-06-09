@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2017|toyota|tacoma",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "Limited",
+    "SR5",
+    "SR",
+    "TRD",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on TRD Sport Adds to or replaces features offered on TRD Off-Road",
+      "Bed Length Bed Length Bed Length",
+      "Long Bed 73.7 in. (Access Cab) \u2022 Short Bed 60.5 in. (Double Cab) \u2022 Short Bed 60.5 in. (Double Cab)",
+      "Short Bed 60.5 in./Long 73.7 in. (Double Cab) Drivetrain Drivetrain",
+      "3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp \u2022 3.5-Liter DOHC V6 direct-injection Atkinson-cycle: 6-speed manual",
+      "3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp @ 6000 rpm; 265 lb.-ft. @ 4600 rpm: 6-speed automatic transmission transmission or 6-speed automatic transmission",
+      "Rear-Wheel Drive or 4WDemand part-time 4WD \u2022 Hill Start Assist Control (HAC)30 (A/T only) \u2022 Hill Start Assist Control (HAC)30 (A/T only)",
+      "Electronically controlled locking rear differential Exterior Features \u2022 V6 Tow Package9",
+      "Hill Start Assist Control (HAC)30 (A/T only)",
+      "Off-Road Performance",
+      "Charcoal grille with polished finish and chrome surround",
+      "Off-Road Performance"
+    ],
+    "SR5": [
+      "Adds to or replaces features offered on SR Adds to or replaces features offered on SR5",
+      "Bed Length Bed Length Bed Length",
+      "Short Bed 60.5 in. (Double Cab) \u2022 Short Bed 60.5 in. (Double Cab) \u2022 Short Bed 60.5 in. (Double Cab)",
+      "Long Bed 73.7 in. (Access Cab) \u2022 Long Bed 73.7 in. (Access Cab and Double Cab) \u2022 Long Bed 73.7 in. (Access Cab and Double Cab)",
+      "Drivetrain Drivetrain Drivetrain",
+      "2.7-Liter DOHC 16-Valve 4-Cylinder with VVT-i; 159 hp @ 5200 rpm; \u2022 2.7-Liter DOHC 16-Valve 4-Cylinder with VVT-i; 159 hp @ 5200 rpm; \u2022 3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp",
+      "3.5-Liter DOHC V6 direct-injection Atkinson-cycle with 278 hp @ 6000 rpm; 265 lb.-ft. @ 4600 rpm: 6-speed automatic transmission \u2022 Rear-Wheel Drive or 4WDemand part-time 4WD",
+      "Rear-Wheel Drive or 4WDemand part-time 4WD \u2022 Hill Start Assist Control (HAC)30 (A/T only) Exterior Features",
+      "Automatic Limited-Slip Differential (Auto LSD)34",
+      "Hill Start Assist Control (HAC)30 (A/T only) \u2022 Gray grille with smoked finish and chrome surround",
+      "Exterior Features \u2022 Charcoal grille with chrome surround \u2022 Color-keyed power outside mirrors with turn signal indicators",
+      "Chrome rear bumper \u2022 Color-keyed overfenders and rear bumper"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

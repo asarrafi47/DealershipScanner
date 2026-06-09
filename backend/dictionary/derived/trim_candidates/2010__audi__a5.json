@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2010|audi|a5",
+  "year": 2010,
+  "make": "Audi",
+  "model": "A5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Sport",
+    "Limited",
+    "LT",
+    "LE",
+    "A5",
+    "S5"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

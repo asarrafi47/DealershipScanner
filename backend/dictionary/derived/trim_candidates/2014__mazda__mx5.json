@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2014|mazda|mx5",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "MX-5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Select",
+    "Sport",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|volvo|s80",
+  "year": 2011,
+  "make": "Volvo",
+  "model": "S80",
+  "ladder_id": "brochure_llm_2011__volvo__s80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S80 T6 AWD",
+    "S80 3.2"
+  ],
+  "adds_by_trim": {
+    "S80 T6 AWD": [
+      "3.0-liter turbocharged six-cylinder engine with 300 hp and 325 ft-lbs torque",
+      "Twin-scroll turbo for enhanced performance and acceleration",
+      "0–60 mph in 6.3 seconds",
+      "All-wheel drive system with electronic control",
+      "16/24 mpg city/highway fuel consumption"
+    ],
+    "S80 3.2": [
+      "3.2-liter naturally aspirated six-cylinder engine with 240 hp and 236 ft-lbs torque",
+      "Front-wheel drive configuration",
+      "0–60 mph in 7.4 seconds",
+      "18/27 mpg city/highway fuel consumption",
+      "Six-speed Geartronic automatic transmission with manual shift capability",
+      "Power-assisted hydraulic rack and pinion steering with tilt and telescopic column",
+      "Dynamic Stability and Traction Control (DSTC)",
+      "Anti-lock disc brakes with multiple assistance systems (ABS, HBA, RAB, FBS, EBD)"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|hyundai|elantra",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2011__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "17-inch alloy wheels with P215/45R17 tires",
+      "Power tilt-and-slide sunroof with one-touch up driver window",
+      "Leather seating surfaces",
+      "Heated front and rear seats",
+      "Black chrome grille",
+      "Front fog lights",
+      "Outside mirrors with integrated turn signal indicators",
+      "Leather-wrapped steering wheel and shift knob",
+      "Proximity key entry with electronic push-button start",
+      "Limited Badge"
+    ],
+    "GLS": [
+      "1.8L Nu MPI 4-cylinder engine with 148 hp",
+      "6-speed manual or automatic transmission options",
+      "15-inch steel wheels with full wheelcovers and P195/65R15 tires",
+      "6-airbag safety system with dual front and side-curtain airbags",
+      "Vehicle Stability Management and Electronic Stability Control with Traction Control",
+      "AM/FM/XM/CD/MP3 audio system with 6 speakers",
+      "iPod/USB auxiliary input jacks",
+      "Cruise control and tilt steering wheel",
+      "Power door locks and power windows with driver auto-down",
+      "Dual heated power outside mirrors"
+    ]
+  }
+}

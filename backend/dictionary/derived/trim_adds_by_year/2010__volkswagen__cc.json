@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2010|volkswagen|cc",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "CC",
+  "ladder_id": "brochure_llm_2010__volkswagen__cc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "VR6 4Motion",
+    "VR6 DSG",
+    "Sport VR6",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "VR6 4Motion": [
+      "All-wheel drive 4MOTION system"
+    ],
+    "VR6 DSG": [
+      "VR6 engine with DSG dual-clutch automatic transmission"
+    ],
+    "Sport VR6": [
+      "VR6 engine",
+      "Sport-tuned suspension and styling"
+    ],
+    "Sport": [
+      "Touchscreen navigation system with 30GB hard drive and rearview camera",
+      "Dynaudio premium sound system with 10 speakers, 4 tweeters, 2 midrange, 4 woofers, 600-watt amp",
+      "Digital sound processor technology",
+      "Four Autobahn-tested wheel styles available",
+      "MDI with iPod cable for touchscreen Premium VIII radio integration",
+      "iPod playlist, album, and song title navigation capability"
+    ]
+  }
+}

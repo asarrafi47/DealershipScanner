@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2016|chevrolet|ss",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "SS",
+  "ladder_id": "brochure_2016__chevrolet__ss",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SS",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds High-Intensity Discharge headlamps with automatic exterior lamp control",
+      "Adds LED daytime running lamps",
+      "Adds 5 dual-stage frontal air bags with thorax side-impact and head-curtain side-impact protection",
+      "Adds Forward Collision Alert",
+      "Adds Lane Departure Warning",
+      "Adds Rear Cross Traffic Alert",
+      "Adds OnStar Guidance Plan with Automatic Crash Response and Turn-by-Turn Navigation",
+      "Adds Keyless Access with passive entry and push-button start",
+      "Adds leather-wrapped steering wheel with cruise and audio controls",
+      "Adds power sunroof with express-open"
+    ],
+    "Limited": [
+      "Adds Color Head-Up Display with vehicle speed, selected gear, audio information, and navigation data",
+      "Adds auto-dimming rearview mirror"
+    ],
+    "SS": [
+      "Adds power sunroof with express-open functionality",
+      "Adds remote vehicle starter system",
+      "Adds transmission oil cooler"
+    ]
+  }
+}

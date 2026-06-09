@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|mazda|cx9",
+  "year": 2020,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2020__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA CX-9 SIGNATURE",
+    "MAZDA CX-9 GRAND TOURING",
+    "MAZDA CX-9 TOURING",
+    "MAZDA CX-9 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA CX-9 SPORT": [
+      "LED headlights with auto on/off and LED daytime running lights",
+      "7-inch full-color touchscreen with MAZDA CONNECT infotainment system",
+      "Bluetooth hands-free phone and audio streaming",
+      "Advanced dual front airbags with passenger-weight sensors",
+      "Front side-impact airbags and side-impact air curtains",
+      "Blind Spot Monitoring and Rear Cross Traffic Alert",
+      "Advanced Smart City Brake Support with pedestrian detection",
+      "Lane Departure Warning and Lane-keep Assist",
+      "Mazda Radar Cruise Control with Stop & Go",
+      "18-inch alloy wheels with Gray Metallic finish"
+    ],
+    "MAZDA CX-9 TOURING": [
+      "9-inch full-color touchscreen display",
+      "Apple CarPlay and Android Auto integration",
+      "Mazda Advanced Keyless Entry System",
+      "Power-adjustable front passenger seat",
+      "2nd-row bench seat with power slide-and-tilt feature",
+      "2nd-row center folding armrest with integrated height adjustment",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Dual illuminated visor vanity mirrors"
+    ],
+    "MAZDA CX-9 GRAND TOURING": [
+      "12-speaker Bose premium audio system",
+      "SiriusXM Satellite Radio with 3-month trial and Traffic and Travel Link services",
+      "Navigation System with windshield-projected Active Driving Display",
+      "7-inch LCD Meter Display with LED interior illumination",
+      "20-inch alloy wheels with Brilliant Silver finish and P255/50 R20 tires",
+      "360-degree View Monitor with front and rear parking sensors",
+      "Hands-free Rear Power Liftgate",
+      "Heated steering wheel and ventilated front seats",
+      "2nd-row heated captain's chairs with armrest and center walk-through",
+      "Adaptive Front-lighting System with LED fog lights"
+    ],
+    "MAZDA CX-9 SIGNATURE": [
+      "Genuine Santos Rosewood interior trim with color-matched accents",
+      "Nappa leather-trimmed seats in Deep Chestnut or Parchment",
+      "Leather-wrapped steering wheel with unique stitching",
+      "LED shifter and signature grille accent lighting",
+      "20-inch alloy wheels with Dark Silver finish",
+      "i-ACTIV AWD with Off-road Traction Assist and Signature AWD badge"
+    ]
+  }
+}

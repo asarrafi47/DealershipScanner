@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|bmw|5series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "bmw_5_series",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "r information can be obtained from your authorized BMW center or bmwusa.com.",
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is u nder license. iPhone, iPod and iPad are registered trademarks of",
+      "ylinder | \uea04/\uea04 | \uea04/\uea04 | \uea06/\uea04 | \uea06/\uea04 | \uea08/\uea04 | \uea08/\uea04 | \uea06/\uea04 | \uea06/\uea04 | \uea06/\uea04",
+      "\uea01\uea09\uea09\uea07 | \uea02\uea09\uea07\uea09 | \uea02\uea09\uea07\uea09 | \uea04\uea03\uea09\uea05 | \uea04\uea03\uea09\uea05 | \uea02\uea09\uea09\uea03 | \uea02\uea09\uea09\uea03 | \uea02\uea09\uea07\uea09",
+      "\uea05\uea0a\uea0a\uea0a \u2013 \uea06\uea05\uea0a\uea0a | \uea05\uea08\uea0a\uea0a \u2013 \uea06\uea0a\uea0a\uea0a | \uea05\uea08\uea0a\uea0a | \uea05\uea05\uea0a\uea0a \u2013 \uea06\uea0a\uea0a\uea0a | \uea05\uea05\uea0a\uea0a \u2013 \uea06\uea0a\uea0a\uea0a | \uea04\uea0a\uea0a\uea0a\uea03 | \uea04\uea0a\uea0a\uea0a\uea03 | \uea05\uea08\uea0a\uea0a \u2013 \uea06\uea0a\uea0a\uea0a",
+      "\uea03.\uea02\uea03 | \uea03.\uea0a\uea08 | \uea03.\uea0a\uea08 | \uea02.\uea08\uea01 | \uea02.\uea08\uea01 | \uea02.\uea06\uea05 | \uea02.\uea06\uea05 | \uea02.\uea09\uea03",
+      "\uea01\uea07 x \uea08.\uea0a | \uea01\uea08 x \uea08.\uea0a | \uea01\uea08 x \uea08.\uea0a | \uea01\uea08 x \uea08.\uea0a | \uea01\uea08 x \uea08.\uea0a | \uea01\uea08 x \uea08.\uea0a | \uea01\uea08 x \uea08.\uea0a | \uea01\uea08 x \uea08.\uea0a",
+      "\uea02\uea02\uea05/\uea05\uea05 | \uea02\uea04\uea05/\uea04\uea05 | \uea02\uea04\uea05/\uea04\uea05 | \uea02\uea04\uea05/\uea04\uea05 | \uea02\uea04\uea05/\uea04\uea05 | \uea02\uea04\uea05/\uea04\uea05 | \uea02\uea04\uea05/\uea04\uea05 | \uea02\uea04\uea05/\uea04\uea05",
+      "transmission: \uea05\uea0a.\uea06/\uea04\uea09.\uea04.",
+      "transmission: \uea04.\uea01\uea01/\uea02.\uea03\uea02/\uea01.\uea05\uea04/ \uea01.\uea01\uea08/\uea01.\uea0a\uea0a/\uea0a.\uea08\uea05/\uea03.\uea07\uea03. Final drive ratio: \uea03.\uea02\uea03.",
+      "results may vary, depending on specification of vehicle;",
+      "driving conditions; actual mileage may be lower."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 12.0,
+    "per_trim_add_counts": {
+      "Na": 12
+    }
+  }
+}

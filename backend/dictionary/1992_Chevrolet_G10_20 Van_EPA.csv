@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1992,Chevrolet,G10/20 Van,2WD,4.3L V6 ((FFS) (SPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,16,,,,,,4.3L V6,
-1992,Chevrolet,G10/20 Van,2WD,5.0L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.0,13,17,14,,,,,,5.0L V8,
-1992,Chevrolet,G10/20 Van,2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,13,17,14,,,,,,5.7L V8,
-1992,Chevrolet,G10/20 Van,2WD,Diesel 6.2L V8 ((NO-CAT)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Vans,8,6.2,15,22,18,,,,,,6.2L V8,
-1992,Chevrolet,G10/20 Van,G10/20 Sport Van 2WD,4.3L V6 ((FFS) (SPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,14,17,15,,,,,,4.3L V6,
-1992,Chevrolet,G10/20 Van,G10/20 Sport Van 2WD,5.0L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.0,12,16,13,,,,,,5.0L V8,
-1992,Chevrolet,G10/20 Van,G10/20 Sport Van 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,11,16,13,,,,,,5.7L V8,
-1992,Chevrolet,G10/20 Van,G10/20 Sport Van 2WD,Diesel 6.2L V8 ((NO-CAT)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Vans,8,6.2,14,18,16,,,,,,6.2L V8,

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2024|subaru|brz",
+  "year": 2024,
+  "make": "Subaru",
+  "model": "BRZ",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base",
+    "Platinum"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

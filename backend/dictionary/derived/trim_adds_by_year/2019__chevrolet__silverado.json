@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2019|chevrolet|silverado",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2019__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HIGH COUNTRY",
+    "LTZ",
+    "LT TRAIL BOSS",
+    "RST",
+    "LT",
+    "CUSTOM TRAIL BOSS",
+    "CUSTOM",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "HIGH COUNTRY": [
+      "6.2L EcoTec3 V8 engine option with 460 hp and 383 lb-ft torque",
+      "3.0L Duramax turbo-diesel engine option available"
+    ],
+    "LTZ": [
+      "6.2L EcoTec3 V8 engine option with 460 hp and 383 lb-ft torque",
+      "3.0L Duramax turbo-diesel engine option available",
+      "5.3L EcoTec3 V8 with Dynamic Fuel Management as standard engine"
+    ],
+    "LT TRAIL BOSS": [
+      "5.3L EcoTec3 V8 with Dynamic Fuel Management as standard engine",
+      "Trail Boss-specific off-road capability and styling"
+    ],
+    "RST": [
+      "2.7L Turbo engine as standard option",
+      "5.3L EcoTec3 V8 with Dynamic Fuel Management available",
+      "3.0L Duramax turbo-diesel engine option available"
+    ],
+    "LT": [
+      "2.7L Turbo engine as standard option",
+      "5.3L EcoTec3 V8 with Dynamic Fuel Management available",
+      "3.0L Duramax turbo-diesel engine option available"
+    ],
+    "CUSTOM TRAIL BOSS": [
+      "5.3L EcoTec3 V8 engine option",
+      "Trail Boss-specific off-road capability and styling"
+    ],
+    "CUSTOM": [
+      "5.3L EcoTec3 V8 engine option available"
+    ],
+    "WT": [
+      "4.3L EcoTec3 V6 standard engine",
+      "5.3L EcoTec3 V8 engine option available",
+      "4-wheel antilock disc brakes with Duralife rotors",
+      "StabiliTrak Electronic Stability Control with Proactive Roll Avoidance",
+      "Rear vision camera",
+      "Bluetooth phone connectivity and wireless audio streaming",
+      "Rear seat air vents",
+      "12 fixed cargo tie-downs rated 500 lbs per corner"
+    ]
+  }
+}

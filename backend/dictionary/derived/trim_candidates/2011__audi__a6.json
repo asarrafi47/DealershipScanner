@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2011|audi|a6",
+  "year": 2011,
+  "make": "Audi",
+  "model": "A6",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "Limited",
+    "Sport",
+    "A6",
+    "S6"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

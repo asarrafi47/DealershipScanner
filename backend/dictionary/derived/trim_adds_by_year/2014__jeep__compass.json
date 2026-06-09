@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2014|jeep|compass",
+  "year": 2014,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_web_2014__jeep__compass",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Trailhawk",
+    "Limited",
+    "Latitude Lux",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Trailhawk": [
+      "1.0-inch lift over other trims",
+      "Selec-Terrain traction management system",
+      "Active Drive Low 4×4 system",
+      "Hill descent control"
+    ],
+    "Limited": [
+      "Pricing $150 more than Latitude Lux, positioned above it in the lineup"
+    ],
+    "Latitude Lux": [
+      "Limited availability variant of Latitude trim"
+    ],
+    "Latitude": [
+      "Standard heated front seats",
+      "Heated steering wheel",
+      "Remote start capability"
+    ],
+    "Sport": [
+      "2.0-liter turbocharged inline-four engine with 200 hp and 221 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Standard 4WD",
+      "10.1-inch central touchscreen",
+      "Apple CarPlay and Android Auto",
+      "Voice-activated audio",
+      "Remote start via Jeep Connect smartphone app",
+      "Six-speaker audio system",
+      "7.0-inch gauge cluster screen",
+      "Automatic emergency braking, blind-spot monitoring, automatic headlights"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jeep/compass/"
+}

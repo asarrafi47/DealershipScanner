@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2022|gmc|acadia",
+  "year": 2022,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_web_2022__gmc__acadia",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "22-inch wheels",
+      "Silver exterior accents",
+      "Trim-specific grille",
+      "Animated greeting lights",
+      "Quilted door surfaces",
+      "Heated and ventilated front seats",
+      "Available second-row heated seats",
+      "Available 16-speaker Bose stereo system"
+    ],
+    "AT4": [
+      "All-terrain tires",
+      "Dual-clutch AWD system",
+      "Off-road tuned suspension",
+      "1.0-inch lift",
+      "Red tow hooks",
+      "Forest Storm interior with Mahogany stitching",
+      "18-inch gloss-black wheels",
+      "Unique interior design details"
+    ],
+    "Elevation": [
+      "LED headlights",
+      "18-inch wheels with all-season tires",
+      "Hands-free liftgate",
+      "15.0-inch vertical infotainment touchscreen",
+      "11.0-inch fully digital instrument cluster",
+      "Google built-in apps with Android Auto and Apple CarPlay",
+      "2.5-liter turbocharged engine with 328 hp and 326 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Automatic emergency braking and pedestrian detection",
+      "Rear cross-traffic braking and blind zone steering assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/acadia/"
+}

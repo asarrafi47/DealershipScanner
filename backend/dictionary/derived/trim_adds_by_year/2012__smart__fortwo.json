@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2012|smart|fortwo",
+  "year": 2012,
+  "make": "Smart",
+  "model": "Fortwo",
+  "ladder_id": "brochure_llm_2012__smart__fortwo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "passion",
+    "pure"
+  ],
+  "adds_by_trim": {
+    "passion": [
+      "Styled exterior trim and badging distinguishing passion model",
+      "Enhanced interior appointments and cabin finishes"
+    ],
+    "pure": [
+      "3-cylinder 70 hp engine with automated manual 5-speed transmission",
+      "ESP® dynamic stability control with hill-start assist and ABS",
+      "155/60 R15 front and 175/55 R15 rear tires",
+      "7.8–12 cubic feet expandable luggage compartment",
+      "Multipoint fuel injection with electronic accelerator",
+      "3-way catalytic converter exhaust gas purification"
+    ]
+  }
+}

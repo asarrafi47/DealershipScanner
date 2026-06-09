@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2014|rollsroyce|phantom",
+  "year": 2014,
+  "make": "Rolls Royce",
+  "model": "Phantom",
+  "ladder_id": "brochure_2014__rollsroyce__phantom",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes V12 engine with 453 bhp and 720 Nm torque",
+      "Adds Features roofline with understated elegance design"
+    ],
+    "Limited": [
+      "Adds optional visible chrome exhaust",
+      "Adds brushed steel bonnet option to emphasise sleek design",
+      "Adds wheel centre painting to match exterior colour"
+    ]
+  }
+}

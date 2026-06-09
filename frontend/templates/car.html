@@ -6,10 +6,26 @@
     <title>{{ car.title }} — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
+    {% if dealer_map and dealer_map.has_pin %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
+    {% endif %}
 </head>
-<body class="car-detail-page{% if car_embed %} car-embed{% endif %}" data-car-id="{{ car.id }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
+<body class="car-detail-page{% if car_embed %} car-embed{% endif %}{% if scan_lab_mode %} scan-lab-vdp{% endif %}" data-car-id="{{ car.id }}"{% if logged_in_user or scan_lab_mode %} data-logged-in="1"{% endif %}>
 
     <div class="page">
+
+        {% if scan_lab_mode %}
+        <div class="scan-lab-vdp-banner">
+            <span>Scan lab (dev)</span>
+            <a href="{{ scan_lab_back_url or url_for('dev.scan_lab_listings') }}">← Back to results</a>
+            {% if admin_username is defined and admin_username %}
+            <span class="scan-lab-vdp-banner-user">Signed in as {{ admin_username }}</span>
+            {% elif logged_in_user %}
+            <span class="scan-lab-vdp-banner-user">Signed in as {{ logged_in_user }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
 
         {% set nav_active = "listings" %}
         {% from '_icons.html' import icon %}
@@ -117,8 +133,11 @@
             {% set listing_link_is_vdp = listing_vdp_url and car.dealer_url and listing_vdp_url.rstrip('/') != car.dealer_url.rstrip('/') %}
             {% set show_premium_features = has_paid_access or (logged_in and not billing_stripe_enabled) %}
             {% set show_options_tab = logged_in or has_paid_access %}
-            {% set show_ask_tab = true %}
+            {% set show_ask_tab = show_premium_features %}
             {% set has_pricing_insights = market_intel %}
+            {% set car_is_electrified = car.fuel_type in ['Electric', 'Plug-in Hybrid', 'Plug-In Hybrid', 'EV'] %}
+            {% set show_ev_battery = car_is_electrified and show_premium_features %}
+            {% set show_ev_battery_upsell = car_is_electrified and billing_stripe_enabled and not show_premium_features %}
 
             <div class="car-detail-hero">
                 {# Gallery — JSON in script tag avoids broken data-gallery attributes #}
@@ -150,6 +169,18 @@
 
                 <div class="car-detail-info car-detail-info--hero">
                     <p class="eyebrow car-detail-dealer-eyebrow">{{ car.dealer_name }}</p>
+                    {% set dealer_rep_rating = car.dealer_rating if car.dealer_rating is defined else (dealer_info.google_rating if dealer_info and dealer_info.google_rating is defined else none) %}
+                    {% set dealer_rep_reviews = car.dealer_reviews if car.dealer_reviews is defined else (dealer_info.google_review_count if dealer_info and dealer_info.google_review_count is defined else none) %}
+                    {% if not dealer_map %}
+                    <div id="dealer-reputation-block" class="dealer-reputation-block"
+                        {% if dealer_rep_rating is none %}hidden aria-hidden="true"{% endif %}
+                        {% if dealer_rep_rating is not none %}data-dealer-rating="{{ dealer_rep_rating }}"{% endif %}
+                        {% if dealer_rep_reviews is not none %}data-dealer-reviews="{{ dealer_rep_reviews }}"{% endif %}>
+                        <span class="reputation-stars" aria-hidden="true">★★★★★</span>
+                        <span id="dealer-review-count">(Loading reviews...)</span>
+                        <div id="dealer-trust-badges"></div>
+                    </div>
+                    {% endif %}
                     <h1 class="car-detail-title">{{ car.title }}</h1>
                     {% if (car.trim and car.trim != '—') or (car.mileage is not none and car.mileage != '') %}
                     <p class="car-detail-hero-meta">
@@ -210,6 +241,80 @@
                         </a>
                         {% endif %}
                     </div>
+                    {% if car.price and car.price > 0 %}
+                    <div class="car-finance-estimate" id="car-finance-calculator" data-vehicle-price="{{ car.price | int }}">
+                        <div class="car-finance-estimate-card">
+                            <div class="car-finance-estimate-hero">
+                                <p class="car-finance-monthly-label">Estimated payment</p>
+                                <p class="car-finance-monthly-display">$<span id="display-monthly-payment">--</span><span class="car-finance-monthly-suffix">/mo</span></p>
+                            </div>
+                            <details class="car-finance-estimate-details">
+                                <summary class="car-finance-customize-trigger">
+                                    <span class="car-finance-customize-trigger__icon">{{ icon('chart', 20) }}</span>
+                                    <span class="car-finance-customize-trigger__copy">
+                                        <span class="car-finance-customize-trigger__title">Customize payment</span>
+                                        <span class="car-finance-customize-trigger__hint">Down payment · loan term · trade-in · credit tier</span>
+                                    </span>
+                                    <span class="car-finance-customize-trigger__chevron">{{ icon('chevron-right', 18) }}</span>
+                                </summary>
+                                <div class="car-finance-estimate-panel-wrap">
+                                <div class="car-finance-estimate-panel">
+                                <div class="car-finance-field">
+                                    <label class="car-finance-label" for="calc-down-payment">Down Payment</label>
+                                    <input type="number" id="calc-down-payment" class="car-finance-input" value="2000" min="0" max="{{ car.price | int }}" step="100" inputmode="numeric">
+                                </div>
+                                <div class="car-finance-trade-section">
+                                    <span class="car-finance-label" id="trade-in-toggle-label">Are you trading in a vehicle?</span>
+                                    <div class="car-finance-toggle-group" role="group" aria-labelledby="trade-in-toggle-label">
+                                        <button type="button" class="car-finance-toggle-btn car-finance-toggle-btn--active" id="trade-in-toggle-no" data-trade-toggle="no" aria-pressed="true">No</button>
+                                        <button type="button" class="car-finance-toggle-btn" id="trade-in-toggle-yes" data-trade-toggle="yes" aria-pressed="false">Yes</button>
+                                    </div>
+                                    <div id="trade-in-inputs-panel" class="car-finance-trade-panel" hidden>
+                                        <div class="car-finance-field">
+                                            <label class="car-finance-label" for="trade-vehicle-condition">Estimated Value Method</label>
+                                            <select id="trade-vehicle-condition" class="car-finance-select">
+                                                <option value="clean">Clean (No accidents, light wear)</option>
+                                                <option value="fair" selected>Fair (Minor dents/scratches)</option>
+                                                <option value="rough">Rough (Mechanical or body issues)</option>
+                                            </select>
+                                        </div>
+                                        <div class="car-finance-field">
+                                            <label class="car-finance-label" for="calc-trade-value">Estimated Trade-In Value</label>
+                                            <input type="number" id="calc-trade-value" class="car-finance-input" value="0" min="0" max="{{ car.price | int }}" step="100" inputmode="numeric" placeholder="Enter estimated value">
+                                        </div>
+                                        <div class="car-finance-field car-finance-field--checkbox">
+                                            <label class="car-finance-checkbox-label">
+                                                <input type="checkbox" id="trade-high-demand-bonus" class="car-finance-checkbox">
+                                                <span>Add $1,000 for high-demand vehicle class (SUV/Truck)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="car-finance-field">
+                                    <label class="car-finance-label" for="calc-credit-tier">Credit Tier</label>
+                                    <select id="calc-credit-tier" class="car-finance-select">
+                                        <option value="excellent">Excellent (750+)</option>
+                                        <option value="good" selected>Good (700–749)</option>
+                                        <option value="fair">Fair (650–699)</option>
+                                        <option value="subprime">Subprime (&lt;650)</option>
+                                    </select>
+                                </div>
+                                <div class="car-finance-field">
+                                    <label class="car-finance-label" for="calc-term">Loan Term</label>
+                                    <select id="calc-term" class="car-finance-select">
+                                        <option value="36">36 Months</option>
+                                        <option value="48">48 Months</option>
+                                        <option value="60" selected>60 Months</option>
+                                        <option value="72">72 Months</option>
+                                    </select>
+                                </div>
+                                <p class="car-finance-disclaimer">Estimates include estimated local taxes &amp; fees. Actual terms vary by lender.</p>
+                                </div>
+                                </div>
+                        </details>
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="car-hero-actions">
                         {% if dealership_view_url %}
                         <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="car-hero-link car-hero-link--dealer">
@@ -249,6 +354,38 @@
 
                 <div class="car-vdp-panels">
                     <section class="car-vdp-panel car-vdp-panel--active" id="car-panel-overview" role="tabpanel" aria-labelledby="car-tab-overview" data-panel="overview">
+                        <div id="negotiation-radar-widget"
+                            class="negotiation-radar-widget"
+                            data-created-at="{{ car.created_at or car.first_seen_at or car.scraped_at or '' }}"
+                            data-price-history='{{ car.price_history_json | default("[]", true) | tojson }}'
+                            role="region"
+                            aria-label="Negotiation leverage tracker">
+                            <h4>Negotiation Leverage Tracker</h4>
+                            <p class="days-on-lot-text">Days on Market: <span id="days-count">--</span> Days</p>
+                            <div id="negotiation-badge-container"></div>
+                            <div class="price-history-timeline" id="history-timeline-list">
+                                <h5>Price Adjustment History</h5>
+                            </div>
+                        </div>
+
+                        <div id="market-velocity-card"
+                            class="market-velocity-card"
+                            data-car-type="{{ car.body_style | lower if car.body_style else 'sedan' }}"
+                            data-car-brand="{{ car.make | lower }}"
+                            role="region"
+                            aria-label="Market turnaround velocity">
+                            <h4>Market Turnaround Velocity</h4>
+                            <p class="market-velocity-summary">Predictive Local Turnaround: <span id="velocity-days-projection">--</span> Days</p>
+                            <div class="velocity-heatmap-track" aria-hidden="true">
+                                <div id="velocity-marker"></div>
+                            </div>
+                            <div class="velocity-labels">
+                                <span>Slow Move (Anchor)</span>
+                                <span>Average Turn</span>
+                                <span>High Velocity (Hot)</span>
+                            </div>
+                        </div>
+
                         {% if has_pricing_insights %}
                         <div class="car-pricing-insights" role="region" aria-label="Pricing insights">
                             <h2 class="car-vdp-panel-title">Pricing insights</h2>
@@ -258,7 +395,7 @@
                                 <p class="car-market-line">
                                     <span class="car-market-label">Similar listings avg.</span>
                                     <strong>{{ market_intel.avg_price_display }}</strong>
-                                    <span class="car-market-samples">({{ market_intel.sample_count }} nearby)</span>
+                                    <span class="car-market-samples">({{ market_intel.sample_count }} similar listings)</span>
                                 </p>
                                 <p class="car-market-line">
                                     <span class="car-market-label">This listing</span>
@@ -272,31 +409,51 @@
                         </div>
                         {% endif %}
 
-                        {% if not has_pricing_insights and not dealer_info %}
+                        {% if not has_pricing_insights and not dealer_map %}
                         <p class="car-vdp-panel-lead">Use the <strong>Specs</strong> tab for the full specification sheet{% if show_options_tab %}, or <strong>Options</strong> for factory equipment{% endif %}.</p>
                         {% endif %}
 
-                        {% if dealer_info %}
+                        {% if dealer_map %}
                         <div class="car-dealer-card car-dealer-card--inline">
-                            <h3 class="dealer-card-heading">Dealership</h3>
-                            <p class="dealer-card-name">{{ dealer_info.name }}</p>
-                            {% if dealer_info.street_address %}
-                            <p class="dealer-card-address">{{ dealer_info.street_address }}</p>
+                            <h3 class="dealer-card-heading">Dealership location</h3>
+                            <p class="dealer-card-name">{{ dealer_map.name }}</p>
+                            <div id="dealer-reputation-block" class="dealer-reputation-block dealer-reputation-block--card"
+                                {% if dealer_rep_rating is none %}hidden aria-hidden="true"{% endif %}
+                                {% if dealer_rep_rating is not none %}data-dealer-rating="{{ dealer_rep_rating }}"{% endif %}
+                                {% if dealer_rep_reviews is not none %}data-dealer-reviews="{{ dealer_rep_reviews }}"{% endif %}>
+                                <span class="reputation-stars" aria-hidden="true">★★★★★</span>
+                                <span id="dealer-review-count">(Loading reviews...)</span>
+                                <div id="dealer-trust-badges"></div>
+                            </div>
+                            {% if dealer_map.street_address %}
+                            <p class="dealer-card-address">{{ dealer_map.street_address }}</p>
                             {% endif %}
-                            {% if dealer_info.city or dealer_info.state %}
-                            <p class="dealer-card-location">{{ dealer_info.city }}{% if dealer_info.city and dealer_info.state %}, {% endif %}{{ dealer_info.state }}{% if dealer_info.zip_code %} {{ dealer_info.zip_code }}{% endif %}</p>
+                            {% if dealer_map.city or dealer_map.state or dealer_map.zip_code %}
+                            <p class="dealer-card-location">{{ dealer_map.city }}{% if dealer_map.city and dealer_map.state %}, {% endif %}{{ dealer_map.state }}{% if dealer_map.zip_code %} {{ dealer_map.zip_code }}{% endif %}</p>
+                            {% elif dealer_map.address_line and not dealer_map.street_address %}
+                            <p class="dealer-card-location">{{ dealer_map.address_line }}</p>
                             {% endif %}
-                            {% set dealer_site = dealer_info.dealer_website_url or dealer_info.website_url %}
-                            {% if dealer_site %}
-                            <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit dealership website</a>
+                            {% if dealer_map.has_pin %}
+                            <div id="car-dealer-map" class="car-dealer-map" role="application" aria-label="Dealership map"></div>
+                            <script type="application/json" id="car-dealer-map-json" nonce="{{ csp_nonce }}">{{ dealer_map | tojson }}</script>
                             {% endif %}
+                            <p class="car-dealer-map-actions">
+                                <a href="{{ dealer_map.google_maps_url }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link dealer-card-link--maps">Open in Google Maps</a>
+                                {% set dealer_site = (dealer_info.dealer_website_url or dealer_info.website_url) if dealer_info else none %}
+                                {% if dealer_site %}
+                                <span class="car-dealer-map-actions-sep" aria-hidden="true">·</span>
+                                <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit website</a>
+                                {% endif %}
+                            </p>
                         </div>
                         {% endif %}
                     </section>
 
                     <section class="car-vdp-panel car-vdp-panel--specs" id="car-panel-specs" role="tabpanel" aria-labelledby="car-tab-specs" data-panel="specs" hidden>
-                        {% set show_trim_ladder = show_premium_features and trim_ladder %}
-                        {% set show_trim_ladder_upsell = billing_stripe_enabled and not show_premium_features %}
+                        {% set car_model_year = (car.year | int) if car.year else 0 %}
+                        {% set trim_ladder_year_ok = (not car_model_year) or car_model_year >= 2010 %}
+                        {% set show_trim_ladder = show_premium_features and trim_ladder and trim_ladder_year_ok %}
+                        {% set show_trim_ladder_upsell = billing_stripe_enabled and not show_premium_features and trim_ladder_year_ok %}
                         <div class="car-specs-split{% if not show_trim_ladder and not show_trim_ladder_upsell %} car-specs-split--single{% endif %}">
                         <div class="car-specs-split__col car-specs-split__col--specs">
                         <h2 class="car-vdp-panel-title">Full specifications</h2>
@@ -368,6 +525,131 @@
                         </div>
                         {% endif %}
                         </div>
+
+                        {% if show_ev_battery %}
+                        <div id="ev-battery-intelligence-block"
+                            data-factory-range="{{ car.factory_range if car.factory_range else '' }}"
+                            data-mileage="{{ car.mileage if car.mileage else 0 }}"
+                            data-year="{{ car.year }}"
+                            data-car-make="{{ car.make | lower }}">
+                            <p class="ev-battery-metric">
+                                Estimated Battery State of Health (SoH):
+                                <span id="display-battery-health">--</span>%
+                            </p>
+                            <p class="ev-battery-range-row">
+                                Real-World Max Range:
+                                <span id="display-real-world-range">--</span> miles /
+                                <span class="factory-range-muted">orig. <span id="display-factory-range">{% if car.factory_range %}{{ car.factory_range }} mi{% else %}—{% endif %}</span></span>
+                            </p>
+                            <div class="battery-gauge-bar"><div id="battery-gauge-fill"></div></div>
+                        </div>
+                        {% elif show_ev_battery_upsell %}
+                        <div class="ev-battery-upsell car-premium-upsell car-premium-upsell--inline" aria-labelledby="ev-battery-upsell-heading">
+                            <h3 id="ev-battery-upsell-heading" class="ev-battery-upsell__title">EV battery health &amp; range</h3>
+                            <p class="car-packages-hint">Estimated battery state of health and real-world range projections for this electric or plug-in hybrid — included with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
+                            {% if not logged_in %}
+                            <p class="car-packages-hint"><a href="{{ url_for('login_page') }}">Sign in</a> and upgrade to unlock battery intelligence on every EV listing.</p>
+                            {% endif %}
+                            <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
+                        </div>
+                        {% endif %}
+
+                        {% set car_is_pure_ev = car.fuel_type in ['Electric', 'EV'] %}
+                        <div id="tco-intelligence-card"
+                            data-car-make="{{ car.make | lower }}"
+                            data-car-mpg="{{ car.tco_avg_mpg if car.tco_avg_mpg else 25 }}"
+                            data-car-mpg-city="{{ car.mpg_city if car.mpg_city else '' }}"
+                            data-car-mpg-highway="{{ car.mpg_highway if car.mpg_highway else '' }}"
+                            data-fuel-tank-gal="{{ car.fuel_tank_gallons if car.fuel_tank_gallons else '' }}"
+                            data-car-mileage="{{ car.mileage if car.mileage is not none and car.mileage != '' else 0 }}"
+                            data-car-state="{{ car.state }}"
+                            data-user-zip="{{ listings_geo_zip or '' }}"
+                            data-fuel-tier="{{ car.fuel_requirement }}"
+                            {% if car_is_pure_ev %}data-is-ev="1"{% endif %}
+                            data-ev-efficiency="{{ car.tco_ev_efficiency if car.tco_ev_efficiency is defined and car.tco_ev_efficiency else '' }}"
+                            data-car-fuel-type="{{ (car.fuel_type or '') | lower }}">
+                            <h4>5-Year Projected Cost of Ownership</h4>
+                            <div class="tco-metrics-dashboard" role="group" aria-label="Five-year projected operating costs">
+                                <div class="tco-metric">
+                                    <span class="tco-metric__label">Projected 5-Year Maintenance</span>
+                                    <span class="tco-metric__value" id="tco-maintenance-cost">$--</span>
+                                </div>
+                                <div class="tco-metric">
+                                    <span class="tco-metric__label">Projected 5-Year Fuel/Energy</span>
+                                    <span class="tco-metric__value" id="tco-fuel-cost">$--</span>
+                                </div>
+                                <div class="tco-metric tco-metric--total">
+                                    <span class="tco-metric__label">Total Projected Operational Cost</span>
+                                    <span class="tco-metric__value" id="tco-total-combined">$--</span>
+                                </div>
+                            </div>
+                            <div class="tco-bar-chart" aria-hidden="true">
+                                <div class="tco-bar-chart__track">
+                                    <div class="tco-bar-chart__segment tco-bar-chart__segment--fuel" id="tco-bar-fuel"></div>
+                                    <div class="tco-bar-chart__segment tco-bar-chart__segment--maintenance" id="tco-bar-maintenance"></div>
+                                </div>
+                                <div class="tco-bar-chart__legend">
+                                    <span class="tco-bar-chart__legend-item tco-bar-chart__legend-item--fuel">Fuel / energy</span>
+                                    <span class="tco-bar-chart__legend-item tco-bar-chart__legend-item--maintenance">Maintenance</span>
+                                </div>
+                            </div>
+                            {% if car_is_pure_ev %}
+                            <div class="tco-fuel-price-control" id="tco-electricity-price-control">
+                                <label class="tco-fuel-price-control__label" for="tco-electricity-price-input">Your electricity rate</label>
+                                <div class="tco-fuel-price-control__field">
+                                    <span class="tco-fuel-price-control__prefix" aria-hidden="true">$</span>
+                                    <input type="number" id="tco-electricity-price-input" class="tco-fuel-price-control__input tco-electricity-price-control__input"
+                                        min="0.01" max="2" step="0.001" inputmode="decimal"
+                                        aria-describedby="tco-dynamic-state-label" placeholder="—" />
+                                    <span class="tco-fuel-price-control__suffix" aria-hidden="true">/kWh</span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="tco-fuel-price-control" id="tco-fuel-price-control">
+                                <label class="tco-fuel-price-control__label" for="tco-fuel-price-input">Your fuel price</label>
+                                <div class="tco-fuel-price-control__field">
+                                    <span class="tco-fuel-price-control__prefix" aria-hidden="true">$</span>
+                                    <input type="number" id="tco-fuel-price-input" class="tco-fuel-price-control__input"
+                                        min="0.01" max="20" step="0.01" inputmode="decimal"
+                                        aria-describedby="tco-dynamic-state-label" placeholder="—" />
+                                    <span class="tco-fuel-price-control__suffix" aria-hidden="true">/gal</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if not car_is_pure_ev %}
+                            <p class="tco-fillup-estimate" id="tco-fillup-estimate" hidden>
+                                You will roughly spend <strong id="tco-fillup-cost">$--</strong> per fill-up
+                                <span class="tco-fillup-estimate__detail" id="tco-fillup-detail"></span>
+                            </p>
+                            {% endif %}
+                            <p class="tco-cost-subtitle" id="tco-cost-subtitle">Projected operating cost by year (±$1 fuel sensitivity)</p>
+                            <div class="tco-cost-chart-frame">
+                                <canvas id="tcoCostCanvas" role="img" aria-label="Five-year operating cost forecast with fuel price sensitivity"></canvas>
+                            </div>
+                            <ul class="tco-cost-legend" id="tco-cost-legend" aria-label="Fuel price scenarios"></ul>
+                            <p class="tco-disclaimer"><span class="tco-disclaimer-text">Estimates calculate 12,000 mi/yr over 5 years based on <span id="tco-dynamic-state-label">analyzing market costs...</span>.</span> Brand maintenance averages; not a dealer quote.</p>
+                        </div>
+
+                        <div id="depreciation-forecast-card"
+                            data-car-price="{{ car.price if car.price else 20000 }}"
+                            data-car-year="{{ car.year if car.year else 2020 }}"
+                            data-car-mileage="{{ car.mileage if car.mileage is not none and car.mileage != '' else 0 }}"
+                            data-car-trim="{{ (car.trim if car.trim and car.trim != '—' else '') | lower }}"
+                            data-gen-start="{{ car.gen_start if car.gen_start is defined and car.gen_start else car.year }}"
+                            data-gen-end="{{ car.gen_end if car.gen_end is defined and car.gen_end else '' }}">
+                            <h4>Estimated Future Value</h4>
+                            <p class="depreciation-subtitle">Projected resale by year and odometer</p>
+                            <div class="depreciation-chart-frame">
+                                <canvas id="depreciationCanvas" role="img" aria-label="Five-year depreciation forecast chart"></canvas>
+                            </div>
+                            <ul class="depreciation-legend" aria-label="Depreciation value milestones">
+                                <li class="depreciation-legend__rate">
+                                    <label class="depreciation-mileage-select__label" for="dep-annual-mi-select">Assumed driving</label>
+                                    <select id="dep-annual-mi-select" class="depreciation-mileage-select" aria-label="Assumed annual driving mileage"></select>
+                                </li>
+                                <li>Year 1 (<span id="dep-y1-mi">--</span>): <span id="dep-y1">$--</span> · Year 5 (<span id="dep-y5-mi">--</span>): <span id="dep-y5">$--</span></li>
+                            </ul>
+                        </div>
                         </div>
 
                         <aside class="car-specs-split__col car-specs-split__col--ladder" aria-label="Trim lineup"{% if not show_trim_ladder and not show_trim_ladder_upsell %} hidden{% endif %}>
@@ -382,21 +664,9 @@
                             {% elif trim_ladder.quality == 'medium' and trim_ladder.matched %}
                             <p class="car-trim-ladder__confidence">Matched from listing data</p>
                             {% endif %}
-                            <p class="car-trim-ladder__lead" id="car-trim-ladder-lead">
-                                {% if trim_ladder.matched %}
-                                This listing matches <strong>{{ trim_ladder.listing_trim }}</strong> on the {{ trim_ladder.make }} {{ trim_ladder.model }} trim ladder.
-                                {% else %}
-                                Trim ladder for {{ trim_ladder.make }} {{ trim_ladder.model }}. We could not confidently match &ldquo;{{ trim_ladder.listing_trim }}&rdquo; to a rung.
-                                {% endif %}
-                            </p>
-                            {% if trim_ladder.quality == 'high' %}
-                            <p class="car-trim-ladder__confidence">Curated OEM trim order</p>
-                            {% elif not trim_ladder.matched %}
-                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Trim match uncertain — ladder shown for reference.</p>
-                            {% endif %}
                             <ol class="car-trim-ladder__timeline" role="list">
                                 {% for step in trim_ladder.steps %}
-                                <li class="car-trim-ladder__step{% if step.is_current %} car-trim-ladder__step--current{% elif step.is_passed %} car-trim-ladder__step--passed{% endif %} car-trim-ladder__step--{{ step.side }}"
+                                <li class="car-trim-ladder__step{% if step.is_current %} car-trim-ladder__step--current{% elif step.is_passed %} car-trim-ladder__step--passed{% endif %}"
                                     role="listitem"
                                     data-trim-index="{{ loop.index0 }}"
                                     data-trim-name="{{ step.name | e }}">
@@ -404,7 +674,7 @@
                                         aria-label="Select {{ step.name }} trim">
                                         <span class="car-trim-ladder__dot" aria-hidden="true"></span>
                                     </button>
-                                    <div class="car-trim-ladder__card" role="button" tabindex="0"
+                                    <div class="car-trim-ladder__card car-trim-ladder__card--expandable" role="button" tabindex="0"
                                         aria-expanded="false"
                                         aria-controls="car-trim-ladder-panel-{{ loop.index0 }}">
                                         <div class="car-trim-ladder__card-head">
@@ -412,17 +682,29 @@
                                             {% if step.is_current %}
                                             <span class="car-trim-ladder__badge car-trim-ladder__badge--vehicle">This vehicle</span>
                                             {% endif %}
+                                            <span class="car-trim-ladder__chevron" aria-hidden="true"></span>
                                         </div>
-                                        {% if step.adds %}
                                         <div class="car-trim-ladder__panel" id="car-trim-ladder-panel-{{ loop.index0 }}">
+                                            {% if step.adds %}
                                             <p class="car-trim-ladder__panel-label">What this trim adds</p>
                                             <ul class="car-trim-ladder__adds">
                                                 {% for item in step.adds %}
                                                 <li>{{ item }}</li>
                                                 {% endfor %}
                                             </ul>
+                                            {% elif step.specs %}
+                                            <p class="car-trim-ladder__panel-label">What this trim adds</p>
+                                            <ul class="car-trim-ladder__adds">
+                                                {% for row in step.specs %}
+                                                {% for item in row.value.split(';') %}
+                                                {% if item.strip() %}
+                                                <li>{{ item.strip() }}</li>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endfor %}
+                                            </ul>
+                                            {% endif %}
                                         </div>
-                                        {% endif %}
                                     </div>
                                 </li>
                                 {% endfor %}
@@ -485,7 +767,7 @@
                         {% if window_sticker_preview_url %}src="{{ window_sticker_preview_url }}"{% endif %}
                     />
                 </div>
-                <p class="car-window-sticker-unavailable" id="car-window-sticker-unavailable" {% if window_sticker_available or window_sticker_preview_url or window_sticker_pdf_url or listing_sticker_options %}hidden{% endif %}>
+                <p class="car-window-sticker-unavailable" id="car-window-sticker-unavailable" {% if window_sticker_available or window_sticker_preview_url or window_sticker_pdf_url or listing_sticker_options or window_sticker_oem_url %}hidden{% endif %}>
                     Window sticker not loaded yet.{% if listing_vdp_url %} <a href="{{ listing_vdp_url }}" target="_blank" rel="noopener noreferrer">Open the dealer listing</a> if the sticker is available there.{% endif %}
                 </p>
                 {% if sticker_exterior_color or sticker_interior_color %}
@@ -693,18 +975,34 @@
                             {% if car.carfax_url %}
                             <a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View full CARFAX report</a>
                             {% elif car.vin and not car.vin.startswith('unknown-') %}
-                            <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View full CARFAX report</a>
+                            <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin | e }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View full CARFAX report</a>
                             {% elif dealership_view_url %}
                             <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Contact dealer for history</a>
                             {% endif %}
                         </div>
+                        {% if car.vin and not car.vin.startswith('unknown-') %}
+                        <div id="vehicle-history-action-block" class="vehicle-history-tools">
+                            <h3 class="vehicle-history-tools-heading">Reports &amp; safety checks</h3>
+                            <div class="vehicle-history-actions-row">
+                                <button type="button" id="btn-premium-history-decode" class="vehicle-history-premium-btn">Scan national salvage databases</button>
+                            </div>
+                            <p class="vehicle-history-tools-note">Salvage scan uses NHTSA recalls, government VIN validation, and title-risk signals. Premium only.</p>
+                            <div id="premium-history-upsell" class="premium-history-upsell car-premium-upsell" hidden role="dialog" aria-labelledby="premium-history-upsell-title" aria-modal="true">
+                                <h3 id="premium-history-upsell-title" class="premium-history-upsell__title">Premium title &amp; salvage intelligence</h3>
+                                <p class="car-packages-hint">Scan NHTSA recalls, government VIN validation, and national title-risk signals without leaving Sarrafi Cars — included with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
+                                <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
+                                <button type="button" class="premium-history-upsell__dismiss" id="premium-history-upsell-dismiss">Not now</button>
+                            </div>
+                            <div id="vehicle-history-intelligence-results" class="vehicle-history-intelligence-results" hidden aria-live="polite"></div>
+                        </div>
+                        {% endif %}
                     </section>
 
                     {% if show_ask_tab %}
                     <section class="car-vdp-panel" id="car-panel-ask" role="tabpanel" aria-labelledby="car-tab-ask" data-panel="ask" hidden>
                         <section class="car-chat-section car-chat-section--tab" id="car-chat-section" data-car-id="{{ car.id }}">
                             <h2 class="car-vdp-panel-title">Ask about this car</h2>
-                            <p class="car-chat-hint">Answers are generated from this listing and public reference data. They may be incomplete or wrong — do not use them alone for VIN verification, pricing, financing, or legal decisions. They are not from the dealer or government records.{% if not session.get('user_id') %} <a href="{{ url_for('login_page') }}">Sign in</a> for comparison-style questions that may use live web research when enabled.{% endif %}</p>
+                            <p class="car-chat-hint">Answers are generated from this listing and public reference data. They may be incomplete or wrong — do not use them alone for VIN verification, pricing, financing, or legal decisions. They are not from the dealer or government records.</p>
                             <details class="car-chat-disclaimer-details">
                                 <summary>Important limitations</summary>
                                 <p>Do not rely on AI replies for purchases, compliance, or safety-critical decisions. Confirm details on the window sticker, CARFAX, and with the dealership.</p>
@@ -757,16 +1055,34 @@
         </div>
     </div>
 
-    {% if has_paid_access or (logged_in and not billing_stripe_enabled) %}
-    <script src="{{ url_for('static', filename='car_chat.js') }}" nonce="{{ csp_nonce }}"></script>
+    {% if show_ask_tab %}
+    <script src="{{ url_for('static', filename='car_chat.js') }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
-    <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
-    <script src="{{ url_for('static', filename='car_page.js') }}" nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    {% if dealer_map and dealer_map.has_pin %}
+    <script nonce="{{ csp_nonce }}">
+        window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";
+    </script>
+    <script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car_dealer_map.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    {% endif %}
+    {% if car.vin and not car.vin.startswith('unknown-') %}
+    <script type="application/json" id="car-page-access-json" nonce="{{ csp_nonce }}">{{ {
+        "car_id": car.id,
+        "vin": car.vin,
+        "has_paid_access": has_paid_access,
+        "billing_stripe_enabled": billing_stripe_enabled,
+        "show_premium_features": show_premium_features,
+        "logged_in": logged_in,
+        "premium_url": url_for('premium_page')
+    } | tojson }}</script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='car_page.js') }}" defer nonce="{{ csp_nonce }}"></script>
     {% if show_premium_features %}
-    <script src="{{ url_for('static', filename='car_trim_ladder.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car_trim_ladder.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
     {% if has_paid_access or (logged_in and not billing_stripe_enabled) %}
-    <script src="{{ url_for('static', filename='car_packages.js') }}" nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car_packages.js') }}" defer nonce="{{ csp_nonce }}"></script>
     {% endif %}
     <script nonce="{{ csp_nonce }}">
     (function () {

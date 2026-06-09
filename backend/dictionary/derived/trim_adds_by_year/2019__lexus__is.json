@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|lexus|is",
+  "year": 2019,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2019__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS300 AWD F SPORT",
+    "IS300 F SPORT",
+    "IS300 AWD",
+    "IS300"
+  ],
+  "adds_by_trim": {
+    "IS300 AWD F SPORT": [
+      "All-wheel drive system for enhanced traction and handling"
+    ],
+    "IS300 F SPORT": [
+      "F SPORT-exclusive styling and performance enhancements"
+    ],
+    "IS300 AWD": [
+      "All-wheel drive system for enhanced traction and handling"
+    ],
+    "IS300": [
+      "2.0-liter turbocharged engine producing horsepower",
+      "Lexus Safety System+ with Pre-Collision System",
+      "Adaptive Front Lighting System",
+      "Intelligent High Beams",
+      "Dynamic Radar Cruise Control",
+      "Lane Departure Alert with Steering Assist",
+      "Mark Levinson Premium audio system",
+      "Bluetooth connectivity and hands-free phone system",
+      "Enform services with Remote Connect capability"
+    ]
+  }
+}

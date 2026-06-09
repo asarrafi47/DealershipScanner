@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2019_ford_f-150_complete_options",
+  "make": "Ford",
+  "models": [
+    "F-150",
+    "F-150"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "Raptor": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+      }
+    ]
+  }
+}

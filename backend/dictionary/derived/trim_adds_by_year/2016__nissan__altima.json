@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2016|nissan|altima",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2016__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SL",
+    "2.5 SL",
+    "2.5 SV",
+    "2.5 SR",
+    "2.5 S"
+  ],
+  "adds_by_trim": {
+    "3.5 SL": [
+      "3.5L V6 engine (vs 2.5L four-cylinder)",
+      "Predictive Forward Collision Warning (PFCW)",
+      "Forward Emergency Braking (FEB)",
+      "Intelligent Cruise Control (ICC)",
+      "NissanConnectSM Services powered by SiriusXM with 7.0-inch color touchscreen"
+    ],
+    "2.5 SL": [
+      "Power sliding glass moonroof with one-touch auto open/close and tilt",
+      "NissanConnectSM with Navigation and Mobile Apps, 7.0-inch color touchscreen",
+      "NissanConnectSM Services powered by SiriusXM",
+      "Predictive Forward Collision Warning (PFCW)",
+      "Forward Emergency Braking (FEB)",
+      "Intelligent Cruise Control (ICC)",
+      "LED headlights with integrated signature (late availability)",
+      "Smoked headlight housing (late availability)"
+    ],
+    "2.5 SV": [
+      "6-way power driver seat or power sliding glass moonroof package options",
+      "Heated front seats (Cold Weather Package)",
+      "Heated outside mirrors (Cold Weather Package)",
+      "Heated steering wheel (Cold Weather Package)",
+      "NissanConnectSM with Navigation and Mobile Apps, 7.0-inch color touchscreen (Navigation Package)",
+      "SiriusXM Traffic with Travel Link"
+    ],
+    "2.5 SR": [
+      "LED headlights with integrated signature (late availability)",
+      "Nissan Voice Recognition for navigation and audio"
+    ],
+    "2.5 S": [
+      "6-way power driver seat",
+      "Heated outside mirrors",
+      "Heated steering wheel",
+      "Manual folding outside mirrors with LED turn signal indicators",
+      "HomeLink Universal Transceiver",
+      "Rear passenger air conditioning vents",
+      "Passenger-side front-window one-touch auto-up/down with auto-reverse",
+      "Side cargo net"
+    ]
+  }
+}

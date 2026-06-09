@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|volkswagen|routan",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Routan",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "GTI"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2016|fiat|124",
+  "year": 2016,
+  "make": "Fiat",
+  "model": "124",
+  "ladder_id": "brochure_web_2016__fiat__124",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Lusso",
+    "Classico",
+    "Turbo"
+  ],
+  "adds_by_trim": {
+    "Turbo": [
+      "1.4L turbocharged engine producing 160 hp vs 1.4L naturally aspirated 160 hp",
+      "6-speed manual transmission standard",
+      "Sport-tuned suspension",
+      "Catback exhaust system",
+      "Darkened headlight bezels",
+      "17-inch alloy wheels"
+    ],
+    "Lusso": [
+      "Leather upholstery and steering wheel",
+      "Heated front seats",
+      "Power windows and locks",
+      "Air conditioning",
+      "AM/FM stereo with auxiliary input",
+      "Chrome interior trim accents"
+    ],
+    "Classico": [
+      "1.4L naturally aspirated DOHC engine producing 160 hp",
+      "5-speed manual transmission",
+      "Manual windows and locks",
+      "Power steering",
+      "16-inch steel wheels with full wheel covers",
+      "Cloth upholstery",
+      "AM/FM radio",
+      "Dual airbags and stability control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/fiat/124/"
+}

@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Mercedes-Benz,CLK-Class,CLK350,3.5L V6,3.5L V6 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.5,17,26,20,,,,,
+2006,Mercedes-Benz,CLK-Class,CLK350 (Cabriolet),3.5L V6,3.5L V6 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.5,16,24,19,,,,,
+2006,Mercedes-Benz,CLK-Class,CLK500,5.0L V8,5.0L V8 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,15,23,18,,,,,
+2006,Mercedes-Benz,CLK-Class,CLK500 (Cabriolet),5.0L V8,5.0L V8 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,15,23,18,,,,,
+2006,Mercedes-Benz,CLK-Class,CLK55 AMG (Cabriolet),5.4L V8,5.4L V8 Turbo,Turbocharged,Automatic (S5),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.4,15,21,17,,,,,

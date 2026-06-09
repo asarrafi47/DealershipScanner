@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Infiniti,Q50,Hybrid,Hybrid 3.5L V6,3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,28,33,30,,,,,
+2016,Infiniti,Q50,Hybrid AWD,Hybrid 3.5L V6,3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,27,30,28,,,,,
+2016,Infiniti,Q50,S Red Sport,3.0L V6 (SIDI),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,20,26,22,,,,,
+2016,Infiniti,Q50,S Red Sport  AWD,3.0L V6 (SIDI),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,19,26,22,,,,,
+2016,Infiniti,Q50,Q50,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,23,31,26,,,,,
+2016,Infiniti,Q50,AWD,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,22,28,24,,,,,
+2016,Infiniti,Q50,Q50,3.0L V6 (SIDI),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,19,28,23,,,,,
+2016,Infiniti,Q50,AWD,3.0L V6 (SIDI),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,19,27,22,,,,,
+2016,Infiniti,Q50,S,3.0L V6 (SIDI),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,19,28,23,,,,,
+2016,Infiniti,Q50,S AWD,3.0L V6 (SIDI),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,18,26,21,,,,,

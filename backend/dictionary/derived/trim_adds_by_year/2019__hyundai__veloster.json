@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2019|hyundai|veloster",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_llm_2019__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Veloster Turbo Ultimate",
+    "Veloster 2.0 Premium",
+    "Veloster 2.0"
+  ],
+  "adds_by_trim": {
+    "Veloster Turbo Ultimate": [
+      "8-inch floating touchscreen with advanced navigation, split-screen display, and junction view lane guidance",
+      "HD Radio traffic flow and incident data",
+      "Heads-up Display projecting turn-by-turn navigation onto transparent screen",
+      "Turbo engine with increased power output"
+    ],
+    "Veloster 2.0 Premium": [
+      "8-inch floating touchscreen display",
+      "Infinity Premium Audio System with 8 speakers and subwoofer",
+      "Automatic temperature control",
+      "Oversized sunroof",
+      "Cabin air filter standard"
+    ],
+    "Veloster 2.0": [
+      "Apple CarPlay and Android Auto smartphone integration",
+      "Bluetooth connectivity",
+      "Asymmetrical dashboard layout",
+      "Hidden third door for rear-seat access",
+      "60/40 split rear seats with 44.5 cubic feet cargo storage when folded"
+    ]
+  }
+}

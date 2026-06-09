@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_buick_encore_complete_options",
+  "make": "Buick",
+  "models": [
+    "Encore",
+    "Encore"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Preferred": [
+      {
+        "label": "Engine Options",
+        "value": "1.2L turbocharged 3-cylinder engine paired with Buick"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "All trims except for the mid-level Preferred trim were discontinued, and the Pre"
+      }
+    ]
+  }
+}

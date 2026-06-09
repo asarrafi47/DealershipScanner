@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|bentley|bentayga",
+  "year": 2017,
+  "make": "bentley",
+  "model": "bentayga",
+  "ladder_id": "brochure_llm_2017__bentley__bentayga",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Event Specification",
+    "All Terrain Specification",
+    "Touring Specification",
+    "City Specification",
+    "Sunshine Specification",
+    "Smoker's Specification",
+    "Bentayga"
+  ],
+  "adds_by_trim": {
+    "Event Specification": [
+      "Veneered picnic tables",
+      "Contrast binding to overmats",
+      "Deep pile overmats to front and rear"
+    ],
+    "All Terrain Specification": [
+      "All-terrain focused off-road capabilities and styling"
+    ],
+    "Touring Specification": [
+      "Touring-focused exterior and interior appointments"
+    ],
+    "City Specification": [
+      "City-focused design and convenience features"
+    ],
+    "Sunshine Specification": [
+      "Enhanced weather-related features and styling"
+    ],
+    "Smoker's Specification": [
+      "Smoking-related interior appointments"
+    ],
+    "Bentayga": [
+      "Power latching driver and passenger doors",
+      "Keyless entry and ignition",
+      "Heated, acoustic front windscreen",
+      "16-way electric front seats heated with memory",
+      "8-inch capacitive touchscreen with HDD navigation and digital radio",
+      "Panoramic roof with tilt and slide front panel",
+      "Four floating adaptive LED headlamps with integrated headlamp washer",
+      "Brake system with ESP, TCS, ABS, EBD, HBA, MSR, EDL",
+      "Front and rear Park Distance Control",
+      "Electronic Tyre Pressure Monitoring System"
+    ]
+  }
+}

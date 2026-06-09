@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Honda,Element,2WD,2.4L I4,2.4L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,19,24,21,,,,,
+2006,Honda,Element,2WD,2.4L I4,2.4L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,19,23,21,,,,,
+2006,Honda,Element,4WD,2.4L I4,2.4L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.4,19,23,20,,,,,
+2006,Honda,Element,4WD,2.4L I4,2.4L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.4,18,22,20,,,,,

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|gmc|terrain",
+  "year": 2015,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_2015__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds OnStar Directions & Connections Plan with 6 months complimentary service",
+      "Adds Automatic Crash Response",
+      "Adds Stolen Vehicle Assistance",
+      "Adds OnStar link to Emergency Services",
+      "Adds Remote Door Unlock",
+      "Adds OnStar Vehicle Diagnostics",
+      "Adds SiriusXM Satellite Radio with 3 months trial service",
+      "Adds Pro Grade Protection Plan with 2-year/24,000-mile scheduled maintenance"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "Pro": [],
+    "SLE": [
+      "Premium cloth seating",
+      "8-way power driver seat adjuster with manual fore/aft and power lumbar",
+      "Leather-wrapped steering wheel with mounted audio and cruise controls",
+      "Single-zone automatic air conditioning with climate control",
+      "Pioneer premium 8-speaker system with subwoofer and amplifier",
+      "Heated driver and front passenger seats with convenience package"
+    ],
+    "SLT": [
+      "Adds available touch-screen navigation system with XM NavTraffic"
+    ],
+    "Denali": [
+      "Heated front and rear seats",
+      "19-inch wheels with available 20-inch option",
+      "Smart Frequency dampers tuned for ride comfort",
+      "Animated headlights and taillights",
+      "All-wheel drive standard",
+      "Hill descent control standard"
+    ]
+  }
+}

@@ -6,8 +6,29 @@
     <title>Search inventory — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
-    <link rel="prefetch" href="{{ url_for('api_listings_cars') }}" as="fetch" crossorigin="same-origin">
-    <link rel="prefetch" href="{{ url_for('api_listings_geo_coords') }}" as="fetch" crossorigin="same-origin">
+    {% include "_head_perf.html" %}
+    <link rel="preload" href="{{ url_for('api_listings_cars') }}" as="fetch" crossorigin="same-origin">
+    <link rel="preload" href="{{ url_for('api_listings_geo_coords') }}" as="fetch" crossorigin="same-origin">
+    <link rel="preload" href="{{ url_for('static', filename='car_page.js') }}" as="script">
+    <link rel="preload" href="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" as="script">
+    <script nonce="{{ csp_nonce }}">
+    (function () {
+        if (window.__DS_warmListingsApis) {
+            window.__DS_warmListingsApis();
+            return;
+        }
+        fetch("/api/listings/cars", { credentials: "same-origin" })
+            .then(function (r) {
+                if (r.headers.get("ETag")) window.__DS_listingsCarsEtag = r.headers.get("ETag");
+                return r.ok ? r.json() : null;
+            })
+            .then(function (d) {
+                if (d && d.ok && Array.isArray(d.cars)) window.__DS_prefetchCars = d.cars;
+            })
+            .catch(function () {});
+        fetch("/api/listings/geo-coords", { credentials: "same-origin" }).catch(function () {});
+    })();
+    </script>
 </head>
 <body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
 
@@ -34,7 +55,7 @@
                 <strong>Save cars you like</strong> — <a href="{{ url_for('register_page') }}">create a free account</a>.
                 Want advanced features? <a href="{{ url_for('premium_page') }}">Go Premium</a>.
             </span>
-            <button class="guest-banner-dismiss" aria-label="Dismiss" onclick="this.closest('.guest-banner').remove()">&#x2715;</button>
+            <button type="button" class="guest-banner-dismiss" aria-label="Dismiss" id="guest-banner-dismiss">&#x2715;</button>
         </div>
     </div>
     {% endif %}
@@ -138,6 +159,14 @@
                             &lt;{{ "{:,}".format(mi) }}
                         </option>
                         {% endfor %}
+                    </select>
+                </div>
+                <div class="pill-group pill-select-group" data-filter-param="inventory_condition">
+                    <label class="pill-select-label" for="listings-inventory-condition">Condition</label>
+                    <select name="inventory_condition" id="listings-inventory-condition" class="pill-select">
+                        <option value="" {% if not active or not active.inventory_condition %}selected{% endif %}>New &amp; pre-owned</option>
+                        <option value="new" {% if active and active.inventory_condition == 'new' %}selected{% endif %}>New</option>
+                        <option value="pre_owned" {% if active and active.inventory_condition == 'pre_owned' %}selected{% endif %}>Pre-owned</option>
                     </select>
                 </div>
                 </div>
@@ -581,6 +610,14 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="acc-plain-group" data-filter-param="inventory_condition">
+                        <div class="acc-plain-label">Condition</div>
+                        <select name="inventory_condition" class="sidebar-select">
+                            <option value="" {% if not active or not active.inventory_condition %}selected{% endif %}>New &amp; pre-owned</option>
+                            <option value="new" {% if active and active.inventory_condition == 'new' %}selected{% endif %}>New</option>
+                            <option value="pre_owned" {% if active and active.inventory_condition == 'pre_owned' %}selected{% endif %}>Pre-owned</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="docked-footer">
@@ -605,9 +642,9 @@
     </div>
 </div>
 
-<script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
-<script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
-<script src="{{ url_for('static', filename='listings.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='listings.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script type="application/json" id="ds-listings-paid-access" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
 <script nonce="{{ csp_nonce }}">
 (function () {
@@ -685,8 +722,20 @@
         });
     });
 
+    function syncActiveDealerIdsFromDom() {
+        activeIds = new Set();
+        listEl.querySelectorAll('input[name="dealer_registry_id"]:checked').forEach(function (cb) {
+            const id = parseInt(cb.value, 10);
+            if (Number.isFinite(id) && id > 0) activeIds.add(id);
+        });
+    }
+    window.__DS_syncActiveDealerIdsFromDom = syncActiveDealerIdsFromDom;
+
     function notifyFilterChange() {
-        if (typeof window.__DS_runFilterRender === "function") {
+        syncActiveDealerIdsFromDom();
+        if (typeof window.__DS_runFilterRenderInstant === "function") {
+            window.__DS_runFilterRenderInstant();
+        } else if (typeof window.__DS_runFilterRender === "function") {
             window.__DS_runFilterRender();
         }
     }
@@ -858,7 +907,7 @@
             lastKey = "";
             activeIdsGeoKey = "";
             loadDealers(z, r);
-        }, 350);
+        }, 120);
     }
 
     window.__DS_reloadNearbyDealers = function () {

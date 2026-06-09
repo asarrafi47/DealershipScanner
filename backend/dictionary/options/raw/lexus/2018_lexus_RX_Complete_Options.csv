@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2018,lexus,RX,350,3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.5,20,27,23,,,,,
+2018,lexus,RX,350 AWD,3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.5,19,26,22,,,,,
+2018,lexus,RX,450h AWD,Hybrid 3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (AV-S6),All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.5,31,28,30,,,,,
+2018,lexus,RX,350 L,3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.5,19,26,22,,,,,
+2018,lexus,RX,350 L AWD,3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.5,18,25,21,,,,,
+2018,lexus,RX,450h L AWD,Hybrid 3.5L V6 (SIDI & PFI),3.5L V6,,Automatic (AV-S6),All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.5,29,28,29,,,,,

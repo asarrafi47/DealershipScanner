@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2014|porsche|panamera",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "Panamera",
+  "ladder_id": "brochure_llm_2014__porsche__panamera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Panamera Turbo",
+    "Panamera GTS",
+    "Panamera S E-Hybrid",
+    "Panamera S4",
+    "Panamera S",
+    "Panamera 4"
+  ],
+  "adds_by_trim": {
+    "Panamera Turbo": [
+      "GTS interior package in Carmine Red with exclusive styling",
+      "Side skirts painted as standard equipment",
+      "Leather interior with Smooth-Finish Leather and Alcantara available",
+      "SiriusXM Satellite Radio unavailable on Turbo"
+    ],
+    "Panamera GTS": [
+      "GTS interior package in GT Silver standard",
+      "Side skirts painted standard",
+      "Tineo and Anthracite Birch interior packages available at no extra cost"
+    ],
+    "Panamera S E-Hybrid": [
+      "Dark Walnut interior package available at no extra cost",
+      "Natural Olive interior package available at no extra cost",
+      "Brushed Aluminum interior package available at no extra cost"
+    ],
+    "Panamera S4": [
+      "Burmester High-End Surround Sound System unavailable",
+      "All standard interior and audio features matching S trim"
+    ],
+    "Panamera S": [
+      "Adaptive Cruise Control with Porsche Active Safe",
+      "Lane Change Assist and Lane Departure Warning",
+      "18-way Adaptive Sport Seats with memory package",
+      "Soft-close doors",
+      "8-way power rear seats with comfort headrests"
+    ],
+    "Panamera 4": [
+      "Adaptive Cruise Control including Porsche Active Safe",
+      "Lane Change Assist and Lane Departure Warning standard",
+      "14-way power seats with memory package",
+      "8-way power rear seats",
+      "Seat heating front and rear, seat ventilation front"
+    ]
+  }
+}

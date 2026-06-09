@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2019,BMW,7 Series,740i,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,21,29,24,,,,,,3.0L I6 Turbo,Turbocharged
-2019,BMW,7 Series,740i xDrive,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,20,29,23,,,,,,3.0L I6 Turbo,Turbocharged
-2019,BMW,7 Series,750i,4.4L V8 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,4.4,18,26,21,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
-2019,BMW,7 Series,750i xDrive,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.4,17,25,20,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
-2019,BMW,7 Series,Alpina B7 xDrive,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.4,17,25,20,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
-2019,BMW,7 Series,M760i xDrive,6.6L V12 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,12,6.6,13,20,16,,,,,,6.6L V12 Twin Turbo,Twin Turbocharged
-2019,BMW,7 Series,740e xDrive,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Large Cars,4,2.0,25,29,27,,,,,,2.0L I4,

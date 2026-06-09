@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2015|subaru|outback",
+  "year": 2015,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2015__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "2.5i": [
+      "175-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring and X-MODE",
+      "6.2-inch high-resolution LCD touchscreen with HD Radio and voice controls",
+      "6-speaker AM/FM/CD player with Bluetooth audio streaming",
+      "SUBARU STARLINK system with iHeartRadio, Aha infotainment and Pandora",
+      "Cloth upholstery",
+      "6-way manually adjustable driver seat, 4-way manual front passenger seat",
+      "Manually adjustable air conditioning with air filtration",
+      "17-inch steel wheels with covers",
+      "Lineartronic CVT with 6-speed manual-mode paddle shifters"
+    ],
+    "2.5i Premium": [
+      "7.0-inch high-resolution LCD touchscreen with upgraded infotainment system",
+      "6-speaker AM/FM/CD player with dual USB ports and SiriusXM Satellite Radio",
+      "17-inch aluminum-alloy wheels",
+      "Fog lights with Steering Responsive option on EyeSight models",
+      "10-way power adjustable driver seat with 4-way manual passenger seat",
+      "All-Weather Package with heated mirrors, 3-mode heated front seats, wiper de-icer",
+      "Dual-zone automatic climate control system",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Power windows with auto-up/down for driver and front passenger",
+      "Electroluminescent gauges with LCD color display and welcome lighting"
+    ],
+    "2.5i Limited": [
+      "12 Harman Kardon GreenEdge speakers with center dash speaker and subwoofer",
+      "Harman Kardon 576-watt equivalent GreenEdge amplifier",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "18-inch machine finish 2-tone aluminum-alloy wheels",
+      "Power rear gate with height memory",
+      "All-Weather Package with dual mode heated rear seats",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver seat with 2-position memory",
+      "4-way power adjustable front-passenger seat",
+      "Woodgrain-patterned matte finish accent trim and integrated turn signal side mirrors"
+    ],
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine with Dual Active Valve Control",
+      "HID low-beam headlights",
+      "Lineartronic HCVT (High-Torque CVT) with 6-speed manual-mode paddle shifters",
+      "Dual exhaust outlets"
+    ]
+  }
+}

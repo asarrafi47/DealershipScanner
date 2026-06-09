@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|toyota|corollacross",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Corolla Cross",
+  "ladder_id": "brochure_llm_2022__toyota__corollacross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "LED low- and high-beam headlights, LED front turn signals, and LED taillights",
+      "LED fog lights",
+      "18-inch alloy wheels with black-painted machined finish",
+      "Black grille with metallic paint surround",
+      "Satin-finish door handles",
+      "SofTex-trimmed seating",
+      "10-way power-adjustable driver's seat",
+      "Leather-trimmed steering wheel",
+      "Leather shift knob",
+      "Dual zone air conditioning with air filter and rear-seat vents"
+    ],
+    "LE": [
+      "LED projector low and high-beam headlights and LED stop lights",
+      "Heated power outside mirrors with turn signal and blind spot warning indicators",
+      "17-inch silver alloy wheels",
+      "Black roof rails",
+      "Rear privacy glass",
+      "Rear windshield wiper",
+      "8-inch touchscreen and six speakers",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert with Braking Assist",
+      "Backup camera with dynamic gridlines",
+      "Qi-compatible wireless smartphone charging"
+    ],
+    "L": [
+      "2.0-Liter 4-Cylinder engine with 169 hp",
+      "Continuously Variable Transmission",
+      "Front-Wheel Drive or available All-Wheel Drive",
+      "31 city/33 highway/32 combined mpg FWD",
+      "Color-keyed rear spoiler",
+      "Color-keyed outside door handles",
+      "17-inch steel wheels with silver wheel covers",
+      "Heated power outside mirrors",
+      "Fabric-trimmed seating with 60/40 split fold-flat second-row seats",
+      "Overhead console with maplights"
+    ]
+  }
+}

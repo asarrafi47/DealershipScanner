@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|ford|eseries",
+  "year": 2014,
+  "make": "Ford",
+  "model": "E-Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "XLT",
+    "SE",
+    "XL",
+    "Base",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

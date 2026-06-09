@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2023|ram|commercial",
+  "year": 2023,
+  "make": "ram",
+  "model": "commercial",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Tradesman"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

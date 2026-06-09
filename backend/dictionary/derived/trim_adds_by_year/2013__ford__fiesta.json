@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|ford|fiesta",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_llm_2013__ford__fiesta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium Sedan/Hatchback",
+    "SE Sedan/Hatchback",
+    "S Sedan/Hatchback"
+  ],
+  "adds_by_trim": {
+    "Titanium Sedan/Hatchback": [
+      "Heated front seats",
+      "Ambient lighting",
+      "Auto-dimming rearview mirror",
+      "Intelligent Access with push-button start and 2 key fob transmitters",
+      "Leather-wrapped steering wheel",
+      "Rear carpeted floor mats",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "16\" premium Luster Nickel-painted aluminum wheels with P195/50R16 tires",
+      "Anti-theft perimeter alarm",
+      "Chrome beltline and decklid moldings with LED parking lamps"
+    ],
+    "SE Sedan/Hatchback": [
+      "12-volt rear powerpoint",
+      "Unique cloth seats",
+      "AM/FM stereo/single-CD player with MP3 capability and 6 speakers",
+      "Automatic locking doors with driveaway feature",
+      "Cruise control",
+      "Driver and front-passenger sun visors with vanity mirrors",
+      "Ford SYNC voice-activated connectivity system with USB port and SYNC Services",
+      "Front-passenger seat back map pocket",
+      "Integrated armrest on driver's seat",
+      "Message center with trip computer"
+    ],
+    "S Sedan/Hatchback": [
+      "1.6L Ti-VCT I-4 engine with 120 hp and 112 lb-ft torque",
+      "5-speed manual transmission",
+      "Cloth seats",
+      "AM/FM stereo with 4 speakers",
+      "Day/night rearview mirror",
+      "Driver and front-passenger sun visors",
+      "Manual windows",
+      "15\" steel wheels with silver-painted covers and P185/60R15 tires",
+      "Body-color 3-bar upper grille and power sideview mirrors",
+      "Remote Keyless Entry System with 2 keyhead transmitter remotes"
+    ]
+  }
+}

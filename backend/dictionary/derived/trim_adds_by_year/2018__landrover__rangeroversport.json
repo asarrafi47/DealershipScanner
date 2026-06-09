@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|landrover|rangeroversport",
+  "year": 2018,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2018__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVR",
+    "Autobiography",
+    "Supercharged Dynamic",
+    "Supercharged",
+    "HSE Dynamic",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SVR": [
+      "567 HP supercharged V8 engine with 4.3 second 0-60 acceleration",
+      "176 mph maximum speed capability",
+      "Performance and design enhancements specific to SVR model"
+    ],
+    "Autobiography": [
+      "518 HP supercharged V8 engine with 5.0 second 0-60 acceleration",
+      "Premium luxury interior appointments and materials",
+      "Enhanced exterior styling and design elements"
+    ],
+    "Supercharged Dynamic": [
+      "380 HP supercharged V6 engine with 6.8 second 0-60 acceleration",
+      "Dynamic performance suspension and handling upgrades"
+    ],
+    "Supercharged": [
+      "340 HP supercharged V6 engine with 6.9 second 0-60 acceleration"
+    ],
+    "HSE Dynamic": [
+      "Dynamic exterior and interior styling enhancements",
+      "Upgraded suspension tuning for improved handling"
+    ],
+    "HSE": [
+      "Premium cabin amenities and comfort features",
+      "Enhanced infotainment and connectivity systems"
+    ],
+    "SE": [
+      "254 HP diesel TDV6 engine",
+      "Standard infotainment system with basic connectivity",
+      "Core safety and driver assistance technologies",
+      "Ventilated disc brakes with integrated parking brake",
+      "Standard Land Rover Roadside Assistance capability"
+    ]
+  }
+}

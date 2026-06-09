@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2020|mitsubishi|eclipsecross",
+  "year": 2020,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2020_Mitsubishi_EclipseCross_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [
+    6
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 6,
+      "trim_hint": true,
+      "text": "CHOOSE YOUR\nADVENTURE\nThe Eclipse Cross offers a wide range of trim levels, styles, options, packages and\naccessories with many standard features like a 7\u201d Touchscreen with Bluetooth\u00ae\nand a 1.5L direct-injection turbo engine. So, while choosing the Eclipse Cross is easy,\npicking the trim level might be difficult. We think small but we give you a big choice.\nES 1.5 LE 1.5 SE 1.5 SEL 1.5\nWith Optional Front Crash\nPrevention + Specific Headlights.\n(4) The Forward Collision Mitigation (FCM)/Pedestrian Detection (PD) system and the Forward Collision Mitigation with High-\nSpeed Braking Capability (FCM-HSB) system are driver aids only and are not substitutes for safe and careful driving. Under certain\ncircumstances, the systems may not detect other vehicles and/or pedestrians correctly. (5) The Blind Spot Warning (BSW) system, Lane\nChange Assist (LCA) system, and Rear Cross Traffic Alert (RCTA) system are driver aids only and are not substitutes for safe and careful\ndriving. Under certain circumstances, the systems may not detect other vehicles correctly. (6) The Lane Departure Warning (LDW) system\nis designed to read the lane marks under certain conditions. It is not a collision avoidance system and is not a substitute for safe and\ncareful driving.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 6 ---\nCHOOSE YOUR\nADVENTURE\nThe Eclipse Cross offers a wide range of trim levels, styles, options, packages and\naccessories with many standard features like a 7\u201d Touchscreen with Bluetooth\u00ae\nand a 1.5L direct-injection turbo engine. So, while choosing the Eclipse Cross is easy,\npicking the trim level might be difficult. We think small but we give you a big choice.\nES 1.5 LE 1.5 SE 1.5 SEL 1.5\nWith Optional Front Crash\nPrevention + Specific Headlights.\n(4) The Forward Collision Mitigation (FCM)/Pedestrian Detection (PD) system and the Forward Collision Mitigation with High-\nSpeed Braking Capability (FCM-HSB) system are driver aids only and are not substitutes for safe and careful driving. Under certain\ncircumstances, the systems may not detect other vehicles and/or pedestrians correctly. (5) The Blind Spot Warning (BSW) system, Lane\nChange Assist (LCA) system, and Rear Cross Traffic Alert (RCTA) system are driver aids only and are not substitutes for safe and careful\ndriving. Under certain circumstances, the systems may not detect other vehicles correctly. (6) The Lane Departure Warning (LDW) system\nis designed to read the lane marks under certain conditions. It is not a collision avoidance system and is not a substitute for safe and\ncareful driving."
+}

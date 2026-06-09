@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2024_mini_mack_complete_options",
+  "make": "MINI",
+  "models": [
+    "Mack",
+    "Mack"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SEL": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The right is reserved to make changes in price, materials, equipment, design, specifications, diagrams and models, and to discontinue models of equipment at any time, without notice and without incurring any obligation whatsoever.; For more information…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: MODEL YEAR 2022 MINI LINEUP PRICING AND EQUIPMENT UPDATES Woodcliff Lake, NJ - June 14, 2021 - Following a series of major updates and new vehicle additions in the previous model year, MINI USA presents its Model Year 2022 vehicle lineup with several significant…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: MODEL YEAR 2022 MINI LINEUP PRICING AND EQUIPMENT UPDATES Woodcliff Lake, NJ - J"
+      }
+    ]
+  }
+}

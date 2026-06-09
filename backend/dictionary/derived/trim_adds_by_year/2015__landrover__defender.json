@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2015|landrover|defender",
+  "year": 2015,
+  "make": "landrover",
+  "model": "Defender",
+  "ladder_id": "brochure_2015__landrover__defender",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes standard or Heavy Duty chassis and suspension configurations",
+      "Adds Features extensive range of durable exterior color coatings",
+      "Adds Includes interior color customization"
+    ],
+    "Standard": [
+      "Adds tailor-made conversion solutions based on 11 platforms",
+      "Adds specialized variants including Field Ambulance, Police Personnel Carrier, and Cash In Transit configurations",
+      "Adds Heavy Duty suspension option for enhanced capability",
+      "Adds Armoured B6 variant with ballistic protection certification"
+    ]
+  }
+}

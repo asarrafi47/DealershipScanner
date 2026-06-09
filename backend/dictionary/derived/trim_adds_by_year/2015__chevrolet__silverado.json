@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2015|chevrolet|silverado",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2015__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "ZTL (Z71)",
+    "ZTL",
+    "LTZ",
+    "LT (Z71)",
+    "LT",
+    "SL",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "Chrome cap heated power-adjustable power-folding mirrors with auto-dimming and integrated turn signals",
+      "Halogen projector-beam headlamps",
+      "Body-color front and rear bumpers with integrated rear corner steps",
+      "Chrome bodyside moldings",
+      "Rear-seat DVD entertainment system with 9.2-inch display and wireless headphones"
+    ],
+    "ZTL (Z71)": [
+      "Z71-specific grille surround with badge",
+      "Chrome cap heated power-adjustable power-folding mirrors with integrated turn signals",
+      "Halogen projector-beam headlamps"
+    ],
+    "ZTL": [
+      "Chrome cap heated power-adjustable power-folding mirrors with integrated turn signals",
+      "Halogen projector-beam headlamps",
+      "Chrome bodyside moldings"
+    ],
+    "LTZ": [
+      "MyLink 8-inch color touch radio with navigation and SiriusXM",
+      "Bose premium audio system with 6 speakers",
+      "Color-matching power-adjustable mirrors with heated glass and spotter mirror"
+    ],
+    "LT (Z71)": [
+      "Z71-specific grille surround with badge",
+      "Color-matching power-adjustable mirrors with heated glass",
+      "Fog lamps halogen front"
+    ],
+    "LT": [
+      "MyLink 8-inch color touch radio with SiriusXM and navigation",
+      "Fog lamps halogen front",
+      "Color-matching power-adjustable mirrors with heated glass and spotter mirror"
+    ],
+    "SL": [
+      "MyLink 4.2-inch color radio with Bluetooth and USB ports",
+      "Rear wheelhouse liners on Double and Crew Cab models",
+      "EZ-Lift and Lower Tailgate feature"
+    ],
+    "WT": [
+      "4.2-inch color radio with AM/FM USB and SD card slot",
+      "Black door handles and manual black mirrors",
+      "Black front and rear bumpers"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2018|gmc|acadia",
+  "year": 2018,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_llm_2018__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT-2",
+    "SLT-1",
+    "SLE-2",
+    "SLE-1",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Signature Denali grille with bright finish",
+      "Denali-specific body-color bodyside molding with chrome insert and rocker molding",
+      "Heated power-adjustable auto-dimming driver-side mirror with memory",
+      "Driver Alert Package II with adaptive cruise and forward automatic braking",
+      "Memory package for driver seat and outside rearview mirrors",
+      "Technology package including surround vision and adaptive cruise control"
+    ],
+    "SLT-2": [
+      "8-inch diagonal color touchscreen with GMC Infotainment System and navigation",
+      "Heated power-adjustable manual-folding body-color mirrors with black caps",
+      "Driver Alert Package II with lane keep assist and following distance indicator",
+      "Memory settings for driver seat and outside rearview mirrors"
+    ],
+    "SLT-1": [
+      "8-inch diagonal color touchscreen with GMC Infotainment System",
+      "Front halogen projector-type fog lamps",
+      "Driver Alert Package I with lane change alert and rear cross traffic alert",
+      "Heated power-adjustable manual-folding body-color mirrors with black caps"
+    ],
+    "SLE-2": [
+      "8-speaker Bose premium sound system with subwoofer",
+      "LED daytime running lamps",
+      "Roof rails in silver",
+      "SiriusXM satellite radio with 3 trial months of service"
+    ],
+    "SLE-1": [
+      "7-inch diagonal color touchscreen with GMC Infotainment System",
+      "SiriusXM satellite radio with 3 trial months of service",
+      "Bluetooth for phone and personal cell phone connectivity"
+    ],
+    "LS": [
+      "2.5L I-4 VVT engine with Stop/Start technology and 193 hp",
+      "6-speed automatic transmission",
+      "Standard front-wheel drive",
+      "4-wheel disc brakes with antilock system and Duralife rotors",
+      "Electric variable-effort rack-and-pinion steering",
+      "6-speaker audio system",
+      "Projector-beam headlamps",
+      "Privacy solar-ray glass except windshield"
+    ]
+  }
+}

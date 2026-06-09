@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_gmc_sierra_complete_options",
+  "make": "GMC",
+  "models": [
+    "Sierra",
+    "Sierra"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "AT4X": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 10-spd; Four-Wheel Drive"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Battery 0.45 kWh lithium-ion (eAssist mild hybrid)"
+      }
+    ]
+  }
+}

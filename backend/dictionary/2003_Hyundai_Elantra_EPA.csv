@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2003,Hyundai,Elantra,Elantra,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,30,25,,,,,,2.0L I4,
-2003,Hyundai,Elantra,Elantra,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,30,25,,,,,,2.0L I4,
-2003,Hyundai,Elantra,Elantra,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,30,25,,,,,,2.0L I4,
-2003,Hyundai,Elantra,Elantra,2.0L I4 (FFS),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,30,25,,,,,,2.0L I4,

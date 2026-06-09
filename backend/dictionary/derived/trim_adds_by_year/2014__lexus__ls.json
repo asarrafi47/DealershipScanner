@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2014|lexus|ls",
+  "year": 2014,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2014__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LSh",
+    "LS F SPORT",
+    "LS AWD",
+    "LS RWD"
+  ],
+  "adds_by_trim": {
+    "LSh": [
+      "5.0L V8 engine with 438 hp (vs. 4.6L/386 hp on LS RWD or 360 hp on LS AWD)",
+      "8-speed electronically controlled automatic transmission with paddle shifters",
+      "LED headlamps with intelligent high-beam control",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert",
+      "Four-zone climate control with Air Purifier and infrared rear-passenger temperature sensor",
+      "Power-adjustable outboard rear seats with memory and butterfly headrests",
+      "Rear-seat cool box and power rear-door sunshades",
+      "Mark Levinson 19-speaker 450-watt Reference audio system with 7.1 channels",
+      "Heated steering wheel",
+      "19-inch 15-spoke alloy wheels"
+    ],
+    "LS F SPORT": [
+      "F SPORT exterior styling with front bumper, upper and lower grille inserts, rear diffuser",
+      "Brembo opposed six-piston front brake calipers with 14.8-inch ventilated discs",
+      "TORSEN limited-slip rear differential (RWD only)",
+      "F SPORT-tuned lowered Adaptive Variable Air Suspension with stabilizer bars and shock absorbers",
+      "Black leather-trimmed interior with white perforations and bolstered front seats",
+      "19-inch split-10-spoke forged alloy wheels by BBS",
+      "Downshift rev-matching (RWD only)",
+      "Aluminum pedals and interior trim"
+    ],
+    "LS AWD": [
+      "All-wheel drive system",
+      "All-Weather Package with windshield-wiper deicer, headlamp washers, enhanced interior heater"
+    ],
+    "LS RWD": [
+      "SmartAccess with push-button Start/Stop and dual-zone automatic climate control",
+      "Interior air filter and smog sensor with automatic recirculation mode",
+      "Navigation System with Remote Touch device and 12.3-inch multimedia display",
+      "Integrated backup camera",
+      "Lexus Enform App Suite",
+      "Leather-trimmed interior and four-zone climate control",
+      "Drive Mode Select with Comfort and Sport S+ modes",
+      "Intuitive Parking Assist with LED daytime running lights and LED foglamps",
+      "10 standard airbags",
+      "Pre-Collision System with all-speed Dynamic Radar Cruise Control"
+    ]
+  }
+}

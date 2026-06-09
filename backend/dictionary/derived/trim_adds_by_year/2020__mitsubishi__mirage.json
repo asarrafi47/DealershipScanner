@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2020|mitsubishi|mirage",
+  "year": 2020,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2020__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mirage GT",
+    "Mirage SE",
+    "Mirage LE",
+    "Mirage ES",
+    "Mirage G4 SE",
+    "Mirage G4 LE",
+    "Mirage G4 ES"
+  ],
+  "adds_by_trim": {
+    "Mirage GT": [
+      "Information not provided in brochure for GT-specific additions"
+    ],
+    "Mirage SE": [
+      "Information not provided in brochure for SE-specific additions"
+    ],
+    "Mirage LE": [
+      "Information not provided in brochure for LE-specific additions"
+    ],
+    "Mirage ES": [
+      "Remote Keyless Entry",
+      "12V Power Outlet",
+      "USB charging port",
+      "Rearview camera",
+      "LED taillights",
+      "7-inch touch-panel display audio system with Bluetooth wireless technology",
+      "Automatic climate control",
+      "Steering wheel-mounted cruise and audio controls"
+    ],
+    "Mirage G4 SE": [
+      "Information not provided in brochure for SE-specific additions"
+    ],
+    "Mirage G4 LE": [
+      "Information not provided in brochure for LE-specific additions"
+    ],
+    "Mirage G4 ES": [
+      "USB charging port",
+      "Rearview camera",
+      "Automatic climate control",
+      "Remote Keyless Entry with panic feature",
+      "12V Power Outlet",
+      "Steering wheel-mounted cruise and audio controls"
+    ]
+  }
+}

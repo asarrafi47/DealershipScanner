@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2016|hyundai|tucson",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2016_Hyundai_Tucson_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [
+    12
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 12,
+      "trim_hint": true,
+      "text": "AMERICA\u2019S BEST WARRANTY\nPOWERTRAIN LIMITED WARRANTY NEW VEHICLE LIMITED WARRANTY ANTI-PERFORATION WARRANTY 24/7 ROADSIDE ASSISTANCE\n10 YEARS 100,000 MILES 5 YEARS 60,000 MILES 7 YEARS UNLIMITED MILES 5 YEARS UNLIMITED MILES\nSee dealer for LIMITED WARRANTY details. Fuel economy estimated by EPA for comparison only. Mileage may vary. While the information contained in this brochure was correct at the time of printing, specifications\nand equipment can change. Feature comparisons based on competitor information available at the time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to\nchange product specifications and equipment at any time without incurring obligations. Some vehicles are shown with optional equipment. Specifications apply to U.S. vehicles only. Please contact your Hyundai dealer\nfor current vehicle specifications. As part of Hyundai\u2019s commitment to a responsible environment, this brochure was printed using paper certified by the Forest Stewardship Council.\u00ae FSC\u00ae certification helps ensure\nthat the highest social and environmental standards are met in the making of the paper we use, contributing to conservation, responsible management, and community-level benefits for people near the forests.\n\u00a92015 HYUNDAI NP020 T2016",
+      "table_lines": [
+        "AMERICA\u2019S\nED WARRANT | BEST WA\nY AN\n7\n. While the inform\ng. No warranty or\nth optional equipm\ns printed using p\nconservation, resp | RRAN\nTI-PERF",
+        "5 YEARS 60,0 | 00 MILES | 7 | YEARS | UNLIMITED MILES",
+        "ly. Mileage may vary\nt the time of printin\nehicles are shown wi\nent, this brochure wa\nuse, contributing to | ation contai\nguarantee i\nent. Specific\naper certifie\nonsible man"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 12 ---\nAMERICA\u2019S BEST WARRANTY\nPOWERTRAIN LIMITED WARRANTY NEW VEHICLE LIMITED WARRANTY ANTI-PERFORATION WARRANTY 24/7 ROADSIDE ASSISTANCE\n10 YEARS 100,000 MILES 5 YEARS 60,000 MILES 7 YEARS UNLIMITED MILES 5 YEARS UNLIMITED MILES\nSee dealer for LIMITED WARRANTY details. Fuel economy estimated by EPA for comparison only. Mileage may vary. While the information contained in this brochure was correct at the time of printing, specifications\nand equipment can change. Feature comparisons based on competitor information available at the time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to\nchange product specifications and equipment at any time without incurring obligations. Some vehicles are shown with optional equipment. Specifications apply to U.S. vehicles only. Please contact your Hyundai dealer\nfor current vehicle specifications. As part of Hyundai\u2019s commitment to a responsible environment, this brochure was printed using paper certified by the Forest Stewardship Council.\u00ae FSC\u00ae certification helps ensure\nthat the highest social and environmental standards are met in the making of the paper we use, contributing to conservation, responsible management, and community-level benefits for people near the forests.\n\u00a92015 HYUNDAI NP020 T2016\n\nAMERICA\u2019S\nED WARRANT | BEST WA\nY AN\n7\n. While the inform\ng. No warranty or\nth optional equipm\ns printed using p\nconservation, resp | RRAN\nTI-PERF\n5 YEARS 60,0 | 00 MILES | 7 | YEARS | UNLIMITED MILES\nly. Mileage may vary\nt the time of printin\nehicles are shown wi\nent, this brochure wa\nuse, contributing to | ation contai\nguarantee i\nent. Specific\naper certifie\nonsible man"
+}

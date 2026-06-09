@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1990,Audi,100,100,2.3L V5 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.3,16,20,18,,,,,,2.3L V5 Turbo,Turbocharged
-1990,Audi,100,100,2.3L V5 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.3,16,22,18,,,,,,2.3L V5 Turbo,Turbocharged
-1990,Audi,100,quattro,2.3L V5 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.3,16,22,18,,,,,,2.3L V5 Turbo,Turbocharged

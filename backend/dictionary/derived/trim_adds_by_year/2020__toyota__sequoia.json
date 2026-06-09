@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|toyota|sequoia",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_llm_2020__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Sport",
+    "SR5",
+    "TRD Pro"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Premium Audio with Dynamic Navigation, JBL, 7.0-inch touchscreen with Clari-Fi",
+      "Rear-seat Blu-ray Disc player with 9-inch display and wireless headphones",
+      "Perforated leather-trimmed heated second-row captain's chairs",
+      "Perforated leather-trimmed 60/40 split power reclining fold-flat third-row seat",
+      "Chrome auto-dimming heated power mirrors with power folding and memory features"
+    ],
+    "Limited": [
+      "Premium Audio with Dynamic Navigation and 7-inch touch-screen display with Clari-Fi",
+      "Leather-trimmed and heated front seats with 10-way power-adjustable driver's seat",
+      "6-way power-adjustable front passenger seat with power reclining",
+      "Power liftgate with jam protection and puddle lights",
+      "20-inch diamond-cut-finish alloy wheels",
+      "Chrome auto-dimming heated power mirrors with power folding and reverse tilt-down"
+    ],
+    "TRD Sport": [
+      "TRD Sport performance-tuned Bilstein shock absorbers front and rear",
+      "TRD Sport performance-tuned sway bars front and rear",
+      "20-inch TRD Sport black alloy wheels",
+      "Satin-black TRD Sport front door logos",
+      "Gloss-black heated power outside mirrors",
+      "7-passenger seating with easy-clean fabric-trimmed front seats and captain's chairs"
+    ],
+    "SR5": [
+      "5.7-liter i-FORCE V8 DOHC engine with 381 hp and 401 lb-ft torque",
+      "6-speed electronically controlled automatic transmission with sequential shift mode",
+      "LED high- and low-beam headlights with auto-off feature",
+      "Integrated LED fog lights",
+      "Color-keyed heated power outside mirrors",
+      "18-inch alloy wheels",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Automatic three-zone front and rear climate control",
+      "Optitron instrumentation with LCD display",
+      "Easy-clean fabric-trimmed 40/20/40 split second-row seat with one-touch third-row access"
+    ],
+    "TRD Pro": [
+      "TRD Pro front and rear coil-spring independent double-wishbone suspension",
+      "TRD FOX shocks with piggyback reservoirs front and rear",
+      "TRD 18-inch forged aluminum alloy wheels",
+      "Multi-Mode 4WD with Torsen limited-slip center differential standard"
+    ]
+  }
+}

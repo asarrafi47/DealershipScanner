@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2012|gmc|acadia",
+  "year": 2012,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_2012__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes OnStar Directions & Connections plan with 6 months complimentary service",
+      "Adds SiriusXM satellite radio with 3 trial months of XM Premier package",
+      "Adds Features OnStar turn-by-turn navigation with voice-activated directions"
+    ],
+    "Premium": [
+      "Adds OnStar Directions Connections plan with Hands-Free Calling",
+      "Adds XM Radio with 3 trial months of service and commercial-free music channels",
+      "Adds Automatic Crash Response with Stolen Vehicle Assistance",
+      "Adds OnStar Vehicle Diagnostics and Remote Door Unlock",
+      "Adds 24-Hour Roadside Assistance with Courtesy Transportation",
+      "Adds Commitment Plus owner orientation with full tank of gas",
+      "Adds GM 5-Year/100,000-Mile Transferable Powertrain Limited Warranty"
+    ],
+    "Limited": [
+      "Acadia SLE-2 plus the following of",
+      "(cid:129) Chrome beltline moulding",
+      "(cid:129) Tri-zone automatic climate control"
+    ],
+    "SLE": [
+      "8-way power driver seat with power recline and lumbar control",
+      "2-way power front passenger seat",
+      "Heated front seats",
+      "Tri-zone air conditioning with individual climate settings and second/third-row controls",
+      "Color Touch Radio with IntelliLink and 6.5-inch touchscreen",
+      "Remote vehicle start",
+      "Auto-dimming inside rearview mirror"
+    ],
+    "SLT": [
+      "Adds available Touch-Screen Navigation System",
+      "Adds XM NavTraffic with real-time traffic data display"
+    ],
+    "Denali": [
+      "22-inch wheels",
+      "Silver exterior accents",
+      "Trim-specific grille",
+      "Animated greeting lights",
+      "Quilted door surfaces",
+      "Heated and ventilated front seats",
+      "Available second-row heated seats",
+      "Available 16-speaker Bose stereo system"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2015|ram|promaster",
+  "year": 2015,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2015__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cutaway Chassis",
+    "Cab Chassis",
+    "Windowed Van",
+    "Van"
+  ],
+  "adds_by_trim": {
+    "Cutaway Chassis": [
+      "Heavy-duty suspension option for 2500/3500 models with 136-inch or 159-inch wheelbase",
+      "Motor Home Suspension Package available for 3500 models",
+      "Extended wiring for taillamps",
+      "Rear cargo lamps",
+      "Cargo tie-down rings on floor and side-wall",
+      "Full-side wall panels option",
+      "Rear window defroster with rear-hinged doors and fixed glass",
+      "Wood floor in rear cargo area"
+    ],
+    "Cab Chassis": [
+      "260-degree opening rear doors with no glass",
+      "Right-side cargo door with fixed glass",
+      "Cargo compartment floor mat",
+      "Lower-side wall panels",
+      "Cargo partition without window",
+      "Rear window guards",
+      "Spray-on floor liner option"
+    ],
+    "Windowed Van": [
+      "260-degree opening rear doors with fixed glass",
+      "Left-side cargo door with fixed glass",
+      "Right-side cargo door with no glass",
+      "Cargo partition with sliding window",
+      "Rear window defroster capability",
+      "ParkSense rear park assist",
+      "Trailer Tow Group with Class V hitch receiver and 4/7-pin wiring"
+    ],
+    "Van": [
+      "3.0L EcoDiesel I4 engine with 6-speed dual active drive transmission",
+      "3.6L Pentastar V6 with 6-speed automatic transmission",
+      "Electronic stability control and vehicle tracking system",
+      "AM/FM/MP3 radio with four speakers and media input hub",
+      "ParkView rear back-up camera",
+      "Six air bags",
+      "Four-way manually adjustable driver and front-passenger bucket seats",
+      "Power windows and door locks",
+      "Telescoping steering column"
+    ]
+  }
+}

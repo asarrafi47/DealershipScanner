@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2014|volkswagen|eos",
+  "year": 2014,
+  "make": "Volkswagen",
+  "model": "Eos",
+  "ladder_id": "brochure_web_2014__volkswagen__eos",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "SEL Premium",
+    "SEL",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.0L TSI turbocharged engine with 200 horsepower",
+      "6-speed automatic transmission",
+      "Power convertible top with one-touch operation",
+      "Air conditioning with climate control",
+      "Power windows, locks, and mirrors",
+      "Cruise control",
+      "AM/FM CD audio system with auxiliary input",
+      "16-inch alloy wheels"
+    ],
+    "SEL": [
+      "Automatic headlights and rain-sensing wipers",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "Six-speaker sound system upgrade",
+      "17-inch alloy wheels",
+      "Bluetooth connectivity for phone",
+      "Chrome exterior accents"
+    ],
+    "SEL Premium": [
+      "Premium 6-speaker sound system with subwoofer",
+      "Navigation system with 6.5-inch touchscreen",
+      "Bi-xenon HID headlights",
+      "Panoramic sunroof with power shade",
+      "Full leather seating surfaces",
+      "Heated leather steering wheel",
+      "Parking sensors with visual display"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/eos/"
+}

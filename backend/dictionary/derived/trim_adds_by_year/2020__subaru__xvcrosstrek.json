@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|subaru|xvcrosstrek",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2020__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crosstrek Limited",
+    "Crosstrek Premium",
+    "Crosstrek"
+  ],
+  "adds_by_trim": {
+    "Crosstrek Limited": [
+      "18 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/55 R18 all-season tires",
+      "SI-DRIVE (Subaru Intelligent Drive) standard",
+      "X-MODE with Hill Descent Control standard",
+      "Lineartronic CVT transmission standard",
+      "Auto Start-Stop System standard"
+    ],
+    "Crosstrek Premium": [
+      "Optional SI-DRIVE (Subaru Intelligent Drive)",
+      "Optional X-MODE with Hill Descent Control",
+      "Optional Lineartronic CVT transmission",
+      "Optional Auto Start-Stop System"
+    ],
+    "Crosstrek": [
+      "6-speed manual transmission with Incline Start Assist standard",
+      "17 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/60 R17 all-season tires",
+      "Subaru Symmetrical All-Wheel Drive",
+      "2.0-liter DOHC direct-injection BOXER engine with 152 hp and 145 lb-ft torque",
+      "Vehicle Dynamics Control (VDC) with Active Torque Vectoring",
+      "4-wheel disc brakes with ABS and Electronic Brake-force Distribution"
+    ]
+  }
+}

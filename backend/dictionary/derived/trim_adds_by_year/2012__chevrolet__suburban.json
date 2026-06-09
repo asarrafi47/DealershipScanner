@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|chevrolet|suburban",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2012__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome door handles",
+      "Chrome assist steps",
+      "Leather-wrapped heated steering wheel",
+      "Power-folding driver-side auto-dimming mirrors",
+      "Power-tilt-sliding sunroof with Express-Open/-Close"
+    ],
+    "LT": [
+      "Power-retractable assist steps with chrome accent strip",
+      "Power-remote liftgate with washer/wiper",
+      "Power-folding driver-side auto-dimming mirrors",
+      "Power-adjustable pedals for accelerator and brake",
+      "Luxury Package with 10-way power front bucket seats and heated second-row seats"
+    ],
+    "LS": [
+      "Vortec 5.3L V8 with Active Fuel Management and E85 FlexFuel capability",
+      "Automatic headlamps and Daytime Running Lamps",
+      "Roof-mounted luggage rack with side and center rails",
+      "Power heated driver and passenger mirrors",
+      "Remote Keyless Entry"
+    ]
+  }
+}

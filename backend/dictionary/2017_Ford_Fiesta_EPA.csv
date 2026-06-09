@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2017,Ford,Fiesta,FWD,1.6L I4,Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,27,37,31,,,,,,1.6L I4 Turbo,Turbocharged
-2017,Ford,Fiesta,FWD,1.6L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,27,35,30,,,,,,1.6L I4 Turbo,Turbocharged
-2017,Ford,Fiesta,SFE FWD,1.0L I3 (SIDI),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.0,31,41,35,,,,,,1.0L I3,
-2017,Ford,Fiesta,ST FWD,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,26,33,29,,,,,,1.6L I4 Turbo,Turbocharged

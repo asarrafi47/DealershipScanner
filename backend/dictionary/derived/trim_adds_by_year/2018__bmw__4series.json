@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2018|bmw|4series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "4 Series",
+  "ladder_id": "brochure_llm_2018__bmw__4series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M4 Coupe",
+    "M4 Convertible"
+  ],
+  "adds_by_trim": {
+    "M4 Coupe": [
+      "3.0-liter M TwinPower Turbo inline 6-cylinder engine with 425 hp",
+      "0-60 mph acceleration in 3.9 seconds (automatic) or 4.1 seconds (manual)",
+      "17/24/19 city/highway/combined mpg (automatic) or 17/26/20 (manual)",
+      "Multiple exterior paint options including Alpine White, Black Sapphire Metallic, and BMW Individual colors",
+      "Cloth/leather combination, extended Merino leather, full Merino leather, and BMW Individual upholstery choices",
+      "Interior trim options including carbon fiber, fineline anthracite wood, aluminum blade, and piano black"
+    ],
+    "M4 Convertible": [
+      "Convertible body style with power soft-top roof",
+      "0-60 mph acceleration in 4.2 seconds (automatic) or 4.4 seconds (manual)",
+      "Same 3.0-liter M TwinPower Turbo inline 6-cylinder engine with 425 hp",
+      "17/24/19 city/highway/combined mpg (automatic) or 17/26/20 (manual)"
+    ]
+  }
+}

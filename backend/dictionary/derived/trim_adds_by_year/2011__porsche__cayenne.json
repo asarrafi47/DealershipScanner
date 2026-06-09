@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2011|porsche|cayenne",
+  "year": 2011,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "2009_porsche_cayenne_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Turbo",
+    "Carrera",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Carrera": [
+      "ransport Comfort and t"
+    ],
+    "Turbo": [
+      "Comfort and transport"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Carrera": 1,
+      "Sport": 0
+    }
+  }
+}

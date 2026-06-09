@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2021|jeep|compass",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "jeep_compass",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Willys"
+  ],
+  "adds_by_trim": {
+    "Trailhawk": [
+      "driver convenience system, not a substitute for active"
+    ],
+    "Limited": [
+      "driver must remain aware of traffic conditions and be prepared to use the brakes to avoid collisions. (7) This system is a"
+    ],
+    "Willys": [
+      "driver must remain aware of traffic conditions and maintain control of the vehicle. (8) Always sit properly in designated"
+    ],
+    "Latitude": [
+      "6-speed automatic transmission standard on FWD models",
+      "6-speed manual transmission standard on 4x4 models",
+      "Jeep Active Drive single-speed 4WD on 4x4"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.6666666666666666,
+    "per_trim_add_counts": {
+      "Trailhawk": 1,
+      "Latitude": 0,
+      "Willys": 1
+    }
+  }
+}

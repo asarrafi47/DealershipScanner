@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2020_acura_ilx_complete_options",
+  "make": "ACURA",
+  "models": [
+    "ILX",
+    "ILX"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Electric motor MF6 DC synchronous; CVT (1.5 L hybrid; 2013–2014) (was –2014 (ILX Hybrid); Layout Front-engine, front-wheel drive)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: In the interior, the overall design has revised seats, with the availability of; In the interior, the overall design has revised seats, with the availability of red leather (only on the A-Spec), and an updated infotainment system — the latter 30%…"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: –2014 (ILX Hybrid); Layout Front-engine, front-wheel drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Options are grouped into Premium and Technology packages and include leather uph; Options are grouped into Premium and Technology packages and include leather upholstery, 17-inch alloy wheels, navigation system, premium audio system with SiriusXM satellite…"
+      }
+    ]
+  }
+}

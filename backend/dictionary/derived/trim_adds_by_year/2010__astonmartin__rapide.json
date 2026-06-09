@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2010|astonmartin|rapide",
+  "year": 2010,
+  "make": "Aston Martin",
+  "model": "rapide",
+  "ladder_id": "brochure_2010__astonmartin__rapide",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds leather-trimmed seats with heated front and rear as standard",
+      "Adds 1000-watt Bang & Olufsen BeoSound audio system with 15 speakers",
+      "Adds dual-zone heating, ventilation and air-conditioning system",
+      "Adds glass starter module with ECU (Emotion Control Unit)",
+      "Adds ISOFIX fittings and dedicated child seats",
+      "Adds LED map lamps and ambient lighting",
+      "Adds Iridium Silver trim with satin chrome and anodised aluminium controls"
+    ],
+    "Limited": [
+      "Adds seat cooling option for front and rear passengers"
+    ]
+  }
+}

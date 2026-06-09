@@ -1,0 +1,121 @@
+{
+  "catalog_key": "2022|chevrolet|silverado",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_2022__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "ZR2",
+    "Trail Boss",
+    "LT Trail Boss",
+    "RST",
+    "Z71",
+    "LT",
+    "Custom Trail Boss",
+    "Custom",
+    "WT",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Standard 2.7L Turbo High-Output engine"
+    ],
+    "WT": [
+      "4.3L EcoTec3 V6 standard engine",
+      "Available 2.7L Turbo and 5.3L EcoTec3 V8 engines",
+      "Entry-level work truck with essential features and equipment"
+    ],
+    "Custom": [
+      "Adds body-color grille bar, bumpers and door handles",
+      "Adds Black Chevrolet bowtie emblems",
+      "Adds All Star Edition"
+    ],
+    "Custom Trail Boss": [
+      "Adds 2-inch factory suspension lift",
+      "Adds Z71 Off-Road suspension with monotube shocks",
+      "Adds Hill Descent Control",
+      "Adds skid plates with Z71 badge",
+      "Adds Autotrac 2-speed transfer case",
+      "Adds automatic locking rear differential",
+      "Adds 18-inch high-gloss Black-painted wheels with Goodyear Wrangler DuraTrac mud-terrain tires"
+    ],
+    "LT": [
+      "Upgraded to 13.4-inch diagonal color touch-screen display with Google built-in compatibility",
+      "Adds 12.3-inch diagonal reconfigurable Driver Information Center",
+      "Adds chrome grille bar, bumpers and mirror caps",
+      "Adds leather-wrapped steering wheel",
+      "Adds Convenience Package"
+    ],
+    "Z71": [
+      "Adds Z71 Off-Road suspension with monotube shocks",
+      "Adds Hill Descent Control",
+      "Adds skid plates",
+      "Adds Z71 badge",
+      "Adds Autotrac 2-speed transfer case",
+      "Adds automatic locking rear differential"
+    ],
+    "RST": [
+      "Adds body-color grille bar, bumpers and door handles",
+      "Adds All Star Edition",
+      "Adds available Multi-Flex Tailgate or power-up/-down tailgate",
+      "Adds available in-vehicle Trailering App",
+      "Adds available Leather Package",
+      "Adds available RST All Star Premium Package"
+    ],
+    "LT Trail Boss": [
+      "Adds 2-inch factory suspension lift",
+      "Upgraded to Z71 Off-Road suspension with monotube shocks",
+      "Adds Hill Descent Control",
+      "Adds skid plates",
+      "Adds Autotrac 2-speed transfer case",
+      "Adds automatic locking rear differential",
+      "Adds 18-inch high-gloss Black-painted wheels with Goodyear Wrangler DuraTrac mud-terrain tires",
+      "Adds raised hood with styled Black insert"
+    ],
+    "Trail Boss": [
+      "Adds 2-inch factory suspension lift",
+      "Adds Z71 Off-Road suspension with monotube shocks",
+      "Adds Hill Descent Control",
+      "Adds skid plates",
+      "Adds Autotrac 2-speed transfer case",
+      "Adds automatic locking rear differential",
+      "Adds 18-inch high-gloss Black-painted wheels with Goodyear Wrangler DuraTrac mud-terrain tires"
+    ],
+    "ZR2": [
+      "Upgraded to 6.2L V8 engine",
+      "Adds Multimatic DSSV dampers",
+      "Adds front and rear electronic locking differentials",
+      "Adds large underbody aluminum skid plates",
+      "Adds enhanced 2-speed transfer case with Terrain mode",
+      "Adds 33-inch Goodyear Wrangler Territory mud-terrain tires with ZR2-specific 18-inch aluminum wheels",
+      "Adds raised hood with styled Black insert",
+      "Adds exclusive Graystone/Jet Black interior trim with Strike Yellow accent stitching"
+    ],
+    "LTZ": [
+      "Adds 20-inch painted-aluminum wheels",
+      "Adds available power-up/-down or Multi-Flex Tailgate",
+      "Adds high-intensity LED reflector headlamps with LED curtain DRLs and White tracer animation",
+      "Adds advanced trailering camera system with up to 14 views",
+      "Adds perforated leather-appointed front bucket seats",
+      "Adds Bose premium 7-speaker audio system",
+      "Adds HD Surround Vision",
+      "Adds Rear Cross Traffic Braking and Trailer Side Blind Zone Alert",
+      "Adds LTZ Plus Package"
+    ],
+    "High Country": [
+      "Upgraded to 5.3L V8 with available 6.2L V8 or Duramax 3.0L Turbo-Diesel I-6 engine",
+      "Adds exclusive Galvano grille with Godric accents",
+      "Adds leather seating surfaces with exclusive custom perforation and stitching pattern",
+      "Adds authentic open-pore wood trim",
+      "Adds Bose premium 7-speaker audio system with stainless steel speaker grilles",
+      "Adds available power-retractable assist steps",
+      "Adds 20-inch machined-aluminum or available 22-inch painted-aluminum wheels",
+      "Adds Bed View Camera",
+      "Adds available Super Cruise with Trailering",
+      "Adds available High Country Premium Package"
+    ]
+  }
+}

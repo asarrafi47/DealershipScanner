@@ -1,0 +1,39 @@
+{
+  "ladder_id": "gmc_yukon",
+  "make": "GMC",
+  "models": [
+    "Yukon",
+    "Yukon XL",
+    "Yukon Denali",
+    "Yukon AT4"
+  ],
+  "year_min": 2021,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Denali Ultimate": [
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior and tech"
+      }
+    ],
+    "Denali": [
+      {
+        "label": "Interior Materials",
+        "value": "Premium leather seating"
+      }
+    ],
+    "SLT": [
+      {
+        "label": "Interior Materials",
+        "value": "Leather-appointed seating"
+      }
+    ],
+    "Elevation": [
+      {
+        "label": "Engine Options",
+        "value": "Mid-level equipment"
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2016|volkswagen|beetle",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Beetle",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

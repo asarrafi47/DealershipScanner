@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2017|infiniti|qx5680",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2017__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 Limited 4WD",
+    "QX80 Limited",
+    "QX80 4WD",
+    "QX80"
+  ],
+  "adds_by_trim": {
+    "QX80 Limited 4WD": [
+      "Darkened automatic on/off LED headlights with high beam assist",
+      "Darkened LED rear brake lights and center high-mounted stoplight",
+      "Dark chrome roof rails",
+      "Dark chrome exterior trim",
+      "Auto-dimming power-folding heated outside mirrors with integrated turn signals"
+    ],
+    "QX80 Limited": [
+      "Darkened automatic on/off LED headlights with high beam assist",
+      "Darkened LED rear brake lights and center high-mounted stoplight",
+      "Dark chrome roof rails",
+      "Dark chrome exterior trim"
+    ],
+    "QX80 4WD": [
+      "INFINITI All-Mode 4WD with computer-controlled transfer case offering Auto, 4H, and 4L settings",
+      "4-wheel Active Brake Limited Slip system",
+      "Integrated Class IV tow hitch and 7-pin wiring harness with cover",
+      "8,500 lbs towing capacity"
+    ],
+    "QX80": [
+      "5.6-liter 32-valve V8 engine with 400 hp and 413 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control",
+      "Rear-wheel drive",
+      "Engine-speed-sensitive power steering",
+      "Independent double-wishbone front and rear suspension",
+      "Automatic on/off LED headlights with high beam assist and windshield wiper interlock",
+      "LED integrated front fog lights and LED rear brake lights",
+      "Power sliding tinted glass moonroof with one-touch auto-open/close and tilt feature",
+      "Tri-Zone Automatic Temperature Control with microfilter",
+      "INFINITI Intelligent Key with illuminated push button ignition"
+    ]
+  }
+}

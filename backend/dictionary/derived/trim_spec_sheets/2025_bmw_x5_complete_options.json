@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2025_bmw_x5_complete_options",
+  "make": "BMW",
+  "models": [
+    "X5",
+    "X5"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "xDrive45e": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Automatic (S8); All-Wheel Drive (was Layout Front-engine, four-wheel-drive; In December 2013, additional engine options became available.); Automatic (S8)"
+      }
+    ],
+    "M Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, four-wheel-drive; In December 2013, additional engine options became available."
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, four-wheel-drive; In December 2013, additional engine options became available."
+      }
+    ]
+  }
+}

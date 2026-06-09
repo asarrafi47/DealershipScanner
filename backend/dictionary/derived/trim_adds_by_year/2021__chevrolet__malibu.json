@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2021|chevrolet|malibu",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2021__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "TL",
+    "SR",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Chevrolet Infotainment 3 Plus with 8-inch HD touchscreen, Navigation, Alexa Built-In",
+      "9-speaker Bose premium audio system",
+      "Wireless charging pad for one compatible mobile device",
+      "120-volt power outlet on rear center console",
+      "Trunk mat and cargo anchors",
+      "Enhanced 8-inch reconfigurable multi-color driver display",
+      "9-speaker Bose premium system replaces 6-speaker standard",
+      "Enhanced Driver Confidence Package with Adaptive Cruise Control and Automatic Parking Assist",
+      "SiriusXM All Access 3-month trial subscription"
+    ],
+    "TL": [
+      "Available Leather Package with heated leather steering wheel and auto-dimming mirror",
+      "Available special editions: Midnight, Redline, Sport with unique wheel and styling designs",
+      "Power sunroof with tilt-sliding function and fixed rear skylight",
+      "Driver express-up and express-down power windows",
+      "Leather-wrapped shift knob",
+      "Available Driver Confidence I & II Package with advanced safety features",
+      "SiriusXM All Access 3-month trial subscription included"
+    ],
+    "SR": [
+      "3-spoke steering wheel with mounted audio, cruise and phone controls",
+      "Exterior temperature display",
+      "Available 4G LTE Wi-Fi Hotspot for up to seven devices with 1 month data",
+      "Available Driver Confidence I Package with lane and blind zone alerts"
+    ],
+    "SL": [
+      "Available 4G LTE Wi-Fi Hotspot with 1 month or 3 GB data included",
+      "Remote vehicle starter system",
+      "Exterior temperature display",
+      "Available Driver Confidence I Package"
+    ],
+    "L": [
+      "Standard electronic cruise control with Set and Resume Speed",
+      "Keyless Open and Start with extended-range Remote Keyless Entry",
+      "Power door locks with programmable lockout protection",
+      "Front and rear carpeted floor mats",
+      "Monochromatic driver information center display",
+      "Rear Seat Reminder notification",
+      "Chevrolet Infotainment 3 system with 8-inch touchscreen and Bluetooth audio streaming",
+      "Wireless Apple CarPlay and Android Auto compatibility",
+      "USB Type-A and Type-C ports with auxiliary input",
+      "6-speaker audio system"
+    ]
+  }
+}

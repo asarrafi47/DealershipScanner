@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|volkswagen|arteon",
+  "year": 2018,
+  "make": "Volkswagen",
+  "model": "Arteon",
+  "ladder_id": "brochure_llm_2018__volkswagen__arteon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL Premium",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL Premium": [
+      "Heated steering wheel",
+      "Driver's seat power massage function",
+      "Actively ventilated front seats",
+      "Heated rear outboard seats with separate controls",
+      "3-color adjustable ambient interior lighting",
+      "Overhead View Camera (Area View)",
+      "Park Distance Control front and rear",
+      "Parking Steering Assistant (Park Assist)",
+      "Active Blind Spot Monitor with Rear Traffic Alert",
+      "Lane Keeping System (Lane Assist)"
+    ],
+    "SEL": [
+      "LED dynamic headlights with LED Daytime Running Lights",
+      "Adaptive Front-lighting System and dynamic cornering lights",
+      "Power folding side mirrors with position memory",
+      "Power tilting and sliding panoramic sunroof",
+      "Driver's seat position memory",
+      "Nappa Leather seating surfaces",
+      "Volkswagen Digital Cockpit high-resolution digital display cluster",
+      "Adaptive Cruise Control Stop and Go",
+      "Remote engine start feature",
+      "Hands-free Easy Open and Easy Close rear hatch"
+    ],
+    "SE": [
+      "2.0L TSI 268 HP turbocharged engine with direct injection",
+      "8-speed automatic transmission with Tiptronic and Sport mode",
+      "Front-wheel drive standard with 4MOTION available",
+      "Four-wheel independent suspension with multi-mode DCC adaptive control",
+      "LED modular headlights with LED Daytime Running Lights",
+      "LED taillights and rear license plate lighting",
+      "Heated, foldable power-adjustable side mirrors with integrated turn signals",
+      "12-way power front seats including 4-way lumbar support",
+      "Heated front Comfort Sport seats",
+      "Forward Collision Warning with Autonomous Emergency Braking and Pedestrian Monitoring"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2012|ford|f150",
+  "year": 2012,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2012__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVT RAPTOR",
+    "Ford Harley-Davidson F-150",
+    "PLATINUM",
+    "KING RANCH",
+    "LARIAT",
+    "FX2/FX4",
+    "XLT",
+    "STX",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "SVT RAPTOR": [
+      "Wider body: 86.3 inches excluding mirrors versus 79.2 inches on XL",
+      "Increased ground clearance and approach/departure angles for off-road capability",
+      "SuperCab and SuperCrew configurations with enhanced chassis tuning"
+    ],
+    "Ford Harley-Davidson F-150": [
+      "Exclusive Harley-Davidson branding and styling",
+      "Limited availability in SuperCab and SuperCrew configurations"
+    ],
+    "PLATINUM": [
+      "Premium luxury trim available in SuperCab and SuperCrew configurations",
+      "Enhanced interior appointments and premium features"
+    ],
+    "KING RANCH": [
+      "King Ranch exclusive branding and styling",
+      "Available in SuperCab and SuperCrew with enhanced trim options"
+    ],
+    "LARIAT": [
+      "Luxury-focused trim with enhanced appointments",
+      "Available across Regular Cab, SuperCab, and SuperCrew body styles"
+    ],
+    "FX2/FX4": [
+      "Off-road focused package available in SuperCab and SuperCrew",
+      "Four-wheel drive capability with off-road enhancements"
+    ],
+    "XLT": [
+      "Mid-level trim across all cab styles and box configurations",
+      "Available in Regular Cab, SuperCab, and SuperCrew"
+    ],
+    "STX": [
+      "Specialized trim available in SuperCab configuration",
+      "Sport-oriented styling and features"
+    ],
+    "XL": [
+      "Power 4-wheel vented-disc brakes with ABS",
+      "AdvanceTrac with RSC and front-seat side airbags",
+      "Dual-note horn, tilt steering column, and 12-volt powerpoints",
+      "Personal Safety System with dual-stage front airbags and pretensioners",
+      "Tire Pressure Monitoring System and trailer sway control",
+      "Air conditioning and assist/grab handles",
+      "Intermittent windshield wipers and removable tailgate with key lock"
+    ]
+  }
+}

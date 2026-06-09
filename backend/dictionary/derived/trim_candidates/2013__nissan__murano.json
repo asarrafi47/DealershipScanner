@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2013|nissan|murano",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Murano",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Limited",
+    "Premium",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

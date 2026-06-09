@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2022_cadillac_srx_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "SRX",
+    "SRX"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine; L LFX V6 (gasoline/E85) (was Layout Front-engine, rear-wheel drive / Front-engine, all-wheel drive; Engine)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: Additional interior features included standard HD radio, Bluetooth audio streami; Exterior colors Graphite Metallic, Terra Mocha Metallic, and Sapphire Blue Metallic were added, and caramel and ebony interior accents became options. 2015 changes The…"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, rear-wheel drive / Front-engine, all-wheel drive; Engine"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Heated front seats and wood interior trim were standard in the V8 and available; Heated front seats and wood interior trim were standard in the V8 and available as options in the V6."
+      }
+    ]
+  }
+}

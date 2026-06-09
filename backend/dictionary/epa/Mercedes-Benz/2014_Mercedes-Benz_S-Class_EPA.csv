@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2014,Mercedes-Benz,S-Class,S550,4.7L V8 (SIDI),4.7L V8 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,4.7,17,26,20,,,,,
+2014,Mercedes-Benz,S-Class,S63 AMG 4matic,5.5L V8 (SIDI),5.5L V8 Twin Turbo,Twin Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Large Cars,8,5.5,15,23,18,,,,,
+2014,Mercedes-Benz,S-Class,S550 4matic,4.7L V8 (SIDI),4.7L V8 Turbo,Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Large Cars,8,4.7,16,26,19,,,,,

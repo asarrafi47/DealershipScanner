@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2010|cadillac|sts",
+  "year": 2010,
+  "make": "Cadillac",
+  "model": "STS",
+  "ladder_id": "brochure_llm_2010__cadillac__sts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "STS V8 PERFORMANCE COLLECTION",
+    "STS V8 LUXURY COLLECTION",
+    "STS V8",
+    "STS V6 PREMIUM COLLECTION",
+    "STS V6 LUXURY COLLECTION",
+    "STS V6"
+  ],
+  "adds_by_trim": {
+    "STS V6 LUXURY COLLECTION": [
+      "Eight-speaker Bose Sound System stereo with in-dash six-disc CD changer",
+      "Bluetooth wireless technology for phone interface with hands-free calling",
+      "Heated steering wheel",
+      "Memory settings for two drivers adjusting seat, steering wheel, mirrors, audio, and climate",
+      "Universal home remote three-channel programmable",
+      "Automatic rear level control self-adjusting"
+    ],
+    "STS V6 PREMIUM COLLECTION": [
+      "Decklid spoiler",
+      "Performance brakes with fade-resistant pads",
+      "Performance cooling system with all electric cooling package",
+      "Premium steering ZF Servotronic with performance gearing and variable-ratio electronic control",
+      "18-inch cast-aluminum polished wheels"
+    ],
+    "STS V8": [
+      "4.6L Northstar V8 engine with RWD or available AWD"
+    ],
+    "STS V8 LUXURY COLLECTION": [
+      "Automatic rear level control",
+      "Ultrasonic rear parking assist with LED indicators and audible warning",
+      "Bluetooth wireless technology for phone interface with hands-free calling",
+      "Heated steering wheel",
+      "Memory settings for two drivers adjusting seat, steering wheel, mirrors, audio, and climate",
+      "Universal home remote three-channel programmable"
+    ],
+    "STS V8 PERFORMANCE COLLECTION": [
+      "Bose 5.1 Studio Surround Sound System with navigation",
+      "Xenon High-Intensity Discharge HID headlamps with IntelliBeam automatic high-beam switching and headlamp washers",
+      "Magnetic ride control computer-controlled suspension with adjustable shock absorbers",
+      "18-inch cast-aluminum polished wheels"
+    ],
+    "STS V6": []
+  }
+}

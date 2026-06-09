@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2017|alfaromeo|giulia",
+  "year": 2017,
+  "make": "alfa romeo",
+  "model": "giulia",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

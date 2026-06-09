@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2018|chevrolet|cruze",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2018__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "DIESEL",
+    "LTZ",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Driver Confidence II Package with IntelliBeam, Forward Collision Alert, Following Distance Indicator, Lane Keep Assist",
+      "Sun and Sound with Navigation Package including MyLink Navigation and 8-inch display",
+      "Enhanced Convenience Package with wireless charging and 110-volt power outlet",
+      "Leather-appointed seating surfaces with heated leather-wrapped steering wheel",
+      "18-inch machined-face aluminum wheels"
+    ],
+    "DIESEL": [
+      "Driver Confidence Package with Rear Park Assist, Lane Change Alert, Side Blind Zone Alert, Rear Cross Traffic Alert",
+      "Technology Package with Bose 9-speaker system and MyLink Radio with 8-inch display",
+      "16-inch aluminum wheels"
+    ],
+    "LTZ": [
+      "Sun and Sound Package with MyLink 8-inch display, Bose premium 9-speaker system, power sunroof, ambient lighting",
+      "Redline Edition with 18-inch Red-accented aluminum wheels, Black Cruze emblems, Black bowtie emblems",
+      "RS Package with rear spoiler, foglamps, sport body kit, RS badging",
+      "Convenience Package with Keyless Open and Start, heated front seats, 8-way power driver seat"
+    ],
+    "SL": [
+      "Convenience Package with Keyless Open and Start, heated driver and front passenger seats, 8-way power driver seat",
+      "16-inch aluminum wheels",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for up to 7 devices"
+    ],
+    "L": [
+      "15-inch steel wheels with painted wheel covers",
+      "OnStar Basic Plan for five years with select myChevrolet Mobile App features",
+      "OnStar 4G LTE and built-in Wi-Fi hotspot with 3-month data trial"
+    ]
+  }
+}

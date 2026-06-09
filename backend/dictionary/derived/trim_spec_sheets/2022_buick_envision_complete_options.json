@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2022_buick_envision_complete_options",
+  "make": "Buick",
+  "models": [
+    "Envision",
+    "Envision"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Avenir": [
+      {
+        "label": "Engine Options",
+        "value": "L LSY turbo gasoline I4"
+      }
+    ],
+    "Essence": [
+      {
+        "label": "Engine Options",
+        "value": "L LSY turbo gasoline I4"
+      }
+    ],
+    "Select": [
+      {
+        "label": "Engine Options",
+        "value": "L LSY turbo gasoline I4"
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2020|landrover|evoque",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Evoque",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2020|dodge|challenger",
+  "year": 2020,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2020__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat",
+    "SRT Hellcat Redeye",
+    "1320",
+    "Scat Pack",
+    "T/A",
+    "R/T",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT Hellcat Redeye": [
+      "SRT Hellcat spoiler badge",
+      "Wildwheel Alcantara suede-wrapped steering wheel with Alcantara Appearance Package"
+    ],
+    "SRT Hellcat": [
+      "Advanced SRT multistage driver and front-passenger air bags",
+      "SRT Hellcat spoiler badge",
+      "SRT Performance leather-wrapped flat-bottom heated steering wheel",
+      "P305/35ZR20 All-Season Performance tires",
+      "Optional P305/35ZR20 P ZERO Summer High-Performance tires"
+    ],
+    "1320": [
+      "Performance four-bump suede-wrapped steering wheel",
+      "P275/40R20 Nexen street-legal drag radials",
+      "60/40 split-folding rear bench included in Cargo Net"
+    ],
+    "Scat Pack": [
+      "Scat Pack Bee spoiler badge",
+      "Dodge Performance flat-bottom leather-wrapped steering wheel with Performance Handling Group",
+      "P275/40ZR20 All-Season Performance tires standard",
+      "Optional P275/40ZR20 P ZERO Summer High-Performance tires"
+    ],
+    "T/A": [
+      "Dodge Performance flat-bottom leather-wrapped steering wheel",
+      "P275/40ZR20 All-Season Performance tires standard",
+      "Optional P245/45ZR20 BSW Performance tires",
+      "Optional P275/40ZR20 P ZERO Summer High-Performance tires"
+    ],
+    "R/T": [
+      "Performance four-bump leather-wrapped steering wheel standard",
+      "Steering wheel-mounted paddle shifters standard",
+      "Optional Harman Kardon 18-speaker 900-watt audio system",
+      "P245/45ZR20 All-Season Performance tires standard"
+    ],
+    "GT": [
+      "Performance four-bump leather-wrapped steering wheel standard",
+      "Steering wheel-mounted paddle shifters standard",
+      "Optional Harman Kardon 18-speaker 900-watt audio system",
+      "P235/55R19 BSW All-Season Performance tires standard"
+    ],
+    "SXT": [
+      "Leather-wrapped steering wheel with vehicle controls",
+      "Six-speaker sound system standard",
+      "Uconnect 4 with 7-inch touchscreen and Apple CarPlay standard",
+      "P235/55R18 All-Season Performance tires standard"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|nissan|nv",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_llm_2013__nissan__nv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "NissanConnect with Navigation 5.8-inch QVGA color touchscreen monitor",
+      "Nissan Voice Recognition for audio and navigation",
+      "NavTraffic and NavWeather with 3-month SiriusXM trial subscription",
+      "Google POIs and Send-to-Car functionality",
+      "Hands-free text messaging assistant",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "Pandora radio compatibility and Bluetooth streaming audio",
+      "RearView Monitor",
+      "Body-color front and rear bumpers",
+      "Body-color door handles and outside mirrors"
+    ],
+    "S": [
+      "2.0-liter DOHC 16-valve 4-cylinder MR20DE engine with 131 hp and 139 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "Dual power heated outside mirrors",
+      "Sliding side doors on both driver's and passenger's sides",
+      "40/60 split rear cargo doors with 180-degree maximum opening",
+      "Rear window defroster",
+      "Daytime Running Lights and halogen headlights",
+      "AM/FM/CD audio system with MP3/WMA playback and auxiliary audio input",
+      "Bluetooth hands-free phone system",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags"
+    ]
+  }
+}

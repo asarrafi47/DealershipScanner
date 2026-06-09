@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2024|toyota|grandhighlander",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Grand Highlander",
+  "ladder_id": "2024_toyota_grandhighlander",
+  "source": "manual_brochure_review",
+  "trims_available": ["LE", "XLE", "Limited", "Platinum", "Hybrid MAX"],
+  "adds_by_trim": {
+    "XLE": [
+      "Second-row captain chairs or bench upgrades and enhanced tech vs LE",
+      "Heated mirrors and power liftgate content"
+    ],
+    "Limited": [
+      "Leather-trimmed heated/ventilated seats and 12.3-inch multimedia",
+      "Panoramic roof and premium audio path"
+    ],
+    "Platinum": [
+      "Platinum luxury appointments and top non-hybrid trim",
+      "Advanced comfort and driver-assist features"
+    ],
+    "Hybrid MAX": [
+      "Hybrid MAX powertrain with highest output in Grand Highlander lineup",
+      "Three-row hybrid flagship trim"
+    ]
+  }
+}

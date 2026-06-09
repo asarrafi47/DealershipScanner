@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2019|dodge|journey",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2019__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SXT",
+    "Crossroad",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "Black roof rack side rails included with Blacktop Package",
+      "Performance suspension on AWD models",
+      "Touring suspension on FWD models with Blacktop Package"
+    ],
+    "SXT": [
+      "3-Zone Automatic Temperature Control with humidity sensor via Uconnect 8.4",
+      "Auto-dimming rearview mirror",
+      "Front and rear swiveling LED lamps",
+      "Premium door trim panel with Gray accent stitching",
+      "Leather-wrapped shift knob via Premium or Connectivity Group",
+      "Leather-wrapped steering wheel via Premium or Connectivity Group",
+      "Heated steering wheel via Popular Equipment Group"
+    ],
+    "Crossroad": [
+      "3-Zone Automatic Temperature Control with humidity sensor",
+      "Auto-dimming rearview mirror",
+      "Front and rear swiveling LED lamps",
+      "Platinum Chrome roof rack side rails",
+      "Premium door trim panel options with accent stitching"
+    ],
+    "ES": [
+      "2.4L Tigershark MultiAir2 DOHC 16V I4 engine standard",
+      "4-speed Automatic transmission with FWD",
+      "3-Zone manual temperature control",
+      "Front-passenger assist handle",
+      "Full-length floor console",
+      "Child Seat Anchor System LATCH",
+      "Driver and front-passenger footwell LED lamps",
+      "Front courtesy and map lamps"
+    ]
+  }
+}

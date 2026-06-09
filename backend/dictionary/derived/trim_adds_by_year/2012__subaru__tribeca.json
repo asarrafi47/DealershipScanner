@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|subaru|tribeca",
+  "year": 2012,
+  "make": "Subaru",
+  "model": "Tribeca",
+  "ladder_id": "brochure_llm_2012__subaru__tribeca",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Touring",
+    "3.6R Limited",
+    "3.6R Premium"
+  ],
+  "adds_by_trim": {
+    "3.6R Touring": [
+      "High intensity discharge (HID) low-beam headlights with multireflector halogen high-beam headlights",
+      "Power tilt/sliding-glass moonroof with 99% UV light reduction",
+      "Body-color side sills and front/rear lower bumper area",
+      "Raised roof rails in silver-finish with 150 lbs. maximum capacity",
+      "385-watt 10-speaker Harman Kardon 6-CD audio system with amplifier and subwoofer"
+    ],
+    "3.6R Limited": [
+      "Leather-trimmed upholstery throughout cabin",
+      "2-position driver's seat memory",
+      "Auto-dimming rearview mirror with integrated 3.3-inch back-up camera display",
+      "Power front and rear windows with driver's auto-down feature",
+      "Bluetooth hands-free phone module",
+      "HomeLink remote transmitter with 3 memory settings",
+      "Raised roof rails in black-finish with 150 lbs. maximum capacity"
+    ],
+    "3.6R Premium": [
+      "Projector low-beam and multireflector high-beam headlights",
+      "Premium cloth upholstery",
+      "8-way power driver's seat and 4-way power front-passenger's seat with manual lumbar support",
+      "Leather-wrapped 3-spoke steering wheel with audio system buttons",
+      "Center console with armrest, enclosed storage and rear storage drawer",
+      "10 cup holders throughout vehicle",
+      "6-speaker single-CD audio system with 3.5-mm auxiliary jack",
+      "Subaru Symmetrical All-Wheel Drive system",
+      "SUBARU BOXER 3.6-liter engine",
+      "Front bumper underguard"
+    ]
+  }
+}

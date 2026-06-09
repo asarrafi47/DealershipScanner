@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2022|hyundai|ioniq",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "ladder_id": "brochure_web_2022__hyundai__ioniq",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ioniq Plug-In Hybrid Limited",
+    "Ioniq Plug-In Hybrid SEL",
+    "Ioniq Hybrid Limited",
+    "Ioniq Plug-In Hybrid SE",
+    "Ioniq Hybrid SEL",
+    "Ioniq Hybrid SE",
+    "Ioniq Hybrid Blue"
+  ],
+  "adds_by_trim": {
+    "Ioniq Plug-In Hybrid Limited": [
+      "45-kW electric motor and 8.9-kWh battery for plug-in hybrid powertrain",
+      "119 mpg-e EPA rating"
+    ],
+    "Ioniq Plug-In Hybrid SEL": [
+      "Plug-in hybrid powertrain with 45-kW motor and 8.9-kWh battery"
+    ],
+    "Ioniq Hybrid Limited": [
+      "Upgraded trim level with enhanced features over SEL"
+    ],
+    "Ioniq Plug-In Hybrid SE": [
+      "Plug-in hybrid powertrain with 45-kW motor and 8.9-kWh battery",
+      "Standard adaptive cruise control with stop-and-go capability"
+    ],
+    "Ioniq Hybrid SEL": [
+      "Upper trim with enhanced standard equipment"
+    ],
+    "Ioniq Hybrid SE": [
+      "Heated side mirrors with LED daytime running lights",
+      "10-way power driver's seat with lumbar support",
+      "Heated front seats",
+      "Blue Link connected car system",
+      "Blind-spot monitoring with rear cross-traffic alert"
+    ],
+    "Ioniq Hybrid Blue": [
+      "1.6-liter four-cylinder with 32-kW electric motor and 1.6-kWh battery",
+      "139 total hp from hybrid system",
+      "6-speed dual-clutch automatic transmission",
+      "58/60 mpg city/highway rating",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane keep assist and automatic high-beams",
+      "8.0-inch touchscreen with wireless Android Auto and Apple CarPlay",
+      "4.2-inch instrument cluster display",
+      "Seating for five with 60/40 split-folding rear seatback"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/ioniq/"
+}

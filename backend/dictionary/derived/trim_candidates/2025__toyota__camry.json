@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2025|toyota|camry",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XSE",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features Adds to or replaces features off ered on LE Adds to or replaces features off ered on SE",
+      "Available Electronic On-Demand All-Wheel Drive (AWD) Available Electronic On-Demand All-Wheel Available Electronic On-Demand All-Wheel",
+      "Electronically controlled Continuously Variable Electronically controlled Continuously Variable Electronically controlled Continuously Variable",
+      "Transmission (ECVT) with sequential shift mode Transmission (ECVT) with sequential shift mode Transmission (ECVT) with sequential shift mode",
+      "Normal, Eco, EV3 4 and Sport drive modes Normal, Eco, EV3 4 and Sport drive modes Normal, Eco, EV3 4 and Sport drive modes",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED projector low- and high-beam headlights, Bi-LED projector low- and high-beam headlights, Dual LED projector low- and high-beam headlights,",
+      "Automatic High Beams (AHB)3 0 and auto on/off Automatic High Beams (AHB) 30 and auto on/off Automatic High Beams (AHB) 30 and auto on/off",
+      "LED combination taillights with bulb turn LED combination taillights with bulb turn Premium LED combination taillights",
+      "Black horizontal bar front grille Black sport mesh front grille 19-in. black and smoke-gray-finished alloy wheels",
+      "Interior Features Interior Features",
+      "Leather-trimmed seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|subaru|impreza",
+  "year": 2010,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "generic_subaru_impreza",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "58.9 inches (2.5GT: 58.9 in./59.1 in.)"
+    ],
+    "Limited": [
+      "cubic feet (with moonroof: 93.0"
+    ],
+    "Base": [
+      "58.9 inches (2.5GT: 58.9 in./59.1 in.) | 58.7 inches/"
+    ],
+    "Premium": [
+      "Silver-painted door handles",
+      "Front and rear bumper underguards",
+      "Leather-wrapped 3-spoke steering wheel with audio and Bluetooth controls",
+      "Leather-wrapped shifter handle",
+      "6-speaker audio system with CD/MP3/WMA and Bluetooth connectivity",
+      "Optional TomTom Navigation System with 6-speaker audio and 4.3-inch touchscreen"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.6666666666666666,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "Premium": 0,
+      "Base": 1
+    }
+  }
+}

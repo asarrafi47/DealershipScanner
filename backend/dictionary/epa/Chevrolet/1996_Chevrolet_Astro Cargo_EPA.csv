@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1996,Chevrolet,Astro Cargo,Astro AWD (cargo),4.3L V6 ((FFS) (MPFI)),4.3L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,16,,,,,
+1996,Chevrolet,Astro Cargo,Astro 2WD (cargo),4.3L V6 ((FFS) (MPFI)),4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,

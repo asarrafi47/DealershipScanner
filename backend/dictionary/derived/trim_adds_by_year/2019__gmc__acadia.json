@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2019|gmc|acadia",
+  "year": 2019,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_web_2019__gmc__acadia",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "22-inch wheels",
+      "Silver exterior accents",
+      "Trim-specific grille",
+      "Animated greeting lights",
+      "Quilted door surfaces",
+      "Heated and ventilated front seats",
+      "Available second-row heated seats",
+      "Available 16-speaker Bose stereo system"
+    ],
+    "AT4": [
+      "All-terrain tires",
+      "Dual-clutch AWD system",
+      "Off-road tuned suspension",
+      "1.0-inch lift",
+      "Red tow hooks",
+      "Forest Storm interior with Mahogany stitching",
+      "18-inch gloss-black wheels"
+    ],
+    "Elevation": [
+      "LED headlights",
+      "18-inch wheels with all-season tires",
+      "Hands-free liftgate",
+      "15.0-inch vertical infotainment touchscreen",
+      "11.0-inch fully digital instrument cluster",
+      "Google built-in apps with Android Auto and Apple CarPlay",
+      "Automatic emergency braking",
+      "Rear pedestrian detection",
+      "Front pedestrian and bicycle braking"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/acadia/"
+}

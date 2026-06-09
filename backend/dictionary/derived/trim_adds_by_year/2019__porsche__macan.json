@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2019|porsche|macan",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "Macan",
+  "ladder_id": "brochure_web_2019__porsche__macan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Macan GTS",
+    "Macan S",
+    "Macan T",
+    "Macan"
+  ],
+  "adds_by_trim": {
+    "Macan GTS": [
+      "2.9-liter twin-turbo V-6 engine with 434 hp and 405 lb-ft of torque",
+      "0–60 mph acceleration in 3.6 seconds",
+      "17 city / 22 highway mpg",
+      "Surface coated brakes (standard on GTS only as of 2025)"
+    ],
+    "Macan S": [
+      "2.9-liter twin-turbo V-6 engine with 375 hp and 383 lb-ft of torque",
+      "0–60 mph acceleration in 4.6 seconds",
+      "17 city / 23 highway mpg"
+    ],
+    "Macan T": [
+      "Standard Sport Chrono package",
+      "0–60 mph acceleration in 5.3 seconds with Sport Chrono"
+    ],
+    "Macan": [
+      "2.0-liter turbo four-cylinder engine with 261 hp and 295 lb-ft of torque",
+      "Seven-speed automatic transmission",
+      "19 city / 25 highway mpg",
+      "10.9-inch touchscreen with Apple CarPlay",
+      "Eight-speaker audio system",
+      "Adaptive cruise control and automatic emergency braking",
+      "Parking sensors and lane keeping warning"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/macan/"
+}

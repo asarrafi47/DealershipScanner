@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|bmw|z4",
+  "year": 2014,
+  "make": "BMW",
+  "model": "Z4",
+  "ladder_id": "brochure_2014__bmw__z4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes BMW Ultimate Service with New Vehicle Limited Warranty coverage",
+      "Adds BMW Maintenance Program covering factory-recommended service",
+      "Adds Includes BMW Assist eCall emergency safety feature",
+      "Adds BMW Roadside Assistance",
+      "Adds Includes BMW TeleService vehicle monitoring",
+      "Adds BMW ConnectedDrive services",
+      "Adds Includes iDrive Display with Navigation system integration"
+    ],
+    "SE": [
+      "Adds Enhanced USB and Bluetooth with Smartphone Integration",
+      "Adds MyInfo feature for business location and contact management",
+      "Adds Includes Mobile Office capabilities with text message integration to iDrive Display",
+      "Adds Remote Door Unlock through My BMW Remote app",
+      "Adds Stolen Vehicle Recovery feature"
+    ],
+    "Sport": [
+      "Adds Remote Vehicle Status monitoring via mobile device control"
+    ],
+    "Limited": [
+      "Adds Black Alcantara/Nappa Leather Combo upholstery",
+      "Adds Piano Black Wood interior trim option",
+      "Adds Black Sapphire Metallic exterior color option"
+    ],
+    "Premium": [
+      "Adds optional Concierge Services with unlimited personalized directions",
+      "Adds Includes concierge restaurant and hotel recommendations"
+    ],
+    "M Sport": [
+      "Adds Critical Calling operator-assisted service capability"
+    ]
+  }
+}

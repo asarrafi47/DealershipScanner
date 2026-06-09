@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2010|lexus|is",
+  "year": 2010,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_2010__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds standard four-year/50,000-mile Lexus Limited Warranty",
+      "Adds standard six-year/70,000-mile Powertrain Warranty",
+      "Adds standard six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds Engine Immobilizer anti-theft system",
+      "Adds Pre-Collision System for frontal collision assistance",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds Brake Assist system with ABS"
+    ],
+    "Limited": [
+      "Adds Navigation System with XM Radio capability",
+      "Adds XM NavTraffic for real-time traffic information",
+      "Adds XM NavWeather for real-time weather and forecasting",
+      "Adds SmartAccess keyless system",
+      "Adds backup camera with rearward view assistance"
+    ],
+    "Premium": [
+      "Adds Mark Levinson premium audio system",
+      "Adds Lexus Enform telematics with Destination Assist",
+      "Adds Lexus Safety Connect services",
+      "Adds enhanced roadside assistance program"
+    ],
+    "Luxury": [
+      "Adds F-Sport Performance Accessories compatibility",
+      "Adds available front or rear brake upgrade options",
+      "Adds high-friction brake system option",
+      "Adds run-flat tire technology option"
+    ]
+  }
+}

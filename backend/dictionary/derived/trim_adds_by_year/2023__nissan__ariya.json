@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2023|nissan|ariya",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "ARIYA",
+  "ladder_id": "2023_nissan_ariya",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Venture+",
+    "Engage",
+    "Engage e-4ORCE",
+    "Evolve+",
+    "Evolve+ e-4ORCE",
+    "Empower+",
+    "Platinum+ e-4ORCE"
+  ],
+  "adds_by_trim": {
+    "Engage": [
+      "Adds to Venture+: head-up display and 8-way power driver seat"
+    ],
+    "Engage e-4ORCE": [
+      "e-4ORCE AWD with 63 kWh battery"
+    ],
+    "Evolve+": [
+      "Leatherette seats and ProPILOT Assist with Navi-link"
+    ],
+    "Evolve+ e-4ORCE": [
+      "87 kWh battery with e-4ORCE AWD"
+    ],
+    "Empower+": [
+      "Heated rear seats and Intelligent Around View Monitor"
+    ],
+    "Platinum+ e-4ORCE": [
+      "ProPILOT Assist 2.0 and Bose Premium Audio",
+      "ARIYA flagship trim in 2023 brochure"
+    ]
+  }
+}

@@ -65,6 +65,7 @@ from backend.utils.gallery_merge import (
 )
 from backend.utils.spec_provenance import merge_spec_source_json
 from backend.scanner.utils.vdp_gallery_urls import merge_https_url_batches
+from backend.scanner.utils.gallery_url_filter import filter_vdp_gallery_urls
 from backend.scanner.utils.vdp_price_merge import (
     listing_price_is_empty,
     merge_vdp_price_into_vehicle,
@@ -339,6 +340,51 @@ def _settle_ms() -> int:
         return max(200, int(raw))
     except ValueError:
         return 2200
+
+
+def _vdp_js_timeout_ms() -> int:
+    """Cap Playwright ``evaluate`` calls (gallery harvest can hang on huge DOM)."""
+    raw = (os.environ.get("SCANNER_VDP_JS_TIMEOUT_MS") or "12000").strip()
+    try:
+        return max(2000, min(120000, int(raw)))
+    except ValueError:
+        return 12000
+
+
+def _vdp_response_text_timeout_sec() -> float:
+    raw = (os.environ.get("SCANNER_VDP_RESPONSE_TEXT_TIMEOUT_SEC") or "8").strip()
+    try:
+        return max(1.0, min(60.0, float(raw)))
+    except ValueError:
+        return 8.0
+
+
+def _vdp_drain_pending_timeout_sec() -> float:
+    raw = (os.environ.get("SCANNER_VDP_DRAIN_PENDING_TIMEOUT_SEC") or "12").strip()
+    try:
+        return max(2.0, min(120.0, float(raw)))
+    except ValueError:
+        return 12.0
+
+
+def _vdp_gallery_loop_max_sec(site_profile: Any = None) -> float:
+    """Wall-clock cap per VDP gallery carousel harvest (URL count stays uncapped)."""
+    opt = ""
+    if isinstance(site_profile, dict):
+        opt = str(site_profile.get("optimize_for") or "").strip().lower()
+    if opt == "bmw":
+        raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_SEC_BMW") or "300").strip()
+    else:
+        raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_SEC") or "150").strip()
+    try:
+        return max(30.0, min(600.0, float(raw)))
+    except ValueError:
+        return 300.0 if opt == "bmw" else 150.0
+
+
+async def _vdp_page_evaluate(page_or_frame: Any, js: str, *, timeout_ms: int | None = None) -> Any:
+    tmo = (timeout_ms if timeout_ms is not None else _vdp_js_timeout_ms()) / 1000.0
+    return await asyncio.wait_for(page_or_frame.evaluate(js), timeout=tmo)
 
 
 def _max_vdp_concurrency() -> int:
@@ -1050,6 +1096,26 @@ PAGE_EXTRACT_JS = r"""
         Object.keys(parsedEp).slice(0, 55).forEach((k) => inlineKeySamples.add(k));
       }
     }
+    if (/cityFuelEconomy|highwayFuelEconomy|cityFuelEfficiency/i.test(txt) && result.inlineEpObjects.length < 14) {
+      const vinFuel = txt.match(/"vin"\\s*:\\s*"([A-HJ-NPR-Z0-9]{17})"/i);
+      if (vinFuel && vinFuel.index != null) {
+        const start = txt.lastIndexOf("{", vinFuel.index);
+        if (start >= 0) {
+          const parsedFuel = parseJsonFromBrace(txt, start);
+          if (parsedFuel && typeof parsedFuel === "object" && !Array.isArray(parsedFuel)) {
+            const hasFuel =
+              parsedFuel.cityFuelEconomy != null ||
+              parsedFuel.highwayFuelEconomy != null ||
+              parsedFuel.cityFuelEfficiency != null ||
+              parsedFuel.highwayFuelEfficiency != null;
+            if (hasFuel) {
+              result.inlineEpObjects.push(parsedFuel);
+              result.extractDebug.inlineEpParseCount++;
+            }
+          }
+        }
+      }
+    }
   }
   result.extractDebug.inlineKeySamples = Array.from(inlineKeySamples).slice(0, 70);
   for (const sc of inlineScripts) {
@@ -1095,7 +1161,7 @@ PAGE_EXTRACT_JS = r"""
       "[class*='accordion'][class*='header'], [class*='toggle'][class*='spec'], " +
       "summary, details:not([open]) > summary"
     ));
-    for (const el of accordionTriggers.slice(0, 20)) {
+    for (const el of accordionTriggers.slice(0, 40)) {
       try {
         const t = (el.textContent || "").trim().toLowerCase();
         if (/spec|feature|convenience|suspension|powertrain|body|safety|seat|entertain|lighting|dimension|equipment|package|option|accessori|standard|dealer notes|included/i.test(t)) {
@@ -1139,9 +1205,24 @@ PAGE_EXTRACT_JS = r"""
     if (t && t.length < 120) result.domBadges.push(t);
   });
   try {
-    const packageSectionRe = /included packages|packages\\s*&\\s*accessories|packages\\s*&\\s*options|standard features|included options|factory installed|equipment groups/i;
+    const packageSectionRe = /included packages|packages\\s*&\\s*accessories|packages\\s*&\\s*options|standard features|included options|factory installed|equipment groups|(?:^|\\s)(?:[\\w/&+-]+\\s+)*package\\s*$/i;
     const dealerNotesRe = /^dealer notes\b|^seller notes\b|^dealer comments\b|^about this vehicle\b/i;
     const priceRe = /\\$[\\d,]+(?:\\.\\d{2})?/;
+    try {
+      const pkgAccordions = Array.from(document.querySelectorAll(
+        "h4[aria-expanded='false'], h3[aria-expanded='false'], button[aria-expanded='false'], [role='button'][aria-expanded='false']"
+      )).filter((el) => {
+        const t = (el.textContent || "").trim().toLowerCase();
+        return /package/.test(t) && !/spec|dimension|powertrain|suspension|safety|convenience|entertainment/i.test(t);
+      });
+      for (const el of pkgAccordions.slice(0, 35)) {
+        try { el.click(); } catch (ePkgAcc) {}
+      }
+      const showAllPkg = Array.from(
+        document.querySelectorAll("button, a, [role='button']")
+      ).find((el) => /show all package items/i.test((el.textContent || "").trim()));
+      if (showAllPkg) showAllPkg.click();
+    } catch (eShowAll) {}
     const pkgSeen = new Set();
     function pushPkg(section, name, priceLabel, features) {
       const n = (name || "").trim().replace(/\\s+/g, " ");
@@ -1256,7 +1337,7 @@ PAGE_EXTRACT_JS = r"""
       const role = (cur.getAttribute && cur.getAttribute("role")) || "";
       const t = (cls + " " + cid + " " + role).toLowerCase();
       if (
-        /(cfx|cfximg|ipacket|i-packet|i_packet|vpp|vehicle-?protec|warrantytile|vpp-|-vpp-|-vpp|carfax-?widget|kbb-?widget|dealer-?feature-?ti|dealer-?ti|value-?your-?trade|as-?is-?disclaim|asistile|recall-?polic|financ|about-?us-?|warranty-?ext|warranty-?flyer|vdp-?tile|quick-?link|vehicle-?broch|apply-?fin|ipocket|i-pocket|mlp-?image|fandi|fi_badge|plan-?overview)/i.test(
+        /(cfx|cfximg|ipacket|i-packet|i_packet|vpp|vehicle-?protec|warrantytile|vpp-|-vpp-|-vpp|carfax-?widget|kbb-?widget|dealer-?feature-?ti|dealer-?ti|value-?your-?trade|as-?is-?disclaim|asistile|recall-?polic|financ|about-?us-?|warranty-?ext|warranty-?flyer|vdp-?tile|quick-?link|vehicle-?broch|apply-?fin|ipocket|i-pocket|mlp-?image|fandi|fi_badge|plan-?overview|certified|bmw-?certified|m-?performance|brand-?logo|dealer-?logo|marketing|promo|social|banner)/i.test(
           t
         )
       ) {
@@ -1274,12 +1355,6 @@ PAGE_EXTRACT_JS = r"""
     "[class*='vehicle-photo'] img",
     "[class*='image-gallery'] img",
     "[class*='media-gallery'] img",
-  ];
-  const imgSelectorsWide = [
-    "img[src*='.jpg']",
-    "img[src*='.jpeg']",
-    "img[src*='.png']",
-    "img[src*='.webp']",
   ];
   for (const sel of imgSelectorsSpecific) {
     try {
@@ -1301,29 +1376,6 @@ PAGE_EXTRACT_JS = r"""
       });
     } catch (e) {}
     if (result.domGalleryUrls.length >= 80) break;
-  }
-  if (result.domGalleryUrls.length < 4) {
-    for (const sel of imgSelectorsWide) {
-      try {
-        document.querySelectorAll(sel).forEach((el, idx) => {
-          if (idx > 160 || result.domGalleryUrls.length >= 96) return;
-          if (isLikelyVdpJunkImage(el)) return;
-          const s =
-            el.getAttribute("src") ||
-            el.getAttribute("data-src") ||
-            el.getAttribute("data-lazy-src") ||
-            el.getAttribute("data-original") ||
-            "";
-          const t = (s || "").trim();
-          if (!/^https?:\/\//i.test(t)) return;
-          if (!/\.(jpe?g|png|webp|gif)(\?|$)/i.test(t)) return;
-          if (imgSeen.has(t)) return;
-          imgSeen.add(t);
-          result.domGalleryUrls.push(t.slice(0, 900));
-        });
-      } catch (e) {}
-      if (result.domGalleryUrls.length >= 4) break;
-    }
   }
   result.galleryExtractDebug.domImgSample = result.domGalleryUrls.length;
   const jSeen = new Set();
@@ -1727,9 +1779,21 @@ GALLERY_COLLECT_URLS_JS = r"""
     if (!/^https:\/\//i.test(t)) return;
     const low = t.toLowerCase();
     if (!mightBeRasterUrl(low)) return;
+    if (isLikelyJunkUrl(low)) return;
     if (seen.has(t)) return;
     seen.add(t);
     if (out.length < 220) out.push(t.slice(0, 900));
+  }
+  function isLikelyJunkUrl(low) {
+    if (
+      /(logo|icon|badge|banner|certified|cfximg|cfx\\/|\\/cfx\\/|placeholder|favicon|spinner|loading|m[-_]?logo|bmw[-_]?certified|m[-_]?performance|oem[-_]?vin[-_]?stock|generic-bmw|stackadapt|carnow|agent-0|marketing|promo|sprite|powered-by|value-your-trade|quick-link|warranty-tile|dealer-logo|brand-logo|social-share|facebook|instagram|youtube|twitter)/i.test(
+        low
+      )
+    ) {
+      return true;
+    }
+    if (/[?&](?:w|width|h|height)=\d{1,2}(?:&|$|\/)/i.test(low)) return true;
+    return false;
   }
   function fromSrcset(ss) {
     if (!ss || typeof ss !== "string") return;
@@ -1812,7 +1876,7 @@ GALLERY_COLLECT_URLS_JS = r"""
       const role = (cur.getAttribute && cur.getAttribute("role")) || "";
       const t = (cls + " " + cid + " " + role).toLowerCase();
       if (
-        /(cfx|cfximg|ipacket|i-packet|i_packet|vpp|vehicle-?protec|warrantytile|vpp-|-vpp-|-vpp|carfax-?widget|kbb-?widget|dealer-?feature-?ti|dealer-?ti|value-?your-?trade|as-?is-?disclaim|asistile|recall-?polic|financ|about-?us-?|warranty-?ext|warranty-?flyer|vdp-?tile|quick-?link|vehicle-?broch|apply-?fin|ipocket|i-pocket|mlp-?image|fandi|fi_badge|plan-?overview)/i.test(
+        /(cfx|cfximg|ipacket|i-packet|i_packet|vpp|vehicle-?protec|warrantytile|vpp-|-vpp-|-vpp|carfax-?widget|kbb-?widget|dealer-?feature-?ti|dealer-?ti|value-?your-?trade|as-?is-?disclaim|asistile|recall-?polic|financ|about-?us-?|warranty-?ext|warranty-?flyer|vdp-?tile|quick-?link|vehicle-?broch|apply-?fin|ipocket|i-pocket|mlp-?image|fandi|fi_badge|plan-?overview|certified|bmw-?certified|m-?performance|brand-?logo|dealer-?logo|marketing|promo|social|banner)/i.test(
           t
         )
       ) {
@@ -1872,26 +1936,6 @@ GALLERY_COLLECT_URLS_JS = r"""
       });
     } catch (e2) {}
   }
-  try {
-    const bsel =
-      "div,span,section,article,li,a,button,p,figure,header,footer,main,aside," +
-      "[style*='background'],[style*='Background']";
-    document.querySelectorAll(bsel).forEach((el, idx) => {
-      if (idx > 520) return;
-      try {
-        const st = el.getAttribute("style");
-        if (st && /background\\s*:|background-image\\s*:/i.test(st)) {
-          fromBackgroundString(st);
-        }
-        if (window.getComputedStyle) {
-          const cbg = window.getComputedStyle(el).backgroundImage;
-          if (cbg && cbg !== "none" && cbg !== "initial") {
-            fromBackgroundString(cbg);
-          }
-        }
-      } catch (eBg) {}
-    });
-  } catch (e3) {}
   return out;
 }
 """
@@ -1920,6 +1964,12 @@ def _dom_specs_to_ep(dom_specs: dict[str, str]) -> dict[str, Any]:
             if m:
                 flat["city_fuel_economy"] = m.group(1)
                 flat["highway_fuel_economy"] = m.group(2)
+            else:
+                m1 = re.search(r"(\d{1,2})", val)
+                if m1 and re.search(r"city", lk):
+                    flat["city_fuel_economy"] = m1.group(1)
+                elif m1 and re.search(r"highway|hwy", lk):
+                    flat["highway_fuel_economy"] = m1.group(1)
     return flat
 
 
@@ -2048,10 +2098,24 @@ def _vdp_count_gallery_signals(
     return n
 
 
-async def _drain_pending_tasks(pending: list[asyncio.Task[Any]]) -> None:
+async def _drain_pending_tasks(pending: list[asyncio.Task[Any]], *, timeout_sec: float | None = None) -> None:
     if not pending:
         return
-    await asyncio.gather(*pending, return_exceptions=True)
+    tmo = timeout_sec if timeout_sec is not None else _vdp_drain_pending_timeout_sec()
+    try:
+        await asyncio.wait_for(asyncio.gather(*pending, return_exceptions=True), timeout=tmo)
+    except asyncio.TimeoutError:
+        n_cancel = 0
+        for task in pending:
+            if not task.done():
+                task.cancel()
+                n_cancel += 1
+        if n_cancel:
+            log.warning(
+                "VDP: network capture drain hit %.1fs timeout — cancelled %s straggler task(s)",
+                tmo,
+                n_cancel,
+            )
     pending.clear()
 
 
@@ -2117,7 +2181,7 @@ async def _vdp_evaluate_gallery_all_frames(wp: Any) -> list[str]:
     frames = list(getattr(wp, "frames", None) or [])
     for fr in frames:
         try:
-            raw = await fr.evaluate(GALLERY_COLLECT_URLS_JS)
+            raw = await _vdp_page_evaluate(fr, GALLERY_COLLECT_URLS_JS)
         except Exception:
             continue
         if not isinstance(raw, list):
@@ -2156,6 +2220,7 @@ async def _vdp_gallery_interaction_loop(
     settle_ms: int,
     response_image_urls: list[str],
     pending: list[asyncio.Task[Any]],
+    site_profile: Any = None,
 ) -> list[str]:
     ordered: list[str] = []
     seen: set[str] = set()
@@ -2165,18 +2230,27 @@ async def _vdp_gallery_interaction_loop(
     cap = vdp_gallery_url_max()
     thumb_rot = [0]
     settle_sleep = min(1200, max(240, int(settle_ms // 4)))
+    loop_started = asyncio.get_running_loop().time()
+    loop_deadline = loop_started + _vdp_gallery_loop_max_sec(site_profile)
     try:
         await _vdp_try_open_photo_lightbox(wp)
         try:
-            await wp.evaluate(GALLERY_MODAL_NUDGE_JS)
+            await _vdp_page_evaluate(wp, GALLERY_MODAL_NUDGE_JS, timeout_ms=4000)
         except Exception:
             pass
     except Exception:
         pass
     for round_i in range(_gallery_max_rounds()):
+        if asyncio.get_running_loop().time() >= loop_deadline:
+            log.info(
+                "VDP: gallery harvest wall-clock cap %.0fs reached (%s URL(s) collected)",
+                _vdp_gallery_loop_max_sec(site_profile),
+                len(ordered),
+            )
+            break
         if round_i > 0 and round_i % 6 == 0:
             try:
-                await wp.evaluate(GALLERY_MODAL_NUDGE_JS)
+                await _vdp_page_evaluate(wp, GALLERY_MODAL_NUDGE_JS, timeout_ms=4000)
             except Exception:
                 pass
         snap = list(response_image_urls)
@@ -2234,7 +2308,9 @@ async def _download_vdp_gallery_images(wp: Any, vehicle: dict[str, Any], urls: l
     manifest: dict[str, Any] = {"files": [], "errors": []}
     req = wp.context.request
     tmo = _nav_timeout_ms()
-    cap = inventory_gallery_max()
+    from backend.scanner.scan_efficiency import vdp_gallery_url_max
+
+    cap = vdp_gallery_url_max() or 256
     for i, url in enumerate(urls[:cap]):
         if not isinstance(url, str) or not url.lower().startswith("https://"):
             continue
@@ -2322,7 +2398,13 @@ async def _vdp_visit_one(
                 return
             if not _vdp_wants_json_network_capture(ct):
                 return
-            text = await response.text()
+            try:
+                text = await asyncio.wait_for(
+                    response.text(),
+                    timeout=_vdp_response_text_timeout_sec(),
+                )
+            except (asyncio.TimeoutError, Exception):
+                return
             if visit_epoch[0] != my_epoch:
                 return
             if not text or len(text) > MAX_JSON_BYTES:
@@ -2376,7 +2458,27 @@ async def _vdp_visit_one(
             return
 
     def on_response(response: Any) -> None:
-        pending.append(asyncio.create_task(capture_response(response)))
+        task = asyncio.create_task(capture_response(response))
+
+        def _absorb_playwright_race(t: asyncio.Task) -> None:
+            if t.cancelled():
+                return
+            try:
+                exc = t.exception()
+            except asyncio.CancelledError:
+                return
+            if exc is None:
+                return
+            name = type(exc).__name__
+            msg = str(exc)
+            if name in ("Error", "TargetClosedError") and (
+                "getResponseBody" in msg or "Target page, context or browser has been closed" in msg
+            ):
+                return
+            logger.debug("VDP network capture task failed: %s", exc)
+
+        task.add_done_callback(_absorb_playwright_race)
+        pending.append(task)
 
     wp.on("response", on_response)
     urls_to_try: list[str] = [u]
@@ -2415,7 +2517,7 @@ async def _vdp_visit_one(
                 log.warning("VDP: %s — navigation issue: %s", dealer_name, nav_err[:120])
 
             try:
-                bundle = await wp.evaluate(PAGE_EXTRACT_JS)
+                bundle = await _vdp_page_evaluate(wp, PAGE_EXTRACT_JS)
             except Exception as e:
                 bundle = {"error": str(e)}
             last_bundle = bundle if isinstance(bundle, dict) else {}
@@ -2446,6 +2548,7 @@ async def _vdp_visit_one(
                     settle_ms=_settle_ms(),
                     response_image_urls=response_image_urls,
                     pending=pending,
+                    site_profile=site_profile,
                 )
             except Exception as e:
                 log.warning("VDP: %s — gallery interaction loop: %s", dealer_name, str(e)[:160])
@@ -2578,20 +2681,25 @@ async def _vdp_visit_one(
 
         cand_gallery: list[str] = []
         gseen: set[str] = set()
-        from backend.scanner.scan_efficiency import vdp_gallery_url_max
+        from backend.scanner.scan_efficiency import vdp_gallery_carousel_only, vdp_gallery_url_max
 
         mx_cap = vdp_gallery_url_max()
+        carousel_only = vdp_gallery_carousel_only()
 
         def _push_g(batch: list[str]) -> None:
             merge_https_url_batches(cand_gallery, gseen, batch, max_total=mx_cap)
 
         if isinstance(last_bundle, dict):
-            for key in ("domGalleryUrls", "jsonGalleryUrls"):
-                _push_g([u2 for u2 in (last_bundle.get(key) or []) if isinstance(u2, str)])
-        for row in network_rows:
-            _push_g([u2 for u2 in (row.get("image_urls") or []) if isinstance(u2, str)])
+            if not carousel_only:
+                _push_g([u2 for u2 in (last_bundle.get("domGalleryUrls") or []) if isinstance(u2, str)])
+                _push_g([u2 for u2 in (last_bundle.get("jsonGalleryUrls") or []) if isinstance(u2, str)])
+        if not carousel_only:
+            for row in network_rows:
+                _push_g([u2 for u2 in (row.get("image_urls") or []) if isinstance(u2, str)])
         _push_g(extra_loop_gallery)
-        _push_g(list(response_image_urls))
+        if not carousel_only:
+            _push_g(list(response_image_urls))
+        cand_gallery = filter_vdp_gallery_urls(cand_gallery)
 
         # HTTP/HTML gallery recovery when Playwright harvest is still thin
         try:
@@ -2709,6 +2817,14 @@ async def _vdp_visit_one(
                 if merge_vdp_packages_into_vehicle(v, last_bundle):
                     if "packages" not in filled:
                         filled.append("packages")
+                try:
+                    from backend.scanner.vdp_specs_extract import merge_spec_sheet_into_vehicle
+
+                    if merge_spec_sheet_into_vehicle(v, last_bundle):
+                        if "spec_sheet" not in filled:
+                            filled.append("spec_sheet")
+                except Exception as _spec_err:
+                    log.debug("VDP spec sheet merge failed for %s: %s", vin[:17], _spec_err)
                 dom_notes = dealer_notes_from_bundle(last_bundle)
             except Exception as _pkg_err:
                 log.debug("VDP packages merge failed for %s: %s", vin[:17], _pkg_err)
@@ -2716,6 +2832,12 @@ async def _vdp_visit_one(
             dom_desc = dom_notes or str(last_bundle.get("domDescription") or "").strip()
             cur_desc = str(v.get("description") or "").strip()
             if dom_desc and (not cur_desc or (dom_notes and len(dom_notes) > len(cur_desc))):
+                try:
+                    from backend.utils.listing_description_extract import strip_dealer_description_intro
+
+                    dom_desc = strip_dealer_description_intro(dom_desc)
+                except Exception:
+                    pass
                 v["description"] = dom_desc[:4000]
                 if "description" not in filled:
                     filled.append("description")

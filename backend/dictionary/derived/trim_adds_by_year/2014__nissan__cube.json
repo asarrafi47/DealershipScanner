@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|nissan|cube",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Cube",
+  "ladder_id": "brochure_llm_2014__nissan__cube",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL with Preferred Package",
+    "SL",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL with Preferred Package": [
+      "Fog lights",
+      "Nissan Navigation System with 5-inch color touch-screen monitor",
+      "RearView Monitor",
+      "SiriusXM Satellite Radio and NavTraffic",
+      "USB connection port for iPod interface and compatible devices",
+      "Rockford Fosgate subwoofer and amplifier",
+      "Six upgraded speakers including two tweeters"
+    ],
+    "SL": [
+      "16-inch aluminum-alloy wheels",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Automatic Temperature Control with outside temperature display",
+      "Automatic on/off headlights"
+    ],
+    "S": [
+      "122-hp 1.8-liter DOHC 4-cylinder engine",
+      "6-speed manual transmission or optional Xtronic CVT",
+      "15-inch steel wheels with wheel covers",
+      "Air conditioning with in-cabin microfilter",
+      "AM/FM/CD audio system with auxiliary audio input jack",
+      "Bluetooth Hands-free Phone System",
+      "Remote keyless entry with Integrated Key",
+      "Power mirrors, windows and door locks",
+      "Anti-lock Braking System and Vehicle Dynamic Control with Traction Control",
+      "Six standard air bags"
+    ]
+  }
+}

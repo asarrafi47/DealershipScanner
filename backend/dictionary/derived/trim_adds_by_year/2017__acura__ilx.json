@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2017|acura|ilx",
+  "year": 2017,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "brochure_llm_2017__acura__ilx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ILX WITH TECHNOLOGY PLUS PACKAGE",
+    "ILX WITH ACURAWATCH PLUS PACKAGE",
+    "ILX WITH PREMIUM PACKAGE"
+  ],
+  "adds_by_trim": {
+    "ILX WITH TECHNOLOGY PLUS PACKAGE": [
+      "8-Speed DCT with Sequential SportShift Paddle Shifters",
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with Street and Freeway Conditions",
+      "Next-Generation AcuraLink",
+      "Acura/ELS Studio Premium Audio System with 10 Speakers",
+      "Song By Voice voice control",
+      "Siri Eyes Free integration",
+      "Power Moonroof"
+    ],
+    "ILX WITH ACURAWATCH PLUS PACKAGE": [
+      "Adaptive Cruise Control (ACC)",
+      "Collision Mitigation Braking System (CMBS)",
+      "Road Departure Mitigation System",
+      "Forward Collision Warning (FCW) System",
+      "Lane Departure Warning (LDW) System",
+      "Color Multi-Information Display (MID)",
+      "18-inch Machine-Finished Noise-Reducing Alloy Wheels",
+      "Fog Lights",
+      "Body-Colored Side Sills and Trunk Spoiler",
+      "Ebony Headliner"
+    ],
+    "ILX WITH PREMIUM PACKAGE": [
+      "Perforated Leather-Trimmed Interior",
+      "Blind Spot Information (BSI) System",
+      "Rear Cross Traffic Monitor",
+      "On Demand Multi-Use Display (ODMD)",
+      "iPhone AcuraLink Navigation App Connectivity",
+      "Driver's Memory Seat",
+      "Front Passenger 4-Way Power Seat"
+    ]
+  }
+}

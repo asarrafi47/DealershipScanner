@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2014|lexus|is",
+  "year": 2014,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_2014__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero-deductible warranty coverage",
+      "Adds Includes Vehicle Stability Control and Vehicle Dynamics Integrated Management",
+      "Adds airbag supplemental restraint systems"
+    ],
+    "Limited": [
+      "Adds Navigation System with XM Radio capability",
+      "Adds XM NavTraffic for real-time traffic information",
+      "Adds XM NavWeather for real-time weather and forecasting",
+      "Adds SmartAccess keyless system",
+      "Adds backup camera with rearward view assistance"
+    ],
+    "Premium": [
+      "Adds Mark Levinson premium audio system",
+      "Adds Lexus Enform telematics with Destination Assist",
+      "Adds Lexus Safety Connect services",
+      "Adds enhanced roadside assistance program"
+    ],
+    "Luxury": [
+      "Adds F-Sport Performance Accessories compatibility",
+      "Adds available front or rear brake upgrade options",
+      "Adds high-friction brake system option",
+      "Adds run-flat tire technology option"
+    ]
+  }
+}

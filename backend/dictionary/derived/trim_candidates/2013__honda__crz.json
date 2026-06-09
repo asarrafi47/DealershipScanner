@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|honda|crz",
+  "year": 2013,
+  "make": "Honda",
+  "model": "CR-Z",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "EX",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

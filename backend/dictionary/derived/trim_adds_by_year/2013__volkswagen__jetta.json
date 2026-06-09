@@ -1,0 +1,87 @@
+{
+  "catalog_key": "2013|volkswagen|jetta",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "brochure_2013__volkswagen__jetta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GLI",
+    "SEL",
+    "SE",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 2.0L 115-hp 4-cylinder SOHC engine with 125 lbs/ft torque",
+      "Adds 5-speed manual transmission",
+      "Adds 15-inch steel wheels with all-season tires",
+      "Adds 1-touch power windows and power door locks",
+      "Adds power side mirrors in black finish",
+      "Adds cloth seating surfaces with 60/40-split folding rear seats",
+      "Adds 4-speaker sound system with MP3 and WMA-compatible CD player, AM/FM radio, and AUX-in",
+      "Adds multi-function trip computer",
+      "Adds basic safety features including airbags and ABS"
+    ],
+    "Sport": [
+      "Upgraded to 2.5L 170-hp 5-cylinder engine with 177 lbs/ft torque",
+      "Adds 16-inch steel wheels with all-season tires",
+      "Adds body color side mirrors with integrated turn signals",
+      "Adds chrome grille accents and window trim",
+      "Adds carpeted floor mats",
+      "Adds cruise control",
+      "Adds front center console with storage box",
+      "Adds leather-wrapped steering wheel and shift knob",
+      "Adds 6-way partial power front seats with power recline"
+    ],
+    "LT": [
+      "Adds 16-inch alloy wheels with all-season tires",
+      "Adds Bluetooth audio streaming",
+      "Adds heated front seats",
+      "Adds leather-wrapped multi-function steering wheel",
+      "Upgraded to 6-speaker sound system with Media Device Interface and iPod cable",
+      "Adds SiriusXM Satellite Radio with 3-month trial subscription"
+    ],
+    "Premium": [
+      "Adds 6-way power-adjustable driver seat",
+      "Adds sport bolstered comfort seats",
+      "Upgraded to Fender Premium Audio System"
+    ],
+    "Limited": [
+      "Adds 6-speed DSG automatic transmission with Tiptronic and Sport mode",
+      "Adds steering wheel-mounted paddle shifters"
+    ],
+    "SE": [
+      "Adds 2.0L 140-hp TDI Clean Diesel engine with 236 lbs/ft torque",
+      "Adds halogen reflector lens foglights",
+      "Adds sunglasses holder",
+      "Adds 6-way power driver seat",
+      "Adds driver and front passenger seats with adjustable lumbar support",
+      "Adds power tilting/sliding sunroof"
+    ],
+    "SEL": [
+      "Adds keyless access with push-button start",
+      "Adds RNS 315 navigation system with 5-inch color touchscreen",
+      "Adds halogen reflector lens foglights with low-speed corner-illuminating feature",
+      "Adds Climatronic dual-zone automatic climate control",
+      "Adds 17-inch alloy wheels with all-season tires",
+      "Adds heated washer nozzles"
+    ],
+    "GLI": [
+      "Upgraded to 2.0L 200-hp TSI turbocharged engine with 207 lbs/ft torque",
+      "Upgraded to 6-speed manual transmission",
+      "Adds 4-corner independent sport suspension",
+      "Upgraded to 17-inch alloy wheels with all-season tires",
+      "Adds honeycomb mesh front grille with sport side skirts and valances",
+      "Adds Bi-Xenon high-intensity headlights with LED Daytime Running Lights and Adaptive Front-lighting System",
+      "Adds V-Tex leatherette seating surfaces",
+      "Adds XDS Cross Differential System",
+      "Adds rearview camera",
+      "Adds Fender Premium Audio System with premium upgrades"
+    ]
+  }
+}

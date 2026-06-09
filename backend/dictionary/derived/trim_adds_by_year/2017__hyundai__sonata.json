@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|hyundai|sonata",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_llm_2017__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited 2.0T",
+    "Limited",
+    "Sport 2.0T",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited 2.0T": [
+      "2.0T turbocharged engine",
+      "Distinctive sport seating with contrast stitching",
+      "D-cut steering wheel with paddle shifters",
+      "Aluminum sport pedals",
+      "Mechanical dial gauges with six o'clock needle positions"
+    ],
+    "Limited": [
+      "Heated and ventilated leather front seats standard",
+      "Heated rear seats available",
+      "Driver's seat memory with two presets for seat and mirror positions",
+      "Fully automatic dual temperature climate control",
+      "Proximity key with illuminated door handle and push-button unlock",
+      "Premium leather and woodgrain trim throughout cabin",
+      "Leather-wrapped steering wheel and shift knob",
+      "Class-exclusive integrated rear side sunshades in door panels"
+    ],
+    "Sport 2.0T": [
+      "2.0T turbocharged engine",
+      "Distinctive sport seating with contrast stitching",
+      "Sport shifter with contrast stitching",
+      "D-cut steering wheel with paddle shifters",
+      "Aluminum sport pedals"
+    ],
+    "Sport": [
+      "Apple CarPlay and Android Auto available"
+    ],
+    "Base": [
+      "Most interior volume in its vehicle class",
+      "Generous front head room and legroom",
+      "Driver-oriented ergonomics with center console pitched toward driver",
+      "Rear floor console-mounted vents for rear passenger comfort"
+    ]
+  }
+}

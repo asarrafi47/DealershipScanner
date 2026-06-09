@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2018|jaguar|xj",
+  "year": 2018,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "brochure_llm_2018__jaguar__xj",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XJR575",
+    "XJL Supercharged",
+    "XJ Supercharged",
+    "XJL Portfolio",
+    "XJ R-Sport"
+  ],
+  "adds_by_trim": {
+    "XJR575": [
+      "5.0L V8 Supercharged engine with 575 hp and 517 lb-ft torque",
+      "Sport Exhaust system",
+      "Red brake calipers with 'JAGUAR' script",
+      "R-tuned front coils with rear air suspension",
+      "360° Parking Aid with side impact alerts standard",
+      "Park Assist with Parallel, Perpendicular and Exit modes"
+    ],
+    "XJL Supercharged": [
+      "5.0L V8 Supercharged engine with 470 hp and 424 lb-ft torque",
+      "Active Differential Control",
+      "Front coils with rear air suspension tuned for Supercharged models",
+      "124.3-inch wheelbase for extended rear legroom of 43.7 inches"
+    ],
+    "XJ Supercharged": [
+      "5.0L V8 Supercharged engine with 470 hp and 424 lb-ft torque",
+      "Active Differential Control",
+      "Front coils with rear air suspension tuned for Supercharged models"
+    ],
+    "XJL Portfolio": [
+      "Optional Rear Business Tables with leather and soft feel paint",
+      "Optional Premium Rear Seat Package available",
+      "124.3-inch wheelbase for extended rear legroom of 43.7 inches",
+      "Available all-wheel drive configuration"
+    ],
+    "XJ R-Sport": [
+      "3.0L V6 Supercharged engine with 340 hp and 332 lb-ft torque",
+      "Standard wheelbase of 119.4 inches",
+      "Blind Spot Assist with Reverse Traffic Detection for RWD models",
+      "Lane Departure Warning and Lane Keep Assist",
+      "Driver Condition Monitor",
+      "8-speed automatic transmission with Sequential Shift and Drive/Sport modes",
+      "JaguarDrive Control with Normal, Winter and Dynamic modes",
+      "Adaptive Dynamics and All Surface Progress Control"
+    ]
+  }
+}

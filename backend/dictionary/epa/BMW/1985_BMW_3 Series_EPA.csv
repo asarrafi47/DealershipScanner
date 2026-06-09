@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,BMW,3 Series,3 Series,1.8L I4 ((FFS)),1.8L I4 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,19,24,21,,,,,
+1985,BMW,3 Series,3 Series,1.8L I4 ((FFS)),1.8L I4 Turbo,Turbocharged,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,26,23,,,,,
+1985,BMW,3 Series,3 Series,2.7L V6 ((FFS)),2.7L I6 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.7,18,25,21,,,,,
+1985,BMW,3 Series,3 Series,2.7L V6 ((FFS)),2.7L I6 Turbo,Turbocharged,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.7,19,26,21,,,,,

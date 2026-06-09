@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2014|infiniti|qx50",
+  "year": 2014,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "inventory_infiniti_qx50",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "mark of Apple Inc. Android and Google Play are trademarks of Google Inc. Formula 1 is a trade"
+    ],
+    "Limited": [
+      "mark of Apple Inc. iPad is a registered trade"
+    ],
+    "Touring": [
+      "19 x 8.5-inch split 5-spoke aluminum-alloy wheels with 245/45R19 tires",
+      "Adaptive Front Lighting System with HID xenon auto-leveling headlights",
+      "2-way driver's seat power lumbar support",
+      "8-way power front-passenger's seat",
+      "Power up-folding 2nd-row seats",
+      "Premium stitching on meter hood"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Premium": 1,
+      "Touring": 0
+    }
+  }
+}

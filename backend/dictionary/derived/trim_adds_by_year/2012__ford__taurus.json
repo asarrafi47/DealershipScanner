@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2012|ford|taurus",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_llm_2012__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SHO",
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SHO": [
+      "3.5L EcoBoost V6 engine with 365 hp and 350 lb-ft torque",
+      "All-wheel drive (AWD)",
+      "Electric power-actuated steering with drift control",
+      "Sport-tuned suspension",
+      "Painted-black brake calipers",
+      "19-inch premium Luster Nickel-painted aluminum wheels with P255/45R19 tires",
+      "Leather-trimmed seats with Miko Suede perforated inserts",
+      "Aluminum brake and accelerator pedal covers",
+      "Intelligent Access with push-button start",
+      "High-intensity discharge (HID) headlamps with autolamp and rear spoiler"
+    ],
+    "Limited": [
+      "19-inch chrome-clad aluminum wheels with P255/45R19 all-season tires",
+      "Chrome-accented, power, heated sideview mirrors with memory and security approach lamps",
+      "Rear-view camera",
+      "Reverse Sensing System",
+      "Anti-theft perimeter alarm",
+      "Premium Sound System with AM/FM stereo, 6-disc CD changer, MP3, and 7 speakers"
+    ],
+    "SEL": [
+      "6-speed SelectShift Automatic transmission with paddle shifters",
+      "18-inch Sparkle Silver-painted aluminum wheels with P235/55R18 all-season tires",
+      "10-way power driver and front-passenger seats with driver's side memory feature",
+      "Leather-trimmed seats with perforated leather inserts",
+      "Dual-zone electronic automatic temperature control",
+      "Ford SYNC voice-activated in-vehicle connectivity system",
+      "Leather-wrapped steering wheel with wood accent",
+      "Auto-dimming rearview mirror",
+      "SiriusXM Satellite Radio with 6-month trial subscription"
+    ],
+    "SE": [
+      "3.5L DOHC Duratec V6 engine with 263 hp and 249 lb-ft torque",
+      "6-speed automatic transmission with SelectShift capability",
+      "Front-wheel drive (FWD)",
+      "Front bucket seats with 60/40 split-fold rear seat",
+      "6-way power driver's seat with manual lumbar adjustment",
+      "AM/FM stereo with single-CD player, MP3, and 6 speakers",
+      "12.3-inch tire pressure monitoring and Tire Pressure Monitoring System",
+      "Remote Keyless Entry System with integrated keyhead transmitters",
+      "Personal Safety System with dual-stage front airbags and side-curtain airbags",
+      "17-inch Sparkle Silver-painted aluminum wheels with P235/60R17 all-season tires"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2016|jeep|compass",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_llm_2016__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HIGH ALTITUDE",
+    "LATITUDE",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "HIGH ALTITUDE": [
+      "2.4L DOHC 16V dual VVT 4-cylinder engine",
+      "6-speed PowerTech automatic transmission with AutoStick",
+      "17-inch aluminum wheels with P215/65R17 All-Terrain tires",
+      "Radio 430N with 6.5-inch touchscreen, DVD/MP3, 40GB hard drive",
+      "Perforated McKinley leather seating in Dark slate gray",
+      "Power sunroof with express open/close and tilt sunshade",
+      "Boston Acoustics 9-speaker system with subwoofer",
+      "Freedom Drive II off-road group with crawl ratio and hill descent control"
+    ],
+    "LATITUDE": [
+      "2.0L DOHC 16V dual VVT 4-cylinder engine",
+      "Continuously variable transaxle (CVT2) automatic with AutoStick",
+      "Radio 430 with 6.5-inch touchscreen, CD/DVD/MP3, 40GB hard drive",
+      "McKinley leather or vinyl/sport mesh cloth seating options",
+      "ParkView rear back-up camera",
+      "Power sunroof with express open/close available",
+      "12-volt and 115-volt accessory power outlets",
+      "Freedom Drive I active full-time 4WD with selectable lock mode"
+    ],
+    "SPORT": [
+      "2.0L DOHC 16V dual VVT 4-cylinder engine standard",
+      "Continuously variable transaxle (CVT2) automatic with AutoStick",
+      "P215/60R17 BSW All-Season touring tires",
+      "Radio 430 with 6.5-inch touchscreen and audio input jack",
+      "Cloth seating with light pebble beige or light frost accent stitching",
+      "Remote keyless entry with illuminated entry",
+      "Air conditioning with automatic temperature control",
+      "Electronic Stability Control and brake assist safety systems"
+    ]
+  }
+}

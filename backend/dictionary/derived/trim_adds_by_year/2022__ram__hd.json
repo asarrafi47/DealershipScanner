@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2022|ram|hd",
+  "year": 2022,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2022__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Laramie",
+    "Power Longhorn",
+    "Big Horn",
+    "Lone Horn",
+    "Tradesman",
+    "Star"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Chrome bumpers front and rear with Chrome Appearance Group",
+      "Chrome upper grille header and lower appliqué",
+      "LED fog lamps with cornering feature via Premium Lighting Group",
+      "LED CHMSL lamp with camera in tailgate"
+    ],
+    "Laramie": [
+      "Chrome bumpers front and rear standard",
+      "Chrome grille upper header and lower appliqué standard",
+      "Available 30K lb Mopar fifth-wheel hitch for 3500"
+    ],
+    "Power Longhorn": [
+      "Exclusive Power Wagon Package features: electronically locking front and rear differentials",
+      "WARN 12,000-lb capacity front electric winch",
+      "Ram Articulink suspension system for off-road performance"
+    ],
+    "Big Horn": [
+      "Available electronic shift-on-the-fly transfer case",
+      "Available 4-pin and 7-pin trailer harness plugs",
+      "Available Mopar fifth-wheel hitch 20K lb capacity"
+    ],
+    "Lone Horn": [
+      "Crew Cab and Mega Cab availability for expanded seating",
+      "Available 50-gallon fuel tank on Crew Cab with 8-foot box"
+    ],
+    "Tradesman": [
+      "Standard 6.4L HEMI V8 or 6.7L Cummins diesel engine options",
+      "Standard 4-wheel antilock brakes with electronic stability control",
+      "Standard power steering with recirculating ball design"
+    ],
+    "Star": [
+      "Base Regular Cab with 8-foot box configuration",
+      "Standard 180-amp alternator with gas engine",
+      "Standard mechanical park brake and traction control"
+    ]
+  }
+}

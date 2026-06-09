@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2026|toyota|tundra",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "2026_toyota_tundra",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SR",
+    "SR5",
+    "Limited",
+    "Platinum",
+    "1794 Edition",
+    "Capstone",
+    "TRD Pro"
+  ],
+  "adds_by_trim": {
+    "SR5": [
+      "i-FORCE 3.4L V6 — 389 hp (replaces 358 hp on SR)",
+      "20-inch silver-painted alloy wheels and LED headlights",
+      "Smart Key with Push Button Start and power vertical rear window"
+    ],
+    "Limited": [
+      "Heated and ventilated front seats",
+      "12.3-inch digital meter and 14-inch touchscreen audio",
+      "20-inch gray machined alloy wheels"
+    ],
+    "Platinum": [
+      "Premium LED headlights with sequential turn signals and auto leveling",
+      "Heated and ventilated front and rear seats",
+      "12-speaker JBL Premium Audio and Trailer Backup Guide with Straight Path Assist"
+    ],
+    "1794 Edition": [
+      "1794 Edition chrome grille accents and western-themed interior",
+      "Trailer Backup Guide with Straight Path Assist",
+      "20-inch machined alloy wheels and premium LED lighting"
+    ],
+    "Capstone": [
+      "i-FORCE MAX hybrid — 437 hp / 583 lb-ft (available on Capstone grade)",
+      "Adaptive Variable Suspension and Load-leveling Rear Height Control Air Suspension",
+      "22-inch dark chrome machined wheels and power running boards with BedStep"
+    ],
+    "TRD Pro": [
+      "TRD Pro off-road suspension with FOX Internal Bypass coil-overs and 1.1-inch front lift",
+      "Black TOYOTA heritage grille with integrated LED light bar",
+      "Electronically controlled locking rear differential and Multi-Terrain Select with Crawl Control",
+      "TRD aluminum front skid plate and Xply Armor undercovers"
+    ],
+    "SR": [
+      "Base trim with i-FORCE 3.4L-T V6 engine in 4x2 and 4x4",
+      "Standard seating for five passengers",
+      "9.3-inch minimum ground clearance on gas models",
+      "Essential truck capabilities with foundational feature set"
+    ]
+  }
+}

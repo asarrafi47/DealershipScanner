@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2015|acura|tlx",
+  "year": 2015,
+  "make": "acura",
+  "model": "tlx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

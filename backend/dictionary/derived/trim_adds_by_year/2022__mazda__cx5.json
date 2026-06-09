@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2022|mazda|cx5",
+  "year": 2022,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2022__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-5 2.5 TURBO SIGNATURE",
+    "CX-5 2.5 TURBO",
+    "CX-5 2.5 S SELECT",
+    "CX-5 2.5 S"
+  ],
+  "adds_by_trim": {
+    "CX-5 2.5 TURBO SIGNATURE": [
+      "19-inch alloy wheels with Bright Silver finish",
+      "Body-colored automatic power-folding side mirrors",
+      "Front grille with Bright finish",
+      "Caturra Brown Nappa leather-trimmed seats",
+      "Genuine layered wood trim",
+      "SiriusXM Traffic and Travel Link Services with 3-year trial",
+      "Mazda Navigation System",
+      "Interior LED lighting in ambient cabin, footwells, vanity mirror, glove box, cargo area",
+      "Frameless auto-dimming rearview mirror with HomeLink and 360° View Monitor",
+      "Traffic Sign Recognition, Smart City Brake Support–Reverse, Driver Attention Alert, Traffic Jam Assist"
+    ],
+    "CX-5 2.5 TURBO": [
+      "SKYACTIV-G 2.5 Dynamic Pressure Turbo engine with 256 hp and 320 lb-ft torque",
+      "19-inch alloy wheels with Black Metallic finish",
+      "Black automatic power-folding side mirrors",
+      "Front grille with Gloss Black finish",
+      "Gloss Black lower bumper trim and rocker panel molding",
+      "Turbo rear badge",
+      "Wireless phone charger",
+      "Black interior trim with Red stitching on steering wheel and gear selector"
+    ],
+    "CX-5 2.5 S SELECT": [
+      "6-way manual front passenger seat with seat-height adjuster"
+    ],
+    "CX-5 2.5 S": [
+      "SKYACTIV-G 2.5 DOHC 16-valve engine with 187 hp and 186 lb-ft torque",
+      "i-ACTIV AWD with SKYACTIV-Drive 6-speed automatic transmission",
+      "17-inch alloy wheels in Gray Metallic finish with all-season tires",
+      "LED headlights with auto on/off and daytime running lights",
+      "10.25-inch full-color center display with MAZDA CONNECT infotainment system",
+      "Apple CarPlay and Android Auto integration with voice command",
+      "Bluetooth hands-free phone and audio streaming with dual front USB ports",
+      "Advanced Smart City Brake Support with Pedestrian Detection and Mazda Radar Cruise Control",
+      "Lane Departure Warning, Lane-keep Assist, Blind Spot Monitoring, Rear Cross Traffic Alert",
+      "Rear View Monitor, rain-sensing windshield wipers, body-colored power side mirrors with LED turn signals"
+    ]
+  }
+}

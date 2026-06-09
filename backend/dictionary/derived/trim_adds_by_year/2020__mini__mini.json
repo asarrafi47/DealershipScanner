@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2020|mini|mini",
+  "year": 2020,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_llm_2020__mini__mini",
+  "source": "brochure_llm",
+  "trims_available": [
+    "John Cooper Works",
+    "Cooper S",
+    "Cooper"
+  ],
+  "adds_by_trim": {
+    "John Cooper Works": [
+      "228 hp and 258 lb-ft of torque with Dual Clutch Transmission",
+      "Electronic Differential Lock Control for enhanced cornering",
+      "Race-inspired performance engineering"
+    ],
+    "Cooper S": [
+      "189 hp and 207 lb-ft of torque with Dual Clutch Transmission",
+      "More thrills compared to Cooper base model"
+    ],
+    "Cooper": [
+      "134 hp and 162 lb-ft of torque with Dual Clutch Transmission",
+      "Sporty and spirited driving character",
+      "Forward Collision Warning and Automatic Emergency Braking",
+      "Eight airbags on Hardtop and Clubman models",
+      "LED headlamps with auto-leveling system",
+      "Rear View Camera",
+      "Dynamic Traction Control",
+      "Anti-lock Brake System with Corner Brake Control"
+    ]
+  }
+}

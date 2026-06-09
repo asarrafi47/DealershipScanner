@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2014,BMW,i3,BEV,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Subcompact Cars,,,137,111,124,,,,,
+2014,BMW,i3,REX,Plug-in Hybrid 0.6L I2 (PHEV),0.6L I2,,Automatic (A1),Rear-Wheel Drive,Premium Gasoline / Electricity,Subcompact Cars,2,0.6,41,37,39,,,,,

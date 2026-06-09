@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_alfa_romeo_tonale_complete_options",
+  "make": "Alfa",
+  "models": [
+    "Romeo Tonale",
+    "Romeo Tonale"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L GME T4 turbo I4; Petrol/electric mild hybrid: (was Layout Front-engine, front-wheel-drive or all-wheel-drive; The plug-in hybrid version has less boot space than the non-plug-in version.)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, front-wheel-drive or all-wheel-drive; The plug-in hybrid version has less boot space than the non-plug-in version."
+      }
+    ]
+  }
+}

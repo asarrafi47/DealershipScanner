@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1987,Toyota,Celica,Convertible,2.0L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,2.0,23,31,26,,,,,,2.0L I4,
-1987,Toyota,Celica,Convertible,2.0L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,2.0,23,31,26,,,,,,2.0L I4,
-1987,Toyota,Celica,Celica,2.0L I4 ((3S-GE) (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,20,26,22,,,,,,2.0L I4,
-1987,Toyota,Celica,Celica,2.0L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,23,31,26,,,,,,2.0L I4,
-1987,Toyota,Celica,Celica,2.0L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,23,31,26,,,,,,2.0L I4,
-1987,Toyota,Celica,Celica,2.0L I4 ((3S-GE) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,20,26,22,,,,,,2.0L I4,

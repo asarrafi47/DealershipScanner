@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2021|subaru|outback",
+  "year": 2021,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2021__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.5i-TOURING EyeSight",
+    "2.5i-PREMIUM",
+    "2.5i-LIMITED EyeSight",
+    "2.5i-FIELD EyeSight"
+  ],
+  "adds_by_trim": {
+    "2.5i-TOURING EyeSight": [
+      "Black, Ivory, or Tan Nappa leather seat options",
+      "Premium audio system with Harman/Kardon speakers",
+      "Dual-zone automatic air-conditioning system"
+    ],
+    "2.5i-PREMIUM": [
+      "Black Nappa leather seats",
+      "Dual-zone automatic air-conditioning system"
+    ],
+    "2.5i-LIMITED EyeSight": [
+      "Black fabric seats",
+      "Standard Subaru EyeSight technology"
+    ],
+    "2.5i-FIELD EyeSight": [
+      "Polyurethane seats designed for easy cleaning",
+      "Cargo area with height-adjustable tonneau cover",
+      "Subaru EyeSight safety technology",
+      "Front and rear bumper guards",
+      "LED fog lamps and rear combination lamps"
+    ]
+  }
+}

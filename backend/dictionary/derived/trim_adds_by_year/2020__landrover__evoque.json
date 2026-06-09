@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2020|landrover|evoque",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_2020__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Ingenium P250 gas engine producing 246 hp",
+      "Adds automatic transmission with all-wheel drive",
+      "Adds Stop/Start Technology and smart regenerative charging",
+      "Adds 40:20:40 rear bench seating as standard",
+      "Adds intuitive infotainment and connectivity technologies",
+      "Adds driver assistance features",
+      "Adds off-road capability"
+    ],
+    "Limited": [],
+    "Standard": [],
+    "HSE": [
+      "Upgraded to Ingenium P300 gas engine producing 296 hp",
+      "Upgraded to active all-wheel drive with Active Driveline"
+    ]
+  }
+}

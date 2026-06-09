@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2021|toyota|4runner",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2021__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD Pro",
+    "Nightshade Special Edition",
+    "Limited",
+    "SR5 Premium",
+    "SR5 Trail Special Edition",
+    "TRD Off-Road Premium",
+    "TRD Off-Road",
+    "Venture Special Edition",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "TRD Pro": [
+      "4.0-Liter V6 with 270 hp engine",
+      "Available full-time 4WD system with Active Traction Control and Torsen limited-slip center"
+    ],
+    "Nightshade Special Edition": [
+      "Available full-time 4WD system with Active Traction Control and Torsen limited-slip center"
+    ],
+    "Limited": [
+      "Available full-time 4WD system with Active Traction Control and Torsen limited-slip center"
+    ],
+    "SR5 Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed seats with heated front seats",
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "40/20/40 split reclining and fold-flat second-row seat",
+      "All-weather floor liners",
+      "Auto-dimming rearview mirror",
+      "Premium Audio with 8.0-inch touchscreen, eight speakers, Dynamic Navigation, and Destination Assist"
+    ],
+    "SR5 Trail Special Edition": [
+      "Yakima LoadWarrior cargo basket",
+      "17-inch dark gray alloy wheels with P265/70R17 tires",
+      "Black external emblem overlays",
+      "Available part-time 4WD system with Active Traction Control"
+    ],
+    "TRD Off-Road Premium": [
+      "17-inch matte-black TRD alloy wheels",
+      "SofTex-trimmed seats and side mirrors with heated front seats",
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "Blacked-out Toyota emblems and outer door handles",
+      "Black rear spoiler"
+    ],
+    "TRD Off-Road": [
+      "Part-time 4WD system with Active Traction Control and locking rear differential",
+      "Hill Start Assist Control and Multi-Terrain Select with Crawl Control",
+      "17-inch 7-spoke alloy wheels with black-painted accents and P265/70R17 tires",
+      "Color-keyed front and rear bumpers with silver accents and hood scoop",
+      "TRD Off-Road external hard badges and Yakima MegaWarrior cargo basket"
+    ],
+    "Venture Special Edition": [
+      "Part-time 4WD system with Active Traction Control and locking rear differential",
+      "Hill Start Assist Control and Multi-Terrain Select with Crawl Control"
+    ],
+    "SR5": [
+      "4.0-Liter V6 with 270 hp engine",
+      "5-speed automatic transmission with Rear-Wheel Drive",
+      "Automatic Limited-Slip Differential",
+      "Available part-time 4WD with Active Traction Control, Hill Start Assist, and Downhill Assist",
+      "LED headlights, fog lights, and taillights",
+      "Skid plates on engine, front suspension, fuel tank, and transfer case",
+      "17-inch 6-spoke alloy wheels with P265/70R17 tires",
+      "Heated power outside mirrors",
+      "Smart Key System with Push Button Start and remote illuminated entry",
+      "8.0-inch touchscreen with eight speakers, Android Auto, and Apple CarPlay"
+    ]
+  }
+}

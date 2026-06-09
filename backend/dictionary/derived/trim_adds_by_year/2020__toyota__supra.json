@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2020|toyota|supra",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Supra",
+  "ladder_id": "brochure_llm_2020__toyota__supra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.0 Launch Edition",
+    "3.0 Premium",
+    "3.0"
+  ],
+  "adds_by_trim": {
+    "3.0 Launch Edition": [
+      "Brembo 4-piston ventilated disc brakes with red calipers (front)",
+      "Ventilated disc brakes with red calipers, cast iron (rear)",
+      "Larger rear rotors: 345 mm x 24 mm versus aluminum on base"
+    ],
+    "3.0 Premium": [
+      "Brembo 4-piston ventilated disc brakes with red calipers (front)",
+      "Ventilated disc brakes with red calipers, cast iron (rear)",
+      "Larger rear rotors: 345 mm x 24 mm versus aluminum on base"
+    ],
+    "3.0": [
+      "3.0L twin-scroll single turbo inline six-cylinder engine with 335 hp",
+      "8-speed automatic transmission with paddle shifters and manual mode",
+      "Adaptive Variable Sport suspension with double-joint MacPherson struts",
+      "Active rear sport differential and active exhaust system",
+      "Sport-calibrated electric power steering with 2.1 lock-to-lock turns",
+      "Brembo 4-piston ventilated disc brakes with 348 mm front rotors",
+      "Michelin Pilot Super Sport tires in 255/35ZR19 and 275/35ZR19",
+      "Launch Control and automatic engine start/stop technology"
+    ]
+  }
+}

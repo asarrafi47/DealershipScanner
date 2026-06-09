@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2022|nissan|armada",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2022__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "MIDNIGHT EDITION",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Heated outboard second-row seats",
+      "Power recline and one-touch folding third-row",
+      "Quilted leather-appointed seats",
+      "Birdseye Maple wood-tone trim",
+      "Heated leather-wrapped steering wheel with contrast stitching",
+      "Tri-Zone Entertainment System with dual 8-inch monitors and wireless headphones",
+      "Body-color overfenders",
+      "Wireless charger"
+    ],
+    "MIDNIGHT EDITION": [
+      "20-inch 12-spoke aluminum-alloy wheels",
+      "Black exterior badging and grille",
+      "Black roof rails and rear finisher",
+      "Black lower center bumper fascias",
+      "Black interior trim and headliner",
+      "Power heated and folding black outside mirrors with LED turn signal indicators",
+      "Midnight Edition Floor Mats",
+      "Carpeted Cargo Area Protector"
+    ],
+    "SL": [
+      "Intelligent Around View Monitor",
+      "Trailer Sway Control",
+      "20-inch 18-spoke aluminum-alloy wheels",
+      "LED fog lights",
+      "Body-color outside mirrors with puddle lights and auto-dimming",
+      "Power sliding glass moonroof",
+      "Power liftgate",
+      "Remote Engine Start System",
+      "HomeLink Universal Transceiver",
+      "Leather-appointed seats and door trim with wood-tone trim"
+    ],
+    "SV": [
+      "Trailer brake controller",
+      "Climate-controlled front seats with heating and cooling",
+      "Power heated and folding body-color outside mirrors with LED turn signal indicators",
+      "Rear privacy glass",
+      "Dark gray roof rails",
+      "Illuminated cup holders",
+      "Rain-sensing windshield wipers"
+    ],
+    "S": [
+      "400-hp Endurance 5.6-liter V8 engine",
+      "7-speed automatic transmission with 2-speed Intelligent 4x4 available",
+      "13.8-inch front and rear vented disc brakes with ABS and EBD",
+      "Independent double-wishbone suspension with auto-leveling rear",
+      "Intelligent Cruise Control, Lane Intervention, and Forward Collision Warning",
+      "Intelligent Blind Spot Intervention and Rear Cross Traffic Alert",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Front and Rear Sonar with Rear Automatic Braking",
+      "Vehicle Dynamic Control with Traction Control",
+      "18-inch 12-spoke aluminum-alloy wheels"
+    ]
+  }
+}

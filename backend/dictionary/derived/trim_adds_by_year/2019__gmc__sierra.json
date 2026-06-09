@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2019|gmc|sierra",
+  "year": 2019,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2019__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DENALI",
+    "AT4",
+    "SLT",
+    "ELEVATION",
+    "SLE"
+  ],
+  "adds_by_trim": {
+    "DENALI": [
+      "6.2L V8 engine with 10-speed automatic transmission (most powerful V8 in half-ton class)",
+      "Premium GMC Infotainment System with Navigation and wireless charging",
+      "Forge leather appointments with authentic open-pore ash wood trim",
+      "Spray-on bedliner with class-exclusive continuous damping Adaptive Ride Control",
+      "GMC MultiPro Tailgate standard",
+      "Denali Ultimate Package available: High Definition Surround Vision, Rear Camera Mirror, 15-inch Head-Up Display, Lane Keep Assist, power sunroof, 22-inch polished aluminum wheels"
+    ],
+    "AT4": [
+      "Factory-installed 2-inch suspension lift with 2-speed AutoTrac transfer case for low-range 4-wheel-drive gearing",
+      "Automatic locking rear differential and skid plates for off-road capability",
+      "18-inch wheels with Dark Gray accents and available mud terrain-rated Goodyear Wrangler Duratrac tires",
+      "Exclusive athletic interior trim elements with red vertical recovery hooks",
+      "GMC MultiPro Tailgate with six-function design",
+      "X31 Off-Road Package available"
+    ],
+    "SLT": [
+      "5.3L V8 engine with 8-speed automatic transmission",
+      "Monochromatic bold exterior with gloss-black grille and matching 20-inch gloss-black aluminum wheels",
+      "Body-color bumpers and door handles with black side-window surround and LED fog lamps",
+      "Premium GMC Infotainment System with heated 10-way power leather-appointed front seats",
+      "Heated steering wheel and rear seatback with rear under-seat storage",
+      "ProGrade Trailering System with in-vehicle Trailering App and integrated trailer brake controller"
+    ],
+    "ELEVATION": [
+      "Bright chrome side-window surround and chrome mirror caps",
+      "Chrome front and rear bumpers with body-color door handles",
+      "8-inch diagonal GMC Infotainment System with Apple CarPlay and Android Auto compatibility",
+      "Leather-wrapped steering wheel and color 4.2-inch Driver Information Center"
+    ],
+    "SLE": [
+      "All-new proportions with standard LED headlamps and taillamps featuring signature C-shape",
+      "Black grille inserts with chrome surround and larger rear corner bumper steps",
+      "12 fixed cargo tie-downs rated at 500 lbs per corner with front recovery hooks on 4WD models",
+      "Standard cloth bench seats with 7-inch diagonal GMC Infotainment System",
+      "Apple CarPlay and Android Auto compatibility with rear air vents on Double and Crew Cab models"
+    ]
+  }
+}

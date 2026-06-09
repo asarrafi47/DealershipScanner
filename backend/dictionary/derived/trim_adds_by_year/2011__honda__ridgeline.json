@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|honda|ridgeline",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "ladder_id": "brochure_2011__honda__ridgeline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [],
+    "Limited": [
+      "Adds Honda Satellite-Linked Navigation System",
+      "Adds trailer harness as standard equipment"
+    ]
+  }
+}

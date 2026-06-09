@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2025|nissan|kicks",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Kicks",
+  "ladder_id": "brochure_llm_2025__nissan__kicks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "ProPILOT Assist with adaptive cruise control",
+      "Intelligent Lane Intervention and Intelligent Blind Spot Intervention",
+      "Traffic Sign Recognition system",
+      "Front and Rear Sonar System",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "LED headlights with LED signature accents and silver roof rails",
+      "12.3-inch fully digital dashboard with gauges",
+      "Automatic Temperature Control and adjustable ambient interior accent lighting",
+      "HD Intelligent Around View Monitor",
+      "Leather-wrapped steering wheel and shift knob with leatherette seat trim"
+    ],
+    "SV": [
+      "17-inch steel wheels with covers (FWD) or machine-finished aluminum-alloy wheels (AWD)",
+      "NissanConnect 12.3-inch display with multi-touch control and wireless Apple CarPlay",
+      "Wireless Android Auto compatibility and SiriusXM with 3-month subscription",
+      "Two USB-C ports with wireless charger (deletes USB-A port and auxiliary jack)",
+      "Nissan Intelligent Key with Push Button Ignition and Approach Unlock/Walk Away Lock",
+      "Body-color outside mirrors and body-color outside door handles",
+      "Privacy glass and matte chrome interior door handles",
+      "Interior LED lighting",
+      "Adjustable rear cargo floor (FWD only)"
+    ],
+    "S": [
+      "Available Intelligent All-Wheel Drive with Snow Mode",
+      "Hill start assist and electronic parking brake with Automatic Brake Hold",
+      "16-inch steel wheels with wheel covers",
+      "Intelligent Cruise Control and Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking, Lane Departure Warning, and High Beam Assist",
+      "Blind Spot Warning, Rear Cross Traffic Alert, and Rear Sonar System",
+      "Intelligent Driver Alertness and LED headlights with LED Daytime Running Lights",
+      "7-inch Advanced Drive-Assist Display and 7-inch touch-screen display",
+      "Bluetooth Hands-free Phone System with one USB-A port and auxiliary audio input",
+      "AM/FM audio system with four speakers and center armrest with storage"
+    ]
+  }
+}

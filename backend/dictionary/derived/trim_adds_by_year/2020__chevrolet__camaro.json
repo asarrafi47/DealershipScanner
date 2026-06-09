@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|chevrolet|camaro",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_2020__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SS",
+    "RS",
+    "LT",
+    "LS",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Chevrolet Infotainment System with smartphone integration",
+      "Adds Features comprehensive safety and security package",
+      "Adds Includes 24-hour Roadside Assistance"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "LS": [
+      "275-horsepower 2.0L Turbo engine",
+      "0 to 60 mph in 5.4 seconds",
+      "6-speed manual transmission",
+      "Power-adjustable mirrors",
+      "Dual-outlet exhaust with bright tips",
+      "18-inch Silver-painted aluminum wheels",
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen",
+      "Wireless Apple CarPlay and Android Auto compatibility"
+    ],
+    "LT": [
+      "3 GB of data (whichever comes first) | ● | ● | ● | ● | ● | ● | ●",
+      "Wireless charging 15 | — | — | — | ● | — | — | ●"
+    ],
+    "RS": [],
+    "SS": [
+      "455-horsepower 6.2L V8 engine",
+      "6-speed manual transmission with Active Rev Matching",
+      "Magnetic Ride Control",
+      "Available 10-speed paddle-shift automatic transmission",
+      "Available performance copper-free brake system",
+      "Limited-slip differential",
+      "Performance suspension",
+      "SS-style engine hood with black bowtie emblems"
+    ]
+  }
+}

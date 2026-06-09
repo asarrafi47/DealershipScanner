@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_dodge_challenger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Challenger",
+    "Challenger"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: It was positioned to compete against the Mercury Cougar and Pontiac Firebird in the upper end of the pony car market, a large and lucrative niche of two-door sport coupes that the Ford Mustang had pioneered in April 1964. Like the Barracuda, it was…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Equipment Listing VIN Vehicle Description 2C3CDZFJ4MH649702 2021 DODGE CHALLENGER R/T SCAT PACK BADASS BODY LANGUAGE // Challenger has perfected the art of saying everything without saying a word.; 2021 Dodge Challenger Specs, Features & Options Here's…"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: It was positioned to compete against the Mercury Cougar and Pontiac Firebird in the upper end of the pony car market, a large and lucrative niche of two-door sport coupes that the Ford Mustang had pioneered in April 1964. Like the Barracuda, it was available in…; Automatic 8-spd"
+      }
+    ]
+  }
+}

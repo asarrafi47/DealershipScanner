@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2021|lexus|lc",
+  "year": 2021,
+  "make": "lexus",
+  "model": "LC",
+  "ladder_id": "brochure_2021__lexus__lc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes four-year/50,000-mile Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Includes eight-year/100,000-mile Hybrid System Warranty",
+      "Adds Features Lexus Safety System+ with Pre-Collision System and Pedestrian Detection",
+      "Adds Includes Dynamic Radar Cruise Control",
+      "Adds Includes Lane Departure Alert with Lane Keep Assist",
+      "Adds Features Intelligent High Beams"
+    ],
+    "Touring": [],
+    "Limited": [
+      "Connect renewal will be included when Safety"
+    ],
+    "Premium": [
+      "Adds infrared interior lighting available for additional charge",
+      "Upgraded to Mark Levinson premium audio system"
+    ]
+  }
+}

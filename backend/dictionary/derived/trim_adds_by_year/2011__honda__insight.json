@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|honda|insight",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Insight",
+  "ladder_id": "brochure_web_2011__honda__insight",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Touring",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Heated front seats",
+      "8-way power adjustable driver's seat",
+      "Leather upholstery",
+      "Moonroof",
+      "Dual-zone automatic climate control",
+      "10-speaker audio system",
+      "Wi-Fi hotspot",
+      "Navigation",
+      "HondaLink subscription services"
+    ],
+    "EX": [
+      "LED headlights",
+      "Driver's seat with manual height adjustment",
+      "Cloth seats",
+      "Remote engine start",
+      "8-speaker audio system",
+      "8.0-inch touchscreen with Apple CarPlay and Android Auto",
+      "SiriusXM",
+      "HD Radio"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/honda/insight/"
+}

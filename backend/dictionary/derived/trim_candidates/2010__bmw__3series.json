@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2010|bmw|3series",
+  "year": 2010,
+  "make": "BMW",
+  "model": "3 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "328i",
+    "335i",
+    "M Sport",
+    "Premium",
+    "Platinum",
+    "Limited",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

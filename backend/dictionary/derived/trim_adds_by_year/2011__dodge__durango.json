@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2011|dodge|durango",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2011__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S75",
+    "M75",
+    "P75",
+    "H75",
+    "H75",
+    "L75"
+  ],
+  "adds_by_trim": {
+    "S75": [
+      "Chrome surround grille with chrome texture",
+      "High Intensity Discharge low-beam headlamps with automatic leveling",
+      "SmartBeam auto-dimming high-beam headlamp control system",
+      "Power folding multifunction mirrors with memory and auto-dimming",
+      "20-inch polished aluminum wheels with silver painted pockets",
+      "Nappa ventilated leather trim bucket seats with perforated inserts",
+      "Power 4-way driver lumbar adjustment",
+      "Dual rear exhaust with bright tips"
+    ],
+    "M75": [
+      "Body-color fascias with sport appearance lower contour",
+      "Body-color grille surround with black texture",
+      "Body-color license plate brow with Dodge logo",
+      "Power liftgate with fob-integrated key and overhead console",
+      "Remote start system with 300-foot range",
+      "20-inch chrome-clad aluminum wheels",
+      "Bright cargo area scuff plates",
+      "Auto-dimming rearview mirror with microphone"
+    ],
+    "P75": [
+      "Body-color fascias with accent-color lower and bright insert",
+      "Chrome grille surround and crosshairs with black texture",
+      "Chrome license plate brow with Dodge logo",
+      "Bright side roof rails with integrated storable crossrails",
+      "Accent-color sill moldings with bright insert",
+      "Two-speed active on-demand all-wheel drive system",
+      "Power sunroof with express open-close and comfort-stop",
+      "Full-length front floor console with 115V power inverter"
+    ],
+    "H75": [
+      "Dual rear exhaust with bright tips standard",
+      "Rain-sensitive automatic wiper feature",
+      "Memory system for radio, seat position, and mirrors"
+    ],
+    "L75": [
+      "3.6L Pentastar V6 VVT engine with 5-speed automatic transmission",
+      "24.6-gallon fuel tank with power locking fuel door",
+      "Dual-zone automatic temperature control with infrared sensors",
+      "Carpeted cargo area with storage tray and tie-down loops",
+      "Overhead front console with LED map lamps and HomeLink",
+      "Gradual mesh cloth low-back bucket seats with Carolina cloth bolsters",
+      "Sapphire blue interior switch lighting and ambient LED lighting",
+      "Front speed-sensitive variable intermittent wipers"
+    ]
+  }
+}

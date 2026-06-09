@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|mazda|6",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2016__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Standard SKYACTIV-Drive 6-speed Sport automatic transmission with manual-shift and Sport modes",
+      "Power sliding-glass moonroof",
+      "19-inch alloy wheels with Dark Silver finish",
+      "Rear lip spoiler",
+      "Rain-sensing windshield wipers",
+      "LED headlights with Adaptive Front-lighting System",
+      "LED fog lights",
+      "Auto on/off headlights",
+      "LED daytime running lights",
+      "Smart City Brake Support"
+    ],
+    "Touring": [
+      "Dual-zone automatic climate control",
+      "Blind Spot Monitoring",
+      "Rear Cross Traffic Alert",
+      "19-inch alloy wheels",
+      "Mazda Advanced Keyless Entry System",
+      "6-way power-adjustable driver's seat",
+      "MAZDA CONNECT infotainment with 7-inch touch-screen and HD Radio",
+      "Rearview camera",
+      "Rear A/C vents",
+      "Leatherette-trimmed seats"
+    ],
+    "Sport": [
+      "184-hp 2.5L SKYACTIV-G DOHC 16-valve 4-cylinder engine with variable valve timing",
+      "SKYACTIV-MT 6-speed manual transmission or SKYACTIV-Drive 6-speed automatic with Sport Mode",
+      "Tilt and telescopic steering column",
+      "Electronic parking brake",
+      "60/40 split fold-down rear seatback",
+      "AM/FM/CD/MP3-compatible audio system with 6 speakers",
+      "Bluetooth hands-free phone and audio streaming",
+      "Halogen headlights with auto off and daytime running lights",
+      "LED combination taillights",
+      "Dynamic Stability Control and Traction Control System"
+    ]
+  }
+}

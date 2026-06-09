@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2018_mercedes-benz_gla-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLA-Class",
+    "GLA-Class"
+  ],
+  "year_min": 2016,
+  "year_max": 2020,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM7)"
+      }
+    ],
+    "AMG GLA45": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM7)"
+      }
+    ],
+    "GLA250": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM7)"
+      }
+    ]
+  }
+}

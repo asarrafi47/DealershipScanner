@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|toyota|corollahatchback",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "brochure_llm_2019__toyota__corollahatchback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Adaptive Front-Lighting System (AFS) with automatic operation",
+      "Integrated LED fog lights",
+      "18-inch machined alloy wheels",
+      "Front chrome grille surround",
+      "Rear chrome diffuser",
+      "Entune 3.05 Audio Plus with JBL and Clari-Fi",
+      "7-inch TFT Multi-Information Display",
+      "Dual zone climate control",
+      "Leather-trimmed heated sport seats with 8-way power driver adjustment",
+      "Qi-compatible wireless smartphone charging"
+    ],
+    "SE": [
+      "2.0L Dynamic Force 4-cylinder engine with 168 hp",
+      "Dynamic Shift CVT or available 6-speed iMT",
+      "LED headlights with LED Daytime Running Lights and auto on/off",
+      "16-inch twin-spoke alloy wheels",
+      "Front dark gray grille surround",
+      "Color-keyed heated power outside mirrors with turn signals and blind spot warning",
+      "Entune 3.05 Audio Plus with Apple CarPlay and Amazon Alexa",
+      "4.2-inch Multi-Information Display",
+      "Leather-wrapped steering wheel with fabric sport seats",
+      "Toyota Safety Sense 2.0 with pre-collision system and pedestrian detection"
+    ]
+  }
+}

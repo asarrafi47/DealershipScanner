@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Ford,Escape,FWD,2.3L I4,2.3L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.3,20,23,21,,,,,
+2006,Ford,Escape,FWD,2.3L I4,2.3L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.3,21,27,23,,,,,
+2006,Ford,Escape,FWD,3.0L V6,3.0L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.0,18,23,20,,,,,
+2006,Ford,Escape,Hybrid FWD,Hybrid 2.3L I4,2.3L I4 Turbo,Turbocharged,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.3,30,28,29,,,,,
+2006,Ford,Escape,4WD,2.3L I4,2.3L I4 Turbo,Turbocharged,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.3,18,22,20,,,,,
+2006,Ford,Escape,4WD,2.3L I4,2.3L I4 Turbo,Turbocharged,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.3,19,24,21,,,,,
+2006,Ford,Escape,4WD,3.0L V6,3.0L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.0,17,21,19,,,,,
+2006,Ford,Escape,Hybrid 4WD,Hybrid 2.3L I4,2.3L I4 Turbo,Turbocharged,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.3,28,26,27,,,,,

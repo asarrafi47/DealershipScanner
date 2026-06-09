@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2015|toyota|camry",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XSE",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on SE",
+      "Powertrain Powertrain Powertrain",
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm35 \u2022 2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm35 \u2022 2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm35",
+      "25 city/35 hwy/28 combined est. mpg37 \u2022 25 city/35 hwy/28 combined est. mpg37 \u2022 25 city/35 hwy/28 combined est. mpg37",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "Exterior Features Exterior Features Exterior Features",
+      "Projector-beam halogen headlights with auto on/off feature \u2022 Projector-beam halogen headlights with black sport trim bezels \u2022 LED Daytime Running Lights (DRL)",
+      "Color-keyed heated power outside mirrors with manual and auto on/off feature \u2022 18-in. machined-face alloy wheels with black-painted finish",
+      "16-in. steel wheels with wheel covers \u2022 Smoked chrome upper grille and rear trunk garnish Interior Features",
+      "Integrated front and rear underbody spoilers \u2022 Dual zone automatic climate control with rear-seat vents",
+      "Color-keyed rear spoiler \u2022 Entune\u2122 Audio Plus \u2014 includes 6.1-in. high-resolution touch-",
+      "Entune\u2122 Audio \u2014 includes 6.1-in. touch-screen display, USB \u2022 17-in. alloy wheels with Graphite finish screen display, USB 2.0 port,5 advanced voice recognition,7"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on Hybrid LE Adds to or replaces features offered on Hybrid LE",
+      "Powertrain Powertrain Powertrain",
+      "Hybrid Engine: 2.5L 4-Cylinder Engine \u2022 Hybrid Engine: 2.5L 4-Cylinder Engine \u2022 Hybrid Engine: 2.5L 4-Cylinder Engine",
+      "Hybrid system net power: 200 hp (149 kW) \u2022 Hybrid system net power: 200 hp (149 kW) \u2022 Hybrid system net power: 200 hp (149 kW)",
+      "43 city/39 hwy/41 combined est. mpg37 \u2022 40 city/38 hwy/40 combined est. mpg37 \u2022 40 city/38 hwy/40 combined est. mpg37",
+      "Electronically controlled Continuously Variable Transmission \u2022 Electronically controlled Continuously Variable Transmission \u2022 Electronically controlled Continuously Variable Transmission",
+      "Exterior Features Exterior Features Exterior Features",
+      "Projector-beam halogen headlights with auto on/off feature \u2022 Projector-beam halogen headlights with black sport trim bezels \u2022 LED Daytime Running Lights (DRL)",
+      "Color-keyed heated power outside mirrors with manual and auto on/off feature \u2022 17-in. alloy wheels with Super Chrome paint",
+      "16-in. steel wheels with wheel covers \u2022 Smoked chrome upper grille and rear trunk garnish",
+      "Acoustic noise-reducing front windshield \u2022 Integrated front and rear underbody spoilers Interior Features",
+      "Color-keyed rear spoiler \u2022 Dual zone automatic climate control with rear-seat vents"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

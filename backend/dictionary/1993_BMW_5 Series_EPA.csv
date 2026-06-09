@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1993,BMW,5 Series,525i Touring,2.5L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.5,16,23,19,,,,,,2.5L I6 Turbo,Turbocharged
-1993,BMW,5 Series,525i,2.5L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.5,16,23,19,,,,,,2.5L I6 Turbo,Turbocharged
-1993,BMW,5 Series,525i,2.5L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.5,17,26,20,,,,,,2.5L I6 Turbo,Turbocharged
-1993,BMW,5 Series,535i,3.4L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.4,15,20,17,,,,,,3.4L I6 Turbo,Turbocharged
-1993,BMW,5 Series,535i,3.4L V6 ((GUZZLER) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.4,14,22,16,,,,,,3.4L I6 Turbo,Turbocharged

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2018|hyundai|kona",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Kona",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2018_Hyundai_Kona_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [
+    4
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 4,
+      "trim_hint": true,
+      "text": "1 EPA MPG estimate for comparison only. Mileage may vary. Your actual mileage will vary with options, driving conditions, driving habits and the vehicle\u2019s condition. 2 Available on Kona Limited and Ultimate models. 3 Standard on Kona SEL, Limited and Ultimate models.\n4 Claim based on comparison of specifications on manufacturer websites.\nKONA Ultimate in Black Leather with Lime Accents",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 4 ---\n1 EPA MPG estimate for comparison only. Mileage may vary. Your actual mileage will vary with options, driving conditions, driving habits and the vehicle\u2019s condition. 2 Available on Kona Limited and Ultimate models. 3 Standard on Kona SEL, Limited and Ultimate models.\n4 Claim based on comparison of specifications on manufacturer websites.\nKONA Ultimate in Black Leather with Lime Accents"
+}

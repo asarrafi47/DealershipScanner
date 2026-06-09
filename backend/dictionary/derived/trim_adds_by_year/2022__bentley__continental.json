@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2022|bentley|continental",
+  "year": 2022,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_llm_2022__bentley__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Continental GT Mulliner",
+    "Continental GT Azure"
+  ],
+  "adds_by_trim": {
+    "Continental GT Mulliner": [
+      "Bentley Rotating Display with diamond milled technical finish on centre console",
+      "Head-Up Display for driver information projection",
+      "Mulliner unique clock replacing standard Bentley analogue clock",
+      "Mulliner overmats with accent micro piping in place of standard deep pile",
+      "Mulliner quilt pattern to seats, doors and rear quarters versus diamond in diamond quilting",
+      "Eight Mulliner tri-colour seat combinations instead of one monotone colour",
+      "Satin silver door mirror caps replacing body coloured mirrors",
+      "Bentley Dynamic Drive with Electronic All-Wheel Steering and torque vectoring eDiff",
+      "Duo-tone heated 3-spoke hide-trimmed steering wheel versus single tone"
+    ],
+    "Continental GT Azure": [
+      "Azure exterior fender badges and treadplates for model identification",
+      "Azure seat emblems and fascia badge for interior personalization",
+      "Electric 24-way adjustable front seats with heating, ventilation, massage and adjustable bolster",
+      "12.3-inch high-resolution capacitive touchscreen infotainment with HDD-Navigation and DVD/CD capability",
+      "Full LED matrix headlamps with high-beam assist and supplementary LED tail lamps",
+      "22-inch 5-spoke alloy wheels with black and polished edge finish",
+      "Three-chamber air suspension with Continuous Damping Control and Bentley Dynamic Ride",
+      "Panoramic glass sunroof and heated rear screen for enhanced visibility"
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "catalog_key": "2017|honda|ridgeline",
+  "year": 2017,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "ladder_id": "brochure_llm_2017__honda__ridgeline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BLACK EDITION",
+    "RTL-E",
+    "RTL-T",
+    "RTL",
+    "SPORT",
+    "RTS",
+    "RT"
+  ],
+  "adds_by_trim": {
+    "BLACK EDITION": [
+      "Crystal Black Pearl paint",
+      "Exclusive 18-inch black-painted alloy wheels",
+      "Perforated black leather seats with red under-fabric and red stitching",
+      "Gloss black door handles",
+      "Red ambient LED lighting",
+      "Black Edition badging"
+    ],
+    "RTL-E": [
+      "Standard intelligent Variable Torque Management (i-VTM4) AWD system",
+      "Honda SensingTM suite of safety and driver-assistive features",
+      "Blind spot information system (BSI) with cross traffic monitor",
+      "Exclusive 18-inch machine-finished alloy wheels",
+      "One-touch power moonroof with tilt feature",
+      "Power sliding rear window",
+      "LED headlights with auto-on/off and auto high-beam",
+      "150-watt/400-watt truck-bed power outlet",
+      "Body-colored parking sensors (front and rear)",
+      "Heated steering wheel"
+    ],
+    "RTL-T": [
+      "LED Daytime Running Lights (DRL)",
+      "Honda LaneWatchTM",
+      "USB Audio Interface with 1.5-amp charging port in front/1.0-amp in center",
+      "8-inch Display Audio with high-resolution touch-screen and customizable features",
+      "Apple CarPlayTM and Android AutoTM",
+      "HondaLink®",
+      "SiriusXM® Radio and HD RadioTM",
+      "Pandora® compatibility",
+      "Honda Satellite-Linked Navigation SystemTM with voice recognition and HD Digital Traffic",
+      "USB charging ports in second row (2)"
+    ],
+    "RTL": [
+      "Acoustic windshield",
+      "Leather-wrapped steering wheel",
+      "Heated side mirrors (AWD models)",
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "Front passenger's seat with 4-way power adjustment",
+      "Leather-trimmed interior",
+      "Driver's and front passenger's seatback pockets",
+      "Heated front seats",
+      "Integrated trailer hitch",
+      "Truck-bed lights"
+    ],
+    "SPORT": [
+      "Crystal Black Pearl paint",
+      "18-inch dark gray-painted alloy wheels",
+      "Sport badging"
+    ],
+    "RTS": [
+      "Remote engine start",
+      "18-inch machine-finished alloy wheels",
+      "Smart Entry",
+      "Fog lights",
+      "Intelligent Variable Torque ManagementTM (i-VTM4TM) AWD system (available)",
+      "Intelligent Traction Management",
+      "Exterior temperature indicator",
+      "Tri-zone automatic climate control system with humidity control and air filtration",
+      "HomeLink® remote system",
+      "Push button start"
+    ],
+    "RT": [
+      "280-hp 3.5-liter i-VTEC® V-6 engine with direct injection",
+      "6-speed automatic transmission",
+      "Heavy-duty transmission cooler (available)",
+      "18-inch alloy wheels",
+      "Multi-angle rearview camera with guidelines",
+      "Dual-action tailgate",
+      "In-Bed Trunk®",
+      "60/40 split lift-up rear seat with underseat storage",
+      "200-watt audio system with 7 speakers including subwoofer",
+      "USB Audio Interface (1.0-amp charging port in center console)"
+    ]
+  }
+}

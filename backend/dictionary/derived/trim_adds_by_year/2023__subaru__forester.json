@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2023|subaru|forester",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2023__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Forester Touring",
+    "Forester Limited",
+    "Forester Wilderness",
+    "Forester Sport",
+    "Forester Premium",
+    "Forester"
+  ],
+  "adds_by_trim": {
+    "Forester": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "EyeSight Driver Assist Technology",
+      "Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "SI-DRIVE Engine Performance Management",
+      "17-inch steel wheels with covers",
+      "Auto-on/off LED Steering Responsive Headlights with High Beam Assist",
+      "6-way manually adjustable driver seat",
+      "Roof rails with tie-down points"
+    ],
+    "Forester Premium": [
+      "X-MODE with Hill Descent Control",
+      "17-inch alloy wheels",
+      "Halogen fog lights",
+      "Body-color exterior mirrors",
+      "Privacy glass",
+      "Premium cloth upholstery",
+      "Keyless Access with Push-Button Start"
+    ],
+    "Forester Sport": [
+      "Dual-function X-MODE with Hill Descent Control and Sharp mode",
+      "Panoramic moonroof",
+      "Dual-function tail lights and body-color exterior mirrors with integrated turn signals",
+      "3,000-lb towing capacity with SI-DRIVE Sport mode",
+      "Rear spoiler"
+    ],
+    "Forester Wilderness": [
+      "17-inch matte black finish alloy wheels with Yokohama Geolandar All-Terrain tires",
+      "9.2 inches of ground clearance",
+      "18-inch roof rails with tie-down points",
+      "Engine skid plate",
+      "Forester Wilderness exterior underguards, fender flares and side cladding",
+      "Orange accents on exterior",
+      "Hexagonal LED fog lights"
+    ],
+    "Forester Limited": [
+      "LED fog lights",
+      "Touring 18-inch alloy wheels",
+      "Leather-trimmed upholstery",
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with Apple CarPlay and Android Auto",
+      "SiriusXM with 4-month trial subscription",
+      "Satin chrome finish exterior mirrors with integrated turn signals and automatic reverse tilt"
+    ],
+    "Forester Touring": [
+      "Available Saddle Brown Leather-trimmed upholstery",
+      "Exterior and interior crystal black silica upgrades",
+      "Front, rear and side underguards with orange accents"
+    ]
+  }
+}

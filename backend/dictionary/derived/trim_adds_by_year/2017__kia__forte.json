@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2017|kia|forte",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_llm_2017__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Koup SX",
+    "Sedan/Forte5 SX",
+    "Sedan/Forte5 S",
+    "Sedan/Forte5 EX",
+    "Sedan LX",
+    "Forte5 LX"
+  ],
+  "adds_by_trim": {
+    "Koup SX": [
+      "1.6L turbocharged engine with 201 hp and 195 lb-ft torque",
+      "7-speed dual-clutch transmission with steering-wheel paddle shifters",
+      "HID headlights with dynamic bending light",
+      "Unique sport bumpers with red accent trim",
+      "Dual chrome exhaust tips",
+      "18-inch alloy wheels with 225/40R18 tires",
+      "D-shaped leather-wrapped steering wheel",
+      "Larger front sport suspension brakes",
+      "UVO eServices with voice-command navigation and 7-inch touchscreen"
+    ],
+    "Sedan/Forte5 SX": [
+      "1.6L turbocharged engine with 201 hp and 195 lb-ft torque",
+      "7-speed dual-clutch transmission with steering-wheel paddle shifters",
+      "HID headlights with dynamic bending light",
+      "Larger front sport suspension brakes",
+      "Heated front seats",
+      "Dual-zone automatic temperature control with rear vents",
+      "UVO eServices with voice-command navigation and 7-inch touchscreen"
+    ],
+    "Sedan/Forte5 S": [
+      "2.0L Gasoline Direct Injection engine with 164 hp",
+      "Rear LED taillights",
+      "Front fog lights",
+      "16-inch alloy wheels with 205/55R16 tires",
+      "Sport cloth seat trim",
+      "8-way power-adjustable driver's seat",
+      "Sliding dual visor with mirror and light",
+      "Auto on/off headlights"
+    ],
+    "Sedan/Forte5 EX": [
+      "2.0L Gasoline Direct Injection engine with 164 hp",
+      "Front LED accent lights",
+      "Rear LED taillights",
+      "Front fog lights",
+      "17-inch alloy wheels with 215/45R17 tires",
+      "Leather seat trim",
+      "Ventilated front seats",
+      "Automatic climate control with dual-zone temperature",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "Sedan LX": [
+      "2.0L Multipoint Injection engine with 147 hp",
+      "6-speed manual or automatic transmission",
+      "Power sunroof",
+      "15-inch steel wheels with 195/65R15 tires",
+      "Basic cloth seat trim",
+      "4-speaker audio system with AM/FM/CD/MP3/SiriusXM",
+      "Tilt and telescopic steering column",
+      "Power windows and door locks"
+    ],
+    "Forte5 LX": [
+      "2.0L Multipoint Injection engine with 147 hp",
+      "6-speed Sportmatic transmission as standard",
+      "15-inch steel wheels with 195/65R15 tires",
+      "Cloth seat trim",
+      "4-speaker audio system with AM/FM/CD/MP3/SiriusXM",
+      "Sliding armrest standard",
+      "60/40 split-folding rear seats",
+      "Tire-Pressure Monitoring System"
+    ]
+  }
+}

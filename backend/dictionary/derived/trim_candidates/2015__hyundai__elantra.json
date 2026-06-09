@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|hyundai|elantra",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Blue",
+    "Premium",
+    "Sport",
+    "LE",
+    "M/T"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

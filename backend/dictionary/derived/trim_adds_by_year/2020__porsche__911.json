@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2020|porsche|911",
+  "year": 2020,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2020__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "911 Carrera 4S",
+    "911 Carrera S"
+  ],
+  "adds_by_trim": {
+    "911 Carrera 4S": [
+      "All-wheel drive system for enhanced traction and stability"
+    ],
+    "911 Carrera S": [
+      "2-Zone Automatic Climate Control with separate driver and passenger temperature settings",
+      "Active carbon filter trapping particles, pollen, and odors",
+      "Automatic air-circulation mode monitoring air quality and humidity",
+      "Optional Ionizer function improving cabin air quality",
+      "Electrically adjustable slide/tilt metal sunroof with net-type wind deflector",
+      "Optional electrically adjustable slide/tilt glass sunroof with electric roll-up sunblind"
+    ]
+  }
+}

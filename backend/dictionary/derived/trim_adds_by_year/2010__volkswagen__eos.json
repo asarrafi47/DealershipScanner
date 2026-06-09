@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2010|volkswagen|eos",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Eos",
+  "ladder_id": "brochure_web_2010__volkswagen__eos",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Lux",
+    "Komfort",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Lux": [
+      "Leather seating surfaces with power adjustment",
+      "Panoramic power sunroof with power wind deflector",
+      "Premium sound system with six speakers",
+      "Xenon HID headlights with dynamic range control",
+      "18-inch Laguna alloy wheels",
+      "Automatic climate control with dual zones",
+      "Power windows with one-touch up/down functionality",
+      "Cruise control with electronic speed regulation"
+    ],
+    "Komfort": [
+      "Heated front seats",
+      "Power convertible top with one-touch operation",
+      "Six-speaker AM/FM stereo with CD player",
+      "Air conditioning system",
+      "16-inch alloy wheels",
+      "Power locks and power windows",
+      "Tilt and telescoping steering wheel"
+    ],
+    "Standard": [
+      "2.0-liter TSI turbocharged four-cylinder engine with 200 horsepower",
+      "Six-speed automatic transmission with Tiptronic shift",
+      "Power convertible top with manual operation option",
+      "Four-speaker AM/FM stereo with CD player",
+      "Air conditioning",
+      "15-inch steel wheels with covers",
+      "Power steering",
+      "Driver and passenger airbags with stability control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/eos/"
+}

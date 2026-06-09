@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2013|honda|crv",
+  "year": 2013,
+  "make": "Honda",
+  "model": "CR-V",
+  "ladder_id": "inventory_honda_crv",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "XM service at the end of your complimentary trial, the plan you choose",
+      "Sirius, XM and all related marks and logos are trademarks of",
+      ",000-Mile Limited Powertrain Warranty. Ordinary maintenance or adjustments, parts subject to normal wear and replacement, and certain items are excluded. Please see your Honda dealer"
+    ],
+    "EX-L": [
+      "vehicles. Ratings should only be compared to similar ratings on MY 2011 and later",
+      "Sirius XM Radio Inc."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "EX": 3
+    }
+  }
+}

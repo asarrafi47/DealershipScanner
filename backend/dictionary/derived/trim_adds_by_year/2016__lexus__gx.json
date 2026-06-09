@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2016|lexus|gx",
+  "year": 2016,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2016__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Features Intuitive Parking Assist system",
+      "Adds Includes Navigation System",
+      "Adds Features CRAWL Control for off-road terrain management",
+      "Adds Includes Downhill Assist Control (DAC)",
+      "Adds Includes Hill Assist Control (HAC)",
+      "Adds Features TORSEN differential system",
+      "Adds Includes Trailer Sway Control (TSC)"
+    ],
+    "Premium": [
+      "Adds Enform services and smartphone integration",
+      "Adds Safety Connect emergency services subscription",
+      "Adds Wide-view Front and Side Monitor system",
+      "Adds Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert system",
+      "Adds Pre-Collision System",
+      "Adds Brake Assist system",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds HD Radio Technology"
+    ]
+  }
+}

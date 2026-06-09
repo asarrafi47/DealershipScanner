@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2016,Kia,Sorento,FE AWD,3.3L V6 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.3,18,25,21,,,,,,3.3L V6,
-2016,Kia,Sorento,FWD,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,20,27,23,,,,,,2.0L I4,
-2016,Kia,Sorento,FWD,2.4L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.4,21,28,24,,,,,,2.4L I4,
-2016,Kia,Sorento,FWD,3.3L V6 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.3,18,25,20,,,,,,3.3L V6,
-2016,Kia,Sorento,AWD,2.0L I4 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,19,25,21,,,,,,2.0L I4,
-2016,Kia,Sorento,AWD,2.4L I4 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,21,25,22,,,,,,2.4L I4,
-2016,Kia,Sorento,AWD,3.3L V6 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.3,17,23,19,,,,,,3.3L V6,

@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2018|toyota|camry",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XSE",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on SE Adds to or replaces features offered on XSE",
+      "Powertrain Powertrain Powertrain",
+      "2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm \u2022 2.5-Liter Dynamic Force 4-Cylinder Engine with 206 hp @ 6600 rpm \u2022 3.5-Liter V6 with 301 hp @ 6600 rpm",
+      "28 city/39 hwy/32 combined est. mpg50 \u2022 28 city/39 hwy/32 combined est. mpg50 \u2022 22 city/32 hwy/26 combined est. mpg50",
+      "Exterior Features Exterior Features Exterior Features",
+      "Black front grille with sport mesh insert \u2022 LED headlights with smoke tint and fully integrated LED Daytime \u2022 Panoramic glass roof with front power tilt/slide moonroof",
+      "Color-keyed sport side rocker panels Running Lights (DRL) with auto on/off feature \u2022 Shark-fin antenna",
+      "18-in. black machined-finish alloy wheels and P235/45R18 tires \u2022 LED taillights with smoke tint Interior and Safety Features",
+      "Color-keyed rear spoiler \u2022 Gloss-black front grille with sport mesh insert",
+      "Entune\u2122 3.04 Audio Plus with JBL\u00ae w/Clari-Fi, Connected Navigation5",
+      "Single exhaust with dual chrome tips \u2022 Color-keyed heated power outside mirrors with turn signal and and App Suite4 \u2014 includes 8-in. touch-screen, AM/FM CD player,",
+      "Interior and Safety Features MP3/WMA playback capability, nine speakers in nine locations,"
+    ],
+    "XLE": [
+      "Available Fall 2017 Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Powertrain Powertrain Powertrain",
+      "2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm \u2022 2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm \u2022 3.5-Liter V6 with 301 hp @ 6600 rpm",
+      "29 city/41 hwy/34 combined est. mpg50 \u2022 28 city/39 hwy/32 combined est. mpg50 \u2022 22 city/33 hwy/26 combined est. mpg50",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED combination headlights with auto on/off feature \u2022 LED headlights with fully integrated LED Daytime Running Lights \u2022 Panoramic glass roof with front power tilt/slide moonroof",
+      "LED Daytime Running Lights (DRL) with on/off feature (DRL) with auto on/off feature \u2022 Shark-fin antenna",
+      "16-in. steel wheels and P205/65R16 tires \u2022 LED taillights \u2022 Dual exhaust with chrome finisher",
+      "Interior and Safety Features \u2022 Bright metallic front grille Interior and Safety Features",
+      "Color-keyed heated power outside mirrors with turn signal and",
+      "Toyota Safety Sense\u2122 P (TSS-P)27 blind spot warning indicators3 \u2022 Entune\u2122 3.04 Audio Plus with JBL\u00ae w/Clari-Fi, Connected Navigation5",
+      "Integrated backup camera21 with projected path \u2022 Color-keyed outside door handles with touch-sensor and App Suite4 \u2014 includes 8-in. touch-screen, AM/FM CD player,"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on L is subscription-free. See toyota.com/entune for details.",
+      "Leather-trimmed multi-stage heated front seats with seatback pockets;",
+      "Powertrain 8-way power-adjustable driver\u2019s seat with power lumbar support; \u2022 Qi-compatible wireless smartphone charging20",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel with audio,",
+      "Direct Shift-8AT (8-Speed Electronically Controlled automatic Transmission) Multi-Information Display and Bluetooth\u00ae11 hands-free phone controls \u2022 Overhead console with maplights, HomeLink\u00ae30 universal transceiver",
+      "Exterior Features and Safety Connect\u00ae15 button",
+      "3-mode switch (ECO, Normal, Sport)",
+      "Dual sun visors with sliding extensions and illuminated vanity mirrors",
+      "17-in. alloy wheels and P215/55R17 tires \u2022 Tiger Eye wood interior trim",
+      "Options and Packages",
+      "Interior and Safety Features \u2022 Smart Key System29 on front doors and trunk with Push Button Start",
+      "Auto-dimming rearview mirror with compass \u2022 Navigation Package19 includes"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on Hybrid LE Adds to or replaces features offered on Hybrid LE",
+      "Powertrain Powertrain Powertrain",
+      "Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine \u2022 Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine \u2022 Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine",
+      "Hybrid system net power: 208 hp (155 kW) \u2022 Hybrid system net power: 208 hp (155 kW) \u2022 Hybrid system net power: 208 hp (155 kW)",
+      "51 city/53 hwy/52 combined est. mpg50 \u2022 44 city/47 hwy/46 combined est. mpg50 \u2022 44 city/47 hwy/46 combined est. mpg50",
+      "Electronically controlled Continuously Variable Transmission (ECVT) \u2022 Electronically controlled Continuously Variable Transmission (ECVT) \u2022 Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED combination headlights with auto on/off feature \u2022 Black front grille with sport mesh insert \u2022 LED headlights with fully integrated LED Daytime Running Lights",
+      "LED Daytime Running Lights (DRL) with on/off feature \u2022 Color-keyed sport side rocker panels (DRL) with auto on/off feature",
+      "Black front grille \u2022 18-in. black machined-finish alloy wheels and P235/45R18 tires \u2022 LED taillights",
+      "16-in. steel wheels and P205/65R16 tires \u2022 Color-keyed rear spoiler \u2022 Bright metallic front grille",
+      "Acoustic noise-reducing front windshield \u2022 Single exhaust with dual chrome tips \u2022 Color-keyed heated power outside mirrors with turn signal and"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

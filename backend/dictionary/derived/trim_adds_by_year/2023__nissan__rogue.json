@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2023|nissan|rogue",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2023__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Variable Compression Turbo (VC-Turbo) engine with 201 hp and 225 lb-ft torque",
+      "ProPILOT Assist with Navi-link and Nissan Door to Door Navigation",
+      "Front, Rear, and Side Sonar System with Traffic Sign Recognition",
+      "Intelligent Driver Alertness and Motion Activated Liftgate",
+      "Quilted semi-aniline leather-appointed seats with rear door sunshades",
+      "NissanConnect 9-inch color touchscreen with Wireless Apple CarPlay and SiriusXM",
+      "Alexa Built-in and Bose Premium Audio System with dual-driver woofer",
+      "Wireless charger, interior accent lighting, and remote-folding rear seats"
+    ],
+    "SL": [
+      "19-inch aluminum-alloy wheels and roof rails",
+      "Dual Panel Panoramic Moonroof and auto-dimming inside rearview mirror",
+      "Outside mirrors with LED turn signals and reverse tilt-down feature",
+      "Intelligent Around View Monitor and Divide-N-Hide cargo system",
+      "4-way power front-passenger seat with memory system for driver seat",
+      "Leather-appointed seats with leather-wrapped heated steering wheel and heated front seats",
+      "Two 12-volt DC power outlets"
+    ],
+    "SV": [
+      "ProPILOT Assist with Intelligent Blind Spot Intervention",
+      "Intelligent Lane Intervention and 18-inch aluminum-alloy wheels",
+      "Heated outside mirrors and Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System with Intelligent Climate Control",
+      "NissanConnect Services powered by SiriusXM and Wi-Fi Hotspot",
+      "Two USB-A ports and two USB-C ports"
+    ],
+    "S": [
+      "Variable Compression Turbo (VC-Turbo) engine with 201 hp and 225 lb-ft torque",
+      "Available Intelligent All-Wheel Drive with Drive Mode Dial and Snow/Off-Road Modes",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, and Rear Cross Traffic Alert",
+      "Rear Automatic Braking and High Beam Assist with Safety Shield 360 technology",
+      "17-inch aluminum-alloy wheels with LED headlights and LED Daytime Running Lights",
+      "LED taillights and Rear Door Alert",
+      "NissanConnect 8-inch color touchscreen with Apple CarPlay and Android Auto",
+      "Advanced Drive-Assist Display and Nissan Advanced Air Bag System"
+    ]
+  }
+}

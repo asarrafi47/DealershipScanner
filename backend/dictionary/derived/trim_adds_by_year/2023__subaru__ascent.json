@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2023|subaru|ascent",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Ascent",
+  "ladder_id": "2023_subaru_ascent",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Dual-Mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "20-inch dark gray wheels, leather upholstery, and Harman Kardon 14-speaker audio",
+      "Panoramic moonroof and Hands-Free Power Rear Gate",
+      "360-degree Surround View Monitor and DriverFocus Distraction Mitigation"
+    ],
+    "Touring": [
+      "Includes Limited plus Nappa leather and woodgrain accent trim",
+      "Rain-sensing wipers, interior ambient lighting, and 120-volt outlet",
+      "Highest Ascent trim in 2025 brochure"
+    ],
+    "Premium": [
+      "5,000-lb towing capacity",
+      "18-inch aluminum-alloy wheels in gray with machine finish",
+      "8-way power-adjustable driver seat",
+      "Leather-wrapped steering wheel and shift lever",
+      "Second-row climate controls",
+      "4G LTE Wi-Fi capability",
+      "SUBARU STARLINK 8.0-inch multimedia plus with Apple CarPlay and Android Auto"
+    ]
+  }
+}

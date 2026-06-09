@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|ram|commercial",
+  "year": 2015,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_llm_2015__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie",
+    "SLT",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Laramie": [
+      "Laramie badging",
+      "Chrome surround grille with chrome insert",
+      "Halogen bifunctional projector headlamps",
+      "Power multifunction trailer-tow mirrors with heated manual-folding chrome finish",
+      "Center stack woodgrain insert",
+      "Dual-zone temperature control air conditioning",
+      "18 x 8-inch polished aluminum wheels on 3500 SRW",
+      "19.5 x 6-inch polished aluminum wheels on 4500/5500",
+      "Electric shift part-time transfer case on 4x4"
+    ],
+    "SLT": [
+      "SLT badging",
+      "Chrome front bumper with Chrome Appearance Group",
+      "Chrome surround grille with black insert",
+      "Fog lamps with Chrome Appearance Group",
+      "Power trailer-tow heated manual-folding black mirrors with courtesy lamps",
+      "18 x 8-inch chrome-clad steel wheels on 3500 SRW",
+      "17 x 6-inch bright wheel skins and center cap on 3500 DRW",
+      "Color-keyed center stack bezel"
+    ],
+    "Tradesman": [
+      "SLT badging standard",
+      "Black front bumper",
+      "Black grille insert and surround",
+      "Black folding trailer-tow manual mirrors on Regular Cab",
+      "Black front headlamp filler fascia",
+      "Black center stack bezel",
+      "Single-zone air conditioning",
+      "18 x 8-inch styled steel painted Argent wheels on 3500 SRW",
+      "17 x 6-inch steel painted Argent wheels on 3500 DRW",
+      "19.5 x 6-inch steel wheels on 4500/5500"
+    ]
+  }
+}

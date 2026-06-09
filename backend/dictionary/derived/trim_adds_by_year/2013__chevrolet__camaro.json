@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2013|chevrolet|camaro",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2013__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZL1",
+    "2SS",
+    "1SS",
+    "2LT",
+    "1LT",
+    "2LS",
+    "1LS"
+  ],
+  "adds_by_trim": {
+    "ZL1": [
+      "Sueded microfiber-wrapped flat-bottom steering wheel with audio and cruise controls",
+      "Sueded microfiber-wrapped shift knob and shift boot",
+      "Red interior accent trim",
+      "Heated leather-appointed driver and front passenger seats with sueded microfiber surfaces",
+      "20-inch forged-aluminum bright 5-spoke wheels",
+      "Chevrolet MyLink radio with AM/FM, SiriusXM with 12 trial months, and smartphone integration"
+    ],
+    "2SS": [
+      "20-inch forged-aluminum black-painted 10-spoke wheels",
+      "SiriusXM satellite radio with 12 trial months",
+      "Sueded microfiber-wrapped flat-bottom steering wheel with audio and cruise controls"
+    ],
+    "1SS": [
+      "19-inch polished-aluminum wheels",
+      "Sueded microfiber package with wrapped steering wheel, shift knob, and shift boot",
+      "SiriusXM satellite radio with three trial months"
+    ],
+    "2LT": [
+      "Heated leather-appointed driver and front passenger seats",
+      "Universal home remote with 3-channel programmable garage door opener",
+      "Power sunroof with express-open and venting feature",
+      "Chevrolet MyLink radio with navigation, AM/FM, SiriusXM, and NavTraffic",
+      "19-inch bright silver-painted aluminum wheels",
+      "Boston Acoustics premium 245-watt system with nine speakers"
+    ],
+    "1LT": [
+      "18-inch silver-painted aluminum wheels",
+      "Chevrolet MyLink radio with AM/FM, SiriusXM, USB port, and smartphone integration",
+      "Boston Acoustics premium 245-watt system with nine speakers"
+    ],
+    "2LS": [
+      "Mojave interior accent trim package with leather front seats and carbon flash accents",
+      "Leather-wrapped steering wheel and shift knob",
+      "Inferno orange interior accent trim option"
+    ],
+    "1LS": [
+      "Front sport bucket seats with power recline and adjustable head restraints",
+      "AM/FM stereo with CD player and MP3 playback",
+      "Steering wheel-mounted audio and cruise controls",
+      "OnStar with Directions and Connections plan for six months",
+      "18-inch heritage steel wheels",
+      "Front reading lamps and interior dome with illuminated entry"
+    ]
+  }
+}

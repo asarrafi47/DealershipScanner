@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|chevrolet|tahoe",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2015__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "22-inch painted-aluminum wheels with chrome inserts",
+      "Luxury Package with keyless entry and push-button start",
+      "Power-fold third-row 60/40 split-bench seat",
+      "Heated second-row seats and heated steering wheel",
+      "Outside heated power-adjustable power-folding mirrors",
+      "Foglamps and front/rear park assist with rear cross traffic alert",
+      "Side blind zone alert and body-color trailer hitch closeout"
+    ],
+    "LT": [
+      "20-inch chrome-aluminum wheels",
+      "Chevrolet MyLink 2 Radio with 8-inch touchscreen and GPS navigation",
+      "AM/FM/HD Radio with Bluetooth audio streaming and CD player",
+      "5 USB ports, SD card reader and auxiliary input jack"
+    ],
+    "LS": [
+      "5.3L EcoTec3 V8 engine with 355 hp and 383 lb-ft torque",
+      "6-speed automatic transmission with overdrive and Tow/Haul mode",
+      "3-passenger front 40/20/40 split-bench seat with power adjusters and lumbar control",
+      "Second-row split-bench seat with power-release",
+      "Power-retractable assist steps with chrome accent strip and perimeter lighting",
+      "Active 2-speed electronic Autotrac transfer case for 4WD models"
+    ]
+  }
+}

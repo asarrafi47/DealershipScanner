@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2017|maserati|quattroporte",
+  "year": 2017,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_web_2017__maserati__quattroporte",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Nerissimo",
+    "GranSport",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Nerissimo": [
+      "Black exterior trim and accents throughout",
+      "Dark tinted headlights and taillights",
+      "Exclusive dark interior styling options",
+      "Premium leather upholstery with contrast stitching"
+    ],
+    "GranSport": [
+      "Sport-tuned suspension and steering",
+      "19-inch dark forged aluminum wheels",
+      "Sport leather steering wheel",
+      "Upgraded Brembo braking system",
+      "Unique exterior design elements and badging"
+    ],
+    "S": [
+      "3.0L twin-turbocharged V6 engine producing 424 hp",
+      "All-wheel drive standard",
+      "ZF 8-speed automatic transmission",
+      "Upgraded 18-inch wheels",
+      "Premium leather interior appointments",
+      "Maserati Intelligent Assistant infotainment system"
+    ],
+    "Base": [
+      "3.0L twin-turbocharged V6 engine, 424 hp",
+      "All-wheel drive with electronic Q4 system",
+      "ZF 8-speed automatic transmission",
+      "17-inch alloy wheels with all-season tires",
+      "Premium leather seating surfaces",
+      "8.4-inch touchscreen display",
+      "Dual-zone climate control",
+      "Proximity key with push-button start",
+      "Premium audio system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/quattroporte/"
+}

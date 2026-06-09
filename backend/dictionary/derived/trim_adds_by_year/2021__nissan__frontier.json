@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2021|nissan|frontier",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2021__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRO-4X CREW CAB",
+    "SV CREW CAB LONG BED",
+    "SV CREW CAB",
+    "SV KING CAB",
+    "S CREW CAB",
+    "S KING CAB"
+  ],
+  "adds_by_trim": {
+    "PRO-4X CREW CAB": [
+      "Bilstein off-road performance shocks with electronic locking rear differential",
+      "Skid plates for undercarriage protection",
+      "PRO-4X embroidered leather-appointed seats",
+      "8-way power adjustable driver's seat and 4-way front-passenger seat",
+      "Heated front seats with rear fold-down center armrest",
+      "White-faced gauges with satin chrome bezels",
+      "Rockford Fosgate-powered ten-speaker audio system with subwoofer",
+      "Auto-dimming rearview mirror with digital compass and outside temperature",
+      "Power sliding glass moonroof with roof rack and crossbars",
+      "Nissan Navigation System with Voice Recognition"
+    ],
+    "SV CREW CAB LONG BED": [
+      "16-inch 6-split spoke aluminum-alloy wheels",
+      "Body-color front bumper and chrome rear bumper",
+      "Sliding rear window",
+      "Dual power outside mirrors with heated function",
+      "Sun visors with vanity mirrors and extension",
+      "Value Truck Package standard on 4x2 models"
+    ],
+    "SV CREW CAB": [
+      "Four full-size doors with seating for five",
+      "60/40-split flip-up rear bench seat",
+      "AM/FM audio system upgraded to six speakers",
+      "16-inch 6-split spoke aluminum-alloy wheels",
+      "Body-color front bumper and chrome rear bumper",
+      "Sliding rear window and dual power outside mirrors"
+    ],
+    "SV KING CAB": [
+      "16-inch 6-split spoke aluminum-alloy wheels",
+      "Body-color front bumper and chrome rear bumper",
+      "Bed rail caps"
+    ],
+    "S CREW CAB": [
+      "Four full-size doors with seating for five",
+      "60/40-split flip-up rear bench seat",
+      "AM/FM audio system upgraded to six speakers"
+    ],
+    "S KING CAB": [
+      "3.8-liter V6 Direct Injection Gasoline engine with 310 hp and 281 lb-ft torque",
+      "9-speed automatic transmission",
+      "16-inch 6-spoke steel wheels",
+      "Active Brake Limited Slip and full-length boxed ladder frame",
+      "7-inch color touch-screen display with AM/FM four-speaker audio",
+      "USB port and Bluetooth hands-free phone system",
+      "RearView Monitor and illuminated steering wheel-mounted audio controls",
+      "Remote Keyless Entry with Push Button Ignition",
+      "Power door locks, power windows, and automatic on/off headlights"
+    ]
+  }
+}

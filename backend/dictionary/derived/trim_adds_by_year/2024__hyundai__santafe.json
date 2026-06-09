@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2024|hyundai|santafe",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2024__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "21-inch alloy wheels",
+      "Quilted premium Nappa leather seating surfaces",
+      "2nd-row captain's chairs with power reclining and tilting",
+      "Dual wireless phone charger",
+      "Premium finish grille and dark chrome C-pillar assist handle",
+      "Camera-based rearview mirror",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Blind-Spot View Monitor and Surround View Monitor"
+    ],
+    "Limited": [
+      "20-inch alloy wheels",
+      "Ventilated front seats and heated 2nd-row seats",
+      "Leather-trimmed seating surfaces",
+      "Remote Smart Parking Assist",
+      "Parking Distance Warning – Forward/Side/Reverse",
+      "Bose premium audio with 12 speakers"
+    ],
+    "XRT": [
+      "18-inch all-terrain tires",
+      "Higher ground clearance",
+      "Rugged interior trim and accents",
+      "Dark chrome C-pillar assist handle",
+      "12.3-inch navigation system",
+      "HTRAC all-wheel drive and 4,500-lb towing capacity with trailer brakes"
+    ],
+    "SEL": [
+      "18-inch alloy wheels",
+      "Dual automatic temperature control",
+      "H-Tex seating surfaces and heated front seats",
+      "Panoramic curved display",
+      "Digital Key 2 and wireless phone charger",
+      "HTRAC all-wheel drive available"
+    ],
+    "SE": [
+      "Smartstream 2.5L Turbo GDI/MPI 4-cylinder engine with 277 HP and 311 lb-ft torque",
+      "8-speed DCT with SHIFTRONIC transmission",
+      "Proximity key with push button start",
+      "Hands-free power liftgate with auto open",
+      "Bi-directional center console armrest with two-level storage",
+      "12.3-inch display audio with Android Auto and Apple CarPlay",
+      "Optional HTRAC all-wheel drive"
+    ]
+  }
+}

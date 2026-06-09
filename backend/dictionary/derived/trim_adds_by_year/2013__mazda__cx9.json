@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2013|mazda|cx9",
+  "year": 2013,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2013__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-9 Grand Touring",
+    "CX-9 Touring",
+    "CX-9 Sport"
+  ],
+  "adds_by_trim": {
+    "CX-9 Grand Touring": [
+      "Bi-Xenon HID headlights with automatic on/off",
+      "Alarm system",
+      "Power open/close rear liftgate",
+      "Rain-sensing windshield wipers",
+      "Power side mirrors with integrated turn-signals",
+      "Mirror memory function and tilt-in-reverse",
+      "20-inch aluminum wheels",
+      "Available Rear-Seat Entertainment System with 9-inch DVD player",
+      "Available Advanced Technology Package with Bose premium audio"
+    ],
+    "CX-9 Touring": [
+      "Auto-off headlights",
+      "Heated side mirrors",
+      "Heated front seats",
+      "Leather-trimmed seats in 1st and 2nd-row outboard positions",
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Blind Spot Monitoring System",
+      "Rearview camera",
+      "Rear backup sensors",
+      "Available Touring Technology Package with Bose audio and moonroof"
+    ],
+    "CX-9 Sport": [
+      "Halogen headlights",
+      "Power side mirrors",
+      "Pandora Internet radio",
+      "SMS text message audio delivery and reply",
+      "E911 automatic emergency notification",
+      "Advanced dual front airbags with driver seat-position sensor",
+      "18-inch aluminum alloy wheels",
+      "Three-zone automatic climate control",
+      "5.8-inch color touchscreen display",
+      "USB audio input"
+    ]
+  }
+}

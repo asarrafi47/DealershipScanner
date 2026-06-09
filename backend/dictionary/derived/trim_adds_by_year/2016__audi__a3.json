@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2016|audi|a3",
+  "year": 2016,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_llm_2016__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S3",
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "S3": [
+      "1,984cc turbocharged TFSI four-cylinder engine with 292 horsepower",
+      "0–60 mph in 4.7 seconds",
+      "155 mph top track speed",
+      "Ventilated front and rear disc brakes (13.4/12.2 inches)",
+      "quattro all-wheel drive with six-speed S tronic dual-clutch transmission",
+      "Audi progressive steering",
+      "S3 sport suspension standard",
+      "Matte brushed aluminum decorative inlays",
+      "Sepang Blue pearl, Misano Red pearl, and Scuba Blue metallic exclusive colors"
+    ],
+    "Prestige": [
+      "Aluminum Mistral decorative inlays",
+      "Premium Plus features included"
+    ],
+    "Premium Plus": [
+      "Aluminum Mistral decorative inlays"
+    ],
+    "Premium": [
+      "Micrometallic Silver decorative inlays",
+      "Choice of 1.8T, 2.0T, or TDI turbocharged four-cylinder engines"
+    ],
+    "Base": [
+      "Four-cylinder turbocharged engine options: 1.8T (170 hp), 2.0T (220 hp), or TDI (150 hp)",
+      "Six-speed S tronic dual-clutch transmission with front-wheel drive",
+      "MacPherson strut front suspension with torsion-beam rear suspension",
+      "Ventilated front disc and solid rear disc brakes",
+      "Electromechanical power steering system",
+      "ultra lightweight technology with galvanized steel unibody",
+      "36.1-foot turning diameter",
+      "Sport suspension available"
+    ]
+  }
+}

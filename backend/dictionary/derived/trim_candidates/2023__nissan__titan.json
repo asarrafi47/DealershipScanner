@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2023|nissan|titan",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Titan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum Reserve",
+    "Platinum",
+    "Pro-4X",
+    "SV",
+    "Midnight Edition",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|volvo|v50",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "V50",
+  "ladder_id": "brochure_llm_2010__volvo__v50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T5 AWD",
+    "2.4i"
+  ],
+  "adds_by_trim": {
+    "T5 AWD": [
+      "2.5-liter turbocharged five-cylinder engine with 227 hp and 236 ft-lbs torque",
+      "Electronically controlled all-wheel drive system",
+      "Six-speed manual transmission standard (five-speed geartronic automatic optional)",
+      "Dynamic Sports Suspension",
+      "0–60 mph acceleration in 6.7 seconds (manual) or 7.1 seconds (automatic)"
+    ],
+    "2.4i": [
+      "2.4-liter five-cylinder engine with 168 hp and 170 ft-lbs torque",
+      "Front-wheel drive",
+      "Five-speed geartronic automatic transmission standard",
+      "McPherson front suspension with anti-dive and anti-lift function",
+      "Multilink independent rear suspension with stabilizer bars front and rear",
+      "Power-assisted electro-hydraulic rack and pinion steering with tilt and telescopic column",
+      "Power-assisted anti-lock disc brakes with EBA and EBD"
+    ]
+  }
+}

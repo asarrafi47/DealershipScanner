@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2017|dodge|journey",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Journey",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Citadel",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE",
+    "Platinum",
+    "Touring",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

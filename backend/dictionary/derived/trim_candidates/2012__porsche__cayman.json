@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2012|porsche|cayman",
+  "year": 2012,
+  "make": "Porsche",
+  "model": "Cayman",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo",
+    "Carrera S",
+    "Carrera",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2014|nissan|armada",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "generic_nissan_armada",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Gps",
+    "Sig"
+  ],
+  "adds_by_trim": {
+    "Sig": [
+      "System \u2013 driver\u2019s seat, outside mirrors, and pedals",
+      "Part of Platinum Reserve Package RearView Monitor D Cloth seat trim",
+      "t available at siriusxm.com. \u00a92013 Sirius",
+      "and logos are owned by Bluetooth SIG, Inc. and any use of such marks by Nissan is under license. HomeLink\u00ae is a registered trademark of Johnson Controls Technology Corporation. iPod\u00ae is a registered trademark of Apple, Inc. All rights reserved. iPod not included."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 4.0,
+    "per_trim_add_counts": {
+      "Sig": 4
+    }
+  }
+}

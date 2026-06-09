@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_volvo_xc90_complete_options",
+  "make": "Volvo",
+  "models": [
+    "XC90",
+    "XC90"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "In 2010, all XC90 models received painted wheel arches (previously they were opt; In 2010, all XC90 models received painted wheel arches (previously they were optional)."
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "L B5254T2 turbo I5"
+      }
+    ]
+  }
+}

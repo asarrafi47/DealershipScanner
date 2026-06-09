@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2016|dodge|performance",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Performance",
+  "ladder_id": "brochure_llm_2016__dodge__performance",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT",
+    "SRT 392",
+    "Super Track Pak",
+    "Blacktop Package",
+    "Scat Pack",
+    "Super Sport Group (SS/T)",
+    "R/T",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT": [
+      "SRT performance leather-wrapped flat-bottom heated steering wheel",
+      "200-mph primary speedometer with red-faced gauges",
+      "Luxury Black with Black velour binding front seats with SRT embroidered logo"
+    ],
+    "SRT 392": [
+      "180-mph primary speedometer",
+      "Luxury Black with Sepia velour binding front seats with SRT embroidered logo"
+    ],
+    "Super Track Pak": [
+      "P245/45ZR20 performance tires or P245/45ZR20 all-season performance tires",
+      "Steering wheel-mounted paddle shifters with automatic transmission",
+      "Parkview rear back-up camera"
+    ],
+    "Blacktop Package": [
+      "Bifunctional HID headlamps with integrated Air Catcher",
+      "Projector fog lamps",
+      "Black rear spoiler with back-up camera",
+      "P245/45ZR20 performance tires",
+      "Gloss black interior accents",
+      "Performance leather-wrapped steering wheel with vehicle controls"
+    ],
+    "Scat Pack": [
+      "Premium Scat Pack floor mats",
+      "Premium Scat Pack floor mats included with Scat Pack Appearance Group",
+      "Performance leather-wrapped steering wheel with vehicle controls",
+      "Hectic mesh aluminum interior accents"
+    ],
+    "Super Sport Group (SS/T)": [
+      "Body-color rear spoiler with back-up camera",
+      "P245/45R20 all-season performance tires",
+      "Steering wheel-mounted paddle shifters with automatic transmission"
+    ],
+    "R/T": [
+      "Bifunctional HID headlamps included with R/T Classic or Scat Pack Appearance Group",
+      "LED-illuminated daytime running lamps with park and turn indicators",
+      "Split LED-illuminated taillamps with gloss black surround",
+      "Automatic headlamps",
+      "Power multifunction heated foldaway mirrors",
+      "Remote start with automatic transmission",
+      "160-mph primary speedometer"
+    ],
+    "SXT": [
+      "Bifunctional halogen projector headlamps with quad halo LED surround",
+      "LED-illuminated daytime running lamps with park and turn indicators",
+      "Automatic headlamps",
+      "Power body-color manual folding heated mirrors",
+      "Full-length floor-mounted center console with cell phone storage",
+      "Dual-zone automatic temperature control",
+      "6-way power driver's seat with 4-way power lumbar adjuster",
+      "Tilt/telescoping manual steering column",
+      "Leather-wrapped shift knob",
+      "160-mph primary speedometer"
+    ]
+  }
+}

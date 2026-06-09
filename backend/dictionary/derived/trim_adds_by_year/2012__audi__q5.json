@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2012|audi|q5",
+  "year": 2012,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_2012__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "LT",
+    "EX",
+    "SE",
+    "LE",
+    "N/A",
+    "Q5"
+  ],
+  "adds_by_trim": {
+    "Q5": [
+      "Adds Audi Singleframe® grille",
+      "Adds halogen headlights with daytime running lights",
+      "Adds quattro® all-wheel drive",
+      "Adds Tiptronic® automatic transmission",
+      "Adds direct injection gasoline engine"
+    ],
+    "N/A": [],
+    "LE": [],
+    "SE": [],
+    "EX": [],
+    "LT": [],
+    "Limited": [],
+    "S line": [],
+    "Premium": [
+      "Adds Xenon plus headlights with LED daytime running light"
+    ]
+  }
+}

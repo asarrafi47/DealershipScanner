@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|ford|fusion",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_llm_2013__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "2.0L EcoBoost I-4 engine with 240 hp and 270 lb-ft torque",
+      "6-speed SelectShift Automatic transmission",
+      "10-way power driver's seat with power lumbar support",
+      "17-inch Sparkle Silver-painted aluminum wheels with all-season tires",
+      "Automatic headlamps",
+      "Body-color rocker moldings",
+      "SecuriCode invisible keypad",
+      "Charcoal Black leather trim seating"
+    ],
+    "SE": [
+      "2.5L iVCT I-4 engine with 175 hp and 175 lb-ft torque",
+      "6-speed SelectShift Automatic transmission with shifter button activation",
+      "10-way power driver's seat with power lumbar support",
+      "Rear-seat fold-down center armrest with two cupholders",
+      "17-inch Sparkle Silver-painted aluminum wheels with all-season tires",
+      "Automatic headlamps",
+      "Body-color rocker moldings",
+      "SecuriCode invisible keypad"
+    ],
+    "S": [
+      "4-wheel disc ABS and hill start assist",
+      "Electric power-assisted steering and front/rear stabilizer bars",
+      "4-way manual driver's seat and 2-way manual front-passenger seat",
+      "60/40 split fold-flat spring-assisted rear seat",
+      "16-inch steel wheels with Sparkle Silver covers and all-season tires",
+      "Ford SYNC voice-activated in-vehicle connectivity system",
+      "MyFord with 4.2-inch LCD display in instrument cluster",
+      "Single-zone manual air conditioning",
+      "Personal Safety System with dual-stage front airbags and side-curtain airbags",
+      "AdvanceTrac electronic stability control with brake-actuated traction control"
+    ]
+  }
+}

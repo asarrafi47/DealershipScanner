@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2017|lincoln|mkz",
+  "year": 2017,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_llm_2017__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RESERVE",
+    "SELECT",
+    "PREMIERE"
+  ],
+  "adds_by_trim": {
+    "RESERVE": [
+      "Heated and cooled front seats",
+      "Multicontour front seats with Active Motion (with Driver's Package)",
+      "Premium adaptive LED headlamps",
+      "Revel Ultima audio system with 20 speakers and 20-channel amplifier",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link"
+    ],
+    "SELECT": [
+      "Heated front seats",
+      "Leather-trimmed seats with perforated inserts",
+      "Lincoln soft-touch seats in Cappuccino or Ebony",
+      "BLIS with cross-traffic alert available"
+    ],
+    "PREMIERE": [
+      "4-way power lumbar on front seats",
+      "Heated front seats",
+      "Leather-trimmed seats",
+      "Autofold sideview mirrors with turn signal indicators and auto-dimming driver's side",
+      "Fade-up ambient lighting",
+      "Lincoln Signature fade-on/off exterior lighting",
+      "110-volt power outlet",
+      "Ambient lighting",
+      "Genuine wood steering wheel accent",
+      "Rear-seat USB ports (2)"
+    ]
+  }
+}

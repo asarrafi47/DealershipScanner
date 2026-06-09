@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2012|mitsubishi|galant",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "Galant",
+  "ladder_id": "brochure_llm_2012__mitsubishi__galant",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Galant SE",
+    "Galant ES"
+  ],
+  "adds_by_trim": {
+    "Galant SE": [
+      "DVD-based touch-screen navigation system with rear-view backup camera",
+      "650-watt Rockford Acoustic Design® audio system",
+      "Power glass sunroof",
+      "Heated front seats with 8-way power adjustable driver's seat",
+      "Black Sport Fabric or Black Leather interior color options"
+    ],
+    "Galant ES": [
+      "2.4-liter, 160-horsepower MIVEC engine",
+      "4-speed Sportronic® automatic transmission",
+      "16-inch steel wheels with full wheel covers",
+      "140-watt CD/MP3 audio system with 6 speakers",
+      "Bluetooth® Hands-free phone system"
+    ]
+  }
+}

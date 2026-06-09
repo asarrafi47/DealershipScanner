@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2016|lexus|es",
+  "year": 2016,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2016__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Four-year/50,000-mile Limited Warranty",
+      "Adds Six-year/70,000-mile Powertrain Warranty",
+      "Adds Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Eight-year/100,000-mile Hybrid System Warranty",
+      "Adds Pre-Collision System with Pedestrian Detection",
+      "Adds Lane Departure Alert",
+      "Adds Intelligent high-beams system",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds backup camera"
+    ],
+    "Luxury": [
+      "Adds Intelligent high-beams system",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds SiriusXM satellite radio capability",
+      "Adds HD Radio technology",
+      "Adds Enform app services and connected vehicle features"
+    ]
+  }
+}

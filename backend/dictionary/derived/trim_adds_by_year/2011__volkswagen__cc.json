@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|volkswagen|cc",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "CC",
+  "ladder_id": "brochure_web_2011__volkswagen__cc",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "CC R-Line 2.0T Executive w/Carbon DSG",
+    "CC R-Line 2.0T Executive DSG",
+    "CC 2.0T Sport DSG"
+  ],
+  "adds_by_trim": {
+    "CC R-Line 2.0T Executive w/Carbon DSG": [
+      "Carbon trim package distinguishing the executive variant"
+    ],
+    "CC R-Line 2.0T Executive DSG": [
+      "Lane departure warning system",
+      "Forward collision warning",
+      "Autonomous emergency braking",
+      "Adaptive cruise control",
+      "6.3-inch Discover Media touchscreen with navigation",
+      "Apple CarPlay and Android Auto compatibility",
+      "R-Line exterior styling"
+    ],
+    "CC 2.0T Sport DSG": [
+      "2.0-liter turbocharged four-cylinder engine with 200 hp",
+      "207 lb-ft of torque",
+      "Six-speed dual-clutch automatic transmission",
+      "22/31 mpg city/highway fuel economy rating",
+      "13.2 cubic feet trunk space",
+      "60/40 split-folding rear seats",
+      "High-quality interior materials with user-friendly controls"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/cc/"
+}

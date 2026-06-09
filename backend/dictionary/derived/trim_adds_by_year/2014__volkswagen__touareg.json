@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2014|volkswagen|touareg",
+  "year": 2014,
+  "make": "Volkswagen",
+  "model": "Touareg",
+  "ladder_id": "brochure_web_2014__volkswagen__touareg",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Touareg V6 Executive",
+    "Touareg V6 Wolfsburg Edition",
+    "Touareg V6 Sport w/Technology"
+  ],
+  "adds_by_trim": {
+    "Touareg V6 Executive": [
+      "Navigation system",
+      "Eight-inch touchscreen",
+      "Dynaudio premium audio system",
+      "Hands-free power liftgate",
+      "360-degree view camera system",
+      "Larger alloy wheels"
+    ],
+    "Touareg V6 Wolfsburg Edition": [
+      "Brushed aluminum interior decor",
+      "Stainless steel door sills and pedals",
+      "Two-tone Vienna leather upholstery",
+      "Heated and ventilated front seats",
+      "Gray door inserts",
+      "Contrast stitching on floor mats, steering wheel, and shifter",
+      "20-inch alloy wheels"
+    ],
+    "Touareg V6 Sport w/Technology": [
+      "Eight-way power adjustable front seats with heating",
+      "Dual-zone climate control",
+      "HID headlights with LED accents",
+      "Leatherette upholstery",
+      "6.5-inch touchscreen",
+      "Rearview camera",
+      "Park assist",
+      "Forward collision warning and automatic emergency braking",
+      "Adaptive cruise control and lane change assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/touareg/"
+}

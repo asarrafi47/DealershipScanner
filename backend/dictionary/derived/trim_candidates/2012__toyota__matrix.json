@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2012|toyota|matrix",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Matrix",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

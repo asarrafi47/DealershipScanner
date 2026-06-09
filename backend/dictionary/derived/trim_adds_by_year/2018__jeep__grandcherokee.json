@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2018|jeep|grandcherokee",
+  "year": 2018,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "jeep_grand_cherokee_wk2",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Laredo",
+    "Limited",
+    "Overland",
+    "Trailhawk",
+    "Summit",
+    "SRT",
+    "Trackhawk"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Quadra-Trac II active full-time 4WD (replaces Quadra-Trac I on 4x4)",
+      "Uconnect 8.4 touchscreen with Apple CarPlay / Android Auto",
+      "Capri leather-trimmed seats with heated 1st- and 2nd-row seating",
+      "Bi-xenon HID headlamps with LED fog lamps",
+      "Premium Alpine 506W 9-speaker surround sound",
+      "Power liftgate, remote start, and Selec-Terrain (4x4)"
+    ],
+    "Overland": [
+      "Quadra-Lift four-corner air suspension with Selec-Terrain",
+      "Nappa leather-trimmed seating with open-pore wood trim",
+      "20-inch polished aluminum wheels with Mineral Gray pockets",
+      "Harman Kardon 825W 19-speaker premium audio",
+      "CommandView dual-pane panoramic sunroof",
+      "Blind Spot Monitoring with rear cross-path detection"
+    ],
+    "Trailhawk": [
+      "Trail Rated 4x4 with Rock mode, Selec-Speed, and red tow hooks",
+      "Trailhawk Nappa leather with suede inserts and red stitching",
+      "Off-road skid plates and Quadra-Drive II 4WD",
+      "18-inch wheels with all-terrain tire package",
+      "8.4-inch Uconnect NAV with Trailhawk-themed interior"
+    ],
+    "Summit": [
+      "20-inch full-polished wheels with Satin Clear Coat",
+      "Natura Plus leather with open-pore wood and Harman Kardon 19-speaker audio",
+      "Active noise cancellation and acoustic laminated glass",
+      "Adaptive Cruise Control with Forward Collision Warning Plus",
+      "Front Park Assist and premium LED lighting"
+    ],
+    "SRT": [
+      "6.4L HEMI V8 — 475 hp",
+      "Selec-Track, Launch control, and SRT Performance Pages",
+      "SRT Brembo brakes and sport suspension",
+      "Laguna leather sport seats and carbon fiber accents",
+      "SRT 20-inch forged wheel options"
+    ],
+    "Trackhawk": [
+      "6.2L supercharged HEMI V8 — 707 hp (0–60 in 3.5 seconds)",
+      "Trackhawk-exclusive interior with Laguna performance leather",
+      "TorqueFlite 8-speed with Trackhawk drive modes and launch control",
+      "Brembo brakes and Trackhawk adaptive Bilstein suspension",
+      "20-inch Trackhawk forged aluminum wheels",
+      "Widebody fascias, dual heat extractors, and Trackhawk badging"
+    ],
+    "Laredo": [
+      "Leather-wrapped steering wheel as standard premium feature",
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Available 5.7L V8 engine with Fuel Saver Technology",
+      "8.5-inch ground clearance with 26.2-degree approach angle",
+      "Multilink rear suspension with coil springs and gas-charged shock absorbers"
+    ]
+  }
+}

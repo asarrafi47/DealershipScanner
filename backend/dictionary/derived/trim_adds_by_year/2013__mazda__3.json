@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2013|mazda|3",
+  "year": 2013,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_web_2013__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mazda3 s Grand Touring",
+    "Mazda3 i Grand Touring",
+    "Mazda3 i Touring",
+    "Mazda3 i Sport",
+    "Mazda3 i SV"
+  ],
+  "adds_by_trim": {
+    "Mazda3 s Grand Touring": [
+      "2.5L DOHC 16-valve engine producing 167 hp and 168 lb-ft torque",
+      "15.9-gallon fuel capacity versus 14.5 gallons on Mazda3 i",
+      "Curb weight 3,048–3,104 lbs depending on transmission type"
+    ],
+    "Mazda3 i Grand Touring": [
+      "Full-color 5.8-inch touch-screen navigation with real-time traffic updates",
+      "Bi-Xenon High-Intensity-Discharge adaptive front-lighting system",
+      "Blind Spot Monitoring System with rear window wiper",
+      "Push Button Start with Mazda Advanced Keyless Entry",
+      "Dual-zone automatic climate control",
+      "Rain-sensing windshield wipers and clear-lens LED taillights",
+      "Integral fog lights with auto-leveling dual power mirrors"
+    ],
+    "Mazda3 i Touring": [
+      "Bose 265-watt Centerpoint 10-speaker surround sound system with Audio Pilot",
+      "Illuminated steering-wheel-mounted controls for audio and cruise",
+      "Bluetooth hands-free phone and audio capabilities",
+      "USB audio input"
+    ],
+    "Mazda3 i Sport": [
+      "17-inch aluminum alloy wheels with P205/50 R17 all-season radial tires",
+      "11.8-inch vented front and 11.0-inch solid rear disc brakes",
+      "SKYACTIV-G 2.0L engine producing 155 hp and 148 lb-ft torque"
+    ],
+    "Mazda3 i SV": [
+      "2.0L DOHC 16-valve MZR engine with VVT producing 148 hp and 135 lb-ft torque",
+      "5-speed manual overdrive transmission",
+      "16-inch aluminum alloy wheels with P205/55 R16 all-season radial tires",
+      "10.9-inch vented front and 10.4-inch solid rear disc brakes",
+      "4-wheel ABS with Electronic Brakeforce Distribution and Brake Assist",
+      "Traction Control System and Dynamic Stability Control",
+      "Power rack-and-pinion steering with electrohydraulic power assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mazda/3/"
+}

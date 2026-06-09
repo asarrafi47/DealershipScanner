@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2022|mitsubishi|mirage",
+  "year": 2022,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

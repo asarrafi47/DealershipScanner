@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2014|nissan|juke",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Juke",
+  "ladder_id": "brochure_llm_2014__nissan__juke",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "NISMO®",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Nissan Navigation System with 5-inch color touchscreen monitor and NavTraffic",
+      "RearView Monitor",
+      "Six upgraded speakers",
+      "Leather-appointed seats",
+      "Heated front seats",
+      "Leather-wrapped shift knob",
+      "Automatic on/off headlights",
+      "Fog lights"
+    ],
+    "SV": [
+      "Power sliding glass moonroof",
+      "Rear privacy glass",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Integrated Control (I-CON) system with Automatic Temperature Control",
+      "Rockford Fosgate ecoPUNCH audio system with 8-inch subwoofer and amplifier",
+      "Premium cloth seat trim",
+      "Leather-wrapped steering wheel",
+      "Front-passenger seatback pocket",
+      "USB connection port for iPod interface"
+    ],
+    "NISMO®": [
+      "NISMO-tuned 1.6-liter DIG turbo 4-cylinder engine",
+      "6-speed manual transmission option or Xtronic CVT with Sport mode",
+      "NISMO-tuned suspension with increased spring and dampening rates",
+      "18-inch NISMO aluminum-alloy wheels with P225/45R18 summer tires",
+      "NISMO aerodynamic body kit with front and rear fascias, side sills, rear roof spoiler",
+      "NISMO sport front bucket seats with embroidered synthetic suede and signature red stitching",
+      "NISMO Alcantara and leather-wrapped steering wheel",
+      "NISMO tachometer",
+      "Smoked front combination lights and LED Daytime Running Lights"
+    ],
+    "S": [
+      "1.6-liter DIG turbo 4-cylinder engine",
+      "Front-Wheel Drive (FWD) or All-Wheel Drive (AWD) with torque vectoring",
+      "Xtronic CVT with Sport mode",
+      "17-inch aluminum-alloy wheels",
+      "AM/FM/CD audio system with MP3/WMA playback and iPod interface",
+      "Bluetooth Hands-free Phone System",
+      "Power windows, power door locks, and remote keyless entry",
+      "Six standard air bags",
+      "Vehicle Dynamic Control (VDC) with Traction Control System (TCS)",
+      "60/40 split fold-down rear seatbacks"
+    ]
+  }
+}

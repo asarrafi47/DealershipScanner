@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2014|ford|edge",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Edge",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "Sport",
+    "SE",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

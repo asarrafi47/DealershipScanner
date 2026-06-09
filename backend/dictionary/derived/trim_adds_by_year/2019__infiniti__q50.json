@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2019|infiniti|q50",
+  "year": 2019,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_llm_2019__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q50 RED SPORT 400",
+    "Q50 3.0t SPORT",
+    "Q50 3.0t LUXE",
+    "Q50 2.0t PURE"
+  ],
+  "adds_by_trim": {
+    "Q50 RED SPORT 400": [
+      "400-hp 3.0-liter twin-turbo V6 engine vs. 300-hp",
+      "Exclusive 19-inch aluminum-alloy Sport wheels",
+      "Sport brakes with red-painted calipers",
+      "Sport fast ratio electronic power steering",
+      "Exclusive dual exhaust tips with brushed satin finish",
+      "Red 'S' exterior badging and black side mirror covers",
+      "Quilted, semi-aniline leather-appointed sport seats with red contrast stitching",
+      "Dark metallic steering wheel-mounted paddle shifters",
+      "Aluminum sport pedals",
+      "Dynamic Digital Suspension"
+    ],
+    "Q50 3.0t SPORT": [
+      "300-hp 3.0-liter twin-turbo V6 engine vs. 200-hp 2.0t",
+      "19-inch Sport-design triple 5-spoke aluminum-alloy wheels",
+      "Sport brakes with silver-painted calipers",
+      "Sport front and rear fascias",
+      "Dynamic Digital Suspension",
+      "Steering wheel-mounted paddle shifters",
+      "Silver 'S' trunk badge",
+      "Rack Electronic Power Steering",
+      "Bose Performance Series Audio 16-speaker stereo with Bose Centerpoint simulated surround"
+    ],
+    "Q50 3.0t LUXE": [
+      "300-hp 3.0-liter twin-turbo V6 engine vs. 200-hp 2.0t",
+      "18-inch aluminum-alloy wheels",
+      "225/50R18 all-season run-flat tires",
+      "Power sliding/tilting moonroof",
+      "Maple wood interior trim",
+      "INFINITI InTouch Navigation with Lane Guidance and 3D building graphics",
+      "Advanced Climate Control System with auto recirculation and Plasmacluster air purifier",
+      "Enhanced ambient lighting",
+      "Entry/Exit assist for driver's seat and steering wheel",
+      "Heated steering wheel and heated front seats"
+    ],
+    "Q50 2.0t PURE": [
+      "200-hp 2.0-liter turbocharged I4 engine with Idle Stop/Start",
+      "7-speed automatic transmission with manual shift mode and Downshift Rev Matching",
+      "17-inch split 5-spoke aluminum-alloy wheels",
+      "LED signature headlights, fog lights and turn signals",
+      "INFINITI InTouch dual screen display",
+      "Bluetooth Hands-free Phone System and audio streaming",
+      "SiriusXM Radio with Traffic and Travel Link 4-year trial",
+      "Leatherette seats with leather-wrapped 3-spoke steering wheel",
+      "8-way power adjustable front seats",
+      "RearView Monitor and Forward Emergency Braking"
+    ]
+  }
+}

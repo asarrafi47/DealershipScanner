@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2010|mazda|3",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "generic_mazda_3",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "Touring",
+    "LT",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "4-Door 5-Door Safety & Security"
+    ],
+    "Touring": [
+      "4-Door 5-Door Comfort & Convenience"
+    ],
+    "Sport": [
+      "2.5-liter naturally aspirated engine with 167 hp and 168 lb-ft torque",
+      "18-inch alloy wheels",
+      "Bilevel rear spoiler",
+      "Fully functional hood scoop",
+      "Power sliding-glass moonroof with one-touch-open feature",
+      "Rear window wiper",
+      "Sound system with in-dash 6-disc CD/MP3 changer",
+      "Multi Information Display"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 5,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Touring": 1,
+      "LT": 0,
+      "SE": 1,
+      "LE": 0
+    }
+  }
+}

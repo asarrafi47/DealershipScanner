@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2013|lotus|evora",
+  "year": 2013,
+  "make": "Lotus",
+  "model": "Evora",
+  "ladder_id": "brochure_2013__lotus__evora",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes 6-speed manual transmission with sports-tuned ratios",
+      "Adds Features Dynamic Performance Management (DPM) stability system",
+      "Adds integrated rear boot spoiler for aerodynamic styling",
+      "Adds Includes free-flowing exhaust system with bypass valve"
+    ],
+    "Sport": [
+      "Adds 6-speed IPS automatic transmission option with steering wheel paddle controls",
+      "Adds sport button to activate exhaust bypass valve at higher engine speeds",
+      "Swaps steering wheel to lightweight magnesium construction for improved responsiveness",
+      "Adds choice of lightweight alloy wheels in 18-inch through 20-inch diameters"
+    ]
+  }
+}

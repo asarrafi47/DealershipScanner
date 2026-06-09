@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2018|porsche|718",
+  "year": 2018,
+  "make": "Porsche",
+  "model": "718",
+  "ladder_id": "brochure_web_2018__porsche__718",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Turbo S",
+    "Turbo",
+    "GTS",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Turbo S": [
+      "3.8L turbocharged flat-six engine producing 540 hp and 457 lb-ft torque",
+      "Sport Chrono package with dynamic transmission mounts",
+      "Porsche Torque Vectoring with mechanical limited-slip differential",
+      "Adaptive suspension with PASM continuously damped system",
+      "20-inch Turbo Exclusive Design wheels standard",
+      "Exclusive exterior and interior trim packages",
+      "Bose premium sound system upgrade"
+    ],
+    "Turbo": [
+      "3.0L turbocharged flat-six engine producing 540 hp and 457 lb-ft torque",
+      "Porsche Torque Vectoring with mechanical limited-slip differential",
+      "Adaptive suspension with PASM continuously damped system",
+      "19-inch Carrera S wheels standard",
+      "Porsche Active Suspension Management for enhanced handling",
+      "Sport exhaust system"
+    ],
+    "GTS": [
+      "3.0L turbocharged flat-six engine producing 365 hp and 309 lb-ft torque",
+      "Sport Chrono package included",
+      "Adaptive suspension with PASM system",
+      "20-inch RS Spyder Design wheels",
+      "Exclusive GTS styling and interior appointments",
+      "Bose premium sound system"
+    ],
+    "Base": [
+      "2.0L turbocharged flat-four engine producing 300 hp and 280 lb-ft torque",
+      "Six-speed manual transmission standard",
+      "19-inch Carrera wheels with Goodyear tires",
+      "Manual convertible soft top",
+      "Porsche Communication Management touchscreen infotainment system",
+      "Apple CarPlay integration",
+      "Airbag safety system and electronic stability control",
+      "Power windows, locks, and heated mirrors"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/718/"
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2018_lexus_gs_complete_options",
+  "make": "lexus",
+  "models": [
+    "GS",
+    "GS"
+  ],
+  "year_min": 2016,
+  "year_max": 2020,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

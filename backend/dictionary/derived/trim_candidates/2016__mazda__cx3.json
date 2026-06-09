@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|mazda|cx3",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "CX-3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

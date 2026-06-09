@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2015|cadillac|srx",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "SRX",
+  "ladder_id": "brochure_web_2015__cadillac__srx",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SRX AWD Premium Collection",
+    "SRX FWD Premium Collection",
+    "SRX AWD Performance Collection",
+    "SRX FWD Performance Collection",
+    "SRX AWD Luxury Collection",
+    "SRX FWD Luxury Collection",
+    "SRX FWD Base"
+  ],
+  "adds_by_trim": {
+    "SRX FWD Luxury Collection": [
+      "Bose premium audio system",
+      "Three-zone climate control",
+      "Keyless entry and start",
+      "Rearview camera",
+      "Heated rear seats",
+      "Panoramic sunroof",
+      "Cadillac CUE infotainment with navigation and eight-inch touchscreen"
+    ],
+    "SRX FWD Performance Collection": [
+      "Sportier suspension tuning over Luxury Collection"
+    ],
+    "SRX AWD Luxury Collection": [
+      "All-wheel drive system"
+    ],
+    "SRX AWD Performance Collection": [
+      "Performance-focused suspension"
+    ],
+    "SRX FWD Premium Collection": [
+      "Premium interior materials and finishes over Performance Collection"
+    ],
+    "SRX AWD Premium Collection": [
+      "All-wheel drive system with premium features"
+    ],
+    "SRX FWD Base": [
+      "HD radio",
+      "Bluetooth connectivity",
+      "Two USB ports",
+      "Dual front, front-side, and side curtain airbags",
+      "Rollover mitigation sensor",
+      "3.6-liter V-6 engine with 308 hp and 265 lb-ft torque",
+      "Six-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/srx/"
+}

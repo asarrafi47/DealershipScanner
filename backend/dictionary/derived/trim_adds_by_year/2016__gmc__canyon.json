@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2016|gmc|canyon",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2016__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Canyon",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "SLT": [
+      "8-inch diagonal color touchscreen with IntelliLink, AM/FM/SiriusXM, USB, Bluetooth streaming audio",
+      "Inside rearview auto-dimming mirror",
+      "Chrome door handles and beltline moldings",
+      "Heated power-adjustable chrome mirrors with driver-side spotter mirror",
+      "Leather-wrapped steering wheel with mounted audio controls",
+      "Tilt and telescopic steering column",
+      "Leather-appointed front bucket seats",
+      "Single-zone automatic climate control",
+      "Overhead console",
+      "Color-keyed carpeting and floor mats"
+    ],
+    "SLE": [
+      "4.2-inch diagonal color display with AM/FM stereo, USB port, auxiliary jack",
+      "Cloth front bucket seats with rear flat-folding seats and under-seat storage",
+      "Overhead console",
+      "Body-color door handles",
+      "Power-adjustable body-color remote mirrors with driver-side spotter mirror",
+      "Color-keyed carpeting and floor mats",
+      "Rear folding split bench with under-seat storage",
+      "Driver 4-way power seat adjuster with manual recline",
+      "Manual inside rearview mirror",
+      "Black beltline moldings"
+    ],
+    "Canyon": [
+      "Remote keyless entry, cruise control, rear-window defogger, EZ-Lift tailgate",
+      "Theft-deterrent system",
+      "Driver information center with monochromatic display"
+    ],
+    "SL": [
+      "6-speed manual transmission standard on Extended Cab 2WD models",
+      "Heavy-duty maintenance-free battery with rundown protection",
+      "Electronic traction control",
+      "StabiliTrak stability control with Trailer Sway Control",
+      "4-wheel antilock 4-wheel disc brakes with Duralife rotors",
+      "Vinyl front bucket seats",
+      "Single-zone manual climate control",
+      "Full-length vinyl floor covering",
+      "Jet Black door release handles",
+      "Projector-type headlamps with signature lighting"
+    ]
+  }
+}

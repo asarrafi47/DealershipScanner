@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2014|audi|a6",
+  "year": 2014,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_2014__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "A6"
+  ],
+  "adds_by_trim": {
+    "A6": [
+      "Adds 2.0T four-cylinder turbocharged engine with 220 horsepower",
+      "Adds Audi multitronic continuously variable transmission with front-wheel drive",
+      "Adds five-link front suspension",
+      "Adds trapezoidal-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds ventilated front and rear disc brakes",
+      "Adds Audi ultra lightweight technology with aluminum exterior body panels"
+    ],
+    "Sport": [],
+    "Limited": [],
+    "S line": [],
+    "Premium": [
+      "Adds Sport suspension calibration"
+    ],
+    "Premium Plus": [
+      "Adds sport suspension calibration"
+    ],
+    "Prestige": [
+      "Adds sport suspension calibration"
+    ]
+  }
+}

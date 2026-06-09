@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2012|dodge|avenger",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Avenger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

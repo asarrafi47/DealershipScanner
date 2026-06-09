@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2019|chrysler|300",
+  "year": 2019,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2019__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C",
+    "300S Limited",
+    "300L Touring",
+    "300 Touring"
+  ],
+  "adds_by_trim": {
+    "300C": [
+      "Nappa luxury perforated and quilted leather-trimmed bucket seats",
+      "Power tilt/telescoping steering column with memory",
+      "Heated steering wheel",
+      "Dual-pane panoramic sunroof with 1-touch open/close",
+      "Rearview auto-dimming mirror",
+      "8-way power driver seat with 4-way power lumbar adjuster"
+    ],
+    "300S Limited": [
+      "Nappa leather-trimmed sport bucket seats with perforated inserts and accent stitching",
+      "Heated 2nd-row seats",
+      "LED-illuminated front and rear map pockets",
+      "Memory settings for 2 drivers",
+      "Power Backlight Sunshade",
+      "9 amplified speakers with subwoofer and 300 Premium Group"
+    ],
+    "300L Touring": [
+      "Nappa perforated leather-trimmed bucket seats",
+      "Ventilated front seats",
+      "Real natural-pore Mocha wood interior accents",
+      "180-amp alternator"
+    ],
+    "300 Touring": [
+      "3.6L Pentastar V6 with 8-speed automatic transmission",
+      "Cloth bucket seats",
+      "6 premium speakers with 276-watt digital amplifier",
+      "Heated front seats",
+      "Rear 60/40 split-folding bench seat with armrest, cup holders and storage",
+      "ParkView rear back-up camera",
+      "Electronic Stability Control with Brake Assist and Hill Start Assist"
+    ]
+  }
+}

@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2020,Acura,RDX,FWD,2.0L I4 (SIDI),Automatic (S10),Front-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,22,28,24,,,,,,2.0L I4 Turbo,Turbocharged
-2020,Acura,RDX,FWD A-SPEC,2.0L I4 (SIDI),Automatic (S10),Front-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,22,27,24,,,,,,2.0L I4 Turbo,Turbocharged
-2020,Acura,RDX,AWD,2.0L I4 (SIDI),Automatic (S10),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,27,23,,,,,,2.0L I4 Turbo,Turbocharged
-2020,Acura,RDX,AWD A-SPEC,2.0L I4 (SIDI),Automatic (S10),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,26,23,,,,,,2.0L I4 Turbo,Turbocharged

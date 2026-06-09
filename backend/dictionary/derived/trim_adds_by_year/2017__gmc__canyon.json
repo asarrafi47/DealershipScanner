@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2017|gmc|canyon",
+  "year": 2017,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2017__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "All Terrain",
+    "SLE",
+    "Canyon",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Heated and ventilated driver and front-passenger seats",
+      "Perforated leather-appointed front bucket seats",
+      "Heated, leather-wrapped steering wheel with mounted audio controls",
+      "Multicolor driver information center with personalization",
+      "Wireless charging mat"
+    ],
+    "SLT": [
+      "4-way power front-passenger seat adjuster with power lumbar control",
+      "Driver 4-way power seat adjuster with power lumbar control",
+      "Single-zone automatic climate control",
+      "Overhead console",
+      "Chrome door release handles"
+    ],
+    "All Terrain": [
+      "Off-road suspension package",
+      "Hill descent control",
+      "Heated driver and front-passenger seats"
+    ],
+    "SLE": [
+      "Leather-appointed front buckets",
+      "Rear folding split bench with under-seat storage",
+      "Driver and passenger-side forward-facing flat-folding rear seats with under-seat storage",
+      "Multicolor driver information center",
+      "Rear sliding window",
+      "Remote keyless entry",
+      "Remote vehicle start system"
+    ],
+    "Canyon": [
+      "Cloth front buckets",
+      "Electronic cruise control with automatic capability",
+      "Rear-window electric defogger",
+      "Eaton heavy-duty automatic locking rear differential",
+      "Trailering package capability"
+    ],
+    "LS": [
+      "Vinyl front buckets",
+      "Monochromatic driver information center",
+      "Manual tilt and telescopic steering wheel",
+      "4-wheel antilock disc brakes with Duralife rotors",
+      "Capless fuel fill",
+      "Teen driver technology",
+      "Electronic traction control",
+      "StabiliTrak stability control with trailer sway control"
+    ]
+  }
+}

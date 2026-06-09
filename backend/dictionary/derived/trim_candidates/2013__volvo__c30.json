@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2013|volvo|c30",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "C30",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Ultra",
+    "Plus",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

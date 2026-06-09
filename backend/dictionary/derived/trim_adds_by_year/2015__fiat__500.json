@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2015|fiat|500",
+  "year": 2015,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2015__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Lounge",
+    "Sport",
+    "Pop"
+  ],
+  "adds_by_trim": {
+    "Lounge": [
+      "Premium seats with enhanced comfort",
+      "Automatic temperature control",
+      "Fixed-glass roof",
+      "Security alarm system",
+      "Bright exterior accents"
+    ],
+    "Sport": [
+      "Sport suspension tuning",
+      "Sport-specific seats",
+      "Unique front and rear fascias",
+      "Rear spoiler",
+      "Rosso red brake calipers",
+      "16-inch aluminum alloy wheels (versus 15-inch on Pop)"
+    ],
+    "Pop": [
+      "1.4L MultiAir Turbo I-4 engine with 6-speed automatic transmission",
+      "Electric power steering with tilt/telescoping column",
+      "Front MacPherson suspension with KONI FSD technology",
+      "Bifunctional halogen projector headlamps with daytime running lamps",
+      "16-inch 13-spoke Gray Gloss painted aluminum wheels with all-season tires",
+      "Uconnect 5.0 with 5-inch touchscreen and Bluetooth connectivity",
+      "6 speakers standard audio system",
+      "Advanced multistage dual front airbags and side-curtain airbags",
+      "Electronic Stability Control and Hill Start Assist",
+      "Sentry Key Engine Immobilizer theft-deterrent system"
+    ]
+  }
+}

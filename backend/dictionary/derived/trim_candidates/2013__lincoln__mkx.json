@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2013|lincoln|mkx",
+  "year": 2013,
+  "make": "Lincoln",
+  "model": "MKX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

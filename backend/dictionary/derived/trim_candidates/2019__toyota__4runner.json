@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2019|toyota|4runner",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Pro": [
+      "Adds to or replaces features offered on Limited",
+      "20-in. black alloy wheels",
+      "Black exterior accents including front and rear bumper spoilers,",
+      "Black interior trim including steering wheel, shift knob, inner door",
+      "Black badge overlays",
+      "Low Emission Vehicle II (LEV-II) S S S S S S S",
+      "Electronic, with Toyota Direct Ignition (TDI) S S S S S S S",
+      "Rear-Wheel Drive (RWD) with Automatic Limited-Slip Differential (Auto LSD)32 S S \u2014 \u2014 S S \u2014",
+      "Part-time 4WD with Active Traction Control (A-TRAC) O O S S \u2014 \u2014 S",
+      "Full-time 4WD with Active Traction Control (A-TRAC) and Torsen\u00ae33 limited-slip center differential",
+      "Approach/departure angle (degrees) (4x2/4x4) 30/26;33/26 30/26;33/26 33/26 33/26 30/26;33/26 30/26;33/26 33/26",
+      "Ground clearance (in.) (4x2/4x4) 9.0;9.6 9.0;9.6 9.6 9.6 9.0;9.6 9.0;9.6 9.6"
+    ],
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on TRD Off-Road Adds to or replaces features offered on SR5 Premium",
+      "Exterior Features Drivetrain Drivetrain",
+      "Heated power outside mirrors with turn signal indicators \u2022 Rear-Wheel Drive (RWD) or full-time 4WD system with Active \u2022 4.0-Liter DOHC 24-Valve V6 with Dual Independent Variable",
+      "Interior Features Traction Control (A-TRAC) and Torsen\u00ae33 limited-slip center Valve Timing with intelligence (VVT-i); 270 hp @ 5600 rpm;",
+      "SofTex\u00ae-trimmed heated front seats; 8-way power-adjustable \u2022 X-REAS Sport Enhancement Suspension \u2022 Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "SofTex\u00ae-trimmed 40/20/40 split reclining and fold-flat \u2022 20-in. split 6-spoke alloy wheels with P245/60R20 tires",
+      "TRD FOX\u00ae36 high-performance shocks with rear remote reservoirs",
+      "TRD-tuned front springs",
+      "Entune\u2122 Premium Audio with Integrated Navigation13 and Entune\u00ae \u2022 Front and rear parking assist sonar28",
+      "App Suite,14 and 6.1-in. high-resolution touch-screen display \u2022 Color-keyed front and rear bumpers and side rocker panels with \u2022 Locking rear differential",
+      "HomeLink\u00ae19 universal transceiver chrome inserts, chrome door handles and chrome-accented Exterior Features",
+      "Auto-dimming rearview mirror front grille insert \u2022 Black \u201cTRD PRO\u201d external hard badges"
+    ],
+    "SR5": [
+      "Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Drivetrain Exterior Features Drivetrain",
+      "4.0-Liter DOHC 24-Valve V6 with Dual Independent Variable Valve \u2022 Heated power outside mirrors with turn signal indicators \u2022 Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "Timing with intelligence (VVT-i); 270 hp @ 5600 rpm; 278 lb.-ft. Interior Features \u2022 Hill Start Assist Control (HAC),34 Multi-terrain Select and",
+      "Rear-Wheel Drive (RWD) or part-time 4WD system with Active \u2022 SofTex\u00ae-trimmed heated front seats; 8-way power-adjustable \u2022 Locking rear differential",
+      "Traction Control (A-TRAC) driver\u2019s seat with power lumbar support; 4-way power-adjustable",
+      "Automatic Limited-Slip Differential32 (Auto LSD on 4x2 models only)",
+      "Downhill Assist Control (DAC)35 (4x4 models only) and Hill Start \u2022 SofTex\u00ae-trimmed 40/20/40 split reclining and fold-flat \u2022 17-in. 7-spoke alloy wheels with P265/70R17 tires and",
+      "Assist Control (HAC)34 second-row seat black-painted accents",
+      "Entune\u2122 Premium Audio with Integrated Navigation13 and Entune\u00ae \u2022 Color-keyed front and rear bumpers with silver accents and",
+      "Exterior Features App Suite,14 and 6.1-in. high-resolution touch-screen display color-keyed hood scoop",
+      "Integrated fog lights \u2022 HomeLink\u00ae19 universal transceiver \u2022 \u201cTRD Off-Road\u201d external hard badges"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

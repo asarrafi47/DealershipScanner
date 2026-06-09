@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2019|chevrolet|colorado",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2019__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZR2",
+    "Z71",
+    "LT",
+    "WT",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "ZR2": [
+      "Duramax 2.8L Turbo-Diesel engine with 186 hp and 369 lb-ft torque",
+      "8-speed automatic transmission",
+      "Electric 2-speed Autotrac 4x4 transfer case",
+      "Driver-selectable full locking front and rear differential",
+      "Diesel Exhaust Brake",
+      "Integrated trailer brake controller",
+      "Auto-dimming rearview mirror",
+      "Heated driver and front passenger seats",
+      "6-way power front passenger seat",
+      "Chevrolet Infotainment 3 Premium System with navigation and SiriusXM"
+    ],
+    "Z71": [
+      "3.6L V6 engine with 308 hp and 275 lb-ft torque",
+      "8-speed automatic transmission",
+      "Electric 2-speed Autotrac 4x4 transfer case",
+      "Automatic locking rear differential",
+      "Tow/Haul mode with trailering assist guiding line",
+      "Diesel Exhaust Brake",
+      "17-inch Dark Argent Metallic cast-aluminum wheels",
+      "Chevrolet Infotainment 3 Plus System",
+      "Built-in 4G LTE Wi-Fi"
+    ],
+    "LT": [
+      "Heated power-adjustable body-color manual-folding mirrors",
+      "OnStar Safety & Security Plan with 1-month coverage",
+      "6-way power driver seat",
+      "Manual tilt and telescoping steering column",
+      "Chevrolet Infotainment 3 Plus System with 8-inch touch-screen",
+      "4-way power front passenger seat",
+      "17-inch Blade Silver Metallic cast-aluminum wheels"
+    ],
+    "WT": [
+      "2.5L 4-cylinder engine standard",
+      "6-speed automatic transmission",
+      "Electric 2-speed 4x4 transfer case",
+      "Automatic locking rear differential",
+      "16-inch Ultra Silver Metallic cast-aluminum wheels",
+      "Rear Park Assist with ultrasonic sensors",
+      "Content-theft alarm",
+      "Manual tilt steering column"
+    ],
+    "BASE": [
+      "2.5L DOHC 4-cylinder engine with 200 hp and 191 lb-ft torque",
+      "6-speed manual transmission",
+      "Theft-deterrent system",
+      "Teen Driver technology",
+      "6-speaker audio system",
+      "Chevrolet Infotainment 3 System with 7-inch touch-screen",
+      "Bluetooth audio streaming",
+      "4-way power driver seat",
+      "2-way manual front passenger seat",
+      "16-inch Ultra Silver Metallic-painted steel wheels"
+    ]
+  }
+}

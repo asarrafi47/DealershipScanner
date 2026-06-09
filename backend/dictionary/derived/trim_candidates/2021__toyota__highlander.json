@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2021|toyota|highlander",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Highlander",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "D irect Shift-8AT (8-speed Electronically Controlled Available Multi-Terrain Select (Mud/Sand, Available Multi-Terrain Select (Mud/Sand,",
+      "Front-Wheel Drive (FWD) Up to 21 city/29 highway/24 combined Up to 21 city/29 highway/24 combined",
+      "Available All-Wheel Drive (AWD) EPA-est. mpg rating3 EPA-est. mpg rating3",
+      "Snow Mode + Drive Mode Select (ECO, Normal, Sport) Exterior Features Exterior Features",
+      "A vailable Multi-Terrain Select (Mud/Sand, Color-keyed heated power outside mirrors with 18-in. machined-finish alloy wheels",
+      "Rock/Dirt, Normal) turn signal and blind spot warning35 indicators and Power tilt/slide moonroof",
+      "U p to 21 city/29 highway/24 combined manual folding feature",
+      "EPA-est. mpg rating3 LED fog lights",
+      "Exterior Features Height-adjustable power liftgate with jam protection",
+      "Seating for up to eight",
+      "C olor-keyed heated power outside mirrors with turn Interior Features"
+    ],
+    "Limited": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Adds to or replaces features offered on Limited",
+      "Sport-tuned suspension Available All-Wheel Drive (AWD) Available All-Wheel Drive (AWD)",
+      "Available All-Wheel Drive (AWD) A vailable Multi-Terrain Select (Mud/Sand, Available Multi-Terrain Select (Mud/Sand,",
+      "A vailable Multi-Terrain Select (Mud/Sand, Rock/Dirt, Normal) Rock/Dirt, Normal)",
+      "Rock/Dirt, Normal) U p to 21 city/29 highway/24 combined Up to 21 city/29 highway/24 combined",
+      "U p to 21 city/29 highway/24 combined EPA-est. mpg rating3 EPA-est. mpg rating3",
+      "EPA-est. mpg rating3 Exterior Features Exterior Features",
+      "Exterior Features C olor-keyed heated power outside mirrors with puddle LED projector headlights with Adaptive Front-Lighting",
+      "LED projector headlights with black accents and lights with integrated Highlander logo, turn signal, System (AFS),43 auto leveling and LED-strip Daytime",
+      "LED-strip Daytime Running Lights (DRL) blind spot warning35 indicators and memory feature Running Lights (DRL)",
+      "A ggressive mesh front grille with sporty front bumper 20-in. chrome wheels with front lower bumper in silver finish",
+      "R ear lower bumper in gray metallic finish with H eight-adjustable hands-free power liftgate with Rear bumper scuff plate"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on Hybrid LE",
+      "Available Electronic All-Wheel Drive (AWD)",
+      "Available Electronic All-Wheel Drive (AWD)",
+      "C ontinuously Variable",
+      "Available Electronic All-Wheel Drive (AWD) Exterior Features",
+      "EPA-est. mpg rating3 Power tilt/slide moonroof blind spot warning35 indicators and memory feature",
+      "Exterior Features Roof rails High-output LED fog lights",
+      "C olor-keyed heated power outside mirrors with Interior Features 20-in. chrome wheels",
+      "LED fog lights jam protection6",
+      "A uto-dimming rearview mirror with",
+      "Grille shutters HomeLink\u00ae37 universal transceiver Interior Features",
+      "Height-adjustable power liftgate with jam protection S ofTex\u00ae-trimmed38 front- and second-row seats Seating for up to eight"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

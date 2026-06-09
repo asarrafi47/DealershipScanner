@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|buick|lucerne",
+  "year": 2010,
+  "make": "Buick",
+  "model": "Lucerne",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Select",
+    "Base",
+    "Limited",
+    "Premium",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

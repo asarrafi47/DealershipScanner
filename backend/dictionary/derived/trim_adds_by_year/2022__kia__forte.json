@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2022|kia|forte",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_llm_2022__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TG",
+    "GT-Line",
+    "SXL",
+    "EF"
+  ],
+  "adds_by_trim": {
+    "TG": [
+      "201-hp 1.6L Turbo GDI engine with 7-speed dual-clutch transmission and paddle shifters",
+      "12.0-inch ventilated front disc brakes",
+      "Automatic LED multi-reflector headlights with LED daytime running lights",
+      "LED fog lights and LED rear tail lights",
+      "Sport-tuned dual exhaust",
+      "Multi-link independent rear suspension",
+      "18-inch alloy wheels with 225/40R18 summer tires",
+      "Smart Trunk with electronic parking brake and auto hold",
+      "10.25-inch touchscreen with navigation, Kia Connect, and built-in modem",
+      "Cloth and SynTex seat trim with 60/40 split-folding rear seatback with cupholder armrest"
+    ],
+    "GT-Line": [
+      "Unique GT design front and rear bumpers",
+      "Sport rear spoiler and side sill",
+      "Gloss black outside mirrors with heated function and integrated LED turn signals",
+      "17-inch alloy wheels with 225/45R17 all-season tires",
+      "11.2-inch solid rear disc brakes",
+      "LED rear tail lights",
+      "6-speaker audio system with front tweeters",
+      "Apple CarPlay and Android Auto compatibility",
+      "Leather-wrapped sport design steering wheel",
+      "SynTex artificial leather seat trim"
+    ],
+    "SXL": [
+      "16-inch alloy wheels with 205/55R16 all-season tires",
+      "Body color outside mirrors",
+      "Drive Mode Select available",
+      "8-inch touchscreen display audio with wireless Apple CarPlay and Android Auto",
+      "4-speaker audio system with 2 front and 2 rear speakers",
+      "Cloth seat trim with 60/40 split-folding rear seatback",
+      "Remote keyless entry",
+      "Two front 12V power outlets"
+    ],
+    "EF": [
+      "147-hp 2.0L MPI 4-cylinder engine with Smartstream Intelligent Variable Transmission",
+      "15-inch steel wheels with wheel covers and 195/65R15 all-season tires",
+      "11.0-inch ventilated front and 10.3-inch solid rear disc brakes",
+      "Automatic projector headlights",
+      "4.2-inch TFT digital driver information display",
+      "Steering wheel-mounted audio and cruise controls",
+      "Coupled torsion beam rear suspension",
+      "Cloth seat trim",
+      "Kia Drive Wise 2 safety suite with Forward Collision-Avoidance Assist with pedestrian detection"
+    ]
+  }
+}

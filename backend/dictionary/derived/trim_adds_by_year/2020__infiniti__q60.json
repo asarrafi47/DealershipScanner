@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|infiniti|q60",
+  "year": 2020,
+  "make": "Infiniti",
+  "model": "Q60",
+  "ladder_id": "brochure_llm_2020__infiniti__q60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q60 3.0t RED SPORT 400",
+    "Q60 3.0t LUXE",
+    "Q60 3.0t PURE"
+  ],
+  "adds_by_trim": {
+    "Q60 3.0t RED SPORT 400": [
+      "3.0-liter twin-turbocharged V6 engine with 400 horsepower and 350 lb-ft torque",
+      "Dynamic Digital Suspension",
+      "Sport brakes with red-finish calipers",
+      "20-inch staggered aluminum-alloy sport wheels",
+      "Unique dual exhaust tips with brushed satin finish",
+      "Red 'S' exterior badging",
+      "Steering wheel-mounted paddle shifters",
+      "Black-painted side mirrors",
+      "Genuine Black Carbon Fiber interior trim",
+      "Exclusive Matte Black Chrome interior accents"
+    ],
+    "Q60 3.0t LUXE": [
+      "INFINITI InTouch dual HD display system with Apple CarPlay and Android Auto integration",
+      "SiriusXM Radio with 3-month trial access",
+      "Bluetooth Hands-free Phone System with audio streaming",
+      "USB Type-A and USB Type-C ports",
+      "Dual Zone Automatic Temperature Control System",
+      "INFINITI Intelligent Key with Push Button Start",
+      "INFINITI Voice Recognition",
+      "Enhanced Intelligent Key memory for audio and climate preferences",
+      "INFINITI Drive Mode Selector",
+      "Power sliding and tinted glass moonroof with sliding sunshade"
+    ],
+    "Q60 3.0t PURE": [
+      "3.0-liter twin-turbocharged V6 engine with 300 horsepower and 295 lb-ft torque",
+      "7-speed automatic transmission with Manual shift mode and Downshift Rev Matching",
+      "Rear-Wheel Drive or INFINITI Intelligent All-Wheel Drive",
+      "Rack Electronic Power Steering",
+      "LED automatic-on/off headlights with signature Daytime Running Lights",
+      "LED signature taillights and front fog lights",
+      "19-inch aluminum-alloy wheels with run-flat all-season tires",
+      "Zero-lift aerodynamics",
+      "Leatherette seating with 8-way power adjustable front seats",
+      "Brushed Aluminum interior trim with front door aluminum INFINITI kick plates"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|toyota|rav4",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "XLE MODEL HIGHLIGHTS Adds to or replaces features offered on LE LIMITED MODEL HIGHLIGHTS Adds to or replaces features offered on XLE",
+      "Exterior features 4-way adjustable front passenger seat Exterior features Options",
+      "Power tilt/slide moonroof with sunshade French-stitching accents Adjustable power liftgate with jam protection SiriusXM Radio with 90-day complimentary trial",
+      "Color-keyed heated power outside mirrors Cargo area tonneau cover Projector-beam headlights with auto on/off feature Display Audio with Navigation, Entune\u00ae and",
+      "Integrated fog lights Display Audio with Navigation3 and Entune\u00ae4 SofTex\u00ae-trimmed seating complimentary trial",
+      "Dual zone automatic climate control with Driver and front passenger heated seats",
+      "Mechanical and Performance LE XLE LIMITED",
+      "Electronic, with Toyota Direct Ignition (TDI) Standard Standard Standard",
+      "Ultra Low Emission Vehicle II (ULEV-II) Standard Standard Standard",
+      "Front-Wheel Drive (FWD) with Automatic Limited-Slip Differential (Auto LSD) Standard Standard Standard",
+      "Dynamic Torque-Control AWD Available Available Available",
+      "Unitized body Standard Standard Standard"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

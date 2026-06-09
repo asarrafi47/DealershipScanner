@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2018_mercedes-benz_gle-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLE-Class",
+    "GLE-Class"
+  ],
+  "year_min": 2016,
+  "year_max": 2020,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG GLE63": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG GLE43": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "GLE350": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "GLE550e": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 7-spd; Four-Wheel Drive"
+      }
+    ]
+  }
+}

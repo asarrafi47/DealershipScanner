@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|landrover|defender",
+  "year": 2011,
+  "make": "landrover",
+  "model": "Defender",
+  "ladder_id": "brochure_web_2011__landrover__defender",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "HSE",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "HSE": [
+      "Leather-trimmed seats and steering wheel",
+      "Dual-zone automatic climate control",
+      "Power windows and locks",
+      "Premium audio system with six speakers",
+      "Roof rails and side steps",
+      "Upgraded interior trim panels"
+    ],
+    "S": [
+      "Air conditioning",
+      "Power steering",
+      "Manual windows and locks",
+      "Basic audio system",
+      "Cloth interior trim"
+    ],
+    "Base": [
+      "4.0L V8 engine with 192 horsepower",
+      "Five-speed manual transmission",
+      "Part-time four-wheel drive with low-range transfer case",
+      "Steel wheels with all-terrain tires",
+      "Manual windows and door locks",
+      "Vinyl upholstery",
+      "Basic instrument cluster",
+      "Driver and passenger airbags",
+      "Anti-lock braking system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/landrover/defender/"
+}

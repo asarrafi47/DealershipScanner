@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2021|porsche|taycan",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "Taycan",
+  "ladder_id": "brochure_web_2021__porsche__taycan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Turbo GT Weissach",
+    "Turbo GT",
+    "Turbo S",
+    "Turbo",
+    "GTS",
+    "4S",
+    "4",
+    "base"
+  ],
+  "adds_by_trim": {
+    "Turbo GT Weissach": [
+      "1,019 hp output with over-boost function",
+      "Track-focused performance tuning and Weissach package",
+      "Distinct front and rear fascia with Turbonite badges"
+    ],
+    "Turbo GT": [
+      "Track-focused performance variant",
+      "Enhanced powertrain with increased performance capabilities"
+    ],
+    "Turbo S": [
+      "938 hp with Performance Battery Plus and over-boost",
+      "892 lb-ft torque with temporary over-boost engaged",
+      "Distinct front and rear fascia with Turbonite badges and trim"
+    ],
+    "Turbo": [
+      "Dual-motor AWD powertrain configuration",
+      "Increased performance over GTS model"
+    ],
+    "GTS": [
+      "Performance-oriented tuning and handling upgrades"
+    ],
+    "4S": [
+      "Dual-motor AWD powertrain over RWD base"
+    ],
+    "4": [
+      "Optional dual-motor AWD configuration available"
+    ],
+    "base": [
+      "Single-motor RWD configuration",
+      "84 kWh standard battery with 274 miles EPA range",
+      "Standard air suspension with ride height adjustment",
+      "Standard heated steering wheel and ambient lighting",
+      "Standard charge-port doors on both sides",
+      "Air-cooled dual-phone wireless charger",
+      "16.8-inch gauge cluster and stacked 10.9-inch/8.4-inch touchscreens",
+      "Active-Matrix LED headlights",
+      "Standard Lane Change Assist and automatic emergency braking",
+      "Door sill protectors in brushed aluminum"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/taycan/"
+}

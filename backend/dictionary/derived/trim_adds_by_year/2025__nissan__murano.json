@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2025|nissan|murano",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2025__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "241-hp 2.0-liter VC-Turbo engine with 9-speed automatic transmission",
+      "Paddle shifters and Drive Mode Selector with three modes",
+      "ProPILOT Assist and Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning and Intelligent Lane Intervention",
+      "Blind Spot Warning and Intelligent Blind Spot Intervention",
+      "Rear Cross Traffic Alert and Rear Automatic Braking",
+      "Front and Rear Sonar System and RearView Monitor",
+      "10-way power driver's seat with 2-way power lumbar support",
+      "Heated front seats and 60/40-split fold-down rear seatbacks"
+    ],
+    "SL": [
+      "Intelligent All-Wheel Drive standard",
+      "Rear passenger air conditioning vents",
+      "Heated steering wheel",
+      "HD Enhanced Intelligent Around View Monitor",
+      "ProPILOT Assist 1.1",
+      "20-inch Gloss black aluminum-alloy wheels with Gun Metallic aero covers",
+      "Panoramic moonroof",
+      "Matte chrome interior accents and Murano glass-inspired interior trim",
+      "Power tilting and heated outside mirrors with integrated turn signals",
+      "Bose Premium Audio System with 10 speakers"
+    ],
+    "PLATINUM": [
+      "12.3-inch Digital dashboard with fully digital gauges",
+      "NissanConnect 12.3-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "Wireless charger and four USB-C ports",
+      "21-inch Machine-finished aluminum-alloy wheels with Gun Metallic aero covers",
+      "Gloss black bumper accents and side moldings",
+      "Motion Activated Liftgate with power tilt and telescoping steering column",
+      "Rain-sensing windshield wipers and Active Noise Cancellation",
+      "Climate-controlled front seats (heated and ventilated) with massaging function",
+      "Quilted semi-aniline leather-appointed seats",
+      "Head-Up Display"
+    ]
+  }
+}

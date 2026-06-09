@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Land Rover,Defender,90,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,4,2.0,18,21,19,,,,,
+2023,Land Rover,Defender,110,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,4,2.0,17,20,18,,,,,
+2023,Land Rover,Defender,110 MHEV,Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,23,20,,,,,
+2023,Land Rover,Defender,90 MHEV,Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,23,20,,,,,
+2023,Land Rover,Defender,90,5.0L V8 (SIDI),5.0L V8 Twin Turbo,Twin Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,5.0,15,19,16,,,,,
+2023,Land Rover,Defender,110,5.0L V8 (SIDI),5.0L V8 Twin Turbo,Twin Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,5.0,14,19,16,,,,,
+2023,Land Rover,Defender,130 P300 MHEV,Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,17,21,19,,,,,
+2023,Land Rover,Defender,130 P400 MHEV,Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,17,21,19,,,,,

@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2015|toyota|tundra",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Tundra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "1794",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "SR",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

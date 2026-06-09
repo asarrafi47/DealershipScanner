@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2021|lexus|ls",
+  "year": 2021,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2021__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LS F SPORT",
+    "LS h",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LS F SPORT": [
+      "F SPORT-specific carpet floor mats",
+      "F SPORT-specific key gloves with F logo",
+      "F SPORT-specific rear bumper appliqué"
+    ],
+    "LS h": [
+      "Hybrid powertrain with enhanced fuel efficiency"
+    ],
+    "LS": [
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Eight-year/100,000-mile Hybrid System Warranty",
+      "Available luxury leather interior options in multiple colors",
+      "Premium wood and special finish trim options"
+    ]
+  }
+}

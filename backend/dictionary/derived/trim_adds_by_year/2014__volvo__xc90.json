@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2014|volvo|xc90",
+  "year": 2014,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2014__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "R-Design",
+    "3.2 AWD",
+    "3.2 FWD"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Volvo Premium Sound System",
+      "Navigation System with Map Care",
+      "Rear Park Assist Camera"
+    ],
+    "R-Design": [
+      "R-Design blue-faced instruments",
+      "R-Design floor mats",
+      "R-Design Sport leather steering wheel",
+      "R-Design leather upholstery",
+      "Sanded Silver Aluminum inlays",
+      "R-Design grille",
+      "R-Design satin mirror caps",
+      "R-Design tailpipe",
+      "R-Design Aluminum Inlays"
+    ],
+    "3.2 AWD": [
+      "All-Wheel-Drive system"
+    ],
+    "3.2 FWD": [
+      "240 HP 6-cylinder engine (230 HP PZEV)",
+      "6-speed Geartronic Automatic Transmission",
+      "Quickfold front passenger seat",
+      "Active Dual Xenon Headlights",
+      "Red Wood Inlay",
+      "Red Wood Gear Shift Knob",
+      "Home Link Integrated Garage Door Opener",
+      "Digital Compass",
+      "Grocery Bag Holder",
+      "Powerglass moonroof with slide/tilt and sunshade"
+    ]
+  }
+}

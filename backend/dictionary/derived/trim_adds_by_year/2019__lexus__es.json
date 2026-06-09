@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|lexus|es",
+  "year": 2019,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "2019_lexus_es_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Luxury": [
+      "detect other vehicles under certain conditions. When potential lane departure is",
+      "Spotify is a registered trademark of",
+      "ubject to change at any time without notice. S",
+      "Telenav are registered trademarks of",
+      "system. Always look over your shoulder and use your mirrors to confirm rear clearance. There are limitations to the function, detection and range of the",
+      "vehicle conditions. See Owner\u2019s Manual for additional limitations and details. 49. The Rear Pedestrian Detection System is designed to detect a pedestrian behind the",
+      "impact is imminent and help reduce"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Limited": 0
+    }
+  }
+}

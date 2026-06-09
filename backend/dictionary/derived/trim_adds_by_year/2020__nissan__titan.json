@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2020|nissan|titan",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_llm_2020__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum Reserve",
+    "PRO-4X",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum Reserve": [
+      "Climate-controlled front seats with heating and cooling",
+      "Memory system for driver seat, steering wheel, and outside mirrors",
+      "PRO-4X embroidered seats with contrast stitching"
+    ],
+    "PRO-4X": [
+      "PRO-4X embroidered seats with contrast stitching",
+      "Heated front seats"
+    ],
+    "SL": [
+      "Heated front seats",
+      "8-way power adjustable driver seat with power lumbar support",
+      "4-way power adjustable passenger seat"
+    ],
+    "SV": [
+      "Front overhead storage console",
+      "Lockable rear seat cargo organizer"
+    ],
+    "S": [
+      "40/20/40-split bench front seat with flip-down center seat with armrest",
+      "60/40 split fold-up rear bench seat",
+      "Center console-mounted 120-volt AC and 12-volt DC power outlets with illuminated USB ports",
+      "Center console smartphone holder",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming rearview mirror",
+      "Rain-sensing wipers",
+      "Rear door alert"
+    ]
+  }
+}

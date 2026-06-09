@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2018|chevrolet|spark",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2018__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL2",
+    "TL1",
+    "VITCA",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "TL2": [
+      "Chrome trim on liftgate and beltline",
+      "Chrome door handles",
+      "Roof-mounted silver-painted luggage rack"
+    ],
+    "TL1": [
+      "Front foglamps with chrome rings",
+      "Chrome-surround grille",
+      "Heated power-adjustable manual-folding body-color mirrors"
+    ],
+    "VITCA": [
+      "No documented additions between VITCA and SL base trim"
+    ],
+    "SL": [
+      "Black front and rear bumpers",
+      "Body-color door handles",
+      "Manual-adjustable manual-folding black mirrors",
+      "Black rocker moldings",
+      "Intermittent rear wiper",
+      "Rear aero spoiler",
+      "1.4L DOHC 4-cylinder ECOTEC engine",
+      "Electric power steering",
+      "5-speed manual transmission",
+      "Dual-stage frontal air bags with Passenger Sensing System"
+    ]
+  }
+}

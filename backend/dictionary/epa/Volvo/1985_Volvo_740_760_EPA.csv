@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Volvo,740/760,740/760,"2.3L I4 ((FFS,TRBO))",2.3L I4 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,20,18,,,,,
+1985,Volvo,740/760,740/760,2.3L I4 ((FFS)),2.3L I4 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,19,23,21,,,,,
+1985,Volvo,740/760,740/760,2.3L I4 ((FFS)),2.3L I4 Turbo,Turbocharged,Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,20,26,22,,,,,
+1985,Volvo,740/760,740/760,"2.3L I4 ((FFS,TRBO))",2.3L I4 Turbo,Turbocharged,Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,23,19,,,,,
+1985,Volvo,740/760,740/760,"Diesel 2.4L V6 ((DSL,TRBO)) Diesel",2.4L V6 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize Cars,6,2.4,21,24,23,,,,,
+1985,Volvo,740/760,740/760,"Diesel 2.4L V6 ((DSL,TRBO)) Diesel",2.4L V6 Turbo,Turbocharged,Manual 4-spd,Rear-Wheel Drive,Diesel,Midsize Cars,6,2.4,22,28,24,,,,,
+1985,Volvo,740/760,740/760,2.9L V6 ((FFS)),2.9L V6 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.9,16,21,18,,,,,

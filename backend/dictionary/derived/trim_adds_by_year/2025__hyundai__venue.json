@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2025|hyundai|venue",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Venue",
+  "ladder_id": "2025_hyundai_venue",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "17-inch alloy wheels and proximity key with push-button start",
+      "8-inch display with wireless Android Auto and Apple CarPlay",
+      "Heated front seats and automatic climate control"
+    ],
+    "SE": [
+      "121 hp 1.6L Smartstream Dual Port Injection 4-cylinder engine",
+      "Smartstream Intelligent Variable Transmission with SHIFTRONIC",
+      "Motor-Driven Power Steering",
+      "Front and rear skid plate accents",
+      "Automatic headlights",
+      "Bodycolor exterior door handles",
+      "4.2-inch Digital instrument cluster",
+      "Rearview camera",
+      "Tilt-and-telescopic steering wheel with audio and cruise controls",
+      "6-way adjustable driver seat with height adjustment"
+    ]
+  }
+}

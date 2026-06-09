@@ -1,0 +1,87 @@
+{
+  "ladder_id": "2022_kia_carnival_complete_options",
+  "make": "Kia",
+  "models": [
+    "Carnival",
+    "Carnival"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "SX Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II V6; L Lambda V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "SX": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II V6; L Lambda V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II V6; L Lambda V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II V6; L Lambda V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L Mu LPi V6; The SE level adds 17-inch alloys, dual power-sliding rear doors, heated mirrors,"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; L Sigma V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      },
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "rear doors, heated mirrors, automatic climate control, a leather-wrapped steering wheel with audio controls wood or…; rear doors, heated mirrors, The SE level adds 17-inch alloys, dual power-sliding rear doors, heated mirrors, automatic…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; L Sigma V6"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2019|subaru|brz",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2019__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Series.Gray",
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Series.Gray": [
+      "Brembo® performance braking system with 4-piston front and dual-piston rear calipers",
+      "SACHS® performance dampers front and rear",
+      "Exclusive Cool Gray Khaki paint",
+      "Black-painted side mirrors",
+      "Black badging",
+      "17 x 7.5-inch multi-spoke aluminum-alloy wheels with black finish",
+      "Frameless rearview mirror",
+      "12.8-inch front and 12.4-inch rear brake discs"
+    ],
+    "BRZ Limited": [
+      "LED fog lights",
+      "Alcantara® and leather-trimmed upholstery",
+      "Center console and lower door knee pads with red stitching",
+      "Instrument cluster meter visor with red stitching",
+      "4.2-inch color multifunction display",
+      "Heated front seats",
+      "Dual-zone automatic digital climate control",
+      "Keyless Access with Push-Button Start",
+      "Anti-theft security system",
+      "SUBARU STARLINK™ 7.0-inch Multimedia Navigation with Apple CarPlay and Android Auto"
+    ],
+    "BRZ Premium": [
+      "205-hp direct-injection 2.0-liter 4-cylinder SUBARU BOXER® engine",
+      "Close-ratio 6-speed manual transmission",
+      "Sport-tuned suspension with strut-type front and double-wishbone rear",
+      "Multi-spoke 17-inch aluminum-alloy wheels",
+      "LED headlights",
+      "Trunk spoiler",
+      "Heated side mirrors",
+      "Cloth upholstery",
+      "Leather-wrapped steering wheel with audio and Bluetooth® controls",
+      "SUBARU STARLINK™ 6.2-inch Multimedia System with Pandora, iHeartRadio, and Stitcher"
+    ]
+  }
+}

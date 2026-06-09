@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2016|lincoln|mkc",
+  "year": 2016,
+  "make": "Lincoln",
+  "model": "MKC",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Reserve",
+    "Select",
+    "Standard",
+    "Limited",
+    "Premium",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|smart|fortwo",
+  "year": 2015,
+  "make": "Smart",
+  "model": "Fortwo",
+  "ladder_id": "brochure_llm_2015__smart__fortwo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "passion",
+    "pure"
+  ],
+  "adds_by_trim": {
+    "passion": [
+      "175/55 R15 wheels and tires (rear) versus 155/60 R15 on pure"
+    ],
+    "pure": [
+      "3-cylinder in-line engine with 70 hp and 68 lb.-ft. torque",
+      "999 cc engine displacement",
+      "Automated manual 5-speed transmission",
+      "Rear-wheel drive configuration",
+      "34/38 mpg estimated city/highway fuel consumption",
+      "155/60 R15 wheels and tires (front/rear)",
+      "8.8 ft. vehicle length with 6.1 ft. wheelbase",
+      "1,830–1,841 lbs. curb weight for coupe; 1,882 lbs. for cabriolet",
+      "7.8–12 cu. ft. luggage compartment",
+      "9 gallon fuel tank capacity"
+    ]
+  }
+}

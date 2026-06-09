@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|volkswagen|beetle",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Beetle",
+  "ladder_id": "brochure_web_2016__volkswagen__beetle",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Beetle Convertible Final Edition SEL",
+    "Beetle Convertible SE",
+    "Beetle Convertible Final Edition SE",
+    "Beetle Convertible S",
+    "Beetle Final Edition SEL",
+    "Beetle SE",
+    "Beetle Final Edition SE",
+    "Beetle S"
+  ],
+  "adds_by_trim": {
+    "Beetle Convertible Final Edition SEL": [
+      "Convertible body style with powered soft top"
+    ],
+    "Beetle Convertible SE": [
+      "Convertible body style with powered soft top"
+    ],
+    "Beetle Convertible Final Edition SE": [
+      "Convertible body style with powered soft top"
+    ],
+    "Beetle Convertible S": [
+      "Convertible body style with powered soft top"
+    ],
+    "Beetle Final Edition SEL": [
+      "Premium package: HID headlights, navigation system, dual-zone climate control",
+      "Fender premium audio system, LED daytime running lights, fog lights, parking sensors",
+      "18-inch alloy wheels with white accents, leather upholstery"
+    ],
+    "Beetle SE": [
+      "Keyless entry and start, leatherette upholstery, heated front seats",
+      "Ambient lighting, 6.3-inch touchscreen with Android Auto and Apple CarPlay",
+      "Sunroof, 17-inch alloy wheels"
+    ],
+    "Beetle Final Edition SE": [
+      "Leatherette upholstery with cloth inserts, special styling for Final Edition"
+    ],
+    "Beetle S": [
+      "16-inch alloy wheels, leather-wrapped steering wheel, cloth upholstery",
+      "Eight-speaker audio system, 5.0-inch touchscreen, rearview camera, Bluetooth connectivity",
+      "Blind-spot monitoring and rear cross-traffic alert standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/beetle/"
+}

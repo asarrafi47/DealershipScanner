@@ -1,0 +1,93 @@
+{
+  "catalog_key": "2015|honda|accord",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Accord",
+  "ladder_id": "brochure_llm_2015__honda__accord",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ACCORD SEDAN TOURING",
+    "ACCORD SEDAN EX-L V-6 WITH NAVIGATION",
+    "ACCORD SEDAN EX-L V-6",
+    "ACCORD SEDAN EX-L",
+    "ACCORD SEDAN EX",
+    "ACCORD SEDAN LX",
+    "ACCORD HYBRID EX-L",
+    "ACCORD HYBRID",
+    "ACCORD COUPE EX",
+    "ACCORD COUPE LX-S"
+  ],
+  "adds_by_trim": {
+    "ACCORD SEDAN TOURING": [
+      "360-watt AM/FM/CD premium audio system with 7 speakers and subwoofer",
+      "HondaLink featuring Aha compatibility",
+      "SiriusXM Radio",
+      "Leather-trimmed interior",
+      "Heated front seats"
+    ],
+    "ACCORD SEDAN EX-L V-6 WITH NAVIGATION": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic"
+    ],
+    "ACCORD SEDAN EX-L V-6": [
+      "3.5-liter i-VTEC V-6 engine with direct injection",
+      "6-speed automatic transmission",
+      "18-inch alloy wheels",
+      "Body-colored decklid spoiler"
+    ],
+    "ACCORD SEDAN EX-L": [
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry system with remote entry",
+      "Fog lights",
+      "Heated power side mirrors with integrated turn indicators",
+      "Honda LaneWatch"
+    ],
+    "ACCORD SEDAN EX": [
+      "Rearview camera with guidelines",
+      "Adaptive Compatibility Engineering (ACE)",
+      "Vehicle Stability Assist with traction control",
+      "Forward Collision Warning",
+      "Push button start"
+    ],
+    "ACCORD SEDAN LX": [
+      "185-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "6-speed manual or CVT with Sport Mode",
+      "Vehicle Stability Assist with traction control",
+      "Tilt and telescopic steering column",
+      "Map lights",
+      "Driver's seat with 10-way power adjustment including lumbar support"
+    ],
+    "ACCORD HYBRID EX-L": [
+      "2.0-liter i-VTEC 4-cylinder engine",
+      "196 total-system horsepower lithium-ion battery",
+      "Continuously variable transmission with traction control",
+      "Rearview camera with guidelines",
+      "Driver's seat with 10-way power adjustment including lumbar support",
+      "Front passenger seat with 4-way power adjustment"
+    ],
+    "ACCORD HYBRID": [
+      "Tilt and telescopic steering column",
+      "Heated front seats",
+      "Pandora compatibility",
+      "Bluetooth streaming audio",
+      "USB Audio Interface",
+      "SiriusXM Radio"
+    ],
+    "ACCORD COUPE EX": [
+      "Multi-angle rearview camera with guidelines",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry",
+      "Fog lights",
+      "Honda LaneWatch",
+      "Adaptive Cruise Control"
+    ],
+    "ACCORD COUPE LX-S": [
+      "185-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "6-speed manual or CVT with Sport Mode and paddle shifters",
+      "Vehicle Stability Assist with traction control",
+      "Rearview camera with guidelines",
+      "Advanced Compatibility Engineering",
+      "360-watt AM/FM/CD premium audio with 7 speakers and subwoofer",
+      "SiriusXM Radio"
+    ]
+  }
+}

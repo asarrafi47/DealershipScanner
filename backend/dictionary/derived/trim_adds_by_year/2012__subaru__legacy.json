@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2012|subaru|legacy",
+  "year": 2012,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "inventory_subaru_legacy",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "● 256-hp 3.6-liter 6-cylinder SUBARU Passenger volume 103.0 cubic feet (with available moonroof: 100.0 cubic feet)",
+      "● 25 mpg2 Base curb weight 2.5i: 3,272 lbs/3,381 lbs 2.5GT Limited: 3,483 lbs/n/a 3.6R: n/a/3,484 lbs",
+      "● 5-speed automatic transmission 2.5i Limited: n/a/3,423 lbs 3.6R Limited: n/a/3,529 lbs"
+    ],
+    "Limited": [
+      "inches/62.0 inches 61.0",
+      "● 256-hp 3.6-liter 6-cylinder SUBARU",
+      "● 5-speed automatic transmission"
+    ],
+    "Premium": [
+      "Upgraded 7.0-inch high-resolution LCD touchscreen with voice-activated controls",
+      "6-speaker AM/FM/CD player with HD Radio, dual USB ports, and SiriusXM Satellite Radio",
+      "17-inch aluminum-alloy wheels with silver finish",
+      "10-way power adjustable driver's seat with 2-position memory and 4-way power adjustable passenger seat",
+      "All-Weather Package with heated exterior mirrors and heated front seats",
+      "Dual-zone automatic climate control",
+      "Leather-wrapped steering wheel and shifter handle"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.5,
+    "per_trim_add_counts": {
+      "Premium": 0,
+      "Base": 3
+    }
+  }
+}

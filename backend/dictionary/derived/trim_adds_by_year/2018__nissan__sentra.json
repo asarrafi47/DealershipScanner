@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2018|nissan|sentra",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2018__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM PACKAGE SR TURBO",
+    "PREMIUM PACKAGE SR",
+    "TECHNOLOGY PACKAGE SR",
+    "ALL-WEATHER PKG. SV",
+    "PREMIUM PACKAGE SV",
+    "APPEARANCE PKG. S"
+  ],
+  "adds_by_trim": {
+    "PREMIUM PACKAGE SR TURBO": [
+      "Bose Premium Audio System with eight speakers including dual subwoofers",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert"
+    ],
+    "PREMIUM PACKAGE SR": [
+      "Power sliding glass moonroof with tilt feature",
+      "Nissan Navigation System with 5.8-inch color touch-screen display",
+      "NissanConnect with Navigation, Mobile Apps, and Services",
+      "Nissan Voice Recognition for navigation and audio",
+      "SiriusXM Traffic and Travel Link",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming rearview mirror",
+      "Dual illuminated visor vanity mirrors",
+      "Leather-appointed seats",
+      "6-way power driver's seat with 2-way power lumbar"
+    ],
+    "TECHNOLOGY PACKAGE SR": [
+      "Nissan Navigation System with 5.8-inch color touch-screen display",
+      "NissanConnect Mobile Apps",
+      "Nissan Voice Recognition for navigation and audio",
+      "SiriusXM Traffic and Travel Link"
+    ],
+    "ALL-WEATHER PKG. SV": [
+      "Dual power heated outside mirrors with tilt feature",
+      "Heated front seats",
+      "Dual illuminated visor vanity mirrors",
+      "Center room LED dim lamp"
+    ],
+    "PREMIUM PACKAGE SV": [
+      "Power sliding glass moonroof",
+      "Nissan Navigation System with 5.8-inch color touch-screen display",
+      "NissanConnect Mobile Apps",
+      "Nissan Voice Recognition for navigation and audio",
+      "SiriusXM Traffic and Travel Link",
+      "Bose Premium Audio System with eight speakers including dual subwoofers",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert"
+    ],
+    "APPEARANCE PKG. S": [
+      "16-inch aluminum-alloy wheels",
+      "Rear spoiler",
+      "Requires CVT transmission"
+    ]
+  }
+}

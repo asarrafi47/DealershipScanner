@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2012|cadillac|cts",
+  "year": 2012,
+  "make": "Cadillac",
+  "model": "CTS",
+  "ladder_id": "brochure_llm_2012__cadillac__cts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM",
+    "PERFORMANCE",
+    "LUXURY",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "PREMIUM": [
+      "Recaro performance seats with 19-inch polished wheels and summer or all-season performance tires",
+      "CTS V rear spoiler",
+      "Midnight Sapele wood trim on instrument panel, center console, and door trim",
+      "Microfiber sueded trim on steering wheel and shifter knob",
+      "Sport alloy pedals"
+    ],
+    "PERFORMANCE": [
+      "19-inch polished aluminum wheels with summer-only or all-season performance tires",
+      "Steering wheel-mounted paddle shift controls",
+      "Performance brakes",
+      "Performance cooling system",
+      "FE3 sport performance suspension",
+      "Limited slip differential",
+      "Xenon HID headlamps with adaptive forward lighting and front foglamps"
+    ],
+    "LUXURY": [
+      "Leather seating surfaces with 10-way power driver and front passenger seat with 2-way lumbar control and memory",
+      "Heated and ventilated driver and front passenger seats",
+      "Wood trim Sapele on instrument panel, center console, door trim, steering wheel, and shift knob",
+      "Leather-trimmed heated steering wheel with fingertip controls",
+      "Ultrasonic rear park assist",
+      "Navigation Glide-up with hard-drive, Bose 5.1 surround sound, and 8-inch touch-screen",
+      "OnStar one-year Directions & Connections Plan"
+    ],
+    "STANDARD": [
+      "3.0L or 3.6L direct-injection V6 VVT engine",
+      "Rear-wheel drive or all-wheel drive",
+      "6-speed manual or 6-speed automatic transmission",
+      "4-wheel independent suspension with coil-over struts and anti-sway bars",
+      "4-wheel disc brakes with anti-lock system and electronic parking brake",
+      "Leatherette seats with 8-way power driver seat and articulating headrests",
+      "Dual-zone automatic climate control",
+      "Power-tilt telescoping steering wheel",
+      "Daytime running lamps with twilight sentinel and LED taillamps",
+      "18-inch aluminum wheels with all-season tires"
+    ]
+  }
+}

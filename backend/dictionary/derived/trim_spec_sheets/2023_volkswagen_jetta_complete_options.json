@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2023_volkswagen_jetta_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Jetta",
+    "Jetta"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The plant was heavily robotised in an effort to make build quality more consistent. New innovations on the second generation included an optional trip computer (referred to as the MFA, German Multi-Funktions-Anzeige), as well as silicone dampened engine…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Adds Speaker Count & Breakdown: instrument panel, front and rear doors, footwells, and the gauge \"rings\" of a newly available fully digital instrument cluster display, marketed as the \"Digital Cockpit\""
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Its ten-color customizable ambient interior lighting includes lighting across th; Its ten-color customizable ambient interior lighting includes lighting across the dashboard and instrument panel, front and rear doors, footwells, and the gauge \"rings\" of…"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "6-speaker system; [Brochure] 6-speaker system"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Extended Range Remote Key Fob (1) upgrade for Remote Engine Start EXU Extended R; Extended Range Remote Key Fob (1) upgrade for Remote Engine Start EXU Extended Range Remote Upgrade Automatic models only - Jetta SE or higher - Not compatible w/ EXR $300 - SE…"
+      }
+    ]
+  }
+}

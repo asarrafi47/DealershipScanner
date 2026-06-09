@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2023|gmc|sierra",
+  "year": 2023,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2023__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DENALI",
+    "AT4",
+    "SLT",
+    "SLE",
+    "PRO"
+  ],
+  "adds_by_trim": {
+    "DENALI": [
+      "Premium features and luxury appointments (specific details not provided in brochure excerpt)"
+    ],
+    "AT4": [
+      "SLT Premium Package including SLT Convenience and Preferred packages",
+      "Driver Alert Package I with front/rear park assist and lane change alert",
+      "Spray-on bedliner",
+      "6-inch rectangular chrome assist steps (cab-length on Crew Cab, standard on Double Cab)"
+    ],
+    "SLT": [
+      "Bucket seats with center console and ventilated front seats",
+      "Rear sliding power window",
+      "Universal Home Remote",
+      "SLT Preferred Package with Bed View Camera and High Definition Surround Vision",
+      "8-inch Premium GMC Infotainment System with Navigation",
+      "Bose Premium Audio System with Richbass woofer and wireless charging"
+    ],
+    "SLE": [
+      "Dual-zone climate control",
+      "10-way power driver seat with power lumbar",
+      "Heated driver and front outboard passenger seats",
+      "Heated steering wheel",
+      "Keyless open and start",
+      "Remote start",
+      "Rear-window defogger",
+      "LED cargo bed lighting"
+    ],
+    "PRO": [
+      "Keyless entry",
+      "EZ-Lift Tailgate with power lock and release",
+      "Tinted glass",
+      "LED cargo bed lighting",
+      "Heated outside power-adjustable vertical trailering mirrors",
+      "Cruise control",
+      "Power windows and power door locks on Regular Cab"
+    ]
+  }
+}

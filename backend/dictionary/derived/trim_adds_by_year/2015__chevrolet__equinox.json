@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2015|chevrolet|equinox",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2015__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Front and rear body-color bumpers with bright lowers",
+      "Chrome door handles",
+      "Halogen foglamps",
+      "Programmable power liftgate with fixed glass",
+      "Chrome manual-folding power-adjustable heated mirrors",
+      "Auto-dimming rearview mirror",
+      "Memory settings for driver seat and exterior mirrors",
+      "Leather-appointed seats with perforated seat inserts",
+      "Heated driver and front passenger seats",
+      "Front dual-flow dampers"
+    ],
+    "2LT": [
+      "Body-color manual-folding power-adjustable heated mirrors",
+      "Rear vision camera",
+      "Roof rack side rails",
+      "Automatic climate control",
+      "Chevrolet MyLink 10 with Navigation and SiriusXM All Access Package",
+      "Pioneer premium 8-speaker sound system with subwoofer and amplifier"
+    ],
+    "1LT": [
+      "Power driver seat with adjustment for lumbar and height",
+      "Heated driver and front passenger seats",
+      "Automatic climate control",
+      "Chevrolet MyLink 10 with Navigation and SiriusXM All Access Package",
+      "Pioneer premium 8-speaker sound system with subwoofer and amplifier"
+    ],
+    "LS": [
+      "Manual climate control",
+      "Rearview manual day/night mirror",
+      "Multi-Flex sliding rear seat with 60/40 split-folding and 3-position recline",
+      "AM/FM stereo with CD player, RDS technology, auxiliary audio input and USB port",
+      "5 airbags with Passenger Sensing System",
+      "StabiliTrak Electronic Stability Control with Traction and Electronic Trailer Sway Control",
+      "LATCH system for child safety seats",
+      "OnStar Directions and Connections with 6-month trial",
+      "6-speed automatic transmission with overdrive",
+      "ECOTEC 2.4L DOHC 4-cylinder engine with 182 hp"
+    ]
+  }
+}

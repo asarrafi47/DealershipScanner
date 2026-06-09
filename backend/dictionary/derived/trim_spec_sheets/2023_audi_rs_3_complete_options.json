@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2023_audi_rs_3_complete_options",
+  "make": "Audi",
+  "models": [
+    "RS 3",
+    "RS 3"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+      }
+    ],
+    "A3 Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+      }
+    ],
+    "S3 Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+      }
+    ]
+  }
+}

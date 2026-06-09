@@ -1,0 +1,82 @@
+{
+  "catalog_key": "2014|dodge|dart",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Dart",
+  "ladder_id": "brochure_llm_2014__dodge__dart",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Dart Limited",
+    "Dart GT",
+    "Dart Rallye",
+    "Dart SXT",
+    "Dart SE",
+    "Dart Aero"
+  ],
+  "adds_by_trim": {
+    "Dart Limited": [
+      "2.4L 184-hp TigerShark 4-cylinder with MultiAir II engine",
+      "7-inch TFT reconfigurable digital gauge cluster with navigation",
+      "UConnect 8.4 with 8.4-inch touchscreen, Garmin navigation, SiriusXM Travel Link",
+      "Nappa leather-trimmed seats with perforated leather and red accent stitching",
+      "Power 10-way driver's seat with heated front seats and heated steering wheel",
+      "Dual-zone automatic temperature control",
+      "Active grille shutters",
+      "Remote start capability"
+    ],
+    "Dart GT": [
+      "2.4L 184-hp TigerShark 4-cylinder with MultiAir II engine",
+      "18-inch satin silver aluminum wheels",
+      "Projector fog lamps with bright grille and door handles",
+      "LED racetrack taillamps",
+      "Ambient LED interior lighting",
+      "Power 10-way driver's seat",
+      "Power sunroof",
+      "Auto-dimming rearview mirror",
+      "Sport suspension with frequency-sensing damping shocks and active grille shutters"
+    ],
+    "Dart Rallye": [
+      "17-inch hyper black aluminum wheels",
+      "Dark-tinted headlamps with black crosshair grille and black front fascia",
+      "Integrated dual exhaust with bright tips",
+      "Leather-wrapped steering wheel and shifter",
+      "Touring suspension",
+      "Rallye badge",
+      "Accent stitching on IP and center armrest",
+      "Dark headliner with Sedoso cloth and light tungsten stripes"
+    ],
+    "Dart SXT": [
+      "2.4L 184-hp TigerShark 4-cylinder with MultiAir II engine",
+      "17-inch satin silver aluminum wheels",
+      "Automatic headlamps",
+      "Projector fog lamps",
+      "Power heated mirrors with supplemental signals",
+      "Keyless enter 'n go with push-button start",
+      "Remote CD player",
+      "Illuminated vanity mirrors",
+      "Premium door trim panel with accent stitching"
+    ],
+    "Dart SE": [
+      "2.0L 160-hp TigerShark 4-cylinder engine",
+      "16-inch wheel covers",
+      "Ultra low-rolling resistance tires",
+      "Projector headlamps",
+      "LED stop/turn taillamps",
+      "Laminated acoustic windshield",
+      "6-way driver's seat with height adjuster",
+      "Soft-touch instrument panel with tachometer"
+    ],
+    "Dart Aero": [
+      "1.4L 160-hp and 184 lb-ft MultiAir intercooled turbo with 6-speed automatic transmission",
+      "16-inch tech silver aluminum wheels",
+      "Automatic bright chrome headlamps",
+      "LED racetrack taillamps",
+      "Ambient LED interior lighting",
+      "Power sunroof",
+      "7-inch TFT reconfigurable digital gauge cluster",
+      "Heated front seats",
+      "Auto-dimming rearview mirror",
+      "Underbody aero kit"
+    ]
+  }
+}

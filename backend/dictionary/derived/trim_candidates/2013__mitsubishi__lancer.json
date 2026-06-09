@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2013|mitsubishi|lancer",
+  "year": 2013,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

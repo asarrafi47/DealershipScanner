@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2016|lexus|rx",
+  "year": 2016,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_llm_2016__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RX F SPORT",
+    "RX450h",
+    "RX350"
+  ],
+  "adds_by_trim": {
+    "RX F SPORT": [
+      "Rioja Red leather interior trim option",
+      "F SPORT-specific exterior styling"
+    ],
+    "RX450h": [
+      "Hybrid powertrain with improved fuel efficiency",
+      "EPA estimated 30/28/30 city/highway/combined mpg (AWD)"
+    ],
+    "RX350": [
+      "Available 12.3-inch multimedia display",
+      "Panoramic View Monitor with 360-degree camera view",
+      "Color Heads-Up Display",
+      "Remote Touch interface for center console control",
+      "Mark Levinson premium audio system",
+      "HD Radio technology",
+      "Dual-screen entertainment system with DVD player",
+      "Lexus Enform smartphone app integration",
+      "Lexus Safety System+ with Pre-Collision System",
+      "Pedestrian Detection System"
+    ]
+  }
+}

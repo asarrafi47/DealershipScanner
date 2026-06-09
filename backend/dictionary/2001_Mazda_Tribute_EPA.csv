@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2001,Mazda,Tribute,2WD,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,21,26,23,,,,,,2.0L I4,
-2001,Mazda,Tribute,2WD,3.0L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.0,16,22,18,,,,,,3.0L V6,
-2001,Mazda,Tribute,4WD,2.0L I4,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.0,20,24,21,,,,,,2.0L I4,
-2001,Mazda,Tribute,4WD,3.0L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.0,16,22,18,,,,,,3.0L V6,

@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2024|lexus|is",
+  "year": 2024,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2024__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS 300/350 F SPORT",
+    "IS 300/350 F SPORT DESIGN",
+    "IS 300"
+  ],
+  "adds_by_trim": {
+    "IS 300/350 F SPORT": [
+      "F SPORT-tuned suspension",
+      "F SPORT bolstered, heated and ventilated front seats",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Four-way adjustable headrests",
+      "F SPORT 19-inch split-five-spoke staggered-width alloy wheels with Dark Metallic finish",
+      "F SPORT exterior styling with unique front and rear bumpers, grille surround, rear spoiler and exhaust tips"
+    ],
+    "IS 300/350 F SPORT DESIGN": [
+      "F SPORT exterior styling including unique front and rear bumpers, grille surround, rear spoiler and exhaust tips",
+      "F SPORT-tuned suspension",
+      "F SPORT bolstered, heated and ventilated front seats",
+      "F SPORT 19-inch split-five-spoke alloy wheels with Dark Metallic finish",
+      "F SPORT Design exterior badging",
+      "Black Geometric interior trim",
+      "Aluminum pedals"
+    ],
+    "IS 300": [
+      "LED headlamps, taillamps and daytime running lights",
+      "Performance-inspired instrumentation with sliding bezel",
+      "NuLuxe® interior trim",
+      "Eight-way power front seats",
+      "F SPORT heated leather-trimmed steering wheel",
+      "Dual-zone climate control",
+      "Heated outside mirrors",
+      "Apple CarPlay® integration and Android Auto™ compatibility",
+      "Lexus Multimedia System with 8.0-inch touchscreen display",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert and backup camera with dynamic gridlines"
+    ]
+  }
+}

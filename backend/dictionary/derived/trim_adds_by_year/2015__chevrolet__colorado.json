@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|chevrolet|colorado",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "inventory_chevrolet_colorado",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Crew",
+    "Cab"
+  ],
+  "adds_by_trim": {
+    "Cab": [
+      "General Motors New Vehicle Limited",
+      "alterations) to any of the parts, components,",
+      "1588 mm (62.5 in.) \u2022 3-year/60,000 km 1 New Vehicle Limited Warranty college or university 8 may be entitled to receive a Student Bonus Vehicle to, General Motors, GM, Chevrolet, the Chevrolet emblem, Colorado, and their",
+      "INTERIOR, MM (IN.) (CONTINUED) \u2022 8 -year/130,000 km 1 coverage on catalytic converters and Powertrain Purchase Price on eligible new GM vehicles.9 For full program details, registered trademarks of OnStar, LLC. Apple, iPhone and Siri are trademarks of",
+      "oom, front 1460 (57.5) \u2022 OnStar with the Directions & Connections Plan for 6 months 3 trademark of BlackBerry Limited. Bluetooth is a registered trademark of",
+      "oom, rear \u2014 Extended Cab 1455 (57.3) \u2022 O nStar Basic Plan4 for 5 years on most Chevrolet vehicles5 \u2014 includes INFoRMATIoN RESoURCES You can find more information about these Bluetooth SIG, Inc. Bose is a registered trademark of the Bose Corporation.",
+      "oom, rear \u2014 Crew Cab 1425 (56.1) RemoteLink Key Fob Services to remotely start and lock/unlock your vehicle programs from your Chevrolet dealer, or at these information centres: Facebook is a registered trademark of Facebook Inc. Gracenote is a registered",
+      "rear \u2014 Crew Cab 1356 (53.4)",
+      "services, you must contact OnStar at 1.888.4.ONSTAR"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 9.0,
+    "per_trim_add_counts": {
+      "Cab": 9
+    }
+  }
+}

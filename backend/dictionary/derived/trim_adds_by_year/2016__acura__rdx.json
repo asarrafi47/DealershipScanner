@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2016|acura|rdx",
+  "year": 2016,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_2016__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds Includes standard safety suite with airbags"
+    ],
+    "Sport": [
+      "Adds Lane Keeping Assist System for active lane management"
+    ],
+    "Technology": [
+      "Adds Collision Mitigation Braking System for advanced collision avoidance",
+      "Adds Includes premium audio system with ELS Surround technology"
+    ],
+    "Advance": [
+      "Adds comprehensive AcuraLink Premium subscription services",
+      "Adds Includes advanced Connect and Assist safety features",
+      "Adds live concierge services capability"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2014|acura|mdx",
+  "year": 2014,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2014__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MDX with Advance Package",
+    "MDX with Technology and Entertainment Package",
+    "MDX with Technology Package",
+    "MDX"
+  ],
+  "adds_by_trim": {
+    "MDX with Advance Package": [
+      "Collision Mitigation Braking System (CMBS) with heads-up warning",
+      "Adaptive cruise control (ACC) with low-speed follow",
+      "Lane Keeping Assist System (LKAS)",
+      "Acura DVD rear entertainment system with 16.2-inch ultrawide full VGA screen and HDMI compatibility",
+      "Exclusive 19-inch aluminum-alloy wheels",
+      "Front passenger's power-lumbar support",
+      "Active sound control",
+      "Acoustic windshield and front side glass",
+      "Perforated Milano premium leather-trimmed interior"
+    ],
+    "MDX with Technology and Entertainment Package": [
+      "Acura DVD rear entertainment system with 9-inch full VGA screen",
+      "110-volt power outlet (front center console)",
+      "Second-row side sunshades (manual)"
+    ],
+    "MDX with Technology Package": [
+      "290-hp, 3.5-liter, 24-valve SOHC i-VTEC direct injection V-6 engine",
+      "Variable Cylinder Management (VCM)",
+      "Acura Navigation System with 3D view",
+      "AcuraLink real-time traffic with exclusive street and freeway conditions",
+      "Next-generation AcuraLink 5",
+      "Acura/ELS Studio premium audio system with hard disk drive (HDD) media storage and 10 speakers",
+      "Song by Voice",
+      "GPS-linked, tri-zone automatic climate control",
+      "Forward Collision Warning (FCW) System",
+      "Lane Departure Warning (LDW) System"
+    ],
+    "MDX": [
+      "290-hp, 3.5-liter, 24-valve, SOHC i-VTEC direct injection V-6 engine",
+      "6-speed automatic transmission with Sport Mode and Sequential SportShift paddle shifters",
+      "Available Super Handling All-Wheel Drive (SH-AWD)",
+      "Jewel Eye LED headlights",
+      "Acura Premium audio system with 8 speakers",
+      "Tri-zone automatic climate control system with humidity control and air filtration",
+      "Keyless access system with Smart entry, pushbutton ignition, and Acura Personalized Settings",
+      "Leather-trimmed interior with 7-passenger seating capability",
+      "Driver's heated, 10-way power seat including power lumbar support",
+      "Front passenger's heated, 8-way power seat"
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "catalog_key": "2023|kia|seltos",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Seltos",
+  "ladder_id": "brochure_llm_2023__kia__seltos",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Touring HEV",
+    "SX HEV",
+    "EX Touring HEV",
+    "EX HEV",
+    "LX HEV",
+    "Wave EV",
+    "Wind EV"
+  ],
+  "adds_by_trim": {
+    "SX Touring HEV": [
+      "18-inch wheels with 225/45 R18 tires",
+      "LED projector headlights",
+      "Gloss black exterior mirrors",
+      "10-way power passenger's seat with 2-way lumbar support",
+      "10.25-inch Supervision color TFT meter cluster display"
+    ],
+    "SX HEV": [
+      "18-inch wheels with 225/45 R18 tires",
+      "Ventilated front seats",
+      "Heated steering wheel",
+      "Integrated Memory System for driver's seat",
+      "Perforated vegan leather seats"
+    ],
+    "EX Touring HEV": [
+      "Power sunroof with sunshade",
+      "Smart Power Liftgate",
+      "LED fog lamps",
+      "Satin-chrome window surrounds",
+      "Front chrome-coated skid plate",
+      "Heated power-folding exterior mirrors with integrated turn signals"
+    ],
+    "EX HEV": [
+      "10-way power driver's seat with 2-way lumbar support",
+      "Vegan leather and fabric seats",
+      "Heated front seats",
+      "Vegan leather-wrapped steering wheel",
+      "Leather-wrapped transmission shift lever",
+      "Electrochromatic automatic day/night rearview mirror"
+    ],
+    "LX HEV": [
+      "1.6L 4-cylinder GDI hybrid engine with 139 hp and 195 lb.-ft. torque",
+      "6-speed Dual-Clutch Transmission",
+      "Electronic Parking Brake with Auto Hold",
+      "Drive Mode Select with Sport and Eco modes",
+      "16-inch wheels with 205/60 R16 tires",
+      "LED Daytime Running Lights and LED rear combination lamps",
+      "6-way manual driver and passenger seats with height adjustment",
+      "Cloth-trimmed seats with 60/40 split-folding rear seats",
+      "8-inch touchscreen with wireless Apple CarPlay and Android Auto integration",
+      "6-speaker audio system"
+    ],
+    "Wave EV": [
+      "65 kWh lithium-ion polymer battery with 253-mile all-electric range",
+      "Paddle shifters",
+      "LED projector headlights",
+      "Acoustic-laminated front and side windows",
+      "Satin chrome window trim surround",
+      "Heated power-folding exterior mirrors with integrated turn signals",
+      "Gloss black wheel arches, door moldings and exterior trim"
+    ],
+    "Wind EV": [
+      "65 kWh lithium-ion polymer battery with 253-mile all-electric range",
+      "201 hp and 188 lb.-ft. torque electric-drive motor",
+      "Electronic Parking Brake with Auto Hold",
+      "Drive Mode Select with Normal, Sport and Eco modes",
+      "17-inch wheels with 215/55 R17 tires",
+      "LED Daytime Running Lights",
+      "10-way power passenger's seat with 2-way lumbar support",
+      "Perforated vegan leather seats"
+    ]
+  }
+}

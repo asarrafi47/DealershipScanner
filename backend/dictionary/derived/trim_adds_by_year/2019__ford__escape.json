@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2019|ford|escape",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_2019__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper coverage",
+      "Adds Includes 5-year/60,000-mile powertrain warranty",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion protection",
+      "Adds Includes 5-year/60,000-mile roadside assistance"
+    ],
+    "Sport": [
+      "Adds voice-activated navigation with turn-by-turn directions",
+      "Adds 3-D maps with pinch-to-zoom capability"
+    ],
+    "Limited": [
+      "Adds SYNC Connect with 4G LTE Wi-Fi hotspot for up to 10 devices",
+      "Adds remote vehicle start, stop, lock and unlock functionality",
+      "Adds fuel level and mileage monitoring via smartphone app",
+      "Adds SiriusXM Traffic and Travel Link with real-time traffic updates"
+    ]
+  }
+}

@@ -631,6 +631,19 @@ def merge_analytics_ep_into_vehicle(
     else:
         skipped.append("fuel_type: ep empty or not normalizable")
 
+    if is_effectively_empty(vehicle.get("fuel_type")):
+        blob = " ".join(
+            str(vehicle.get(k) or "")
+            for k in ("engine_description", "model", "title", "trim")
+        ).lower()
+        eng_ep = str(ep.get("engine") or "").lower()
+        if any(
+            tok in blob or tok in eng_ep
+            for tok in ("electric", " plug-in", "plug in", " bev", "ev ", " e-tron", " ix ", " i4", " i7", " i5", " i3")
+        ):
+            vehicle["fuel_type"] = "Electric"
+            filled.append("fuel_type")
+
     try:
         cc_raw = ep.get("city_fuel_economy")
         ch_raw = ep.get("highway_fuel_economy")
@@ -701,6 +714,19 @@ def merge_analytics_ep_into_vehicle(
             filled.append("condition")
         elif cond_label:
             vehicle["condition"] = cond_label[:80]
+            filled.append("condition")
+        elif vehicle.get("is_cpo") == 1:
+            vehicle["condition"] = "Certified"
+            filled.append("condition")
+        elif vehicle.get("is_cpo") == 0:
+            try:
+                mi = int(vehicle.get("mileage") or 0)
+            except (TypeError, ValueError):
+                mi = None
+            if mi is not None and mi < 500:
+                vehicle["condition"] = "New"
+            else:
+                vehicle["condition"] = "Used"
             filled.append("condition")
 
     eng = ep.get("engine")

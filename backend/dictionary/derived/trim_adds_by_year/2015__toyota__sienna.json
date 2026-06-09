@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|toyota|sienna",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "generic_toyota_sienna",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "XLE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      ". See footnote 24 in Disclosures section. 2"
+    ],
+    "SE": [
+      ". See footnote 19 in Disclosures section. 3"
+    ],
+    "XLE": [
+      "SiriusXM service at the end of your",
+      "HD Radio, and “Arc” logos are proprietary trademarks of iBiquity Digital Corp. 10. Always drive",
+      "subscription term selected. 23. Vehicle Stability Control (VSC) is an electronic system",
+      "in the key/fob, it can be costly to replace. If you lose a key or fob, your Toyota dealer can"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "SE": 1,
+      "LE": 1
+    }
+  }
+}

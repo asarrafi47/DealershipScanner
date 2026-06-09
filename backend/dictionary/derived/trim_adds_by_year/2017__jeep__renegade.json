@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2017|jeep|renegade",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_2017__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude"
+  ],
+  "adds_by_trim": {
+    "Latitude": [
+      "Adds Includes Uconnect Phone with Bluetooth Hands-Free Profile",
+      "Adds Features Electronic Stability Control",
+      "Adds Includes ParkSense and ParkView parking assistance",
+      "Adds Includes Forward Collision Warning system",
+      "Adds Features Selec-Terrain drive modes",
+      "Adds Includes SiriusXM satellite radio capability"
+    ],
+    "Trailhawk": [
+      "Adds low-range power transfer unit with 20:1 crawl ratio",
+      "Adds water fording capability rated in Owner's Manual"
+    ],
+    "Limited": [
+      "Adds Uconnect Access subscription services",
+      "Adds 9-1-1 Emergency Assistance Call button",
+      "Adds Roadside Assistance Service access",
+      "Adds Wi-Fi Hotspot capability with subscription",
+      "Adds Voice Text Reply and Voice Texting features"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|ford|ranger",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Ranger",
+  "ladder_id": "brochure_llm_2020__ford__ranger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARIAT",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "LARIAT": [
+      "8-way power heated front seats with leather seating front and rear",
+      "Leather-wrapped steering wheel, shift knob, and door-trim inserts",
+      "Dual 4.2-inch productivity screens in instrument cluster",
+      "Intelligent Access with push-button start",
+      "Auto-dimming rearview mirror",
+      "Universal garage door opener",
+      "LED headlamps, fog lamps, cargo lamp and taillamps",
+      "Power-folding sideview mirrors with power heated glass and turn signals",
+      "18-inch Machined Aluminum wheels with Stealth Gray-Painted Pockets",
+      "Rain-Sensing Windshield Wipers with wiper de-icer"
+    ],
+    "XLT": [
+      "4x4 drivetrain with electronic shift-on-the-fly transfer case",
+      "Electronic-locking rear differential",
+      "Ford Co-Pilot360 Technology with Pre-Collision Assist and Automatic Emergency Braking",
+      "BLIS with Trailer Coverage and Cross-Traffic Alert",
+      "Lane-Keeping System with Lane-Keeping Alert and Lane-Keeping Assist",
+      "Rear View Camera with Dynamic Hitch Assist",
+      "Auto High-Beam Headlamps",
+      "SYNC 3 with 8-inch LCD touchscreen, Apple CarPlay and Android Auto",
+      "Voice-Activated Touchscreen Navigation System with SiriusXM Traffic",
+      "17-inch Silver-Painted Aluminum wheels"
+    ]
+  }
+}

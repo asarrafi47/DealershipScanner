@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2022|chevrolet|express",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Express",
+  "ladder_id": "brochure_llm_2022__chevrolet__express",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL1",
+    "SL1"
+  ],
+  "adds_by_trim": {
+    "TL1": [
+      "All safety and driver assistance features standard across all configurations"
+    ],
+    "SL1": [
+      "4.3L V6 engine with 276 hp and 298 lb-ft torque standard",
+      "8-speed automatic transmission with Tow/Haul mode",
+      "4-wheel antilock disc brakes",
+      "Electronic Stability Control with Electronic Trailer Sway Control",
+      "Integrated rear vision camera in rearview mirror",
+      "Forward Collision Alert with Lane Departure Warning",
+      "Tire Pressure Monitoring System",
+      "Heavy-duty trailering equipment with dual connectors"
+    ]
+  }
+}

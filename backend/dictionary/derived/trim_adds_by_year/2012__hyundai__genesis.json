@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2012|hyundai|genesis",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "ladder_id": "brochure_llm_2012__hyundai__genesis",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5.0 R-spec",
+    "5.0",
+    "4.6",
+    "3.8"
+  ],
+  "adds_by_trim": {
+    "5.0 R-spec": [
+      "5.0L V8 engine with 429 hp (versus 5.0L in 5.0 trim)",
+      "R-spec exclusive styling and performance tuning",
+      "19-inch Premium Machined Finish Alloy Wheels",
+      "Exclusive exterior color availability including Black Noir Pearl"
+    ],
+    "5.0": [
+      "5.0L V8 engine producing 429 horsepower",
+      "18-inch Hyper Silver Alloy Wheels",
+      "Enhanced interior space with reduced front headroom (38.1 in vs 40.4 in)",
+      "20.3-gallon fuel tank capacity"
+    ],
+    "4.6": [
+      "4.6L V8 engine",
+      "18-inch Hyper Silver Alloy Wheels",
+      "4,132 lbs curb weight"
+    ],
+    "3.8": [
+      "3.8L V6 engine",
+      "17-inch Alloy Wheels",
+      "19 city / 29 highway / 22 combined EPA fuel economy",
+      "3,971 lbs curb weight",
+      "Standard Cashmere, Jet Black, or Saddle Leather interior colors",
+      "America's Best Warranty: 10 years/100,000 miles powertrain coverage"
+    ]
+  }
+}

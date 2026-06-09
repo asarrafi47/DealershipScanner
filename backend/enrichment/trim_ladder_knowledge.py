@@ -379,6 +379,8 @@ MODEL_TRIM_ORDER: dict[tuple[str, str], tuple[str, ...]] = {
         "M Competition",
         "M60i xDrive",
         "M60i",
+        "xDrive50i",
+        "M50i",
         "xDrive45e",
         "xDrive40i",
         "sDrive40i",
@@ -395,14 +397,20 @@ MODEL_TRIM_ORDER: dict[tuple[str, str], tuple[str, ...]] = {
         "eDrive40",
     ),
     ("bmw", "5series"): (
-        "M550i xDrive",
-        "550e xDrive",
-        "540i xDrive",
+        "M550i",
+        "550e",
         "540i",
-        "530i xDrive",
         "530i",
-        "530e xDrive",
         "530e",
+    ),
+    ("bmw", "3series"): (
+        "M340i",
+        "340i",
+        "330e",
+        "330i",
+        "328i",
+        "335i",
+        "320i",
     ),
     ("bmw", "ix"): (
         "xDrive50",
@@ -423,6 +431,49 @@ MODEL_TRIM_ORDER: dict[tuple[str, str], tuple[str, ...]] = {
         "Carbide",
         "Obsidian",
         "Launch Edition",
+    ),
+    ("jeep", "grandcherokee"): (
+        "Trackhawk",
+        "SRT",
+        "Summit Reserve",
+        "Summit",
+        "High Altitude",
+        "Overland",
+        "Trailhawk",
+        "Limited X",
+        "Limited",
+        "Laredo",
+    ),
+    ("honda", "accord"): (
+        "Touring Hybrid",
+        "Sport-L Hybrid",
+        "EX-L Hybrid",
+        "Sport Hybrid",
+        "SE",
+        "LX",
+    ),
+    ("jeep", "renegade"): (
+        "Trailhawk",
+        "Limited",
+        "Latitude",
+        "Sport",
+        "Altitude",
+    ),
+    ("chevrolet", "captivasport"): (
+        "LTZ",
+        "LT",
+        "LS",
+    ),
+    ("volvo", "ex90"): (
+        "Ultra",
+        "Ultimate",
+        "Plus",
+        "Core",
+    ),
+    ("volvo", "ex30"): (
+        "Ultra",
+        "Plus",
+        "Core",
     ),
     ("toyota", "bz"): (
         "Limited",
@@ -663,6 +714,11 @@ MODEL_TRIM_ORDER: dict[tuple[str, str], tuple[str, ...]] = {
         "Luxury",
         "Sport",
     ),
+    ("cadillac", "xt4"): (
+        "Premium Luxury",
+        "Sport",
+        "Luxury",
+    ),
     ("jeep", "grandwagoneer"): (
         "Summit Reserve",
         "Summit",
@@ -711,6 +767,159 @@ _DRIVETRAIN_INLINE_RE = re.compile(
     r"\b(?:2wd|4wd|awd|fwd|rwd|4x4|4x2)\b",
     re.I,
 )
+_DRIVETRAIN_SUFFIX_RE = re.compile(
+    r"\s+(?:xDrive|sDrive|eDrive|Quattro|4MATIC|AWD|RWD|2WD|4WD|FWD)\s*$",
+    re.I,
+)
+_BMW_SEDAN_MOTOR_DV_RE = re.compile(
+    r"^(M?\d{3}[ie])(?:\s+(?:xDrive|sDrive))?$",
+    re.I,
+)
+_BMW_SAV_DV_PREFIX_RE = re.compile(
+    r"^(?:xDrive|sDrive|eDrive)(\d{2}[ie])$",
+    re.I,
+)
+
+
+def drivetrain_merge_key(name: str, make: str, model: str | None = None) -> str:
+    """Normalize trim labels that differ only by drivetrain into one merge bucket."""
+    n = (name or "").strip()
+    if not n:
+        return ""
+
+    m = _BMW_SEDAN_MOTOR_DV_RE.match(n)
+    if m:
+        return re.sub(r"[^a-z0-9]+", "", m.group(1).lower())
+
+    compact = re.sub(r"[^a-z0-9]+", "", n.lower())
+    sm = _BMW_SAV_DV_PREFIX_RE.match(compact)
+    if sm:
+        return sm.group(1)
+
+    base = _DRIVETRAIN_SUFFIX_RE.sub("", n).strip()
+    for _ in range(4):
+        base = _DRIVETRAIN_INLINE_RE.sub(" ", base).strip()
+    base = re.sub(r"\s+", " ", base).strip()
+    return re.sub(r"[^a-z0-9]+", "", (base or n).lower())
+
+
+def drivetrain_merge_display_name(name: str, make: str, model: str | None = None) -> str:
+    """Preferred ladder label after merging xDrive / sDrive / 2WD variants."""
+    n = (name or "").strip()
+    if not n:
+        return n
+
+    m = _BMW_SEDAN_MOTOR_DV_RE.match(n)
+    if m:
+        motor = m.group(1)
+        if motor.upper().startswith("M"):
+            return motor[0].upper() + motor[1:]
+        return motor
+
+    compact = re.sub(r"[^a-z0-9]+", "", n.lower())
+    sm = _BMW_SAV_DV_PREFIX_RE.match(compact)
+    if sm:
+        return sm.group(1)
+
+    base = _DRIVETRAIN_SUFFIX_RE.sub("", n).strip()
+    for _ in range(4):
+        base = _DRIVETRAIN_INLINE_RE.sub(" ", base).strip()
+    base = re.sub(r"\s+", " ", base).strip()
+    return base or n
+
+
+def _prefer_merged_display_name(names: list[str], make: str, model: str | None = None) -> str:
+    """Pick the cleanest label when several drivetrain variants merge."""
+    if not names:
+        return ""
+    for n in names:
+        low = n.lower()
+        if not any(tok in low for tok in ("xdrive", "sdrive", "edrive", "4wd", "2wd", "4matic", "quattro")):
+            return drivetrain_merge_display_name(n, make, model)
+    return drivetrain_merge_display_name(names[0], make, model)
+
+
+def merge_drivetrain_ladder_steps(
+    steps: list[dict],
+    make: str,
+    *,
+    model: str | None = None,
+    adds_limit: int = 10,
+    alias_limit: int = 12,
+) -> list[dict]:
+    """Merge ladder rungs that differ only by drivetrain; union aliases and feature adds."""
+    if not steps:
+        return []
+
+    buckets: dict[str, dict] = {}
+    order: list[str] = []
+    raw_names: dict[str, list[str]] = {}
+
+    for step in steps or []:
+        name = str(step.get("name") or "").strip()
+        if not name:
+            continue
+        key = drivetrain_merge_key(name, make, model) or re.sub(r"[^a-z0-9]+", "", name.lower())
+        if key not in buckets:
+            buckets[key] = {"aliases": [], "adds": [], "year_min": 0, "year_max": 9999, "inventory_price_note": ""}
+            order.append(key)
+            raw_names[key] = []
+        raw_names[key].append(name)
+        entry = buckets[key]
+        price_note = str(step.get("inventory_price_note") or "").strip()
+        if price_note and not entry.get("inventory_price_note"):
+            entry["inventory_price_note"] = price_note
+
+        by_year = step.get("adds_from_year")
+        if isinstance(by_year, dict) and by_year and "adds_from_year" not in entry:
+            entry["adds_from_year"] = by_year
+
+        ymin = int(step.get("year_min") or 0)
+        ymax = int(step.get("year_max") or 9999)
+        if ymin:
+            entry["year_min"] = ymin if not entry["year_min"] else min(entry["year_min"], ymin)
+        if ymax >= 9999:
+            entry["year_max"] = 9999
+        elif entry["year_max"] < 9999:
+            entry["year_max"] = max(entry["year_max"], ymax)
+
+        for alias in step.get("aliases") or []:
+            astr = str(alias).strip()
+            if astr and astr not in entry["aliases"]:
+                entry["aliases"].append(astr)
+        seen_adds = {a.lower() for a in entry["adds"]}
+        for line in step.get("adds") or []:
+            s = str(line).strip()
+            if s and s.lower() not in seen_adds:
+                seen_adds.add(s.lower())
+                entry["adds"].append(s)
+
+    out: list[dict] = []
+    for key in order:
+        entry = buckets[key]
+        names = raw_names[key]
+        display = _prefer_merged_display_name(names, make, model)
+        aliases: list[str] = []
+        for variant in names + entry["aliases"]:
+            if variant != display and variant not in aliases:
+                aliases.append(variant)
+        aliases = list(dict.fromkeys(aliases))[:alias_limit]
+
+        row: dict = {
+            "name": display,
+            "aliases": aliases,
+            "adds": entry["adds"][:adds_limit],
+        }
+        if entry["year_min"]:
+            row["year_min"] = entry["year_min"]
+        if entry["year_max"] < 9999:
+            row["year_max"] = entry["year_max"]
+        if entry.get("adds_from_year"):
+            row["adds_from_year"] = entry["adds_from_year"]
+        if str(entry.get("inventory_price_note") or "").strip():
+            row["inventory_price_note"] = str(entry["inventory_price_note"]).strip()
+        out.append(row)
+    return out
 _DIMENSION_TAIL_RE = re.compile(
     r"\s*:?\s*\d+(?:\.\d+)?\s*(?:in|mm|inches)\b.*$",
     re.I,
@@ -768,6 +977,11 @@ _JUNK_TRIM_EXACT = frozenset(
         "and",
         "or",
         "the",
+        "na",
+        "n/a",
+        "bmw",
+        "none",
+        "unknown",
         "package",
         "packages",
         "options",
@@ -867,6 +1081,24 @@ TRIM_YEAR_WINDOWS: dict[tuple[str, str, str], tuple[int, ...]] = {
     ("ram", "1500", "trx"): (2021, 2023),
     ("gmc", "yukon", "at4"): (2021, 2030),
     ("gmc", "yukon", "denaliultimate"): (2022, 2030),
+    # --- Jeep Grand Cherokee WK2 / WL ---
+    ("jeep", "grandcherokee", "trackhawk"): (2018, 2021),
+    ("jeep", "grandcherokee", "srt"): (2012, 2021),
+    ("jeep", "grandcherokee", "limitedx"): (2020, 2021),
+    ("jeep", "grandcherokee", "summitreserve"): (2022, 2030),
+    # --- BMW X5 (G05) ---
+    ("bmw", "x5", "m60ixdrive"): (2024, 2030),
+    ("bmw", "x5", "m60i"): (2024, 2030),
+    ("bmw", "x5", "xdrive50i"): (2019, 2023),
+    ("bmw", "x5", "m50i"): (2019, 2023),
+    ("bmw", "x5", "xdrive45e"): (2021, 2030),
+    ("bmw", "x5", "45e"): (2021, 2030),
+    # --- BMW X6 (G06) ---
+    ("bmw", "x6", "m60ixdrive"): (2024, 2030),
+    ("bmw", "x6", "m60i"): (2024, 2030),
+    ("bmw", "x6", "xdrive50i"): (2020, 2023),
+    # --- Cadillac Escalade (5th gen) ---
+    ("cadillac", "escalade", "vseries"): (2022, 2030),
 }
 
 
@@ -898,13 +1130,41 @@ _GENERIC_TRIM_ADD_RE = re.compile(
 )
 
 
+_LADDER_PLACEHOLDER_PROSE_RE = re.compile(
+    r"(?:"
+    r"mid-level trim between\b"
+    r"|rugged or adventure-oriented\b"
+    r"|builds on .+ with additional comfort, technology, or appearance upgrades"
+    r"|top of this trim lineup\b"
+    r"|entry rung on this ladder\b"
+    r"|typically the most equipment\b"
+    r"|fewer optional upgrades than higher trims\b"
+    r"|positioned below .+ on the .+ trim ladder\b"
+    r"|positioned above .+ on the .+ trim ladder\b"
+    r"|highest trim level offered on the\b"
+    r"|base trim level on the\b"
+    r"|adds premium audio, larger display, and comfort upgrades over the mid trim\b"
+    r"|sits below .+ with fewer premium features\b"
+    r")",
+    re.I,
+)
+
+
 def is_generic_trim_add(text: str, trim_name: str | None = None) -> bool:
     """True for tautological placeholder lines that restate the trim name."""
     s = (text or "").strip()
-    if not s or len(s) < 20:
+    if not s:
+        return True
+    if _LADDER_PLACEHOLDER_PROSE_RE.search(s):
+        return True
+    if re.search(r"\bmarketing trim level from oem brochure\b", s, re.I):
+        return True
+    if re.search(r"\bauthorized\b.*\bcenter\b|\bbmwusa\.com\b", s, re.I):
         return True
     if _GENERIC_TRIM_ADD_RE.search(s):
         return True
+    if len(s) < 20:
+        return False
     if trim_name:
         tn = trim_name.strip()
         if tn and re.fullmatch(
@@ -920,20 +1180,159 @@ def is_generic_trim_add(text: str, trim_name: str | None = None) -> bool:
     return False
 
 
-def sanitize_trim_adds(adds: list[str] | None, trim_name: str | None = None) -> list[str]:
+def sanitize_trim_adds(
+    adds: list[str] | None,
+    trim_name: str | None = None,
+    *,
+    max_items: int = 6,
+) -> list[str]:
     """Drop placeholder / junk add lines; keep substantive feature bullets only."""
+    from backend.enrichment.trim_spec_extractor import is_junk_spec_text
+
     out: list[str] = []
     seen: set[str] = set()
     for raw in adds or []:
         line = str(raw or "").strip()
-        if not line or is_generic_trim_add(line, trim_name):
+        if not line or is_generic_trim_add(line, trim_name) or is_junk_spec_text(line):
             continue
         key = line.lower()
         if key in seen:
             continue
         seen.add(key)
         out.append(line[:240])
-    return out[:6]
+    if max_items <= 0:
+        return out
+    return out[:max_items]
+
+
+def sanitize_brochure_trim_adds(adds: list[str] | None, trim_name: str | None = None) -> list[str]:
+    """Brochure-sourced bullets: keep full OEM equipment list (minimal filtering)."""
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in adds or []:
+        line = str(raw or "").strip()
+        if not line or is_generic_trim_add(line, trim_name):
+            continue
+        if len(line) < 8:
+            continue
+        key = line.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(line[:280])
+    return out[:80]
+
+
+_TRIM_NAME_HINTS: tuple[tuple[tuple[str, ...], str], ...] = (
+    (("calligraphy",), "Flagship trim with premium materials, advanced driver assists, and exclusive design details."),
+    (("pinnacle", "ultimate"), "Highest trim level with the most luxury features and technology."),
+    (("limited", "platinum", "prestige", "premium plus"), "Upper trim with upgraded interior, expanded tech, and additional comfort features."),
+    (("n line", "n-line"), "Sport-styled trim with unique exterior accents, wheels, and interior touches."),
+    (("hellcat", "scat pack", "srt", "trd pro", "m sport", "m package"), "High-performance trim with upgraded power, brakes, and sport suspension."),
+    (("sel premium", "xle premium", "premium plus"), "Adds premium audio, larger display, and comfort upgrades over the mid trim."),
+    (("sel", "xle", "ex", "sv", "touring"), "Mid-level trim with added convenience features and nicer interior finishes."),
+    (("xrt", "trail", "off-road", "wilderness", "rubicon"), "Rugged or adventure-oriented trim with protective styling and capability-focused equipment."),
+    (("big horn",), "Well-equipped work-oriented trim with added convenience and appearance upgrades."),
+    (("laramie", "lariat", "ltz", "limited"), "Upper trim with leather-appointed seating, upgraded tech, and premium comfort features."),
+    (("sport", "rs", "r/t", "gt", "ss"), "Sport trim with performance styling, handling upgrades, or stronger engine options."),
+    (("se", "s ", " s", "lx", "ls", "base", "essential", "preferred"), "Entry-level trim with core standard equipment."),
+)
+
+
+def _trim_name_hint(trim_name: str) -> str | None:
+    raw = (trim_name or "").strip()
+    if not raw:
+        return None
+    if raw.lower() == "n":
+        return "Performance-oriented trim with sport tuning and stronger powertrain options."
+    low = f" {raw.lower()} "
+    for tokens, line in _TRIM_NAME_HINTS:
+        for tok in tokens:
+            t = tok.strip().lower()
+            if not t:
+                continue
+            if t == raw.lower() or t in raw.lower() or (tok.startswith(" ") and tok in low):
+                return line
+    return None
+
+
+def infer_trim_step_adds(
+    trim_name: str,
+    *,
+    index: int,
+    total: int,
+    lower_trim: str = "",
+    higher_trim: str = "",
+    make: str = "",
+    model: str = "",
+) -> list[str]:
+    """
+    Educational fallback when CSV/curated data has no feature bullets.
+    Describes trim tier position and common naming patterns — not model-specific OEM specs.
+    """
+    name = (trim_name or "").strip()
+    if not name or total < 2:
+        return []
+
+    out: list[str] = []
+    hint = _trim_name_hint(name)
+    if hint:
+        out.append(hint)
+
+    if index == 0:
+        out.append("Top of this trim lineup — typically the most equipment and premium content.")
+    elif index >= total - 1:
+        out.append("Entry rung on this ladder — fewer optional upgrades than higher trims.")
+
+    lower = (lower_trim or "").strip()
+    higher = (higher_trim or "").strip()
+    if lower and index < total - 1:
+        out.append(f"Builds on {lower} with additional comfort, technology, or appearance upgrades.")
+    elif higher and index > 0:
+        out.append(f"Sits below {higher} with fewer premium features but a lower typical price point.")
+
+    return sanitize_trim_adds(out, name)[:4]
+
+
+def fallback_trim_step_adds(
+    trim_name: str,
+    *,
+    index: int,
+    total: int,
+    make: str,
+    model: str | None = None,
+    lower_trim: str = "",
+    higher_trim: str = "",
+) -> list[str]:
+    """
+    Last-resort copy when OEM/brochure/inventory bullets are unavailable.
+    Keeps the trim ladder panel useful without implying specific factory equipment.
+    """
+    name = (trim_name or "").strip()
+    if not name or total < 2:
+        return []
+
+    out: list[str] = []
+    hint = _trim_name_hint(name)
+    if hint:
+        out.append(hint)
+
+    if not out:
+        mk = (make or "").strip()
+        mdl = (model or "").strip()
+        vehicle = f"{mk} {mdl}".strip() or "this model"
+        if index == 0:
+            out.append(f"Highest trim level offered on the {vehicle}.")
+        elif index >= total - 1:
+            out.append(f"Base trim level on the {vehicle}.")
+        elif higher_trim and lower_trim:
+            out.append(f"Mid-level trim between {lower_trim} and {higher_trim}.")
+        elif higher_trim:
+            out.append(f"Positioned below {higher_trim} on the {vehicle} trim ladder.")
+        elif lower_trim:
+            out.append(f"Positioned above {lower_trim} on the {vehicle} trim ladder.")
+
+    return sanitize_trim_adds(out, name)[:3]
 
 
 def _resolve_trim_model_key(make: str, model: str | None) -> tuple[str, str]:
@@ -945,6 +1344,8 @@ def _resolve_trim_model_key(make: str, model: str | None) -> tuple[str, str]:
             return mk, "wagoneer"
         if mod.startswith("grandwagoneer"):
             return mk, "grandwagoneer"
+        if "grandcherokee" in mod:
+            return mk, "grandcherokee"
     if mk == "mini":
         if mod in {"2door", "4door", "convertible", "cooper", "coopers", "hardtop"}:
             return mk, "cooper"
@@ -978,6 +1379,13 @@ def _resolve_trim_model_key(make: str, model: str | None) -> tuple[str, str]:
             return mk, "z4"
         if mod == "m2" or mod.startswith("m2"):
             return mk, "m2"
+    if mk == "chevrolet" and "captiva" in mod:
+        return mk, "captivasport"
+    if mk == "volvo":
+        if mod.startswith("ex90"):
+            return mk, "ex90"
+        if mod.startswith("ex30"):
+            return mk, "ex30"
     if mk == "chrysler" and mod == "pacifica":
         return mk, "pacifica"
     if mk == "audi":
@@ -1032,6 +1440,8 @@ def _resolve_trim_model_key(make: str, model: str | None) -> tuple[str, str]:
         return mk, "mazda3"
     if mk == "cadillac" and mod.startswith("escalade"):
         return mk, "escalade"
+    if mk == "cadillac" and mod.startswith("xt4"):
+        return mk, "xt4"
     if mk == "dodge" and mod.startswith("charger"):
         return mk, "charger"
     if mk == "dodge" and mod.startswith("challenger"):
@@ -1068,6 +1478,10 @@ _EPA_MODEL_SEARCH_NAMES: dict[tuple[str, str], str] = {
     ("mercedesbenz", "gla"): "GLA-Class",
     ("mercedesbenz", "glb"): "GLB-Class",
     ("mercedesbenz", "gls"): "GLS-Class",
+    ("mercedesbenz", "sl"): "SL-Class",
+    ("mercedesbenz", "slclass"): "SL-Class",
+    ("mercedesbenz", "slc"): "SLC-Class",
+    ("mercedesbenz", "slk"): "SLK-Class",
     ("mercedesbenz", "cclass"): "C-Class",
     ("mercedesbenz", "eclass"): "E-Class",
     ("mercedesbenz", "cle"): "CLE-Class",
@@ -1115,6 +1529,39 @@ def _model_trim_order(make: str, model: str | None) -> tuple[str, ...]:
     return MODEL_TRIM_ORDER.get(key, ())
 
 
+def _mercedes_motor_trim_label(raw: str) -> str | None:
+    """Normalize Mercedes motor badges (SL400, SL63 AMG, GLC300, etc.)."""
+    t = re.sub(r"\s+", " ", (raw or "").strip())
+    if not t:
+        return None
+
+    m = re.match(r"^(?:AMG\s+)?SL([CK]?)\s*(\d{2,3})\s+AMG\b", t, re.I)
+    if m:
+        body = f"SL{m.group(1).upper()}" if m.group(1) else "SL"
+        return f"{body} {m.group(2)} AMG"
+    m = re.match(r"^SL([CK]?)(\d{2,3})\s+AMG\b", t, re.I)
+    if m:
+        body = f"SL{m.group(1).upper()}" if m.group(1) else "SL"
+        return f"{body} {m.group(2)} AMG"
+    m = re.match(r"^SL([CK]?)\s*(\d{2,3})\b", t, re.I)
+    if m:
+        body = f"SL{m.group(1).upper()}" if m.group(1) else "SL"
+        return f"{body} {m.group(2)}"
+    m = re.match(r"^SL([CK]?)(\d{2,3})\b", t, re.I)
+    if m:
+        body = f"SL{m.group(1).upper()}" if m.group(1) else "SL"
+        return f"{body} {m.group(2)}"
+
+    m = re.search(
+        r"\b(AMG\s+[A-Z]{1,3}\s?\d{2,3}[a-z]?|GL[CESABLK]\s?\d{2,3}[a-z]?|C\s?\d{3}|E\s?\d{3}|S\s?\d{3})\b",
+        t,
+        re.I,
+    )
+    if m:
+        return re.sub(r"\s+", " ", m.group(1).strip())
+    return None
+
+
 def preserve_trim_label(raw: str, make: str, model: str | None = None) -> str:
     """Keep motor/series trim tokens that generic canonicalization would drop."""
     t = str(raw or "").strip()
@@ -1139,9 +1586,18 @@ def preserve_trim_label(raw: str, make: str, model: str | None = None) -> str:
         return ""
 
     mk, mod = _resolve_trim_model_key(make, model)
-    for known in _model_trim_order(make, model):
-        if re.search(rf"\b{re.escape(known)}\b", t, re.I):
-            return known
+    if mk == "mercedesbenz":
+        mb_label = _mercedes_motor_trim_label(t)
+        if mb_label:
+            return mb_label
+
+    model_trims = _model_trim_order(make, model)
+    if model_trims:
+        for known in sorted(model_trims, key=len, reverse=True):
+            if t.lower() == known.lower():
+                return known
+            if re.search(rf"\b{re.escape(known)}\b", t, re.I):
+                return known
 
     if mk == "bmw" and _BMW_MOTOR_TRIM_RE.match(t.replace(" ", "")):
         if re.match(r"^M60i(?:\s+xDrive)?$", t, re.I):
@@ -1149,6 +1605,13 @@ def preserve_trim_label(raw: str, make: str, model: str | None = None) -> str:
         if re.match(r"^Alpina\s+XB7$", t, re.I):
             return "Alpina XB7"
         return t
+    if mk == "bmw" and mod in {"x1", "x2", "x3", "x4", "x5", "x6", "x7"}:
+        sav = re.search(r"\bX\d\s+(\d{2}[ie])\b", t, re.I)
+        if sav:
+            return sav.group(1).lower()
+        sav_e = re.search(r"\bX\d\s+(\d{2}e)\b", t, re.I)
+        if sav_e:
+            return sav_e.group(1).lower()
     if mk == "bmw" and re.match(r"^[xs]Drive\d{2}[ie]$", t.replace(" ", ""), re.I):
         return t[0].lower() + t[1:] if t[0].isupper() else t
     if mk == "bmw" and re.match(r"^M\d{2,3}i$", t, re.I):
@@ -1199,13 +1662,9 @@ def preserve_trim_label(raw: str, make: str, model: str | None = None) -> str:
             return "Cooper S " + m.group(1).replace(" ", "")
 
     if mk == "mercedesbenz":
-        m = re.search(
-            r"\b(AMG\s+[A-Z]{1,3}\s?\d{2,3}[a-z]?|GL[CESAB]\s?\d{3}[a-z]?|C\s?\d{3}|E\s?\d{3}|S\s?\d{3})\b",
-            t,
-            re.I,
-        )
-        if m:
-            return re.sub(r"\s+", " ", m.group(1).strip())
+        mb_label = _mercedes_motor_trim_label(t)
+        if mb_label:
+            return mb_label
 
     if mk == "toyota" and mod in ("bz", "bzwoodland", "corolla", "corollahybrid", "corollahatchback"):
         m = re.match(r"^(AWD\s*)?(Woodland|LIMITED|Hybrid(?:\s+SE|\s+AWD|\s+SE\s+AWD)?|GR\s+Corolla|Hatchback(?:\s+XSE|\s+FX)?|SE|LE|XLE|XSE)\b", t, re.I)
@@ -1278,7 +1737,13 @@ def preserve_trim_label(raw: str, make: str, model: str | None = None) -> str:
             if re.search(rf"\b{re.escape(known)}\b", t, re.I):
                 return known
     if mk == "cadillac" and mod == "escalade":
+        if re.fullmatch(r"V\s*AWD", t, re.I):
+            return "V-Series"
         for known in ("V-Series", "Platinum", "Premium Luxury", "Luxury", "Sport"):
+            if re.search(rf"\b{re.escape(known)}\b", t, re.I):
+                return known
+    if mk == "cadillac" and mod == "xt4":
+        for known in ("Premium Luxury", "Sport", "Luxury"):
             if re.search(rf"\b{re.escape(known)}\b", t, re.I):
                 return known
 
@@ -1380,6 +1845,10 @@ def canonical_trim_name(raw: str, make: str, model: str | None = None) -> str:
     t = str(raw or "").strip()
     if not t:
         return ""
+    if _norm_make_key(make) == "bmw":
+        m = re.match(r"^(\d{2})i(\s|/|$)", t, re.I)
+        if m and 18 <= int(m.group(1)) <= 49:
+            t = re.sub(r"^(\d{2})i", rf"3{m.group(1)}i", t, count=1, flags=re.I)
     t = _COLON_SUFFIX_RE.sub("", t).strip()
     t = _PAREN_DIMENSION_RE.sub("", t).strip()
     t = _DIMENSION_TAIL_RE.sub("", t).strip()
@@ -1448,6 +1917,46 @@ def _bmw_luxury_sort_key(trim_name: str) -> tuple[int, int, int, int] | None:
     return None
 
 
+def _mercedes_luxury_sort_key(trim_name: str) -> tuple[int, int, int] | None:
+    """Sort Mercedes motor trims luxury-first (Maybach/600 → AMG → higher model numbers)."""
+    t = re.sub(r"\s+", " ", (trim_name or "").strip())
+    if not t:
+        return None
+    low = t.lower()
+
+    model_num: int | None = None
+    m = re.search(r"\b(?:GL[CESABLK]|CLS?|EQ[ESCB]|SL|G)\s*(\d{2,3})\b", t, re.I)
+    if m:
+        model_num = int(m.group(1))
+    if model_num is None:
+        m = re.search(r"\b(?:AMG\s+)?(?:\w+\s+)?(\d{2,3})\b", t, re.I)
+        if m:
+            model_num = int(m.group(1))
+
+    if "maybach" in low or (model_num is not None and model_num >= 600 and re.search(r"\bGLS\s*600\b", t, re.I)):
+        return (0, -(model_num or 600), 0)
+
+    if "amg" in low:
+        amg_num = model_num
+        if amg_num is None:
+            m2 = re.search(r"\bamg\s+(?:\w+\s+)?(\d{2,3})\b", t, re.I)
+            amg_num = int(m2.group(1)) if m2 else 63
+        return (1, -(amg_num or 63), 0)
+
+    if model_num is not None:
+        return (2, -model_num, 0)
+
+    return None
+
+
+def _mercedes_luxury_rank(trim_name: str) -> int | None:
+    key = _mercedes_luxury_sort_key(trim_name)
+    if key is None:
+        return None
+    tier, neg_num, suffix = key
+    return tier * 10_000 + (-neg_num) * 100 + suffix
+
+
 def _bmw_luxury_rank(trim_name: str) -> int | None:
     key = _bmw_luxury_sort_key(trim_name)
     if key is None:
@@ -1462,6 +1971,10 @@ def luxury_rank(trim_name: str, make: str, model: str | None = None) -> int:
         bmw_rank = _bmw_luxury_rank(trim_name)
         if bmw_rank is not None:
             return bmw_rank
+    if _norm_make_key(make) == "mercedesbenz":
+        mb_rank = _mercedes_luxury_rank(trim_name)
+        if mb_rank is not None:
+            return mb_rank
     order = ordered_trim_candidates(make, model)
     rank_map = {n.lower(): i for i, n in enumerate(order)}
     direct = rank_map.get((trim_name or "").lower())
@@ -1491,7 +2004,7 @@ def normalize_ladder_steps(
         name = canonical_trim_name(raw_name, make, model) or preserve_trim_label(raw_name, make, model)
         if not name or not trim_name_is_acceptable(name, make, model):
             continue
-        key = re.sub(r"[^a-z0-9]+", "", name.lower())
+        key = drivetrain_merge_key(name, make, model) or re.sub(r"[^a-z0-9]+", "", name.lower())
         aliases: list[str] = []
         for a in step.get("aliases") or []:
             raw = str(a).strip()
@@ -1503,6 +2016,7 @@ def normalize_ladder_steps(
         adds = [str(a).strip() for a in (step.get("adds") or []) if str(a).strip()]
         step_ymin = int(step.get("year_min") or 0)
         step_ymax = int(step.get("year_max") or 9999)
+        price_note = str(step.get("inventory_price_note") or "").strip()
 
         if key not in by_key:
             by_key[key] = {
@@ -1511,8 +2025,11 @@ def normalize_ladder_steps(
                 "adds": [],
                 "year_min": step_ymin,
                 "year_max": step_ymax,
+                "inventory_price_note": price_note,
             }
         entry = by_key[key]
+        if price_note and not entry.get("inventory_price_note"):
+            entry["inventory_price_note"] = price_note
         if step_ymin:
             entry["year_min"] = max(int(entry.get("year_min") or 0), step_ymin)
         if step_ymax < 9999:
@@ -1531,7 +2048,12 @@ def normalize_ladder_steps(
         key=lambda k: (
             (0, _bmw_luxury_sort_key(by_key[k]["name"]))
             if _norm_make_key(make) == "bmw" and _bmw_luxury_sort_key(by_key[k]["name"]) is not None
-            else (1, luxury_rank(by_key[k]["name"], make, model), by_key[k]["name"].lower())
+            else (
+                (0, _mercedes_luxury_sort_key(by_key[k]["name"]))
+                if _norm_make_key(make) == "mercedesbenz"
+                and _mercedes_luxury_sort_key(by_key[k]["name"]) is not None
+                else (1, luxury_rank(by_key[k]["name"], make, model), by_key[k]["name"].lower())
+            )
         ),
     )
     out: list[dict] = []
@@ -1546,6 +2068,11 @@ def normalize_ladder_steps(
                 "adds": entry["adds"][:6],
                 **({"year_min": int(entry["year_min"])} if int(entry.get("year_min") or 0) else {}),
                 **({"year_max": int(entry["year_max"])} if int(entry.get("year_max") or 9999) < 9999 else {}),
+                **(
+                    {"inventory_price_note": str(entry.get("inventory_price_note") or "").strip()}
+                    if str(entry.get("inventory_price_note") or "").strip()
+                    else {}
+                ),
             }
         )
     return out if len(out) >= 2 else []
@@ -1619,6 +2146,19 @@ _TRUCK_MODEL_TOKENS = frozenset(
     }
 )
 
+# Chevrolet make-wide order is truck/sports-only (ZR1, High Country, etc.).
+_CHEVROLET_MAKE_FALLBACK_MODEL_TOKENS = frozenset(
+    {
+        "silverado",
+        "tahoe",
+        "suburban",
+        "corvette",
+        "camaro",
+        "colorado",
+        "blazer",
+        "express",
+    }
+)
 
 def _make_fallback_trim_order(make: str, model: str) -> tuple[str, ...]:
     """Make-wide trim order when model-specific data is unavailable."""
@@ -1626,6 +2166,8 @@ def _make_fallback_trim_order(make: str, model: str) -> tuple[str, ...]:
     if mk == "bmw":
         return ()
     if mk == "toyota" and not any(tok in mod for tok in _TRUCK_MODEL_TOKENS):
+        return ()
+    if mk == "chevrolet" and not any(tok in mod for tok in _CHEVROLET_MAKE_FALLBACK_MODEL_TOKENS):
         return ()
     return MAKE_TRIM_ORDER.get(mk, ())
 

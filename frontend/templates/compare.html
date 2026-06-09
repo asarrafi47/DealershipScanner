@@ -6,6 +6,7 @@
     <title>Compare vehicles — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
 </head>
 <body class="compare-page" data-compare-ids="{{ compare_ids | join(',') }}">
 
@@ -99,9 +100,9 @@
 {% if cars %}
 <script type="application/json" id="compare-cars-json" nonce="{{ csp_nonce }}">{{ cars | tojson }}</script>
 {% endif %}
-<script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {% if show_compare_chat %}
-<script src="{{ url_for('static', filename='compare_chat.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='compare_chat.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 {% endif %}
 </body>
 </html>

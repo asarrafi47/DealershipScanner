@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2010,Ford,Explorer,Sport Trac 2WD,4.6L V8,4.6L V8,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,4.6,15,21,17,,,,,
+2010,Ford,Explorer,Sport Trac 2WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.0,14,20,16,,,,,
+2010,Ford,Explorer,Sport Trac 4WD,4.6L V8,4.6L V8,,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,4.6,14,19,16,,,,,
+2010,Ford,Explorer,Sport Trac 4WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.0,13,19,15,,,,,
+2010,Ford,Explorer,2WD,4.6L V8,4.6L V8,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,4.6,15,21,17,,,,,
+2010,Ford,Explorer,2WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,14,20,16,,,,,
+2010,Ford,Explorer,4WD,4.6L V8,4.6L V8,,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,4.6,14,19,16,,,,,
+2010,Ford,Explorer,4WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Four-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,13,19,15,,,,,

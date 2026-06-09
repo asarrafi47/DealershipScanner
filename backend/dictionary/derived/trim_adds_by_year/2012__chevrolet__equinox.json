@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2012|chevrolet|equinox",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2012__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome front and rear bumpers with bright lowers",
+      "Chrome door handles",
+      "Halogen uplevel projector-style headlamps",
+      "Power-programmable rear liftgate with fixed glass",
+      "Chrome manual-folding power-adjustable heated mirrors",
+      "Center roof rails",
+      "3.0L DOHC Direct Injection 264-hp V6 engine",
+      "Eight-way power front driver seat with lumbar and recline",
+      "Leather-appointed front and rear seats with perforated inserts",
+      "Driver and front passenger heated seats"
+    ],
+    "2LT": [
+      "Front halogen foglamps",
+      "Power-programmable rear liftgate with fixed glass",
+      "Body-color manual-folding power-adjustable heated mirrors",
+      "Power tilt/sliding sunroof with Express-Open feature",
+      "Rear vision camera",
+      "Leather-appointed front and rear seats with perforated inserts",
+      "Driver and front passenger heated seats"
+    ],
+    "1LT": [
+      "Side roof rails",
+      "Body-color manual-folding power-adjustable heated mirrors",
+      "Power tilt/sliding sunroof with Express-Open feature",
+      "Rear vision camera",
+      "Leather-wrapped steering wheel with mounted audio controls",
+      "Eight-way power front driver seat with lumbar and recline"
+    ],
+    "LS": [
+      "ECOTEC 2.4L DOHC Direct Injection 182-hp 4-cylinder engine",
+      "Front and rear body-color bumpers with charcoal lowers",
+      "Halogen headlamps",
+      "Manual rear liftgate with fixed glass",
+      "Black manual-folding power-adjustable mirrors",
+      "Integrated blind spot mirrors",
+      "Multi-Flex sliding rear seat with 60/40 split-folding seatback",
+      "Carpeted floor mats front and rear",
+      "Power windows with Express-Down feature and passenger lockout",
+      "Tilt and telescoping steering wheel"
+    ]
+  }
+}

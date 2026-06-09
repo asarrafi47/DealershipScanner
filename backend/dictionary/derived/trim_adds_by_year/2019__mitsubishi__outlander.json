@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2019|mitsubishi|outlander",
+  "year": 2019,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2019__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT S-AWC",
+    "SEL 2WD/S-AWC",
+    "SE 2WD/S-AWC",
+    "ES 2WD/AWC"
+  ],
+  "adds_by_trim": {
+    "GT S-AWC": [
+      "3.0L MIVEC SOHC 24-valve V6 engine with 224 horsepower",
+      "6-speed electronic automatic transmission",
+      "Standard S-AWC all-wheel control",
+      "LED high and low beam headlights standard",
+      "Auto on/off headlights",
+      "Chrome beltline molding",
+      "Power folding side-view mirrors",
+      "Power remote tailgate",
+      "Homelink remote mirror controls"
+    ],
+    "SEL 2WD/S-AWC": [
+      "LED fog lights",
+      "Automatic High Beam headlights optional",
+      "Chrome beltline molding",
+      "Power folding side-view mirrors",
+      "Silver roof rails",
+      "Forward Collision Mitigation optional",
+      "Lane Departure Warning optional",
+      "Adaptive Cruise Control optional"
+    ],
+    "SE 2WD/S-AWC": [
+      "SiriusXM Satellite Radio with 3-month subscription",
+      "Second Row USB port",
+      "Power folding side-view mirrors optional"
+    ],
+    "ES 2WD/AWC": [
+      "2.4L MIVEC SOHC 16-valve inline engine with 166 horsepower",
+      "Continuously Variable Transmission",
+      "710-watt Rockford Fosgate premium audio system with 9 speakers",
+      "7.0-inch touch panel display audio system",
+      "Front USB port",
+      "Auto-off headlights",
+      "Heated power side-view mirrors",
+      "Cargo tie-down hooks",
+      "ECO drive mode switch"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2011|honda|crv",
+  "year": 2011,
+  "make": "Honda",
+  "model": "CR-V",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX",
+    "SE",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

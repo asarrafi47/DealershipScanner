@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|chevrolet|suburban",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2015__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chevrolet MyLink 2 Radio with Navigation and 8-inch touchscreen",
+      "Rear-Seat Blu-ray Entertainment System with wireless headphones",
+      "22-inch painted-aluminum wheels with chrome inserts",
+      "Luxury Package: keyless entry, push-button start, power-fold third-row seat",
+      "Heated second-row seats and heated steering wheel",
+      "Memory power tilt and telescopic steering column",
+      "Outside heated power-adjustable power-folding mirrors",
+      "Front and Rear Park Assist with Rear Cross Traffic Alert",
+      "Side Blind Zone Alert and body-color trailer hitch closeout",
+      "Maximum Trailering Package availability"
+    ],
+    "LT": [
+      "20-inch chrome-aluminum wheels",
+      "Second-row power-release bucket seats",
+      "Sun and Entertainment and Destinations Package availability",
+      "Theft Protection Package with self-powered horn and glass breakage sensors"
+    ],
+    "LS": [
+      "5.3L EcoTec3 V8 engine with 355 hp and 383 lb.-ft. torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "3-passenger front 40/20/40 split-bench seat with power driver adjusters",
+      "Power-retractable assist steps with chrome accent strip",
+      "Second-row split-bench seat with power-release",
+      "Active 2-speed electronic Autotrac transfer case (4WD)"
+    ]
+  }
+}

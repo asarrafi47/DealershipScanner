@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2020|chevrolet|spark",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2020__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL2",
+    "VITCA",
+    "TL1",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "TL2": [
+      "Chrome door handles and chrome trim on liftgate and beltline",
+      "LED signature daytime running lamps",
+      "Front fog lamps with chrome rings",
+      "Roof-mounted silver-painted luggage rack",
+      "Black rocker moldings",
+      "Heated power-adjustable body-color mirrors",
+      "Rear Park Assist and Driver Confidence Package",
+      "Keyless Open and Start",
+      "Leather-wrapped steering wheel with silver accents",
+      "Leatherette seating with heated driver and front passenger seats"
+    ],
+    "VITCA": [
+      "Continuously Variable Transmission (CVT) option",
+      "Heated power-adjustable manual-folding body-color mirrors",
+      "Projector-type headlamps",
+      "Leather-wrapped steering wheel with silver accents",
+      "Leatherette seating material",
+      "Heated driver and front passenger seats",
+      "SiriusXM Radio All Access Package with 3-month trial"
+    ],
+    "TL1": [
+      "LED signature daytime running lamps",
+      "Heated power-adjustable manual-folding body-color mirrors",
+      "Electronic cruise control with Set and Resume Speed",
+      "Power door locks with automatic feature",
+      "Remote Keyless Entry",
+      "3-spoke steering wheel with audio, cruise and phone controls",
+      "Power windows with driver express-up/-down",
+      "6-speaker audio system",
+      "SiriusXM Radio All Access Package with 3-month trial",
+      "4G LTE Wi-Fi hotspot for up to seven devices"
+    ],
+    "SL": [
+      "Daytime running lamps (DRLs)",
+      "Body-color door handles",
+      "Manual-adjustable manual-folding black mirrors",
+      "Chrome-surround grille with halogen headlamps",
+      "Automatic exterior lamp control and projector-type headlamps",
+      "Rear aero spoiler",
+      "4-wheel antilock brakes with front disc/rear drum",
+      "Hill Start Assist",
+      "Rear vision camera",
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen, Bluetooth, Apple CarPlay and Android Auto"
+    ]
+  }
+}

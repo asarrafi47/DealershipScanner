@@ -1,0 +1,57 @@
+{
+  "ladder_id": "2025_ford_maverick_complete_options",
+  "make": "Ford",
+  "models": [
+    "Maverick",
+    "Maverick"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Lariat": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid drivetrain Parallel hybrid; The top-tier (Lariat) trim adds features to the mid-level trim, including Active"
+      }
+    ],
+    "Tremor": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 8-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Powertrain A hybrid engine with an eCVT gearbox is standard equipment on"
+      }
+    ],
+    "XLT": [
+      {
+        "label": "Engine Options",
+        "value": "Ford 8-speed 8F35 automatic (turbo)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "An optional package adds heated and power-adjustable seats, a leather-wrapped st"
+      }
+    ],
+    "XL": [
+      {
+        "label": "Engine Options",
+        "value": "Ford HF45 (hybrid); Cruise became a standard feature for 2023. The mid-level (XLT) trim adds fe"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "An optional package adds heated and power-adjustable seats, a leather-wrapped st"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Equipped with a 2.0-liter EcoBoost® engine, the compact pickup builds on the FX4 Off-Road"
+      }
+    ]
+  }
+}

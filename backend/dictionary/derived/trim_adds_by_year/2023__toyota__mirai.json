@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2023|toyota|mirai",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_llm_2023__toyota__mirai",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "highway/65 combined est. mpge38",
+      "limitations and details. 44. When the system is on, Electric Parking",
+      "tions and details. 47. The backup camera",
+      "the vehicle and use mirrors to confirm clearance. Certain vehicle and environmental",
+      "hybrid, and fuel cell and battery electric vehicles beginning with model year 2020, the hybrid (HV) battery is covered for 10 years from original date of first use or 150,000",
+      "vehicle model. Select applications may require an additional charge. Toyota Genuine Accessory Warranty",
+      "installer. See Toyota dealer for details. 54. Qi wireless charging may not be compatible with all mobile phones,",
+      "the vehicle’s immobilizer. The transponder chip is embedded",
+      "Emission coverages vary under Federal and California regulations."
+    ],
+    "XLE": [
+      "76 city/71 hwy/74 combined MPGe EPA rating",
+      "Base trim hydrogen fuel cell vehicle"
+    ]
+  }
+}

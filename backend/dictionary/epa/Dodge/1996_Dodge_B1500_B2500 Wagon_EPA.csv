@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1996,Dodge,B1500/B2500 Wagon,2WD,3.9L V6 ((FFS)),3.9L V6,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,3.9,13,16,14,,,,,
+1996,Dodge,B1500/B2500 Wagon,2WD,5.2L V8 ((FFS)),5.2L V8,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.2,11,13,12,,,,,
+1996,Dodge,B1500/B2500 Wagon,2WD,5.2L V8 ((FFS)),5.2L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.2,12,16,13,,,,,
+1996,Dodge,B1500/B2500 Wagon,2WD,5.9L V8 ((FFS)),5.9L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.9,11,16,13,,,,,

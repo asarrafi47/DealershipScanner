@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2011|lincoln|navigator",
+  "year": 2011,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_2011__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Select",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 18-inch 7-spoke aluminum wheels as standard",
+      "Adds Includes 6-year/70,000-mile Powertrain Limited Warranty with no deductible"
+    ],
+    "Limited": [
+      "1st- and 2nd-row premium leather-trimmed seats in Canyon with Charcoal Black piping",
+      "Charcoal Black embroidered Lincoln Star on all head restraints",
+      "Black carpeting and floor mats",
+      "Olive ash wood trim",
+      "Power moonroof",
+      "20-inch 7-spoke polished aluminum wheels with P275/55R20 all-season tires",
+      "LIMITED EDITION exterior badge",
+      "Power-folding sideview mirrors with body-color mirror caps"
+    ],
+    "Standard": [],
+    "Select": [
+      "Adds 20-inch 7-spoke polished aluminum wheels as available upgrade"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2019|infiniti|qx60",
+  "year": 2019,
+  "make": "Infiniti",
+  "model": "QX60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sensory",
+    "Luxe",
+    "Pure",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

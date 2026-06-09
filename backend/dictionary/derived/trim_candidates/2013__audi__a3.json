@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2013|audi|a3",
+  "year": 2013,
+  "make": "Audi",
+  "model": "A3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "SE",
+    "LE",
+    "A3"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

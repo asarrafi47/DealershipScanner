@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2018|fiat|124",
+  "year": 2018,
+  "make": "Fiat",
+  "model": "124",
+  "ladder_id": "brochure_llm_2018__fiat__124",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Abarth",
+    "Lusso",
+    "Classica"
+  ],
+  "adds_by_trim": {
+    "Abarth": [
+      "Blind Spot Monitoring with Cross-Path Detection",
+      "ParkView Rear Back-Up Camera with dynamic grid lines"
+    ],
+    "Lusso": [
+      "Blind Spot Monitoring with Cross-Path Detection",
+      "ParkView Rear Back-Up Camera with dynamic grid lines",
+      "Standard projector halogen headlamps with halogen daytime running lamps"
+    ],
+    "Classica": [
+      "Electronic Stability Control (ESC)",
+      "Dual-stage front air bags with seat-mounted side air bags",
+      "Steel safety frame with high-tensile-strength construction and crumple zones",
+      "Available ParkView Rear Back-Up Camera with dynamic grid lines"
+    ]
+  }
+}

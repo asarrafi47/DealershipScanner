@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|landrover|discovery",
+  "year": 2019,
+  "make": "landrover",
+  "model": "Discovery",
+  "ladder_id": "brochure_llm_2019__landrover__discovery",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE LUXURY",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "HSE LUXURY": [
+      "Premium interior trim and materials compared to HSE",
+      "Enhanced seat color and material combinations",
+      "Light Oyster/Espresso interior color option"
+    ],
+    "HSE": [
+      "Mid-level interior personalization options compared to SE",
+      "Enhanced seat configuration choices"
+    ],
+    "SE": [
+      "5 or 7-seat configuration",
+      "8-speed automatic transmission",
+      "Choice of 3.0L Si6 gasoline (340 hp) or 3.0L Td6 diesel (254 hp) engines",
+      "All-wheel drive permanent system",
+      "Terrain Response system",
+      "Hill Descent Control",
+      "USB charging ports for all three rows of seats",
+      "12V power outlets throughout cabin",
+      "Air suspension with off-road height adjustment",
+      "Integrated motor-on caliper park brake"
+    ]
+  }
+}

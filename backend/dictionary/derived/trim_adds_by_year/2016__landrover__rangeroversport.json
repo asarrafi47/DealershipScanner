@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2016|landrover|rangeroversport",
+  "year": 2016,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2016__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVR",
+    "5.0L V8 Supercharged",
+    "3.0L V6 Supercharged",
+    "3.0L V6 Turbocharged",
+    "3.0L V6 TD6 Diesel"
+  ],
+  "adds_by_trim": {
+    "SVR": [
+      "5.0L V8 Supercharged engine producing 550 horsepower",
+      "0-60 acceleration in 4.5 seconds",
+      "Top speed of 162 mph",
+      "Dynamic Response system for enhanced handling",
+      "Maximum torque of 502 lb-ft"
+    ],
+    "5.0L V8 Supercharged": [
+      "5.0L V8 Supercharged engine producing 510 horsepower",
+      "0-60 acceleration in 5.0 seconds",
+      "Top speed of 140 mph (155 mph available)",
+      "Maximum torque of 461 lb-ft at 2,500-5,500 rpm",
+      "Larger front brake rotors at 14.96 inches"
+    ],
+    "3.0L V6 Supercharged": [
+      "3.0L V6 Supercharged engine producing 380 horsepower",
+      "0-60 acceleration in 6.8 seconds",
+      "Maximum torque of 332 lb-ft at 3,500-5,000 rpm",
+      "Fuel tank capacity of 105 liters (27.7 US gallons)"
+    ],
+    "3.0L V6 Turbocharged": [
+      "3.0L V6 Turbocharged engine producing 340 horsepower",
+      "0-60 acceleration in 6.9 seconds",
+      "Maximum torque of 332 lb-ft at 3,500-5,000 rpm",
+      "Fuel tank capacity of 105 liters (27.7 US gallons)"
+    ],
+    "3.0L V6 TD6 Diesel": [
+      "3.0L V6 TD6 Diesel engine producing 254 horsepower",
+      "0-60 acceleration in 7.1 seconds",
+      "Maximum torque of 440 lb-ft at 2,000 rpm",
+      "Diesel Particulate Filter (DPF) standard",
+      "Fuel tank capacity of 89 liters (23.5 US gallons)"
+    ]
+  }
+}

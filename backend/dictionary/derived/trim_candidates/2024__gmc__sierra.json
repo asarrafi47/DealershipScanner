@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2024|gmc|sierra",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Sierra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali Ultimate",
+    "AT4X",
+    "Denali",
+    "AT4",
+    "SLT",
+    "Elevation",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2013|ram|commercial",
+  "year": 2013,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_llm_2013__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ram 1500",
+    "Ram 3500",
+    "Ram C/V Tradesman"
+  ],
+  "adds_by_trim": {
+    "Ram 1500": [
+      "Available 3.6-liter Pentastar V6 with TorqueFlite 8-speed automatic transmission",
+      "Available 5.7-liter HEMI V8 with VVT and Multi-Displacement System fuel saver technology",
+      "All-new class-exclusive available Active-Level Four-Corner Air Suspension System for automatic load-leveling",
+      "Class-leading 25 mpg highway fuel economy",
+      "All-new PowerNet electrical architecture",
+      "New levels of available Uconnect communications with full-color graphic interfaces",
+      "Wind tunnel-tested exterior with best-in-class aerodynamics",
+      "Available Ram 1500 HFE (High Fuel Efficiency) model"
+    ],
+    "Ram 3500": [
+      "Standard 5.7-liter HEMI V8 engine with competitive fuel efficiency",
+      "Available Cummins High Output Turbo Diesel with best-in-class 850 lb-ft of torque",
+      "Available class-exclusive six-speed manual transmission with Cummins Turbo Diesel",
+      "New maximum GVWR of 14,000 lb when properly equipped",
+      "New automatic front axle disconnect on 4x4 models for improved fuel efficiency",
+      "Larger maximum front GAWR up to 6,000 lb when properly equipped",
+      "Frames utilizing 50-KSI steel for increased robustness",
+      "New fully-integrated rear frame structural crossmember",
+      "Available factory-installed harness connector in bed for fifth-wheel or gooseneck hitches",
+      "Electronic Stability Control (ESC) standard on dual-rear-wheel models as class-only feature"
+    ],
+    "Ram C/V Tradesman": [
+      "Flex Fuel-capable Pentastar V6 with Variable Valve Timing (VVT) and 283 hp/260 lb-ft torque",
+      "Best-in-class cargo capacity up to 155.5 cubic feet with available premium load floor",
+      "Best-in-class cargo area length of 99.0 inches and width of 49.0 inches",
+      "Best-in-class payload capacity of 1,800 lb",
+      "Best-in-class towing of 3,600 lb when properly equipped",
+      "Best-in-class highway driving range up to 500 miles with full 20-gallon tank",
+      "Commercial-grade heavy-duty suspension system",
+      "Standard Electronic Stability Control (ESC) specially tuned for commercial users",
+      "Crisp rack and pinion steering with front anti-sway bar",
+      "Available premium load floor with three in-floor storage bins and flat load floor design"
+    ]
+  }
+}

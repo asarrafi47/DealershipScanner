@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2017|nissan|pathfinder",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2017__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch aluminum-alloy wheels",
+      "LED low-beam projector headlights",
+      "Chrome body side moldings",
+      "Dual panel panoramic moonroof",
+      "Bose Premium Audio System with 13 speakers and Acoustic Waveguide",
+      "Climate-controlled front seats with heating and cooling",
+      "Wood-tone interior trim",
+      "Tow hitch receiver with 7-pin wiring harness",
+      "NissanConnect with Navigation and Services",
+      "Forward Emergency Braking (FEB)"
+    ],
+    "SL": [
+      "8.0-inch color display with multi-touch control",
+      "Motion Activated Liftgate",
+      "4-way power adjustable passenger seat",
+      "Heated outside mirrors with reverse tiltdown feature",
+      "Heated front and second row outboard seats",
+      "Heated steering wheel",
+      "Metallic interior trim",
+      "120-volt AC power outlet",
+      "Stainless steel front kick plates",
+      "Blind Spot Warning (BSW) and Rear Cross Traffic Alert (RCTA)"
+    ],
+    "SV": [
+      "Smart Auto Headlights",
+      "Fog lights",
+      "Rear Sonar System",
+      "Nissan Intelligent Key with Remote Engine Start",
+      "8-way power adjustable driver seat",
+      "Power windows with one-touch auto-up/down",
+      "SiriusXM Traffic",
+      "Variable intermittent speed-sensitive windshield wipers",
+      "Auto-dimming rearview mirror",
+      "HomeLink Universal Transceiver"
+    ],
+    "S": [
+      "3.5-liter V6 engine with 284 hp and 259 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "6000 lbs standard towing capacity",
+      "All-Mode 4x4-i intuitive 4WD system",
+      "Hill start assist and hill descent control (4WD only)",
+      "18-inch aluminum-alloy wheels",
+      "LED Daytime Running Lights (DRL)",
+      "EZ Flex Seating System",
+      "Tri-Zone Automatic Temperature Control with Traction Control",
+      "Advanced Drive-Assist Display and NissanConnect"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2019|ford|taurus",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Taurus",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "Sport",
+    "Active"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

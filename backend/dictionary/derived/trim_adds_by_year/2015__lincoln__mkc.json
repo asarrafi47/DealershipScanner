@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2015|lincoln|mkc",
+  "year": 2015,
+  "make": "Lincoln",
+  "model": "MKC",
+  "ladder_id": "brochure_llm_2015__lincoln__mkc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Reserve",
+    "Select",
+    "Premiere"
+  ],
+  "adds_by_trim": {
+    "Reserve": [
+      "Enhanced THX II audio system with 14 speakers and 700 watts",
+      "Voice-activated navigation system with SiriusXM traffic and Travel Link",
+      "10-way power front-passenger seat",
+      "Bridge of Weir Deepsoft leather-trimmed seats",
+      "Heated and cooled front seats",
+      "Panoramic vista roof with power sunshade",
+      "BLIS with cross-traffic alert as standard"
+    ],
+    "Select": [
+      "Premium Sound System with 9 speakers",
+      "4-way power front-passenger seat",
+      "Heated front seats",
+      "Lincoln luxury soft-touch-trimmed seats",
+      "Panoramic vista roof with power sunshade available",
+      "Technology Package option with adaptive cruise and collision warning"
+    ],
+    "Premiere": [
+      "10-way power driver's seat with 2-way power lumbar and memory",
+      "Leather-wrapped Wollsdorf leather steering wheel",
+      "Power tilt/telescoping steering column",
+      "Sonata Spin aluminum accents on instrument panel and door panels",
+      "Dual bright exhaust tips",
+      "HID headlamps with LED signature lamps"
+    ]
+  }
+}

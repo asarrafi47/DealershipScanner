@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2011|nissan|maxima",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2011__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SV TECHNOLOGY PACKAGE",
+    "3.5 SV PREMIUM PACKAGE",
+    "3.5 SV SPORT PACKAGE",
+    "3.5 SV MONITOR PACKAGE",
+    "3.5 SV COLD PACKAGE",
+    "3.5 SV"
+  ],
+  "adds_by_trim": {
+    "3.5 SV TECHNOLOGY PACKAGE": [
+      "Nissan Hard Drive Navigation System with VGA color touch-screen monitor and voice recognition",
+      "XM NavTraffic® and XM NavWeather™ real-time traffic and weather",
+      "Zagat Survey® restaurant reviews integration",
+      "Streaming audio via Bluetooth® wireless technology",
+      "9.3 GB Music Box® hard drive with DVD playback capability",
+      "Digital compass in rearview mirror deleted with this package"
+    ],
+    "3.5 SV PREMIUM PACKAGE": [
+      "Dual Panel Moonroof with power retractable sunshades",
+      "Climate-controlled driver's seat with heating and cooling",
+      "Rear-window power sunshade and premium mood lighting",
+      "Rear windows one-touch auto-up/down",
+      "Eucalyptus wood-tone trim replacing metallic-link trim",
+      "Does not include dark chrome grille, smoked headlights, sport-tuned suspension, or 19\" wheels"
+    ],
+    "3.5 SV SPORT PACKAGE": [
+      "Sport-tuned suspension and trunk chassis reinforcement",
+      "19\" x 8\" aluminum-alloy wheels with P245/40VR19 V-rated all-season tires",
+      "Rear spoiler",
+      "Dark chrome grille and smoked headlights",
+      "High Intensity Discharge (HID) xenon headlights",
+      "Heated outside mirrors with reverse tilt-down feature",
+      "Auto-dimming driver-side outside mirror",
+      "Memory System for driver's seat, steering wheel, and outside mirrors",
+      "Parallel-seamed heated leather-wrapped steering wheel with paddle shifters",
+      "Power-tilt/telescoping steering column"
+    ],
+    "3.5 SV MONITOR PACKAGE": [
+      "7.0-inch color Information Center monitor",
+      "RearView Monitor",
+      "2 GB Music Box® with 800 MB music storage",
+      "USB connection port for iPod® interface",
+      "iPod® storage net inside center console",
+      "Auxiliary audio/video input jacks in center console"
+    ],
+    "3.5 SV COLD PACKAGE": [
+      "Heated front seats, steering wheel, and outside mirrors"
+    ],
+    "3.5 SV": [
+      "VQ35DE 3.5-liter DOHC 24-valve V6 engine with 290 hp and 261 lb-ft torque",
+      "Xtronic CVT® with DS mode and manual mode",
+      "Front-Wheel Drive",
+      "18\" x 8\" aluminum-alloy wheels with P245/45R18 V-rated all-season tires",
+      "Front independent strut-type and rear multi-link suspension with stabilizer bars",
+      "Vehicle-speed-sensitive power steering",
+      "12.60\" x 1.10\" front and 12.13\" x 0.63\" rear vented disc brakes",
+      "4-wheel Anti-lock Braking System (ABS) with Electronic Brake force Distribution and Brake Assist",
+      "7.0-inch color Information Center monitor",
+      "RearView Monitor, 2 GB Music Box®, USB iPod® interface, and auxiliary audio input"
+    ]
+  }
+}

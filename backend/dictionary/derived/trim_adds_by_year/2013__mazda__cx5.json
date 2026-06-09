@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|mazda|cx5",
+  "year": 2013,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2013__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "8-way power driver's seat with power lumbar support",
+      "40/20/40 dual split one-touch fold-down rear seatback",
+      "Leather-trimmed sport seats",
+      "Bi-Xenon HID headlamps with auto leveling and Adaptive Front-lighting System",
+      "Mazda Navigation System standard",
+      "Mazda Advanced Keyless Entry System standard",
+      "Auto-dimming rear view mirror with compass and HomeLink",
+      "Heated front seats with 3 levels"
+    ],
+    "Touring": [
+      "6-way power-adjustable driver's seat with manual lumbar support",
+      "60/40 split fold-down rear seatback",
+      "Premium cloth-trimmed sport seats",
+      "Rear window defogger with timer",
+      "Power sliding-glass moonroof available",
+      "Dual body-colored power outside mirrors with integrated turn signals",
+      "Halogen fog lights",
+      "Auto on/off headlights"
+    ],
+    "Sport": [
+      "6-way manually adjustable driver's seat",
+      "5-passenger seating",
+      "Cloth-trimmed sport seats",
+      "Air conditioning with pollen filter",
+      "Power windows with driver's one-touch up/down",
+      "Power door locks with 2-stage unlocking",
+      "Cruise control with steering-wheel-mounted controls",
+      "Halogen headlamps",
+      "17-inch aluminum alloy wheels with P225/65R17 tires",
+      "Blind Spot Monitoring System available"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2015|lexus|lx",
+  "year": 2015,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "2013_lexus_lx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Pandora Media, Inc., used with permission. 29. The Bluetooth® word mark and logos are registered trademarks owned by Bluetooth SIG, Inc. and any use of such",
+      "service at the end of your complimentary trial, the plan you",
+      ". HD Radio™ and the HD, HD Radio, and “Arc” logos are proprietary trademarks of iBiquity Digital Corp. 32. iPod® is a registered"
+    ],
+    "Premium": [
+      "Ventilated front seats",
+      "Head-up display",
+      "Interior ambient lighting",
+      "Adaptive suspension",
+      "Third-row seat option"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Limited": 3
+    }
+  }
+}

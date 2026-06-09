@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2022|nissan|leaf",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2022__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL PLUS",
+    "SV PLUS",
+    "SV",
+    "S PLUS",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "40 kWh lithium-ion battery",
+      "110 kW AC synchronous electric motor with 147 hp and 236 lb-ft torque",
+      "6.6 kW onboard charger",
+      "Quick Charge port - 50 kW",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Lane Intervention",
+      "Intelligent Blind Spot Intervention",
+      "NissanConnect® 8-inch color display with multi-touch control"
+    ],
+    "S PLUS": [
+      "62 kWh lithium-ion battery",
+      "160 kW AC synchronous electric motor with 214 hp and 250 lb-ft torque",
+      "High-output Quick Charge port - 100 kW",
+      "16-inch aluminum-alloy wheels",
+      "Front bumper chin spoiler"
+    ],
+    "SV": [
+      "Intelligent Cruise Control",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Fog lights",
+      "Heated leather-wrapped steering wheel",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "Heated outside mirrors",
+      "Hybrid Heater System",
+      "AM/FM audio system with six speakers"
+    ],
+    "SV PLUS": [
+      "ProPILOT Assist",
+      "Intelligent Around View® Monitor",
+      "Intelligent Driver Alertness",
+      "LED headlights with LED signature Daytime Running Lights",
+      "8-way power adjustable driver's bucket seat with 2-way adjustable lumbar",
+      "Heated front seats",
+      "NissanConnect® EV with Services powered by SiriusXM®",
+      "SiriusXM® Traffic and Travel Link with 3-month trial access"
+    ],
+    "SL PLUS": [
+      "Outside mirrors with integrated LED turn signal indicators",
+      "Leather-appointed seats",
+      "Removable cargo cover",
+      "Bose Energy Efficient Series Premium Audio System with seven speakers"
+    ]
+  }
+}

@@ -24,7 +24,11 @@ from pathlib import Path
 
 # Repo root → backend/dictionary (canonical EPA CSV dir; same folder ``enrich_from_dictionary.py`` uses).
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-DICTIONARY = _REPO_ROOT / "backend" / "dictionary"
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+from backend.enrichment.dictionary_paths import DICTIONARY_ROOT  # noqa: E402
+
+DICTIONARY = DICTIONARY_ROOT
 DEFAULT_EPA_CSV = Path("/tmp/vehicles.csv")
 
 DICT_COLUMNS = [
@@ -176,17 +180,21 @@ def process_epa_csv(epa_csv: Path, min_year: int, dictionary_dir: Path):
     print(f"  Total rows: {total}, kept (year >= {min_year}): {kept}")
     print(f"  Unique year+make+model files: {len(rows_by_file)}")
 
-    dictionary_dir.mkdir(exist_ok=True)
+    dictionary_dir.mkdir(parents=True, exist_ok=True)
     written = 0
     for file_key, file_rows in sorted(rows_by_file.items()):
-        fname = dictionary_dir / f"{file_key}_EPA.csv"
+        make_label = (file_rows[0].get("Make") if file_rows else "") or ""
+        make_dir = re.sub(r"[^\w\-. ]", "_", make_label.strip()).replace(" ", "_") or "Unknown"
+        out_dir = dictionary_dir / "epa" / make_dir if dictionary_dir.resolve() == DICTIONARY_ROOT.resolve() else dictionary_dir
+        out_dir.mkdir(parents=True, exist_ok=True)
+        fname = out_dir / f"{file_key}_EPA.csv"
         with open(fname, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=DICT_COLUMNS, extrasaction="ignore")
             writer.writeheader()
             writer.writerows(file_rows)
         written += 1
 
-    print(f"  Wrote {written} EPA CSV files to {dictionary_dir}/")
+    print(f"  Wrote {written} EPA CSV files under {dictionary_dir}/")
     return written
 
 

@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2011|chevrolet|corvette",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_llm_2011__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3ZR",
+    "1ZR",
+    "3LZ",
+    "2LZ",
+    "1LZ",
+    "4LT",
+    "3LT",
+    "2LT",
+    "1LT"
+  ],
+  "adds_by_trim": {
+    "3ZR": [
+      "6.2 Liter LS9 supercharged V8 engine with 638 hp",
+      "Magnetic Selective Ride Control with Tour and Sport modes",
+      "Dual-mode performance exhaust with 495 hp and aggressive sound"
+    ],
+    "1ZR": [
+      "6.2 Liter LS9 supercharged V8 engine with 638 hp",
+      "Magnetic Selective Ride Control with Tour and Sport modes"
+    ],
+    "3LZ": [
+      "7.0 Liter LS7 V8 engine with 505 hp and launch control",
+      "Z07 Ultimate Performance Package with carbon ceramic brakes and Michelin Pilot Sport tires",
+      "CFZ Carbon Fiber Package with carbon-fiber roof and rockers"
+    ],
+    "2LZ": [
+      "7.0 Liter LS7 V8 engine with 505 hp and launch control",
+      "Z07 Ultimate Performance Package with carbon ceramic brakes and Michelin Pilot Sport tires"
+    ],
+    "1LZ": [
+      "7.0 Liter LS7 V8 engine with 505 hp and launch control"
+    ],
+    "4LT": [
+      "Navigation system with 6.5-inch touchscreen, seven-speaker Bose sound system and XM Radio",
+      "In-dash six-disc CD changer",
+      "Magnetic Selective Ride Control with Tour and Sport modes",
+      "Dual-mode performance exhaust with 495 hp",
+      "Roof Package with body-color and transparent roof panels"
+    ],
+    "3LT": [
+      "Navigation system with 6.5-inch touchscreen, seven-speaker Bose sound system and XM Radio",
+      "In-dash six-disc CD changer",
+      "Magnetic Selective Ride Control with Tour and Sport modes",
+      "Roof Package options with body-color and transparent roof panels"
+    ],
+    "2LT": [
+      "Head-Up Display projecting speed, rpm, water temperature and g-meter data",
+      "Navigation system with 6.5-inch touchscreen and seven-speaker Bose sound system"
+    ],
+    "1LT": [
+      "6.2 Liter LS3 V8 engine with 430 hp and launch control",
+      "Six-way power driver seat with leather surfaces",
+      "Dual-zone automatic climate control and cabin air filtration",
+      "Active Handling System with Traction Control and ABS",
+      "Keyless Access with Push-Button Start",
+      "Xenon high-intensity discharge headlamps with automatic activation and foglamps",
+      "Dual power-adjustable heated sport mirrors with auto-dimming",
+      "Seven-speaker audio system with XM Radio three-month trial",
+      "OnStar with Directions and Connections Plan for six months"
+    ]
+  }
+}

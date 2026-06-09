@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|subaru|brz",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2014__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Limited": [
+      "Fog lights",
+      "Trunk spoiler",
+      "Alcantara and leather-trimmed upholstery",
+      "Heated front seats and side mirrors",
+      "Dual-zone digital climate control",
+      "Keyless Access & Start",
+      "Antitheft security system"
+    ],
+    "BRZ Premium": [
+      "200-hp direct-injected 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Close-ratio 6-speed manual transmission",
+      "Sport-tuned suspension",
+      "Multi-spoke 17-inch aluminum-alloy wheels",
+      "HID headlights",
+      "Cloth upholstery",
+      "8-speaker audio system with integrated touch-screen navigation system",
+      "Manually adjustable air-conditioning system"
+    ]
+  }
+}

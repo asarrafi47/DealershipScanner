@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2011|toyota|corolla",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2011__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S",
+    "LE",
+    "COROLLA"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "4-speed electronically controlled automatic transmission standard",
+      "P205/55R16 all-season tires available",
+      "Optional moonroof with adjusted headroom specs"
+    ],
+    "LE": [
+      "5-speed manual transmission standard",
+      "P195/65R15 all-season tires standard",
+      "4-speed automatic transmission available",
+      "P205/55R16 all-season tires available"
+    ],
+    "COROLLA": [
+      "1.8L DOHC 16-valve 4-cylinder engine with VVT-i standard",
+      "132 hp at 6000 rpm and 128 lb-ft torque at 4400 rpm",
+      "Electronic power steering with power-assisted rack-and-pinion",
+      "Power-assisted ventilated front disc brakes with ABS and EBD",
+      "5 passenger seating capacity",
+      "13.2-gallon fuel tank capacity"
+    ]
+  }
+}

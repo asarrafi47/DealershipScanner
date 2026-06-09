@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2012|porsche|cayenne",
+  "year": 2012,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "brochure_2012__porsche__cayenne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Turbo",
+    "Carrera",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds CDR audio system",
+      "Adds seat heating (front)",
+      "Adds interior package in black (high-gloss)",
+      "Adds three-spoke sport steering wheel with gearshift paddles",
+      "Adds metallic paint option"
+    ],
+    "Premium": [
+      "Upgraded to Bose® Surround Sound System",
+      "Upgraded to Porsche Communication Management (PCM) with navigation module",
+      "Adds seat heating (front and rear)",
+      "Adds walnut interior package",
+      "Adds heated three-spoke multifunction steering wheel in Walnut",
+      "Adds 6-disc CD changer",
+      "Adds 14-way power seats (front) with memory package"
+    ],
+    "Carrera": [
+      "Upgraded to Burmester® High-End Surround Sound System",
+      "Adds seat ventilation (front)",
+      "Adds heated three-spoke multifunction steering wheel in Anthracite Birch",
+      "Adds Anthracite Birch interior package",
+      "Adds 6-disc CD/DVD changer",
+      "Adds SiriusXM Satellite Radio® receiver",
+      "Adds Porsche Rear Seat Entertainment",
+      "Adds adaptive cruise control"
+    ],
+    "Turbo": [
+      "Adds Carbon Fiber interior package",
+      "Adds heated three-spoke multifunction steering wheel in Carbon Fiber",
+      "Adds Yachting Mahogany interior package",
+      "Adds HD Radio® receiver",
+      "Adds 8-speed Tiptronic S transmission",
+      "Adds Porsche Ceramic Composite Brakes (PCCB)",
+      "Adds Porsche Active Suspension Management (PASM) air suspension",
+      "Adds Bi-Xenon™ headlights with Porsche Dynamic Light System (PDLS)"
+    ]
+  }
+}

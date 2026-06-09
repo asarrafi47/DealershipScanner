@@ -1,0 +1,57 @@
+{
+  "ladder_id": "bmw_x3",
+  "make": "BMW",
+  "models": [
+    "X3",
+    "X3 M",
+    "X3 M40i",
+    "X3 xDrive30i",
+    "X3 sDrive30i",
+    "X3 xDrive28i"
+  ],
+  "year_min": 2011,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M Competition": [
+      {
+        "label": "Engine Options",
+        "value": "503 hp twin-turbo inline-six (X3 M Competition)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Track-focused M sport interior and exterior"
+      }
+    ],
+    "M": [
+      {
+        "label": "Engine Options",
+        "value": "473 hp twin-turbo inline-six"
+      }
+    ],
+    "M40i": [
+      {
+        "label": "Engine Options",
+        "value": "382 hp turbocharged inline-six"
+      }
+    ],
+    "xDrive30i": [
+      {
+        "label": "Engine Options",
+        "value": "248 hp turbocharged 2.0L with xDrive AWD"
+      }
+    ],
+    "xDrive30e": [
+      {
+        "label": "Engine Options",
+        "value": "Plug-in hybrid 2.0L with xDrive AWD; Combined turbo and electric output"
+      }
+    ],
+    "sDrive30i": [
+      {
+        "label": "Engine Options",
+        "value": "248 hp turbocharged 2.0L with rear-wheel drive"
+      }
+    ]
+  }
+}

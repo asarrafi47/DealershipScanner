@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2012|jeep|grandcherokee",
+  "year": 2012,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT",
+    "Summit",
+    "Overland",
+    "Limited",
+    "Laredo",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

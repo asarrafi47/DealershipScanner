@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2013|volkswagen|cc",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "CC",
+  "ladder_id": "brochure_llm_2013__volkswagen__cc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Executive V6 4MOTION",
+    "V6 Lux",
+    "Sport Lux",
+    "Lux",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Executive V6 4MOTION": [
+      "3.6L 24-valve DOHC V6 FSI engine with 280 hp",
+      "All-wheel drive 4MOTION system",
+      "Leather seating surfaces",
+      "Front seats with active ventilation and driver's massage function"
+    ],
+    "V6 Lux": [
+      "3.6L 24-valve DOHC V6 FSI engine with 280 hp",
+      "Leather seating surfaces",
+      "Front seats with active ventilation and driver's massage function",
+      "18-inch St. Louis alloy wheels"
+    ],
+    "Sport Lux": [
+      "6-speed DSG automatic transmission with Tiptronic and Sport mode",
+      "18-inch St. Louis alloy wheels",
+      "Steering-wheel-mounted Tiptronic paddle shifters"
+    ],
+    "Lux": [
+      "6-speed DSG automatic transmission with Tiptronic and Sport mode",
+      "12-way power-adjustable front seats with 4-way lumbar support and memory",
+      "Power tinted-glass sunroof with tilt function",
+      "RNS 315 navigation system with 5-inch color touchscreen"
+    ],
+    "Sport": [
+      "2.0L TSI turbocharged engine with 200 hp",
+      "6-speed manual transmission",
+      "17-inch Verme alloy wheels with sport suspension",
+      "Bi-Xenon high-intensity headlights with low-speed corner illumination",
+      "LED taillights and Adaptive Front-lighting System",
+      "Dual front and rear reading lights with illuminated glovebox",
+      "Climatronic dual-zone automatic climate control",
+      "Touchscreen Premium VIII sound system with HD Radio and 6-disc CD changer"
+    ]
+  }
+}

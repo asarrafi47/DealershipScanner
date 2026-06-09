@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2017|chevrolet|sonic",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "RS",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

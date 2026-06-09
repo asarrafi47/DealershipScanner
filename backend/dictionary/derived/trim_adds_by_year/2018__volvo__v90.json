@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2018|volvo|v90",
+  "year": 2018,
+  "make": "Volvo",
+  "model": "V90",
+  "ladder_id": "brochure_llm_2018__volvo__v90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V90 Cross Country with Luxury Package",
+    "V90 Cross Country"
+  ],
+  "adds_by_trim": {
+    "V90 Cross Country with Luxury Package": [
+      "Highly sophisticated Scandinavian refinement and intuitive technology enhancements"
+    ],
+    "V90 Cross Country": [
+      "18-inch alloy wheels (T5) and 19-inch alloy wheels (T6)",
+      "Cross Country mesh grille with charcoal lower grille",
+      "Charcoal wheel arch extensions and sill moldings",
+      "Bright integrated roof rails and high gloss black decor",
+      "8-inch (T5) or 12.3-inch (T6) digital driver display",
+      "9-inch Sensus touchscreen with voice control and high performance audio system",
+      "Sensus Connect with remote control buttons in steering wheel",
+      "Comfort seats with leather upholstery and 4-way power lumbar support",
+      "Dark walnut wood decor inlays with interior mid-level illumination",
+      "City Safety, Pilot Assist, Lane Keeping Mitigation, and Road Sign Information"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|acura|mdx",
+  "year": 2012,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "inventory_acura_mdx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Advance",
+    "Technology"
+  ],
+  "adds_by_trim": {
+    "Advance": [
+      "rade-in values obtained from Kelley Blue Book are estimates and the actual value of your vehicle may vary. The actual value of your t",
+      "EPA mileage estimates determined by Acura. Final",
+      "AcuraLink Real-Time Traffic and Weather™ are operable only in select markets within the 48 contiguous United States.",
+      "AcuraLink® Satellite Communication System does not require a subscription."
+    ],
+    "Technology": [
+      "Acura Navigation System with 3D view and GPS-linked climate control",
+      "AcuraLink Real-Time Traffic with exclusive street and freeway conditions",
+      "Traffic Rerouting and multi-view rear camera with dynamic guidelines",
+      "Blind spot information (BSI) system",
+      "Forward Collision Warning (FCW) system",
+      "Lane Departure Warning (LDW) system"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Technology": 0
+    }
+  }
+}

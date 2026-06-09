@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2014|honda|fit",
+  "year": 2014,
+  "make": "Honda",
+  "model": "Fit",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

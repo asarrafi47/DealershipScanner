@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2021|hyundai|tucson",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2021__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Tucson Ultimate",
+    "Tucson SE"
+  ],
+  "adds_by_trim": {
+    "Tucson Ultimate": [
+      "Pedestrian Detection added to Forward Collision-Avoidance Assist",
+      "High Beam Assist standard",
+      "Rain-sensing wipers standard",
+      "Smart Cruise Control with Stop & Go standard"
+    ],
+    "Tucson SE": [
+      "Forward Collision-Avoidance Assist standard",
+      "Lane Keeping Assist standard",
+      "Driver Attention Warning standard",
+      "Available 2.4L GDI engine",
+      "6-speed automatic transmission",
+      "Multi-link rear suspension",
+      "Available HTRAC All Wheel Drive with Active Cornering Control"
+    ]
+  }
+}

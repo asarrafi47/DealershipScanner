@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2011|chevrolet|tahoe",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_2011__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "SS",
+    "Z71",
+    "RS",
+    "LT",
+    "Custom",
+    "LS",
+    "Limited",
+    "Premium",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Vortec 5.3L V8 engine with Active Fuel Management and E85 FlexFuel capability",
+      "Adds Hydra-Matic six-speed automatic transmission with Tow/Haul mode",
+      "Adds Premium Cloth front bucket seats with six-way power driver and right-front passenger seats",
+      "Adds 17-inch aluminum wheels",
+      "Adds dual-stage frontal air bags with Passenger Sensing System and head-curtain side-impact air bags",
+      "Adds four-wheel antilock disc brakes",
+      "Adds StabiliTrak Electronic Stability Control System with Traction Control",
+      "Adds AM/FM stereo with CD/MP3 player",
+      "Adds XM Radio with three trial months",
+      "Adds eight-speaker sound system"
+    ],
+    "LE": [
+      "Upgraded to Bose nine-speaker sound system",
+      "Adds tri-zone automatic climate controls with individual climate settings"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "LS": [
+      "Adds Convenience Package with power-adjustable pedals, remote vehicle starter system, Ultrasonic Rear Parking Assist, and rearview camera system"
+    ],
+    "Custom": [
+      "Upgraded to Custom Leather-appointed heated front bucket seats with 10-way power driver and right-front passenger seats"
+    ],
+    "LT": [
+      "Adds power-remote liftgate",
+      "Adds Remote vehicle starter system",
+      "Upgraded to Custom Leather-appointed heated front bucket seats with 10-way power driver and right-front passenger seats"
+    ],
+    "RS": [],
+    "Z71": [],
+    "SS": [],
+    "LTZ": [
+      "Upgraded to Autoride Suspension Package",
+      "Upgraded to perforated leather-appointed heated and cooled front bucket seats with 12-way power, driver memory, driver/passenger power recline and lumbar support",
+      "Adds power-retractable assist steps with chrome accent strip",
+      "Adds power-adjustable pedals as standard",
+      "Adds Ultrasonic Rear Parking Assist as standard",
+      "Adds inside auto-dimming rearview mirror",
+      "Adds power-remote liftgate as standard",
+      "Adds AM/FM stereo with CD/MP3 player and touch-screen navigation radio",
+      "Upgraded to Bose Centerpoint Surround Sound 10-speaker system",
+      "Adds Side Blind Zone Alert"
+    ]
+  }
+}

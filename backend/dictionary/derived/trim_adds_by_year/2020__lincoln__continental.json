@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2020|lincoln|continental",
+  "year": 2020,
+  "make": "Lincoln",
+  "model": "Continental",
+  "ladder_id": "brochure_web_2020__lincoln__continental",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Continental"
+  ],
+  "adds_by_trim": {
+    "Black Label": [
+      "20-inch alloy wheels",
+      "LED headlights (replaces HID)",
+      "Premium leather seating upholstery",
+      "19-speaker Revel premium audio system",
+      "Premium maintenance with pickup and delivery",
+      "Complimentary car washes",
+      "Concierge service access"
+    ],
+    "Reserve": [
+      "19-inch alloy wheels (replaces 18-inch)",
+      "Dual-panel moonroof",
+      "Power-operated trunk lid",
+      "Leather seating upholstery (replaces leatherette)",
+      "Heated and ventilated 24-way power-adjustable front seats",
+      "Heated steering wheel",
+      "Heated rear seats",
+      "Rear USB charge ports",
+      "13-speaker Revel premium audio system",
+      "Semi-autonomous parking assist"
+    ],
+    "Continental": [
+      "18-inch alloy wheels",
+      "HID projector headlights",
+      "LED running lights and taillights",
+      "Heated power-folding side mirrors",
+      "Soft-close doors",
+      "Leatherette seating upholstery",
+      "Heated 10-way power-adjustable front seats",
+      "10-speaker audio system",
+      "Adaptive cruise control",
+      "Lane keep assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/continental/"
+}

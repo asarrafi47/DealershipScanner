@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2020|toyota|corolla",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Hybrid",
+    "Limited",
+    "TRD",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on SE Adds to or replaces features offered on SE",
+      "Powertrain Powertrain Powertrain",
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp @ 6600 rpm. \u2022 2.0L 4-cylinder Dynamic Force Engine with 169 hp @ 6600 rpm \u2022 2.0L 4-cylinder Dynamic Force Engine with 169 hp @ 6600 rpm",
+      "Normal and Sport driving modes \u2022 Normal and Sport driving modes \u2022 6-speed Intelligent Manual Transmission (iMT)",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) \u2022 Dynamic-Shift Continuously Variable Transmission (CVT) \u2022 29 city/36 highway/32 combined est. mpg47",
+      "31 city/40 highway/34 combined est. mpg47 \u2022 31 city/40 highway/34 combined est. mpg47 Exterior Features",
+      "Exterior Features Exterior Features \u2022 Power tilt/slide moonroof with sliding sunshade",
+      "High-grade LED headlights with LED accent lights and \u2022 Sport mesh black front grille with black bumper Interior Features",
+      "LED Daytime Running Lights (DRL) accent lighting and surround",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel",
+      "LED taillights and stop lights \u2022 Black heated power outside mirrors with turn signal indicators",
+      "Color-keyed heated power outside mirrors with \u2022 Black outside door handles hands-free phone controls"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "1.8L 4-cylinder engine with 139 hp @ 6100 rpm \u2022 1.8L 4-cylinder engine with 139 hp @ 6100 rpm \u2022 1.8L 4-cylinder engine with 139 hp @ 6100 rpm",
+      "Continuously Variable Transmission with intelligence \u2022 Continuously Variable Transmission with intelligence \u2022 Continuously Variable Transmission with intelligence",
+      "30 city/38 highway/33 combined est. mpg47 \u2022 30 city/38 highway/33 combined est. mpg47 \u2022 29 city/37 highway/32 combined est. mpg47",
+      "Exterior Features Exterior Features Exterior Features",
+      "LED headlights \u2022 Color-keyed heated power outside mirrors \u2022 High-grade LED headlights",
+      "LED taillights and stop lights \u2022 16-in. wide-vent steel wheels \u2022 Color-keyed heated power outside mirrors with turn signal",
+      "LED Daytime Running Lights (DRL) Interior Features indicators and Blind Spot Monitor (BSM)3",
+      "Black front grille with sport mesh insert \u2022 Power tilt/slide moonroof with sliding sunshade",
+      "Automatic climate control with dust and pollen filter",
+      "Color-keyed roof-mounted shark-fin antenna and push-button controls \u2022 16-in. alloy wheels"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

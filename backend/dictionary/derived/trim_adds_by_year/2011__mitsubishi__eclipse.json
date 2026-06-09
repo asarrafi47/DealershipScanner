@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2011|mitsubishi|eclipse",
+  "year": 2011,
+  "make": "Mitsubishi",
+  "model": "Eclipse",
+  "ladder_id": "brochure_llm_2011__mitsubishi__eclipse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT ll Performance",
+    "GT ll",
+    "Sport ll",
+    "GS"
+  ],
+  "adds_by_trim": {
+    "GT ll Performance": [
+      "3.8-liter V6 engine producing 265 hp and 262 lb-ft torque",
+      "5-speed Sportronic automatic transmission",
+      "11.2-inch ventilated rear disc brakes",
+      "Automatic climate control",
+      "Premium 650-watt Rockford Acoustic Design audio system with SIRIUS Satellite Radio"
+    ],
+    "GT ll": [
+      "High-Intensity Discharge projector-type headlamps",
+      "Parabolic fog lights",
+      "Power glass sunroof",
+      "Heated leather front seating surfaces",
+      "Power driver's seat",
+      "Bluetooth hands-free phone system",
+      "Steering wheel-mounted audio controls",
+      "Rear-view backup camera"
+    ],
+    "Sport ll": [
+      "650-watt Rockford Acoustic Design premium audio system with SIRIUS Satellite Radio",
+      "Heated leather front seating surfaces",
+      "Power driver's seat",
+      "Bluetooth hands-free phone system",
+      "Steering wheel-mounted audio controls",
+      "Rear-view backup camera"
+    ],
+    "GS": [
+      "2.4-liter 4-cylinder engine producing 162 hp and 162 lb-ft torque",
+      "4-speed Sportronic automatic transmission",
+      "Sport fabric upholstery",
+      "Manual air conditioning",
+      "140-watt Mitsubishi AM/FM/CD/MP3 audio system",
+      "Cruise control",
+      "Tilt steering column with sport-wrapped steering wheel"
+    ]
+  }
+}

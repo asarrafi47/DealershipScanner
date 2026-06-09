@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2017|honda|odyssey",
+  "year": 2017,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2017__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING ELITE",
+    "TOURING",
+    "EX-L",
+    "SE",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "TOURING ELITE": [
+      "Audio touch-screen infotainment system",
+      "Ultrawide Rear Entertainment System with HDMI technology",
+      "650-watt premium audio system with 12 speakers and 5.1 surround sound",
+      "HD Radio technology"
+    ],
+    "TOURING": [
+      "High-Intensity Discharge (HID) headlights with auto-on/off",
+      "Blind spot information system (BSI)",
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Multi-angle rearview camera with guidelines"
+    ],
+    "EX-L": [
+      "One-touch power moonroof with tilt feature",
+      "Power tailgate",
+      "Cool box",
+      "Leather-trimmed interior",
+      "Heated front seats",
+      "SiriusXM Radio subscription",
+      "Available Rear Entertainment System with 115-volt power outlet"
+    ],
+    "SE": [
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "Front passenger's seat with 4-way power adjustment",
+      "Push button start",
+      "3rd-row folding center armrest",
+      "HondaLink featuring Aha compatibility",
+      "Pandora compatibility"
+    ],
+    "EX": [
+      "Smart entry system with push button start",
+      "Vehicle Stability Assist (VSA) with Traction Control",
+      "Heated power side mirrors with reverse gear tilt-down",
+      "Driver's seat with 8-way power adjustment",
+      "i-MID with 8-inch high-resolution screen",
+      "Tri-zone automatic climate control system",
+      "Rear Entertainment System with 115-volt power outlet",
+      "Honda LaneWatch camera display"
+    ],
+    "LX": [
+      "248-hp 3.5-liter i-VTEC V-6 engine with 6-speed automatic transmission",
+      "Power sliding doors",
+      "Fog lights",
+      "17-inch and 18-inch alloy wheel options",
+      "One-motion 60/40 split 3rd-row Magic Seat",
+      "Rearview camera with guidelines",
+      "Bluetooth HandsFreeLink and streaming audio",
+      "USB Audio Interface with SMS text message function",
+      "Tilt and telescopic steering column",
+      "HondaVAC system"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2022|nissan|titan",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_2022__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum Reserve",
+    "Platinum",
+    "Nismo",
+    "Pro-4X",
+    "SV",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [],
+    "LE": [
+      "Adds Standard seating with cloth upholstery"
+    ],
+    "SE": [],
+    "Premium": [],
+    "Limited": [],
+    "SV": [
+      "Adds Intelligent Around View Monitor",
+      "Adds Front and Rear Sonar System",
+      "Adds Traffic Sign Recognition",
+      "Adds Intelligent Cruise Control",
+      "Adds 18\" dark-painted machine-finished aluminum-alloy wheels",
+      "Adds front tow hooks",
+      "Adds oil pan, fuel tank and transmission skid plates on 4x4",
+      "Adds body-color front and rear bumpers",
+      "Adds running boards with chrome accents",
+      "Upgraded to NissanConnect 9\" color touch-screen with door-to-door navigation"
+    ],
+    "Pro-4X": [
+      "Adds switch-operated 2-speed transfer case",
+      "Adds factory-applied spray-on bedliner",
+      "Adds class IV tow hitch receiver with 4-pin/7-pin wiring harness",
+      "Adds PRO-4X cloth embroidered seats with contrast stitching",
+      "Adds leather-wrapped steering wheel",
+      "Adds carpeted floor mats with PRO-4X logo"
+    ],
+    "Nismo": [],
+    "Platinum": [
+      "Adds front and rear sonar system",
+      "Adds power sliding back window with defroster",
+      "Adds Utili-track channel system with four tie-down cleats",
+      "Adds bed-mounted 120-volt AC power outlet",
+      "Adds LED under-rail bed and tailgate area lighting",
+      "Adds electronic tailgate lock",
+      "Adds rear bumper step assist"
+    ],
+    "Platinum Reserve": [
+      "Adds two-tone exterior paint option",
+      "Adds brushed satin-finished grille and tailgate finisher",
+      "Adds power-folding and auto-dimming driver's outside mirror",
+      "Adds chrome mirror caps",
+      "Adds power heated black outside mirrors with reverse tilt-down feature",
+      "Adds remote engine start system with intelligent climate control",
+      "Adds premium leather-appointed seats with Platinum Reserve logo",
+      "Adds integrated gooseneck hitch with 7-pin in-bed wiring harness on XD model"
+    ]
+  }
+}

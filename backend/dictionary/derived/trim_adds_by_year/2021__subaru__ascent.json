@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|subaru|ascent",
+  "year": 2021,
+  "make": "Subaru",
+  "model": "Ascent",
+  "ladder_id": "brochure_llm_2021__subaru__ascent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ascent Touring",
+    "Ascent Limited",
+    "Ascent Premium",
+    "Ascent"
+  ],
+  "adds_by_trim": {
+    "Ascent": [
+      "260-hp Direct-Injection Turbocharged SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 8-speed manual-mode paddle shifters",
+      "X-MODE with Hill Descent Control",
+      "18-inch aluminum-alloy wheels with silver finish",
+      "LED Steering Responsive Headlights with High Beam Assist",
+      "SUBARU STARLINK 6.5-inch Multimedia Plus with Apple CarPlay and Android Auto",
+      "EyeSight Driver Assist Technology",
+      "Tri-zone automatic climate control system",
+      "Rear-Vision Camera"
+    ],
+    "Ascent Premium": [
+      "5,000-lb towing capacity",
+      "18-inch aluminum-alloy wheels in gray with machine finish",
+      "Body-color exterior mirrors",
+      "Privacy glass",
+      "8-way power-adjustable driver seat",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "All-Weather Package: heated exterior mirrors, windshield wiper de-icer, 3-mode heated front seats",
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with SiriusXM",
+      "STARLINK Safety and Security enabled with Remote Engine Start",
+      "4G LTE Wi-Fi capability"
+    ],
+    "Ascent Limited": [
+      "20-inch aluminum-alloy wheels in dark gray with machine finish",
+      "LED fog lights",
+      "Body-color exterior mirrors with integrated turn signals",
+      "Lower door cladding with chrome accents",
+      "Power Rear Gate with vehicle lock button",
+      "Leather-trimmed upholstery",
+      "10-way power-adjustable driver seat with 2-position memory and thigh support",
+      "Dual-mode heated second-row seats and heated steering wheel",
+      "Second-row retractable sunshades",
+      "Reverse Automatic Braking and Keyless Access with Push-Button Start"
+    ],
+    "Ascent Touring": [
+      "Panoramic power moonroof",
+      "Automatic power-folding exterior mirrors with satin chrome",
+      "Chrome door handles",
+      "Gloss black grille",
+      "Java Brown or Slate Black leather-trimmed upholstery",
+      "Second-row captain's chairs for 7 passengers",
+      "SUBARU STARLINK 8.0-inch Multimedia Navigation with SiriusXM Traffic",
+      "Harman Kardon 792-watt-equivalent premium audio with 14 speakers",
+      "Smart Rear-View Mirror and 180-Degree Front View Monitor",
+      "3-mode ventilated front seats and 120-volt AC power outlet"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2011|toyota|yaris",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_llm_2011__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Power",
+    "Convenience"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Color-keyed front and rear underbody spoilers and rear spoiler",
+      "Integrated front fog lamps",
+      "Front and rear sport seats with sport fabric",
+      "Unique S badge",
+      "iPod interface with auto sound leveling",
+      "15-inch alloy wheels with P185/60R15 tires"
+    ],
+    "Power": [
+      "Power door locks and power windows with driver-side auto down",
+      "Color-keyed power outside mirrors",
+      "Remote keyless entry system with lock, unlock and panic function",
+      "Engine immobilizer",
+      "Integrated audio face plate on Sedan"
+    ],
+    "Convenience": [
+      "AM/FM CD player with MP3/WMA playback and XM compatible",
+      "Four speakers with auxiliary audio jack and CD text display",
+      "Leather-trimmed steering wheel and shift lever",
+      "Optitron instrumentation with speedometer, tachometer, LCD odometer and trip meters",
+      "60/40 split fold-down rear seat with reclining on Liftback",
+      "15-inch steel wheels with full wheel covers",
+      "Cruise control",
+      "Rear window wiper on Liftback"
+    ]
+  }
+}

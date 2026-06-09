@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2017|buick|regal",
+  "year": 2017,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2017__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "REGAL GS",
+    "REGAL PREMIUM",
+    "REGAL SPORT TOURING",
+    "REGAL GROUP"
+  ],
+  "adds_by_trim": {
+    "REGAL GS": [
+      "2.0L Turbo DOHC SIDI engine with 259 hp and 295 lb-ft torque",
+      "REH 19-inch V-spoke alloy wheels",
+      "HiPer Strut front suspension",
+      "GS-specific sport fascias, rockers, and badging",
+      "GS-specific dual exhaust integrated into rear fascia",
+      "Sport seats with heated steering wheel and sport pedals",
+      "Brembo front brakes 4-wheel anti-lock disc"
+    ],
+    "REGAL PREMIUM": [
+      "2.0L Turbo DOHC SIDI engine with 259 hp and 295 lb-ft torque",
+      "All-Wheel Drive capability",
+      "Dual-outlet stainless steel exhaust with bright tips",
+      "Driver Confidence Package 1 with Lane Change Alert and Side Blind Zone Alert",
+      "Front and Rear Park Assist",
+      "Audio System with Navigation",
+      "Bose Premium Audio System",
+      "Q6Y 18-inch chromed alloy wheels"
+    ],
+    "REGAL SPORT TOURING": [
+      "2.0L Turbo DOHC SIDI engine with 259 hp and 295 lb-ft torque",
+      "Dual-outlet stainless steel exhaust with bright tips",
+      "Rear spoiler",
+      "E-Z Key Passive Entry System",
+      "Remote Vehicle Start System",
+      "Push-Button Start",
+      "10-way power front passenger seating",
+      "Universal Garage-Door Opener"
+    ],
+    "REGAL GROUP": [
+      "2.0L Turbo DOHC SIDI engine with 259 hp and 295 lb-ft torque",
+      "Dual-outlet stainless steel exhaust with bright tips",
+      "E-Z Key Passive Entry System",
+      "Remote Vehicle Start System",
+      "Push-Button Start",
+      "10-way power front passenger seating",
+      "Universal Garage-Door Opener"
+    ]
+  }
+}

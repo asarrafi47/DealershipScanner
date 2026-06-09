@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2020|acura|rdx",
+  "year": 2020,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_2020__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology",
+    "A-Spec"
+  ],
+  "adds_by_trim": {
+    "A-Spec": [
+      "Adds Super Handling All-Wheel Drive (SH-AWD)",
+      "Adds AcuraWatch suite with Collision Mitigation Braking System (CMBS)",
+      "Adds Adaptive Cruise Control (ACC) with Low-Speed Follow",
+      "Adds Forward Collision Warning (FCW)",
+      "Adds Vehicle Stability Assist (VSA)",
+      "Adds Driver Attention Monitor",
+      "Adds HandsFreeLink connectivity",
+      "Adds AcuraLink smartphone integration"
+    ],
+    "Technology": [
+      "Upgraded to True Touchpad Interface infotainment system",
+      "Adds AcuraLink Real-Time Traffic Rerouting",
+      "Adds Jewel Eye LED headlights",
+      "Adds premium ELS Studio audio system"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2011|toyota|4runner",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "inventory_toyota_4runner",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "ervices mentioned (if installed) are dependent upon many factors. Use common sense when relying on information provided. S",
+      "Controls, Inc. 17. Vehicle Stability",
+      "driver steering input can all affect whether VSC will be effective in preventing a loss of control. Please see your Owner’s Manual for further details. 18. Brake Assist is designed to help the",
+      "response center is dependent upon the telematics device being in operative condition, cellular connection availability, navigation map data and GPS satellite signal reception, which can limit the ability to reach the",
+      "the vehicle. The engine will only start if the code in the transponder chip inside the key or Smart Key fob matches the code in",
+      "Key fob, it can be costly to replace. If you lose a key or Smart"
+    ],
+    "Premium": [
+      "Power tilt/slide moonroof with sunshade",
+      "Heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed, heated front seats with 8-way power-adjustable driver seat and lumbar",
+      "SofTex-trimmed 40/20/40 split reclining fold-flat second-row seat",
+      "Entune Premium Audio with Navigation, App Suite, and 6.1-inch touchscreen"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Premium": 0
+    }
+  }
+}

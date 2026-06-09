@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2020|chevrolet|tahoe",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2020__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier Plus Edition",
+    "RST 6.2L Performance Edition",
+    "RST Edition",
+    "LT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "Premier Plus Edition": [
+      "6.2L EcoTec3 V8 engine with 10-speed transmission",
+      "22-inch aluminum wheels (SEU)",
+      "Power sunroof",
+      "Power-retractable assist steps",
+      "Mahogany perforated leather-appointed seating with Jet Black accents",
+      "Second-row bucket seats with power-release",
+      "Head-Up Display",
+      "Rear-Seat Entertainment System with Blu-ray/DVD player",
+      "Cargo area organizer"
+    ],
+    "RST 6.2L Performance Edition": [
+      "6.2L EcoTec3 V8 engine with 10-speed transmission",
+      "Performance-calibrated Magnetic Ride Control suspension",
+      "Integrated trailer brake controller"
+    ],
+    "RST Edition": [
+      "22-inch aluminum wheels (SGK)",
+      "Unique Gloss Black sport grille with body-color surround",
+      "Body-color door handles and headlamp accents",
+      "Black bowtie emblems and mirror caps"
+    ],
+    "LT": [
+      "Chevrolet Infotainment System with Navigation and GPS",
+      "SiriusXM NavTraffic",
+      "Third-row power-folding 60/40 split-bench seat"
+    ],
+    "SL": [
+      "Chevrolet Infotainment System with 8-inch touchscreen and AM/FM stereo",
+      "HD Radio, Bluetooth audio streaming, Apple CarPlay and Android Auto compatibility",
+      "Third-row manual-folding 60/40 split-bench seat",
+      "Chevrolet Connected Access with 10 years of standard connectivity"
+    ]
+  }
+}

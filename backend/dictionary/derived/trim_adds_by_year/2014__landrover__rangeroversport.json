@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2014|landrover|rangeroversport",
+  "year": 2014,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2014__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Autobiography",
+    "Supercharged"
+  ],
+  "adds_by_trim": {
+    "Autobiography": [
+      "Ebony/Pimento interior color option with matching seats",
+      "Exclusive personal customization and specification touches"
+    ],
+    "Supercharged": [
+      "340 HP supercharged V6 engine with 6.9 second 0-60 acceleration"
+    ]
+  }
+}

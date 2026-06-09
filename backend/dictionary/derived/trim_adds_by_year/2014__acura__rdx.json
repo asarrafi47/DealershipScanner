@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|acura|rdx",
+  "year": 2014,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_llm_2014__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RDX with Performance Technology Package",
+    "RDX"
+  ],
+  "adds_by_trim": {
+    "RDX with Performance Technology Package": [
+      "Acura Navigation System with Voice Recognition and Zagat Survey ratings",
+      "8-inch LED backlit VGA display",
+      "Acura/ELS Surround Premium Audio System with HDD media storage and 10 speakers",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "GPS-linked solar-sensing dual-zone automatic climate control",
+      "Song By Voice and Note function music-reminder for XM Radio",
+      "Phone-book exchange for Bluetooth HandsFreeLink",
+      "Automated Appointments feature",
+      "Remote-linked power-operated tailgate",
+      "Xenon HID headlights and fog lights"
+    ],
+    "RDX": [
+      "273-hp 3.5-liter 24-valve SOHC i-VTEC V-6 engine with Variable Cylinder Management",
+      "6-speed automatic transmission with Sequential SportShift paddle shifters",
+      "Front-wheel drive or AWD with Intelligent Control System",
+      "4-wheel independent suspension with MacPherson strut front and multi-link rear",
+      "18-inch aluminum-alloy wheels with P235/60 R18 all-season tires",
+      "Vehicle Stability Assist with traction control and motion-adaptive steering",
+      "Dual-zone automatic climate control with air filtration",
+      "Keyless Access System with smart entry and pushbutton ignition",
+      "Bluetooth HandsFreeLink wireless telephone interface",
+      "5-inch color information display with compass and cruise control"
+    ]
+  }
+}

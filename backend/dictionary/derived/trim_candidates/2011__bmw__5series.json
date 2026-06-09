@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|bmw|5series",
+  "year": 2011,
+  "make": "BMW",
+  "model": "5 Series",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

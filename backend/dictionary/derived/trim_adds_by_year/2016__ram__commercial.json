@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|ram|commercial",
+  "year": 2016,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "generic_ram_commercial",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Tradesman",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Laramie Longhorn": [
+      "ased on 250/2500 and 350/3500 pickups. [9] B"
+    ],
+    "Limited": [
+      "ased on latest available competitive information. Class b"
+    ],
+    "Tradesman": [
+      "ased on light-duty pickups. [10] B"
+    ],
+    "Laramie": [
+      "Laramie badging",
+      "Chrome surround grille with chrome insert",
+      "Halogen bifunctional projector headlamps",
+      "Power multifunction trailer-tow mirrors with heated manual-folding chrome finish",
+      "Center stack woodgrain insert",
+      "Dual-zone temperature control air conditioning",
+      "18 x 8-inch polished aluminum wheels on 3500 SRW",
+      "19.5 x 6-inch polished aluminum wheels on 4500/5500",
+      "Electric shift part-time transfer case on 4x4"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 5,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Laramie Longhorn": 1,
+      "Laramie": 0,
+      "Tradesman": 1,
+      "Premium": 0
+    }
+  }
+}

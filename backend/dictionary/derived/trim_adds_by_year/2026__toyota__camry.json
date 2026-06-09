@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2026|toyota|camry",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "2026_toyota_camry",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LE",
+    "SE",
+    "Nightshade",
+    "XLE",
+    "XSE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "18-inch multi-spoke black-finished alloy wheels (replaces 16-inch on LE)",
+      "Gloss-black sport mesh front grille and black rear spoiler",
+      "Aluminum sport pedals and leather-trimmed shift knob",
+      "Sport-tuned suspension with multi-link rear and front strut tower bracing"
+    ],
+    "Nightshade": [
+      "19-inch satin black-finished alloy wheels",
+      "Black sport mesh grille, black window trim, and chrome CAMRY rear lettering",
+      "SofTex-and-fabric seats with Nightshade styling and aluminum sport pedals"
+    ],
+    "XLE": [
+      "19-inch smoked gray and black-finished alloy wheels",
+      "12.3-inch digital gauge cluster and leather-trimmed heated front seats",
+      "Premium LED combination taillights and chrome window trim",
+      "Qi-compatible wireless charging"
+    ],
+    "XSE": [
+      "18-inch two-tone multi-spoke machined and black-finished wheels",
+      "Dark metallic gray horizontal bar grille and sport-tuned suspension",
+      "Leather-trimmed heated steering wheel with paddle shifters",
+      "XSE sport calibration vs XLE comfort orientation"
+    ],
+    "LE": [
+      "2.5L 4-cylinder gas/electric hybrid with 225 net combined horsepower",
+      "Available electronic on-demand all-wheel drive with 232 net combined horsepower",
+      "Electronically controlled continuously variable transmission with sequential shift mode",
+      "Normal, Eco, EV3, and Sport drive modes",
+      "Bi-LED projector low- and high-beam headlights with Automatic High Beams",
+      "LED combination taillights with bulb turn signal and reverse light",
+      "Black horizontal bar front grille",
+      "16-inch 10-spoke silver-painted alloy wheels",
+      "Dual zone automatic climate control with air filter and humidity sensor",
+      "6-way manual-adjustable driver's seat and 60/40 split fold-down rear seat"
+    ]
+  }
+}

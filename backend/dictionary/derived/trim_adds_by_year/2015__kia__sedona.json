@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2015|kia|sedona",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Sedona",
+  "ladder_id": "brochure_llm_2015__kia__sedona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Limited",
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Limited": [
+      "Dual front and rear sunroofs with dual sliding sun-shades",
+      "Driver's memory seat system with settings for two drivers",
+      "Heated steering wheel",
+      "Premium full-grain Nappa leather seats for first and second row"
+    ],
+    "LX": [
+      "Dual front and rear 3-point seat belts",
+      "LATCH system for child seat installation",
+      "Side-impact door beams with reinforced A and B pillars",
+      "Front and rear crumple zones",
+      "Height-adjustable front seat-belt anchors",
+      "Front seat-belt pretensioners",
+      "Airbag and seat-belt sensors with advanced impact monitoring",
+      "Dual front, front seat-mounted side, and full-length side curtain airbags"
+    ],
+    "SX": [
+      "Heated steering wheel"
+    ],
+    "EX": [
+      "Two-tone Nappa leather seat trim available",
+      "Reclining second-row first-class lounge seats with sliding and adjustability",
+      "Aviation-style contoured headrests with adjustable armrests and footrests"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2022|subaru|impreza",
+  "year": 2022,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2022__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Impreza Limited 5-Door",
+    "Impreza Sport",
+    "Impreza Premium",
+    "Impreza"
+  ],
+  "adds_by_trim": {
+    "Impreza Premium": [
+      "Auto-on/off headlights",
+      "Welcome lighting",
+      "Lineartronic CVT with 7-speed manual-mode and paddle shifters",
+      "SI-DRIVE engine performance management system",
+      "16-inch alloy wheels",
+      "Halogen fog lights",
+      "Roof rails in silver finish (5-door)",
+      "Body-color exterior mirrors",
+      "All-Weather Package with heated mirrors and front seats",
+      "High-grade instrument cluster with color LCD display"
+    ],
+    "Impreza Sport": [
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with SiriusXM and Travel Link",
+      "5-speed manual transmission with short throw shifter (5-door) or optional Lineartronic CVT",
+      "Active Torque Vectoring",
+      "Sport-tuned suspension",
+      "18-inch alloy wheels",
+      "Body-color exterior mirrors with integrated turn signals",
+      "Trunk spoiler (sedan) and body-color side rocker spoilers",
+      "LED Daytime Running Lights",
+      "Active grille shutter",
+      "Sport instrument cluster and sport cloth interior with red stitching"
+    ],
+    "Impreza Limited 5-Door": [
+      "Blind-Spot Detection and Rear Cross-Traffic Alert",
+      "Reverse Automatic Braking",
+      "17-inch alloy wheels",
+      "LED Steering Responsive Headlights",
+      "LED fog lights",
+      "Automatic climate control system",
+      "6-way power-adjustable driver seat",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shifter handle with silver stitching"
+    ],
+    "Impreza": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic CVT",
+      "16-inch steel wheels with covers",
+      "Cloth upholstery with black simulated carbon fiber interior accents",
+      "6-way manually adjustable driver seat and 4-way front-passenger seat",
+      "Driver and front-passenger auto-up/down power windows",
+      "Automatic power door locks",
+      "SUBARU STARLINK 6.5-inch Multimedia with Apple CarPlay and Android Auto",
+      "Manually adjustable air conditioning, electronic cruise control, and Rear-Vision Camera"
+    ]
+  }
+}

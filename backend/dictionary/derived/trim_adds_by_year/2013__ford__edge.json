@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|ford|edge",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_llm_2013__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "3.7L Ti-VCT V6 engine with 305 hp and 280 lb-ft torque",
+      "6-speed SelectShift Automatic transmission with Sport Mode and paddle activation",
+      "Sport-tuned suspension",
+      "Charcoal Black leather-trimmed seating with Silver Smoke Metallic inserts and contrast stitching",
+      "Heated front bucket seats with 10-way power driver's seat with memory and 6-way power front-passenger seat"
+    ],
+    "Limited": [
+      "3.5L Ti-VCT V6 engine with 285 hp and 253 lb-ft torque",
+      "Heated front bucket seats with 10-way power driver's seat with memory and 10-way power front-passenger seat",
+      "Leather-trimmed seating surfaces",
+      "MyFord Touch with two configurable LCD displays and 8-inch LCD touch screen with media hub",
+      "Ambient lighting with brushed-aluminum door-sill scuff plates"
+    ],
+    "SEL": [
+      "10-way power driver's seat with memory feature",
+      "EasyFold rear seat back release",
+      "Auto-dimming rearview mirror",
+      "Dual-zone electronic automatic temperature control with particulate air filter",
+      "Ford SYNC voice-activated in-vehicle connectivity with Traffic, Directions and Information",
+      "Below-floor Cargo Management System and cargo net",
+      "Compass and high-gloss Black center stack finish"
+    ],
+    "SE": [
+      "17-inch spare wheel and tire",
+      "4-wheel disc ABS with Hill start assist",
+      "Power rack-and-pinion steering with manual fold-away power sideview mirrors",
+      "Front bucket seats with 4-way adjustable head restraints and 60/40 split fold-flat rear seat",
+      "Personal Safety System with dual-stage front airbags and safety belt pretensioners",
+      "AdvanceTrac with RSC and front-seat side airbags",
+      "Safety Canopy System with side-curtain airbags and rollover sensor",
+      "Bi-functional projector-beam halogen headlamps with variable-intermittent wipers",
+      "MyFord with 4.2-inch color LCD displays and 6-speaker AM/FM stereo with CD/MP3",
+      "Rocker moldings and privacy glass on rear windows"
+    ]
+  }
+}

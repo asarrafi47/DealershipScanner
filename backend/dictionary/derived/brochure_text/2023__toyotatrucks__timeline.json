@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2023|toyotatrucks|timeline",
+  "year": 2023,
+  "make": "ToyotaTrucks",
+  "model": "Timeline",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2023_ToyotaTrucks_Timeline_Brochure.pdf",
+  "page_count": 1,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

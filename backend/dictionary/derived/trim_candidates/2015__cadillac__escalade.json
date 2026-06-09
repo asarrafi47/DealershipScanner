@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2015|cadillac|escalade",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Luxury",
+    "Sport",
+    "Limited",
+    "Premium",
+    "Touring",
+    "LT",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

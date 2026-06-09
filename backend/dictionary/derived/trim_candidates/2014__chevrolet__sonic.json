@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2014|chevrolet|sonic",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "RS",
+    "LT",
+    "Custom",
+    "LS",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

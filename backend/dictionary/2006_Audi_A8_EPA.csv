@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2006,Audi,A8,A8,4.2L V8,Automatic (S6),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.2,16,22,18,,,,,,4.2L V8 Turbo,Turbocharged
-2006,Audi,A8,L,4.2L V8,Automatic (S6),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.2,16,22,18,,,,,,4.2L V8 Turbo,Turbocharged
-2006,Audi,A8,L,6.0L V12,Automatic (S6),All-Wheel Drive,Premium Gasoline,Large Cars,12,6.0,13,19,15,,,,,,6.0L V12 Turbo,Turbocharged

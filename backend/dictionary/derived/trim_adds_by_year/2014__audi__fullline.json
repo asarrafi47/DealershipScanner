@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|audi|fullline",
+  "year": 2014,
+  "make": "Audi",
+  "model": "Full Line",
+  "ladder_id": "brochure_web_2014__audi__fullline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "S4",
+    "S4 Premium",
+    "S4 Premium Plus",
+    "S4 Prestige"
+  ],
+  "adds_by_trim": {
+    "S4": [
+      "3.0L supercharged V6 engine with 333 hp",
+      "6-speed manual transmission standard",
+      "Quattro all-wheel drive system",
+      "17-inch alloy wheels",
+      "Cloth upholstery",
+      "6.5-inch MMI infotainment system",
+      "Audi Drive Select dynamic handling system",
+      "Power windows, locks, and mirrors"
+    ],
+    "S4 Premium": [
+      "Leather upholstery upgrade",
+      "Panoramic sunroof",
+      "Premium 10-speaker audio system",
+      "Park assist with rear view camera",
+      "18-inch alloy wheels",
+      "Automatic xenon headlights with LED daytime running lights"
+    ],
+    "S4 Premium Plus": [
+      "Bang & Olufsen premium sound system",
+      "Heated front and rear seats",
+      "Comfort package including seat heating",
+      "Upgraded navigation system with 7-inch display",
+      "Dynamic ride control suspension",
+      "Exterior carbon fiber accents"
+    ],
+    "S4 Prestige": [
+      "Full leather Nappa upholstery",
+      "Adaptive air suspension for enhanced comfort and handling",
+      "LED interior accent lighting",
+      "Bose surround sound system",
+      "Rearview camera with integrated parking system",
+      "Premium LED headlights with dynamic range extension"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/audi/full-line/"
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|nissan|titan",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "generic_nissan_titan",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "P1",
+    "Mu"
+  ],
+  "adds_by_trim": {
+    "Mu": [
+      "speaker (King cab only) P1 P2 ■",
+      "speaker (crew cab only) P1 P2 ■",
+      "KiNG Cab aND CRew Cab PRO-4X",
+      "stanDarD/long BED optional: 20\" x 8.0\" chrome-alloy wheels (part of hM)",
+      "up to 76.9/76.6 p275/60r20 Goodyear® Wrangler® tires (sl)",
+      "61.3/60.5 rear: Multi-leaf with solid dana® axle",
+      "registered trademark of dana corporation.® rancho is a",
+      "registered trademark of uniroyal Goodrich"
+    ],
+    "P1": [
+      "KiNG Cab aND CREw Cab PRO-4X"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 8.0,
+    "per_trim_add_counts": {
+      "Mu": 8
+    }
+  }
+}

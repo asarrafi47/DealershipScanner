@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2011|acura|rdx",
+  "year": 2011,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_llm_2011__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RDX SH-AWD with Technology Package",
+    "RDX SH-AWD",
+    "RDX with Technology Package",
+    "RDX"
+  ],
+  "adds_by_trim": {
+    "RDX SH-AWD with Technology Package": [
+      "Acura Navigation System with Voice Recognition, Traffic Rerouting, rearview camera and Zagat Survey ratings",
+      "Acura/ELS Surround 410-watt Premium Audio System with 10 speakers, 6-disc CD/DVD-Audio/MP3/WMA changer, Dolby Pro Logic II",
+      "AcuraLink Real-Time Traffic and Weather",
+      "GPS-linked, solar-sensing, dual-zone automatic climate control system",
+      "XM Radio with Note function music reminder",
+      "Bluetooth HandsFreeLink wireless telephone interface with phone-book exchange",
+      "Automated Appointments"
+    ],
+    "RDX SH-AWD": [
+      "Super Handling All-Wheel Drive (SH-AWD) with torque vectoring capability",
+      "Maximum torque distribution from 100:0 to 0:100 front-to-rear"
+    ],
+    "RDX with Technology Package": [
+      "Acura Navigation System with Voice Recognition, Traffic Rerouting, rearview camera and Zagat Survey ratings",
+      "Acura/ELS Surround 410-watt Premium Audio System with 10 speakers, 6-disc CD/DVD-Audio/MP3/WMA changer, Dolby Pro Logic II",
+      "AcuraLink Real-Time Traffic and Weather",
+      "GPS-linked, solar-sensing, dual-zone automatic climate control system",
+      "XM Radio with Note function music reminder",
+      "Bluetooth HandsFreeLink wireless telephone interface with phone-book exchange",
+      "Automated Appointments"
+    ],
+    "RDX": [
+      "2.3L turbocharged i-VTEC aluminum-alloy inline 4-cylinder engine with 240 hp and 260 lb-ft torque",
+      "5-speed automatic transmission with Sequential SportShift paddle shifters and grade logic control",
+      "Front-wheel drive with variable torque distribution",
+      "Dual-zone automatic climate control system with air filtration",
+      "Acura 360-watt Premium Sound System with AM/FM, 6-disc CD changer, MP3, WMA and 7 speakers",
+      "XM Radio and USB Audio Interface with iPod integration",
+      "Sport seats with perforated leather-trimmed interior and driver's 10-way power seat",
+      "Power moonroof with tilt feature, auto-open/close, auto-reverse and key-off operation",
+      "Auto-on/off xenon HID headlights with fog lights and LED directional signals",
+      "Vehicle Stability Assist (VSA) with traction control, 4-wheel ABS, dual-stage front airbags, side curtain airbags"
+    ]
+  }
+}

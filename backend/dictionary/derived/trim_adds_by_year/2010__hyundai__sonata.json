@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|hyundai|sonata",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "2010_hyundai_sonata",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "GLS",
+    "SE",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Popular Equipment Package Plus: 17-inch alloy wheels, fog lights, rear spoiler",
+      "Sport-tuned suspension and dual exhaust on V6 models",
+      "SE leather bolster/cloth sport seats and leather-wrapped steering wheel",
+      "Sunroof and upgraded audio available"
+    ],
+    "Limited": [
+      "Leather-trimmed interior with heated front seats and dual automatic climate control",
+      "17-inch alloy wheels with chrome inserts; sunroof",
+      "Infinity audio with 6-disc in-dash changer",
+      "Auto-dimming mirror with HomeLink and compass; navigation package available",
+      "Deletes sport suspension and rear deck spoiler for comfort orientation"
+    ],
+    "GLS": [
+      "Dual automatic climate controls with three-zone body-section buttons",
+      "8-way power driver seat with power lumbar support",
+      "Pillar-to-pillar panoramic sunroof",
+      "Steering-wheel-mounted cruise, audio and phone controls",
+      "Reinforced unibody construction with high-tensile steel",
+      "4-wheel ABS brakes with Brake Assist",
+      "Electronic Stability Control and Traction Control System",
+      "Active front head restraints",
+      "Intelligent airbag system with height and weight detection"
+    ]
+  }
+}

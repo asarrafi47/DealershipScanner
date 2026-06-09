@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2023_toyota_venza_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Venza",
+    "Venza"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L 2GR-FE V6 (GGV10/15)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The leather package was available for all models."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "2.7-liter front-wheel drive configuration"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "3.5-liter all-wheel drive configuration"
+      }
+    ]
+  }
+}

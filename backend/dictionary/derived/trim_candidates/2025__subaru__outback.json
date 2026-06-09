@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2025|subaru|outback",
+  "year": 2025,
+  "make": "Subaru",
+  "model": "Outback",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring XT",
+    "Touring",
+    "Wilderness",
+    "Limited XT",
+    "Limited",
+    "Onyx Edition",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

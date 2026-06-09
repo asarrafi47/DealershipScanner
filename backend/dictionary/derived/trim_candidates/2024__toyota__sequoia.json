@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2024|toyota|sequoia",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Capstone",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Capstone": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on Limited",
+      "Selectable driving and TOW/HAUL modes Selectable driving and TOW/HAUL modes Selectable driving and TOW/HAUL modes",
+      "Towing hitch receiver and wiring harness with 4-pin/7-pin Towing hitch receiver and wiring harness with 4-pin/7-pin Towing hitch receiver and wiring harness with 4-pin/7-pin",
+      "Integrated Trailer Brake Control (ITBC)3 Integrated Trailer Brake Control (ITBC)3 Integrated Trailer Brake Control (ITBC)3",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD",
+      "Exterior Features Exterior Features Exterior Features",
+      "LED headlights with Daytime Running Lights (DRL) Gray metallic horizontal-bar grille with chrome surround Dark-chrome-accented mesh grille with chrome surround",
+      "LED fog lights Chrome-plated outside mirror caps with dark-black Color-keyed door handles and dark-black",
+      "Premium LED headlights with LED Daytime Running",
+      "Three-zone automatic climate control Heated and ventilated front seats",
+      "Leather-trimmed seats with premium contrast stitching",
+      "Power tilt/slide moonroof with sliding sunshade Heated steering wheel"
+    ],
+    "Platinum": [
+      "Adds to or replaces features offered on Limited Adds to or replaces features offered on Platinum",
+      "Transmission with intelligence (ECT-i) with intelligence (ECT-i)",
+      "Electronically controlled locking rear differential Selectable driving and TOW/HAUL modes",
+      "Multi-Terrain Select (MTS), Crawl Control (CRAWL)4 Towing hitch receiver and wiring harness",
+      "TRD Pro off-road suspension with 2.5-in. FOX\u00ae16 Integrated Trailer Brake Control (ITBC)3",
+      "Internal Bypass coil-overs and rear remote-reservoir",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD",
+      "Exterior Features Exterior Features",
+      "Chrome-accented mesh grille with chrome surround",
+      "Black \"TOYOTA\" heritage grille with integrated LED light",
+      "Automatic power-extending running boards",
+      "Chrome-plated outside mirror caps with satin-chrome-"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

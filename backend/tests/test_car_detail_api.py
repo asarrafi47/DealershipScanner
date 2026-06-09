@@ -53,6 +53,39 @@ def test_api_car_detail_ok(monkeypatch) -> None:
     assert body["gallery_images"] == ["https://example.com/photo1.jpg"]
     assert body["logged_in"] is False
     assert body["market_intel"] is None
+    assert body.get("dealer_map") is None
+
+
+def test_api_car_detail_includes_dealer_google_rating(monkeypatch) -> None:
+    car = _sample_car(42)
+    car["dealership_registry_id"] = 5
+    monkeypatch.setattr("backend.main.get_car_by_id", lambda cid, **kw: car if cid == 42 else None)
+    monkeypatch.setattr(
+        "backend.main.prepare_car_detail_context",
+        lambda _raw: {"verified_specs": {}, "gallery_images": []},
+    )
+    monkeypatch.setattr(
+        "backend.db.dealerships_db.get_dealership_by_id",
+        lambda _id: {
+            "id": 5,
+            "name": "Rated Motors",
+            "city": "Charlotte",
+            "state": "NC",
+            "latitude": 35.0,
+            "longitude": -80.8,
+            "google_rating": 4.7,
+            "google_review_count": 410,
+            "google_rating_fetched_at": "2026-06-01T12:00:00+00:00",
+        },
+    )
+
+    with app.test_client() as client:
+        rv = client.get("/api/cars/42")
+    assert rv.status_code == 200
+    body = rv.get_json()
+    dealer_info = body.get("dealer_info") or {}
+    assert dealer_info.get("google_rating") == 4.7
+    assert dealer_info.get("google_review_count") == 410
 
 
 def test_api_car_detail_market_intel_when_paid(monkeypatch) -> None:

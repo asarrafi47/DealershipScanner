@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2010|porsche|911",
+  "year": 2010,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2010__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "911 Turbo S4",
+    "911 Turbo 4",
+    "911 Targa S4",
+    "911 Targa 4",
+    "911 Cabriolet S4",
+    "911 Cabriolet 4",
+    "911 Cabriolet S",
+    "911 Cabriolet",
+    "911 Carrera S4",
+    "911 Carrera 4",
+    "911 Carrera S"
+  ],
+  "adds_by_trim": {
+    "911 Turbo S4": [
+      "Powerkit Carrera S engine upgrade to 300 kW (408 hp) with sports exhaust system"
+    ],
+    "911 Turbo 4": [
+      "Powerkit Carrera S engine upgrade to 300 kW (408 hp) with sports exhaust system"
+    ],
+    "911 Carrera S": [
+      "HomeLink programmable garage door opener",
+      "Cruise control",
+      "Preparation for vehicle tracking system",
+      "Fire extinguisher",
+      "Floor mats",
+      "Comfort seats with driver memory",
+      "Seat heating",
+      "Seat ventilation",
+      "Heated steering wheel operable separately",
+      "Sport Chrono Package Plus"
+    ],
+    "911 Targa S4": [],
+    "911 Targa 4": [],
+    "911 Cabriolet S4": [],
+    "911 Cabriolet 4": [],
+    "911 Cabriolet S": [],
+    "911 Cabriolet": [],
+    "911 Carrera S4": [
+      "Electric tilt/slide sunroof deleted (cabriolet-specific)",
+      "Rear wiper not available",
+      "Roof Transport System not available"
+    ],
+    "911 Carrera 4": [
+      "Electric tilt/slide sunroof deleted (cabriolet-specific)",
+      "Rear wiper not available",
+      "Roof Transport System not available"
+    ]
+  }
+}

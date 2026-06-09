@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2020|subaru|impreza",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2020__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Impreza Limited",
+    "Impreza Sport",
+    "Impreza Premium",
+    "Impreza"
+  ],
+  "adds_by_trim": {
+    "Impreza Limited": [
+      "17 x 7.0-inch dark gray aluminum-alloy wheels with machine finish",
+      "205/50 R17 89V all-season tires",
+      "Lineartronic CVT transmission standard"
+    ],
+    "Impreza Sport": [
+      "18 x 7.5-inch black aluminum-alloy wheels with machine finish",
+      "225/40 R18 88V all-season tires",
+      "Sport-tuned rear stabilizer bar",
+      "Brake Override System standard",
+      "Active Torque Vectoring"
+    ],
+    "Impreza Premium": [
+      "16 x 6.5-inch black aluminum-alloy wheels with machine finish",
+      "Lineartronic CVT transmission standard"
+    ],
+    "Impreza": [
+      "2.0-liter DOHC 16-valve horizontally-opposed 4-cylinder SUBARU BOXER engine with DAVCS",
+      "152 hp @ 6,000 rpm and 145 lb-ft torque @ 4,000 rpm",
+      "Fully synchronized 5-speed manual transmission with Incline Start Assist",
+      "Subaru Symmetrical All-Wheel Drive",
+      "16 x 6.5-inch steel wheels with covers",
+      "205/55 R16 89V all-season tires",
+      "4-wheel independent suspension with MacPherson strut front",
+      "4-wheel disc ventilated brakes with ABS and EBD",
+      "Vehicle Dynamics Control with Traction Control System",
+      "Electric power-assisted rack-and-pinion steering"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2011_mercedes-benz_slk-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SLK-Class",
+    "SLK-Class"
+  ],
+  "year_min": 2009,
+  "year_max": 2013,
+  "source": "generated",
+  "trims": {
+    "SLK 350": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Manual 6-spd"
+      }
+    ],
+    "SLK 300": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

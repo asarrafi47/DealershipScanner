@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Mercedes-Benz,E-Class,E320 Cdi,Diesel 3.2L V6 Diesel,3.2L V6 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Diesel,Midsize Cars,6,3.2,23,33,27,,,,,
+2006,Mercedes-Benz,E-Class,E350,3.5L V6,3.5L V6 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.5,17,25,20,,,,,
+2006,Mercedes-Benz,E-Class,E350 4matic,3.5L V6,3.5L V6 Turbo,Turbocharged,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.5,16,23,19,,,,,
+2006,Mercedes-Benz,E-Class,E500,5.0L V8,5.0L V8 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,15,23,18,,,,,
+2006,Mercedes-Benz,E-Class,E500 4matic,5.0L V8,5.0L V8 Turbo,Turbocharged,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,14,19,16,,,,,
+2006,Mercedes-Benz,E-Class,E55 AMG,5.4L V8,5.4L V8 Turbo,Turbocharged,Automatic (S5),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.4,13,19,16,,,,,
+2006,Mercedes-Benz,E-Class,E350 (wagon),3.5L V6,3.5L V6 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.5,16,24,19,,,,,
+2006,Mercedes-Benz,E-Class,E350 4matic (wagon),3.5L V6,3.5L V6 Turbo,Turbocharged,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.5,16,22,18,,,,,
+2006,Mercedes-Benz,E-Class,E500 4matic (wagon),5.0L V8,5.0L V8 Turbo,Turbocharged,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,8,5.0,14,18,16,,,,,
+2006,Mercedes-Benz,E-Class,E55 AMG (wagon),5.4L V8,5.4L V8 Turbo,Turbocharged,Automatic (S5),Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,8,5.4,13,20,15,,,,,

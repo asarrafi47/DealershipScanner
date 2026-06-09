@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|chevrolet|sonic",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "ladder_id": "brochure_llm_2020__chevrolet__sonic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "Sport suspension with 17-inch Black-painted aluminum wheels",
+      "RS Package with integrated decklid rear spoiler and Sport body kit",
+      "SiriusXM All Access Package with 3-month trial subscription",
+      "Driver Confidence Package with Forward Collision Alert and Lane Departure Warning"
+    ],
+    "LT": [
+      "6-way power driver seat adjuster",
+      "Heated driver and front passenger seats via Convenience Package",
+      "Keyless Open and Start with remote vehicle starter system",
+      "Enhanced Driver Information Center and compass display",
+      "Heated 3-spoke leather-wrapped steering wheel",
+      "RS Package option with 16-inch aluminum wheels and Sport suspension",
+      "SiriusXM All Access Package with 3-month trial subscription"
+    ],
+    "LS": [
+      "7-inch Chevrolet Infotainment 3 system with Apple CarPlay and Android Auto",
+      "Bluetooth audio streaming for two active devices",
+      "4G LTE Wi-Fi Hotspot for up to seven devices with 1 month data",
+      "Front bucket seats with rear 60/40 split-folding seats",
+      "4-way manual driver seat adjuster",
+      "Chevrolet Connected Access with 10 years standard connectivity"
+    ]
+  }
+}

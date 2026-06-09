@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2020|subaru|legacy",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Legacy",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring XT",
+    "Touring",
+    "Limited XT",
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

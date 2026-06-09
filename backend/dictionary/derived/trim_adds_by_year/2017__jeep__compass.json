@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2017|jeep|compass",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_web_2017__jeep__compass",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Trailhawk",
+    "Limited",
+    "Latitude Lux",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Trailhawk": [
+      "Trim-specific 1.0-inch lift over rest of lineup",
+      "Selec-Terrain traction management system",
+      "Active Drive Low 4×4 system",
+      "Hill descent control for rough descents"
+    ],
+    "Limited": [
+      "Premium trim positioned $150 below Trailhawk"
+    ],
+    "Latitude Lux": [
+      "Limited availability variant of Latitude trim"
+    ],
+    "Latitude": [
+      "Standard heated front seats",
+      "Standard heated steering wheel",
+      "Standard remote start functionality"
+    ],
+    "Sport": [
+      "2.0-liter turbo inline-four engine with 200 hp and 221 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Standard 4WD",
+      "10.1-inch central touchscreen",
+      "Apple CarPlay and Android Auto",
+      "Six-speaker audio system",
+      "Automatic emergency braking",
+      "Blind-spot monitoring",
+      "Automatic headlights"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jeep/compass/"
+}

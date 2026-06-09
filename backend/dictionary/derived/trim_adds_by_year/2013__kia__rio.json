@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2013|kia|rio",
+  "year": 2013,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_2013__kia__rio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds Eco Package with Idle Stop & Go (ISG) engine auto-shutoff"
+    ],
+    "Limited": [
+      "Upgraded to 6-speed automatic transmission with improved fuel efficiency"
+    ],
+    "Platinum": [
+      "Adds available push-button start operation"
+    ],
+    "LX": [
+      "Adds available rear-camera display with backup visibility"
+    ],
+    "EX": [
+      "Integrated USB/auxiliary jack for MP3 players",
+      "SiriusXM satellite radio with 130+ channels"
+    ],
+    "SX": [
+      "Sport-tuned suspension",
+      "17-inch alloy wheels",
+      "Available power sunroof with tilt-and-slide design",
+      "Available heated leather driver and front passenger seats",
+      "Available power-folding side mirrors",
+      "Available push-button start with smart key remote"
+    ]
+  }
+}

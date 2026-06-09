@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1987,Pontiac,1000,1000,1.6L I4 ((FFS)),1.6L I4,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,22,28,24,,,,,
+1987,Pontiac,1000,1000,1.6L I4 ((FFS)),1.6L I4,,Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,31,27,,,,,
+1987,Pontiac,1000,1000,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,32,27,,,,,

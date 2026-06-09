@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2013|nissan|370z",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "370Z",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Nismo",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

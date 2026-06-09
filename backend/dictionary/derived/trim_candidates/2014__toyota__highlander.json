@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|toyota|highlander",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Highlander",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Adds to or replaces features offered on Limited",
+      "Hybrid Synergy Drive\u00ae badges",
+      "EV18/ECO Modes",
+      "Energy monitor display",
+      "Hybrid system power meter",
+      "SAFETY AND CONVENIENCE (continued) LE PLUS XLE LIMITED LIMITED LE PLUS XLE LIMITED LIMITED",
+      "Safety Connect\u00ae31 \u2014 includes Emergency Assistance, Stolen Pre-Collision System (PCS)32 with Dynamic Radar Cruise",
+      "Vehicle Locator, Roadside Assistance and Automatic Collision Control (DRCC)16 \u2014 \u2014 \u2014 P P",
+      "Notification. Available by subscription. \u2014 \u2014 \u2014 P P Lane Departure Alert (LDA)33 with Automatic High Beam (AHB)34 \u2014 \u2014 \u2014 P P",
+      "Driver Technology Package \u2014 includes Safety Connect,\u00ae31 Second-row captain\u2019s chairs \u2014 leather second-row captain\u2019s",
+      "Pre-Collision System (PCS)32 with Dynamic Radar Cruise chairs with folding side table with two cup holders \u2014 \u2014 O S S",
+      "Control (DRCC),16 Lane Departure Alert (LDA)33 with Automatic Rear-seat Blu-ray Disc\u2122 entertainment system with 9-in. display,"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE Plus Adds to or replaces features offered on XLE",
+      "Exterior Features Exterior Features Exterior Features Exterior Features",
+      "18-in. split 5-spoke alloy wheels \u2022 18-in. split 5-spoke machined-face alloy wheels \u2022 Power tilt/slide moonroof with sunshade and jam \u2022 19-in. 5-spoke Chromtec\u00ae alloy wheels",
+      "Windshield wiper de-icer \u2022 Integrated fog lights protection \u2022 Rear parking assist sonar",
+      "Color-keyed heated power outside mirrors with \u2022 Flip-up rear hatch window \u2022 Chromtec\u00ae roof rails \u2022 LED Daytime Running Lights (DRL)",
+      "Interior Features Interior Features \u2022 Entune\u2122 Premium Audio with Navigation6 and App",
+      "Seating for eight \u2022 Entune\u2122 Audio Plus: 6.1-in. high-resolution touch- Suite7 and 8-in. high-resolution touch-screen display Interior Features",
+      "Soft-touch in-dash shelf with easy cable management screen display, HD Radio\u21224 and SiriusXM Radio5 \u2022 4.2-in. color LCD Multi-Information Display with \u2022 Seating for seven with second-row captain\u2019s chairs",
+      "24.5-liter soft-touch roll-top center console with \u2022 SofTex\u00ae/cloth seats with contrast stitching turn-by-turn navigation6 \u2022 Entune\u2122 Premium JBL\u00ae Audio with Navigation6 and",
+      "Second- and third-row 60/40 split, sliding and reclining \u2022 Three-zone automatic climate control with separate \u2022 Second-row retractable window sunshades \u2022 Perforated leather-trimmed seats with heated and",
+      "Integrated backup camera1 with projected path settings for driver \u2022 HomeLink\u00ae8 universal transceiver driver\u2019s seat",
+      "Entune\u2122 Audio: 6.1-in. high-resolution touch-screen \u2022 Second-row 120V auxiliary AC power outlet \u2022 4-way power-adjustable front passenger seat"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

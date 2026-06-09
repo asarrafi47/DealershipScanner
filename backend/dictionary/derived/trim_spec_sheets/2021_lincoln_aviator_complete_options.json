@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_lincoln_aviator_complete_options",
+  "make": "Lincoln",
+  "models": [
+    "Aviator",
+    "Aviator"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Touring": [
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: synchronous Power output 400"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Gasoline plug-in hybrid:; Electric motor 75 kW (101 hp; 102 PS) permanent magnet synchronous"
+      }
+    ]
+  }
+}

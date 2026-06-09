@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|cadillac|ats",
+  "year": 2018,
+  "make": "Cadillac",
+  "model": "ATS",
+  "ladder_id": "brochure_llm_2018__cadillac__ats",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Performance",
+    "Premium Luxury",
+    "Luxury",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Premium Performance": [
+      "18-inch machined face forged alloy wheels with P225/40R18 front and P255/35R18 rear summer-only run-flat tires",
+      "Performance-tuned suspension and drivetrain calibration"
+    ],
+    "Premium Luxury": [
+      "18-inch polished forged alloy wheels with all-season run-flat tire options",
+      "Enhanced luxury interior appointments and trim materials"
+    ],
+    "Luxury": [
+      "18-inch premium painted alloy forged wheels with all-season run-flat tires",
+      "Upgraded interior comfort and convenience features"
+    ],
+    "Standard": [
+      "17-inch premium painted alloy forged wheels with P225/45R17 all-season run-flat tires",
+      "OnStar connectivity with theft avoidance and vehicle management",
+      "6-year/70,000-mile powertrain limited warranty with roadside assistance",
+      "4-year/50,000-mile bumper-to-bumper coverage",
+      "Tire sealant and compressor kit for temporary puncture repair"
+    ]
+  }
+}

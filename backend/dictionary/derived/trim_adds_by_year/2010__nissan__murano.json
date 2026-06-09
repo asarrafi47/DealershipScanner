@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2010|nissan|murano",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2010__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "SL",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "20-inch 5-split spoke aluminum-alloy wheels",
+      "P235/55R20 all-season tires"
+    ],
+    "SL": [
+      "Leather-appointed seats with heated front seats",
+      "Driver's seat power lumbar support",
+      "4-way power front-passenger's seat",
+      "High Intensity Discharge bi-functional xenon headlights",
+      "Dual heated outside mirrors",
+      "Automatic on/off headlights",
+      "Bluetooth Hands-free Phone System",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Power liftgate",
+      "7-inch color Information Center monitor with RearView Monitor"
+    ],
+    "S": [
+      "18-inch 6-spoke aluminum-alloy wheels",
+      "P235/65R18 all-season tires",
+      "265 hp VQ35DE 3.5-liter DOHC V6 engine",
+      "Intuitive All-Wheel Drive with Xtronic CVT",
+      "Independent strut front suspension with multi-link independent rear suspension",
+      "4-wheel vented disc brakes with ABS and Electronic Brake force Distribution",
+      "Push Button Ignition with Nissan Intelligent Key",
+      "5-star safety rating"
+    ]
+  }
+}

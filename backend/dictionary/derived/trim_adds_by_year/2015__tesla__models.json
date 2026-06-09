@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|tesla|models",
+  "year": 2015,
+  "make": "tesla",
+  "model": "Model S",
+  "ladder_id": "brochure_llm_2015__tesla__models",
+  "source": "brochure_llm",
+  "trims_available": [
+    "85 kWh Performance",
+    "85 kWh Dual Motor All Wheel Drive",
+    "60 kWh Rear Wheel Drive"
+  ],
+  "adds_by_trim": {
+    "85 kWh Performance": [
+      "Dual Motor All Wheel Drive standard with high performance rear and high efficiency front motors",
+      "Supercar acceleration: 0–60 mph in 3.2 seconds",
+      "Tesla Red Brake Calipers",
+      "Carbon Fiber Spoiler"
+    ],
+    "85 kWh Dual Motor All Wheel Drive": [
+      "Dual Motor All Wheel Drive with independent torque control to front and rear wheels",
+      "Improved range and acceleration versus single-motor configuration",
+      "Unparalleled traction control in all weather conditions"
+    ],
+    "60 kWh Rear Wheel Drive": [
+      "17-inch touchscreen with day and night modes, Google Maps integration with real-time traffic",
+      "Advanced Autopilot with forward-looking camera, radar, 360-degree sonar sensors for lane changing and auto-parking",
+      "Smart air suspension that lowers at highway speeds to reduce drag",
+      "Eight airbags with automatic battery disconnection in accidents",
+      "Five-star NHTSA crash test rating in all categories",
+      "Zero-profile retractable door handles",
+      "All-glass panoramic roof with electronic controls",
+      "Bluetooth, HD radio, USB audio, and on-demand Internet radio"
+    ]
+  }
+}

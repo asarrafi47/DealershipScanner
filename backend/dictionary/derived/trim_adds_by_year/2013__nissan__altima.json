@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2013|nissan|altima",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2013__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SL",
+    "3.5 SV",
+    "3.5 S",
+    "2.5 SV",
+    "2.5 S",
+    "2.5"
+  ],
+  "adds_by_trim": {
+    "3.5 SL": [
+      "Leather-appointed seats",
+      "Bose premium audio system with nine speakers",
+      "High Intensity Discharge (HID) xenon headlights",
+      "Wood-tone trim (Beige interior) and metallic-tone trim (Charcoal interior)",
+      "Heated steering wheel",
+      "8-way power adjustable driver's seat"
+    ],
+    "3.5 SV": [
+      "Power sliding glass moonroof",
+      "Dual Zone Automatic Temperature Control with rear passenger vents",
+      "Remote Engine Start System",
+      "RearView Monitor",
+      "Upgraded 5-inch color display audio with speed-sensitive volume control",
+      "USB connection port for iPod interface",
+      "SiriusXM Satellite Radio",
+      "Pandora radio capability",
+      "Hands-free text messaging assistant",
+      "Folding outside mirrors with LED turn signal indicators"
+    ],
+    "3.5 S": [
+      "3.5-liter DOHC 24-valve V6 engine",
+      "18-inch aluminum-alloy wheels",
+      "Paddle shifters and manual shift mode",
+      "Advanced Drive-Assist Display"
+    ],
+    "2.5 SV": [
+      "17-inch aluminum-alloy wheels",
+      "Dual Zone Automatic Temperature Control with rear passenger vents",
+      "Remote Engine Start System",
+      "RearView Monitor",
+      "Upgraded 5-inch color display audio with speed-sensitive volume control",
+      "USB connection port for iPod interface",
+      "SiriusXM Satellite Radio",
+      "Pandora radio capability"
+    ],
+    "2.5 S": [
+      "Nissan Intelligent Key",
+      "6-way power adjustable driver's seat",
+      "TPMS with individual tire pressure display and Easy-Fill Tire Alert",
+      "AM/FM/CD audio system with six speakers",
+      "Air conditioning with in-cabin microfilter",
+      "Smart Auto Headlights",
+      "Cruise control with steering wheel-mounted controls"
+    ],
+    "2.5": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine with Xtronic CVT",
+      "Active Understeer Control and Vehicle Dynamic Control (VDC)",
+      "Traction Control System (TCS)",
+      "Remote keyless entry with Push Button Ignition",
+      "Bluetooth hands-free phone system and streaming audio",
+      "TPMS with Easy-Fill Tire Alert",
+      "AM/FM/CD audio system with four speakers",
+      "Zero-gravity front seats with 60/40 split fold-down rear seatbacks",
+      "Six airbags"
+    ]
+  }
+}

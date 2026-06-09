@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|volkswagen|jetta",
+  "year": 2014,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "inventory_volkswagen_jetta",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "GTI",
+    "GLI"
+  ],
+  "adds_by_trim": {
+    "GTI": [
+      "why we think everyone deserves a same belief. And it’s",
+      "All rights reserved. “Bluetooth” is a registered trademark of Bluetooth SIG, Inc. “iPod” is a registered trademark of Apple, Inc.",
+      "navigation route. Periodically, the mapping is updated and a new DVD will be required in order to maintain the latest"
+    ],
+    "GLI": [
+      "system to function. The"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "GLI": 0
+    }
+  }
+}

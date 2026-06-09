@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|chrysler|300",
+  "year": 2014,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2014__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C",
+    "300S"
+  ],
+  "adds_by_trim": {
+    "300C": [
+      "100 percent Nappa perforated leather seating surfaces",
+      "Standard heated rear seats and ventilated front seats",
+      "Real wood interior accents and Satin Chrome finishes",
+      "Class-exclusive auto dual illuminated heated and cooled front cup holders",
+      "LED lighting throughout the cabin",
+      "Real wood and leather-wrapped heated steering wheel",
+      "Bright chrome exterior accents",
+      "Garmin Navigation with SiriusXM Traffic and Travel Link",
+      "Rear power sunshade with memory settings for two occupants",
+      "Power adjustable pedals and six premium speakers with 276-watt amplifier"
+    ],
+    "300S": [
+      "Pentastar V6 engine with 300 horsepower and 8-speed transmission",
+      "Standard dual-exhaust system on V6 model",
+      "Optional 5.7L HEMI V8 with 363 horsepower and 5-speed power",
+      "Exclusive Beats Audio 10-speaker sound system",
+      "Black headlamp and fog lamp bezels with chrome surround grille",
+      "Liquid chrome Chrysler wing badge with Black center",
+      "20-inch aluminum wheels with polished face and Black pockets",
+      "Performance leather-trimmed sport bucket seats with unique embroidered S logo",
+      "Lacquered Piano Black and Matte Fiber hydro interior accents",
+      "Heated 12-way power driver and passenger seats"
+    ]
+  }
+}

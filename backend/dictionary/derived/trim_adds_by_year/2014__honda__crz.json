@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2014|honda|crz",
+  "year": 2014,
+  "make": "Honda",
+  "model": "CR-Z",
+  "ladder_id": "generic_honda_crz",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "he Bluetooth SIG, Inc., and any use of such marks by Honda Motor Co., Ltd., is under license. 9 Carrying too much cargo or improperly",
+      "Limited Powertrain Warranty. Ordinary maintenance or adjustments, parts subject to normal wear and replacement, and certain items are excluded.",
+      "Please see your Honda dealer for details. 13 NHL and the NHL Shield are registered trademarks of the"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "EX": 3
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|volvo|c70",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "C70",
+  "ladder_id": "brochure_2010__volvo__c70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 2.5-liter five-cylinder turbocharged engine with 227 hp",
+      "Adds six-speed manual transmission",
+      "Adds five-speed Geartronic automatic transmission with manual shifting capability",
+      "Adds continuously variable valve timing on intake and exhaust",
+      "Adds double overhead camshafts with 20 valves",
+      "Adds power-assisted anti-lock disc brakes with ventilated front discs",
+      "Adds Electronic Brake Assistance (EBA) and Electronic Brake Distribution (EBD)",
+      "Adds Dynamic Stability and Traction Control (DSTC)",
+      "Adds front McPherson strut suspension with anti-dive and anti-lift function",
+      "Adds multilink independent rear suspension"
+    ],
+    "Limited": [
+      "Adds leather-clad steering wheel",
+      "Adds tilt and telescopic steering column"
+    ]
+  }
+}

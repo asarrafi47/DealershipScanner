@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2016|lexus|gs",
+  "year": 2016,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "brochure_llm_2016__lexus__gs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS450h",
+    "GS350",
+    "GS200t"
+  ],
+  "adds_by_trim": {
+    "GS450h": [
+      "Hybrid powertrain with 3.5-liter V6 engine"
+    ],
+    "GS350": [
+      "3.5-liter V6 engine"
+    ],
+    "GS200t": [
+      "2.0-liter turbocharged inline-4 engine",
+      "Premium unleaded gasoline required (91 octane or higher)",
+      "17-, 18-, or 19-inch performance tires available"
+    ]
+  }
+}

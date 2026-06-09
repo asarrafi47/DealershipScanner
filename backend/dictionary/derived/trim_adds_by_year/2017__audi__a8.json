@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2017|audi|a8",
+  "year": 2017,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_llm_2017__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S8 plus",
+    "A8 L 4.0T",
+    "A8 L 3.0T"
+  ],
+  "adds_by_trim": {
+    "S8 plus": [
+      "AudiSport 21-inch 5-double-arm design wheels with titanium finish standard",
+      "Additional exterior color options: Daytona Gray pearl and Florett Silver matte",
+      "Audi exclusive customization program available"
+    ],
+    "A8 L 4.0T": [
+      "4.0T TFSI engine with increased power output",
+      "AudiSport 21-inch 5-arm-rotor design wheels optional with titanium finish",
+      "Black optic package available"
+    ],
+    "A8 L 3.0T": [
+      "19-inch 15-spoke design wheels standard",
+      "3.0T TFSI engine base powertrain",
+      "AudiSport 20-inch 5-double-spoke design wheels with Galvano silver finish available",
+      "Executive package and 20-inch wheel package options"
+    ]
+  }
+}

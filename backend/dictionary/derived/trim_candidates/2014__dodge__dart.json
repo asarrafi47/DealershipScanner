@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|dodge|dart",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Dart",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE",
+    "Express",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

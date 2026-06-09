@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2017|gmc|sierra",
+  "year": 2017,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2017__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "All Terrain",
+    "SLT",
+    "SLE",
+    "Elevation Edition",
+    "Sierra"
+  ],
+  "adds_by_trim": {
+    "All Terrain": [
+      "Magnetic Ride Control Suspension System",
+      "8-inch diagonal color customizable Driver Information Center display",
+      "All Terrain SLT Premium Package with heated leather-wrapped steering wheel"
+    ],
+    "SLT": [
+      "4.2-inch diagonal color Driver Information Center display",
+      "Leather-wrapped steering wheel with audio and cruise controls",
+      "8-speed automatic transmission with 6.2L V-8 EcoTec3 engine option",
+      "Front and rear ultrasonic park assist with enhanced driver packages",
+      "Front 3-passenger leather-appointed 40/20/40 split bench with 10-way power adjusters"
+    ],
+    "SLE": [
+      "4.2-inch diagonal color Driver Information Center display",
+      "Tilt-Wheel and manual telescopic steering column",
+      "Z71 Off-Road Suspension Package option with Rancho shocks and Hill Descent Control",
+      "5.3L V-8 EcoTec3 engine standard on 4WD Crew Cab",
+      "Rear ultrasonic park assist with Convenience Package option"
+    ],
+    "Elevation Edition": [
+      "5.3L V-8 EcoTec3 engine with auxiliary external transmission oil cooler"
+    ],
+    "Sierra": [
+      "3.5-inch diagonal monochromatic Driver Information Center display",
+      "110-volt in-cabin power outlet with Convenience Package option",
+      "4.3L V-6 EcoTec3 engine standard with E85 FlexFuel capability",
+      "Front 3-passenger cloth 40/20/40 split bench with manual recline and storage",
+      "Trailering Package with automatic locking rear differential option"
+    ]
+  }
+}

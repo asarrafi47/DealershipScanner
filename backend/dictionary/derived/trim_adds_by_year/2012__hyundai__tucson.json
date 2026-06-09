@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2012|hyundai|tucson",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_2012__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds Standard cloth seating surfaces"
+    ],
+    "Blue": [
+      "Upgraded to cloth plus leatherette seating surfaces",
+      "Adds black and saddle leather interior color option"
+    ],
+    "Limited": [
+      "Upgraded to premium leather seating surfaces",
+      "Adds taupe leather interior finish option"
+    ]
+  }
+}

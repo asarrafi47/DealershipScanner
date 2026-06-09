@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2024|hyundai|sonata",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_llm_2024__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "N Line",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Leatherette-wrapped dashboard",
+      "Integrated Memory System for driver seat and mirrors",
+      "Leather-trimmed seating surfaces with heated steering wheel",
+      "Ventilated front seats",
+      "Full color Head-up Display",
+      "Power trunk with hands-free smart trunk and auto open",
+      "Remote Smart Parking Assist",
+      "Parking Collision-Avoidance Assist – Reverse",
+      "Parking Distance Warning – Reverse/Forward/Side",
+      "Rain-sensing wipers"
+    ],
+    "N Line": [
+      "Smartstream 2.5L Turbo GDI/MPI 4-cylinder engine with 290 hp/311 lb-ft",
+      "N 8-speed Wet Dual Clutch Transmission (DCT) with paddle shifters",
+      "Quad-outlet dual exhaust system",
+      "N Line front and rear fascia",
+      "Gloss black side mirrors and window surround",
+      "Fender-mounted LED turn signal indicators",
+      "Rear lip spoiler",
+      "N Line sport front seats with aluminum pedals and leather-wrapped sport steering wheel",
+      "Bose premium audio with 12 speakers",
+      "Highway Driving Assist"
+    ],
+    "SEL": [
+      "Smartstream 2.5L GDI/MPI 4-cylinder engine with 191 hp/181 lb-ft",
+      "8-speed automatic transmission",
+      "Dual LED projector-type headlights",
+      "Auto-dimming rearview mirror",
+      "LED Daytime Running Lights and LED taillights",
+      "Dual automatic temperature control",
+      "8-way power driver seat with adjustable lumbar support",
+      "4-way power front passenger seat",
+      "Smart Cruise Control with Stop & Go",
+      "SiriusXM Satellite Radio standard across all trims"
+    ]
+  }
+}

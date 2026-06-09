@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|kia|rio",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_llm_2015__kia__rio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "Available paddle shifters for manual transmission control",
+      "Available voice-command navigation with SiriusXM Traffic updates",
+      "Available Rear-Camera Display for backing assistance",
+      "Available push-button start with Smart Key remote",
+      "Premium Package option with enhanced styling"
+    ],
+    "Base": [
+      "1.6L Gasoline Direct Injection I4 engine with 138 horsepower",
+      "Available six-speed automatic transmission with smooth shifting",
+      "Six airbags and Electronic Stability Control safety system",
+      "Hill-start Assist Control and Vehicle Stability Management",
+      "Hatchback design with roomy cargo area on 5-Door model",
+      "Anti-lock Braking System with Electronic Brake-force Distribution",
+      "LATCH system for child safety seat installation",
+      "10-year/100,000-mile limited powertrain warranty"
+    ]
+  }
+}

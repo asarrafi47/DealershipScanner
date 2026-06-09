@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2024|toyota|corollahatchback",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "LE",
+    "Platinum",
+    "Premium",
+    "LT",
+    "Sport",
+    "Hatchback"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Includes these key features Adds to or replaces features offered on SE Adds to or replaces features offered on SE",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) Dynamic-Shift Continuously Variable Transmission (CVT) Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "Normal, Eco and Sport driving modes Normal, Eco and Sport driving modes Normal, Eco and Sport driving modes",
+      "Front-Wheel Drive (FWD) Front-Wheel Drive (FWD) Front-Wheel Drive (FWD)",
+      "Exterior Features Exterior Features Exterior Features",
+      "LED headlights and LED Daytime Running Lights (DRL) LED headlights and LED Daytime Running Lights (DRL) LED headlights and LED Daytime Running Lights (DRL)",
+      "Gloss-black front upper grille surround Gloss-black front upper grille surround 18-in. alloy wheels2 with graphite-colored finish",
+      "Color-keyed front lower grille surround Black front lower grille surround Gloss-black front upper grille surround",
+      "Color-keyed rear spoiler Black heated power outside mirrors Color-keyed front lower grille surround",
+      "Color-keyed heated power outside mirrors with with turn signal indicators Color-keyed rear spoiler",
+      "Single exhaust Interior Features with turn signal indicators",
+      "Color-keyed rear diffuser surround Single exhaust with dual chrome-colored"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2019_mercedes-benz_s-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "S-Class",
+    "S-Class"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG S63": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG S65": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

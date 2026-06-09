@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|mazda|mx5",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2014__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Club",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "17-inch aluminum alloy wheels",
+      "In-dash 6-disc CD changer",
+      "Bose audio system with AudioPilot",
+      "Leather-wrapped shift knob",
+      "Available Premium Package with automatic climate control, Xenon HID headlights, Bluetooth, leather seats, heated seats, SiriusXM"
+    ],
+    "Club": [
+      "17-inch aluminum alloy wheels with gunmetal finish",
+      "Power door locks with 2-stage unlocking",
+      "Sport-tuned suspension with Bilstein shocks and limited-slip differential on manual models",
+      "Front air dam and rear diffuser",
+      "Black cloth seats with red stitching",
+      "Club model badging and side graphics",
+      "Available 6-speed manual transmission option"
+    ],
+    "Sport": [
+      "16-inch aluminum alloy wheels",
+      "Halogen fog lights",
+      "Air conditioning",
+      "Cloth-trimmed seats",
+      "Leather-wrapped steering wheel",
+      "AM/FM/CD/MP3-compatible audio system",
+      "Dual front and side-impact air bags",
+      "5-speed manual overdrive transmission with short-throw shifter",
+      "Optional 6-speed Sport automatic transmission with paddle shifters"
+    ]
+  }
+}

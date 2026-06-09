@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|nissan|altima",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "2010_nissan_altima",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "2.5",
+    "2.5 S",
+    "3.5 SR",
+    "Hybrid"
+  ],
+  "adds_by_trim": {
+    "2.5 S": [
+      "HID xenon headlights (replaces standard halogen on 2.5)",
+      "Fog lights and rear spoiler",
+      "8-way power driver seat with lumbar",
+      "Leather-wrapped steering wheel",
+      "Illuminated steering-wheel audio controls",
+      "16-inch 6-spoke alloy wheels"
+    ],
+    "3.5 SR": [
+      "3.5L V6 — 270 hp (replaces 2.5L four-cylinder)",
+      "Sport-tuned suspension and 17-inch 5-split-spoke alloy wheels",
+      "Dual exhaust with chrome tips",
+      "Heated outside mirrors and power moonroof",
+      "Leather-appointed heated front seats",
+      "Bose 9-speaker audio with 4.3-inch color display",
+      "Music Box hard drive and USB/iPod connectivity"
+    ],
+    "Hybrid": [
+      "Hybrid Synergy-style eCVT powertrain — 198 hp net",
+      "16-inch alloy wheels standard",
+      "Hybrid-specific efficiency tuning vs 2.5 gas models"
+    ],
+    "2.5": [
+      "6-way manual adjustable driver's seat with seatback pocket",
+      "AM/FM/CD audio system",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags",
+      "Driver and front-passenger seat-mounted side-impact supplemental air bags",
+      "Roof-mounted curtain side-impact supplemental air bags",
+      "Vehicle Dynamic Control with Traction Control System",
+      "3-point seat belts with pretensioners and load limiters",
+      "LATCH System for child safety seats",
+      "Zone Body construction with crumple zones and energy-absorbing steering column",
+      "Tire Pressure Monitoring System with Easy-Fill Tire Alert"
+    ]
+  }
+}

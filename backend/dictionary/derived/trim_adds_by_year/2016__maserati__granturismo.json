@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2016|maserati|granturismo",
+  "year": 2016,
+  "make": "maserati",
+  "model": "granturismo",
+  "ladder_id": "brochure_web_2016__maserati__granturismo",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "GranTurismo Trofeo Coupe",
+    "GranTurismo Coupe"
+  ],
+  "adds_by_trim": {
+    "GranTurismo Trofeo Coupe": [
+      "Twin-turbocharged 3.0-liter V-6 engine with 542 hp and 479 lb-ft torque (versus 483 hp base)",
+      "0-60 mph acceleration in 3.4 seconds versus 3.7 seconds on Modena"
+    ],
+    "GranTurismo Coupe": [
+      "Twin-turbocharged 3.0-liter V-6 Nettuno engine with 483 hp and 443 lb-ft torque",
+      "Eight-speed paddle-shift automatic transmission with standard all-wheel drive",
+      "Dual-display infotainment: 12.3-inch upper display and 8.8-inch lower touchscreen",
+      "12.2-inch digital gauge cluster with central reconfigurable digital clock display",
+      "Apple CarPlay and Android Auto connectivity",
+      "Air suspension with climate control and drive mode selection",
+      "Four-seat 2+2 seating configuration with heated and ventilated front seats",
+      "18/27 mpg city/highway fuel economy rating"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/granturismo/"
+}

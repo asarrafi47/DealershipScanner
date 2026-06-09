@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2008,Chrysler,Town and Country/Voyager/Grand Voyager,Town and Country/Voyager/Grand Voy. 2WD,3.8L V6,3.8L V6,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.8,16,23,18,,,,,
+2008,Chrysler,Town and Country/Voyager/Grand Voyager,Town and Country/Voyager/Grand Voy. 2WD,4.0L V6,4.0L V6,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,4.0,16,23,18,,,,,
+2008,Chrysler,Town and Country/Voyager/Grand Voyager,Town and Country/Voyager/Grand Voy. 2WD,3.3L V6,3.3L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.3,17,24,19,,,,,
+2008,Chrysler,Town and Country/Voyager/Grand Voyager,Town and Country/Voyager/Grand Voy. 2WD,FFV 3.3L V6 (GAS 380),3.3L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Minivan - 2WD,6,3.3,17,24,19,,,,,

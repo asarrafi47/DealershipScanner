@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2021_toyota_prius_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Prius",
+    "Prius"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "\"Toyota Adds to Prius Lineup With Smallest Hybrid\".; Latest technology in the 2021 Toyota Prius: Compare all specifications and configurations of the 2021 Toyota Prius, special features and options, and check out specs and trims on CarBuzz Comparison of all 2021 Toyota Prius Trims based on engine, transmission, interior,…"
+      }
+    ],
+    "XSE": [
+      {
+        "label": "Engine Options",
+        "value": "\"Toyota Adds to Prius Lineup With Smallest Hybrid\".; Latest technology in the 2021 Toyota Prius: Compare all specifications and configurations of the 2021 Toyota Prius, special features and options, and check out specs and trims on CarBuzz Comparison of all 2021 Toyota Prius Trims based on engine, transmission, interior,…"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "\"Toyota Adds to Prius Lineup With Smallest Hybrid\".; Latest technology in the 2021 Toyota Prius: Compare all specifications and configurations of the 2021 Toyota Prius, special features and options, and check out specs and trims on CarBuzz Comparison of all 2021 Toyota Prius Trims based on engine, transmission, interior,…"
+      }
+    ]
+  }
+}

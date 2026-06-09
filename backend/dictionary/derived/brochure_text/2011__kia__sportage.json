@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|kia|sportage",
+  "year": 2011,
+  "make": "Kia",
+  "model": "Sportage",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Kia_Sportage_Brochure.pdf",
+  "page_count": 24,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

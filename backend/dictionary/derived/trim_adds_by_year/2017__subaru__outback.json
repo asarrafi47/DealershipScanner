@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2017|subaru|outback",
+  "year": 2017,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2017__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Touring",
+    "3.6R Limited",
+    "2.5i Touring",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Touring": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine",
+      "Lineartronic HCVT with 6-speed manual-mode paddle shifters",
+      "Dual exhaust outlets"
+    ],
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine",
+      "Lineartronic HCVT with 6-speed manual-mode paddle shifters",
+      "Dual exhaust outlets",
+      "HID low-beam headlights",
+      "Unique dark-gray front grille",
+      "Lower door cladding with chrome accents",
+      "Body-color door handles with chrome inserts",
+      "Rear bumper cover"
+    ],
+    "2.5i Touring": [
+      "Java Brown leather-trimmed upholstery",
+      "Heated steering wheel",
+      "HID low-beam headlights",
+      "Touring appearance package",
+      "Low-profile roof rails with silver finish",
+      "18-inch dark gray aluminum-alloy wheels with machine finish",
+      "Unique woodgrain-patterned matte finish accent trim",
+      "Piano gloss black interior trim",
+      "SUBARU STARLINK 7.0-inch Multimedia Navigation System",
+      "EyeSight Driver Assist Technology with High Beam Assist and Reverse Automatic Braking"
+    ],
+    "2.5i Limited": [
+      "Premium audio system with 12 Harman Kardon GreenEdge speakers and 576-watt amplifier",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "18-inch black aluminum-alloy wheels with machine finish",
+      "Power moonroof",
+      "Keyless Access with Push-button Start",
+      "Power rear gate with height memory functions",
+      "All-Weather Package with 3-mode heated front seats and dual-mode heated rear seats",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver's seat with 2-position memory",
+      "Woodgrain-patterned matte finish accent trim"
+    ],
+    "2.5i Premium": [
+      "SUBARU STARLINK 7.0-inch Multimedia Plus System with smartphone app integration and voice controls",
+      "SiriusXM Satellite Radio and Travel Link",
+      "Fog lights",
+      "10-way power adjustable driver's seat",
+      "All-Weather Package with heated exterior mirrors and 3-mode heated front seats",
+      "Dual-zone automatic climate control system with air filtration",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Front-passenger auto-up/down power window",
+      "Electroluminescent gauges with LCD color display",
+      "STARLINK Safety Plus enabled with Automatic Collision Notification and SOS Emergency Assistance"
+    ],
+    "2.5i": [
+      "175-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 6-speed manual-mode paddle shifters",
+      "X-MODE with Hill Descent Control",
+      "17-inch aluminum-alloy wheels",
+      "SUBARU STARLINK 6.2-inch Multimedia System with 4 speakers and HD Radio",
+      "Cloth upholstery",
+      "Manually adjustable CFC-free air conditioning with air filtration",
+      "Driver auto-up/down power window",
+      "Cargo-area tray with tie-downs and grocery bag hooks"
+    ]
+  }
+}

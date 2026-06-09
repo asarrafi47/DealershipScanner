@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2016|chevrolet|colorado",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2016__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Z71",
+    "LT",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "Z71": [
+      "Manual tilt and telescoping steering column",
+      "Chevrolet MyLink Radio with 8-inch touchscreen, navigation, and Apple CarPlay",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "17-inch Black-painted wheels with Goodyear Wrangler DuraTrac off-road tires",
+      "Automatic locking rear differential",
+      "Tow/Haul mode",
+      "Available 3.6L V6 engine or Duramax 2.8L Turbo-Diesel engine",
+      "Available Diesel Exhaust Brake and Integrated Trailer Brake Controller"
+    ],
+    "LT": [
+      "Chevrolet MyLink Radio with 4.2-inch color display, Bluetooth, and Pandora integration",
+      "Fog lamps with LT Convenience Package",
+      "Remote vehicle starter system with LT Convenience Package",
+      "EZ Lift & Lower tailgate",
+      "Sliding rear window and electronic rear-window defogger",
+      "Available 3.6L V6 engine with Tow/Haul mode"
+    ],
+    "WT": [
+      "2.5L DOHC 4-cylinder engine with 200 hp and 191 lb-ft torque",
+      "AM/FM stereo with 4.2-inch diagonal color display",
+      "Cargo box lighting",
+      "Manual tilt steering column",
+      "USB port",
+      "Theft-deterrent system and OnStar Guidance Plan"
+    ]
+  }
+}

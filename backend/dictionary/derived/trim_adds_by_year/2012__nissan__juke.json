@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2012|nissan|juke",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Juke",
+  "ladder_id": "brochure_llm_2012__nissan__juke",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Nissan Hard Drive Navigation System with 5.0\" color touch-screen and XM NavTraffic",
+      "RearView Monitor",
+      "Automatic Temperature Control (ATC) with in-cabin microfilter",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Heated front seats",
+      "Premium cloth seat trim",
+      "Leather-appointed seats",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SV": [
+      "Nissan Hard Drive Navigation System with 5.0\" color touch-screen and XM NavTraffic",
+      "Integrated Control (I-CON) system",
+      "Automatic Temperature Control (ATC) with in-cabin microfilter",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Rockford Fosgate 8\" subwoofer with 6 upgraded speakers",
+      "Premium cloth seat trim",
+      "Leather-wrapped steering wheel"
+    ],
+    "S": [
+      "MR16DDT 1.6-liter turbocharged DIG 4-cylinder engine with 188 hp",
+      "Front-Wheel Drive with optional Torque Vectoring AWD",
+      "6-speed manual or Xtronic CVT transmission",
+      "AM/FM/CD audio system with 6 speakers and XM Satellite Radio",
+      "Air conditioning with in-cabin microfilter",
+      "Integrated Key with remote keyless entry",
+      "Tilt steering column and cruise control",
+      "6-way manual driver seat and 4-way manual passenger seat",
+      "60/40 split fold-flat rear seatbacks with flat-tricot cloth trim",
+      "Illuminated kick plates and interior accent lighting"
+    ]
+  }
+}

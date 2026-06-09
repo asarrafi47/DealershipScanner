@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|nissan|gtr",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_2012__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds electronic analog instrument cluster with upshift indicator and digital gear indicator",
+      "Adds multi-function drive computer",
+      "Adds touch-screen hard disk drive navigation system with xM Navtraffic and xM NavWeather",
+      "Adds Multi-function Display with performance monitor featuring 11 customizable screens",
+      "Adds 11-speaker Bose audio system with dual subwoofers",
+      "Adds USB connection port for iPod interface and compatible devices",
+      "Adds Nissan intelligent Key with push button ignition",
+      "Adds Bluetooth hands-free phone system and streaming audio",
+      "Adds hand-stitched leather-wrapped steering wheel with audio and cruise controls",
+      "Adds AtteSA e-tS all-wheel drive system with rear-mounted transaxle and three driver-selectable modes"
+    ],
+    "Premium": [
+      "Adds electronic analog instrument cluster with upshift indicator and digital gear indicator",
+      "Adds touch-screen navigation system with voice activation",
+      "Adds multi-function display with performance monitor",
+      "Adds 9.3 GB Music Box audio system",
+      "Adds 11-speaker Bose audio system with dual subwoofers",
+      "Adds USB connectivity with iPod compatibility and DVD playback",
+      "Adds Nissan Intelligent Key with Push Button Ignition",
+      "Adds Bluetooth hands-free phone system and streaming audio",
+      "Adds hand-stitched leather-wrapped steering wheel with audio and cruise controls",
+      "Adds dual clutch 6-speed transmission with paddle shifters"
+    ],
+    "Limited": [
+      "Adds available 11-speaker Bose audio system with dual subwoofers",
+      "Adds available Interface System for iPod connectivity"
+    ]
+  }
+}

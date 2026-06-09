@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|genesis|g90",
+  "year": 2018,
+  "make": "genesis",
+  "model": "G90",
+  "ladder_id": "brochure_llm_2018__genesis__g90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V8",
+    "V6"
+  ],
+  "adds_by_trim": {
+    "V8": [
+      "420 hp/383 lb-ft 5.0L GDI V8 engine (vs. 365 hp/376 lb-ft 3.3L twin-turbo V6)",
+      "Heated and ventilated rear seats",
+      "Rear seat power-adjustable head restraints",
+      "14-way power right-rear seat and 12-way power left-rear seat",
+      "Integrated Memory System for rear outboard seats"
+    ],
+    "V6": [
+      "365 hp/376 lb-ft 3.3L GDI twin-turbo V6 engine",
+      "8-speed automatic transmission with SHIFTRONIC and paddle shifters",
+      "Genesis Adaptive Control Suspension with Electronic Damping Control",
+      "22-way power driver seat with lumbar, shoulder and side-bolster adjustment",
+      "Full LED headlights with LED accents and Dynamic Bending Light",
+      "Nappa leather seating surfaces and microfiber suede headliner",
+      "9 airbags with Advanced dual front airbags and roof-mounted side-curtain airbags",
+      "Smart Cruise Control with stop/start and Pedestrian Detection",
+      "Power tilt-and-slide sunroof",
+      "3-zone automatic temperature control with Air Quality System"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2020|jeep|renegade",
+  "year": 2020,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_2020__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Trailhawk",
+    "Latitude",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 1.3L MultiAir®2 Turbo I-4 engine with 177 horsepower",
+      "Adds 2.4L Tigershark® MultiAir2 engine option with 180 horsepower",
+      "Adds MacPherson strut front suspension with coil springs",
+      "Adds Chapman strut rear suspension with coil springs",
+      "Adds electric power rack and pinion steering",
+      "Adds antilock brake system with vented front rotors and solid rear rotors",
+      "Adds seating capacity for 5 passengers"
+    ],
+    "Sport": [
+      "Upgraded to 3.734 axle ratio for improved performance"
+    ],
+    "Latitude": [
+      "Upgraded to 3.734 axle ratio for improved performance"
+    ],
+    "Trailhawk": [
+      "Upgraded to 4.585 axle ratio for enhanced off-road capability",
+      "Adds 30.5-degree approach angle for superior off-road geometry",
+      "Adds 25.7-degree breakover angle for obstacle clearance",
+      "Adds 34.3-degree departure angle for trail departure capability",
+      "Adds 19.0-inch water fording depth capability",
+      "Upgraded to 2.76 lock-to-lock steering ratio for enhanced maneuverability",
+      "Adds 35.3-foot curb-to-curb turning diameter",
+      "Adds high-strength steel double-shell lower control arms for 4x4 configuration"
+    ]
+  }
+}

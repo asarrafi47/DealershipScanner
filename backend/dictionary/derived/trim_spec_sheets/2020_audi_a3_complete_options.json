@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2020_audi_a3_complete_options",
+  "make": "AUDI",
+  "models": [
+    "A3",
+    "A3"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Name Type Engine code Output at rpm Torque at rpm 0–100 km/h (0–62 mph) time Top speed Years; Petrol engines (was Layout Front-engine, front-wheel-drive/all-wheel-drive (quattro))"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, front-wheel-drive/all-wheel-drive (quattro) (was Name Type Engine code Output at rpm Torque at rpm 0–100 km/h (0–62 mph) time Top speed Years; Petrol engines)"
+      }
+    ],
+    "S3 Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Name Type Engine code Output at rpm Torque at rpm 0–100 km/h (0–62 mph) time Top speed Years; Petrol engines"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+      }
+    ]
+  }
+}

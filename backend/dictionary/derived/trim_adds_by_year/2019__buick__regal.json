@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2019|buick|regal",
+  "year": 2019,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2019__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Regal GS",
+    "Avenir",
+    "Essence",
+    "Preferred II",
+    "Preferred",
+    "Regal (1SV)"
+  ],
+  "adds_by_trim": {
+    "Regal GS": [
+      "Sport Red exterior color exclusive to this model",
+      "Ebony Perforated Quilt-Stitched Leather-Appointed Seating exclusive to GS",
+      "19-inch Aluminum wheels with Technical Gray Accents exclusive to GS"
+    ],
+    "Avenir": [
+      "Whisper Beige Perforated Leather-Appointed Seating",
+      "19-inch Aluminum wheels with Pearl Nickel Finish exclusive to Avenir",
+      "Premium paint colors unavailable on 1SV and GS models"
+    ],
+    "Essence": [
+      "Ebony Cloth seating",
+      "18-inch Machine-Faced Aluminum wheels",
+      "Available on Preferred and Preferred II trim levels"
+    ],
+    "Preferred II": [
+      "18-inch 5-Spoke Dynamic Aluminum wheels standard",
+      "Driver Confidence Package standard",
+      "Ebony Cloth or Shale Cloth seating options"
+    ],
+    "Preferred": [
+      "17-inch 5-Spoke Aluminum wheels standard",
+      "Ebony Cloth or Shale Cloth seating available",
+      "Base preferred trim level"
+    ],
+    "Regal (1SV)": [
+      "Shale Cloth seating standard",
+      "17-inch 5-Spoke Aluminum wheels standard",
+      "Summit White and premium paint colors unavailable on base model"
+    ]
+  }
+}

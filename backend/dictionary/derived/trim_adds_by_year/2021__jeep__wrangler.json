@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2021|jeep|wrangler",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_2021__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Altitude",
+    "Limited",
+    "Rubicon",
+    "Sahara",
+    "Willys",
+    "Altitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds high-strength steel and lightweight aluminum body structure",
+      "Adds supplemental front-seat-mounted side air bags",
+      "Adds advanced multistage air bags with crash severity matching",
+      "Adds Sentry Key anti-theft engine immobilizer",
+      "Adds ultrasonic and anti-tilt security system",
+      "Adds 2.0L Turbo I-4 engine with engine stop/start technology",
+      "Adds 6-speed manual transmission",
+      "Adds Command-Trac 4WD system"
+    ],
+    "Altitude": [],
+    "Willys": [
+      "Available 2.0-liter turbocharged I-4 plug-in hybrid 4xe powertrain"
+    ],
+    "Sahara": [
+      "Adds 3.6L Pentastar V6 engine option with eTorque mild-hybrid technology",
+      "Adds 8-speed automatic transmission option"
+    ],
+    "Rubicon": [
+      "Adds 3.0L EcoDiesel V6 engine option with variable geometry turbocharger"
+    ],
+    "Limited": [
+      "registered trademarks of Bridgestone Corporation. Dana and Trac-Lok are"
+    ],
+    "High Altitude": [
+      "Adds enhanced accident response system with interior lighting activation and hazard lamp flashing"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2026_acura_rdx_complete_options",
+  "make": "Acura",
+  "models": [
+    "RDX",
+    "RDX"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "A-Spec": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S10)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 3.0 L J30Y1 V6 (China Only)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "The package also featured a 10-speaker ELS Surround audio system with DTS and Do"
+      }
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2019|jeep|wrangler",
+  "year": 2019,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2019__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon",
+    "Sahara",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Rubicon": [
+      "Freedom Top modular hardtop available in body-color",
+      "Sky One-Touch power top available on Unlimited models",
+      "Premium positioning over Sahara trim"
+    ],
+    "Sahara": [
+      "Freedom Top modular hardtop available in body-color",
+      "Sky One-Touch power top available on Unlimited models",
+      "Mid-level trim positioning"
+    ],
+    "Sport": [
+      "Sunrider soft top standard with zipperless closure",
+      "Freedom Top modular hardtop available in Black",
+      "Fold-down windshield and removable aluminum doors",
+      "Base trim with core open-air features"
+    ]
+  }
+}

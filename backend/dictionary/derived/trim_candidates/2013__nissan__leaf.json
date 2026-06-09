@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|nissan|leaf",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Leaf",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SV",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

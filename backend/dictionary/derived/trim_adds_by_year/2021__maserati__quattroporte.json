@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2021|maserati|quattroporte",
+  "year": 2021,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_llm_2021__maserati__quattroporte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Quattroporte Trofeo",
+    "Quattroporte S Q4",
+    "Quattroporte S"
+  ],
+  "adds_by_trim": {
+    "Quattroporte Trofeo": [
+      "3.8-liter V8 90° engine producing 580 CV and 730 Nm torque",
+      "0-100 km/h acceleration in 4.5 seconds versus 4.8 seconds",
+      "Maximum speed of 326 km/h versus 288 km/h",
+      "Shorter stopping distance of 34 m from 100-0 km/h"
+    ],
+    "Quattroporte S Q4": [
+      "All-wheel drive Q4 system with enhanced traction control",
+      "Improved 0-100 km/h acceleration of 4.8 seconds versus 5.0 seconds",
+      "Increased weight capacity and suspension tuning for AWD performance"
+    ],
+    "Quattroporte S": [
+      "3.0-liter V6 60° petrol engine with 430 CV and 580 Nm torque",
+      "Long wheelbase ensuring spacious, elegantly crafted cabin",
+      "Hand-stitched Italian Pieno Fiore natural leather upholstery",
+      "Restyled signature Trident grille with LED-inspired taillamps",
+      "Redesigned instrument cluster with 10.1-inch HD touchscreen display",
+      "Maserati Intelligent Assistant (MIA) multimedia system with intuitive interface",
+      "Advanced driving assistance systems for enhanced safety and convenience"
+    ]
+  }
+}

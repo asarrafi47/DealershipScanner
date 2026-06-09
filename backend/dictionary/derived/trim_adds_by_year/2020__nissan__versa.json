@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|nissan|versa",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2020__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "17-inch Split 5-spoke aluminum-alloy wheels",
+      "LED headlights with LED signature Daytime Running Lights",
+      "Fog lights",
+      "Black painted heated outside mirrors with LED turn signal indicators",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System",
+      "Dark chrome V-Motion grille"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist Display",
+      "NissanConnect 7-inch touchscreen with Apple CarPlay and Android Auto",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "SiriusXM Radio with 3-month complimentary trial",
+      "Body-color heated outside mirrors with integrated turn signal indicators",
+      "Prima-Tex-appointed dash trim",
+      "Body-color exterior door handles",
+      "Chrome interior door handles"
+    ],
+    "S": [
+      "122-hp 1.6-liter DOHC 4-cylinder engine",
+      "5-speed manual transmission with available Xtronic CVT",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking",
+      "Lane Departure Warning",
+      "High Beam Assist",
+      "RearView Monitor",
+      "7-inch touchscreen display",
+      "Bluetooth Hands-free Phone System",
+      "Bluetooth streaming audio"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Nissan,ARIYA,ENGAGE FWD 63kWh,EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Station Wagons,,,109,94,101,,,,,
+2023,Nissan,ARIYA,EVO Plus/EMP Plus/PRM FWD 87kWh,EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Station Wagons,,,105,91,98,,,,,
+2023,Nissan,ARIYA,VENTURE Plus FWD 87kWh,EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Station Wagons,,,111,95,103,,,,,
+2023,Nissan,ARIYA,ENG Plus/EVO Plus e-4ORCE 87kWh,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,97,86,92,,,,,
+2023,Nissan,ARIYA,ENGAGE e-4ORCE 63kWh,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,101,89,95,,,,,
+2023,Nissan,ARIYA,PLAT Plus e-4ORCE 87kWh 19,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,93,87,90,,,,,
+2023,Nissan,ARIYA,PLAT Plus e-4ORCE 87kWh 20,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,89,84,87,,,,,

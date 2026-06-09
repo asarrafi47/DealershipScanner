@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|ford|expedition",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2013__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT Premium",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "XLT Premium": [
+      "Camel leather seats standard on 1st and 2nd rows",
+      "Equipment Group 203A with voice-activated navigation and 10-gigabyte hard drive",
+      "Power moonroof included",
+      "HD Radio Technology with Premium Sound System",
+      "SiriusXM Traffic and Travel Link with 6-month trial"
+    ],
+    "XLT": [
+      "5.4L 3-valve V8 FFV engine with 310 hp and 365 lb-ft torque",
+      "6-speed automatic transmission with tow/haul mode",
+      "4-wheel independent suspension with coil-over shocks",
+      "4-wheel power disc brakes with ABS and electronic brake force distribution",
+      "1st-row bucket seats with 6-way power driver's seat and 2-way adjustable head restraints",
+      "2nd-row 40/20/40 split-fold seat with CenterSlide feature",
+      "3rd-row 60/40 split-fold-flat-to-floor bench seat",
+      "Ford SYNC voice-activated in-vehicle connectivity system",
+      "Safety Canopy System with 3-row side-curtain airbags",
+      "18-inch machined aluminum wheels and black roof-rack side rails"
+    ]
+  }
+}

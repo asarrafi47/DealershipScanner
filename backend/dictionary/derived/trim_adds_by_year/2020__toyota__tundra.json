@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|toyota|tundra",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2020__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD PRO",
+    "1794 EDITION",
+    "PLATINUM",
+    "LIMITED",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "TRD PRO": [
+      "TRD coil-spring front suspension with 2-inch lift and TRD FOX shock absorbers with piggyback reservoirs",
+      "TRD FOX rear shock absorbers with piggyback reservoirs",
+      "Ground clearance 10.6 inches (4x4)"
+    ],
+    "1794 EDITION": [
+      "38.0-gallon fuel tank standard"
+    ],
+    "PLATINUM": [
+      "38.0-gallon fuel tank standard"
+    ],
+    "LIMITED": [
+      "38.0-gallon fuel tank available"
+    ],
+    "SR5": [
+      "26.4-gallon or 38.0-gallon fuel tank options"
+    ],
+    "SR": [
+      "5.7L V8 engine with Tow Package including towing receiver hitch and trailer brake controller",
+      "Hydraulic power rack-and-pinion steering",
+      "Power-assisted ventilated disc brakes with Star Safety System",
+      "All-Season tires with full-size spare mounted under body",
+      "26.4-gallon fuel tank standard"
+    ]
+  }
+}

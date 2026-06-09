@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2025|subaru|xvcrosstrek",
+  "year": 2025,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2025__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crosstrek Wilderness",
+    "Crosstrek Limited",
+    "Crosstrek Sport",
+    "Crosstrek Premium",
+    "Crosstrek"
+  ],
+  "adds_by_trim": {
+    "Crosstrek": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with Incline Start Assist and low mode",
+      "X-MODE featuring Hill Descent Control",
+      "Auto-on/off LED Steering Responsive Headlights with High Beam Assist",
+      "17-inch alloy wheels with dark gray finish",
+      "Subaru Dual 7.0-inch Multimedia System with Apple CarPlay and Android Auto",
+      "EyeSight Driver Assist Technology with Pre-Collision Braking",
+      "8 airbags with dual-stage deployment"
+    ],
+    "Crosstrek Premium": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Dual-Mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "LED fog lights",
+      "Keyless Access with Push-Button Start",
+      "Steering wheel with integrated manual-mode paddle shifters",
+      "Rear-seat center armrest with integrated cup holders",
+      "Subaru 11.6-inch Multimedia Plus System with wireless Apple CarPlay and Android Auto",
+      "4G LTE Wi-Fi capability",
+      "Dual-zone automatic climate control with dynamic ventilation and air filtration"
+    ],
+    "Crosstrek Sport": [
+      "High-grade LED Steering Responsive Headlights with High Beam Assist",
+      "18-inch alloy wheels with dark gray and machine finish",
+      "Crystal Black Silica exterior mirrors with integrated turn signals",
+      "Yellow exterior accents on front bumper, rear bumper and doors",
+      "Sport badging on front doors and rear gate",
+      "Sport cloth upholstery with yellow accents and stitching",
+      "Leather-wrapped steering wheel with yellow stitching",
+      "Yellow illuminated gauge rings",
+      "Qi wireless smartphone charging pad"
+    ],
+    "Crosstrek Limited": [
+      "18-inch alloy wheels with dark gray and machine finish",
+      "Dark gray exterior accents on front bumper, rear bumper and doors",
+      "10-way power adjustable driver's seat",
+      "Leather-trimmed upholstery with orange stitching",
+      "Leather-wrapped steering wheel and shifter handle with orange stitching",
+      "All-Weather Package with heated exterior mirrors and heated front seats",
+      "Retractable cargo-area cover",
+      "EyeSight Driver Assist Technology with Automatic Emergency Steering",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert"
+    ],
+    "Crosstrek Wilderness": [
+      "Advanced Dual-Mode X-MODE with Snow/Dirt and Deep Snow/Mud modes and low-ratio gradient control",
+      "9.3 inches of ground clearance with 3,500-lb towing capacity",
+      "4 tow points with Anodized Copper-finish covers",
+      "17-inch aluminum-alloy wheels with matte black finish and Yokohama GEOLANDAR All-Terrain tires",
+      "Hexagonal LED fog lights",
+      "Crosstrek Wilderness-design front and rear bumper covers with fender flares and side cladding",
+      "Matte-black anti-glare hood decal with raised roof rails and Anodized Copper accents",
+      "Crosstrek Wilderness StarTex water-repellent upholstery with Anodized Copper accents",
+      "Crosstrek Wilderness gauges with Anodized Copper-color gauge ring illumination"
+    ]
+  }
+}

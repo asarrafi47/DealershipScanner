@@ -161,14 +161,14 @@
                 <span class="premium-feature-badge">Premium</span>
             </div>
 
-            {% if not premium_embed %}
             <div class="premium-feature-card">
-                <div class="premium-feature-icon">{{ icon('bell', 32) }}</div>
-                <h3>Price Drop Alerts</h3>
-                <p>Save any car and get notified when its price drops. Track as many listings as you want across any dealership in our network.</p>
-                <span class="premium-feature-badge premium-feature-badge--soon">Coming Soon</span>
+                <div class="premium-feature-icon">{{ icon('chart', 32) }}</div>
+                <h3>EV Battery Health &amp; Range</h3>
+                <p>On electric and plug-in hybrid listings, see estimated battery state of health and a real-world max range projection based on age and mileage — so you know what you're buying before you visit the lot.</p>
+                <span class="premium-feature-badge">Premium</span>
             </div>
 
+            {% if not premium_embed %}
             <div class="premium-feature-card">
                 <div class="premium-feature-icon">{{ icon('star', 32) }}</div>
                 <h3>Everything Free Includes</h3>
@@ -235,14 +235,14 @@
                     <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
                 </tr>
                 <tr>
-                    <td>Factory options &amp; window sticker analysis</td>
+                    <td>EV battery health &amp; real-world range (EV / PHEV)</td>
                     <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
                     <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
                 </tr>
                 <tr>
-                    <td>Price drop alerts</td>
+                    <td>Factory options &amp; window sticker analysis</td>
                     <td class="col-free"><span class="icon-dash" aria-hidden="true">—</span></td>
-                    <td class="col-premium">Coming soon</td>
+                    <td class="col-premium"><span class="icon-check-wrap">{{ icon('check', 18) }}</span></td>
                 </tr>
             </tbody>
         </table>

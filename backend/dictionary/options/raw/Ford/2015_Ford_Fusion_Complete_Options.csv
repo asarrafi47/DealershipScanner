@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Ford,Fusion,AWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,22,31,25,,,,,
+2015,Ford,Fusion,FWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,22,33,26,,,,,
+2015,Ford,Fusion,FWD,2.5L I4,2.5L I4,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,22,33,26,,,,,
+2015,Ford,Fusion,FWD,1.5L I4 (SIDI; with Stop/Start Technology),1.5L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,25,36,29,,,,,
+2015,Ford,Fusion,FWD,1.5L I4 (SIDI),1.5L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,24,36,28,,,,,
+2015,Ford,Fusion,Hybrid FWD,Hybrid 2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,43,39,41,,,,,
+2015,Ford,Fusion,Energi Plug-in Hybrid,Plug-in Hybrid 2.0L I4 (PHEV),2.0L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline / Electricity,Midsize Cars,4,2.0,40,36,38,,,,,

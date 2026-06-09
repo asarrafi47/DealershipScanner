@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2012|hyundai|sonata",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_llm_2012__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Heated leather front and rear seats",
+      "Sport-tuned suspension and steering"
+    ],
+    "SE": [
+      "Sport-tuned suspension and steering",
+      "Steering-wheel-mounted cruise, audio and phone controls"
+    ],
+    "GLS": [
+      "Dual automatic climate controls with three-zone body-section buttons",
+      "8-way power driver seat with power lumbar support",
+      "Pillar-to-pillar panoramic sunroof",
+      "Steering-wheel-mounted cruise, audio and phone controls",
+      "Reinforced unibody construction with high-tensile steel",
+      "4-wheel ABS brakes with Brake Assist",
+      "Electronic Stability Control and Traction Control System",
+      "Active front head restraints",
+      "Intelligent airbag system with height and weight detection"
+    ]
+  }
+}

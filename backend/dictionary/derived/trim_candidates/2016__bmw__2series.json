@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|bmw|2series",
+  "year": 2016,
+  "make": "BMW",
+  "model": "2 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Sport",
+    "M235i"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

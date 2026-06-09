@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2021|jeep|compass",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Compass",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Willys"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

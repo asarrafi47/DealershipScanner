@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2014|chevrolet|silverado",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "2012_chevrolet_silverado_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "LTZ",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "ections Plan. 6-month subscription. ● ● ● ● ● ● ●",
+      "require USB connectivity. Data plan rates apply. 2Not compatible with all devices. 3Go to gmtotalconnect.com to find out which phones are compatible with the vehicle. 4If you subscribe after",
+      "siriusxm.com/travellink. XM satellite service is available only to those in the 48 contiguous USA and DC. Sirius, XM and all related marks and logos are trademarks of SiriusXM Radio, Inc. 5Full functionality",
+      "channels, live performances and equipment vehicle (or chassis) as distributed by General Motors are not covered by the General Motors New-Vehicle",
+      "a rear-facing infant restraint in the ASSEMBLY Chevrolet vehicles and their components are assembled or produced by different operating units of",
+      "your vehicle includes the equipment you",
+      "purchase or lease of an eligible new GM vehicle. With three cards to",
+      "schedule for up to 2 years or 24,000 miles, whichever comes first. Does not include air filters. Maximum of 4 service events."
+    ],
+    "LT": [
+      "MyLink 8-inch color touch radio with SiriusXM and navigation",
+      "Fog lamps halogen front",
+      "Color-matching power-adjustable mirrors with heated glass and spotter mirror"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "LT": 0
+    }
+  }
+}

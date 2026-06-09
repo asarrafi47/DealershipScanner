@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2013|infiniti|m",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "M",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2013_Infiniti_M_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [
+    2,
+    7
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 2,
+      "trim_hint": true,
+      "text": "2013 SPECIFICATIONS\nI N F I N I T I M\u00ae\nPower M37 M37x Infiniti M56 M56x\nAWD M\u00ae Hybrid AWD\nEngine\n3.7-liter (3,696cc) 24-valve V6, aluminum-alloy block and heads \u2022 \u2022\n3.5-liter V6 with Infiniti Direct Response Hybrid\u00ae utilizing a lithium-ion battery and 50 kW electric motor \u2022\n5.6-liter (5,552cc) 32-valve V8, aluminum-alloy block and heads \u2022 \u2022\nValvetrain\nDouble overhead camshaft (DOHC), 4 valves per cylinder with microfinished camshafts. Variable Valve Event \u2022 \u2022\nand Lift (VVEL\u00ae) and Continuously Variable Valve Timing Control System (CVTCS) optimizes opening of intake and\nexhaust valves\nDouble overhead camshaft (DOHC), 4 valves per cylinder with microfinished camshafts. Steel intake and exhaust \u2022\nvalves. Continuously Variable Valve Timing Control System (CVTCS) optimizes opening of intake and exhaust valves\nDouble overhead camshaft (DOHC), 4 valves per cylinder with microfinished camshafts. Direct Injection Gasoline \u2022 \u2022\n(DIG\u2122). Variable Valve Event and Lift (VVEL\u00ae) and Continuously Variable Valve Timing Control System (CVTCS)\noptimizes opening of intake and exhaust valves\nHorsepower\n330 hp @ 7,000 rpm \u2022 \u2022\n360 hp @ 6,500 rpm (Hybrid System Net Power) \u2022\n420 hp @ 6,000 rpm \u2022 \u2022\nTorque\n270 lb-ft @ 5,200 rpm \u2022 \u2022\nPeak engine 258 lb-ft and peak electric motor 199 lb-ft \u2022\n417 lb-ft @ 4,400 rpm \u2022 \u2022\nTransmission\nElectronically controlled 7-speed automatic with Adaptive Shift Control (ASC). Driver-adaptive learning algorithm \u2022 \u2022 \u2022 \u2022\nsenses driving style and adjusts automatic shifting accordingly. Manual shift mode offers sequentially selectable\nmanual gearshifts and Downshift Rev Matching\nElectronically controlled 7-speed automatic with Adaptive Shift Control (ASC). Driver-adaptive learning algorithm \u2022\nsenses driving style and adjusts automatic shifting accordingly. Manual shift mode offers sequentially selectable\nmanual gearshifts\nInfiniti Drive Mode Selector allows driver to choose between Standard, Sport, Snow or Eco mode and controls \u2022 \u2022 \u2022 \u2022 \u2022\nthrottle responses and transmission shift points\nHill start assist \u2022 \u2022 \u2022 \u2022 \u2022\nDrive Type\nRear-wheel drive \u2022 \u2022 \u2022\nIntelligent All-Wheel Drive (AWD) \u2022 \u2022\nHandling\nSteering\nType Vehicle-speed-sensitive power steering \u2022 \u2022 \u2022 \u2022 \u2022\nHybrid-Electric Power Steering (H-EPS) \u2022\nTurning diameter 36.7 feet \u2022 \u2022 \u2022\n37.4 feet \u2022 \u2022\n\u2022 Standard Available",
+      "table_lines": [
+        "\u2022 | \u2022",
+        "\u2022",
+        "\u2022 | \u2022",
+        "\u2022 | \u2022",
+        "\u2022",
+        "\u2022 | \u2022",
+        "\u2022 | \u2022",
+        "\u2022",
+        "\u2022 | \u2022",
+        "\u2022 | \u2022",
+        "\u2022",
+        "\u2022 | \u2022",
+        "\u2022 | \u2022 | \u2022 | \u2022",
+        "\u2022",
+        "\u2022 | \u2022 | \u2022 | \u2022 | \u2022",
+        "\u2022 | \u2022 | \u2022 | \u2022 | \u2022",
+        "\u2022 | \u2022 | \u2022",
+        "\u2022 | \u2022",
+        "\u2022 | \u2022 | \u2022 | \u2022 | \u2022",
+        "\u2022",
+        "\u2022 | \u2022 | \u2022",
+        "\u2022 | \u2022"
+      ]
+    },
+    {
+      "page": 7,
+      "trim_hint": true,
+      "text": "Dimensions and Figures M37 M37x Infiniti M56 M56x\nAWD M\u00ae Hybrid AWD\nExterior\nOverall length (inches) 194.7 194.7 194.7 194.7 194.7\nOverall width (inches) 72.6 72.6 72.6 72.6 72.6\nOverall height (inches) 59.1 59.6 59.1 59.1 59.6\nWheelbase (inches) 114.2 114.2 114.2 114.2 114.2\nTrack width (inches)\u2014front 62.0 62.0 62.0 62.0 62.0\nTrack width (inches)\u2014rear 61.8 61.6 61.8 61.8 61.6\nCoefficient of drag 0.27 0.27 0.26 0.27 0.27\nInterior\nHeadroom (inches)\u2014front 39.1 39.1 39.1 39.1 39.1\nHeadroom (inches)\u2014rear 37.7 37.7 37.7 37.7 37.7\nLegroom (inches)\u2014front 44.4 44.4 44.4 44.4 44.4\nLegroom (inches)\u2014rear 36.2 36.2 36.2 36.2 36.2\nShoulder room (inches)\u2014front 58.4 58.4 58.4 58.4 58.4\nShoulder room (inches)\u2014rear 56.7 56.7 56.7 56.7 56.7\nHip room (inches)\u2014front 54.3 54.3 54.3 54.3 54.3\nHip room (inches)\u2014rear 53.5 53.5 53.5 53.5 53.5\nWeight and Capacity\nPassenger volume (cubic feet) 103.6 103.6 103.6 103.6 103.6\nCargo volume (cubic feet) 14.9 14.9 11.3 14.9 14.9\nCurb weight (lbs) 3,863 4,059 4,136 4,032 4,240\nWeight distribution (percent)\u2014front/rear 54/46 55/45 51/49 56/44 57/43\nFuel capacity (gallons) 20.0 20.0 17.8 20.0 20.0\nEstimated Fuel Economy (mpg)14\u2014city/highway 18/26 17/24 27/32 16/24 16/23\nThis specification sheet is intended for general descriptive and informational purposes only. It is subject to change and does not constitute an offer, representation or warranty (express or implied) by\nNissan North America, Inc. Interested parties should confirm the accuracy of any information in this brochure as it relates to a vehicle directly with Infiniti before relying on it to make a purchase decision. Nissan\nNorth America, Inc. reserves the right to make changes, at any time, without prior notice, in prices, colors, materials, equipment, specifications, and models and to discontinue models or equipment. Due to\ncontinuous product development and other pre- and post-production factors, actual vehicle, materials and specifications may vary from this brochure. Some vehicles shown with optional equipment. See the\nactual vehicle for complete accuracy. Availability and delivery times for particular models or equipment may vary. Specifications, options and accessories may differ in Hawaii, U.S. territories and other countries.\nFor additional information on availability, options or accessories, see your Infiniti retailer or contact Nissan North America, Inc.\nInfiniti has taken care to ensure that the color swatches presented here are the closest possible representations of actual vehicle colors. Swatches may vary slightly due to the printing process and whether\nviewed in daylight, fluorescent or incandescent light. Please see the actual colors at your local Infiniti retailer.",
+      "table_lines": [
+        "194.7 | 194.7 | 194.7 | 194.7 | 194.7",
+        "72.6 | 72.6 | 72.6 | 72.6 | 72.6",
+        "59.1 | 59.6 | 59.1 | 59.1 | 59.6",
+        "114.2 | 114.2 | 114.2 | 114.2 | 114.2",
+        "62.0 | 62.0 | 62.0 | 62.0 | 62.0",
+        "61.8 | 61.6 | 61.8 | 61.8 | 61.6",
+        "0.27 | 0.27 | 0.26 | 0.27 | 0.27",
+        "39.1 | 39.1 | 39.1 | 39.1 | 39.1",
+        "37.7 | 37.7 | 37.7 | 37.7 | 37.7",
+        "44.4 | 44.4 | 44.4 | 44.4 | 44.4",
+        "36.2 | 36.2 | 36.2 | 36.2 | 36.2",
+        "58.4 | 58.4 | 58.4 | 58.4 | 58.4",
+        "56.7 | 56.7 | 56.7 | 56.7 | 56.7",
+        "54.3 | 54.3 | 54.3 | 54.3 | 54.3",
+        "53.5 | 53.5 | 53.5 | 53.5 | 53.5",
+        "103.6 | 103.6 | 103.6 | 103.6 | 103.6",
+        "14.9 | 14.9 | 11.3 | 14.9 | 14.9",
+        "3,863 | 4,059 | 4,136 | 4,032 | 4,240",
+        "54/46 | 55/45 | 51/49 | 56/44 | 57/43",
+        "20.0 | 20.0 | 17.8 | 20.0 | 20.0",
+        "18/26 | 17/24 | 27/32 | 16/24 | 16/23"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\n2013 SPECIFICATIONS\nI N F I N I T I M\u00ae\nPower M37 M37x Infiniti M56 M56x\nAWD M\u00ae Hybrid AWD\nEngine\n3.7-liter (3,696cc) 24-valve V6, aluminum-alloy block and heads \u2022 \u2022\n3.5-liter V6 with Infiniti Direct Response Hybrid\u00ae utilizing a lithium-ion battery and 50 kW electric motor \u2022\n5.6-liter (5,552cc) 32-valve V8, aluminum-alloy block and heads \u2022 \u2022\nValvetrain\nDouble overhead camshaft (DOHC), 4 valves per cylinder with microfinished camshafts. Variable Valve Event \u2022 \u2022\nand Lift (VVEL\u00ae) and Continuously Variable Valve Timing Control System (CVTCS) optimizes opening of intake and\nexhaust valves\nDouble overhead camshaft (DOHC), 4 valves per cylinder with microfinished camshafts. Steel intake and exhaust \u2022\nvalves. Continuously Variable Valve Timing Control System (CVTCS) optimizes opening of intake and exhaust valves\nDouble overhead camshaft (DOHC), 4 valves per cylinder with microfinished camshafts. Direct Injection Gasoline \u2022 \u2022\n(DIG\u2122). Variable Valve Event and Lift (VVEL\u00ae) and Continuously Variable Valve Timing Control System (CVTCS)\noptimizes opening of intake and exhaust valves\nHorsepower\n330 hp @ 7,000 rpm \u2022 \u2022\n360 hp @ 6,500 rpm (Hybrid System Net Power) \u2022\n420 hp @ 6,000 rpm \u2022 \u2022\nTorque\n270 lb-ft @ 5,200 rpm \u2022 \u2022\nPeak engine 258 lb-ft and peak electric motor 199 lb-ft \u2022\n417 lb-ft @ 4,400 rpm \u2022 \u2022\nTransmission\nElectronically controlled 7-speed automatic with Adaptive Shift Control (ASC). Driver-adaptive learning algorithm \u2022 \u2022 \u2022 \u2022\nsenses driving style and adjusts automatic shifting accordingly. Manual shift mode offers sequentially selectable\nmanual gearshifts and Downshift Rev Matching\nElectronically controlled 7-speed automatic with Adaptive Shift Control (ASC). Driver-adaptive learning algorithm \u2022\nsenses driving style and adjusts automatic shifting accordingly. Manual shift mode offers sequentially selectable\nmanual gearshifts\nInfiniti Drive Mode Selector allows driver to choose between Standard, Sport, Snow or Eco mode and controls \u2022 \u2022 \u2022 \u2022 \u2022\nthrottle responses and transmission shift points\nHill start assist \u2022 \u2022 \u2022 \u2022 \u2022\nDrive Type\nRear-wheel drive \u2022 \u2022 \u2022\nIntelligent All-Wheel Drive (AWD) \u2022 \u2022\nHandling\nSteering\nType Vehicle-speed-sensitive power steering \u2022 \u2022 \u2022 \u2022 \u2022\nHybrid-Electric Power Steering (H-EPS) \u2022\nTurning diameter 36.7 feet \u2022 \u2022 \u2022\n37.4 feet \u2022 \u2022\n\u2022 Standard Available\n\n\u2022 | \u2022\n\u2022\n\u2022 | \u2022\n\u2022 | \u2022\n\u2022\n\u2022 | \u2022\n\u2022 | \u2022\n\u2022\n\u2022 | \u2022\n\u2022 | \u2022\n\u2022\n\u2022 | \u2022\n\u2022 | \u2022 | \u2022 | \u2022\n\u2022\n\u2022 | \u2022 | \u2022 | \u2022 | \u2022\n\u2022 | \u2022 | \u2022 | \u2022 | \u2022\n\u2022 | \u2022 | \u2022\n\u2022 | \u2022\n\u2022 | \u2022 | \u2022 | \u2022 | \u2022\n\u2022\n\u2022 | \u2022 | \u2022\n\u2022 | \u2022\n\n--- page 7 ---\nDimensions and Figures M37 M37x Infiniti M56 M56x\nAWD M\u00ae Hybrid AWD\nExterior\nOverall length (inches) 194.7 194.7 194.7 194.7 194.7\nOverall width (inches) 72.6 72.6 72.6 72.6 72.6\nOverall height (inches) 59.1 59.6 59.1 59.1 59.6\nWheelbase (inches) 114.2 114.2 114.2 114.2 114.2\nTrack width (inches)\u2014front 62.0 62.0 62.0 62.0 62.0\nTrack width (inches)\u2014rear 61.8 61.6 61.8 61.8 61.6\nCoefficient of drag 0.27 0.27 0.26 0.27 0.27\nInterior\nHeadroom (inches)\u2014front 39.1 39.1 39.1 39.1 39.1\nHeadroom (inches)\u2014rear 37.7 37.7 37.7 37.7 37.7\nLegroom (inches)\u2014front 44.4 44.4 44.4 44.4 44.4\nLegroom (inches)\u2014rear 36.2 36.2 36.2 36.2 36.2\nShoulder room (inches)\u2014front 58.4 58.4 58.4 58.4 58.4\nShoulder room (inches)\u2014rear 56.7 56.7 56.7 56.7 56.7\nHip room (inches)\u2014front 54.3 54.3 54.3 54.3 54.3\nHip room (inches)\u2014rear 53.5 53.5 53.5 53.5 53.5\nWeight and Capacity\nPassenger volume (cubic feet) 103.6 103.6 103.6 103.6 103.6\nCargo volume (cubic feet) 14.9 14.9 11.3 14.9 14.9\nCurb weight (lbs) 3,863 4,059 4,136 4,032 4,240\nWeight distribution (percent)\u2014front/rear 54/46 55/45 51/49 56/44 57/43\nFuel capacity (gallons) 20.0 20.0 17.8 20.0 20.0\nEstimated Fuel Economy (mpg)14\u2014city/highway 18/26 17/24 27/32 16/24 16/23\nThis specification sheet is intended for general descriptive and informational purposes only. It is subject to change and does not constitute an offer, representation or warranty (express or implied) by\nNissan North America, Inc. Interested parties should confirm the accuracy of any information in this brochure as it relates to a vehicle directly with Infiniti before relying on it to make a purchase decision. Nissan\nNorth America, Inc. reserves the right to make changes, at any time, without prior notice, in prices, colors, materials, equipment, specifications, and models and to discontinue models or equipment. Due to\ncontinuous product development and other pre- and post-production factors, actual vehicle, materials and specifications may vary from this brochure. Some vehicles shown with optional equipment. See the\nactual vehicle for complete accuracy. Availability and delivery times for particular models or equipment may vary. Specifications, options and accessories may differ in Hawaii, U.S. territories and other countries.\nFor additional information on availability, options or accessories, see your Infiniti retailer or contact Nissan North America, Inc.\nInfiniti has taken care to ensure that the color swatches presented here are the closest possible representations of actual vehicle colors. Swatches may vary slightly due to the printing process and whether\nviewed in daylight, fluorescent or incandescent light. Please see the actual colors at your local Infiniti retailer.\n\n194.7 | 194.7 | 194.7 | 194.7 | 194.7\n72.6 | 72.6 | 72.6 | 72.6 | 72.6\n59.1 | 59.6 | 59.1 | 59.1 | 59.6\n114.2 | 114.2 | 114.2 | 114.2 | 114.2\n62.0 | 62.0 | 62.0 | 62.0 | 62.0\n61.8 | 61.6 | 61.8 | 61.8 | 61.6\n0.27 | 0.27 | 0.26 | 0.27 | 0.27\n39.1 | 39.1 | 39.1 | 39.1 | 39.1\n37.7 | 37.7 | 37.7 | 37.7 | 37.7\n44.4 | 44.4 | 44.4 | 44.4 | 44.4\n36.2 | 36.2 | 36.2 | 36.2 | 36.2\n58.4 | 58.4 | 58.4 | 58.4 | 58.4\n56.7 | 56.7 | 56.7 | 56.7 | 56.7\n54.3 | 54.3 | 54.3 | 54.3 | 54.3\n53.5 | 53.5 | 53.5 | 53.5 | 53.5\n103.6 | 103.6 | 103.6 | 103.6 | 103.6\n14.9 | 14.9 | 11.3 | 14.9 | 14.9\n3,863 | 4,059 | 4,136 | 4,032 | 4,240\n54/46 | 55/45 | 51/49 | 56/44 | 57/43\n20.0 | 20.0 | 17.8 | 20.0 | 20.0\n18/26 | 17/24 | 27/32 | 16/24 | 16/23"
+}

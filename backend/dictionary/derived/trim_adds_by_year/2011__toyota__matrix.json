@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2011|toyota|matrix",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Matrix",
+  "ladder_id": "brochure_web_2011__toyota__matrix",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "S",
+    "L"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.4-liter I-4 engine producing 158 hp and 162 lb-ft of torque",
+      "6.1-inch touch-screen audio display"
+    ],
+    "L": [
+      "1.8-liter I-4 engine producing 132 hp and 128 lb-ft of torque",
+      "Standard audio system with satellite radio capability",
+      "iPod connectivity and Bluetooth hands-free phone and audio streaming",
+      "Automatic sound leveling with six speakers",
+      "Five-speed manual transmission standard or optional four-speed automatic"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/matrix/"
+}

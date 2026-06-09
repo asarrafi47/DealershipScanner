@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_mazda_mx-30_complete_options",
+  "make": "Mazda",
+  "models": [
+    "MX-30",
+    "MX-30"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Select": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Battery 35.5 kWh prismatic lithium ion; The MX-30 features clamshell doors, marketed as freestyle doors by Mazda and previously used on the rotary-engined RX-8 sports car. It uses MacPherson strut front suspension and torsion beam rear suspension. (was…"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: kW (143 hp; 145 PS) (MHEV)[a]; Battery 35.5 kWh prismatic lithium ion"
+      }
+    ]
+  }
+}

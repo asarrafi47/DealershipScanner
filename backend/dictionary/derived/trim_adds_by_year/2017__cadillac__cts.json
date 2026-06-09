@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|cadillac|cts",
+  "year": 2017,
+  "make": "Cadillac",
+  "model": "CTS",
+  "ladder_id": "brochure_llm_2017__cadillac__cts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CTS V-Sport Premium Luxury",
+    "CTS Premium Luxury",
+    "CTS Luxury",
+    "CTS"
+  ],
+  "adds_by_trim": {
+    "CTS V-Sport Premium Luxury": [
+      "18-inch aluminum wheels with ultrabright machined finish and after midnight painted pockets",
+      "Performance summer-only run-flat tires"
+    ],
+    "CTS Premium Luxury": [
+      "19-inch aluminum wheels with polished finish including all-season blackwall run-flat tires",
+      "18-inch aluminum wheels with premium painted finish"
+    ],
+    "CTS Luxury": [
+      "18-inch aluminum wheels with polished finish",
+      "18-inch aluminum wheels with ultrabright finish and dark pockets",
+      "Available OnStar 4G LTE with built-in Wi-Fi hotspot"
+    ],
+    "CTS": [
+      "17-inch aluminum wheels with painted finish",
+      "17-inch aluminum wheels with ultrabright finish and dark pockets",
+      "Cadillac CUE infotainment system",
+      "OnStar services available",
+      "6-year/70,000-mile powertrain limited warranty with roadside assistance"
+    ]
+  }
+}

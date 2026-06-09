@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_toyota_yaris_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Yaris",
+    "Yaris"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Toyota Yaris Design Hybrid (MXPH11, UK); Trim levels offered are X \"B package\", X, G, and Z. Since February 2023, a m"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Also called Mazda2 Hybrid (Europe, 2022–present); Four-wheel drive is available as an option for 1.5-litre models, with the hybrid"
+      }
+    ]
+  }
+}

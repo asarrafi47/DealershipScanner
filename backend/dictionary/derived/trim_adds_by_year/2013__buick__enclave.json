@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|buick|enclave",
+  "year": 2013,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_web_2013__buick__enclave",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Avenir",
+    "Sport Touring",
+    "Preferred"
+  ],
+  "adds_by_trim": {
+    "Avenir": [
+      "Trim-specific 22-inch alloy wheels",
+      "Panoramic sunroof",
+      "Rain-sensing wipers",
+      "Adaptive dampers",
+      "Power package with head-up display",
+      "One-touch folding second row seats",
+      "Power-folding third row seats",
+      "16-speaker Bose audio system",
+      "Ventilated front seats with massaging feature",
+      "Heated second row outboard seats"
+    ],
+    "Sport Touring": [
+      "Trim-specific interior trim",
+      "Flat-bottom steering wheel",
+      "ST badges",
+      "Model-specific grille and 20-inch wheels"
+    ],
+    "Preferred": [
+      "Multicolor ambient lighting",
+      "Hands-free power liftgate",
+      "QuietTuning noise cancelling technology",
+      "First row power heated seats with four-way lumbar support",
+      "Model-specific 20-inch alloy wheels",
+      "Bose 12-speaker audio system",
+      "30.0-inch digital dashboard with Google operating system",
+      "Wireless Apple CarPlay and Android Auto",
+      "Standard automatic emergency braking with intersection detection",
+      "Lane keeping and traffic sign recognition"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/buick/enclave/"
+}

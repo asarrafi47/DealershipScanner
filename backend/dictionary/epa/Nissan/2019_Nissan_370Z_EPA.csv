@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2019,Nissan,370Z,370Z,3.7L V6,3.7L V6,,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.7,19,26,22,,,,,
+2019,Nissan,370Z,370Z,3.7L V6,3.7L V6,,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.7,17,26,20,,,,,
+2019,Nissan,370Z,Roadster,3.7L V6,3.7L V6,,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.7,18,25,21,,,,,

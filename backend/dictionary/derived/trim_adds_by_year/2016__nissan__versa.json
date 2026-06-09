@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2016|nissan|versa",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2016__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "S Plus",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Nissan Navigation System with 5.8-inch color touch-screen monitor",
+      "Around View Monitor",
+      "SiriusXM Satellite Radio with Traffic and Travel Link",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Tire Pressure Monitoring System with Easy-Fill Tire Alert"
+    ],
+    "SR": [
+      "Rear roof spoiler",
+      "Suede-like seat fabric with color-accented stitching",
+      "Leather-wrapped sport steering wheel",
+      "Sport grille and smoked headlights",
+      "Sport front and rear fascias with side sills",
+      "Fog lights",
+      "Dual power outside mirrors with LED turn signal indicators",
+      "Variable intermittent flat-blade windshield wipers"
+    ],
+    "SV": [
+      "NissanConnect with Mobile Apps and 5.0-inch color display",
+      "RearView Monitor",
+      "Hands-free text messaging assistant",
+      "Streaming audio via Bluetooth wireless technology",
+      "Voice Recognition for audio and navigation",
+      "SiriusXM Satellite Radio",
+      "Heated front seats",
+      "USB connection port for iPod interface and compatible devices",
+      "Dual power heated outside mirrors with LED turn signal indicators",
+      "Divide-N-Hide Adjustable Floor"
+    ],
+    "S Plus": [
+      "Xtronic CVT (Continuously Variable Transmission)",
+      "Active grille shutter",
+      "Up to 40 MPG highway"
+    ],
+    "S": [
+      "1.6-liter 4-cylinder engine",
+      "5-speed manual transmission",
+      "15-inch steel wheels with wheel covers",
+      "P185/65HR15 all-season low rolling resistance tires",
+      "Dual power outside mirrors",
+      "Bluetooth Hands-free Phone System",
+      "Air conditioning",
+      "Fine Vision electroluminescent gauges",
+      "60/40 split fold-down rear seats",
+      "AM/FM/CD audio system with MP3/WMA playback and auxiliary input"
+    ]
+  }
+}

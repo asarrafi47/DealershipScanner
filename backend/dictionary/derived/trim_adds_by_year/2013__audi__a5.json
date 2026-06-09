@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|audi|a5",
+  "year": 2013,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_2013__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Sport",
+    "Limited",
+    "SE",
+    "LE",
+    "A5"
+  ],
+  "adds_by_trim": {
+    "A5": [
+      "Adds 2.0T turbocharged TFSI four-cylinder engine with 211 horsepower",
+      "Adds five-link front suspension with sport calibration",
+      "Adds trapezoidal-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds fully galvanized steel unibody with multistep anti-corrosion protection"
+    ],
+    "LE": [],
+    "SE": [],
+    "Limited": [],
+    "Sport": [
+      "2.0-liter TFSI turbocharged engine",
+      "18-inch Audi Sport 10-spoke design wheels standard",
+      "Electronic Stability Control system with torque vectoring"
+    ],
+    "S line": [],
+    "Premium": [
+      "18-inch 10-spoke-V design wheels",
+      "245/40 all-season tires"
+    ]
+  }
+}

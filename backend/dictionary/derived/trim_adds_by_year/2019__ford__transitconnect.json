@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2019|ford|transitconnect",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_2019__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper warranty coverage",
+      "Adds Includes 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion perforation coverage"
+    ],
+    "Limited": []
+  }
+}

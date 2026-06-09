@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2018|chevrolet|tahoe",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2018__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "6.2L EcoTec3 V8 engine with 420 hp and 460 lb-ft torque",
+      "Hydra-Matic 10-speed automatic transmission",
+      "Bose Centerpoint Surround Sound 10-speaker audio system",
+      "Adaptive Cruise Control with Forward Automatic Braking",
+      "Enhanced Driver Information Center with 8-inch display and Head-Up Display"
+    ],
+    "LT": [
+      "Bose premium 9-speaker audio system",
+      "Chevrolet MyLink 8-inch navigation touchscreen with 5 USB ports",
+      "Rear-Seat Blu-ray Entertainment System with wireless headphones",
+      "Second-row bucket seats with power-release"
+    ],
+    "SL": [
+      "5.3L EcoTec3 V8 engine with 355 hp and 383 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "6-speaker audio system",
+      "Front bucket seats with 10-way power driver and 6-way power passenger",
+      "OnStar Basic Plan for five years",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for seven devices"
+    ]
+  }
+}

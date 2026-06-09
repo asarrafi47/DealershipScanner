@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2011|ford|edge",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_web_2011__ford__edge",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Edge ST AWD",
+    "Edge Titanium AWD",
+    "Edge ST-Line AWD",
+    "Edge SEL AWD",
+    "Edge SE AWD"
+  ],
+  "adds_by_trim": {
+    "Edge ST AWD": [
+      "2.7-liter twin-turbocharged V-6 engine with 335 hp and 380 lb-ft torque",
+      "0-60 mph in 6.1 seconds",
+      "Sport-tuned suspension system",
+      "Available Brembo brakes",
+      "Optional summer performance tires",
+      "Dark exterior styling cues",
+      "Larger wheels than standard models"
+    ],
+    "Edge Titanium AWD": [
+      "Wireless charging pad for mobile devices",
+      "12-speaker Bang & Olufsen premium audio system",
+      "Premium interior appointments"
+    ],
+    "Edge ST-Line AWD": [
+      "ST-line specific exterior styling",
+      "Enhanced visual presence compared to SEL"
+    ],
+    "Edge SEL AWD": [
+      "Upgraded features compared to base SE model"
+    ],
+    "Edge SE AWD": [
+      "2.0-liter turbocharged I-4 engine with 250 hp and 280 lb-ft torque",
+      "Eight-speed automatic transmission with standard AWD",
+      "12.0-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto connectivity",
+      "Two USB ports standard",
+      "Dual 4.2-inch LCD displays in gauge cluster",
+      "Six-speaker audio system",
+      "Ford Co-Pilot360 suite with driver assist features",
+      "Automatic high-beams, front automatic emergency braking, rear cross-traffic alert, blind-spot monitoring, lane keep assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/edge/"
+}

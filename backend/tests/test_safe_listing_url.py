@@ -25,5 +25,18 @@ def test_blocks_private_ip_image_url() -> None:
     assert normalize_listing_image_url("https://192.168.1.10/photo.jpg") is None
 
 
+def test_blocks_localhost_in_production(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("FLASK_ENV", "production")
+    assert normalize_listing_image_url("https://127.0.0.1/photo.jpg") is None
+    assert normalize_listing_image_url("https://localhost/photo.jpg") is None
+
+
+def test_normalize_safe_http_url_blocks_javascript() -> None:
+    from backend.utils.safe_listing_url import normalize_safe_http_url
+
+    assert normalize_safe_http_url("javascript:alert(1)") is None
+    assert normalize_safe_http_url("https://dealer.example.com") == "https://dealer.example.com"
+
+
 def test_blocks_credentials_in_url() -> None:
     assert normalize_listing_image_url("https://user:pass@example.com/x.jpg") is None

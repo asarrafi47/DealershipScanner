@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2011|nissan|gtr",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_2011__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds electronic analog instrument cluster with upshift indicator and digital gear indicator",
+      "Adds touch-screen navigation system with voice activation",
+      "Adds multi-function display with performance monitor",
+      "Adds 9.3 GB Music Box audio system",
+      "Adds 11-speaker Bose audio system with dual subwoofers",
+      "Adds USB connectivity with iPod compatibility and DVD playback",
+      "Adds Nissan Intelligent Key with Push Button Ignition",
+      "Adds Bluetooth hands-free phone system and streaming audio",
+      "Adds hand-stitched leather-wrapped steering wheel with audio and cruise controls",
+      "Adds dual clutch 6-speed transmission with paddle shifters"
+    ],
+    "Limited": [
+      "Adds available 11-speaker Bose audio system with dual subwoofers",
+      "Adds available Interface System for iPod connectivity"
+    ]
+  }
+}

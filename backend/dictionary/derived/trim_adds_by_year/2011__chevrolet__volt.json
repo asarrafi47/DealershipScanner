@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2011|chevrolet|volt",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "brochure_llm_2011__chevrolet__volt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Trim Package",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium Trim Package": [
+      "Perforated leather-appointed seat trim with color-keyed textile accents",
+      "Leather-wrapped steering wheel",
+      "Heated driver and front passenger seats with auto-heated selectable activation",
+      "Premium door trim with layered graphics"
+    ],
+    "Base": [
+      "Bifunctional halogen projector headlamps with Automatic Exterior Lamp Control",
+      "Heated power-adjustable body-color outside mirrors with integrated turn signals",
+      "Rear spoiler",
+      "Tilt and telescoping steering wheel",
+      "Lithium-ion 16 kWh Rechargeable Energy Storage System with liquid thermal management",
+      "Drive mode control switch: Normal, Sport and Mountain modes",
+      "Voltec electric drive with 149 hp and 273 lb-ft torque",
+      "1.4L range extender engine with 83 hp requiring premium fuel",
+      "Electric Power Steering with variable assist",
+      "MacPherson strut front and semi-independent compound crank rear suspension"
+    ]
+  }
+}

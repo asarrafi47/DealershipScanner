@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2024|nissan|titan",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Titan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum Reserve",
+    "Platinum",
+    "Pro-4X",
+    "SV",
+    "Midnight Edition",
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

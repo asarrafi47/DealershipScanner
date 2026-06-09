@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|jaguar|xf",
+  "year": 2010,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_2010__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds 7 inch full color Touch-screen display with audio and climate control",
+      "Adds Bluetooth telephone connectivity with hands-free mobile phone use",
+      "Adds JaguarVoice voice control for telephone and navigation",
+      "Adds auto recirculation climate control with external sensor",
+      "Adds parking aid pack with rear camera and front sensors",
+      "Adds portable audio interface for iPod and MP3 player connection",
+      "Adds Windows Media Audio and MP3 compatibility"
+    ],
+    "Sport": [
+      "Adds R Interior Theme with dark mesh aluminium finish on instrument panel and doors",
+      "Adds Dark Oak veneer with Warm Charcoal upper and lower environment",
+      "Adds JaguarSense Sports seats with embossed R logo front and rear",
+      "Adds R badging on steering wheel and instrument panel",
+      "Adds instrument cluster dials with red pointers and Supercharged motif"
+    ],
+    "Premium": [
+      "Adds R Exterior Theme with deeper section front bumper and larger lower air intakes",
+      "Adds side sill extensions and aerodynamic trunk lid spoiler",
+      "Adds quad exhaust tailpipes with body color rear valance",
+      "Adds Supercharged embossed hood louvers for additional cooling",
+      "Adds silver-grey brake calipers with R logo",
+      "Adds R badge on trunk lid"
+    ]
+  }
+}

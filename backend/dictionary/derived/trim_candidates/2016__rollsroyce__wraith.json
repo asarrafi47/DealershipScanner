@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2016|rollsroyce|wraith",
+  "year": 2016,
+  "make": "Rolls Royce",
+  "model": "Wraith",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

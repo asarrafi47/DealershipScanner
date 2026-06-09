@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|hyundai|elantra",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2010__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "GLS",
+    "Blue"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Sport-tuned steering and suspension",
+      "16-inch alloy wheels with P205/55R16 tires",
+      "Electronic Stability Control with Traction Control System",
+      "Leather-wrapped steering wheel and shift knob",
+      "Steering-wheel-mounted audio controls",
+      "Trip computer",
+      "Fog lights"
+    ],
+    "GLS": [
+      "4-speed automatic transmission option",
+      "Air conditioning",
+      "AM/FM/XM/CD/MP3 audio system with 6 speakers",
+      "iPod/USB and MP3 auxiliary input jacks",
+      "Cruise control",
+      "Dual front illuminated vanity mirrors",
+      "Front sun visor extensions",
+      "Tilt-and-telescopic steering wheel"
+    ],
+    "Blue": [
+      "2.0L DOHC 4-cylinder engine with CVVT",
+      "5-speed manual transmission",
+      "EcoShift Indicator",
+      "26/35 MPG city/highway",
+      "4-wheel independent suspension",
+      "15-inch steel wheels with P195/65R15 tires",
+      "4-wheel disc brakes with ABS and Electronic Brake-force Distribution",
+      "6 airbags including dual front, side-impact, and side-curtain airbags",
+      "Active front head restraints",
+      "Tire Pressure Monitoring System"
+    ]
+  }
+}

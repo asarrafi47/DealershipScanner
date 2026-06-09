@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|jeep|liberty",
+  "year": 2010,
+  "make": "Jeep",
+  "model": "Liberty",
+  "ladder_id": "brochure_llm_2010__jeep__liberty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Maximum payload capacity of 1,150 pounds versus 950 pounds on Sport"
+    ],
+    "Sport": [
+      "3.7L SOHC V6 engine with 210 horsepower and 235 lb-ft torque",
+      "4-speed automatic transmission with overdrive and lockup torque converter",
+      "Electronic Stability Control with four-channel ABS and active sensors",
+      "Hill Start Assist and Hill Descent Control on 4x4 models",
+      "Power-assisted rack-and-pinion steering with 35.5-foot turning diameter",
+      "Independent front suspension with coil springs and gas-charged shocks",
+      "Five-link solid rear axle with coil springs and stabilizer bar",
+      "UniFrame construction with all-steel body and welded frame",
+      "Seating capacity for 5 adults with 25.2 cubic feet cargo volume",
+      "Class III towing capability with 5,000-pound maximum trailer weight"
+    ]
+  }
+}

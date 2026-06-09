@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2014_ram_3500_complete_options",
+  "make": "Ram",
+  "models": [
+    "3500",
+    "3500"
+  ],
+  "year_min": 2012,
+  "year_max": 2016,
+  "source": "generated",
+  "trims": {
+    "Laramie": [
+      {
+        "label": "Engine Options",
+        "value": "6.7L V6 Turbo; Automatic 6-spd"
+      }
+    ],
+    "Big Horn": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Four-Wheel Drive"
+      }
+    ],
+    "Tradesman": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ]
+  }
+}

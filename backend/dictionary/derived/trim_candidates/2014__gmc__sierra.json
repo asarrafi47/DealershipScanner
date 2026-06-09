@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2014|gmc|sierra",
+  "year": 2014,
+  "make": "GMC",
+  "model": "Sierra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium",
+    "Base",
+    "E85"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2018|jaguar|ftype",
+  "year": 2018,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_llm_2018__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F-TYPE SVR",
+    "F-TYPE 400 SPORT",
+    "F-TYPE R-DYNAMIC",
+    "F-TYPE R",
+    "F-TYPE"
+  ],
+  "adds_by_trim": {
+    "F-TYPE SVR": [
+      "Special Vehicle Operations engineering and performance enhancements",
+      "F-TYPE SVR specific aerodynamics for enhanced downforce",
+      "Lightweight technologies reducing overall vehicle weight",
+      "F-TYPE SVR exclusive interior design and appointments"
+    ],
+    "F-TYPE 400 SPORT": [
+      "Special Edition badging and exclusive styling"
+    ],
+    "F-TYPE R-DYNAMIC": [
+      "R-Dynamic exterior styling and aggressive design cues",
+      "Configurable Dynamic Mode for personalized driving characteristics",
+      "Advanced torque vectoring for enhanced cornering capability"
+    ],
+    "F-TYPE R": [
+      "3.0-liter supercharged V6 producing 340 horsepower",
+      "332 lb-ft maximum torque from 3,500 to 5,000 RPM",
+      "0-60 mph acceleration in 5.1 seconds (automatic)",
+      "Top speed of 161 mph",
+      "18.5-gallon fuel tank capacity",
+      "Available all-wheel drive system"
+    ],
+    "F-TYPE": [
+      "2.0-liter turbocharged i4 engine with 296 horsepower",
+      "295 lb-ft maximum torque from 1,500 to 4,500 RPM",
+      "0-60 mph acceleration in 5.4 seconds (automatic)",
+      "Top speed of 155 mph",
+      "16.6-gallon fuel tank capacity",
+      "LED J-blade daytime running lights",
+      "Lightweight aluminum architecture",
+      "Available roof styles including aluminum, panoramic glass, carbon fiber, and fabric"
+    ]
+  }
+}

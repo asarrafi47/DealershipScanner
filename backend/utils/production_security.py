@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import os
 
+from backend.utils.credential_db_encryption import assert_credential_db_encryption_config
 from backend.utils.runtime_env import is_production_env
 
 _log = logging.getLogger(__name__)
@@ -22,9 +23,11 @@ def app_admin_dev_pass_through_allowed() -> bool:
 
 
 def assert_production_security_config() -> None:
-    """Fail fast on dangerous production configuration (SEC-081)."""
+    """Fail fast on dangerous production configuration (SEC-081, SEC-088)."""
     if not is_production_env():
         return
+
+    assert_credential_db_encryption_config()
 
     dev_console = (os.environ.get("DEV_CONSOLE") or "").strip().lower() in (
         "1",
@@ -68,3 +71,23 @@ def assert_production_security_config() -> None:
     cors = (os.environ.get("SOCKETIO_CORS_ORIGINS") or "").strip()
     if cors == "*":
         _log.warning("SOCKETIO_CORS_ORIGINS=* in production allows any Socket.IO browser origin.")
+
+    if not (os.environ.get("DEV_IP_ALLOWLIST") or "").strip():
+        _log.warning(
+            "/dev is reachable without DEV_IP_ALLOWLIST; set comma-separated IPs/CIDRs for defense in depth."
+        )
+
+    if (os.environ.get("ALLOW_DEV_PUBLIC_REGISTER") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    ):
+        _log.warning(
+            "ALLOW_DEV_PUBLIC_REGISTER=1 allows self-serve /dev/register operator accounts."
+        )
+
+    if (os.environ.get("TRUST_PROXY_HEADERS") or "").strip().lower() in ("1", "true", "yes", "on"):
+        _log.warning(
+            "TRUST_PROXY_HEADERS=1: rate limits trust X-Forwarded-For — use only behind a trusted reverse proxy."
+        )

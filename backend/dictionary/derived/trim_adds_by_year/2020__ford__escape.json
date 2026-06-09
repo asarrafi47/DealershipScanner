@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2020|ford|escape",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2020__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TITANIUM",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "TITANIUM": [
+      "B&O Sound System with 10 speakers including subwoofer and HD Radio",
+      "Ford Co-Pilot360 Assist+ with Adaptive Cruise Control, Lane Centering, Voice-Activated Navigation",
+      "Active Park Assist 2.0 with Parallel, Perpendicular, and Park Out capabilities",
+      "12.3-inch configurable LCD digital instrument cluster",
+      "Dual-zone electronic automatic temperature control",
+      "Ambient lighting with 7 selectable hues",
+      "Heated steering wheel",
+      "Head-up display (Premium Package)",
+      "Power panoramic Vista Roof (Premium Package or optional)",
+      "19-inch machined-face aluminum wheels"
+    ],
+    "SEL": [
+      "Hands-free, foot-activated liftgate",
+      "ActiveX high-end synthetic seating material on contoured front bucket seats",
+      "Reverse Sensing System",
+      "Fog lamps",
+      "18-inch aluminum wheels with painted pockets",
+      "2.0L EcoBoost engine option with 250 hp and 8-speed SelectShift transmission with paddle shifters",
+      "Class II Trailer Tow Package (2.0L EcoBoost only)",
+      "Leather-wrapped heated steering wheel"
+    ],
+    "SE": [
+      "SYNC 3 with 8-inch LCD capacitive touchscreen, Apple CarPlay, Android Auto compatibility",
+      "SiriusXM with 6-month All Access trial subscription",
+      "Heated front seats",
+      "Push-button start with Intelligent Access",
+      "SecuriCode invisible keypad",
+      "10-way power driver's seat with power lumbar and recline",
+      "Electronic automatic temperature control",
+      "Body-color power heated sideview mirrors",
+      "Halogen projector-beam headlamps with LED signature lamps",
+      "17-inch shadow silver-painted aluminum wheels"
+    ]
+  }
+}

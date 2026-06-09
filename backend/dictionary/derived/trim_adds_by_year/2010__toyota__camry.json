@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|toyota|camry",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "2010_toyota_camry",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LE",
+    "SE",
+    "XLE",
+    "Hybrid"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Sport-tuned appearance: blackout sport grille and blue-tinted headlamp bezels",
+      "Integrated front fog lamps and 17-inch 5-spoke machined alloy wheels",
+      "Unique Sport fabric seats, sport steering wheel, and aluminum sport pedals",
+      "Dual exhaust with chrome tips vs base LE"
+    ],
+    "XLE": [
+      "Leather-trimmed seats with heated front seats",
+      "Smart Key push-button start and auto-dimming compass mirror",
+      "Dual-zone auto climate with Plasmacluster ionizer",
+      "JBL 6-disc in-dash audio with Bluetooth and USB/iPod",
+      "Power moonroof and navigation with backup camera available"
+    ],
+    "Hybrid": [
+      "2.4L 4-cylinder Hybrid Synergy Drive with ECVT (replaces 2.5L on gas LE)",
+      "SmartGauge with Eco Drive Level and hybrid energy flow display",
+      "16-inch 10-spoke aero aluminum wheels",
+      "EPA-rated high-efficiency powertrain for 2010 Camry Hybrid"
+    ],
+    "LE": [
+      "3.5-liter V6 DOHC engine with 268 hp and 248 lb-ft torque",
+      "All features from LE 4-Cylinder"
+    ]
+  }
+}

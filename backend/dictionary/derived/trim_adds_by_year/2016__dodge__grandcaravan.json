@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2016|dodge|grandcaravan",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2016__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T/R",
+    "R/T",
+    "TXS",
+    "ES",
+    "PVA",
+    "SXT Plus",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "T/R": [
+      "Luxury steering wheel",
+      "Heated 2nd-row seats via Driver Convenience Group",
+      "Uconnect Voice Command via Driver Convenience Group",
+      "3.6L Pentastar V6 with 6-speed automatic transmission"
+    ],
+    "R/T": [
+      "Heated front and 2nd-row seats via Driver Convenience Group",
+      "Performance-tuned suspension",
+      "Load-leveling and height-control suspension"
+    ],
+    "TXS": [
+      "3-Zone Automatic Temperature Control via Driver Convenience Group",
+      "Super Console storage",
+      "8-way power front-passenger seat"
+    ],
+    "ES": [
+      "8-way power driver's seat",
+      "Reactive front head restraints"
+    ],
+    "PVA": [
+      "Body-color door handles",
+      "Body-color grille",
+      "Body-color bodyside molding"
+    ],
+    "SXT Plus": [
+      "Foldaway power heated mirrors with body-color exterior",
+      "Heated front seats via Driver Convenience Group"
+    ],
+    "SXT": [
+      "3.6L Pentastar V6 engine with 6-speed automatic transmission",
+      "160-amp alternator and 730-amp maintenance-free battery",
+      "4-wheel antilock brakes with heavy-duty discs",
+      "Rear defroster and electronic stability control with traction control",
+      "Power sliding doors and power liftgate",
+      "Remote keyless entry system with 2 transmitters",
+      "Dual-zone front manual air conditioning",
+      "Power door locks and console floor storage with cup holders"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|bmw|z4",
+  "year": 2015,
+  "make": "BMW",
+  "model": "Z4",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

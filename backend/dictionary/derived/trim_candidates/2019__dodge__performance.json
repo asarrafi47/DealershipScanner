@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2019|dodge|performance",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Performance",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat Redeye",
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack",
+    "R/T Scat Pack",
+    "Daytona",
+    "R/T",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2022_audi_tts_complete_options",
+  "make": "Audi",
+  "models": [
+    "TTS",
+    "TTS"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Sep 1, 2025There are also several stand-alone options, such as a heated steering wheel and; Front-engine, front-wheel-drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Sep 1, 2025There are also several stand-alone options, such as a heated steering wheel and; Front-engine, front-wheel-drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ],
+    "40 TFSI": [
+      {
+        "label": "Engine Options",
+        "value": "Sep 1, 2025There are also several stand-alone options, such as a heated steering wheel and"
+      }
+    ]
+  }
+}

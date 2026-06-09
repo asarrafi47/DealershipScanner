@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|hyundai|equus",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Equus",
+  "ladder_id": "brochure_2015__hyundai__equus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Equus Concierge Services with white-glove delivery test drive",
+      "Adds complimentary valet service with courtesy vehicle replacement",
+      "Adds 3 years or 36,000 miles of free scheduled maintenance",
+      "Adds Customer Connect Center support via phone and app",
+      "Adds Enhanced Car Care with Monthly Vehicle Health Reports and maintenance alerts",
+      "Adds Blue Link connected car services with remote vehicle management",
+      "Adds Automatic Collision Notification and SOS Emergency Assistance",
+      "Adds Enhanced Roadside Assistance with 5 years unlimited miles coverage",
+      "Adds Service Link mobile scheduling capability"
+    ],
+    "Blue": [
+      "Adds Blue Link connected car services with emergency assistance",
+      "Adds Lexicon premium audio system",
+      "Adds Bluetooth wireless connectivity",
+      "Adds SiriusXM satellite radio with 90-day complimentary subscription",
+      "Adds HD Radio digital tuning",
+      "Adds Electronic Stability Control safety system",
+      "Adds Supplemental Restraint System with multiple airbags",
+      "Adds 3 years or 36,000 miles of free scheduled maintenance coverage"
+    ],
+    "Limited": [
+      "Adds Hyundai At Your Service valet pickup and delivery for maintenance",
+      "Adds courtesy replacement vehicle during service appointments",
+      "Adds Customer Connect Center priority support line"
+    ]
+  }
+}

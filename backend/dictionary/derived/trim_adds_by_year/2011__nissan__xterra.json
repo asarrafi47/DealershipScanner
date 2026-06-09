@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|nissan|xterra",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Xterra",
+  "ladder_id": "generic_nissan_xterra",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Pro-4X",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Goodrich Corporation.® Long Trail T/A and Rugged Trail T/A are registered trademarks of Uniroyal"
+    ],
+    "Pro-4X": [
+      "Nissan Navigation System with 5.8-inch color touch-screen and Voice Recognition",
+      "SiriusXM® Traffic and Travel Link®",
+      "RearView Monitor",
+      "Rockford Fosgate®-powered AM/FM/CD audio system",
+      "16-inch aluminum-alloy wheels with P265/75R16 Hankook all-terrain tires",
+      "Bilstein® off-road performance shocks",
+      "Skid plates for transfer case, oil pan, and fuel tank",
+      "Electronic locking rear differential",
+      "Heated front seats",
+      "White-faced gauges"
+    ],
+    "Premium": [
+      "Goodrich licensing"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Premium": 0
+    }
+  }
+}

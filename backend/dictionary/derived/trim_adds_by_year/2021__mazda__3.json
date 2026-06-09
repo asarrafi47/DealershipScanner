@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2021|mazda|3",
+  "year": 2021,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2021__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA3 2.5 S HATCHBACK",
+    "MAZDA3 2.5 S SEDAN",
+    "MAZDA3 2.0 SEDAN"
+  ],
+  "adds_by_trim": {
+    "MAZDA3 2.5 S HATCHBACK": [
+      "SKYACTIV-G 2.5L DOHC 16-valve 4-cylinder engine",
+      "SKYACTIV-Drive 6-speed automatic with Sport modes",
+      "G-Vectoring Control Plus vehicle dynamics system",
+      "16-inch alloy wheels with P205/60 R16 tires",
+      "LED headlights with auto on/off and daytime running lights",
+      "8.8-inch full-color MAZDA CONNECT infotainment display",
+      "Apple CarPlay and Android Auto integration",
+      "Rain-sensing windshield wipers",
+      "Bluetooth hands-free phone and audio streaming"
+    ],
+    "MAZDA3 2.5 S SEDAN": [
+      "SKYACTIV-G 2.5L DOHC 16-valve 4-cylinder engine",
+      "SKYACTIV-Drive 6-speed automatic with Sport modes",
+      "G-Vectoring Control Plus vehicle dynamics system",
+      "16-inch alloy wheels with P205/60 R16 tires",
+      "LED headlights with auto on/off and daytime running lights",
+      "8.8-inch full-color MAZDA CONNECT infotainment display",
+      "Apple CarPlay and Android Auto integration",
+      "Rain-sensing windshield wipers",
+      "Mazda Radar Cruise Control with Stop & Go"
+    ],
+    "MAZDA3 2.0 SEDAN": [
+      "SKYACTIV-G 2.0L DOHC 16-valve 4-cylinder engine",
+      "SKYACTIV-Drive 6-speed automatic transmission",
+      "G-Vectoring Control Plus vehicle dynamics",
+      "16-inch alloy wheels with P205/60 R16 tires",
+      "LED headlights with auto on/off and daytime running lights",
+      "8.8-inch MAZDA CONNECT infotainment system",
+      "Advanced front and side-impact air bags with curtains",
+      "Rearview camera with Dynamic Stability Control",
+      "Smart Brake Support and Driver Attention Alert"
+    ]
+  }
+}

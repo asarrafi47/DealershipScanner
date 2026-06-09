@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2015|kia|sportage",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_llm_2015__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XS",
+    "XE",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XE": [
+      "18-inch alloy wheels",
+      "Chrome exterior door handles",
+      "Heated outside mirrors",
+      "Power windows with driver's one-touch auto up/down",
+      "UVO eServices Infotainment System with voice-command navigation and SiriusXM Traffic",
+      "Push-button start with Smart Key",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Auto-on/off headlights",
+      "Trip computer",
+      "Rear-Camera Display and Back-Up Warning System"
+    ],
+    "XS": [
+      "2.0L Gasoline Direct Injection 4-cylinder engine",
+      "Front fog lights",
+      "LED daytime running lights",
+      "Rear LED taillights",
+      "Chrome front grille",
+      "Chrome dual-outlet exhaust finish",
+      "Power tilt/sliding panoramic sunroof",
+      "Power-folding outside mirrors",
+      "Mesh-style front grille replaces chrome grille"
+    ],
+    "XL": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine with 180 horsepower",
+      "6-speed Sportmatic transmission with overdrive",
+      "17-inch alloy wheels with tires",
+      "Body-color exterior door handles",
+      "Chrome front grille",
+      "AM/FM/CD/MP3/SiriusXM audio system with 4 speakers",
+      "Power windows",
+      "Front and rear intermittent windshield wipers",
+      "Windshield de-icer",
+      "Traction Control System and Electronic Stability Control"
+    ]
+  }
+}

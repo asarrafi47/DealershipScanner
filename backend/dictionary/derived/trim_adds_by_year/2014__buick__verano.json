@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2014|buick|verano",
+  "year": 2014,
+  "make": "Buick",
+  "model": "Verano",
+  "ladder_id": "brochure_llm_2014__buick__verano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Turbo Group",
+    "Leather Group",
+    "Convenience Group"
+  ],
+  "adds_by_trim": {
+    "Turbo Group": [
+      "2.0L Turbo DOHC engine with 250 hp and 260 lb-ft torque",
+      "20 city / 31 highway EPA-estimated mpg with manual transmission"
+    ],
+    "Leather Group": [
+      "Premium grade leather-appointed seating",
+      "Bose premium audio system",
+      "Passive entry system with push-button start"
+    ],
+    "Convenience Group": [
+      "Forward collision alert system",
+      "Lane departure warning system",
+      "Auto-dimming inside rearview mirror",
+      "Driver 6-way power seat with manual recline",
+      "Body-color heated outside power mirrors with adaptive remote operation",
+      "Ultrasonic rear parking assist",
+      "Rear cross traffic alert system",
+      "Side blind zone alert system",
+      "Universal home remote with 3-channel programmable garage-door opener",
+      "Heated driver and front-passenger seats with adaptive remote activation"
+    ]
+  }
+}

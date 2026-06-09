@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2021|landrover|velar",
+  "year": 2021,
+  "make": "landrover",
+  "model": "Velar",
+  "ladder_id": "brochure_llm_2021__landrover__velar",
+  "source": "brochure_llm",
+  "trims_available": [
+    "P400e",
+    "P400 MHEV",
+    "P340 MHEV",
+    "D300 MHEV",
+    "D300",
+    "D200 MHEV",
+    "D200",
+    "P250"
+  ],
+  "adds_by_trim": {
+    "P400e": [
+      "Plug-in hybrid powertrain with 143 PS electric motor and 275 Nm torque",
+      "53-61 km EV range on fully charged battery (WLTP/NEDC2)",
+      "69-litre useable fuel tank capacity",
+      "5.4 second 0-100 km/h acceleration",
+      "209 km/h maximum speed"
+    ],
+    "P400 MHEV": [
+      "400 PS petrol engine with mild hybrid technology",
+      "5.5 second 0-100 km/h acceleration",
+      "250 km/h maximum speed with coil suspension",
+      "370 mm front brake discs",
+      "2.500 kg maximum towing capacity"
+    ],
+    "P340 MHEV": [
+      "340 PS petrol engine with mild hybrid technology",
+      "6.3 second 0-100 km/h acceleration",
+      "240 km/h maximum speed with coil suspension",
+      "370 mm front brake discs"
+    ],
+    "D300 MHEV": [
+      "300 PS diesel engine with mild hybrid technology",
+      "6.5 second 0-100 km/h acceleration",
+      "230 km/h maximum speed",
+      "370 mm front brake discs",
+      "2.500 kg maximum towing capacity"
+    ],
+    "D300": [
+      "300 PS diesel engine",
+      "6.5 second 0-100 km/h acceleration",
+      "230 km/h maximum speed",
+      "370 mm front brake discs",
+      "2.500 kg maximum towing capacity"
+    ],
+    "D200 MHEV": [
+      "200 PS diesel engine with mild hybrid technology",
+      "8.2 second 0-100 km/h acceleration",
+      "210 km/h maximum speed",
+      "350 mm front brake discs",
+      "2.400 kg maximum towing capacity"
+    ],
+    "D200": [
+      "200 PS diesel engine",
+      "8.2 second 0-100 km/h acceleration",
+      "210 km/h maximum speed",
+      "350 mm front brake discs",
+      "2.400 kg maximum towing capacity"
+    ],
+    "P250": [
+      "250 PS petrol engine",
+      "7.5 second 0-100 km/h acceleration",
+      "217 km/h maximum speed",
+      "82-litre useable fuel tank capacity",
+      "350 mm front brake discs",
+      "2.400 kg maximum towing capacity"
+    ]
+  }
+}

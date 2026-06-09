@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|rollsroyce|phantom",
+  "year": 2013,
+  "make": "Rolls Royce",
+  "model": "Phantom",
+  "ladder_id": "brochure_web_2013__rollsroyce__phantom",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Phantom",
+    "Phantom Extended Wheelbase"
+  ],
+  "adds_by_trim": {
+    "Phantom": [
+      "6.75L twin-turbocharged V12 engine producing 453 horsepower",
+      "Rolls-Royce bespoke leather interior with extensive customization options",
+      "Power-adjustable front and rear seats with massage function",
+      "Dual-zone automatic climate control with individual temperature settings",
+      "Navigation system with real-time traffic information",
+      "Premium sound system with multiple speakers throughout cabin",
+      "Automatic headlights and rain-sensing wipers",
+      "Adaptive suspension with self-leveling technology",
+      "Parking assist with rear-view camera and sensors"
+    ],
+    "Phantom Extended Wheelbase": [
+      "Additional 9 inches of rear legroom compared to standard Phantom",
+      "Enhanced rear seat comfort with extended cushioning and recline",
+      "Rear-seat power controls for seat adjustment and climate zones",
+      "Increased cargo space accommodating longer items and luggage",
+      "Standard power partition window separating driver from rear passengers"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/rolls-royce/phantom/"
+}

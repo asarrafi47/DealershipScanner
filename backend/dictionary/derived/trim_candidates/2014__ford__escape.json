@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2014|ford|escape",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Escape",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "Titanium",
+    "Sport",
+    "SE",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

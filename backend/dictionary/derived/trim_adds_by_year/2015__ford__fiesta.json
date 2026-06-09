@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2015|ford|fiesta",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_llm_2015__ford__fiesta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE Appearance Package",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SE Appearance Package": [
+      "MyFord Touch with 6.5-inch color LCD touchscreen and media hub with 2 USB ports",
+      "16-inch 8-spoke Sparkle Silver aluminum wheels",
+      "Fog lamps with chrome bezels",
+      "Rear decklid spoiler",
+      "Aluminum compact spare wheel",
+      "Sport cloth seats with contrast stitching",
+      "Driver's seat manual lumbar support",
+      "Leather-wrapped shift knob on manual transmission models"
+    ],
+    "SE": [
+      "16-inch 8-spoke Black machined aluminum wheels",
+      "Unique cloth seats and door-trim inserts",
+      "12-volt rear powerpoint",
+      "Ambient lighting",
+      "Chrome door handles",
+      "Cruise control",
+      "Full center console with armrest",
+      "Leather-wrapped steering wheel",
+      "Message center with trip computer",
+      "Overhead console"
+    ],
+    "S": [
+      "1.6L Ti-VCT I-4 engine with 5-speed manual transmission",
+      "Compact spare tire",
+      "Power front disc and rear drum brakes with Torque Vectoring Control",
+      "Adjustable front and rear head restraints",
+      "3-spoke steering wheel",
+      "AM/FM stereo with single-CD player, MP3 capability, and 6 speakers with 80 watts",
+      "Auxiliary audio input jack",
+      "Power windows with one-touch-up/-down on driver's side",
+      "Day/night rearview mirror",
+      "Ford SYNC voice-activated in-vehicle connectivity with USB support"
+    ]
+  }
+}

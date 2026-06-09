@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2024_cadillac_armored_vehicle_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Armored Vehicle",
+    "Armored Vehicle"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Premium Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; SPORT PLATINUM 6.2L V8 engine with Dynamic Fuel Management 420 hp at 5600 rpm an"
+      }
+    ],
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; SPORT PLATINUM 6.2L V8 engine with Dynamic Fuel Management 420 hp at 5600 rpm an"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine; SPORT PLATINUM 6.2L V8 engine with Dynamic Fuel Management 420 hp at 5600 rpm an"
+      }
+    ]
+  }
+}

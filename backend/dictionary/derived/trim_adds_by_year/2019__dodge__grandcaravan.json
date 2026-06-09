@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2019|dodge|grandcaravan",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2019__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TXS",
+    "SXT",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "TXS": [
+      "P225/65R17 BSW All-Season Touring tires",
+      "17-inch aluminum wheels",
+      "Fog lamps",
+      "Power liftgate",
+      "Foldaway power heated mirrors with body-color exterior",
+      "Power sliding doors",
+      "Remote start system"
+    ],
+    "SXT": [
+      "P225/65R17 BSW All-Season tires as standard option",
+      "Automatic headlamps with quad-halogen",
+      "Black/Bright grille",
+      "Body-color door handles",
+      "Body-color fascias",
+      "Three-Zone Manual Temperature Control air conditioning"
+    ],
+    "ES": [
+      "3.6L Pentastar Flex Fuel V6 with 6-speed Automatic transmission",
+      "160-amp alternator",
+      "730-amp maintenance-free battery",
+      "4-wheel antilock brakes with heavy-duty discs",
+      "Rear defroster",
+      "20-gallon fuel tank",
+      "Touring-tuned suspension",
+      "Daytime running lamps",
+      "Sunscreen glass",
+      "Manual sliding doors"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2017|dodge|performance",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Performance",
+  "ladder_id": "brochure_llm_2017__dodge__performance",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat",
+    "392 Scat Pack",
+    "392 Shaker",
+    "R/T Shaker",
+    "R/T Pack",
+    "T/R",
+    "T/R Plus",
+    "SXT Plus"
+  ],
+  "adds_by_trim": {
+    "SRT Hellcat": [
+      "Performance Laguna leather with SRT Hellcat logo",
+      "18-inch Harmon Kardon speakers with 900-watt digital amplifier",
+      "200-mph primary speedometer with red-faced gauges",
+      "SRT performance leather-wrapped flat-bottom heated steering wheel"
+    ],
+    "392 Scat Pack": [
+      "Scat Pack Performance leather/suede with heated front and ventilated front seats",
+      "Premium Red-Edge Scat Pack floor mats",
+      "P275/40ZR20 all-season performance tires",
+      "9-speaker audio system with 506-watt digital amplifier"
+    ],
+    "392 Shaker": [
+      "Premium Shaker floor mats",
+      "Heritage Shaker hood system",
+      "Performance leather/suede interior"
+    ],
+    "R/T Shaker": [
+      "Performance leather/suede with R/T badging",
+      "Shaker hood styling"
+    ],
+    "R/T Pack": [
+      "Performance Laguna leather interior",
+      "Leather-wrapped power adjustable steering column",
+      "Scat Pack style appearance package"
+    ],
+    "T/R": [
+      "Sport leather interior with power drivers seat",
+      "4-way power lumbar adjuster",
+      "P235/55R18 all-season performance tires"
+    ],
+    "T/R Plus": [
+      "Houndstooth performance cloth upholstery",
+      "LED-illuminated cup holders"
+    ],
+    "SXT Plus": [
+      "Power front windows with 1-touch auto down",
+      "Rear window defrost",
+      "2-speed windshield wipers with variable/intermittent mode",
+      "Power door locks with speed-sensitive locking",
+      "Dual vanity visor with illumination",
+      "Full-length floor console with storage",
+      "Illuminated carpeted trunk with carpeted decklid"
+    ]
+  }
+}

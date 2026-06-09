@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|chrysler|200",
+  "year": 2014,
+  "make": "Chrysler",
+  "model": "200",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

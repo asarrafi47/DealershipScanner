@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2018|hyundai|santafe",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

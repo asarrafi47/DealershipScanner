@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2019|toyota|sienna",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2019__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "18-inch 10-spoke machined alloy wheels with P235/55R18 tires",
+      "Color-keyed heated power outside mirrors with memory feature",
+      "Seating for seven with premium leather-trimmed captain's chairs",
+      "Power third-row seat (FWD only)",
+      "Premium leather-trimmed and multi-stage heated front seats",
+      "Heated leather-trimmed tilt/telescopic steering wheel with audio and voice controls"
+    ],
+    "XLE": [
+      "17-inch 7-spoke machined alloy wheels with P235/60R17 tires",
+      "Available 18-inch 10-spoke machined alloy wheels with P235/55R18 tires (AWD only)",
+      "Color-keyed heated power outside mirrors with blind spot warning indicators",
+      "Chrome-accented outside door handles with touch-sensor lock/unlock feature",
+      "Leather-trimmed and multi-stage heated front seats",
+      "Leatherette-trimmed 60/40 Split & Stow 3rd Row seat",
+      "Leather-trimmed tilt/telescopic steering wheel with audio and Bluetooth controls"
+    ],
+    "SE": [
+      "19-inch 6-spoke gunmetal-finish alloy wheels with P235/50R19 tires",
+      "Available 18-inch 6-spoke gunmetal-finish alloy wheels with P235/55R18 tires (AWD only)",
+      "Projector-beam halogen headlights with smoked sport trim and LED Daytime Running Lights",
+      "Sport mesh front grille",
+      "Available color-keyed heated power outside mirrors with blind spot warning indicators",
+      "Chrome-accented outside door handles",
+      "Fog lights",
+      "Power liftgate with jam protection",
+      "Perforated leather-trimmed and multi-stage heated front seats",
+      "Sport instrumentation with 4.2-inch color TFT Multi-Information Display"
+    ],
+    "LE": [
+      "Available 18-inch 10-spoke machined alloy wheels with P235/55R18 tires (AWD only)",
+      "Color-keyed heated power outside blind spot mirrors",
+      "Dual power sliding side doors",
+      "Black roof rails",
+      "Privacy glass on rear windows",
+      "Seating for up to eight with 40/20/40 second-row seat and stowable center seat",
+      "Entune 3.06 Audio Plus with App Suite, HD Radio and SiriusXM Satellite Radio",
+      "8-way power-adjustable driver's seat",
+      "Second- and third-row sunshades"
+    ],
+    "L": [
+      "17-inch 5-spoke alloy wheels with P235/60R17 tires",
+      "Projector-beam halogen headlights with auto on/off feature",
+      "Power outside mirrors with blind spot mirrors",
+      "Windshield wiper de-icer",
+      "Engine immobilizer",
+      "Seating for seven with second-row captain's chairs",
+      "Entune 3.06 Audio with App Suite and Apple CarPlay compatibility",
+      "Soft-touch materials",
+      "Three-zone automatic climate control with individual temperature settings",
+      "Integrated backup camera and Toyota Safety Sense P with Pre-Collision System"
+    ]
+  }
+}

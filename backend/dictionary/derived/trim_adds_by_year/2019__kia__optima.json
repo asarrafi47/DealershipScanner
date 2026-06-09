@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2019|kia|optima",
+  "year": 2019,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_2019__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds UVO eServices connectivity",
+      "Adds Apple CarPlay and Android Auto compatibility",
+      "Adds Driver Attention Warning system",
+      "Adds 911 Connect emergency assistance",
+      "Adds 24-hour Roadside Assistance"
+    ],
+    "Limited": [
+      "Full-grain Nappa leather-trimmed front and rear seats",
+      "Satin chrome and black gloss interior accents"
+    ],
+    "LX": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine with 185 horsepower",
+      "6-speed Sportmatic transmission",
+      "16-inch alloy wheels",
+      "UVO eServices Infotainment System with 7-inch touchscreen, Apple CarPlay and Android Auto",
+      "Blind-Spot Detection, Rear Park Assist System, and Rear Cross-Traffic Alert",
+      "Cloth seat trim with CleanTex and 60/40 split-folding rear seats",
+      "6-way manually adjustable driver's seat with power lumbar support",
+      "Clear-lens projection headlights",
+      "Heated power-folding outside mirrors with turn-signal indicators",
+      "Bluetooth wireless technology and USB/auxiliary input jacks"
+    ],
+    "EX": [
+      "2.4L Gasoline Direct Injection engine",
+      "17-inch alloy wheels",
+      "Smart Key with push-button start and Smart Trunk",
+      "10-way power-adjustable driver's seat with 2-way power lumbar support",
+      "Leather seat trim with heated front seats",
+      "Leather-wrapped steering wheel"
+    ],
+    "SX": [
+      "2.0L Turbo engine with 245 horsepower and 260 lb.-ft. torque",
+      "18-inch premium-finish alloy wheels",
+      "Panoramic sunroof with power sunshade",
+      "Heated and ventilated front seats",
+      "Sport-tuned suspension",
+      "Larger front disc brakes",
+      "Dual Projection LED headlights with Auto-Leveling and Dynamic Bending Light",
+      "Red front and rear brake calipers"
+    ]
+  }
+}

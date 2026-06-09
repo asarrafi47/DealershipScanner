@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2021|landrover|defender",
+  "year": 2021,
+  "make": "landrover",
+  "model": "Defender",
+  "ladder_id": "brochure_llm_2021__landrover__defender",
+  "source": "brochure_llm",
+  "trims_available": [
+    "P400",
+    "P300"
+  ],
+  "adds_by_trim": {
+    "P400": [
+      "4 piston opposed 2 piece caliper front brakes versus twin piston sliding fist caliper",
+      "363mm front brake diameter versus 349mm",
+      "350mm rear brake diameter versus 325mm",
+      "MHEV mild hybrid electric vehicle option",
+      "0-60 mph in 5.7-5.8 seconds versus 6.7-7.0 seconds",
+      "Maximum towing up to 8,200 lbs on Defender 90 versus 7,715 lbs",
+      "Higher curb weight starting at 4,780 lbs on Defender 90"
+    ],
+    "P300": [
+      "Twin piston sliding fist caliper front brakes",
+      "349mm front brake diameter and 325mm rear brake diameter",
+      "Integrated Electric Parking Brake standard",
+      "0-60 mph acceleration in 6.7-7.0 seconds",
+      "Maximum towing 7,715 lbs unbraked trailer capacity",
+      "Seating for 5 or 6 passengers on Defender 90, 5 or 5+2 on Defender 110",
+      "Up to 1,786 lbs maximum payload on Defender 90"
+    ]
+  }
+}

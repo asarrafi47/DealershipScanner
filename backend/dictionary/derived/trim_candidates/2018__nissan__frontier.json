@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2018|nissan|frontier",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Frontier",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "Pro-4X",
+    "SV",
+    "S",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

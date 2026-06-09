@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|mercury|mountaineer",
+  "year": 2010,
+  "make": "Mercury",
+  "model": "Mountaineer",
+  "ladder_id": "brochure_llm_2010__mercury__mountaineer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MOUNTAINEER PREMIER",
+    "MOUNTAINEER"
+  ],
+  "adds_by_trim": {
+    "MOUNTAINEER PREMIER": [
+      "18-inch satin-aluminum chrome-clad wheels with P235/65R18 all-season tires",
+      "Color-keyed step bars",
+      "Satin-aluminum roof side rails, sideview mirror caps and exhaust tip",
+      "Power moonroof with mini-overhead console",
+      "Reverse Sensing System",
+      "1st-row leather-trimmed heated bucket seats with perforated inserts and 10-way power driver seat with memory",
+      "6-way power passenger seat",
+      "2nd-row leather-trimmed fold-flat 60/40 split-folding bench seat with perforated inserts",
+      "3rd-row vinyl-trimmed manual-fold 50/50 split bench seat",
+      "Dual-zone Electronic Automatic Temperature Control"
+    ],
+    "MOUNTAINEER": [
+      "4.0L 2-valve V-6 engine with 5-speed automatic transmission and 210 horsepower",
+      "4-wheel disc Anti-lock Brake System with Intelligent Safety System for driver and front passenger airbags",
+      "Front and rear independent suspensions with rear-wheel drive",
+      "AdvanceTrac with Roll Stability Control and Safety Canopy System with side-curtain airbags",
+      "Auto-dimming rearview mirror and color-keyed leather-wrapped steering wheel with cruise controls",
+      "Power door locks and windows with one-touch-up/-down driver-window feature",
+      "Premium AM/FM stereo with single-CD player and MP3 capability",
+      "Roof-rail crossbars and fog lamps",
+      "17-inch machined-aluminum wheels with P245/65R17 all-terrain tires",
+      "1st-row cloth bucket seats with 6-way power driver seat"
+    ]
+  }
+}

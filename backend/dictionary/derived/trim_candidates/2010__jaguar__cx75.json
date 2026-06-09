@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2010|jaguar|cx75",
+  "year": 2010,
+  "make": "Jaguar",
+  "model": "C-X75",
+  "status": "draft",
+  "quality": "none",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "no_text",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_text_extracted"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|audi|q5",
+  "year": 2014,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2014__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q5 3.0T",
+    "Q5 TDI",
+    "Q5 hybrid",
+    "Q5 2.0T"
+  ],
+  "adds_by_trim": {
+    "Q5 3.0T": [
+      "Six-cylinder 2,995cc engine with 272 horsepower",
+      "295 lb-ft torque at 2,150 rpm",
+      "24-valve DOHC supercharged TFSI engine",
+      "13.6-inch ventilated front and rear disc brakes",
+      "0–60 mph acceleration in 6.0 seconds",
+      "Dynamic steering available on Prestige trim"
+    ],
+    "Q5 TDI": [
+      "Six-cylinder 2,967cc turbocharged TDI diesel engine",
+      "428 lb-ft torque at 1,750–2,250 rpm",
+      "EPA ratings: 24/31/27 city/highway/combined",
+      "13.6-inch ventilated front and rear disc brakes",
+      "6.0-gallon AdBlue diesel exhaust fluid capacity",
+      "Ultra-low-sulfur diesel fuel requirement"
+    ],
+    "Q5 hybrid": [
+      "54-hp water-cooled three-phase hybrid AC electric motor",
+      "266-volt 72-cell lithium-ion hybrid battery system",
+      "Combined output 245 horsepower at 4,300 rpm",
+      "354 lb-ft combined torque at 1,500 rpm",
+      "0–60 mph acceleration in 6.8 seconds",
+      "19.0-gallon fuel tank capacity"
+    ],
+    "Q5 2.0T": [
+      "Four-cylinder 1,984cc turbocharged TFSI engine with 220 horsepower",
+      "258 lb-ft torque at 1,500 rpm",
+      "12.6-inch ventilated front and solid rear disc brakes",
+      "0–60 mph acceleration in 7.0 seconds",
+      "Eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "4,079 lb curb weight"
+    ]
+  }
+}

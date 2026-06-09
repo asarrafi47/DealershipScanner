@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2016|tesla|models",
+  "year": 2016,
+  "make": "tesla",
+  "model": "Model S",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2016_tesla_Model_S_Brochure.pdf",
+  "page_count": 14,
+  "all_pages": false,
+  "trim_hint_pages": [
+    5,
+    14
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 5,
+      "trim_hint": true,
+      "text": "Autopilot Autopilot combines a forward looking camera, radar, and 360 degree sonar\nsensors with real time traffic updates to automatically drive Model S on the open\nroad and in dense stop and go traffic. Changing lanes becomes as simple as a tap\nof the turn signal. When you arrive at your destination, Model S will both detect\na parking spot and automatically park itself. Standard equipment safety features\nare constantly monitoring stop signs, traffic signals and pedestrians, as well as for\nunintentional lane changes.",
+      "table_lines": []
+    },
+    {
+      "page": 14,
+      "trim_hint": true,
+      "text": "Design your Model S\nBATTERY & DRIVE ROOF SEATING STANDARD EQUIPMENT\n70 kWh All-Wheel Drive Solid Body Color Roof Black Multi-Pattern Maps and navigation\n85 kWh Rear Wheel Drive All Glass Panoramic Roof Leather Seats in Black Mobile connectivity\n85 kWh All-Wheel Drive Leather Seats in Tan Automatic keyless entry\n85 kWh Performance All-Wheel Drive PAINT Leather Seats in Grey Power-folding and heated mirrors\nSolid Black Next Generation Seats in Black LED daytime running lights\nPERFORMANCE Solid White Next Generation Seats in Tan Parking sensors\nCarbon Fiber Spoiler Titanium Metallic Next Generation Seats in Grey Lane departure warning\nTesla Red Brake Calipers Midnight Silver Metallic Automatic emergency braking\nObsidian Black Metallic D\u00c9COR Supercharging enabed\nOPTIONS Deep Blue Metallic Piano Black GPS enabled Homelink\nAutopilot Convenience Features Pearl White Multi-Coat Matte Obeche Wood 8 year, infinite mile battery\nand drive unit warranty\nPremium Interior and Lighting Red Multi-Coat Glossy Obeche Wood\nSmart Air Suspension Carbon Fiber\nUltra High Fidelity Sound WHEELS\nExecutive Rear Seats 19\u201d Wheels HEADLINER\nSubzero Weather Package 19\u201d Silver Cyclone Wheels Textile\nRear Facing Seats 21\u201d Silver Turbine Wheels White Alcantara For pricing and ordering\n21\u201d Grey Turbine Wheels Black Alcantara Visit a Tesla Store or Gallery\nOnline at teslamotors.com\nBy phone: (888) 518-3752",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 5 ---\nAutopilot Autopilot combines a forward looking camera, radar, and 360 degree sonar\nsensors with real time traffic updates to automatically drive Model S on the open\nroad and in dense stop and go traffic. Changing lanes becomes as simple as a tap\nof the turn signal. When you arrive at your destination, Model S will both detect\na parking spot and automatically park itself. Standard equipment safety features\nare constantly monitoring stop signs, traffic signals and pedestrians, as well as for\nunintentional lane changes.\n\n--- page 14 ---\nDesign your Model S\nBATTERY & DRIVE ROOF SEATING STANDARD EQUIPMENT\n70 kWh All-Wheel Drive Solid Body Color Roof Black Multi-Pattern Maps and navigation\n85 kWh Rear Wheel Drive All Glass Panoramic Roof Leather Seats in Black Mobile connectivity\n85 kWh All-Wheel Drive Leather Seats in Tan Automatic keyless entry\n85 kWh Performance All-Wheel Drive PAINT Leather Seats in Grey Power-folding and heated mirrors\nSolid Black Next Generation Seats in Black LED daytime running lights\nPERFORMANCE Solid White Next Generation Seats in Tan Parking sensors\nCarbon Fiber Spoiler Titanium Metallic Next Generation Seats in Grey Lane departure warning\nTesla Red Brake Calipers Midnight Silver Metallic Automatic emergency braking\nObsidian Black Metallic D\u00c9COR Supercharging enabed\nOPTIONS Deep Blue Metallic Piano Black GPS enabled Homelink\nAutopilot Convenience Features Pearl White Multi-Coat Matte Obeche Wood 8 year, infinite mile battery\nand drive unit warranty\nPremium Interior and Lighting Red Multi-Coat Glossy Obeche Wood\nSmart Air Suspension Carbon Fiber\nUltra High Fidelity Sound WHEELS\nExecutive Rear Seats 19\u201d Wheels HEADLINER\nSubzero Weather Package 19\u201d Silver Cyclone Wheels Textile\nRear Facing Seats 21\u201d Silver Turbine Wheels White Alcantara For pricing and ordering\n21\u201d Grey Turbine Wheels Black Alcantara Visit a Tesla Store or Gallery\nOnline at teslamotors.com\nBy phone: (888) 518-3752"
+}

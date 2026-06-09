@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2016|cadillac|ats",
+  "year": 2016,
+  "make": "Cadillac",
+  "model": "ATS",
+  "ladder_id": "generic_cadillac_ats",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Sizes: 18\" x 8\" front and 18\" x 9\" rear;",
+      "a registered trademark of Sirius XM Radio Inc. Blu-ray is a trademark of Blu-ray Disc combinations may change the vehicle’s performance characteristics. For important tire and wheel information, go to cadillacaccessories.com or see your dealer. Low-profile tires wear"
+    ],
+    "Limited": [
+      "Included on ATS Coupe Available on ATS Coupe and Premium",
+      "Sizes: 18\" x 8\" front and 18\" x 9\" includes all-season, run-flat tires.",
+      "front and P255/35R18 run-flat tires. P225/40R18",
+      "(Premium RWD) P255/35R18 rear",
+      "a registered trademark of Pandora Media, Inc. SiriusXM Satellite Radio is"
+    ],
+    "Luxury": [
+      "17-inch polished alloy wheels with P225/45R17 all-season run-flat tires",
+      "Available on ATS sedan and coupe models"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 3.5,
+    "per_trim_add_counts": {
+      "Limited": 5,
+      "Premium": 2
+    }
+  }
+}

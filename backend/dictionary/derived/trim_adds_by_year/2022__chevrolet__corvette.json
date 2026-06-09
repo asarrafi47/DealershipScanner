@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2022|chevrolet|corvette",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_llm_2022__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3LT",
+    "2LT",
+    "1LT"
+  ],
+  "adds_by_trim": {
+    "3LT": [
+      "IMSA GTLM Championship C8.R Edition available with exclusive styling"
+    ],
+    "2LT": [
+      "Enhanced interior appointments compared to 1LT base model"
+    ],
+    "1LT": [
+      "2-passenger coupe or convertible body style",
+      "490-horsepower 6.2L V8 engine with Direct Injection and Variable Valve Timing",
+      "Active Fuel Management™ technology",
+      "Dry-sump oil lubrication system with Oil Life Monitoring",
+      "8-speed dual-clutch transmission with manual and automatic modes",
+      "4-wheel independent suspension",
+      "4-wheel disc brakes with Black-painted Brembo 4-piston calipers",
+      "Available performance exhaust adds 5 hp and 5 lb.-ft. torque",
+      "Available Z51 Performance Package",
+      "Available Magnetic Selective Ride Control™"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|volkswagen|jetta",
+  "year": 2019,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "brochure_web_2019__volkswagen__jetta",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "Brown/Titan Black perforated Vienna leather seats",
+      "18-inch alloy wheels"
+    ],
+    "SE": [
+      "Wireless smartphone charging pad",
+      "Wireless smartphone mirroring",
+      "SiriusXM satellite radio",
+      "Voice control",
+      "17-inch alloy wheels"
+    ],
+    "Sport": [
+      "Upgraded from base S trim with enhanced styling"
+    ],
+    "S": [
+      "1.5-liter turbocharged four-cylinder engine with 158 hp and 184 lb-ft torque",
+      "Eight-speed automatic transmission with front-wheel drive",
+      "8.0-inch floating infotainment touchscreen standard",
+      "Wireless Apple CarPlay and Android Auto",
+      "VW IQ.Drive suite with lane keep assist, adaptive cruise control, blind-spot monitoring, rear cross-traffic alert, automatic emergency braking"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/jetta/"
+}

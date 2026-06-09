@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|ford|flex",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_llm_2015__ford__flex",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "6-way power driver's seat with 4-way manual front-passenger seat",
+      "7-passenger seating with 1st-row heated bucket seats",
+      "10-way power driver's seat with power recline and lumbar",
+      "6-way power passenger seat with manual recline and lumbar",
+      "2nd-row 40/40 reclining bucket seats",
+      "Dual-zone electronic automatic temperature control",
+      "Intelligent Access with push-button start",
+      "18-inch painted aluminum wheels with P235/60R18 BSW tires",
+      "Black-painted power heated sideview mirrors with integrated blind spot mirrors",
+      "Bright stainless steel beltline and chrome door handles"
+    ],
+    "SE": [
+      "AM/FM stereo with single-CD player, MP3 capability and 6 speakers",
+      "SYNC voice-activated in-vehicle connectivity with 4.2-inch color LCD display",
+      "Single-zone air conditioning with 2nd and 3rd-row adjustable vents",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "17-inch painted aluminum wheels with P235/60R17 BSW tires",
+      "Automatic halogen headlamps with wiper activation",
+      "Power sideview mirrors with integrated blind spot mirrors",
+      "Body-color-painted door handles and chrome grille",
+      "Universal garage door opener",
+      "Cloth seating with embossed metal instrument panel appliqués"
+    ]
+  }
+}

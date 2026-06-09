@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2016|jeep|cherokee",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Willys",
+    "Altitude",
+    "Latitude",
+    "Sport",
+    "Premium",
+    "EX",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

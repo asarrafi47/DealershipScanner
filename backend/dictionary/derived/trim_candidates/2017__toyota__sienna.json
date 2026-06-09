@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2017|toyota|sienna",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Sienna",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2019_jaguar_f-type_complete_options",
+  "make": "Jaguar",
+  "models": [
+    "F-TYPE",
+    "F-TYPE"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic (S8)"
+      }
+    ],
+    "R Convertible": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Supercharged; Automatic (S8)"
+      }
+    ],
+    "R Coupe": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Supercharged; Automatic (S8)"
+      }
+    ]
+  }
+}

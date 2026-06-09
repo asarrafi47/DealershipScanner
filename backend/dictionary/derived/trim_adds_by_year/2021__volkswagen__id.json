@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2021|volkswagen|id",
+  "year": 2021,
+  "make": "Volkswagen",
+  "model": "ID",
+  "ladder_id": "brochure_llm_2021__volkswagen__id",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1st Edition",
+    "Pro S AWD",
+    "Pro S",
+    "Pro AWD",
+    "Pro"
+  ],
+  "adds_by_trim": {
+    "1st Edition": [
+      "Single-motor RWD powertrain",
+      "Perforated leatherette seating surfaces",
+      "12-way power front seats with 4-way lumbar and massage",
+      "Panoramic fixed-glass roof with electric sun shade",
+      "Premium LED projector headlights with Adaptive Front Lighting System",
+      "Illuminated front Volkswagen logo and light bar",
+      "Power folding side mirrors with position memory and puddle lights",
+      "Hands-free Easy Open and Easy Close remote power rear liftgate",
+      "Discover Pro Max 12-inch touchscreen navigation system",
+      "SiriusXM 3-month All Access trial subscription"
+    ],
+    "Pro S AWD": [
+      "Dual-motor AWD powertrain versus single-motor RWD",
+      "All Pro S features with AWD capability"
+    ],
+    "Pro S": [
+      "Perforated leatherette seating surfaces versus cloth",
+      "12-way power front seats with 4-way lumbar and massage",
+      "Panoramic fixed-glass roof with electric sun shade",
+      "Premium LED projector headlights with Adaptive Front Lighting System",
+      "Illuminated front Volkswagen logo and light bar",
+      "Power folding side mirrors with position memory and puddle lights",
+      "Hands-free Easy Open and Easy Close remote power rear liftgate",
+      "Discover Pro Max 12-inch touchscreen navigation system",
+      "SiriusXM 3-month All Access trial subscription"
+    ],
+    "Pro AWD": [
+      "Dual-motor AWD powertrain versus single-motor RWD"
+    ],
+    "Pro": [
+      "Single-motor RWD electric powertrain with single-speed automatic transmission",
+      "Cloth seating surfaces",
+      "Standard infotainment and safety features for base model"
+    ]
+  }
+}

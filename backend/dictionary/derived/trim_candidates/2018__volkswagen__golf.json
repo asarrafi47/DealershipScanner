@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2018|volkswagen|golf",
+  "year": 2018,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GTI",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

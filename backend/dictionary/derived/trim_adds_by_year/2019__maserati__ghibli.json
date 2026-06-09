@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|maserati|ghibli",
+  "year": 2019,
+  "make": "maserati",
+  "model": "ghibli",
+  "ladder_id": "brochure_llm_2019__maserati__ghibli",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ghibli S Q4",
+    "Ghibli S",
+    "Ghibli Diesel"
+  ],
+  "adds_by_trim": {
+    "Ghibli S Q4": [
+      "430 CV (316 kW) petrol V6 engine with 580 Nm peak torque",
+      "All-wheel drive (Q4) system",
+      "0–100 km/h acceleration in 4.7 seconds",
+      "286 km/h maximum speed"
+    ],
+    "Ghibli S": [
+      "350 CV (257 kW) petrol V6 engine with 500 Nm peak torque",
+      "0–100 km/h acceleration in 5.5 seconds",
+      "267 km/h maximum speed",
+      "80-liter fuel tank capacity"
+    ],
+    "Ghibli Diesel": [
+      "2987 cm³ turbodiesel V6 engine with 275 CV (202 kW) output",
+      "600 Nm peak torque at 2000–2600 rpm",
+      "ZF eight-speed automatic transmission with five operating modes",
+      "500-liter boot capacity",
+      "7.0–7.5 l/100 km combined fuel consumption"
+    ]
+  }
+}

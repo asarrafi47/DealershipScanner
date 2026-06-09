@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2011|chevrolet|impala",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2011__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "3.9L V6 engine with 230 hp and 235 lb-ft torque (vs 3.5L with 211 hp on LS/LT)",
+      "Dual-outlet stainless steel exhaust",
+      "Luxury-Tuned four-wheel independent suspension",
+      "18-inch machined-face aluminum wheels",
+      "Front heated bucket seats with leather and eight-way power driver seat",
+      "Flip-and-fold-flat rear seat",
+      "Bose premium eight-speaker sound system",
+      "Heated, power-adjustable mirrors standard",
+      "Chrome door handles",
+      "Sport-Styled Rear Spoiler standard"
+    ],
+    "LT": [
+      "3.5L V6 engine with 211 hp and 216 lb-ft torque",
+      "Dual-zone manual climate controls with individual settings",
+      "Fog lamps integral in front fascia",
+      "Remote vehicle starter system with Remote Keyless Entry",
+      "Deluxe four-gauge cluster with chrome trim and outside temperature display",
+      "Illuminated front vanity mirrors",
+      "Bose premium eight-speaker sound system optional",
+      "Optional heated bucket seats with leather appointments"
+    ],
+    "LS": [
+      "3.5L V6 engine with 211 hp and 216 lb-ft torque",
+      "Front cloth bucket seats with six-way power driver seat",
+      "Single-zone manual climate control",
+      "17-inch fascia-spoke painted silver wheels standard",
+      "Four-gauge analog cluster with Driver Information Center",
+      "Six-speaker sound system",
+      "XM Radio with three trial months",
+      "OnStar with Directions & Connections Plan standard for first six months"
+    ]
+  }
+}

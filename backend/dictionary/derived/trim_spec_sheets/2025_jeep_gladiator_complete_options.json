@@ -1,0 +1,51 @@
+{
+  "ladder_id": "2025_jeep_gladiator_complete_options",
+  "make": "Jeep",
+  "models": [
+    "Gladiator",
+    "Gladiator"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L Hurricane 4 EVO turbo I4 (gasoline) (2027–)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Alpine audio; Alpine audio; Alpine audio; [Brochure] Alpine audio | [Brochure] Alpine audio | [Brochure] Alpine audio"
+      }
+    ],
+    "Rubicon": [
+      {
+        "label": "Engine Options",
+        "value": "L Hurricane 4 EVO turbo I4 (gasoline) (2027–)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Alpine audio; Alpine audio; Alpine audio; [Brochure] Alpine audio | [Brochure] Alpine audio | [Brochure] Alpine audio"
+      }
+    ],
+    "Sport S": [
+      {
+        "label": "Engine Options",
+        "value": "3.6 L V6 engine"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "3.6 L V6 engine"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Audio System Layout",
+        "value": "Alpine audio; Alpine audio; Alpine audio; [Brochure] Alpine audio | [Brochure] Alpine audio | [Brochure] Alpine audio"
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "ladder_id": "2023_gmc_yukon_complete_options",
+  "make": "GMC",
+  "models": [
+    "Yukon",
+    "Yukon"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Denali": [
+      {
+        "label": "Engine Options",
+        "value": "The 2021 GMC Yukon Denali features its own exclusive package upgrades that are unique only to this trim level.; The Denali Deluxe, Denali Premium, Advanced Technology, and Denali Ultimate Packages allow buyers to take customization to the next level."
+      }
+    ],
+    "AT4": [
+      {
+        "label": "Engine Options",
+        "value": "The 2021 GMC Yukon Denali features its own exclusive package upgrades that are unique only to this trim level.; The Denali Deluxe, Denali Premium, Advanced Technology, and Denali Ultimate Packages allow buyers to take customization to the next level."
+      }
+    ],
+    "SLT": [
+      {
+        "label": "Engine Options",
+        "value": "The 2021 GMC Yukon Denali features its own exclusive package upgrades that are unique only to this trim level.; The Denali Deluxe, Denali Premium, Advanced Technology, and Denali Ultimate Packages allow buyers to take customization to the next level."
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "The 2021 GMC Yukon Denali features its own exclusive package upgrades that are unique only to this trim level.; The Denali Deluxe, Denali Premium, Advanced Technology, and Denali Ultimate Packages allow buyers to take customization to the next level."
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "The 2021 GMC Yukon Denali features its own exclusive package upgrades that are unique only to this trim level.; The Denali Deluxe, Denali Premium, Advanced Technology, and Denali Ultimate Packages allow buyers to take customization to the next level."
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "The 2021 GMC Yukon Denali features its own exclusive package upgrades that are unique only to this trim level.; The Denali Deluxe, Denali Premium, Advanced Technology, and Denali Ultimate Packages allow buyers to take customization to the next level."
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "The 2021 GMC Yukon Denali features its own exclusive package upgrades that are unique only to this trim level.; The Denali Deluxe, Denali Premium, Advanced Technology, and Denali Ultimate Packages allow buyers to take customization to the next level."
+      }
+    ]
+  }
+}

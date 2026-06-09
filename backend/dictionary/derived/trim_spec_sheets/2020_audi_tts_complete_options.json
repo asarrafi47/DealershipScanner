@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2020_audi_tts_complete_options",
+  "make": "AUDI",
+  "models": [
+    "TTS",
+    "TTS"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S6)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ],
+    "40 TFSI": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Assembly Hungary: Győr (engines and final assembly); Sep 1, 2025There are also several stand-alone options, such as a heated steering wheel and"
+      }
+    ]
+  }
+}

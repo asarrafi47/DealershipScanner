@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Chevrolet,G30 Van,2WD,4.1L V6,4.1L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",6,4.1,13,17,14,,,,,
+1984,Chevrolet,G30 Van,2WD,4.1L V6,4.1L V6,,Manual 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",6,4.1,13,15,14,,,,,

@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|lexus|ct",
+  "year": 2015,
+  "make": "lexus",
+  "model": "CT",
+  "ladder_id": "brochure_2015__lexus__ct",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds four-year/50,000-mile limited warranty",
+      "Adds eight-year/100,000-mile hybrid system warranty",
+      "Adds six-year unlimited-mileage corrosion perforation warranty",
+      "Adds zero-deductible warranty coverage",
+      "Adds Lexus Delivery Specialist personalized delivery service",
+      "Adds Lexus Technology Specialist expert guidance support"
+    ],
+    "Luxury": [
+      "Adds F SPORT accessories availability through authorized Lexus dealers",
+      "Adds HD Radio technology",
+      "Adds Navigation System with real-time traffic information",
+      "Adds Pandora audio streaming integration",
+      "Adds Dynamic Radar Cruise Control system"
+    ]
+  }
+}

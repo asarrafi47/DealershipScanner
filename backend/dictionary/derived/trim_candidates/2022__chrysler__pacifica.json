@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2022|chrysler|pacifica",
+  "year": 2022,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Pinnacle",
+    "Limited",
+    "Touring L",
+    "Touring",
+    "Select",
+    "Hybrid",
+    "Platinum",
+    "Premium",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

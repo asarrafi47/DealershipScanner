@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2015|honda|fit",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Fit",
+  "ladder_id": "brochure_web_2015__honda__fit",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "Sport",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "Leather-trimmed upholstery",
+      "Heated front seats",
+      "Heated body-color side mirrors with integrated turn signal indicators"
+    ],
+    "EX": [
+      "16-inch machine-finished alloy wheels with black inserts",
+      "Power moonroof",
+      "Keyless entry with walk away auto locking",
+      "Push-button start",
+      "Honda Sensing suite: auto emergency braking, adaptive cruise control, lane keep assist, auto high beams"
+    ],
+    "Sport": [
+      "16-inch black alloy wheels",
+      "Fog lights",
+      "Body kit with orange accents",
+      "Chrome exhaust finisher",
+      "Leather-wrapped steering wheel",
+      "Rearview camera with dynamic guidelines",
+      "7.0-inch touchscreen infotainment with Apple CarPlay and Android Auto",
+      "Six-speaker audio system",
+      "Satellite radio",
+      "Paddle shifters for optional CVT"
+    ],
+    "LX": [
+      "1.5-liter naturally aspirated four-cylinder engine",
+      "Six-speed manual transmission standard",
+      "15-inch steel wheels with covers",
+      "Cloth upholstery",
+      "5.0-inch color infotainment screen",
+      "Four-speaker audio system",
+      "Power-adjustable body-color side mirrors",
+      "Rear spoiler",
+      "LED brake lights"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/honda/fit/"
+}

@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2021_mercedes-benz_amg_gt_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "AMG GT",
+    "AMG GT"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM7)"
+      }
+    ],
+    "C Coupe": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM7)"
+      }
+    ],
+    "C Roadster": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic (AM7)"
+      }
+    ],
+    "R Coupe": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM7)"
+      }
+    ]
+  }
+}

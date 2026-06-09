@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|chrysler|200",
+  "year": 2011,
+  "make": "Chrysler",
+  "model": "200",
+  "ladder_id": "brochure_llm_2011__chrysler__200",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "P225/50R18 BSW all-season tires",
+      "Bright, power, heated mirrors",
+      "Premium leather-trimmed, low-back bucket seats",
+      "Automatic temperature control air conditioning",
+      "Media Center 430 CD/DVD/MP3/HDD radio with 6.5-inch touch screen",
+      "SIRIUS Satellite Radio with one-year subscription",
+      "Six Boston Acoustics speakers",
+      "Auto-dimming rearview mirror with microphone"
+    ],
+    "Touring": [
+      "Automatic headlamps with headlamps-off time-delay",
+      "HomeLink universal garage door opener",
+      "Front and rear LED lamps with aimable design",
+      "Six-speaker audio system",
+      "SIRIUS Satellite Radio with one-year subscription",
+      "Power express open/close sunroof option",
+      "Heated front seats in Cold Weather Group",
+      "Media Center 430 with 6.5-inch touch screen option"
+    ],
+    "LX": [
+      "Bifunction halogen projector headlamps with time-delay feature",
+      "Body-color, power, heated mirrors",
+      "Electroluminescent cluster with LED lighting",
+      "Four-speaker audio system",
+      "Media Center 130 CD/MP3 radio with auxiliary jack",
+      "Power door locks",
+      "P225/55R17 BSW all-season tires with 17-inch wheel covers",
+      "Manual air conditioning"
+    ]
+  }
+}

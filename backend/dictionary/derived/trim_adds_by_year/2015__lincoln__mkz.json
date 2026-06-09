@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2015|lincoln|mkz",
+  "year": 2015,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_llm_2015__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Reserve",
+    "Select",
+    "Premiere"
+  ],
+  "adds_by_trim": {
+    "Reserve": [
+      "Brown Swirl Walnut trim package standard with ebony interior",
+      "Leather-trimmed perforated seats",
+      "Heated and cooled front seats",
+      "Heated rear seats",
+      "10-way power heated driver and front-passenger seats with 2-way lumbar and memory"
+    ],
+    "Select": [
+      "Ambient lighting",
+      "Auto-dimming rearview mirror",
+      "Power rear sunshade",
+      "Power windows with one-touch up/down for all 4 windows with global open/close",
+      "Heated steering wheel",
+      "Leather-wrapped steering wheel with wood accent in brown swirl walnut or Prussian burl"
+    ],
+    "Premiere": [
+      "110-volt power outlet standard on all MKZ Hybrid models",
+      "All-weather floor mats",
+      "Rear view camera",
+      "60/40 split-fold-flat spring-assisted rear seat",
+      "Lincoln luxury soft-touch-trimmed seats in ebony"
+    ]
+  }
+}

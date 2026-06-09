@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2023|nissan|maxima",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2023__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SR",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "19-inch machine-finished aluminum-alloy wheels",
+      "Power-tilt/telescoping steering column with memory",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Rear-window power sunshade",
+      "Heated rear seats",
+      "Premium semi-aniline leather seats with diamond-quilted inserts",
+      "Satin Birdseye Maple wood-tone faceted interior trim",
+      "Illuminated kick plates"
+    ],
+    "SR": [
+      "Paddle shifters",
+      "LED fog lights",
+      "Sport-tuned suspension with retuned dampers and larger front stabilizer bar",
+      "19-inch gloss black aluminum-alloy wheels",
+      "Black V-Motion grille with black exterior accents",
+      "Black quad-tipped exhaust finishers",
+      "Premium Ascot leather-appointed seats with diamond-quilted Alcantara inserts",
+      "Driver's seat manual thigh support extension",
+      "Front-passenger's seat power lifter",
+      "Climate-controlled front seats with heating and cooling"
+    ],
+    "SV": [
+      "3.5-liter DOHC 24-valve V6 engine with 300 hp and 261 lb-ft torque",
+      "Xtronic CVT with Drive Mode Selector",
+      "4-wheel ABS with electronic brake force distribution",
+      "Independent strut and multi-link rear suspension with stabilizer bars",
+      "Intelligent Cruise Control and Intelligent Driver Alertness",
+      "Automatic Emergency Braking with pedestrian detection",
+      "Lane Departure Warning and Blind Spot Warning",
+      "RearView Monitor with rear sonar system",
+      "LED headlights with daytime running lights",
+      "18-inch machine-finished aluminum-alloy wheels"
+    ]
+  }
+}

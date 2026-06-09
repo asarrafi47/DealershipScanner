@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2016|fiat|usfullline",
+  "year": 2016,
+  "make": "Fiat",
+  "model": "US FullLine",
+  "ladder_id": "brochure_web_2016__fiat__usfullline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Lounge",
+    "Pop",
+    "Classic"
+  ],
+  "adds_by_trim": {
+    "Lounge": [
+      "Leather-trimmed seating surfaces",
+      "Heated front seats",
+      "Automatic temperature control with dual-zone capability",
+      "Uconnect 6.5-inch touchscreen with Bluetooth and backup camera",
+      "Steering wheel mounted audio controls",
+      "Fog lamps",
+      "Automatic headlamps with delay-off feature"
+    ],
+    "Pop": [
+      "Uconnect 5-inch touchscreen with Bluetooth connectivity",
+      "AM/FM stereo with six speakers",
+      "Steering wheel mounted audio and cruise controls",
+      "Rear window defroster",
+      "Brake assist and stability control systems"
+    ],
+    "Classic": [
+      "1.4-liter MultiAir turbocharged engine with 160 horsepower",
+      "Six-speed manual transmission standard",
+      "Power windows, locks, and mirrors",
+      "Air conditioning",
+      "Tilt steering wheel",
+      "Front and rear door cup holders",
+      "60/40 split-folding rear seats",
+      "Dual front airbags and side-curtain airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/fiat/us-fullline/"
+}

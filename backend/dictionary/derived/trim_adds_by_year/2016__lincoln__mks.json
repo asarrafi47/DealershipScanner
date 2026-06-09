@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2016|lincoln|mks",
+  "year": 2016,
+  "make": "Lincoln",
+  "model": "MKS",
+  "ladder_id": "brochure_llm_2016__lincoln__mks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MKS with EcoBoost®",
+    "MKS"
+  ],
+  "adds_by_trim": {
+    "MKS with EcoBoost®": [
+      "EcoBoost® engine for improved fuel efficiency"
+    ],
+    "MKS": [
+      "12-volt powerpoints (3)",
+      "Ambient lighting",
+      "Auto-dimming rearview mirror",
+      "Leather-wrapped steering wheel with genuine wood accent",
+      "Power windows with global open/close and one-touch-up/-down",
+      "12-way power heated and cooled driver and front-passenger seats with lumbar and memory",
+      "Bridge of Weir™ leather-trimmed seats",
+      "Rear center armrest with pass-through and 2 cupholders",
+      "Personal Safety System™ with dual-stage front airbags and safety belt pretensioners",
+      "Front-seat side airbags, Safety Canopy® System with side-curtain airbags, AdvanceTrac® stability control"
+    ]
+  }
+}

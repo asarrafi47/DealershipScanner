@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|nissan|murano",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2012__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE PLATINUM EDITION",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE PLATINUM EDITION": [
+      "Nissan Hard Drive Navigation System with 7.0-inch VGA touchscreen and voice recognition",
+      "XM NavTraffic and XM NavWeather subscription services",
+      "Zagat Survey restaurant reviews integration",
+      "Streaming audio via Bluetooth wireless technology",
+      "20-inch 7-spoke aluminum-alloy wheels",
+      "Rear bumper protector",
+      "Unique Platinum Edition badging"
+    ],
+    "SL": [
+      "Nissan Hard Drive Navigation System with 7.0-inch VGA color touchscreen and voice recognition",
+      "XM NavTraffic and XM NavWeather services",
+      "Zagat Survey restaurant reviews",
+      "Streaming audio via Bluetooth wireless technology"
+    ],
+    "SV": [
+      "18-inch 5-spoke aluminum-alloy wheels",
+      "P235/65R18 all-season tires"
+    ],
+    "S": [
+      "VQ35DE 3.5-liter DOHC 24-valve V6 engine producing 260 hp and 240 lb-ft torque",
+      "Intuitive All-Wheel Drive with Xtronic CVT transmission",
+      "4-wheel vented disc brakes with ABS and Electronic Brake force Distribution",
+      "Front independent strut suspension with multi-link rear suspension",
+      "18-inch 5-spoke aluminum-alloy wheels with P235/65R18 all-season tires",
+      "Brake Assist safety system"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2025_dodge_challenger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Challenger",
+    "Challenger"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Audio System Layout",
+        "value": "Upgrades Audio System Layout: remote start, rear parking assistance system).; Alpine; Harman Kardon audio; remote start, rear parking assistance system). | [Brochure] Alpine; Harman Kardon audio (was Alpine; Harman Kardon audio; [Brochure] Alpine; Harman Kardon audio)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Audio System Layout",
+        "value": "Upgrades Audio System Layout: Alpine; Harman Kardon audio; [Brochure] Alpine; Harman Kardon audio (was remote start, rear parking assistance system).; Alpine; Harman Kardon audio; remote start, rear parking assistance system). | [Brochure] Alpine; Harman Kardon audio)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Automatic 8-spd; Rear-Wheel Drive; Automatic 8-spd"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: remote start, rear parking assistance system).; Alpine; Harman Kardon audio; remote start, rear parking assistance system). | [Brochure] Alpine; Harman Kardon audio"
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|chevrolet|impala",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2019__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "TL",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "19-inch machined-face aluminum wheels",
+      "20-inch aluminum wheels available",
+      "LT Leather Package with 8-way power front passenger seat adjuster",
+      "LT Entertainment Package with Bose Centerpoint Surround Sound 11-speaker system and navigation"
+    ],
+    "TL": [
+      "18-inch painted-alloy wheels",
+      "19-inch Special Midnight Edition aluminum wheels with black-painted pockets available",
+      "Sunroof and Spoiler Package with tilt-sliding power sunroof and rear spoiler",
+      "Driver Confidence Package with Rear Cross Traffic Alert and Lane Change Alert",
+      "Chevrolet Infotainment System with Navigation and 8-inch touchscreen available"
+    ],
+    "SL": [
+      "18-inch steel wheels with fascia-spoke wheel cover",
+      "8-inch Chevrolet Infotainment System with AM/FM stereo and smartphone integration",
+      "Android Auto and Apple CarPlay compatibility",
+      "SiriusXM Radio All Access Package with 3-month trial subscription",
+      "Chevrolet Connected Access with Vehicle Diagnostics and Smart Driver",
+      "Built-in 4G LTE Wi-Fi for up to seven devices with 1-month data trial"
+    ]
+  }
+}

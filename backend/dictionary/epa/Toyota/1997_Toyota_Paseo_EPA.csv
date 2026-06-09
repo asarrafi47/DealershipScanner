@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1997,Toyota,Paseo,Paseo,1.5L I4 ((FFS)),1.5L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,23,29,26,,,,,
+1997,Toyota,Paseo,Paseo,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,26,34,29,,,,,
+1997,Toyota,Paseo,Convertible,1.5L I4 ((FFS)),1.5L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,23,29,26,,,,,
+1997,Toyota,Paseo,Convertible,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,25,32,28,,,,,

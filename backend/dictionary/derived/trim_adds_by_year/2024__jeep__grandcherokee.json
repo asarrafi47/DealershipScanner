@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2024|jeep|grandcherokee",
+  "year": 2024,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "brochure_llm_2024__jeep__grandcherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Summit Reserve",
+    "Summit",
+    "Overland",
+    "Limited",
+    "Laredo"
+  ],
+  "adds_by_trim": {
+    "Summit Reserve": [
+      "Ventilated Palermo leather with quilted bolsters and Cognac accent stitching",
+      "Natural Waxed Walnut wood interior accents on instrument panel and steering wheel",
+      "Palermo leather door trim",
+      "Premium McIntosh audio with 19 speakers, 10-inch subwoofer, 950-watt amplifier",
+      "10.25-inch front-passenger interactive touchscreen display",
+      "21-inch machined-face aluminum wheels in Gloss Black or Granite Crystal",
+      "275/45R21XL All-Season tires"
+    ],
+    "Summit": [
+      "2nd-row bucket seats with manual easy entry slide and power-folding seatbacks",
+      "Power-folding 3rd-row 50/50 seats",
+      "2-tier 2nd-row floor console with illuminated cup holders",
+      "Quilted Palermo leather seats with leather bolsters",
+      "Deluxe suede headliner",
+      "Palermo leather door trim",
+      "21-inch machined-face wheels standard on 3-row models"
+    ],
+    "Overland": [
+      "Mopar Finishing Package with paint protection film and splash guards",
+      "360° Surround-View Camera System with integrated off-road camera",
+      "Parallel and perpendicular park and unpark assist with side-distance warning",
+      "Intersection Collision Assist System",
+      "Active Driving Assist System",
+      "Ventilated rear seats"
+    ],
+    "Limited": [
+      "6-passenger seating with 2nd-row bucket seats and manual-folding seatbacks",
+      "3rd-row 50/50 manual-folding seats",
+      "Auto-dimming exterior driver's mirror",
+      "3rd-row USB ports",
+      "Rearview auto-dimming digital display mirror",
+      "Window shades for 2nd row",
+      "Wireless charging pad",
+      "ParkSense front and rear park assist with stop"
+    ],
+    "Laredo": [
+      "S elec-Terrain Traction Management System on 4x4 models",
+      "LED fog lamps",
+      "Power liftgate",
+      "Power-adjusting heated manual-folding mirrors with blind-spot indicator",
+      "8-way power-adjust front-passenger seat",
+      "Ambient LED lighting",
+      "Heated front and 2nd-row seating",
+      "Heated steering wheel",
+      "Uconnect 5 NAV with 10.1-inch touchscreen display and GPS navigation",
+      "Alpine Premium Audio System with 9 speakers and subwoofer"
+    ]
+  }
+}

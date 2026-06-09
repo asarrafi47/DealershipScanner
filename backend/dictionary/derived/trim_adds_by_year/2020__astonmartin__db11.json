@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2020|astonmartin|db11",
+  "year": 2020,
+  "make": "Aston Martin",
+  "model": "db11",
+  "ladder_id": "brochure_llm_2020__astonmartin__db11",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V12 COUPE",
+    "V8 COUPE",
+    "VOLANTE"
+  ],
+  "adds_by_trim": {
+    "V12 COUPE": [
+      "5.2-litre twin-turbocharged V12 engine",
+      "Dark V12 bonnet blades with Black meshes",
+      "Bright V12 bonnet blades with Black meshes on Heritage and Shanghai Fashionista specs"
+    ],
+    "V8 COUPE": [
+      "4.0-litre twin-turbocharged V8 engine",
+      "Titanium V8 meshes",
+      "20-inch 10-spoke directional wheels with Silver Diamond or Gloss Black finish"
+    ],
+    "VOLANTE": [
+      "4.0-litre twin-turbocharged V8 engine",
+      "Open-topped convertible body configuration",
+      "Stunning and intense open-topped grand touring experience"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2017|infiniti|qx70",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "QX70",
+  "ladder_id": "brochure_llm_2017__infiniti__qx70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX70 Limited AWD",
+    "QX70 AWD",
+    "QX70"
+  ],
+  "adds_by_trim": {
+    "QX70 Limited AWD": [
+      "21 x 9.5-inch multi-spoke aluminum-alloy wheels with 265/45R21 all-season tires",
+      "Power rear liftgate with electric closure assist"
+    ],
+    "QX70 AWD": [
+      "Intelligent All-Wheel Drive with 0-50% front/100% rear power distribution",
+      "21 x 9.5-inch Sport 6-spoke dark finish aluminum-alloy wheels with 265/45R21 tires"
+    ],
+    "QX70": [
+      "3.7-liter V6 engine with 325 hp and 267 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control and manual mode",
+      "Vehicle-speed-sensitive power steering with 36.7-foot turning diameter",
+      "Independent double-wishbone front suspension with stabilizer bar",
+      "Independent multi-link rear suspension with stabilizer bar",
+      "HID bi-functional xenon headlights with Adaptive Front Lighting System",
+      "18 x 8.0-inch split 5-spoke aluminum-alloy wheels with 265/60R18 all-season tires",
+      "Dual Zone Automatic Temperature Control system",
+      "Intelligent Key with illuminated push button ignition",
+      "Power windows with one-touch auto up/down and auto-reverse feature"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2024|infiniti|qx60",
+  "year": 2024,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2024__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX60 AUTOGRAPH",
+    "QX60 SENSORY",
+    "QX60 LUXE",
+    "QX60 PURE"
+  ],
+  "adds_by_trim": {
+    "QX60 AUTOGRAPH": [
+      "High Beam Assist with automatic leveling function",
+      "10.8-inch Head-Up Display",
+      "Smart Rearview Mirror",
+      "Around View Monitor with Moving Object Detection",
+      "Traffic Sign Recognition",
+      "Front parking sensors",
+      "Semi-aniline leather-appointed seats with quilting and perforation",
+      "Black Open Pore Ash Wood interior trim accents",
+      "Bose 17-speaker Performance Series Audio system",
+      "20-inch charcoal metallic machine-finished aluminum-alloy wheels"
+    ],
+    "QX60 SENSORY": [
+      "Android Auto integration for compatible Android phones",
+      "Wireless Charging Pad",
+      "Blind Spot Warning",
+      "Rear Automatic Braking",
+      "Rear Cross Traffic Alert",
+      "RearView Monitor",
+      "Lane Departure Warning with haptic steering wheel feedback",
+      "Adaptive Front Lighting System with auto-leveling function",
+      "Navigation with 3D building graphics and 5-year MapCare trial",
+      "Tri-Zone Automatic Temperature Control with microfilter"
+    ],
+    "QX60 LUXE": [
+      "8-way power adjustable and heated front seats",
+      "4-way driver power lumbar support",
+      "2-way front-passenger power lumbar support",
+      "60:40-split folding and sliding second-row bench seat",
+      "Multi-mode second-row seat with one-touch release for third-row entry",
+      "60:40-split folding third-row seat",
+      "Leather-wrapped steering wheel",
+      "Heated steering wheel",
+      "Leather-accented shifter",
+      "Stainless steel kick plates on first and second rows"
+    ],
+    "QX60 PURE": [
+      "3.5-liter V6 engine producing 295 horsepower and 270 lb-ft torque",
+      "9-speed automatic transmission with manual-mode paddle shifters",
+      "Front-Wheel Drive or INFINITI Intelligent All-Wheel Drive",
+      "6,000-lb maximum towing capacity on AWD models",
+      "Trailer sway control on AWD models",
+      "Transmission oil cooler on AWD models",
+      "18-inch charcoal metallic machine-finished wheels with 255/60R18 tires",
+      "LED automatic on/off headlights with LED signature Daytime Running Lights",
+      "Panoramic moonroof with power open and close",
+      "10 cup holders and 4 bottle holders throughout cabin"
+    ]
+  }
+}

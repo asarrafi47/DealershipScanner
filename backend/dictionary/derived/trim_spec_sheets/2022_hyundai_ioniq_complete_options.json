@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_hyundai_ioniq_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Ioniq",
+    "Ioniq"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine or motor, front-wheel-drive; In addition, with the amount of standard driver aids at even the Blue level, Hyu"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Malaysia: Kulim, Kedah (Hyundai-Sime Darby Motors, hybrid only); The hybrid version competes with, and surpasses in fuel economy, the previous mi"
+      }
+    ]
+  }
+}

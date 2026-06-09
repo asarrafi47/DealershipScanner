@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2014|kia|rio",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_llm_2014__kia__rio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "LX",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "Premium Package available with enhanced features",
+      "Paddle shifters available for manual gear selection"
+    ],
+    "LX": [
+      "Voice-command navigation with real-time SiriusXM traffic available",
+      "UVO infotainment system with voice-activation technology available",
+      "Push-button start with Smart Key remote available"
+    ],
+    "EX": [
+      "1.6L Gasoline Direct Injection engine with 138 horsepower",
+      "Six-speed automatic transmission available",
+      "Rear-Camera Display available for enhanced visibility",
+      "Hatchback body style with roomy cargo area",
+      "Industry-leading 10-year/100,000-mile powertrain warranty"
+    ]
+  }
+}

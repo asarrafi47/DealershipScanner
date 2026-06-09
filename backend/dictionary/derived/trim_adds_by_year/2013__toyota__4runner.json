@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|toyota|4runner",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2013__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "TRAIL",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Full-time 4WD with Torsen limited-slip center differential and locking feature",
+      "X-REAS Sport Enhancement Suspension",
+      "Safety Connect with Emergency Assistance and Stolen Vehicle Locator",
+      "Advanced Airbag System with roll-sensing side curtain airbags all rows"
+    ],
+    "TRAIL": [
+      "Part-time 4WD with Active Traction Control",
+      "Kinetic Dynamic Suspension System (KDSS)",
+      "Electronically controlled locking rear differential with Multi-terrain Select and Crawl Control",
+      "Multi-terrain ABS braking system",
+      "Increased approach angle to 33 degrees"
+    ],
+    "SR5": [
+      "4.0-Liter V6 DOHC 24-Valve engine with 270 hp and 278 lb-ft torque",
+      "5-speed electronically controlled automatic transmission with sequential shift mode",
+      "Rear-wheel drive with Automatic Limited-Slip Differential standard",
+      "Star Safety System with VSC, Traction Control, ABS and Smart Stop Technology",
+      "Eight standard airbags including driver and passenger knee airbags",
+      "Power-assisted rack-and-pinion steering with Variable Flow Control",
+      "5,000 lb towing capacity with integrated receiver hitch",
+      "Seating for 5 or 7 with optional third-row seat"
+    ]
+  }
+}

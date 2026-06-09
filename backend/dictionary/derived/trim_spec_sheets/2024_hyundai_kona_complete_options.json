@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2024_hyundai_kona_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Kona",
+    "Kona"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "N Line": [
+      {
+        "label": "Engine Options",
+        "value": "The all-wheel drive option is available for the 1.6-litre T-GDi petrol engine.; L Smartstream G1.0 T-GDi I3 (Mild hybrid)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; It is available with petrol, mild hybrid, hybrid and battery electric models, wh"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Front-motor, front-wheel-drive (electric); Petrol hybrid:"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; It is available with petrol, mild hybrid, hybrid and battery electric models, wh"
+      }
+    ]
+  }
+}

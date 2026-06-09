@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2014|ford|edge",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_llm_2014__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "10-way power driver's seat",
+      "EasyFold rear seat back release",
+      "18-inch chrome-clad aluminum wheels",
+      "20-inch chrome-clad aluminum wheels",
+      "Auto-dimming rearview mirror",
+      "Below-floor Cargo Management System",
+      "Cargo net",
+      "Body-color door handles and heated sideview mirrors",
+      "Body-color SecuriCode keyless entry keypad"
+    ],
+    "SE": [
+      "2.0L EcoBoost I-4 engine with 6-speed automatic transmission and Active Grille Shutters",
+      "3.5L Ti-VCT V6 engine with 6-speed automatic transmission",
+      "Front bucket seats with driver's manual lumbar support",
+      "Cloth seats",
+      "17-inch painted aluminum wheels",
+      "AM/FM stereo with single-CD player, MP3 capability and 6 speakers",
+      "MyFord 4.2-inch color LCD display in instrument cluster and center stack",
+      "Leather-wrapped steering wheel and shift knob",
+      "Illuminated front door-sill plates",
+      "Automatic headlamps with wiper activation"
+    ]
+  }
+}

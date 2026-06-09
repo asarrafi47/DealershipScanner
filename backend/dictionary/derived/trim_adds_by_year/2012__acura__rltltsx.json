@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|acura|rltltsx",
+  "year": 2012,
+  "make": "acura",
+  "model": "RL TL TSX",
+  "ladder_id": "generic_acura_rltltsx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sig",
+    "Els"
+  ],
+  "adds_by_trim": {
+    "Els": [
+      "a registered trademark of Apple Inc. The XM name, XM NavTraffic,\u00ae and XM NavWeather\u2122 are trademarks of Sirius XM Radio Inc. and its subsidiaries. Zagat Survey\u00ae is",
+      "Traffic\u00ae and NavWeather\u2122 subscriptions. Navigation-equipped vehicles include 90 days of XM Nav",
+      "a Finance Corporation. 7 See your local dealer for details about Total Luxury Care (TLC) Roadside Assistance and Concierge service. 8 XM services require a subscription after 90-day trial period. Subscriptions governed by SiriusXM Customer Agreement;"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Els": 3
+    }
+  }
+}

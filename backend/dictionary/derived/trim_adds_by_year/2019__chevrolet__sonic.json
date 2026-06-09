@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2019|chevrolet|sonic",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "ladder_id": "brochure_llm_2019__chevrolet__sonic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier Hatchback",
+    "Premier Sedan",
+    "LT Hatchback",
+    "LT Sedan",
+    "SL Sedan"
+  ],
+  "adds_by_trim": {
+    "Premier Hatchback": [
+      "17-inch Black-painted aluminum wheels",
+      "Perforated leatherette seating with sueded microfiber inserts",
+      "Rear sport spoiler",
+      "Sport suspension",
+      "Heated driver and front passenger seats"
+    ],
+    "Premier Sedan": [
+      "17-inch painted-aluminum wheels",
+      "Leatherette seating with sueded microfiber inserts",
+      "Integrated rear decklid sport spoiler",
+      "Convenience Package with heated leather steering wheel",
+      "Heated driver and front passenger seats"
+    ],
+    "LT Hatchback": [
+      "16-inch aluminum wheels",
+      "Deluxe cloth seating",
+      "RS Package with sport body kit, foglamps, and flat-bottom sport steering wheel",
+      "Forward Collision Alert, Lane Departure Warning, and Rear Park Assist",
+      "Premium 6-speaker sound system"
+    ],
+    "LT Sedan": [
+      "16-inch aluminum wheels",
+      "Deluxe cloth seating",
+      "RS Package with sport styling and sport steering wheel",
+      "SiriusXM Radio All Access Package with 3-month trial",
+      "Premium 6-speaker sound system"
+    ],
+    "SL Sedan": [
+      "Manual-adjustable body-color mirrors",
+      "Black beltline moldings",
+      "Sport cloth seating",
+      "Carpeted front floor mats",
+      "15-inch steel wheels with bolt-on wheel cover",
+      "Chevrolet Infotainment 3 System with 7-inch touchscreen and Bluetooth audio streaming",
+      "4G LTE Wi-Fi for up to seven devices with 1-month trial",
+      "Chevrolet Connected Access with Vehicle Diagnostics and Smart Driver"
+    ]
+  }
+}

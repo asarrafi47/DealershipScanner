@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2023|kia|sportage",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_llm_2023__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sportage X-Pro Prestige",
+    "Sportage X-Pro",
+    "X-Line Prestige",
+    "X-Line",
+    "SX Prestige",
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Sportage X-Pro Prestige": [
+      "Available 2.5L GDI or Turbo-Hybrid powertrain options",
+      "Navigation-based Smart Cruise Control—Curve with Highway Driving Assist",
+      "Blind-Spot Collision-Avoidance Assist and Blind-Spot View Monitor",
+      "Premium exterior color options including dual-tone finishes"
+    ],
+    "Sportage X-Pro": [
+      "X-Pro exterior styling and capability features",
+      "Available advanced safety systems with navigation integration"
+    ],
+    "X-Line Prestige": [
+      "X-Line premium trim designation",
+      "Enhanced exterior styling compared to SX Prestige"
+    ],
+    "X-Line": [
+      "X-Line exterior design and features"
+    ],
+    "SX Prestige": [
+      "Prestige-level interior and exterior appointments",
+      "Available advanced driver assistance features"
+    ],
+    "SX": [
+      "SX-level styling and feature content"
+    ],
+    "EX": [
+      "EX-level features and appointments"
+    ],
+    "LX": [
+      "Available 2.5L GDI or Hybrid powertrain",
+      "Standard safety features",
+      "Multiple exterior color options"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|toyota|corolla",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Hybrid",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Includes these key features Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Continuously Variable Transmission (CVT) 30 city/38 highway/33 combined est. mpg28 Continuously Variable Transmission (CVT)",
+      "Front-Wheel Drive (FWD) Exterior Features 29 city/37 highway/32 combined est. mpg28",
+      "Exterior Features 16-in. wide-vent steel wheels High-grade LED headlights and accent lighting",
+      "LED headlights, Daytime Running Lights (DRL), Interior Features Color-keyed heated power outside mirrors",
+      "Automatic climate control",
+      "Black front grille with sport mesh insert Power tilt/slide moonroof with sliding sunshade",
+      "Premium fabric-trimmed seats include:",
+      "Color-keyed power outside mirrors 16-in. alloy wheels",
+      "60/40 split fold-down rear seat with center armrest",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "Multi-function in-key remote keyless entry system SofTex\u00ae-trimmed4 seats include:"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on SE Adds to or replaces features offered on XSE Adds to or replaces features offered on LE",
+      "Normal and Sport driving modes Sport-tuned suspension \u2014 increased stabilizer Hybrid engine: 1.8L 4-cylinder with 121 hp @ 5200 rpm",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) bar and coil spring rates Electronically controlled Continuously Variable",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) Normal, Power and ECO driving modes",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Exterior Features 53 city/52 highway/52 combined est. mpge8",
+      "Gray metallic sport side rocker panels and rear spoiler",
+      "Sport mesh black front grille with bronze/ Exterior Features",
+      "SofTex\u00ae-trimmed4 seats Bronze/black side rocker panels and rear diffuser accent 15-in. alloy wheels",
+      "Heated front seats with sport fabric inserts",
+      "Steering-wheel-mounted paddle shifters (CVT) Interior Features",
+      "Sport-tuned exhaust with conical-shaped tip"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

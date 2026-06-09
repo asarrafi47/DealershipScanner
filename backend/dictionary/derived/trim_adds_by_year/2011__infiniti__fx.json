@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|infiniti|fx",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "FX",
+  "ladder_id": "brochure_web_2011__infiniti__fx",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "FX50",
+    "FX35",
+    "FX35 Base"
+  ],
+  "adds_by_trim": {
+    "FX50": [
+      "5.0L V8 engine producing 390 hp vs 3.5L V6 in FX35",
+      "All-Wheel Drive standard",
+      "Upgraded suspension tuning for performance"
+    ],
+    "FX35": [
+      "3.5L V8 engine producing 303 hp",
+      "All-Wheel Drive standard",
+      "Infiniti Hard Drive navigation system",
+      "Premium Bose audio system with 13 speakers",
+      "Heated and cooled leather front seats",
+      "Power moonroof",
+      "Rear parking sensors with camera display"
+    ],
+    "FX35 Base": [
+      "3.5L V6 engine producing 303 hp",
+      "Rear-Wheel Drive standard",
+      "Four-wheel independent double-wishbone suspension",
+      "17-inch aluminum wheels",
+      "Cloth interior seating",
+      "8-inch color touchscreen display",
+      "Infinity AM/FM audio system",
+      "Backup camera",
+      "Dual-zone automatic climate control",
+      "Bluetooth connectivity"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/fx/"
+}

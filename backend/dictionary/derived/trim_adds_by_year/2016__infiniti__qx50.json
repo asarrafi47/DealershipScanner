@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2016|infiniti|qx50",
+  "year": 2016,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_llm_2016__infiniti__qx50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX50 with Technology Package",
+    "QX50 with Deluxe Touring Package",
+    "QX50 with Premium Plus Package",
+    "QX50 with Premium Package",
+    "QX50"
+  ],
+  "adds_by_trim": {
+    "QX50 with Technology Package": [
+      "Intelligent Cruise Control (Full-Speed Range)",
+      "Lane Departure Warning and Lane Departure Prevention",
+      "Distance Control Assist",
+      "Intelligent Brake Assist with Forward Collision Warning",
+      "Blind Spot Warning"
+    ],
+    "QX50 with Deluxe Touring Package": [
+      "19 x 8.5-inch split 5-spoke aluminum-alloy wheels with 245/45R19 tires",
+      "Adaptive Front Lighting System with HID xenon auto-leveling headlights",
+      "2-way driver's seat power lumbar support",
+      "8-way power front-passenger's seat",
+      "Power up-folding 2nd-row seats",
+      "Premium stitching on meter hood"
+    ],
+    "QX50 with Premium Plus Package": [
+      "Infiniti Hard Drive Navigation System with touch-screen display and 3-D building graphics",
+      "Infiniti Voice Recognition for audio, navigation, and vehicle information",
+      "NavTraffic with SiriusXM detailed traffic information",
+      "NavWeather with SiriusXM weather updates and 3-day forecasts",
+      "Streaming audio via Bluetooth wireless technology",
+      "Around View Monitor with Front and Rear Sonar System"
+    ],
+    "QX50 with Premium Package": [
+      "Bose 11-speaker Premium Sound system with AM/FM/CD/DVD and MP3 playback",
+      "Advanced Climate Control System with Plasmacluster air purifier and Grape Polyphenol Filter",
+      "Dual-occupant memory system for driver's seat, steering wheel, and outside mirrors",
+      "Entry/exit assist for driver's seat and steering wheel",
+      "Auto-dimming inside mirror with HomeLink Universal Transceiver",
+      "Maple interior accents",
+      "Power tilt and telescopic steering column",
+      "Aluminum roof rails"
+    ],
+    "QX50": [
+      "3.7-liter 24-valve V6 engine with 325 hp and 267 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control and Downshift Rev Matching",
+      "Infiniti Intelligent Key with Illuminated Push Button Ignition",
+      "Dual Zone Automatic Temperature Control system",
+      "Rear-seat heating and cooling vents in center console",
+      "Vehicle-speed-sensitive power steering",
+      "Independent double-wishbone front and multi-link rear suspension",
+      "18 x 8.0-inch 8-spoke aluminum-alloy wheels with 225/55R18 tires",
+      "Power sliding tinted glass moonroof with one-touch auto-open/close and sunshade",
+      "LED rear brake lights and center high-mounted stoplight"
+    ]
+  }
+}

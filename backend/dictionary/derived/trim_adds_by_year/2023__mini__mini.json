@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2023|mini|mini",
+  "year": 2023,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_llm_2023__mini__mini",
+  "source": "brochure_llm",
+  "trims_available": [
+    "John Cooper Works",
+    "Cooper S",
+    "Cooper"
+  ],
+  "adds_by_trim": {
+    "John Cooper Works": [
+      "228 hp and 235 lb-ft of torque (Hardtop/Convertible) or 301 hp and 331 lb-ft (Clubman/Countryman)",
+      "Electronic Differential Lock Control for enhanced cornering",
+      "Race-inspired performance engineering"
+    ],
+    "Cooper S": [
+      "189 hp and 206 lb-ft of torque",
+      "Enhanced thrills over base Cooper model"
+    ],
+    "Cooper": [
+      "134 hp and 162 lb-ft of torque",
+      "Sport Dual Clutch Transmission",
+      "LED headlights with auto-leveling system",
+      "Rear View Camera and PDC Sensors",
+      "Eight airbags (Hardtop 2/4 Door, Clubman, Countryman) or six airbags (Convertible)",
+      "Active Driving Assistant with Forward Collision Warning and Automatic Emergency Braking",
+      "8.8-inch touchscreen center display",
+      "Digital instrument cluster",
+      "Anti-lock Brake System with Corner Brake Control"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2017|jeep|grandcherokee",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "brochure_llm_2017__jeep__grandcherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Summit",
+    "Overland",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Summit": [
+      "Ultra-premium Nappa leather on seats, console, upper instrument panel, door panels",
+      "High-gloss wood instrument panel and door trim",
+      "Soft suede-like Dinamica headliner",
+      "Harman Kardon premium audio system with 825 watts, 19 GreenEdge speakers"
+    ],
+    "Overland": [
+      "CommandView Dual-Pane Panoramic Sunroof standard",
+      "8.4-inch Uconnect NAV radio with color touchscreen and Voice Command",
+      "Front and second-row heated seats standard",
+      "First-row ventilated seats standard",
+      "Alpine Surround Sound System with nine speakers and subwoofer"
+    ],
+    "Limited": [
+      "Configurable 7-inch Multi-View Display Cluster with navigation and vehicle data",
+      "Alpine Surround Sound System optional"
+    ]
+  }
+}

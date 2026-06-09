@@ -1,0 +1,37 @@
+{
+  "ladder_id": "bmw_x7",
+  "make": "BMW",
+  "models": [
+    "X7",
+    "X7 M60i",
+    "X7 xDrive40i",
+    "Alpina XB7"
+  ],
+  "year_min": 2019,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Alpina XB7": [
+      {
+        "label": "Engine Options",
+        "value": "612 hp Alpina-tuned twin-turbo V8"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Exclusive Alpina interior and exterior trim"
+      }
+    ],
+    "M60i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "523 hp twin-turbo V8 with mild hybrid; 3.0L I6 Turbo"
+      }
+    ],
+    "xDrive40i": [
+      {
+        "label": "Engine Options",
+        "value": "375 hp turbocharged inline-six with xDrive AWD; 3.0L I6 Turbo"
+      }
+    ]
+  }
+}

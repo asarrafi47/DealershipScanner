@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2027_audi_q6_e-tron_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q6 e-tron",
+    "Q6 e-tron"
+  ],
+  "year_min": 2025,
+  "year_max": 2029,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "There is the option of a 10.9-inch infotainment display for the front passenger; 10.9-inch infotainment display"
+      }
+    ],
+    "Quattro": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

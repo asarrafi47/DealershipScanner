@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2019|chevrolet|trax",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Trax",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LT",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

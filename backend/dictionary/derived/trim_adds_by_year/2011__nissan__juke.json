@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2011|nissan|juke",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Juke",
+  "ladder_id": "brochure_llm_2011__nissan__juke",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Nissan Hard Drive Navigation System with 5.0-inch color touchscreen and XM NavTraffic",
+      "Rockford Fosgate 8-inch subwoofer with 6 upgraded speakers",
+      "USB connection port for iPod interface and compatible devices",
+      "RearView Monitor",
+      "Integrated Control (I-CON) system",
+      "Automatic Temperature Control (ATC) with in-cabin microfilter",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Heated front seats",
+      "Sport Package: 17-inch gunmetal aluminum-alloy wheels, rear roof spoiler, stainless steel exhaust finisher"
+    ],
+    "SV": [
+      "6 upgraded speakers",
+      "XM Satellite Radio",
+      "Interface System for iPod",
+      "Bluetooth Hands-free Phone System",
+      "Drive computer with outside temperature display",
+      "Air conditioning with in-cabin microfilter",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Tilt steering column"
+    ],
+    "S": [
+      "AM/FM/CD audio system with 6 speakers",
+      "MP3/WMA CD playback capability",
+      "Auxiliary audio input jack",
+      "Radio Data System (RDS)",
+      "Speed-sensitive volume and steering-wheel-mounted audio controls",
+      "Bluetooth Hands-free Phone System",
+      "Drive computer with outside temperature display",
+      "Steering-wheel-mounted cruise control",
+      "Power windows and power door locks with auto-locking feature",
+      "Integrated Key with remote keyless entry"
+    ]
+  }
+}

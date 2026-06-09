@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2021|toyota|corollahatchback",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "brochure_llm_2021__toyota__corollahatchback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE Nightshade Edition",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "8-in. touchscreen with eight JBL speakers and premium audio",
+      "Dynamic Navigation with 3-year trial subscription",
+      "Qi-compatible wireless charging pad",
+      "Adaptive Front Lighting System (AFS)",
+      "18-in. machined finish alloy wheels",
+      "Front chrome grille surround",
+      "Leather-trimmed sport seats with fabric inserts and heated front seats with sport bolsters",
+      "Dual zone automatic climate control",
+      "Up to 30 city/38 highway/33 combined EPA-estimated mpg (CVT)"
+    ],
+    "SE Nightshade Edition": [
+      "18-in. black alloy wheels",
+      "Black front lower grille surround",
+      "Black rear spoiler",
+      "Black heated power outside mirrors with turn signal indicators",
+      "Single exhaust with dual black diffusers",
+      "Black rear diffuser surround",
+      "Black rear Toyota emblem and badges",
+      "Integrated LED fog lights",
+      "Up to 32 city/41 highway/35 combined EPA-estimated mpg (CVT)"
+    ],
+    "SE": [
+      "2.0L 4-cylinder Dynamic-Force engine with 168 hp",
+      "Dynamic Shift CVT with Normal and Sport driving modes",
+      "Available 6-speed Intelligent Manual Transmission (iMT)",
+      "LED headlights and LED Daytime Running Lights with auto on/off",
+      "16-in. twin-spoke alloy wheels",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Single exhaust with dual chrome diffusers",
+      "Automatic climate control",
+      "4.2-in. Multi-Information Display",
+      "Smart Key System with Push Button Start"
+    ]
+  }
+}

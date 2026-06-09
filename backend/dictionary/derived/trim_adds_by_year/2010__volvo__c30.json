@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2010|volvo|c30",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "C30",
+  "ladder_id": "brochure_2010__volvo__c30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 2.5-liter five-cylinder turbocharged T5 engine with 227 hp",
+      "Adds six-speed manual transmission standard",
+      "Adds five-speed Geartronic automatic transmission option",
+      "Adds Includes McPherson front suspension with anti-dive and anti-lift function",
+      "Adds Includes Multilink independent rear suspension",
+      "Adds Dynamic Stability Control (DSTC) system",
+      "Adds Includes power-assisted electro-hydraulic rack and pinion steering with tilt and telescopic column",
+      "Adds power-assisted anti-lock disc brakes (ABS) with Emergency Brake Assistance (EBA)",
+      "Adds Includes Volvo Navigation System (VNS) with Real Time Traffic (RTT)",
+      "Adds integrated Bluetooth handsfree system"
+    ],
+    "Premium": [
+      "Upgraded to sport-tuned dynamic chassis configuration",
+      "Adds Volvo Navigation System Map Care with two complimentary map data updates"
+    ],
+    "Limited": [
+      "Adds variable all-valve timing optimization for enhanced engine response"
+    ]
+  }
+}

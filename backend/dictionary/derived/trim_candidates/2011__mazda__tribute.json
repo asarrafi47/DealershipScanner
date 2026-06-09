@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2011|mazda|tribute",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "Tribute",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Limited",
+    "Touring",
+    "LT",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

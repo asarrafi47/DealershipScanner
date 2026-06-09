@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2012|ford|escape",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2012__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited",
+    "Limited",
+    "Hybrid",
+    "XLT",
+    "XLS"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited": [
+      "Heated front bucket seats with leather trim",
+      "Power moonroof",
+      "Rear view camera with reverse sensing system",
+      "16-inch bright-machined aluminum wheels"
+    ],
+    "Limited": [
+      "Heated front bucket seats with leather trim",
+      "16-inch bright-machined aluminum wheels",
+      "Chrome finish on door handles and air vent bezels",
+      "Ambient lighting"
+    ],
+    "Hybrid": [
+      "2.5L i-VCT Atkinson-cycle I-4 engine with electric motor",
+      "Electronically controlled continuously variable transmission (eCVT)",
+      "330-volt nickel-metal-hydride battery pack",
+      "Regenerative braking system",
+      "34 city/31 hwy/32 combined mpg FWD or 30 city/27 hwy/29 combined mpg 4WD"
+    ],
+    "XLT": [
+      "6-way power driver's seat",
+      "Premium-grade cloth seats",
+      "Auto-dimming rearview mirror",
+      "16-inch cast-aluminum wheels with all-season tires",
+      "Leather-wrapped steering wheel with secondary audio controls",
+      "AM/FM stereo with 4 speakers",
+      "SiriusXM satellite radio with 6-month trial subscription"
+    ],
+    "XLS": [
+      "Front bucket seats with 60/40 split-fold rear bench seat",
+      "Air conditioning with rear floor air ducts",
+      "AM/FM stereo with single-CD player and 4 speakers",
+      "Auxiliary audio input jack",
+      "Cruise control with tilt steering column",
+      "Power windows with one-touch-down driver's side",
+      "Power door locks with child-safety rear door locks",
+      "Automatic headlamps with front fog lamps",
+      "4-wheel independent suspension with front/rear stabilizer bars",
+      "AdvanceTrac with roll stability control and dual-stage front airbags"
+    ]
+  }
+}

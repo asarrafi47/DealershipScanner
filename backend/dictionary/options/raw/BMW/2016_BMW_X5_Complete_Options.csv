@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,BMW,X5,sDrive35i,3.0L V6 (SIDI),3.0L I6 Turbo,Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,18,25,21,,,,,
+2016,BMW,X5,xDrive35i,3.0L V6 (SIDI),3.0L I6 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,24,20,,,,,
+2016,BMW,X5,xDrive50i,4.4L V8 (SIDI),4.4L V8 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,4.4,15,21,17,,,,,
+2016,BMW,X5,xDrive40e,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),2.0L I4,,Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Standard Sport Utility Vehicle 4WD,4,2.0,23,25,24,,,,,
+2016,BMW,X5,xDrive35d,Diesel 3.0L V6 Diesel,3.0L I6 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Diesel,Standard Sport Utility Vehicle 4WD,6,3.0,23,29,25,,,,,

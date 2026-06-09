@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2012|audi|a6",
+  "year": 2012,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_llm_2012__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A6 3.0T Prestige",
+    "A6 3.0T Plus Premium",
+    "A6 3.0T Premium",
+    "A6 2.0T Plus Premium",
+    "A6 2.0T Premium"
+  ],
+  "adds_by_trim": {
+    "A6 3.0T Prestige": [
+      "Audi S line exterior appearance package",
+      "20-inch 10-spoke V design alloy wheels with anthracite/part-polished finish",
+      "Summer performance tires with sport suspension calibration",
+      "Full LED headlight technology with adaptive cornering lights",
+      "Bang & Olufsen Advanced Sound System with 15 speakers and 1,300 watts",
+      "Four-zone automatic climate control",
+      "Power tilt and telescopic steering column with memory"
+    ],
+    "A6 3.0T Plus Premium": [
+      "Audi adaptive cruise control with Stop and Go function",
+      "Audi side assist and Audi pre sense plus driver assistance features",
+      "Power-adjustable, power-folding, auto-dimming heated side mirrors with memory",
+      "19-inch 15-spoke star design alloy wheels with summer performance tires",
+      "Three-spoke multifunction steering wheel with shift paddles"
+    ],
+    "A6 3.0T Premium": [
+      "Ventilated front seats with perforated leather seating surfaces",
+      "Heated rear seats",
+      "LED turn indicator light technology integrated in side mirrors",
+      "Xenon plus headlights with LED daytime running light technology"
+    ],
+    "A6 2.0T Plus Premium": [
+      "Audi adaptive cruise control with Stop and Go function",
+      "Audi side assist and Audi pre sense plus driver assistance features",
+      "Power-adjustable, power-folding, auto-dimming heated side mirrors with memory",
+      "18-inch 5-twin-spoke design alloy wheels with sport suspension calibration",
+      "Three-spoke multifunction steering wheel with shift paddles"
+    ],
+    "A6 2.0T Premium": [
+      "Audi Singleframe grille with chrome exterior window trim",
+      "Halogen headlights with daytime running lights",
+      "Automatic headlights with LED taillight technology",
+      "Heated front seats with eight-way power adjustment and four-way power lumbar",
+      "Power windows with one-touch up/down operation and pinch protection",
+      "Folding rear seat with pass-through and driver seat memory",
+      "Sunroof with tilt and telescopic manually adjustable steering column"
+    ]
+  }
+}

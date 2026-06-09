@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2015|chevrolet|commercial",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "Z71",
+    "LT",
+    "WT",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

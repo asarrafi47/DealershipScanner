@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2019|toyota|86",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "brochure_llm_2019__toyota__86",
+  "source": "brochure_llm",
+  "trims_available": [
+    "86 TRD Special Edition",
+    "86 GT",
+    "86"
+  ],
+  "adds_by_trim": {
+    "86 TRD Special Edition": [
+      "6-speed close-ratio manual transmission only (automatic not available)",
+      "18-inch split-spoke alloy wheels",
+      "TRD front, rear, and side underbody spoilers",
+      "Rear wing in matte black with aerodynamic end plates",
+      "TRD tricolor side body graphic",
+      "TRD performance exhaust",
+      "Brembo brakes and SACHS performance dampers",
+      "Power-assisted ventilated 12.83-inch front and 12.44-inch rear disc brakes",
+      "Red and black sport front bucket seats with side bolsters and leather trim",
+      "Red and black leather-trimmed steering wheel with red contrast stitching"
+    ],
+    "86 GT": [
+      "LED fog lights",
+      "Heated sport front bucket seats with leather and Granlux suede-like inserts",
+      "Red contrast stitching on sport seats",
+      "4.2-inch TFT Multi-Information Display with vehicle performance information",
+      "Smart Key System with Push Button Start",
+      "Dual zone automatic climate control",
+      "Leather-trimmed tilt/telescopic steering wheel with MID controls"
+    ],
+    "86": [
+      "2.0L 4-cylinder horizontally opposed engine with 205 hp (manual) or 200 hp (automatic)",
+      "6-speed close-ratio manual or 6-speed electronically controlled automatic transmission",
+      "Torsen limited-slip differential",
+      "LED projector-beam headlights with Daytime Running Lights and all-LED rear lights",
+      "Chrome-tipped dual exhaust",
+      "17-inch twisted spoke alloy wheels",
+      "Sport front bucket seats with Granlux suede-like material",
+      "Analog tachometer with programmable rev indicator",
+      "Auto-dimming rearview mirror with integrated backup camera",
+      "Display Audio with 7-inch touch-screen display"
+    ]
+  }
+}

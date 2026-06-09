@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2018|ford|expedition",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_2018__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "Active",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds SYNC 3 infotainment system with 8-inch touchscreen",
+      "Adds voice control functionality",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds 2 smart-charging USB ports",
+      "Adds Siri Eyes Free integration with iPhone",
+      "Adds SYNC AppLink for compatible mobile apps",
+      "Adds 3-year/36,000-mile bumper-to-bumper warranty coverage"
+    ],
+    "Active": [
+      "Adds SYNC Connect 4G LTE Wi-Fi hotspot with up to 10 device connectivity",
+      "Adds FordPass smartphone app with remote vehicle access",
+      "Adds SiriusXM Traffic & Travel Link with 5-year complimentary subscription",
+      "Adds voice-activated turn-by-turn navigation with 3D maps"
+    ],
+    "Platinum": [
+      "Adds leather-trimmed interior seating",
+      "Adds rear seat entertainment system",
+      "Adds remote start systems capability"
+    ],
+    "Limited": [
+      "Adds in-vehicle safe",
+      "Adds extended vehicle security system options"
+    ]
+  }
+}

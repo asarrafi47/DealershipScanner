@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2017|audi|q3",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Q3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

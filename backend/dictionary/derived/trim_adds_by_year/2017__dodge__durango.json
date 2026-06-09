@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2017|dodge|durango",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2017__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Citadel",
+    "GT",
+    "R/T",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "Citadel": [
+      "Power 8-way driver and passenger seats with driver memory",
+      "Power 4-way lumbar adjuster for driver and passenger",
+      "Heated and ventilated front seats",
+      "3-zone automatic temperature control with infrared sensors",
+      "Leather-wrapped center armrest",
+      "Memory system for radio, mirrors, and steering wheel",
+      "Chrome power folding multifunction mirrors with auto-dimming",
+      "Rear load-leveling suspension"
+    ],
+    "GT": [
+      "5.7L HEMI V8 engine with Multi-Displacement System optional",
+      "Sport suspension with lowered ride height",
+      "Gloss Black grille and power folding mirrors optional",
+      "Dual rear exhaust with bright tips",
+      "Power liftgate with key fob control",
+      "Power sunroof with express-open/close optional"
+    ],
+    "R/T": [
+      "3rd-row 50/50 split-folding seats standard",
+      "2nd-row fold-and-tumble Captain's Chairs with armrest",
+      "HD antilock 4-wheel disc brakes",
+      "Rear load-leveling suspension standard"
+    ],
+    "SXT": [
+      "7-inch TFT reconfigurable digital gauge cluster",
+      "Rear air conditioning with headliner vents",
+      "Full-length front floor console with cup holders",
+      "Overhead console with LED map lamps",
+      "Remote start system",
+      "8-speed automatic transmission",
+      "3.6L Pentastar V6 engine standard"
+    ]
+  }
+}

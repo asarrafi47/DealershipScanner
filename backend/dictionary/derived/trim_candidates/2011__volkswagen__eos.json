@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|volkswagen|eos",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Eos",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GTI",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|mazda|2",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "2",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Platinum",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

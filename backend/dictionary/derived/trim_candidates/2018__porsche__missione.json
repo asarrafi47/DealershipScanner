@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2018|porsche|missione",
+  "year": 2018,
+  "make": "Porsche",
+  "model": "Mission E",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo",
+    "Base",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

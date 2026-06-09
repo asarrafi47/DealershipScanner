@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2013|astonmartin|rapide",
+  "year": 2013,
+  "make": "Aston Martin",
+  "model": "rapide",
+  "ladder_id": "brochure_2013__astonmartin__rapide",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes petrol engine with catalytic converter",
+      "Adds Features Carbon-Fibre detailing options"
+    ],
+    "Limited": [
+      "Adds Q by Aston Martin expert personalization service",
+      "Adds exclusive accessories and options package"
+    ]
+  }
+}

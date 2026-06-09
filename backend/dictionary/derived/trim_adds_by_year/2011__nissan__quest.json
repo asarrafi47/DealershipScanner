@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|nissan|quest",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Quest",
+  "ladder_id": "brochure_llm_2011__nissan__quest",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "18-inch x 7-inch aluminum-alloy wheels",
+      "P225/55TR18 all-season tires",
+      "Dual Opening Glass Moonroof Package available",
+      "Bose Audio System Package available with 13 speakers"
+    ],
+    "SL": [
+      "18-inch x 7-inch aluminum-alloy wheels",
+      "P225/55TR18 all-season tires",
+      "DVD Entertainment System Package with 7.0-inch color monitor",
+      "Second-row 11.0-inch WVGA DVD monitor with auto-dimming",
+      "Dual Media Playback capability with two wireless headsets",
+      "120-volt AC power outlet"
+    ],
+    "SV": [
+      "16-inch x 7-inch aluminum-alloy wheels",
+      "P225/65TR16 all-season tires"
+    ],
+    "S": [
+      "3.5-liter DOHC 24-valve V6 engine with 260 horsepower",
+      "Xtronic CVT continuously variable transmission",
+      "Independent strut front suspension with multi-link rear suspension",
+      "4-wheel vented disc brakes with ABS and brake assist",
+      "16-inch x 6.5-inch steel wheels with bolt-on covers",
+      "Advanced Climate Control System with cabin air filtration",
+      "Fold-flat second and third row seats with permanent cargo well"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|gmc|savana",
+  "year": 2011,
+  "make": "GMC",
+  "model": "Savana",
+  "ladder_id": "generic_gmc_savana",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Cd",
+    "Mp3"
+  ],
+  "adds_by_trim": {
+    "Mp3": [
+      "trailering hitch A A Upgradeable to include turn signal indicators. side steel door beams S S",
+      "approved tire and wheel combinations",
+      "ections plan.3 Six-month S S",
+      "GMC ownership experience. of design features, materials or workmanship of any alterations by such suppliers."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 4.0,
+    "per_trim_add_counts": {
+      "Mp3": 4
+    }
+  }
+}

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,Toyota,4Runner,2WD,2.4L I4 (SIDI & PFI),2.4L I4,,Automatic (S8),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.4,20,26,22,,,,,
+2025,Toyota,4Runner,2WD,2.4L I4 (SIDI & PFI; with Stop-Start),2.4L I4,,Automatic (S8),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.4,20,24,22,,,,,
+2025,Toyota,4Runner,4WD,2.4L I4 (SIDI & PFI),2.4L I4,,Automatic (S8),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.4,19,25,21,,,,,
+2025,Toyota,4Runner,4WD,2.4L I4 (SIDI & PFI; with Stop-Start),2.4L I4,,Automatic (S8),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.4,20,24,21,,,,,
+2025,Toyota,4Runner,4WD,Hybrid 2.4L I4 (SIDI & PFI; Hybrid),2.4L I4,,Automatic (S8),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.4,23,24,23,,,,,
+2025,Toyota,4Runner,4WD,Hybrid 2.4L I4 (SIDI & PFI; Hybrid),2.4L I4,,Automatic (S8),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.4,23,24,23,,,,,

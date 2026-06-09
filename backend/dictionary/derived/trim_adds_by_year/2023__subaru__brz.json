@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2023|subaru|brz",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2023__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Limited": [
+      "18-inch aluminum-alloy wheels with Michelin Pilot Sport 4 summer-performance tires",
+      "LED Steering Responsive Headlights",
+      "Heated, body-color exterior mirrors",
+      "Ultrasuede and leather-trimmed upholstery",
+      "Aluminum-alloy sill cover inserts",
+      "8 speakers with 2-channel amplifier",
+      "Dual-mode heated front seats",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Reverse Automatic Braking",
+      "STARLINK Safety and Security enabled with Advanced Automatic Collision Notification and Remote Engine Start"
+    ],
+    "BRZ Premium": [
+      "228-hp 2.4-liter DOHC SUBARU BOXER engine with direct injection",
+      "Close-ratio 6-speed manual or 6-speed automatic transmission with paddle shifters and rev-matching downshift",
+      "Sport-tuned suspension with TORSEN limited-slip rear differential",
+      "17-inch multi-spoke aluminum-alloy wheels",
+      "Auto-on/off LED headlights and LED taillights with functional vents",
+      "Ducktail-design rear decklid and side rocker spoilers",
+      "7.0-inch customizable digital gauge cluster with Normal, Sport, and Track display modes",
+      "SUBARU STARLINK 8.0-inch multimedia system with Apple CarPlay and Android Auto integration",
+      "EyeSight Driver Assist Technology with High Beam Assist",
+      "Keyless Access with Push-Button Start and anti-theft security system"
+    ]
+  }
+}

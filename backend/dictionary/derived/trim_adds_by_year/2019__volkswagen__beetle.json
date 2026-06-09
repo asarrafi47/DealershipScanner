@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2019|volkswagen|beetle",
+  "year": 2019,
+  "make": "Volkswagen",
+  "model": "Beetle",
+  "ladder_id": "brochure_web_2019__volkswagen__beetle",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Beetle Convertible Final Edition SEL",
+    "Beetle Convertible SE",
+    "Beetle Convertible Final Edition SE",
+    "Beetle Final Edition SEL",
+    "Beetle Convertible S",
+    "Beetle SE",
+    "Beetle Final Edition SE",
+    "Beetle S"
+  ],
+  "adds_by_trim": {
+    "Beetle Convertible Final Edition SEL": [
+      "Convertible body style with power roof"
+    ],
+    "Beetle Convertible SE": [
+      "Convertible body style with power roof"
+    ],
+    "Beetle Convertible Final Edition SE": [
+      "Convertible body style with power roof"
+    ],
+    "Beetle Final Edition SEL": [
+      "Premium package: HID headlights, navigation, dual-zone climate control",
+      "Fender audio system with navigation",
+      "LED daytime running lights and fog lights",
+      "Parking sensors",
+      "18-inch alloy wheels with white accents",
+      "Leather upholstery"
+    ],
+    "Beetle Convertible S": [
+      "Convertible body style with power roof"
+    ],
+    "Beetle SE": [
+      "Keyless entry and start",
+      "Leatherette upholstery",
+      "Heated front seats",
+      "Ambient lighting",
+      "6.3-inch touchscreen with Android Auto and Apple CarPlay",
+      "17-inch alloy wheels"
+    ],
+    "Beetle Final Edition SE": [
+      "Leatherette upholstery with cloth inserts",
+      "Final Edition badging"
+    ],
+    "Beetle S": [
+      "16-inch alloy wheels",
+      "Leather-wrapped steering wheel",
+      "Cloth upholstery",
+      "Eight-speaker audio system",
+      "5.0-inch touchscreen",
+      "Rearview camera",
+      "Bluetooth connectivity",
+      "Blind-spot monitoring and rear cross-traffic alert"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/beetle/"
+}

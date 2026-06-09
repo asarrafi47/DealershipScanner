@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2012|lotus|elise",
+  "year": 2012,
+  "make": "Lotus",
+  "model": "Elise",
+  "ladder_id": "brochure_2012__lotus__elise",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes 6-speed manual transmission with sports-matched ratios",
+      "Adds Features distinctive LED daylight running lights and LED brake light cluster",
+      "Adds Includes soft-top roof as standard with character-defining design"
+    ],
+    "Sport": [
+      "Adds selectable Sport mode to Dynamic Performance Management for extended performance limits",
+      "Adds Includes matched throttle blips on downshifts for enhanced driving control"
+    ]
+  }
+}

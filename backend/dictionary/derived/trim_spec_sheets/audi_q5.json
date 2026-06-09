@@ -1,0 +1,51 @@
+{
+  "ladder_id": "audi_q5",
+  "make": "Audi",
+  "models": [
+    "Q5",
+    "Q5 Sportback",
+    "SQ5",
+    "SQ5 Sportback"
+  ],
+  "year_min": 2018,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "Top Q5 equipment level"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Head-up display and full LED matrix lighting"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Heated and ventilated front seats"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Audio System Layout",
+        "value": "Bang & Olufsen audio available"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Screen Size",
+        "value": "Audi MMI touch display"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather seating surfaces"
+      }
+    ],
+    "S line": [
+      {
+        "label": "Interior Materials",
+        "value": "S line exterior and interior styling"
+      }
+    ]
+  }
+}

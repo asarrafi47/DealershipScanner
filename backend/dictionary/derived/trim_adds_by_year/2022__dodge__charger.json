@@ -1,0 +1,118 @@
+{
+  "catalog_key": "2022|dodge|charger",
+  "year": 2022,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_2022__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat Redeye Widebody",
+    "SRT Hellcat Redeye",
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack Widebody",
+    "Scat Pack",
+    "Daytona",
+    "R/T",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SXT": [
+      "3.6L 292-hp Pentastar V6 engine",
+      "8-speed automatic transmission",
+      "Touring suspension with 4-wheel ABS and ESC",
+      "17-inch painted aluminum wheels",
+      "Integrated dual bright exhaust tips",
+      "Charger decklid badge",
+      "ParkView Rear Back-Up Camera",
+      "ParkSense Rear Park Assist",
+      "Auto headlamps and daytime running lamps",
+      "7-inch reconfigurable cluster display with Uconnect 4"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "GT": [
+      "Adds performance suspension",
+      "Upgraded to 20-inch Satin Carbon aluminum wheels",
+      "Adds GT and Dodge grille badges",
+      "Adds Performance Black grille",
+      "Adds Performance hood, fascias and sills",
+      "Adds projector LED fog lamps",
+      "Adds rear body-color spoiler"
+    ],
+    "R/T": [
+      "Upgraded to 5.7L HEMI V8 engine",
+      "Adds high-speed engine controller",
+      "Adds active exhaust",
+      "Adds R/T badge",
+      "Adds tire service kit"
+    ],
+    "Daytona": [],
+    "Scat Pack": [
+      "Upgraded to 392 HEMI V8 engine",
+      "Upgraded to 4-piston Brembo brakes with black-painted calipers",
+      "Adds high-performance suspension",
+      "Adds Launch Assist",
+      "Adds limited-slip differential",
+      "Adds 3.09 rear axle ratio",
+      "Upgraded to 20-inch Low-Gloss Granite Crystal aluminum wheels",
+      "Adds SRT Drive Modes",
+      "Adds SRT Performance Pages"
+    ],
+    "Scat Pack Widebody": [
+      "Adds widebody package",
+      "Upgraded to 305/35ZR20 All-Season Performance tires",
+      "Adds Adaptive Damping Suspension",
+      "Adds All-Speed Traction Control",
+      "Adds body-color fender flares",
+      "Upgraded to 6-piston fixed front caliper Brembo brakes",
+      "Adds flat-bottom steering wheel",
+      "Adds performance shift indicator"
+    ],
+    "Hellcat": [
+      "Advanced SRT multistage front air bags",
+      "200-mph primary speedometer with red-faced gauges",
+      "SRT Configurable Drive Modes",
+      "SRT Performance Pages",
+      "Premium leather-wrapped SRT flat-bottom steering wheel",
+      "Alcantara wrapped SRT flat-bottom steering wheel with Alcantara Package",
+      "Dark Engine Turn aluminum interior accents",
+      "SRT Hellcat premium floor mats"
+    ],
+    "SRT Hellcat": [
+      "Upgraded to supercharged 6.2L HEMI V8 engine",
+      "Upgraded to 6-piston Brembo brakes",
+      "Adds Adaptive Damping Suspension",
+      "Adds competition suspension",
+      "Adds after-run cooling system",
+      "Upgraded to 20-inch Carbon Black aluminum wheels",
+      "Adds performance hood with extractors",
+      "Adds Bi-functional High Intensity Discharge (HID) headlamps",
+      "Upgraded to Laguna leather trim Performance seats with Hellcat logo"
+    ],
+    "SRT Hellcat Redeye": [
+      "Adds SRT Power Chiller",
+      "Adds Redeye decklid badge",
+      "Adds Redeye fender badge",
+      "Adds Redeye grille badge",
+      "Adds 220-mph speedometer",
+      "Adds Jailbreak IP badge",
+      "Upgraded to Alcantara/Laguna leather seats with logo",
+      "Adds Blind Spot Monitoring (BSM) and Rear Cross-Path Detection System"
+    ],
+    "SRT Hellcat Redeye Widebody": [
+      "Adds dual stripes in multiple colors",
+      "Adds SRT hood, roof and decklid stripe",
+      "Adds interior accents in Dub Plate, Hectic Mesh and Real Carbon Fiber",
+      "Adds gloss black-painted roof option",
+      "Adds satin black-painted hood/roof/trunk/spoiler option",
+      "Adds Harman Kardon Audio Group",
+      "Adds Navigation & Travel Group",
+      "Adds Power sunroof",
+      "Adds suede headliner option"
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2022|toyota|avalon",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_2022__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "Premium",
+    "Touring",
+    "LT",
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "Adds Includes Vehicle Stability Control",
+      "Adds Includes Brake Assist system",
+      "Adds Includes Smart Stop Technology",
+      "Adds Includes Hill Start Assist Control",
+      "Adds Includes engine immobilizer anti-theft system",
+      "Adds Includes Rear Cross-Traffic Braking system",
+      "Adds Includes backup camera",
+      "Adds Includes Tire Pressure Monitor System",
+      "Adds Includes Whiplash-Injury-Lessening front seats",
+      "Adds Includes Bluetooth connectivity"
+    ],
+    "Sport": [],
+    "LT": [],
+    "Touring": [
+      "Adaptive variable suspension for sharper handling",
+      "Engine sound enhancement",
+      "Gloss black exterior accents",
+      "Heated rear seats",
+      "Aluminum pedal covers"
+    ],
+    "Premium": [],
+    "XLE": [
+      "Hybrid powertrain with 2.5L four-cylinder and dual electric motors (215 hp combined)",
+      "CVT automatic transmission",
+      "43/43-44 mpg city/highway fuel economy"
+    ],
+    "XSE": [
+      "Black grille, black rear spoiler, and black window trim exterior styling",
+      "LED headlights with smoked chrome bezels",
+      "Aluminum interior trim and aluminum pedal covers",
+      "Sport-tuned suspension"
+    ],
+    "Limited": [
+      "Hybrid powertrain with 2.5L four-cylinder and dual electric motors (215 hp combined)",
+      "CVT automatic transmission",
+      "43/43-44 mpg city/highway fuel economy",
+      "Genuine wood trim interior accents"
+    ],
+    "Platinum": []
+  }
+}

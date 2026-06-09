@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2020|toyota|corolla",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2020__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE 6MT",
+    "SE Nightshade Edition",
+    "SE",
+    "XLE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SE 6MT": [
+      "6-speed Intelligent Manual Transmission instead of Dynamic-Shift CVT",
+      "29 city/36 highway/32 combined mpg",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Leather-trimmed tilt/telescopic steering wheel with audio and Bluetooth controls",
+      "Smart Key System on front doors and trunk with Push Button Start"
+    ],
+    "SE Nightshade Edition": [
+      "Sport mesh black front grille with black bumper accent lighting",
+      "Black heated power outside mirrors with turn signal indicators",
+      "Black outside door handles",
+      "Black-painted sport side rocker panels and rear spoiler",
+      "18-inch black-painted alloy wheels",
+      "Black roof-mounted shark-fin antenna",
+      "Blacked-out Corolla, SE and Toyota badging"
+    ],
+    "SE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp at 6600 rpm",
+      "Normal and Sport driving modes",
+      "Dynamic-Shift Continuously Variable Transmission",
+      "31 city/40 highway/34 combined mpg",
+      "High-grade LED headlights with LED accent lights and Daytime Running Lights",
+      "Sport mesh dark gray metallic front grille",
+      "18-inch machined alloy wheels with dark gray-painted accents",
+      "Dual chrome-tipped exhaust"
+    ],
+    "XLE": [
+      "High-grade LED headlights",
+      "Color-keyed heated power outside mirrors with turn signal indicators and Blind Spot Monitor",
+      "16-inch alloy wheels",
+      "Audio Plus with 8-inch touchscreen, USB media port, advanced voice recognition and music streaming",
+      "SiriusXM with 3-month All Access trial",
+      "Service Connect with 3-year trial",
+      "Remote Connect with 6-month trial",
+      "SofTex-trimmed 8-way power-adjustable driver's seat with power lumbar support",
+      "Driver's and front passenger heated seats",
+      "XLE Connectivity Package and XLE Advanced Lighting Package"
+    ],
+    "LE": [
+      "Color-keyed heated power outside mirrors",
+      "16-inch wide-vent steel wheels",
+      "Automatic climate control with dust and pollen filter",
+      "Premium fabric-trimmed 6-way adjustable driver's seat and 4-way adjustable front passenger seat",
+      "8-inch touch-screen audio system with Apple CarPlay and advanced voice recognition",
+      "Multi-function in-key remote keyless entry with lock, unlock, panic and trunk-release",
+      "LE Premium Package with Smart Key System, alloy wheels, Blind Spot Monitor and moonroof"
+    ],
+    "L": [
+      "1.8L 4-cylinder engine with 139 hp at 6100 rpm",
+      "Continuously Variable Transmission with intelligence and Shift Mode",
+      "30 city/38 highway/33 combined mpg",
+      "LED headlights, taillights, stop lights and Daytime Running Lights",
+      "Black front grille with sport mesh insert",
+      "6-speaker audio with 7-inch touch-screen, Apple CarPlay and Scout GPS Link",
+      "Integrated backup camera with projected path",
+      "Premium instrumentation cluster with 4.2-inch color TFT Multi-Information Display",
+      "Fabric-trimmed 6-way adjustable driver's seat and 4-way adjustable front passenger seat",
+      "Toyota Safety Sense 2.0 and eight airbags"
+    ]
+  }
+}

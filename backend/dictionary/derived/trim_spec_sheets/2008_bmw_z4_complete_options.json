@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2008_bmw_z4_complete_options",
+  "make": "BMW",
+  "models": [
+    "Z4",
+    "Z4"
+  ],
+  "year_min": 2006,
+  "year_max": 2010,
+  "source": "generated",
+  "trims": {
+    "M Coupe": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S6)"
+      }
+    ],
+    "M Roadster": [
+      {
+        "label": "Engine Options",
+        "value": "3.2L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

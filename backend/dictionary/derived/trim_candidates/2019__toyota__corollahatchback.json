@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|toyota|corollahatchback",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "Limited",
+    "Premium",
+    "Sport",
+    "S",
+    "Hatchback"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Adds to or replaces features offered on SE",
+      "Powertrain Powertrain",
+      "2.0L 4-Cylinder Dynamic Force Engine \u2022 2.0L 4-Cylinder Dynamic Force Engine",
+      "Galactic Aqua Mica Smoked Paprika Metallic",
+      "Dynamic Shift Continuously Variable Transmission (CVT) \u2022 Dynamic Shift Continuously Variable Transmission (CVT)",
+      "Available Intelligent Manual Transmission (iMT) \u2022 Available Intelligent Manual Transmission (iMT)",
+      "32 city/42 highway/36 combined est. mpg51 \u2022 30 city/38 highway/33 combined est. mpg52",
+      "Exterior Features Exterior Features",
+      "LED headlights and LED Daytime Running Lights (DRL) \u2022 Adaptive Front-Lighting System (AFS)41 (automatic)",
+      "16-in. twin-spoke alloy wheels \u2022 18-in. machined alloy wheels",
+      "Front dark gray grille surround \u2022 Front chrome grille surround Oxide Bronze Classic Silver Metallic",
+      "Color-keyed heated power outside mirrors with \u2022 Color-keyed heated power outside mirrors with turn signal"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

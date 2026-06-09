@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2019|audi|allroad",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Allroad",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "Base",
+    "A4",
+    "S4"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

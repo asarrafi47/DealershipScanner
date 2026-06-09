@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|porsche|cayman",
+  "year": 2015,
+  "make": "Porsche",
+  "model": "Cayman",
+  "ladder_id": "brochure_2015__porsche__cayman",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Carrera",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds air conditioning system",
+      "Adds CDR audio system",
+      "Adds standard seating with manual adjustments",
+      "Adds basic wheel options",
+      "Adds core safety features"
+    ],
+    "Carrera": [
+      "Upgraded to CDR Plus audio system",
+      "Adds Porsche Communication Management (PCM) with navigation module",
+      "Adds two-zone automatic climate control",
+      "Adds Adaptive Sports seats Plus with 18-way electric adjustment",
+      "Adds Porsche Ceramic Composite Brake (PCCB)",
+      "Adds Bi-Xenon headlights with Porsche Dynamic Light System (PDLS)",
+      "Adds Sport Chrono Package with Porsche Track Precision app",
+      "Adds Light design package",
+      "Adds metallic or special color paint options"
+    ]
+  }
+}

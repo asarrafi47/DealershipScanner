@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_chevrolet_trax_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Trax",
+    "Trax"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "LS": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: \"Here Is 2025 Chevy Trax Pricing With Options And Packages\". (was \"Here Is 2025 Chevy Trax Pricing With Options And Packages\".; L LE2 turbo I4)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: \"Here Is 2025 Chevy Trax Pricing With Options And Packages\".; L LE2 turbo I4"
+      }
+    ]
+  }
+}

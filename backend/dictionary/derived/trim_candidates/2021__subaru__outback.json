@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2021|subaru|outback",
+  "year": 2021,
+  "make": "Subaru",
+  "model": "Outback",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

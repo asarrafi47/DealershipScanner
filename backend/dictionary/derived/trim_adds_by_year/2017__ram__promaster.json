@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|ram|promaster",
+  "year": 2017,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2017__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cargo Van",
+    "Windowed Van",
+    "Cutaway Cab",
+    "Chassis Cab"
+  ],
+  "adds_by_trim": {
+    "Windowed Van": [
+      "Rear windows with glass panels for improved visibility",
+      "Rear door storage net included in Interior Convenience Group"
+    ],
+    "Cutaway Cab": [
+      "Extended wiring for taillamps as standard",
+      "Rear roof clearance lamps standard"
+    ],
+    "Chassis Cab": [
+      "Heavy-duty rear stabilizer bar standard on 3500 models",
+      "Premium heavy-duty suspension standard on 3500 models",
+      "Rear window defroster available with rear doors"
+    ],
+    "Cargo Van": [
+      "260-degree-opening rear doors with fixed glass",
+      "Right-side door with fixed glass",
+      "Rear cargo lamps",
+      "Cargo partition options with or without sliding window",
+      "Floor cargo tie-down rings"
+    ]
+  }
+}

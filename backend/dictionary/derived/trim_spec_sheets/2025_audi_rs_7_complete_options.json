@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_audi_rs_7_complete_options",
+  "make": "Audi",
+  "models": [
+    "RS 7",
+    "RS 7"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "L V6 TDI"
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|lincoln|nautilus",
+  "year": 2019,
+  "make": "Lincoln",
+  "model": "Nautilus",
+  "ladder_id": "brochure_2019__lincoln__nautilus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Select",
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Lincoln Pickup & Delivery service with complimentary loaner vehicle",
+      "Adds 6-month complimentary CLEAR membership for owner and spouse/significant other",
+      "Adds Lincoln Way app access for service scheduling and vehicle management",
+      "Adds Lincoln Connect remote vehicle access to locate, start, and lock/unlock doors",
+      "Adds Lincoln Concierge personal connection service",
+      "Adds Amazon Alexa skill integration for remote vehicle control"
+    ],
+    "Standard": [],
+    "Select": [],
+    "Reserve": [
+      "Adaptive suspension system",
+      "Digital Scent aromatics with three fragrance options",
+      "Panoramic sunroof",
+      "Illuminated Lincoln badge in grille",
+      "21-inch wheels"
+    ],
+    "Black Label": [
+      "Upgraded LED headlights",
+      "24-way adjustable massaging front seats",
+      "Exclusive interior colorways",
+      "Illuminated tailgate lettering",
+      "28-speaker Revel audio system",
+      "22-inch wheels"
+    ]
+  }
+}

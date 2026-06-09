@@ -1,0 +1,49 @@
+{
+  "ladder_id": "2016_porsche_911_complete_options",
+  "make": "Porsche",
+  "models": [
+    "911",
+    "911"
+  ],
+  "year_min": 2014,
+  "year_max": 2018,
+  "source": "generated",
+  "trims": {
+    "GT3 RS": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AM-S7); Rear-Wheel Drive"
+      }
+    ],
+    "GT3": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AM-S7); Rear-Wheel Drive"
+      }
+    ],
+    "Turbo S": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo S trim.; 3.8L V6 Twin Turbo"
+      }
+    ],
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim.; 3.8L V6 Twin Turbo"
+      }
+    ],
+    "Carrera S": [
+      {
+        "label": "Engine Options",
+        "value": "3.4L V6 Turbo; Manual 7-spd"
+      }
+    ],
+    "Carrera": [
+      {
+        "label": "Engine Options",
+        "value": "3.4L V6 Turbo; Manual 7-spd"
+      }
+    ]
+  }
+}

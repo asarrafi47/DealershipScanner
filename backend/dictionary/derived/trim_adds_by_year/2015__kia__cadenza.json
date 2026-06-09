@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2015|kia|cadenza",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Cadenza",
+  "ladder_id": "brochure_2015__kia__cadenza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Platinum",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 3.3L V6 Gasoline Direct Injection engine with 293 hp",
+      "Adds 6-speed automatic transmission with Sportmatic",
+      "Adds 18-inch alloy wheels with all-season tires",
+      "Adds Infinity 3 surround-sound audio system with 12 speakers and subwoofer",
+      "Adds dual-zone automatic temperature control",
+      "Adds power windows with front one-touch auto up and down",
+      "Adds Back-Up Warning system with sonar detection",
+      "Adds Bluetooth wireless technology",
+      "Adds USB and auxiliary input jacks",
+      "Adds power-assisted brakes with ABS and electronic stability control"
+    ],
+    "Limited": [
+      "Upgraded to 19-inch alloy wheels",
+      "Adds Rear-Camera display",
+      "Adds Xenon HID headlights with Adaptive Lighting system",
+      "Adds front LED fog lights",
+      "Adds rear LED taillights",
+      "Adds panoramic sunroof with power-retractable sunshade",
+      "Adds auto rain-sensing wipers",
+      "Adds acoustic front windshield"
+    ],
+    "Platinum": [
+      "Adds dual heated power-folding outside mirrors with LED turn-signal indicators",
+      "Adds Supervision gauge cluster with seven-inch TFT display and voice-command navigation",
+      "Adds hydrophobic glass on front side windows",
+      "Adds windshield wiper de-icer"
+    ],
+    "LX": [
+      "Adds power rear-window sunshade",
+      "Adds auto-dimming rearview mirror with HomeLink"
+    ],
+    "EX": [
+      "Adds steering-wheel-mounted paddle shifters",
+      "Adds integrated memory system for driver's seat"
+    ],
+    "SX": [
+      "Adds electronic parking brake",
+      "Upgraded to 19-inch chrome wheels",
+      "Adds front LED accent lights",
+      "Adds perimeter approach lighting"
+    ]
+  }
+}

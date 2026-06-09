@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2016|ford|edge",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_web_2016__ford__edge",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Edge ST AWD",
+    "Edge Titanium AWD",
+    "Edge ST-Line AWD",
+    "Edge SEL AWD",
+    "Edge SE AWD"
+  ],
+  "adds_by_trim": {
+    "Edge ST AWD": [
+      "2.7-liter twin-turbocharged V-6 engine with 335 hp and 380 lb-ft torque",
+      "0-60 mph in 6.1 seconds",
+      "Sport-tuned suspension",
+      "Available Brembo brakes",
+      "Optional summer tires",
+      "Dark styling cues and big wheels"
+    ],
+    "Edge Titanium AWD": [
+      "Wireless charging pad",
+      "12-speaker Bang & Olufsen premium audio system"
+    ],
+    "Edge ST-Line AWD": [
+      "ST-Line specific exterior styling"
+    ],
+    "Edge SEL AWD": [
+      "Upgrades from SE trim (specific features not detailed in brochure)"
+    ],
+    "Edge SE AWD": [
+      "2.0-liter turbocharged I-4 engine with 250 hp and 280 lb-ft torque",
+      "Eight-speed automatic transmission with standard AWD",
+      "12.0-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto connectivity",
+      "Two USB ports and dual 4.2-inch LCD gauge cluster displays",
+      "Ford Co-Pilot360 driver assist and active safety features",
+      "Automatic high-beams, front automatic emergency braking, and blind-spot monitoring",
+      "Six-speaker audio system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/edge/"
+}

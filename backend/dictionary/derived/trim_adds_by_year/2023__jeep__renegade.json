@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2023|jeep|renegade",
+  "year": 2023,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_llm_2023__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Trailhawk",
+    "Adventure"
+  ],
+  "adds_by_trim": {
+    "Trailhawk": [
+      "30.5-degree approach angle and 34.3-degree departure angle for enhanced off-road capability",
+      "25.7-degree breakover angle for improved trail performance",
+      "19.0-inch water fording depth versus 12.0-inch on base 4x4",
+      "35.3-foot turning diameter with 2.76 lock-to-lock steering ratio",
+      "4.585 axle ratio for off-road performance",
+      "2,000 lbs towing capacity when properly equipped",
+      "3,527 lbs curb weight with reinforced chassis",
+      "Chapman strut rear suspension with isolated steel rear cradle"
+    ],
+    "Adventure": [
+      "1.3L I-4 MultiAir®2 Turbo engine with 177 horsepower and 210 lb-ft torque",
+      "1,332 cc displacement with direct fuel injection",
+      "Electric power rack and pinion steering with 15.7:1 overall ratio",
+      "12.7-gallon fuel tank capacity",
+      "3,320 lbs base curb weight",
+      "8.0-inch ground clearance",
+      "21.0-degree approach angle and 32.1-degree departure angle",
+      "Antilock Brake System with vented front and solid rear rotors"
+    ]
+  }
+}

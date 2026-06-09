@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2026_toyota_grand_highlander_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Grand Highlander",
+    "Grand Highlander"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); All-Wheel Drive"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S6); Front-Wheel Drive"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Front-Wheel Drive"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Front-Wheel Drive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2019|chevrolet|suburban",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2019__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier Plus Edition",
+    "RST Edition",
+    "LT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "Premier Plus Edition": [
+      "6.2L EcoTec3 V8 engine with 10-speed automatic transmission",
+      "22-inch 12-spoke polished-finish aluminum wheels",
+      "Power sunroof",
+      "Power-retractable assist steps",
+      "Mahogany perforated leather with Jet Black accents",
+      "Second-row power-release bucket seats",
+      "Head-Up Display",
+      "Rear-Seat Entertainment System",
+      "12 months of 4G LTE Wi-Fi service"
+    ],
+    "RST Edition": [
+      "22-inch Gloss Black-painted aluminum wheels with custom Silver accents",
+      "Unique Gloss Black sport grille with body-color surround",
+      "Body-color door handles and headlamp accents",
+      "Black mirror caps, beltline moldings, roof rails and nameplate badging"
+    ],
+    "LT": [
+      "Standard trim features for mid-level model"
+    ],
+    "SL": [
+      "Base model with standard features including seating for up to nine"
+    ]
+  }
+}

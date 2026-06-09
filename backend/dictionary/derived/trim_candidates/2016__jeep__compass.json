@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2016|jeep|compass",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Compass",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "High Altitude",
+    "Latitude",
+    "Altitude",
+    "Sport",
+    "Mojave",
+    "Willys",
+    "Premium",
+    "Touring",
+    "LT",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

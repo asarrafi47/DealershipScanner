@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_honda_odyssey_complete_options",
+  "make": "Honda",
+  "models": [
+    "Odyssey",
+    "Odyssey"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); Front-Wheel Drive"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Honda Odyssey can refer to three motor vehicles manufactured by Honda: Honda Od; Honda Odyssey can refer to three motor vehicles manufactured by Honda: Honda Odyssey (ATV) Honda Odyssey (Minivan, international) Honda Odyssey (Minivan, North America) Honda…"
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|chevrolet|aveo",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Aveo",
+  "ladder_id": "brochure_llm_2011__chevrolet__aveo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Charcoal Deluxe Cloth or Neutral Deluxe Cloth interior upholstery",
+      "Charcoal Perforated Leatherette or Neutral Perforated Leatherette seating surfaces"
+    ],
+    "1LT": [
+      "Neutral Cloth interior upholstery on sedan models",
+      "Charcoal Cloth interior upholstery on Aveo5 models"
+    ],
+    "LS": [
+      "Charcoal Cloth interior upholstery on sedan models",
+      "Charcoal Cloth interior upholstery on Aveo5 models",
+      "Base 2011 Chevrolet Aveo model with standard safety and powertrain features"
+    ]
+  }
+}

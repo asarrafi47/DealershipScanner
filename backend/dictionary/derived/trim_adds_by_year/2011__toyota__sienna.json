@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|toyota|sienna",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2011__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XLE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Dual moonroof with 35.9 inches rear head room",
+      "3.5L V6 engine standard (266 hp, 245 lb-ft torque)",
+      "Active Torque Control All-Wheel Drive available",
+      "P235/55R18 run-flat tires on AWD models"
+    ],
+    "XLE": [
+      "Sport-calibrated Electric Power Steering",
+      "3.5L V6 engine standard",
+      "P235/50R19 standard tires on FWD models",
+      "Single moonroof available with 39.1 inches front head room",
+      "8-passenger seating capacity available"
+    ],
+    "SE": [
+      "3.5L V6 engine available",
+      "Sport-tuned coil springs in rear suspension",
+      "Active Torque Control All-Wheel Drive available",
+      "8-passenger seating capacity available",
+      "P235/60R17 standard tires"
+    ],
+    "LE": [
+      "2.7L DOHC 16-valve 4-cylinder engine standard (187 hp, 186 lb-ft torque)",
+      "3.5L V6 engine available",
+      "Active Torque Control All-Wheel Drive available",
+      "Electric Power Steering standard",
+      "7-passenger seating capacity",
+      "Front-wheel drive standard",
+      "6-speed electronically controlled automatic transmission"
+    ]
+  }
+}

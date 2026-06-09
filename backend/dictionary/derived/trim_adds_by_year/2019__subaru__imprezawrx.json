@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2019|subaru|imprezawrx",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2019__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "STI-design leather-wrapped flat-bottom steering wheel with red stitching",
+      "STI sport-design electroluminescent gauges with DCCD and SI-DRIVE mode displays",
+      "Trunk spoiler - STI",
+      "Exhaust system with quad stainless-steel outlets",
+      "SUBARU STARLINK™ 7.0-inch Multimedia Navigation with Harman Kardon® audio system"
+    ],
+    "WRX Limited": [
+      "10-way power adjustable driver's seat with power adjustable lumbar support",
+      "Leather-trimmed upholstery",
+      "Heated body-color power side mirrors with integrated turn signals",
+      "Power tilt/sliding-glass moonroof",
+      "SUBARU STARLINK™ 7.0-inch Multimedia Plus with voice-activated controls and NFC technology"
+    ],
+    "WRX Premium": [
+      "8-way power adjustable driver's seat",
+      "Performance-design front seats with adjustable head restraints and red stitching",
+      "Leather-wrapped flat-bottom steering wheel with red stitching",
+      "Heated body-color power side mirrors",
+      "Sport-design electroluminescent gauges with 3.5-inch LCD color display",
+      "SUBARU STARLINK™ 6.5-inch Multimedia with Apple CarPlay, Android Auto, and SiriusXM All Access Radio"
+    ],
+    "WRX": [
+      "6-way manually adjustable driver's seat and 4-way manually adjustable front-passenger's seat",
+      "Cloth upholstery",
+      "Projector low-beam and multireflector high-beam halogen headlights",
+      "LED Steering Responsive Headlights",
+      "Automatic climate control system with CFC-free air conditioning",
+      "Subaru Symmetrical All-Wheel Drive",
+      "Vehicle Dynamics Control with Active Torque Vectoring",
+      "4-wheel antilock braking system with Electronic Brake-force Distribution"
+    ]
+  }
+}

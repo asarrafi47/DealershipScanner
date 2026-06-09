@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2016|audi|a7",
+  "year": 2016,
+  "make": "Audi",
+  "model": "A7",
+  "ladder_id": "brochure_llm_2016__audi__a7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS 7",
+    "S7",
+    "A7"
+  ],
+  "adds_by_trim": {
+    "RS 7": [
+      "4.0L twin-turbocharged eight-cylinder engine with 560 horsepower and 516 lb-ft torque",
+      "3.7-second 0–60 mph acceleration",
+      "Seven-speed S tronic dual-clutch transmission with quattro all-wheel drive",
+      "RS-design carbon fiber and aluminum race decorative inlays",
+      "15.4-inch ventilated wave-design front and rear disc brakes",
+      "13.0:1 steering ratio for enhanced handling",
+      "Available DRC sport suspension system with dynamic damping control",
+      "174 mph top track speed"
+    ],
+    "S7": [
+      "4.0L twin-turbocharged eight-cylinder engine with 450 horsepower and 406 lb-ft torque",
+      "4.5-second 0–60 mph acceleration",
+      "Seven-speed S tronic dual-clutch transmission with quattro all-wheel drive",
+      "Carbon, layered aluminum/black wood, or carbon twill decorative inlays",
+      "15.7-inch ventilated front and 14.0-inch ventilated rear disc brakes",
+      "155 mph top track speed",
+      "Available sport differential",
+      "32-valve DOHC with variable valve timing valvetrain"
+    ],
+    "A7": [
+      "Choice of 3.0T supercharged six-cylinder or TDI turbocharged six-cylinder engine",
+      "3.0T: 333 horsepower, 325 lb-ft torque, 5.2-second 0–60 mph acceleration",
+      "TDI: 240 horsepower, 428 lb-ft torque, 5.6-second 0–60 mph acceleration",
+      "Eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Audi adaptive air suspension with model-specific tuning",
+      "Fine grain ash, natural brown wood, or layered walnut wood decorative inlays",
+      "Ventilated front and rear disc brakes",
+      "Ultra lightweight technology with aluminum exterior body panels and steel chassis",
+      "Five-link front and trapezoidal-link rear suspension",
+      "Electromechanical power steering system"
+    ]
+  }
+}

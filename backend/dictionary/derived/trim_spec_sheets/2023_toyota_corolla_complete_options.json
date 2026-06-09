@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_toyota_corolla_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Corolla",
+    "Corolla"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "XSE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S10); Front-Wheel Drive"
+      }
+    ],
+    "GR Corolla": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ]
+  }
+}

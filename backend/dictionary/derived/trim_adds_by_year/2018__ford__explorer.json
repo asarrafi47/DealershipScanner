@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|ford|explorer",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_2018__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "XLT",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds SYNC 3 infotainment system with touchscreen",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds voice-activated navigation with turn-by-turn directions",
+      "Adds smart-charging USB ports",
+      "Adds SiriusXM Traffic and Travel Link capability"
+    ],
+    "XLT": [
+      "Adds SYNC AppLink for voice control of compatible mobile apps",
+      "Adds Spotify and Pandora app integration",
+      "Adds SYNC Connect with 4G LTE Wi-Fi hotspot for up to 10 devices"
+    ],
+    "Sport": [
+      "Adds FordPass smartphone app integration",
+      "Adds remote vehicle start, lock, and unlock functionality",
+      "Adds remote fuel level and mileage checking"
+    ],
+    "Limited": [
+      "Adds Siri Eyes Free integration for hands-free iPhone control"
+    ]
+  }
+}

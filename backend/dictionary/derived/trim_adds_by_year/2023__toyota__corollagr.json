@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2023|toyota|corollagr",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla GR",
+  "ladder_id": "brochure_llm_2023__toyota__corollagr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Morizo Edition",
+    "Circuit Edition",
+    "Core Edition"
+  ],
+  "adds_by_trim": {
+    "Morizo Edition": [
+      "Front and rear Torsen limited-slip differentials with 295 lb-ft torque",
+      "4-piston aluminum fixed-caliper disc brakes with red-painted calipers",
+      "GR track-tuned suspension with one rear strut brace and two floor braces",
+      "High-performance Michelin Pilot Sport Cup 2 245/40R18 summer tires",
+      "Forged carbon-fiber roof",
+      "Alcantara Morizo signature shift knob",
+      "Heated track-inspired front seats",
+      "Exclusive Morizo Edition badge"
+    ],
+    "Circuit Edition": [
+      "Front and rear Torsen limited-slip differentials",
+      "4-piston aluminum fixed-caliper disc brakes with red-painted calipers and GR logo",
+      "GR track-tuned suspension",
+      "High-performance Michelin Pilot Sport 4 235/40R18 summer tires",
+      "Forged carbon-fiber roof",
+      "Brin Naub and synthetic leather-trimmed semi-bucket sport seats with red accent trim",
+      "Leather Morizo signature shift knob",
+      "Heated front seats and steering wheel",
+      "GR Ultrasuede-wrapped tilt/telescopic sport steering wheel with red sight line",
+      "Exclusive Circuit Edition badge"
+    ],
+    "Core Edition": [
+      "1.6L turbo 3-cylinder G16E-GTS engine with 300 hp and 273 lb-ft torque",
+      "6-speed intelligent Manual Transmission with GR-FOUR All-Wheel Drive system",
+      "Three selectable power settings: Street, Touring, and Track modes",
+      "Four drive modes: Eco, Normal, Sport, and Custom",
+      "4-piston aluminum fixed-caliper disc brakes and open differentials",
+      "GR sport-tuned suspension",
+      "Michelin Pilot Sport 4 235/40R18 summer tires",
+      "LED headlights with Daytime Running Lights and taillights",
+      "Matte-black front grille with functional air ducts and LED fog lights",
+      "Fabric-trimmed sport seats with 60/40 split fold-down rear seat"
+    ]
+  }
+}

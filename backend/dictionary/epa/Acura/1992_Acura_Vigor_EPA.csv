@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1992,Acura,Vigor,Vigor,2.5L V5 ((FFS)),2.5L V5,,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,5,2.5,18,23,20,,,,,
+1992,Acura,Vigor,Vigor,2.5L V5 ((FFS)),2.5L V5,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,5,2.5,18,24,20,,,,,

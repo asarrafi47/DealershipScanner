@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2024_bmw_x1_complete_options",
+  "make": "BMW",
+  "models": [
+    "X1",
+    "X1"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "xDrive28i": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "For the X1 sold in the US, the optional Active Seats with Lumbar Support include"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive (xDrive)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "For the X1 sold in the US, the optional Active Seats with Lumbar Support include"
+      }
+    ]
+  }
+}

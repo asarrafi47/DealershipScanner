@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2019|ram|commercial",
+  "year": 2019,
+  "make": "ram",
+  "model": "commercial",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Big Horn",
+    "Tradesman"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

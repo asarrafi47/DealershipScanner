@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2012|cadillac|escalade",
+  "year": 2012,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_web_2012__cadillac__escalade",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "V-Series",
+    "Sport Platinum",
+    "Premium Luxury Platinum",
+    "Sport",
+    "Premium Luxury",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "V-Series": [
+      "Supercharged 6.2-liter V-8 engine with 682 hp and 653 lb-ft of torque",
+      "0-60 acceleration in 4.7 seconds",
+      "4WD-only configuration"
+    ],
+    "Sport Platinum": [
+      "40-speaker sound system with Executive Second Row package",
+      "Massaging seats in second row",
+      "Stowable tray tables for second row",
+      "12.6-inch personal screens for passengers",
+      "Dual wireless phone charging pads"
+    ],
+    "Premium Luxury Platinum": [
+      "36-speaker AKG sound system upgrade",
+      "Enhanced interior trim options"
+    ],
+    "Sport": [
+      "Sport-specific exterior styling",
+      "19-speaker AKG Studio sound system standard"
+    ],
+    "Premium Luxury": [
+      "Upgraded leather and interior materials",
+      "Premium cabin appointments"
+    ],
+    "Luxury": [
+      "55.0-inch digital dashboard display spanning entire width",
+      "Dual screens for driver and passenger",
+      "Tablet-style climate control screen",
+      "Full-color head-up display on most trims",
+      "5G Wi-Fi hotspot and HD streaming",
+      "126-color LED ambient lighting",
+      "19-speaker AKG Studio sound system",
+      "6.2-liter V-8 engine with 420 hp and 460 lb-ft of torque",
+      "10-speed automatic transmission",
+      "Adaptive air suspension with smooth ride quality"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/escalade/"
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_cadillac_elr_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "ELR",
+    "ELR"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Sport mode improved throttle response, and improved feedback with more aggressive steering and suspension settings. For 2016, the ELR could combine power from both the engine and electric motor when in Sport mode.; Cadillac announced that it will launch a new plug-in hybrid version of its new CT6 sedan in late 2016."
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Sport mode improved throttle response, and improved feedback with more aggressive steering and suspension settings. For 2016, the ELR could combine power from both the engine and electric motor when in Sport mode.; Cadillac announced that it will launch a new plug-in hybrid version of its new CT6 sedan in late 2016."
+      }
+    ]
+  }
+}

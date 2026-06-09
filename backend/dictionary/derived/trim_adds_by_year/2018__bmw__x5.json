@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|bmw|x5",
+  "year": 2018,
+  "make": "BMW",
+  "model": "X5",
+  "ladder_id": "brochure_llm_2018__bmw__x5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "X5 xDrive50i",
+    "X5 xDrive35d",
+    "X5 xDrive35i",
+    "X5 sDrive35i"
+  ],
+  "adds_by_trim": {
+    "X5 xDrive50i": [
+      "4.4-liter TwinPower Turbo V-8 engine with 445 hp and 480 lb-ft torque",
+      "0-60 mph in 4.7 seconds",
+      "15/21/17 city/highway/combined mpg",
+      "Executive Package with soft-close automatic doors and rear manual side-window shades",
+      "Dynamic Handling Package with Dynamic Damper Control and rear-axle air suspension"
+    ],
+    "X5 xDrive35d": [
+      "3.0-liter TwinPower Turbo Diesel inline 6-cylinder with 255 hp and 413 lb-ft torque",
+      "23/29/25 city/highway/combined mpg",
+      "xDrive all-wheel drive system"
+    ],
+    "X5 xDrive35i": [
+      "xDrive all-wheel drive system",
+      "3.0-liter TwinPower Turbo inline 6-cylinder with 300 hp and 300 lb-ft torque",
+      "18/24/20 city/highway/combined mpg"
+    ],
+    "X5 sDrive35i": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder with 300 hp and 300 lb-ft torque",
+      "18/25/21 city/highway/combined mpg",
+      "Comfort Access keyless entry",
+      "4-zone automatic climate control",
+      "SiriusXM Satellite Radio with 1-year subscription"
+    ]
+  }
+}

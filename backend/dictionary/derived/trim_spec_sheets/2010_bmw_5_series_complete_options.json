@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2010_bmw_5_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "5 Series",
+    "5 Series"
+  ],
+  "year_min": 2008,
+  "year_max": 2012,
+  "source": "generated",
+  "trims": {
+    "550i": [
+      {
+        "label": "Engine Options",
+        "value": "4.8L V8 Twin Turbo; Manual 6-spd"
+      }
+    ],
+    "550": [
+      {
+        "label": "Engine Options",
+        "value": "4.8L V8 Twin Turbo; Manual 6-spd"
+      }
+    ],
+    "535i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S6)"
+      }
+    ],
+    "528i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S6)"
+      }
+    ]
+  }
+}

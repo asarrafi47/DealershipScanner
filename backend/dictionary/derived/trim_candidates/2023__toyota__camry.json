@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2023|toyota|camry",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "TRD",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Transmission with intelligence (ECT-i) with",
+      "Exterior Features Exterior Features",
+      "Normal, Eco and Sport drive modes LED headlights and LED DRL with auto on/off feature Panoramic glass roof with front power tilt/slide moonroof",
+      "Available All-Wheel Drive (AWD) LED taillights with black trim Dual exhaust with chrome tips",
+      "Exterior Features 10-in color Head-Up Display (HUD)",
+      "Color-keyed heated power outside mirrors with",
+      "Bi-LED combination headlights with auto on/off feature turn-signal indicators Dual sun visors with sliding extensions and",
+      "LED combination taillights with black trim Single exhaust with chrome tip",
+      "Dark gray front grille Audio Multimedia",
+      "Roof-mounted shark-fin antenna Leather-trimmed seats - 9-in. touchscreen and nine JBL\u00ae23 speakers including",
+      "Heated front seats subwoofer and amplifier"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on LE Hybrid Adds to or replaces features offered on LE Hybrid Adds to or replaces features offered on SE Hybrid",
+      "Hybrid engine: 2.5L 4-Cylinder with 208 net hp Hybrid engine: 2.5L 4-Cylinder with 208 net hp Hybrid engine: 2.5L 4-Cylinder with 208 net hp",
+      "Sport-tuned suspension 44 city/47 highway/46 combined EPA-est. mpg2 44 city/47 highway/46 combined EPA-est. mpg2",
+      "Exterior Features LED headlights and LED DRL with auto on/off feature LED headlights with black trim, LED DRL with",
+      "Bi-LED combination headlights with black trim LED taillights with black trim auto on/off feature",
+      "Black front grille with sport mesh lower insert 18-in. dark gray machined-finish alloy wheels Gloss-black front grille with sport mesh lower insert",
+      "Color-keyed sport side rocker panels Color-keyed heated power outside mirrors with 19-in. gloss-black alloy wheels",
+      "Color-keyed rear spoiler Interior Features Leather-trimmed seats",
+      "Color-keyed heated power outside mirrors with Leather-trimmed seats - Heated front seats",
+      "Single exhaust with dual chrome tips - Rear adjustable headrests 7-in. Multi-Information Display (MID)",
+      "Interior Features Leather-trimmed tilt/telescopic steering wheel Qi-compatible wireless charging35",
+      "Dual zone automatic climate control 7-in. Multi-Information Display (MID) Patterned metal interior trim"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

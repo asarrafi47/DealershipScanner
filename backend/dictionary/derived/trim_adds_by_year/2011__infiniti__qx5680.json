@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|infiniti|qx5680",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_web_2011__infiniti__qx5680",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Theater Package",
+    "Deluxe",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Theater Package": [
+      "Rear-seat entertainment system with dual 7-inch screens",
+      "Premium Bose audio system with additional speakers",
+      "Heated rear seats with manual adjustment"
+    ],
+    "Deluxe": [
+      "Heated and cooled front seats",
+      "Power rear liftgate",
+      "Upgraded interior trim with wood and leather accents",
+      "Proximity key with push-button start",
+      "Upgraded climate control with rear zone"
+    ],
+    "Base": [
+      "5.6L V8 engine with 400 horsepower",
+      "Four-wheel drive standard",
+      "Seating for eight passengers",
+      "Power windows, locks, and mirrors",
+      "Dual-zone automatic climate control",
+      "AM/FM/CD audio system",
+      "18-inch aluminum wheels",
+      "Roof rack side rails"
+    ]
+  },
+  "web_source_url": "https://www.carwow.co.uk/infiniti/qx56-80/2011/specifications"
+}

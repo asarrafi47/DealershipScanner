@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2022|genesis|gv80",
+  "year": 2022,
+  "make": "genesis",
+  "model": "GV80",
+  "ladder_id": "brochure_2022__genesis__gv80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Advanced",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Forward Collision-Avoidance Assist with Pedestrian and Cyclist Detection",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist",
+      "Adds Parking Collision-Avoidance Assist – Rear",
+      "Adds Blind-Spot Collision-Avoidance Assist",
+      "Adds Blind-Spot View Monitor",
+      "Adds Remote Smart Parking Assist",
+      "Adds smart liftgate with Proximity Key detection",
+      "Adds SiriusXM satellite radio capability",
+      "Adds Apple CarPlay and Android Auto connectivity"
+    ],
+    "Limited": [
+      "Upgraded to Connected Routing with active Genesis Connected Services subscription",
+      "Adds Near Field Communication digital smartphone key capability"
+    ],
+    "Advanced": [
+      "Adds Qi wireless charging functionality for compatible smartphones"
+    ],
+    "Prestige": [
+      "Adds Forward Attention Warning driver monitoring system"
+    ]
+  }
+}

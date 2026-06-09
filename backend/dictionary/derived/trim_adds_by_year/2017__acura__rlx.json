@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2017|acura|rlx",
+  "year": 2017,
+  "make": "acura",
+  "model": "rlx",
+  "ladder_id": "brochure_llm_2017__acura__rlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RLX Sport Hybrid SH-AWD",
+    "RLX"
+  ],
+  "adds_by_trim": {
+    "RLX Sport Hybrid SH-AWD": [
+      "3.5-liter V-6 engine with three electric motors producing 377 combined horsepower",
+      "Super Handling All-Wheel Drive (SH-AWD) with independent rear electric motor torque vectoring",
+      "30 mpg combined EPA fuel economy rating (28 city/32 highway)",
+      "Electric-only acceleration capability at low speeds using three electric motors",
+      "Regenerative braking technology to capture kinetic energy and charge lithium-ion battery",
+      "All-wheel drive capability with real-time power distribution based on traction conditions"
+    ],
+    "RLX": [
+      "Precision All-Wheel Steer (P-AWS) system with independent rear wheel toe angle adjustment",
+      "Agile Handling Assist dynamic braking system paired with P-AWS for enhanced maneuverability",
+      "Collision Mitigation Braking System (CMBS) with radar detection and automatic braking",
+      "Forward Collision Warning (FCW) with audible alert and heads-up warning light",
+      "Advanced Compatibility Engineering (ACE) structural design for crash energy distribution",
+      "Seat belt pre-tensioning system integrated with collision mitigation technology"
+    ]
+  }
+}

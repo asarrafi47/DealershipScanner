@@ -1,0 +1,84 @@
+{
+  "catalog_key": "2013|nissan|maxima",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2013__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SV Premium Package",
+    "3.5 SV Sport Package",
+    "3.5 SV Tech Package",
+    "3.5 SV Value Package",
+    "3.5 SV Cold Package",
+    "3.5 SV Bose® Audio Package",
+    "3.5 SV Monitor Package",
+    "3.5 SV",
+    "3.5 S"
+  ],
+  "adds_by_trim": {
+    "3.5 SV Premium Package": [
+      "Dual Panel Moonroof with power retractable sunshades",
+      "Rear-window power sunshade",
+      "Premium mood lighting",
+      "Atlantic Cherry wood-tone trim interior",
+      "Sport Package contents included"
+    ],
+    "3.5 SV Sport Package": [
+      "Sport-tuned suspension with retuned struts and stiffer springs",
+      "19-inch Aluminum-alloy Dark Hyper Silver finish wheels with P245/40R19 V-rated tires",
+      "Rear spoiler",
+      "Dark-finish sport grille and smoked headlights",
+      "Metallic trim replaces piano-hairline trim"
+    ],
+    "3.5 SV Tech Package": [
+      "Nissan Hard Drive Navigation System with 7-inch VGA touchscreen and voice recognition",
+      "NavTraffic and NavWeather provided by SiriusXM",
+      "Zagat Survey® restaurant reviews"
+    ],
+    "3.5 SV Value Package": [
+      "Combines Bose® Audio and Cold Packages"
+    ],
+    "3.5 SV Cold Package": [
+      "Heated outside mirrors",
+      "Heated front seats",
+      "Heated steering wheel"
+    ],
+    "3.5 SV Bose® Audio Package": [
+      "Bose® audio system with AM/FM/in-dash 6-CD changer and nine speakers",
+      "SiriusXM Satellite Radio with speed-sensitive volume control",
+      "Radio Data System (RDS)"
+    ],
+    "3.5 SV Monitor Package": [
+      "Vehicle Information System with 7-inch QVGA color monitor and RearView Monitor",
+      "USB connection port for iPod® interface",
+      "Auxiliary audio/video input jacks in center console",
+      "iPod® storage net inside center console",
+      "Single-CD player replaces in-dash 6-CD changer"
+    ],
+    "3.5 SV": [
+      "3.5-liter DOHC 24-valve V6 engine with 290 hp and 261 lb-ft torque",
+      "Xtronic CVT with DS mode and paddle shifters",
+      "Dual Zone Automatic Temperature Control with microfilter and rear vents",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "8-way power driver's seat with power lumbar support",
+      "4-way power front-passenger seat",
+      "Leather-appointed seats",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags",
+      "Vehicle Dynamic Control with Traction Control System",
+      "18-inch Fine Silver aluminum-alloy wheels with P245/45R18 V-rated tires"
+    ],
+    "3.5 S": [
+      "3.5-liter DOHC 24-valve V6 engine with 290 hp and 261 lb-ft torque",
+      "Xtronic CVT with DS mode",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "8-way power driver's seat with manual lumbar support",
+      "Cloth seat trim",
+      "Vehicle Information System with 7-inch QVGA color monitor",
+      "AM/FM/in-dash 6-CD changer audio system with eight speakers",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags",
+      "Vehicle Dynamic Control with Traction Control System"
+    ]
+  }
+}

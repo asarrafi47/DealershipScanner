@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2012|toyota|4runner",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "inventory_toyota_4runner",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Adventure",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "the vehicle, the key transmits an electronic code to"
+    ],
+    "Adventure": [
+      "the vehicle. The engine will only start if the code in the transponder chip inside the key or Smart Key fob matches the code in"
+    ],
+    "Premium": [
+      "Power tilt/slide moonroof with sunshade",
+      "Heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed, heated front seats with 8-way power-adjustable driver seat and lumbar",
+      "SofTex-trimmed 40/20/40 split reclining fold-flat second-row seat",
+      "Entune Premium Audio with Navigation, App Suite, and 6.1-inch touchscreen"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Adventure": 1,
+      "Premium": 0
+    }
+  }
+}

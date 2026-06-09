@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2016|maserati|quattroporte",
+  "year": 2016,
+  "make": "maserati",
+  "model": "quattroporte",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2016_maserati_quattroporte_Brochure.pdf",
+  "page_count": 92,
+  "all_pages": false,
+  "trim_hint_pages": [
+    84
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 84,
+      "trim_hint": true,
+      "text": "ManUFacTUring\nA GLORIOUS COLLABORATION\nOF MAN AND MACHINE\nWhile Maserati Headquarters and manufacturing have long been based in Modena, Italy,\nproduction of the Quattroporte flagship sedan takes place at a recently opened Maserati plant in\nGrugliasco, Italy \u2013 outside of Turin. The plant is named after company patriarch Giovanni \u201cGianni\u201d\nAgnelli, honoring Gianni\u2019s strong connection with the Turin area. One billion euros were invested in\nrenewing this plant, anticipating growing global sales. While the latest technology is utilized to help\nwith fitting parts, skilled technicians man each station, keeping the assembly a handcrafted affair.\nUtilising proven practices developed through the company\u2019s World Class Manufacturing (WCM)\nsystem, the plant has a strong culture dedicated to producing the highest quality cars possible.\nEach car is built to order \u2013 and with literally millions of combinations of mechanical and interior\nspecifications possible, a document goes with each car and is signed at each station to ensure that\nthe exact car is built to the customers\u2019 personal requirements.\n82 Grugliasco factory \u2013 Turin, Italy",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 84 ---\nManUFacTUring\nA GLORIOUS COLLABORATION\nOF MAN AND MACHINE\nWhile Maserati Headquarters and manufacturing have long been based in Modena, Italy,\nproduction of the Quattroporte flagship sedan takes place at a recently opened Maserati plant in\nGrugliasco, Italy \u2013 outside of Turin. The plant is named after company patriarch Giovanni \u201cGianni\u201d\nAgnelli, honoring Gianni\u2019s strong connection with the Turin area. One billion euros were invested in\nrenewing this plant, anticipating growing global sales. While the latest technology is utilized to help\nwith fitting parts, skilled technicians man each station, keeping the assembly a handcrafted affair.\nUtilising proven practices developed through the company\u2019s World Class Manufacturing (WCM)\nsystem, the plant has a strong culture dedicated to producing the highest quality cars possible.\nEach car is built to order \u2013 and with literally millions of combinations of mechanical and interior\nspecifications possible, a document goes with each car and is signed at each station to ensure that\nthe exact car is built to the customers\u2019 personal requirements.\n82 Grugliasco factory \u2013 Turin, Italy"
+}

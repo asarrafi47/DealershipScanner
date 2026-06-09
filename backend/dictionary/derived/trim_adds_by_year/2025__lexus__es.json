@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2025|lexus|es",
+  "year": 2025,
+  "make": "Lexus",
+  "model": "ES",
+  "ladder_id": "2025_lexus_es",
+  "source": "manual_brochure_review",
+  "trims_available": ["ES", "Luxury", "Ultra Luxury", "F SPORT Design", "F SPORT Handling"],
+  "adds_by_trim": {
+    "Luxury": [
+      "18-inch split-10-spoke two-tone wheels and quilted semi-aniline leather",
+      "Heated wood-and-leather steering wheel and power moonroof",
+      "Lexus Interface 12.3-inch display and Intuitive Parking Assist with Auto Braking"
+    ],
+    "Ultra Luxury": [
+      "18-inch split-five-spoke noise-reduction wheels and Head-Up Display",
+      "Power trunk with kick sensor and Mark Levinson 17-speaker PurePlay Surround Sound",
+      "Panorama glass roof on ES350 and rear pedestrian detection with Panoramic View Monitor"
+    ],
+    "F SPORT Design": [
+      "19-inch FSPORT Gloss Black wheels and FSPORT exterior styling with unique grille",
+      "Hadori aluminum trim, aluminum pedals, and black headliner"
+    ],
+    "F SPORT Handling": [
+      "Includes F SPORT Design plus FSPORT-tuned Adaptive Variable Suspension with Sport S+",
+      "FSPORT bolstered heated and ventilated front seats and rain-sensing wipers",
+      "Active Noise Control on F SPORT Handling (ES350/ES300h)"
+    ]
+  }
+}

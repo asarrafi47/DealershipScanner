@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|jeep|wrangler",
+  "year": 2010,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "2010_jeep_wrangler",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Sport",
+    "Sahara",
+    "Rubicon"
+  ],
+  "adds_by_trim": {
+    "Sahara": [
+      "Body-color fender flares and premium Sahara styling",
+      "Diamond-plate texture side steps and two-tone leather-trimmed seats available",
+      "Leather-wrapped steering wheel with speed control",
+      "Infinity 7-speaker audio with SIRIUS Satellite Radio",
+      "Power Convenience Group: power locks, one-touch-down windows, remote keyless entry"
+    ],
+    "Rubicon": [
+      "Rock-Trac 4WD with front sway bar disconnect and 4.10 axle ratio",
+      "32-inch off-road tires, rock rails, and Rubicon hood/badging",
+      "Electronic locking differentials and heavy-duty Dana 44 axles",
+      "4.1-inch suspension lift and Tru-Lok lockers for Trail Rated capability",
+      "Highest off-road trim with BFGoodrich Mud-Terrain and winch-ready setup"
+    ],
+    "Sport": [
+      "3.8L V6 SMPI engine with 6-speed manual transmission standard",
+      "Next Generation Dana 30 solid front axle",
+      "Next Generation Dana 44 heavy-duty solid rear axle",
+      "Protective fuel tank skid plate with 2.5-mm thickness",
+      "Transfer case and transmission skid plates for added protection"
+    ]
+  }
+}

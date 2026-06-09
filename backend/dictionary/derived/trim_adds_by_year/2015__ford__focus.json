@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|ford|focus",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_2015__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Titanium",
+    "Sport",
+    "SE",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 1.0L EcoBoost I-3 engine with Auto Start-Stop",
+      "Adds 5-person seating configuration",
+      "Adds 4-way manual front-passenger seat",
+      "Adds Anti-Lock Brake System (ABS)",
+      "Adds AdvanceTrac electronic stability control",
+      "Adds dual-stage front airbags with safety belt pretensioners",
+      "Adds rear view camera",
+      "Adds Rear-window defroster with washer",
+      "Adds Cabin air filtration system",
+      "Adds MyKey system"
+    ],
+    "Active": [],
+    "SE": [
+      "5-person seating capacity",
+      "4-way manual driver's seat adjustment",
+      "2-way manual front-passenger seat adjustment",
+      "4-way adjustable front head restraints",
+      "Removable rear head restraints",
+      "Rear fold-down bench seat",
+      "Tilt/telescoping steering column",
+      "Power door locks"
+    ],
+    "Sport": [],
+    "Titanium": [
+      "Chrome headlight and fog light bezels",
+      "Heated side view mirrors and remote engine start",
+      "One-touch up/down on all windows with quick entry push-start ignition",
+      "Heated steering wheel and leather-trimmed heated front seats",
+      "Eight-way power front seats",
+      "17-inch polished aluminum wheels"
+    ],
+    "Limited": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2017|audi|q7",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Q7",
+  "ladder_id": "brochure_2017__audi__q7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport",
+    "Q7"
+  ],
+  "adds_by_trim": {
+    "Q7": [
+      "Adds 3.0T supercharged TFSI six-cylinder engine with 333 horsepower",
+      "Adds eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Adds five-link independent front and rear steel spring suspension",
+      "Adds electromechanical power steering system",
+      "Adds ventilated front and rear disc brakes",
+      "Adds seven-seat seating capacity",
+      "Adds ultra lightweight multi-material body construction",
+      "Adds 24-valve DOHC valvetrain",
+      "Adds start-stop engine efficiency system",
+      "Adds standard leather seating surfaces"
+    ],
+    "Sport": [
+      "Upgraded to sport-tuned suspension setup",
+      "Adds enhanced exterior styling elements"
+    ],
+    "Limited": [
+      "Adds premium interior inlay selections",
+      "Adds enhanced comfort appointments"
+    ],
+    "Premium": [
+      "Adds available Audi adaptive air suspension",
+      "Adds available all-wheel steering",
+      "Adds premium Valcona leather seat upgrades",
+      "Adds high-gloss interior inlay options"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2015|nissan|altima",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2015__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SL",
+    "3.5 SV",
+    "3.5 S",
+    "2.5 SL",
+    "2.5 SV",
+    "2.5 S",
+    "2.5"
+  ],
+  "adds_by_trim": {
+    "3.5 SL": [
+      "3.5L V6 engine (versus 2.5L 4-cylinder base)",
+      "22/32/26 city/highway/combined MPG with V6"
+    ],
+    "3.5 SV": [
+      "All 3.5 SL features carried forward"
+    ],
+    "3.5 S": [
+      "All 3.5 SV features carried forward"
+    ],
+    "2.5 SL": [
+      "8-way power adjustable driver's seat with lumbar support",
+      "Leather-appointed seats for front and rear-seat outboard occupants",
+      "Heated front seats and heated steering wheel",
+      "Leather-wrapped steering wheel and shift knob",
+      "Wood-tone or metallic-tone trim options",
+      "Blind Spot Warning and Moving Object Detection",
+      "Lane Departure Warning system"
+    ],
+    "2.5 SV": [
+      "Power sliding glass moonroof with one-touch open/close and tilt",
+      "Manual folding outside mirrors with LED turn signal indicators",
+      "Rear passenger air conditioning vents",
+      "Passenger-side front-window one-touch auto-up/down with auto-reverse"
+    ],
+    "2.5 S": [
+      "6-way power adjustable driver's seat",
+      "Display Audio Package with 5-inch color display and RearView Monitor",
+      "NissanConnect with Mobile Apps and hands-free text messaging",
+      "SiriusXM Satellite Radio with diversity antenna",
+      "USB connection port for iPod interface and compatible devices",
+      "Premium AM/FM/CD audio system",
+      "Cloth seat trim standard"
+    ],
+    "2.5": [
+      "6-way manual adjustable driver's seat with seatback pocket",
+      "AM/FM/CD audio system",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags",
+      "Driver and front-passenger seat-mounted side-impact supplemental air bags",
+      "Roof-mounted curtain side-impact supplemental air bags",
+      "Vehicle Dynamic Control with Traction Control System",
+      "3-point seat belts with pretensioners and load limiters",
+      "LATCH System for child safety seats",
+      "Zone Body construction with crumple zones and energy-absorbing steering column",
+      "Tire Pressure Monitoring System with Easy-Fill Tire Alert"
+    ]
+  }
+}

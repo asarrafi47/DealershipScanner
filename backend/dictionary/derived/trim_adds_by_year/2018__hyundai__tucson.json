@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2018|hyundai|tucson",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_web_2018__hyundai__tucson",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited AWD",
+    "Limited FWD",
+    "SEL Convenience AWD",
+    "SEL Convenience FWD",
+    "XRT AWD",
+    "XRT FWD",
+    "SEL AWD",
+    "SEL FWD",
+    "SE AWD",
+    "SE FWD"
+  ],
+  "adds_by_trim": {
+    "Limited AWD": [
+      "Forward Attention Warning driver attention monitor standard",
+      "Automatic emergency braking, blind-spot monitor, rear cross-traffic assist standard",
+      "Lane keeping assist standard",
+      "Available 12.0-inch color head-up display",
+      "Available parking sensors and 360-degree camera"
+    ],
+    "Limited FWD": [
+      "Forward Attention Warning driver attention monitor standard",
+      "Automatic emergency braking, blind-spot monitor, rear cross-traffic assist standard",
+      "Lane keeping assist standard",
+      "Available 12.0-inch color head-up display",
+      "Available parking sensors and 360-degree camera"
+    ],
+    "SEL Convenience AWD": [
+      "Forward Attention Warning optional on SEL trim",
+      "Wireless phone charger in center console"
+    ],
+    "SEL Convenience FWD": [
+      "Forward Attention Warning optional on SEL trim",
+      "Wireless phone charger in center console"
+    ],
+    "XRT AWD": [
+      "Exterior side cladding and tow hitch standard",
+      "H-Tex faux leather seating upholstery",
+      "Leather shift knob",
+      "8.3 inches ground clearance"
+    ],
+    "XRT FWD": [
+      "Exterior side cladding and tow hitch standard",
+      "H-Tex faux leather seating upholstery",
+      "Leather shift knob"
+    ],
+    "SEL AWD": [
+      "Forward Attention Warning optional",
+      "Enhanced interior and technology features compared to base SE"
+    ],
+    "SEL FWD": [
+      "Forward Attention Warning optional",
+      "Enhanced interior and technology features compared to base SE"
+    ],
+    "SE AWD": [
+      "All-wheel drive capability",
+      "8.3 inches ground clearance versus 7.1 inches FWD"
+    ],
+    "SE FWD": [
+      "Standard 12.3-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "Available 12.3-inch digital instrument cluster",
+      "Automatic emergency braking, blind-spot monitor, rear cross-traffic assist",
+      "Lane keeping assist, proximity-key entry with push-button start",
+      "2.5-liter inline-four engine with 187 hp and 178 lb-ft torque"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/tucson/"
+}

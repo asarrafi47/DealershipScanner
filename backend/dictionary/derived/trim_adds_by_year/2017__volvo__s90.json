@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|volvo|s90",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "S90",
+  "ladder_id": "brochure_llm_2017__volvo__s90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Inscription",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Inscription": [
+      "Fine Nappa Leather Perforated, Comfort seat ventilated upholstery",
+      "Linear Walnut wood inlays (standard vs. Dark Flame Birch)",
+      "Matte silver-colored grille with waterfall theme and glossy chrome frame",
+      "Color-coordinated lower body moldings with high-gloss chrome strip and Inscription logo",
+      "Black lower outer grilles with chrome deco strip",
+      "Side window frames with high-gloss chrome finish",
+      "19-inch 10-Spoke Silver Diamond Cut Alloy Wheels",
+      "Dual Integrated Tailpipes",
+      "Leather Covered Dash Board and Upper Door Panels"
+    ],
+    "Momentum": [
+      "Leather Comfort seat upholstery in Charcoal, Amber, or Blond",
+      "Dark Flame Birch wood inlays",
+      "Full LED Headlights with Active Bending Lights and Auto Highbeam",
+      "Power Sunroof with Sunshade",
+      "12.3-inch Digital Instrument Cluster Driver Display",
+      "10-way Power Front Seats with Driver Seat Memory and Power Lumbar",
+      "4-Zone Electric Climate Control and Cooled Glovebox",
+      "Volvo Sensus Navigation with 9-inch touchscreen and 6-month subscription",
+      "High Performance Audio with 10 speakers and 330W output",
+      "Pilot Assist semi-autonomous drive system with City Safety collision avoidance"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2012|audi|fullline",
+  "year": 2012,
+  "make": "Audi",
+  "model": "Full Line",
+  "ladder_id": "generic_audi_fullline",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "S line",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Audi connect and Wi-Fi features and technologies discussed",
+      "and other road system changes are beyond the control of Audi of America,",
+      "mapping and your actual",
+      "will be available for purchase from time to time at an additional cost. Consult your dealer",
+      "SiriusXM Traffic service available in select markets. Subscriptions are governed by",
+      "SiriusXM to cancel. Sirius U.S. Satellite Service available only to those 18 and older in the 48",
+      "performance tires are designed for optimum"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 7.0,
+    "per_trim_add_counts": {
+      "Limited": 7
+    }
+  }
+}

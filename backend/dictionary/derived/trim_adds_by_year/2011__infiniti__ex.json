@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|infiniti|ex",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "EX",
+  "ladder_id": "brochure_web_2011__infiniti__ex",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "EX35 Journey",
+    "EX35 GT"
+  ],
+  "adds_by_trim": {
+    "EX35 Journey": [
+      "3.5L V6 engine with 297 horsepower",
+      "All-Wheel Drive standard",
+      "5-passenger seating with cloth upholstery",
+      "Power windows, locks, and mirrors",
+      "Air conditioning with dual-zone climate control",
+      "AM/FM CD audio system with 6 speakers",
+      "17-inch alloy wheels",
+      "Bluetooth hands-free system",
+      "Vehicle dynamic control with traction control"
+    ],
+    "EX35 GT": [
+      "Leather-appointed seating surfaces",
+      "Heated front seats",
+      "Automatic headlights with fog lights",
+      "Premium Bose audio system with 9 speakers",
+      "Navigation system with 7-inch display screen",
+      "Rear view monitor camera",
+      "18-inch alloy wheels with all-season tires",
+      "Panoramic moonroof",
+      "Xenon HID headlights"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/infiniti/ex"
+}

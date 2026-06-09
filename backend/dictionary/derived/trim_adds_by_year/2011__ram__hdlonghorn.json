@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|ram|hdlonghorn",
+  "year": 2011,
+  "make": "ram",
+  "model": "HD Longhorn",
+  "ladder_id": "brochure_2011__ram__hdlonghorn",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie Longhorn",
+    "Laramie",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Standard 5-speed automatic transmission on Hemi V8 models",
+      "Adds Standard 6-speed automatic transmission on Cummins Turbo Diesel models",
+      "Adds Includes remote start functionality",
+      "Adds Includes ParkView rear backup camera",
+      "Adds Includes Parksense rear park assist"
+    ],
+    "Laramie": [
+      "Adds fog lamps",
+      "Adds dual exhaust on 1500 models",
+      "Upgraded to polished aluminum wheels"
+    ],
+    "Laramie Longhorn": [
+      "Adds lower two-tone body color and fender flares",
+      "Adds unique Laramie Longhorn badging",
+      "Upgraded to premium leather seating with embossed etching and stitching",
+      "Adds unique steering wheel design",
+      "Adds woodgrain treatments to instrument panel center stack and door trim",
+      "Adds carpeted flooring with premium embroidered floor mats",
+      "Adds dual-zone temperature control",
+      "Adds available Rambox cargo management system on 1500 model"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2017|audi|q7",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Q7",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport",
+    "Q7"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

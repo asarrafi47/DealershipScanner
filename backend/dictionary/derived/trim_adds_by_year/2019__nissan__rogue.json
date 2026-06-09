@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2019|nissan|rogue",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2019__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL Hybrid",
+    "SL",
+    "SV Hybrid",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL Hybrid": [
+      "LED headlights",
+      "Auto-dimming inside rearview mirror",
+      "HomeLink® Universal Transceiver",
+      "SiriusXM® Traffic and Travel Link®",
+      "Intelligent Around View® Monitor",
+      "Intelligent Cruise Control",
+      "Leather-appointed seats",
+      "Heated leather-wrapped steering wheel",
+      "Memory System for driver's seat and outside mirrors"
+    ],
+    "SL": [
+      "19-inch aluminum-alloy wheels",
+      "Fog lights",
+      "Electronic parking brake",
+      "Intelligent Cruise Control",
+      "ProPILOT Assist",
+      "Leather-appointed seats",
+      "Heated leather-wrapped steering wheel",
+      "4-way power front-passenger's seat",
+      "Bose® Premium Audio System with nine speakers including dual woofers",
+      "Intelligent Around View® Monitor"
+    ],
+    "SV Hybrid": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with electric motor",
+      "Engine Idle Start/Stop",
+      "Energy Flow screen",
+      "60/40 split-folding second-row seat",
+      "Under-floor cargo storage"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Roof rails",
+      "Motion Activated Liftgate",
+      "Rear privacy glass",
+      "Chrome outside door handles",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key® with Push Button Ignition",
+      "8-way power driver's seat with 2-way lumbar support",
+      "Quick Comfort® heated front seats"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine",
+      "Xtronic CVT® with Sport Mode Shifter and Eco Mode",
+      "Available Intelligent All-Wheel Drive",
+      "17-inch steel wheels with wheel covers",
+      "LED Daytime Running Lights",
+      "Intelligent Auto Headlights with High Beam Assist",
+      "NissanConnect® 7-inch touchscreen with Apple CarPlay™ and Android Auto™",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Lane Intervention"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2012|subaru|outback",
+  "year": 2012,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "inventory_subaru_outback",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "\u25cf 256-hp 3.6-liter 6-cylinder SUBARU",
+      "\u25cf 5-speed automatic transmission",
+      "adjustable driver\u2019s seat. 4-way s 10-way power"
+    ],
+    "Limited": [
+      "adjustable front-passenger\u2019s seat. s 10-way power"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.5,
+    "per_trim_add_counts": {
+      "Premium": 3,
+      "Base": 0
+    }
+  }
+}

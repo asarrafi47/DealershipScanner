@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2012|kia|soul",
+  "year": 2012,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2012__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Soul+",
+    "Soul"
+  ],
+  "adds_by_trim": {
+    "Soul+": [
+      "2.0L 4-cylinder engine (164 hp vs. base 1.6L with 138 hp)",
+      "Leather-wrapped steering wheel and gearshift knob",
+      "Steering-wheel-mounted audio controls",
+      "Bluetooth wireless technology",
+      "16-inch alloy wheels",
+      "Remote keyless entry",
+      "Unique black interior seating"
+    ],
+    "Soul": [
+      "AM/FM/CD/MP3/SiriusXM 4-speaker audio system",
+      "Air conditioning",
+      "Power windows and locks",
+      "1.6L 4-cylinder engine with Dual CVVT"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2001,Chevrolet,Silverado,1500 2WD,4.3L V6,4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.3,15,20,17,,,,,
+2001,Chevrolet,Silverado,1500 2WD,4.3L V6,4.3L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.3,14,19,16,,,,,
+2001,Chevrolet,Silverado,1500 2WD,4.8L V8,4.8L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,4.8,14,19,16,,,,,
+2001,Chevrolet,Silverado,1500 2WD,4.8L V8,4.8L V8,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,4.8,14,19,16,,,,,
+2001,Chevrolet,Silverado,1500 2WD,5.3L V8,5.3L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.3,14,18,15,,,,,
+2001,Chevrolet,Silverado,1500 4WD,4.3L V6,4.3L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.3,14,18,15,,,,,
+2001,Chevrolet,Silverado,1500 4WD,4.3L V6,4.3L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.3,13,16,14,,,,,
+2001,Chevrolet,Silverado,1500 4WD,4.8L V8,4.8L V8,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,4.8,13,16,14,,,,,
+2001,Chevrolet,Silverado,1500 4WD,4.8L V8,4.8L V8,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,4.8,13,17,14,,,,,
+2001,Chevrolet,Silverado,1500 4WD,5.3L V8,5.3L V8,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,13,16,14,,,,,

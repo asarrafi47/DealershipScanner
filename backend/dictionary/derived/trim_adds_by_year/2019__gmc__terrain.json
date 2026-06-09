@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2019|gmc|terrain",
+  "year": 2019,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_web_2019__gmc__terrain",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Heated front and rear seats",
+      "19-inch wheels with available 20-inch option",
+      "Smart Frequency dampers tuned for ride comfort",
+      "All-wheel drive standard",
+      "Hill descent control standard",
+      "Animated headlights and taillights"
+    ],
+    "AT4": [
+      "Selectable AT4-exclusive Terrain mode",
+      "Ride height lift",
+      "Protective metal underbody shield",
+      "Red front recovery hooks",
+      "17-inch wheels with all-terrain tires",
+      "All-wheel drive standard",
+      "Hill descent control standard",
+      "Animated headlights and taillights"
+    ],
+    "Elevation": [
+      "1.5-liter turbocharged four-cylinder engine",
+      "15.0-inch infotainment touchscreen with Google built-in technology",
+      "11.0-inch digital instrument cluster",
+      "Heated front seats",
+      "Available FWD with CVT or AWD with eight-speed automatic",
+      "Blind-zone steering assist and automatic rear braking for cross traffic",
+      "Reverse automatic braking and side bicyclist alert",
+      "Adaptive cruise control and enhanced automatic emergency braking"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/terrain/"
+}

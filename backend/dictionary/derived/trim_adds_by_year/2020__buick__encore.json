@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|buick|encore",
+  "year": 2020,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2020__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ESSENCE",
+    "SPORT TOURING",
+    "PREFERRED",
+    "ENCORE"
+  ],
+  "adds_by_trim": {
+    "ESSENCE": [
+      "8-inch Buick Infotainment System with Navigation",
+      "LED headlamps with LED daytime running lamps",
+      "Inside auto-dimming rearview mirror",
+      "Leather-appointed seating",
+      "Heated front seats",
+      "Memory seat driver",
+      "Universal home remote with 3-channel programmable garage-door opener",
+      "Safety Package II with Front and Rear Park Assist, Forward Collision Alert, Lane Departure Warning, air ionizer, Rainsense wipers"
+    ],
+    "SPORT TOURING": [
+      "Rear sport spoiler",
+      "Safety Package with Side Blind Zone Alert, Rear Cross Traffic Alert, 120-volt rear power outlet"
+    ],
+    "PREFERRED": [
+      "Cargo shade",
+      "Floor mats front and rear carpeted",
+      "Side Blind Zone Alert",
+      "Rear Cross Traffic Alert"
+    ],
+    "ENCORE": [
+      "1.4L Turbo engine with Variable Valve Timing and DOHC",
+      "10 airbags",
+      "60/40 split-folding rear seat",
+      "Keyless open and start",
+      "Apple CarPlay compatibility",
+      "Android Auto compatibility",
+      "8-inch Buick Infotainment System with touchscreen",
+      "3 months SiriusXM subscription",
+      "QuietTuning technology with active noise cancellation",
+      "StabiliTrak stability control system"
+    ]
+  }
+}

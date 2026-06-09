@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2015|hyundai|tucson",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2015__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "SE",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "7-inch touchscreen navigation system with NavTraffic",
+      "360-Watt premium audio system with external amplifier and subwoofer",
+      "Panoramic sunroof",
+      "Proximity key entry with push-button start",
+      "Dual automatic temperature control with CleanAir Ionizer",
+      "Heated front seats",
+      "Leather seating surfaces, steering wheel and shift knob",
+      "Hyundai Blue Link telematics system",
+      "Auto-dimming rearview mirror with HomeLink",
+      "18-inch alloy wheels"
+    ],
+    "SE": [
+      "182 HP, 2.4L Gasoline Direct Injection DOHC 4-cylinder engine",
+      "4.3-inch color touchscreen audio with rearview camera",
+      "Power driver seat with lumbar support",
+      "Leatherette seat bolsters with cloth inserts",
+      "Automatic projection headlights",
+      "Fog lights",
+      "LED taillights",
+      "Lower bodyside cladding",
+      "Roof side rails"
+    ],
+    "GLS": [
+      "164 HP, 2.0L Gasoline Direct Injection DOHC 4-cylinder engine",
+      "6-speed SHIFTRONIC automatic transmission",
+      "Active ECO system",
+      "SACHS ASD shock absorbers",
+      "Remote keyless entry with alarm",
+      "Air conditioning with cabin air filter",
+      "Tilt-and-telescopic steering wheel",
+      "Steering wheel audio, phone and cruise controls",
+      "Power door locks and windows with driver's auto-down",
+      "160-Watt AM/FM/SiriusXM/CD/MP3 audio system with 6 speakers"
+    ]
+  }
+}

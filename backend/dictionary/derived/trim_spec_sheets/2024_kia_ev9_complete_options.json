@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_kia_ev9_complete_options",
+  "make": "Kia",
+  "models": [
+    "EV9",
+    "EV9"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "GT-Line": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

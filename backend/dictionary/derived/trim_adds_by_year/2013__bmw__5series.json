@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2013|bmw|5series",
+  "year": 2013,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "bmw_5_series",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Platinum",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "x . | "
+    ],
+    "Limited": [
+      ". / . / ."
+    ],
+    "M Sport": [
+      "x . | "
+    ]
+  }
+}

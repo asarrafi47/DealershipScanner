@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2019|nissan|altima",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2019__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum VC-Turbo",
+    "Platinum",
+    "SL",
+    "SR VC-Turbo",
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "188-hp 2.5-liter Direct Injection Gasoline 4-cylinder engine",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking",
+      "RearView Monitor",
+      "Active Ride Control and Intelligent Trace Control",
+      "16-inch steel wheels with bolt-on wheel covers",
+      "8-way power adjustable driver's seat",
+      "NissanConnect 8-inch touchscreen with Apple CarPlay and Android Auto",
+      "SiriusXM Radio with 3-month trial"
+    ],
+    "SV": [
+      "Available Intelligent All-Wheel Drive",
+      "ProPILOT Assist semi-autonomous driving",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Lane Intervention",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Rear Sonar System and Rear Automatic Braking",
+      "17-inch aluminum-alloy wheels",
+      "LED headlights with signature lighting",
+      "Power sliding glass moonroof",
+      "Dual Zone Automatic Temperature Control"
+    ],
+    "SR": [
+      "Paddle shifters with manual shift mode",
+      "Sport-tuned suspension on FWD models",
+      "19-inch aluminum-alloy wheels",
+      "LED headlights with signature lighting",
+      "Dark chrome V-Motion grille and black outside mirrors",
+      "Sport cloth seat trim",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SR VC-Turbo": [
+      "248-hp 2.0-liter Variable Compression Turbo 4-cylinder engine",
+      "Power sliding glass moonroof",
+      "Heated front seats",
+      "Heated outside mirrors with LED turn signal indicators"
+    ],
+    "SL": [
+      "Intelligent Traffic Sign Recognition",
+      "4-way power adjustable front-passenger seat",
+      "Leather-appointed seats",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "SiriusXM Traffic and Travel Link with 3-month trial"
+    ],
+    "Platinum": [
+      "Intelligent Around View Monitor with 360-degree camera view",
+      "19-inch aluminum-alloy wheels",
+      "Interior accent lighting",
+      "Driver's memory seat with power lumbar support"
+    ],
+    "Platinum VC-Turbo": [
+      "248-hp 2.0-liter Variable Compression Turbo 4-cylinder engine"
+    ]
+  }
+}

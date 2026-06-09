@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2024|toyota|supra",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Supra",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "3.0 Premium",
+    "3.0",
+    "2.0",
+    "Platinum",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "3.0 Premium": [
+      "Includes these key features Adds to or replaces features offered on 2.0 Adds to or replaces features offered on 3.0",
+      "Top racetrack speed: 155 mph2 (electronically controlled) 382 hp;1 368 lb.-ft. of torque 382 hp;1 368 lb.-ft. of torque",
+      "Active exhaust Top racetrack speed: 155 mph2 (electronically controlled) Top racetrack speed: 155 mph2 (electronically controlled)",
+      "Launch Control19 Active exhaust Active exhaust",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires20 Launch Control19 Launch Control19",
+      "Available 6-speed intelligent Manual Transmission (iMT) Available 6-speed intelligent Manual Transmission (iMT)",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires37 High-performance Michelin\u00ae Pilot\u00ae Super Sport tires37",
+      "Built-in rear spoiler Exterior Features Exterior Features",
+      "Gloss-black auto-folding, heated outside mirrors 6-lens auto-leveling LED headlights (three low-beam; 6-lens auto-leveling LED headlights (three low-beam;",
+      "Matte-black auto-folding, heated outside mirrors Matte-black auto-folding, heated outside mirrors",
+      "Smart Key System with Smart Entry and Start",
+      "Alcantara\u00ae-trimmed21/leather-trimmed sport seats Interior Features Interior Features"
+    ],
+    "3.0": [
+      "Adds to or replaces features offered on 3.0 Premium",
+      "Top racetrack speed: 155 mph2 (electronically controlled)",
+      "Active rear sport differential",
+      "Available 6-speed intelligent Manual Transmission (iMT)",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires37 Mikan Blast Stratosphere41",
+      "Hazelnut leather trim",
+      "Manually adjustable rear spoiler",
+      "Black \"Supra\" side graphic",
+      "Orange strut tower braces",
+      "Smart Key System with Smart Entry and Start",
+      "Black leather-trimmed heated sport seats",
+      "Carbon-fiber interior trim"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

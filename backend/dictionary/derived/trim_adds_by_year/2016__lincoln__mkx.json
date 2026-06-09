@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2016|lincoln|mkx",
+  "year": 2016,
+  "make": "Lincoln",
+  "model": "MKX",
+  "ladder_id": "brochure_llm_2016__lincoln__mkx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Reserve",
+    "Select",
+    "Premiere"
+  ],
+  "adds_by_trim": {
+    "Reserve": [
+      "Heated and cooled front seats (replaces heated front seats)",
+      "2-way multicontour front seats with Active Motion, power head restraints, and power thigh extenders",
+      "Adaptive LED headlamps",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link services"
+    ],
+    "Select": [
+      "Hands-free liftgate",
+      "Auto-folding sideview mirrors with turn signal indicators and auto-dimming driver's side",
+      "BLIS (Blind Spot Information System) with cross-traffic alert"
+    ],
+    "Premiere": [
+      "10-way power front seats with 2-way power lumbar and driver's side memory feature",
+      "60/40 split-fold-flat rear seat",
+      "Bridge of Weir Deepsoft leather-trimmed seats",
+      "Heated front seats",
+      "3.7L Ti-VCT aluminum V6 engine with 303 hp and 278 lb.-ft. torque",
+      "6-speed SelectShift automatic transmission with paddle activation",
+      "Active noise control",
+      "Lincoln Premium Sound System with 10 speakers including subwoofer",
+      "SiriusXM Satellite Radio with 6-month trial subscription"
+    ]
+  }
+}

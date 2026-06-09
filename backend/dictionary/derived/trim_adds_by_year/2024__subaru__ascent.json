@@ -1,0 +1,85 @@
+{
+  "catalog_key": "2024|subaru|ascent",
+  "year": 2024,
+  "make": "Subaru",
+  "model": "Ascent",
+  "ladder_id": "brochure_llm_2024__subaru__ascent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ascent Touring",
+    "Ascent Onyx Edition Limited",
+    "Ascent Limited",
+    "Ascent Onyx Edition",
+    "Ascent Premium",
+    "Ascent"
+  ],
+  "adds_by_trim": {
+    "Ascent Premium": [
+      "Dual-mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "18-inch aluminum-alloy wheels in gray with machine finish",
+      "Body-color exterior mirrors with integrated turn signals",
+      "Privacy glass",
+      "8-way power-adjustable driver seat",
+      "Spill-resistant cloth upholstery",
+      "Leather-wrapped steering wheel and shift lever",
+      "Second-row climate controls",
+      "4G LTE Wi-Fi capability",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert"
+    ],
+    "Ascent Onyx Edition": [
+      "20-inch aluminum-alloy wheels in black finish",
+      "LED fog lights",
+      "Crystal Black Silica front grille, front bumper air ducts, exterior mirrors, roof spoiler and tailgate trim",
+      "Black badging",
+      "Panoramic power moonroof",
+      "Power Rear Gate with vehicle lock button",
+      "Leather-trimmed upholstery",
+      "Black interior accent trim with silver stitching on dash and doors",
+      "Onyx branded floor mats with silver stitching"
+    ],
+    "Ascent Limited": [
+      "20-inch aluminum-alloy wheels in dark gray with machine finish",
+      "LED fog lights",
+      "Lower door cladding with chrome accents",
+      "Gray StarTex water-repellent upholstery with green stitching",
+      "12-way power-adjustable driver seat with 4-way lumbar support",
+      "4-way power-adjustable front-passenger seat",
+      "Adjustable driver-seat thigh support",
+      "Two-position memory driver seat and exterior mirrors",
+      "Dual-mode heated second-row seats",
+      "Reverse Automatic Braking and DriverFocus Distraction Mitigation System"
+    ],
+    "Ascent Onyx Edition Limited": [
+      "Black window trim surround",
+      "Black badging",
+      "Power Rear Gate with vehicle lock button",
+      "Onyx branded floor mats with green stitching",
+      "Second-row retractable sunshades",
+      "Auto-dimming rearview compass mirror with HomeLink"
+    ],
+    "Ascent Touring": [
+      "Panoramic power moonroof",
+      "Automatic power-folding exterior mirrors with satin chrome",
+      "Chrome front bumper air ducts and door handles",
+      "Nappa leather-trimmed upholstery",
+      "Second-row captain's chairs with seven passengers",
+      "High-grade leather-wrapped steering wheel",
+      "3-mode ventilated front seats",
+      "Woodgrain-patterned matte finish accent trim",
+      "Harman Kardon 792-watt-equivalent premium audio system with 14 speakers",
+      "360-degree Surround View Monitor and Cabin Connect"
+    ],
+    "Ascent": [
+      "260-hp Direct-Injection Turbocharged BOXER engine",
+      "EyeSight Driver Assist Technology with wide-angle mono camera",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 8-speed manual-mode paddle shifters",
+      "X-MODE featuring Hill Descent Control",
+      "2,000-lb. towing capacity",
+      "18-inch aluminum-alloy wheels with silver finish",
+      "Auto-on/off LED Steering Responsive Headlights with High Beam Assist",
+      "Cloth upholstery with 6-way manually adjustable driver seat",
+      "SUBARU STARLINK 11.6-inch Multimedia Plus with wireless Apple CarPlay and Android Auto"
+    ]
+  }
+}

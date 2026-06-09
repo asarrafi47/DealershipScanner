@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2012|suzuki|sx4",
+  "year": 2012,
+  "make": "Suzuki",
+  "model": "SX4",
+  "ladder_id": "brochure_llm_2012__suzuki__sx4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport Sedan",
+    "SportBack",
+    "Crossover",
+    "Sedan"
+  ],
+  "adds_by_trim": {
+    "Sport Sedan": [
+      "Formula 1-style steering-wheel-mounted paddle shifters",
+      "17-inch alloy wheels",
+      "Sport suspension with KYB performance-tuned shocks",
+      "Aero Sport Body Kit",
+      "Foglamps",
+      "Rear spoiler"
+    ],
+    "SportBack": [
+      "5-door sport hatch body style",
+      "Sport suspension with KYB performance-tuned shocks",
+      "Aero Sport Body Kit",
+      "Foglamps",
+      "Rear spoiler"
+    ],
+    "Crossover": [
+      "5-door crossover body style",
+      "3-Mode Intelligent All-Wheel Drive (i-AWD)",
+      "Crossover suspension",
+      "Crossover body kit with black overfenders",
+      "Roof rack rails",
+      "Heated power side mirrors"
+    ],
+    "Sedan": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with 150-hp (MT) and 148-hp (AT)",
+      "Front-wheel drive",
+      "6-speed Manual Transmission",
+      "15-inch wheels with full covers",
+      "4-wheel disc brakes ventilated in front",
+      "Power side mirrors",
+      "Rear window defroster",
+      "Front wipers with variable intermittent function",
+      "Air conditioning with pollen filter",
+      "Power steering"
+    ]
+  }
+}

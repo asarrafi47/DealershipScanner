@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2011|suzuki|sx4",
+  "year": 2011,
+  "make": "Suzuki",
+  "model": "SX4",
+  "ladder_id": "brochure_llm_2011__suzuki__sx4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport Sedan",
+    "Sportback",
+    "Crossover",
+    "Sedan/LE"
+  ],
+  "adds_by_trim": {
+    "Sport Sedan": [
+      "Touchscreen TRIP 2.0 GPS navigation system",
+      "17-inch alloy wheels",
+      "Aero Sport Body Kit",
+      "4-speaker AM/FM/CD audio system with MP3 playback",
+      "4-wheel disc brakes",
+      "Available paddle shifters",
+      "Available leather-wrapped steering wheel with illuminated audio and cruise control"
+    ],
+    "Sportback": [
+      "Aero Sport Body Kit",
+      "17-inch alloy wheels",
+      "Sport-tuned suspension",
+      "Foglamps",
+      "Leather-wrapped steering wheel with illuminated audio and cruise control",
+      "Electronic Stability Program standard",
+      "Available touchscreen TRIP 2.0 GPS navigation",
+      "51.8 cubic feet maximum cargo capacity"
+    ],
+    "Crossover": [
+      "AWD capability with 23/29 mpg city/highway",
+      "60/40 split-folding rear seats",
+      "Cargo security cover",
+      "Seat heaters for driver and front passenger",
+      "Mont Blanc removable roof",
+      "Rack system and modules",
+      "51.8 cubic feet maximum cargo capacity",
+      "Electronic Stability Program standard"
+    ],
+    "Sedan/LE": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with 150-hp",
+      "Front-Wheel Drive",
+      "6-speed manual or CVT automatic transmission",
+      "4-wheel disc brakes with Bosch ABS",
+      "Electronic Brake-Force Distribution",
+      "Halogen headlamps",
+      "Power steering and power windows",
+      "Manual air conditioning with pollen filter",
+      "4-speaker AM/FM/CD with MP3 playback and XM capability",
+      "Information display showing MPG, range, temperature, average speed"
+    ]
+  }
+}

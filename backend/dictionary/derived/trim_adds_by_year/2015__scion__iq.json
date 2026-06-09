@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2015|scion|iq",
+  "year": 2015,
+  "make": "Scion",
+  "model": "iQ",
+  "ladder_id": "brochure_web_2015__scion__iq",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "iQ Limited",
+    "iQ",
+    "iQ Base"
+  ],
+  "adds_by_trim": {
+    "iQ Limited": [
+      "Leather-trimmed steering wheel and shift knob",
+      "Power windows and door locks",
+      "Cruise control",
+      "Backup camera with display audio",
+      "Alloy wheels",
+      "Fog lights"
+    ],
+    "iQ": [
+      "Audio system with aux input",
+      "Power steering",
+      "Air conditioning",
+      "Manual windows and locks",
+      "Steel wheels with wheel covers"
+    ],
+    "iQ Base": [
+      "1.3-liter 4-cylinder engine with 94 horsepower",
+      "5-speed manual transmission",
+      "Electric power steering",
+      "Air conditioning",
+      "Seat belt pretensioners and load limiters",
+      "Anti-lock brakes with electronic brakeforce distribution",
+      "Stability control",
+      "Six standard airbags",
+      "Manual windows and door locks",
+      "Steel wheels with covers and all-season tires"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/iq/"
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|bmw|6series",
+  "year": 2012,
+  "make": "BMW",
+  "model": "6 Series",
+  "ladder_id": "2012_bmw_6_series_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "\uea04\uea0a\uea02 [\uea04\uea09\uea09] | \uea04\uea0a\uea02",
+      "\uea0a / \uea03.\uea05\uea0a | \uea03.\uea03"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "LT": 0,
+      "LE": 0
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|mazda|5",
+  "year": 2013,
+  "make": "Mazda",
+  "model": "5",
+  "ladder_id": "brochure_llm_2013__mazda__5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Power sliding-glass moonroof with interior sunshade",
+      "Rain-sensing windshield wipers",
+      "Xenon HID headlights with automatic on/off",
+      "Dual heated body-colored power side mirrors with integrated turn signals",
+      "Heated front leather-trimmed seats",
+      "Alarm system"
+    ],
+    "Touring": [
+      "5-speed Sport automatic overdrive transmission",
+      "Dark gray painted front grille",
+      "Rear liftgate spoiler and side sill extensions",
+      "Fog lights",
+      "17-inch alloy wheels",
+      "Leather-wrapped steering wheel and shift knob",
+      "Bluetooth hands-free phone and audio streaming",
+      "Trip computer",
+      "Rear backup sensors",
+      "Available moonroof and audio package with SiriusXM satellite radio"
+    ],
+    "Sport": [
+      "2.5L DOHC 16-valve 4-cylinder engine with VVT",
+      "157 horsepower at 6,000 RPM and 163 lb-ft torque",
+      "6-speed manual transmission or 5-speed automatic with manual-shift mode",
+      "4-wheel independent suspension with MacPherson strut front and multilink rear",
+      "Dual front airbags, front side-impact airbags, and side-impact air curtains",
+      "Dual sliding rear doors and full automatic climate control",
+      "16-inch alloy wheels and remote keyless entry system",
+      "Tire Pressure Monitoring System and Dynamic Stability Control",
+      "Tilt/telescopic steering wheel with audio controls",
+      "Auxiliary audio input jack and USB port"
+    ]
+  }
+}

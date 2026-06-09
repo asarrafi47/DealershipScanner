@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|gmc|terrain",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_2013__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds SiriusXM satellite radio with 3 trial months of service",
+      "Adds OnStar Directions & Connections plan for 6 months",
+      "Adds OnStar automatic crash response and stolen vehicle assistance",
+      "Adds OnStar remote door unlock and vehicle diagnostics",
+      "Adds OnStar hands-free calling capability"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "SLE": [
+      "Premium cloth seating",
+      "8-way power driver seat adjuster with manual fore/aft and power lumbar",
+      "Leather-wrapped steering wheel with mounted audio and cruise controls",
+      "Single-zone automatic air conditioning with climate control",
+      "Pioneer premium 8-speaker system with subwoofer and amplifier",
+      "Heated driver and front passenger seats with convenience package"
+    ],
+    "SLT": [
+      "Adds available touch-screen navigation system with XM NavTraffic"
+    ],
+    "Denali": [
+      "Heated front and rear seats",
+      "19-inch wheels with available 20-inch option",
+      "Smart Frequency dampers tuned for ride comfort",
+      "Animated headlights and taillights",
+      "All-wheel drive standard",
+      "Hill descent control standard"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2019|gmc|yukon",
+  "year": 2019,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "brochure_web_2019__gmc__yukon",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali Ultimate",
+    "AT4 Ultimate",
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali Ultimate": [
+      "24-inch machined wheels",
+      "22-speaker Bose sound system",
+      "Open-pore wood interior with laser-etched topographical patterns",
+      "Heated, ventilated, and massaging second-row executive seats",
+      "6.2-liter V-8 engine (420 hp, 460 lb-ft torque)"
+    ],
+    "AT4 Ultimate": [
+      "20-inch wheels",
+      "Four-corner adaptive air suspension with 2.0 inches extra ground clearance",
+      "6.2-liter V-8 engine (420 hp, 460 lb-ft torque)",
+      "Plush appointments combined with rugged off-road capability"
+    ],
+    "Denali": [
+      "6.2-liter V-8 engine (420 hp, 460 lb-ft torque)",
+      "Second-row executive seating option available",
+      "Luxury-focused interior and exterior styling"
+    ],
+    "AT4": [
+      "5.3-liter V-8 engine standard (355 hp, 383 lb-ft torque)",
+      "Off-road focused trim with rugged capability",
+      "Available 6.2-liter V-8 engine upgrade"
+    ],
+    "Elevation": [
+      "5.3-liter V-8 engine standard (355 hp, 383 lb-ft torque)",
+      "10-speed automatic transmission",
+      "11.0-inch digital instrument cluster",
+      "16.8-inch infotainment touchscreen",
+      "Front pedestrian and bicyclist braking",
+      "Intersection automatic emergency braking",
+      "Rear cross-traffic braking",
+      "Side bicyclist alert"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/yukon/"
+}

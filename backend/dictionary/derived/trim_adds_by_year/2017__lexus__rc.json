@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2017|lexus|rc",
+  "year": 2017,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "brochure_2017__lexus__rc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes Four-year/50,000-mile Lexus Limited Warranty with zero deductible",
+      "Adds Includes Six-year/70,000-mile Powertrain Warranty with zero deductible",
+      "Adds Includes Six-year/unlimited-mileage Corrosion Perforation Warranty with zero deductible"
+    ],
+    "Premium": [
+      "Adds Dynamic Radar Cruise Control system",
+      "Adds high-friction performance brake system",
+      "Adds Mark Levinson premium audio system",
+      "Adds Navigation System with Scout GPS Link integration",
+      "Adds Enform connected services with Safety Connect subscription",
+      "Adds SmartAccess keyless entry system",
+      "Adds Bluetooth hands-free phone connectivity",
+      "Adds HD Radio technology",
+      "Adds Siri Eyes Free voice control compatibility"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2020|chevrolet|commercial",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "brochure_llm_2020__chevrolet__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HIGH COUNTRY",
+    "LTZ",
+    "LT TRAIL BOSS",
+    "RST",
+    "LT",
+    "CUSTOM TRAIL BOSS",
+    "CUSTOM",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "HIGH COUNTRY": [
+      "5.3L EcoTec3 V8 L84 standard engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine",
+      "Crew Cab Short Bed configuration"
+    ],
+    "LTZ": [
+      "5.3L EcoTec3 V8 L84 standard engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine",
+      "Available on Regular Cab and Crew Cab"
+    ],
+    "LT TRAIL BOSS": [
+      "5.3L EcoTec3 V8 L84 standard engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Off-road focused Trail Boss variant"
+    ],
+    "RST": [
+      "2.7L Turbo L3B standard engine",
+      "Available 5.3L EcoTec3 V8 L84 engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine"
+    ],
+    "LT": [
+      "2.7L Turbo L3B standard engine",
+      "Available 5.3L EcoTec3 V8 L84 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine"
+    ],
+    "CUSTOM TRAIL BOSS": [
+      "4.3L EcoTec3 V6 LV3 standard engine",
+      "Available 5.3L EcoTec3 V8 L82 engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Off-road focused Trail Boss variant"
+    ],
+    "CUSTOM": [
+      "4.3L EcoTec3 V6 LV3 standard engine",
+      "Available 2.7L Turbo L3B engine",
+      "Available 5.3L EcoTec3 V8 L82 engine"
+    ],
+    "WT": [
+      "4.3L EcoTec3 V6 LV3 standard engine",
+      "Available 2.7L Turbo L3B engine",
+      "Available 5.3L EcoTec3 V8 L82 engine",
+      "Four-wheel antilock disc brakes with Duralife rotors",
+      "Fully boxed ladder-type high-strength steel frame",
+      "StabiliTrak Electronic Stability Control with Proactive Roll Avoidance",
+      "12 fixed cargo tie-downs rated 500 lbs per corner",
+      "6-gauge instrument cluster with speedometer and fuel level"
+    ]
+  }
+}

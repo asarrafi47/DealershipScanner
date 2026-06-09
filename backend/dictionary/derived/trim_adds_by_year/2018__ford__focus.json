@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2018|ford|focus",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_llm_2018__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ST",
+    "RS",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "ST": [
+      "Carbon-fiber gear shift knob",
+      "Over-the-top stripes",
+      "Carbon-fiber trim panel",
+      "Sport pedals",
+      "Full vehicle cover"
+    ],
+    "RS": [
+      "Carbon-fiber door spear",
+      "Carbon-fiber gear shift knobs",
+      "RS wheel center caps",
+      "Winter Tire & Wheel Package",
+      "RS full vehicle cover"
+    ],
+    "SE": [
+      "SYNC 3 infotainment system with 6-inch touchscreen",
+      "Apple CarPlay and Android Auto compatibility",
+      "SiriusXM Traffic and Travel Link (complimentary 5 years)",
+      "Voice-activated navigation with 3-D maps",
+      "SYNC AppLink with Spotify and Pandora control",
+      "Keyless entry keypad",
+      "Remote start system capability",
+      "Smart-charging USB ports"
+    ]
+  }
+}

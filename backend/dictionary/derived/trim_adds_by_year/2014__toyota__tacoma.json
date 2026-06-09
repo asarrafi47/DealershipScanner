@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2014|toyota|tacoma",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_web_2014__toyota__tacoma",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Tacoma Limited",
+    "Trailhunter",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD PreRunner",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "Tacoma Limited": [
+      "14.0-inch touchscreen standard",
+      "10-speaker JBL audio system",
+      "Head-up display",
+      "Toyota Safety Sense 3.0 suite standard on all trims"
+    ],
+    "Trailhunter": [
+      "i-Force Max hybrid powertrain standard with 326 hp and 465 lb-ft torque",
+      "Front anti-rollbar disconnect available",
+      "Enhanced off-road capability"
+    ],
+    "TRD Pro": [
+      "i-Force Max hybrid powertrain standard with 326 hp and 465 lb-ft torque",
+      "Easy access red front tow hooks",
+      "Mudbath paint color option available"
+    ],
+    "TRD Off-Road": [
+      "14.0-inch touchscreen",
+      "10-speaker JBL audio system",
+      "Front anti-rollbar disconnect available",
+      "Rear differential lock in 4 Low"
+    ],
+    "TRD Sport": [
+      "14.0-inch touchscreen",
+      "10-speaker JBL audio system",
+      "On-road performance tuning"
+    ],
+    "TRD PreRunner": [
+      "TRD-specific exterior styling",
+      "2WD configuration"
+    ],
+    "SR5": [
+      "Six-speaker audio system",
+      "Blind-spot monitoring and rear cross-traffic alert standard"
+    ],
+    "SR": [
+      "2.4-liter turbocharged I-4 engine with 228 hp and 243 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "8.0-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "Four-speaker audio on XtraCab models",
+      "Toyota Safety Sense 3.0 suite standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/tacoma/"
+}

@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2023|mazda|cx50",
+  "year": 2023,
+  "make": "Mazda",
+  "model": "CX-50",
+  "ladder_id": "brochure_llm_2023__mazda__cx50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-50 2.5 S PREMIUM PLUS",
+    "CX-50 2.5 S PREMIUM",
+    "CX-50 2.5 S PREFERRED PLUS",
+    "CX-50 2.5 S PREFERRED",
+    "CX-50 2.5 S SELECT"
+  ],
+  "adds_by_trim": {
+    "CX-50 2.5 S SELECT": [
+      "17-inch alloy wheels in Black Metallic finish",
+      "Rear privacy glass",
+      "Dual-zone automatic climate control with pollen filter and rear seat vents",
+      "Mazda Advanced Keyless Entry System",
+      "Leather-wrapped steering wheel and gear selector",
+      "Leatherette seats",
+      "40/60 split rear seat with remote fold down",
+      "10.25-inch full-color center display with HD Radio",
+      "Overhead console with sunglasses holder",
+      "Dual illuminated visor vanity mirrors"
+    ],
+    "CX-50 2.5 S PREFERRED": [
+      "Dual heated side mirrors",
+      "Power sliding-glass panoramic moonroof",
+      "Rear Power Liftgate with programmable one-touch open/close feature",
+      "6-way power-adjustable passenger seat",
+      "Windshield wiper de-icer",
+      "8-way power-adjustable driver's seat with power lumbar support and heated front seats with 3-level adjustment",
+      "Front and rear center armrest with storage"
+    ],
+    "CX-50 2.5 S PREFERRED PLUS": [
+      "Auto-dimming rearview mirror with HomeLink",
+      "Power driver's seat 2-position memory function",
+      "Automatic power-folding side mirrors",
+      "Windshield-projected Active Driving Display",
+      "Bose 12-speaker surround sound system with Centerpoint 2 and AudioPilot 2",
+      "Roof-mounted shark fin antenna",
+      "SiriusXM Satellite Radio with 3-month subscription"
+    ],
+    "CX-50 2.5 S PREMIUM": [
+      "20-inch alloy wheel with Black Metallic finish and machine cut",
+      "P245/45 R20 all-season tires",
+      "Black or Terracotta leather-trimmed seats",
+      "Ventilated front seats"
+    ]
+  }
+}

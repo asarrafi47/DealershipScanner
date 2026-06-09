@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2024_ford_transit_connect_complete_options",
+  "make": "Ford",
+  "models": [
+    "Transit Connect",
+    "Transit Connect"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "XLT": [
+      {
+        "label": "Engine Options",
+        "value": "L Duratorq TDCi Diesel I4"
+      }
+    ],
+    "XL": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; L Duratorq TDCi Diesel I4"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "L Duratorq TDCi Diesel I4"
+      }
+    ]
+  }
+}

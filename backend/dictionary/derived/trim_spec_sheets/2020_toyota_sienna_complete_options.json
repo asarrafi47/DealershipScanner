@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2020_toyota_sienna_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Sienna",
+    "Sienna"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, front-wheel-drive; Following the discontinuation of General Motors's all-wheel drive minivans in 20 (was Power output 194–210 hp (145–157 kW; 197–213 PS); Front-engine, all-wheel-drive)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: The XLE models offered leather seats and a wood trim package. (was Limited Package EasySpeak, Premium Leather Seat Surfaces, Dual Power Moonroof, 10 Speakers)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Power output 194–210 hp (145–157 kW; 197–213 PS); Front-engine, all-wheel-drive (was Layout Front-engine, front-wheel-drive; Following the discontinuation of General Motors's all-wheel drive minivans in 20)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Limited Package EasySpeak, Premium Leather Seat Surfaces, Dual Power Moonroof, 10 Speakers"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Layout Front-engine, front-wheel-drive; Following the discontinuation of General Motors's all-wheel drive minivans in 20"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Adds Audio System Layout: The optional rear seat audio system was discontinued."
+      }
+    ]
+  }
+}

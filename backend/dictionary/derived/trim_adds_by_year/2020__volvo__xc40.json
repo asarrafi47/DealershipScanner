@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|volvo|xc40",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "XC40",
+  "ladder_id": "brochure_web_2020__volvo__xc40",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ultra",
+    "Plus",
+    "Core"
+  ],
+  "adds_by_trim": {
+    "Ultra": [
+      "20-inch wheels",
+      "Pixel-style headlights with cornering capability",
+      "Harman Kardon 14-speaker audio system",
+      "Powered child locks for rear doors",
+      "Pilot Assist adaptive cruise control and lane centering"
+    ],
+    "Plus": [
+      "Panoramic roof",
+      "360-degree camera",
+      "Front parking sensors",
+      "Crystal gear selector",
+      "Driftwood interior trim",
+      "Leather upholstery",
+      "Power passenger seat with additional adjustment",
+      "Configurable cargo area"
+    ],
+    "Core": [
+      "2.0-liter turbocharged inline-four with 247 hp and 258 lb-ft torque",
+      "Eight-speed automatic transmission with standard AWD",
+      "12.3-inch digital instrument cluster",
+      "9.0-inch portrait touchscreen with Google integration and Apple CarPlay",
+      "Front and rear emergency braking, lane departure warning, automatic high-beams",
+      "Blind-spot monitoring and rear cross-traffic alert",
+      "Power folding headrests"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volvo/xc40/"
+}

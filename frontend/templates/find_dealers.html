@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Find dealers near you — Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
 </head>
 <body class="find-dealers-page">
@@ -85,10 +86,10 @@
 
 </div>
 
-<script>
+<script nonce="{{ csp_nonce }}">
     window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";
 </script>
-<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
-<script src="{{ url_for('static', filename='find_dealers.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='find_dealers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

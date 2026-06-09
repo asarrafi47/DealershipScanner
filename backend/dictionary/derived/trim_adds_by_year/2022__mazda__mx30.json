@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2022|mazda|mx30",
+  "year": 2022,
+  "make": "Mazda",
+  "model": "MX-30",
+  "ladder_id": "brochure_llm_2022__mazda__mx30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MX-30 EV PREMIUM PLUS",
+    "MX-30 EV"
+  ],
+  "adds_by_trim": {
+    "MX-30 EV PREMIUM PLUS": [
+      "Premium trim designation with enhanced features"
+    ],
+    "MX-30 EV": [
+      "143 hp e-SKYACTIV electric motor with 200 lb-ft torque",
+      "35.5 kWh battery with EPA-estimated 100-mile range",
+      "18-inch alloy wheels with Silver finish and P215/55 R18 tires",
+      "LED headlights and taillights with Signature lighting and Adaptive Front-lighting",
+      "Leatherette-trimmed seats with cloth inserts and 8-way driver power seat with lumbar",
+      "7-inch automatic climate control touchscreen with Apple CarPlay and Android Auto",
+      "8.8-inch full-color center display with Mazda Connect infotainment system",
+      "Power sliding-glass moonroof with one-touch open and tilt feature",
+      "Rear View Monitor with static guides and rear parking sensors",
+      "Comprehensive safety suite: automatic emergency braking, lane departure warning, blind spot monitoring"
+    ]
+  }
+}

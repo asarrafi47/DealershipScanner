@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2010|gmc|acadia",
+  "year": 2010,
+  "make": "GMC",
+  "model": "Acadia",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

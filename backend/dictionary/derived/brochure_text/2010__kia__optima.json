@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2010|kia|optima",
+  "year": 2010,
+  "make": "Kia",
+  "model": "Optima",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2010_Kia_Optima_Brochure.pdf",
+  "page_count": 16,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

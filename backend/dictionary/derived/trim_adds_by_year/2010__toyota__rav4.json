@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2010|toyota|rav4",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "2010_toyota_rav4",
+  "source": "manual_brochure_review",
+  "trims_available": ["Base", "Sport", "Limited"],
+  "adds_by_trim": {
+    "Sport": [
+      "Sport-tuned suspension with springs and shock absorbers",
+      "Blackout sport-trim halogen headlamps with auto-off",
+      "17-inch 5-spoke alloy wheels with P225/65R17 tires",
+      "Integrated fog lamps"
+    ],
+    "Limited": [
+      "Halogen headlamps with auto on/off feature",
+      "17-inch alloy wheels and upgraded interior convenience",
+      "Available 3.5L V6 with 5-speed automatic (Limited V6 models)",
+      "Highest convenience trim before optional V6 Sport variants"
+    ]
+  }
+}

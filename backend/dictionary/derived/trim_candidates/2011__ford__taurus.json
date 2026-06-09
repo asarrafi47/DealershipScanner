@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2011|ford|taurus",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Taurus",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

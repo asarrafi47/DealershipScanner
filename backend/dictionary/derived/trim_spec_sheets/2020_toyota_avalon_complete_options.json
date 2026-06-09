@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2020_toyota_avalon_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Avalon",
+    "Avalon"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Other options included a keyless Remote Engine Start, glass breakage sensor, rea (was Front-engine, four-wheel-drive (2020–2022); HID lighting with auto-leveling was standard on Touring and Limited grades.)"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: A backup camera became standard using either the rear view mirror or navigation"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Front-engine, four-wheel-drive (2020–2022); HID lighting with auto-leveling was standard on Touring and Limited grades."
+      }
+    ]
+  }
+}

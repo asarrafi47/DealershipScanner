@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2021|jeep|gladiator",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Gladiator",
+  "ladder_id": "brochure_2021__jeep__gladiator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Overland",
+    "High Altitude",
+    "Limited",
+    "Rubicon",
+    "Mojave",
+    "Willys",
+    "Altitude"
+  ],
+  "adds_by_trim": {
+    "Altitude": [
+      "Adds Uconnect Phone with Bluetooth hands-free capability",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM Guardian trial subscription with remote vehicle start",
+      "Adds electronic stability control and rollover mitigation safety systems"
+    ],
+    "Willys": [
+      "Mid-range trim positioning between Big Bear and Mojave"
+    ],
+    "Mojave": [
+      "Performance hood, trail-tuned suspension for off-road dirt and sand driving"
+    ],
+    "Rubicon": [
+      "registered trademarks of Dana Corporation. Facebook is a"
+    ],
+    "Limited": [
+      "registered trademarks of Bridgestone Corporation. Dana and Trac-Lok are"
+    ],
+    "High Altitude": [],
+    "Overland": [
+      "registered trademark of Bluetooth SIG, Inc. Bridgestone and any Bridgestone products or service names are trademarks or"
+    ]
+  }
+}

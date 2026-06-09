@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2013|bmw|x5",
+  "year": 2013,
+  "make": "BMW",
+  "model": "X5",
+  "ladder_id": "brochure_2013__bmw__x5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes BMW Ultimate Service suite with comprehensive programs and services",
+      "Adds BMW Maintenance Program covering factory-recommended maintenance",
+      "Adds Includes New Vehicle/SAV Limited Warranty for four years",
+      "Adds BMW Roadside Assistance at no charge for first four years",
+      "Adds Includes unlimited-mileage corrosion and rust perforation warranty protection"
+    ],
+    "Sport": [
+      "Adds M Sport Package option availability",
+      "Adds BMW Original Accessories customization options"
+    ],
+    "Limited": [
+      "Adds BMW Navigation system with turn-by-turn directions",
+      "Adds Google Maps database integration to iDrive Display"
+    ],
+    "Premium": [
+      "Adds BMW Assist Safety Plan with four-year coverage",
+      "Adds Automatic Collision Notification and Emergency Request features",
+      "Adds Enhanced Roadside Assistance with Door Unlock and Stolen Vehicle Recovery",
+      "Adds BMW TeleService continuous monitoring of wear-and-tear components"
+    ],
+    "M Sport": [
+      "Adds BMW Mobile Office feature with Bluetooth text and email integration",
+      "Adds MyInfo for sending business locations and street addresses to Navigation system",
+      "Adds BMW Assist Convenience Plan with unlimited personalized Directions and Traffic reports",
+      "Adds Critical Calling with four operator-assisted calls per year",
+      "Adds BMW Online access to real-time fuel prices, weather forecasts, and Bloomberg stock indices"
+    ]
+  }
+}

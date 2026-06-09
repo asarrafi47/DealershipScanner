@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|volvo|xc70",
+  "year": 2014,
+  "make": "Volvo",
+  "model": "XC70",
+  "ladder_id": "brochure_llm_2014__volvo__xc70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier Plus",
+    "Premier",
+    "3.2 AWD",
+    "3.2 FWD"
+  ],
+  "adds_by_trim": {
+    "Premier Plus": [
+      "Power-operated tailgate with programmable memory setting",
+      "HomeLink integrated garage door opener",
+      "Digital compass",
+      "Cargo cover",
+      "Grocery bag holder",
+      "12V power outlet in cargo area",
+      "Electric folding rear headrests",
+      "Private locking safe",
+      "Rear park assist camera"
+    ],
+    "Premier": [
+      "Power glass moonroof",
+      "Leather seating surfaces",
+      "Power passenger seat",
+      "Classic walnut wood inlays",
+      "Tinted rear seat and cargo area windows",
+      "Keyless drive with personal car communicator",
+      "Auto dimming interior mirror",
+      "Adaptive digital TFT display"
+    ],
+    "3.2 AWD": [
+      "AWD with instant traction",
+      "300 HP 6-cylinder turbocharged engine"
+    ],
+    "3.2 FWD": [
+      "240 HP 6-cylinder engine",
+      "Complimentary factory scheduled maintenance 3 years/36,000 miles",
+      "4 years/50,000 miles warranty",
+      "ABS anti-lock brakes",
+      "Dynamic stability and traction control",
+      "City safety low-speed collision avoidance system",
+      "LED daytime running lights",
+      "Bluetooth handsfree system with streaming audio"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2013|buick|verano",
+  "year": 2013,
+  "make": "Buick",
+  "model": "Verano",
+  "ladder_id": "brochure_llm_2013__buick__verano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM",
+    "LEATHER",
+    "CONVENIENCE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "PREMIUM": [
+      "2.0L EcoTec turbocharged engine with 250 hp and 260 lb-ft torque",
+      "6-way power driver seat with manual recline",
+      "Heated front seats with adaptive remote activation",
+      "Heated leather-wrapped steering wheel",
+      "Bose premium audio 9-speaker system with subwoofers",
+      "18-inch split-spoke forged alloy wheels with Manoogian Silver finish",
+      "Dual exhaust stainless steel with chrome tips",
+      "Aluminum sport pedals"
+    ],
+    "LEATHER": [
+      "Premium grade leather-appointed seating",
+      "Passive entry system with push-button start",
+      "Audio system with navigation, 7-inch color touch-screen, and GPS",
+      "Power tilt-sliding sunroof with sunshade",
+      "Rear spoiler flushmount",
+      "Turbo badging"
+    ],
+    "CONVENIENCE": [
+      "6-way power driver seat with manual recline",
+      "Heated outside mirrors with body-color finish, activates at 45 degrees or below",
+      "Rear parking assist with cross-traffic alert",
+      "Side blind zone alert",
+      "Auto-dimming rearview mirror",
+      "Flushmount rear spoiler",
+      "Passive entry system with push-button start"
+    ],
+    "Base": [
+      "2.4L EcoTec engine with 180 hp and 171 lb-ft torque",
+      "6-speed automatic transmission with overdrive and shift control",
+      "Front-wheel drive with independent MacPherson strut suspension",
+      "Power electric steering and 4-wheel anti-lock disc brakes with stability control",
+      "10 air bags including front, side-impact, and knee protection",
+      "Premium ribbon fabric seat trim with leatherette bolsters",
+      "Dual-zone air conditioning with manual climate control",
+      "7-inch LED color touch-screen with rearview camera and 6 speakers",
+      "Bluetooth connectivity, USB port, and auxiliary jack",
+      "18-inch multi-spoke machined-faced alloy wheels"
+    ]
+  }
+}

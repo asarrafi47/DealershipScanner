@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2021|ford|edge",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_2021__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Titanium",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds 2.0L EcoBoost engine",
+      "Adds front-wheel drive configuration",
+      "Adds all-wheel drive configuration option",
+      "Adds standard safety restraint coverage",
+      "Adds bumper-to-bumper warranty coverage"
+    ],
+    "Titanium": [
+      "Upgraded to 2.7L EcoBoost V6 engine option",
+      "Adds roof-mounted crossbars",
+      "Adds cargo box accessory compatibility",
+      "Adds wheel lock kit",
+      "Adds molded splash guards front and rear"
+    ],
+    "Limited": [
+      "Adds Class II Trailer Tow Prep Package option",
+      "Adds cargo area protector",
+      "Adds cargo cover",
+      "Adds floor liners",
+      "Adds dash cam system compatibility",
+      "Adds Custom UVS100 Sunscreen accessory"
+    ]
+  }
+}

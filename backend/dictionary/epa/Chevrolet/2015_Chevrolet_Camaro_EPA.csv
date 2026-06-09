@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Chevrolet,Camaro,Camaro,7.0L V8 (Z/28),7.0L V8,,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,7.0,13,19,15,,,,,
+2015,Chevrolet,Camaro,Camaro,6.2L V8,6.2L V8,,Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Compact Cars,8,6.2,15,24,18,,,,,
+2015,Chevrolet,Camaro,Camaro,3.6L V6 (SIDI),3.6L V6,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.6,19,29,22,,,,,
+2015,Chevrolet,Camaro,Camaro,3.6L V6 (SIDI),3.6L V6,,Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.6,18,26,21,,,,,
+2015,Chevrolet,Camaro,Camaro,3.6L V6 (SIDI),3.6L V6,,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.6,17,27,20,,,,,
+2015,Chevrolet,Camaro,Camaro,6.2L V8,6.2L V8,,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,6.2,16,24,19,,,,,
+2015,Chevrolet,Camaro,Camaro,6.2L V8,6.2L V8,,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,6.2,12,18,14,,,,,
+2015,Chevrolet,Camaro,Camaro,6.2L V8,6.2L V8,,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,6.2,14,19,16,,,,,

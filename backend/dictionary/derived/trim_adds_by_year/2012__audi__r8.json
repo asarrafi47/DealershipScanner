@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2012|audi|r8",
+  "year": 2012,
+  "make": "Audi",
+  "model": "R8",
+  "ladder_id": "brochure_2012__audi__r8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds V10 gasoline engine with FSI direct fuel injection",
+      "Adds 560 hp at 8,000 rpm output",
+      "Adds quattro permanent all-wheel drive",
+      "Adds sequential six-speed R tronic automatic transmission",
+      "Adds forged aluminum wheels"
+    ],
+    "Premium": [
+      "Upgraded to R8 GT model variant",
+      "Upgraded to 19-inch exclusive forged aluminum wheels with larger rear sizing",
+      "Upgraded to performance-tuned suspension setup"
+    ]
+  }
+}

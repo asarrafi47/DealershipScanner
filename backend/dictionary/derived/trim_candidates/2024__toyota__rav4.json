@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2024|toyota|rav4",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE Premium",
+    "XSE",
+    "XLE",
+    "TRD Off-Road",
+    "TRD",
+    "Adventure",
+    "SE",
+    "LE",
+    "Base",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Direct Shift 8-speed Automatic Transmission Multi-Terrain Select (MTS) Multi-Terrain Select (MTS)",
+      "Normal, Eco and Sport drive modes Up to 28 city/35 highway/30 combined EPA-est. mpg1 Up to 28 city/35 highway/30 combined EPA-est. mpg1",
+      "Front-Wheel Drive (FWD) Exterior Features Exterior Features",
+      "Available All-Wheel Drive (AWD) Color-keyed heated power outside mirrors with turn Integrated LED fog lights",
+      "Up to 27 city/34 highway/30 combined EPA-est. mpg1 folding feature",
+      "Power liftgate36 with jam protection",
+      "Exterior Features 19-in. multi-spoke metallic-finished alloy wheels",
+      "LED projector headlights with DRL Interior Features",
+      "SofTex\u00ae-trimmed37 seats",
+      "LED taillights and stop lights Fabric-trimmed seats with embossed polygon-design - 8-way power-adjustable driver\u2019s seat",
+      "Black hexagon-patterned bar front grille seat inserts with lumbar support"
+    ],
+    "XLE Premium": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on Adventure Adds to or replaces features offered on XLE Premium",
+      "Dynamic Torque Vectoring All-Wheel Drive (TV- Dynamic Torque Vectoring All-Wheel Drive Available Dynamic Torque Vectoring All-Wheel",
+      "AWD) with Rear Driveline Disconnect (TV-AWD) with Rear Driveline Disconnect Drive (TV-AWD) with Rear Driveline Disconnect",
+      "Multi-Terrain Select (MTS) (MUD & SAND, Multi-Terrain Select (MTS) (MUD & SAND, Available Multi-Terrain Select (MTS) (MUD & SAND,",
+      "ROCK & DIRT, and SNOW modes) ROCK & DIRT, and SNOW modes) ROCK & DIRT, and SNOW modes)",
+      "Exterior Features 25 city/32 highway/27 combined EPA-est. mpg1 LED projector headlights with LED DRL",
+      "Unique split-bar front upper grille Exterior Features accent lights and turn signals",
+      "Active grille shutters Black rear bumper with metallic gray insert Dark gray metallic-colored hexagon patterned front grille",
+      "Larger black overfenders Power tilt/slid moonroof with one-touch open/close Chrome-accented color keyed outside door handles",
+      "Unique raised black roof rails Power liftgate36 with jam protection",
+      "Black RAV4 and Adventure badging with Black RAV4 and TRD Off-Road badging",
+      "Heated front seats"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on Hybrid XLE Adds to or replaces features offered on Hybrid XLE Adds to or replaces features offered on Hybrid SE",
+      "Exterior Features 41 city/38 highway/39 combined EPA-est. mpg1 41 city/38 highway/39 combined EPA-est. mpg1",
+      "Integrated LED fog lights Exterior Features Exterior Features",
+      "Power tilt/slide moonroof with one-touch open/close Black hexagon-patterned front grille Vertical LED accent lighting",
+      "Power liftgate36 with jam protection LED projector headlights with LED DRL accent lights Two-tone exterior color with Midnight Black",
+      "Black-painted lower front bumper, overfenders, Power tilt/slide moonroof with one-touch open/close",
+      "Integrated LED fog lights with metallic gray insert",
+      "Dual zone automatic climate control system, front Power tilt/slide moonroof with one-touch open/close SofTex\u00ae-trimmed37 seats with sporty blue stitching",
+      "Heated front seats",
+      "SofTex\u00ae-trimmed37 seats",
+      "8-way power-adjustable driver\u2019s seat Interior Features Blue ambient interior lighting",
+      "Leather-trimmed steering wheel Blue-accented interior including blue stitching"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on Hybrid LE Adds to or replaces features offered on Hybrid LE",
+      "Hybrid engine: 2.5L 4-Cylinder with 219 net combined hp 41 city/38 highway/39 combined EPA-est. mpg1 38 city/35 highway/37 combined EPA-est. mpg1",
+      "Electronically controlled Continuously Variable Exterior Features TRD-tuned suspension",
+      "Transmission with sequential shift mode",
+      "Color-keyed outside door handles with Exterior Features",
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Drive mode dial with Normal, Eco and Sport Drive modes",
+      "Color-keyed heated power outside mirrors with turn signal 18-in. 6-spoke bronze-colored TRD flow-formed alloy wheels",
+      "TRAIL and EV Mode47 select buttons and blind spot warning34 indicators, and folding feature",
+      "Falken\u00ae44 WILDPEAK All-Terrain tires",
+      "Interior Features Black heated power outside mirrors with turn signal",
+      "Exterior Features Dual zone automatic climate control with rear-seat vents and blind spot warning34 indicators, and folding feature"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

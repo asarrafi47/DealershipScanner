@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2016|gmc|savana",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Savana",
+  "ladder_id": "brochure_llm_2016__gmc__savana",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL",
+    "SL",
+    "TW"
+  ],
+  "adds_by_trim": {
+    "TL": [
+      "Seat-mounted side-impact and head curtain side-impact airbags for first-, second-, and third-row outboard occupants",
+      "Enhanced-technology glass on rearmost side windows (12- and 15-passenger models)",
+      "LATCH child seat anchor system",
+      "Rear auxiliary heater standard on 3500 Series extended-wheelbase passenger van models",
+      "Rear air conditioning standard on 3500 Series extended-wheelbase passenger van models"
+    ],
+    "SL": [
+      "Chrome front and rear bumpers with rear step pad",
+      "Power-operated, heated, black manual-folding outside rearview mirrors",
+      "Daytime running lamps",
+      "Frontal airbags for driver and front passenger",
+      "Power door locks with lockout protection",
+      "Side steel door beams",
+      "Tire pressure monitoring system",
+      "Pass-Key III theft-deterrent system"
+    ],
+    "TW": [
+      "Vortec 4.8L V-8 engine standard",
+      "6-speed automatic heavy-duty transmission with electronic Tow/Haul mode",
+      "StabiliTrak vehicle stability enhancement system and traction control",
+      "Tow/Haul mode selector",
+      "Heavy-duty trailering hitch platform with 7-pin sealed connector",
+      "145-amp alternator standard",
+      "Front air conditioning",
+      "Front reclining bucket seats with vinyl trim",
+      "Power windows, power outlets, and tilt-adjustable steering wheel",
+      "Cargo tie-downs with 6 D-ring attachments on cargo-area floor"
+    ]
+  }
+}

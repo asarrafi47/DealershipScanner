@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_gmc_yukon_xl_complete_options",
+  "make": "GMC",
+  "models": [
+    "Yukon XL",
+    "Yukon XL"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Denali": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front engine, rear-wheel drive / four-wheel drive; From 1973 to 2013, it had been available in half-ton and 3/4-ton versions. Chevrolet discontinued this option for the public during the tenth-generation model's tenure after 2013 because of slow…"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as; The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as well."
+      }
+    ]
+  }
+}

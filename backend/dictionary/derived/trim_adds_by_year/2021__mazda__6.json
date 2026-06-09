@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2021|mazda|6",
+  "year": 2021,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2021__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "Carbon Edition",
+    "Grand Touring Reserve",
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "SKYACTIV-G 2.5 DOHC 16-valve 4-cylinder engine with 187 hp",
+      "SKYACTIV-Drive 6-speed automatic transmission with manual shift and Sport modes",
+      "17-inch alloy wheels with Gun Metallic finish and P225/55 R17 tires",
+      "LED headlights with auto on/off and LED daytime running lights",
+      "8-inch full-color touchscreen with MAZDA CONNECT infotainment system",
+      "Cloth-trimmed sport seats with 6-way manually adjustable driver's seat",
+      "MAZDA CONNECT voice command and Multifunction Commander control",
+      "Apple CarPlay and Android Auto integration",
+      "Mazda Radar Cruise Control with Stop & Go",
+      "Blind Spot Monitoring and Rear Cross Traffic Alert"
+    ],
+    "Touring": [
+      "19-inch alloy wheels with Gun Metallic finish and P225/45 R19 tires",
+      "Power sliding-glass moonroof with one-touch-open feature and interior sunshade",
+      "Mazda Advanced Keyless Entry System",
+      "6-way power-adjustable driver's seat with manual lumbar support",
+      "Heated front seats",
+      "Leatherette-trimmed sport seats",
+      "Rear A/C vents",
+      "Rear seat center armrest with storage and 2 USB charging ports"
+    ],
+    "Grand Touring": [
+      "SKYACTIV-G 2.5 Dynamic Pressure Turbo engine with 250 hp and 320 lb-ft torque"
+    ],
+    "Grand Touring Reserve": [
+      "Leather trim and premium interior appointments over Grand Touring"
+    ],
+    "Carbon Edition": [
+      "Exclusive styling and design elements distinguishing it from Grand Touring Reserve"
+    ],
+    "Signature": [
+      "Premium leather appointments and top-tier luxury features completing the lineup"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|audi|q7",
+  "year": 2010,
+  "make": "Audi",
+  "model": "Q7",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

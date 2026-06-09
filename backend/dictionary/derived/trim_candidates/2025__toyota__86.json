@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2025|toyota|86",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "86",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds to or replaces features offered on GR86 Adds to or replaces features offered on GR86 Premium",
+      "FA24 2.4L naturally aspirated, horizontally opposed FA24 2.4L naturally aspirated, horizontally opposed FA24 2.4L naturally aspirated, horizontally opposed",
+      "S hort-throw 6-speed close-ratio Manual Transmission S hort-throw 6-speed close-ratio Manual Transmission Short-throw 6-speed close-ratio Manual Transmission",
+      "Transmission (ECT) with paddle shifters Transmission (ECT) with paddle shifters",
+      "Torsen\u00ae6 limited-slip differential Torsen\u00ae6 limited-slip differential Torsen\u00ae6 limited-slip differential",
+      "GR circuit-tuned coil springs, shock absorbers, GR circuit-tuned coil springs, shock absorbers, MacPherson strut front suspension and multi-link",
+      "B rembo\u00ae28 4-piston front disc brakes with 12.8-in.",
+      "Exterior Features Exterior Features ventilated rotors; Brembo\u00ae28 2-piston rear",
+      "Auto-leveling dual LED headlights and turn signal Michelin\u00ae3 Pilot\u00ae Sport 4 tires4 Exterior Features",
+      "LED stop light and backup light",
+      "Rear Hakone Edition badging",
+      "Black heated power outside mirrors Interior Features"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2014|volkswagen|jetta",
+  "year": 2014,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GTI",
+    "GLI"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

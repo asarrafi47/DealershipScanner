@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|lincoln|navigator",
+  "year": 2014,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_llm_2014__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Navigator L Monochrome Limited Edition Package",
+    "Navigator L",
+    "Navigator"
+  ],
+  "adds_by_trim": {
+    "Navigator L Monochrome Limited Edition Package": [
+      "1st- and 2nd-row premium leather-trimmed seats in Canyon with Charcoal Black piping",
+      "Charcoal Black embroidered Lincoln Star on all head restraints",
+      "Black carpeting and floor mats",
+      "Olive ash wood trim",
+      "Power moonroof",
+      "20-inch 7-spoke polished aluminum wheels with P275/55R20 all-season tires",
+      "LIMITED EDITION exterior badge",
+      "Power-folding sideview mirrors with body-color mirror caps"
+    ],
+    "Navigator L": [
+      "33.5-gallon fuel tank",
+      "42.6 cubic feet of cargo space behind 3rd-row seat",
+      "Cargo Management System"
+    ],
+    "Navigator": [
+      "6-speed automatic transmission with tow/haul mode",
+      "1st-row premium leather-trimmed heated and cooled bucket seats with 10-way power adjustments",
+      "2nd-row premium leather-trimmed heated bucket seats",
+      "3rd-row PowerFold 60/40 split bench seat",
+      "1st-row center floor console with auxiliary audio input and USB port",
+      "Dual-zone electronic automatic temperature control",
+      "18-inch 7-spoke bright machined-aluminum wheels with P255/70R18 tires",
+      "Class III/IV Standard-Duty Trailer Tow Package with trailer sway control",
+      "SiriusXM Satellite Radio with THX II Certified 5.1 Surround Audio System",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link"
+    ]
+  }
+}

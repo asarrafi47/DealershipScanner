@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2023|lexus|nx",
+  "year": 2023,
+  "make": "lexus",
+  "model": "NX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Base",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

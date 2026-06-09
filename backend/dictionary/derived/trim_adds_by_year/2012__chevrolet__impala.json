@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|chevrolet|impala",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2012__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome door handles",
+      "Integral foglamps in front fascia",
+      "Heated power-adjustable mirrors",
+      "Rear spoiler",
+      "Luxury-Tuned four-wheel independent suspension",
+      "Auto-dimming inside rearview mirror",
+      "Power tilt/sliding sunroof with sunshade"
+    ],
+    "LT": [
+      "Rear spoiler",
+      "Dual-zone climate control with individual driver and passenger settings",
+      "Deluxe four-gauge cluster with chrome trim, outside temperature display and compass",
+      "Driver and passenger illuminated visor vanity mirrors",
+      "Power tilt/sliding sunroof with sunshade",
+      "Universal Home Remote transmitter",
+      "Front visors with illuminated vanity mirrors"
+    ],
+    "LS": [
+      "3.6L SIDI DOHC V6 with Variable Valve Timing, 300 hp, 262 lb-ft torque",
+      "E85 FlexFuel-capable engine",
+      "Engine block heater",
+      "Dual-outlet stainless steel exhaust",
+      "Oil-Life Monitor",
+      "Power rack-and-pinion steering",
+      "Touring suspension with four-wheel independent design",
+      "6-speed automatic transmission with overdrive",
+      "Dual-stage frontal and side-impact airbags with head-curtain coverage",
+      "Front bucket seats with six-way power driver seat"
+    ]
+  }
+}

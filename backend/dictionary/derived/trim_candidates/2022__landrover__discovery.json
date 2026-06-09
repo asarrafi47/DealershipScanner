@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2022|landrover|discovery",
+  "year": 2022,
+  "make": "landrover",
+  "model": "Discovery",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "HSE",
+    "SE",
+    "Standard",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

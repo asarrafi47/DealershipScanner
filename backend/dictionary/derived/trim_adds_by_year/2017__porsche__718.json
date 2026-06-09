@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2017|porsche|718",
+  "year": 2017,
+  "make": "Porsche",
+  "model": "718",
+  "ladder_id": "brochure_llm_2017__porsche__718",
+  "source": "brochure_llm",
+  "trims_available": [
+    "718 Boxster S",
+    "718 Cayman S",
+    "718 Boxster",
+    "718 Cayman"
+  ],
+  "adds_by_trim": {
+    "718 Boxster S": [
+      "2.5-litre turbocharged boxer engine producing 257 kW (350 hp) and 420 Nm",
+      "Variable turbine geometry (VTG) for enhanced performance",
+      "19-inch alloy wheels",
+      "Four-piston aluminium monobloc fixed brake calipers in red, front and rear",
+      "Centrally positioned twin tailpipe with powerful boxer engine sound",
+      "Extended leather detailing on steering wheel, door handles, door armrests, and centre console storage lid",
+      "Porsche Communication Management (PCM) with mobile phone preparation and Sound Package Plus"
+    ],
+    "718 Cayman S": [
+      "2.5-litre turbocharged boxer engine producing 257 kW (350 hp) and 420 Nm",
+      "Variable turbine geometry (VTG) for enhanced performance",
+      "19-inch alloy wheels",
+      "330 mm front brake discs with four-piston aluminium monobloc fixed calipers in red",
+      "Extended leather detailing on steering wheel, door handles, door armrests, and centre console storage lid",
+      "Porsche Communication Management (PCM) with mobile phone preparation and Sound Package Plus"
+    ],
+    "718 Boxster": [
+      "2.0-litre turbocharged boxer engine producing 220 kW (300 hp) and 380 Nm",
+      "18-inch alloy wheels",
+      "330 mm front brake discs with four-piston aluminium monobloc fixed calipers in black",
+      "Bi-Xenon main headlights",
+      "Centrally positioned single-tube tailpipe in brushed stainless steel",
+      "SPORT button for enhanced performance",
+      "Porsche Communication Management (PCM) with mobile phone preparation and Sound Package Plus",
+      "Net-type wind deflector",
+      "Sports-look pedals and footrest"
+    ],
+    "718 Cayman": [
+      "2.0-litre turbocharged boxer engine producing 220 kW (300 hp) and 380 Nm",
+      "18-inch alloy wheels",
+      "299 mm rear brake discs with four-piston aluminium monobloc fixed calipers in black",
+      "Bi-Xenon main headlights",
+      "Centrally positioned single-tube tailpipe in brushed stainless steel",
+      "SPORT button for enhanced performance",
+      "Porsche Communication Management (PCM) with mobile phone preparation and Sound Package Plus",
+      "Net-type wind deflector",
+      "Sports-look pedals and footrest"
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2022|chevrolet|blazer",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Blazer",
+  "ladder_id": "brochure_llm_2022__chevrolet__blazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "3LT",
+    "2LT"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "3.6L V6 engine with 308 hp (standard, vs. 2.0L Turbo on RS)",
+      "New dark front and rear fascias with wheel moldings and rocker panels",
+      "Silver-painted roof rails",
+      "Integrated rectangular dual-outlet exhaust",
+      "Premier-specific 20-inch machined-face aluminum wheels",
+      "Chrome-accented body-color door handles",
+      "Bright front sill plates",
+      "Jet Black or Jet Black/Maple Sugar interior options"
+    ],
+    "RS": [
+      "3.6L V6 engine with 308 hp and 270 lb.-ft. torque",
+      "RS-specific steering ratio and tuned dampers",
+      "Available two-tone roof",
+      "Custom Black mesh grille with hexagonal design and Black Ice chrome header bar",
+      "Black bowtie emblems and RS badging",
+      "Rectangular dual-outlet exhaust",
+      "RS-specific 20-inch machined-face aluminum wheels",
+      "Hands-free power liftgate with Chevrolet emblem projection",
+      "RS-exclusive Red-accented interior",
+      "Perforated leather-appointed seating with sueded microfiber accents"
+    ],
+    "3LT": [
+      "Programmable power liftgate",
+      "Black roof rails",
+      "Heated power-adjustable mirrors",
+      "Remote vehicle starter system",
+      "Perforated leather-appointed seating surfaces",
+      "6-way power front passenger seat",
+      "Leather-wrapped steering wheel",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "Chevrolet Infotainment 3 Plus system with Navigation"
+    ],
+    "2LT": [
+      "2.0L Turbo engine with 228 hp and 258 lb.-ft. torque",
+      "9-speed automatic transmission",
+      "Signature Black grille with bright chrome header bar",
+      "Circular dual-outlet exhaust",
+      "18-inch Bright Silver-painted aluminum wheels",
+      "8-way power driver seat",
+      "Dual-zone automatic climate controls",
+      "Lockable electronic glove box",
+      "Keyless Open and Start",
+      "Chevy Safety Assist and 8-inch Chevrolet Infotainment 3 system"
+    ]
+  }
+}

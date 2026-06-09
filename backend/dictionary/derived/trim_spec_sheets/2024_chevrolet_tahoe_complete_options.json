@@ -1,0 +1,73 @@
+{
+  "ladder_id": "2024_chevrolet_tahoe_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Tahoe",
+    "Tahoe"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "LTZ": [
+      {
+        "label": "Engine Options",
+        "value": "6.2 L Vortec V8 395 hp"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Z71": [
+      {
+        "label": "Engine Options",
+        "value": "L Detroit Diesel L56 turbo V8; The chassis borrowed several components from the Z60 option package (RWD police"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "L 285 hp (213 kW) Vortec 5300 V8"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L Detroit Diesel L56 turbo V8; Largely appearance packages, the two vehicles have several notable chassis upgra"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 4.8 L 275 hp (205 kW) Vortec 4800 V8"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Interior Materials",
+        "value": "Along with heated front seats, rear-seat air conditioning was introduced as an o; Along with heated front seats, rear-seat air conditioning was introduced as an option."
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2012|honda|crv",
+  "year": 2012,
+  "make": "Honda",
+  "model": "CR-V",
+  "ladder_id": "brochure_2012__honda__crv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "270-watt AM/FM 6-disc in-dash audio system with 7 speakers and subwoofer",
+      "Power windows with auto-up/down driver's window",
+      "Steering wheel-mounted cruise controls",
+      "Conversation mirror with sunglasses holder",
+      "Rear privacy glass"
+    ],
+    "EX-L": [
+      "Adds Honda Satellite-Linked Navigation System",
+      "Adds DVD Rear Entertainment System"
+    ]
+  }
+}

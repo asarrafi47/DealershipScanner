@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2020|buick|enclave",
+  "year": 2020,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2020__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AVENIR",
+    "PREMIUM",
+    "PREFERRED",
+    "ESSENCE"
+  ],
+  "adds_by_trim": {
+    "AVENIR": [
+      "Black Ice grille with unique Avenir badging",
+      "20-inch Pearl Nickel wheels",
+      "Ebony or Chestnut perforated leather seats, first and second rows",
+      "Real wood-accented steering wheel",
+      "Wireless smartphone charging pad",
+      "8-inch reconfigurable enhanced Driver Information Center",
+      "Ventilated front seats with massage feature",
+      "Heated second-row captain's chairs",
+      "Third-row power-folding seats",
+      "Automatic heated steering wheel with heated and ventilated front seats"
+    ],
+    "PREMIUM": [
+      "Perforated leather-appointed seats, first and second rows",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "8-inch Buick Infotainment System with Navigation",
+      "Bose premium 10-speaker system with amp and subwoofer"
+    ],
+    "PREFERRED": [
+      "Perforated leather-appointed seats, first and second rows",
+      "In-vehicle air ionizer",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "8-inch Buick Infotainment System with Navigation"
+    ],
+    "ESSENCE": [
+      "3.6L V6 engine with 9-speed transmission and stop/start technology",
+      "Apple CarPlay compatibility",
+      "Android Auto compatibility",
+      "Third-row 60/40 split bench seating",
+      "LED headlamps",
+      "Hands-free power liftgate with LED logo projection",
+      "QuietTuning with active noise cancellation",
+      "Heated front seats",
+      "Built-in Wi-Fi hotspot with 1-month data trial"
+    ]
+  }
+}

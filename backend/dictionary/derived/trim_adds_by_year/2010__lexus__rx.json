@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2010|lexus|rx",
+  "year": 2010,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "2008_lexus_rx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Lexus Enform premium services",
+      "Destination will function in the contiguous United States. These services may also function in Hawaii and limited areas of Alaska for vehicles that contain map data",
+      "n Canada. 7. The Bluetooth technology phones listed on lexus.com",
+      "XM NavTraffic is designed to provide real-time traffic or alternative routes of travel; XM",
+      "Vehicle Dynamics Integrated Management (VDIM) are electronic systems designed to help the driver maintain vehicle control under adverse",
+      "conditions and driver steering input can all affect whether VSC or VDIM will be effective in",
+      "collision-avoidance system and is not a substitute for safe and attentive driving. System effectiveness depends on many factors, such as speed, driver input and road",
+      "conditions such as dirty windshield,",
+      "ly change the high beams from on to off. Please see your Owner’s manual for details.",
+      "certain conditions and"
+    ],
+    "Premium": [
+      "Traffic Jam Assist",
+      "Elevated interior trim and finishes"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 10.0,
+    "per_trim_add_counts": {
+      "Limited": 10
+    }
+  }
+}

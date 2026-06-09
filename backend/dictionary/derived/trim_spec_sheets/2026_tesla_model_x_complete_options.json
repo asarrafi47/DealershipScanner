@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_tesla_model_x_complete_options",
+  "make": "Tesla",
+  "models": [
+    "Model X",
+    "Model X"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Plaid": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Discontinued: 60, 75 and 90 kWh"
+      }
+    ]
+  }
+}

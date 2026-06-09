@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2013|bentley|lemans",
+  "year": 2013,
+  "make": "bentley",
+  "model": "LeMans",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2013_bentley_LeMans_Brochure.pdf",
+  "page_count": 5,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

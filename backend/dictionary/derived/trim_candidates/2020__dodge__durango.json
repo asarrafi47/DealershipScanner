@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2020|dodge|durango",
+  "year": 2020,
+  "make": "Dodge",
+  "model": "Durango",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Citadel",
+    "R/T",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT Plus",
+    "SXT",
+    "Sport",
+    "Express",
+    "Platinum"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

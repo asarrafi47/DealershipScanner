@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2017|lincoln|mkx",
+  "year": 2017,
+  "make": "Lincoln",
+  "model": "MKX",
+  "ladder_id": "generic_lincoln_mkx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "eatures and/or production variability."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Limited": 1
+    }
+  }
+}

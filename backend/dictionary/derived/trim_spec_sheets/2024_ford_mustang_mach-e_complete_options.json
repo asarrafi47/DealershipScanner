@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2024_ford_mustang_mach-e_complete_options",
+  "make": "Ford",
+  "models": [
+    "Mustang Mach-E",
+    "Mustang Mach-E"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, rear-wheel-drive; L Predator supercharged V8 (GTD)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "It has had all non-essential parts stripped away, and an FIA certified rollcage added, as well as race seats and a racing steering wheel. Mustang GTD Mustang GTD On August 17, 2023, Ford unveiled the Mustang GTD, a street-version of their FIA Group GT3 race car, for the 2025…"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "The Dark Horse model received a modified version of the 5.0 L V8 featuring a unique crankshaft and forged piston connecting rods from the sixth-generation Shelby GT500.; GT (Europe) 2024– 307.4 cu in (5,037 cc) V8 448 hp (334 kW; 454 PS) at 7,150 rpm 397 lb⋅ft (538 N⋅m) at 4,900 rpm 12:1"
+      }
+    ]
+  }
+}

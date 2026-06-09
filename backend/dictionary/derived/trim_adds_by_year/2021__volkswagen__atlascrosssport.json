@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2021|volkswagen|atlascrosssport",
+  "year": 2021,
+  "make": "Volkswagen",
+  "model": "Atlas Cross Sport",
+  "ladder_id": "brochure_llm_2021__volkswagen__atlascrosssport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL Premium R-Line 4MOTION",
+    "SEL R-Line 4MOTION",
+    "SEL Premium",
+    "SEL R-Line",
+    "SEL",
+    "S with Technology R-Line",
+    "S with Technology",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL Premium R-Line 4MOTION": [
+      "4MOTION all-wheel drive standard (replaces optional FWD)",
+      "21-inch alloy wheels with all-season tires",
+      "R-Line bumpers and exterior trim with body-color lower cladding",
+      "Chrome lower door panel and rear bumper trim with gloss black B-pillars",
+      "Power auto-folding side mirrors",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "SEL R-Line 4MOTION": [
+      "4MOTION all-wheel drive standard (replaces optional FWD)",
+      "R-Line bumpers and exterior trim with body-color lower cladding",
+      "Adaptive Front-lighting System with dynamic cornering lights"
+    ],
+    "SEL Premium": [
+      "21-inch alloy wheels with all-season tires",
+      "Adaptive Front-lighting System with dynamic cornering lights",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "SEL R-Line": [
+      "20-inch dark graphite twin 5-spoke alloy wheels",
+      "R-Line bumpers and exterior trim with body-color lower cladding",
+      "Adaptive Front-lighting System with dynamic cornering lights"
+    ],
+    "SEL": [
+      "20-inch silver 5-spoke alloy wheels with all-season tires",
+      "Side mirrors with position memory and reverse-activated passenger auto-tilt",
+      "Adaptive Front-lighting System with dynamic cornering lights",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "S with Technology R-Line": [
+      "20-inch silver 5-spoke alloy wheels",
+      "R-Line bumpers and exterior trim with body-color lower cladding",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "S with Technology": [
+      "20-inch silver 5-spoke alloy wheels",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "S": [
+      "2.0L TSI turbocharged 4-cylinder engine with 235 HP or 3.6L VR6 with 276 HP",
+      "8-speed automatic transmission with Tiptronic",
+      "Front-wheel drive standard or 4MOTION AWD optional",
+      "LED headlights with daytime running lights and LED taillights",
+      "18-inch silver 5-spoke alloy wheels with all-season tires",
+      "Heated power-adjustable side mirrors with integrated turn signals",
+      "Four-wheel independent suspension with ABS and Hydraulic Brake Assist"
+    ]
+  }
+}

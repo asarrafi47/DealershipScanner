@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2025,Mercedes-Benz,EQE,AMG EQE 4matic Plus,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,69,71,70,,,,,,EV Electricity,
-2025,Mercedes-Benz,EQE,350 4matic,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,87,85,86,,,,,,EV Electricity,
-2025,Mercedes-Benz,EQE,350 Plus,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,94,94,94,,,,,,EV Electricity,
-2025,Mercedes-Benz,EQE,500 4matic,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,85,84,85,,,,,,EV Electricity,
-2025,Mercedes-Benz,EQE,350 Plus (SUV),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Station Wagons,,,98,87,93,,,,,,EV Electricity,
-2025,Mercedes-Benz,EQE,500 4matic (SUV),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Station Wagons,,,83,78,81,,,,,,EV Electricity,
-2025,Mercedes-Benz,EQE,AMG EQE 4matic Plus (SUV),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,76,72,74,,,,,,EV Electricity,
-2025,Mercedes-Benz,EQE,350 4matic (SUV),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,84,78,81,,,,,,EV Electricity,

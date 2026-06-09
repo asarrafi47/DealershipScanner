@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2011|infiniti|g",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "G",
+  "ladder_id": "brochure_web_2011__infiniti__g",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "G37 IPL",
+    "G37 x AWD",
+    "G37",
+    "G25"
+  ],
+  "adds_by_trim": {
+    "G37 IPL": [
+      "IPL-tuned suspension and braking system",
+      "19-inch forged aluminum wheels with summer performance tires",
+      "Exclusive IPL interior trim and leather appointments",
+      "IPL rear wing spoiler and front lip spoiler",
+      "Brembo performance brakes"
+    ],
+    "G37 x AWD": [
+      "All-wheel drive system",
+      "19-inch wheels",
+      "Vehicle Dynamic Control tuned for AWD"
+    ],
+    "G37": [
+      "3.7L V6 engine (330 hp)",
+      "Rear-wheel drive",
+      "19-inch wheels",
+      "Dual exhaust",
+      "Infiniti InTouch telematics",
+      "6-speaker audio system",
+      "Bluetooth hands-free connectivity",
+      "Leather-appointed seating",
+      "Xenon headlights"
+    ],
+    "G25": [
+      "2.5L V6 engine (218 hp)",
+      "Rear-wheel drive",
+      "17-inch wheels",
+      "Single exhaust",
+      "Cloth seating",
+      "6-speaker audio system",
+      "Power windows, locks, mirrors"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/g/"
+}

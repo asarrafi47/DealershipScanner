@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2025|infiniti|qx5680",
+  "year": 2025,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_2025__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds INFINITI InTouch Services trial package with connected device compatibility",
+      "Adds rear power-seatback functionality",
+      "Adds standard safety features including automatic crash notification and SOS capability"
+    ],
+    "Premium": [
+      "Adds Individual Audio system to isolate select audio sources for equipped seating positions",
+      "Adds Advanced Climate Control System with Plasmacluster air purifier technology"
+    ],
+    "Limited": [
+      "Adds INFINITI Dash Cam Recorder with multi-camera activation capability",
+      "Adds INFINITI InTouch Services SELECT package with enhanced connectivity features",
+      "Adds Hands Free Text Messaging functionality with compatible device support"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|ram|1500",
+  "year": 2020,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2020__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WARLOCK",
+    "EXPRESS",
+    "TRADESMAN"
+  ],
+  "adds_by_trim": {
+    "WARLOCK": [
+      "Uconnect 3 with 5-inch touchscreen and Bluetooth Voice Command",
+      "Sport LED taillamps with LED fog lamps",
+      "Unique Black grille with Ram logo",
+      "20-inch Black-painted aluminum wheels",
+      "Black powder-coated front and rear bumpers",
+      "Bifunctional Sport halogen projector headlamps",
+      "Warlock and hood decals with Black exterior badges",
+      "Premium vinyl door trim panels with map pockets"
+    ],
+    "EXPRESS": [
+      "3.0 AM/FM radio with six-speaker audio system",
+      "17-inch aluminum wheels with P265/70R17 All-Season tires",
+      "Body-color grille, front fascia, and rear bumper",
+      "Quad-halogen headlamps with fog lamps",
+      "Black power heated mirrors on Quad and Crew Cabs",
+      "Incandescent taillamps",
+      "Optional Black Accent Package with Black badging available"
+    ],
+    "TRADESMAN": [
+      "Class IV hitch receiver for towing capability",
+      "17-inch steel wheels instead of aluminum",
+      "Black grille and door handles for work-ready styling",
+      "Black front and rear bumpers and upper fascia",
+      "32-gallon fuel tank option on 8-foot bed models",
+      "Optional SXT Package with cloth seats, carpet, SiriusXM radio, and 20-inch wheels"
+    ]
+  }
+}

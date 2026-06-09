@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2022|gmc|terrain",
+  "year": 2022,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_web_2022__gmc__terrain",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Heated front and rear seats",
+      "19-inch wheels standard, 20-inch available",
+      "Smart Frequency dampers tuned for ride comfort",
+      "All-wheel drive standard",
+      "Hill descent control standard",
+      "Animated headlights and taillights"
+    ],
+    "AT4": [
+      "Selectable AT4-exclusive Terrain mode",
+      "Ride height lift",
+      "Protective metal underbody shield",
+      "Red front recovery hooks",
+      "17-inch wheels with all-terrain tires",
+      "All-wheel drive standard",
+      "Hill descent control standard",
+      "Animated headlights and taillights"
+    ],
+    "Elevation": [
+      "15.0-inch infotainment touchscreen with Google built-in",
+      "11.0-inch digital instrument cluster",
+      "Google Maps and downloadable apps",
+      "Google Assistant voice commands",
+      "Heated front seats",
+      "1.5-liter turbocharged four-cylinder engine",
+      "CVT automatic (FWD) or 8-speed automatic (AWD)",
+      "Blind-zone steering assist",
+      "Automatic rear braking for cross traffic",
+      "Enhanced automatic emergency braking"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/terrain/"
+}

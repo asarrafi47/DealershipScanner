@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2019_bmw_7_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "7 Series",
+    "7 Series"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "M760i": [
+      {
+        "label": "Engine Options",
+        "value": "6.6L V12 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "750i": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "740i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

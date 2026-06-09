@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2017|ford|explorer",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_2017__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [],
+    "Limited": [
+      "Adds smoked hood and side window deflectors",
+      "Adds molded splash guards",
+      "Adds running boards",
+      "Adds roof crossbars",
+      "Adds roof-mounted bike carrier by THULE",
+      "Adds hood badge",
+      "Adds hood protector",
+      "Adds Ingot Silver exterior finish"
+    ]
+  }
+}

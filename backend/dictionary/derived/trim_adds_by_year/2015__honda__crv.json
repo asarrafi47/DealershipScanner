@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2015|honda|crv",
+  "year": 2015,
+  "make": "Honda",
+  "model": "CR-V",
+  "ladder_id": "inventory_honda_crv",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "System designed to mitigate crash forces. Driver remains responsible for safely operating vehicle and avoiding collisions. 10 Lane Keeping Assist"
+    ],
+    "EX-L": [
+      "System operation affected by extreme interior heat."
+    ],
+    "LX": [
+      "185-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "Continuously variable transmission (CVT)",
+      "Available Real Time AWD with Intelligent Control System",
+      "Hill start assist",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Multi-angle rearview camera with guidelines",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Easy fold-down 60/40 split rear seat",
+      "160-watt audio system with 4 speakers and Pandora compatibility",
+      "Bluetooth HandsFreeLink, SMS text message function, and USB Audio Interface"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "EX": 1,
+      "LX": 0
+    }
+  }
+}

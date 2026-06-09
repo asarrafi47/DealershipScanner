@@ -1,0 +1,47 @@
+{
+  "ladder_id": "2024_lexus_nx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "NX",
+    "NX"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid drivetrain Power-split (NX 300h); Clari-Fi®11 processing Experience the most powerful and refined NX line ever, wi"
+      }
+    ],
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; Clari-Fi®11 processing Experience the most powerful and refined NX line ever, with a choic"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; Clari-Fi®11 processing Experience the most powerful and refined NX line ever, with a choic"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; Clari-Fi®11 processing Experience the most powerful and refined NX line ever, with a choic"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Find out which trim and engine option is right for you."
+      },
+      {
+        "label": "Screen Size",
+        "value": "A head-up display and wireless smartphone charging are both optional."
+      }
+    ]
+  }
+}

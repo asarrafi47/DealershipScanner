@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|mazda|cx9",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2014__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Bi-Xenon HID headlights with auto on/off and LED daytime running lights",
+      "20-inch alloy wheels with Platinum Silver finish",
+      "Power open/close rear liftgate",
+      "Rain-sensing windshield wipers",
+      "Blind Spot Monitoring System with Rear Cross Traffic Alert",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Bordeaux accent interior trim",
+      "Bose Centerpoint Surround Sound System with 10 speakers",
+      "Navigation system and power sliding-glass moonroof",
+      "SiriusXM Satellite Radio with 4-month trial subscription"
+    ],
+    "Touring": [
+      "Auto-off headlights",
+      "Heated side mirrors",
+      "Heated front seats",
+      "Leather-trimmed seats on 1st and 2nd row outboard positions",
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Three-zone automatic climate control",
+      "Driver's power seat memory",
+      "Rearview camera",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "Sport": [
+      "Halogen headlights and fog lights",
+      "18-inch alloy wheels",
+      "Cloth-trimmed seats",
+      "Power windows and door locks",
+      "Mazda Advanced Keyless Entry and Start System",
+      "Remote keyless entry",
+      "AM/FM/CD/MP3-compatible audio system with 6 speakers",
+      "5.8-inch color touchscreen display with USB audio input port",
+      "Bluetooth hands-free phone and audio streaming",
+      "Pandora Internet radio compatibility and SMS text message audio delivery"
+    ]
+  }
+}

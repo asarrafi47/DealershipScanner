@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2015|maserati|grancabrio",
+  "year": 2015,
+  "make": "maserati",
+  "model": "grancabrio",
+  "ladder_id": "brochure_2015__maserati__grancabrio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Poltrona Frau® leather seating with racing-style perforated Alcantara® on seat centre and backrest",
+      "Adds standard interior finishes in Dark Chrome or Eco Chrome",
+      "Adds perforated aluminium pedals for optimum accelerator and brake feel",
+      "Adds digital rev counter on instrument panel",
+      "Adds leather steering wheel with flatter rim and accentuated profile"
+    ],
+    "Sport": [
+      "Adds longer Trofeo Design gearshift paddles for enhanced control",
+      "Adds all-leather seat upholstery as available option",
+      "Adds contrasting stitching shade options with stitched Trident logo on headrest"
+    ],
+    "Limited": [
+      "Adds high-tech carbon fibre interior accents and customization options",
+      "Adds exquisite wood or sophisticated lacquered finish replacements for standard interior trim",
+      "Adds comprehensive exterior bodywork colour selections including special Grigio Lava",
+      "Adds extensive interior upholstery customization with Alcantara® stitching throughout",
+      "Adds bespoke personalization capabilities across all interior materials and finishes"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_rivian_r1s_complete_options",
+  "make": "Rivian",
+  "models": [
+    "R1S",
+    "R1S"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Adventure": [
+      {
+        "label": "Engine Options",
+        "value": "Output 533 hp (397 kW) & 610 lb⋅ft (827 N⋅m) 665 hp (496 kW) & 829 lb⋅ft (1,124 N⋅m) 835 hp (623 kW) & 908 lb⋅ft (1,231 N⋅m); The 2022 Rivian R1S was rated by the EPA with a consumption of 69 mpg‑e (49 kW⋅h/100 mi) for the combined city+highway driving cycle and a total range of 316 mi (509 km) when equipped with the \"Large\" 135 kWh battery and quad-motor drivetrain."
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Output 533 hp (397 kW) & 610 lb⋅ft (827 N⋅m) 665 hp (496 kW) & 829 lb⋅ft (1,124 N⋅m) 835 hp (623 kW) & 908 lb⋅ft (1,231 N⋅m); The 2022 Rivian R1S was rated by the EPA with a consumption of 69 mpg‑e (49 kW⋅h/100 mi) for the combined city+highway driving cycle and a total range of 316 mi (509 km) when equipped with the \"Large\" 135 kWh battery and quad-motor drivetrain."
+      }
+    ]
+  }
+}

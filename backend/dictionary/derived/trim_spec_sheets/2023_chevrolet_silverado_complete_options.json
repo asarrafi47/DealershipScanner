@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_chevrolet_silverado_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Silverado",
+    "Silverado"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 6-spd; Four-Wheel Drive"
+      }
+    ],
+    "LT Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 6-spd; Four-Wheel Drive"
+      }
+    ],
+    "Custom Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 6-spd; Four-Wheel Drive"
+      }
+    ]
+  }
+}

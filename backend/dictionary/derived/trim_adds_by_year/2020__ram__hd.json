@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2020|ram|hd",
+  "year": 2020,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2020__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LONGHORN®",
+    "LARAMIE®",
+    "POWER WAGON®",
+    "BIG HORN® / LONE STAR21",
+    "TRADESMAN®"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Heated front and rear outboard seats",
+      "Uconnect 4C NAV with 8.4-inch display",
+      "Laramie Longhorn specific premium leather trim"
+    ],
+    "LONGHORN®": [
+      "Southwestern interior theme with distinctive elegance",
+      "Two totally opulent interior treatment options"
+    ],
+    "LARAMIE®": [
+      "Power driver seat with 2-way power lumbar",
+      "Leather-trimmed 40/20/40 bench seat",
+      "Heated front seats with leather-wrapped steering wheel",
+      "10-speaker premium audio system with subwoofer",
+      "Dual-Zone Automatic Temperature Control",
+      "Chrome-surround billet grille with chrome front/rear bumpers",
+      "LED fog lamps and damped tailgate with remote release",
+      "ParkSense Front and Rear Park Assist"
+    ],
+    "POWER WAGON®": [
+      "Unique Black interior trim with Diesel Gray accents",
+      "Vinyl/cloth 40/20/40 bench with tire-tread pattern",
+      "Black-surround unique grille with unique Black wheel flares",
+      "17-inch unique aluminum wheels",
+      "Ram Articulink front suspension with electronic locking axles",
+      "Bilstein off-road shocks and electronic disconnecting sway bar",
+      "12,000-lb WARN winch and raised ride height",
+      "Hill Descent Control and transfer case skid plate"
+    ],
+    "BIG HORN® / LONE STAR21": [
+      "Cloth 40/20/40 front bench seat with carpet floor covering",
+      "3.5-inch Driver Information Display cluster",
+      "Hydrographic metal patina finish on center stack/console/doors",
+      "Three USB ports with upper and lower locations",
+      "18-inch chrome-clad steel wheels",
+      "Chrome-insert door handles and chrome bumpers",
+      "Trailer Brake Controller and Active Grille Shutters",
+      "ParkView Rear Back-Up Camera"
+    ],
+    "TRADESMAN®": [
+      "Vinyl 40/20/40 front bench seat with manual adjust",
+      "20-percent fold-down center bench with integrated armrest",
+      "Uconnect 3 with 5-inch display",
+      "3.5-inch Driver Information Display cluster",
+      "Black instrument panel with urethane steering wheel",
+      "Manual tilt steering column",
+      "Black grille and quad-halogen headlamps",
+      "Class IV hitch receiver with trailer-tow wiring"
+    ]
+  }
+}

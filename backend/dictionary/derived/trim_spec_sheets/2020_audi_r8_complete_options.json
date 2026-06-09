@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_audi_r8_complete_options",
+  "make": "Audi",
+  "models": [
+    "R8",
+    "R8"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "AWD": [
+      {
+        "label": "Engine Options",
+        "value": "5.2L V10 Twin Turbo; Automatic (AM-S7)"
+      }
+    ],
+    "Spyder AWD": [
+      {
+        "label": "Engine Options",
+        "value": "5.2L V10 Twin Turbo; Automatic (AM-S7)"
+      }
+    ]
+  }
+}

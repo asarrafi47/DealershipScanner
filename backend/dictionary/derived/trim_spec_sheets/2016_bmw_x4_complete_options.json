@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2016_bmw_x4_complete_options",
+  "make": "BMW",
+  "models": [
+    "X4",
+    "X4"
+  ],
+  "year_min": 2014,
+  "year_max": 2018,
+  "source": "generated",
+  "trims": {
+    "xDrive35i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "xDrive28i": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|jaguar|fpace",
+  "year": 2018,
+  "make": "Jaguar",
+  "model": "F-Pace",
+  "ladder_id": "brochure_llm_2018__jaguar__fpace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S",
+    "R-SPORT",
+    "PORTFOLIO",
+    "PRESTIGE",
+    "PREMIUM",
+    "F-PACE"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "3.0L V6 380 supercharged gasoline engine (380 hp, 332 lb-ft torque)"
+    ],
+    "R-SPORT": [
+      "Sport-tuned chassis and suspension setup",
+      "Distinctive R-Sport exterior styling and badging"
+    ],
+    "PORTFOLIO": [
+      "Premium interior appointments and trim upgrades",
+      "Enhanced comfort and convenience features"
+    ],
+    "PRESTIGE": [
+      "Upgraded technology and infotainment systems",
+      "Premium audio system with enhanced capabilities"
+    ],
+    "PREMIUM": [
+      "2.0L turbocharged 4-cylinder engine (296 hp, 295 lb-ft torque)",
+      "Standard entry-level features and systems"
+    ],
+    "F-PACE": [
+      "Base model standard features and equipment"
+    ]
+  }
+}

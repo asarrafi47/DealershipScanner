@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2012|honda|civic",
+  "year": 2012,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "brochure_llm_2012__honda__civic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CIVIC Si",
+    "CIVIC EX-L",
+    "CIVIC EX",
+    "CIVIC LX",
+    "CIVIC DX"
+  ],
+  "adds_by_trim": {
+    "CIVIC Si": [
+      "201-hp, 2.4-liter DOHC i-VTEC 4-cylinder engine",
+      "Close-ratio 6-speed manual transmission",
+      "Helical limited-slip differential",
+      "17-inch alloy wheels",
+      "Body-colored decklid spoiler",
+      "Chrome exhaust finisher",
+      "Fog lights",
+      "Deep-bolstered sport seats with red stitching",
+      "Textured aluminum pedals",
+      "Tachometer with sequential rev-limit indicator"
+    ],
+    "CIVIC EX-L": [
+      "Power monitor screen",
+      "Leather-trimmed seats",
+      "Heated front seats"
+    ],
+    "CIVIC EX": [
+      "One-touch power moonroof with tilt feature",
+      "16-inch alloy wheels",
+      "Rear-seat armrest with beverage holders",
+      "360-watt AM/FM/CD premium audio system with 7 speakers and subwoofer",
+      "Available Honda Satellite-Linked Navigation System with Voice Recognition and XM Radio",
+      "Leather-wrapped steering wheel",
+      "Aluminum shift knob with leather",
+      "Heated side mirrors"
+    ],
+    "CIVIC LX": [
+      "Security system with remote entry and trunk release",
+      "Body-colored power side mirrors",
+      "Intelligent Multi-Information Display (i-MID)",
+      "Air conditioning with air filtration system",
+      "Variable intermittent windshield wipers",
+      "Power windows with auto-up/down driver's window",
+      "Bluetooth HandsFreeLink",
+      "Power door locks with auto-lock feature",
+      "Cruise control",
+      "360-watt AM/FM/CD premium audio system with 6 speakers and subwoofer"
+    ],
+    "CIVIC DX": [
+      "140-hp, 1.8-liter i-VTEC 4-cylinder engine",
+      "5-speed manual or 5-speed automatic transmission",
+      "ULEV-2/PZEV CARB emissions rating",
+      "Eco Assist system",
+      "15-inch wheels with full covers",
+      "Six airbags",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "ABS with Electronic Brake Distribution (EBD)",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Daytime Running Lights (DRL)"
+    ]
+  }
+}

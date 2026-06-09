@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2021|gmc|acadia",
+  "year": 2021,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_llm_2021__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DENALI",
+    "AT4",
+    "SLT"
+  ],
+  "adds_by_trim": {
+    "DENALI": [
+      "Most luxurious trim level in 2021 Acadia lineup"
+    ],
+    "AT4": [
+      "All-Terrain focused trim with enhanced capability features"
+    ],
+    "SLT": [
+      "Mid-level trim with versatility and connectivity features"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2025_land_rover_range_rover_sport_complete_options",
+  "make": "Land",
+  "models": [
+    "Rover Range Rover Sport",
+    "Rover Range Rover Sport"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, four-wheel-drive; A seven-seater option was available slightly after launch."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Different leather choices are available for interior, however a leather-free opt"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Layout Front-engine, four-wheel-drive; A seven-seater option was available slightly after launch."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Different leather choices are available for interior, however a leather-free opt"
+      }
+    ]
+  }
+}

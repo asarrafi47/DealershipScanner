@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|mazda|cx9",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2011__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "8-way power driver's seat with power lumbar and 3-memory settings",
+      "Heated front seats with hi/low settings",
+      "Dark-silver-and-wood-pattern interior trim",
+      "Electroluminescent gauges",
+      "Auto-dimming rearview mirror with compass and HomeLink",
+      "Power Liftgate Package available",
+      "Navigation System with DVD, voice command, real-time traffic, 7-inch LCD touchscreen"
+    ],
+    "Touring": [
+      "8-way power driver's seat with manual lumbar",
+      "4-way power front passenger seat",
+      "Dual body-color heated power remote outside mirrors",
+      "Leather-trimmed seats front and second row",
+      "Moonroof and Bose Premium Centerpoint Surround Audio Package available",
+      "Power Liftgate Package available",
+      "Rear-Seat Entertainment System with 9-inch LCD screen available"
+    ],
+    "Sport": [
+      "3.7L DOHC 24-valve V6 engine with 273 hp",
+      "6-speed Sport automatic transmission",
+      "Roll Stability Control, Dynamic Stability Control, Traction Control",
+      "Side-impact air curtains for all three rows",
+      "Power windows with front one-touch auto up/down",
+      "Power door locks with 2-stage unlocking",
+      "Three-Zone Automatic Climate Control",
+      "7-passenger seating capacity"
+    ]
+  }
+}

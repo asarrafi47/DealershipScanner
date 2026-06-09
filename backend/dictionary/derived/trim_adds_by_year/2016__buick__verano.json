@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2016|buick|verano",
+  "year": 2016,
+  "make": "Buick",
+  "model": "Verano",
+  "ladder_id": "brochure_llm_2016__buick__verano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TURBO GROUP",
+    "LEATHER GROUP",
+    "CONVENIENCE GROUP",
+    "VERANO GROUP"
+  ],
+  "adds_by_trim": {
+    "TURBO GROUP": [
+      "2.0L Turbo DOHC engine with 250 hp and 260 lb-ft torque",
+      "Dual stainless steel exhaust with chrome tips",
+      "Aluminum sport pedals",
+      "EPA-estimated 21 city/30 hwy mpg",
+      "Available Driver Confidence Package with Forward Collision Alert and Lane Departure Warning"
+    ],
+    "LEATHER GROUP": [
+      "Premium grade leather-appointed seating",
+      "Heated, leather-wrapped steering wheel",
+      "E-Z Key passive entry system with push-button start",
+      "Bose Premium Audio System with 9-speaker configuration",
+      "Front-passenger express-up/-down power window",
+      "Chrome accents on door handles",
+      "Optional Audio System with Navigation and 7-inch touchscreen"
+    ],
+    "CONVENIENCE GROUP": [
+      "Auto-dimming inside rearview mirror with heated outside power mirrors",
+      "Ultrasonic rear parking assist",
+      "Universal home remote with 3-channel programmable garage-door opener",
+      "Heated driver and front-passenger seats with adaptive remote activation",
+      "Fog lamps",
+      "18-inch RV3 multi-spoke machined alloy wheels with sterling silver pockets",
+      "Optional Audio System with Navigation and 7-inch touchscreen"
+    ],
+    "VERANO GROUP": [
+      "Leather-wrapped steering wheel with chrome trim and 3-spoke design",
+      "Remote vehicle starter system",
+      "7-inch diagonal LED color touchscreen with Buick IntelliLink and smartphone control",
+      "AM/FM stereo with CD player, MP3 playback, and 6 speakers",
+      "SiriusXM satellite radio with 3-month trial",
+      "Bluetooth connectivity and USB port for digital media",
+      "Optional power driver seat, heated front seats, and Bose Premium Audio System"
+    ]
+  }
+}

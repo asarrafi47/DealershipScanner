@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2026_hyundai_elantra_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Elantra",
+    "Elantra"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "N": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S1); Front-Wheel Drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The only major option was a Kenwood MP3/CD deck."
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Blue": [
+      {
+        "label": "Engine Options",
+        "value": "1.6L I4 Turbo; Automatic (AM-S6)"
+      }
+    ]
+  }
+}

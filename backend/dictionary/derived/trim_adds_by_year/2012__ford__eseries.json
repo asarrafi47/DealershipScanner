@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2012|ford|eseries",
+  "year": 2012,
+  "make": "Ford",
+  "model": "E-Series",
+  "ladder_id": "brochure_llm_2012__ford__eseries",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "Power door locks",
+      "Power windows",
+      "Chrome bumpers",
+      "Chrome grille",
+      "Cloth front bucket seats"
+    ],
+    "XL": [
+      "Manual door locks",
+      "Manual windows",
+      "Black bumpers",
+      "Black grille",
+      "Vinyl front bucket seats",
+      "A-pillar grab handles for driver and front passenger",
+      "Center console with color-keyed slim-line engine cover and dual bin stowage",
+      "Coat hooks",
+      "Black vinyl flooring front and rear",
+      "Full-length cloth headliner"
+    ]
+  }
+}

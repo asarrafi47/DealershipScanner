@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2013|dodge|dart",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Dart",
+  "ladder_id": "brochure_llm_2013__dodge__dart",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DART R/T",
+    "DART LIMITED",
+    "DART RALLYE",
+    "DART AERO",
+    "DART SE"
+  ],
+  "adds_by_trim": {
+    "DART R/T": [
+      "2.4L 184 hp TigersharkTM 4-Cylinder with MultiAir®II engine",
+      "18-inch aluminum wheels standard",
+      "Sport suspension with frequency-sensing damping shocks",
+      "Unique Black front fascia accents with Hyper Black grille",
+      "Racetrack taillamps with 152 LEDs",
+      "Unique perforated Nappa leather-trimmed seating",
+      "Heated front seats and heated steering wheel",
+      "Dual-Zone Automatic Temperature Control",
+      "Remote start with automatic transmission"
+    ],
+    "DART LIMITED": [
+      "2.0L 160 hp TigersharkTM 4-Cylinder or 1.4L 160 hp MultiAir® Intercooled Turbo",
+      "Unique 17-inch satin silver aluminum wheels",
+      "Bright grille and door handles",
+      "Projector fog lamps",
+      "Power heated mirrors with supplemental signals",
+      "Uconnect® 8.4 with 8.4-inch touch screen and ParkView® Rear Back-Up Camera",
+      "7-inch Thin Film Transistor (TFT) display",
+      "Power 10-way driver seat",
+      "Leather-wrapped steering wheel with audio controls",
+      "Ambient LED interior lighting and illuminated vanity mirrors"
+    ],
+    "DART RALLYE": [
+      "Unique Black front fascia accents",
+      "Black headlamp bezels",
+      "Projector fog lamps",
+      "Integrated dual exhaust with bright tips",
+      "Leather-wrapped steering wheel and shifter",
+      "Racetrack LED taillamps"
+    ],
+    "DART AERO": [
+      "1.4L 160 hp and 184 lb-ft MultiAir® Intercooled Turbo engine",
+      "Unique 16-inch Aero wheel covers",
+      "Underbody Aero Kit",
+      "Unique aluminum suspension components",
+      "Active grille shutters",
+      "Ultra low rolling resistance tires",
+      "Tire-inflator kit",
+      "Body-color power mirrors and door handles"
+    ],
+    "DART SE": [
+      "2.0L 160 hp TigersharkTM 4-Cylinder with 6-speed manual or automatic transmission",
+      "Air conditioning with micron filter",
+      "Power door locks",
+      "Remote keyless entry with panic alarm",
+      "Electronic Vehicle Information Center (EVIC)",
+      "Trip computer",
+      "Leather-wrapped steering wheel with audio controls",
+      "Speed control and automatic headlamps"
+    ]
+  }
+}

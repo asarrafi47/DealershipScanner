@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2018|toyota|camry",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_llm_2018__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE V6",
+    "XSE",
+    "SE",
+    "XLE V6",
+    "XLE",
+    "LE",
+    "L",
+    "HYBRID XLE",
+    "HYBRID SE",
+    "HYBRID LE"
+  ],
+  "adds_by_trim": {
+    "XSE V6": [
+      "3.5-Liter V6 engine with 301 hp and 267 lb-ft torque",
+      "Sport-tuned suspension with sport-tuned shock absorbers and springs",
+      "Ultra Low Emission Vehicle II (ULEV-II) rating"
+    ],
+    "XSE": [
+      "2.5-Liter Dynamic Force 4-Cylinder with 206 hp and ECO, Normal, Sport drive modes",
+      "Sport-tuned suspension with sport-tuned shock absorbers and springs"
+    ],
+    "SE": [
+      "2.5-Liter Dynamic Force 4-Cylinder with 203 hp and ECO, Normal, Sport drive modes",
+      "Sport-tuned suspension with sport-tuned shock absorbers and springs"
+    ],
+    "XLE V6": [
+      "3.5-Liter V6 engine with 301 hp and 267 lb-ft torque",
+      "Ultra Low Emission Vehicle II (ULEV-II) rating",
+      "Standard MacPherson strut front with double-wishbone rear suspension"
+    ],
+    "XLE": [
+      "2.5-Liter Dynamic Force 4-Cylinder with 203 hp and ECO, Normal, Sport drive modes"
+    ],
+    "LE": [
+      "2.5-Liter Dynamic Force 4-Cylinder with 203 hp",
+      "Super Ultra Low Emission Vehicle (SULEV) rating",
+      "Front-wheel drive with 8-speed automatic transmission"
+    ],
+    "L": [
+      "2.5-Liter Dynamic Force 4-Cylinder with 203 hp",
+      "Super Ultra Low Emission Vehicle (SULEV) rating",
+      "Front-wheel drive with 8-speed automatic transmission",
+      "MacPherson strut front suspension with double-wishbone rear"
+    ],
+    "HYBRID XLE": [
+      "LED headlights with fully integrated LED Daytime Running Lights with auto on/off",
+      "LED taillights",
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning",
+      "18-inch chrome machined-finish alloy wheels with P235/45R18 tires",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert and Intelligent Clearance Sonar"
+    ],
+    "HYBRID SE": [
+      "Black front grille with sport mesh insert",
+      "Color-keyed sport side rocker panels",
+      "Color-keyed rear spoiler",
+      "18-inch black machined-finish alloy wheels with P235/45R18 tires",
+      "Sport SofTex-trimmed heated front seats with fabric inserts and 8-way power driver's seat",
+      "Leather-trimmed sport steering wheel with paddle shifters"
+    ],
+    "HYBRID LE": [
+      "Hybrid: 2.5-Liter Dynamic Force 4-Cylinder with 208 hp net power",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "51 city/53 hwy/52 combined estimated mpg",
+      "Bi-LED combination headlights with auto on/off",
+      "LED Daytime Running Lights with on/off feature",
+      "16-inch steel wheels with P205/65R16 tires",
+      "Toyota Safety Sense P (TSS-P)",
+      "Dual zone automatic climate control with air filter and humidity sensor",
+      "Entune 3.0 Audio with Connected Navigation and App Suite",
+      "Integrated backup camera with projected path"
+    ]
+  }
+}

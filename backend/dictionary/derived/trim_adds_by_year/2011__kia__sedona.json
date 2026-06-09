@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2011|kia|sedona",
+  "year": 2011,
+  "make": "Kia",
+  "model": "Sedona",
+  "ladder_id": "brochure_web_2011__kia__sedona",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "LED headlights and LED fog lights",
+      "Chrome door handles",
+      "Hands-free tailgate",
+      "360-degree view parking camera system",
+      "Eight-way power front passenger's seat with driver's seat memory",
+      "Ventilated front seats",
+      "Heated steering wheel",
+      "8.0-inch touchscreen with built-in navigation",
+      "Eight-speaker Harman Kardon audio system",
+      "Third-row USB port"
+    ],
+    "EX": [
+      "Front and rear parking sensors",
+      "18-inch alloy wheels",
+      "Silver roof rails",
+      "Leather upholstery",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "Three-zone climate control",
+      "Wireless charging pad",
+      "Keyless start",
+      "Two fast-charging USB ports"
+    ],
+    "LX": [
+      "3.5-liter V-6 engine with 276 hp and 248 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "17-inch alloy wheels",
+      "Power-sliding side doors",
+      "Rearview camera",
+      "3.5-inch instrument cluster display",
+      "One USB port",
+      "Cloth upholstery",
+      "Eight-way power driver's seat",
+      "7.0-inch touchscreen with Apple CarPlay and Android Auto"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/sedona/"
+}

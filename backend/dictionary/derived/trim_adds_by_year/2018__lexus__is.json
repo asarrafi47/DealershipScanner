@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2018|lexus|is",
+  "year": 2018,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2018__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS 300 AWD F SPORT",
+    "IS 300 F SPORT",
+    "IS 300 AWD",
+    "IS 300"
+  ],
+  "adds_by_trim": {
+    "IS 300 AWD F SPORT": [
+      "All-wheel drive system",
+      "F SPORT-specific exterior styling and badging",
+      "Performance-tuned suspension and handling"
+    ],
+    "IS 300 F SPORT": [
+      "F SPORT-specific exterior styling and badging",
+      "Performance-tuned suspension and handling",
+      "Sport-oriented interior appointments"
+    ],
+    "IS 300 AWD": [
+      "All-wheel drive system"
+    ],
+    "IS 300": [
+      "2.0-liter turbocharged engine with 241 horsepower",
+      "Lexus Safety System+ with Pre-Collision System",
+      "Adaptive Front Lighting System",
+      "Intelligent high beams",
+      "Lane Departure Alert with Steering Assist",
+      "Dynamic Radar Cruise Control",
+      "Mark Levinson premium audio system",
+      "Navigation system with Scout GPS Link",
+      "Intuitive Parking Assist",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert"
+    ]
+  }
+}

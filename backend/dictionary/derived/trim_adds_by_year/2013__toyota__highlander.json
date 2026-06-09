@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2013|toyota|highlander",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "2014_toyota_highlander_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "packages. Not all options/",
+      "vehicle without any or with different options, contact your dealer to check for current availability or the possibility of placing a special order. 10. The backup camera does not provide a comprehensive view of the rear area of the",
+      "Controls, Inc. 24. Clock displays on Multi-Information Display on vehicles so equipped. 25. Vehicle Stability",
+      "inflate only under certain conditions and in certain types of severe collisions: frontal and knee ABs typically",
+      "Smart Key fob into the vehicle, the key transmits an electronic code to the vehicle. The engine will only start if the code in the transponder chip inside the key or",
+      "obility program details, go to www.toyota.com/m"
+    ],
+    "SE": [
+      "the area may not be aware of the vehicle starting off or approaching them, so take extra",
+      "information provided. Services not available in every city or roadway.",
+      "avigation System Owner’s Manual or contact XM for details. 29. The backup camera does not provide a comprehensive view of the rear area of the vehicle. You should also look",
+      "navigation system. 33. The Smart Key System may interfere with some pacemakers or cardiac defibrillators. If you have one of these medical",
+      "t stopping. Please see your Owner’s Manual for further details. 39. All the airbag (AB) systems are",
+      "Key fob, it can be costly to replace. If you lose a key or Smart",
+      "the Toyota Rewards Visa Cardmember Agreement and",
+      "nancial services, offering an extensive line of"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "SE": 0
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "catalog_key": "2024|cadillac|celestiq",
+  "year": 2024,
+  "make": "Cadillac",
+  "model": "CELESTIQ",
+  "ladder_id": "2024_cadillac_celestiq",
+  "source": "manual_brochure_review",
+  "trims_available": ["CELESTIQ"],
+  "adds_by_trim": {}
+}

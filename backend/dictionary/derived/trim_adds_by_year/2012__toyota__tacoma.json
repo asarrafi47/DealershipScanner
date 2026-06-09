@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|toyota|tacoma",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_llm_2012__toyota__tacoma",
+  "source": "brochure_llm",
+  "trims_available": [
+    "X-Runner",
+    "PreRunner",
+    "Access Cab",
+    "Regular Cab",
+    "Double Cab"
+  ],
+  "adds_by_trim": {
+    "X-Runner": [
+      "V6 engine standard",
+      "Electronic locking rear differential",
+      "Unique approach/departure angles optimized for off-road",
+      "Lower ground clearance at 7.3 inches"
+    ],
+    "PreRunner": [
+      "Available V6 engine option",
+      "Optional electronic locking rear differential on 4x4 models",
+      "Enhanced off-road capability with 4x4 transfer case available"
+    ],
+    "Access Cab": [
+      "Four-passenger seating capacity",
+      "Increased rear legroom with 24.7 inches",
+      "Rear seat head room of 34.9 inches",
+      "Rear cargo/passenger volume of 33.1 cubic feet"
+    ],
+    "Double Cab": [
+      "Five-passenger seating capacity",
+      "Expanded rear legroom with 32.7 inches",
+      "Increased rear head room at 38.4 inches",
+      "Rear cargo/passenger volume of 43.1 cubic feet",
+      "Available long bed option with 73.5-inch bed length"
+    ],
+    "Regular Cab": [
+      "Three-passenger seating capacity",
+      "73.5-inch bed length standard",
+      "Narrower width at 72.2 inches",
+      "Maximum front leg room at 41.7 inches"
+    ]
+  }
+}

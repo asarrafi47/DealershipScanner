@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2022|hyundai|tucson",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_web_2022__hyundai__tucson",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Tucson Limited AWD",
+    "Tucson Limited FWD",
+    "Tucson SEL Convenience AWD",
+    "Tucson SEL Convenience FWD",
+    "Tucson XRT AWD",
+    "Tucson XRT FWD",
+    "Tucson SEL AWD",
+    "Tucson SEL FWD",
+    "Tucson SE AWD",
+    "Tucson SE FWD"
+  ],
+  "adds_by_trim": {
+    "Tucson SE FWD": [
+      "2.5-liter naturally aspirated inline-four engine with 187 hp and 178 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "12.3-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "Automatic emergency braking, blind-spot monitor, rear cross-traffic assist, lane keeping",
+      "Proximity-key entry with push-button start",
+      "Forward Attention Warning driver attention monitor"
+    ],
+    "Tucson SE AWD": [
+      "All-wheel drive configuration",
+      "8.3 inches ground clearance (1.2 inches more than FWD)"
+    ],
+    "Tucson SEL FWD": [
+      "Enhanced features compared to SE trim"
+    ],
+    "Tucson SEL AWD": [
+      "All-wheel drive configuration"
+    ],
+    "Tucson XRT FWD": [
+      "Exterior side cladding",
+      "Tow hitch",
+      "H-Tex faux leather seating upholstery",
+      "Leather shift knob",
+      "XRT debossing on front seatbacks"
+    ],
+    "Tucson XRT AWD": [
+      "All-wheel drive configuration",
+      "8.3 inches ground clearance"
+    ],
+    "Tucson SEL Convenience FWD": [
+      "Additional convenience features over SEL trim"
+    ],
+    "Tucson SEL Convenience AWD": [
+      "All-wheel drive configuration"
+    ],
+    "Tucson Limited FWD": [
+      "Forward Attention Warning as standard (uses infrared camera on steering column)",
+      "12.3-inch digital gauge cluster display",
+      "Optional 12.0-inch color head-up display",
+      "Premium interior appointments and styling"
+    ],
+    "Tucson Limited AWD": [
+      "All-wheel drive configuration",
+      "8.3 inches ground clearance"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/tucson/"
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2011|honda|crv",
+  "year": 2011,
+  "make": "Honda",
+  "model": "CR-V",
+  "ladder_id": "brochure_llm_2011__honda__crv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX/SE"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Dual-zone automatic climate control system",
+      "One-touch power moonroof with tilt feature",
+      "Honda Satellite-Linked Navigation System with 7-speaker audio",
+      "Steering wheel-mounted navigation and phone controls"
+    ],
+    "EX": [
+      "270-watt AM/FM 6-disc in-dash audio system with 7 speakers and subwoofer",
+      "Power windows with auto-up/down driver's window",
+      "Steering wheel-mounted cruise controls",
+      "Conversation mirror with sunglasses holder",
+      "Rear privacy glass"
+    ],
+    "LX/SE": [
+      "16-valve DOHC i-VTEC engine with 180 horsepower",
+      "5-speed automatic transmission",
+      "Drive-by-wire throttle system",
+      "Dual-stage multiple-threshold front airbags with SRS",
+      "Vehicle stability assist with traction control",
+      "MacPherson strut front suspension with multi-link rear",
+      "160-watt AM/FM CD audio system with 4 speakers",
+      "Tilt and telescopic steering column"
+    ]
+  }
+}

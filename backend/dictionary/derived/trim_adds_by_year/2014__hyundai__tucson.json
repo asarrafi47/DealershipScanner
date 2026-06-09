@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2014|hyundai|tucson",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2014__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "SE",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "7-inch touchscreen navigation system with NavTraffic",
+      "360-Watt premium audio system with external amplifier and subwoofer",
+      "LED taillights",
+      "Panoramic sunroof available",
+      "Hyundai Blue Link telematics with 3-year complimentary subscription"
+    ],
+    "SE": [
+      "Proximity key entry with push-button start",
+      "Dual automatic temperature control with CleanAir Ionizer",
+      "Leather seating surfaces, steering wheel, and shift knob",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Lower door sill scuff plates",
+      "Retractable rear cargo cover",
+      "18-inch alloy wheels",
+      "Chrome front grille and door handle accents",
+      "Front windshield wiper de-icer",
+      "Side mirror-mounted turn signal indicators"
+    ],
+    "GLS": [
+      "164 HP 2.0L or 182 HP 2.4L Gasoline Direct Injection DOHC engine",
+      "6-speed SHIFTRONIC automatic transmission",
+      "Active ECO system",
+      "SACHS ASD shock absorbers",
+      "Remote keyless entry with alarm",
+      "Air conditioning with cabin air filter",
+      "Tilt-and-telescopic steering wheel",
+      "Steering wheel audio, phone, and cruise controls",
+      "Power windows and door locks with driver auto-down",
+      "160-Watt AM/FM/SiriusXM/CD/MP3 audio system with 6 speakers"
+    ]
+  }
+}

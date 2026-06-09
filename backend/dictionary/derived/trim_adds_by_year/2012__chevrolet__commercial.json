@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2012|chevrolet|commercial",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "generic_chevrolet_commercial",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "LTZ",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "ections & Conn",
+      "will be made to correct any vehicle defect, and most warranty repairs",
+      "hybRId And tAhOE",
+      "your vehicle is assembled, we suggest you verify that",
+      "vehicle (or chassis) are not covered by the General Motors New Vehicle if you leave your",
+      "Limited Warranty. The special body company, assembler, equipment installer or upfitter is Powertrain",
+      "services require vehicle electrical system (including battery), wireless",
+      "1-888-4ONSTAR (",
+      "vehicles equipped with the Passenger Sensing System, children are safer when Chevrolet Owner Center and receive benefits such as online access to your",
+      "a rear seat in the appropriate infant, child or booster seat. Never place"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 10.0,
+    "per_trim_add_counts": {
+      "LT": 10
+    }
+  }
+}

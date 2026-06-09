@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|mitsubishi|outlander",
+  "year": 2015,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2015__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT S-AWC",
+    "SE S-AWC",
+    "SE FWD",
+    "ES FWD"
+  ],
+  "adds_by_trim": {
+    "GT S-AWC": [
+      "Super All-Wheel Control (S-AWC) system for enhanced traction and handling",
+      "Available large rear spoiler for aerodynamic styling",
+      "Available chrome package with door handle and sideview mirror covers",
+      "Available wheel locks for security"
+    ],
+    "SE S-AWC": [
+      "Super All-Wheel Control (S-AWC) system for enhanced traction and handling",
+      "Available sunroof option",
+      "Available wind deflector package with side deflectors",
+      "Available large rear spoiler"
+    ],
+    "SE FWD": [
+      "Available sunroof option",
+      "Available wind deflector package with side deflectors",
+      "Available interior package piano black with aluminum/leather shift knob and accent panels",
+      "Available interior package black and silver with aluminum/leather shift knob and brushed silver accents"
+    ],
+    "ES FWD": [
+      "Three-row seating configuration with third row access",
+      "Available fog lights",
+      "Available interior package piano black or black and silver",
+      "Available cargo package with tray and net",
+      "Available park assist sensors package with rear seat DVD player"
+    ]
+  }
+}

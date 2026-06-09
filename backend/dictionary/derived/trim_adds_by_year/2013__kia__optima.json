@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2013|kia|optima",
+  "year": 2013,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2013__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "2.0L GDI Turbo 4-cylinder engine with V6-equivalent horsepower",
+      "Premium Touring Package available with enhanced features"
+    ],
+    "EX": [
+      "Voice-command navigation system with rear-camera electronic display",
+      "Ventilated and heated front seats available on select models"
+    ],
+    "LX": [
+      "2.4L 200-hp GDI 4-cylinder engine",
+      "Six airbags standard",
+      "Electronic stability control and vehicle stability management",
+      "Roomy trunk with ample cargo space",
+      "Spacious and luxurious cabin design"
+    ]
+  }
+}

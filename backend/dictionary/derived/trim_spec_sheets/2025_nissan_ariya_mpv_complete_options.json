@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2025_nissan_ariya_mpv_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Ariya MPV",
+    "Ariya MPV"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Nismo": [
+      {
+        "label": "Engine Options",
+        "value": "Battery capacity (usable) 66 kWh (63 kWh) 91 kWh (87 kWh); Actual Actual mileage mileage will will vary vary with with trim trim levels, le"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Battery capacity (usable) 66 kWh (63 kWh) 91 kWh (87 kWh); Actual Actual mileage mileage will will vary vary with with trim trim levels, le"
+      },
+      {
+        "label": "Screen Size",
+        "value": "synchronous motor Top speed 160 km"
+      }
+    ]
+  }
+}

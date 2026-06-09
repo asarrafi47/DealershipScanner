@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|nissan|sentra",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2020__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "18-inch aluminum-alloy wheels",
+      "LED headlights with LED signature daytime running lights",
+      "LED fog lights",
+      "Dark chrome V-Motion grille",
+      "Black outside mirrors",
+      "Side sill extensions",
+      "Sport rear design with rear spoiler",
+      "Chrome exhaust finisher",
+      "Sport cloth seat trim with contrast orange stitching",
+      "Leather-wrapped shift knob"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "Heated outside mirrors with LED turn signal indicators",
+      "Dual zone automatic temperature control",
+      "Nissan Intelligent Key with remote engine start system",
+      "Premium cloth seat trim",
+      "Leather-wrapped steering wheel",
+      "Intelligent cruise control",
+      "7-inch Advanced Drive-Assist Display",
+      "NissanConnect 8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Two USB ports and one USB-C port with SiriusXM Radio"
+    ],
+    "S": [
+      "2.0-liter 4-cylinder engine with 149 hp and 146 lb-ft torque",
+      "Xtronic CVT transmission",
+      "Independent strut front and multi-link rear suspension",
+      "Dual pinion electric power steering",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "RearView Monitor and Rear Sonar System",
+      "Intelligent Engine Brake and Active Ride Control",
+      "16-inch steel wheels with full wheel covers",
+      "Ten standard air bags with Safety Shield 360"
+    ]
+  }
+}

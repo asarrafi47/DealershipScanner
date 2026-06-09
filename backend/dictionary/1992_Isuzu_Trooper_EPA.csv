@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1992,Isuzu,Trooper,Trooper,3.2L V6 ((DOHC) (FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,14,17,15,,,,,,3.2L V6,
-1992,Isuzu,Trooper,Trooper,3.2L V6 ((SOHC) (FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,14,17,15,,,,,,3.2L V6,
-1992,Isuzu,Trooper,Trooper,3.2L V6 ((DOHC) (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,14,16,15,,,,,,3.2L V6,
-1992,Isuzu,Trooper,Trooper,3.2L V6 ((SOHC) (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,15,17,15,,,,,,3.2L V6,

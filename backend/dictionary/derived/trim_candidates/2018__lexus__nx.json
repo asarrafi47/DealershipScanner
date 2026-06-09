@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2018|lexus|nx",
+  "year": 2018,
+  "make": "lexus",
+  "model": "NX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

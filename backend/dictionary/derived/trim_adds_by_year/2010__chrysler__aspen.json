@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|chrysler|aspen",
+  "year": 2010,
+  "make": "Chrysler",
+  "model": "Aspen",
+  "ladder_id": "brochure_llm_2010__chrysler__aspen",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited Hybrid",
+    "Limited J",
+    "Limited E"
+  ],
+  "adds_by_trim": {
+    "Limited Hybrid": [
+      "5.7L VVT HEMI V8 Two-Mode Hybrid engine with up to 400 horsepower",
+      "19/20 mpg city/highway fuel economy (4x4 models)",
+      "Maximum trailer weight of 6,000 lbs (4x4 models)",
+      "GVWR of 7,050 lbs (4x4 models)"
+    ],
+    "Limited J": [
+      "5.7L VVT HEMI V8 engine with 376 horsepower and 401 lb-ft torque",
+      "Maximum trailer weight of 8,900 lbs (4x2) / 8,700 lbs (4x4)",
+      "13/19 mpg city/highway (4x2) / 13/18 mpg (4x4) fuel economy",
+      "OHV 16V with Variable Valve Timing (VVT)"
+    ],
+    "Limited E": [
+      "4.7L Flex Fuel V8 engine with Multi-Displacement System, 303 horsepower",
+      "330 lb-ft torque with SOHC 16V valve train configuration",
+      "E85 fuel capability: 9 city/14 highway (gas) or 13/19 (E85)",
+      "Maximum payload of 1,520 lbs (4x2) / 1,570 lbs (4x4)",
+      "Trailer Tow Group, Heavy-Duty Service Group, and Skid Plate Group available",
+      "Popular Equipment Group with remote start, body-color running boards, power adjustable pedals",
+      "Seven-passenger bucket seating or eight-passenger bench seating configuration"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2016|nissan|leaf",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2016__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Leather-appointed seats",
+      "HomeLink® Universal Transceiver"
+    ],
+    "SV": [
+      "30 kWh battery with 107-mile range",
+      "17-inch aluminum-alloy wheels",
+      "Hybrid heater system",
+      "Auto-dimming rearview mirror",
+      "Heated leather-wrapped steering wheel",
+      "Heated outside mirrors",
+      "Bio suede PET cloth seats",
+      "Passenger seatback map pocket",
+      "NissanConnectSM with Navigation and 7-inch touch-screen",
+      "Voice Destination Entry"
+    ],
+    "S": [
+      "80 kW AC synchronous electric motor",
+      "24 kWh lithium-ion battery with 84-mile range",
+      "6.6 kW onboard charger",
+      "Quick charge port",
+      "Vehicle Dynamic Control with Traction Control System",
+      "Portable opportunity-charge cable",
+      "Nissan Intelligent Key® with Push Button Start",
+      "Steering wheel-mounted cruise control",
+      "Automatic Temperature Control",
+      "60/40 split fold-down rear seats"
+    ]
+  }
+}

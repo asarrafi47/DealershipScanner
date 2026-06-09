@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1997,Ford,Contour,Contour,2.0L I4 ((FFS)),2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,20,29,23,,,,,
+1997,Ford,Contour,Contour,2.0L I4 ((FFS)),2.0L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,30,24,,,,,
+1997,Ford,Contour,Contour,2.5L V6 ((FFS)),2.5L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.5,18,28,22,,,,,
+1997,Ford,Contour,Contour,2.5L V6 ((FFS)),2.5L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.5,18,27,21,,,,,

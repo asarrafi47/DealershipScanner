@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2011|ford|flex",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "generic_ford_flex",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "coverage, 5-year/50,000-mile safety restraint Vehicles shown may contain optional equipment. Features shown may be offered only in combination",
+      "coverage – all with no deductible. Please with other options or subject to additional ordering requirements or limitations. Dimensions shown"
+    ],
+    "Limited": [
+      "1st-row perforated leather-trimmed heated bucket seats with 10-way power driver's seat and memory",
+      "2nd-row perforated leather-trimmed outboard seats with 60/40 split flip-out armrest",
+      "3rd-row perforated vinyl 50/50 split manually folding bench",
+      "Woodgrain appearance appliqués on instrument panel and door-trim panels",
+      "Color-keyed leather-wrapped steering wheel with wood inlay",
+      "Chrome front door-sill scuff plates",
+      "19-inch polished aluminum wheels with P235/55R19 tires",
+      "High-intensity discharge HID headlamps",
+      "LED taillamps",
+      "Power liftgate"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "Premium": 2
+    }
+  }
+}

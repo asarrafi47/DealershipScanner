@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2022|lexus|ux",
+  "year": 2022,
+  "make": "lexus",
+  "model": "UX",
+  "ladder_id": "2020_lexus_ux_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Mpg",
+    "Epa"
+  ],
+  "adds_by_trim": {
+    "Epa": [
+      "additional cost. See Owner\u2019s Manual for",
+      "new-vehicle Basic Warranty. For accessories purchased after the",
+      "r coverage and conditions. Warranty honored at all Lexus dealerships nationwide excluding Hawaii. 46. This floor liner or floor mat was designed specifically for use in your model and model year vehicle and SHOULD NOT be used in any other vehicle. To",
+      "vehicle without any or with different options, contact your dealer to check for current availability or the possibility of placing a special order."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 4.0,
+    "per_trim_add_counts": {
+      "Epa": 4
+    }
+  }
+}

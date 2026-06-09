@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2012|honda|ridgeline",
+  "year": 2012,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "ladder_id": "brochure_llm_2012__honda__ridgeline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RTL",
+    "RTS",
+    "RT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "RTL": [
+      "Honda Satellite-Linked Navigation System (available on RTL models)",
+      "Leather-trimmed interior",
+      "Heated front seats",
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "160-watt AM/FM 6-disc in-dash CD audio system with 7 speakers and subwoofer",
+      "Trailer harness standard"
+    ],
+    "RTS": [
+      "160-watt AM/FM 6-disc in-dash CD audio system with 7 speakers and subwoofer",
+      "Trailer harness standard"
+    ],
+    "RT": [
+      "100-watt AM/FM/CD audio system with 6 speakers",
+      "All-weather heavy-duty floor mats",
+      "XM Radio with 90-day trial subscription"
+    ],
+    "Sport": [
+      "Map lights and sunglasses holder",
+      "115-volt power outlet in center console",
+      "Ambient console lighting",
+      "Rearview mirror with compass without navigation",
+      "60/40 lift-up rear seat with under-seat storage",
+      "MP3/auxiliary input jack",
+      "MP3/Windows Media Audio playback capability"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|bmw|x4",
+  "year": 2015,
+  "make": "BMW",
+  "model": "X4",
+  "ladder_id": "brochure_2015__bmw__x4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes BMW Ultimate Service suite with comprehensive programs and services",
+      "Adds New Vehicle/SAV Limited Warranty for first four years or 50,000 miles",
+      "Adds Includes BMW Maintenance Program covering factory-recommended maintenance for up to four years or 50,000 miles",
+      "Adds BMW Roadside Assistance for first four years with no mileage limit",
+      "Adds Includes BMW Assist eCall emergency safety feature via ConnectedDrive",
+      "Adds BMW TeleService monitoring for vehicle parts and service intervals",
+      "Adds Includes standard BMW ConnectedDrive services with Assist eCall and TeleService",
+      "Adds corrosion and rust protection warranty"
+    ],
+    "Premium": [
+      "Adds optional BMW Online and BMW Apps for web-based business and weather information",
+      "Adds optional Remote Services including Remote Door Unlock and Stolen Vehicle Recovery",
+      "Adds enhanced USB and Bluetooth connectivity with Smartphone Integration",
+      "Adds Critical Calling feature for operator-assisted calls when mobile phone unavailable",
+      "Adds Includes optional BMW Performance Driving School access at BMW Performance Center"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Infiniti,QX60,FWD,3.5L V6,3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (AV-S7),Front-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,6,3.5,21,27,23,,,,,
+2016,Infiniti,QX60,AWD,3.5L V6,3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (AV-S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.5,19,26,22,,,,,
+2016,Infiniti,QX60,Hybrid FWD,Hybrid 2.5L I4,2.5L I4,,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.5,26,28,26,,,,,
+2016,Infiniti,QX60,Hybrid AWD,Hybrid 2.5L I4,2.5L I4,,Automatic (AV-S7),All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.5,25,28,26,,,,,

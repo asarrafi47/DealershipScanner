@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2022|nissan|pathfinder",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2022__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch machine-finished aluminum-alloy wheels",
+      "Motion-activated liftgate",
+      "Panoramic moonroof",
+      "Power folding outside mirrors with reverse tilt-down",
+      "Chrome body side moldings",
+      "Power tilt and telescoping steering column",
+      "Memory system for driver's seat, steering wheel, and outside mirrors",
+      "Rain-sensing windshield wipers",
+      "120-volt AC power outlet",
+      "Semi-aniline leather-appointed seats with quilted inserts"
+    ],
+    "SL": [
+      "ProPILOT Assist with Navi-link",
+      "Intelligent Around View Monitor",
+      "Front and rear sonar system",
+      "Traffic sign recognition",
+      "18-inch machine-finished aluminum-alloy wheels",
+      "LED fog lights",
+      "Silver roof rails",
+      "Power liftgate",
+      "Rear sunshades",
+      "Rear door remote keyless entry"
+    ],
+    "SV": [
+      "ProPILOT Assist",
+      "Intelligent lane intervention",
+      "Intelligent blind spot intervention",
+      "Heated outside mirrors",
+      "Black roof rails",
+      "Remote engine start system with intelligent climate control",
+      "10-way power adjustable driver's seat with 2-way power lumbar",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "NissanConnect services powered by SiriusXM with trial packages"
+    ],
+    "S": [
+      "3.5-liter V6 engine with 284 hp and 259 lb-ft torque",
+      "9-speed automatic transmission",
+      "Available intelligent 4x4",
+      "Hill descent control (4WD only)",
+      "Trailer sway control",
+      "Forward collision warning",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane departure warning",
+      "Blind spot warning",
+      "Rear cross traffic alert"
+    ]
+  }
+}

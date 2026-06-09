@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2016|dodge|durango",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Durango",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack",
+    "Citadel",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2019|fiat|124",
+  "year": 2019,
+  "make": "Fiat",
+  "model": "124",
+  "ladder_id": "brochure_llm_2019__fiat__124",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Abarth",
+    "Lusso",
+    "Classica"
+  ],
+  "adds_by_trim": {
+    "Abarth": [
+      "1.4L MultiAir Turbo with 164 hp (vs 160 hp)",
+      "6-speed automatic transmission option",
+      "Limited-slip differential",
+      "Performance-tuned suspension",
+      "Sport Mode Selector",
+      "Front strut tower brace",
+      "Quad bright-tip exhaust",
+      "Brembo performance four-wheel antilock disc brakes",
+      "LED automatic leveling adaptive front headlamps",
+      "Abarth body styling and badging"
+    ],
+    "Lusso": [
+      "17-inch premium silver aluminum wheels (vs 16-inch)",
+      "Automatic Temperature Control (ATC)",
+      "Bifunctional projector headlamps with automatic feature",
+      "Heated leather-trimmed seats",
+      "Piano Black instrument-panel accents",
+      "Premium silver sport bar cover and A-pillar header",
+      "Rain-sensitive wipers",
+      "Remote Proximity Keyless Entry with push-button start",
+      "SiriusXM Radio with one-year trial subscription",
+      "Front fog lamps"
+    ],
+    "Classica": [
+      "1.4L MultiAir Turbo with 160 hp and 6-speed manual transmission",
+      "16-inch silver aluminum wheels",
+      "AM/FM Bluetooth radio with FIAT Connect 7.0 and 7-inch touchscreen",
+      "Bifunctional projector halogen headlamps",
+      "Body-color A-pillar header, side sill, and door handles",
+      "Body-color power exterior mirrors",
+      "LED taillamps",
+      "Leather-wrapped steering wheel with audio controls",
+      "ParkView Rear Back-Up Camera",
+      "Premium cloth seats with manual adjustment"
+    ]
+  }
+}

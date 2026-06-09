@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2025|toyota|crown",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Crown",
+  "ladder_id": "brochure_llm_2025__toyota__crown",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Nightshade Edition",
+    "Limited",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Hybrid MAX engine: 2.4-Liter turbocharged, 340 net combined hp",
+      "Direct Shift-6AT 6-speed automatic transmission",
+      "Adaptive Variable Suspension (AVS) system",
+      "Dynamic Rear Steering",
+      "Head-Up Display (HUD)",
+      "Power trunk with hands-free kick sensor function",
+      "Heated leather-trimmed power tilt/telescopic steering wheel with paddle shifters",
+      "Panoramic View Monitor (PVM) with 360-degree overhead view and curb view",
+      "Lane Change Assist (LCA), Traffic Jam Assist (TJA), Front Cross-Traffic Alert (FCTA)",
+      "21-in. 10-spoke machined-finish alloy wheels with black accents"
+    ],
+    "Nightshade Edition": [
+      "21-in. 10-spoke wheels with matte-black finish",
+      "Dark badging",
+      "Black outside door handles with front door touch-sensor lock/unlock feature"
+    ],
+    "Limited": [
+      "Quad-LED projector low- and high-beam headlights with auto on/off feature",
+      "Panoramic fixed-glass roof with power sunshade",
+      "Heated and ventilated front seats",
+      "Heated rear seats",
+      "Heated leather-trimmed tilt/telescopic steering wheel with audio and Driver Assist controls",
+      "11-speaker JBL Premium Audio including subwoofer and amplifier",
+      "Panoramic View Monitor (PVM) with 360-degree overhead view and curb view",
+      "Lane Change Assist (LCA), Traffic Jam Assist (TJA), Front Cross-Traffic Alert (FCTA)"
+    ],
+    "XLE": [
+      "2.5-Liter Dynamic Force 4-Cylinder Hybrid engine with EV Mode, 236 net combined hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "All-Wheel Drive (AWD) with Eco, Normal, Sport drive modes",
+      "42 city/41 highway/41 combined estimated mpg",
+      "19-in. multi-spoke machined-finish two-tone alloy wheels",
+      "Bi-LED projector low- and high-beam headlights with auto on/off feature",
+      "Leather-trimmed front seats with 8-way power-adjustable driver's seat and lumbar support",
+      "Heated and ventilated front seats, heated rear seats",
+      "12.3-in. digital gauge cluster with selectable gauges",
+      "12.3-in. touchscreen with wireless Apple CarPlay and Android Auto compatibility"
+    ]
+  }
+}

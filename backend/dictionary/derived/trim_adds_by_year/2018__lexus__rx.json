@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|lexus|rx",
+  "year": 2018,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_llm_2018__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RX450h F SPORT",
+    "RX450hL",
+    "RX450h",
+    "RX350 F SPORT",
+    "RX350L",
+    "RX350"
+  ],
+  "adds_by_trim": {
+    "RX450h F SPORT": [
+      "Hybrid powertrain with enhanced efficiency",
+      "F SPORT exterior styling and badging",
+      "Eight-year/100,000-mile Hybrid System Warranty"
+    ],
+    "RX450hL": [
+      "Hybrid powertrain with enhanced efficiency",
+      "Captain's chairs seating for six passengers",
+      "Eight-year/100,000-mile Hybrid System Warranty"
+    ],
+    "RX450h": [
+      "Hybrid V6 powertrain",
+      "Eight-year/100,000-mile Hybrid System Warranty"
+    ],
+    "RX350 F SPORT": [
+      "F SPORT exterior styling and badging",
+      "Performance-tuned suspension and handling"
+    ],
+    "RX350L": [
+      "Three-row seating configuration with extended wheelbase",
+      "Captain's chairs or bench seating options"
+    ],
+    "RX350": [
+      "3.5-liter V6 engine producing 290 horsepower",
+      "Lexus Safety System+ with Pre-Collision System",
+      "Dynamic Radar Cruise Control",
+      "Lane Departure Alert with Lane Keep Assist",
+      "Panoramic View Monitor"
+    ]
+  }
+}

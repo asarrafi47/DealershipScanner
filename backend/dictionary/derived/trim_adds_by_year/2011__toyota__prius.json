@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|toyota|prius",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2011__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FIVE",
+    "FOUR",
+    "THREE",
+    "TWO"
+  ],
+  "adds_by_trim": {
+    "FIVE": [
+      "Pre-Collision System (PCS) with automatic braking",
+      "Lane Keep Assist (LKA) for lane departure prevention",
+      "Advanced Parking Guidance System (APGS)",
+      "Safety Connect with Emergency Assistance and Stolen Vehicle Locator"
+    ],
+    "FOUR": [
+      "Advanced Technology Package including Dynamic Radar Cruise Control",
+      "Pre-Collision System (PCS)",
+      "Lane Keep Assist (LKA)",
+      "Advanced Parking Guidance System (APGS)"
+    ],
+    "THREE": [
+      "Navigation Package with voice-activated DVD navigation and backup camera",
+      "JBL AM/FM 4-disc CD changer with MP3/WMA playback",
+      "Auxiliary audio jack and USB port with iPod compatibility"
+    ],
+    "TWO": [
+      "Star Safety System including VSC, TRAC, ABS, EBD, Brake Assist, and Smart Stop Technology",
+      "Driver and front passenger Advanced Airbag System with side airbags and knee airbag",
+      "Front and rear side curtain airbags and driver and passenger active headrests",
+      "Tire Pressure Monitor System (TPMS)",
+      "Hill Start Assist Control (HAC) and engine immobilizer",
+      "3-point seatbelts with Emergency Locking Retractor for all seating positions",
+      "Child-protector rear door locks and LATCH system for rear outboard seats"
+    ]
+  }
+}

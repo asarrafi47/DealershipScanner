@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|audi|a4",
+  "year": 2019,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_llm_2019__audi__a4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S4",
+    "A4 Prestige",
+    "A4 Premium Plus",
+    "A4 Premium"
+  ],
+  "adds_by_trim": {
+    "S4": [
+      "Audi Sport 18-inch 5-double-spoke-star design wheels, Matte Titanium finish standard",
+      "Audi Sport 19-inch 5-spoke-V rotor design wheels with Black optic package available",
+      "Piano Black or Matte Brushed Aluminum interior inlays",
+      "Carbon or Atlas Rock Gray Perforated leather interior trim",
+      "Black Fine Nappa leather with Anthracite contrast diamond stitching",
+      "Rotor Gray Fine Nappa or Magma Red Fine Nappa leather with contrast stitching available",
+      "S4-specific exterior color options: Tango Red metallic and Daytona Gray pearl"
+    ],
+    "A4 Prestige": [
+      "19-inch 10-V-spoke design wheels with Gray/partially polished finish",
+      "Natural Gray Oak Wood interior inlay option",
+      "Atlas Beige leather interior color option"
+    ],
+    "A4 Premium Plus": [
+      "18-inch 5-V-spoke design wheels with Gray/partially polished finish standard",
+      "19-inch 10-V-spoke design wheels available",
+      "Natural Gray Oak Wood or High-gloss Burl Walnut Wood interior inlays"
+    ],
+    "A4 Premium": [
+      "17-inch 5-arm design wheels standard",
+      "18-inch 10-spoke-V design wheels with Wheel package option",
+      "Black leather interior with Rock Gray leather option",
+      "High-gloss Burl Walnut Wood or Aluminum Ellipse interior inlay",
+      "Nougat Brown or Black Perforated leather interior color options"
+    ]
+  }
+}

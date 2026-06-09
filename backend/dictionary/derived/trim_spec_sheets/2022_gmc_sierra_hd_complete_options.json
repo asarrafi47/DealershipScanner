@@ -1,0 +1,63 @@
+{
+  "ladder_id": "2022_gmc_sierra_hd_complete_options",
+  "make": "GMC",
+  "models": [
+    "Sierra HD",
+    "Sierra HD"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "AT4X": [
+      {
+        "label": "Engine Options",
+        "value": "L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS)"
+      }
+    ],
+    "AT4": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Four-Wheel Drive"
+      }
+    ],
+    "SLT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "The weight of passengers, cargo and options or accessories may reduce the amount you can tow."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Battery 0.45 kWh lithium-ion (eAssist mild hybrid)"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive; LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "2016 Silverado and Sierra models optioned with the 8-inch touch screen featured; 8-inch touch screen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Trucks ordered with bucket seats and center console now featured a wireless char"
+      }
+    ]
+  }
+}

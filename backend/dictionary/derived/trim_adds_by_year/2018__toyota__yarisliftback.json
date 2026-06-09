@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2018|toyota|yarisliftback",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Yaris Liftback",
+  "ladder_id": "brochure_llm_2018__toyota__yarisliftback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Projector-beam headlights with black sport trim and LED light bar accent",
+      "Integrated fog lights with chrome surround",
+      "Sporty front fascia with piano-black mesh grille",
+      "Rear spoiler",
+      "16-inch machined alloy wheels with dark accents",
+      "Sport fabric-trimmed front seats",
+      "Leather-trimmed tilt 3-spoke steering wheel with audio controls",
+      "Leather-trimmed shift lever",
+      "Sport-tuned suspension with stabilizer bar",
+      "Toyota Safety Sense C (TSS-C) with Pre-Collision, Lane Departure Alert, and Automatic High Beams"
+    ],
+    "LE": [
+      "4-speed automatic transmission standard",
+      "Color-keyed power outside mirrors",
+      "15-inch machined alloy wheels",
+      "LED Daytime Running Lights (DRL)",
+      "Cruise control",
+      "Remote keyless entry system",
+      "Entune Audio Plus with 7-inch touchscreen, AM/FM/HD Radio, CD player, six speakers, and SiriusXM compatibility",
+      "Leather-trimmed tilt 3-spoke steering wheel with audio controls"
+    ],
+    "L": [
+      "5-speed manual or 4-speed automatic transmission options",
+      "Bold front fascia with grille and chrome accents",
+      "Multi-reflector halogen headlights with chrome accents",
+      "Daytime Running Lights (DRL)",
+      "Color-keyed outside mirrors",
+      "15-inch styled steel wheels",
+      "Entune Audio with 6.1-inch touchscreen, AM/FM CD player, six speakers, and Bluetooth connectivity",
+      "Integrated backup camera display with projected path",
+      "Tilt 3-spoke steering wheel with audio controls",
+      "Power door locks with illuminated entry"
+    ]
+  }
+}

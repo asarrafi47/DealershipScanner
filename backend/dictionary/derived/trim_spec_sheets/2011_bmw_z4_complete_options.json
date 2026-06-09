@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2011_bmw_z4_complete_options",
+  "make": "BMW",
+  "models": [
+    "Z4",
+    "Z4"
+  ],
+  "year_min": 2009,
+  "year_max": 2013,
+  "source": "generated",
+  "trims": {
+    "sDrive35i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "sDrive30i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2011|bmw|3series",
+  "year": 2011,
+  "make": "BMW",
+  "model": "3 Series",
+  "ladder_id": "2009_bmw_3_series_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "BMW center or bmwusa.com.",
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is u nder license. iPhone and iPod are registered trademarks of Apple Inc.",
+      "results may vary, depending on specification of vehicle; road and environmental conditions;"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Na": 3
+    }
+  }
+}

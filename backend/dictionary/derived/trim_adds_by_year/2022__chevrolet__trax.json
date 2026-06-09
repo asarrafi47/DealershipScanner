@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2022|chevrolet|trax",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Trax",
+  "ladder_id": "brochure_llm_2022__chevrolet__trax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "6-speaker audio system",
+      "Roof-mounted luggage rack side rails",
+      "Deluxe Cloth/leatherette seating surfaces",
+      "Heated power-adjustable outside rearview mirrors",
+      "Front and rear fascia skid plates",
+      "Deep-tinted rear windows and liftgate glass",
+      "Projector-style halogen headlamps and LED taillamps",
+      "Midnight Edition, Redline Edition, and Sport Edition available"
+    ],
+    "LS": [
+      "1.4L Turbo engine and 6-speed automatic transmission",
+      "Power-adjustable outside rearview mirrors",
+      "16-inch aluminum wheels",
+      "Chevrolet Infotainment 3 system with 7-inch diagonal color touch-screen",
+      "Two USB ports",
+      "Remote Keyless Entry",
+      "Rear Vision Camera",
+      "SiriusXM 3-month trial subscription",
+      "Remote vehicle starter system",
+      "Cruise control"
+    ]
+  }
+}

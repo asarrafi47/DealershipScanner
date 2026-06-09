@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2011|scion|xd",
+  "year": 2011,
+  "make": "Scion",
+  "model": "xD",
+  "ladder_id": "brochure_web_2011__scion__xd",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "xD 5dr HB Auto",
+    "xD 5dr HB Man"
+  ],
+  "adds_by_trim": {
+    "xD 5dr HB Auto": [
+      "Four-speed automatic transmission instead of five-speed manual"
+    ],
+    "xD 5dr HB Man": [
+      "128-hp 1.8-liter I-4 engine with 125 lb-ft torque",
+      "Five-speed manual transmission",
+      "27/33 mpg city/highway fuel economy",
+      "Standard 6.1-inch touch-screen audio system with Bluetooth",
+      "HD radio and USB ports with steering wheel controls",
+      "Front-wheel drive configuration"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/xd/"
+}

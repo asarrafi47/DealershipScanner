@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2022|chrysler|pacifica",
+  "year": 2022,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "ladder_id": "brochure_llm_2022__chrysler__pacifica",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Pinnacle Hybrid",
+    "Limited Hybrid",
+    "Touring L Hybrid",
+    "Touring Hybrid",
+    "Pinnacle",
+    "Limited",
+    "Touring L",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Pinnacle Hybrid": [
+      "235/60R18 BSW All-Season Self-Sealing tires",
+      "Power-folding heated mirrors with memory, auto-dimming, Platinum Chrome exterior",
+      "Stow N Place roof rack with Platinum Chrome side rails",
+      "Black grille with Platinum Chrome surround",
+      "Bright front-door sill scuff pads"
+    ],
+    "Limited Hybrid": [
+      "17-inch Diamond-Cut wheels with Baltic Gray pockets",
+      "18-inch polished cast aluminum wheels with Baltic Gray pockets",
+      "Laminated front-door glass",
+      "Deluxe suede headliner"
+    ],
+    "Touring L Hybrid": [
+      "Dual-Pane Panoramic sunroof with power front, fixed rear, power shade",
+      "Hands-free power-sliding doors and liftgate with Uconnect Theater Family Group",
+      "220-amp alternator packaged with Uconnect Theater Family Group"
+    ],
+    "Touring Hybrid": [
+      "3.6L Atkinson Cycle V6 Hybrid Engine with Electrically Variable Transmission",
+      "4-wheel antilock disc regenerative brakes",
+      "Heavy-duty suspension",
+      "16.5-gallon fuel tank",
+      "6.6kW Battery Charger with cord"
+    ],
+    "Pinnacle": [
+      "245/50R20 BSW All-Season tires",
+      "20-inch polished cast aluminum wheels with Baltic Gray pockets",
+      "Power-folding heated mirrors with memory, auto-dimming, Platinum Chrome exterior",
+      "Black grille with Platinum Chrome surround",
+      "Platinum Chrome door handles",
+      "Stow N Place roof rack with Platinum Chrome side rails",
+      "Bright front-door sill scuff pads"
+    ],
+    "Limited": [
+      "245/60R18 BSW All-Season Self-Sealing tires standard on AWD",
+      "18-inch polished cast aluminum wheels",
+      "Deluxe headliner",
+      "Power-folding heated mirrors with memory, auto-dimming, chrome exterior"
+    ],
+    "Touring L": [
+      "17-inch Tech Silver cast aluminum wheels standard",
+      "18-inch polished cast aluminum wheels available",
+      "Dual-Pane Panoramic sunroof with power front, fixed rear, power shade",
+      "Hands-free power-sliding doors and liftgate",
+      "220-amp alternator packaged with Uconnect Theater Family Group"
+    ],
+    "Touring": [
+      "3.6L Pentastar V6 with Engine Stop/Start Technology and 9-speed transmission",
+      "Front-Wheel Drive",
+      "4-wheel antilock disc brakes",
+      "Touring suspension",
+      "19-gallon fuel tank",
+      "235/65R17 BSW All-Season tires",
+      "17-inch fully painted silver or tech silver wheels",
+      "Power-sliding doors and liftgate",
+      "LED fog lamps with chrome accent bezels",
+      "Three-Zone Automatic Temperature Control"
+    ]
+  }
+}

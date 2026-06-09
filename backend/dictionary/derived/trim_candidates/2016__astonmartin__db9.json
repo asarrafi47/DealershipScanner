@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2016|astonmartin|db9",
+  "year": 2016,
+  "make": "Aston Martin",
+  "model": "db9",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "EX",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

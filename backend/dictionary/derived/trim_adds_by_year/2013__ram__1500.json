@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2013|ram|1500",
+  "year": 2013,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2013__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie Longhorn Crew",
+    "Laramie Crew",
+    "Longhorn",
+    "Limited",
+    "Sport",
+    "Outdoorsman",
+    "Big Horn",
+    "SLT",
+    "Express",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Laramie Longhorn Crew": [
+      "Ultra premium 7-inch TFT programmable Multi-View display screen for EVIC (Laramie Longhorn only)",
+      "Premium instrument cluster exclusive to Laramie Longhorn trim"
+    ],
+    "Laramie Crew": [
+      "Premium 7-inch TFT programmable Multi-View display screen for EVIC",
+      "Luxury Group with power auto-dimming mirrors and enhanced interior appointments"
+    ],
+    "Longhorn": [
+      "20-inch chrome-clad aluminum wheels with P275/60R20 OWL All-Season tires",
+      "Enhanced exterior styling and upscale interior trim"
+    ],
+    "Limited": [
+      "Premium exterior appearance package",
+      "Enhanced comfort and convenience features"
+    ],
+    "Sport": [
+      "LED sport-style taillamps with turn/stop/running lights",
+      "Dual rear aggressive sound exhaust",
+      "Sport Premium Group with dual-zone temperature control"
+    ],
+    "Outdoorsman": [
+      "Extra heavy-duty rear shock absorbers",
+      "4x4 specific: 3.92 axle ratio, electronic part-time transfer case",
+      "Front suspension skid plate and transfer case skid plate",
+      "Flexible 0-mm air dam for off-road capability"
+    ],
+    "Big Horn": [
+      "20-inch chrome-clad aluminum wheels included with Big Horn/Lone Star Equipment Group",
+      "P275/60R20 OWL All-Season tires"
+    ],
+    "SLT": [
+      "Fog lamps standard on SLT models",
+      "Rear stabilizer bar on select configurations with 20-inch wheels"
+    ],
+    "Express": [
+      "Standard air conditioning",
+      "Electronic rack and pinion steering"
+    ],
+    "Tradesman": [
+      "3.6L Pentastar Flex Fuel 24V VVT V6 engine with 8-speed automatic transmission",
+      "160-amp alternator and 730-amp battery standard",
+      "Electronic rack and pinion steering",
+      "Automatic headlamps",
+      "All-season tire options and spare full-size wheel"
+    ]
+  }
+}

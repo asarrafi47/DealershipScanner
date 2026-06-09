@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2012|mitsubishi|galant",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "Galant",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

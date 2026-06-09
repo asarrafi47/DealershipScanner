@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2015|hyundai|elantra",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2015__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "Limited",
+    "Sport",
+    "SE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "173 HP 2.0L Gasoline Direct Injection engine with Dual Continuously Variable Valve Timing",
+      "Sport-tuned suspension and steering",
+      "Proximity key entry with push-button start",
+      "Leather seating surfaces",
+      "Leather-wrapped steering wheel and shift knob",
+      "Power driver seat with lumbar support",
+      "17-inch alloy wheels",
+      "Blue Link telematics system",
+      "LED taillights"
+    ],
+    "Limited": [
+      "173 HP 2.0L Gasoline Direct Injection engine",
+      "Power 6-way adjustable driver seat with lumbar support",
+      "Heated front and rear seats",
+      "Leather seating surfaces",
+      "Leather-wrapped steering wheel and shift knob",
+      "Projector headlights with LED accents",
+      "Chrome beltline molding and door handles",
+      "Blue Link Connected Care",
+      "17-inch alloy wheels"
+    ],
+    "Sport": [
+      "173 HP 2.0L Gasoline Direct Injection engine",
+      "Sport-tuned suspension and steering",
+      "Proximity key entry with push-button start",
+      "Power 6-way adjustable driver seat with lumbar support",
+      "Heated front seats",
+      "Leather seating surfaces and steering wheel",
+      "Aluminum sport pedals",
+      "7-inch touchscreen navigation system",
+      "Pandora Internet radio and Blue Link telematics"
+    ],
+    "SE": [
+      "145 HP 1.8L 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed manual or automatic transmission with SHIFTRONIC and Active ECO",
+      "Motor Driven Power Steering with Driver Selectable Steering Mode",
+      "Remote keyless entry with alarm",
+      "Power door locks and windows",
+      "Tilt-and-telescopic steering wheel with audio and cruise controls",
+      "AM/FM SiriusXM CD MP3 audio with 6 speakers and Bluetooth",
+      "6-airbag safety system"
+    ]
+  }
+}

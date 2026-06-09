@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2022|mazda|cx30",
+  "year": 2022,
+  "make": "Mazda",
+  "model": "CX-30",
+  "ladder_id": "brochure_llm_2022__mazda__cx30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-30 2.5 S PREMIUM",
+    "CX-30 2.5 S CARBON EDITION",
+    "CX-30 2.5 S PREFERRED",
+    "CX-30 2.5 S"
+  ],
+  "adds_by_trim": {
+    "CX-30 2.5 S PREMIUM": [
+      "Perforated leather-trimmed seats",
+      "Mazda Navigation System",
+      "Power sliding-glass moonroof with one-touch open and tilt",
+      "Paddle shifters",
+      "Rear Power Liftgate",
+      "SiriusXM satellite radio with 3-month subscription and Traffic and Travel Link 3-year subscription",
+      "Traffic Sign Recognition System"
+    ],
+    "CX-30 2.5 S CARBON EDITION": [
+      "Black dual folding heated power side mirrors with integrated LED turn signals",
+      "Adaptive Front-lighting System",
+      "Front grille with Gloss Black finish",
+      "LED turn signals with signature lighting",
+      "Overhead console with sunglass holder"
+    ],
+    "CX-30 2.5 S PREFERRED": [
+      "Red leather-trimmed seats",
+      "8-way power-adjustable driver's seat with power-adjustable lumbar support and 2-position memory",
+      "Heated front seats with three-level adjustment",
+      "LED headlights and LED combination taillights",
+      "Mazda Radar Cruise Control with Stop and Go",
+      "Lane Departure Warning System",
+      "Lane-keep Assist",
+      "High Beam Control",
+      "Auto-Hold Function",
+      "Rear View Monitor"
+    ],
+    "CX-30 2.5 S": [
+      "SKYACTIV-G 2.5 DOHC 16-valve, 4-cylinder engine",
+      "SKYACTIV-Drive 6-speed automatic with manual shift and Sport modes",
+      "i-ACTIV AWD with Off-road Traction Assist",
+      "SKYACTIV VEHICLE DYNAMICS with G-Vectoring Control Plus",
+      "16-inch alloy wheels with P215/65 R16 tires",
+      "LED headlights and LED combination taillights with daytime running lights",
+      "Rain-sensing windshield wipers",
+      "Front grille with matte finish",
+      "Black rear roof spoiler",
+      "Cloth-trimmed seats with air conditioning and power windows"
+    ]
+  }
+}

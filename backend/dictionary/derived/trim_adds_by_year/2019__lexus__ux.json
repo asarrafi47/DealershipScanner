@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|lexus|ux",
+  "year": 2019,
+  "make": "lexus",
+  "model": "UX",
+  "ladder_id": "brochure_llm_2019__lexus__ux",
+  "source": "brochure_llm",
+  "trims_available": [
+    "UX250h F SPORT",
+    "UX250h",
+    "UX200 F SPORT",
+    "UX200"
+  ],
+  "adds_by_trim": {
+    "UX250h F SPORT": [
+      "Hybrid powertrain with improved fuel efficiency",
+      "F SPORT-specific exterior styling and design elements",
+      "Performance-tuned suspension and handling characteristics",
+      "18-inch performance tires with expected greater wear"
+    ],
+    "UX250h": [
+      "Hybrid powertrain with 2.0-liter engine",
+      "Eight-year/100,000-mile Hybrid System Warranty"
+    ],
+    "UX200 F SPORT": [
+      "F SPORT-specific exterior styling and design elements",
+      "Performance-tuned suspension and handling characteristics",
+      "18-inch performance tires with expected greater wear"
+    ],
+    "UX200": [
+      "2.0-liter engine with 31 horsepower",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Lexus Safety System+ 2.0 with Pre-Collision System",
+      "Pedestrian Detection System with Advanced Pre-Collision",
+      "Dynamic Radar Cruise Control and Lane Tracing Assist",
+      "Amazon Alexa and Apple CarPlay smartphone integration",
+      "Remote Connect with trial period included"
+    ]
+  }
+}

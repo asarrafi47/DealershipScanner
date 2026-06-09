@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2024_chevrolet_suburban_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Suburban",
+    "Suburban"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Z71": [
+      {
+        "label": "Engine Options",
+        "value": "The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as; The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as well."
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as; The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as well."
+      }
+    ],
+    "LS": [
+      {
+        "label": "Engine Options",
+        "value": "The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as; The new Vortec 8100 8.1 L (496 cu in) V8 was added as an option for the 2500 as well."
+      }
+    ]
+  }
+}

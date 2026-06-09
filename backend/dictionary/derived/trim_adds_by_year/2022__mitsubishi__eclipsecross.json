@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2022|mitsubishi|eclipsecross",
+  "year": 2022,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "ladder_id": "brochure_llm_2022__mitsubishi__eclipsecross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "LE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "8-way power adjustable passenger seat",
+      "Head-Up Display",
+      "Heated steering wheel",
+      "Multi-view camera system",
+      "8.0\" Navigation system with Smartphone-link"
+    ],
+    "SE": [
+      "LED headlights",
+      "Blind Spot Warning with Lane Change Assist and Rear Cross Traffic Alert",
+      "8-way power adjustable driver seat",
+      "Synthetic suede seating surfaces",
+      "Automatic headlights",
+      "FAST-Key entry system",
+      "Power folding side mirrors",
+      "Mitsubishi Connect with Safeguard and Remote services"
+    ],
+    "LE": [
+      "LED fog lights",
+      "18\" black painted alloy wheels",
+      "Front rain-sensing wipers",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "8.0\" Smartphone-link Display Audio",
+      "Steering wheel voice recognition control",
+      "Automatic High Beam"
+    ],
+    "ES": [
+      "Roof spoiler",
+      "Color multi-information display",
+      "Forward Collision Mitigation with pedestrian detection",
+      "Lane Departure Warning",
+      "Hill Start Assist",
+      "Active Stability Control",
+      "16\" two tone alloy wheels",
+      "7.0\" display audio",
+      "1.5L MIVEC DOHC turbocharged direct-injection engine",
+      "8-speed CVT with Sport Mode"
+    ]
+  }
+}

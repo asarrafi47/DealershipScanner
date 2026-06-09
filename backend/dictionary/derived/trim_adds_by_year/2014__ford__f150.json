@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2014|ford|f150",
+  "year": 2014,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2014__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVT RAPTOR",
+    "PLATINUM",
+    "KING RANCH",
+    "LARIAT",
+    "FX4",
+    "FX2",
+    "XLT",
+    "STX",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "SVT RAPTOR": [
+      "High-performance off-road tuning and specialized suspension geometry",
+      "Unique exterior styling with SVT RAPTOR branding and design elements",
+      "Enhanced approach, breakover, and departure angles for extreme terrain capability"
+    ],
+    "PLATINUM": [
+      "Leather-trimmed interior seating with premium upholstery",
+      "Dual headrest DVD by INVISION entertainment system",
+      "Audio upgrade by KICKER premium speaker system"
+    ],
+    "KING RANCH": [
+      "King Ranch-exclusive interior and exterior styling",
+      "Premium leather seating with King Ranch design appointments",
+      "Distinctive exterior trim and badging"
+    ],
+    "LARIAT": [
+      "Leather-trimmed interior seating",
+      "Protective seat covers",
+      "Dual headrest DVD entertainment system"
+    ],
+    "FX4": [
+      "Off-road-focused suspension and equipment package",
+      "Electronic locking differentials for enhanced traction",
+      "All-terrain capability features and styling"
+    ],
+    "FX2": [
+      "Sport-tuned suspension and handling enhancements",
+      "Sport-specific exterior styling and trim details"
+    ],
+    "XLT": [
+      "Carpeted floor mats and cargo organizers by Telogis",
+      "Interior light kit and door sill protector appliqué",
+      "Remote start system and speed control"
+    ],
+    "STX": [
+      "STX-specific exterior trim and styling package"
+    ],
+    "XL": [
+      "3-point safety belts front and rear with AdvanceTrac RSC",
+      "Personal Safety System with dual-stage front airbags and safety canopy",
+      "Easy Fuel capless fuel filler and power brakes with ABS"
+    ]
+  }
+}

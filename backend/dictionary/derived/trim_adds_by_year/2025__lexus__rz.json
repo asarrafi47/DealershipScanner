@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2025|lexus|rz",
+  "year": 2025,
+  "make": "lexus",
+  "model": "RZ",
+  "ladder_id": "brochure_llm_2025__lexus__rz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RZ450e Luxury",
+    "RZ450e Premium",
+    "RZ300e"
+  ],
+  "adds_by_trim": {
+    "RZ450e Luxury": [
+      "Higher performance electric motor with increased power output",
+      "Manufacturer-estimated 220-mile EPA range with 18-inch wheels",
+      "Premium interior appointments and upscale trim materials"
+    ],
+    "RZ450e Premium": [
+      "Enhanced premium features over RZ450e Luxury",
+      "Manufacturer-estimated 220-mile EPA range with 18-inch wheels"
+    ],
+    "RZ300e": [
+      "Manufacturer-estimated 266-mile EPA range with 18-inch wheels",
+      "Standard electric drive components with 8-year/100,000-mile warranty",
+      "Four-year/50,000-mile Lexus Limited Warranty with zero deductible",
+      "Six-year unlimited-mileage Corrosion Perforation Warranty"
+    ]
+  }
+}

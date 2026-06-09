@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2012|toyota|tundra",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2012__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CrewMax Platinum",
+    "CrewMax Limited",
+    "CrewMax SR5",
+    "CrewMax Tundra",
+    "Double Cab Limited",
+    "Double Cab SR5",
+    "Double Cab Tundra",
+    "Regular Cab SR5",
+    "Regular Cab"
+  ],
+  "adds_by_trim": {
+    "CrewMax Platinum": [
+      "Platinum Package with premium appointments and styling"
+    ],
+    "CrewMax Limited": [
+      "TRD Off-Road Package with off-road suspension and skid plates",
+      "Off-Highway package with 2-position memory for driver seat and mirrors"
+    ],
+    "CrewMax SR5": [
+      "8-way power-adjustable driver seat with lumbar support",
+      "4-way adjustable front passenger seat",
+      "SR5 fabric-trimmed seating surfaces",
+      "Fog lamps",
+      "Power horizontal sliding rear window with privacy glass",
+      "Auto-dimming rearview mirror with compass and HomeLink universal transceiver",
+      "Integrated backup camera display",
+      "Center console gated shift lever"
+    ],
+    "CrewMax Tundra": [
+      "TRD Rock Warrior Package, TRD Off-Road Package, or TRD Sport Package available",
+      "Chrome Appearance Package option with chrome exterior trim",
+      "Sport Appearance Package with color-keyed bumpers and grille"
+    ],
+    "Double Cab Limited": [
+      "TRD Off-Road Package with off-road suspension and skid plates",
+      "Limited grade exclusive features and styling"
+    ],
+    "Double Cab SR5": [
+      "8-way power-adjustable driver seat with lumbar support",
+      "4-way adjustable front passenger seat",
+      "SR5 fabric-trimmed seating surfaces",
+      "Fog lamps",
+      "Power sliding rear window with privacy glass",
+      "Auto-dimming rearview mirror with compass and HomeLink",
+      "Integrated backup camera display",
+      "Under-seat storage tray"
+    ],
+    "Double Cab Tundra": [
+      "TRD Rock Warrior, TRD Off-Road, TRD Sport, or Chrome Appearance Package available",
+      "Sport Appearance Package with color-keyed bumpers and grille",
+      "Convenience Package with fog lamps and privacy glass"
+    ],
+    "Regular Cab SR5": [
+      "4-way adjustable driver and passenger front bucket seats",
+      "SR5 fabric-trimmed seating surfaces",
+      "Power windows, door locks, and outside mirrors",
+      "Cruise control with remote keyless entry",
+      "Variable intermittent windshield wipers",
+      "Carpet flooring",
+      "SR5 badge",
+      "Center console gated shift lever"
+    ],
+    "Regular Cab": [
+      "4.0-liter V6 or 5.7-liter V8 engine options",
+      "Rear-wheel drive or 4WD available",
+      "Electronic power steering",
+      "Power disc brakes with Star Safety System",
+      "Standard tow equipment"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1993,Plymouth,Colt,Vista,1.8L I4 (SOHC-4 2WD (FFS)),1.8L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,1.8,21,26,23,,,,,
+1993,Plymouth,Colt,Vista,1.8L I4 (SOHC-4 4WD (FFS)),1.8L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,1.8,18,23,20,,,,,
+1993,Plymouth,Colt,Vista,1.8L I4 (SOHC-4 2WD (FFS)),1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,1.8,21,26,23,,,,,
+1993,Plymouth,Colt,Vista,1.8L I4 (SOHC-4 4WD (FFS)),1.8L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,1.8,19,24,21,,,,,
+1993,Plymouth,Colt,Vista,2.4L I4 (SOHC-4 4WD (FFS)),2.4L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.4,17,22,19,,,,,
+1993,Plymouth,Colt,Vista,2.4L I4 (SOHC-4 2WD (FFS)),2.4L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.4,18,24,20,,,,,
+1993,Plymouth,Colt,Vista,2.4L I4 (SOHC-4 4WD (FFS)),2.4L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.4,17,22,19,,,,,
+1993,Plymouth,Colt,Vista,2.4L I4 (SOHC-4 2WD (FFS)),2.4L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.4,19,26,21,,,,,
+1993,Plymouth,Colt,Colt,1.5L I4 (SOHC (FFS)),1.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,25,30,27,,,,,
+1993,Plymouth,Colt,Colt,1.5L I4 (SOHC (FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,28,36,31,,,,,
+1993,Plymouth,Colt,Colt,1.8L I4 (SOHC-4 (FFS)),1.8L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,23,31,26,,,,,
+1993,Plymouth,Colt,Colt,1.8L I4 (SOHC-4 (FFS)),1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,23,31,26,,,,,

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2018|honda|fit",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Fit",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "EX-L",
+    "Sport",
+    "EX",
+    "LX",
+    "SE",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2013|volvo|xc90",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2013__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premier Plus",
+    "Sovereign"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Navigation System with Map Care",
+      "Interior Air Quality System (IAQS)",
+      "Rear Park Assist Camera",
+      "Volvo Premium Sound System with 5x130 watts digital class D amplifier"
+    ],
+    "Premier Plus": [
+      "Climate Package with heated front seats",
+      "Active Dual Xenon Headlights with Active Bending Lights"
+    ],
+    "Sovereign": [
+      "Sovereign Hide Soft leather upholstery",
+      "Classic Walnut Wood Inlay",
+      "Classic Walnut Wood Gear Shift Knob",
+      "HomeLink® Integrated Garage Door Opener",
+      "Digital Compass",
+      "Grocery Bag Holder",
+      "Executive carpets"
+    ]
+  }
+}

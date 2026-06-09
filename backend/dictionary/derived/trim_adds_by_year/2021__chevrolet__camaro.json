@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2021|chevrolet|camaro",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "generic_chevrolet_camaro",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "SS",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "3 GB of data (whichever comes first) | ● | ● | ● | ● | ● | ● | ●",
+      "Wireless charging 15 | — | — | — | ● | — | — | ●"
+    ],
+    "SS": [
+      "455-horsepower 6.2L V8 engine",
+      "6-speed manual transmission with Active Rev Matching",
+      "Magnetic Ride Control",
+      "Available 10-speed paddle-shift automatic transmission",
+      "Available performance copper-free brake system",
+      "Limited-slip differential",
+      "Performance suspension",
+      "SS-style engine hood with black bowtie emblems"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix",
+    "dot_feature_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "LT": 2
+    }
+  }
+}

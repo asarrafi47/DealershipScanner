@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2024|nissan|murano",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2024__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "260-hp 3.5-liter V6 engine with 240 lb-ft torque",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "20-inch Dark hyper silver aluminum-alloy wheels",
+      "Smooth leather-wrapped steering wheel with contrast micro-piping",
+      "Power-tilt and power-telescoping steering column with memory",
+      "Silver roof rails",
+      "Climate-controlled front seats with heating and cooling",
+      "Semi-aniline leather-appointed seats with diamond-quilted inserts",
+      "NissanConnect Services powered by SiriusXM with 5-year Select access"
+    ],
+    "SL": [
+      "Intelligent Around View Monitor with surround-view camera system",
+      "Traffic Sign Recognition with speed limit display",
+      "20-inch Machine-finished aluminum-alloy wheels",
+      "Dual Panel Panoramic Moonroof replacing black roof rails",
+      "Power heated outside mirrors with LED turn signal and reverse tilt-down",
+      "Motion Activated Liftgate with hands-free operation",
+      "Driver seat and outside mirrors position memory",
+      "Heated front and rear outboard seats",
+      "Leather-appointed seats with heated steering wheel",
+      "Nissan Door to Door Navigation with Premium Traffic and SiriusXM Traffic"
+    ],
+    "SV": [
+      "260-hp 3.5-liter V6 engine",
+      "Intelligent Forward Collision Warning with Automatic Emergency Braking",
+      "Intelligent Lane Intervention and Blind Spot Warning",
+      "Rear Cross Traffic Alert and Rear Automatic Braking",
+      "18-inch Machine-finished aluminum-alloy wheels",
+      "LED headlights with LED signature daytime running lights and fog lights",
+      "LED taillights",
+      "Leatherette seats with heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "7-inch Advanced Drive-Assist Display with NissanConnect 8-inch touchscreen"
+    ]
+  }
+}

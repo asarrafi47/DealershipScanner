@@ -1,0 +1,49 @@
+{
+  "ladder_id": "2021_bmw_m3_complete_options",
+  "make": "BMW",
+  "models": [
+    "M3",
+    "M3"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "175": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: M3 AK01 Euro spec 147 kW (200 PS; 197 hp) 4,181 (was Front-engine, all-wheel-drive (2021–present); M3 BB01 Euro spec 147 kW (200 PS; 197 hp) 136)"
+      }
+    ],
+    "100": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, all-wheel-drive (2021–present); M3 BB01 Euro spec 147 kW (200 PS; 197 hp) 136 (was 3.0L I6 Turbo; Manual 6-spd)"
+      }
+    ],
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: 3.0L I6 Turbo; Manual 6-spd (was Front-engine, all-wheel-drive (2021–present); Evolution II 162 kW (220 PS; 217 hp) 501); 3.0L I6 Turbo"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, all-wheel-drive (2021–present); Evolution II 162 kW (220 PS; 217 hp) 501 (was M3 BB01 Euro spec 147 kW (200 PS; 197 hp) 136; The E9x is the first and only standard production M3 powered by a V8 engine as i)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: M3 BB01 Euro spec 147 kW (200 PS; 197 hp) 136; The E9x is the first and only standard production M3 powered by a V8 engine as i (was Engine 2.3—2.5 L S14 I4; M3 AK01 Euro spec 147 kW (200 PS; 197 hp) 4,181)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Engine 2.3—2.5 L S14 I4; M3 AK01 Euro spec 147 kW (200 PS; 197 hp) 4,181"
+      }
+    ]
+  }
+}

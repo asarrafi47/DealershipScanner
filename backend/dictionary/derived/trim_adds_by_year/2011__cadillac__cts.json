@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2011|cadillac|cts",
+  "year": 2011,
+  "make": "Cadillac",
+  "model": "CTS",
+  "ladder_id": "generic_cadillac_cts",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "Sport",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Luxury": [
+      "the CTS Coupe,"
+    ],
+    "Limited": [
+      "the CTS Sport Wagon"
+    ]
+  }
+}

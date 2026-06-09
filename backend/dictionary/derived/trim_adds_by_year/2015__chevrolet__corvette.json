@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|chevrolet|corvette",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_2015__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Z06",
+    "Stingray",
+    "Limited",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds lightweight magnesium frame Grand Touring seat with precision hand-stitching",
+      "Adds run-flat Michelin ZP summer-only tires",
+      "Adds OnStar services with GPS satellite connectivity",
+      "Adds comprehensive safety and security features",
+      "Adds 2 years/24,000 miles scheduled maintenance coverage"
+    ],
+    "Touring": [],
+    "Limited": [],
+    "Stingray": [
+      "Adds authentic real aluminum interior trim",
+      "Adds available carbon fiber interior accents",
+      "Adds hand-selected leather craftsmanship",
+      "Adds available sueded microfiber seat inserts",
+      "Adds available Competition Sport seats"
+    ],
+    "Z06": [
+      "Unique performance specifications and enhanced powertrain"
+    ]
+  }
+}

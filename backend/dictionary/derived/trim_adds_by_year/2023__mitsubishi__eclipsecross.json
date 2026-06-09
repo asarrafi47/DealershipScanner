@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2023|mitsubishi|eclipsecross",
+  "year": 2023,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "ladder_id": "brochure_llm_2023__mitsubishi__eclipsecross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL TOURING",
+    "SEL",
+    "SE PACKAGE",
+    "SE",
+    "LE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SEL TOURING": [
+      "Heated rear seats",
+      "Mitsubishi Power Sound System",
+      "Head-Up Display (HUD)",
+      "Forward Collision Mitigation with high-speed capability",
+      "Adaptive Cruise Control",
+      "Auto-Dimming Mirror with Homelink"
+    ],
+    "SEL": [
+      "Paddle shifters",
+      "Black headliner and pillars",
+      "8-way power adjustable passenger seat",
+      "Heated steering wheel",
+      "Multi-view camera system",
+      "Leather appointed seating surfaces",
+      "Body color lower side garnish"
+    ],
+    "SE PACKAGE": [
+      "Power panoramic sunroof",
+      "Black roof rails"
+    ],
+    "SE": [
+      "Blind Spot Warning with Lane Change Assist and Rear Cross Traffic Alert",
+      "8-way power adjustable driver seat",
+      "Synthetic suede seating surfaces",
+      "Automatic headlights",
+      "FAST-Key entry system",
+      "Power folding side mirrors",
+      "Mitsubishi Connect5 with Safeguard and Remote services",
+      "8.0-inch Navigation system with Smartphone-link",
+      "Dual-Zone auto A/C",
+      "Auto-Dimming Mirrors"
+    ],
+    "LE": [
+      "18-inch black painted alloy wheels",
+      "Front rain-sensing wipers",
+      "Heated front seats",
+      "Black heated side mirrors",
+      "Leather-wrapped steering wheel",
+      "8.0-inch Smartphone-link Display Audio with SiriusXM",
+      "Steering wheel voice recognition control",
+      "Automatic High Beam",
+      "Black door handle covers",
+      "Bumper protector"
+    ],
+    "ES": [
+      "1.5L MIVEC DOHC Direct-Injection Turbocharged engine",
+      "8-speed CVT with Sport Mode",
+      "S-AWC all-wheel control",
+      "Active Yaw Control",
+      "Telescopic electric power steering",
+      "Roof spoiler",
+      "Forward Collision Mitigation with pedestrian detection",
+      "Lane Departure Warning",
+      "Hill Start Assist",
+      "Active Stability Control"
+    ]
+  }
+}

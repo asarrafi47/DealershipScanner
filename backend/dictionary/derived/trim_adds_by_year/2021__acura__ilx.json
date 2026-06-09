@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2021|acura|ilx",
+  "year": 2021,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "brochure_llm_2021__acura__ilx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A-Spec®",
+    "Technology",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "A-Spec®": [
+      "Sport A-Spec® Seats with Perforated Milano Premium Leather and Ultrasuede®-Trimmed Interior",
+      "18 x 7.5 Shark Gray 15-Spoke Aluminum-Alloy Wheels",
+      "225/40 R18 High-Performance All-Season Tires",
+      "Stainless Steel Sport Pedals",
+      "Graphite and Chrome Dash Trim",
+      "Machine-Finished Ebony Headliner",
+      "LED Fog Lights",
+      "Decklid Spoiler",
+      "Side Underbody Spoilers"
+    ],
+    "Technology": [
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic™ with Street and Freeway Conditions",
+      "Traffic Rerouting™",
+      "AcuraLink® Connected Services",
+      "On Demand Multi-Use Display™ (ODMD™) 2.0",
+      "Acura/ELS Studio® Premium Audio System with 10 Speakers",
+      "HD Radio®",
+      "SiriusXM® Satellite Radio",
+      "Multi-View Rear Camera with Dynamic Guidelines",
+      "Automatic-Dimming Rearview Mirror"
+    ],
+    "Premium": [
+      "Sport Seats with Perforated Milano Premium Leather-Trimmed Interior with Contrast Stitching and Piping",
+      "Front Passenger's 4-Way Power Seat with Power Lumbar Support",
+      "Heated Front Seats",
+      "17 x 7.0 Pewter Silver Metallic Machine-Finished Aluminum-Alloy Wheels (Premium)",
+      "Blind Spot Information (BSI) System",
+      "Rear Cross Traffic Monitor",
+      "Apple CarPlay® Integration",
+      "Android Auto™ Integration",
+      "Acura Premium Audio System with 7 Speakers and Subwoofer",
+      "HomeLink®"
+    ],
+    "Base": [
+      "201 hp 2.4L Aluminum-Alloy 4-Cylinder DOHC i-VTEC® Engine",
+      "8-Speed DCT with Torque Converter and Sequential SportShift Paddle Shifters",
+      "Front-Wheel Drive",
+      "MacPherson Strut Front and Multi-Link Rear Suspension with Amplitude Reactive Dampers",
+      "Sport Seats with Leatherette-Trimmed Interior with Contrast Stitching",
+      "Driver's 8-Way Power Seat with Power Lumbar Support",
+      "Dual-Zone Automatic Climate Control with Humidity Control and Air Filtration",
+      "Keyless Access System with Acura Personalized Settings",
+      "Pushbutton Ignition",
+      "17 x 7.0 Glitter Silver Machine-Finished Ebony Aluminum-Alloy Wheels"
+    ]
+  }
+}

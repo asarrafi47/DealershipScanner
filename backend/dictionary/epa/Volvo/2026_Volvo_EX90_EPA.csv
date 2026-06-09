@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Volvo,EX90,EX90,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,97,86,92,,,,,
+2026,Volvo,EX90,(21 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,104,91,98,,,,,
+2026,Volvo,EX90,Twin Motor,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,90,82,86,,,,,
+2026,Volvo,EX90,Twin Motor (21 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,92,84,88,,,,,
+2026,Volvo,EX90,Twin Motor Performance,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,90,82,86,,,,,
+2026,Volvo,EX90,Twin Motor Performance (21 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,92,84,88,,,,,

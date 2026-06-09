@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Mercedes-Benz,EQS,450 Plus,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,97,97,97,,,,,
+2022,Mercedes-Benz,EQS,580 4matic,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,92,99,95,,,,,
+2022,Mercedes-Benz,EQS,AMG EQS 4matic Plus,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,76,78,77,,,,,

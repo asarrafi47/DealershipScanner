@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|buick|enclave",
+  "year": 2021,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2021__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AVENIR",
+    "PREMIUM",
+    "ESSENCE",
+    "PREFERRED"
+  ],
+  "adds_by_trim": {
+    "AVENIR": [
+      "Black Ice grille with unique Avenir badging detail",
+      "20-inch Pearl Nickel wheels",
+      "Ebony or Chestnut perforated leather seating, first and second rows",
+      "Real wood-accented steering wheel",
+      "Wireless smartphone charging",
+      "8-inch reconfigurable enhanced Driver Information Center",
+      "Rear Camera Mirror with HD Surround Vision",
+      "Power moonroof with rear fixed skylight",
+      "Heated and ventilated front seats with massage feature",
+      "Third-row power-folding seats"
+    ],
+    "PREMIUM": [
+      "Perforated leather-appointed seating, first and second rows",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "QuietTuning with active noise cancellation",
+      "Built-in Wi-Fi hotspot with available 4G LTE",
+      "Bose performance-enhanced premium 10-speaker system with amp and subwoofer",
+      "Heated front seats",
+      "Rear Park Assist"
+    ],
+    "ESSENCE": [
+      "8-inch diagonal Buick Infotainment System with Navigation",
+      "LED headlamps",
+      "Heated front seats"
+    ],
+    "PREFERRED": [
+      "Front-wheel drive",
+      "3.6L V6 engine with 9-speed transmission and stop/start technology",
+      "Apple CarPlay and Android Auto compatibility",
+      "Third-row 60/40 split bench seating",
+      "Hands-free power liftgate with LED logo projection",
+      "Safety Package with Lane Change Alert and Rear Cross Traffic Alert"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2012|mazda|2",
+  "year": 2012,
+  "make": "Mazda",
+  "model": "2",
+  "ladder_id": "brochure_llm_2012__mazda__2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "6-speaker AM/FM/CD/MP3-compatible audio system",
+      "Trip computer with center instrument panel display",
+      "Leather-wrapped steering wheel with audio and cruise controls",
+      "15-inch aluminum-alloy wheels",
+      "Body-color rear roof spoiler",
+      "Halogen fog lights",
+      "Auto-dimming rearview mirror"
+    ],
+    "Sport": [
+      "1.5L DOHC 16-valve 4-cylinder engine with VVT producing 100 hp",
+      "5-speed manual transmission or 4-speed automatic transmission",
+      "Power windows with driver's one-touch-down/up feature",
+      "Power door locks with 2-stage unlocking",
+      "Cruise control with steering-wheel-mounted controls",
+      "Remote keyless entry",
+      "Air conditioning with pollen filter",
+      "15-inch steel wheels with full wheel covers",
+      "AM/FM/CD/MP3-compatible audio system with 4 speakers",
+      "Auxiliary-audio input jack"
+    ]
+  }
+}

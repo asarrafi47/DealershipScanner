@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2014|nissan|quest",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Quest",
+  "ladder_id": "brochure_llm_2014__nissan__quest",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Around View Monitor with 360-degree camera system",
+      "Blind Spot Warning safety system",
+      "Nissan Hard Drive Navigation System with 8-inch touch-screen",
+      "NavTraffic and NavWeather by SiriusXM",
+      "DVD Entertainment System with second-row 11.0-inch monitor",
+      "Bose audio system with 13 speakers",
+      "Advanced Climate Control System with polyphenol microfilter",
+      "Automatic tilt-in-reverse outside mirrors",
+      "Driver's memory seat system",
+      "4-way power front-passenger seat"
+    ],
+    "SL": [
+      "18-inch aluminum-alloy wheels",
+      "Roof rails with side sill spoilers and chrome accents",
+      "One-touch power liftgate",
+      "Leather-appointed seats and leather-wrapped shift knob",
+      "Quick Comfort heated front seats",
+      "8-way power driver's seat with power lumbar support",
+      "Auto-dimming interior rearview mirror with digital compass",
+      "HomeLink Universal Transceiver"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "Fog lights",
+      "One-touch power sliding doors",
+      "RearView Monitor backup camera",
+      "Conversation mirror",
+      "Premium AM/FM/CD audio system with 4.3-inch color display and six speakers",
+      "SiriusXM Satellite Radio",
+      "Bluetooth Hands-free Phone System",
+      "USB connection port for iPod interface and compatible devices",
+      "Leather-wrapped steering wheel with illuminated audio controls"
+    ],
+    "S": [
+      "3.5-liter V6 engine with Xtronic CVT transmission",
+      "Anti-lock Braking System (ABS)",
+      "Vehicle Dynamic Control (VDC) and Traction Control System (TCS)",
+      "Tire Pressure Monitoring System (TPMS) with Easy-Fill Tire Alert",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "AM/FM/CD audio system with auxiliary audio input jack",
+      "Cruise control with illuminated steering wheel-mounted switches",
+      "Power second-row side windows",
+      "7-passenger seating with fold-flat second and third-row seats",
+      "Nissan Advanced Air Bag System with six standard air bags"
+    ]
+  }
+}

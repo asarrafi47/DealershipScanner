@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2011|lexus|gs",
+  "year": 2011,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "brochure_llm_2011__lexus__gs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS460",
+    "GS450h",
+    "GS350"
+  ],
+  "adds_by_trim": {
+    "GS460": [
+      "8-speed sequential-shift automatic transmission with ECT-i",
+      "4.6L V8 engine",
+      "13.1-inch front ventilated disc brakes",
+      "18-inch five-spoke alloy wheels with 245/40ZR18 tires",
+      "Adaptive Variable Suspension (AVS) standard",
+      "Variable Gear-Ratio Steering (VGRS) standard",
+      "Electronic Controlled Braking (ECB)"
+    ],
+    "GS450h": [
+      "Hybrid powertrain with electronically controlled CVT transmission",
+      "12.2-inch rear ventilated disc brakes",
+      "18-inch split-five-spoke alloy wheels with 245/40ZR18 tires",
+      "Adaptive Variable Suspension (AVS) standard",
+      "Variable Gear-Ratio Steering (VGRS) standard",
+      "Electronic Controlled Braking (ECB)",
+      "Snow mode transmission setting"
+    ],
+    "GS350": [
+      "6-speed sequential-shift automatic transmission with ECT-i",
+      "3.5L V6 engine",
+      "17-inch seven-spoke alloy wheels with 225/50VR17 tires",
+      "Rear-wheel drive or full-time all-wheel drive options",
+      "Electronic Power Steering (EPS) system"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|hyundai|genesis",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Hyundai_Genesis_Brochure.pdf",
+  "page_count": 32,
+  "all_pages": false,
+  "trim_hint_pages": [
+    30
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 30,
+      "trim_hint": true,
+      "text": "2011 genesis_FeaTuRes\nGEnEsis 3.8 GEnEsis 4.6\nbodY / sUspEnsion / chAssis 4-wheel independent suspension, front 5-link virtual kingpin axis, rear 5-link S S\nSACHS\u00ae Amplitude Selective Damping gas shock absorbers, front and rear S S\nStabilizer bars (mm), front / rear 25.0 / 17.0 25.0 / 18.0\nPower rack-and-pinion steering, engine-RPM-sensing S \u2013\nElectro-hydraulic power steering \u2013 S\n4-wheel anti-lock disc brakes S S\n17-inch, split-spoke Euroflange alloy wheels with P225 / 55R tires S \u2013\n18-inch, 9-spoke Hypersilver Euroflange alloy wheels with P235 / 50R tires PN \u2013\n18-inch, split-spoke Hypersilver Euroflange alloy wheels with P235 / 50R tires T S\nTurning diameter (ft), curb to curb 36.0 36.0\nElectronic parking brake with automatic vehicle hold T S\nExTERioR dimEnsions Wheelbase (in) 115.6 115.6\nLength (in) 195.9 195.9\nWidth (in), excluding mirrors 74.4 74.4\nHeight (in) 58.1 58.3\nTrack (in), front / rear 63.8 / 64.4 63.1 / 63.8\nCoefficient of drag 0.27 0.27\nCurb weight (lbs) 3897 4120\nCurb weight (lbs) 3897 4120\ninTERioR dimEnsions Head room (in), front / rear 40.4 / 37.7 38.1 / 37.7\nLeg room (in), front / rear 44.3 / 38.6 44.3 / 38.6\nShoulder room (in), front / rear 58.3 / 57.9 58.3 / 57.9\nHip room (in), front / rear 54.9 / 54.3 54.9 / 54.3\nPassenger volume (cu ft) 109.4 109.4\nCargo volume (cu ft) 15.9 15.9\nTotal interior volume (cu ft) 125.3 125.3\nEPA size classification Large Car Large Car\nEpA milEAGE EsTimATEs / FUEl cApAciTY Fuel economy (city / highway / combined) 18 / 27 / 21 17 / 25 / 19\nFuel tank capacity (gal) 19.3 20.3\nFuel economy estimated by epa for comparison. While the information contained in this brochure was correct at time of printing, specifications and equipment can change. Feature comparisons based\non competitor information available at time of printing. no warranty or guarantee is being extended in this brochure, and hyundai reserves the right to change product specifications and equipment at any\ntime without incurring obligations. some vehicles are shown with optional equipment. specifications apply to u.s. vehicles only. please contact your hyundai dealer for current vehicle specifications. as\npart of hyundai\u2019s commitment to a sustainable environment, this brochure is printed using paper certified by the Forest stewardship council. Fsc certification helps ensure that the highest social and\nenvironmental standards are met in the making of the paper we use, contributing to conservation, responsible management, and community level benefits for people near the forests.",
+      "table_lines": [
+        "S",
+        "25.0 / 17.0 25",
+        "S",
+        "\u2013",
+        "S",
+        "S",
+        "PN",
+        "T",
+        "36.0",
+        "T",
+        "195.9",
+        "74.4",
+        "58.1",
+        "63.8 / 64.4 63",
+        "0.27",
+        "3897",
+        "44.3 / 38.6 44",
+        "58.3 / 57.9 58",
+        "54.9 / 54.3 54",
+        "109.4",
+        "15.9",
+        "18 / 27 / 21 17"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 30 ---\n2011 genesis_FeaTuRes\nGEnEsis 3.8 GEnEsis 4.6\nbodY / sUspEnsion / chAssis 4-wheel independent suspension, front 5-link virtual kingpin axis, rear 5-link S S\nSACHS\u00ae Amplitude Selective Damping gas shock absorbers, front and rear S S\nStabilizer bars (mm), front / rear 25.0 / 17.0 25.0 / 18.0\nPower rack-and-pinion steering, engine-RPM-sensing S \u2013\nElectro-hydraulic power steering \u2013 S\n4-wheel anti-lock disc brakes S S\n17-inch, split-spoke Euroflange alloy wheels with P225 / 55R tires S \u2013\n18-inch, 9-spoke Hypersilver Euroflange alloy wheels with P235 / 50R tires PN \u2013\n18-inch, split-spoke Hypersilver Euroflange alloy wheels with P235 / 50R tires T S\nTurning diameter (ft), curb to curb 36.0 36.0\nElectronic parking brake with automatic vehicle hold T S\nExTERioR dimEnsions Wheelbase (in) 115.6 115.6\nLength (in) 195.9 195.9\nWidth (in), excluding mirrors 74.4 74.4\nHeight (in) 58.1 58.3\nTrack (in), front / rear 63.8 / 64.4 63.1 / 63.8\nCoefficient of drag 0.27 0.27\nCurb weight (lbs) 3897 4120\nCurb weight (lbs) 3897 4120\ninTERioR dimEnsions Head room (in), front / rear 40.4 / 37.7 38.1 / 37.7\nLeg room (in), front / rear 44.3 / 38.6 44.3 / 38.6\nShoulder room (in), front / rear 58.3 / 57.9 58.3 / 57.9\nHip room (in), front / rear 54.9 / 54.3 54.9 / 54.3\nPassenger volume (cu ft) 109.4 109.4\nCargo volume (cu ft) 15.9 15.9\nTotal interior volume (cu ft) 125.3 125.3\nEPA size classification Large Car Large Car\nEpA milEAGE EsTimATEs / FUEl cApAciTY Fuel economy (city / highway / combined) 18 / 27 / 21 17 / 25 / 19\nFuel tank capacity (gal) 19.3 20.3\nFuel economy estimated by epa for comparison. While the information contained in this brochure was correct at time of printing, specifications and equipment can change. Feature comparisons based\non competitor information available at time of printing. no warranty or guarantee is being extended in this brochure, and hyundai reserves the right to change product specifications and equipment at any\ntime without incurring obligations. some vehicles are shown with optional equipment. specifications apply to u.s. vehicles only. please contact your hyundai dealer for current vehicle specifications. as\npart of hyundai\u2019s commitment to a sustainable environment, this brochure is printed using paper certified by the Forest stewardship council. Fsc certification helps ensure that the highest social and\nenvironmental standards are met in the making of the paper we use, contributing to conservation, responsible management, and community level benefits for people near the forests.\n\nS\n25.0 / 17.0 25\nS\n\u2013\nS\nS\nPN\nT\n36.0\nT\n195.9\n74.4\n58.1\n63.8 / 64.4 63\n0.27\n3897\n44.3 / 38.6 44\n58.3 / 57.9 58\n54.9 / 54.3 54\n109.4\n15.9\n18 / 27 / 21 17"
+}

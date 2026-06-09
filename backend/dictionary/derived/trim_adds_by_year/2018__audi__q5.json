@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2018|audi|q5",
+  "year": 2018,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2018__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SQ5",
+    "Q5"
+  ],
+  "adds_by_trim": {
+    "SQ5": [
+      "3.0-liter twin-scroll turbocharged six-cylinder engine producing 354 horsepower",
+      "Eight-speed Tiptronic automatic transmission with quattro sport rear differential",
+      "Audi adaptive air suspension with adjustable ground clearance",
+      "Six-piston fixed front calipers with S badging and red brake calipers",
+      "Larger ventilated front disc brakes (13.8 inches) versus Q5 (13.3 inches)",
+      "Rotor Gray Fine Nappa leather interior as SQ5 standard option",
+      "High-gloss Gray Oak Wood interior inlay option",
+      "SQ5-specific exterior color options including Daytona Gray pearl and Navarra Blue metallic",
+      "21-inch Audi Sport five-double-spoke V design wheels"
+    ],
+    "Q5": [
+      "2.0-liter turbocharged four-cylinder TFSI engine with 252 horsepower and 273 lb-ft torque",
+      "Seven-speed S tronic dual-clutch automatic transmission with quattro all-wheel drive and ultra technology",
+      "Five-link front and rear suspension with adaptive damping",
+      "Ventilated front and rear disc brakes (13.3 inch/13.0 inch)",
+      "Electromechanical power steering system with 38.4-foot turning circle",
+      "Multi-material body construction combining steel and aluminum",
+      "Black leather or Nougat Brown leather interior color options",
+      "High-gloss Dark Brown Walnut Wood interior inlay standard",
+      "18-inch five-double-spoke dynamic design wheels standard"
+    ]
+  }
+}

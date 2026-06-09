@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2021|chevrolet|bolt",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "ladder_id": "brochure_llm_2021__chevrolet__bolt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT",
+    "LT with DC Fast Charging"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "Infotainment Package with Bose premium 7-speaker audio system and Richbass woofer",
+      "Wireless charging pad for compatible mobile devices",
+      "Two USB charge-only ports on rear of center console",
+      "Driver Confidence II Package requires Infotainment Package"
+    ],
+    "LT": [
+      "Comfort and Convenience Package with heated driver and passenger seats",
+      "Heated leather-wrapped steering wheel with selectable automatic activation",
+      "Auto-dimming inside rearview mirror",
+      "Driver Confidence Package with Lane Change Alert, Side Blind Zone Alert, Rear Cross Traffic Alert, and Rear Park Assist",
+      "DC Fast Charging capability available"
+    ],
+    "LT with DC Fast Charging": [
+      "DC Fast Charging capability enables faster charging compared to standard charging"
+    ]
+  }
+}

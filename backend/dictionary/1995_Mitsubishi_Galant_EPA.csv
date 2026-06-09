@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1995,Mitsubishi,Galant,Galant,2.4L I4 (SOHC-4 (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,19,26,22,,,,,,2.4L I4,
-1995,Mitsubishi,Galant,Galant,2.4L I4 (SOHC-4 (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,21,28,23,,,,,,2.4L I4,
-1995,Mitsubishi,Galant,Galant,2.5L V6 (SOHC-V6 (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.5,18,24,20,,,,,,2.5L V6,

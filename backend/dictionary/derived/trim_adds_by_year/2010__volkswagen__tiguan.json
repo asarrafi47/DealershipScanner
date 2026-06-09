@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2010|volkswagen|tiguan",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_web_2010__volkswagen__tiguan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Tiguan 2.0T SEL R-Line 4MOTION",
+    "Tiguan 2.0T SE R-Line Black 4MOTION",
+    "Tiguan 2.0T SE R-Line Black FWD",
+    "Tiguan 2.0T SE 4MOTION",
+    "Tiguan 2.0T SE FWD",
+    "Tiguan 2.0T S 4MOTION",
+    "Tiguan 2.0T S FWD"
+  ],
+  "adds_by_trim": {
+    "Tiguan 2.0T S FWD": [
+      "2.0-liter turbocharged four-cylinder engine with 201 hp",
+      "12.9-inch touchscreen display",
+      "10.3-inch driver information display",
+      "Automatic emergency braking with pedestrian detection",
+      "Adaptive cruise control with Travel Assist semi-autonomous driving",
+      "Lane keeping assist and blind-spot monitoring",
+      "Rear cross-traffic monitor and parking sensors",
+      "10 total airbags including driver knee and center airbags",
+      "Wireless phone charging pad",
+      "Vehicle exit warning system"
+    ],
+    "Tiguan 2.0T S 4MOTION": [
+      "All-wheel drive 4MOTION system"
+    ],
+    "Tiguan 2.0T SE FWD": [
+      "15.0-inch center display on more upscale trims"
+    ],
+    "Tiguan 2.0T SE 4MOTION": [
+      "All-wheel drive 4MOTION system"
+    ],
+    "Tiguan 2.0T SE R-Line Black FWD": [
+      "R-Line exterior styling package with enhanced design elements"
+    ],
+    "Tiguan 2.0T SE R-Line Black 4MOTION": [
+      "All-wheel drive 4MOTION system with R-Line styling"
+    ],
+    "Tiguan 2.0T SEL R-Line 4MOTION": [
+      "Premium cabin materials including walnut accents and Savona leather upholstery",
+      "Wrapped center console",
+      "12-speaker Harman Kardon premium audio system",
+      "Head-up display",
+      "Enhanced ambient lighting with Atmospheres mood lighting synchronization",
+      "Ventilated and massaging power front seats",
+      "Heated rear seats and steering wheel",
+      "Hands-free power liftgate",
+      "Front LED light bar with illuminated logo",
+      "Automated park assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/tiguan/"
+}

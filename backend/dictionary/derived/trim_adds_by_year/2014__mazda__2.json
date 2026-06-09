@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|mazda|2",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "2",
+  "ladder_id": "brochure_llm_2014__mazda__2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mazda2 Touring",
+    "Mazda2 Sport"
+  ],
+  "adds_by_trim": {
+    "Mazda2 Touring": [
+      "15-inch alloy wheels instead of steel wheels with full wheel covers",
+      "Halogen fog lights",
+      "Bright tip exhaust finisher",
+      "Red piping and stitching on black cloth upholstery",
+      "Rear liftgate spoiler"
+    ],
+    "Mazda2 Sport": [
+      "1.5L DOHC 16-valve 4-cylinder engine with VVT, 100 hp, 98 lb-ft torque",
+      "5-speed manual or available 4-speed automatic transmission",
+      "Front-wheel drive",
+      "Advanced front air bags with seat belt-use and passenger-weight sensors",
+      "Front side-impact air bags and side-impact air curtains",
+      "Anti-lock Brake System with Electronic Brakeforce Distribution and Brake Assist",
+      "Dynamic Stability Control and Traction Control System",
+      "Power steering with electric assist",
+      "Air conditioning with pollen filter",
+      "Remote keyless entry and engine-immobilizer antitheft system"
+    ]
+  }
+}

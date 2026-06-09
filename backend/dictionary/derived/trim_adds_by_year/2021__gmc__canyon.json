@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2021|gmc|canyon",
+  "year": 2021,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2021__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DENALI",
+    "AT4",
+    "ELEVATION"
+  ],
+  "adds_by_trim": {
+    "DENALI": [
+      "Luxury positioning above AT4 trim level"
+    ],
+    "AT4": [
+      "Off-road capability and rugged styling focus"
+    ],
+    "ELEVATION": [
+      "3-year/36,000-mile bumper-to-bumper limited warranty",
+      "5-year/60,000-mile transferable powertrain limited warranty",
+      "24/7 roadside assistance and courtesy transportation"
+    ]
+  }
+}

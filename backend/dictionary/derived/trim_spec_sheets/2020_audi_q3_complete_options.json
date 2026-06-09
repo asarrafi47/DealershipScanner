@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2020_audi_q3_complete_options",
+  "make": "AUDI",
+  "models": [
+    "Q3",
+    "Q3"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: TECHNICAL DATA STANDARD/OPTIONAL EQUIPMENT With every Audi comes a life full of; Audi V8 (1988–1995) (was TECHNICAL DATA STANDARD/OPTIONAL EQUIPMENT With every Audi comes a life full of)"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: TECHNICAL DATA STANDARD/OPTIONAL EQUIPMENT With every Audi comes a life full of (was TECHNICAL DATA STANDARD/OPTIONAL EQUIPMENT With every Audi comes a life full of; Audi V8 (1988–1995))"
+      }
+    ],
+    "A1 Sportback Concept": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: TECHNICAL DATA STANDARD/OPTIONAL EQUIPMENT With every Audi comes a life full of; Audi V8 (1988–1995)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: The optional MMI navigation plus, combined with the standard Audi virtual cockpi"
+      }
+    ]
+  }
+}

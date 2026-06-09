@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2013|lincoln|mkt",
+  "year": 2013,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_llm_2013__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "ELITE": [
+      "3rd-row 50/50 split one-touch PowerFold bench seat with tailgate feature",
+      "BLIS (Blind Spot Information System) with cross-traffic alert",
+      "Heated steering wheel",
+      "THX II Certified Audio System with 14 speakers including subwoofer, 700 watts",
+      "Hybrid Voice Activated Navigation System with 14.9-inch touchscreen",
+      "Travel Link with 6-month trial subscription for traffic, weather, fuel prices",
+      "20-inch polished aluminum wheels with P255/45R20 all-season tires",
+      "Dual head restraint DVD by INVISION"
+    ],
+    "BASE": [
+      "1st-row 12-way power heated and cooled bucket seats with 4-way adjustable head restraints and memory",
+      "2nd-row 60/40 split fold-flat bench seat with heated outboard seating",
+      "3rd-row 50/50 split fold-flat bench seat with 7-passenger seating",
+      "Bridge of Weir leather-trimmed seats for 1st and 2nd rows",
+      "Personal Safety System with dual-stage front airbags and front-seat side airbags",
+      "Safety Canopy System with 3-row side-curtain airbags and rollover sensor",
+      "SYNC with MyLincoln Touch voice-activated system, 8-inch color LCD touch screen, Bluetooth",
+      "Lincoln premium sound system with AM/FM stereo, single-CD player, MP3, 10 speakers",
+      "SiriusXM Satellite Radio with 6-month all-access trial subscription",
+      "Tri-zone electronic automatic temperature control"
+    ]
+  }
+}

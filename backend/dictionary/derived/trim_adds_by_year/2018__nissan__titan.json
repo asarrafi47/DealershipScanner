@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2018|nissan|titan",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_llm_2018__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum Reserve",
+    "PRO-4X",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum Reserve": [
+      "20-inch dark chrome-clad aluminum-alloy wheels",
+      "Dark chrome grille, door handles, and tailgate finisher",
+      "Two-tone exterior paint with chrome-tipped exhaust finisher",
+      "Climate-controlled front seats (heated and cooled)",
+      "Heated outboard rear seats",
+      "Premium leather-appointed seats with Platinum Reserve logo",
+      "Heated leather-wrapped steering wheel with wood-tone insert",
+      "Premium open-pore wood-tone interior trim",
+      "Intelligent Around View Monitor",
+      "Integrated gooseneck hitch receiver"
+    ],
+    "PRO-4X": [
+      "Switch-operated 2-speed transfer case (4WD)",
+      "Hill descent control and electronic locking rear differential",
+      "Bilstein off-road performance shocks",
+      "18-inch dark-finished aluminum-alloy wheels with all-terrain tires",
+      "Transfer case and lower radiator skid plates",
+      "LED headlights and fog lights",
+      "Spray-on bedliner",
+      "Nissan Navigation System with 7.0-inch touchscreen",
+      "Front captain's chairs with 8-way power driver's seat"
+    ],
+    "SL": [
+      "20-inch aluminum-alloy wheels with all-season tires",
+      "LED headlights and fog lights",
+      "Running boards and chrome exterior trim",
+      "Body-color rear bumper",
+      "Front and Rear Sonar System",
+      "Utili-track Channel System with four tie-down cleats",
+      "Nissan Navigation System with 7.0-inch touchscreen",
+      "Remote Engine Start System with Intelligent Climate Control",
+      "Front captain's chairs with 8-way power driver's seat",
+      "Leather-appointed seats and wood-tone interior trim"
+    ],
+    "SV": [
+      "18-inch silver-painted aluminum-alloy wheels",
+      "Oil pan and fuel tank skid plates (4x4 models only)",
+      "Front tow hooks (4x4 only)",
+      "Advanced Drive-Assist Display with fine vision electroluminescent gauges",
+      "SiriusXM Satellite Radio",
+      "Stain-resistant cloth seat trim with interior mood lighting",
+      "Sun visors with illuminated vanity mirrors",
+      "Trailer sway control",
+      "Metallic interior accents"
+    ],
+    "S": [
+      "5.6-liter 32-valve V8 engine with 7-speed automatic transmission",
+      "Hill start assist",
+      "18-inch styled steel wheels with P265/70R18 all-season tires",
+      "8-foot truck bed with dampened assist tailgate",
+      "Easy Clean vinyl flooring",
+      "40/20/40-split bench front seat with flip-down center seat",
+      "Column shifter with manual shift mode",
+      "Remote keyless entry with push button ignition",
+      "Bluetooth hands-free phone system",
+      "RearView Monitor and Vehicle Dynamic Control with Traction Control"
+    ]
+  }
+}

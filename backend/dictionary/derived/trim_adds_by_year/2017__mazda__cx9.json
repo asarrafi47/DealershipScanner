@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2017|mazda|cx9",
+  "year": 2017,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2017__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SIGNATURE",
+    "GRAND TOURING",
+    "SPORT TOURING"
+  ],
+  "adds_by_trim": {
+    "SIGNATURE": [
+      "i-ACTIV AWD® all-wheel drive standard",
+      "20-inch alloy wheels with dark silver finish",
+      "Auburn Nappa leather upholstery",
+      "Mazda Navigation System with voice commands and advanced lane guidance standard",
+      "3D interactive map with step-by-step audio directions"
+    ],
+    "GRAND TOURING": [
+      "20-inch alloy wheels with dark silver finish",
+      "Black or sand leather upholstery",
+      "Available Mazda Navigation System with voice commands and advanced lane guidance",
+      "Available all-wheel drive i-ACTIV AWD®",
+      "Dual USB charging ports for second-row passengers"
+    ],
+    "SPORT TOURING": [
+      "18-inch alloy wheels with dark silver finish",
+      "Black or sand cloth upholstery",
+      "MAZDA CONNECT™ infotainment system with multifunction Commander control",
+      "Bluetooth® hands-free phone and audio streaming",
+      "SMS Text Message Audio Delivery and Reply capability",
+      "HD Radio™ with integrated internet radio apps",
+      "Full-color display for infotainment controls",
+      "250 hp SKYACTIV®-G 2.5T turbocharged engine standard"
+    ]
+  }
+}

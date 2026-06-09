@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2022|toyota|prius",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Prius",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium",
+    "E1"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features: Adds to or replaces features offered on L Eco Adds to or replaces features offered on LE",
+      "E lectronically controlled Continuously E lectronically controlled Continuously E lectronically controlled Continuously",
+      "Variable Transmission (ECVT) Variable Transmission (ECVT) Variable Transmission (ECVT)",
+      "F ront-Wheel Drive (FWD) Front-Wheel Drive (FWD) E lectronic On-Demand Compact",
+      "E V29/Eco/POWER Modes E V29/Eco/POWER Modes All-Wheel Drive (AWD-e)1",
+      "I ndependent MacPherson strut front suspension I ndependent MacPherson strut front suspension E V29/Eco/POWER Modes",
+      "E lectric Power Steering (EPS); power-assisted E lectric Power Steering (EPS); power-assisted stabilizer bars",
+      "Exterior Features Exterior Features",
+      "B i-LED projector low- and high-beam headlights Intermittent rear window wiper",
+      "L ED Daytime Running Lights (DRL) with on/off feature 1 5-in. 5-spoke alloy wheels with two-tone",
+      "L ED taillights and stop lights F abric-trimmed front seats with extended seatback wheel covers and P195/65R15 tires",
+      "L ED clearance lamps adjustable front passenger seat Interior Features"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "E lectronically controlled Continuously E lectronically controlled Continuously E lectronically controlled Continuously",
+      "Variable Transmission (ECVT) Variable Transmission (ECVT) Variable Transmission (ECVT)",
+      "F ront-Wheel Drive (FWD) E lectronic On-Demand Compact F ront-Wheel Drive (FWD)",
+      "E V29/Eco/POWER Modes All-Wheel Drive (AWD-e)1 E V29/Eco/POWER Modes",
+      "I ndependent MacPherson strut front suspension E V29/Eco/POWER Modes I ndependent MacPherson strut front suspension",
+      "E lectric Power Steering (EPS); power-assisted stabilizer bars E lectric Power Steering (EPS); power-assisted",
+      "Exterior Features Exterior Features",
+      "B i-LED projector low- and high-beam headlights A daptive Front-Lighting System (AFS)42 with",
+      "R ain-sensing variable intermittent windshield wipers with auto on/off feature Integrated fog lights and LED accent lights",
+      "Integrated fog lights and LED accent lights R ain-sensing variable intermittent windshield wipers Audio Multimedia",
+      "P remium Audio \u2014 11.6-in. touchscreen and ten JBL\u00ae7"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

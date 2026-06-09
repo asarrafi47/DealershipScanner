@@ -1,0 +1,86 @@
+{
+  "catalog_key": "2022|lexus|rc",
+  "year": 2022,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "brochure_llm_2022__lexus__rc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RC F FUJI SPEEDWAY EDITION",
+    "RC F",
+    "RC 350 F SPORT",
+    "RC 300 F SPORT AWD",
+    "RC 300 F SPORT",
+    "RC 350",
+    "RC 300 AWD",
+    "RC 300"
+  ],
+  "adds_by_trim": {
+    "RC F FUJI SPEEDWAY EDITION": [
+      "Carbon fiber hood, roof, front spoiler, rocker-panel splitters, rear diffuser and fixed rear wing",
+      "Titanium mufflers",
+      "Brembo carbon-ceramic brakes with red brake calipers",
+      "Blue Carbon Fiber interior trim",
+      "Black and Blue Alcantara interior trim",
+      "SmartAccess card key with F logo",
+      "Exclusive Fuji Speedway Edition serialized badge"
+    ],
+    "RC F": [
+      "472-horsepower V8 with eight-speed paddle-shift transmission",
+      "Launch Control",
+      "Torsen limited-slip rear differential",
+      "F-Adaptive Variable Suspension",
+      "Speed-activated rear wing",
+      "Drive Mode Select with Sport S/S+ and Custom modes",
+      "Performance-inspired instrumentation with G-force display and lap timer",
+      "Bi-LED headlamps and daytime running lights",
+      "Brembo six-piston front calipers and four-piston rear calipers",
+      "10-speaker Premium Sound System"
+    ],
+    "RC 350 F SPORT": [
+      "311-horsepower V6 with eight-speed paddle-shift transmission",
+      "Cool-air intake",
+      "Available rear-wheel or all-wheel drive"
+    ],
+    "RC 300 F SPORT AWD": [
+      "All-wheel drive",
+      "FSPORT-tuned Adaptive Variable Suspension with Sport S+ and Custom drive modes",
+      "FSPORT heated and ventilated front seats with enhanced bolsters",
+      "FSPORT interior details including Dark Gray Streamline trim, aluminum pedals and black headliner",
+      "Perforated leather-trimmed shift knob and steering wheel with FSPORT logo",
+      "FSPORT exterior styling including unique front bumper and grille",
+      "Performance-inspired instrumentation with sliding bezel",
+      "Turbo-boost gauge"
+    ],
+    "RC 300 F SPORT": [
+      "260-horsepower V6 with six-speed paddle-shift transmission",
+      "FSPORT 19-inch split-five-spoke alloy wheels with Dark Graphite finish and summer tires",
+      "FSPORT-tuned Adaptive Variable Suspension with Sport S+ and Custom drive modes",
+      "FSPORT heated and ventilated front seats with enhanced bolsters",
+      "FSPORT interior details including Dark Gray Streamline trim, aluminum pedals and black headliner",
+      "Perforated leather-trimmed shift knob and steering wheel with FSPORT logo",
+      "FSPORT exterior styling including unique front bumper and grille",
+      "Performance-inspired instrumentation with sliding bezel"
+    ],
+    "RC 350": [
+      "311-horsepower V6 with eight-speed paddle-shift transmission",
+      "Cool-air intake",
+      "Available rear-wheel or all-wheel drive"
+    ],
+    "RC 300 AWD": [
+      "All-wheel drive"
+    ],
+    "RC 300": [
+      "241-horsepower turbo with eight-speed paddle-shift transmission",
+      "Rear-wheel drive",
+      "Two-piece front brake rotors with high-friction brake pads",
+      "Lateral performance damper",
+      "Steering-wheel-mounted paddle shifters",
+      "Vehicle Dynamics Integrated Management",
+      "Lexus Multimedia System with 7.0-inch color display",
+      "Lexus Enform Wi-Fi with 4GB three-month trial included",
+      "Lexus Enform Safety Connect and Service Connect",
+      "Lexus Enform Remote accessible via Lexus app with Alexa and Hey Google compatibility"
+    ]
+  }
+}

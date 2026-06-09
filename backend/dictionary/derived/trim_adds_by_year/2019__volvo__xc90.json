@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2019|volvo|xc90",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2019__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Excellence",
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Excellence": [
+      "Lavishly appointed four-seat SUV configuration with epitome of finest Scandinavian design",
+      "Ultimate experience of craftsmanship and design"
+    ],
+    "Inscription": [
+      "Highly sophisticated expression of Scandinavian design",
+      "Premium interior materials and appointments"
+    ],
+    "R-Design": [
+      "Spirited drive characterized by style, responsiveness and control",
+      "Performance-oriented design and handling enhancements"
+    ],
+    "Momentum": [
+      "9-inch Sensus Touchscreen with voice control",
+      "High-Performance audio system with 10 speakers",
+      "Apple CarPlay and Android Auto smartphone integration",
+      "CleanZone cabin air filtration technology",
+      "City Safety collision avoidance with Pilot Assist semi-autonomous driving",
+      "Lane Keeping Aid and Lane Departure Warning",
+      "LED headlights with Thor's Hammer daytime running lights",
+      "18-inch or 19-inch alloy wheels",
+      "Power-operated tailgate with hands-free function",
+      "Leatherette upholstery with Dark Flame Birch inlays"
+    ]
+  }
+}

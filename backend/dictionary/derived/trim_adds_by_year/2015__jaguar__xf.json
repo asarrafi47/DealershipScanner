@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2015|jaguar|xf",
+  "year": 2015,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_web_2015__jaguar__xf",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XF R-Dynamic SE Sedan AWD",
+    "XF R-Dynamic SE Sedan RWD"
+  ],
+  "adds_by_trim": {
+    "XF R-Dynamic SE Sedan AWD": [
+      "All-wheel drive system",
+      "296 hp turbocharged four-cylinder engine with 295 lb-ft torque",
+      "0–60 mph acceleration in 6.5 seconds",
+      "22/30 mpg city/highway fuel economy"
+    ],
+    "XF R-Dynamic SE Sedan RWD": [
+      "246 hp turbocharged four-cylinder engine with 269 lb-ft torque",
+      "Rear-wheel drive configuration",
+      "23/30 mpg city/highway fuel economy",
+      "12.3-inch digital instrument cluster",
+      "11.4-inch touchscreen with Android Auto and Apple CarPlay",
+      "12-speaker Meridian audio system",
+      "Emergency automatic braking and blind-spot assistance",
+      "Adaptive cruise control and lane keeping assist",
+      "Front and rear parking sensors with rear traffic monitoring",
+      "Motorized adjustable steering column and heated steering wheel"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jaguar/xf/"
+}

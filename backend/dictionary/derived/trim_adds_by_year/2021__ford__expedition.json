@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2021|ford|expedition",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2021__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "KING RANCH"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Enhanced 3.5L EcoBoost engine with 400 horsepower and 480 lb.-ft. torque",
+      "22-inch aluminum wheels",
+      "Power-deployable running boards",
+      "Luxury leather-trimmed heated and ventilated multicontour front seats with Active Motion",
+      "Perforated seat inserts and quilted bolsters on 1st and 2nd-row seats",
+      "Leather-wrapped instrument panel top with wood accents",
+      "Panoramic Vista Roof"
+    ],
+    "KING RANCH": [
+      "Del Rio leather trim on seats, door-trim inserts, armrests, center console side rails, and steering wheel",
+      "Rich wood accents throughout interior",
+      "22-inch machined-face aluminum wheels with Running W logo",
+      "Running W logo branding on seat backs and floor mats",
+      "Southwestern luxury design aesthetic"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2012|audi|a4",
+  "year": 2012,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_llm_2012__audi__a4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A4 Prestige",
+    "A4 Plus Premium",
+    "A4 Premium",
+    "S4 Prestige",
+    "S4 Plus Premium",
+    "S4 Premium"
+  ],
+  "adds_by_trim": {
+    "A4 Prestige": [
+      "3.0-liter supercharged V6 engine with 333 hp and 325 lb-ft torque",
+      "Audi quattro all-wheel drive standard",
+      "Four-wheel independent double-wishbone suspension",
+      "19-inch alloy wheels"
+    ],
+    "A4 Plus Premium": [
+      "Eight-speed Tiptronic automatic transmission with manual shift capability",
+      "Audi drive select dynamic handling system"
+    ],
+    "A4 Premium": [
+      "2.0-liter turbocharged TFSI engine with 211 hp and 258 lb-ft torque",
+      "Available Audi multitronic continuously variable transmission",
+      "Available six-speed manual transmission",
+      "Available Audi quattro all-wheel drive"
+    ],
+    "S4 Prestige": [
+      "Dynamic suspension tuning with sport-calibrated settings",
+      "Red brake calipers with S4 badging",
+      "Exclusive S4 interior trim styling"
+    ],
+    "S4 Plus Premium": [
+      "Seven-speed Audi S tronic dual-clutch transmission",
+      "Launch control system for optimal acceleration"
+    ],
+    "S4 Premium": [
+      "3.0-liter supercharged V6 TFSI engine producing 333 hp at 5,500 rpm",
+      "Audi quattro all-wheel drive system",
+      "Six-speed manual transmission standard",
+      "0-60 mph in 4.9 seconds with 155 mph top speed"
+    ]
+  }
+}

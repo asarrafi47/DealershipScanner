@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|chevrolet|volt",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "generic_chevrolet_volt",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Chevrolet logo, A noTE on ChIlD SAFETy. Always use safety belts and the correct restraint for your child’s ChEVrolET.CoM/SAFETy."
+    ],
+    "Limited": [
+      ".com/chevrolet twitter"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Premium": 1,
+      "Sport": 0
+    }
+  }
+}

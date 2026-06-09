@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|toyota|yaris",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_llm_2012__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5-Door SE",
+    "5-Door LE",
+    "5-Door L",
+    "3-Door LE",
+    "3-Door L"
+  ],
+  "adds_by_trim": {
+    "5-Door SE": [
+      "Sport-tuned independent MacPherson strut front suspension with stabilizer bar",
+      "Sport-calibrated Electric Power Steering (EPS)",
+      "Power-assisted ventilated front disc brakes with rear disc brakes",
+      "36.7-foot turning circle diameter"
+    ],
+    "5-Door LE": [
+      "4-speed Electronically Controlled automatic transmission with intelligence (ECT-i)",
+      "5-door body configuration"
+    ],
+    "5-Door L": [
+      "5-door body configuration",
+      "4-speed Electronically Controlled automatic transmission with intelligence (ECT-i)"
+    ],
+    "3-Door LE": [
+      "4-speed Electronically Controlled automatic transmission with intelligence (ECT-i) standard"
+    ],
+    "3-Door L": [
+      "5-speed manual transmission standard",
+      "1.5-liter 4-cylinder DOHC 16-valve engine with VVT-i",
+      "106 horsepower at 6000 rpm",
+      "Front-wheel drive",
+      "Independent MacPherson strut front suspension with stabilizer bar",
+      "Electric Power Steering (EPS)",
+      "Power-assisted ventilated front disc brakes with rear drum brakes and Star Safety System"
+    ]
+  }
+}

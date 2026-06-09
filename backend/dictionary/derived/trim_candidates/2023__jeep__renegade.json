@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2023|jeep|renegade",
+  "year": 2023,
+  "make": "Jeep",
+  "model": "Renegade",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Willys",
+    "Altitude",
+    "Latitude",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

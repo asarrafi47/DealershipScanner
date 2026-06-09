@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|volvo|xc60",
+  "year": 2018,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2018__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Inscription": [
+      "Highly sophisticated interior design and appointments"
+    ],
+    "R-Design": [
+      "Spirited driving character with distinctive styling"
+    ],
+    "Momentum": [
+      "18\" or 19\" alloy wheels",
+      "LED headlights with automatic lever adjuster",
+      "9\" Sensus touchscreen with voice control and Apple CarPlay/Android Auto",
+      "High-performance audio system with 10 speakers and Bluetooth streaming",
+      "Leather comfort seats with 10-way power adjustment and lumbar support",
+      "Iron Ore aluminum decor inlays",
+      "City Safety collision avoidance with steering support",
+      "Lane keeping aid and driver alert control",
+      "Panoramic moonroof",
+      "Power-operated tailgate with hands-free function option"
+    ]
+  }
+}

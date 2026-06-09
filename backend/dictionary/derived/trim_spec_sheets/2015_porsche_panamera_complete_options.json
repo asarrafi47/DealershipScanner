@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2015_porsche_panamera_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Panamera",
+    "Panamera"
+  ],
+  "year_min": 2013,
+  "year_max": 2017,
+  "source": "generated",
+  "trims": {
+    "Turbo S": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo S trim.; 4.8L V8 Twin Turbo"
+      }
+    ],
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim.; 4.8L V8 Twin Turbo"
+      }
+    ],
+    "GTS": [
+      {
+        "label": "Engine Options",
+        "value": "4.8L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "4.8L V8 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

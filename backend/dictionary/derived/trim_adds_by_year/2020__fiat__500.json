@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|fiat|500",
+  "year": 2020,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2020__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Lounge",
+    "Trekking",
+    "Pop"
+  ],
+  "adds_by_trim": {
+    "Lounge": [
+      "Fold-down rear armrest with cup holder",
+      "Ambient LED lighting",
+      "Sun visor with illuminated mirror",
+      "Premium leather-trimmed bucket seats",
+      "Heated front seats",
+      "Power 2-way driver lumbar adjust",
+      "Manual 2-way front-passenger lumbar adjust",
+      "Cornering front fog lamps",
+      "Chrome exterior mirror spotter mirrors",
+      "Uconnect 4 NAV with 7-inch GPS navigation display"
+    ],
+    "Trekking": [
+      "Lower sill and wheel arch accent moldings in Nero Black",
+      "Satin door handles",
+      "Satin Gray accent front fascia",
+      "17-inch aluminum wheels with 225/45R17 all-season tires",
+      "Power 2-way driver lumbar adjust",
+      "Manual 2-way front-passenger lumbar adjust",
+      "Cornering front fog lamps",
+      "Uconnect 4 NAV with 7-inch GPS navigation display",
+      "ParkSense rear park assist system",
+      "Rearview auto-dimming mirror"
+    ],
+    "Pop": [
+      "1.4L MultiAir Turbo I-4 engine with 6-speed automatic transmission",
+      "Front-wheel drive",
+      "MacPherson front suspension with KONI Frequency Selective Damping",
+      "Twist-beam rear axle with KONI FSD shock absorbers",
+      "Bifunction halogen projector headlamps with daytime running lamps",
+      "Deep-tint sunscreen glass",
+      "Power windows with one-touch up/down front and rear",
+      "Rear window defroster",
+      "Variable intermittent front wipers with rear wiper and washer",
+      "Power door locks"
+    ]
+  }
+}

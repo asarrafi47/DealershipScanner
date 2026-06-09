@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2023|toyota|supra",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Supra",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "3.0 Premium",
+    "3.0",
+    "2.0",
+    "Platinum",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "3.0 Premium": [
+      "Includes these key features Adds to or replaces features offered on 2.0 Adds to or replaces features offered on 3.0",
+      "Top racetrack speed: 155 mph5 (electronically controlled) 6-speed intelligent Manual Transmission (iMT) or 6-speed intelligent Manual Transmission (iMT) or",
+      "Top racetrack speed: 155 mph5 (electronically controlled) Top racetrack speed: 155 mph5 (electronically controlled)",
+      "Active exhaust Active exhaust",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires26",
+      "Launch Control25 (Automatic Transmission only) Launch Control25 (Automatic Transmission only)",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires37 High-performance Michelin\u00ae Pilot\u00ae Super Sport tires37",
+      "Exterior Features Exterior Features",
+      "Built-in rear spoiler",
+      "Gloss-black auto-folding, heated outside mirrors 6-lens auto-leveling LED headlights (three low-beam, 6-lens auto-leveling LED headlights (three low-beam,",
+      "Smart Key System with Smart Entry and Start",
+      "Interior Features Interior Features"
+    ],
+    "3.0": [
+      "Adds to or replaces features offered on 3.0 Premium",
+      "Top racetrack speed: 155 mph5 (electronically controlled)",
+      "Active rear sport differential",
+      "Red Strut tower braces",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires37",
+      "Exterior Features Renaissance Red 2.0 Nitro Yellow1",
+      "Unique red Supra badge",
+      "Exclusive exterior colors: Burnout1 and CU Later Gray",
+      "Smart Key System with Smart Entry and Start",
+      "Exclusive interior: Hazelnut-colored leather-trimmed",
+      "Alcantara\u00ae-trimmed27 shift knob",
+      "Carbon-fiber interior trim"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

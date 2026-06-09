@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|toyota|tacoma",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_llm_2020__toyota__tacoma",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD PRO",
+    "LIMITED",
+    "TRD OFF-ROAD",
+    "TRD SPORT",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "TRD PRO": [
+      "TRD Pro cat-back exhaust",
+      "2.5-inch FOX Internal Bypass coil-overs with rear remote reservoir shocks",
+      "4WD standard (part-time with electronically controlled transfer case)",
+      "Active Traction Control with manual transmission"
+    ],
+    "LIMITED": [
+      "Double Cab body style with enhanced interior space (32.6-inch rear leg room vs 24.6-inch Access Cab)"
+    ],
+    "TRD OFF-ROAD": [
+      "TRD-tuned off-road suspension with Bilstein shocks",
+      "6-speed manual transmission option",
+      "Clutch start-cancel switch"
+    ],
+    "TRD SPORT": [
+      "TRD sport-tuned suspension",
+      "6-speed manual transmission option",
+      "Clutch start-cancel switch"
+    ],
+    "SR5": [
+      "3.5-Liter V6 engine standard (278 hp, 265 lb-ft torque)",
+      "6-speed electronically controlled automatic transmission"
+    ],
+    "SR": [
+      "3.5-Liter V6 DOHC 24-valve direct-injection engine with VVT-iW and VVT-i (278 hp, 265 lb-ft)",
+      "Variable-assist power rack-and-pinion steering",
+      "Power-assisted ventilated front disc brakes with rear drum brakes",
+      "One-piece frame rails with fully boxed front sub-frame",
+      "Coil-spring double-wishbone front suspension with leaf spring rear suspension"
+    ]
+  }
+}

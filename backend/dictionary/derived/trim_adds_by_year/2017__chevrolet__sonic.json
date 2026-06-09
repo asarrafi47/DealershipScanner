@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2017|chevrolet|sonic",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "ladder_id": "brochure_llm_2017__chevrolet__sonic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HATCHBACK PREMIER",
+    "SEDAN PREMIER",
+    "HATCHBACK LT",
+    "SEDAN LT",
+    "SEDAN SL"
+  ],
+  "adds_by_trim": {
+    "HATCHBACK PREMIER": [
+      "17-inch black-painted aluminum wheels",
+      "Perforated leatherette seating with sueded microfiber inserts",
+      "Sport suspension with 3-spoke leather-wrapped flat-bottom sport steering wheel",
+      "Heated driver and front passenger seats with 6-way power driver adjuster",
+      "Keyless Open and Start with remote vehicle starter system",
+      "Piano Black instrument panel accents",
+      "Power tilt/sliding sunroof with express-open and wind deflector",
+      "Rear sport spoiler on hatchback body"
+    ],
+    "SEDAN PREMIER": [
+      "17-inch painted-aluminum wheels",
+      "Leatherette seating with sueded microfiber inserts",
+      "Sport suspension with 3-spoke leather-wrapped flat-bottom sport steering wheel",
+      "Heated driver and front passenger seats with 6-way power driver adjuster",
+      "Keyless Open and Start with remote vehicle starter system",
+      "Piano Black instrument panel accents",
+      "Convenience Package: heated seats, power driver seat, Keyless Open and Start, enhanced Driver Information Center"
+    ],
+    "HATCHBACK LT": [
+      "6-speed manual transmission option or 6-speed automatic",
+      "ECOTEC 1.4L turbocharged engine with 138 hp and 148 lb-ft torque",
+      "Deluxe cloth seating",
+      "Chrome beltline moldings",
+      "3-spoke leather-wrapped sport steering wheel with contrasting stitching",
+      "16-inch aluminum wheels",
+      "Integrated rear decklid or sport spoiler",
+      "Graphite Silver Metallic instrument panel accents",
+      "Premium 6-speaker sound system",
+      "Rear vision camera standard"
+    ],
+    "SEDAN LT": [
+      "6-speed manual transmission option or 6-speed automatic with ECOTEC 1.4L turbo",
+      "Cruise control",
+      "Chrome beltline moldings",
+      "3-spoke leather-wrapped sport steering wheel",
+      "Heated power-adjustable body-color mirrors",
+      "Deluxe cloth seating",
+      "Premium 6-speaker sound system",
+      "16-inch aluminum wheels"
+    ],
+    "SEDAN SL": [
+      "5-speed or 6-speed manual transmission option",
+      "ECOTEC 1.8L naturally aspirated engine with 138 hp and 125 lb-ft torque",
+      "Chevrolet MyLink 7-inch touchscreen with Android Auto and Apple CarPlay",
+      "Bluetooth wireless technology for select phones",
+      "Rear vision camera",
+      "OnStar Basic Plan for five years with myChevrolet Mobile App features",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for up to seven devices"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2021|lincoln|navigator",
+  "year": 2021,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_2021__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 4-year/50,000-mile bumper-to-bumper warranty coverage",
+      "Adds Includes 6-year/70,000-mile powertrain warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint warranty coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion perforation warranty coverage",
+      "Adds Roadside Assistance for Life with 24-hour/7-day-week nationwide support for original owner"
+    ],
+    "Limited": [
+      "eatures may be offered only in combination with other options or subject to additional ordering requirements/limitations. Dimensions shown may vary due to optional f"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2022|ford|superduty",
+  "year": 2022,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_llm_2022__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARIAT",
+    "LTX",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "LARIAT": [
+      "Premium interior trim and materials",
+      "Enhanced exterior styling elements",
+      "Upgraded comfort and convenience features"
+    ],
+    "LTX": [
+      "Mid-level interior appointments",
+      "Additional exterior trim details",
+      "Enhanced convenience package"
+    ],
+    "XLT": [
+      "Standard safety and technology package",
+      "Basic exterior trim upgrades",
+      "Core convenience features"
+    ],
+    "XL": [
+      "4-wheel disc brakes with Anti-Lock Brake System",
+      "Front and side airbags with Safety Canopy System",
+      "Ford Co-Pilot360 Technology with rear view camera",
+      "FordPass Connect with 4G LTE Wi-Fi hotspot",
+      "Trailer brake controller with Smart Trailer Tow Connector on DRW",
+      "AdvanceTrac with Roll Stability Control",
+      "Configurable daytime running lamps and LED roof marker lamps",
+      "Variable-intermittent windshield wipers",
+      "SecuriLock Passive Anti-Theft System"
+    ]
+  }
+}

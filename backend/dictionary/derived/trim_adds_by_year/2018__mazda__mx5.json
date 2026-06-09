@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2018|mazda|mx5",
+  "year": 2018,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_web_2018__mazda__mx5",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Grand Touring",
+    "Club",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Base model with 2.0L SKYACTIV-G engine and 6-speed manual transmission",
+      "Cloth upholstery and manual windows",
+      "7-inch touchscreen with Bluetooth and USB audio input",
+      "LED headlights and fog lights",
+      "16-inch alloy wheels with Bridgestone tires",
+      "Power steering and power brakes with ABS",
+      "Air conditioning with manual controls",
+      "Backup camera"
+    ],
+    "Club": [
+      "Automatic transmission option (6-speed automatic available)",
+      "Upgraded cloth upholstery with higher-quality materials",
+      "Automatic headlights with auto-leveling",
+      "Cruise control",
+      "Power windows, locks, and mirrors",
+      "17-inch alloy wheels",
+      "Push-button start with keyless entry",
+      "Upgraded audio system with additional speakers"
+    ],
+    "Grand Touring": [
+      "Leather-trimmed seats with power driver's seat and lumbar support",
+      "Heated front seats and steering wheel",
+      "Bose premium audio system with 9 speakers",
+      "Navigation system integrated with touchscreen display",
+      "Automatic bi-functional HID headlights",
+      "18-inch forged alloy wheels",
+      "Active safety features including automatic emergency braking",
+      "Premium interior trim materials and stitching details"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mazda/mx-5/"
+}

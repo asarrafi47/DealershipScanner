@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2013|gmc|acadia",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_llm_2013__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT-2",
+    "SLT-1",
+    "ELS",
+    "ELS"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Signature Denali grille and front/rear fascias",
+      "Denali-specific body-color bodyside moldings with chrome insert and rocker molding",
+      "Chrome Denali-specific roof rails",
+      "High-Intensity Discharge low-beam headlamps with halogen projector high beam",
+      "Premium Denali-specific carpeted floor mats for all 3 rows",
+      "Premium acoustical package",
+      "Illuminated front sill plate",
+      "Perforated leather-appointed seating in first and second rows",
+      "8-way power driver seat with 2-position memory and 2-way power front passenger seat"
+    ],
+    "SLT-2": [
+      "Rear Cross Traffic Alert and Side Blind Zone Alert",
+      "High-Intensity Discharge low-beam headlamps with halogen projector high beam (requires Technology Package)",
+      "Audio controls in rear cargo area (requires Technology Package)",
+      "NavTraffic included with Color Touch Navigation System"
+    ],
+    "SLT-1": [
+      "Front halogen fog lamps",
+      "Heated power-adjustable manual-folding mirrors with integrated turn signal indicators",
+      "Leather-appointed seating in first and second rows",
+      "8-way power driver seat with lumbar control and 2-way power front passenger seat with lumbar control",
+      "Variable effort power steering",
+      "Tri-zone air conditioning with second and third-row controls"
+    ],
+    "ELS": [
+      "Power rear liftgate",
+      "Front center air bag",
+      "Tri-zone air conditioning with individual climate settings for driver and front passenger",
+      "Remote vehicle start",
+      "3-prong 120-volt household-style power outlet",
+      "2-panel Dual Skyscape sunroof with tilt-sliding front and fixed rear",
+      "Inside rearview auto-dimming mirror",
+      "Remote keyless entry with extended range",
+      "SiriusXM Satellite Radio with 3 trial months of service"
+    ]
+  }
+}

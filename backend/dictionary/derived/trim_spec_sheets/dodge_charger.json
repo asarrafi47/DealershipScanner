@@ -1,0 +1,61 @@
+{
+  "ladder_id": "dodge_charger",
+  "make": "Dodge",
+  "models": [
+    "Charger",
+    "Charger SRT"
+  ],
+  "year_min": 2015,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "SRT Hellcat Redeye Widebody": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ],
+    "SRT Hellcat Redeye": [
+      {
+        "label": "Engine Options",
+        "value": "Supercharged Hellcat V8 with track-oriented cooling.; Automatic 8-spd"
+      }
+    ],
+    "SRT Hellcat": [
+      {
+        "label": "Engine Options",
+        "value": "707+ hp supercharged HEMI and performance brakes.; Automatic 8-spd"
+      }
+    ],
+    "Scat Pack Widebody": [
+      {
+        "label": "Engine Options",
+        "value": "Naturally aspirated 6.4L HEMI with widebody stance."
+      }
+    ],
+    "Scat Pack": [
+      {
+        "label": "Engine Options",
+        "value": "Performance HEMI, sport suspension, and Brembo brakes."
+      }
+    ],
+    "R/T": [
+      {
+        "label": "Engine Options",
+        "value": "5.7L HEMI V8 and sport-tuned suspension.; Automatic 8-spd"
+      }
+    ],
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "V6 AWD performance trim with sport appearance."
+      }
+    ],
+    "SXT": [
+      {
+        "label": "Interior Materials",
+        "value": "Entry V6 trim with Uconnect and cloth or leather seating."
+      }
+    ]
+  }
+}

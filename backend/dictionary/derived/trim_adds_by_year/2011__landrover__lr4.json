@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2011|landrover|lr4",
+  "year": 2011,
+  "make": "landrover",
+  "model": "LR4",
+  "ladder_id": "brochure_llm_2011__landrover__lr4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LUX",
+    "HSE"
+  ],
+  "adds_by_trim": {
+    "HSE": [
+      "Full-color Infotainment Touch-screen standard at top of center console",
+      "5-inch Thin Film Transistor (TFT) display in instrument panel",
+      "Personalized drive settings including drive-away locking and speed warning",
+      "Optional High Beam Assist function via TFT display menu",
+      "Thumb controls on steering wheel for display and audio/phone functions",
+      "Analog clock in premium ambience interior design",
+      "Choice of in-car entertainment options including Harman/Kardon LOGIC7 system",
+      "HD Radio and Sirius Satellite Radio availability"
+    ],
+    "LUX": []
+  }
+}

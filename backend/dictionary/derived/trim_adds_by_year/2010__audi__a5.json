@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|audi|a5",
+  "year": 2010,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "2010_audi_a5",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Premium",
+    "Premium Plus",
+    "Prestige",
+    "S5"
+  ],
+  "adds_by_trim": {
+    "Premium Plus": [
+      "Audi xenon plus headlights with LED daytime running lights and LED taillights",
+      "HomeLink and Bluetooth hands-free phone interface",
+      "Heated front seats and three-zone automatic climate control",
+      "Audi music interface for iPod control through MMI"
+    ],
+    "Prestige": [
+      "Bang & Olufsen sound system",
+      "Audi MMI navigation plus with 7-inch display and 40-GB hard drive",
+      "Audi advanced key push-button start",
+      "Driver seat and mirror memory"
+    ],
+    "S5": [
+      "4.2L V8 FSI — 354 hp with quattro Sport Rear Differential (replaces 2.0T/3.2 on A5)",
+      "Silk Nappa S5 sport seats with integrated headrests and Carbon Fiber interior accents",
+      "19-inch wheels with summer performance tires and quad-tip exhaust",
+      "Aluminum suspension components and sport-tuned chassis"
+    ],
+    "Premium": [
+      "Leather seating surfaces as standard",
+      "Eight-way power driver and passenger seats with four-way power lumbar adjustment",
+      "Halogen headlights with integrated high and low beams",
+      "Dual exhaust pipes on left side",
+      "Split folding 50/50 rear seatback",
+      "Tilting glass panorama sunroof",
+      "Leather-wrapped three-spoke multifunction sport steering wheel",
+      "Audi concert system with single CD player, MP3 playback and AM/FM radio",
+      "Audi Sound System 180 watts with ten speakers and subwoofer",
+      "Electronic cruise control"
+    ]
+  }
+}

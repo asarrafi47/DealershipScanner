@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|buick|encore",
+  "year": 2019,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2019__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport Touring",
+    "Essence",
+    "Preferred",
+    "Encore (1SV)"
+  ],
+  "adds_by_trim": {
+    "Sport Touring": [
+      "18-inch 7-spoke chromed aluminum wheels",
+      "Brandy leather-appointed seating",
+      "Experience Buick Package with 18-inch technical gray aluminum wheels"
+    ],
+    "Essence": [
+      "18-inch 10-spoke aluminum wheels with light argent finish",
+      "Shale cloth with leatherette or brandy leather-appointed seating",
+      "Available leatherette and leather-appointed interior options"
+    ],
+    "Preferred": [
+      "18-inch 10-spoke aluminum wheels with light argent finish",
+      "Shale cloth with leatherette or leather-appointed seating options"
+    ],
+    "Encore (1SV)": [
+      "Signature LED daytime running lamps",
+      "Winged signature grille",
+      "Unique wheels per trim level",
+      "Elevated SUV seating position",
+      "Athletic exterior stance",
+      "Ebony cloth with leatherette seating (standard)"
+    ]
+  }
+}

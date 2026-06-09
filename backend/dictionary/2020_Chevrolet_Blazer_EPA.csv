@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2020,Chevrolet,Blazer,FWD,2.5L I4 (SIDI),Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,21,27,23,,,,,,2.5L I4 Turbo,Turbocharged
-2020,Chevrolet,Blazer,FWD,3.6L V6 (SIDI),Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.6,19,26,21,,,,,,3.6L V6,
-2020,Chevrolet,Blazer,AWD,3.6L V6 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,18,25,21,,,,,,3.6L V6,
-2020,Chevrolet,Blazer,FWD,2.0L I4 (SIDI),Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,21,28,24,,,,,,2.0L I4,
-2020,Chevrolet,Blazer,AWD,2.0L I4 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,27,23,,,,,,2.0L I4,

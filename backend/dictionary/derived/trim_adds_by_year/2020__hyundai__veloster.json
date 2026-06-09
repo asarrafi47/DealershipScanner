@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2020|hyundai|veloster",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_2020__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue"
+  ],
+  "adds_by_trim": {
+    "Blue": [
+      "Adds Apple CarPlay and Android Auto smartphone integration",
+      "Adds Blue Link Connected Care with 24/7 SOS Emergency Assistance",
+      "Adds Automatic Collision Notification",
+      "Adds MyHyundai app for remote vehicle access",
+      "Adds On-Demand Diagnostics and Monthly Vehicle Health Reports",
+      "Adds Car Finder smartphone navigation feature"
+    ],
+    "Limited": [
+      "Adds Blue Link Guidance package with voice-activated search and navigation",
+      "Adds remote engine start and door unlock via smartphone",
+      "Adds Amazon Echo and Google Home voice command integration",
+      "Adds Destination Send-to-Car feature",
+      "Adds Service Link convenient service scheduling"
+    ]
+  }
+}

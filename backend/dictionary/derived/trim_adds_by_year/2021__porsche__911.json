@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2021|porsche|911",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2021__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "911 Carrera 4S",
+    "911 Carrera S"
+  ],
+  "adds_by_trim": {
+    "911 Carrera 4S": [
+      "All-wheel drive system"
+    ],
+    "911 Carrera S": [
+      "2-Zone Automatic Climate Control with separate temperature controls for driver and passenger",
+      "Active carbon filter traps particles, pollen, odors, and fine dust",
+      "Automatic air-circulation mode monitors air quality and switches between fresh and recirculated air",
+      "Optional Ionizer function improves air quality by reducing airborne germs and pollutants",
+      "Electrically adjustable slide/tilt metal sunroof with wind deflector",
+      "Optional electrically adjustable slide/tilt glass sunroof with electric roll-up sunblind"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2019|fiat|500",
+  "year": 2019,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2019__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ABARTH",
+    "LOUNGE",
+    "POP"
+  ],
+  "adds_by_trim": {
+    "ABARTH": [
+      "160-mph speedometer (vs. 140-mph on lower trims)",
+      "Performance high-back cloth front buckets with seat belt pass-through",
+      "Abarth performance-designed perforated leather-wrapped steering wheel with audio/cruise controls",
+      "3-mode Electronic Stability Control (Full-on, Partial-off, Full-off)",
+      "16-inch or 17-inch premium forged aluminum wheels in Hyper Black or Bronze",
+      "Performance front spoiler",
+      "16-inch cast aluminum Black Noise wheels",
+      "Rear wiper and washer not available on Cabrio model"
+    ],
+    "LOUNGE": [
+      "Leather-faced front bucket seats with embroidered 500 logo on seatback",
+      "Automatic Temperature Control with micron filter (packaged in Popular Equipment Package)",
+      "Auto-dimming rearview mirror with microphone (packaged in Popular Equipment Package)",
+      "Rearview manual mirror with microphone",
+      "Front-passenger assist handle",
+      "Rear wiper and washer (Hatchback only)",
+      "Front floor mats",
+      "Heated seats (packaged in Popular Equipment Package)"
+    ],
+    "POP": [
+      "Power windows with front-row 1-touch down",
+      "Rear defroster",
+      "Tinted glass",
+      "Intermittent windshield wipers",
+      "Power door locks",
+      "Electronic Vehicle Information Center with 7-inch HD TFT display",
+      "Uconnect 3 with 5-inch touchscreen display and Bluetooth",
+      "ParkView rear back-up camera",
+      "Multiple airbags including side-curtain airbags",
+      "Electronic Stability Control with Traction Control and Brake Assist"
+    ]
+  }
+}

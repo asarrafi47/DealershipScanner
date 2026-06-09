@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2017|cadillac|escalade",
+  "year": 2017,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_llm_2017__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Escalade ESV Platinum",
+    "Escalade Platinum",
+    "Escalade ESV Premium Luxury",
+    "Escalade Premium Luxury",
+    "Escalade ESV Luxury",
+    "Escalade Luxury",
+    "Escalade ESV",
+    "Escalade"
+  ],
+  "adds_by_trim": {
+    "Escalade ESV Platinum": [
+      "22-inch premium painted wheels with chrome accents and ultrabright finish"
+    ],
+    "Escalade Platinum": [
+      "22-inch premium painted wheels with chrome accents and ultrabright finish"
+    ],
+    "Escalade ESV Premium Luxury": [
+      "22-inch dual 7-spoke aluminum wheels with premium paint and chrome inserts"
+    ],
+    "Escalade Premium Luxury": [
+      "22-inch dual 7-spoke aluminum wheels with premium paint and chrome inserts"
+    ],
+    "Escalade ESV Luxury": [
+      "22-inch 7-spoke aluminum wheels with premium paint"
+    ],
+    "Escalade Luxury": [
+      "22-inch 7-spoke aluminum wheels with premium paint"
+    ],
+    "Escalade ESV": [
+      "20-inch dual 7-spoke aluminum chrome-plated wheels standard"
+    ],
+    "Escalade": [
+      "20-inch dual 7-spoke aluminum chrome-plated wheels standard"
+    ]
+  }
+}

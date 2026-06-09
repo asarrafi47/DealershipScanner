@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2015|subaru|forester",
+  "year": 2015,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2015__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0XT Touring",
+    "2.0XT Premium",
+    "2.5i Touring",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "2.0XT Touring": [
+      "2.0-liter turbocharged engine with 250 hp and 258 lb-ft torque",
+      "Lineartronic CVT automatic transmission with manual mode",
+      "12.4-inch front and 10.9-inch rear ventilated disc brakes",
+      "18 x 7.0-inch 5-spoke aluminum alloy wheels with dark gray finish",
+      "225/55 R18 all-season tires",
+      "Sport-tuned suspension",
+      "X-MODE with Hill Descent Control",
+      "Premium unleaded gasoline requirement"
+    ],
+    "2.0XT Premium": [
+      "2.0-liter turbocharged engine with 250 hp and 258 lb-ft torque",
+      "Lineartronic CVT automatic transmission with manual mode",
+      "12.4-inch front and 10.9-inch rear ventilated disc brakes",
+      "Sport-tuned suspension",
+      "Premium unleaded gasoline requirement"
+    ],
+    "2.5i Touring": [
+      "18 x 7.0-inch 5-spoke aluminum alloy wheels with high-luster silver finish",
+      "225/55 R18 all-season tires",
+      "X-MODE with Hill Descent Control",
+      "Dual-zone automatic climate control with air filtration",
+      "One-touch folding rear seatbacks"
+    ],
+    "2.5i Limited": [
+      "17 x 7.0-inch 5-spoke aluminum alloy wheels",
+      "X-MODE with Hill Descent Control",
+      "Automatic climate control with air filtration",
+      "Lineartronic CVT automatic transmission standard",
+      "Body-color side mirrors with integrated turn signals"
+    ],
+    "2.5i Premium": [
+      "17 x 7.0-inch 5-spoke aluminum alloy wheels",
+      "Body-color side mirrors",
+      "Fog lights",
+      "Manually adjustable air conditioning with air filtration"
+    ],
+    "2.5i": [
+      "2.5-liter horizontally-opposed DOHC engine with 170 hp and 174 lb-ft torque",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission standard with Incline Start Assist",
+      "4-wheel independent suspension with front struts and rear double wishbones",
+      "Vehicle Dynamics Control and ABS with EBD",
+      "Brake Assist and Brake Override System",
+      "Daytime Running Lights",
+      "17 x 7.0-inch steel wheels",
+      "225/60 R17 all-season tires",
+      "Keyless entry with electronic chirp"
+    ]
+  }
+}

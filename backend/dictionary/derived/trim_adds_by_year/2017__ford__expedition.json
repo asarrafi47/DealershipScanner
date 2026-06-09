@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2017|ford|expedition",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_2017__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "King Ranch"
+  ],
+  "adds_by_trim": {
+    "King Ranch": [
+      "coverage – options or subject to additional ordering requirements/limitations. Dimensions shown may vary due to optional features"
+    ],
+    "Limited": [
+      "Adds leather-trimmed interior seating",
+      "Adds illuminated door sill plates",
+      "Adds remote start system capability",
+      "Adds vehicle security system"
+    ]
+  }
+}

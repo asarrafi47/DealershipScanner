@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|hyundai|palisade",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Palisade",
+  "ladder_id": "brochure_llm_2021__hyundai__palisade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "Exclusive grille and front bumper styling",
+      "Premium rear accent lighting with LED accents",
+      "Side mirror approach lights (puddle lamps)",
+      "Microfiber suede headliner with quilted leather door panels",
+      "Perforated leather-wrapped steering wheel",
+      "Premium Nappa leather seating surfaces",
+      "Ventilated front seats with 2nd-row captain's chairs",
+      "8-way power driver seat with extendable thigh and 4-way lumbar support",
+      "Exclusive 20-inch alloy wheels",
+      "12.3-inch full-digital instrument cluster with selectable viewing modes"
+    ],
+    "Limited": [
+      "12.3-inch full-digital instrument cluster display with selectable viewing modes",
+      "Full-color Heads-up Display",
+      "Harman Kardon 12-speaker premium audio with QuantumLogic Surround",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Rain-sensing windshield wipers",
+      "Roof side rails",
+      "Hands-free smart liftgate with auto open and adjustable height",
+      "Proximity Key entry with push button start and remote engine start",
+      "Premium Nappa leather seating surfaces",
+      "Ambient LED interior lighting with 64 adjustable colors"
+    ],
+    "SEL": [
+      "10.25-inch high-resolution touchscreen navigation system",
+      "7-passenger seating with 2nd-row captain's chairs and heated front seats",
+      "Heated steering wheel",
+      "8-way power front passenger seat",
+      "3rd-row power-folding and reclining seats",
+      "Dual automatic temperature control with CleanAir Ionizer",
+      "SiriusXM Satellite Radio",
+      "Driver Talk in-car intercom",
+      "Integrated Memory System for driver seat and mirrors",
+      "Rear Occupant Alert system"
+    ],
+    "SE": [
+      "291 horsepower 3.8L Atkinson Cycle GDI V6 engine",
+      "8-speed automatic transmission with SHIFTRONIC manual-shift mode",
+      "Paddle shifters and Shift-by-Wire push-button gear selector",
+      "HTRAC All Wheel Drive with AWD lock and Downhill Brake Control",
+      "Auto-leveling rear suspension",
+      "Hands-free smart liftgate with auto open",
+      "Electronic Parking Brake with Automatic Vehicle Hold",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Lane Keeping Assist and Lane Following Assist",
+      "8-passenger seating with 5 USB charge ports"
+    ]
+  }
+}

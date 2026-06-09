@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|infiniti|q70",
+  "year": 2016,
+  "make": "Infiniti",
+  "model": "Q70",
+  "ladder_id": "brochure_llm_2016__infiniti__q70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q70L 5.6",
+    "Q70L 3.7",
+    "Q70 5.6",
+    "Q70 3.7",
+    "Q70 Hybrid"
+  ],
+  "adds_by_trim": {
+    "Q70L 5.6": [
+      "Long wheelbase configuration for extended rear legroom",
+      "18x8.0-inch double 5-spoke aluminum wheels with 245/50R18 all-season tires"
+    ],
+    "Q70L 3.7": [
+      "Long wheelbase configuration for extended rear legroom",
+      "3.7-liter V6 engine with 330 hp at 7,000 rpm"
+    ],
+    "Q70 5.6": [
+      "5.6-liter V8 engine producing 420 hp at 6,000 rpm",
+      "414 lb-ft torque at 4,400 rpm",
+      "20x9.0-inch split 5-spoke aluminum wheels with 245/40R20 summer performance tires available"
+    ],
+    "Q70 3.7": [
+      "3.7-liter 24-valve V6 engine with aluminum-alloy block and heads",
+      "330 hp at 7,000 rpm",
+      "270 lb-ft torque at 5,200 rpm",
+      "Independent double-wishbone front suspension with coil springs",
+      "Multi-link independent rear suspension with coil springs",
+      "Automatic-on/off LED headlights with wiper interlock",
+      "LED front fog lights",
+      "Power folding heated auto-dimming outside mirrors with reverse tilt-down",
+      "Rain-sensing variable intermittent front windshield wipers",
+      "7-speed automatic transmission with Adaptive Shift Control"
+    ],
+    "Q70 Hybrid": [
+      "3.5-liter V6 with Direct Response Hybrid and lithium-ion battery",
+      "360 hp hybrid system net power at 6,500 rpm",
+      "Peak engine 258 lb-ft and peak electric motor 214 lb-ft torque",
+      "Hybrid Regenerative Braking System"
+    ]
+  }
+}

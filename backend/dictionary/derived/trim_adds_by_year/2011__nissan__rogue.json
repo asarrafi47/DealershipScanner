@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2011|nissan|rogue",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2011__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "K Kröm™ Edition",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "K Kröm™ Edition": [
+      "18-inch brilliant-finish aluminum-alloy wheels with P225/55R18 tires",
+      "Kröm™-exclusive integrated body design with front and rear fascia",
+      "Integrated fog lights in front fascia",
+      "Center exit sport-tuned exhaust",
+      "Body-color rear spoiler",
+      "Body-color power outside mirrors",
+      "Rear privacy glass"
+    ],
+    "SL": [
+      "18-inch 5-split-spoke aluminum-alloy wheels with P225/55R18 tires",
+      "High Intensity Discharge (HID) xenon headlights with manual levelizer",
+      "Automatic on/off headlights",
+      "Fog lights",
+      "Leather-appointed seats",
+      "Leather-wrapped steering wheel",
+      "Heated front seats",
+      "Heated outside mirrors with timer",
+      "Digital Bose® audio system with eight speakers and Nd® Richbass® woofer",
+      "Nissan Navigation System with 5-inch color touchscreen and XM NavTraffic®"
+    ],
+    "SV": [
+      "17-inch 5-spoke aluminum-alloy wheels with P225/60R17 tires",
+      "Power sliding glass moonroof with sliding shade and one-touch open/close",
+      "Auto-dimming rearview mirror",
+      "Automatic Temperature Control (ATC)",
+      "Nissan Intelligent Key® wireless entry and engine start system"
+    ],
+    "S": [
+      "2.5-liter DoHC 16-valve 4-cylinder engine with 170 hp and 175 lb-ft torque",
+      "Xtronic CVT® continuously variable transmission",
+      "Front-wheel drive with optional all-wheel drive",
+      "4-wheel active brake limited slip system",
+      "16-inch steel wheels with wheel covers and P215/70R16 all-season tires",
+      "Independent front strut and rear multi-link suspension",
+      "4-wheel vented disc brakes with ABS and Electronic Brake force Distribution",
+      "Vehicle-speed-sensitive electric power steering"
+    ]
+  }
+}

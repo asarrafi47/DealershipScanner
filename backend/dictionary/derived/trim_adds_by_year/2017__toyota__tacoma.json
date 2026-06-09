@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2017|toyota|tacoma",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_llm_2017__toyota__tacoma",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD Pro",
+    "Limited",
+    "TRD Off-Road",
+    "TRD Sport",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "TRD Pro": [
+      "TRD Pro cat-back exhaust",
+      "TRD-tuned off-road suspension with 2.5-inch FOX Internal Bypass shocks with rear remote reservoirs",
+      "TRD Pro 1/4-inch aluminum front skid plate",
+      "Heritage TOYOTA front grille",
+      "Rigid Industries LED fog lights",
+      "16-inch TRD black alloy wheels with Goodyear Wrangler All-Terrain tires"
+    ],
+    "Limited": [
+      "Power tilt/slide moonroof",
+      "Leather-trimmed seats",
+      "18-inch polished alloy wheels",
+      "Chrome-accented power outside mirrors with turn signal indicators",
+      "Charcoal grille with polished finish and chrome surround"
+    ],
+    "TRD Off-Road": [
+      "Off-road-tuned suspension with Bilstein shocks",
+      "Electronically controlled locking rear differential",
+      "Multi-terrain Select and Crawl Control (CRAWL) with 4x4 A/T",
+      "Active Traction Control (A-TRAC) with 4x4 M/T",
+      "16-inch machined contrast alloy wheels",
+      "Black overfenders",
+      "Chrome rear bumper"
+    ],
+    "TRD Sport": [
+      "3.5-Liter DOHC V6 direct-injection Atkinson-cycle engine with 278 hp",
+      "Automatic Limited-Slip Differential (Auto LSD)",
+      "Hill Start Assist Control (HAC)",
+      "Gray grille with smoked finish and chrome surround",
+      "17-inch machined alloy wheels",
+      "LED Daytime Running Lights and integrated wide-angle fog lights",
+      "Qi-compatible wireless smartphone charging"
+    ],
+    "SR5": [
+      "3.5-Liter DOHC V6 direct-injection Atkinson-cycle engine with 278 hp",
+      "6-speed automatic transmission",
+      "Automatic Limited-Slip Differential (Auto LSD)",
+      "Charcoal grille with chrome surround",
+      "Color-keyed overfenders and rear bumper",
+      "Projector-beam headlights with turn Daytime Running Lights and integrated fog lights",
+      "Entune Audio Plus with Connected Navigation App",
+      "4.2-inch color Multi-Information Display"
+    ],
+    "SR": [
+      "2.7-Liter DOHC 16-Valve 4-Cylinder engine with VVT-i: 159 hp",
+      "5-speed manual transmission or 6-speed automatic transmission",
+      "Dark gray grille with black surround",
+      "16-inch styled steel wheels",
+      "Projector-beam headlights with turn Daytime Running Lights",
+      "Engine and front suspension skid plate",
+      "Power sliding rear window",
+      "Entune Audio with 2.2-inch LCD odometer and tripmeter",
+      "Integrated backup camera and GoPro mount on windshield"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2016|toyota|rav4",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE",
+      "Powertrain Powertrain Powertrain Powertrain",
+      "2.5L 4-Cylinder Engine \u2022 2.5L 4-Cylinder Engine \u2022 2.5L 4-Cylinder Engine \u2022 2.5L 4-Cylinder Engine",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "176 hp @ 6000 rpm \u2022 176 hp @ 6000 rpm \u2022 176 hp @ 6000 rpm \u2022 176 hp @ 6000 rpm",
+      "172 lb.-ft. @ 4100 rpm \u2022 172 lb.-ft. @ 4100 rpm \u2022 172 lb.-ft. @ 4100 rpm \u2022 172 lb.-ft. @ 4100 rpm",
+      "Available Dynamic Torque-Control AWD \u2022 Available Dynamic Torque-Control AWD \u2022 Available Dynamic Torque-Control AWD \u2022 Available Dynamic Torque-Control AWD",
+      "Exterior Features Exterior Features Exterior Features Exterior Features",
+      "Projector-beam headlights with auto-off feature \u2022 Halogen projector-beam headlights with \u2022 LED projector-beam headlights with \u2022 LED projector-beam headlights with",
+      "Front and rear skid plates auto on/off feature auto on/off feature auto on/off feature",
+      "Power outside mirrors with folding feature and \u2022 Integrated fog lights \u2022 LED Daytime Running Lights (DRL) \u2022 LED Daytime Running Lights (DRL)",
+      "Roof rails \u2022 17-in. 5-spoke alloy wheels with P225/65R17 tires P235/55R18 tires P235/55R18 tires"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

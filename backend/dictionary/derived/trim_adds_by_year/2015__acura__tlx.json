@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|acura|tlx",
+  "year": 2015,
+  "make": "acura",
+  "model": "tlx",
+  "ladder_id": "brochure_llm_2015__acura__tlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TLX V-6 SH-AWD",
+    "TLX V-6",
+    "TLX"
+  ],
+  "adds_by_trim": {
+    "TLX V-6 SH-AWD": [
+      "Super Handling All-Wheel Drive (SH-AWD) system",
+      "3.5-liter Direct-Injection V-6 engine with 290 hp",
+      "267 lb-ft torque at 4,500 rpm"
+    ],
+    "TLX V-6": [
+      "3.5-liter Direct-Injection V-6 engine with 290 hp",
+      "267 lb-ft torque at 4,500 rpm",
+      "21/34/25 EPA fuel economy (City/Highway/Combined)",
+      "Expandable cargo volume with Advance Package (14.3 cu ft)"
+    ],
+    "TLX": [
+      "2.4-liter Direct-Injection 4-Cylinder engine with 206 hp",
+      "182 lb-ft torque at 4,500 rpm",
+      "24/35/28 EPA fuel economy (City/Highway/Combined)",
+      "13.2 cubic feet cargo volume"
+    ]
+  }
+}

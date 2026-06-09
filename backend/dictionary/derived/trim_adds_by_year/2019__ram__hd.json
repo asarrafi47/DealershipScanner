@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2019|ram|hd",
+  "year": 2019,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2019__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LARAMIE LONGHORN",
+    "LARAMIE",
+    "POWER WAGON",
+    "BIG HORN",
+    "TRADESMAN"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Uconnect 4C NAV with 12-inch display",
+      "Limited-specific premium leather and wood interior treatment",
+      "Premium leather bucket front seats with full-length center console",
+      "Ventilated front seats",
+      "Leather-wrapped/real-wood steering wheel",
+      "Chrome bodyside molding and side steps",
+      "Power running boards",
+      "Blind Spot Monitoring with Rear Cross-Path Detection"
+    ],
+    "LARAMIE LONGHORN": [
+      "Uconnect 4C NAV with 8.4-inch display",
+      "Laramie Longhorn specific premium leather and wood interior treatment",
+      "Premium leather bucket front seats with full-length center console",
+      "Heated front and rear outboard seats",
+      "Unique bright-surround Laramie Longhorn specific grille",
+      "Premium LED headlamps with LED taillamps",
+      "Laramie Longhorn badge",
+      "Chrome tow hooks"
+    ],
+    "LARAMIE": [
+      "Uconnect 4 with 8.4-inch display",
+      "Leather-trimmed 40/20/40 bench seat",
+      "Hydrographic metal patina finish on center stack and console doors",
+      "Leather-wrapped steering wheel with heat",
+      "Heated front seats",
+      "LED headlamps and taillamps with chrome bezel",
+      "LED fog lamps",
+      "Chrome-surround/chrome billet grille",
+      "Chrome front and rear bumpers"
+    ],
+    "POWER WAGON": [
+      "Unique Black interior trim with Diesel Gray accents",
+      "Vinyl/cloth 40/20/40 bench seats with tire-tread pattern",
+      "Unique Black wheel flares and 17-inch unique aluminum wheels",
+      "Black-surround unique grille with LED headlamps and Black bezels",
+      "Bilstein off-road shocks with electronic disconnecting front sway bar",
+      "Electronic locking front and rear axles (eLocker)",
+      "Ram Articulink front suspension with raised ride height",
+      "12,000-lb WARN winch with fuel tank skid plate"
+    ],
+    "BIG HORN": [
+      "Cloth 40/20/40 front bench seat",
+      "Cloth 60/40 rear split-folding bench seat (Mega Cab) or Cloth rear folding bench (Crew Cab)",
+      "Uconnect 4 with 8.4-inch display",
+      "Five USB ports and two power outlets",
+      "Universal Garage Door Opener",
+      "Dual-Zone Automatic Temperature Control",
+      "7-inch Driver Information Display color cluster",
+      "10-speaker premium audio system with subwoofer"
+    ],
+    "TRADESMAN": [
+      "Vinyl 40/20/40 front bench seat with manual adjust",
+      "Manual tilt steering column and manual temperature control",
+      "20-percent fold-down center bench seat with integrated armrest",
+      "Uconnect 3 with 5-inch display",
+      "Urethane steering wheel",
+      "Three USB ports and vinyl floor covering",
+      "Quad-halogen headlamps and incandescent taillamps",
+      "Class IV hitch receiver with trailer-tow wiring"
+    ]
+  }
+}

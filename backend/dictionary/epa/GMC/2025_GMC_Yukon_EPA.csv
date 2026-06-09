@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,GMC,Yukon,2WD,6.2L V8 (SIDI),6.2L V8,,Automatic 10-spd,Rear-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 2WD,8,6.2,15,20,17,,,,,
+2025,GMC,Yukon,XL 2WD,6.2L V8 (SIDI),6.2L V8,,Automatic 10-spd,Rear-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 2WD,8,6.2,15,19,16,,,,,
+2025,GMC,Yukon,2WD,5.3L V8 (SIDI),5.3L V8,,Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,8,5.3,15,20,17,,,,,
+2025,GMC,Yukon,XL 2WD,5.3L V8 (SIDI),5.3L V8,,Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,8,5.3,15,20,17,,,,,
+2025,GMC,Yukon,4WD,6.2L V8 (SIDI),6.2L V8,,Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,6.2,14,18,16,,,,,
+2025,GMC,Yukon,XL 4WD,6.2L V8 (SIDI),6.2L V8,,Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,6.2,14,18,16,,,,,
+2025,GMC,Yukon,4WD,5.3L V8 (SIDI),5.3L V8,,Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,8,5.3,15,19,17,,,,,
+2025,GMC,Yukon,XL 4WD,5.3L V8 (SIDI),5.3L V8,,Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,8,5.3,14,19,16,,,,,
+2025,GMC,Yukon,XL 2WD,Diesel 3.0L V6 Diesel,3.0L V6,,Automatic 10-spd,Rear-Wheel Drive,Diesel,Standard Sport Utility Vehicle 2WD,6,3.0,21,26,23,,,,,
+2025,GMC,Yukon,2WD,Diesel 3.0L V6 Diesel,3.0L V6,,Automatic 10-spd,Rear-Wheel Drive,Diesel,Standard Sport Utility Vehicle 2WD,6,3.0,21,26,23,,,,,
+2025,GMC,Yukon,XL 4WD,Diesel 3.0L V6 Diesel,3.0L V6,,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Sport Utility Vehicle 4WD,6,3.0,20,26,22,,,,,
+2025,GMC,Yukon,4WD,Diesel 3.0L V6 Diesel,3.0L V6,,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Sport Utility Vehicle 4WD,6,3.0,20,26,22,,,,,

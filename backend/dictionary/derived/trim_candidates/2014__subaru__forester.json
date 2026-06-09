@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|subaru|forester",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "Forester",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring",
+    "Limited",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

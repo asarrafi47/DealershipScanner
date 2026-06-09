@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2017|hyundai|tucson",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2017_Hyundai_Tucson_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [
+    6,
+    12
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 6,
+      "trim_hint": true,
+      "text": "1 Optional on Tucson SE, standard on Eco, Sport and Limited models. 2 Standard on Tucson Limited. Apple CarPlay works with iPhone 5s, iPhone 5c, iPhone 5 and later models running\nthe latest version of iOS 7 and above. Apple is a registered trademark of Apple Inc. 3 Blue Link Connected Care includes one year of the Blue Link Connected Care Package and requires\nan active Blue Link subscription. One-year term starts from the new vehicle date of first use and is available for new vehicle purchases and leases based upon terms and conditions on\nthe Blue Link subscription enrollment pages. Cellular and GPS coverage is required. Features, specifications, and fees vary by subscription plan and are subject to change. For more on\ndetails and limitations, visit Hyundaiusa.com or your authorized Hyundai dealer.",
+      "table_lines": []
+    },
+    {
+      "page": 12,
+      "trim_hint": true,
+      "text": "america\u2019s Best warrantY\n10 Years 5 Years\npowertrain new vehicLe\nLimited warrantY 100,000 miLes Limited warrantY 60,000 miLes\n7 Years 5 Years\nanti-perforation 24/7 roadside\nwarrantY unLimited miLes assistance unLimited miLes\nSee dealer for LIMITED WARRANTY details. Fuel economy estimated by EPA for comparison only. Mileage may vary. While the information contained in this brochure was correct at the time of printing, specifications and equipment can change. Feature comparisons\nbased on competitor information available at the time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to change product specifications and equipment at any time without incurring obligations. Some vehicles are\nshown with optional equipment. Specifications apply to U.S. vehicles only. Please contact your Hyundai dealer for current vehicle specifications. As part of Hyundai\u2019s commitment to a responsible environment, this brochure was printed using paper certified by the Forest\nStewardship Council.\u00ae FSC\u00ae certification helps ensure that the highest social and environmental standards are met in the making of the paper we use, contributing to conservation, responsible management, and community-level benefits for people near the forests.\n\u00a92016 HYunDAI nP020 t2017",
+      "table_lines": [
+        "america\u2019s Best warrantY",
+        "10 Years 5 Years\npowertrain new vehicLe\nLimited warrantY 100,000 miLes Limited warrantY 60,000 miLes\n7 Years 5 Years\nanti-perforation 24/7 roadside\nwarrantY unLimited miLes assistance unLimited miLes"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 6 ---\n1 Optional on Tucson SE, standard on Eco, Sport and Limited models. 2 Standard on Tucson Limited. Apple CarPlay works with iPhone 5s, iPhone 5c, iPhone 5 and later models running\nthe latest version of iOS 7 and above. Apple is a registered trademark of Apple Inc. 3 Blue Link Connected Care includes one year of the Blue Link Connected Care Package and requires\nan active Blue Link subscription. One-year term starts from the new vehicle date of first use and is available for new vehicle purchases and leases based upon terms and conditions on\nthe Blue Link subscription enrollment pages. Cellular and GPS coverage is required. Features, specifications, and fees vary by subscription plan and are subject to change. For more on\ndetails and limitations, visit Hyundaiusa.com or your authorized Hyundai dealer.\n\n--- page 12 ---\namerica\u2019s Best warrantY\n10 Years 5 Years\npowertrain new vehicLe\nLimited warrantY 100,000 miLes Limited warrantY 60,000 miLes\n7 Years 5 Years\nanti-perforation 24/7 roadside\nwarrantY unLimited miLes assistance unLimited miLes\nSee dealer for LIMITED WARRANTY details. Fuel economy estimated by EPA for comparison only. Mileage may vary. While the information contained in this brochure was correct at the time of printing, specifications and equipment can change. Feature comparisons\nbased on competitor information available at the time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to change product specifications and equipment at any time without incurring obligations. Some vehicles are\nshown with optional equipment. Specifications apply to U.S. vehicles only. Please contact your Hyundai dealer for current vehicle specifications. As part of Hyundai\u2019s commitment to a responsible environment, this brochure was printed using paper certified by the Forest\nStewardship Council.\u00ae FSC\u00ae certification helps ensure that the highest social and environmental standards are met in the making of the paper we use, contributing to conservation, responsible management, and community-level benefits for people near the forests.\n\u00a92016 HYunDAI nP020 t2017\n\namerica\u2019s Best warrantY\n10 Years 5 Years\npowertrain new vehicLe\nLimited warrantY 100,000 miLes Limited warrantY 60,000 miLes\n7 Years 5 Years\nanti-perforation 24/7 roadside\nwarrantY unLimited miLes assistance unLimited miLes"
+}

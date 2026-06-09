@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2023|toyota|supra",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Supra",
+  "ladder_id": "brochure_llm_2023__toyota__supra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A91-MT Edition",
+    "3.0 Premium",
+    "3.0",
+    "2.0"
+  ],
+  "adds_by_trim": {
+    "A91-MT Edition": [
+      "6-speed intelligent Manual Transmission (iMT) only"
+    ],
+    "3.0 Premium": [
+      "14-way heated power-adjustable sport seats with driver's-seat memory function",
+      "Sport pedals",
+      "Full-color Head-Up Display (HUD)",
+      "12-speaker JBL® HiFi Surround Sound system (500W)",
+      "8.8-inch touchscreen with Supra Command touchpad control and navigation",
+      "Qi-compatible wireless smartphone charging tray",
+      "Supra Connect with Automatic Emergency Calling, Roadside Assistance, Remote-Control Lock/Ventilation"
+    ],
+    "3.0": [
+      "3.0L twin-scroll single-turbo DOHC 24-valve inline 6-cylinder engine with 382 hp",
+      "6-speed intelligent Manual Transmission (iMT) or 8-speed Automatic Transmission",
+      "Active exhaust",
+      "Active rear sport differential",
+      "Launch Control (Automatic Transmission only)",
+      "High-performance Michelin Pilot Super Sport summer tires (F: 255/35 ZR19, R: 275/35 ZR19)",
+      "19-inch Frozen Gunmetal Gray forged-aluminum wheels",
+      "Matte-black auto-folding heated outside mirrors with memory function",
+      "14-way power-adjustable sport seats with driver's-seat memory and 4-way lumbar",
+      "10-speaker HiFi sound system (205W)"
+    ],
+    "2.0": [
+      "2.0L twin-scroll single-turbo 4-cylinder engine with 255 hp and 295 lb.-ft. torque",
+      "8-speed Automatic Transmission with paddle shifters",
+      "Top racetrack speed: 155 mph (electronically controlled)",
+      "6-lens auto-leveling LED headlights with three low-beam and three high-beam",
+      "Built-in rear spoiler",
+      "18-inch cast-aluminum 10-spoke wheels with dual-tone finish",
+      "8-way manual sport seats with 4-way lumbar and 2-way bolster adjustment",
+      "Carbon-fiber interior trim",
+      "Leather-wrapped 3-spoke steering wheel with paddle shifters",
+      "4-speaker sound system with 8.8-inch display screen, AM/FM, SiriusXM, USB, Bluetooth"
+    ]
+  }
+}

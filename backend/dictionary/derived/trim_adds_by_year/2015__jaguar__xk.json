@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2015|jaguar|xk",
+  "year": 2015,
+  "make": "Jaguar",
+  "model": "XK",
+  "ladder_id": "brochure_llm_2015__jaguar__xk",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XKR-S",
+    "XKR",
+    "XK"
+  ],
+  "adds_by_trim": {
+    "XKR-S": [
+      "5.0L V8 Supercharged engine producing 550 HP",
+      "Performance seats with individually fine-tuned lumbar support and sculpted side bolsters",
+      "Diamond sew detail on performance seats"
+    ],
+    "XKR": [
+      "5.0L V8 Supercharged engine delivering 510 HP",
+      "Choice of Luxury or Performance interior theme",
+      "Performance seats available as option with heating and lumbar support"
+    ],
+    "XK": [
+      "5.0L V8 engine producing 385 HP",
+      "16-way adjustable Luxury seats upholstered in twin-stitched soft grain leather",
+      "Seat heating and cooling functionality standard",
+      "2 seat memory and recall with adjust buttons",
+      "Bi-function HID Xenon headlamps with LED signature running lights",
+      "All-LED tail lamps",
+      "Aluminum body construction in Coupe and Convertible bodystyles"
+    ]
+  }
+}

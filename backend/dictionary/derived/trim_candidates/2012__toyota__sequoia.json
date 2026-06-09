@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2012|toyota|sequoia",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "SR5"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

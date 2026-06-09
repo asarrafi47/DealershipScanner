@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2020|gmc|terrain",
+  "year": 2020,
+  "make": "GMC",
+  "model": "Terrain",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

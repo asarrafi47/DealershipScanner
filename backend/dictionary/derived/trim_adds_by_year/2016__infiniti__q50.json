@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|infiniti|q50",
+  "year": 2016,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_llm_2016__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q50 3.0t Red Sport 400",
+    "Q50 2.0t Sport",
+    "Q50 3.0t Sport",
+    "Q50 Hybrid",
+    "Q50 2.0t Premium",
+    "Q50 3.0t Premium"
+  ],
+  "adds_by_trim": {
+    "Q50 3.0t Red Sport 400": [
+      "3.0-liter V6 twin-turbo 400 with 400 horsepower and 350 lb-ft torque",
+      "19x9.0-inch front and 19x9.5-inch rear staggered unique aluminum-alloy wheels",
+      "245/40R19 summer run-flat performance tires",
+      "4-piston opposed front calipers with 14.0x1.3-inch vented discs",
+      "2-piston opposed rear calipers with 13.8x0.88-inch vented discs",
+      "Sport-tuned rear stabilizer bar with double piston shock absorbers"
+    ],
+    "Q50 2.0t Sport": [
+      "2.0-liter I4 turbocharged engine with 208 horsepower and 258 lb-ft torque",
+      "19x8.5-inch triple 5-spoke aluminum-alloy wheels with 245/40R19 summer run-flat performance tires",
+      "Sport-tuned front stabilizer bar"
+    ],
+    "Q50 3.0t Sport": [
+      "3.0-liter V6 twin-turbo 300 with 300 horsepower and 295 lb-ft torque",
+      "19x8.5-inch triple 5-spoke aluminum-alloy wheels with 245/40R19 summer run-flat performance tires"
+    ],
+    "Q50 Hybrid": [
+      "3.5-liter V6 with Infiniti Direct Response Hybrid utilizing lithium-ion battery and 50 kW electric motor",
+      "360 horsepower combined hybrid system net power",
+      "Hybrid Regenerative Braking System",
+      "Independent multi-link rear suspension with coil springs over double piston shock absorbers",
+      "Double overhead camshaft with microfinished camshafts and continuously variable valve timing control"
+    ],
+    "Q50 2.0t Premium": [
+      "Idle Stop Start technology on 2.0-liter turbocharged engine"
+    ],
+    "Q50 3.0t Premium": [
+      "Water-cooled air charging system on 3.0-liter V6 twin-turbo 300"
+    ]
+  }
+}

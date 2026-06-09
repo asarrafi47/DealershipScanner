@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Porsche,Boxster,Boxster,2.7L V6 (SIDI),2.7L V6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,20,29,24,,,,,
+2015,Porsche,Boxster,Boxster,2.7L V6 (SIDI),2.7L V6 Turbo,Turbocharged,Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,22,31,25,,,,,
+2015,Porsche,Boxster,S,3.4L V6 (SIDI),3.4L V6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,20,27,22,,,,,
+2015,Porsche,Boxster,S,3.4L V6 (SIDI),3.4L V6 Turbo,Turbocharged,Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,21,29,24,,,,,
+2015,Porsche,Boxster,GTS,3.4L V6 (SIDI),3.4L V6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,19,26,22,,,,,
+2015,Porsche,Boxster,GTS,3.4L V6 (SIDI),3.4L V6 Turbo,Turbocharged,Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,21,30,25,,,,,

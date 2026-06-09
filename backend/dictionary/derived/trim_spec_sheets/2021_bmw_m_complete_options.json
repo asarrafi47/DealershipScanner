@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2021_bmw_m_complete_options",
+  "make": "BMW",
+  "models": [
+    "M",
+    "M"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "550i": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "240i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

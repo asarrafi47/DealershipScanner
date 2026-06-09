@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2015|bentley|mulsanne",
+  "year": 2015,
+  "make": "bentley",
+  "model": "mulsanne",
+  "ladder_id": "brochure_llm_2015__bentley__mulsanne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MULLINER DRIVING SPECIFICATION",
+    "ENTERTAINMENT SPECIFICATION",
+    "PREMIER SPECIFICATION",
+    "COMFORT SPECIFICATION",
+    "Mulsanne"
+  ],
+  "adds_by_trim": {
+    "MULLINER DRIVING SPECIFICATION": [
+      "21-inch 2-piece Mulliner alloy wheels in painted or polished finish",
+      "Sports-tuned suspension and steering",
+      "Mulliner Flying B style wing vents",
+      "Handcrafted by Bentley Mulliner England treadplate plaque",
+      "Drilled alloy sports foot pedals",
+      "Indented hide headlining",
+      "Knurled sports gear lever",
+      "Veneered picnic tables with contemporary cross-banding and inlay"
+    ],
+    "ENTERTAINMENT SPECIFICATION": [
+      "Rear seat entertainment system with dual 8-inch LCD screens and 20GB hard drive",
+      "6-disc DVD player",
+      "Two sets of Bluetooth headphones and remote control",
+      "Wi-Fi hotspot connectivity",
+      "Naim for Bentley Premium Audio System with 2200W digital amplifier and 20 speakers"
+    ],
+    "PREMIER SPECIFICATION": [
+      "Ambient interior mood lighting",
+      "Bright stainless steel door pillar finisher",
+      "Bright stainless steel matrix to lower bumper apertures and front wing vents",
+      "Flying B radiator mascot",
+      "Jewel fuel filler cap",
+      "Personalised embroidery to headrests",
+      "Personalised treadplate plaques",
+      "Shade band to tinted windscreen"
+    ],
+    "COMFORT SPECIFICATION": [
+      "Comfort headrests to rear seats",
+      "Twin footrests to rear cabin",
+      "Twin loose cushions to rear cabin",
+      "Curtains to rear cabin in black or ivory",
+      "Frosted glass refrigerated bottle cooler with crystal champagne flutes",
+      "4 city umbrellas",
+      "First aid kit with warning triangle"
+    ],
+    "Mulsanne": [
+      "6.75-liter turbocharged V8 engine",
+      "8-inch high-resolution colour infotainment screen with concealed veneered panel",
+      "Central Multi Media Interface rotary controller with navigation, telephone, radio, media",
+      "60GB hard disc drive with 20GB personal storage and CD changer",
+      "Satellite navigation with 4 map configurations and 3D topographical views",
+      "Rear seat ISOFIX child seat fixings with top tether points",
+      "Direct tyre pressure monitoring system with speed-related warning",
+      "Vehicle immobiliser and interior volumetric alarm system",
+      "Mulsanne audio system with 14 speakers and dual subwoofers",
+      "Full iPod and MP3 player compatibility with album art display"
+    ]
+  }
+}

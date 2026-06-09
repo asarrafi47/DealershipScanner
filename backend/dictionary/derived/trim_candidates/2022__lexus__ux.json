@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2022|lexus|ux",
+  "year": 2022,
+  "make": "lexus",
+  "model": "UX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

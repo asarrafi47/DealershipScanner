@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2023|infiniti|q50",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_llm_2023__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q50 RED SPORT 400",
+    "Q50 SENSORY",
+    "Q50 LUXE"
+  ],
+  "adds_by_trim": {
+    "Q50 LUXE": [
+      "3.0-liter twin-turbocharged V6 engine with 300 hp and 295 lb-ft torque",
+      "7-speed automatic transmission with manual shift mode and Downshift Rev Matching",
+      "Rear-Wheel Drive or INFINITI Intelligent All-Wheel Drive",
+      "Electronic Power Steering with hill start assist",
+      "LED automatic on/off headlights with signature daytime running lights and fog lights",
+      "18-inch aluminum sport wheels with 225/50R18 run-flat tires",
+      "Body-color power-folding heated outside mirrors with integrated LED turn signals",
+      "INFINITI InTouch dual HD display system with Services and Wi-Fi Hotspot",
+      "Wireless Apple CarPlay and Android Auto integration",
+      "Textured Aluminum interior trim accents with heated steering wheel and front seats"
+    ],
+    "Q50 SENSORY": [
+      "Bose Performance Series Audio 16-speaker stereo with Centerpoint surround",
+      "Intelligent Cruise Control with Full-Speed Range capability",
+      "Distance Control Assist and Front and Rear Sonar System",
+      "High Beam Assist and Remote Engine Start with HomeLink transceiver",
+      "19-inch sport-design triple 5-spoke aluminum wheels with 245/40R19 performance tires",
+      "Sport-design front and rear fascias with body-color diffuser and black grille",
+      "Black Open Pore Wood interior trim accents with black headliner and pillars",
+      "Auto-dimming outside mirrors and Advanced Climate Control with auto-recirculation",
+      "POLLEN Plus Enhanced Ambient Air Purification with Grape Polyphenol Filter",
+      "Navigation with 3D building graphics, SiriusXM Travel Link, and XM Traffic"
+    ],
+    "Q50 RED SPORT 400": [
+      "3.0-liter twin-turbocharged V6 engine with 400 hp and 350 lb-ft torque",
+      "Sport brakes with red-painted calipers and revised exhaust mid-pipe for powerful sound",
+      "Dynamic Digital Suspension with higher final drive ratio",
+      "Exclusive dual exhaust tips with brushed satin finish",
+      "Exclusive 19-inch aluminum-alloy sport wheels with black mirror caps",
+      "Red S rear badge and quilted semi-aniline leather sport seats with red contrast stitching",
+      "Genuine Matte Black Carbon Fiber interior trim accents with unique Dark Chrome finishes",
+      "Dark metallic steering wheel-mounted paddle shifters",
+      "Dashboard and shifter with red contrast stitching",
+      "Aluminum sport pedals"
+    ]
+  }
+}

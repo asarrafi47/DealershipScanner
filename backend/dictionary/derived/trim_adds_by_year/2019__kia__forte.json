@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2019|kia|forte",
+  "year": 2019,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_2019__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds UVO eServices with 5-year complimentary subscription",
+      "Adds SiriusXM satellite radio capability",
+      "Adds Qi wireless charging for compatible mobile devices",
+      "Adds 911 Connect emergency assistance",
+      "Adds 24-hour Roadside Assistance",
+      "Adds Vehicle Diagnostics system"
+    ],
+    "Limited": [
+      "Upgraded to eServices with Premium Navigation",
+      "Adds Parking Minder remote vehicle monitoring",
+      "Adds My Car Zone vehicle management features"
+    ]
+  }
+}

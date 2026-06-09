@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2013|bentley|mulsanne",
+  "year": 2013,
+  "make": "bentley",
+  "model": "mulsanne",
+  "ladder_id": "brochure_llm_2013__bentley__mulsanne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MULLINER DRIVING SPECIFICATION",
+    "PREMIERE SPECIFICATION",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "MULLINER DRIVING SPECIFICATION": [
+      "21-inch 2-piece Mulliner alloy wheels in painted or polished finish",
+      "Veneered-rim steering wheel with premium wood veneer options",
+      "Personalized embroidery to headrests and tread plate plaques",
+      "Diamond-quilted hide door panels and seat covering",
+      "Indented hide headlining throughout cabin",
+      "Knurled sports gear lever with premium finish",
+      "Coined finish to interior door handles"
+    ],
+    "PREMIERE SPECIFICATION": [
+      "Ambient interior mood lighting throughout cabin",
+      "Bright stainless steel door pillar finisher",
+      "Bright stainless steel matrix to lower bumper apertures and front wing vents",
+      "Flying 'B' radiator mascot",
+      "Hand-stitched leather storage case",
+      "Jewel fuel filler cap",
+      "Choice of 21 carpet colours with leather binding and polished stainless steel fixings"
+    ],
+    "Base": [
+      "20-inch Mulsanne chromed alloy wheels or 21-inch Classic alloy wheels",
+      "Duo-tone or heated single-tone hide-trimmed 4-spoke steering wheel",
+      "Mulsanne audio system with 14 speakers, two subwoofers, DAB or satellite radio",
+      "Hide-lined iPod drawer with integrated connector for multimedia devices",
+      "Full leather interior with choice of 22 seat belt colours",
+      "Rear-view camera with optional side-view camera capability",
+      "Bentley GPS tracking system preparation or full fitment available",
+      "Twin illuminated fold-down vanity mirrors and valet key",
+      "Intelligent dual airbag system with head and thorax airbags front and rear",
+      "Acoustic glazing with infrared reflective interlayer and power windows"
+    ]
+  }
+}

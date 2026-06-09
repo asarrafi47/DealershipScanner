@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2017|landrover|evoque",
+  "year": 2017,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_llm_2017__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Autobiography",
+    "HSE Dynamic",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Autobiography": [
+      "Massage front seats with five intensity settings, selectable via touchscreen",
+      "Configurable ambient interior lighting standard (ten colors available)"
+    ],
+    "HSE Dynamic": [
+      "Configurable ambient interior lighting standard",
+      "Eligible for Black Design Package option"
+    ],
+    "HSE": [
+      "Configurable ambient interior lighting standard"
+    ],
+    "SE": [
+      "Functional and stylishly appointed loadspace",
+      "60:40 split rear seating on Coupe and Five-door models",
+      "Optional heated rear seats available on Coupe and Five-door",
+      "Optional heated and cooled front seats on Five-door",
+      "Optional powered gesture tailgate (Coupe and Five-door only)"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|porsche|macan",
+  "year": 2015,
+  "make": "Porsche",
+  "model": "Macan",
+  "ladder_id": "brochure_llm_2015__porsche__macan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Macan Turbo",
+    "Macan S"
+  ],
+  "adds_by_trim": {
+    "Macan Turbo": [
+      "14-way Power Seats with comfort memory standard (8-way on S)",
+      "18-way Adaptive Sport Seats with comfort memory available",
+      "Heated multifunction Sport steering wheel in Dark Walnut or Carbon Fiber",
+      "Carbon Fiber interior package option",
+      "Brushed Aluminum interior package option",
+      "Premium Package Plus Turbo with Lane Change Assist and Lane Keep Assist",
+      "21-inch Sport Classic wheels painted black high-gloss option"
+    ],
+    "Macan S": [
+      "8-way electric seat adjustment for driver and passenger",
+      "Piano Black interior package standard",
+      "Dark Walnut interior package option",
+      "18-inch Macan S wheels standard",
+      "Stainless steel front skid plate standard",
+      "Side blades painted in exterior color standard",
+      "Metallic paint standard"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2021|toyota|landcruiser",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "ladder_id": "brochure_llm_2021__toyota__landcruiser",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Land Cruiser Heritage Edition",
+    "Land Cruiser"
+  ],
+  "adds_by_trim": {
+    "Land Cruiser Heritage Edition": [
+      "18-inch Bronze-colored BBS forged-aluminum alloy wheels",
+      "Heritage Edition grille with black inserts and darkened chrome-finished surround",
+      "Heritage Edition badge on exterior",
+      "Yakima MegaWarrior cargo basket",
+      "Black interior package with bronze-colored contrast stitching",
+      "Seating for five passengers instead of eight",
+      "Available black perforated leather third-row seating to increase capacity to eight"
+    ],
+    "Land Cruiser": [
+      "5.7L V8 with 381 hp and 401 lb-ft torque",
+      "8-speed electronically controlled automatic transmission",
+      "Full-time 4WD with Active Traction Control and Torsen limited-slip differential",
+      "Multi-Terrain Select and Crawl Control systems",
+      "Kinetic Dynamic Suspension System",
+      "Projector-beam LED headlights",
+      "18-inch split-spoke alloy wheels with dark housing",
+      "Seating for eight with 40/20/40 split second-row and 50/50 third-row seats",
+      "Four-zone automatic climate control",
+      "9-inch touchscreen with 14 JBL speakers and integrated navigation"
+    ]
+  }
+}

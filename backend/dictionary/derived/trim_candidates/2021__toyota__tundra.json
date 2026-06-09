@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2021|toyota|tundra",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Tundra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD",
+    "SR5",
+    "SR",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2017|fiat|usfullline",
+  "year": 2017,
+  "make": "Fiat",
+  "model": "US FullLine",
+  "ladder_id": "brochure_2017__fiat__usfullline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 6-speed Automatic transmission",
+      "Adds Bifunctional halogen projector headlamps",
+      "Adds Power windows with front row 1-touch down",
+      "Adds Premium cloth front bucket seating",
+      "Adds Rear 50/50 split-folding bench seat",
+      "Adds Manual tilt steering column",
+      "Adds Leather-wrapped steering wheel with audio controls",
+      "Adds FIAT Premium Audio System",
+      "Adds Uconnect 5.0 radio with AM/FM/Bluetooth and Integrated Voice Command",
+      "Adds Dual advanced driver and front-passenger air bags with supplemental safety systems"
+    ],
+    "Touring": [
+      "Adds Auto-dimming rearview mirror with microphone",
+      "Adds SiriusXM Satellite Radio standard",
+      "Adds Automatic Temperature Control standard"
+    ],
+    "Premium": [
+      "Adds Power, folding 3-position premium soft top Cabrio configuration",
+      "Adds Automatic Temperature Control standard"
+    ],
+    "Limited": [
+      "Adds Power, folding 3-position premium soft top Cabrio configuration",
+      "Adds ParkSense Rear Park Assist System standard",
+      "Adds Security Alarm standard"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2017|astonmartin|db4",
+  "year": 2017,
+  "make": "Aston Martin",
+  "model": "db4",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

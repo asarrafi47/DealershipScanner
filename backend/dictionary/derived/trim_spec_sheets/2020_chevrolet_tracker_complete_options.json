@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_chevrolet_tracker_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Tracker",
+    "Tracker"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 4-spd; Rear-Wheel Drive"
+      }
+    ],
+    "LS": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: There are numerous options, features, packages and trim levels that make each an; There are numerous options, features, packages and trim levels that make each and every truck unique from each other."
+      }
+    ]
+  }
+}

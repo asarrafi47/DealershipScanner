@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|dodge|dakota",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Dakota",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Crew",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

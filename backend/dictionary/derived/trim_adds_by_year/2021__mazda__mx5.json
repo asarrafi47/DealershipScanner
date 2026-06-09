@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2021|mazda|mx5",
+  "year": 2021,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_web_2021__mazda__mx5",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Club",
+    "Sport",
+    "Grand Touring"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Bose premium audio system with 9 speakers",
+      "Leather-trimmed seats and steering wheel",
+      "Power-adjustable driver seat with lumbar support",
+      "Heated seats front and rear",
+      "Automatic headlights with adaptive lighting",
+      "Rear spoiler",
+      "19-inch alloy wheels",
+      "Power folding mirrors"
+    ],
+    "Sport": [
+      "7-inch touchscreen display with Apple CarPlay and Android Auto",
+      "Bluetooth connectivity and audio streaming",
+      "Steering wheel-mounted audio controls",
+      "Manual or automatic transmission availability",
+      "Sport-tuned suspension",
+      "16-inch alloy wheels"
+    ],
+    "Club": [
+      "2.0L SKYACTIV-G engine producing 181 horsepower",
+      "5-speed manual or 6-speed automatic transmission",
+      "Dual airbags and stability control",
+      "Air conditioning with manual controls",
+      "Power windows and locks",
+      "Cloth upholstery",
+      "15-inch steel wheels"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mazda/mx-5/"
+}

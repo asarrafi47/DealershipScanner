@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|scion|xd",
+  "year": 2013,
+  "make": "Scion",
+  "model": "xD",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

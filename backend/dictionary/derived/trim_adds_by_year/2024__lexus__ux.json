@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2024|lexus|ux",
+  "year": 2024,
+  "make": "Lexus",
+  "model": "UX",
+  "ladder_id": "2024_lexus_ux",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "UX",
+    "Premium",
+    "F SPORT Design",
+    "F SPORT Handling"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Heated and ventilated front seats and power tilt-and-slide moonroof",
+      "Rain-sensing wipers and Power Rear Door with Kick Sensor",
+      "12.3-inch multi-information display and Intuitive Parking Assist"
+    ],
+    "F SPORT Design": [
+      "F SPORT 18-inch split-five-spoke wheels and F SPORT exterior styling",
+      "F SPORT interior trim and sport-oriented appearance"
+    ],
+    "F SPORT Handling": [
+      "Includes F SPORT Design plus F SPORT Handling suspension and tuning",
+      "Highest UX performance trim in 2025 brochure"
+    ]
+  }
+}

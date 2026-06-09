@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_volvo_xc40_complete_options",
+  "make": "Volvo",
+  "models": [
+    "XC40",
+    "XC40"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Petrol hybrid:; L B3154T5 I3 turbo (was In 2022, a mild hybrid version was introduced. In the United States, engine; In 2022, a mild hybrid version was introduced. In the United States, engine choices are limited to the 2.0-litre four-cylinder petrol…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: In 2022, a mild hybrid version was introduced. In the United States, engine; In 2022, a mild hybrid version was introduced. In the United States, engine choices are limited to the 2.0-litre four-cylinder petrol powered T4 and T5 models. In 2023, Volvo removed…"
+      }
+    ]
+  }
+}

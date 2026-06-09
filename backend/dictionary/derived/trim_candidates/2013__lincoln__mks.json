@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|lincoln|mks",
+  "year": 2013,
+  "make": "Lincoln",
+  "model": "MKS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

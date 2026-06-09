@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2025|toyota|supra",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Supra",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "3.0 Premium",
+    "3.0",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "3.0 Premium": [
+      "Includes these key features Adds to or replaces features offered on 3.0",
+      "Top racetrack speed: 155 mph2 (electronically controlled) Top racetrack speed: 155 mph2 (electronically controlled)",
+      "Active exhaust Active exhaust",
+      "Active rear sport differential Active rear sport differential",
+      "Launch Control18 Launch Control18",
+      "Available 6-speed intelligent Manual Transmission (iMT) Available 6-speed intelligent Manual Transmission (iMT)",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires19 High-performance Michelin\u00ae Pilot\u00ae Super Sport tires19",
+      "Exterior Features Exterior Features",
+      "Built-in rear spoiler Built-in rear spoiler",
+      "Matte-black auto-folding, heated outside mirrors Matte-black auto-folding, heated outside mirrors",
+      "Interior Features Interior Features",
+      "Smart Key System with Smart Entry and Start Smart Key System with Smart Entry and Start"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

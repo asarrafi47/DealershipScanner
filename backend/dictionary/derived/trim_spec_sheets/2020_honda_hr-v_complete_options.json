@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_honda_hr-v_complete_options",
+  "make": "Honda",
+  "models": [
+    "HR-V",
+    "HR-V"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Everus VE-1 (China, electric); L L15BP/L15BS DOHC VTC I4 turbo (was The standard engine was a SOHC, 1.6-litre unit with 105 PS (77 kW; 104 hp); Hond)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: The standard engine was a SOHC, 1.6-litre unit with 105 PS (77 kW; 104 hp); Hond"
+      }
+    ]
+  }
+}

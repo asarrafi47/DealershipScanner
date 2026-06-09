@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2023|nissan|pathfinder",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "2023_nissan_pathfinder",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "S",
+    "SV",
+    "Rock Creek",
+    "SL",
+    "Platinum"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "ProPILOT Assist, Intelligent Lane Intervention, and heated power mirrors",
+      "Power liftgate and Remote Engine Start with Intelligent Climate Control",
+      "10-way power driver seat with lumbar and heated front seats",
+      "12.3-inch digital dashboard and NissanConnect Services trial packages"
+    ],
+    "Rock Creek": [
+      "295-hp V6 with standard Intelligent 4x4 and off-road tuned suspension",
+      "18-inch beadlock-style AT wheels and black tubular roof rack",
+      "Rock Creek fascia, grille badging, and exclusive leatherette seats",
+      "Intelligent Around View with Off-Road Mode and tow hitch with 7-pin harness"
+    ],
+    "SL": [
+      "ProPILOT Assist with Navi-link, front/rear sonar, and traffic sign recognition",
+      "18-inch machine-finished wheels, silver roof rails, and rear sunshades",
+      "Leather-appointed 1st and 2nd rows and heated steering wheel",
+      "Wireless Apple CarPlay, Nissan Door to Door Navigation, and wireless charger"
+    ],
+    "Platinum": [
+      "20-inch wheels, motion activated liftgate, and panoramic moonroof",
+      "Semi-aniline quilted leather with climate-controlled front seats",
+      "Heated outboard 2nd-row seats and Bose Premium 13-speaker audio",
+      "Rain-sensing wipers and driver seat-mounted front-center supplemental air bag"
+    ],
+    "S": [
+      "3.5-liter V6 engine with 284 hp and 259 lb-ft torque",
+      "9-speed automatic transmission",
+      "Available intelligent 4x4",
+      "Hill descent control (4WD only)",
+      "Trailer sway control",
+      "Forward collision warning",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane departure warning",
+      "Blind spot warning",
+      "Rear cross traffic alert"
+    ]
+  }
+}

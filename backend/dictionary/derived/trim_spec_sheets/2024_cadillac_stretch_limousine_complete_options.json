@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_cadillac_stretch_limousine_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Stretch Limousine",
+    "Stretch Limousine"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "In 1936, President Franklin D. Roosevelt bought a Ford V8 Phaeton coupe and had it equipped with hand controls in direct contravention of a Secret Service directive prohibiting sitting presidents from getting behind the wheel of a car."
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Roosevelt's administration bought the Sunshine Special, the first presidential s; In 1936, President Franklin D. Roosevelt bought a Ford V8 Phaeton coupe and had it equipped with hand controls in direct contravention of a Secret Service directive prohibiting sitting presidents from getting behind the wheel of a car."
+      }
+    ]
+  }
+}

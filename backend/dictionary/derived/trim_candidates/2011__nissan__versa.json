@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|nissan|versa",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Versa",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "Limited",
+    "Premium",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

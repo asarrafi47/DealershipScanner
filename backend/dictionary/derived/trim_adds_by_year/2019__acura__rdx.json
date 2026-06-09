@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2019|acura|rdx",
+  "year": 2019,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_2019__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology",
+    "A-Spec"
+  ],
+  "adds_by_trim": {
+    "A-Spec": [
+      "Adds Super Handling All-Wheel Drive (SH-AWD)",
+      "Adds A-Spec styling package",
+      "Adds AcuraWatch safety suite with Collision Mitigation Braking System (CMBS)",
+      "Adds Adaptive Cruise Control (ACC) with Low-Speed Traffic Rerouting",
+      "Adds Vehicle Stability Assist (VSA)",
+      "Adds HandsFreeLink connectivity",
+      "Adds AcuraLink mobile app integration",
+      "Adds Maintenance Minder system"
+    ],
+    "Technology": [
+      "Adds True Touchpad Interface for infotainment system",
+      "Adds premium audio system with ELS Studio technology",
+      "Adds advanced navigation capabilities",
+      "Adds expanded AcuraLink services and connectivity features"
+    ]
+  }
+}

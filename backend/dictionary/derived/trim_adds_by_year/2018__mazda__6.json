@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|mazda|6",
+  "year": 2018,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2018__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "Grand Touring Reserve",
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Signature": [
+      "2.5L turbocharged engine with 250 hp and 310 lb-ft torque"
+    ],
+    "Grand Touring Reserve": [
+      "2.5L turbocharged engine with 250 hp and 310 lb-ft torque"
+    ],
+    "Grand Touring": [
+      "2.5L turbocharged engine with 250 hp and 310 lb-ft torque"
+    ],
+    "Touring": [
+      "6-speed automatic transmission with manual shift and Sport modes",
+      "SKYACTIV-VEHICLE DYNAMICS with G-Vectoring Control"
+    ],
+    "Sport": [
+      "Available 6-speed manual transmission option",
+      "2.5L naturally aspirated engine with 187 hp and 186 lb-ft torque",
+      "Advanced Blind Spot Monitoring",
+      "Rear Cross Traffic Alert",
+      "Smart City Brake Support"
+    ]
+  }
+}

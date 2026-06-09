@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2014|kia|soul",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2014__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Whole Shabang",
+    "Primo",
+    "Sun & Sound",
+    "Audio",
+    "Eco",
+    "Soul"
+  ],
+  "adds_by_trim": {
+    "Whole Shabang": [
+      "Ventilated front seats",
+      "Heated front seats and rear seat cushions",
+      "Heated steering wheel",
+      "Push-button start with Smart Key",
+      "HID low-beam headlights with auto leveling and LED accent lights",
+      "Supervision meter cluster with 4.3-inch TFT color LCD",
+      "Leather seat trim",
+      "Immobilizer"
+    ],
+    "Primo": [
+      "Ventilated front seats",
+      "Heated front seats and rear seat cushions",
+      "Heated steering wheel",
+      "Push-button start with Smart Key",
+      "Front fog lights",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Leather seat trim",
+      "Panoramic sunroof with power sunshade",
+      "Immobilizer"
+    ],
+    "Sun & Sound": [
+      "UVO eServices infotainment system with voice-command navigation and SiriusXM Travel Link",
+      "Rear-Camera Display",
+      "Infinity audio with HD Radio Technology and front-door speaker lights",
+      "Center channel speaker",
+      "Automatic temperature control with auto defog and cluster ionizer",
+      "Panoramic sunroof with power sunshade",
+      "External amplifier and subwoofer"
+    ],
+    "Audio": [
+      "UVO eServices infotainment system with voice-command navigation and SiriusXM Travel Link",
+      "Rear-Camera Display",
+      "Infinity audio with HD Radio Technology and front-door speaker lights",
+      "Center channel speaker",
+      "Automatic temperature control with auto defog and cluster ionizer",
+      "Leather-wrapped steering wheel and gearshift knob",
+      "Black gloss trim",
+      "Leatherette interior trim",
+      "Satin chrome interior door handles",
+      "External amplifier and subwoofer"
+    ],
+    "Eco": [
+      "Idle Stop & Go system",
+      "Low rolling resistance 16-inch tires instead of 17-inch"
+    ],
+    "Soul": [
+      "Side-impact door beams reinforced with steel",
+      "Front and rear crumple zones",
+      "Rear child-safety door locks",
+      "LATCH system for child seats",
+      "Advanced airbag sensor system with six airbags",
+      "Seat belt pretensioners",
+      "Height-adjustable front seat belts",
+      "Three-point seat belts all positions"
+    ]
+  }
+}

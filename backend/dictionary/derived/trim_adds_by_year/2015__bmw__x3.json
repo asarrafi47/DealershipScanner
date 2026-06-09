@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|bmw|x3",
+  "year": 2015,
+  "make": "BMW",
+  "model": "X3",
+  "ladder_id": "brochure_2015__bmw__x3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds BMW Ultimate Service suite with comprehensive programs and services",
+      "Adds New Vehicle/SAV Limited Warranty for four years or 50,000 miles",
+      "Adds BMW Maintenance Program covering factory-recommended service for four years or 50,000 miles",
+      "Adds BMW Roadside Assistance for four years with unlimited mileage",
+      "Adds BMW Assist eCall safety feature with Emergency Request and Automatic Collision Notification",
+      "Adds BMW TeleService monitoring for vehicle parts and wear-and-tear services",
+      "Adds BMW ConnectedDrive with Assist eCall and TeleService as standard",
+      "Adds Enhanced USB and Bluetooth with Smartphone Integration for Mobile Office functions"
+    ],
+    "Premium": [
+      "Adds optional BMW Online and BMW Apps with web information and MyInfo feature",
+      "Adds optional BMW Navigation system with turn-by-turn directions and Google Maps integration",
+      "Adds optional Remote Services including Remote Door Unlock and Stolen Vehicle Recovery",
+      "Adds optional Concierge Services with personalized Directions, restaurant and hotel recommendations",
+      "Adds optional Critical Calling for up to four operator-assisted calls per year"
+    ]
+  }
+}

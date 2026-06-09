@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2011|volkswagen|jetta",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "brochure_web_2011__volkswagen__jetta",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Jetta SEL Auto",
+    "Jetta SE Auto",
+    "Jetta Sport Auto",
+    "Jetta S Auto"
+  ],
+  "adds_by_trim": {
+    "Jetta SEL Auto": [
+      "Brown/Titan Black perforated Vienna leather seats",
+      "18-inch alloy wheels",
+      "Automatic high-beams and upgraded headlights"
+    ],
+    "Jetta SE Auto": [
+      "Wireless smartphone charging pad",
+      "Wireless smartphone mirroring",
+      "SiriusXM satellite radio",
+      "Voice control",
+      "17-inch alloy wheels"
+    ],
+    "Jetta Sport Auto": [
+      "Enhanced styling and trim details"
+    ],
+    "Jetta S Auto": [
+      "1.5-liter turbocharged inline four-cylinder engine with 158 hp and 184 lb-ft torque",
+      "Eight-speed automatic transmission with front-wheel drive",
+      "Floating 8.0-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "IQ.Drive suite with lane keep assist, adaptive cruise control, blind-spot monitoring, and automatic emergency braking",
+      "LED headlights with standard light bar connecting taillights",
+      "41.1 inches front legroom and 37.4 inches rear legroom"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/jetta/"
+}

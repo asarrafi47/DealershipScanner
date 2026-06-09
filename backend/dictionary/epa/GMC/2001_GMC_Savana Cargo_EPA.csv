@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2001,GMC,Savana Cargo,Savana 1500/2500 2WD (cargo),4.3L V6,4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",6,4.3,13,17,15,,,,,
+2001,GMC,Savana Cargo,Savana 1500/2500 2WD (cargo),5.0L V8,5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.0,13,17,15,,,,,
+2001,GMC,Savana Cargo,Savana 1500/2500 2WD (cargo),5.7L V8,5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.7,12,16,14,,,,,

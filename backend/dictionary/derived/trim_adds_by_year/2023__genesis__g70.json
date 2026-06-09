@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2023|genesis|g70",
+  "year": 2023,
+  "make": "genesis",
+  "model": "G70",
+  "ladder_id": "brochure_llm_2023__genesis__g70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "G70 3.3T SPORT PRESTIGE",
+    "G70 3.3T SPORT ADVANCED",
+    "G70 2.0T SPORT PRESTIGE",
+    "G70 3.3T STANDARD",
+    "G70 2.0T STANDARD"
+  ],
+  "adds_by_trim": {
+    "G70 3.3T SPORT PRESTIGE": [
+      "Electronically Controlled Suspension",
+      "Brembo® Braking System",
+      "Limited-Slip Differential",
+      "Nappa Leather Seating Surfaces",
+      "Microfiber Suede Headliner & Pillars",
+      "Surround View Monitor",
+      "Blind-Spot View Monitor",
+      "Power Driver's Seat Bolsters & Cushion Extension",
+      "Power Trunk",
+      "Genesis Digital Key"
+    ],
+    "G70 3.3T SPORT ADVANCED": [
+      "19-inch Sport Alloy Wheels",
+      "Dark Chrome Grille & Daylight Opening Trim",
+      "Sport Aluminum Trim",
+      "Variable Exhaust Valve System",
+      "Head-Up Display",
+      "Wide Sunroof",
+      "Lexicon® Premium Audio",
+      "Ventilated Front Seats",
+      "Parking Distance Warning – Forward & Reverse"
+    ],
+    "G70 2.0T SPORT PRESTIGE": [
+      "19-inch Sport Alloy Wheels",
+      "Leather Seating Surfaces",
+      "Dark Chrome Grille & Daylight Opening Trim",
+      "Sport Aluminum Trim & Alloy Pedals",
+      "Wide Sunroof",
+      "Lexicon® Premium Audio",
+      "Ventilated Front Seats",
+      "Parking Distance Warning – Forward & Reverse",
+      "Wireless Device Charging"
+    ],
+    "G70 3.3T STANDARD": [
+      "3.3L Twin-Turbo V6 (365 HP / 376 lb-ft)",
+      "R-MDPS with Variable Gear Ratio Steering",
+      "Power Telescopic Steering Wheel",
+      "Leather Seating Surfaces",
+      "Power Front Passenger Seat with 4-Way Power Lumbar",
+      "Head-Up Display"
+    ],
+    "G70 2.0T STANDARD": [
+      "2.0L Inline 4 Turbo GDI (252 HP / 260 lb-ft)",
+      "8-speed Automatic Transmission",
+      "Electronic Parking Brake",
+      "Ventilated Front & Rear Disc Brakes",
+      "Drive Mode Select",
+      "Forward Collision-Avoidance Assist with Lane Keeping Assist",
+      "Smart Cruise Control with Stop & Go",
+      "Navigation System with 10.25-inch Screen",
+      "Apple CarPlay® and Android Auto™",
+      "8 Airbags"
+    ]
+  }
+}

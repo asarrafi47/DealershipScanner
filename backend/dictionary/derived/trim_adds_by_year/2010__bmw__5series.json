@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|bmw|5series",
+  "year": 2010,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "2010_bmw_5series",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "528i",
+    "535i",
+    "550i"
+  ],
+  "adds_by_trim": {
+    "535i": [
+      "3.0L twin-turbo inline-6 — 300 hp with Advanced Turbo (replaces 230-hp naturally aspirated 3.0L on 528i)",
+      "Dakota Leather upholstery with Premium Package (Leatherette standard on 528i)",
+      "8-speed automatic transmission available (6-speed manual or 6-speed auto on 528i)",
+      "Sport Package: 18-inch or 19-inch performance run-flat tires and sport suspension calibration available",
+      "Increased top-speed limiter and M Sport Package with 18-inch Star Spoke 193M wheels available"
+    ],
+    "550i": [
+      "4.8L V8 — 360 hp with Valvetronic and high-precision injection (replaces twin-turbo six on 535i)",
+      "20-way power multi-contour front seats with articulated upper backrest and 4-way lumbar",
+      "Split-folding lockable rear seats and ski bag",
+      "19-inch Double Spoke Style 167 wheels with mixed-size performance run-flat tires",
+      "Night Vision and Head-Up Display available with Navigation and Cold Weather Package"
+    ],
+    "528i": [
+      "BMW Twin-Power Turbo V8 engine producing 399 hp",
+      "Double-Spoke Style wheels in light alloy",
+      "Raised seating position for improved visibility and confidence",
+      "Panoramic moonroof with large frameless rear windows",
+      "Split folding rear seats with up to 68 degrees recline",
+      "Dual-zone climate control with four-zone capability",
+      "Rear Seat Entertainment with dual high-resolution screens",
+      "Removable partition wall between cargo and rear cabin"
+    ]
+  }
+}

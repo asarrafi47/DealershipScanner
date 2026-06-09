@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2012|chevrolet|tahoe",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2012__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "HY"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome door handles",
+      "Heated leather-wrapped steering wheel",
+      "Power-folding driver-side auto-dimming mirrors",
+      "Power-tilt-sliding sunroof with Express-Open/-Close"
+    ],
+    "LT": [
+      "Power-retractable assist steps with chrome accent strip",
+      "Power-remote liftgate with washer/wiper",
+      "Power-adjustable pedals for accelerator and brake",
+      "Rear vision camera",
+      "Rear Parking Assist",
+      "Remote vehicle starter system"
+    ],
+    "LS": [
+      "Black assist steps",
+      "Automatic headlamps and Daytime Running Lamps",
+      "Power-heated driver- and passenger-side mirrors",
+      "Remote Keyless Entry",
+      "Leather-wrapped steering wheel with audio and cruise controls",
+      "Analog instrumentation with speedometer and tachometer"
+    ],
+    "HY": [
+      "Vortec 6.0L V8 engine with Active Fuel Management"
+    ]
+  }
+}

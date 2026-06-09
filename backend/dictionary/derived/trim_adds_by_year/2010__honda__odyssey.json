@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2010|honda|odyssey",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "inventory_honda_odyssey",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "LX": [
+      "Air Conditioning (manual, front and rear)",
+      "Honda DVD Rear Entertainment System Available Available"
+    ],
+    "EX-L": [
+      "229-Watt AM/FM/CD-Library 2-GB Memory Audio System with 7 speakers including subwoofer",
+      "XM Radio capability",
+      "USB Audio Interface"
+    ],
+    "EX": [
+      "229-Watt AM/FM/CD Audio System with 5 speakers including subwoofer",
+      "MP3/Auxiliary Input Jack",
+      "Multi-Information Display (MID)",
+      "Maintenance Minder System",
+      "Battery Management System",
+      "Daytime Running Lights (DRL)"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix",
+    "dot_feature_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "EX": 0,
+      "LX": 2
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2020_jeep_gladiator_complete_options",
+  "make": "Jeep",
+  "models": [
+    "Gladiator",
+    "Gladiator"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L Hurricane 4 EVO turbo I4 (gasoline) (2027–)"
+      }
+    ],
+    "Rubicon": [
+      {
+        "label": "Engine Options",
+        "value": "L Hurricane 4 EVO turbo I4 (gasoline) (2027–)"
+      }
+    ],
+    "Sport S": [
+      {
+        "label": "Engine Options",
+        "value": "3.6 L V6 engine"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "3.6 L V6 engine"
+      }
+    ]
+  }
+}

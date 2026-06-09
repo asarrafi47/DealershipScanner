@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2020|nissan|frontier",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2020__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRO-4X® CREW CAB",
+    "SV CREW CAB",
+    "SV KING CAB",
+    "S CREW CAB",
+    "S KING CAB"
+  ],
+  "adds_by_trim": {
+    "PRO-4X® CREW CAB": [
+      "Bilstein® off-road performance shocks and electronic locking rear differential",
+      "Skid plates and 16-inch aluminum wheels with all-terrain tires",
+      "Rear Sonar System and Dual Zone Automatic Temperature Control",
+      "PRO-4X embroidered leather-appointed seats with 8-way power driver adjustment",
+      "Heated front seats and rear fold-down center armrest",
+      "Power sliding glass moonroof with roof rack and crossbars",
+      "NissanConnect® 5.8-inch display with Nissan Navigation System",
+      "Rockford Fosgate®-powered audio system with ten speakers and subwoofer",
+      "Auto-dimming rearview mirror with digital compass and outside temperature",
+      "SiriusXM® Radio with 3-month subscription and Traffic and Travel Link®"
+    ],
+    "SV CREW CAB": [
+      "16-inch 6-split spoke aluminum-alloy wheels replacing steel wheels",
+      "Body-color front bumper and chrome rear bumper with bed rail caps",
+      "Four full-size doors with seating for five passengers",
+      "60/40 Split flip-up rear bench seat",
+      "AM/FM audio system upgraded to six speakers",
+      "Sliding rear window and dual power outside mirrors",
+      "Sun visors with vanity mirrors and extension"
+    ],
+    "SV KING CAB": [
+      "16-inch 6-split spoke aluminum-alloy wheels replacing steel wheels",
+      "Body-color front bumper and chrome rear bumper with bed rail caps"
+    ],
+    "S CREW CAB": [
+      "Four full-size doors with seating for five passengers",
+      "60/40 Split flip-up rear bench seat",
+      "AM/FM audio system upgraded to six speakers",
+      "Siri® Eyes Free and RearView Monitor",
+      "Remote Keyless Entry with Push Button Ignition",
+      "Power door locks and power windows with driver's one-touch auto-down",
+      "Rear access doors and second-row under-seat storage"
+    ],
+    "S KING CAB": [
+      "3.8-liter V6 Direct Injection engine with 310 hp and 281 lb-ft torque",
+      "9-speed automatic transmission",
+      "16-inch 6-spoke steel wheels and Active Brake Limited Slip (ABLS)",
+      "Full-length and fully boxed ladder frame",
+      "7-inch touch-screen display with AM/FM audio system and four speakers",
+      "Bluetooth® Hands-free Phone System and Hands-free Text Messaging Assistant",
+      "Streaming Audio via Bluetooth® and USB port",
+      "Vehicle Dynamic Control (VDC) and Tire Pressure Monitoring System (TPMS)"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2014|gmc|sierra",
+  "year": 2014,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2014__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Sierra"
+  ],
+  "adds_by_trim": {
+    "SLT": [
+      "6.2L V-8 EcoTec3 engine available (late availability)",
+      "Dual-zone automatic climate control",
+      "Folding rear 60/40 split 3-passenger bench seat",
+      "4.2-inch color driver information center display",
+      "AutoTrac active transfer case on 4WD models"
+    ],
+    "SLE": [
+      "5.3L V-8 EcoTec3 engine option",
+      "4.2-inch color driver information center display",
+      "Single-zone manual air conditioning",
+      "SLE Preferred Package and SLE Value Package options with enhanced features",
+      "AutoTrac active transfer case available on 4WD models"
+    ],
+    "Sierra": [
+      "4.3L V-6 EcoTec3 engine standard",
+      "6-speed automatic transmission with tow/haul mode",
+      "4-wheel disc antilock brakes with Duralife rotors",
+      "StabiliTrak stability control with electronic trailer sway control",
+      "3.5-inch monochromatic driver information center display"
+    ]
+  }
+}

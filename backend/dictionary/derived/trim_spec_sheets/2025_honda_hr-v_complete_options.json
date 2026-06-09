@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2025_honda_hr-v_complete_options",
+  "make": "Honda",
+  "models": [
+    "HR-V",
+    "HR-V"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Everus VE-1 (China, electric); L L15BP/L15BS DOHC VTC I4 turbo"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Ciimo X-NV/M-NV (China, electric)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; The standard engine was a SOHC, 1.6-litre unit with 105 PS (77 kW; 104 hp); Hond"
+      }
+    ]
+  }
+}

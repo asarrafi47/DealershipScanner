@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|nissan|sentra",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2022__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "18-inch aluminum-alloy wheels",
+      "LED headlights with LED signature daytime running lights",
+      "LED fog lights",
+      "Heated outside mirrors with LED turn signal indicators",
+      "Dark chrome V-Motion grille with black outside mirrors",
+      "Side sill extensions and sport rear design",
+      "Body-color rear spoiler with chrome exhaust finisher",
+      "Sport cloth seat trim with contrast orange stitching",
+      "Intelligent Cruise Control",
+      "NissanConnect 8-inch color touchscreen with SiriusXM and Wi-Fi Hotspot"
+    ],
+    "SV": [
+      "Intelligent Cruise Control",
+      "16-inch aluminum-alloy wheels",
+      "Heated outside mirrors",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Premium cloth seat trim",
+      "Leather-wrapped steering wheel",
+      "7-inch Advanced Drive-Assist display",
+      "NissanConnect 8-inch touchscreen with SiriusXM radio",
+      "Two USB-A ports and one USB-C port",
+      "Vehicle Security System"
+    ],
+    "S": [
+      "2.0-liter 4-cylinder engine with 149 hp and 146 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "Independent strut front and multi-link rear suspension",
+      "Pinion electric power steering with cruise control",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "RearView Monitor with rear sonar and automatic braking",
+      "High Beam Assist and Intelligent Driver Alertness",
+      "16-inch steel wheels with full wheel covers",
+      "4.2-inch Advanced Drive-Assist display with 7-inch color touchscreen, Apple CarPlay, Android Auto"
+    ]
+  }
+}

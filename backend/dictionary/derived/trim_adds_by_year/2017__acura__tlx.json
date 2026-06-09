@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2017|acura|tlx",
+  "year": 2017,
+  "make": "acura",
+  "model": "tlx",
+  "ladder_id": "brochure_llm_2017__acura__tlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TLX V-6 SH-AWD",
+    "TLX V-6",
+    "TLX"
+  ],
+  "adds_by_trim": {
+    "TLX V-6 SH-AWD": [
+      "Super Handling All-Wheel Drive (SH-AWD) with advanced torque vectoring",
+      "Idle Stop fuel-saving technology",
+      "Forward Collision Warning (FCW) system standard",
+      "Lane Departure Warning (LDW) system standard",
+      "Lane Keeping Assist System (LKAS) standard",
+      "Blind Spot Information (BSI) System standard",
+      "Rear Cross Traffic Monitor standard"
+    ],
+    "TLX V-6": [
+      "3.5-liter V-6 engine with 290 horsepower and 267 lb-ft torque",
+      "9-speed automatic transmission with Sequential SportShift paddle shifters",
+      "Variable Cylinder Management (VCM) technology",
+      "Enhanced 18 x 7.5 inch machine-finished alloy wheels",
+      "Collision Mitigation Braking System (CMBS) with Head-Up Warning available",
+      "Road Departure Mitigation System available with Advance Package",
+      "Front Seat Belt e-Pretensioner System available"
+    ],
+    "TLX": [
+      "2.4-liter Direct-Injection 4-cylinder engine with 206 horsepower",
+      "8-speed dual-clutch transmission with torque converter",
+      "17 x 7.5 inch machine-finished alloy wheels",
+      "Multi-View Rear Camera with Dynamic Guidelines",
+      "Acura Navigation System with 3D View available with Technology Package",
+      "Acura Premium Audio System with 7 speakers standard"
+    ]
+  }
+}

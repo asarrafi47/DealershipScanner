@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2019|cadillac|xt4",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "XT4",
+  "ladder_id": "brochure_web_2019__cadillac__xt4",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Sport",
+    "Premium Luxury"
+  ],
+  "adds_by_trim": {
+    "Premium Luxury": [
+      "Base trim with 2.0L turbocharged four-cylinder engine, 235 hp and 258 lb-ft torque",
+      "33.0-inch curved LED display with Google software integration",
+      "Wireless Apple CarPlay and Android Auto",
+      "Active Safety package standard including adaptive cruise control and lane keeping",
+      "360-degree camera system with rear pedestrian and side bicyclist alerts",
+      "Blind-zone steering assist and rear cross-traffic braking",
+      "Front pedestrian and bicyclist automatic braking",
+      "Four USB ports standard",
+      "Nine-speed automatic transmission with FWD or AWD options"
+    ],
+    "Sport": [
+      "Sport mode for transmission with enhanced responsiveness",
+      "Sport-tuned driving dynamics"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/xt4/"
+}

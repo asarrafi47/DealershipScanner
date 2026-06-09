@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2025|lexus|tx",
+  "year": 2025,
+  "make": "lexus",
+  "model": "TX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "F Sport Performance",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

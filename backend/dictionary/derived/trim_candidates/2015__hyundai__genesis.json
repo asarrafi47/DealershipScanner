@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2015|hyundai|genesis",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

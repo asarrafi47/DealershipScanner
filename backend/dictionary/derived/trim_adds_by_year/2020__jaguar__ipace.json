@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2020|jaguar|ipace",
+  "year": 2020,
+  "make": "Jaguar",
+  "model": "I-Pace",
+  "ladder_id": "brochure_2020__jaguar__ipace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds Includes EV400 powertrain with 394 HP",
+      "Adds single piston ventilated disc brakes",
+      "Adds Includes Jaguar EliteCare coverage with 8-year battery warranty"
+    ],
+    "Sport": [
+      "Adds Illuminated metal treadplates with Jaguar script",
+      "Upgraded to Meridian Surround Sound System (825W)",
+      "Adds Four-zone Climate Control",
+      "Adds Includes configurable Ambient Interior Lighting"
+    ],
+    "Premium": [
+      "Adds Cold Climate Package",
+      "Adds Cabin Air Ionization",
+      "Adds Includes iPhone Connect and Charge Dock",
+      "Adds Sports pedals"
+    ],
+    "Limited": [
+      "Adds Pet Care and Access Package with full height luggage partition",
+      "Adds Includes quilted luggage compartment liner and Pet Access Ramp",
+      "Adds portable rinse system",
+      "Adds Includes rigid luggage compartment organizer"
+    ]
+  }
+}

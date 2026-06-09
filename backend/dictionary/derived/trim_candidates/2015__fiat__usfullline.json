@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|fiat|usfullline",
+  "year": 2015,
+  "make": "Fiat",
+  "model": "US FullLine",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "EX",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

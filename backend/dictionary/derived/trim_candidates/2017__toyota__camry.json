@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|toyota|camry",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XSE",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on SE Adds to or replaces features offered on SE",
+      "Powertrain Powertrain Powertrain",
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm37 \u2022 2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm37 \u2022 3.5L V6 Engine with 268 hp @ 6200 rpm",
+      "24 city/33 hwy/27 combined est. mpg39 \u2022 24 city/33 hwy/27 combined est. mpg39 \u2022 21 city/30 hwy/24 combined est. mpg39",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "Exterior Features Exterior Features Exterior Features",
+      "Projector-beam halogen headlights with black sport trim bezels \u2022 LED Daytime Running Lights (DRL) \u2022 LED low- and high-beam headlights with black sport trim bezels",
+      "Sport mesh front grille \u2022 LED Daytime Running Lights (DRL)",
+      "Smoked chrome upper grille and rear trunk garnish \u2022 Power tilt/slide moonroof",
+      "Integrated front and rear underbody spoilers \u2022 Dual zone automatic climate control with rear-seat vents \u2022 18-in. machined alloy wheels with black-painted accents3",
+      "Color-keyed rear spoiler \u2022 Entune\u2122 Audio Plus with Connected Navigation App11 and \u2022 Acoustic noise-reducing front windshield",
+      "Chrome-tipped exhaust ten JBL\u00ae GreenEdge\u2122 speakers in eight locations, auxiliary"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm37 \u2022 2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm37 \u2022 3.5L V6 Engine with 268 hp @ 6200 rpm",
+      "24 city/33 hwy/27 combined est. mpg39 \u2022 24 city/33 hwy/27 combined est. mpg39 \u2022 21 city/30 hwy/24 combined est. mpg39",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "Exterior Features Exterior Features Exterior Features",
+      "Projector-beam halogen headlights with auto on/off feature \u2022 LED Daytime Running Lights (DRL) \u2022 LED low- and high-beam headlights with auto on/off feature",
+      "Color-keyed heated power outside mirrors with manual \u2022 17-in. alloy wheels with SuperChrome paint \u2022 LED Daytime Running Lights (DRL)",
+      "16-in. steel wheels with wheel covers Interior Features \u2022 17-in. alloy wheels with SuperChrome paint",
+      "Interior Features \u2022 Acoustic noise-reducing front windshield",
+      "Dual zone automatic climate control with rear-seat vents",
+      "Dual chrome-tipped exhaust"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

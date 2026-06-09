@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2015|nissan|gtr",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2015__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT-R® NISMO®",
+    "BLACK EDITION",
+    "PREMIUM"
+  ],
+  "adds_by_trim": {
+    "GT-R® NISMO®": [
+      "NISMO®-tuned 600-hp 3.8-liter twin-turbocharged V6 engine",
+      "NISMO®-tuned suspension with 17.3 mm hollow rear stabilizer bar",
+      "NISMO® Black 20-inch super-lightweight RAYS® forged-alloy wheels",
+      "NISMO® aerodynamic body design with carbon-fiber fascia and rear spoiler",
+      "NISMO® Recaro® leather-appointed front seats with synthetic-suede inserts",
+      "NISMO® Black/Red interior treatment",
+      "NISMO® Alcantara®-wrapped steering wheel and gauge hood",
+      "Additional front and rear brake cooling air ducts",
+      "NISMO® tachometer",
+      "Carbon-fiber trunk lid"
+    ],
+    "BLACK EDITION": [
+      "20-inch special dark-finished super-lightweight forged-alloy RAYS® wheels",
+      "Dry carbon-fiber rear spoiler",
+      "Black/Red Recaro® leather-appointed front seats"
+    ],
+    "PREMIUM": [
+      "3.8-liter twin-turbo V6 engine with dual clutch 6-speed transmission",
+      "Multi-LED headlights with signature lighting",
+      "ATTESA E-TS® All-Wheel Drive system",
+      "20-inch Super-lightweight RAYS® forged-alloy wheels",
+      "Dunlop® SP Sport MAXX GT600 DSST CTT high-performance run-flat tires",
+      "Nissan/Brembo® braking system",
+      "Bilstein® DampTronic® suspension system",
+      "Advanced Vehicle Dynamic Control with three driver-selectable modes",
+      "Nissan Hard Drive Navigation System",
+      "Bose® audio system with Active Noise Control"
+    ]
+  }
+}

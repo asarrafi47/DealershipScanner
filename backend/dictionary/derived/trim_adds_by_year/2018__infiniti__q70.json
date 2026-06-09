@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2018|infiniti|q70",
+  "year": 2018,
+  "make": "Infiniti",
+  "model": "Q70",
+  "ladder_id": "brochure_llm_2018__infiniti__q70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q70L 5.6 LUXE",
+    "Q70L 3.7 LUXE",
+    "Q70 5.6 LUXE",
+    "Q70 Hybrid LUXE",
+    "Q70 3.7 LUXE"
+  ],
+  "adds_by_trim": {
+    "Q70L 5.6 LUXE": [
+      "5.6-liter V8 416-hp engine replaces 3.7-liter V6",
+      "5.6 inches additional second-row legroom",
+      "Rear door cincher",
+      "Rear power outlet (12v)"
+    ],
+    "Q70L 3.7 LUXE": [
+      "5.6 inches additional second-row legroom",
+      "Rear door cincher",
+      "Rear power outlet (12v)",
+      "Rear reading lamps"
+    ],
+    "Q70 5.6 LUXE": [
+      "5.6-liter V8 420-hp engine replaces 3.7-liter V6",
+      "Dual exhaust with polished finishers",
+      "Sequential welcome lighting illuminated entry system",
+      "Front door handle courtesy lights"
+    ],
+    "Q70 Hybrid LUXE": [
+      "3.5-liter V6 360-hp hybrid system net power",
+      "50 kW electric motor producing 67 hp",
+      "Lithium-ion battery",
+      "Electric Driven Intelligent Brake System",
+      "Hybrid-Electric Power Steering (H-EPS)",
+      "Double-piston shock absorbers",
+      "Approaching Vehicle Sounds for Pedestrians (VSP)"
+    ],
+    "Q70 3.7 LUXE": [
+      "3.7-liter V6 330-hp engine with 7-speed automatic transmission",
+      "Automatic on/off LED headlights with wiper interlock",
+      "LED front fog lights",
+      "Power folding heated auto-dimming mirrors with integrated LED turn signals",
+      "Downshift Rev Matching",
+      "RearView Monitor",
+      "INFINITI InTouch with 8-inch touchscreen display",
+      "INFINITI Intelligent Key with Push Button Start",
+      "Drive Mode Selector",
+      "Bluetooth hands-free phone system and audio streaming"
+    ]
+  }
+}

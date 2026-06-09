@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2023|infiniti|qx55",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "QX55",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

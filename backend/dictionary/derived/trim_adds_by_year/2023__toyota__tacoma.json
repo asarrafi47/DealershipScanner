@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2023|toyota|tacoma",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "2023_toyota_tacoma",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SR",
+    "SR5",
+    "TRD Sport",
+    "TRD Off-Road",
+    "Limited",
+    "TRD Pro",
+    "TRD PreRunner"
+  ],
+  "adds_by_trim": {
+    "SR5": [
+      "Upgraded powertrain and convenience over SR",
+      "Smart Key and enhanced multimedia path"
+    ],
+    "TRD Sport": [
+      "Sport-tuned suspension and TRD Sport exterior styling",
+      "18-inch TRD wheels and sport interior accents"
+    ],
+    "TRD Off-Road": [
+      "Multi-Terrain Select, Crawl Control, and locking rear differential available",
+      "TRD off-road suspension and all-terrain tires"
+    ],
+    "Limited": [
+      "Leather-trimmed seats, power tailgate, and 12.3-inch digital gauge cluster",
+      "14-inch multimedia and premium audio available"
+    ],
+    "TRD Pro": [
+      "TRD Pro FOX QS3 internal bypass shocks and IsoDynamic Performance front seats",
+      "TRD Pro forged upper control arms and heritage grille with LED light bar",
+      "Segment-first off-road performance calibration"
+    ],
+    "TRD PreRunner": [
+      "XtraCab RWD lifted front suspension with 32-inch BFG all-terrain tires",
+      "17-inch TRD wheels and electronically locking rear differential"
+    ],
+    "SR": [
+      "2.7-liter DOHC 4-cylinder engine with 159 hp standard",
+      "6-speed manual or automatic transmission options",
+      "One-piece frame with fully boxed front sub-frame",
+      "Variable-assist power rack-and-pinion steering",
+      "Power-assisted ventilated front disc brakes with rear drum brakes"
+    ]
+  }
+}

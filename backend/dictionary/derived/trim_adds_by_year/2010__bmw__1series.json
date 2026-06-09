@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|bmw|1series",
+  "year": 2010,
+  "make": "BMW",
+  "model": "1 Series",
+  "ladder_id": "2008_bmw_1_series_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "accuracy or completeness of information presented. This brochure shall not be used",
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is under license. iPod is a registered trademark of",
+      "BMW Performance Shift Knob (manual transmission)"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Na": 3
+    }
+  }
+}

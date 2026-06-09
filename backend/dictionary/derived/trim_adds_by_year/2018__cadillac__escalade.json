@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2018|cadillac|escalade",
+  "year": 2018,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_llm_2018__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Escalade ESV Platinum",
+    "Escalade ESV Premium Luxury",
+    "Escalade ESV Luxury",
+    "Escalade Premium Luxury",
+    "Escalade Luxury",
+    "Escalade"
+  ],
+  "adds_by_trim": {
+    "Escalade ESV Platinum": [
+      "22-inch Premium Painted Wheels with Chrome Inserts"
+    ],
+    "Escalade ESV Premium Luxury": [
+      "22-inch Dual 7-Spoke Aluminum Wheels with Ultrabright Finish"
+    ],
+    "Escalade ESV Luxury": [
+      "22-inch 7-Spoke Aluminum Wheels with Premium Paint and Chrome Inserts"
+    ],
+    "Escalade Premium Luxury": [
+      "22-inch Dual 7-Spoke Aluminum Wheels with Ultrabright Finish"
+    ],
+    "Escalade Luxury": [
+      "22-inch 7-Spoke Aluminum Wheels with Premium Paint and Chrome Inserts"
+    ],
+    "Escalade": [
+      "20-inch Dual 7-Spoke Aluminum Chrome-Plated Wheels standard",
+      "Cadillac Premium Care Maintenance: 3 years/36,000 miles routine service",
+      "OnStar with emergency assistance, theft prevention, navigation, vehicle management",
+      "New Vehicle Limited Warranty: 6 years/70,000 miles powertrain coverage"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|kia|soul",
+  "year": 2010,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_web_2010__kia__soul",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Soulmate Edition",
+    "GT-Line",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Soulmate Edition": [
+      "Harman/Kardon stereo system",
+      "Unique 18-inch aluminum wheels",
+      "Vinyl-and-cloth Umber-colored upholstery",
+      "Two-tone paint job"
+    ],
+    "GT-Line": [
+      "Sportier styling with unique wheel design and body-color trim",
+      "Standard driver-assistance features: automatic emergency braking, blind-spot monitoring, lane-keep assist, rear cross-traffic alert",
+      "Optional Harman/Kardon stereo setup available"
+    ],
+    "EX": [
+      "10.3-inch touchscreen display with SiriusXM satellite radio, real-time traffic, in-dash navigation, wireless smartphone charging"
+    ],
+    "S": [
+      "Expanded driver-assistance features beyond base model"
+    ],
+    "LX": [
+      "147-hp 2.0-liter four-cylinder engine with CVT and front-wheel drive",
+      "8.0-inch touchscreen infotainment with Apple CarPlay and Android Auto",
+      "Standard forward-collision warning with automated emergency braking",
+      "Standard lane-departure warning with lane-keeping assist",
+      "Six-speaker stereo",
+      "Push-button ignition with keyless entry"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/kia/soul"
+}

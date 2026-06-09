@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|bmw|4series",
+  "year": 2017,
+  "make": "BMW",
+  "model": "4 Series",
+  "ladder_id": "brochure_llm_2017__bmw__4series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "440i xDrive",
+    "440i",
+    "430i xDrive",
+    "430i"
+  ],
+  "adds_by_trim": {
+    "440i xDrive": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 320 hp and 330 lb-ft torque",
+      "0-60 mph in 4.6-4.7 seconds (manual) or 4.8-4.9 seconds (automatic)",
+      "All-wheel drive system for enhanced traction and handling"
+    ],
+    "440i": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 320 hp and 330 lb-ft torque",
+      "0-60 mph in 4.8 seconds (coupe/gran coupe) or 5.1 seconds (convertible)",
+      "Rear-wheel drive configuration"
+    ],
+    "430i xDrive": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 248 hp and 258 lb-ft torque",
+      "All-wheel drive system",
+      "0-60 mph in 5.5 seconds (coupe/gran coupe) or 6.0-6.1 seconds (convertible)"
+    ],
+    "430i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine",
+      "248 hp and 258 lb-ft of torque",
+      "Rear-wheel drive configuration",
+      "0-60 mph in 5.5 seconds (coupe), 5.6 seconds (gran coupe), or 6.0 seconds (convertible)"
+    ]
+  }
+}

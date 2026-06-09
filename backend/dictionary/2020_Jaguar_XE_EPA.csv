@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2020,Jaguar,XE,XE,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,28,,,,,,2.0L I4 Turbo,Turbocharged
-2020,Jaguar,XE,30t,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,32,27,,,,,,2.0L I4 Turbo,Turbocharged
-2020,Jaguar,XE,AWD,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,34,28,,,,,,2.0L I4 Turbo,Turbocharged
-2020,Jaguar,XE,AWD 30t,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,22,30,25,,,,,,2.0L I4 Turbo,Turbocharged

@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2014|acura|ilx",
+  "year": 2014,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "generic_acura_ilx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Technology",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "is a registered trademark of Apple Inc. Pandora, the Pandora logo, and the Pandora trade",
+      "are trademarks of SIRIUS XM Radio, Inc.",
+      "Zagat Survey, LLC. Make an intelligent decision. Fasten your seat belt. 12013 ILX Hybrid fuel economy figures based on",
+      "mileage will vary depending on how you drive and maintain your vehicle. 2Visit www.handsfreelink.com",
+      "ompatible with select phones with Bluetooth.® Your wireless carrier’s rate plans apply. State or local laws may limit use of",
+      "texting feature when conditions allow you to do so safely. 4AcuraLink Real-Time Traffic and Weather,™ as well as Traffic Rerouting,™ require monthly",
+      "XM NavTraffic and NavWeather service.",
+      "select Apple® iPhone® devices only. Your wireless carrier’s rate plans apply. 6The USB Audio Interface is used for direct connection to and"
+    ],
+    "Technology": [
+      "8-Speed DCT with Sequential SportShift Paddle Shifters",
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with Street and Freeway Conditions",
+      "Next-Generation AcuraLink",
+      "Acura/ELS Studio Premium Audio System with 10 speakers",
+      "Song By Voice voice control",
+      "Siri Eyes Free integration",
+      "Power Moonroof",
+      "17-inch noise-reducing alloy wheels"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 8.0,
+    "per_trim_add_counts": {
+      "Sport": 8
+    }
+  }
+}

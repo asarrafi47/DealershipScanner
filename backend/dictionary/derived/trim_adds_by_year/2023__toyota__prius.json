@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2023|toyota|prius",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2023__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited AWD",
+    "Limited",
+    "XLE AWD",
+    "XLE",
+    "LE AWD",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited AWD": [
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Hybrid system net power: 196 hp",
+      "49 city/50 highway/49 combined est. mpg"
+    ],
+    "Limited": [
+      "Fixed glass roof",
+      "Heated and ventilated front seats",
+      "12.3-inch Toyota Audio Multimedia with wireless Android Auto and Apple CarPlay",
+      "8-speaker JBL Premium Audio with subwoofer and amplifier",
+      "Limited Premium Package with Advanced Park and Panoramic View Monitor",
+      "Digital rearview mirror",
+      "Heated rear seats"
+    ],
+    "XLE AWD": [
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Hybrid system net power: 196 hp",
+      "49 city/50 highway/49 combined est. mpg",
+      "Bi-LED projector low- and high-beam headlights with Automatic High Beams"
+    ],
+    "XLE": [
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "6-way power-adjustable front passenger seat",
+      "SofTex-trimmed front seats with seatback pockets",
+      "Heated front seats",
+      "12.3-inch Toyota Audio Multimedia",
+      "8-speaker JBL Premium Audio with subwoofer and amplifier",
+      "Wireless Android Auto and Apple CarPlay compatible",
+      "Digital Key capability with 1-year trial included"
+    ],
+    "LE AWD": [
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Hybrid system net power: 196 hp",
+      "53 city/54 highway/54 combined est. mpg"
+    ],
+    "LE": [
+      "2.0-Liter DOHC 16-valve engine with Variable Valve Timing, 150 hp",
+      "Hybrid system net power: 194 hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Front-Wheel Drive (FWD)",
+      "Independent MacPherson strut suspension front and rear with stabilizer bars",
+      "Electric Power Steering with power-assisted rack-and-pinion",
+      "57 city/56 highway/57 combined est. mpg",
+      "Bi-LED projector headlights with LED Daytime Running Lights and LED taillights",
+      "19-inch alloy wheels with 195/50R19 tires",
+      "Heated power outside mirrors with folding feature"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2010|landrover|rangeroversport",
+  "year": 2010,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2010__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Range Rover Sport Supercharged",
+    "Range Rover Sport HSE with LUX",
+    "Range Rover Sport HSE",
+    "Range Rover Sport"
+  ],
+  "adds_by_trim": {
+    "Range Rover Sport Supercharged": [
+      "5.0 Liter V8 Supercharged engine producing 510 bhp at 6,000-6,500 rpm",
+      "461 lb-ft torque at 2,500-5,500 rpm versus 375 lb-ft on naturally aspirated",
+      "Adaptive Dynamics with Dynamic Program suspension control",
+      "Dynamic Response active roll control system",
+      "Sirius XM Satellite Digital Audio Receiver System standard equipment",
+      "Maximum speed of 140 mph in 6th gear"
+    ],
+    "Range Rover Sport HSE with LUX": [
+      "Premium interior appointments and luxury features versus standard HSE trim"
+    ],
+    "Range Ranger Sport HSE": [
+      "5.0 Liter V8 naturally aspirated engine producing 375 bhp",
+      "Six-speed adaptive automatic gearbox with CommandShift and high/low range",
+      "Four-wheel Electronic Traction Control",
+      "Hill Descent Control with Gradient Release Control",
+      "Four-corner air suspension with Terrain Response",
+      "Active rear E-differential"
+    ],
+    "Range Rover Sport": [
+      "Full-size dual front airbags and front passenger side airbags",
+      "Rear outboard passenger head airbags",
+      "Four Channel all-terrain Anti-lock Braking System with ventilated disc brakes",
+      "Dynamic Stability Control and Roll Stability Control",
+      "480-watt harman/kardon LOGIC7 surround audio system",
+      "Full-color touchscreen infotainment with audio and navigation controls",
+      "Speed proportional power-assisted rack and pinion steering",
+      "Centrally mounted high stop lamp in rear spoiler"
+    ],
+    "Range Rover Sport HSE": [
+      "LR-V8 Supercharged engine option with 510 bhp and 461 ft/lbs torque",
+      "LR-V8 engine option with 375 bhp and 375 ft/lbs torque",
+      "Spray-guided direct injection technology",
+      "20-inch 5-spoke alloy wheel Style 6 diamond turned finish optional"
+    ]
+  }
+}

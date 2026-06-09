@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2014|nissan|altima",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2014__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SL",
+    "3.5 SV",
+    "3.5 S",
+    "2.5 SL",
+    "2.5 SV",
+    "2.5 S"
+  ],
+  "adds_by_trim": {
+    "3.5 SL": [
+      "3.5L V6 engine (vs 2.5L 4-cylinder)",
+      "Nine-speaker audio system",
+      "Leather-wrapped steering wheel and shift knob",
+      "Wood-tone or metallic-tone interior trim",
+      "Heated steering wheel"
+    ],
+    "3.5 SV": [
+      "Bose Premium Audio System with AM/FM/CD and 5-inch color display",
+      "Six speakers (vs four speakers)",
+      "Illuminated steering wheel-mounted audio controls",
+      "SiriusXM Satellite Radio"
+    ],
+    "3.5 S": [
+      "3.5L V6 engine",
+      "AM/FM/CD audio system with 5-inch color display"
+    ],
+    "2.5 SL": [
+      "9-speaker audio system",
+      "Leather-wrapped steering wheel and shift knob",
+      "Wood-tone or metallic-tone interior trim",
+      "Heated steering wheel",
+      "Moonroof Package available with power sliding glass moonroof"
+    ],
+    "2.5 SV": [
+      "Bose Premium Audio System with AM/FM/CD and 5-inch color display",
+      "Six speakers (vs four speakers)",
+      "Illuminated steering wheel-mounted audio controls",
+      "SiriusXM Satellite Radio",
+      "Convenience Package with moonroof and heated steering wheel available"
+    ],
+    "2.5 S": [
+      "2.5L 4-cylinder engine",
+      "AM/FM/CD audio system with 5-inch color display",
+      "Four-speaker audio system",
+      "16x7.0-inch aluminum-alloy wheels",
+      "Rear decklid spoiler",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags",
+      "Vehicle Dynamic Control with Traction Control System"
+    ]
+  }
+}

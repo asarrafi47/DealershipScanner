@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|volvo|xc60",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2019__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Inscription": [
+      "Highly sophisticated expression of Swedish luxury"
+    ],
+    "R-Design": [
+      "Spirited drive characterized by style, responsiveness and control"
+    ],
+    "Momentum": [
+      "Panoramic moonroof with LED headlights and automatic lever adjuster",
+      "9-inch Sensus touchscreen display with voice control and Apple CarPlay/Android Auto",
+      "8-inch digital driver display with automatic brightness adaptation",
+      "High-performance audio system with 10 speakers and Bluetooth streaming",
+      "10-way power front seats with lumbar support and driver seat memory",
+      "Iron Ore aluminum decor inlays and aluminum tread plates",
+      "Heated front seats with 2-zone climate control",
+      "City Safety collision avoidance with steering support and lane keeping aid",
+      "Road sign information, run-off road mitigation, and oncoming lane mitigation",
+      "Rear park assist and integrated roof rails in satin silk metal finish"
+    ]
+  }
+}

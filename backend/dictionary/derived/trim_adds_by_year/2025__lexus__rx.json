@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2025|lexus|rx",
+  "year": 2025,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "2023_lexus_rx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      ". To learn more about Lexus' connected services data collection, use, sharing and retention practices, please",
+      "Drive Connect availability and accuracy depend on certain factors outside of Lexus' control in order to operate, including 4G network availability, a cellular connection and GPS signal.",
+      "Connected Services Terms of Use and Master Data Consent. Data charges may apply. For Lexus Interface Services' vehicle-generated data",
+      "vehicle is occupied by a child). Remote Connect depends on certain factors outside of Lexus' control in order to operate, including 4G network availability, a cellular connection and",
+      "Terms of Use and Master Data Consent. Data charges may apply. For Lexus Interface Services' vehicle-generated data collection, use, sharing and retention practices",
+      "eparture is detected. It is not a collision",
+      "purchase, the Lexus Accessory Warranty coverage is in effect for 48 months/50,000 miles from the vehicle's in-service date, which is the same coverage as the",
+      "new vehicle purchase and installed by a Lexus dealer the coverage is 12 months for the parts and labor, regardless of mileage, from the date the",
+      "floor liner or mat. 43. Genuine Lexus Paint Protection Film by 3MTM is designed for specific sections of the vehicle most prone to chipping which may vary depending on vehicle"
+    ],
+    "Premium": [
+      "Power tilt-and-slide moonroof and heated ventilated front seats",
+      "21-inch 20-spoke alloy wheels and aluminum roof rails",
+      "Lexus Interface 14-inch display with Drive Connect trial"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 9.0,
+    "per_trim_add_counts": {
+      "Limited": 9
+    }
+  }
+}

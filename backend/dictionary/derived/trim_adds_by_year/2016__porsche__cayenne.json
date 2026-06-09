@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2016|porsche|cayenne",
+  "year": 2016,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "brochure_llm_2016__porsche__cayenne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cayenne Turbo S",
+    "Cayenne Turbo",
+    "Cayenne S",
+    "Cayenne E-Hybrid S",
+    "Cayenne GTS",
+    "Cayenne S",
+    "Cayenne"
+  ],
+  "adds_by_trim": {
+    "Cayenne Turbo S": [
+      "Sport tailpipes with black finish standard",
+      "PCCB brakes 370mm front / 330mm rear",
+      "Sport Chrono Package capability"
+    ],
+    "Cayenne Turbo": [
+      "Sport exhaust system with tailpipe options",
+      "PCCB brakes 370mm front / 330mm rear",
+      "26.5 gallon extended range fuel tank available"
+    ],
+    "Cayenne S": [
+      "Porsche Active Suspension Management (PASM)",
+      "Air suspension with self-leveling and ride-height control"
+    ],
+    "Cayenne E-Hybrid S": [
+      "21.1 gallon pressurized fuel tank",
+      "Air suspension with self-leveling and ride-height control"
+    ],
+    "Cayenne GTS": [
+      "Sport tailpipes standard",
+      "PCCB brakes 370mm front / 330mm rear"
+    ],
+    "Cayenne": [
+      "Power Steering Plus",
+      "Moonroof",
+      "Bi-Xenon headlights with Porsche Dynamic Light System (PDLS)",
+      "Auto-dimming exterior and interior mirrors",
+      "Comfort lighting package",
+      "ParkAssist front and rear with reversing camera",
+      "14-way power front seats with memory package",
+      "Front seat heating",
+      "Front seat ventilation",
+      "Panoramic roof"
+    ]
+  }
+}

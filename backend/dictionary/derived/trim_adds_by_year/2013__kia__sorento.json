@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2013|kia|sorento",
+  "year": 2013,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_2013__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Standard 175-hp 2.4L 4-cylinder engine with 29 mpg highway efficiency"
+    ],
+    "Premium": [],
+    "Limited": [
+      "Supervision meter cluster with 7-inch TFT LCD display",
+      "Dual-zone automatic temperature control",
+      "Leather seat trim",
+      "Push-button start with Smart Key",
+      "Interior accent illumination",
+      "Illuminated door handle pockets",
+      "Rear spoiler"
+    ],
+    "LX": [
+      "3.5L V6 engine with 276 hp (available option)",
+      "Split-folding second-row seats",
+      "Split-folding third-row seats (available)",
+      "Six airbags with advanced sensor system",
+      "Front active headrests",
+      "Traction Control System (TCS)",
+      "Electronic Stability Control (ESC)",
+      "Tire-Pressure Monitoring System",
+      "LATCH child seat anchors for three second-row positions",
+      "6-speed automatic transmission with Sportmatic manual-shift capability"
+    ],
+    "EX": [
+      "Adds available 2.4L gasoline direct injection 4-cylinder engine with 191 horsepower and 32 mpg highway efficiency"
+    ],
+    "SX": [
+      "Adds available 3.5L V6 engine with 276 horsepower for impressive performance"
+    ]
+  }
+}

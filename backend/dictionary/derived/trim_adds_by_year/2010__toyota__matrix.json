@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2010|toyota|matrix",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Matrix",
+  "ladder_id": "brochure_llm_2010__toyota__matrix",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XRS 2.4L 4-cyl 5-Speed Auto",
+    "XRS 2.4L 4-cyl 5-Speed Manual",
+    "S AWD 2.4L 4-cyl 4-Speed Auto",
+    "S 2.4L 4-cyl 5-Speed Auto",
+    "S 2.4L 4-cyl 5-Speed Manual",
+    "Matrix 1.8L 4-cyl 4-Speed Auto",
+    "Matrix 1.8L 4-cyl 5-Speed Manual"
+  ],
+  "adds_by_trim": {
+    "XRS 2.4L 4-cyl 5-Speed Auto": [
+      "2.4-liter DOHC 16-valve VVT-i 4-cylinder engine with 158 hp and 162 lb.-ft. torque",
+      "Independent MacPherson strut front with double-wishbone rear suspension and sport strut tower brace",
+      "Larger 11.7-inch front and 11.1-inch rear brake rotors",
+      "Tighter 38.1-foot turning circle diameter"
+    ],
+    "XRS 2.4L 4-cyl 5-Speed Manual": [
+      "2.4-liter DOHC 16-valve VVT-i 4-cylinder engine with 158 hp and 162 lb.-ft. torque",
+      "5-speed manual transmission",
+      "Independent MacPherson strut front with double-wishbone rear suspension and sport strut tower brace",
+      "Larger 11.7-inch front and 11.1-inch rear brake rotors",
+      "Tighter 38.1-foot turning circle diameter"
+    ],
+    "S AWD 2.4L 4-cyl 4-Speed Auto": [
+      "2.4-liter DOHC 16-valve VVT-i 4-cylinder engine with 158 hp and 162 lb.-ft. torque",
+      "All-Wheel Drive with active torque control",
+      "4-speed automatic transmission",
+      "5.3-inch minimum ground clearance"
+    ],
+    "S 2.4L 4-cyl 5-Speed Auto": [
+      "2.4-liter DOHC 16-valve VVT-i 4-cylinder engine with 158 hp and 162 lb.-ft. torque",
+      "5-speed automatic transmission",
+      "Larger 11.7-inch front and 11.0-inch rear brake rotors",
+      "Wider 36.7-foot turning circle diameter"
+    ],
+    "S 2.4L 4-cyl 5-Speed Manual": [
+      "2.4-liter DOHC 16-valve VVT-i 4-cylinder engine with 158 hp and 162 lb.-ft. torque",
+      "5-speed manual transmission",
+      "Larger 11.7-inch front and 11.0-inch rear brake rotors",
+      "Wider 36.7-foot turning circle diameter"
+    ],
+    "Matrix 1.8L 4-cyl 4-Speed Auto": [
+      "4-speed automatic transmission"
+    ],
+    "Matrix 1.8L 4-cyl 5-Speed Manual": [
+      "1.8-liter DOHC 16-valve dual VVT-i 4-cylinder engine with 132 hp and 128 lb.-ft. torque",
+      "5-speed manual transmission",
+      "Ultra Low Emissions Vehicle II certification",
+      "Electric Power Steering with electronic power-assist",
+      "4-wheel ABS with Electronic Brake-force Distribution and Brake Assist",
+      "Vehicle Stability Control and Traction Control with off switch"
+    ]
+  }
+}

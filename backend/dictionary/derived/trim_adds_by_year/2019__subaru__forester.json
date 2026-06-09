@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2019|subaru|forester",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2019__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "Limited",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Chrome fog light trim and chrome door handles",
+      "Front, side, and rear underguards with silver accents",
+      "Roof rails with integrated tie-down points and silver accents"
+    ],
+    "Limited": [
+      "Dual-zone automatic climate control system with air filtration",
+      "10-way power adjustable driver's seat with power lumbar support",
+      "8-way power adjustable front-passenger's seat",
+      "2-position driver's seat memory with exterior mirror synchronization",
+      "Leather-wrapped steering wheel and shifter handle with silver stitching"
+    ],
+    "Sport": [
+      "Gloss black grille and gloss black fog light trim",
+      "Front, side, and rear underguards with orange accents",
+      "Roof rails with integrated tie-down points and orange accents",
+      "Leather-wrapped steering wheel and shifter handle with orange stitching"
+    ],
+    "Premium": [
+      "LED headlights with Steering Responsive Headlights and High Beam Assist",
+      "LED fog lights and LED rear gate light",
+      "Panoramic moonroof with 100% UV light reducing",
+      "Windshield wiper de-icer and heated side mirrors",
+      "6-speaker audio system",
+      "Keyless access with push-button start and PIN-code vehicle access",
+      "Power rear gate with automatic close, height memory, and lock switch"
+    ]
+  }
+}

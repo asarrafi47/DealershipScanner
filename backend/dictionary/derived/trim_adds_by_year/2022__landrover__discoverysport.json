@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2022|landrover|discoverysport",
+  "year": 2022,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "ladder_id": "brochure_2022__landrover__discoverysport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds P290 MHEV petrol engine with 290 PS / 213 kW power",
+      "Adds automatic transmission with all-wheel drive (AWD)",
+      "Adds 5-seater seating configuration",
+      "Adds 17, 18, and 20-inch wheel options"
+    ],
+    "Sport": [
+      "Adds 5-seat seating configuration",
+      "Adds 18-inch 5 split-spoke wheels (Style 511)",
+      "Adds 2.0L Si4 gas engine with 237 HP",
+      "Adds 9-speed automatic transmission",
+      "Adds single piston sliding caliper brakes",
+      "Adds Terrain Response driving technology",
+      "Adds All Terrain Progress Control",
+      "Adds Hill Descent Control (HDC)",
+      "Adds core infotainment system",
+      "Adds SOS Emergency Call safety feature"
+    ],
+    "Limited": [
+      "Adds Driver Assist Plus Package integration",
+      "Adds intelligent routing with live and historical traffic movement analysis",
+      "Adds Share ETA automatic notification via text or email",
+      "Adds Route Planner app with door-to-door guidance including public transportation",
+      "Adds Protect2 incident response with automatic emergency service dispatch"
+    ],
+    "Standard": [
+      "Adds P300e plug-in hybrid electric vehicle (PHEV) option with 309 PS / 227 kW combined power",
+      "Adds 109 PS / 80 kW electric motor with 260 Nm torque",
+      "Adds 15 kWh total battery capacity with 12.17 kWh usable",
+      "Adds 60 km / 37 miles EV range (WLTP Combined)",
+      "Adds DC fast charging: 32kWh to 80% in 30 minutes",
+      "Adds home charger/wall box capability: 7kWh to 100% in 2 hours 12 minutes"
+    ],
+    "HSE": [
+      "Premium specification pack above SE trim"
+    ]
+  }
+}

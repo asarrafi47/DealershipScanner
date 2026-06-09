@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2019|chevrolet|commercial",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "brochure_llm_2019__chevrolet__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "RST",
+    "LT",
+    "Custom Trail Boss",
+    "Custom",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "EcoTec3 5.3L V8 with Dynamic Fuel Management standard",
+      "EcoTec3 6.2L V8 engine available"
+    ],
+    "LTZ": [
+      "EcoTec3 5.3L V8 with Dynamic Fuel Management standard",
+      "EcoTec3 6.2L V8 engine available",
+      "220-amp alternator available"
+    ],
+    "RST": [
+      "EcoTec3 2.7L Turbo I-4 engine standard",
+      "EcoTec3 5.3L V8 with Dynamic Fuel Management available"
+    ],
+    "LT": [
+      "EcoTec3 2.7L Turbo I-4 engine standard",
+      "EcoTec3 5.3L V8 with Dynamic Fuel Management available",
+      "Full-color Driver Information Center standard"
+    ],
+    "Custom Trail Boss": [
+      "EcoTec3 4.3L V6 engine standard",
+      "EcoTec3 5.3L V8 engine available"
+    ],
+    "Custom": [
+      "EcoTec3 4.3L V6 engine standard",
+      "EcoTec3 5.3L V8 engine available"
+    ],
+    "WT": [
+      "EcoTec3 4.3L V6 engine standard",
+      "4-wheel antilock disc brakes with Duralife rotors standard",
+      "StabiliTrak electronic stability control standard",
+      "Durabed with high-strength roll-formed steel floor standard",
+      "12 welded tie-downs rated 500 pounds per corner standard",
+      "Durable vinyl floor for easy cleanup standard",
+      "Power express-down windows standard",
+      "Rear vision camera standard",
+      "Underseat storage standard"
+    ]
+  }
+}

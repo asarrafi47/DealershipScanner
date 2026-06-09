@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|mercury|milan",
+  "year": 2011,
+  "make": "Mercury",
+  "model": "Milan",
+  "ladder_id": "brochure_web_2011__mercury__milan",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Milan Hybrid",
+    "Milan Premier",
+    "Milan SEL",
+    "Milan S"
+  ],
+  "adds_by_trim": {
+    "Milan Hybrid": [
+      "2.5L Atkinson hybrid engine with electric motor, 191 hp combined",
+      "Continuously Variable Transmission (CVT)",
+      "Regenerative braking system",
+      "Enhanced fuel economy vs gasoline models"
+    ],
+    "Milan Premier": [
+      "Leather-trimmed front bucket seats",
+      "Premium sound system with 6 speakers",
+      "Heated front seats",
+      "Dual-zone automatic climate control",
+      "Power driver seat with lumbar support",
+      "Rear window sunshade",
+      "Fog lamps"
+    ],
+    "Milan SEL": [
+      "3.0L V6 engine, 220 hp (vs 2.5L I4)",
+      "6-speed automatic transmission with Select Shift",
+      "17-inch alloy wheels",
+      "Cloth captain's chairs with 6-way power driver seat",
+      "Sync infotainment system with Bluetooth",
+      "Auxiliary audio input jack",
+      "Air conditioning with manual controls"
+    ],
+    "Milan S": [
+      "2.5L Duratec inline 4-cylinder engine, 177 hp",
+      "6-speed SelectShift automatic transmission",
+      "Power windows, locks, and mirrors",
+      "Air conditioning",
+      "Cloth seats",
+      "Speed-sensitive power steering",
+      "Electronic stability control with traction control",
+      "Dual front airbags and side curtain airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mercury/milan/"
+}

@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Mercedes-Benz,300,E,3.0L V6 ((FFS) (MPFI)),3.0L V6 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,20,18,,,,,
+1986,Mercedes-Benz,300,E,3.0L V6 ((FFS) (MPFI)),3.0L V6 Turbo,Turbocharged,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,23,19,,,,,
+1986,Mercedes-Benz,300,SDL,"Diesel 3.0L V6 ((DSL,TRBO) (NO-CAT)) Diesel",3.0L V6 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize Cars,6,3.0,21,24,22,,,,,

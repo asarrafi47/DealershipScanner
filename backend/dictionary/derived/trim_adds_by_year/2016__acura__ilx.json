@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2016|acura|ilx",
+  "year": 2016,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "brochure_llm_2016__acura__ilx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ILX WITH TECHNOLOGY PLUS PACKAGE",
+    "ILX WITH ACURAWATCH PLUS PACKAGE",
+    "ILX WITH PREMIUM PACKAGE",
+    "ILX"
+  ],
+  "adds_by_trim": {
+    "ILX WITH TECHNOLOGY PLUS PACKAGE": [
+      "8-Speed DCT with Sequential SportShift Paddle Shifters",
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with Street and Freeway Conditions",
+      "Next-Generation AcuraLink",
+      "Acura/ELS Studio Premium Audio System with 10 speakers",
+      "Song By Voice voice control",
+      "Siri Eyes Free integration",
+      "Power Moonroof",
+      "17-inch noise-reducing alloy wheels"
+    ],
+    "ILX WITH ACURAWATCH PLUS PACKAGE": [
+      "Adaptive Cruise Control (ACC)",
+      "Collision Mitigation Braking System (CMBS)",
+      "Road Departure Mitigation System",
+      "Forward Collision Warning (FCW) System",
+      "Lane Departure Warning (LDW) System",
+      "Color Multi-Information Display (MID)",
+      "Ebony Headliner",
+      "18-inch machine-finished noise-reducing alloy wheels",
+      "Fog Lights",
+      "Body-colored side sills and trunk spoiler"
+    ],
+    "ILX WITH PREMIUM PACKAGE": [
+      "Perforated leather-trimmed interior",
+      "Blind Spot Information (BSI) system",
+      "Rear Cross Traffic Monitor",
+      "On Demand Multi-Use Display (ODMD)",
+      "iPhone AcuraLink Navigation App Connectivity",
+      "Driver's Memory Seat",
+      "Front Passenger 4-Way Power Seat"
+    ],
+    "ILX": [
+      "201-hp 2.4-liter 16-valve DOHC i-VTEC direct-injection engine",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Jewel Eye LED headlights",
+      "Dual-zone automatic climate control with humidity control",
+      "Multi-View Rear Camera"
+    ]
+  }
+}

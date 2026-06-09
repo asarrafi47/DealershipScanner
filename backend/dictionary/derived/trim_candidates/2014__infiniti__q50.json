@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|infiniti|q50",
+  "year": 2014,
+  "make": "Infiniti",
+  "model": "Q50",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

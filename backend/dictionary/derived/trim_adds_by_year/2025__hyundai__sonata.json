@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2025|hyundai|sonata",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "2025_hyundai_sonata",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "N Line"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "18-inch alloy wheels and H-Tex heated front seats",
+      "12.3-inch display with navigation and Highway Driving Assist",
+      "Proximity key and wireless phone charger"
+    ],
+    "N Line": [
+      "2.5L turbo — 290 hp with sport-tuned suspension",
+      "N Line sport seats and 19-inch N Line alloy wheels",
+      "Dual chrome exhaust and sport appearance package"
+    ],
+    "SE": [
+      "191 hp/181 lb-ft Smartstream 2.5L MPI/GDI 4-cylinder engine",
+      "Smartstream 8-speed automatic transmission",
+      "Electronic Parking Brake with Automatic Vehicle Hold",
+      "Drive Mode Select",
+      "LED headlights",
+      "LED taillights",
+      "Acoustic-laminated windshield and solar control glass",
+      "Heated side mirrors with LED turn signal indicators",
+      "60/40 split-folding rear seats",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection"
+    ]
+  }
+}

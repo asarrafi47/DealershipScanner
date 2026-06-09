@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2016|volvo|polestar",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "Polestar",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

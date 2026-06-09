@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|honda|hrv",
+  "year": 2018,
+  "make": "Honda",
+  "model": "HR-V",
+  "ladder_id": "brochure_llm_2018__honda__hrv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L Navi",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L Navi": [
+      "Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "SiriusXM Radio",
+      "HD Radio",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Automatic climate control with electrostatic touch-screen",
+      "180-watt audio system with 6 speakers",
+      "7-inch Display Audio with electrostatic touch-screen",
+      "HondaLink and Pandora compatibility",
+      "SMS text message function"
+    ],
+    "EX": [
+      "17-inch alloy wheels with black inserts",
+      "One-touch power moonroof with tilt feature",
+      "Roof rails",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic-dimming rearview mirror",
+      "Auto-on/off headlights",
+      "Fog lights",
+      "Heated side mirrors with integrated turn indicators",
+      "Rear privacy glass",
+      "Multi-angle rearview camera with dynamic guidelines"
+    ],
+    "LX": [
+      "141-hp 1.8-liter i-VTEC 4-cylinder engine",
+      "6-speed manual or CVT transmission",
+      "Real Time AWD with Intelligent Control System",
+      "Smart Entry",
+      "Hill start assist",
+      "Electric parking brake with automatic brake hold",
+      "17-inch alloy wheels",
+      "Advanced Compatibility Engineering body structure",
+      "Multi-angle rearview camera with guidelines",
+      "Security system with remote entry"
+    ]
+  }
+}

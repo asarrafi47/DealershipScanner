@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2012|hyundai|azera",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_llm_2012__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Technology": [
+      "19-inch Hyper Silver alloy wheels (vs. 18-inch on Base)",
+      "Ventilated front seats",
+      "Power tilt-and-telescopic steering wheel (vs. manual)",
+      "Integrated Memory System for driver seat, side mirrors, steering wheel",
+      "Panoramic tilt-and-slide sunroof",
+      "High Intensity Discharge (HID) Xenon headlights",
+      "LED headlight accents and taillights",
+      "Side window sunshades",
+      "Power rear sunshade",
+      "Rear parking assistance sensors"
+    ],
+    "Base": [
+      "3.3L Gasoline Direct Injection DOHC V6 engine",
+      "6-speed automatic transmission with SHIFTRONIC manual shift mode",
+      "Active ECO system",
+      "SACHS Amplitude Selective Damper suspension",
+      "18-inch Hyper Silver alloy wheels",
+      "Navigation system with 7-inch touchscreen and rearview camera",
+      "Dimension 450-Watt AM/FM/SiriusXM/CD/MP3 audio system with external amp and subwoofer",
+      "Leather seating surfaces with heated front and rear seats",
+      "Proximity keyless entry with push-button start",
+      "9-airbag safety system with advanced dual front airbags"
+    ]
+  }
+}

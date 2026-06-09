@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2013|jaguar|xj",
+  "year": 2013,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "brochure_web_2013__jaguar__xj",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XJR575",
+    "XJ50 V8",
+    "XJ Supercharged",
+    "XJL Supercharged",
+    "XJ50 V6",
+    "XJ Collection",
+    "XJL Portfolio",
+    "XJ R-Sport"
+  ],
+  "adds_by_trim": {
+    "XJR575": [
+      "5.0-liter supercharged V-8 engine producing 575 hp and 517 lb-ft torque",
+      "0-60 acceleration in 4.2 seconds",
+      "Long-wheelbase body only"
+    ],
+    "XJ50 V8": [
+      "5.0-liter supercharged V-8 engine producing 470 hp and 424 lb-ft torque",
+      "0-60 acceleration in 4.9 seconds",
+      "XJ50 special edition wheels and grille treatment",
+      "Trim-specific interior detailing"
+    ],
+    "XJ Supercharged": [
+      "5.0-liter supercharged V-8 engine producing 470 hp and 424 lb-ft torque",
+      "0-60 acceleration in 4.9 seconds"
+    ],
+    "XJL Supercharged": [
+      "Long-wheelbase body with 4.8 inches extra rear legroom",
+      "Individually-adjustable rear seats with powered window sunshades",
+      "Dual 10.2-inch rear seat displays with fold-down tray tables"
+    ],
+    "XJ50 V6": [
+      "XJ50 special edition wheels and grille treatment",
+      "Trim-specific interior detailing",
+      "Automatic emergency braking on rear-wheel drive models"
+    ],
+    "XJ Collection": [
+      "Long-wheelbase XJL body with 4.8 inches extra rear legroom"
+    ],
+    "XJL Portfolio": [
+      "Long-wheelbase body with 4.8 inches extra rear legroom",
+      "Individually-adjustable rear seats with powered window sunshades",
+      "Dual 10.2-inch rear seat displays with fold-down tray tables"
+    ],
+    "XJ R-Sport": [
+      "3.0-liter supercharged V-6 engine producing 340 hp and 332 lb-ft torque",
+      "Adaptive LED headlights with 19-inch wheels",
+      "Black detailing on grille and spoiler",
+      "Heated and cooled leather seats in both rows",
+      "Wood veneers on dashboard with panoramic sunroof",
+      "12.3-inch digital instrument display and 10-inch infotainment screen",
+      "20-speaker audio system with one USB port",
+      "Lane departure warning and lane keep assist",
+      "Blind-spot monitoring with automatic emergency braking"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jaguar/xj/"
+}

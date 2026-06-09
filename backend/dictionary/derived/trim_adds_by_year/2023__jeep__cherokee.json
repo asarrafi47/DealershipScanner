@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2023|jeep|cherokee",
+  "year": 2023,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "2023_jeep_cherokee",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Latitude",
+    "Latitude Lux",
+    "Limited",
+    "Trailhawk",
+    "Altitude Lux"
+  ],
+  "adds_by_trim": {
+    "Latitude Lux": [
+      "8.4-inch Uconnect 4C NAV and leather-trimmed heated seats",
+      "Premium-wrapped heated steering wheel"
+    ],
+    "Limited": [
+      "Limited luxury content over Latitude Lux"
+    ],
+    "Trailhawk": [
+      "Trailhawk 4x4 off-road hardware and skid plates",
+      "Highest Cherokee off-road trim"
+    ],
+    "Altitude Lux": [
+      "Altitude Lux deluxe treatment with premium safety options",
+      "Featured brochure trim with 8.4-inch NAV"
+    ]
+  }
+}

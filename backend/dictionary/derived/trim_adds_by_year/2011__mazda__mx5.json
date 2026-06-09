@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2011|mazda|mx5",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2011__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GRAND TOURING (MX-5 Power Retractable HardTop)",
+    "GRAND TOURING (MX-5)",
+    "TOURING (MX-5 Power Retractable HardTop)",
+    "TOURING (MX-5)",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "GRAND TOURING (MX-5 Power Retractable HardTop)": [
+      "Black or beige cloth convertible top with central release latch",
+      "Automatic climate control",
+      "200-watt Bose 7-speaker audio system with AudioPilot 2 noise compensation",
+      "Leather-trimmed seats with heated function and 5 settings",
+      "Driver's seat height lifter"
+    ],
+    "GRAND TOURING (MX-5)": [
+      "Black or beige cloth convertible top with central release latch",
+      "Automatic climate control",
+      "200-watt Bose 7-speaker audio system with AudioPilot 2 noise compensation",
+      "Leather-trimmed seats with heated function and 5 settings",
+      "Driver's seat height lifter"
+    ],
+    "TOURING (MX-5 Power Retractable HardTop)": [
+      "Body-color Power Retractable Hard Top",
+      "Silver seatback bars with aeromesh screen and air guide"
+    ],
+    "TOURING (MX-5)": [
+      "6-speed manual transmission",
+      "Power door locks",
+      "Front shock-tower brace",
+      "Chrome grille surround",
+      "17-inch aluminum alloy wheels with P205/45R17 high-performance tires",
+      "Remote keyless entry with retractable key",
+      "Trip computer",
+      "Silver seatback bars",
+      "In-dash 6-disc CD changer",
+      "Cruise control with steering-wheel-mounted controls"
+    ],
+    "SPORT": [
+      "2.0L DOHC 16-valve 4-cylinder engine with variable intake valve timing",
+      "5-speed manual overdrive transmission with short-throw shifter",
+      "Black vinyl Z-fold convertible top with central release latch",
+      "17-inch aluminum alloy wheels",
+      "P205/45R17 high-performance tires",
+      "Halogen fog lights",
+      "Trip computer",
+      "In-dash 6-disc CD changer",
+      "Cruise control with steering-wheel-mounted controls"
+    ]
+  }
+}

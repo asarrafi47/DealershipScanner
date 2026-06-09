@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2022|toyota|tundra",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Tundra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "1794",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "SR",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

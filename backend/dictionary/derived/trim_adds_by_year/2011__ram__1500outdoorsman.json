@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|ram|1500outdoorsman",
+  "year": 2011,
+  "make": "ram",
+  "model": "1500 Outdoorsman",
+  "ladder_id": "brochure_2011__ram__1500outdoorsman",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "Adds Includes Light Truck (LT) 17-inch All-Terrain tires with on-/off-road tread pattern",
+      "Adds standard skid plates",
+      "Adds Includes heavy-duty cooling system for all engines and transmissions",
+      "Adds four- and seven-pin trailer harness plugs (bumper-mounted)",
+      "Adds Includes standard tow hooks and Class IV hitch receiver",
+      "Adds standard Trailer Sway Control on 1500 models",
+      "Adds Includes leather-wrapped steering wheel with audio controls for SIRIUS Satellite Radio",
+      "Adds universal garage door opener (programmable to three devices)",
+      "Adds Includes dash-mounted 115-volt power outlet",
+      "Adds extra lighting for ashtray, glove box, engine bay, rear cabin, and sun visors"
+    ],
+    "Premium": [
+      "Adds premium easy-to-clean cloth seats with stain and odor resistance",
+      "Adds protective all-weather mud/slush mats in front and rear",
+      "Adds Includes rearview auto-dimming mirror",
+      "Adds Electronic Vehicle Information Center with real-time engine, transmission, and tire pressure data"
+    ],
+    "Limited": [
+      "Adds available wide trailer-tow mirror for enhanced visibility",
+      "Adds limited-slip differential (depending on model)"
+    ]
+  }
+}

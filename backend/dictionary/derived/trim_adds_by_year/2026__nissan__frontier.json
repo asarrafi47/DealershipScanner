@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2026|nissan|frontier",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2026__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRO-4X® CREW CAB",
+    "PRO-X® CREW CAB",
+    "SV CREW CAB",
+    "S CREW CAB",
+    "S KING CAB®"
+  ],
+  "adds_by_trim": {
+    "PRO-4X® CREW CAB": [
+      "Electronic locking rear differential",
+      "Steel underbody skid plates (oil pan, fuel tank, transfer case)",
+      "Intelligent Around View Monitor with Off-Road Mode",
+      "PRO-4X embroidered cloth seats and carpeted floor mats"
+    ],
+    "PRO-X® CREW CAB": [
+      "17-inch PRO aluminum-alloy wheels",
+      "Bilstein off-road performance shock absorbers",
+      "LED signature headlights, Daytime Running Lights, fog lights",
+      "Remote Engine Start with Intelligent Climate Control",
+      "Dual Zone Automatic Temperature Control",
+      "4-way power passenger seat and heated front seats",
+      "Heated leather-wrapped steering wheel",
+      "PRO-X embroidered cloth seats with Lava Red stitching"
+    ],
+    "SV CREW CAB": [
+      "17-inch aluminum-alloy wheels",
+      "Rear stabilizer bar",
+      "Upper body-color and lower silver front bumper",
+      "Body-color door handles and rear bumper",
+      "Dual power outside mirrors",
+      "8-way power driver seat with 2-way power lumbar support",
+      "12.3-inch color touchscreen display with NissanConnect"
+    ],
+    "S CREW CAB": [
+      "Four full-size doors with seating for five",
+      "16-inch aluminum-alloy wheels",
+      "60/40-split flip-up rear bench seat",
+      "Rear stabilizer bar",
+      "Rear charge-only USB ports"
+    ],
+    "S KING CAB®": [
+      "3.8-liter V6 engine with 281 horsepower",
+      "9-speed automatic transmission",
+      "16-inch styled steel wheels",
+      "Safety Shield 360 with Automatic Emergency Braking and Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "RearView Monitor and Rear Sonar System",
+      "Hill start assist and full-length boxed ladder frame",
+      "LED headlights and 7-inch Advanced Drive-Assist Display",
+      "8-inch NissanConnect color touchscreen with Apple CarPlay and Android Auto"
+    ]
+  }
+}

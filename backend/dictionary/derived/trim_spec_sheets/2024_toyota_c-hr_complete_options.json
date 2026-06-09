@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_toyota_c-hr_complete_options",
+  "make": "Toyota",
+  "models": [
+    "C-HR",
+    "C-HR"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Base": [
+      {
+        "label": "Screen Size",
+        "value": "8.0-inch console display"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Front-engine, four-wheel-drive"
+      }
+    ]
+  }
+}

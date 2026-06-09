@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2021|alfaromeo|giulia",
+  "year": 2021,
+  "make": "alfa romeo",
+  "model": "giulia",
+  "ladder_id": "brochure_llm_2021__alfaromeo__giulia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QUADRIFOGLIO",
+    "Ti SPORT",
+    "Ti"
+  ],
+  "adds_by_trim": {
+    "QUADRIFOGLIO": [
+      "2.9L Twin-Turbocharged V6 engine with 505 hp and 443 lb-ft torque",
+      "19-inch Bright Tecnico wheels with 245/35ZR-19/285/30ZR-19 Pirelli Performance tires",
+      "Unique Quadrifoglio front and rear fascias with carbon fiber active aero splitter",
+      "Carbon fiber hood, roof, rocker panels, and spoiler",
+      "Brembo high-performance brakes with anodized calipers and torque vectoring rear differential",
+      "Leather/Alcantara seats with 14-way power adjustment and 4-way lumbar support",
+      "8.8-inch multi-touch display with navigation and 7-inch TFT cluster",
+      "Harman Kardon premium audio system with Bluetooth, Apple CarPlay, and Android Auto",
+      "Forward Collision Warning with Full-Speed Stop and blind spot detection",
+      "Alfa DNA Pro Drive Mode Selector with Race Mode"
+    ],
+    "Ti SPORT": [
+      "19-inch Bright 5-hole aluminum wheels replacing 18-inch wheels",
+      "Sport front and rear fascias with gloss black window surrounds",
+      "Colored calipers in red, black, or yellow",
+      "Dark exhaust finish",
+      "Mechanical Limited-Slip Differential (LSD)",
+      "Premium Sport leather-trimmed seats with 14-way power front seats",
+      "Sport leather-wrapped steering wheel with aluminum paddle shifters",
+      "Genuine Dark Gray Oak Wood interior trim with Alfa Romeo bright aluminum door sills"
+    ],
+    "Ti": [
+      "2.0L Turbocharged 4-cylinder engine with 280 hp and 306 lb-ft torque",
+      "18-inch Bright Double Y-spoke aluminum wheels with 225/45R18 run-flat tires",
+      "Dual-pane sunroof",
+      "Heated front seats and heated steering wheel",
+      "Front/Rear Park Assist Sensors and heated windshield washer nozzles",
+      "8.8-inch multi-touch display with navigation",
+      "AM/FM/HD radio with auxiliary input"
+    ]
+  }
+}

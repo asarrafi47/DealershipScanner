@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2017|ford|focus",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_llm_2017__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS",
+    "ST",
+    "Titanium",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "RS": [
+      "Best-in-class turbocharged 350-hp EcoBoost engine",
+      "Full vehicle cover (Ford Licensed Accessory)",
+      "Wheel center caps",
+      "Winter Tire & Wheel Package available"
+    ],
+    "ST": [
+      "252-hp turbocharged EcoBoost engine",
+      "RECARO race-inspired seats",
+      "Full vehicle cover (Ford Licensed Accessory)",
+      "Over-the-top stripes",
+      "Carbon-fiber emergency brake handle trim",
+      "Carbon-fiber gear shift knobs",
+      "Carbon-fiber trim instrument cluster bezel",
+      "Illuminated door-sill plates"
+    ],
+    "Titanium": [
+      "Leather-trimmed seats",
+      "Upscale interior appointments"
+    ],
+    "SEL": [
+      "17-inch machined aluminum wheels"
+    ]
+  }
+}

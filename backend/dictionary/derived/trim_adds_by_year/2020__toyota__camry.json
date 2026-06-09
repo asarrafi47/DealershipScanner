@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2020|toyota|camry",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_llm_2020__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE V6",
+    "XLE",
+    "L",
+    "Hybrid XLE",
+    "Hybrid SE",
+    "Hybrid LE"
+  ],
+  "adds_by_trim": {
+    "XLE V6": [
+      "3.5-Liter V6 engine with 301 hp at 6600 rpm",
+      "22 city/33 hwy/26 combined estimated mpg",
+      "Panoramic glass roof with front power tilt/slide moonroof",
+      "Dual exhaust with chrome finisher",
+      "Audio Plus with JBL w/Clari-Fi, nine speakers including subwoofer, 8-inch touchscreen"
+    ],
+    "XLE": [
+      "LED headlights with fully integrated LED Daytime Running Lights with auto on/off",
+      "LED taillights",
+      "Bright metallic front grille",
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators",
+      "18-inch silver machined-finish alloy wheels and P235/45R18 tires",
+      "Available All-Wheel Drive (AWD)",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ],
+    "L": [
+      "Bi-LED combination headlights with auto on/off feature",
+      "LED Daytime Running Lights with on/off feature",
+      "16-inch steel wheels and P205/65R16 tires",
+      "Shark-fin antenna",
+      "Toyota Safety Sense P (TSS-P)",
+      "Integrated backup camera with projected path",
+      "7-inch touchscreen with Android Auto and Apple CarPlay compatibility",
+      "Hill Start Assist Control"
+    ],
+    "Hybrid XLE": [
+      "LED headlights with fully integrated LED Daytime Running Lights with auto on/off",
+      "LED taillights",
+      "Bright metallic front grille",
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators",
+      "Color-keyed rear spoiler",
+      "Leather-trimmed multi-stage heated front seats with 8-way power-adjustable driver seat",
+      "8-inch touchscreen Audio Plus with Android Auto and Apple CarPlay",
+      "Qi-compatible wireless smartphone charging",
+      "Tiger Eye wood interior trim",
+      "Auto-dimming rearview mirror"
+    ],
+    "Hybrid SE": [
+      "Black front grille with sport mesh insert",
+      "18-inch black machined-finish alloy wheels and P235/45R18 tires",
+      "Color-keyed sport side rocker panels",
+      "Color-keyed rear spoiler",
+      "Sport SofTex-trimmed front seats with fabric inserts and seatback pockets",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel with paddle shifters",
+      "Embossed mesh interior trim",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ],
+    "Hybrid LE": [
+      "2.5-Liter Dynamic Force 4-Cylinder hybrid engine with 208 hp net power",
+      "51 city/53 hwy/52 combined estimated mpg",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Bi-LED combination headlights with auto on/off feature",
+      "16-inch steel wheels and P205/65R16 tires",
+      "Toyota Safety Sense P (TSS-P)",
+      "Dual zone automatic climate control with air filter and humidity sensor",
+      "7-inch touchscreen with Android Auto and Apple CarPlay compatibility",
+      "Fabric-trimmed front seats with 8-way power-adjustable driver seat",
+      "Layered wood interior trim"
+    ]
+  }
+}

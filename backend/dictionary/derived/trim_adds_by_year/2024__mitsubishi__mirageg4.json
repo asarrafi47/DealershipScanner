@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2024|mitsubishi|mirageg4",
+  "year": 2024,
+  "make": "Mitsubishi",
+  "model": "Mirage G4",
+  "ladder_id": "2024_mitsubishi_mirageg4",
+  "source": "manual_brochure_review",
+  "trims_available": ["ES", "LE", "Black Edition", "SE"],
+  "adds_by_trim": {
+    "LE": [
+      "15-inch alloy wheels with 175/55R15 tires, driver’s armrest, and rain-sensing wipers",
+      "Automatic headlights over G4 ES"
+    ],
+    "Black Edition": [
+      "15-inch black wheels, trunk spoiler, red grille accents, and red cloth door trim",
+      "Leather-wrapped steering wheel and shift knob with red stitching",
+      "Two-toned black roof available on select trims"
+    ],
+    "SE": [
+      "Lane Departure Warning, automatic high beams, and premium cloth with carbon print",
+      "FAST-Key, push-button start, LED headlights/DRLs, halogen fog lights, and 15-inch alloys",
+      "Highest Mirage G4 trim in 2024 brochure"
+    ]
+  }
+}

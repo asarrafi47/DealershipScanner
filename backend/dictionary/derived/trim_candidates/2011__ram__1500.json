@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2011|ram|1500",
+  "year": 2011,
+  "make": "ram",
+  "model": "1500",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Laramie",
+    "Big Horn",
+    "Lone Star",
+    "Premium",
+    "LT",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

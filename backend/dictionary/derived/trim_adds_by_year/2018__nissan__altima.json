@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2018|nissan|altima",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2018__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SL",
+    "2.5 SL",
+    "2.5 SV",
+    "2.5 SR",
+    "2.5 S"
+  ],
+  "adds_by_trim": {
+    "3.5 SL": [
+      "3.5-liter DOHC 24-valve V6 engine with 270 hp and 251 lb-ft torque",
+      "Nine-speaker Bose Premium Audio System"
+    ],
+    "2.5 SL": [
+      "7.0-inch multi-touch control color monitor with Nissan Navigation System",
+      "Nine-speaker Bose Premium Audio System",
+      "Auto-dimming inside rearview mirror",
+      "Digital compass"
+    ],
+    "2.5 SV": [
+      "7.0-inch multi-touch control color monitor",
+      "Apple CarPlay and Android Auto compatibility",
+      "Illuminated steering wheel-mounted audio controls",
+      "Rear passenger air conditioning vents"
+    ],
+    "2.5 SR": [
+      "17-inch x 7.5-inch machine-finished aluminum-alloy wheels",
+      "AM/FM/CD audio system with 7.0-inch color monitor",
+      "Nissan Navigation System available"
+    ],
+    "2.5 S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine with 179 hp and 177 lb-ft torque",
+      "Xtronic CVT with paddle shifters and manual shift mode",
+      "AM/FM/CD audio system with 5.0-inch color monitor",
+      "16-inch x 7.0-inch steel wheels with wheel covers",
+      "Dual-zone automatic temperature control",
+      "Bluetooth hands-free phone system",
+      "Nissan Intelligent Key with push button ignition",
+      "Remote engine start system"
+    ]
+  }
+}

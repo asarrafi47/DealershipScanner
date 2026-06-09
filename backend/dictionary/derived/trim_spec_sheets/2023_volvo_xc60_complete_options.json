@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_volvo_xc60_complete_options",
+  "make": "Volvo",
+  "models": [
+    "XC60",
+    "XC60"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Ultimate": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: XC60 Plug-in Hybrid Concept; XC60 Plug-in Hybrid Concept at 2012 NYIAS (was They utilize an Integrated Starter Generator (ISG) and a KERS system In 2023, Volvo removed conventional engines as an option, meaning mild hybrids are the base engine option in…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: They utilize an Integrated Starter Generator (ISG) and a KERS system In 2023, Volvo removed conventional engines as an option, meaning mild hybrids are the base engine option in the US. Plug-in hybrid The XC60 was released with a T8 plug-in hybrid variant that…"
+      }
+    ]
+  }
+}

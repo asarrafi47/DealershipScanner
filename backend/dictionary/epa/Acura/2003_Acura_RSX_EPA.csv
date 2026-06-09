@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,Acura,RSX,RSX,2.0L I4 (VTC/VTEC),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,24,30,26,,,,,
+2003,Acura,RSX,RSX,2.0L I4 (VTC/VTEC),2.0L I4,,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,21,28,24,,,,,
+2003,Acura,RSX,RSX,2.0L I4 (VTC/VTEC),2.0L I4,,Automatic (S5),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,21,30,25,,,,,

@@ -1,0 +1,38 @@
+{
+  "ladder_id": "bmw_7_series",
+  "make": "BMW",
+  "models": [
+    "7 Series",
+    "740i",
+    "750i",
+    "760i",
+    "745e",
+    "745Le",
+    "M760i",
+    "730d",
+    "740d"
+  ],
+  "year_min": 2008,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M Sport": [
+      {
+        "label": "Interior Materials",
+        "value": "M Sport seats and steering wheel"
+      }
+    ],
+    "Luxury Line": [
+      {
+        "label": "Interior Materials",
+        "value": "Full Merino leather and burl walnut trim"
+      }
+    ],
+    "Executive": [
+      {
+        "label": "Interior Materials",
+        "value": "Heated/ventilated front and rear seats; Rear comfort seats with footrests"
+      }
+    ]
+  }
+}

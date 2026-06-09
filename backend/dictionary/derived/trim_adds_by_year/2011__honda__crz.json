@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|honda|crz",
+  "year": 2011,
+  "make": "Honda",
+  "model": "CR-Z",
+  "ladder_id": "brochure_llm_2011__honda__crz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CR-Z EX",
+    "CR-Z"
+  ],
+  "adds_by_trim": {
+    "CR-Z EX": [
+      "Leather-wrapped 3-spoke steering wheel",
+      "High-intensity discharge (HID) headlights",
+      "Fog lights",
+      "Heated power side mirrors",
+      "360-watt premium audio system with 7 speakers and subwoofer",
+      "Bluetooth HandsFreeLink",
+      "Textured-aluminum pedals",
+      "Available Honda satellite-linked Navigation with voice recognition"
+    ],
+    "CR-Z": [
+      "1.5-liter 16-valve i-VTEC 4-cylinder engine with integrated Motor Assist (IMA)",
+      "6-speed manual transmission with hill start assist or available CVT with paddle shifters",
+      "3-mode drive system with Eco Assist and Multi-information Display",
+      "4-wheel disc brakes with Vehicle Stability Assist and active head restraints",
+      "Front, front side and side curtain airbags",
+      "160-watt AM/FM/CD audio system with 6 speakers and MP3/auxiliary input",
+      "USB audio interface for digital music players",
+      "Cruise control and automatic climate control with air filtration",
+      "16-inch alloy wheels and Tire Pressure Monitoring System",
+      "Power windows with auto-up/down driver's window and security system with remote entry"
+    ]
+  }
+}

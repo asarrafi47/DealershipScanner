@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2011|chevrolet|hhr",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "HHR",
+  "ladder_id": "brochure_web_2011__chevrolet__hhr",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "HHR LT w/2LT",
+    "HHR LT w/1LT",
+    "HHR Panel LS",
+    "HHR LS"
+  ],
+  "adds_by_trim": {
+    "HHR LT w/2LT": [
+      "2.4L I-4 engine with 172 horsepower",
+      "22 mpg city/30 mpg highway with automatic transmission"
+    ],
+    "HHR LT w/1LT": [
+      "2.4L I-4 engine with 172 horsepower",
+      "22 mpg city/30 mpg highway with automatic transmission"
+    ],
+    "HHR Panel LS": [
+      "Panel van configuration with no rear-door exterior handles or windows",
+      "Two interior switches for rear doors",
+      "Unfinished cargo space designed for small businesses"
+    ],
+    "HHR LS": [
+      "2.2L I-4 engine with 155 horsepower",
+      "MY LINK package with radio, CD player, MP3 playback, USB port",
+      "Bluetooth phone connectivity and OnStar Directions and Connections",
+      "Leather-wrapped steering wheel with audio controls",
+      "Leather-wrapped shift knob",
+      "Free one year of XM Satellite radio",
+      "Five-seater configuration with fold-flat front passenger seat",
+      "Up to 57.7 cubic feet of cargo space with folding rear seats",
+      "Five-star NHTSA crash ratings for frontal and side impacts"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/chevrolet/hhr/"
+}

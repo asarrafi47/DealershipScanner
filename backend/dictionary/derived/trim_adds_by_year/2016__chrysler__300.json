@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2016|chrysler|300",
+  "year": 2016,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2016__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C",
+    "300S",
+    "Limited",
+    "300"
+  ],
+  "adds_by_trim": {
+    "300C": [
+      "Harman Kardon Audio Group with 19 premium speakers and 900-watt amplifier",
+      "Adaptive Bi-xenon HID headlamps with auto-leveling",
+      "Luxury Group with auto-adjust-in-Reverse mirrors and LED footwell lamps"
+    ],
+    "300S": [
+      "BeatsAudio Group with 10 amplified speakers and 552-watt amplifier",
+      "20-inch polished aluminum wheels",
+      "300S Premium Group availability"
+    ],
+    "Limited": [
+      "SafetyTec Plus with Advanced Brake Assist and Lane Keep Assist",
+      "Full-Speed Forward Collision Warning with Active Braking",
+      "Adaptive Cruise Control with Stop",
+      "ParkSense Front and Rear Park Assist"
+    ],
+    "300": [
+      "Front Active Head Restraints",
+      "ParkView Rear Back-Up Camera",
+      "Rain Brake Support",
+      "Ready Alert Braking",
+      "Sentry Key Theft Deterrent System with antitheft engine immobilizer",
+      "Security Alarm",
+      "Tire Pressure Monitoring Display in Driver Information Center",
+      "Six-speaker audio system",
+      "SiriusXM Satellite Radio with one-year trial"
+    ]
+  }
+}

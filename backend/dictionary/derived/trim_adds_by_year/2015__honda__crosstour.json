@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2015|honda|crosstour",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Crosstour",
+  "ladder_id": "brochure_llm_2015__honda__crosstour",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L V-6 WITH NAVIGATION",
+    "EX-L WITH NAVIGATION",
+    "EX-L V-6",
+    "EX-L",
+    "EX V-6",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX-L V-6 WITH NAVIGATION": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Song By Voice (SBV) voice control",
+      "Available Real Time 4-Wheel Drive",
+      "18-inch alloy wheels",
+      "278-hp 3.5-liter i-VTEC V-6 engine with 6-speed automatic and paddle shifters"
+    ],
+    "EX-L WITH NAVIGATION": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Song By Voice (SBV) voice control",
+      "192-hp 2.4-liter i-VTEC 4-cylinder engine",
+      "5-speed automatic transmission"
+    ],
+    "EX-L V-6": [
+      "278-hp 3.5-liter i-VTEC V-6 engine with 6-speed automatic and paddle shifters",
+      "18-inch alloy wheels",
+      "Multi-angle rearview camera with guidelines",
+      "Memory-linked side mirrors with reverse gear tilt-down",
+      "Dual-zone automatic climate control",
+      "i-MID 8-inch high-resolution screen with customizable settings",
+      "Honda LaneWatch"
+    ],
+    "EX-L": [
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Six airbags total",
+      "One-touch power moonroof with tilt feature",
+      "Security system with remote entry",
+      "Heated body-colored power side mirrors with Expanded View Driver's Mirror",
+      "Forward Collision Warning (FCW) and Lane Departure Warning (LDW)",
+      "Memory-linked side mirrors with reverse gear tilt-down",
+      "Dual-zone automatic climate control",
+      "i-MID 8-inch high-resolution screen",
+      "Honda LaneWatch"
+    ],
+    "EX V-6": [
+      "278-hp 3.5-liter i-VTEC V-6 engine with 6-speed automatic and paddle shifters",
+      "360-watt AM/FM/6-disc in-dash audio system with 7 speakers and subwoofer",
+      "Audio touch-screen",
+      "Bluetooth streaming audio compatibility",
+      "SiriusXM Radio",
+      "18-inch alloy wheels"
+    ],
+    "EX": [
+      "Bluetooth HandsFreeLink with USB Audio Interface",
+      "Rearview Camera",
+      "Side Curtain Airbags with Rollover Sensor",
+      "Center console with armrest and storage compartment",
+      "Heated front seats with driver's two-position memory seat",
+      "Driver's 10-way power seat adjustment with power lumbar support",
+      "360-watt AM/FM/CD premium audio system with 7 speakers and subwoofer",
+      "Easy fold-down 60/40 split rear seatback with center armrest",
+      "17-inch alloy wheels",
+      "Vehicle Stability Assist (VSA)"
+    ]
+  }
+}

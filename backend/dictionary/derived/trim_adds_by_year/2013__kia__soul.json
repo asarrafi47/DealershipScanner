@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2013|kia|soul",
+  "year": 2013,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2013__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Soul+",
+    "Soul"
+  ],
+  "adds_by_trim": {
+    "Soul+": [
+      "2.0L 4-cylinder engine (164 hp vs. 1.6L base)",
+      "Leather-wrapped steering wheel and gearshift knob",
+      "Steering-wheel-mounted audio controls",
+      "Bluetooth wireless technology",
+      "16-inch alloy wheels",
+      "Remote keyless entry",
+      "Unique black interior seating"
+    ],
+    "Soul": [
+      "AM/FM/CD/MP3/SiriusXM 4-speaker audio system",
+      "Air conditioning",
+      "Power windows and locks"
+    ]
+  }
+}

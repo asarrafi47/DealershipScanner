@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2018|hyundai|kona",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Kona",
+  "ladder_id": "brochure_llm_2018__hyundai__kona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ultimate",
+    "Limited",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "Ultimate": [
+      "Black Leather upholstery with Lime Accents"
+    ],
+    "Limited": [
+      "Available features standard on Limited and Ultimate models"
+    ],
+    "SEL": [
+      "Standard on Kona SEL, Limited and Ultimate models"
+    ]
+  }
+}

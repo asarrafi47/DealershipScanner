@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_mercedes-benz_glb-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLB-Class",
+    "GLB-Class"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "GLB250": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Electric motor 2x asynchronous electric motors"
+      }
+    ]
+  }
+}

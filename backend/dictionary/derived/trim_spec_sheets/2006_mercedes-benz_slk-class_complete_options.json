@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2006_mercedes-benz_slk-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SLK-Class",
+    "SLK-Class"
+  ],
+  "year_min": 2004,
+  "year_max": 2008,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.2L V6 Turbo; Automatic 5-spd"
+      }
+    ],
+    "SLK 55 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "2.3L I4 Turbo; Automatic 5-spd"
+      }
+    ],
+    "SLK 350": [
+      {
+        "label": "Engine Options",
+        "value": "2.3L I4 Turbo; Automatic 5-spd"
+      }
+    ],
+    "SLK 280": [
+      {
+        "label": "Engine Options",
+        "value": "2.3L I4 Turbo; Automatic 5-spd"
+      }
+    ]
+  }
+}

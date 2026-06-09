@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2020|toyota|chr",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "CH-R",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Mechanical and Performance Mechanical and Performance Mechanical and Performance Magnetic Gray Metallic Supersonic Red2 Supersonic Red Hot Lava",
+      "R-Code Black2, 3 R-Code Black3",
+      "2.0-Liter 4-Cylinder Engine \u2022 2.0-Liter 4-Cylinder Engine \u2022 2.0-Liter 4-Cylinder Engine",
+      "Continuously Variable Transmission \u2022 Continuously Variable Transmission \u2022 Continuously Variable Transmission",
+      "144 hp @ 6100 rpm \u2022 144 hp @ 6100 rpm \u2022 144 hp @ 6100 rpm",
+      "Exterior Features Exterior Features Exterior Features",
+      "17-in. steel wheels and temporary spare \u2022 Vortex-styled 18-in. sporty alloy \u2022 Sporty turbine-styled 18-in. alloy Silver Knockout Metallic Blizzard Pearl2 Silver Knockout Metallic Blizzard Pearl",
+      "Multi-reflector LED headlights wheels with temporary spare wheels with temporary spare R-Code Black3 R-Code Black2, 3",
+      "LED Daytime Running Lights \u2022 Heated power auto-folding mirrors with turn \u2022 LED projector beam headlights with",
+      "Heated power outside mirrors signal and blind spot warning indicators1,0 and Adaptive Front-Lighting System4",
+      "Front, passenger and hatchback door handles \u2022 Chrome window trim"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

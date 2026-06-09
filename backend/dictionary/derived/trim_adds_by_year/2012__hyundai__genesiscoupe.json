@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2012|hyundai|genesiscoupe",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "ladder_id": "brochure_web_2012__hyundai__genesiscoupe",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "R-Spec",
+    "2.0T",
+    "2.0T R-Spec",
+    "3.8 V6",
+    "3.8 V6 R-Spec"
+  ],
+  "adds_by_trim": {
+    "R-Spec": [
+      "2.0L turbocharged four-cylinder engine with 210 horsepower",
+      "Six-speed manual transmission standard",
+      "17-inch alloy wheels",
+      "Power windows, locks, and mirrors",
+      "Air conditioning",
+      "Audio system with auxiliary input",
+      "Front and side airbags"
+    ],
+    "2.0T": [
+      "Automatic transmission option instead of manual",
+      "Bluetooth hands-free phone connectivity",
+      "Steering wheel-mounted audio controls",
+      "17-inch alloy wheels with upgraded design"
+    ],
+    "2.0T R-Spec": [
+      "Leather-wrapped steering wheel and shift knob",
+      "Upgraded interior trim elements",
+      "Proximity key with push-button start",
+      "Cruise control"
+    ],
+    "3.8 V6": [
+      "3.8L V6 engine with 348 horsepower",
+      "Five-speed automatic transmission",
+      "18-inch alloy wheels",
+      "Dual automatic climate control",
+      "Leather seat upholstery",
+      "Power driver seat with lumbar support",
+      "Navigation system with 5-inch display"
+    ],
+    "3.8 V6 R-Spec": [
+      "Navigation system with larger display",
+      "Premium Infinity surround-sound audio system",
+      "Backup camera",
+      "Heated and ventilated front seats"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/genesis-coupe/"
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|toyota|chr",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "CH-R",
+  "ladder_id": "brochure_llm_2018__toyota__chr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE Premium",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "Integrated fog lights",
+      "Color-keyed outside front and passenger door handles with touch-sensor lock/unlock",
+      "Outside hatchback door handle with touch-sensor lock/unlock",
+      "Power outside mirrors with turn signal and blind spot warning indicators, puddle lights with Toyota C-HR projection, auto-folding",
+      "Sport fabric-trimmed heated front bucket seats with 8-way adjustable driver's seat and power lumbar support",
+      "6-way adjustable front passenger seat with sport bolsters",
+      "Smart Key System on front doors with Push Button Start and remote illuminated entry"
+    ],
+    "XLE": [
+      "2.0-liter 4-cylinder engine with 144 hp and 139 lb-ft torque",
+      "Continuously Variable Transmission with intelligence and Shift Mode (CVTi-S)",
+      "Vortex-styled 18-inch sport alloy wheels with P225/50R18 tires",
+      "Color-keyed rear spoiler with unique cantilevered design",
+      "Unique cluster LED Daytime Running Lights with on/off feature",
+      "Color-keyed outside door handles with hidden-type-design rear door handles",
+      "Color-keyed power outside mirrors with turn signal indicators",
+      "Black front lower grille insert",
+      "4.2-inch TFT Multi-Information Display",
+      "7-inch touch-screen Display Audio"
+    ]
+  }
+}

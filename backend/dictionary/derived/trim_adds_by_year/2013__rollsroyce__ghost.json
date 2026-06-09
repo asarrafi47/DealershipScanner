@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2013|rollsroyce|ghost",
+  "year": 2013,
+  "make": "Rolls Royce",
+  "model": "Ghost",
+  "ladder_id": "brochure_llm_2013__rollsroyce__ghost",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ghost Extended Wheelbase",
+    "Ghost"
+  ],
+  "adds_by_trim": {
+    "Ghost Extended Wheelbase": [
+      "Generously appointed rear compartment with extended wheelbase configuration",
+      "Same exceptional driving dynamics as standard Ghost"
+    ],
+    "Ghost": [
+      "A-grade bull leather with no unsightly scars or stretch marks",
+      "Drum-dyed leather for color consistency and natural suppleness",
+      "Up to 219 separate pieces of leather painstakingly matched for color and grain",
+      "Full grain leather seats that will not squeak or crack with age",
+      "Effortless performance with unparalleled refinement",
+      "Air of informal presence with modern, lithe and dynamic design"
+    ]
+  }
+}

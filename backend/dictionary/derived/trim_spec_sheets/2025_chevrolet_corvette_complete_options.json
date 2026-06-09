@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2025_chevrolet_corvette_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Corvette",
+    "Corvette"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "ZR1": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 6.2 L LT2 crossplane OHV V8 (2020–2026); L LS6 crossplane OHV V8 (2027–)"
+      }
+    ],
+    "Z06": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Rear-Wheel Drive"
+      }
+    ],
+    "Stingray": [
+      {
+        "label": "Engine Options",
+        "value": "6.2 L LT2 crossplane OHV V8"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Rear mid-engine, rear-wheel-drive; Engine 6.2 L LT2 crossplane OHV V8 (2020–2026)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Rear mid-engine, rear-wheel-drive; Engine 6.2 L LT2 crossplane OHV V8 (2020–2026)"
+      }
+    ]
+  }
+}

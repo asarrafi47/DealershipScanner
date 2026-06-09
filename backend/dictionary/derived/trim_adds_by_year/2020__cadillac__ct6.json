@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2020|cadillac|ct6",
+  "year": 2020,
+  "make": "Cadillac",
+  "model": "CT6",
+  "ladder_id": "brochure_llm_2020__cadillac__ct6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CT6-V",
+    "Platinum",
+    "Premium Luxury",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "CT6-V": [
+      "4.2L Twin Turbo V8 Blackwing engine with 550 hp and 640 lb-ft torque",
+      "10-speed automatic transmission",
+      "High-performance Brembo front brakes",
+      "Mechanical limited slip differential",
+      "Track mode in Driver Selectable Modes",
+      "20-inch V-Series Split 5-Spoke alloy wheels with Ultra Bright Midnight Silver finish"
+    ],
+    "Platinum": [
+      "4.2L Twin Turbo V8 Blackwing engine with 500 hp and 574 lb-ft torque",
+      "Super Cruise driver-assistance feature",
+      "20-way adjustable heated, ventilated and massaging front seats",
+      "Rear seat infotainment",
+      "20-inch Platinum Twin 5-Spoke alloy wheels with Manoogian finish and chrome inserts",
+      "Semi-Aniline leather seats with Chevron perforated inserts in multiple color options"
+    ],
+    "Premium Luxury": [
+      "Super Cruise driver-assistance feature",
+      "Automatic Parking Assist with braking",
+      "Night Vision",
+      "Magnetic Ride Control",
+      "Bose Panaray 34-speaker audio system",
+      "UltraView power sunroof",
+      "20-inch Split Spoke alloy wheels with Ultra Bright Manoogian finish"
+    ],
+    "Luxury": [
+      "3.6L V6 engine with 335 hp and 284 lb-ft torque with AWD and 10-speed automatic",
+      "Cadillac User Experience with Rotary Infotainment Controller",
+      "Automatic Emergency Braking",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "19-inch Multi-Spoke alloy wheels with Sterling Silver finish",
+      "Teen Driver feature",
+      "8 airbags with front passenger sensing"
+    ]
+  }
+}

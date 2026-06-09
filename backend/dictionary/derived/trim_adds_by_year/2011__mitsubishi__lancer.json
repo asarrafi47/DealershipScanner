@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2011|mitsubishi|lancer",
+  "year": 2011,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_llm_2011__mitsubishi__lancer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MR",
+    "GSR",
+    "RALLIART",
+    "GTS",
+    "ES",
+    "DE"
+  ],
+  "adds_by_trim": {
+    "MR": [
+      "710-watt Rockford Fosgate Punch premium sound system with nine speakers and 10-inch subwoofer",
+      "Leather and suede-like combination seating surfaces",
+      "Phantom Black print center console and shifter surround",
+      "Chrome grille surround and beltline molding",
+      "Aluminum scuff plate and body-color hood and fender vents",
+      "Improved sound insulation throughout cabin"
+    ],
+    "GSR": [
+      "Bi-Xenon HID headlamps with manual leveling",
+      "710-watt Rockford Fosgate Punch premium sound system with nine speakers",
+      "SIRIUS Satellite Radio with three months prepaid service",
+      "6CD/MP3 in-dash changer",
+      "FAST-Key Entry System",
+      "Power glass sunroof with sunshade",
+      "Heated front seats and side-view mirrors",
+      "Enhanced sound insulation"
+    ],
+    "RALLIART": [
+      "Rear Active Yaw Control Differential (AYC)",
+      "Rear Mechanical Limited Slip Differential (LSD)",
+      "Steering wheel-mounted cruise control and audio controls",
+      "Center console-mounted ACD switch",
+      "Magnesium-alloy paddle shifters on manual transmission"
+    ],
+    "GTS": [
+      "140-watt CD/MP3 head unit with six speakers",
+      "SIRIUS Satellite Radio with three months subscription",
+      "Steering wheel-mounted cruise control and audio controls",
+      "Leather seating surfaces with front seat heaters",
+      "710-watt Rockford Fosgate Punch premium sound system with 10-inch subwoofer",
+      "Power glass sunroof",
+      "Rear lip spoiler on sedan",
+      "Rain-sensing wipers with auto on/off headlamp control"
+    ],
+    "ES": [
+      "140-watt CD/MP3 head unit with four speakers",
+      "MP3/auxiliary stereo input jack",
+      "FUSE Hands-Free Link System",
+      "USB port",
+      "Steering wheel-mounted cruise control and audio controls",
+      "Keyless entry with panic alarm feature"
+    ],
+    "DE": [
+      "Anti-Lock Braking System (ABS) with EBD and Brake Assist",
+      "Active Stability Control (ASC) with Traction Control (TCL)",
+      "Active front seat structure to reduce whiplash injury",
+      "Anti-theft engine immobilizer",
+      "Power door locks and windows with driver's side auto down/up",
+      "140-watt CD/MP3 head unit with four speakers and speed-compensated volume"
+    ]
+  }
+}

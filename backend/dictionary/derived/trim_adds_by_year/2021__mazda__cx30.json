@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2021|mazda|cx30",
+  "year": 2021,
+  "make": "Mazda",
+  "model": "CX-30",
+  "ladder_id": "brochure_llm_2021__mazda__cx30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-30 2.5 Turbo Premium Plus",
+    "CX-30 2.5 Turbo Premium",
+    "CX-30 2.5 Turbo",
+    "CX-30 2.5 Premium Plus",
+    "CX-30 2.5 Premium",
+    "CX-30 2.5"
+  ],
+  "adds_by_trim": {
+    "CX-30 2.5 Turbo Premium Plus": [
+      "Auto-dimming driver's side mirror",
+      "Traffic Jam Assist",
+      "Frameless auto-dimming rearview mirror with HomeLink",
+      "Front and rear parking sensors",
+      "360° View Monitor",
+      "Smart Brake Support–Rear Crossing"
+    ],
+    "CX-30 2.5 Turbo Premium": [
+      "Windshield-projected full-color Active Driving Display",
+      "Adaptive Front-lighting System",
+      "Bose 12-speaker premium audio system",
+      "LED headlights with signature lighting",
+      "Heated steering wheel",
+      "Perforated leather-trimmed seats",
+      "Mazda Navigation System",
+      "Traffic Sign Recognition System",
+      "SiriusXM satellite radio with 3-month trial"
+    ],
+    "CX-30 2.5 Turbo": [
+      "SKYACTIV-G 2.5 Dynamic Pressure Turbo engine with 250 hp and 320 lb-ft torque",
+      "i-ACTIV AWD with Off-road Traction Assist standard",
+      "18-inch Black alloy wheels with P215/55 R18 tires",
+      "Power sliding-glass moonroof with one-touch open"
+    ],
+    "CX-30 2.5 Premium Plus": [
+      "Auto-dimming driver's side mirror",
+      "Traffic Jam Assist",
+      "Frameless auto-dimming rearview mirror with HomeLink",
+      "Front and rear parking sensors",
+      "360° View Monitor",
+      "Smart Brake Support–Rear Crossing"
+    ],
+    "CX-30 2.5 Premium": [
+      "Windshield-projected full-color Active Driving Display",
+      "Adaptive Front-lighting System",
+      "Bose 12-speaker premium audio system",
+      "LED headlights with signature lighting",
+      "Heated steering wheel",
+      "Perforated leather-trimmed seats",
+      "Mazda Navigation System",
+      "Traffic Sign Recognition System",
+      "SiriusXM satellite radio with 3-month trial"
+    ],
+    "CX-30 2.5": [
+      "SKYACTIV-G 2.5 DOHC 16-valve engine with 186 hp and 186 lb-ft torque",
+      "SKYACTIV-Drive 6-speed automatic with manual-shift and Sport modes",
+      "Front-wheel drive with available i-ACTIV AWD",
+      "8.8-inch MAZDA CONNECT infotainment with Apple CarPlay and Android Auto",
+      "Advanced front airbags, front side-impact airbags, and side-impact air curtains",
+      "Mazda Radar Cruise Control with Stop & Go",
+      "Lane Departure Warning and Lane-keep Assist",
+      "Blind Spot Monitoring and Rear Cross Traffic Alert",
+      "8-way power-adjustable driver's seat with lumbar support",
+      "Heated front seats with three-level adjustment"
+    ]
+  }
+}

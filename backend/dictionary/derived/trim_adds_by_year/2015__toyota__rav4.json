@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|toyota|rav4",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_2015__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds advanced safety features designed to help prevent crashes",
+      "Adds Includes Vehicle Stability Control (VSC) electronic system",
+      "Adds Brake Assist system integrated with ABS",
+      "Adds Includes Smart Stop Technology® for simultaneous brake and accelerator applications",
+      "Adds fuel efficiency innovations"
+    ],
+    "Premium": [
+      "61.4/61.4 (V6: 61.8/61.8)"
+    ],
+    "Base": [],
+    "LE": [
+      "Stepped-up interior and exterior styling versus SE"
+    ],
+    "XLE": [
+      "Halogen projector-beam headlights with auto on/off feature",
+      "Integrated fog lights",
+      "Silver-highlighted lower grille",
+      "17-in. 5-spoke alloy wheels with P225/65R17 tires",
+      "Power tilt/slide moonroof with sunshade",
+      "Height-adjustable power liftgate with jam protection",
+      "4.2-in. TFT Multi-Information Display (MID)",
+      "Frameless auto-dimming rearview mirror",
+      "Dual zone automatic climate control with air filter",
+      "Tilt/telescopic leather-trimmed steering wheel with advanced voice recognition and Bluetooth"
+    ],
+    "Limited": [
+      "12.9-inch infotainment touchscreen",
+      "Nine-speaker JBL premium sound system"
+    ]
+  }
+}

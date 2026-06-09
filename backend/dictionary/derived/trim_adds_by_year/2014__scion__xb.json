@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2014|scion|xb",
+  "year": 2014,
+  "make": "Scion",
+  "model": "xB",
+  "ladder_id": "brochure_2014__scion__xb",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Limited": [
+      "Adds chrome-tipped exhaust",
+      "Adds front bumper LED accent lamps"
+    ]
+  }
+}

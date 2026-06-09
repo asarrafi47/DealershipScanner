@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|mini|mini",
+  "year": 2010,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "generic_mini_mini",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "MINI COOPER S CLUBMAN Performance data based on BMW AG test results.",
+      "MINI COOPER CONVERTIBLE MINI JOHN COOPER WORKS HARDTOP production of this brochure are soy-based inks. However, please refrain from trying to make a latte with",
+      "suspension | Climate-controlled glove box"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "LE": 3
+    }
+  }
+}

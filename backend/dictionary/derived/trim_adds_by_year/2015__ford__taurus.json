@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|ford|taurus",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_llm_2015__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "SYNC with MyFord Touch voice-activated connectivity system with SYNC Services",
+      "Two 4.2-inch configurable color LCD displays in instrument cluster",
+      "8-inch color LCD touchscreen in center stack with media hub",
+      "Two USB ports, SD card reader, audio/video input jacks",
+      "Auto-dimming rearview mirror",
+      "Additional center channel speaker",
+      "Power-adjustable pedals",
+      "Intelligent Access with push-button start and dual key fob transmitters",
+      "Dual-zone electronic automatic temperature control",
+      "Leather-wrapped shift knob with chrome trim"
+    ],
+    "SE": [
+      "3.5L Ti-VCT V6 engine with 6-speed SelectShift automatic transmission",
+      "6-way power driver and front-passenger seats with manual lumbar adjustment",
+      "Leather-wrapped steering wheel",
+      "18-inch Sparkle Silver-painted aluminum wheels with P235/55R18 all-season tires",
+      "Body-color power heated sideview mirrors with security approach lamps",
+      "LED supplemental park lamps",
+      "SYNC with MyFord voice-activated connectivity with 4.2-inch color LCD displays",
+      "Reverse Sensing System",
+      "Wiper-activated halogen headlamps with autolamp",
+      "Remote Keyless Entry System with integrated keyhead transmitter remotes"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2014|dodge|charger",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_web_2014__dodge__charger",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SRT Banshee",
+    "Charger Daytona Scat Pack",
+    "Charger Daytona R/T",
+    "Charger Sixpack H.O.",
+    "Charger Sixpack S.O."
+  ],
+  "adds_by_trim": {
+    "SRT Banshee": [
+      "800-volt electrical architecture",
+      "885 hp output expected",
+      "0-60 mph acceleration expected below 3.0 seconds"
+    ],
+    "Charger Daytona Scat Pack": [
+      "630 hp dual-motor all-wheel-drive system standard",
+      "670 hp with Direct Connection Stage 2 kit and Power Shot",
+      "0-60 mph in 3.2 seconds, quarter mile in 11.5 seconds",
+      "Optional Scat Pack Track Package with 16-inch Brembo brake rotors, six and four-piston calipers",
+      "20-inch wheels with Goodyear Eagle F1 Supercar 3 tires",
+      "Dual-valve adaptive damping suspension",
+      "Race Options including Donut Mode, Drift Mode, line lock, launch control",
+      "Donut Mode and Drift Mode driving profiles"
+    ],
+    "Charger Daytona R/T": [
+      "456 hp dual-motor all-wheel-drive system",
+      "404 lb-ft torque standard",
+      "496 hp with Direct Connection Stage 1 upgrade and Power Shot",
+      "0-60 mph in 4.7 seconds, quarter mile in 13.1 seconds",
+      "317 miles EPA-estimated range",
+      "100.5-kW battery pack with 400-volt architecture",
+      "Peak charge rate 183 kW DC fast charging"
+    ],
+    "Charger Sixpack H.O.": [
+      "550 hp Hurricane 3.0-liter twin-turbocharged inline-six engine",
+      "Eight-speed automatic transmission",
+      "All-wheel drive standard"
+    ],
+    "Charger Sixpack S.O.": [
+      "420 hp Hurricane 3.0-liter twin-turbocharged inline-six engine",
+      "Eight-speed automatic transmission",
+      "All-wheel drive standard",
+      "Large dual displays for instrument cluster and infotainment",
+      "Forward collision warning with automatic emergency braking standard",
+      "Lane keeping assistance standard",
+      "Adaptive cruise control with stop-and-go functionality",
+      "Blind-spot monitoring with rear cross-traffic detection"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/dodge/charger/"
+}

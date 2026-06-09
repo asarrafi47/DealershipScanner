@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2021|lexus|is",
+  "year": 2021,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_2021__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds NuLuxe seating surfaces in multiple color options",
+      "Adds carpet floor mats",
+      "Adds coin holder and ashtray cup",
+      "Adds Lexus Safety System+ 2.5",
+      "Adds Dynamic Radar Cruise Control"
+    ],
+    "Limited": [
+      "Adds alloy wheel locks",
+      "Adds body side moldings",
+      "Adds all-weather floor liners"
+    ],
+    "Premium": [
+      "Adds cargo net",
+      "Adds carpet trunk mat",
+      "Adds door edge film by 3M"
+    ],
+    "F Sport": [
+      "All-wheel drive system for enhanced traction and handling"
+    ]
+  }
+}

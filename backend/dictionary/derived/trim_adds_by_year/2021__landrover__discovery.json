@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2021|landrover|discovery",
+  "year": 2021,
+  "make": "landrover",
+  "model": "Discovery",
+  "ladder_id": "brochure_2021__landrover__discovery",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "SE",
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds automatic all-wheel drive transmission",
+      "Adds 7-passenger seating configuration",
+      "Adds Stop/Start engine technology",
+      "Adds Gasoline Particulate Filter"
+    ],
+    "Standard": [],
+    "SE": [
+      "Partial leather upholstery on front seats",
+      "10.25-inch Touch Pro infotainment screen",
+      "Power adjustable driver seat",
+      "18-inch alloy wheels",
+      "Electronic parking brake with auto hold",
+      "Eight-inch digital driver information display",
+      "Rear parking sensors"
+    ],
+    "HSE": [
+      "Adds Mild Hybrid Electric Vehicle technology with smart regenerative charging"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2013|subaru|brz",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2013__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Limited": [
+      "Heated side mirrors with All-Weather Package",
+      "Heated front seats with All-Weather Package",
+      "Alcantara and leather-trimmed upholstery",
+      "Keyless Access and Start system",
+      "Dual-zone automatic digital climate control with 7-speed fan",
+      "Antitheft security system"
+    ],
+    "BRZ Premium": [
+      "6-way manually adjustable driver's seat with 4-way front-passenger seat",
+      "Performance-design front seats with height-adjustable head restraints",
+      "Leather-wrapped 3-spoke steering wheel with red stitching",
+      "Leather-wrapped shifter handle",
+      "Cloth upholstery",
+      "Auto-on/off headlights",
+      "Power front windows with auto up/down",
+      "Electronic cruise control",
+      "12-volt power outlets in center console and glovebox",
+      "High-resolution 6.1-inch touch-screen GPS navigation with 8-speaker audio system"
+    ]
+  }
+}

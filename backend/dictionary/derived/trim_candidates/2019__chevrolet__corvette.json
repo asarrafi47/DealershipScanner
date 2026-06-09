@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2019|chevrolet|corvette",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "ZR1",
+    "Z06",
+    "Stingray",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

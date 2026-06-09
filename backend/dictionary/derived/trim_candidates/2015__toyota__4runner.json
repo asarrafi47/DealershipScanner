@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2015|toyota|4runner",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD",
+    "SR5",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Pro": [
+      "Adds to or replaces features offered on SR5",
+      "Top Features Top Features",
+      "Downhill Assist Control (DAC)1 (4x4 models only) \u2022 Downhill Assist Control (DAC)1",
+      "Backup camera2 with projected path \u2022 Overhead console with Multi-terrain Select and Crawl Control",
+      "Hill Start Assist Control (HAC)3 (CRAWL)9 switches",
+      "Locking rear differential",
+      "Integrated fog lights",
+      "Projector-beam headlights with smoked trim \u2022 17-in. 7-spoke alloy wheels with P265/70R17 tires",
+      "Skid plates \u2014 on engine/front suspension, fuel tank and transfer",
+      "17-in. 6-spoke alloy wheels with P265/70R17 tires \u2022 Heated power outside mirrors with turn signal indicators",
+      "Leather-trimmed tilt/telescopic steering wheel with audio and \u2022 Power tilt/slide moonroof with sunshade",
+      "Bluetooth\u00ae4 hands-free phone and voice command \u2022 SofTex\u00ae-trimmed, heated front seats; 8-way power-adjustable driver\u2019s"
+    ],
+    "Premium": [
+      "Adds to or replaces features offered on Trail Premium Adds to or replaces features offered on Trail and Trail Premium",
+      "Top Features Top Features",
+      "Downhill Assist Control (DAC)1 (4x4 models only) \u2022 Downhill Assist Control (DAC)1",
+      "Front and rear parking assist sonar \u2022 Overhead console with Multi-terrain Select and Crawl Control",
+      "Smart Key System2 with Push Button Start and remote (CRAWL)5 switches",
+      "X-REAS Sport Enhancement Suspension \u2022 TRD-tuned front springs",
+      "Locking rear differential",
+      "20-in. split 6-spoke alloy wheels with P245/60R20 tires",
+      "Power tilt/slide moonroof with sunshade \u2022 TRD-stamped aluminum front skid plate",
+      "Heated power outside mirrors with turn signal indicators \u2022 17-in. matte-black TRD alloy wheels with P265/70R17 A/T tires",
+      "Perforated leather-trimmed, heated and ventilated front seats; \u2022 Black \u201cTRD PRO\u201d external hard badges",
+      "Auto on/off headlight feature"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

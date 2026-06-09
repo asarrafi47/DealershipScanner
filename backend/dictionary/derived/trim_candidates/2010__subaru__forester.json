@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|subaru|forester",
+  "year": 2010,
+  "make": "Subaru",
+  "model": "Forester",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base",
+    "Platinum"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

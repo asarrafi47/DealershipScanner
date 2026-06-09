@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,Mercedes-Benz,S-Class,S430,4.3L V8,4.3L V8 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,4.3,15,22,18,,,,,
+2003,Mercedes-Benz,S-Class,S430 4matic,4.3L V8 (GUZZLER),4.3L V8 Turbo,Turbocharged,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Large Cars,8,4.3,15,20,17,,,,,
+2003,Mercedes-Benz,S-Class,S500,5.0L V8 (GUZZLER),5.0L V8 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,14,20,16,,,,,
+2003,Mercedes-Benz,S-Class,S500 4matic,5.0L V8 (GUZZLER),5.0L V8 Turbo,Turbocharged,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,14,19,16,,,,,
+2003,Mercedes-Benz,S-Class,S55 AMG,5.0L V8 (GUZZLER),5.0L V8 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,13,20,15,,,,,
+2003,Mercedes-Benz,S-Class,S600,5.5L V12 (GUZZLER),5.5L V12 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,12,5.5,12,17,14,,,,,

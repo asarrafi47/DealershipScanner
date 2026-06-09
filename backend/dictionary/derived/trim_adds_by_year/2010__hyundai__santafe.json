@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2010|hyundai|santafe",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2010__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "SE",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Leather seating surfaces",
+      "Heated front seats",
+      "Dual-zone automatic temperature control with outside temperature display and CleanAir Ionizer",
+      "Power tilt-and-slide sunroof",
+      "Chrome accent exterior door and liftgate handles",
+      "Deluxe metal accent door scuff",
+      "HomeLink Integrated Transceiver",
+      "18-inch Euro flange alloy wheels",
+      "Bodycolor rear spoiler",
+      "V6 adds Trailer Prep Package and 115-volt power outlet"
+    ],
+    "SE": [
+      "Leather and cloth seating surfaces",
+      "Auto dimming interior mirror with compass",
+      "Roof rack cross rails",
+      "Bodycolor exterior mirrors",
+      "Fog lights",
+      "Leather-wrapped steering wheel and shift knob",
+      "Windshield wiper de-icer",
+      "Trailer Prep Package",
+      "Automatic headlights",
+      "Option to add heated front seats to AWD"
+    ],
+    "GLS": [
+      "2.4L DOHC 4-cylinder or 3.5L DOHC V6 engine",
+      "6-speed manual or 6-speed automatic transmission with SHIFTRONIC shift feature",
+      "17-inch alloy wheels",
+      "Electronic Stability Control with Traction Control System",
+      "Anti-lock Braking System with Brake Assist and Electronic Brake-force Distribution",
+      "Advanced front, enhanced front side, and rollover-sensing side curtain airbags",
+      "Active front seat head restraints",
+      "Tire Pressure Monitoring System",
+      "Air conditioning with cabin air filter",
+      "AM/FM/CD/MP3 6-speaker audio system with iPod, USB, auxiliary jacks, and XM Satellite Radio"
+    ]
+  }
+}

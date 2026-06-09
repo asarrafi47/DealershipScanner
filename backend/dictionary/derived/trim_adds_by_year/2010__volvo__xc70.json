@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2010|volvo|xc70",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "XC70",
+  "ladder_id": "brochure_llm_2010__volvo__xc70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XC70 T6 AWD",
+    "XC70 3.2 AWD"
+  ],
+  "adds_by_trim": {
+    "XC70 T6 AWD": [
+      "3.0-liter turbocharged six-cylinder engine with 281 hp and 295 ft-lbs torque",
+      "0-60 mph acceleration in 7.1 seconds",
+      "Twin-scroll turbocharger technology for extremely quick turbo boost"
+    ],
+    "XC70 3.2 AWD": [
+      "3.2-liter non-turbocharged six-cylinder engine with 235 hp and 236 ft-lbs torque",
+      "0-60 mph acceleration in 8.4 seconds",
+      "Variable Valve Timing and Cam Profile Shifting for optimized efficiency"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2015|mazda|3",
+  "year": 2015,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2015__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mazda3 i Sport 4-Door",
+    "Mazda3 i SV 4-Door",
+    "Mazda3 i 4-Door",
+    "Mazda3 s 4-Door"
+  ],
+  "adds_by_trim": {
+    "Mazda3 i Sport 4-Door": [
+      "Gloss black dual folding power side mirrors instead of body-colored",
+      "Steering-wheel-mounted audio and cruise controls"
+    ],
+    "Mazda3 i SV 4-Door": [
+      "Body-colored dual folding power side mirrors",
+      "E911 automatic emergency notification",
+      "60/40 split fold-down rear seatbacks"
+    ],
+    "Mazda3 i 4-Door": [
+      "SKyactiv-G 2.0L DOHC 4-cylinder engine with 155 hp and 150 lb-ft torque",
+      "SKyactiv-MT 6-speed manual or SKyactiv-Drive 6-speed automatic transmission",
+      "Front-wheel drive with independent suspension and power steering",
+      "11.02-inch vented front and 10.43-inch solid rear disc brakes",
+      "16-inch steel wheels with full wheel covers and P205/60 R16 tires",
+      "5-passenger seating with air conditioning and power windows",
+      "AM/FM audio system with 4 speakers and auxiliary audio input",
+      "Cruise control, remote keyless entry, and push button start"
+    ],
+    "Mazda3 s 4-Door": [
+      "SKyactiv-G 2.5L DOHC 4-cylinder engine with 184 hp and 185 lb-ft torque",
+      "11.61-inch vented front disc brakes for improved stopping power",
+      "18-inch wheels with P215/45 R18 all-season tires",
+      "Cloth-trimmed sport seats and upgraded interior trim",
+      "Dual exhaust outlets for sportier appearance",
+      "Integrated high-mount center brake light"
+    ]
+  }
+}

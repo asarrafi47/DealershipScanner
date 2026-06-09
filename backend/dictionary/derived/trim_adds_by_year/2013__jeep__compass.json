@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|jeep|compass",
+  "year": 2013,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_llm_2013__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LATITUDE",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "LATITUDE": [
+      "Continuously Variable Automatic Transaxle (CVT) instead of 5-speed manual transmission",
+      "Front-passenger fold-flat bucket seat",
+      "Leather-wrapped steering wheel with speed and audio controls",
+      "Heated front seats",
+      "Electronic Roll Mitigation (ERM)"
+    ],
+    "SPORT": [
+      "Deep-tinted glass",
+      "Premium fog lamps",
+      "Bright roof rack side rails",
+      "17-inch cast aluminum wheels",
+      "LED taillamps",
+      "Body-color rear spoiler",
+      "Body-color exterior door handles and liftgate brow",
+      "Remote keyless entry",
+      "Four-wheel independent touring-tuned suspension",
+      "60/40 split-folding rear seats with 53.6 cubic feet cargo room"
+    ]
+  }
+}

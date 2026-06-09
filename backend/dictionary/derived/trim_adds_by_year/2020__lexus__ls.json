@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2020|lexus|ls",
+  "year": 2020,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2020__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LS500 FSPORT with Executive Package and Kiriko Glass",
+    "LS500 FSPORT with Executive Package",
+    "LS500 FSPORT with Luxury Package",
+    "LS500 FSPORT with Performance Package",
+    "LS500 FSPORT",
+    "LS500 with Luxury Package",
+    "LS500"
+  ],
+  "adds_by_trim": {
+    "LS500 FSPORT with Executive Package and Kiriko Glass": [
+      "Kiriko Glass interior door trim",
+      "Hand-pleated interior door trim"
+    ],
+    "LS500 FSPORT with Executive Package": [
+      "Butterfly power-retractable front headrests",
+      "Power rear sunshade",
+      "Power moonroof",
+      "Hands-free power open/close trunk",
+      "Auto door closer",
+      "20-inch split-five-spoke forged alloy wheels with polished finish",
+      "Mark Levinson 23-speaker 2,400-watt audio system",
+      "Premium Triple-Beam LED headlamps"
+    ],
+    "LS500 FSPORT with Luxury Package": [
+      "28-way power-adjustable passenger seat with multifunction massage and cushion extender",
+      "Remote adjustment for passenger seat",
+      "18-way power-reclining outboard rear seats with memory",
+      "Four-zone Climate Concierge with infrared sensors and air purifier",
+      "Power side-window sunshades",
+      "Semi-aniline leather-trimmed rear armrest with 7.0-inch touchscreen controller",
+      "Rear-seat knee airbags"
+    ],
+    "LS500 FSPORT with Performance Package": [
+      "Variable Gear-Ratio Steering",
+      "Active Rear Steering",
+      "Active stabilizers",
+      "FSPORT perforated leather-trimmed shift knob",
+      "Heated steering wheel"
+    ],
+    "LS500 FSPORT": [
+      "FSPORT exterior styling with front bumper, grille inserts, rear diffuser, and lower door trim",
+      "20-inch split-five-spoke alloy wheels with Dark Graphite finish",
+      "Six-piston front brake calipers with 15.7-inch ventilated discs",
+      "Four-piston rear brake calipers with 14.1-inch ventilated discs",
+      "FSPORT-tuned Adaptive Variable Suspension",
+      "LFA-inspired sliding instrumentation",
+      "FSPORT perforated leather interior with Ultrasuede headliner",
+      "FSPORT perforated leather-trimmed steering wheel and shift knob",
+      "28-way power-adjustable front seats with enhanced bolsters and embossed headrests",
+      "Heated leather-trimmed steering wheel with paddle shifters"
+    ],
+    "LS500 with Luxury Package": [
+      "Interior Upgrade Package features",
+      "28-way power-adjustable passenger seat with multifunction massage and cushion extender",
+      "Remote adjustment for passenger seat",
+      "18-way power-reclining outboard rear seats with memory",
+      "Four-zone Climate Concierge with infrared sensors and air purifier",
+      "Power side-window sunshades",
+      "Semi-aniline leather-trimmed rear armrest with 7.0-inch touchscreen controller",
+      "Rear-seat knee airbags"
+    ],
+    "LS500": [
+      "Lexus Multistage Hybrid Drive",
+      "EV drive mode",
+      "Adaptive Variable Suspension",
+      "Drive Mode Select with Sport S+ and Custom modes",
+      "Semi-aniline leather interior trim",
+      "28-way power-adjustable driver's seat with multifunction massage",
+      "Ultrasuede headliner and sun visors",
+      "Wood- and semi-aniline leather-trimmed center console",
+      "Leather-wrapped heated steering wheel with wood trim",
+      "19-inch or 20-inch split-spoke alloy noise-reduction wheels"
+    ]
+  }
+}

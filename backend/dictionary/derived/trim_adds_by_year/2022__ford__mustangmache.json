@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2022|ford|mustangmache",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Mustang Mach-E",
+  "ladder_id": "brochure_llm_2022__ford__mustangmache",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT Performance Edition",
+    "GT",
+    "California Route 1",
+    "Premium",
+    "Select"
+  ],
+  "adds_by_trim": {
+    "GT Performance Edition": [
+      "480 hp and 634 lb-ft torque with eAWD (vs 480 hp, 600 lb-ft on GT)",
+      "3.5-second 0–60 mph acceleration (vs 3.8 seconds on GT)"
+    ],
+    "GT": [
+      "Extended-range battery standard (91 kWh) with 480 hp and 600 lb-ft torque",
+      "eAWD drivetrain standard",
+      "4.8-second 0–60 mph acceleration"
+    ],
+    "California Route 1": [
+      "Extended-range battery standard (91 kWh) available in RWD or eAWD",
+      "Specialized California Route 1 exterior badging and design elements"
+    ],
+    "Premium": [
+      "Extended-range battery available (91 kWh option vs standard 70 kWh)",
+      "Available in eAWD configuration for enhanced performance"
+    ],
+    "Select": [
+      "Standard-range battery (70 kWh) with 266 hp and 317 lb-ft torque",
+      "AC/DC charging capability with Ford Mobile Charger (120V and 240V)",
+      "Ford Co-Pilot360 2.0 with BLIS, lane-keeping, pre-collision assist and automatic emergency braking",
+      "SYNC 4A with 15.5-inch LCD touchscreen, built-in navigation and SiriusXM trial",
+      "8-way power driver's seat, dual-zone climate control, wireless charging pad",
+      "Intelligent Access with push-button start and SecuriCode keypad",
+      "Selectable drive modes: Engage, Whisper, and Unbridled"
+    ]
+  }
+}

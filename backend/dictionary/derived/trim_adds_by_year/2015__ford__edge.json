@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|ford|edge",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_llm_2015__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "SYNC with MyFord Touch voice-activated system with 8-inch color LCD touch screen",
+      "Two 4.2-inch configurable color LCD screens in instrument cluster",
+      "Media hub with 2 USB ports, SD card reader, and audio input jack",
+      "Leather-trimmed heated front seats",
+      "6-way power front-passenger seat",
+      "Premium Audio System with 9 speakers",
+      "Auto-dimming rearview mirror",
+      "Leather-wrapped steering wheel",
+      "Satin Twilight accent trim",
+      "SiriusXM Satellite Radio with 6-month trial subscription"
+    ],
+    "SE": [
+      "2.0L EcoBoost engine with Active Grille Shutters",
+      "EasyFold rear seat back release",
+      "6-way manual driver's seat and 4-way manual front-passenger seat",
+      "Unique cloth seats",
+      "Dual-zone electronic automatic temperature control",
+      "Intelligent Access with push-button start",
+      "AM/FM stereo with single-CD player, MP3 capability, and 6 speakers",
+      "Ford SYNC enhanced voice system with 4.2-inch color LCD screen",
+      "AppLink and 911 Assist connectivity",
+      "18-inch Sparkle Silver-painted split-spoke aluminum wheels with all-season tires"
+    ]
+  }
+}

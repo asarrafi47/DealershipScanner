@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2018|audi|q5",
+  "year": 2018,
+  "make": "Audi",
+  "model": "Q5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "Sport",
+    "Limited",
+    "SE",
+    "LE",
+    "Q5"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

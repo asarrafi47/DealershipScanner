@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2010|ford|expedition",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2010__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "King Ranch",
+    "Limited",
+    "Eddie Bauer",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "King Ranch": [
+      "20-inch chrome-clad aluminum wheels with King Ranch center cap",
+      "King Ranch-exclusive interior and exterior styling"
+    ],
+    "Limited": [
+      "18-inch machined-aluminum wheels standard",
+      "Limited-exclusive trim features and appointments"
+    ],
+    "Eddie Bauer": [
+      "18-inch machined-aluminum wheels optional",
+      "Eddie Bauer-specific interior and exterior design elements"
+    ],
+    "XLT": [
+      "17-inch aluminum wheels standard",
+      "5.4L 3-valve V8 FFV engine with 310 hp and 365 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "4-wheel independent suspension with coil-over shocks",
+      "4-wheel power disc brakes with ABS and Brake Assist",
+      "AdvanceTrac with Roll Stability Control",
+      "Dual-stage front airbags and side-curtain airbags",
+      "Power windows, power locks, and power door locks",
+      "Air conditioning with auxiliary rear air conditioning and heat",
+      "Cruise control and tilt steering column"
+    ]
+  }
+}

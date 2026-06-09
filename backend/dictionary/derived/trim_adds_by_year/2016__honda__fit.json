@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2016|honda|fit",
+  "year": 2016,
+  "make": "Honda",
+  "model": "Fit",
+  "ladder_id": "brochure_llm_2016__honda__fit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L with Navigation",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L with Navigation": [
+      "Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic",
+      "7-inch Display Audio with high-resolution WVGA electrostatic touch-screen",
+      "HondaLink Next Generation",
+      "HD Radio",
+      "SiriusXM Radio compatibility"
+    ],
+    "EX-L": [
+      "Continuously variable transmission (CVT) with dual-mode paddle shifters standard",
+      "Heated side mirrors with integrated turn indicators",
+      "Leather-wrapped steering wheel and shift knob",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Honda LaneWatch system",
+      "SMS text message function",
+      "Multi-angle rearview camera with dynamic guidelines",
+      "Push button start"
+    ],
+    "EX": [
+      "16-inch alloy wheels",
+      "One-touch power moonroof with tilt feature",
+      "Eco coaching",
+      "Fog lights",
+      "160-watt AM/FM/CD audio system with 6 speakers",
+      "Continuously variable transmission (CVT) available"
+    ],
+    "LX": [
+      "130-hp 1.5-liter direct-injection i-VTEC 4-cylinder engine",
+      "6-speed manual or continuously variable transmission (CVT) available",
+      "ECON button (CVT models)",
+      "Multi-angle rearview camera",
+      "Bluetooth HandsFreeLink and streaming audio",
+      "60/40 split 2nd-row Magic Seat",
+      "Six airbags and Vehicle Stability Assist with traction control",
+      "Tire Pressure Monitoring System",
+      "160-watt AM/FM/CD audio system with 4 speakers",
+      "5-inch color LCD screen with USB Audio Interface"
+    ]
+  }
+}

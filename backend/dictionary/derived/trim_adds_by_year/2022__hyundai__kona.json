@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2022|hyundai|kona",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Kona",
+  "ladder_id": "brochure_web_2022__hyundai__kona",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "N Line",
+    "N Line S",
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "N Line": [
+      "Forward collision avoidance with junction turning and direct oncoming assistance",
+      "Power tilt-and-slide sunroof",
+      "Highway Driving Assist with adaptive cruise control and stop-and-go",
+      "Navigation adaptive cruise control with stop-and-go functionality",
+      "Hyundai Digital Key 2 technology",
+      "12.3-inch touchscreen with navigation and voice controls",
+      "Wi-Fi hot spot",
+      "Bose premium audio with eight speakers"
+    ],
+    "N Line S": [
+      "1.6-liter turbocharged engine with 190 hp and 195 lb-ft torque",
+      "Eight-speed automatic transmission with paddle shifters",
+      "N Line exterior accents and body-color cladding",
+      "Black side mirrors and twin exhaust tips",
+      "19-inch alloy wheels",
+      "Heated front seats with power windows auto-down/up",
+      "Ambient interior lighting with 64 colors",
+      "Leather-wrapped N Line steering wheel with metal sport pedals",
+      "Wireless phone charger",
+      "Multilink rear suspension and Snow driving mode on AWD models"
+    ],
+    "Limited": [
+      "1.6-liter turbocharged engine standard"
+    ],
+    "SEL": [
+      "Dual 12.3-inch display setup for infotainment and instruments"
+    ],
+    "SE": [
+      "2.0-liter naturally aspirated four-cylinder engine with 147 hp",
+      "CVT transmission with front-wheel drive standard",
+      "All-wheel drive available",
+      "Automatic emergency braking",
+      "Lane keep assist",
+      "Blind-spot monitoring and rear cross-traffic alert",
+      "Rear occupant alert and automatic high-beams",
+      "Driver attention warning"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/kona/"
+}

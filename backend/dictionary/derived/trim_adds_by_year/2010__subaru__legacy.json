@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|subaru|legacy",
+  "year": 2010,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "inventory_subaru_legacy",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "lb-ft @ 4,000 rpm | 258"
+    ],
+    "Base": [
+      "● 256-hp 3.6-liter 6-cylinder SUBARU Passenger volume 103.0 cubic feet (with available moonroof: 100.0 cubic feet)",
+      "● 25 mpg2 Base curb weight 2.5i: 3,272 lbs/3,381 lbs 2.5GT Limited: 3,483 lbs/n/a 3.6R: n/a/3,484 lbs",
+      "● 5-speed automatic transmission 2.5i Limited: n/a/3,423 lbs 3.6R Limited: n/a/3,529 lbs"
+    ],
+    "Premium": [
+      "Body-color folding side mirrors",
+      "Power tilt/sliding-glass moonroof",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "Heated front seats and heated side mirrors with windshield wiper de-icer",
+      "Silver metallic trim on doors and console",
+      "Leather-wrapped 3-spoke steering wheel with Bluetooth and cruise control buttons"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Premium": 0,
+      "Base": 0
+    }
+  }
+}

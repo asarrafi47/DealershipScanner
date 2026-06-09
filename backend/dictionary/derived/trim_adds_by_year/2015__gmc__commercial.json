@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|gmc|commercial",
+  "year": 2015,
+  "make": "GMC",
+  "model": "Commercial",
+  "ladder_id": "brochure_llm_2015__gmc__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "6.2L EcoTec3 V-8 engine with Hydra-Matic 8-speed automatic transmission"
+    ],
+    "SLT": [
+      "6.2L EcoTec3 V-8 engine option with Hydra-Matic 8-speed automatic transmission",
+      "Quiet full-size pickup cabin",
+      "Lasting comfort seats",
+      "Generous storage options",
+      "Technology to keep you connected, informed and entertained",
+      "Available Forward Collision Alert and Lane Departure Warning",
+      "Available EZ-Lift and Lower Tailgate",
+      "Available Safety Alert Driver Seat",
+      "Available under-rail box lights",
+      "CornerStep rear bumper"
+    ]
+  }
+}

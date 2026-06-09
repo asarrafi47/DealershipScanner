@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2015|landrover|discoverysport",
+  "year": 2015,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "ladder_id": "brochure_web_2015__landrover__discoverysport",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "HSE LUX",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "2.0L Si4 gasoline engine with 240 hp",
+      "8-speed automatic transmission",
+      "All-wheel drive standard",
+      "8-inch touchscreen with SYNC 3 infotainment",
+      "Dual-zone automatic climate control",
+      "Panoramic sunroof",
+      "Xenon headlights",
+      "17-inch alloy wheels",
+      "Perimeter alarm system",
+      "Rear parking sensors"
+    ],
+    "HSE": [
+      "19-inch alloy wheels",
+      "Premium leather seating surfaces",
+      "Heated front seats",
+      "Power liftgate with customizable height",
+      "Blind spot mirror and side parking sensors",
+      "Roof rails in brushed aluminum",
+      "Front fog lamps",
+      "Upgraded interior trim and ambient lighting"
+    ],
+    "HSE LUX": [
+      "20-inch alloy wheels with unique design",
+      "Windsor leather upholstery throughout",
+      "Heated and cooled front seats",
+      "Driver memory settings for power seat and mirrors",
+      "Meridian premium audio system with 12 speakers",
+      "Navigation system with SD card",
+      "Surround view camera system",
+      "Adaptive dynamics suspension package",
+      "Panoramic sunroof with power shade"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/landrover/discovery-sport/"
+}

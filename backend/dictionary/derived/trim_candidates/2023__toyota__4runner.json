@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2023|toyota|4runner",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "LE",
+    "SR5",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Rear-Wheel Drive (RWD) X-REAS Sport Enhancement Suspension Hill Start Assist Control (HAC)2 and available",
+      "Automatic Limited-Slip Differential Hill Start Assist Control (HAC)2 and available Downhill Assist Control (DAC)36",
+      "Downhill Assist Control (DAC)36 Up to 16 city/19 highway/17 combined EPA-est.mpg37",
+      "Available part-time 4WD system with",
+      "Active Traction Control (A-TRAC) Up to 16 city/19 highway/17 combined EPA-est. mpg37 Exterior Features",
+      "Hill Start Assist Control (HAC)2 and available Exterior Features Heated power outside mirrors with turn signal indicators",
+      "Downhill Assist Control (DAC)36",
+      "Color-keyed TRD hood scoop Interior Features",
+      "Up to 16 city/19 highway/17 combined EPA-est. mpg37",
+      "SofTex\u00ae-trimmed10 seats",
+      "Interior Features - Heated front seats"
+    ],
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on SR5 Adds to or replaces features offered on TRD Off-Road Adds to or replaces features offered on SR5 Premium",
+      "Part-time 4WD system with Active Traction Part-time 4WD system with Active Traction Part-time 4WD system with Active Traction",
+      "Control (A-TRAC) Control (A-TRAC) Control (A-TRAC)",
+      "Hill Start Assist Control (HAC)2 and Multi-Terrain Hill Start Assist Control (HAC)2 and Multi-Terrain Hill Start Assist Control (HAC)2",
+      "Select (MTS) and Crawl Control (CRAWL)4 Select (MTS) and Crawl Control (CRAWL)4 Downhill Assist Control (DAC)36",
+      "Locking rear differential Locking rear differential Up to 16 city/19 highway/17 combined EPA-est. mpg37",
+      "Up to 16 city/19 highway/17 combined EPA-est. mpg37 Up to 16 city/19 highway/17 combined EPA-est. mpg37",
+      "Exterior Features Exterior Features",
+      "Interior Features Bronze-colored \u201c40th Anniversary\u201d rear exterior badge",
+      "Color-keyed front and rear bumpers with silver accents and external emblem overlays",
+      "Heated front seats Unique racing-inspired tri-color striped graphics",
+      "8-way power-adjustable driver\u2019s seat with Interior Features"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

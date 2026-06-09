@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2017|porsche|911",
+  "year": 2017,
+  "make": "Porsche",
+  "model": "911",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo",
+    "Carrera S",
+    "Carrera",
+    "Platinum",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

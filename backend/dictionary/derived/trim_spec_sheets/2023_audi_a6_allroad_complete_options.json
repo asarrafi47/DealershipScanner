@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2023_audi_a6_allroad_complete_options",
+  "make": "Audi",
+  "models": [
+    "A6 allroad",
+    "A6 allroad"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: Other options include xenon plus headlights with an all-weather light, LED rear lights, an electromechanical parking brake, driver information system with colour display, MMI radio plus includes a Bluetooth interface, Audi sound system with ten speakers,…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Engine; Find sources: \"Audi A6\" – news · newspapers · books · scholar · JSTOR (October 2025) (Learn how and when to remove this message) Audi S6 Audi S6 Upon introducing the C4 series A6, Audi made small revisions to what was previously known as the Audi S4,…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: The 2012 model year A6 features all the driver assistance systems from the A8, plus it adds automotive head-up display, active lane assist.; Other options include xenon plus headlights with an all-weather light, LED rear lights, an electromechanical parking brake,…"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: Other options include LED headlights with a unique design, the sport differential on the rear axle, Comfort package, head-up display, the high-performance driver assistance systems, Bang & Olufsen Advanced Sound System with 15 speakers and 1,200 watts of…"
+      }
+    ]
+  }
+}

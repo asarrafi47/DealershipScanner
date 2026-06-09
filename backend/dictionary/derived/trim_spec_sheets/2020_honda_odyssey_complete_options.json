@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_honda_odyssey_complete_options",
+  "make": "Honda",
+  "models": [
+    "Odyssey",
+    "Odyssey"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L J30A V6 (was Layout Front-engine, front-wheel-drive; While base models had slightly smaller dimensions and a smaller 2.3L engine, mod)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, front-wheel-drive; While base models had slightly smaller dimensions and a smaller 2.3L engine, mod"
+      }
+    ]
+  }
+}

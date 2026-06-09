@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2012|porsche|cayman",
+  "year": 2012,
+  "make": "Porsche",
+  "model": "Cayman",
+  "ladder_id": "brochure_llm_2012__porsche__cayman",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cayman S",
+    "Cayman"
+  ],
+  "adds_by_trim": {
+    "Cayman S": [
+      "18-inch Cayman S II wheels standard",
+      "19-inch wheel options including Carrera S II and SportDesign",
+      "Mechanically locking rear differential available",
+      "Sport Chrono Package Plus available with PCM",
+      "Adaptive Sport Seats with driver memory option",
+      "Enhanced personalization and styling options"
+    ],
+    "Cayman": [
+      "17-inch Boxster III wheels standard",
+      "18-inch Boxster S II wheels option",
+      "19-inch wheel options available",
+      "Porsche Doppelkupplung 7-speed PDK transmission option",
+      "Porsche Active Suspension Management with 10mm ride height lowering",
+      "Sport Chrono Package available",
+      "Sport exhaust system available",
+      "Power seats with driver memory",
+      "Automatic climate control",
+      "Bi-Xenon headlights with dynamic cornering lights option"
+    ]
+  }
+}

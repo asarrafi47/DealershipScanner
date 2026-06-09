@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2013|suzuki|equator",
+  "year": 2013,
+  "make": "Suzuki",
+  "model": "Equator",
+  "ladder_id": "brochure_llm_2013__suzuki__equator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RMZ-4",
+    "CREW CAB SPORT",
+    "CREW CAB PREMIUM",
+    "EXTENDED CAB PREMIUM"
+  ],
+  "adds_by_trim": {
+    "RMZ-4": [
+      "4WD with 2-speed transfer case and low-range gearing",
+      "Hill Hold Control (HHC) and Hill Descent Control (HDC)",
+      "Bilstein high-performance shocks",
+      "16-inch off-road alloy wheels with BF Goodrich Rugged Trail tires",
+      "Skid plates protecting oil pan, transfer case, and fuel tank",
+      "Dana 44 rear axle with electronic locking rear differential",
+      "Fog lamps and chrome mirrors/door handles",
+      "RMZ-4 unique seating materials with adjustable driver seat and lumbar support",
+      "Leather-wrapped steering wheel",
+      "Vehicle Security System Alarm"
+    ],
+    "CREW CAB SPORT": [
+      "4.0-liter DOHC 24-valve V6 with 261-hp and 281 lb-ft torque",
+      "17-inch aluminum alloy wheels with P265/65R17 tires",
+      "Larger front-brake rotors",
+      "Four full-size doors with 5-passenger seating",
+      "Spray-on bed liner",
+      "Cargo-bed track-type tie-down system with 4 tie-down cleats",
+      "Dual power outside mirrors and full-size spare tire",
+      "Chrome rear bumper",
+      "Upgraded AM/FM/CD audio with 6 speakers and dual front-door tweeters",
+      "60/40 rear-seat flip-up/fold-up seatback with rear heater ducts and rear window defroster"
+    ],
+    "CREW CAB PREMIUM": [
+      "Includes all Crew Cab Sport features",
+      "5-foot cargo bed instead of standard configuration"
+    ],
+    "EXTENDED CAB PREMIUM": [
+      "2.5-liter DOHC 16-valve 4-cylinder with 152-hp and 171 lb-ft torque",
+      "5-speed automatic transmission",
+      "Fully boxed ladder-frame construction",
+      "Independent front suspension with overslung multi-leaf rear suspension",
+      "16-inch aluminum alloy wheels with P265/70R16 tires",
+      "6-foot cargo bed with detachable tailgate and lock",
+      "Rear-bumper-mounted Class III tow-hitch-ball provision",
+      "Privacy glass and 90-degree rear-door-opening access",
+      "Air conditioning and cruise control",
+      "AM/FM/CD audio system with rear underseat storage, power windows, power door locks, remote keyless entry, tilt steering, manual sliding rear window, Vehicle Dynamic Control, six airbags, ABS, EBD, Active Limited Slip Traction Control, TPMS"
+    ]
+  }
+}

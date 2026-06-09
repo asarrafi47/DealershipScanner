@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2013|bmw|x3",
+  "year": 2013,
+  "make": "BMW",
+  "model": "X3",
+  "ladder_id": "brochure_2013__bmw__x3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes BMW Ultimate Service suite with comprehensive warranty coverage",
+      "Adds Features BMW Maintenance Program with scheduled oil services and inspections",
+      "Adds Includes Automatic Collision Notification and Emergency Request features",
+      "Adds Features iDrive Display with calendar and to-do list functionality"
+    ],
+    "Sport": [
+      "Adds BMW Assist Safety Plan with four-year coverage",
+      "Adds Stolen Vehicle Recovery capability",
+      "Adds Includes MyInfo feature for sending business locations to navigation system"
+    ],
+    "Limited": [
+      "Adds BMW Navigation system with Google Maps database integration",
+      "Adds Includes Bluetooth technology for Mobile Office feature",
+      "Adds fuel price and weather forecast information to iDrive"
+    ],
+    "Premium": [
+      "Adds optional BMW Assist Convenience Plan with unlimited access to Directions and Traffic reports",
+      "Adds Includes Concierge feature for sending destination addresses and phone numbers to navigation",
+      "Adds BMW TeleService monitoring system for vehicle wear and tear items"
+    ],
+    "M Sport": [
+      "Adds M Sport Package with high-performance enhancements",
+      "Adds Includes access to BMW Performance Driving School instruction",
+      "Adds Performance Center Delivery experience in Spartanburg, SC",
+      "Adds Includes European Delivery Program for personalized vehicle acquisition process"
+    ]
+  }
+}

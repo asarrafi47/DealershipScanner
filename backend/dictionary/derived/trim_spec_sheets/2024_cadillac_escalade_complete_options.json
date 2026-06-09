@@ -1,0 +1,53 @@
+{
+  "ladder_id": "2024_cadillac_escalade_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Escalade",
+    "Escalade"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 5.7 L L31 V8 (gasoline)"
+      }
+    ],
+    "Sport Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "F4 (Front-engine, four-wheel drive); Engine 5.7 L L31 V8 (gasoline)"
+      }
+    ],
+    "Premium Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 5.7 L L31 V8 (gasoline)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "F4 (Front-engine, four-wheel drive); L LM7 V8"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 5.7 L L31 V8 (gasoline)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "–2013 (Hybrid); FR (Front-engine, rear-wheel drive)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "The optional satellite navigation system now added instant traffic updates and r; The optional satellite navigation system now added instant traffic updates and rerouting options."
+      }
+    ]
+  }
+}

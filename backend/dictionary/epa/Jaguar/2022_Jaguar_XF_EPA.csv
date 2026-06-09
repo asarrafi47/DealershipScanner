@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Jaguar,XF,P250,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,25,33,28,,,,,
+2022,Jaguar,XF,P250 AWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,23,32,26,,,,,
+2022,Jaguar,XF,P300 AWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,22,30,25,,,,,

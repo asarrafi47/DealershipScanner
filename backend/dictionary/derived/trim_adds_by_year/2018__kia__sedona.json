@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2018|kia|sedona",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Sedona",
+  "ladder_id": "brochure_llm_2018__kia__sedona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX LIMITED",
+    "SX",
+    "EX",
+    "LX",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SX LIMITED": [
+      "19-inch tires with chrome-finish alloy wheels",
+      "Available Nappa leather seat trim for 1st and 2nd rows",
+      "Available 7-passenger seating with 2nd-row first-class lounge seats",
+      "Wood- and leather-trimmed heated steering wheel",
+      "3-stage heated front seats",
+      "Leather-wrapped gearshift knob",
+      "Chrome inside door handles"
+    ],
+    "SX": [
+      "18-inch tires with premium-finish alloy wheels",
+      "Navigation system with 8-inch touch screen",
+      "Ventilated front seats",
+      "HID headlights with Auto-Leveling and High-Beam Assist",
+      "Dynamic Bending Light",
+      "Blind-Spot Detection with Lane-Change Assist"
+    ],
+    "EX": [
+      "18-inch tires with alloy wheels",
+      "Leather seat trim for 1st and 2nd rows",
+      "Dual power-sliding side doors",
+      "Front projection fog lights",
+      "Infinity premium audio system with 8 speakers",
+      "Front and Rear Park Assist System"
+    ],
+    "LX": [
+      "8-passenger seating with removable 2nd-row center seat",
+      "Dual power-sliding side doors",
+      "UVO eServices Infotainment System with 7-inch touch screen",
+      "Apple CarPlay and Android Auto",
+      "8-way power-adjustable driver seat",
+      "Push-button start with Smart Key",
+      "Tri-zone automatic temperature control with ionizer"
+    ],
+    "L": [
+      "3.3L Gasoline Direct Injection V6 engine with 276 hp",
+      "7-passenger seating with 60/40 split fold-in-the-floor 3rd-row seats",
+      "Cloth seats with YES Essentials fabric treatment",
+      "Slide-N-Stow 2nd-row seats",
+      "Rear-Camera Display",
+      "Dual manual-sliding side doors",
+      "6-speed Sportmatic overdrive transmission",
+      "Dual front advanced airbags and full-length side curtain airbags",
+      "Electronic Stability Control, Traction Control, and Anti-lock Braking System",
+      "Bluetooth wireless technology and SiriusXM satellite radio"
+    ]
+  }
+}

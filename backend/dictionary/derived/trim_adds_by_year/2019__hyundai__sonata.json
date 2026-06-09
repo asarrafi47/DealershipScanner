@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2019|hyundai|sonata",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_llm_2019__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited 2.0T",
+    "Sport",
+    "SEL",
+    "Eco",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited 2.0T": [
+      "245-hp 2.0L turbocharged GDI engine with 260 lb-ft torque",
+      "8-speed automatic transmission with SHIFTRONIC and paddle shifters",
+      "Power tilt-and-slide panoramic sunroof",
+      "Rear parking sensors and rear side-window sunshades",
+      "8-inch high-resolution touchscreen navigation system",
+      "Infinity 400-Watt Premium Audio system with 8 speakers and Clari-Fi technology",
+      "HD Radio traffic services and SiriusXM Travel Link with 3 months complimentary",
+      "Leather seating surfaces with heated and ventilated front seats",
+      "Integrated Memory System for driver seat and side mirrors",
+      "LED headlights with Dynamic Bending Light and High Beam Assist"
+    ],
+    "Sport": [
+      "Sport cascading mesh grille and sport diffuser with dual chrome exhaust tips",
+      "Sport-tuned suspension and steering",
+      "8-way power driver seat with power lumbar support",
+      "Aluminum sport pedals and sport seats with leather bolsters",
+      "Leather-wrapped flat-bottom steering wheel and shift knob",
+      "Power tilt-and-slide sunroof"
+    ],
+    "SEL": [
+      "8-way power driver seat with adjustable lumbar support",
+      "Heated front seats and steering wheel",
+      "Dual automatic temperature control with rear-seat air vents",
+      "Proximity Key entry with push button start",
+      "Wireless charging pad and rear seat USB charge port",
+      "Hyundai Blue Link Connected Car System with 3 years complimentary service",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic Emergency Braking with Pedestrian Detection, Lane Keep Assist, Smart Cruise Control, Electronic Parking Brake"
+    ],
+    "Eco": [
+      "7-speed EcoShift Dual Clutch Transmission with SHIFTRONIC"
+    ],
+    "SE": [
+      "185-hp 2.4L GDI 4-cylinder engine",
+      "6-speed automatic transmission with SHIFTRONIC",
+      "7-inch color touchscreen AM/FM/MP3 audio with Android Auto and Apple CarPlay",
+      "Rearview camera with dynamic guidelines",
+      "Blind Spot Detection with Rear Cross-traffic Alert and Lane Change Assist",
+      "Class-leading interior volume"
+    ]
+  }
+}

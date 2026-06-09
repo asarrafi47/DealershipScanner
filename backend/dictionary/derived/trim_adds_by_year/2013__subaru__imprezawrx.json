@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2013|subaru|imprezawrx",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2013__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX STI",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "Leather-trimmed upholstery",
+      "STI-design leather-wrapped 3-spoke steering wheel with audio and Bluetooth controls",
+      "STI trunk spoiler on 4-door models",
+      "Body-color power side mirrors with integrated turn signals",
+      "Footwell illumination lighting",
+      "STI sport-design electroluminescent gauges with center-mounted tachometer",
+      "DCCD and SI-DRIVE modes display"
+    ],
+    "WRX STI": [
+      "HID low-beam and multireflector halogen high-beam headlights",
+      "STI trunk spoiler on 4-door models",
+      "Body-color power side mirrors with integrated turn signals",
+      "STI-design leather-wrapped 3-spoke steering wheel with audio and Bluetooth controls",
+      "STI sport-design electroluminescent gauges with center-mounted tachometer",
+      "DCCD and SI-DRIVE modes display"
+    ],
+    "WRX Limited": [
+      "HID low-beam and multireflector halogen high-beam headlights",
+      "Power tilt/sliding-glass moonroof",
+      "Leather-trimmed upholstery",
+      "Heated front seats with All-Weather Package",
+      "Heated side mirrors and windshield wiper de-icer"
+    ],
+    "WRX Premium": [
+      "Power tilt/sliding-glass moonroof",
+      "Heated front seats with All-Weather Package",
+      "Heated side mirrors and windshield wiper de-icer",
+      "Single-speed rear window wiper with fixed intermittent mode"
+    ],
+    "WRX": [
+      "Projector low-beam and multireflector high-beam halogen headlights",
+      "6-way manually adjustable driver's seat and 4-way front-passenger's seat",
+      "Performance-design front seats with embroidered WRX logos and red stitching",
+      "Leather-wrapped 3-spoke steering wheel with audio, cruise control and Bluetooth buttons",
+      "Subaru Symmetrical All-Wheel Drive with SUBARU BOXER engine",
+      "Vehicle Dynamics Control and Traction Control System",
+      "6-speaker single-CD audio system with USB and iPod control",
+      "60/40-split flat-folding rear seatback"
+    ]
+  }
+}

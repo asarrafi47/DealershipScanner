@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|volkswagen|golf",
+  "year": 2020,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "brochure_2020__volkswagen__golf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds automatic headlights",
+      "Adds LED taillights",
+      "Adds LED Daytime Running Lights (DRL)",
+      "Adds power-operated side mirrors",
+      "Adds rain-sensing windshield wipers",
+      "Adds heated windshield washer nozzles",
+      "Adds heated side mirrors",
+      "Adds 16\" split-V alloy wheels",
+      "Adds 6-way partial power-adjustable front seats with adjustable lumbar support",
+      "Adds heated front seats"
+    ],
+    "Platinum": [
+      "Adds power tilting/sliding panoramic sunroof",
+      "Upgraded to Composition Color touchscreen sound system with 6.5\" color display",
+      "Adds App-Connect",
+      "Adds Volkswagen Car-Net® Remote Access with 5 years at no additional cost",
+      "Adds Volkswagen Car-Net® Safe & Secure with paid subscription",
+      "Adds Volkswagen Car-Net® Hotspot with 1-month/1GB trial subscription",
+      "Adds USB-C port",
+      "Adds Keyless access with push-button start",
+      "Adds V-Tex leatherette seating surfaces",
+      "Adds leather-wrapped gearshift knob"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2022|lexus|lc",
+  "year": 2022,
+  "make": "lexus",
+  "model": "LC",
+  "ladder_id": "generic_lexus_lc",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Connect renewal will be included when Safety"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.3333333333333333,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Touring": 0,
+      "Sport": 0
+    }
+  }
+}

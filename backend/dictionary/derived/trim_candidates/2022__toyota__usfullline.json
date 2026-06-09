@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2022|toyota|usfullline",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "1794",
+    "Platinum",
+    "Limited",
+    "XLE Premium",
+    "TRD Pro",
+    "XSE",
+    "XLE",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "Adventure",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

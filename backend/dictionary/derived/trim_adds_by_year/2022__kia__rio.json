@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2022|kia|rio",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_2022__kia__rio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "GT-Line",
+    "EX",
+    "LX",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Standard infotainment system with smartphone integration"
+    ],
+    "Sport": [],
+    "Premium": [],
+    "Limited": [],
+    "LX": [
+      "2.0L 4-cylinder MPI Atkinson engine with 147 horsepower and 132 lb.-ft. torque",
+      "Intelligent Variable Transmission and 4-wheel disc brakes",
+      "Projector headlights with Front Daytime Running Lights and High Beam Assist",
+      "6-way-adjustable driver and front-passenger seats",
+      "Wireless Apple CarPlay and Android Auto integration with Bluetooth wireless technology",
+      "Remote keyless entry with trunk opener and 8-in. touchscreen",
+      "Rear View Monitor with Parking Guidance and AM/FM/HD audio with 4 speakers",
+      "6 airbags, Hill-start Assist Control, and engine immobilizer alarm"
+    ],
+    "EX": [],
+    "GT-Line": [
+      "17-in. alloy wheels and LED Daytime Running Lights with LED tail lights",
+      "Front LED fog lights and Electronic Parking Brake",
+      "Sport side sills with black high-gloss accent trim",
+      "Black high-gloss rear deck lid spoiler and sport grille with red inserts",
+      "60/40 split-folding rear seatback with rear center armrest & cupholder",
+      "AM/FM/HD audio unit with 6 speakers and alloy sport pedals",
+      "10.25-in. touchscreen with Kia Connect, Navigation, and modem",
+      "Leather-wrapped shift knob and Dual Zone Full Automatic Temperature Control"
+    ],
+    "GT": [
+      "1.6L 4-cylinder GDI Turbo engine with 201 horsepower and 195 lb.-ft. torque",
+      "7-speed Dual-Clutch Transmission with paddle shifters",
+      "Larger front disc brakes and sport-tuned multi-link rear suspension",
+      "Sport-tuned dual exhaust and 18-in. machined-finish alloy wheels",
+      "LED multi-reflective headlights and leather-wrapped Sport Design steering wheel",
+      "GT combination cloth & SynTex seating with red contrast stitching",
+      "Rear USB charge port & A/C vent and wireless smartphone charger",
+      "Electronic Parking Brake and Forward Collision-Avoidance Assist with Cyclist & Pedestrian Detection",
+      "Smart Cruise Control with Stop & Go"
+    ]
+  }
+}

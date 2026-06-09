@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2012|ford|edge",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_llm_2012__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "3.7L Ti-VCT V6 engine with 305 hp",
+      "6-speed SelectShift Automatic with paddle activation",
+      "22-inch polished aluminum wheels with black spoke accents",
+      "Sport-tuned suspension",
+      "Leather-trimmed seating with contrast stitching",
+      "MyFord Touch with 8-inch LCD touchscreen and 2 USB ports",
+      "Sony Audio System with 12 speakers and HD Radio",
+      "Aluminum brake and accelerator pedal covers",
+      "Universal garage door opener"
+    ],
+    "Sport": [
+      "18-inch chrome-clad aluminum wheels",
+      "Heated front bucket seats with 10-way power driver's seat",
+      "Leather-trimmed seating surfaces",
+      "Auto-dimming rearview mirror",
+      "Ford SYNC voice-activated connectivity with USB port",
+      "Sony Audio System with 12 speakers and HD Radio",
+      "Rear view camera and Reverse Sensing System",
+      "Body-color heated sideview mirrors with memory",
+      "Automatic headlamps with wiper activation"
+    ],
+    "SEL": [
+      "18-inch painted aluminum wheels",
+      "10-way power driver's seat with EasyFold rear seat back release",
+      "Dual-zone electronic automatic temperature control",
+      "Ford SYNC voice-activated connectivity with USB port",
+      "Below-floor Cargo Management System",
+      "Illuminated visor vanity mirrors",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SE": [
+      "2.0L EcoBoost I-4 engine with 240 hp and 6-speed automatic transmission",
+      "17-inch painted aluminum wheels",
+      "Front bucket seats with cloth upholstery",
+      "Rear 60/40 split fold-flat seat with reclining backs",
+      "MyFord with 4.2-inch color LCD display and media hub",
+      "AM/FM stereo with single-CD player and MP3 capability",
+      "Personal Safety System with dual-stage front airbags",
+      "AdvanceTrac with Roll Stability Control",
+      "Power door locks and windows with remote keyless entry"
+    ]
+  }
+}

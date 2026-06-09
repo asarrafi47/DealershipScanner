@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2021|toyota|supra",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Supra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "3.0 Premium",
+    "3.0",
+    "2.0",
+    "Premium",
+    "Sport",
+    "A91"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

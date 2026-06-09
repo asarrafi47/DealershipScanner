@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|toyota|corolla",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_web_2016__toyota__corolla",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "GR",
+    "XSE",
+    "XLE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "GR": [
+      "Turbocharged 1.6L three-cylinder engine with 300 hp and 295 lb-ft torque",
+      "Six-speed manual transmission or eight-speed automatic",
+      "All-wheel-drive system with three configurable splits (60/40, 50/50, 30/70)",
+      "High-performance rally-bred suspension and braking system"
+    ],
+    "XSE": [
+      "Blind-spot monitoring standard",
+      "Rear cross-traffic alert standard",
+      "7.0-inch gauge cluster display"
+    ],
+    "XLE": [
+      "Blind-spot monitoring available",
+      "Rear cross-traffic alert available",
+      "7.0-inch gauge cluster display"
+    ],
+    "SE": [
+      "10.5-inch infotainment touchscreen available",
+      "Black exterior accents on roof, wheels, mirror caps, and badges (FX edition)",
+      "Fabric seats with orange stitching (FX edition)"
+    ],
+    "LE": [
+      "2.0-liter non-turbo inline four-cylinder engine with 169 hp and 151 lb-ft torque",
+      "CVT transmission and front-wheel-drive",
+      "Toyota Safety Sense 3.0 including adaptive cruise control, pre-collision system, lane centering, automatic high-beams, and road sign assist",
+      "8.0-inch infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "4.2-inch gauge cluster display",
+      "USB-C charging ports in each row"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/corolla/"
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|volvo|crosscountry",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "Cross Country",
+  "ladder_id": "brochure_llm_2017__volvo__crosscountry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "A",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Sport Leather upholstery with Cross Country stitching",
+      "Harman Kardon Premium Sound system",
+      "19-inch Bor alloy wheels with Diamond Cut/Tech Matte Black finish"
+    ],
+    "A": [
+      "Active dual xenon headlights with headlight washers",
+      "Active high beam system",
+      "Adaptive Cruise Control with Queue Assist",
+      "Collision warning with Full Auto Brake",
+      "Lane Keeping Aid",
+      "Pedestrian and Cyclist Detection",
+      "Distance Alert",
+      "Driver Alert Control"
+    ],
+    "T5": [
+      "18-inch Neso alloy wheels with Diamond Cut/Tech Matte Black finish",
+      "Comfort Leather upholstery",
+      "Collision warning system",
+      "Distance alert functionality"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2010|nissan|xterra",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Xterra",
+  "ladder_id": "brochure_llm_2010__nissan__xterra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "Off Road",
+    "S",
+    "X"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "17-inch 8-spoke aluminum-alloy wheels",
+      "P265/65R17 BFGoodrich Radial Long Trail T/A OWL tires",
+      "5-speed automatic transmission standard"
+    ],
+    "Off Road": [
+      "16-inch 6-spoke aluminum-alloy wheels",
+      "P265/75R16 BFGoodrich Rugged Trail T/A OWL tires",
+      "Electronic locking rear differential",
+      "Bilstein off-road performance shock absorbers",
+      "Hill descent control with automatic transmission",
+      "Hill start assist with automatic transmission",
+      "Clutch start/cancel with manual transmission",
+      "2-speed switch-operated transfer case standard"
+    ],
+    "S": [
+      "16-inch 5-spoke aluminum-alloy wheels",
+      "P265/70R16 BFGoodrich Radial Long Trail T/A OWL tires standard on X 4x4 manual"
+    ],
+    "X": [
+      "16-inch steel wheels",
+      "P265/70R16 all-season tires",
+      "6-speed manual transmission standard"
+    ]
+  }
+}

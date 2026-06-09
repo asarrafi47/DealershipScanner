@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2014|honda|pilot",
+  "year": 2014,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "brochure_llm_2014__honda__pilot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Pilot EX-L with Navigation",
+    "Pilot Touring",
+    "Pilot EX-L",
+    "Pilot EX",
+    "Pilot LX"
+  ],
+  "adds_by_trim": {
+    "Pilot EX-L with Navigation": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Honda DVD Rear Entertainment System with 115-volt power outlet",
+      "Multi-angle rearview camera with guidelines"
+    ],
+    "Pilot Touring": [
+      "Leather-trimmed interior",
+      "Heated front seats",
+      "Tire Pressure Monitoring System with tire pressure indicators",
+      "XM Radio with SiriusXM subscription",
+      "Fog lights with auto-on/off",
+      "HomeLink remote system",
+      "Body-colored parking sensors front and rear",
+      "Trailer harness standard",
+      "650-watt AM/FM/CD premium audio system"
+    ],
+    "Pilot EX-L": [
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "Tilt and telescopic steering column",
+      "18-inch alloy wheels",
+      "Body-colored power side mirrors",
+      "60/40 split flat-folding third-row bench seat",
+      "Multi-reflector halogen headlights with auto-on/off",
+      "Roof rails",
+      "Integrated sunshades"
+    ],
+    "Pilot EX": [
+      "Daytime Running Lights",
+      "Remote entry system",
+      "Acoustic windshield",
+      "Rear privacy glass",
+      "Integrated class III trailer hitch",
+      "Pre-wired for trailer harness",
+      "60/40 split flat-folding sliding second-row seat",
+      "Multi-reflector halogen headlights with auto-off",
+      "Tri-zone automatic climate control system"
+    ],
+    "Pilot LX": [
+      "250-hp 3.5-liter i-VTEC V-6 engine",
+      "5-speed automatic transmission",
+      "ULEV-2 CARB emissions rating",
+      "Hill start assist",
+      "Variable Torque Management 4-wheel-drive system available",
+      "MacPherson strut front and multi-link rear suspension with trailing arms",
+      "Advanced Compatibility Engineering body structure",
+      "i-MID with 8-inch customizable screen",
+      "229-watt AM/FM/CD audio with 7 speakers and subwoofer",
+      "Cruise control"
+    ]
+  }
+}

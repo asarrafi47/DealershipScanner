@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2013|nissan|cube",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Cube",
+  "ladder_id": "brochure_llm_2013__nissan__cube",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL with Preferred Package",
+    "SL",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL with Preferred Package": [
+      "Anti-lock Braking System (ABS)",
+      "Vehicle Dynamic Control (VDC) with Traction Control System (TCS)",
+      "Fog lights",
+      "Six standard air bags",
+      "Nissan Navigation System with 5-inch color touch-screen monitor",
+      "RearView Monitor",
+      "SiriusXM Satellite Radio and NavTraffic",
+      "USB connection port for iPod interface and compatible devices",
+      "Rockford Fosgate subwoofer and amplifier",
+      "Six upgraded speakers including two tweeters"
+    ],
+    "SL": [
+      "16-inch Aluminum-alloy wheels",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Automatic Temperature Control (ATC) with outside temperature display",
+      "Automatic on/off headlights"
+    ],
+    "S": [
+      "122-hp 1.8-liter DOHC 4-cylinder engine",
+      "6-speed manual transmission or optional Xtronic CVT",
+      "15-inch Steel wheels with wheel covers",
+      "Air conditioning with in-cabin microfilter",
+      "AM/FM/CD audio system with auxiliary audio input jack",
+      "Six speakers including tweeters",
+      "Interface System for iPod",
+      "Bluetooth Hands-free Phone System",
+      "Illuminated steering wheel-mounted audio controls",
+      "Remote keyless entry with Integrated Key"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2019|genesis|g80",
+  "year": 2019,
+  "make": "genesis",
+  "model": "G80",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

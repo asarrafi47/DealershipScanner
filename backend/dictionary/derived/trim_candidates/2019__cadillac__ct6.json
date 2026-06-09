@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2019|cadillac|ct6",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "CT6",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|alfaromeo|4c",
+  "year": 2017,
+  "make": "alfa romeo",
+  "model": "4c",
+  "ladder_id": "brochure_llm_2017__alfaromeo__4c",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4C Coupe",
+    "4C Spider"
+  ],
+  "adds_by_trim": {
+    "4C Coupe": [
+      "Sport steering wheel in leather with microfiber insert and red stitching",
+      "Red leather-trimmed bucket seats",
+      "Full-digital instrument cluster with TFT display and carbon fiber cluster surround",
+      "Four-position Alfa DNA Drive Mode Selector",
+      "Red car cover with Alfa Romeo 4C logo"
+    ],
+    "4C Spider": [
+      "Height- and reach-adjustable steering wheel in leather",
+      "Paddle gearshift controls",
+      "Remote keyless entry",
+      "Power windows",
+      "12-volt power outlet",
+      "AM/FM radio with iPod control, USB and SD card connectivity, Bluetooth hands-free",
+      "Premium speaker package",
+      "4-position Alfa DNA Drive Mode Selector",
+      "Full-digital 7.0-inch instrument cluster with TFT display",
+      "Air conditioning system"
+    ]
+  }
+}

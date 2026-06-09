@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2018|toyota|avalon",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_2018__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "LE",
+    "Premium",
+    "Touring",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "LT": [],
+    "Touring": [
+      "XLE Premium features with sport-oriented enhancements"
+    ],
+    "Premium": [],
+    "LE": [],
+    "XLE": [
+      "Replaces 3.5L V6 with 2.5-Liter 4-Cylinder hybrid engine producing 200 hp",
+      "Swaps 6-speed automatic transmission for Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Upgraded to Super Ultra Low Emission Vehicle (SULEV) rating",
+      "Adds Permanent magnet AC synchronous motor with 650V maximum",
+      "Adds Sealed Nickel-Metal Hydride battery system with 244.8V maximum"
+    ],
+    "XLE Premium": [
+      "Adds 17-inch Super Chrome alloy wheels with P215/55R17 tires",
+      "Upgraded to High Intensity Discharge Quadrabeam headlights with auto on/off and LED Daytime Running Lights",
+      "Adds hidden exhaust with chrome-accented cover",
+      "Adds color-keyed heated, auto-dimming power outside mirrors with puddle lights and manual folding",
+      "Adds Power tilt/slide moonroof with sliding sunshade",
+      "Adds Smart Key System on front doors and trunk with Push Button Start",
+      "Adds rain-sensing washer-linked variable intermittent windshield wipers",
+      "Upgraded to Entune Premium Audio with Integrated Navigation and App Suite with 7-inch high-resolution touch-screen",
+      "Adds Qi-compatible wireless smartphone charging",
+      "Upgraded to Premium perforated leather-trimmed multi-stage heated and ventilated front seats with 10-way power-adjustable driver's seat and power lumbar support"
+    ],
+    "Limited": [
+      "Adds 17-inch Super Chrome alloy wheels with P215/55R17 tires",
+      "Upgraded to High Intensity Discharge Quadrabeam headlights with auto on/off and LED Daytime Running Lights",
+      "Adds hidden exhaust with chrome-accented cover",
+      "Adds color-keyed heated, auto-dimming power outside mirrors with puddle lights and manual folding",
+      "Adds Power tilt/slide moonroof with sliding sunshade",
+      "Adds Smart Key System on front doors and trunk with Push Button Start",
+      "Adds rain-sensing washer-linked variable intermittent windshield wipers",
+      "Upgraded to Entune Premium Audio with Integrated Navigation and App Suite",
+      "Adds Qi-compatible wireless smartphone charging",
+      "Upgraded to Premium perforated leather-trimmed multi-stage heated and ventilated front seats with 10-way power-adjustable driver's seat and 8-way power-adjustable passenger seat"
+    ]
+  }
+}

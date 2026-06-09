@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2019_bmw_3_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "3 Series",
+    "3 Series"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "340i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "330i": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

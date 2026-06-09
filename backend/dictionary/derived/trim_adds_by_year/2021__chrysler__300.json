@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2021|chrysler|300",
+  "year": 2021,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2021__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300S",
+    "300 Touring L",
+    "300 Touring"
+  ],
+  "adds_by_trim": {
+    "300S": [
+      "300-hp 3.6L Pentastar V6 with 8-speed automatic transmission",
+      "Optional 5.7L HEMI V8 with 8-speed automatic transmission",
+      "Performance-tuned suspension with Sport mode and steering wheel paddle shifters",
+      "20-inch Black Noise cast aluminum wheels with 245/45R20 all-season performance tires",
+      "Headlamps with Black bezels and Black LED taillamps",
+      "Black Chrome surround with Gloss Black grille and DLO surround moldings",
+      "Chrysler wing badge with Red accents",
+      "Nappa leather-trimmed Sport bucket seats with Piano Black accents",
+      "6 Premium Alpine speakers with 276-watt amplifier"
+    ],
+    "300 Touring L": [
+      "19-inch fully polished cast aluminum wheels standard (RWD) or with AWD",
+      "Front LED fog lamps",
+      "Power, heated mirrors with courtesy lamps, supplemental turn signals, and driver-side auto-dimming",
+      "Power passenger seat with 4-way power lumbar adjust",
+      "Heated front seats",
+      "Remote Start System",
+      "Universal Garage Door Opener",
+      "ParkSense Front and Rear Park Assist System"
+    ],
+    "300 Touring": [
+      "292-hp 3.6L Pentastar V6 with 8-speed automatic transmission and RWD/AWD",
+      "4-wheel independent Touring suspension",
+      "Blind Spot Monitoring and Rear Cross-Path Detection",
+      "17-inch Fine Silver cast aluminum wheels (RWD) or 19-inch polished (AWD)",
+      "Acoustic windshield and front-door glass",
+      "Body-color mirror caps and door handles",
+      "Automatic halogen projector headlamps with LED daytime running lamps",
+      "Nappa leather-trimmed bucket seats with power driver's seat and 4-way lumbar adjust",
+      "Uconnect 4C with 8.4-inch display and six speakers",
+      "Dual-Zone Automatic Temperature Control and remote proximity keyless entry with push-button start"
+    ]
+  }
+}

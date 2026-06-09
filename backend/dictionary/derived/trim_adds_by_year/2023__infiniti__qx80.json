@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2023|infiniti|qx80",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "QX80",
+  "ladder_id": "2023_infiniti_qx80",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Pure",
+    "Luxe",
+    "Sensory",
+    "Autograph"
+  ],
+  "adds_by_trim": {
+    "Luxe": [
+      "Electronic Air Suspension springs and Dynamic Digital Suspension dampers",
+      "Luxe 1-of-2 content over Pure standard features"
+    ],
+    "Sensory": [
+      "INFINITI All-Mode 4WD and Sensory exterior/interior upgrades over Luxe",
+      "Premium second-row and technology content"
+    ],
+    "Autograph": [
+      "22-inch AUTOGRAPH aluminum-alloy wheels",
+      "Includes Sensory plus Autograph luxury appointments",
+      "Flagship QX80 trim in 2025 brochure"
+    ]
+  }
+}

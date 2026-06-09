@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2017|audi|a6",
+  "year": 2017,
+  "make": "Audi",
+  "model": "A6",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "A6",
+    "S6"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2013|bmw|x6",
+  "year": 2013,
+  "make": "BMW",
+  "model": "X6",
+  "ladder_id": "brochure_2013__bmw__x6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes BMW Maintenance Program with factory-recommended service coverage",
+      "Adds BMW Ultimate Service suite with comprehensive ownership programs",
+      "Adds Includes BMW Assist Safety Plan with four-year coverage",
+      "Adds BMW Roadside Assistance for first four years with unlimited mileage",
+      "Adds Includes iDrive Display with navigation and vehicle information",
+      "Adds Bluetooth technology for mobile phone integration",
+      "Adds Includes TeleService for continuous vehicle monitoring",
+      "Adds BMW Assist Concierge feature for destination routing",
+      "Adds Includes corrosion and rust perforation warranty protection"
+    ],
+    "Limited": [
+      "Upgraded to enhanced BMW Assist Safety Plan with MyInfo feature",
+      "Adds MyInfo capability to send business locations and addresses to navigation",
+      "Upgraded to BMW Mobile Office with email and text message integration",
+      "Adds Calendar and To-do List display on iDrive screen",
+      "Upgraded to BMW Navigation system with Google Maps database integration",
+      "Adds access to real-time fuel prices and Bloomberg stock indices",
+      "Upgraded to enhanced BMW Assist with Critical Calling operator assistance"
+    ],
+    "Premium": [
+      "Adds optional BMW Assist Convenience Plan for expanded personalized services",
+      "Upgraded to premium BMW Individual Colors and materials customization",
+      "Adds access to BMW European Delivery Program experience",
+      "Adds Includes BMW Welt personalized delivery and brand-experience center access",
+      "Adds BMW Magazine subscription with latest events and product reviews"
+    ]
+  }
+}

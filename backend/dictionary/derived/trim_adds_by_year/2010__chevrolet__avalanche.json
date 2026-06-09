@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|chevrolet|avalanche",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Avalanche",
+  "ladder_id": "brochure_2010__chevrolet__avalanche",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "SS",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 100,000 mile/5-year transferable Powertrain Limited Warranty",
+      "Adds Features OnStar services with GPS satellite connectivity",
+      "Adds Includes Courtesy Transportation Program for extended warranty repairs"
+    ],
+    "Limited": [],
+    "SS": [],
+    "LTZ": [
+      "20-inch polished-aluminum wheels (standard)",
+      "20-inch chrome aluminum wheels (available)",
+      "Perforated Leather Appointments interior",
+      "White Diamond Tricoat exterior color (extra-cost, LTZ only)"
+    ]
+  }
+}

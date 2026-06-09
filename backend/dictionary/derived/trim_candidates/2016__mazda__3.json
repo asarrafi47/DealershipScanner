@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2016|mazda|3",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Preferred",
+    "Sport",
+    "Platinum",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

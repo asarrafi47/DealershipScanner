@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2020|maserati|levante",
+  "year": 2020,
+  "make": "maserati",
+  "model": "levante",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

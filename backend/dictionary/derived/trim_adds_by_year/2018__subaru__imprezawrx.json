@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2018|subaru|imprezawrx",
+  "year": 2018,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2018__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX STI",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "7.0-inch Multimedia Navigation System with voice-activated GPS and multi-touch gesture control",
+      "Harman Kardon premium audio system with 9 speakers and 440-watt-equivalent amplifier",
+      "Recaro front seats",
+      "8-way power adjustable driver's seat",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Keyless Access with Push-button Start and PIN-code vehicle access",
+      "Power-tilt/sliding moonroof",
+      "Choice of STI or low-profile trunk spoiler"
+    ],
+    "WRX STI": [
+      "305-hp turbocharged 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Driver Controlled Center Differential (DCCD) All-Wheel Drive with front and rear limited-slip differentials",
+      "6-speed close-ratio manual transmission",
+      "Brembo performance braking system",
+      "High-performance STI sport-tuned suspension",
+      "19-inch aluminum-alloy wheels",
+      "STI trunk spoiler",
+      "LED Steering Responsive Headlights (SRH)",
+      "Ultrasuede and leather-trimmed upholstery with red seatbelts",
+      "7.0-inch Multimedia Plus with voice-activated controls and SiriusXM Travel Link"
+    ],
+    "WRX Limited": [
+      "LED Steering Responsive Headlights (SRH)",
+      "LED fog lights",
+      "Keyless Access with Push-button Start and PIN-code vehicle access",
+      "Auto-on/off headlights",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver's seat",
+      "Welcome lighting",
+      "STARLINK Safety Plus enabled with subscription"
+    ],
+    "WRX Premium": [
+      "Optional Sport Lineartronic Transmission with paddle shifters and SI-DRIVE modes",
+      "18-inch aluminum-alloy wheels",
+      "Halogen fog lights",
+      "7.0-inch Multimedia Plus with Siri Eyes-Free and SiriusXM Travel Link",
+      "Power-tilt/sliding moonroof",
+      "All-Weather Package with heated front seats and windshield wiper de-icer",
+      "Optional Performance Package with Recaro seats and performance brake pads"
+    ],
+    "WRX": [
+      "268-hp twin-scroll turbocharged 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission",
+      "Sport-tuned suspension",
+      "17-inch aluminum-alloy wheels",
+      "Low-profile trunk spoiler",
+      "Heated side mirrors",
+      "Cloth upholstery",
+      "Leather-wrapped flat-bottom steering wheel",
+      "6.2-inch Multimedia with smartphone app integration and HD Radio"
+    ]
+  }
+}

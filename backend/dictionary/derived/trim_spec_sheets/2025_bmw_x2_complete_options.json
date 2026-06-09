@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_bmw_x2_complete_options",
+  "make": "BMW",
+  "models": [
+    "X2",
+    "X2"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "M35i": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ],
+    "xDrive28i": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

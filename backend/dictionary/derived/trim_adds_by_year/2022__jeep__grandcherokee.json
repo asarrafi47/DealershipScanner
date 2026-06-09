@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2022|jeep|grandcherokee",
+  "year": 2022,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "brochure_llm_2022__jeep__grandcherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Summit Reserve 3 Row",
+    "Summit Reserve 4xe",
+    "Summit 2 Row",
+    "Overland"
+  ],
+  "adds_by_trim": {
+    "Summit Reserve 3 Row": [
+      "Ventilated rear seats with deluxe headliner",
+      "Palermo leather-trimmed seats with Nappa Reserve door trim",
+      "2nd-row window shades",
+      "McIntosh 19-speaker, 825-watt high-performance audio system",
+      "21-inch polished and painted aluminum wheels",
+      "Summit Reserve badging",
+      "Front-passenger interactive screen",
+      "Third row seating configuration"
+    ],
+    "Summit Reserve 4xe": [
+      "2.0L T4 hybrid engine with 375 horsepower and 8-speed automatic",
+      "Ventilated rear seats with deluxe headliner",
+      "Palermo leather-trimmed seats with Nappa Reserve door trim",
+      "2nd-row window shades",
+      "McIntosh 19-speaker, 825-watt high-performance audio system",
+      "21-inch polished and painted aluminum wheels",
+      "Summit Reserve badging"
+    ],
+    "Summit 2 Row": [
+      "Nappa leather-trimmed seating throughout",
+      "Ventilated front-row and 2nd-row seating",
+      "Heated front-row and 2nd-row seating",
+      "CommandView dual-pane power panoramic sunroof",
+      "Uconnect 5 NAV with 10.1-inch display",
+      "Alpine premium audio system with 9 speakers and subwoofer",
+      "Wood and leather-wrapped steering wheel",
+      "Heated steering wheel"
+    ],
+    "Overland": [
+      "Quadra-Trac II active four-wheel-drive system with 2-speed transfer case",
+      "Front-axle disconnect on 4x4 models",
+      "Quadra-Lift air suspension system on 4x4 models"
+    ]
+  }
+}

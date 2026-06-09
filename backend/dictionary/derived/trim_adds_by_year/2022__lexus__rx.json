@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2022|lexus|rx",
+  "year": 2022,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "2020_lexus_rx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Connect is not renewable as a stand-alone service. 39. The Bluetooth word mark and logos are"
+    ],
+    "SE": [
+      "Connect, or Destination Assist connected service renewal is selected. Service"
+    ],
+    "Premium": [
+      "Power tilt-and-slide moonroof and heated ventilated front seats",
+      "21-inch 20-spoke alloy wheels and aluminum roof rails",
+      "Lexus Interface 14-inch display with Drive Connect trial"
+    ],
+    "Limited": [
+      "Spotify Technology Holding. Waze and Waze logo are registered trademarks of Google LLC. Always drive safely and obey traffic laws. Apps, prices and services vary by phone carrier and are subject",
+      "the key/fob and can be costly to replace. If you lose a key or fob, your Lexus dealer can help or you can go to www.aloa.org to find a qualified locksmith",
+      "on the last time data was collected from the vehicle and is not real-time data.",
+      "Service may vary by vehicle or region. Registration",
+      "required after trial. Service subject to change at any time without notice. Terms of Use apply. Data charges may apply. See usage precautions and service limitations in Owner’s Manual and",
+      "of the vehicle and you should also look around the vehicle, using mirrors to confirm rearward clearance. Environmental conditions may limit effectiveness and view may become obscured. See Owner’s Manual for additional",
+      "tions and in certain types of severe collisions. To decrease the risk of injury from an inflating airbag, always wear",
+      "vehicle and use mirrors to confirm clearance. See Owner’s Manual for",
+      "vehicle’s condition and how/where you drive. See www.fueleconomy.gov. 58. For",
+      "purchase, the Lexus Accessory Warranty coverage is in effect for 48 months/50,000 miles from the vehicle’s in-service date, which is the same coverage as the new-vehicle Basic Warranty.",
+      "accessory was installed on the vehicle, or the remainder of any"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.6666666666666666,
+    "per_trim_add_counts": {
+      "Limited": 0,
+      "SE": 1,
+      "LE": 1
+    }
+  }
+}

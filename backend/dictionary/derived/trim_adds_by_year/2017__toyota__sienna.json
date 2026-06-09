@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2017|toyota|sienna",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2017__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED PREMIUM",
+    "LIMITED",
+    "XLE PREMIUM",
+    "XLE",
+    "SE PREMIUM",
+    "SE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "LIMITED PREMIUM": [
+      "Dual moonroof with dual side curtains",
+      "Vehicle Dynamics Integrated Management (VDIM) system",
+      "Pre-Collision System (PCS)",
+      "Hill Start Assist Control (HAC)",
+      "7-seating capacity with AWD standard"
+    ],
+    "LIMITED": [
+      "Safety Connect with Emergency Assistance and Stolen Vehicle Locator",
+      "Front and rear parking assist sonar",
+      "Anti-theft system with alarm and engine immobilizer",
+      "8-seating capacity with FWD, 7-seating with AWD"
+    ],
+    "XLE PREMIUM": [
+      "Power tilt/slide moonroof with sunshade",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Entune Premium Audio with Integrated Navigation and App Suite",
+      "Run-flat tires optional"
+    ],
+    "XLE": [
+      "Anti-theft system with alarm and engine immobilizer",
+      "Rear parking assist sonar included",
+      "Available All-Wheel Drive with active torque control",
+      "8-seating capacity with FWD, 7-seating with AWD"
+    ],
+    "SE PREMIUM": [
+      "LED Daytime Running Lights with on/off feature",
+      "Power tilt/slide moonroof with sunshade",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Entune Premium Audio with Integrated Navigation and App Suite",
+      "Sport-calibrated Electric Power Steering"
+    ],
+    "SE": [
+      "LED Daytime Running Lights with on/off feature",
+      "Sport-tuned coil springs for rear suspension",
+      "Optional Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Available All-Wheel Drive"
+    ],
+    "LE": [
+      "Standard Daytime Running Lights with on/off feature",
+      "Star Safety System with Enhanced VSC and Traction Control",
+      "Driver front airbag and Advanced Airbag System for passengers",
+      "Available All-Wheel Drive with active torque control",
+      "8-seating capacity with FWD"
+    ],
+    "L": [
+      "3.5-liter V6 DOHC 24-valve engine with 296 hp",
+      "Direct Shift-8AT automatic transmission",
+      "MacPherson strut front and twist-beam rear suspension",
+      "Electric Power Steering standard",
+      "Power-assisted ventilated front and rear disc brakes",
+      "Engine immobilizer anti-theft system",
+      "ToyotaCare with no-cost maintenance plan",
+      "7-seating capacity with front-wheel drive"
+    ]
+  }
+}

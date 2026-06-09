@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2011|audi|q7",
+  "year": 2011,
+  "make": "Audi",
+  "model": "Q7",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Limited",
+    "S",
+    "Q7"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2014|gmc|terrain",
+  "year": 2014,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_2014__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes 6 months of OnStar Directions & Connections Plan with Hands-Free Calling",
+      "Adds Automatic Crash Response and Stolen Vehicle Assistance",
+      "Adds Emergency Services link and OnStar Vehicle Diagnostics",
+      "Adds Remote Door Unlock, Crisis Assist and Remote Horn and Lights control",
+      "Adds Includes SiriusXM Satellite Radio with 3 trial months of service",
+      "Adds Pro Grade Protection Plan with 2-year/24,000-mile recommended scheduled maintenance",
+      "Adds 3-year/36,000-mile bumper-to-bumper limited warranty",
+      "Adds 5-year/100,000-mile powertrain limited warranty",
+      "Adds Roadside Assistance and Courtesy Transportation throughout warranty period"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "Pro": [],
+    "SLE": [
+      "Premium cloth seating",
+      "8-way power driver seat adjuster with manual fore/aft and power lumbar",
+      "Leather-wrapped steering wheel with mounted audio and cruise controls",
+      "Single-zone automatic air conditioning with climate control",
+      "Pioneer premium 8-speaker system with subwoofer and amplifier",
+      "Heated driver and front passenger seats with convenience package"
+    ],
+    "SLT": [
+      "Adds available touch-screen navigation system with XM NavTraffic"
+    ],
+    "Denali": [
+      "Heated front and rear seats",
+      "19-inch wheels with available 20-inch option",
+      "Smart Frequency dampers tuned for ride comfort",
+      "Animated headlights and taillights",
+      "All-wheel drive standard",
+      "Hill descent control standard"
+    ]
+  }
+}

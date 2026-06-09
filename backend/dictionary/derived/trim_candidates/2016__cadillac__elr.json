@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2016|cadillac|elr",
+  "year": 2016,
+  "make": "Cadillac",
+  "model": "ELR",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

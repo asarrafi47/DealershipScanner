@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|dodge|journey",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "2010_dodge_journey",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SXT",
+    "R/T"
+  ],
+  "adds_by_trim": {
+    "SXT": [
+      "Fog lamps and 17-inch aluminum wheels",
+      "Leather-wrapped steering wheel with audio controls and premium cloth",
+      "Power driver seat and Flip 'n Stow front passenger seat",
+      "SIRIUS Satellite Radio, security alarm, and trip computer with compass",
+      "Power one-touch front windows and cruise control"
+    ],
+    "R/T": [
+      "3.5L V6 performance tuning (replaces 2.4L I-4 on SE/SXT)",
+      "19-inch chrome-clad cast aluminum wheels",
+      "Premium Speaker Group with subwoofer",
+      "Bright roof rack side rails and sport-oriented styling"
+    ],
+    "SE": [
+      "Dodge Performance front and rear body-color fascias",
+      "Power heated foldaway body-color mirrors",
+      "Fog lamps",
+      "Front and rear floor mats",
+      "Cargo compartment cover and cargo net",
+      "Dual bright exhaust tips with 3.6L V6 engine",
+      "17-inch tech silver aluminum wheels",
+      "UConnect 4.3S CD/MP3 with SiriusXM satellite radio and 1-year subscription"
+    ]
+  }
+}

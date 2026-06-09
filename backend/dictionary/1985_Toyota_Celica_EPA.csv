@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1985,Toyota,Celica,Celica,2.4L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.4,21,25,22,,,,,,2.4L I4,
-1985,Toyota,Celica,Celica,2.4L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.4,21,28,24,,,,,,2.4L I4,
-1985,Toyota,Celica,Supra,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.8,17,22,19,,,,,,2.8L V6,
-1985,Toyota,Celica,Supra,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.8,18,22,19,,,,,,2.8L V6,

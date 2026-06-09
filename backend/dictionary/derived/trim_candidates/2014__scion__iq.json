@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2014|scion|iq",
+  "year": 2014,
+  "make": "Scion",
+  "model": "iQ",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

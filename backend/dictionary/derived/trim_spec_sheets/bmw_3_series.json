@@ -1,0 +1,46 @@
+{
+  "ladder_id": "bmw_3_series",
+  "make": "BMW",
+  "models": [
+    "3 Series",
+    "328i",
+    "328d",
+    "330i",
+    "330e",
+    "340i",
+    "320i",
+    "335i",
+    "335d",
+    "330d",
+    "ActiveHybrid 3"
+  ],
+  "year_min": 2012,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M340i": [
+      {
+        "label": "Engine Options",
+        "value": "382 hp turbocharged inline-six with available xDrive AWD"
+      }
+    ],
+    "330e": [
+      {
+        "label": "Engine Options",
+        "value": "Plug-in hybrid 2.0L turbo with electric driving range; Hybrid-specific drive modes and charging port"
+      }
+    ],
+    "330i": [
+      {
+        "label": "Engine Options",
+        "value": "255 hp turbocharged 2.0L inline-four"
+      }
+    ],
+    "320i": [
+      {
+        "label": "Engine Options",
+        "value": "180 hp turbocharged 2.0L inline-four"
+      }
+    ]
+  }
+}

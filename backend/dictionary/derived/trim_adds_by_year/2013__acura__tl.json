@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2013|acura|tl",
+  "year": 2013,
+  "make": "acura",
+  "model": "tl",
+  "ladder_id": "brochure_llm_2013__acura__tl",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL SH-AWD with Advance Package",
+    "TL SH-AWD with Technology Package",
+    "TL SH-AWD",
+    "TL with Advance Package",
+    "TL with Technology Package",
+    "TL"
+  ],
+  "adds_by_trim": {
+    "TL SH-AWD with Advance Package": [
+      "Ventilated and heated front seats",
+      "Auto-on/off xenon HID headlights",
+      "Fog lights",
+      "19-inch aluminum-alloy wheels with P245/40 R19 tires"
+    ],
+    "TL SH-AWD with Technology Package": [
+      "Acura Navigation System with Voice Recognition",
+      "440-watt ELS Surround premium audio with 10 speakers and HDD",
+      "Rearview camera",
+      "Keyless Access System with smart entry and pushbutton ignition",
+      "GPS-linked, solar-sensing dual-zone climate control",
+      "Perforated Milano Premium Leather-trimmed interior",
+      "6-speed manual transmission option"
+    ],
+    "TL SH-AWD": [
+      "305-hp 3.7-liter SOHC V-6 engine with intake/exhaust VTEC",
+      "Super Handling All-Wheel Drive (SH-AWD)",
+      "Hill start assist",
+      "Exclusive front sport seats and sport steering wheel with contrast stitching",
+      "18-inch aluminum-alloy wheels with P245/45 R18 tires"
+    ],
+    "TL with Advance Package": [
+      "Ventilated and heated front seats",
+      "Auto-on/off xenon HID headlights",
+      "Fog lights",
+      "18-inch aluminum-alloy wheels with P245/40 R19 tires"
+    ],
+    "TL with Technology Package": [
+      "Acura Navigation System with Voice Recognition",
+      "440-watt ELS Surround premium audio with 10 speakers and HDD",
+      "Rearview camera",
+      "Keyless Access System with smart entry and pushbutton ignition",
+      "GPS-linked, solar-sensing dual-zone climate control",
+      "Perforated Milano Premium Leather-trimmed interior"
+    ],
+    "TL": [
+      "280-hp 3.5-liter SOHC VTEC V-6 engine",
+      "6-speed automatic transmission with Sequential SportShift",
+      "Front-wheel drive",
+      "Double wishbone front and multi-link rear independent suspension",
+      "Dual-zone adaptive climate control",
+      "Leather-trimmed interior with heated power-adjustable front seats",
+      "276-watt Acura Premium Sound System with 6-disc CD changer",
+      "Bluetooth HandsFreeLink telephone interface",
+      "17-inch aluminum-alloy wheels with P245/50 R17 tires",
+      "ACE body structure with VSA and ABS"
+    ]
+  }
+}

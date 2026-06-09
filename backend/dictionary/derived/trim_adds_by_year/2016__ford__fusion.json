@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2016|ford|fusion",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_llm_2016__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Fusion Titanium Hybrid",
+    "Fusion SE",
+    "Fusion S"
+  ],
+  "adds_by_trim": {
+    "Fusion Titanium Hybrid": [
+      "Leather-trimmed Sport seats with 10-way power and heated front seats with driver memory",
+      "Aluminum brake and accelerator pedal covers",
+      "Aluminum front door-sill plates",
+      "Ambient lighting",
+      "110-volt power outlet"
+    ],
+    "Fusion SE": [
+      "10-way power driver's seat including power lumbar support",
+      "6-way power front-passenger seat with fore/aft/up/down and recline",
+      "Rear-seat fold-down center armrest with 2 cupholders",
+      "18-inch premium aluminum wheels (multiple finishes available)",
+      "MyFord 4.2-inch color LCD center stack display",
+      "Available SE Technology Package with 8-inch touchscreen and dual-zone climate control"
+    ],
+    "Fusion S": [
+      "2.5L iVCT I-4 engine with 6-speed SelectShift automatic transmission",
+      "6-way manual driver's seat and 4-way manual front-passenger seat",
+      "60/40 split fold-flat rear seat with spring-assisted operation",
+      "17-inch Sparkle Silver-painted aluminum wheels with all-season tires",
+      "Body-color power heated sideview mirrors with blind spot mirrors",
+      "AM/FM stereo with single-CD player and MP3 capability",
+      "Cruise control and day/night rearview mirror",
+      "SecuriCode invisible keypad and Intelligent Access with push-button start"
+    ]
+  }
+}

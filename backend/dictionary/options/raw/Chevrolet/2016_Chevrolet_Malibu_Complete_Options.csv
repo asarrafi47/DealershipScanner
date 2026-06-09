@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Chevrolet,Malibu,Limited,2.5L I4 (SIDI),2.5L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,23,33,27,,,,,
+2016,Chevrolet,Malibu,Malibu,2.0L I4 (SIDI),2.0L I4,,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,22,32,26,,,,,
+2016,Chevrolet,Malibu,Malibu,1.5L I4 (SIDI),1.5L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,27,36,30,,,,,
+2016,Chevrolet,Malibu,Hybrid,Hybrid 1.8L I4 (SIDI),1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,47,46,46,,,,,

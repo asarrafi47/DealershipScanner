@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2012|bentley|mulsanne",
+  "year": 2012,
+  "make": "bentley",
+  "model": "mulsanne",
+  "ladder_id": "brochure_2012__bentley__mulsanne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Cruise Control as standard",
+      "Adds Park Distance Control with six forward and four rearward-facing sensors",
+      "Adds 14-speaker, six-channel audio system with digital sound processing and iPod connectivity",
+      "Adds eight-inch high-resolution multimedia screen",
+      "Adds power-latching soft-close doors with keyless entry and ignition",
+      "Adds electrically powered bootlid",
+      "Adds 12-way adjustable front seats with optional integrated ventilation and massage systems",
+      "Adds eight-way adjustable outer rear seats",
+      "Adds Xenon headlamps with 70 percent more output than halogen"
+    ],
+    "Touring": [
+      "Adds Adaptive Cruise Control system with twin radar sensors",
+      "Adds optional rear-view camera with advanced reverse and parallel parking settings",
+      "Adds side-view cameras with voice control activation"
+    ],
+    "Premium": [
+      "Adds latest generation navigation with 3D mapping",
+      "Adds full postcode entry with voice control",
+      "Adds rear seat navigation control",
+      "Adds Bluetooth telephone connectivity seamlessly integrated with on-board systems"
+    ],
+    "Limited": [
+      "Adds exclusive Naim for Bentley premium audio system with 20 channels and 20 custom-made speakers",
+      "Adds Rear Seat Entertainment package with twin 8-inch high-resolution screens and Dolby 5.1 surround sound"
+    ]
+  }
+}

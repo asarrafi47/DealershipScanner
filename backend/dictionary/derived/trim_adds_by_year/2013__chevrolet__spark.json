@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2013|chevrolet|spark",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2013__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Leather-wrapped steering wheel",
+      "Steering wheel-mounted phone, audio, and cruise controls",
+      "Sport front and rear fascias",
+      "Projector-style foglamps",
+      "Chrome exhaust outlet",
+      "Content-theft alarm"
+    ],
+    "1LT": [
+      "Content-theft alarm",
+      "Steering wheel-mounted phone, audio, and cruise controls"
+    ],
+    "LS": [
+      "3-spoke steering wheel with silver-color accents",
+      "3-point safety belts at all positions with front height adjustment",
+      "Body-color door handles",
+      "Roof-mounted antenna",
+      "Tire Pressure Monitoring System",
+      "Engine immobilizer theft-deterrent system",
+      "Power windows (front and rear)"
+    ]
+  }
+}

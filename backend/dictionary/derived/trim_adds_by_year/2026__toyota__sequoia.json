@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2026|toyota|sequoia",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "2026_toyota_sequoia",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SR5",
+    "Limited",
+    "Platinum",
+    "TRD Pro",
+    "1794 Edition",
+    "Capstone"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "20-inch dark-gray machined alloy wheels and rain-sensing wipers",
+      "Heated and ventilated front seats",
+      "14-inch Toyota Audio Multimedia touchscreen"
+    ],
+    "Platinum": [
+      "Premium LED headlights with sequential turn signals and auto leveling",
+      "Heated and ventilated front and rear seats",
+      "14-inch multimedia and 14-speaker JBL Premium Audio with subwoofer"
+    ],
+    "TRD Pro": [
+      "Multi-Terrain Select, Crawl Control, and Downhill Assist Control",
+      "Electronically controlled locking rear differential",
+      "18-inch TRD Pro matte-black forged-aluminum BBS wheels",
+      "TRD Pro LED light bar, heritage TOYOTA grille, and TRD Pro exhaust"
+    ],
+    "1794 Edition": [
+      "1794 Edition chrome badging and Saddle Tan leather with American walnut trim",
+      "Automatic power-extending running boards",
+      "Premium LED lighting and 20-inch machined alloy wheels"
+    ],
+    "Capstone": [
+      "22-inch dark-chrome machined alloy wheels — largest Sequoia wheels",
+      "Capstone luxury trim with premium interior and 14-inch JBL audio",
+      "Top-tier Sequoia grade above Platinum and 1794 Edition"
+    ],
+    "SR5": [
+      "i-FORCE MAX Twin-Turbo V6 Hybrid with 437 hp and 583 lb.-ft. torque",
+      "10-speed Electronically Controlled automatic transmission with intelligence (ECT-i)",
+      "Selectable driving and TOW/HAUL modes",
+      "Towing hitch receiver and wiring harness with 4-pin/7-pin connector",
+      "Integrated Trailer Brake Control (ITBC)",
+      "RWD or 4WDemand part-time 4WD",
+      "18-inch silver-painted alloy wheels",
+      "LED headlights with Daytime Running Lights (DRL)",
+      "LED fog lights",
+      "12.3-inch digital meter with selectable gauge display screens"
+    ]
+  }
+}

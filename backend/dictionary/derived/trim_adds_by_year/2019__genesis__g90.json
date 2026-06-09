@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2019|genesis|g90",
+  "year": 2019,
+  "make": "genesis",
+  "model": "G90",
+  "ladder_id": "brochure_2019__genesis__g90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes Smart Cruise Control for highway use",
+      "Adds Driver Attention Alert system",
+      "Adds Lane Keeping Assist supplemental feature",
+      "Adds Automatic Emergency Braking with Pedestrian Detection",
+      "Adds Blind Spot Detection system",
+      "Adds Rear Cross-traffic Alert in reverse",
+      "Adds Includes smart trunk with Proximity Key detection",
+      "Adds Genesis Connected Services complimentary for 3 years",
+      "Adds SiriusXM Traffic and Travel Link complimentary for 3 years"
+    ],
+    "Limited": [
+      "airbags, front and rear seat-mounted side"
+    ],
+    "Advanced": []
+  }
+}

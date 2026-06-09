@@ -1,0 +1,80 @@
+{
+  "catalog_key": "2016|subaru|forester",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2016__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0XT Touring",
+    "2.0XT Premium",
+    "2.5i Touring",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "2.5i": [
+      "170-hp 2.5-liter 4-cylinder BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission or optional Lineartronic CVT",
+      "17-inch styled steel wheels",
+      "Cloth upholstery",
+      "6-way manually adjustable driver's seat",
+      "SUBARU STARLINK 6.2-inch multimedia system with Pandora and iHeartRadio",
+      "4 speakers, AM/FM/CD player, HD Radio with iTunes tagging",
+      "Rear-Vision Camera",
+      "7 airbags"
+    ],
+    "2.5i Premium": [
+      "17-inch aluminum-alloy wheels",
+      "Panoramic moonroof",
+      "Raised roof rails with black finish",
+      "Body-color side mirrors",
+      "10-way power adjustable driver's seat",
+      "Reclining rear seatbacks",
+      "SUBARU STARLINK 7.0-inch multimedia system with 6 speakers",
+      "Dual USB ports",
+      "Driver's auto-up/down power window"
+    ],
+    "2.5i Limited": [
+      "Subaru Symmetrical All-Wheel Drive with X-MODE and Hill Descent Control",
+      "Lineartronic CVT",
+      "Fog lights",
+      "Rear spoiler",
+      "Auto-on/off headlights",
+      "Leather-trimmed upholstery",
+      "Automatic climate control system",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Power rear gate with automatic close and height memory"
+    ],
+    "2.5i Touring": [
+      "18-inch aluminum-alloy wheels",
+      "HID headlights",
+      "Chrome accents on lower door cladding",
+      "Body-color side mirrors with integrated turn signals",
+      "Keyless Access with Push-button Start and pin-code vehicle access",
+      "440-watt Harman Kardon amplifier with 8 Harman Kardon speakers",
+      "Electroluminescent analog gauges with LCD display",
+      "Dual-zone automatic climate control system",
+      "One-touch folding rear seatbacks"
+    ],
+    "2.0XT Premium": [
+      "250-hp turbocharged 2.0-liter 4-cylinder BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with X-MODE and Hill Descent Control",
+      "Lineartronic CVT with manual-mode paddle shifters",
+      "Sport-tuned suspension",
+      "SI-DRIVE performance management system",
+      "18-inch aluminum-alloy wheels",
+      "Sport cloth upholstery",
+      "Leather-wrapped steering wheel and shifter handle with leather boot"
+    ],
+    "2.0XT Touring": [
+      "All features of 2.5i Touring combined with 2.0XT Premium powertrain",
+      "250-hp turbocharged 2.0-liter 4-cylinder BOXER engine",
+      "Lineartronic CVT with manual-mode paddle shifters",
+      "Sport-tuned suspension",
+      "SI-DRIVE performance management system"
+    ]
+  }
+}

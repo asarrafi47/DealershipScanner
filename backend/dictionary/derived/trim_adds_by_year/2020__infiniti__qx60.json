@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|infiniti|qx60",
+  "year": 2020,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2020__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX60 LUXE",
+    "QX60 PURE"
+  ],
+  "adds_by_trim": {
+    "QX60 LUXE": [
+      "Roof rails",
+      "Rear bumper protector",
+      "Heated steering wheel",
+      "Driver's seat 2-way power lumbar support",
+      "Remote engine start",
+      "Outside mirrors with reverse tilt-down feature",
+      "Dual-occupant memory system for driver's seat, steering wheel, and outside mirrors",
+      "Entry/exit assist for driver's seat and steering wheel",
+      "Enhanced intelligent key with memory for occupant position, audio, climate, and navigation",
+      "Bose 13-speaker premium audio system with AM/FM/CD, MP3 playback, and speed-sensitive volume"
+    ],
+    "QX60 PURE": [
+      "3.5-liter V6 engine with 295 hp at 6,400 rpm and 270 lb-ft torque at 4,800 rpm",
+      "Continuously variable transmission with manual shift mode",
+      "Front-wheel drive or INFINITI intelligent all-wheel drive",
+      "LED signature headlights and front fog lights",
+      "LED signature taillights and center high-mounted stoplight",
+      "18-inch aluminum-alloy wheels with 235/65R18 all-season tires",
+      "Power folding, heated outside mirrors with integrated turn signals",
+      "Power sliding/tinted glass moonroof with sunshade",
+      "Tri-zone automatic temperature control system",
+      "8-way power driver's seat with leatherette-appointed seating"
+    ]
+  }
+}

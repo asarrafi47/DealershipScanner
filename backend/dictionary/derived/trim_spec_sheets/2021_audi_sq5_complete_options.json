@@ -1,0 +1,51 @@
+{
+  "ladder_id": "2021_audi_sq5_complete_options",
+  "make": "Audi",
+  "models": [
+    "SQ5",
+    "SQ5"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: 11.9-inch digital instrument cluster; 10.9-inch passenger display (was 7-inch infotainment screen)"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Engine Options",
+        "value": "Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with; Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with Ultra Technology’."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with; Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with Ultra Technology’. (was Model Year Engine type Power, torque at rpm)"
+      }
+    ],
+    "S line": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Model Year Engine type Power, torque at rpm (was L V6 FSI; L TDI diesel V6)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L V6 FSI; L TDI diesel V6"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: 7-inch infotainment screen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Equipment Interior Harman/Becker Automotive Systems produced Audi's new u; For the 2019 model year, heated front seats, rear electric child locks, 7-inch i"
+      }
+    ]
+  }
+}

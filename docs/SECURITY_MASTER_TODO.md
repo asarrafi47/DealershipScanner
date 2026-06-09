@@ -77,6 +77,9 @@
 | `SESSION_COOKIE_SECURE=0` | Local HTTPS testing | Allow session cookie without HTTPS |
 | `MIN_PASSWORD_LENGTH` | Optional | Registration (default 8) |
 | `USERS_DB_PATH` | Optional | Default `users.db` (app `users` table) |
+| `USERS_DB_ENCRYPTION_KEY` | **`FLASK_ENV=production`** | SQLCipher passphrase for `users.db` (≥32 chars; requires `sqlcipher3`) |
+| `ALLOW_UNENCRYPTED_USER_DB` | Dev/test only | When `1`, allows plain SQLite for credential DBs; **forbidden in production** |
+| `BCRYPT_ROUNDS` | Optional | bcrypt work factor for new password hashes (default **13**, range 12–15) |
 | `USERS_DB_CONNECT_TIMEOUT_S` | Optional | Default `30` (SQLite `connect` wait; reduces `database is locked` under dev reload / concurrency) |
 | `USERS_DB_BUSY_TIMEOUT_MS` | Optional | Default `30000` (SQLite `busy_timeout` per query) |
 | `RATE_LIMIT_SMART_SEARCH_PER_MIN` | Optional | Default 90 |
@@ -110,7 +113,7 @@
 | `RATE_LIMIT_DEV_LOGIN_PER_MIN` | Optional | Default 20 (`/dev/login` POST) |
 | `RATE_LIMIT_DEV_REGISTER_PER_MIN` | Optional | Default 5 (`/dev/register` POST) |
 | `DEV_USERS_DB_PATH` | Optional | Default `dev_users.db` (operator accounts for `/dev`) |
-| `DEV_USERS_DB_ENCRYPTION_KEY` | Optional | SQLCipher on `dev_users.db` (requires `sqlcipher3`) |
+| `DEV_USERS_DB_ENCRYPTION_KEY` | **`FLASK_ENV=production`** | See `USERS_DB_ENCRYPTION_KEY` (SEC-088); same requirement for operator DB |
 | `ALLOW_DEV_PUBLIC_REGISTER` | Production self-serve `/dev/register` | Must be truthy in production to allow new dev accounts |
 | `DEV_DISABLE_PUBLIC_REGISTER` | Non-production | When truthy, closes `/dev/register` locally |
 | `CHAT_MAX_MESSAGE_CHARS` | Optional | Default 4000 |
@@ -301,9 +304,29 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/db/password_hash.py` (`verify_or_legacy`), `backend/db/users_db.py`, `backend/db/admin_users_db.py` |
-| **Outcome** | Production accepts only bcrypt (`$2*`) hashes at login; legacy plaintext works in non-production only. Successful login still upgrades legacy rows to bcrypt when encountered in dev. |
-| **Validation** | `python -m pytest backend/tests/test_production_security.py::test_plaintext_password_rejected_in_production -q`. |
-| **Last verified** | 2026-05-26 |
+| **Outcome** | Production accepts only bcrypt (`$2*`) hashes at login; legacy plaintext works in non-production only. New hashes use **bcrypt cost 13** (env `BCRYPT_ROUNDS`, 12–15). Successful login upgrades legacy plaintext and weaker bcrypt costs to the current work factor. |
+| **Validation** | `python -m pytest backend/tests/test_password_hash.py::test_plaintext_password_rejected_in_production backend/tests/test_password_hash.py::test_check_user_upgrades_weak_bcrypt_on_login backend/tests/test_incomplete_listings_index.py::test_rehash_does_not_overwrite_newer_password -q`. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-089 — Public listings fail closed when incomplete index unavailable
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/db/incomplete_listings_db.py`, `backend/db/inventory_db.py` (`_incomplete_index_snapshot_for_listings`, `_filter_public_listings_cars`, listings grid cache token) |
+| **Outcome** | Production listings hide incomplete rows via the sidecar index; if the index cannot be read, filters fall back to per-row completeness checks instead of treating all cars as complete. Incomplete-index cache invalidates when `incomplete_listings.db` mtime changes. |
+| **Validation** | `python -m pytest backend/tests/test_incomplete_listings_index.py -q`. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-088 — Credential encryption at rest (SQLCipher) + bcrypt hardening
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/db/password_hash.py`, `backend/db/users_sqlite.py`, `backend/db/dev_users_sqlite.py`, `backend/utils/credential_db_encryption.py`, `backend/utils/production_security.py`, `backend/db/users_db.py`, `backend/db/admin_users_db.py`, `backend/main.py` (assert before DB init) |
+| **Outcome** | **In production:** `USERS_DB_ENCRYPTION_KEY` and `DEV_USERS_DB_ENCRYPTION_KEY` (each ≥32 chars) required; `sqlcipher3` required; `ALLOW_UNENCRYPTED_USER_DB=1` forbidden. Dev/test may set `ALLOW_UNENCRYPTED_USER_DB=1` for plain SQLite. Password hashes use bcrypt cost 13 by default; login rehashes weak/legacy stored hashes. Sessions remain signed with `SECRET_KEY` (HttpOnly / Secure cookies per SEC-010). No 2FA. |
+| **Validation** | `python -m pytest backend/tests/test_password_hash.py backend/tests/test_production_security.py -q`; production import in `scripts/security_check.sh` with encryption keys. |
+| **Last verified** | 2026-05-30 |
 
 ### SEC-063 — Phone QR sign-in (retired with app 2FA)
 
@@ -542,10 +565,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py`, `backend/utils/car_chat_policy.py`, `backend/intelligence/ai/agent.py`, `backend/utils/web_researcher.py`, `frontend/templates/car.html`, `frontend/templates/compare.html`, `frontend/static/compare_chat.js` (chat disclosure copy) |
+| **Scope** | `backend/main.py`, `backend/utils/car_chat_policy.py`, `backend/intelligence/ai/agent.py`, `backend/utils/web_researcher.py`, `frontend/templates/car.html`, `frontend/templates/compare.html`, `frontend/static/car_page.js`, `frontend/static/compare_chat.js` (chat disclosure copy) |
 | **Outcome** | **Layered rate limits:** optional deployment-wide key (`RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN`, default off); per-IP (`RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN`, default 48/min); per IP+car (`RATE_LIMIT_CAR_CHAT_PER_MIN`, default 24/min); compare chat uses per-IP compare key. Max message length and JSON body bytes unchanged. **Playwright web research** (`CAR_CHAT_WEB_RESEARCH`): production + `auto` allows live browser research only for **signed-in** users unless `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`; pgvector model-knowledge cache may still be read when keywords match. **Logging:** car chat no longer `print`s full user text; use DEBUG for operator detail. **Web research URLs:** `WEB_RESEARCH_ALLOWED_HOSTS` optional allowlist; blocklist + private/loopback host guard in `web_researcher.href_is_acceptable_result`. User messages remain **untrusted**; model output is advisory only. Car page states AI may be wrong; signed-out users see a line about signing in for full web research when the server allows it. Compare page includes the same advisory copy for side-by-side AI. |
 | **Validation** | `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py backend/tests/test_compare_specs.py -q` (413/429 paths, global chat limit, policy + URL guard). Set `BILLING_STRIPE_ENABLED=0` in tests before `import backend.main` so `.env` does not re-enable billing. Oversized body → 413; long message → `message_too_long`; flood → 429. |
-| **Last verified** | 2026-05-22 |
+| **Last verified** | 2026-06-02 |
 
 ### SEC-042 — LLM key & data exfiltration review
 
@@ -741,12 +764,84 @@
 | **Validation** | `python -m pytest backend/tests/test_production_security.py::test_app_admin_session_does_not_access_dev_api_in_production -q`. |
 | **Last verified** | 2026-05-26 |
 
+### SEC-089 — DNS-aware dev scanner URL guard
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/outbound_url.py` (`destination_host_blocked_after_dns`, `validate_dev_scanner_url`) |
+| **Outcome** | Dev scanner subprocess URLs reject hostnames that resolve to loopback, RFC-private, link-local, or metadata-style addresses (not only literal IP literals). |
+| **Validation** | `python -m pytest backend/tests/test_outbound_url.py backend/tests/test_outbound_url_dns.py -q`. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-090 — Attribute-safe escaping (trim ladder + dealer links)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `frontend/static/car_trim_ladder.js`, `frontend/static/find_dealers.js`, `frontend/static/dev.js`, `backend/listings/dealer_locator.py`, `backend/utils/safe_listing_url.py` (`normalize_safe_http_url`) |
+| **Outcome** | Trim ladder `escapeHtml` escapes `"` for attribute contexts; dealer locator API returns http(s)-only `website_url`; client UIs refuse `javascript:` hrefs. |
+| **Validation** | Grep `data-trim-name` + `escapeHtml` in `car_trim_ladder.js`; `pytest backend/tests/test_safe_listing_url.py backend/tests/test_dealer_locator.py -q`. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-091 — Enrichment vision outbound URL guard
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/enrichment/service.py` (`_all_gallery_urls_ordered`, `_fetch_image_b64_optimized`), `backend/utils/safe_listing_url.py` |
+| **Outcome** | Vision image fetches run only through `normalize_listing_image_url` (blocks private/loopback hosts in production, script URLs, embedded credentials). |
+| **Validation** | `python -m pytest backend/tests/test_safe_listing_url.py -q`; code review `_fetch_image_b64_optimized`. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-092 — Dev manifest console secret required (all environments)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/dev/console.py`, `backend/utils/production_security.py` (SEC-081 prod import guard unchanged) |
+| **Outcome** | When `DEV_CONSOLE=1`, `DEV_CONSOLE_SECRET` is required before any manifest route is reachable (non-production included). Login uses `secrets.compare_digest`. |
+| **Validation** | `DEV_CONSOLE=1` without secret → `GET /dev/manifest` returns disabled page or 404 API; with secret → login gate. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-093 — Session lifetime + password max length
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/main.py` (`PERMANENT_SESSION_LIFETIME`, `SESSION_REFRESH_EACH_REQUEST`), `backend/utils/registration_validation.py` |
+| **Outcome** | Flask sessions expire after 14 days with refresh on each request; registration passwords capped at 128 characters. |
+| **Validation** | `python -m pytest backend/tests/test_registration_password_limits.py -q`. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-094 — LLM client error sanitization + untrusted listing blocks
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/intelligence/ai/agent.py` |
+| **Outcome** | Car/compare chat returns generic `chat_unavailable` on provider failures (details logged server-side). Listing notes, packages JSON, and web research wrapped in UNTRUSTED delimiters with model instructions not to follow embedded instructions. |
+| **Validation** | `python -m pytest backend/tests/test_car_chat_policy.py backend/tests/test_compare_specs.py -q`. |
+| **Last verified** | 2026-06-02 |
+
+### SEC-095 — Smart search parse rate limit + CSP map tiles + Playwright sandbox default
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/main.py` (`GET /api/search/smart/parse`, CSP `connect-src`, `object-src 'none'`), `backend/utils/web_researcher.py` (`PLAYWRIGHT_NO_SANDBOX`), `frontend/templates/car.html`, `frontend/templates/listings.html`, `frontend/static/listings.js`, `backend/auth/google_oauth.py` (constant-time `state`) |
+| **Outcome** | GET parse endpoint shares POST smart-search per-IP limit; CSP allows OpenStreetMap tiles; Playwright runs without `--no-sandbox` unless `PLAYWRIGHT_NO_SANDBOX=1`; price history uses `\| tojson`; guest banner dismiss is nonce-safe; OAuth `state` uses `compare_digest`. |
+| **Validation** | `python -m pytest backend/tests/test_smart_search.py backend/tests/test_google_oauth.py backend/tests/test_app_security_basics.py -q`. |
+| **Last verified** | 2026-06-02 |
+
 ---
 
 ## Changelog
 
 | Date (UTC) | Change |
 |------------|--------|
+| 2026-06-02 | **SEC-089–095 (June 2026 deep audit remediation):** DNS-aware dev scanner SSRF; attribute-safe trim ladder + dealer link sanitization; enrichment vision URL guard; dev console secret required in all envs + constant-time login; 14-day session lifetime + password max 128; LLM generic errors + untrusted listing delimiters; smart-search GET rate limit; CSP OSM tiles + `object-src 'none'`; Playwright sandbox default; OAuth state timing-safe; `totp_secret` omitted from default user queries. Validation: `bash scripts/security_check.sh`. |
+| 2026-05-30 | **SEC-082 / SEC-088:** bcrypt cost 13 default + login rehash for weak/legacy hashes; production requires SQLCipher keys + `sqlcipher3` for `users.db` and `dev_users.db`; `ALLOW_UNENCRYPTED_USER_DB` dev-only. Validation: `bash scripts/security_check.sh`. |
 | 2026-05-30 | **SEC-072 / SEC-073 / SEC-031 / SEC-076 (security audit follow-up):** Window sticker PNG preview uses `_require_premium_feature` (login in prod when billing off); compare tray `safeCssBackgroundUrl`; `pip-audit` ignores orphan `chromadb` CVE-2026-45829; redacted demo password from `docs/FULL_AUDIT_MAY2026.md`. Validation: `bash scripts/security_check.sh`. |
 | 2026-05-30 | **SEC-087 / SEC-066:** Debug audit remediation — untrack repo-root `debug/`; trim public smart-search `search_meta`; redact sensitive columns on `/dev/api/car-debug` and `/dev/api/audit-last-scrape`; `SCANNER_FAILURE_HAR` default off; always-on systemd/launchd use gunicorn. Validation: `pytest backend/tests/test_debug_audit.py -q`. |
 | 2026-05-26 | **SEC-086:** `POST /api/auth/register` + shared `register_general_app_user`; iOS native `RegisterSheet`; cookie bridge `syncFromWebView`. Validation: `pytest backend/tests/test_mobile_auth_register.py -q`. |
@@ -811,6 +906,8 @@
 | 2026-05-06 | **SEC-041 (hardening):** Layered chat rate limits + optional global budget; production disables Playwright web research for anonymous sessions (`CAR_CHAT_WEB_RESEARCH` / `CAR_CHAT_WEB_RESEARCH_PUBLIC`); structured logging in `agent.py` / `web_researcher.py` (no full user message at INFO); optional `WEB_RESEARCH_ALLOWED_HOSTS` + SSRF-style host blocks on research URLs; validation runbook note under **How to use**. Validation: `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py -q`. |
 | 2026-05-22 | **SEC-014:** App/dealer **2FA removed** — password-only auth; `_finalize_app_session` sets `mfa_ok`; legacy `/mfa/*` redirect; dealer register/login use `_post_login_redirect` for billing; store admin no longer checks `mfa_ok`. **SEC-063:** QR MFA retired (redirect tests). **SEC-061:** register no longer writes `*.mfa_start` to MFA action log. **SEC-011:** `POST /api/cars/<id>/save` returns **404** for unknown car id. **SEC-041 / premium UX:** `car.html` hides chat UI when billing on and unpaid; `car_chat.js` surfaces `premium_required`. Validation: `python -m pytest backend/tests/test_mfa_totp.py backend/tests/test_mfa_qr.py backend/tests/test_mfa_action_log.py backend/tests/test_billing_gate.py -q`. |
 | 2026-05-22 | **SEC-056 (retired):** Removed KBB IDWS client, dev `kbb-refresh`, post-scan `--post-kbb`, and UI/marketing copy; pricing insights use similar-listing `market_intel` only. **SEC-013** dev surface list + env table updated. Validation: `rg -i "kbb_idws|KBB_API_KEY|kbb-refresh|Kelley Blue" backend frontend/templates` (gallery junk filters excluded). |
+| 2026-06-02 | **SEC-041:** Removed premium negotiation script generator (`negotiation_script` branch, Ollama `run_negotiation_script`, VDP UI). Car chat endpoint unchanged for normal `message` requests. Validation: `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py backend/tests/test_compare_specs.py -q`. |
+| 2026-06-02 | **SEC-082 / SEC-089:** Login rehash updates only when stored hash unchanged (`password = ?` guard); public listings fail closed when incomplete index errors; sidecar index mtime in listings cache token; atomic incomplete rebuild + dev stats join. Validation: `python -m pytest backend/tests/test_incomplete_listings_index.py backend/tests/test_password_hash.py -q`. |
 
 **Done items** stay in their phase table with **Status: Done** and **Last verified** — do not duplicate into a second list.
 

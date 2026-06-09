@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2017|nissan|rogue",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2017__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL Hybrid",
+    "SV Hybrid",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL Hybrid": [
+      "18-inch aluminum-alloy wheels",
+      "LED headlights",
+      "Fog lights",
+      "Motion Activated Liftgate",
+      "NissanConnect with Navigation, Mobile Apps, and Services",
+      "7.0-inch color touch-screen display",
+      "Bose Premium Audio System with nine speakers and two subwoofers",
+      "Nissan Voice Recognition for navigation and audio",
+      "High Beam Assist headlights",
+      "Moving Object Detection"
+    ],
+    "SV Hybrid": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine",
+      "Engine Idle Start/Stop",
+      "Energy Flow gauge",
+      "60/40 Split-folding 2nd-row seat",
+      "Under-floor cargo storage"
+    ],
+    "SL": [
+      "18-inch aluminum-alloy wheels",
+      "Around View Monitor",
+      "Fog lights",
+      "Heated leather-wrapped steering wheel",
+      "Motion Activated Liftgate",
+      "Memory System for driver's seat and outside mirrors",
+      "Bose Premium Audio System with nine speakers and two subwoofers",
+      "High Beam Assist headlights",
+      "Moving Object Detection"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels",
+      "Smart Auto Headlights",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Roof rails",
+      "Rear privacy glass",
+      "Chrome outside door handles",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System",
+      "6-way power driver's seat with power lumbar"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine",
+      "Xtronic CVT with Sport Mode Shifter",
+      "Eco Mode",
+      "Available Intuitive All-Wheel Drive",
+      "Hill start assist",
+      "Active Trace Control, Active Engine Braking, Active Ride Control",
+      "17-inch steel wheels with wheel covers",
+      "LED Daytime Running Lights",
+      "Power outside mirrors",
+      "Advanced Drive-Assist Display with Bluetooth Hands-free Phone System"
+    ]
+  }
+}

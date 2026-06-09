@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Genesis,GV70,AWD (5 Mode),2.5L I4 (5 mode),2.5L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,20,26,22,,,,,
+2026,Genesis,GV70,AWD (4 Mode),2.5L I4 (SIDI & PFI),2.5L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,20,28,23,,,,,
+2026,Genesis,GV70,AWD,3.5L V6 (SIDI & PFI),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.5,18,25,21,,,,,
+2026,Genesis,GV70,Electrified GV70 AWD (19 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,103,88,96,,,,,
+2026,Genesis,GV70,Electrified GV70 AWD (20 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,96,80,88,,,,,

@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|lexus|es",
+  "year": 2015,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2015__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Four-year/50,000-mile Limited Warranty coverage",
+      "Adds Six-year/70,000-mile Powertrain Warranty",
+      "Adds Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero-deductible warranty terms",
+      "Adds Lexus Delivery Specialist personalized delivery service",
+      "Adds Lexus Technology Specialist support via camera-enabled iPad apps"
+    ],
+    "Luxury": [
+      "Adds Intelligent high-beams system",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds SiriusXM satellite radio capability",
+      "Adds HD Radio technology",
+      "Adds Enform app services and connected vehicle features"
+    ]
+  }
+}

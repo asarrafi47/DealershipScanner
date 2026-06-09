@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2021_dodge_charger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Charger",
+    "Charger"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Daytona": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Users have the option of changing the colour of the car, brake callipers, wheels, badges, exhaust tips, and an option of adding the SRT spoiler. In January 2022, Dodge announced that the Hemi V8 Charger (5.7L, 6.4L, and 6.2L) would be retired at the end…"
+      }
+    ],
+    "R/T": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Except for Charger Pursuit (through 2020), all models came standard with the eight-speed automatic transmission. In December 2014, the AWD Charger Pursuit appeared, and the V8 R/T AWD model disappeared. Sales of the AWD Pursuit increased.; An optional…; Automatic 8-spd"
+      }
+    ],
+    "Pursuit": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Users have the option of changing the colour of the car, brake callipers, wheels, badges, exhaust tips, and an option of adding the SRT spoiler. In January 2022, Dodge announced that the Hemi V8 Charger (5.7L, 6.4L, and 6.2L) would be retired at the end of the…"
+      }
+    ]
+  }
+}

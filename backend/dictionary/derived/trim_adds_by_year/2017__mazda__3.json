@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2017|mazda|3",
+  "year": 2017,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_2017__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Preferred",
+    "Select",
+    "Sport",
+    "Platinum",
+    "Touring",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds Includes SKYACTIV-G 2.0L gasoline engine",
+      "Adds Includes SKYACTIV-MT manual or SKYACTIV-Drive automatic transmission",
+      "Adds Includes 4-wheel disc brakes with Anti-lock Brake System",
+      "Adds Includes six standard airbags",
+      "Adds Includes 4-wheel independent suspension",
+      "Adds Includes MAZDA CONNECT infotainment system with 7-inch touchscreen",
+      "Adds Includes Bluetooth hands-free phone and audio streaming",
+      "Adds Includes rearview camera",
+      "Adds Includes 18-inch aluminum alloy wheels"
+    ],
+    "Touring": [
+      "Adds Lane-keep Assist",
+      "Adds Lane Departure Warning System",
+      "Adds Mazda Radar Cruise Control",
+      "Adds Traffic Sign Recognition System",
+      "Adds Advanced Blind Spot Monitoring",
+      "Adds Rear Cross Traffic Alert"
+    ],
+    "Platinum": [
+      "Adds Smart City Brake Support",
+      "Adds Smart Brake Support",
+      "Adds Bose Centerpoint 2 Surround Sound System with 9 speakers"
+    ],
+    "Sport": [
+      "Adds Adaptive Front-lighting System",
+      "Adds LED headlights",
+      "Adds LED daytime running lights",
+      "Adds LED combination taillights",
+      "Adds High Beam Control"
+    ],
+    "Select": [
+      "Adds SiriusXM Satellite Radio",
+      "Adds Pandora internet radio integration",
+      "Adds Stitcher internet radio integration",
+      "Adds SMS text message audio delivery and reply"
+    ],
+    "Preferred": [
+      "Adds Mazda Navigation System",
+      "Adds Auto-dimming rearview mirror with HomeLink",
+      "Adds Rain-sensing windshield wipers",
+      "Adds Electronic Parking Brake"
+    ],
+    "Premium": [
+      "Adds Heated Steering Wheel",
+      "Adds Dual-stitched perforated leather-trimmed seats",
+      "Adds Push Button Start",
+      "Adds Mazda Advanced Keyless Entry System",
+      "Adds Full-color Active Driving Display",
+      "Adds Paddle Shifters on steering wheel"
+    ]
+  }
+}

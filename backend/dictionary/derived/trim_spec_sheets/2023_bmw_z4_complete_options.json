@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_bmw_z4_complete_options",
+  "make": "BMW",
+  "models": [
+    "Z4",
+    "Z4"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "M Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L turbocharged I4 145 kW (197 PS; 194 hp); –2026 285 kW (387 PS; 382 hp)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L turbocharged I4 145 kW (197 PS; 194 hp); –2026 285 kW (387 PS; 382 hp)"
+      }
+    ]
+  }
+}

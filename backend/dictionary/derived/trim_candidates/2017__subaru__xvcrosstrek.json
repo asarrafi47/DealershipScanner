@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2017|subaru|xvcrosstrek",
+  "year": 2017,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

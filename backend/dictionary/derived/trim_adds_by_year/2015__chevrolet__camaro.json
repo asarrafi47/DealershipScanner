@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2015|chevrolet|camaro",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2015__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Z/28",
+    "ZL1",
+    "2SS",
+    "1SS",
+    "2LT",
+    "1LT",
+    "2LS",
+    "1LS"
+  ],
+  "adds_by_trim": {
+    "Z/28": [
+      "6.2L supercharged Gen IV V8 engine with 580 hp and 556 lb.-ft. torque",
+      "Z/28-specific front fascia with front splitter and rear air diffuser",
+      "Exclusive Z/28 aerodynamic styling and performance enhancements"
+    ],
+    "ZL1": [
+      "6.2L supercharged Gen IV V8 engine with 580 hp and 556 lb.-ft. torque",
+      "ZL1-specific front fascia with front splitter and rear air diffuser"
+    ],
+    "2SS": [
+      "6.2L V8 engine with 426 hp and 420 lb.-ft. torque (manual) or 400 hp and 410 lb.-ft. (automatic)",
+      "SS-specific front and rear fascias with unique front grille and rear air diffuser"
+    ],
+    "1SS": [
+      "6.2L V8 engine with 426 hp and 420 lb.-ft. torque (manual) or 400 hp and 410 lb.-ft. (automatic)"
+    ],
+    "2LT": [
+      "Upgraded interior features and content over 1LT"
+    ],
+    "1LT": [
+      "Enhanced trim package over 2LS model"
+    ],
+    "2LS": [
+      "3.6L V6 with Direct Injection and Variable Valve Timing producing 323 hp and 278 lb.-ft. torque",
+      "Dual-stage frontal and side-impact airbags with Passenger Sensing System"
+    ],
+    "1LS": [
+      "3.6L V6 with Direct Injection and Variable Valve Timing producing 323 hp and 278 lb.-ft. torque",
+      "Six dual-stage frontal and side-impact airbags with Passenger Sensing System",
+      "Rear-window electric defogger",
+      "Tire sealant and compressor kit for temporary tire repairs"
+    ]
+  }
+}

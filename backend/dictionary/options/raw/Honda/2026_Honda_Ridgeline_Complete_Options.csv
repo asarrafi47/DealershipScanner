@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Honda,Ridgeline,AWD,3.5L V6 (SIDI),3.5L V6,,Automatic (S9),All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.5,18,24,21,,,,,
+2026,Honda,Ridgeline,AWD TrailSport,3.5L V6 (SIDI),3.5L V6,,Automatic (S9),All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.5,18,23,20,,,,,

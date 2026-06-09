@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|bmw|1series",
+  "year": 2012,
+  "make": "BMW",
+  "model": "1 Series",
+  "ladder_id": "2010_bmw_1_series_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "BMW center or bmwusa.com.",
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is u nder license. iPhone and iPod are registered trademarks of Apple Inc.",
+      "transmission; 135i: 7-speed Double Clutch Transmission [DCT]) % | 49.1/50.9 | 49.7/50.3",
+      "limited to 130 mph."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 4.0,
+    "per_trim_add_counts": {
+      "Na": 4
+    }
+  }
+}

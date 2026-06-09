@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2013|nissan|sentra",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "inventory_nissan_sentra",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Epa",
+    "Mpg"
+  ],
+  "adds_by_trim": {
+    "Mpg": [
+      "vehicle. Not a substitute for proper backing procedures. Always turn to check what is",
+      "feature while driving, exercise extreme caution at all times so full attention may be given to vehicle operation. 6 Availability of specific",
+      "Bluetooth word mark and logos are owned by",
+      "Google\u00ae Send-to-Car2",
+      "30/39 N/A 30/39 30/39"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 5.0,
+    "per_trim_add_counts": {
+      "Mpg": 5
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2024|toyota|venza",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Venza",
+  "ladder_id": "brochure_llm_2024__toyota__venza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Nightshade Edition",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "2.5L hybrid engine with 219 net horsepower",
+      "Electronically controlled Continuously Variable Transmission with sequential shift mode",
+      "Electronic On-Demand All-Wheel Drive",
+      "Normal, Eco, EV and Sport drive modes",
+      "LED projector headlights with dual LED DRL and auto on/off",
+      "LED taillights and stop lights",
+      "Color-keyed heated power outside mirrors with puddle lights and driver auto-fold",
+      "Multi-layer dark gray front grille with chrome accent",
+      "18-inch multi-spoke two-tone machine-finished alloy wheels",
+      "Height-adjustable hands-free power liftgate with jam protection"
+    ],
+    "XLE": [
+      "19-inch multi-spoke metallic-finished alloy wheels",
+      "Low-profile silver roof rails",
+      "SofTex-trimmed seats",
+      "Heated front seats",
+      "Soft-touch dashboard with color-keyed piping and ambient lighting",
+      "Smart Key System on all doors and liftgate with Push Button Start"
+    ],
+    "Nightshade Edition": [
+      "Black VENZA and grade badge",
+      "Black rear Toyota emblem",
+      "19-inch multi-spoke gloss-black alloy wheels",
+      "Low-profile black roof rails",
+      "Black roof-mounted shark-fin antenna",
+      "Black outside mirrors and acrylic front grille with smoked chrome accents"
+    ]
+  }
+}

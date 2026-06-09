@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2011|ford|eseries",
+  "year": 2011,
+  "make": "Ford",
+  "model": "E-Series",
+  "ladder_id": "brochure_llm_2011__ford__eseries",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT Premium",
+    "XLT",
+    "XL",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "XLT Premium": [
+      "Medium Flint Leather interior upholstery",
+      "Medium Pebble Leather interior upholstery"
+    ],
+    "XLT": [
+      "Interior Upgrade Package available",
+      "Premium Van Group available on Commercial Van"
+    ],
+    "XL": [
+      "School Bus Yellow exterior color option (XL Fleet only)",
+      "Standard trim with core commercial van features"
+    ],
+    "Base": [
+      "4.6L V8 FFV engine (E-150 and E-250) or 5.4L V8 FFV (E-350 and E-450)",
+      "Driver and front-passenger bucket seats with inboard armrests",
+      "Manual air conditioning (front only)",
+      "50/50 swing-out rear doors with 172-degree opening (Van and Wagon)",
+      "60/40 swing-out side doors (Van and Wagon)",
+      "AdvanceTrac with Roll Stability Control (Van and Wagon only)",
+      "Power 4-wheel disc brakes with Anti-Lock Brake System",
+      "Driver and front-passenger front airbags",
+      "3-point lap/shoulder safety belts for all seating positions",
+      "Tilt steering column, 12-volt powerpoints (3), tachometer"
+    ]
+  }
+}

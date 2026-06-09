@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2020|mazda|3",
+  "year": 2020,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2020__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM PACKAGE",
+    "PREFERRED PACKAGE"
+  ],
+  "adds_by_trim": {
+    "PREMIUM PACKAGE": [
+      "Perforated leather-trimmed seats",
+      "Power sliding-glass moonroof with one-touch open and tilt",
+      "Windshield-projected full-color Active Driving Display",
+      "18-inch alloy wheels with Black finish",
+      "LED headlights with signature lighting",
+      "LED combination taillights with signature lighting",
+      "Adaptive Front-lighting System",
+      "Steering-wheel-mounted paddle shifters (AT models)",
+      "Available SKYACTIV-MT 6-speed manual transmission (FWD only)",
+      "Mazda Radar Cruise Control (MT models)"
+    ],
+    "PREFERRED PACKAGE": [
+      "Bose 12-speaker premium audio system with Centerpoint and AudioPilot",
+      "8-way power-adjustable driver's seat with power-adjustable lumbar support and 2-position memory",
+      "Heated front seats with three-level adjustment",
+      "Power side mirrors with memory function",
+      "SiriusXM Satellite Radio with 3-month All Access subscription",
+      "Overhead console with sunglasses holder",
+      "Driver and front passenger illuminated vanity mirrors",
+      "Aluminum front door speaker grilles",
+      "Shark fin antenna"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2017|cadillac|ats",
+  "year": 2017,
+  "make": "Cadillac",
+  "model": "ATS",
+  "ladder_id": "brochure_llm_2017__cadillac__ats",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Performance",
+    "Premium Luxury",
+    "Luxury",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Premium Performance": [
+      "18-inch machined face forged alloy wheels with P225/40R18 front and P255/35R18 rear summer-only run-flat tires",
+      "Performance and summer-only tire specification for enhanced handling"
+    ],
+    "Premium Luxury": [
+      "18-inch polished forged alloy wheels with P225/40R18 front and P255/40R18 rear all-season run-flat tires",
+      "Available on both sedan and coupe body styles"
+    ],
+    "Luxury": [
+      "17-inch polished alloy wheels with P225/45R17 all-season run-flat tires",
+      "Available on ATS sedan and coupe models"
+    ],
+    "Standard": [
+      "17-inch premium painted alloy forged wheels with P225/45R17 all-season run-flat tires",
+      "Comprehensive owner benefits and OnStar connectivity",
+      "6-year/70,000-mile powertrain limited warranty with roadside assistance",
+      "4-year/50,000-mile bumper-to-bumper coverage",
+      "Rust-through corrosion coverage for six years and unlimited mileage"
+    ]
+  }
+}

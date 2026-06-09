@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_bmw_i5_complete_options",
+  "make": "BMW",
+  "models": [
+    "i5",
+    "i5"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "M60 xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "eDrive40": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2015|scion|tc",
+  "year": 2015,
+  "make": "Scion",
+  "model": "tC",
+  "ladder_id": "brochure_2015__scion__tc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Limited": [
+      "Adds leather-trimmed steering wheel"
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2020|nissan|altima",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2020__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum VC-Turbo",
+    "Platinum",
+    "SL",
+    "SR VC-Turbo",
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum VC-Turbo": [
+      "236-hp 2.0-liter Variable Compression Turbo engine",
+      "Intelligent Around View Monitor with 360-degree camera",
+      "19-inch aluminum-alloy wheels",
+      "Interior accent lighting",
+      "Driver's memory seat and mirror settings"
+    ],
+    "Platinum": [
+      "Intelligent Around View Monitor with 360-degree camera",
+      "19-inch aluminum-alloy wheels",
+      "Interior accent lighting",
+      "Driver's memory seat and mirror settings"
+    ],
+    "SL": [
+      "Leather-appointed seats",
+      "Bose premium audio system with nine speakers",
+      "Traffic Sign Recognition",
+      "4-way power adjustable front-passenger seat",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "SiriusXM Traffic and Travel Link with 3-month trial",
+      "HD Radio"
+    ],
+    "SR VC-Turbo": [
+      "236-hp 2.0-liter Variable Compression Turbo engine",
+      "Power sliding glass moonroof",
+      "Heated outside mirrors with LED turn signal indicators",
+      "Driver's seat power lumbar support",
+      "Heated front seats"
+    ],
+    "SR": [
+      "Paddle shifters with manual shift mode",
+      "Sport-tuned suspension on FWD models",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking",
+      "Rear Cross Traffic Alert and Blind Spot Warning",
+      "Lane Departure Warning and High Beam Assist",
+      "19-inch aluminum-alloy wheels",
+      "LED headlights with LED Daytime Running Lights",
+      "Sport Cloth seat trim and leather-wrapped steering wheel"
+    ],
+    "SV": [
+      "Electronic parking brake",
+      "ProPILOT Assist semi-autonomous driving",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking and Rear Cross Traffic Alert",
+      "Intelligent Lane Intervention and High Beam Assist",
+      "17-inch aluminum-alloy wheels",
+      "LED headlights with LED Daytime Running Lights and fog lights",
+      "Heated outside mirrors with LED turn signals",
+      "Power sliding glass moonroof",
+      "Dual Zone Automatic Temperature Control with rear vents"
+    ],
+    "S": [
+      "188-hp 2.5-liter Direct Injection Gasoline 4-cylinder engine",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking",
+      "RearView Monitor",
+      "Active Ride Control and Intelligent Trace Control",
+      "Intelligent Driver Alertness monitoring",
+      "16-inch steel wheels with bolt-on wheel covers",
+      "Intelligent Auto Headlights and Nissan Intelligent Key",
+      "8-way power adjustable driver's seat",
+      "NissanConnect 8-inch touchscreen with Apple CarPlay and Android Auto"
+    ]
+  }
+}

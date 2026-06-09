@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2014|chevrolet|corvette",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_2014__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Stingray",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 100,000-mile/5-year transferable Powertrain Limited Warranty",
+      "Adds Features 24/7 Roadside Assistance Program",
+      "Adds Includes Courtesy Transportation Program"
+    ],
+    "Limited": [],
+    "Stingray": [
+      "Adds 2-year/24,000-mile scheduled maintenance program including oil and filter changes",
+      "Adds Includes multipoint vehicle inspections at scheduled service events"
+    ]
+  }
+}

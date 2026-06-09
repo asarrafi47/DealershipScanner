@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2020|ford|expedition",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2020__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "King Ranch",
+    "Limited",
+    "XLT",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "King Ranch": [
+      "Del Rio leather-trimmed seats, door-trim inserts, armrests, and steering wheel",
+      "Running W logo branded on seatbacks in all 3 rows",
+      "Power-deployable running boards",
+      "360-degree camera with split-view",
+      "Carpeted floor mats",
+      "22-inch machined-face aluminum wheels"
+    ],
+    "Limited": [
+      "3.5L EcoBoost V6 engine with enhanced version delivering 400 horsepower and 480 lb.-ft. torque"
+    ],
+    "XLT": [
+      "10-speed automatic transmission"
+    ],
+    "Base": [
+      "3.5L EcoBoost V6 engine",
+      "Available in 4x2 or 4x4 drivetrain options"
+    ]
+  }
+}

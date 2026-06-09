@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2011|suzuki|kizashi",
+  "year": 2011,
+  "make": "Suzuki",
+  "model": "Kizashi",
+  "ladder_id": "brochure_llm_2011__suzuki__kizashi",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLS",
+    "GTS",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SLS": [
+      "Leather-appointed interior",
+      "Heated front seats",
+      "4-way power front passenger seat",
+      "HomeLink universal garage door opener",
+      "Automatic headlamps",
+      "Exterior heated mirrors",
+      "Auto dimming day/night mirror",
+      "Automatic rain-sensing wipers",
+      "Rear sonar parking assist",
+      "Integrated Bluetooth with streaming audio"
+    ],
+    "GTS": [
+      "6-speed manual transmission (FWD only)",
+      "1-touch sunroof",
+      "Steering wheel paddle shifters (CVT only)",
+      "425-watt Rockford Fosgate 10-speaker audio system with subwoofer",
+      "18-inch sport lightweight alloy wheels",
+      "Sport package with sport fascia, rear spoiler, Aero Body Kit, foglamps, sport suspension, sport steering wheel"
+    ],
+    "SE": [
+      "Continuously Variable automatic transmission (CVT)",
+      "18-inch alloy wheels with 235/45-18 Dunlop all-season tires",
+      "Leather-wrapped steering wheel, shift knob, and parking brake lever",
+      "Cruise control",
+      "Power 10-way memory driver's seat",
+      "AM/FM/CD audio system with USB input"
+    ],
+    "S": [
+      "60/40 split-folding locking rear seats",
+      "Rear center armrest with pass-through",
+      "Trunk cargo restraint hooks",
+      "Remote trunk release with valet lockout switch",
+      "Electronic Stability Program with FWD or Intelligent Vehicle Stability Program with AWD",
+      "Bosch anti-lock braking system with electronic brake-force distribution",
+      "Dual front advanced air bags and side-impact air bags",
+      "Side curtain air bags covering front and rear",
+      "Vehicle security system alarm with engine immobilizer",
+      "Rear child-seat tether anchors and ISOFIX anchors"
+    ]
+  }
+}

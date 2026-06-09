@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|lincoln|navigator",
+  "year": 2012,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_llm_2012__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LINCOLN NAVIGATOR L",
+    "LINCOLN NAVIGATOR"
+  ],
+  "adds_by_trim": {
+    "LINCOLN NAVIGATOR L": [
+      "33.5-gallon fuel tank (vs. 28-gallon)",
+      "42.6 cu. ft. cargo space behind 3rd-row seat",
+      "Cargo Management System"
+    ],
+    "LINCOLN NAVIGATOR": [
+      "5.4L SOHC 3-valve V8 flexible-fuel engine, 310 hp/365 lb.-ft. torque",
+      "6-speed automatic transmission with tow/haul mode",
+      "18-inch 7-spoke aluminum wheels with all-season tires",
+      "Power 4-wheel disc brakes with Anti-Lock Brake System",
+      "Chrome-accented lower bodyside cladding with fog lamps",
+      "Class III/IV Standard-Duty Trailer Tow Package with sway control",
+      "Forward Sensing System",
+      "Leather-and wood-trimmed steering wheel with controls",
+      "Auto-dimming rearview mirror with memory settings",
+      "Lincoln SYNC voice-activated in-vehicle connectivity system"
+    ]
+  }
+}

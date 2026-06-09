@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|dodge|journey",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2011__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Journey LUX",
+    "Journey Crew",
+    "Journey Mainstreet",
+    "Journey Express"
+  ],
+  "adds_by_trim": {
+    "Journey LUX": [
+      "19-inch chrome-clad cast aluminum wheels"
+    ],
+    "Journey Crew": [
+      "19-inch painted Satin Silver aluminum wheels"
+    ],
+    "Journey Mainstreet": [
+      "17-inch aluminum wheels"
+    ],
+    "Journey Express": [
+      "Dual-zone air conditioning with air filter",
+      "Full-length floor console",
+      "Power door locks",
+      "Electronic Vehicle Information Center (EVIC)",
+      "LED lamps in front footwells",
+      "Four 12V power outlets",
+      "Tilt/telescoping steering column",
+      "Power windows",
+      "5-passenger seating",
+      "Uconnect Touch 4.3 with 6 speakers"
+    ]
+  }
+}

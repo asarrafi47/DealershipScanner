@@ -159,7 +159,12 @@ def _apply_dom_pairs(pairs: dict[str, str], out: dict[str, Any]) -> None:
                     out.setdefault("mpg_highway", int(m.group(2)))
                 except ValueError:
                     pass
-        if re.search(r"cyl|engine", lk) and "mpg" not in lk:
+        if re.search(r"^engine\b", lk) and "mpg" not in lk and len(val) < 300:
+            out.setdefault("engine_description", val.strip()[:300])
+            c = _cylinders_from_engine_blob(val)
+            if c is not None:
+                out.setdefault("cylinders", c)
+        elif re.search(r"cyl", lk) and "mpg" not in lk:
             c = _cylinders_from_engine_blob(val)
             if c is not None:
                 out.setdefault("cylinders", c)

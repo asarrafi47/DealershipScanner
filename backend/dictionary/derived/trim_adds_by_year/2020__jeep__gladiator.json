@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|jeep|gladiator",
+  "year": 2020,
+  "make": "Jeep",
+  "model": "Gladiator",
+  "ladder_id": "jeep_gladiator",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Overland",
+    "Limited",
+    "Rubicon",
+    "Sport S",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Sport S": [
+      "registered trademark of Facebook Inc. Falken is a"
+    ],
+    "Overland": [
+      "registered trademark of Bluetooth SIG, Inc. Bridgestone and any Bridgestone products or service names are trademarks or"
+    ],
+    "Rubicon": [
+      "registered trademarks of Dana Corporation. Facebook is a"
+    ],
+    "Premium": [
+      "registered trademark of Fox Factory,"
+    ],
+    "Limited": [
+      "registered trademarks of Bridgestone Corporation. Dana and Trac-Lok are"
+    ],
+    "Sport": [
+      "3.6-liter V-6 engine with 285 hp and 260 lb-ft torque",
+      "Eight-speed automatic transmission standard",
+      "Four-wheel drive standard",
+      "12.3-inch touchscreen with wireless Android Auto and Apple CarPlay",
+      "Eight-speaker audio system",
+      "First and second-row side curtain airbags standard",
+      "5-foot 3-inch truck bed",
+      "7,700 pounds maximum towing with 4.10:1 axle, 1,725 pounds payload"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 6,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.8,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Rubicon": 1,
+      "Sport S": 1,
+      "Sport": 0,
+      "Premium": 1
+    }
+  }
+}

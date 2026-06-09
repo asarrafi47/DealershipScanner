@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2018|kia|niro",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Niro",
+  "ladder_id": "brochure_llm_2018__kia__niro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Niro Hybrid Touring",
+    "Niro Hybrid EX",
+    "Niro Hybrid LX",
+    "Niro Hybrid FE",
+    "Niro Plug-In Hybrid EX Premium",
+    "Niro Plug-In Hybrid EX",
+    "Niro Plug-In Hybrid LX"
+  ],
+  "adds_by_trim": {
+    "Niro Hybrid Touring": [
+      "18-inch tires with alloy wheels",
+      "Power tilt-slide sunroof",
+      "HID headlights",
+      "LED daytime running lights",
+      "Fog lamps",
+      "Gloss-black grille surround",
+      "Combination cloth and leather seat trim",
+      "Heated and ventilated front seats",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Driver's memory seat and mirror system"
+    ],
+    "Niro Hybrid EX": [
+      "Power-folding outside mirrors",
+      "Blind Spot Detection with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Combination cloth and leather seat trim",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and gearshift knob"
+    ],
+    "Niro Hybrid LX": [
+      "Push-button start with Smart Key",
+      "LED rear combination lights",
+      "Roof rails",
+      "Dual-zone automatic temperature control"
+    ],
+    "Niro Hybrid FE": [
+      "1.6L Gasoline Direct Injection engine with 32 kW electric motor",
+      "6-speed dual-clutch automatic transmission with Sport mode",
+      "16-inch alloy wheels with full covers",
+      "UVO eServices Infotainment System with Apple CarPlay and Android Auto",
+      "Cloth seat trim"
+    ],
+    "Niro Plug-In Hybrid EX Premium": [
+      "Electric motor (44.5 kW)",
+      "UVO eServices with Premium Navigation",
+      "Harman Kardon 315-watt premium audio system",
+      "Leather seat trim",
+      "Autonomous Emergency Braking",
+      "Auto-dimming rearview mirror",
+      "Wireless phone charger"
+    ],
+    "Niro Plug-In Hybrid EX": [
+      "Electric motor (44.5 kW)",
+      "Blind Spot Detection with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Power-folding outside mirrors",
+      "Autonomous Emergency Braking",
+      "10-way power-adjustable driver's seat",
+      "Cloth and leather seat trim"
+    ],
+    "Niro Plug-In Hybrid LX": [
+      "1.6L Gasoline Direct Injection engine with 44.5 kW electric motor",
+      "16-inch alloy wheels with full covers",
+      "UVO eServices with Apple CarPlay and Android Auto",
+      "Push-button start with Smart Key",
+      "Cloth seat trim"
+    ]
+  }
+}

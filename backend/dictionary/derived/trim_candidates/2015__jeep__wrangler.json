@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2015|jeep|wrangler",
+  "year": 2015,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Rubicon",
+    "Sahara"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

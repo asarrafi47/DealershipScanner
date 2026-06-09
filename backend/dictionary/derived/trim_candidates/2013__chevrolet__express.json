@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2013|chevrolet|express",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Express",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "WT",
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

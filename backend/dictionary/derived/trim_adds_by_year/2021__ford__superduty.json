@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2021|ford|superduty",
+  "year": 2021,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_llm_2021__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "KING RANCH",
+    "PLATINUM",
+    "LARIAT",
+    "XLT",
+    "XL",
+    "STX"
+  ],
+  "adds_by_trim": {
+    "KING RANCH": [
+      "Ultimate Trailer Tow Camera System with voice-activated touchscreen navigation",
+      "Intelligent Access with push-button start",
+      "Remote tailgate release",
+      "Java interior with genuine Khaya wood accents",
+      "Available on F-250 SRW, F-350 SRW, F-350 DRW, F-450 DRW in Crew Cab"
+    ],
+    "PLATINUM": [
+      "Ultimate Trailer Tow Camera System with voice-activated touchscreen navigation",
+      "Intelligent Access with push-button start",
+      "Adaptive Cruise Control",
+      "Platinum brushed-aluminum and genuine Onyx Argento open pore wood interior accents",
+      "Available on F-250 SRW, F-350 SRW, F-350 DRW, F-450 DRW in Crew Cab"
+    ],
+    "LARIAT": [
+      "Dual-zone electronic automatic temperature control",
+      "Power-sliding rear window with defroster",
+      "SecuriCode keyless entry keypad",
+      "Powerscope power-telescoping/folding trailer tow mirrors",
+      "Reverse sensing system",
+      "Available on F-250 SRW, F-350 SRW, F-350 DRW, F-450 DRW in Crew Cab"
+    ],
+    "XLT": [
+      "Pre-Collision Assist with Automatic Emergency Braking",
+      "BLIS Blind Spot Information System with trailer coverage",
+      "Trailer Brake Controller",
+      "Remote Keyless Entry System",
+      "SYNC 3 with 8-inch touchscreen and 2 smart-charging USB ports",
+      "Available on F-250 SRW, F-350 SRW, F-350 DRW, F-450 DRW"
+    ],
+    "XL": [
+      "SYNC with 4.2-inch LCD screen and 1 smart-charging USB port",
+      "FordPass Connect with 4G LTE Wi-Fi hotspot capability",
+      "Autolamp automatic on/off headlamps",
+      "Rear View Camera with Dynamic Hitch Assist",
+      "Black vinyl flooring"
+    ],
+    "STX": [
+      "SYNC with 4.2-inch LCD screen and 1 smart-charging USB port",
+      "FordPass Connect with 4G LTE Wi-Fi hotspot capability",
+      "Autolamp automatic on/off headlamps",
+      "Rear View Camera with Dynamic Hitch Assist",
+      "Black vinyl flooring"
+    ]
+  }
+}

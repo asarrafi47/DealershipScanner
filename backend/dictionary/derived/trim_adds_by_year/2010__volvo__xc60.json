@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|volvo|xc60",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2010__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T6 AWD",
+    "3.2"
+  ],
+  "adds_by_trim": {
+    "T6 AWD": [
+      "3.0-liter twin-scroll turbocharged inline six-cylinder engine with 281 hp",
+      "295 ft-lbs torque, 0-60 mph in 7.1 seconds",
+      "All-wheel drive with Haldex technology and Instant Traction",
+      "Hill Descent Control for steep terrain descent management"
+    ],
+    "3.2": [
+      "3.2-liter inline six-cylinder engine with 235 hp",
+      "236 ft-lbs torque, 0-60 mph in 8.6 seconds",
+      "Six-speed Geartronic automatic transmission with manual gear shifting",
+      "City Safety collision avoidance technology, active up to 19 mph",
+      "Dynamic Stability and Traction Control (DSTC) system",
+      "Roll Stability Control (RSC) to prevent vehicle rollover",
+      "Speed-dependent power steering with highway and parking modes",
+      "Multi-link rear and McPherson spring strut front suspension"
+    ]
+  }
+}

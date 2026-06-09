@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_lexus_gx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "GX",
+    "GX"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: In the US pricing has been reduced by $4,750. First facelift Lexus GX 460 (first facelift) Lexus GX 460 (first facelift) Second facelift Second facelift Second facelift Yearly changes Second facelift interior 2013, for the 2014 model year: Facelift…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: Ground clearance measured 211 mm (8.3 in), with an approach angle of 30° and a departure angle of 29° raised (25° normal). The GX 470 carried a drag coefficient of Cd=0.38. The interior came equipped with two rows of seating, while an optional third…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: In the US pricing has been reduced by $4,750. First facelift Lexus GX 460 (first facelift) Lexus GX 460 (first facelift) Second facelift Second facelift Second facelift Yearly changes Second facelift interior 2013, for the 2014 model year: Facelift with the…"
+      }
+    ]
+  }
+}

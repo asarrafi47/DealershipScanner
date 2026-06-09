@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2011|toyota|corolla",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LE",
+    "Limited",
+    "Premium",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

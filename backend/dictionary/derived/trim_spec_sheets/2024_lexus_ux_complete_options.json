@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_lexus_ux_complete_options",
+  "make": "Lexus",
+  "models": [
+    "UX",
+    "UX"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive"
+      }
+    ]
+  }
+}

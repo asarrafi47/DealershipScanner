@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|ford|expedition",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2014__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "King Ranch",
+    "Limited",
+    "XLT Premium"
+  ],
+  "adds_by_trim": {
+    "King Ranch": [
+      "King Ranch is a registered trademark of King Ranch, Inc."
+    ],
+    "Limited": [
+      "PowerFold 3rd-row seat with push-button operation"
+    ],
+    "XLT Premium": [
+      "5.4L 3-valve V8 FFV engine",
+      "6-speed automatic transmission with tow/haul mode",
+      "4-wheel independent suspension",
+      "4-wheel power disc brakes with ABS",
+      "Leather-trimmed seats with heated and cooled 1st row",
+      "Heated 2nd-row seats",
+      "2nd-row 40/20/40 split-fold seat with CenterSlide functionality",
+      "Power liftgate and power moonroof",
+      "Ford SYNC voice-activated in-vehicle connectivity system",
+      "Dual-stage front airbags and Safety Canopy System"
+    ]
+  }
+}

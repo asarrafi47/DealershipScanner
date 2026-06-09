@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2021_audi_rs_3_complete_options",
+  "make": "AUDI",
+  "models": [
+    "RS 3",
+    "RS 3"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "A3 Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "S3 Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

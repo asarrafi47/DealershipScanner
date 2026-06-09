@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2022|ford|expedition",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2022__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "STEALTH PERFORMANCE EDITION",
+    "LIMITED",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "High-Output 3.5L EcoBoost Twin-Turbo V6 engine with 440 hp and 691 Nm torque",
+      "22-speaker B&O Unleashed Sound System",
+      "15.5-inch LCD capacitive touchscreen, largest in class",
+      "12.4-inch multicolor productivity screen in instrument cluster",
+      "Heated and ventilated leather-trimmed multicontour front seats with Active Motion",
+      "22-inch 12-spoke polished aluminum wheels",
+      "Power-deployable running boards",
+      "Panoramic Vista Roof with power operation",
+      "Leather-wrapped instrument panel top with wood accents",
+      "Perforated leather seat inserts with quilted bolsters"
+    ],
+    "STEALTH PERFORMANCE EDITION": [
+      "High-Output 3.5L EcoBoost Twin-Turbo V6 engine with 440 hp and 691 Nm torque",
+      "22-speaker B&O Unleashed Sound System",
+      "22-inch premium black-painted aluminum wheels",
+      "Ebony Black monochromatic exterior accents",
+      "Red performance-tuned brakes",
+      "EXPEDITION lettering on hood",
+      "Unique red interior stitching",
+      "Ford Co-Pilot360 Assist 2.0 with 360-degree camera and split-view display",
+      "Reverse Brake Assist and Active Park Assist 2.0"
+    ],
+    "LIMITED": [
+      "Heated and ventilated leather-trimmed front seats with driver memory feature",
+      "Power-tilt/-telescoping steering column and power-adjustable pedals",
+      "Panoramic Vista Roof with power operation",
+      "Power-deployable running boards",
+      "15.5-inch LCD capacitive touchscreen"
+    ],
+    "XLT": [
+      "Ford Co-Pilot360 safety technology with pre-collision assist and automatic emergency braking",
+      "BLIS with cross-traffic alert and lane-keeping system",
+      "Leather-wrapped steering wheel",
+      "1st and 2nd-row smart-charging USB ports",
+      "Heated front seats and sideview mirrors"
+    ],
+    "XL": [
+      "10-speed automatic transmission with SelectShift capability",
+      "4-wheel independent suspension",
+      "Ford Co-Pilot360 with automatic emergency braking",
+      "Class IV trailer hitch receiver with 7 and 4-pin connectors",
+      "Rear cross-traffic braking and rear parking sensors",
+      "Active grille shutters",
+      "Dual-zone electronic automatic temperature control",
+      "Personal Safety System with dual-stage front airbags and side airbags"
+    ]
+  }
+}

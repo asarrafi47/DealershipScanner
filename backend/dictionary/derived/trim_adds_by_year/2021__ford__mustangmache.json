@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2021|ford|mustangmache",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Mustang Mach-E",
+  "ladder_id": "brochure_llm_2021__ford__mustangmache",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "First Edition",
+    "California Route 1",
+    "Premium",
+    "Select"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "Permanent-Electric Dual Motor All-Wheel Drive with 459 peak horsepower",
+      "124-mph top speed with mid-3 seconds 0-60 mph acceleration",
+      "98.8-kWh Extended Range battery with at least 235 miles EPA-estimated range",
+      "Up to 150-kWh fast-charge capability",
+      "Red-painted brake calipers",
+      "20-inch cast-aluminum wheels"
+    ],
+    "First Edition": [
+      "All-Wheel Drive option with 332 peak horsepower and mid-5 seconds 0-60 mph",
+      "98.8-kWh Extended Range battery with at least 270 miles EPA-estimated range",
+      "First Edition scuff plates",
+      "Brushed Aluminum unique pedal covers"
+    ],
+    "California Route 1": [
+      "Unique exterior design and badging",
+      "Red-painted brake calipers",
+      "Hands-free, foot-activated liftgate"
+    ],
+    "Premium": [
+      "Panoramic fixed-glass roof",
+      "Heated front seats with driver-side memory and heated steering wheel",
+      "Memory feature for driver's seat",
+      "Power-folding sideview mirrors with memory",
+      "Contrasting seat stitching",
+      "Hands-free, foot-activated liftgate",
+      "B&O Sound System with 10 speakers",
+      "Active Park Assist 2.0 and 360-Degree Camera"
+    ],
+    "Select": [
+      "LED headlamps with signature lighting and LED taillamps with sequential turn signals",
+      "Phone as a Key feature",
+      "15.5-inch center touchscreen",
+      "10.2-inch digital instrument cluster",
+      "Power-folding sideview mirrors with memory",
+      "B&O Sound System with 10 speakers",
+      "Ford Co-Pilot360 2.0 with Active Park Assist 2.0 and 360-Degree Camera",
+      "Ford Co-Pilot360 Assist 2.0",
+      "Standard Range 75.7-kWh battery with at least 210–230 miles EPA-estimated range",
+      "Low-6 seconds 0-60 mph with 255 peak horsepower"
+    ]
+  }
+}

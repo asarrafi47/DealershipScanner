@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|nissan|armada",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2011__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20\" x 8.0\" 6-spoke chrome-clad aluminum-alloy wheels",
+      "Auto-leveling rear suspension",
+      "Auto-dimming driver-side outside mirror",
+      "Power folding outside mirrors with puddle lights and turn signals",
+      "Power flip-out rear windows",
+      "Single-CD Bose audio system instead of 6-CD changer"
+    ],
+    "SL": [
+      "20\" x 8.0\" 6-spoke aluminum-alloy wheels",
+      "P275/60R20 tires",
+      "Auto-leveling rear suspension",
+      "Power liftgate",
+      "Rear Sonar System",
+      "Integrated digital compass on rearview mirror",
+      "Digital Bose audio system with twelve speakers"
+    ],
+    "SV": [
+      "5.6-liter DOHC 32-valve V8 engine with 317 hp and 385 lb-ft torque",
+      "5-speed automatic transmission with Tow/Haul Mode",
+      "18\" x 8.0\" 6-spoke aluminum-alloy wheels with P265/70R18 tires",
+      "Independent double-wishbone front and rear suspension",
+      "4-wheel Anti-lock Braking System with Electronic Brake force Distribution",
+      "Dual Zone Automatic Temperature Control with rear air conditioning",
+      "Rear flip-out windows, power windows with one-touch auto-up/down",
+      "Remote keyless entry, cruise control, power door locks",
+      "AM/FM in-dash 6-CD changer with eight speakers"
+    ]
+  }
+}

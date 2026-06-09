@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_mercedes_gla-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "GLA-Class",
+    "GLA-Class"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "L OM651 turbo I4; The GLA shares its platform with the A-Class and B-Class, with a similar range of petrol and diesel engines. Availability of engines varies between markets."
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "L OM651 turbo I4; The GLA shares its platform with the A-Class and B-Class, with a similar range of petrol and diesel engines. Availability of engines varies between markets."
+      }
+    ]
+  }
+}

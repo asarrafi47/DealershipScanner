@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2024|toyota|prius",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2024__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited AWD",
+    "Limited",
+    "XLE AWD",
+    "XLE",
+    "LE AWD",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited AWD": [
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Hybrid system net power: 196 hp",
+      "49 city/50 highway/49 combined est. mpg"
+    ],
+    "Limited": [
+      "12.3-inch Toyota Audio Multimedia system",
+      "8-speaker JBL Premium Audio with amplifier",
+      "Heated and ventilated front seats",
+      "Digital Key capability with Remote Connect trial",
+      "Limited Premium Package option",
+      "Advanced Park option",
+      "Panoramic View Monitor option"
+    ],
+    "XLE AWD": [
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Hybrid system net power: 196 hp",
+      "49 city/50 highway/49 combined est. mpg"
+    ],
+    "XLE": [
+      "8.0-inch Toyota Audio Multimedia system",
+      "6-speaker audio system",
+      "Wireless Android Auto and Apple CarPlay",
+      "SiriusXM 3-month Platinum Plan trial",
+      "8-way power-adjustable driver's seat with lumbar support",
+      "6-way adjustable front passenger seat",
+      "SofTex-trimmed front seats with seatback pockets",
+      "Heated front seats",
+      "19-inch alloy wheels with 195/50R19 tires",
+      "Heated power outside mirrors with folding feature"
+    ],
+    "LE AWD": [
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Hybrid system net power: 196 hp",
+      "53 city/54 highway/54 combined est. mpg",
+      "Bi-LED projector low- and high-beam headlights"
+    ],
+    "LE": [
+      "2.0-Liter 4-Cylinder DOHC 16-valve engine with VVT-i, 150 hp",
+      "Hybrid system net power: 194 hp",
+      "Front-Wheel Drive (FWD)",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "57 city/56 highway/57 combined est. mpg",
+      "Bi-LED projector low- and high-beam headlights with Automatic High Beams",
+      "LED Daytime Running Lights with on/off feature",
+      "LED taillights and stop lights",
+      "Power liftback",
+      "Top-mount Multi-Information Display with 7-inch LCD"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2020|hyundai|veloster",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

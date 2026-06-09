@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2021|toyota|prius",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2021__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE AWD-e",
+    "XLE",
+    "LE AWD-e",
+    "LE",
+    "Eco",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "11.6-inch touchscreen with ten JBL speakers and amplifier",
+      "Integrated Navigation system",
+      "Adaptive Front-Lighting System with auto-leveling headlights",
+      "Color Head-Up Display with speedometer and navigation",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ],
+    "XLE AWD-e": [
+      "Electronic On-Demand Compact All-Wheel Drive (AWD-e)",
+      "51 city/47 highway/49 combined mpg"
+    ],
+    "XLE": [
+      "17-inch 5-spoke alloy wheels with titanium-finished inserts and P215/45R17 tires",
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "7-inch touchscreen with six speakers",
+      "Android Auto and Apple CarPlay compatible",
+      "SiriusXM with 3-month All Access trial subscription",
+      "Connected Services with Safety Connect",
+      "54 city/50 highway/52 combined mpg"
+    ],
+    "LE AWD-e": [
+      "Electronic On-Demand Compact All-Wheel Drive (AWD-e)",
+      "51 city/47 highway/49 combined mpg"
+    ],
+    "LE": [
+      "SofTex-trimmed heated front seats with extended seatback pockets",
+      "4-way adjustable front passenger seat",
+      "SofTex-trimmed heated tilt/telescopic steering wheel with audio controls",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Qi-compatible wireless smartphone charging",
+      "Integrated backup camera display",
+      "Intelligent Clearance Sonar with Intelligent Parking Assist"
+    ],
+    "Eco": [
+      "Bi-LED projector low and high-beam headlights with auto-off feature",
+      "Rain-sensing variable intermittent windshield wipers",
+      "58 city/53 highway/56 combined mpg"
+    ],
+    "L": [
+      "1.8-Liter 4-Cylinder Aluminum DOHC 16-Valve with Variable Valve Timing (VVT-i)",
+      "96 hp @ 5200 rpm and 105 lb-ft torque @ 3600 rpm",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Front-Wheel Drive (FWD) with EV/ECO/POWER Modes",
+      "Independent MacPherson strut front suspension with stabilizer bars",
+      "Electric Power Steering with power-assisted rack-and-pinion",
+      "Toyota Safety Sense 2.0 (TSS 2.0) and Star Safety System",
+      "Ten airbags and Tire Pressure Monitor System"
+    ]
+  }
+}

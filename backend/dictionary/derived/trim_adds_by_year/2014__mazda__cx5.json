@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2014|mazda|cx5",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2014__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "2.5L SKYACTIV-G engine with 184 hp (vs. 2.0L with 155 hp on Touring)",
+      "185 lb-ft torque at 3,250 rpm (vs. 150 lb-ft on Touring)",
+      "Advanced Keyless Entry System with automatic door/liftgate unlock and lock",
+      "Bi-Xenon Adaptive Front-Lighting System with 15º directional adjustment",
+      "SMS Text Message Readout with preset reply capability"
+    ],
+    "Touring": [
+      "40/20/40 split fold-down rear seat with remote releases (vs. 60/40 on Sport)",
+      "Up to 65.4 cu ft cargo space (vs. 64.8 cu ft on Sport)",
+      "Blind Spot Monitoring System with radar sensors and mirror warning lights",
+      "Rearview Camera with automatic activation in reverse",
+      "Bluetooth Hands-free Phone and Audio with wireless streaming"
+    ],
+    "Sport": [
+      "SKYACTIV-G 2.0L DOHC 4-cylinder engine with 155 hp and VVT",
+      "SKYACTIV-MT 6-speed manual or SKYACTIV-Drive 6-speed automatic transmission",
+      "Front-wheel drive with optional Active Torque Split All-Wheel Drive",
+      "Hill Launch Assist",
+      "60/40 split fold-down rear seat with up to 64.8 cu ft cargo space"
+    ]
+  }
+}

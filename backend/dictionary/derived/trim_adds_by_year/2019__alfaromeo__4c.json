@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2019|alfaromeo|4c",
+  "year": 2019,
+  "make": "alfa romeo",
+  "model": "4c",
+  "ladder_id": "brochure_web_2019__alfaromeo__4c",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Spider",
+    "Launch Edition"
+  ],
+  "adds_by_trim": {
+    "Launch Edition": [
+      "Unique exterior color: Alfa Rosso Competizione red",
+      "Carbon fiber interior trim accents",
+      "Premium leather-wrapped steering wheel",
+      "Exclusive Launch Edition badging",
+      "Staggered 17-inch alloy wheels with performance tires",
+      "Limited production numbering"
+    ],
+    "Spider": [
+      "1.75L turbocharged inline-four engine producing 237 horsepower",
+      "Six-speed manual transmission",
+      "Electrically powered soft convertible top",
+      "Power windows and locks",
+      "Air conditioning",
+      "Leather sport seats",
+      "Bluetooth connectivity",
+      "6-speaker audio system",
+      "Dual front and side airbags",
+      "Electronic stability control and traction control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/alfa-romeo/4c/"
+}

@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2015|kia|soul",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2015__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "! (exclaim) THE WHOLE SHABANG PACKAGE",
+    "+ (plus) PRIMO PACKAGE",
+    "+ (plus) AUDIO PACKAGE",
+    "+ (plus) ECO PACKAGE",
+    "UVO eSERVICES PACKAGE",
+    "SOUL"
+  ],
+  "adds_by_trim": {
+    "! (exclaim) THE WHOLE SHABANG PACKAGE": [
+      "Ventilated front seats",
+      "Heated front seats and heated rear seat cushions",
+      "Heated steering wheel",
+      "HID low-beam headlights with auto leveling and LED accent lights",
+      "Supervision meter cluster with 4.3-inch TFT color LCD",
+      "Leather seat trim",
+      "Immobilizer theft deterrent system"
+    ],
+    "+ (plus) PRIMO PACKAGE": [
+      "Ventilated front seats",
+      "Heated front seats and heated rear seat cushions",
+      "Heated steering wheel",
+      "Push-button start with Smart Key",
+      "Front fog lights",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Leather seat trim",
+      "Panoramic sunroof with power sunshade"
+    ],
+    "+ (plus) AUDIO PACKAGE": [
+      "UVO eServices infotainment system with voice-command navigation and SiriusXM Travel Link",
+      "Infinity audio system with HD Radio Technology",
+      "Front-door speaker lights",
+      "Center channel speaker",
+      "Automatic temperature control with auto defog and cluster ionizer",
+      "Leather-wrapped steering wheel and gearshift knob",
+      "Black gloss trim",
+      "Leatherette interior trim",
+      "Satin chrome interior door handles",
+      "External amplifier and subwoofer"
+    ],
+    "+ (plus) ECO PACKAGE": [
+      "Idle Stop & Go (ISG) system for improved fuel economy",
+      "Low rolling resistance tires (16-inch tires instead of 17-inch)"
+    ],
+    "UVO eSERVICES PACKAGE": [
+      "UVO eServices infotainment system",
+      "Rear-camera display",
+      "Auto-on/off headlights",
+      "Front fog lights on Soul 1.6L models",
+      "Push-button start with Smart Key"
+    ],
+    "SOUL": [
+      "Five-seating capacity with three-point seat belts for all positions",
+      "Side-impact door beams and front and rear crumple zones",
+      "Rear child-safety door locks and LATCH system",
+      "Airbag and seat belt sensors with pretensioners",
+      "Front height-adjustable seat belt anchors",
+      "Front and rear safety systems designed to absorb impact energy"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|lincoln|mks",
+  "year": 2015,
+  "make": "Lincoln",
+  "model": "MKS",
+  "ladder_id": "brochure_llm_2015__lincoln__mks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Elite",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Elite": [
+      "Voice-activated navigation system with integrated SiriusXM Traffic and Travel Link with 6-year subscription",
+      "BLIS blind spot information system with cross-traffic alert",
+      "THX II certified audio system with 16 speakers including 10-inch subwoofer and 14-channel amplifier with 700 watts",
+      "HD Radio technology",
+      "Multicontour front seats with Active Motion power adjustment",
+      "Power-adjustable pedals with memory",
+      "Power rear sunshade",
+      "Wood appliqués in brown swirl walnut or prussian burl on doors, center console, and shifter surround"
+    ],
+    "Base": [
+      "3.7L Ti-VCT aluminum V6 engine with 304 hp and 279 lb.-ft. torque",
+      "6-speed SelectShift automatic transmission with paddle activation",
+      "Front-wheel drive standard, intelligent all-wheel drive available",
+      "Lincoln Drive Control with continuously controlled damping and electric power-assisted steering",
+      "Adaptive HID headlamps with auto high beams and autolamp on/off feature",
+      "12-way power heated and cooled driver and front-passenger seats with power lumbar and memory",
+      "Bridge of Weir leather-trimmed seats",
+      "SYNC with MyLincoln Touch voice-activated connectivity with 8-inch color LCD touchscreen",
+      "SiriusXM satellite radio with 6-month All Access trial subscription",
+      "Personal safety system with dual-stage front airbags and safety canopy system with side-curtain airbags"
+    ]
+  }
+}

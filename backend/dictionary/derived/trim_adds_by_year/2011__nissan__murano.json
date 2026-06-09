@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|nissan|murano",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2011__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "20-inch 5-split spoke aluminum-alloy wheels",
+      "P235/55R20 all-season tires",
+      "Nissan Hard Drive Navigation System with 7.0-inch VGA touchscreen",
+      "XM NavTraffic and XM NavWeather real-time traffic updates",
+      "Zagat Survey restaurant reviews integration",
+      "9.3 GB Music Box hard drive for digital music storage",
+      "Streaming audio via Bluetooth wireless technology"
+    ],
+    "SL": [
+      "Navigation Package available (Hard Drive Navigation with 7.0-inch touchscreen, XM services, Zagat reviews, Music Box)"
+    ],
+    "S": [
+      "VQ35DE 3.5-liter DOHC 24-valve V6 engine with 260 hp and 240 lb-ft torque",
+      "Intuitive All-Wheel Drive standard",
+      "Xtronic CVT Continuously Variable Transmission",
+      "18-inch 5-spoke aluminum-alloy wheels",
+      "P235/65R18 all-season tires",
+      "Independent front strut suspension with multi-link rear suspension",
+      "4-wheel vented disc brakes with ABS and Electronic Brake force Distribution",
+      "Brake Assist and Active Brake Limited Slip",
+      "Push Button Ignition and Nissan Intelligent Key standard"
+    ],
+    "SV": [
+      "Fog lights",
+      "Black roof rails",
+      "Nissan Navigation System with 8.0-inch multi-touch color monitor",
+      "Voice recognition for audio and navigation",
+      "Silver roof rails",
+      "Leather-appointed seats",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Heated front seats",
+      "Power liftgate",
+      "Around View Monitor with HomeLink universal transceiver"
+    ]
+  }
+}

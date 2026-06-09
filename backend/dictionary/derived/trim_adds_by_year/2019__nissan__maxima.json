@@ -1,0 +1,85 @@
+{
+  "catalog_key": "2019|nissan|maxima",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2019__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM RESERVE",
+    "PLATINUM",
+    "SR",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM RESERVE": [
+      "19-inch dark hyper silver aluminum-alloy wheels",
+      "Semi-aniline leather-appointed seats with dynamic diamond-quilted inserts",
+      "Two-tone leather-wrapped steering wheel with contrast insert",
+      "Charcoal headliner",
+      "Satin Bronze faceted interior trim",
+      "Heated rear outboard seats"
+    ],
+    "PLATINUM": [
+      "19-inch machine-finished aluminum-alloy wheels with diamond-quilted leather inserts",
+      "Premium Ascot leather-appointed seats",
+      "Premium Ascot leather-wrapped steering wheel",
+      "Satin Birdseye Maple Wood faceted interior trim",
+      "NissanConnect Services powered by SiriusXM with 3-year Select trial access",
+      "Intelligent Around View Monitor",
+      "Climate-controlled front seats heated and cooled",
+      "Rear Automatic Braking",
+      "Intelligent Cruise Control",
+      "SiriusXM Traffic and Travel Link with 3-month trial access"
+    ],
+    "SR": [
+      "19-inch gloss black aluminum-alloy wheels",
+      "Sport spoiler with dynamic diamond-quilted Alcantara inserts",
+      "Paddle shifters",
+      "Sport-tuned suspension with Integrated Dynamics-control Module",
+      "LED fog lights",
+      "Aluminum sport pedals",
+      "Premium Ascot leather-appointed seats",
+      "Premium Ascot leather-wrapped steering wheel with Alcantara insert",
+      "Satin Dark Chrome faceted interior trim",
+      "Active Sound Enhancement"
+    ],
+    "SL": [
+      "Dual Panel Panoramic Moonroof with one-touch open and close",
+      "HomeLink Universal Transceiver",
+      "Adjustable ambient LED lighting",
+      "Auto-dimming driver-side outside mirror",
+      "Front passenger's seat power lifter",
+      "Outside mirrors with reverse tilt-down feature",
+      "Bose Premium Audio System with 11 speakers and Centerpoint Surround Technology",
+      "Front and Rear Sonar System",
+      "One rear USB port and one rear USB-C port",
+      "Active Noise Cancellation"
+    ],
+    "SV": [
+      "Leather-appointed seats",
+      "Heated front seats",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "SiriusXM Traffic and Travel Link with 3-month trial access",
+      "Intelligent Cruise Control",
+      "Driver's seat power lumbar support",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert"
+    ],
+    "S": [
+      "3.5-liter V6 engine with 300 horsepower and 261 lb-ft torque",
+      "Xtronic CVT transmission",
+      "18-inch machine-finished aluminum-alloy wheels",
+      "Drive Mode Selector with Sport and Normal modes",
+      "LED headlights with LED Signature Daytime Running Lights",
+      "LED taillights with integrated LED signature",
+      "NissanConnect 8-inch touchscreen display with Apple CarPlay and Android Auto",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Automatic Emergency Braking with Pedestrian Detection"
+    ]
+  }
+}

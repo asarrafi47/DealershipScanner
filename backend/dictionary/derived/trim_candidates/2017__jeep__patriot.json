@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2017|jeep|patriot",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Patriot",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "High Altitude",
+    "Limited",
+    "Mojave",
+    "Altitude",
+    "Latitude",
+    "Sport",
+    "Premium",
+    "Touring",
+    "LT",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

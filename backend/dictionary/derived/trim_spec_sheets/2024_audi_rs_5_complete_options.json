@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_audi_rs_5_complete_options",
+  "make": "Audi",
+  "models": [
+    "RS 5",
+    "RS 5"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: 2.9L V6 Twin Turbo; Automatic (S8); 2.9L V6 Twin Turbo"
+      }
+    ]
+  }
+}

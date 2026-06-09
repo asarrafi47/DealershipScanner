@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2000,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,3.8L V6,3.8L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,26,20,,,,,
+2000,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,3.8L V6,3.8L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,28,21,,,,,
+2000,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,5.7L V8,5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.7,15,23,18,,,,,
+2000,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,5.7L V8,5.7L V8,,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.7,16,25,19,,,,,

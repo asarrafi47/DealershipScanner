@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2020|jaguar|ftype",
+  "year": 2020,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_llm_2020__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F-TYPE SVR",
+    "F-TYPE R-DYNAMIC",
+    "F-TYPE R",
+    "F-TYPE"
+  ],
+  "adds_by_trim": {
+    "F-TYPE SVR": [
+      "Most powerful variant with enhanced performance specifications",
+      "Distinctive styling and exclusive exterior treatments"
+    ],
+    "F-TYPE R-DYNAMIC": [
+      "3.0 liter supercharged V6 engine with 340 horsepower",
+      "Enhanced dynamic driving characteristics and performance"
+    ],
+    "F-TYPE R": [
+      "3.0 liter supercharged V6 engine with 340 horsepower",
+      "Performance-oriented powertrain and driving dynamics"
+    ],
+    "F-TYPE": [
+      "2.0 liter turbocharged 4-cylinder engine with 296 horsepower",
+      "Standard aluminum roof on Coupe models",
+      "Lightweight fabric convertible roof available in four colors on Convertible models",
+      "Manually sliding blackout blind on panoramic glass roof option",
+      "13.9 gallon fuel tank capacity"
+    ]
+  }
+}

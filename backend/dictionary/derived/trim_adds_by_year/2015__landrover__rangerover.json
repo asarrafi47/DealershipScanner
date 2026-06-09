@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|landrover|rangerover",
+  "year": 2015,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_llm_2015__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AUTOBIOGRAPHY BLACK",
+    "AUTOBIOGRAPHY",
+    "SUPERCHARGED"
+  ],
+  "adds_by_trim": {
+    "AUTOBIOGRAPHY BLACK": [
+      "Unique front grille with Santorini Black surround and chrome inserts",
+      "Santorini Black mirror caps",
+      "Unique seat design with perforated Semi-Aniline leather and contrast stitching",
+      "Leather perforated headlining",
+      "Autobiography embossed script on center rear squab",
+      "Brushed stainless lower tailgate closure panel",
+      "Unique Autobiography badge with black enamel background and chrome text",
+      "Signature LED rear lamps",
+      "Leather wrapped lower A, B, C pillars and loadspace sides",
+      "Illuminated aluminum treadplates with Autobiography lettering"
+    ],
+    "AUTOBIOGRAPHY": [
+      "Semi-Aniline leather seats with contrast stitching as standard",
+      "Grille mesh in Atlas with bright chrome ribs",
+      "Noble plated upper and lower door handles",
+      "Autobiography badge on rear tailgate",
+      "Leather headlining and steering wheel",
+      "Chrome upper tailgate finisher",
+      "Noble plated gear paddles",
+      "21-inch ten-spoke Style 101 wheels with Diamond Turned finish",
+      "Enhanced rear seat center console with additional stowage",
+      "Power deployable tables finished with Ebony leather"
+    ],
+    "SUPERCHARGED": [
+      "5.0L V8 Supercharged engine",
+      "Grille surround in Dark Atlas with Atlas mesh and ribs",
+      "Body colored vent blades and door handles",
+      "Front bumper accents in Atlas",
+      "21-inch ten-spoke Style 101 wheels",
+      "Oxford leather seats as standard",
+      "Bright Chrome upper and lower door handles"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|nissan|juke",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Juke",
+  "ladder_id": "brochure_llm_2017__nissan__juke",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "NissanConnectSM with Navigation and Mobile Apps, 5.8-inch color touch-screen monitor",
+      "Enhanced Voice Recognition for audio and navigation",
+      "SiriusXM Traffic and Travel Link with fuel prices, sports scores, weather",
+      "Around View Monitor with Moving Object Detection",
+      "Rockford Fosgate ecoPUNCH audio system with 8.0-inch subwoofer and amplifier",
+      "Six upgraded speakers",
+      "Leather-appointed seats",
+      "Leather-wrapped shift knob",
+      "Automatic on/off headlights",
+      "Fog lights"
+    ],
+    "SV": [
+      "17-inch x 7-inch machine-finished aluminum-alloy wheels",
+      "Power sliding glass moonroof",
+      "Rear privacy glass",
+      "Heated front seats",
+      "Heated side mirrors",
+      "Integrated Control system with Automatic Temperature Control",
+      "SiriusXM Satellite Radio",
+      "Premium cloth seat trim",
+      "Front-passenger seatback pocket",
+      "Leather-wrapped steering wheel"
+    ],
+    "S": [
+      "1.6-liter Direct Injection Gasoline turbo 4-cylinder engine",
+      "Front-Wheel Drive or All-Wheel Drive with torque vectoring",
+      "Xtronic CVT with Manual Shift Mode and D-step Simulated Gearing",
+      "17-inch 5-split spoke aluminum-alloy wheels",
+      "Projector halogen low-beam headlights with automatic off",
+      "LED signature accent lights",
+      "Dual power body-color side mirrors with integrated turn signals",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Power windows, power door locks, remote keyless entry",
+      "Vehicle Dynamic Control with Traction Control System"
+    ]
+  }
+}

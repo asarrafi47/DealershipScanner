@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2018|chrysler|300",
+  "year": 2018,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2018__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C",
+    "300 LIMITED",
+    "300S",
+    "300 TOURING L",
+    "300 TOURING"
+  ],
+  "adds_by_trim": {
+    "300C": [
+      "5.7L HEMI V8 engine with 8-speed automatic transmission",
+      "Adaptive Bi-xenon High Intensity Discharge (HID) headlamps",
+      "Automatic headlamp leveling system",
+      "Luxury perforated Nappa leather-trimmed seats",
+      "Luxury leather-wrapped steering wheel",
+      "Steering wheel-mounted paddle shifters",
+      "Heated/cooled front console cup holder",
+      "Platinum Chrome surround with luxury Black grille",
+      "20-inch Cast-Aluminum Wheel Fully Polished with Satin Clear",
+      "300C badge"
+    ],
+    "300 LIMITED": [
+      "Premium leather-trimmed bucket seats",
+      "Heated and ventilated front seats",
+      "Heated second-row seats",
+      "Real open-pore wood interior accents",
+      "Real wood/leather heated steering wheel",
+      "Power tilt/telescoping steering column",
+      "Radio/driver-seat/mirrors memory",
+      "Auto-dimming driver mirror",
+      "Auto-adjust-in-Reverse mirrors",
+      "20-inch Cast-Aluminum Wheel Fully Polished"
+    ],
+    "300S": [
+      "300 hp 3.6L Pentastar VVT V6 with 8.5-speed automatic transmission",
+      "Performance-tuned suspension with Sport mode",
+      "LED fog lamps",
+      "Black LED taillamps",
+      "Headlamps with Black bezels",
+      "Black Chrome surround with Gloss Black grille",
+      "S Model Appearance Package",
+      "20-inch Cast-Aluminum Wheel Fully Painted Hyper Black options",
+      "Gloss Black Daylight Opening surround molding",
+      "Chrysler wing badge with Black accents"
+    ],
+    "300 TOURING L": [
+      "Leather-trimmed bucket seats",
+      "Power passenger seat with 4-way power lumbar adjuster",
+      "Heated front seats",
+      "Cargo net",
+      "Security alarm",
+      "Rear illuminated armrest with storage",
+      "Real wood interior accents",
+      "Performance leather-trimmed seats",
+      "Steering-wheel paddle shifters",
+      "18-inch Cast-Aluminum Wheel Fully Polished"
+    ],
+    "300 TOURING": [
+      "3.6L Pentastar VVT V6 engine",
+      "8-speed automatic transmission with RWD/AWD",
+      "4-wheel independent suspension",
+      "Automatic projector headlamps with LED DRLs",
+      "LED taillamps",
+      "Cloth seats with power driver seat and 4-way lumbar",
+      "60/40 split-folding rear bench seat",
+      "Uconnect 4C with 8.4-inch display and Bluetooth",
+      "SiriusXM Guardian with one-year trial",
+      "ParkView Rear Back-Up Camera"
+    ]
+  }
+}

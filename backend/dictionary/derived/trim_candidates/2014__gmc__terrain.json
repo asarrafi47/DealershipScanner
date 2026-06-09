@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2014|gmc|terrain",
+  "year": 2014,
+  "make": "GMC",
+  "model": "Terrain",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2022|chevrolet|traverse",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "inventory_chevrolet_traverse",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Tl",
+    "Sr"
+  ],
+  "adds_by_trim": {
+    "Sr": [
+      "with available Convenience and",
+      "dealer or window label for details) \u2014 \u2014 \u25cf \u25cf \u25cf \u25cf",
+      "requires available AWD on RS) \u2014 \u2014 \u25cf \u25cf \u25cf \u25cf",
+      "folding 60/40 split-bench seat",
+      "dealer or window label for details) \u2014 \u25cf \u25cf \u25cf \u25cf \u25cf",
+      "dealer or window label for details) \u2014 \u2014 \u2014 \u2014 \u25cf \u25cf",
+      "driver\u2019s responsibility to operate the vehicle in a safe manner. Read the vehicle Owner\u2019s Manual for important feature limitations and information. 2 Does not detect people or items. Always check",
+      "dealer or window label for details) | \u25cf",
+      "ighting with illuminated entry/exit, theater dimming, cargo area, first-row",
+      "dealer or window label for details) | \u2014 | \u2014 | \u2014 | \u2014 | \u25cf | \u25cf",
+      "e Alert, Rear Cross Traffic Alert and Rear Park Assist (feature will not function"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 11.0,
+    "per_trim_add_counts": {
+      "Sr": 11
+    }
+  }
+}

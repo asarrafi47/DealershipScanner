@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2021|ford|ranger",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Ranger",
+  "ladder_id": "brochure_2021__ford__ranger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Lariat",
+    "Tremor",
+    "STX",
+    "Sport",
+    "FX4",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Features 10-speed SelectShift automatic transmission with Ford patented technology",
+      "Adds Includes chain-driven dual overhead cams with twin-scroll turbocharger and overboost function"
+    ],
+    "FX4": [
+      "Adds FX4 Off-Road Package with terrain management capabilities",
+      "Adds Terrain Management System for enhanced off-road performance"
+    ],
+    "Sport": [
+      "Adds Sport Appearance Package with enhanced exterior styling"
+    ],
+    "STX": [],
+    "Tremor": [
+      "Adds Tremor-specific off-road enhancements and styling"
+    ],
+    "Lariat": [
+      "Adds Chrome Appearance Package with premium exterior finishes",
+      "Adds Trailer Tow Package with integrated towing equipment"
+    ],
+    "Limited": [
+      "Upgraded to premium SuperCrew cab configuration",
+      "Adds Ford Performance advanced off-road equipment options including FOX Racing Shox leveling systems"
+    ]
+  }
+}

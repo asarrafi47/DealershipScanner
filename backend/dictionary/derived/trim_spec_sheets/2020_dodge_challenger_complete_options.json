@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_dodge_challenger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Challenger",
+    "Challenger"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "It was positioned to compete against the Mercury Cougar and Pontiac Firebird in the upper end of the pony car market, a large and lucrative niche of two-door sport coupes that the Ford Mustang had pioneered in April 1964. Like the Barracuda, it was available in a wide variety…"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "It was positioned to compete against the Mercury Cougar and Pontiac Firebird in the upper end of the pony car market, a large and lucrative niche of two-door sport coupes that the Ford Mustang had pioneered in April 1964. Like the Barracuda, it was available in a wide variety…"
+      }
+    ]
+  }
+}

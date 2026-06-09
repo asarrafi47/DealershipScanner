@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2019|chevrolet|equinox",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2019__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "8-inch HD color touch-screen Infotainment 3 Plus System with in-vehicle apps",
+      "Chevrolet Infotainment 3 Premium System with Navigation and cloud-connected personalization",
+      "HD Radio and Bose premium 7-speaker audio system with dual woofers",
+      "18-inch machined-face aluminum wheels with painted pockets",
+      "2 USB ports in front console bin",
+      "Sun, Sound and Navigation Package available"
+    ],
+    "LT": [
+      "Chevrolet Infotainment 3 Plus System with Navigation and 8-inch HD touchscreen",
+      "2 USB ports in front console bin",
+      "19-inch Ultra Bright machined-face aluminum wheels with Sparkle Silver pockets option",
+      "Redline Edition package available with 19-inch Black and Red-accented wheels",
+      "Lights and Bright Package with LED headlamps and taillamps available"
+    ],
+    "SL": [
+      "Chevrolet Infotainment 3 System with 7-inch color touch-screen",
+      "Bluetooth audio streaming for two active devices",
+      "Apple CarPlay and Android Auto compatibility",
+      "SiriusXM Radio All Access Package with 3-month trial",
+      "Built-in 4G LTE Wi-Fi for up to seven devices"
+    ],
+    "L": [
+      "Chevrolet Infotainment 3 System with 7-inch color touch-screen and AM/FM stereo",
+      "Bluetooth wireless technology and voice command pass-through",
+      "6-speaker audio system",
+      "17-inch painted-aluminum wheels",
+      "Chevrolet Connected Access with Vehicle Diagnostics and Smart Driver",
+      "2 charge-only USB ports on rear of center console",
+      "Built-in 4G LTE Wi-Fi connectivity"
+    ]
+  }
+}

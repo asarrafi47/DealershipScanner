@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2013|acura|ilx",
+  "year": 2013,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "generic_acura_ilx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Technology",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "trademarks of SIRIUS XM Radio, Inc."
+    ],
+    "Sport": [
+      "trademarks of Pandora Media, Inc. Used with permission. The XM name, XM NavTraffic, and XM NavWeather are"
+    ],
+    "Technology": [
+      "8-Speed DCT with Sequential SportShift Paddle Shifters",
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with Street and Freeway Conditions",
+      "Next-Generation AcuraLink",
+      "Acura/ELS Studio Premium Audio System with 10 speakers",
+      "Song By Voice voice control",
+      "Siri Eyes Free integration",
+      "Power Moonroof",
+      "17-inch noise-reducing alloy wheels"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "LE": 1
+    }
+  }
+}

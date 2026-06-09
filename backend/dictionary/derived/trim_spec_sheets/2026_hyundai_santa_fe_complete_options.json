@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2026_hyundai_santa_fe_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Santa Fe",
+    "Santa Fe"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "XRT": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AM-S8); All-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "The bigger engine came with a computer-controlled four-wheel drive system and a; L Mu LPi V6"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Bose audio | Leather-trimmed; Nappa; suede seating; [Brochure] Bose audio | Leather-trimmed; Nappa; suede seating"
+      }
+    ]
+  }
+}

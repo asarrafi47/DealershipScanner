@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2010|toyota|avalon",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2010__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLS",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "P215/55R17 all-season steel-belted radial tires with full-size alloy spare"
+    ],
+    "XLS": [
+      "P215/55R17 all-season steel-belted radial tires with full-size alloy spare"
+    ],
+    "XL": [
+      "3.5-liter DOHC 24-valve Dual VVT-i V6 engine with 268 hp",
+      "6-speed electronically controlled automatic overdrive transmission with ECT-i",
+      "Front-wheel drive with unitized body and anti-vibration sub-frames",
+      "MacPherson strut suspension front and rear with coil springs",
+      "Power rack-and-pinion steering with engine speed-sensing variable-assist",
+      "11.7-inch front ventilated disc and 11.1-inch rear solid disc brakes with ABS",
+      "Vehicle Stability Control (VSC) with Traction Control (TRAC) and Brake Assist",
+      "P215/60R16 all-season steel-belted radial tires with full-size alloy spare",
+      "18.5-gallon fuel tank capacity",
+      "19 city / 28 highway mpg"
+    ]
+  }
+}

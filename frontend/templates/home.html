@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Home — Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
+    {% if recommendations or saved_cars or recently_viewed or recently_compared %}
+    <link rel="preload" href="{{ url_for('static', filename='car_page.js') }}" as="script">
+    <link rel="preload" href="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" as="script">
+    {% endif %}
 </head>
 <body class="db-page">
 
@@ -103,6 +108,34 @@
         </section>
         {% endif %}
 
+        {% if recently_viewed %}
+        <section class="db-panel db-reveal" id="viewed-section">
+            <div class="db-panel-header">
+                <div>
+                    <p class="db-eyebrow">Your history</p>
+                    <h2 class="db-section-title">Recently viewed</h2>
+                    <p class="db-section-hint">Listings you opened most recently — pick up where you left off.</p>
+                </div>
+                <a href="{{ url_for('listings') }}" class="db-panel-link">Browse more</a>
+            </div>
+            <div class="saved-grid">
+                {% for car in recently_viewed %}
+                <a href="/car/{{ car.id }}" class="saved-card">
+                    <div class="saved-image-wrap">
+                        <div class="saved-image" style="background-image: url('{{ car.gallery[0] if car.gallery else (car.image_url or "/static/placeholder.svg") }}')"></div>
+                    </div>
+                    <div class="saved-info">
+                        <p class="saved-title">{{ car.title }}</p>
+                        {% if car.trim %}<p class="saved-trim">{{ car.trim }}</p>{% endif %}
+                        <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
+                        <p class="saved-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
         {% if recently_compared %}
         <section class="db-panel db-reveal" id="compared-section">
             <div class="db-panel-header">
@@ -171,27 +204,6 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
-<script nonce="{{ csp_nonce }}">
-(function () {
-    let carsPrefetchStarted = false;
-    function prefetchListingsCars() {
-        if (carsPrefetchStarted) return;
-        carsPrefetchStarted = true;
-        fetch("/listings", { credentials: "same-origin" }).catch(() => {});
-        fetch("/api/listings/cars", { credentials: "same-origin" }).catch(() => {});
-    }
-    document.querySelectorAll("[data-nav-listings]").forEach((el) => {
-        el.addEventListener("mouseenter", prefetchListingsCars, { once: true });
-        el.addEventListener("focus", prefetchListingsCars, { once: true });
-        el.addEventListener("click", () => {
-            prefetchListingsCars();
-            el.classList.add("is-nav-loading");
-            el.setAttribute("aria-busy", "true");
-        });
-    });
-})();
-</script>
 <script nonce="{{ csp_nonce }}">
 (function () {
     const track = document.getElementById("reco-track");

@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1994,Suzuki,Sidekick,2Door 2WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,22,21,,,,,
+1994,Suzuki,Sidekick,2Door 2WD,1.6L I4 ((FFS)),1.6L I4,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,22,21,,,,,
+1994,Suzuki,Sidekick,2Door 2WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,24,22,,,,,
+1994,Suzuki,Sidekick,2Door 2WD,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,22,24,23,,,,,
+1994,Suzuki,Sidekick,4Door 2WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,19,24,21,,,,,
+1994,Suzuki,Sidekick,4Door 2WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,20,24,21,,,,,
+1994,Suzuki,Sidekick,2Door 4WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,22,21,,,,,
+1994,Suzuki,Sidekick,2Door 4WD,1.6L I4 ((FFS)),1.6L I4,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,22,21,,,,,
+1994,Suzuki,Sidekick,2Door 4WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,24,22,,,,,
+1994,Suzuki,Sidekick,2Door 4WD,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,22,24,23,,,,,
+1994,Suzuki,Sidekick,4Door 4WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,19,24,21,,,,,
+1994,Suzuki,Sidekick,4Door 4WD,1.6L I4 ((16VALVES) (FFS)),1.6L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,20,24,21,,,,,

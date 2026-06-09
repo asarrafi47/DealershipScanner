@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2023|kia|seltos",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Seltos",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX Prestige",
+    "SX",
+    "GT",
+    "GT-Line",
+    "EX",
+    "X-Line",
+    "LX",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

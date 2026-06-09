@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2015|audi|a3",
+  "year": 2015,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_2015__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Prestige",
+    "Limited",
+    "Sport",
+    "A3",
+    "S3"
+  ],
+  "adds_by_trim": {
+    "S3": [
+      "1,984cc turbocharged TFSI four-cylinder engine with 292 horsepower",
+      "0–60 mph in 4.7 seconds",
+      "155 mph top track speed",
+      "Ventilated front and rear disc brakes (13.4/12.2 inches)",
+      "quattro all-wheel drive with six-speed S tronic dual-clutch transmission",
+      "Audi progressive steering",
+      "S3 sport suspension standard",
+      "Matte brushed aluminum decorative inlays",
+      "Sepang Blue pearl, Misano Red pearl, and Scuba Blue metallic exclusive colors"
+    ],
+    "A3": [
+      "Adds 2.0T TFSI turbocharged engine with 200 hp",
+      "Adds 2.0 TDI turbocharged diesel engine with 140 hp",
+      "Adds six-speed manual transmission option",
+      "Adds six-speed S tronic dual-clutch transmission option",
+      "Adds front-wheel drive configuration",
+      "Adds quattro all-wheel drive option",
+      "Adds MacPherson strut front suspension with stabilizer bar",
+      "Adds four-link rear suspension with stabilizer bar",
+      "Adds Audi servotronic speed-sensitive power steering",
+      "Adds seating capacity for 5 passengers"
+    ],
+    "Sport": [],
+    "Limited": [],
+    "Prestige": [
+      "Adds sport suspension calibration"
+    ],
+    "S line": [],
+    "Premium": [
+      "Micrometallic Silver decorative inlays",
+      "Choice of 1.8T, 2.0T, or TDI turbocharged four-cylinder engines"
+    ],
+    "Premium Plus": [
+      "Adds sport suspension calibration"
+    ]
+  }
+}

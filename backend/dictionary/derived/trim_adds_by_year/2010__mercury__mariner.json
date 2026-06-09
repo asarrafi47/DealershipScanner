@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2010|mercury|mariner",
+  "year": 2010,
+  "make": "Mercury",
+  "model": "Mariner",
+  "ladder_id": "brochure_llm_2010__mercury__mariner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MARINER PREMIER",
+    "MARINER HYBRID",
+    "MARINER"
+  ],
+  "adds_by_trim": {
+    "MARINER PREMIER": [
+      "16-inch 12-spoke machined-aluminum wheels",
+      "AM/FM stereo with 6 speakers instead of 4",
+      "Auto-dimming rearview mirror",
+      "Automatic headlamps",
+      "Ambient lighting",
+      "Cargo Package",
+      "Illuminated visor vanity mirrors",
+      "Mercury SYNC voice-activated communications and entertainment system"
+    ],
+    "MARINER HYBRID": [
+      "2.5L iVCT Atkinson-cycle I-4 engine with electric motor",
+      "Electronically controlled Continuously Variable Transmission (eCVT)",
+      "330-volt sealed nickel-metal-hydride battery",
+      "Regenerative Braking System",
+      "16-inch 5-spoke aluminum wheels with brushed-aluminum center caps",
+      "110-volt AC power outlet",
+      "AM/FM stereo with 6 speakers",
+      "Auto-dimming rearview mirror"
+    ],
+    "MARINER": [
+      "2.5L iVCT Duratec I-4 engine with 6-speed automatic transmission",
+      "16-inch 6-spoke painted-aluminum wheels",
+      "AM/FM stereo with single-CD player and 4 speakers",
+      "Black power sideview mirrors with manual-fold feature",
+      "Blind Spot Mirrors",
+      "Message center",
+      "Premium cloth front bucket seats with 2-way manual driver seat",
+      "Roof-rack side rails in black"
+    ]
+  }
+}

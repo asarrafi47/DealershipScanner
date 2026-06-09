@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2013|buick|enclave",
+  "year": 2013,
+  "make": "Buick",
+  "model": "Enclave",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2013_Buick_Enclave_Brochure.pdf",
+  "page_count": 10,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": false,
+      "text": "2013 ENCLAVE\nBUICK.COM Discover more to like about Buick on Facebook.\nfacebook.com/buick\nIS NOW\nARRIVING.\n\u00a92012 General Motors. All rights reserved. Buick\u00ae Buick emblem\u00ae Enclave\u00ae IntelliLinkTM\nQuietTuning\u00ae Smart Slide\u00ae StabiliTrak\u00ae Facebook is a registered trademark of Facebook, Inc.",
+      "table_lines": []
+    },
+    {
+      "page": 2,
+      "trim_hint": false,
+      "text": "YOU\u2019LL FIND IT\nQUITE REFRESHING.\nOf course, we couldn\u2019t leave well enough alone. So we took everything that makes Enclave the finest luxury\ncrossover ever\u2014and kept going. Taking design, comfort, technology and safety to a whole new place. So now,\nyou can do the same. We call it the 2013 Buick Enclave. 2013 Enclave available late 2012. Shown in Cyber Gray.",
+      "table_lines": []
+    },
+    {
+      "page": 3,
+      "trim_hint": false,
+      "text": "Ah, ThE WIDE-OpEN SpACE.\nSlide in and discover you\u2019ve been bumped up to a new class of travel. A \u201clow and\naway\u201d instrument panel gives you plenty of openness. With a soft-to-the-touch feel\nthat, well, makes you want to keep touching it. Your eyes are treated to distinctive\nwood tones, chrome accents and ice-blue ambient lighting. While your ears enjoy\nthe sounds of silence thanks to our exclusive QuietTuning process.",
+      "table_lines": []
+    },
+    {
+      "page": 4,
+      "trim_hint": false,
+      "text": "SOCIAL MEDIA ISN\u2019T ThE ONLY WAY TO CONNECT WITh FrIENDS.\nSeven of your closest friends and family\u2014and of course, all of their stuff\u2014get to share this space. Three rows of\nfirst-class seating feature Smart Slide, so getting to the third row is easy thanks to second-row seats that slide forward\nwith only one hand. Enclave is quite flexible. Flip down the second- and third-row seats and you\u2019ve got a level\nload floor for up to 115 cubic feet of storage.1 To get to all of this space, a power liftgate does the heavy lifting for you.\n1Cargo and load capacity limited by weight and distribution.",
+      "table_lines": []
+    },
+    {
+      "page": 5,
+      "trim_hint": false,
+      "text": "BOTh SIDES ArE ITS GOOD SIDE.\nA few, oh-so-artfully sculpted lines flow seamlessly\nfrom front to rear and back again.\nShown in Champagne Silver.",
+      "table_lines": []
+    },
+    {
+      "page": 6,
+      "trim_hint": false,
+      "text": "When conditions (weather or otherwise) demand more traction, Enclave\u2019s\navailable intelligent All-Wheel Drive System doesn\u2019t ask you to push buttons.\nIt\u2019s automatically activated when you need it most. By constantly monitoring\ntraction at all four wheels, whenever it detects slip, power is delivered to the\nwheels with the best grip. Combine this with StabiliTrak and traction control\nfor stability even in bad conditions, and you\u2019re going places.\nDON\u2019T jUST\nHIT THE ROAD.\nOUTSmART IT.",
+      "table_lines": []
+    },
+    {
+      "page": 7,
+      "trim_hint": false,
+      "text": "TO hEAr YOUr FAVOrITES, jUST SAY ThE WOrD.\nWith IntelliLink1 voice activation, Enclave plays your favorite music, initiates hands-free calls and lets you choose\nyour favorite Internet radio stations just by asking. Using Bluetooth,\u00ae2 it connects your smartphone, allowing you to\ntake your personalized entertainment like pandora\u00ae internet radio and StitcherTM Smartradio everywhere you travel.\n1Full functionality requires compatible Bluetooth and smartphone. Some devices require USB connectivity. Data plan rates apply.\n2Go to gm.com/bluetooth to find out which Bluetooth phones are compatible with the vehicle.",
+      "table_lines": []
+    },
+    {
+      "page": 8,
+      "trim_hint": false,
+      "text": "SECUrITY DETAIL.\nFor your protection, available Side Blind Zone Alert1 uses radar to warn you when a vehicle is in your blind spot. The rearview\ncamera gives you a heads up of what\u2019s behind you, and the new available rear Cross Traffic Alert makes you aware of oncoming\ntraffic when backing out of a parking spot. And in an industry first, the centrally mounted front air bag2 adds another layer\nof protection by providing cushioning between you and your front passenger to help reduce injuries in side impacts.\n1Before making a lane change, always check the Side Blind Zone Alert display, check side and inside rearview mirrors, look over your shoulder for vehicles/hazards and start the turn signal.\n2Air bag inflation can cause severe injury or death to anyone too close to the bag when it deploys. Be sure every occupant is properly restrained.",
+      "table_lines": []
+    },
+    {
+      "page": 9,
+      "trim_hint": false,
+      "text": "ArE ThEY LIGhTS Or ArT OBjECTS? YES.\nhow you see the world and the world sees you has evolved thanks to signature LED front headlamps and\nrear taillamps. Their contemporary styling helps them illuminate Enclave\u2019s design as much as the road.",
+      "table_lines": []
+    },
+    {
+      "page": 10,
+      "trim_hint": false,
+      "text": "mAKES ANY\nCURB mORE\nAPPEALING.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 1 ---\n2013 ENCLAVE\nBUICK.COM Discover more to like about Buick on Facebook.\nfacebook.com/buick\nIS NOW\nARRIVING.\n\u00a92012 General Motors. All rights reserved. Buick\u00ae Buick emblem\u00ae Enclave\u00ae IntelliLinkTM\nQuietTuning\u00ae Smart Slide\u00ae StabiliTrak\u00ae Facebook is a registered trademark of Facebook, Inc.\n\n--- page 2 ---\nYOU\u2019LL FIND IT\nQUITE REFRESHING.\nOf course, we couldn\u2019t leave well enough alone. So we took everything that makes Enclave the finest luxury\ncrossover ever\u2014and kept going. Taking design, comfort, technology and safety to a whole new place. So now,\nyou can do the same. We call it the 2013 Buick Enclave. 2013 Enclave available late 2012. Shown in Cyber Gray.\n\n--- page 3 ---\nAh, ThE WIDE-OpEN SpACE.\nSlide in and discover you\u2019ve been bumped up to a new class of travel. A \u201clow and\naway\u201d instrument panel gives you plenty of openness. With a soft-to-the-touch feel\nthat, well, makes you want to keep touching it. Your eyes are treated to distinctive\nwood tones, chrome accents and ice-blue ambient lighting. While your ears enjoy\nthe sounds of silence thanks to our exclusive QuietTuning process.\n\n--- page 4 ---\nSOCIAL MEDIA ISN\u2019T ThE ONLY WAY TO CONNECT WITh FrIENDS.\nSeven of your closest friends and family\u2014and of course, all of their stuff\u2014get to share this space. Three rows of\nfirst-class seating feature Smart Slide, so getting to the third row is easy thanks to second-row seats that slide forward\nwith only one hand. Enclave is quite flexible. Flip down the second- and third-row seats and you\u2019ve got a level\nload floor for up to 115 cubic feet of storage.1 To get to all of this space, a power liftgate does the heavy lifting for you.\n1Cargo and load capacity limited by weight and distribution.\n\n--- page 5 ---\nBOTh SIDES ArE ITS GOOD SIDE.\nA few, oh-so-artfully sculpted lines flow seamlessly\nfrom front to rear and back again.\nShown in Champagne Silver.\n\n--- page 6 ---\nWhen conditions (weather or otherwise) demand more traction, Enclave\u2019s\navailable intelligent All-Wheel Drive System doesn\u2019t ask you to push buttons.\nIt\u2019s automatically activated when you need it most. By constantly monitoring\ntraction at all four wheels, whenever it detects slip, power is delivered to the\nwheels with the best grip. Combine this with StabiliTrak and traction control\nfor stability even in bad conditions, and you\u2019re going places.\nDON\u2019T jUST\nHIT THE ROAD.\nOUTSmART IT.\n\n--- page 7 ---\nTO hEAr YOUr FAVOrITES, jUST SAY ThE WOrD.\nWith IntelliLink1 voice activation, Enclave plays your favorite music, initiates hands-free calls and lets you choose\nyour favorite Internet radio stations just by asking. Using Bluetooth,\u00ae2 it connects your smartphone, allowing you to\ntake your personalized entertainment like pandora\u00ae internet radio and StitcherTM Smartradio everywhere you travel.\n1Full functionality requires compatible Bluetooth and smartphone. Some devices require USB connectivity. Data plan rates apply.\n2Go to gm.com/bluetooth to find out which Bluetooth phones are compatible with the vehicle.\n\n--- page 8 ---\nSECUrITY DETAIL.\nFor your protection, available Side Blind Zone Alert1 uses radar to warn you when a vehicle is in your blind spot. The rearview\ncamera gives you a heads up of what\u2019s behind you, and the new available rear Cross Traffic Alert makes you aware of oncoming\ntraffic when backing out of a parking spot. And in an industry first, the centrally mounted front air bag2 adds another layer\nof protection by providing cushioning between you and your front passenger to help reduce injuries in side impacts.\n1Before making a lane change, always check the Side Blind Zone Alert display, check side and inside rearview mirrors, look over your shoulder for vehicles/hazards and start the turn signal.\n2Air bag inflation can cause severe injury or death to anyone too close to the bag when it deploys. Be sure every occupant is properly restrained.\n\n--- page 9 ---\nArE ThEY LIGhTS Or ArT OBjECTS? YES.\nhow you see the world and the world sees you has evolved thanks to signature LED front headlamps and\nrear taillamps. Their contemporary styling helps them illuminate Enclave\u2019s design as much as the road.\n\n--- page 10 ---\nmAKES ANY\nCURB mORE\nAPPEALING."
+}

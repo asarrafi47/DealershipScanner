@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1987,Chevrolet,Sprint,ER,1.0L I3 ((FFS)),1.0L I3,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,3,1.0,44,51,47,,,,,
+1987,Chevrolet,Sprint,Turbo Sprint,"1.0L I3 ((FFS,TRBO))",1.0L I3,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,3,1.0,31,39,34,,,,,
+1987,Chevrolet,Sprint,Sprint,1.0L I3 ((FFS)),1.0L I3,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.0,32,36,34,,,,,
+1987,Chevrolet,Sprint,Sprint,1.0L I3 ((FFS)),1.0L I3,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.0,36,43,39,,,,,

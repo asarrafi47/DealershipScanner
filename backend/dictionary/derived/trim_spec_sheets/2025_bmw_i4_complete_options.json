@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2025_bmw_i4_complete_options",
+  "make": "BMW",
+  "models": [
+    "i4",
+    "i4"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "M50 Gran Coupe": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "eDrive40": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "eDrive35": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2024|subaru|xvcrosstrek",
+  "year": 2024,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2024__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crosstrek Limited",
+    "Crosstrek Sport",
+    "Crosstrek Premium",
+    "Crosstrek"
+  ],
+  "adds_by_trim": {
+    "Crosstrek Premium": [
+      "LED fog lights",
+      "17-inch aluminum-alloy wheels with dark gray machine finish",
+      "Dark gray exterior mirrors with integrated turn signals",
+      "Keyless Access with Push-Button Start",
+      "Premium cloth upholstery",
+      "Steering wheel with integrated manual-mode paddle shifters",
+      "Rear-seat center armrest with integrated cup holders",
+      "SUBARU STARLINK 11.6-inch Multimedia Plus with wireless Apple CarPlay and Android Auto",
+      "SiriusXM with 4-month Platinum Plan and Travel Link trial",
+      "4G LTE Wi-Fi capability"
+    ],
+    "Crosstrek Sport": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Dual-Function X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "High-grade LED Steering Responsive Headlights with High Beam Assist",
+      "18-inch alloy wheels with dark gray finish",
+      "Crystal Black Silica grille accents, roof spoiler, rear gate trim panel",
+      "Sport badging on front doors and rear gate",
+      "Sport cloth upholstery with yellow accents and stitching",
+      "Leather-wrapped steering wheel with yellow stitching",
+      "Yellow illuminated gauge rings",
+      "Aluminum-alloy pedal covers"
+    ],
+    "Crosstrek Limited": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Dual-Mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "High-grade LED Steering Responsive Headlights with High Beam Assist",
+      "18-inch alloy wheels with dark gray machine finish",
+      "Dark gray exterior accents on front bumper, rear bumper, doors",
+      "10-way power-adjustable driver seat",
+      "Leather-trimmed upholstery with orange stitching",
+      "Leather-wrapped steering wheel with orange stitching",
+      "Qi wireless smartphone charging pad",
+      "All-Weather Package: heated mirrors, dual-mode heated front seats, windshield wiper de-icer"
+    ],
+    "Crosstrek": [
+      "2.0-liter BOXER engine with 152 hp and 145 lb-ft torque",
+      "Fully synchronized 6-speed manual transmission with Incline Start Assist",
+      "Subaru Symmetrical All-Wheel Drive",
+      "Vehicle Dynamics Control with Traction Control System",
+      "Active Torque Vectoring for sharper cornering"
+    ]
+  }
+}

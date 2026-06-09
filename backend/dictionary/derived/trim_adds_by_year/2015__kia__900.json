@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|kia|900",
+  "year": 2015,
+  "make": "Kia",
+  "model": "900",
+  "ladder_id": "brochure_llm_2015__kia__900",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury V8 with VIP Package",
+    "Luxury V6 with Technology Package",
+    "Premium V6"
+  ],
+  "adds_by_trim": {
+    "Luxury V8 with VIP Package": [
+      "5.0L Gasoline Direct Injection V8 engine producing 420 hp and 376 lb.-ft. torque",
+      "19-inch chrome-finish alloy wheels with 275/40R19 rear tires",
+      "LED headlights with Adaptive Front Lighting System",
+      "Executive rear seats with power-reclining, ventilated outboard, and air lumbar support",
+      "12.3-inch Thin-Film Transistor LCD cluster display",
+      "Advanced Vehicle Safety Management with pre-safe belt system",
+      "Surround-view Monitor with 360-degree camera coverage"
+    ],
+    "Luxury V6 with Technology Package": [
+      "Panoramic sunroof with power-retractable sunshade",
+      "Shift-by-wire gear selector",
+      "Heated steering wheel",
+      "Nappa leather seat trim with Genuine wood trim accents",
+      "Credit-card-size smart Key",
+      "Advanced Smart Cruise Control with head-up display",
+      "Power door latches with soft close",
+      "16-way adjustable driver's seat with integrated memory, power lumbar, headrest, and seat cushion extension",
+      "Blind-spot Detection with Lane Change Assist and Lane Departure Warning",
+      "Rear Cross-Traffic Alert and Advanced Vehicle Safety Management"
+    ],
+    "Premium V6": [
+      "3.8L Gasoline Direct Injection V6 engine producing 311 hp and 293 lb.-ft. torque",
+      "8-speed Sportmatic automatic transmission with shift-by-cable selector",
+      "18-inch alloy wheels with 245/50R18 tires",
+      "HID headlights with Adaptive Front Lighting System",
+      "Leather seat trim with Aluminum accent trim",
+      "900-watt Lexicon Discrete Logic 7 surround-sound audio with 17 speakers",
+      "UVO eServices infotainment with voice command and SiriusXM traffic",
+      "Navigation with 9.2-inch display and SiriusXM satellite radio",
+      "Front and rear parking sensors with Parking Guide System",
+      "Three-zone automatic temperature control with cluster ionizer"
+    ]
+  }
+}

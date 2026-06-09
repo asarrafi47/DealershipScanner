@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2018|mitsubishi|eclipsecross",
+  "year": 2018,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "ladder_id": "brochure_llm_2018__mitsubishi__eclipsecross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL S-AWC",
+    "SE S-AWC",
+    "LE S-AWC",
+    "ES S-AWC",
+    "ES 2WD"
+  ],
+  "adds_by_trim": {
+    "SEL S-AWC": [
+      "Highest trim level with premium content and maximum equipment"
+    ],
+    "SE S-AWC": [
+      "Mid-range all-wheel drive variant with enhanced features over LE"
+    ],
+    "LE S-AWC": [
+      "All-wheel drive capability with standard equipment for comfort and safety"
+    ],
+    "ES S-AWC": [
+      "Super All-Wheel Control system for improved traction and handling"
+    ],
+    "ES 2WD": [
+      "Front-wheel drive configuration with 26 city / 29 highway fuel economy",
+      "16.6-gallon fuel tank capacity",
+      "Base trim with essential safety and comfort features"
+    ]
+  }
+}

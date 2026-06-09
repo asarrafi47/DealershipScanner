@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2021_audi_tts_complete_options",
+  "make": "Audi",
+  "models": [
+    "TTS",
+    "TTS"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Assembly Hungary: Győr (engines and final assembly); The 1.8 L turbocharged inline-4 engine (was Assembly Hungary: Győr (engines and final assembly)); 2.0L I4 Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: The upgrade includes a fixed rear spoiler and Alcantara/leather sports seats (Si"
+      }
+    ],
+    "40 TFSI": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Assembly Hungary: Győr (engines and final assembly)"
+      }
+    ]
+  }
+}

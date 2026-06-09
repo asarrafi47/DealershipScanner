@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_bmw_z4_complete_options",
+  "make": "BMW",
+  "models": [
+    "Z4",
+    "Z4"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "M Sport": [
+      {
+        "label": "Engine Options",
+        "value": "The standard M Sport package makes it even more exciting, while interior feature; L turbocharged I4 145 kW (197 PS; 194 hp)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "The standard M Sport package makes it even more exciting, while interior feature; L turbocharged I4 145 kW (197 PS; 194 hp)"
+      }
+    ]
+  }
+}

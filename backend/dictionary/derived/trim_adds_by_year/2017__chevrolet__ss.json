@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|chevrolet|ss",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "SS",
+  "ladder_id": "2015_chevrolet_ss_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "SS",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "vehicle shopping and ownership experience through a trademarks and/or service marks"
+    ],
+    "Limited": [
+      "vehicle includes enhancing the"
+    ],
+    "SS": [
+      "vehicle is assembled, we suggest you verify that your"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Sport": 1
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2012|buick|regal",
+  "year": 2012,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2012__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium III",
+    "Premium II",
+    "Premium I",
+    "GS"
+  ],
+  "adds_by_trim": {
+    "Premium III": [
+      "Audio system with navigation, 7-inch color touchscreen, MP3, CD, USB, iPod support, GPS",
+      "HID bi-xenon headlamps",
+      "Premium Harman Kardon audio system",
+      "Rear-seat thorax air bags",
+      "Requires sunroof option for navigation system"
+    ],
+    "Premium II": [
+      "Passive entry system",
+      "Remote vehicle start system (requires automatic transmission)",
+      "Push-button start",
+      "Front-passenger 12-way power seat adjuster",
+      "Universal home remote",
+      "Chrome accents on door handles",
+      "Rear parking assist",
+      "120-volt AC power outlet"
+    ],
+    "Premium I": [
+      "Passive entry system",
+      "Remote vehicle start system (requires automatic transmission)",
+      "Push-button start",
+      "Front-passenger 12-way power seat adjuster",
+      "Universal home remote",
+      "Chrome accents on door handles",
+      "Rear parking assist",
+      "120-volt AC power outlet"
+    ],
+    "GS": [
+      "2.0L EcoTec Turbo with 270 horsepower and 295 lb-ft torque",
+      "Interactive drive control system",
+      "GS-specific fascias and rockers",
+      "GS-specific dual exhaust",
+      "GS-specific badging",
+      "GS sport seats, steering wheel, sport pedals",
+      "Brembo front brakes with 4-wheel anti-lock disc",
+      "HiPer strut front suspension",
+      "Front and rear parking assist"
+    ]
+  }
+}

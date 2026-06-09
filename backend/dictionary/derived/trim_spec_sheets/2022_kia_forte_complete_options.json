@@ -1,0 +1,53 @@
+{
+  "ladder_id": "2022_kia_forte_complete_options",
+  "make": "Kia",
+  "models": [
+    "Forte",
+    "Forte"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "GT-Line": [
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: When combined with the EX trim, leather is utilized for the upholstery, steering (was When paired with the SX trim, it includes only heated leather seats and the sunr)"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: 4.3-inch touchscreen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: When paired with the SX trim, it includes only heated leather seats and the sunr (was When combined with the EX trim, leather is utilized for the upholstery, steering)"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: When combined with the EX trim, leather is utilized for the upholstery, steering (was When paired with the SX trim, it includes only heated leather seats and the sunr)"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Kia Forte LPI Hybrid; The SX has the 2.4-litre engine with a six-speed manual or optional five-speed a (was Layout Front-engine, front-wheel-drive; Engine type Displacement Power Torque Transmission)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: When paired with the SX trim, it includes only heated leather seats and the sunr"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, front-wheel-drive; Engine type Displacement Power Torque Transmission"
+      }
+    ]
+  }
+}

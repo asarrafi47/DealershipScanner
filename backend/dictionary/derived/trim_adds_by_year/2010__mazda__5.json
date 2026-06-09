@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|mazda|5",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "5",
+  "ladder_id": "brochure_web_2010__mazda__5",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Grand Touring",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Leather-trimmed seats and steering wheel",
+      "Power driver seat with lumbar support",
+      "Heated front seats",
+      "Automatic headlights and wipers",
+      "Rear parking sensors",
+      "Power sliding doors",
+      "Roof rack side rails",
+      "16-inch alloy wheels"
+    ],
+    "Sport": [
+      "5-speed automatic transmission",
+      "Steering wheel audio controls",
+      "Power windows, locks, mirrors",
+      "Air conditioning",
+      "Cruise control",
+      "Front and side airbags standard"
+    ],
+    "Base": [
+      "2.3L 4-cylinder engine with 157 horsepower",
+      "5-speed manual transmission standard",
+      "7-passenger seating",
+      "AM/FM stereo with CD player",
+      "Air conditioning",
+      "Power windows and locks",
+      "Dual front airbags and side-curtain airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mazda/5/"
+}

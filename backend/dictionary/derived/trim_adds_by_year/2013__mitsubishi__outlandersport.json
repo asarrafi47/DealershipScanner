@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2013|mitsubishi|outlandersport",
+  "year": 2013,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2013__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE AWC",
+    "SE 2WD",
+    "ES AWC",
+    "ES 2WD"
+  ],
+  "adds_by_trim": {
+    "SE AWC": [
+      "All-Wheel Control (AWC) system",
+      "Super-wide range High Intensity Discharge (S-HID) headlamps",
+      "One-touch Start/Stop (OSS) engine switch",
+      "FAST-Key electronic entry and start system",
+      "Heated front seats",
+      "Automatic climate control with pollen filter",
+      "Halogen fog lights with chrome accent",
+      "Rain-sensing windshield wipers"
+    ],
+    "SE 2WD": [
+      "All-Wheel Control (AWC) system",
+      "Super-wide range High Intensity Discharge (S-HID) headlamps",
+      "One-touch Start/Stop (OSS) engine switch",
+      "FAST-Key electronic entry and start system",
+      "Heated front seats",
+      "Automatic climate control with pollen filter",
+      "Halogen fog lights with chrome accent",
+      "Rain-sensing windshield wipers"
+    ],
+    "ES AWC": [
+      "All-Wheel Control (AWC) system",
+      "Leather-wrapped steering wheel and shift knob",
+      "60/40 split-folding rear seats",
+      "Steering-wheel-mounted paddle shifters"
+    ],
+    "ES 2WD": [
+      "5-speed manual or Continuously Variable Transmission (CVT)",
+      "Color LCD Multi-Information Display",
+      "18-inch aluminum-alloy wheels",
+      "FUSE Hands-free Link System with USB Port",
+      "Halogen headlamps",
+      "Grille with chrome surround",
+      "Rear LED combination tail lights",
+      "Active Stability Control (ASC) and Hill Start Assist"
+    ]
+  }
+}

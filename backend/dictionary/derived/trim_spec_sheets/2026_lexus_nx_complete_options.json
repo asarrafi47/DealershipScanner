@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_lexus_nx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "NX",
+    "NX"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); All-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); All-Wheel Drive"
+      }
+    ]
+  }
+}

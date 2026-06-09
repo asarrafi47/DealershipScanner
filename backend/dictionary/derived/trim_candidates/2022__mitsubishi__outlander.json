@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2022|mitsubishi|outlander",
+  "year": 2022,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

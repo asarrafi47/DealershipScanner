@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|infiniti|qx5680",
+  "year": 2021,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2021__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 SENSORY",
+    "QX80 PREMIUM SELECT",
+    "QX80 LUXE"
+  ],
+  "adds_by_trim": {
+    "QX80 LUXE": [
+      "5.6-liter V8 engine with 400 hp and 413 lb-ft torque",
+      "7-speed automatic transmission",
+      "Rear automatic self-leveling suspension",
+      "Trailer Sway Control and integrated Class IV tow hitch",
+      "INFINITI All-Mode 4WD with computer-controlled transfer case",
+      "Remote Engine Start",
+      "20-inch aluminum alloy wheels with 275/60R20 H-rated all-season tires",
+      "Power folding, auto-dimming, heated outside mirrors",
+      "Leather-appointed seating with 10-way power driver seat",
+      "Charcoal Burl interior trim accents"
+    ],
+    "QX80 PREMIUM SELECT": [
+      "Intelligent Cruise Control with Full-Speed Range",
+      "Distance Control Assist and Smart Rearview Mirror",
+      "Automatic Collision Notification and Emergency Call with 1-year trial",
+      "INFINITI InTouch with Wi-Fi Hotspot and 30-day trial access",
+      "SiriusXM Radio with Advanced Audio Features and 3-month trial",
+      "SiriusXM Traffic and Travel Link with 3-month trial access",
+      "Forward Emergency Braking with pedestrian detection",
+      "Predictive Forward Collision Warning and Backup Collision Intervention",
+      "Lane Departure Warning and Prevention",
+      "Blind Spot Warning and Intervention with Around View Monitor"
+    ],
+    "QX80 SENSORY": [
+      "22-inch dark finish forged aluminum wheels with 275/50R22 H-rated tires",
+      "Dark chrome exterior accents on grille, fenders, and side accents",
+      "Black grille mesh and black mirror caps",
+      "Hydraulic Body Motion Control and Vehicle Speed Sensitive Power Steering",
+      "Adaptive Front Lighting System with auto-leveling headlights",
+      "Climate-controlled front seats with Advanced Climate Control system",
+      "Quilted semi-aniline leather seating with Sahara Stone and Truffle Brown colors",
+      "Charcoal Burl interior trim with gradient finish",
+      "Bose Performance Series 17-speaker audio system",
+      "Rear Seat Entertainment System with dual 8-inch color monitors"
+    ]
+  }
+}

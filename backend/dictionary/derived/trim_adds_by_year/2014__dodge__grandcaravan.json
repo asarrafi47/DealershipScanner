@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2014|dodge|grandcaravan",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2014__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Caravan R/T",
+    "Grand Caravan SXT 30th",
+    "Grand Caravan SXT",
+    "Grand Caravan SE",
+    "Grand Caravan AVP"
+  ],
+  "adds_by_trim": {
+    "Grand Caravan R/T": [
+      "17-inch polished aluminum wheels with Satin carbon pockets",
+      "Fog lamps and automatic headlamps with Black headlamp bezels",
+      "Bright chrome window trim belt molding and roof rails",
+      "30th anniversary exterior, interior, and key fob badging",
+      "Unique Black Torino leatherette seats with suede inserts and Silver accent stitching",
+      "506-watt amplifier with subwoofer",
+      "Heated front and 2nd-row seats with heated steering wheel",
+      "Auto-dimming rearview mirror with microphone and Uconnect voice command"
+    ],
+    "Grand Caravan SXT 30th": [
+      "17-inch Satin carbon aluminum wheels",
+      "Automatic headlamps and Black headlamp bezels",
+      "Body-color grille and performance suspension",
+      "30th anniversary exterior, interior, and key fob badging",
+      "Leather-trimmed seats with power front driver and passenger seats",
+      "Automatic 3-Zone temperature control with electronic vehicle information center",
+      "Overhead ambient surround lighting and illuminated front-door storage"
+    ],
+    "Grand Caravan SXT": [
+      "17-inch Tech Silver aluminum wheels",
+      "Dual power sliding doors with obstacle detection system",
+      "Power liftgate and Black side roof rails with integrated crossbars",
+      "Super console with power 1-touch windows and power rear windows",
+      "Power adjustable pedals",
+      "Black leather-trimmed steering wheel and shift knob with Piano Black bezels",
+      "Front-door armrests with Silver accent stitching and Piano Black appliqués",
+      "Power 8-way driver's seat and power 2nd- and 3rd-row windows"
+    ],
+    "Grand Caravan SE": [
+      "17-inch aluminum wheels",
+      "Air conditioning with dual-Zone automatic temperature control",
+      "Body-color heated exterior mirrors",
+      "Deep-tinted sunscreen glass",
+      "2nd-row bucket seats with Super Stow 'n go fold-in-floor operation",
+      "Mini floor console with cup holders",
+      "Uconnect 130 AM/FM/CD/MP3 radio with 6 speakers"
+    ],
+    "Grand Caravan AVP": [
+      "3.6L 283-horsepower Pentastar VVT V6 engine",
+      "6-speed automatic transmission with electronic range select",
+      "17-inch wheel covers",
+      "Black door handles, bodyside molding, and lower sill appliqué",
+      "Air conditioning with dual-Zone temperature control",
+      "Uconnect 130 AM/FM/CD/MP3 radio with 4 speakers",
+      "Remote keyless entry and fuel economizer button",
+      "7 airbags including advanced multistage front and side-curtain airbags",
+      "Electronic Stability Control with all-Speed Traction control and Brake assist",
+      "4-wheel antilock disc brakes"
+    ]
+  }
+}

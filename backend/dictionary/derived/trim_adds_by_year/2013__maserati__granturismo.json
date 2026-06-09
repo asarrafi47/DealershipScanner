@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2013|maserati|granturismo",
+  "year": 2013,
+  "make": "maserati",
+  "model": "granturismo",
+  "ladder_id": "brochure_web_2013__maserati__granturismo",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "GranTurismo Trofeo Coupe",
+    "GranTurismo Coupe"
+  ],
+  "adds_by_trim": {
+    "GranTurismo Trofeo Coupe": [
+      "542 hp and 479 lb-ft of torque (vs. 483 hp and 443 lb-ft)",
+      "0-60 mph in 3.4 seconds (vs. approximately 3.7 seconds)"
+    ],
+    "GranTurismo Coupe": [
+      "Twin-turbocharged 3.0-liter V-6 Nettuno engine with 483 hp",
+      "443 lb-ft of torque with eight-speed paddle-shift automatic transmission",
+      "Standard all-wheel drive",
+      "18/27 mpg city/highway fuel economy",
+      "Dual 12.3-inch and 8.8-inch touchscreen displays",
+      "12.2-inch digital gauge cluster",
+      "Four-seat 2+2 seating configuration with heated and ventilated front seats",
+      "Heated and ventilated front seats with sporty bolstering",
+      "Apple CarPlay and Android Auto connectivity"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/granturismo/"
+}

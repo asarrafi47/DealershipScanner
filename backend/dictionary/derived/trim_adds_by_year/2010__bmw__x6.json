@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2010|bmw|x6",
+  "year": 2010,
+  "make": "BMW",
+  "model": "X6",
+  "ladder_id": "brochure_llm_2010__bmw__x6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ActiveHybrid X6",
+    "X6 xDrive50i",
+    "X6 xDrive35i"
+  ],
+  "adds_by_trim": {
+    "ActiveHybrid X6": [
+      "Hybrid powertrain combining gasoline engine with electric motor"
+    ],
+    "X6 xDrive50i": [
+      "4.4-liter twin-turbocharged V8 engine (versus 3.0-liter turbocharged inline-6)"
+    ],
+    "X6 xDrive35i": [
+      "Driver and passenger front airbag supplemental restraint system with advanced technology",
+      "3-point safety belts and head restraints at all seating positions",
+      "Front safety belts with automatic pretensioners",
+      "Active Head Restraints in front seats",
+      "Front and rear-compartment Head Protection System with front side-impact airbags",
+      "Rollover sensor triggering airbags and safety-belt pretensioners",
+      "Adaptive Brake Lights",
+      "Battery Safety Terminal and automatic fuel cut-off on airbag deployment",
+      "Central locking system and Coded Driveaway Protection",
+      "Anti-theft alarm system with keyhead remote operation and interior motion detector"
+    ]
+  }
+}

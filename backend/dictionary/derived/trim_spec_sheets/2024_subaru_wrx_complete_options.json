@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_subaru_wrx_complete_options",
+  "make": "Subaru",
+  "models": [
+    "WRX",
+    "WRX"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Subaru Impreza Turbo 2000 (UK WRX equivalent (GF); Mounting the turbo lower in the engine bay helps reduce the car's centre of grav"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine FA20F EJ207 EJ257; kW @ 5600 296 hp"
+      }
+    ]
+  }
+}

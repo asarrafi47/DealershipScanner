@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2016|chevrolet|camaro",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SS",
+    "RS",
+    "LT",
+    "Limited",
+    "Premium",
+    "Sport",
+    "EX",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

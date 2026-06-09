@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2016|chevrolet|corvette",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_llm_2016__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3LZ",
+    "3LT",
+    "Z06",
+    "Stingray with Z51",
+    "Stingray"
+  ],
+  "adds_by_trim": {
+    "3LZ": [
+      "Hand-stretched Napa leather instrument panel with aluminum accents",
+      "Lightweight aluminum door, pedal, shifter and cockpit instrumentation trim"
+    ],
+    "3LT": [
+      "Napa leather available on trim level",
+      "Hand-stretched leather-wrapped instrument panel with meticulous fit and finish"
+    ],
+    "Z06": [
+      "Unique performance specifications and enhanced powertrain"
+    ],
+    "Stingray with Z51": [
+      "Z51 performance package"
+    ],
+    "Stingray": [
+      "Flat-bottom leather-wrapped power tilt and telescopic steering wheel with Bluetooth controls",
+      "Cruise control and audio system controls on steering wheel",
+      "Driver Information Center integrated into steering wheel",
+      "Passenger air vent with interior temperature control and indicator",
+      "Heated and ventilated seats available",
+      "Run-flat Michelin summer-only tires eliminating need for spare tire",
+      "Paddle-shift control for Active Rev Matching or manual shifting",
+      "8-speed paddle-shift automatic transmission available"
+    ]
+  }
+}

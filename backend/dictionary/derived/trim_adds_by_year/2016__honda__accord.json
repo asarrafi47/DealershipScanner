@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2016|honda|accord",
+  "year": 2016,
+  "make": "Honda",
+  "model": "Accord",
+  "ladder_id": "brochure_2016__honda__accord",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L",
+    "Sport",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "LX": [
+      "185-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "6-speed manual or CVT with Sport Mode",
+      "Vehicle Stability Assist with traction control",
+      "Tilt and telescopic steering column",
+      "Map lights",
+      "Driver's seat with 10-way power adjustment including lumbar support"
+    ],
+    "EX": [
+      "Upgraded to 189-hp 2.4-liter i-VTEC 4-cylinder engine",
+      "Adds LED Daytime Running Lights (DRL)",
+      "Adds Honda LaneWatch",
+      "Adds LED fog lights",
+      "Adds one-touch power moonroof with tilt feature",
+      "Adds Smart Entry and push button start",
+      "Adds Heated power side mirrors with integrated turn indicators",
+      "Adds 7-inch Display Audio with electrostatic touch-screen",
+      "Adds Apple CarPlay and Android Auto capability"
+    ],
+    "Sport": [
+      "Upgraded to 189-hp 2.4-liter i-VTEC 4-cylinder engine",
+      "Adds dual chrome exhaust finishers",
+      "Adds 19-inch alloy wheels",
+      "Adds leather-wrapped steering wheel",
+      "Adds aluminum pedals",
+      "Adds Driver's seat with 10-way power adjustment including lumbar support",
+      "Adds 60/40 split fold-down rear seatback with center armrest"
+    ],
+    "EX-L": [
+      "Adds standard continuously variable transmission (CVT) with Sport Mode",
+      "Adds automatic-dimming rearview mirror",
+      "Adds Driver's seat with two-position memory",
+      "Adds Front passenger's seat with 4-way power adjustment",
+      "Adds HondaLink",
+      "Adds SiriusXM Radio and HD Radio",
+      "Adds 360-watt AM/FM/CD premium audio system with 7 speakers including subwoofer",
+      "Adds Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "Adds Standard Honda Sensing suite of safety and driver-assistive features"
+    ]
+  }
+}

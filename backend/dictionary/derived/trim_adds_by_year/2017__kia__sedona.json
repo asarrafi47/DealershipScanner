@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|kia|sedona",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Sedona",
+  "ladder_id": "brochure_llm_2017__kia__sedona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX LIMITED",
+    "SX",
+    "EX",
+    "LX",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SX LIMITED": [
+      "Premium full-grain Nappa leather seat trim for first and second row",
+      "Available dual front and rear sunroofs with dual sliding sunshades",
+      "Available heated and ventilated front seats with three temperature settings",
+      "Available driver's memory seat and mirror system for two drivers",
+      "Tri-zone automatic temperature control with cabin air ionizer"
+    ],
+    "SX": [
+      "Heated front seats and heated second-row outboard seat cushions available",
+      "Available ventilated driver and front-passenger seats",
+      "Driver's memory seat and mirror system available"
+    ],
+    "EX": [
+      "Two-tone Nappa leather seat trim available",
+      "Reclining second-row first-class lounge seats with sliding and adjustability",
+      "Aviation-style contoured headrests with adjustable armrests and footrests"
+    ],
+    "LX": [
+      "Camel beige cloth seating standard",
+      "Three-point seat belts for all seating positions standard"
+    ],
+    "L": [
+      "NHTSA 5-star overall safety rating",
+      "Advanced airbag system with dual front, side, and full-length curtain airbags",
+      "Front and rear crumple zones engineered for impact energy absorption",
+      "Side-impact door beams with reinforced body support pillars",
+      "Rear child-safety door locks and LATCH system for child seats"
+    ]
+  }
+}

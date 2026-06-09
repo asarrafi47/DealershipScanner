@@ -1,0 +1,53 @@
+{
+  "ladder_id": "2025_lexus_nx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "NX",
+    "NX"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid drivetrain Power-split (NX 300h)"
+      }
+    ],
+    "F Sport Handling": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; cc 8AR-FTS turbo I4 (NX 200t/300; AGZ10/15)"
+      }
+    ],
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; cc 8AR-FTS turbo I4 (NX 200t/300; AGZ10/15)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; cc 8AR-FTS turbo I4 (NX 200t/300; AGZ10/15)"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; Electric motor"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive"
+      },
+      {
+        "label": "Screen Size",
+        "value": "A head-up display and wireless smartphone charging are both optional."
+      }
+    ]
+  }
+}

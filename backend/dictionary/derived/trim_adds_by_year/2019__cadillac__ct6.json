@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2019|cadillac|ct6",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "CT6",
+  "ladder_id": "brochure_web_2019__cadillac__ct6",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "CT6-V",
+    "CT6 Platinum",
+    "Premium Luxury",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "CT6-V": [
+      "4.2-liter twin-turbo V-8 engine tuned for 550 hp and 640 lb-ft of torque",
+      "Hand-built Blackwing V-8 with ultimate performance tuning"
+    ],
+    "CT6 Platinum": [
+      "4.2-liter twin-turbo V-8 engine tuned for 500 hp and 574 lb-ft of torque",
+      "34-speaker Bose Panaray audio system"
+    ],
+    "Premium Luxury": [
+      "Super Cruise hands-free driving capability with adaptive cruise control and active lane centering",
+      "Magnetic ride control suspension",
+      "20-inch alloy wheels",
+      "Curve-adaptive headlights",
+      "Active rear steering with four-wheel steering",
+      "Hands-free power tailgate",
+      "16-way heated and ventilated front seats",
+      "Heated rear seats",
+      "12.0-inch instrument cluster display",
+      "Ambient interior lighting with color head-up display and heated steering wheel"
+    ],
+    "Luxury": [
+      "3.6-liter naturally aspirated V-6 engine with 335 hp and 284 lb-ft of torque",
+      "10-speed automatic transmission with AWD",
+      "19-inch alloy wheels with rain-sensing wipers",
+      "LED headlights and taillights with panoramic sunroof",
+      "8-speaker Bose audio system with active noise cancellation",
+      "10.2-inch touchscreen infotainment with navigation, Apple CarPlay, and Android Auto",
+      "8.0-inch instrument cluster display",
+      "Dual-zone climate control with leather upholstery",
+      "Heated 14-way power front seats and wireless charging pad",
+      "Automatic emergency braking, blind-spot monitoring, rear cross-traffic alert, and lane keep assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/ct6/"
+}

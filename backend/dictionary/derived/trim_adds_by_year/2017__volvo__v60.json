@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2017|volvo|v60",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "V60",
+  "ladder_id": "brochure_llm_2017__volvo__v60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "R-Design",
+    "PREMIER",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Active dual xenon headlights with headlight washers",
+      "Accent lighting",
+      "Convenience package with keyless drive and rear park assist camera",
+      "Technology package with adaptive cruise control and collision warning",
+      "Harman Kardon Premium Sound System"
+    ],
+    "R-Design": [
+      "19-inch Ixion diamond cut alloy wheels",
+      "R-Design leather upholstery with charcoal headliner",
+      "Sport seats with charcoal headliner",
+      "Convenience package standard",
+      "Technology package standard"
+    ],
+    "PREMIER": [
+      "Leather seating surfaces",
+      "Sensus Navigation with Mapcare",
+      "Auto dimming interior mirror",
+      "Silver roof rails",
+      "Brightwork on side windows"
+    ],
+    "T5": [
+      "17-inch Pallene silver alloy wheels",
+      "T-Tec textile upholstery in charcoal and offblack",
+      "Quartz headliner",
+      "Power child locks on rear doors with dual outboard booster seats",
+      "Dual screen rear seat entertainment system available"
+    ]
+  }
+}

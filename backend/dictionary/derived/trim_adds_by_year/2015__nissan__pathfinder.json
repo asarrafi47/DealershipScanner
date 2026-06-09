@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2015|nissan|pathfinder",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2015__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch aluminum-alloy wheels",
+      "Bose audio system with 13 speakers and DVD video playback",
+      "Dual panorama moonroof",
+      "Tow hitch receiver",
+      "Nissan Hard Drive Navigation System with 8-inch VGA touch-screen and voice recognition",
+      "Around View Monitor",
+      "Climate-controlled front seats",
+      "Heated steering wheel",
+      "Power-tilt/telescoping steering column with steering-wheel position memory"
+    ],
+    "SL": [
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Welcome lighting and heated front and rear seats",
+      "Leather-appointed seats and door trim",
+      "Driver's seat power lumbar support and outside mirrors position memory",
+      "4-way power adjustable passenger's seat",
+      "Wood-tone trim and stainless steel kick plates",
+      "120-volt AC power outlet",
+      "Remote Engine Start System with digital compass",
+      "Power liftgate with heated outside mirrors and reverse tilt-down feature",
+      "Chrome body side moldings"
+    ],
+    "SV": [
+      "8-way power adjustable driver's seat",
+      "Smart Auto Headlights and fog lights",
+      "Heated outside mirrors and roof rails",
+      "7-inch QVGA color Information Center display",
+      "RearView Monitor and Rear Sonar System",
+      "Individual tire pressure display",
+      "Bluetooth Hands-free Phone System and Nissan Intelligent Key",
+      "Power windows with front one-touch auto-up/down",
+      "Variable intermittent speed-sensitive windshield wipers",
+      "Auto-dimming rearview mirror, HomeLink, dual illuminated visor mirrors, leather-wrapped steering wheel and shift knob, AM/FM/CD audio, USB connection port, plug-in VTR jack, SiriusXM Satellite Radio"
+    ],
+    "S": [
+      "260-hp 3.5-liter V6 engine with Xtronic CVT transmission",
+      "Available All-Mode 4x4-i 4WD system with hill start assist and hill descent control",
+      "18-inch aluminum-alloy wheels",
+      "7-passenger seating capacity with EZ Flex Seating System",
+      "Tri-Zone Automatic Temperature Control",
+      "Advanced Drive-Assist Display with 7-inch QVGA color monitor",
+      "AM/FM in-dash 6-CD audio system with six speakers and MP3/WMA playback",
+      "Nissan Advanced Air Bag System",
+      "Vehicle Dynamic Control with Traction Control System",
+      "Tire Pressure Monitoring System with Easy-Fill Tire Alert and remote keyless entry"
+    ]
+  }
+}

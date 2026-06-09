@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2015|ram|1500rebe",
+  "year": 2015,
+  "make": "ram",
+  "model": "1500-Rebe;",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Rebel",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

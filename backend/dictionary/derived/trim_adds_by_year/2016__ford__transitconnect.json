@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2016|ford|transitconnect",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_web_2016__ford__transitconnect",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Titanium",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "Integrated navigation system",
+      "Nine-speaker premium audio system",
+      "6.5-inch touchscreen with Apple CarPlay and Android Auto"
+    ],
+    "XLT": [
+      "Blind-spot monitoring",
+      "Rear cross-traffic alert",
+      "Lane keep assist",
+      "Automatic high-beams",
+      "Rear parking sensors (passenger configuration)",
+      "6.5-inch touchscreen with Apple CarPlay and Android Auto"
+    ],
+    "XL": [
+      "Front automatic emergency braking on all models",
+      "4.2-inch infotainment screen",
+      "Choice of 2.0L I-4 or 2.5L four-cylinder engines",
+      "Eight-speed or six-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/transit-connect/"
+}

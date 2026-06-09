@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2013|chevrolet|equinox",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2013__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome front and rear bumper lowers",
+      "Halogen uplevel projector-style headlamps",
+      "Power-programmable rear liftgate with fixed glass",
+      "Front-passenger 8-way power-adjustable seat",
+      "Driver 8-way power-adjustable seat with lumbar and height",
+      "Heated driver and front-passenger seats",
+      "Forward Collision Alert and Lane Departure Warning"
+    ],
+    "2LT": [
+      "Rear vision camera",
+      "Multi-Flex sliding rear seat with 60/40 split-folding and 3-position recline"
+    ],
+    "1LT": [
+      "OnStar 7 Directions & Connections Plan standard for six months with Automatic Crash Response",
+      "Daytime running lamps with automatic exterior lamp control"
+    ],
+    "LS": [
+      "Front and rear body-color bumpers with charcoal lowers",
+      "Halogen headlamps",
+      "Power-programmable door locks with lockout protection and rear-door child safety locks",
+      "LATCH system for child safety seats",
+      "Manual rear liftgate with fixed glass",
+      "Multi-Flex sliding rear seat with 60/40 split-folding and 3-position recline",
+      "AM/FM stereo with CD player"
+    ]
+  }
+}

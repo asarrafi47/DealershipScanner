@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2017|toyota|avalon",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2017__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited",
+    "Hybrid XLE Premium",
+    "Hybrid XLE Plus",
+    "Limited",
+    "Touring",
+    "XLE Premium",
+    "XLE Plus",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited": [
+      "17-inch Super Chrome alloy wheels with P215/55R17 tires",
+      "High Intensity Discharge Quadrabeam headlights with auto on/off and LED DRL",
+      "Hidden exhaust with chrome-accented cover",
+      "Premium perforated leather-trimmed multi-stage heated front seats with power adjustment",
+      "Premium leather-trimmed tilt/telescopic steering wheel",
+      "Entune Premium JBL Audio with Integrated Navigation and App Suite with 11 speakers",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert"
+    ],
+    "Hybrid XLE Premium": [
+      "17-inch dark gray painted alloy wheels with machined finish",
+      "Quadrabeam halogen headlights with auto on/off and LED DRL with on/off feature",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Smart Key System on front doors and trunk with Push Button Start",
+      "Entune Premium Audio with Integrated Navigation and App Suite with nine speakers",
+      "Qi-compatible wireless smartphone charging",
+      "Three-zone automatic climate control"
+    ],
+    "Hybrid XLE Plus": [
+      "2.5-liter 4-cylinder hybrid engine with 200 hp hybrid system net power",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "40 city/39 hwy/40 combined estimated mpg",
+      "Smoked LED taillights",
+      "Color-keyed heated auto-dimming power outside mirrors with turn signal indicators and puddle lights",
+      "Entune Audio Plus with Connected Navigation App and Entune Multimedia Bundle with eight speakers",
+      "Leather-trimmed multi-stage heated front seats with 8-way power adjustment"
+    ],
+    "Limited": [
+      "XLE Premium features plus enhanced luxury appointments",
+      "Premium leather interior with additional trim details",
+      "Advanced safety and convenience technology package"
+    ],
+    "Touring": [
+      "XLE Premium features with sport-oriented enhancements"
+    ],
+    "XLE Premium": [
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Smart Key System on front doors and trunk with Push Button Start",
+      "Entune Premium Audio with Integrated Navigation and App Suite with nine speakers",
+      "Qi-compatible wireless smartphone charging",
+      "Three-zone automatic climate control"
+    ],
+    "XLE Plus": [
+      "17-inch dark gray painted alloy wheels with machined finish",
+      "Quadrabeam halogen headlights with auto on/off and LED DRL",
+      "Leather-trimmed multi-stage heated front seats with 8-way power adjustment",
+      "Entune Audio Plus with Connected Navigation App with eight speakers",
+      "Leather-trimmed tilt/telescopic steering wheel with audio controls"
+    ],
+    "XLE": [
+      "3.5-liter V6 DOHC engine with 268 hp and 248 lb-ft torque",
+      "6-speed electronically controlled automatic transmission with sequential shift mode",
+      "Sport, ECO and Normal driving modes",
+      "Front-wheel drive with MacPherson strut suspension",
+      "Power-assisted ventilated disc brakes with Star Safety System",
+      "Electric power steering with 40.0-foot turning circle",
+      "Dual independent variable valve timing with intelligence (VVT-i)"
+    ]
+  }
+}

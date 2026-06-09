@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|subaru|brz",
+  "year": 2015,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2015__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Series.Blue",
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Series.Blue": [
+      "17-inch STI 15-spoke aluminum-alloy wheels with gloss black finish",
+      "Red-painted brake calipers",
+      "Leather-wrapped steering wheel with blue leather accents and stitching",
+      "Door trim with blue stitching",
+      "Center console and lower door knee pads with blue stitching",
+      "Shift boot and parking brake with blue stitching",
+      "STI Aero Kit with front, side and rear quarter under spoilers",
+      "STI red start/stop ignition button",
+      "Carbon fiber-patterned dash trim",
+      "Alcantara and leather-trimmed front seats with blue bolster accents and embroidered BRZ logo"
+    ],
+    "BRZ Limited": [
+      "Fog lights",
+      "Trunk spoiler",
+      "Alcantara and leather-trimmed upholstery",
+      "Heated front seats and side mirrors",
+      "Dual-zone digital climate control",
+      "Keyless Access with Push-button Start",
+      "Antitheft security system",
+      "6-speed automatic transmission option with Sport mode and manual mode with paddle shifters"
+    ],
+    "BRZ Premium": [
+      "200-hp direct-injected 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Close-ratio 6-speed manual transmission",
+      "Sport-tuned suspension",
+      "Multi-spoke 17-inch aluminum-alloy wheels",
+      "HID headlights",
+      "Cloth upholstery",
+      "Manually adjustable air-conditioning system",
+      "6.1-inch high-resolution touch-screen GPS navigation with SUBARU STARLINK system",
+      "8-speaker audio system with HD Radio, iTunes tagging, USB port, iPod control, Bluetooth audio streaming"
+    ]
+  }
+}

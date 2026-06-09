@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|alfaromeo|stelvio",
+  "year": 2019,
+  "make": "alfa romeo",
+  "model": "stelvio",
+  "ladder_id": "brochure_2019__alfaromeo__stelvio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "19-inch Sport 5-hole aluminum wheels with 235/55R19 performance tires",
+      "8.8-inch touchscreen with navigation",
+      "Heated rear seats",
+      "Hands-free power liftgate",
+      "Trailer-tow hitch",
+      "Compact spare tire",
+      "Engine block heater",
+      "Wireless charging",
+      "Gloss Black window surrounds and roof rails",
+      "Colored brake calipers in Red/Black/Yellow options"
+    ],
+    "Premium": [
+      "Upgraded to Q4 All-Wheel Drive (AWD)",
+      "Adds Harman Kardon Premium Audio System",
+      "Adds dual-pane sunroof",
+      "Adds power liftgate",
+      "Adds power-folding, heated exterior mirrors",
+      "Adds auto-dimming interior mirror",
+      "Adds universal garage door opener",
+      "Adds Full-Speed Forward Collision Warning (FCW) Plus",
+      "Adds Hill Descent Control (HDC)"
+    ]
+  }
+}

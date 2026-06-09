@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|chevrolet|traverse",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2012__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Power-foldaway, power-adjustable, heated body-color mirrors with auto-dimming and blind spot mirrors",
+      "Auto-dimming rearview mirror",
+      "Power windows with driver and passenger Express-Up/-Down",
+      "Seven-passenger seating with second-row captain's chairs"
+    ],
+    "2LT": [
+      "Rear vision camera system integrated into rearview mirror",
+      "SkyScape power front sunroof with fixed rear skylight",
+      "Foldaway power-adjustable heated body-color mirrors with turn signals and blind spot mirrors",
+      "Rear Parking Assist with audible warning"
+    ],
+    "1LT": [
+      "Remote vehicle starter system",
+      "Power-remote rearview mirrors",
+      "Universal home remote transmitter",
+      "Second-row console with two cup holders"
+    ],
+    "LS": [
+      "Chrome door handles",
+      "Halogen headlamps with Automatic Exterior Lamp Control",
+      "Manual rearview mirror with day/night adjustment",
+      "First-row console with two cup holders and covered storage",
+      "Rear underfloor storage",
+      "Oil-Life Monitor",
+      "Black roof rail moldings",
+      "Rear spoiler",
+      "Eight-passenger seating with 60/40 split second and third-row benches"
+    ]
+  }
+}

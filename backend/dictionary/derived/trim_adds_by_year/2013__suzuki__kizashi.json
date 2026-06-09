@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|suzuki|kizashi",
+  "year": 2013,
+  "make": "Suzuki",
+  "model": "Kizashi",
+  "ladder_id": "brochure_llm_2013__suzuki__kizashi",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GTS",
+    "SPORT",
+    "SE",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "GTS": [
+      "All-Wheel Drive standard"
+    ],
+    "SPORT": [
+      "Automatic transmission with Continuously Variable Transmission option",
+      "Front-Wheel Drive or All-Wheel Drive availability"
+    ],
+    "SE": [
+      "Automatic transmission",
+      "Front-Wheel Drive or All-Wheel Drive availability"
+    ],
+    "BASE": [
+      "Manual transmission with Front-Wheel Drive",
+      "16.6-gallon fuel tank",
+      "183.1 inches overall length",
+      "106.3-inch wheelbase"
+    ]
+  }
+}

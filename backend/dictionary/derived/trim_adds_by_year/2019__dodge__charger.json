@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2019|dodge|charger",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2019__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT",
+    "R/T",
+    "T/R KCAP",
+    "T/R",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT": [
+      "SRT advanced multistage driver and front-passenger airbags",
+      "SRT performance leather-wrapped flat-bottom heated steering wheel",
+      "Performance Four-Bump leather-wrapped steering wheel with vehicle controls",
+      "LED illuminated door panel map pockets",
+      "Heated and ventilated front seats",
+      "Power tilt/telescoping steering column",
+      "8.4-inch Uconnect 4C touchscreen display with SiriusXM"
+    ],
+    "R/T": [
+      "Advanced multistage driver and front-passenger airbags",
+      "Performance Four-Bump leather-wrapped steering wheel with vehicle controls",
+      "Wildwheel Alcantara suede-wrapped steering wheel option",
+      "Heated and ventilated front seats standard",
+      "LED illuminated door panel map pockets",
+      "8.4-inch Uconnect 4C multimedia system standard"
+    ],
+    "T/R KCAP": [
+      "Heated front seats with Plus Group",
+      "Power tilt/telescoping steering column",
+      "Heated steering wheel",
+      "8.4-inch Uconnect 4C touchscreen display"
+    ],
+    "T/R": [
+      "Steering-wheel-mounted paddle shifters with automatic transmission",
+      "Power tilt/telescoping steering column",
+      "Heated steering wheel with Plus Group",
+      "Dark engine turn interior accents with Plus Group",
+      "Universal garage door opener"
+    ],
+    "GT": [
+      "Leather-wrapped steering wheel with vehicle controls",
+      "Performance Four-Bump leather-wrapped steering wheel option",
+      "8.4-inch Uconnect 4C touchscreen display available",
+      "6 premium Alpine speakers with 276-watt amplifier option"
+    ],
+    "SXT": [
+      "6 speakers standard audio system",
+      "7-inch Uconnect 4 touchscreen display with Apple CarPlay and Android Auto",
+      "Leather-wrapped steering wheel with vehicle controls",
+      "6-way power driver's seat with 4-way power lumbar",
+      "Illuminated carpeted trunk compartment",
+      "Advanced multistage driver and front-passenger airbags",
+      "Supplemental front and rear side-curtain airbags"
+    ]
+  }
+}

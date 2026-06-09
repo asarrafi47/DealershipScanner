@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2012|chevrolet|malibu",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2012__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "3LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Silver insert grille with chrome surround",
+      "Power-adjustable, manual-folding, heated body-color mirrors",
+      "Eight-way power driver seat adjuster",
+      "Halogen composite headlamps with Automatic Exterior Lamp Control"
+    ],
+    "3LT": [
+      "Premium carpeted front and rear floor mats",
+      "Power-adjustable, manual-folding body-color mirrors",
+      "Power Convenience Package with driver six-way power seat, remote vehicle starter, rear power center, and Bluetooth wireless technology"
+    ],
+    "1LT": [
+      "Power-adjustable, manual-folding body-color mirrors",
+      "Power Convenience Package with driver six-way power seat, remote vehicle starter, rear power center, and Bluetooth wireless technology",
+      "LS Uplevel Package including Bluetooth wireless technology, steering wheel-mounted audio controls, carpeted floor mats, body-color bodyside moldings, and compact spare tire"
+    ],
+    "LS": [
+      "Body-color door handles",
+      "Black grille insert with chrome surround",
+      "Halogen composite headlamps with crystalline-like lenses and Automatic Exterior Lamp Control",
+      "Power-adjustable manual-folding black mirrors",
+      "Bodyside and rocker body-color moldings",
+      "Carpeted front and rear floor mats",
+      "Acoustic-laminated Solar-Ray light-tinted glass",
+      "Interior lighting with front reading lamps",
+      "Analog instrumentation with speedometer, engine temperature, fuel and tachometer",
+      "Driver Information Center with oil-life and tire pressure monitors"
+    ]
+  }
+}

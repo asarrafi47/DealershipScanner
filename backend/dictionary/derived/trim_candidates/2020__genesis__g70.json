@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2020|genesis|g70",
+  "year": 2020,
+  "make": "genesis",
+  "model": "G70",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

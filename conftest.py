@@ -1,8 +1,22 @@
 """Root pytest configuration — ensures ``backend/`` is on sys.path for bare-import modules."""
+import os
 import sys
 from pathlib import Path
 
 import pytest
+
+# Dev/test may use plain SQLite for users.db; production forbids this (SEC-088).
+os.environ.setdefault("ALLOW_UNENCRYPTED_USER_DB", "1")
+
+PROD_TEST_USERS_DB_KEY = "pytest-users-db-encryption-key-32chars!"
+PROD_TEST_DEV_USERS_DB_KEY = "pytest-dev-users-db-enc-key-32c!"
+
+
+def apply_production_credential_encryption_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Wire SQLCipher keys for tests that import backend.main with FLASK_ENV=production."""
+    monkeypatch.delenv("ALLOW_UNENCRYPTED_USER_DB", raising=False)
+    monkeypatch.setenv("USERS_DB_ENCRYPTION_KEY", PROD_TEST_USERS_DB_KEY)
+    monkeypatch.setenv("DEV_USERS_DB_ENCRYPTION_KEY", PROD_TEST_DEV_USERS_DB_KEY)
 
 # backend/ must be on sys.path so bare imports like ``from scraping.xxx`` and
 # ``from intelligence.llm.xxx`` resolve to the correct packages.

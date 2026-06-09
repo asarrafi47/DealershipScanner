@@ -1,0 +1,49 @@
+{
+  "ladder_id": "nissan_pathfinder",
+  "make": "Nissan",
+  "models": [
+    "Pathfinder",
+    "Pathfinder Rock Creek"
+  ],
+  "year_min": 2022,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S9); Four-Wheel Drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Premium leather seating"
+      }
+    ],
+    "SL": [
+      {
+        "label": "Engine Options",
+        "value": "The appearance package is only available on the SV and SL trim levels."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather-appointed seats"
+      }
+    ],
+    "SV": [
+      {
+        "label": "Engine Options",
+        "value": "Mid-level convenience"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Entry equipment level"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ]
+  }
+}

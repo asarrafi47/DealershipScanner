@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_ford_bronco_complete_options",
+  "make": "Ford",
+  "models": [
+    "Bronco",
+    "Bronco"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 351 cu in (5.8 L) 351M V8; Based on a design proposal originally used in the development of the previous-ge"
+      }
+    ],
+    "XLT": [
+      {
+        "label": "Engine Options",
+        "value": "The standard, 156 hp (116 kW) 5.8L V8 was discontinued for 1986. Body"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "cu in (6.6 L) 400 V8; However, a large number of options were offered through both Ford and its dealer"
+      }
+    ]
+  }
+}

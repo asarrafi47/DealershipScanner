@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2018|volkswagen|jetta",
+  "year": 2018,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "brochure_web_2018__volkswagen__jetta",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Jetta SEL Auto",
+    "Jetta SE Auto",
+    "Jetta Sport Auto",
+    "Jetta S Auto"
+  ],
+  "adds_by_trim": {
+    "Jetta SEL Auto": [
+      "Brown/Titan Black perforated Vienna leather seats",
+      "18-inch alloy wheels",
+      "Automatic high-beams and upgraded headlights"
+    ],
+    "Jetta SE Auto": [
+      "Wireless smartphone charging pad",
+      "Wireless smartphone mirroring",
+      "SiriusXM satellite radio",
+      "Voice control",
+      "17-inch alloy wheels"
+    ],
+    "Jetta Sport Auto": [
+      "Enhanced styling and trim details"
+    ],
+    "Jetta S Auto": [
+      "1.5-liter turbocharged inline four-cylinder engine, 158 hp, 184 lb-ft torque",
+      "Eight-speed automatic transmission with front-wheel drive",
+      "8.0-inch floating infotainment touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "IQ.Drive active driver assistance suite with lane keep assist, adaptive cruise control with stop-and-go, blind-spot monitoring, rear cross-traffic alert, automatic emergency braking",
+      "LED headlights with new grille design",
+      "Standard light bar connecting taillights"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/jetta/"
+}

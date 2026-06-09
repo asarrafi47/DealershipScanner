@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2013|nissan|rogue",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2013__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV with SL Package",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV with SL Package": [
+      "18-inch aluminum-alloy wheels",
+      "High Intensity Discharge (HID) xenon headlights with automatic on/off",
+      "Leather-appointed seats",
+      "Leather-wrapped steering wheel",
+      "Heated front seats",
+      "Heated outside mirror with timer",
+      "Bose audio system with seven speakers and Nd Richbass subwoofer",
+      "Nissan Navigation System with 5-inch color touch-screen monitor and NavTraffic",
+      "Around View Monitor",
+      "Power sliding glass moonroof with auto-dimming rearview mirror and automatic temperature control"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels with roof rails with silver accents",
+      "Nissan Intelligent Key keyless entry and ignition system",
+      "Premium AM/FM/CD audio system with 4.3-inch color display",
+      "USB connection port for iPod interface and other compatible devices",
+      "SiriusXM Satellite Radio",
+      "RearView Monitor",
+      "6-way power adjustable driver's seat with power lumbar support",
+      "Fold-down front-passenger seat"
+    ],
+    "S": [
+      "170-hp 2.5-liter 4-cylinder engine with Xtronic CVT",
+      "Intuitive All-Wheel Drive (AWD) or Front-Wheel Drive option",
+      "Six standard air bags",
+      "16-inch steel wheels with wheel covers",
+      "4-wheel vented disc brakes with ABS, Electronic Brake force Distribution, and Brake Assist",
+      "AM/FM/CD audio system with four speakers",
+      "Auxiliary audio input jack and iPod interface system",
+      "Air conditioning with in-cabin microfilter",
+      "Remote keyless entry with power windows and door locks"
+    ]
+  }
+}

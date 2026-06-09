@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|mazda|cx9",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2016__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "Grand Touring",
+    "Sport Touring"
+  ],
+  "adds_by_trim": {
+    "Signature": [
+      "i-ACTIV AWD standard (available on lower trims)",
+      "20-inch alloy wheels with Dark Silver finish",
+      "Sand leather or Auburn leather upholstery",
+      "8-way power-adjustable driver's seat with memory",
+      "Available Active Driving Display projecting key information on windshield"
+    ],
+    "Grand Touring": [
+      "20-inch alloy wheels with Dark Silver finish",
+      "Black leather or Sand leather upholstery (vs. cloth on Sport Touring)"
+    ],
+    "Sport Touring": [
+      "SKYACTIV-G 2.5T turbocharged engine with 250 hp",
+      "SKYACTIV-Drive 6-speed automatic transmission with manual shift and Sport modes",
+      "Electric power-assist steering",
+      "Independent MacPherson strut front suspension with stabilizer bar",
+      "Independent multilink rear suspension with stabilizer bar",
+      "12.6-inch front and 12.8-inch rear power-assisted disc brakes with ABS",
+      "18-inch alloy wheels with Dark Silver finish",
+      "Black cloth or Sand cloth upholstery",
+      "Leather-wrapped steering wheel and shift knob",
+      "Full-color display with Commander control for MAZDA CONNECT infotainment"
+    ]
+  }
+}

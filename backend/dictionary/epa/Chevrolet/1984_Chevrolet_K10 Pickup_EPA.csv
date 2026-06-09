@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Chevrolet,K10 Pickup,4WD,4.1L V6,4.1L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.1,14,17,15,,,,,
+1984,Chevrolet,K10 Pickup,4WD,4.1L V6,4.1L V6,,Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.1,13,17,14,,,,,
+1984,Chevrolet,K10 Pickup,4WD,4.1L V6,4.1L V6,,Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.1,13,16,14,,,,,
+1984,Chevrolet,K10 Pickup,4WD,5.0L V8 ((GM-CHEV)),5.0L V8,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.0,13,16,14,,,,,
+1984,Chevrolet,K10 Pickup,4WD,5.0L V8 ((GM-CHEV)),5.0L V8,,Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.0,11,15,13,,,,,
+1984,Chevrolet,K10 Pickup,4WD,5.0L V8 ((GM-CHEV)),5.0L V8,,Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.0,12,16,14,,,,,
+1984,Chevrolet,K10 Pickup,4WD,Diesel 6.2L V8 ((DIESEL)) Diesel,6.2L V8,,Automatic 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,16,20,18,,,,,
+1984,Chevrolet,K10 Pickup,4WD,Diesel 6.2L V8 ((DIESEL)) Diesel,6.2L V8,,Manual 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,17,20,18,,,,,
+1984,Chevrolet,K10 Pickup,4WD,Diesel 6.2L V8 ((DIESEL)) Diesel,6.2L V8,,Manual 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,17,18,17,,,,,
+1984,Chevrolet,K10 Pickup,4WD,5.7L V8 ((350 V8) (FFS) CA model),5.7L V8,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.7,11,15,13,,,,,
+1984,Chevrolet,K10 Pickup,4WD,Diesel 6.2L V8 ((DIESEL) CA model) Diesel,6.2L V8,,Automatic 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,15,20,17,,,,,
+1984,Chevrolet,K10 Pickup,4WD,Diesel 6.2L V8 ((DIESEL) CA model) Diesel,6.2L V8,,Manual 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,17,20,18,,,,,

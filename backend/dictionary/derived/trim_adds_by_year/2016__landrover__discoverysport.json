@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2016|landrover|discoverysport",
+  "year": 2016,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "ladder_id": "brochure_2016__landrover__discoverysport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 2.0L Turbocharged I-4 engine with 240 BHP",
+      "Adds Nine-Speed Automatic transmission",
+      "Adds Terrain Response® driving technology",
+      "Adds Hill Descent Control",
+      "Adds 5 or 5+2 seating configuration",
+      "Adds Land Rover InControl™ infotainment system",
+      "Adds Electric Park Brake",
+      "Adds Ventilated front disc brakes and solid rear disc brakes"
+    ],
+    "Limited": [],
+    "Standard": [],
+    "HSE": [
+      "Adds HSE Luxury designation",
+      "Adds Black Design Pack option"
+    ]
+  }
+}

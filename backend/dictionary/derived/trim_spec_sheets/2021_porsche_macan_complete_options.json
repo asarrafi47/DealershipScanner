@@ -1,0 +1,45 @@
+{
+  "ladder_id": "2021_porsche_macan_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Macan",
+    "Macan"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Equipment and features typical of the Turbo trim. (was L V6 twin-turbo)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "10.9-inch touchscreen display"
+      }
+    ],
+    "GTS": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L V6 twin-turbo (was Model Years of Production Engine &)"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Model Years of Production Engine & (was L Volkswagen-Audi EA839TT TFSI V6 twin-turbo; The Macan S and Macan Turbo have 0–60 mph (0–97 km/h) times of 5.2 seconds and 4)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L Volkswagen-Audi EA839TT TFSI V6 twin-turbo; The Macan S and Macan Turbo have 0–60 mph (0–97 km/h) times of 5.2 seconds and 4"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: 10.9-inch touchscreen display"
+      }
+    ]
+  }
+}

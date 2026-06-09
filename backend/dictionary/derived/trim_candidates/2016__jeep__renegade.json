@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2016|jeep|renegade",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Renegade",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Premium",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

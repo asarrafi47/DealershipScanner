@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2014|lexus|ct",
+  "year": 2014,
+  "make": "lexus",
+  "model": "CT",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

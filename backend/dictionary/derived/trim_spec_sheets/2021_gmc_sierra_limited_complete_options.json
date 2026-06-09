@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_gmc_sierra_limited_complete_options",
+  "make": "GMC",
+  "models": [
+    "Sierra Limited",
+    "Sierra Limited"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "AT4": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 10-spd; Four-Wheel Drive"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 6-spd; Rear-Wheel Drive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|kia|soul",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2017__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "! (exclaim)",
+    "+ (plus)",
+    "1 (base)"
+  ],
+  "adds_by_trim": {
+    "! (exclaim)": [
+      "7-speed Dual-Clutch Transmission",
+      "18-inch alloy wheels with 235/45R18 tires",
+      "HID projector low-beam headlights with auto-leveling and LED accent lights",
+      "LED front fog lights",
+      "Panoramic sunroof with power sunshade",
+      "Body-color heated power outside mirrors",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Heated front seats and rear outboard seat cushions",
+      "Heated steering wheel",
+      "UVO5 Infotainment System with 8-inch touch screen, navigation, Apple CarPlay and Android Auto"
+    ],
+    "+ (plus)": [
+      "2.0L Gasoline Direct Injection engine with 161 horsepower",
+      "6-speed Sportmatic transmission",
+      "17-inch alloy wheels with 215/55R17 tires",
+      "Projector low-beam headlights with LED accent lights",
+      "Front fog lights",
+      "Body-color heated power outside mirrors",
+      "Automatic temperature control with cluster ionizer",
+      "Fast-Charge USB ports",
+      "UVO5 Infotainment System with 7-inch touch screen and Apple CarPlay",
+      "Rear-Camera Display"
+    ],
+    "1 (base)": [
+      "1.6L Gasoline Direct Injection 4-cylinder engine with 130 horsepower",
+      "6-speed manual transmission",
+      "16-inch alloy wheels with 205/60R16 tires",
+      "Multi-Focus Reflector Headlights",
+      "Outside mirrors with turn-signal indicators",
+      "LED taillights with LED high-mount stoplight",
+      "Roof-rack ready mounting points",
+      "Rear-window defroster",
+      "Privacy glass",
+      "Air conditioning"
+    ]
+  }
+}

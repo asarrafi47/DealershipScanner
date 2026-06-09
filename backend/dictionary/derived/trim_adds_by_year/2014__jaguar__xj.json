@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2014|jaguar|xj",
+  "year": 2014,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "brochure_web_2014__jaguar__xj",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XJR575",
+    "XJ50 V8 RWD",
+    "XJL Supercharged RWD",
+    "XJ Supercharged RWD",
+    "XJ50 V6 AWD",
+    "XJ50 V6 RWD",
+    "XJL Portfolio AWD",
+    "XJ Collection RWD",
+    "XJL Portfolio RWD",
+    "XJ R-Sport AWD",
+    "XJ R-Sport RWD"
+  ],
+  "adds_by_trim": {
+    "XJR575": [
+      "5.0-liter supercharged V-8 engine producing 575 hp and 517 lb-ft torque",
+      "0-60 acceleration in 4.2 seconds"
+    ],
+    "XJ50 V8 RWD": [
+      "5.0-liter supercharged V-8 engine producing 470 hp and 424 lb-ft torque",
+      "XJ50 special edition styling with unique wheels and grille treatment",
+      "Special interior detailing and trim-specific features"
+    ],
+    "XJL Supercharged RWD": [
+      "Long-wheelbase configuration providing 4.8 inches additional rear legroom",
+      "5.0-liter supercharged V-8 engine producing 470 hp and 424 lb-ft torque"
+    ],
+    "XJ Supercharged RWD": [
+      "5.0-liter supercharged V-8 engine producing 470 hp and 424 lb-ft torque",
+      "0-60 acceleration in 4.9 seconds"
+    ],
+    "XJ50 V6 AWD": [
+      "All-wheel drive system",
+      "XJ50 special edition styling with unique wheels and grille treatment",
+      "Special interior detailing and trim-specific features"
+    ],
+    "XJ50 V6 RWD": [
+      "XJ50 special edition styling with unique wheels and grille treatment",
+      "Special interior detailing and trim-specific features",
+      "Automatic emergency braking added to driver assist technology"
+    ],
+    "XJL Portfolio AWD": [
+      "All-wheel drive system",
+      "Long-wheelbase configuration providing 4.8 inches additional rear legroom",
+      "Portfolio-level interior and exterior appointments"
+    ],
+    "XJ Collection RWD": [
+      "Collection-level interior and exterior appointments"
+    ],
+    "XJL Portfolio RWD": [
+      "Long-wheelbase configuration providing 4.8 inches additional rear legroom",
+      "Portfolio-level interior and exterior appointments"
+    ],
+    "XJ R-Sport AWD": [
+      "All-wheel drive system",
+      "0-60 acceleration in 6.1 seconds"
+    ],
+    "XJ R-Sport RWD": [
+      "Supercharged 3.0-liter V-6 engine with 340 hp and 332 lb-ft torque",
+      "Adaptive LED headlights with 19-inch wheels",
+      "Black detailing on grille and spoiler for sporty appearance",
+      "Heated and cooled leather seats in both rows with wood veneers",
+      "Panoramic sunroof, 12.3-inch digital instrument display, 10-inch infotainment screen",
+      "20-speaker audio system with one USB port"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jaguar/xj/"
+}

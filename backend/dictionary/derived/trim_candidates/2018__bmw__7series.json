@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2018|bmw|7series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "7 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Executive",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

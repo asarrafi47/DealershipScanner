@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_lexus_rz_complete_options",
+  "make": "Lexus",
+  "models": [
+    "RZ",
+    "RZ"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "F Sport Performance": [
+      {
+        "label": "Engine Options",
+        "value": "Electric range; Plug-in charging 150 kW DC"
+      }
+    ],
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Electric range; Plug-in charging 150 kW DC"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Electric range; Plug-in charging 150 kW DC"
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2022|jeep|compass",
+  "year": 2022,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_2022__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "High Altitude",
+    "Latitude",
+    "Altitude",
+    "Willys",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds new grille design with signature seven-slot Jeep branding",
+      "Adds redesigned front fascia",
+      "Adds available wheel options in 16-inch, 17-inch, and 18-inch styles"
+    ],
+    "Willys": [
+      "driver must remain aware of traffic conditions and maintain control of the vehicle. (8) Always sit properly in designated"
+    ],
+    "Altitude": [
+      "18-inch aluminum painted Gloss Black wheels with 225/55R18 BSW all-season tires",
+      "Gloss Black grille surround with Gloss Black rings and badges",
+      "Black daylight opening molding",
+      "McKinley vinyl and Kimberlite cloth seats with Light Tungsten accent stitching",
+      "Power-adjust 8-way driver seat with power 2-way lumbar adjust",
+      "Heated front seats and heated steering wheel",
+      "Dual-Zone Automatic Temperature Control with humidity sensor",
+      "Foot-activated Open 'n Go power liftgate and remote start system"
+    ],
+    "Latitude": [
+      "6-speed automatic transmission standard on FWD models",
+      "6-speed manual transmission standard on 4x4 models",
+      "Jeep Active Drive single-speed 4WD on 4x4"
+    ],
+    "High Altitude": [
+      "Adds standard LED projector headlamps",
+      "Adds standard premium LED taillamps",
+      "Adds exclusive body-color wheel flares and cladding",
+      "Adds standard 19-inch unique and sporty wheels",
+      "Adds standard premium LED fog lamps with front cornering and curb illumination"
+    ],
+    "Trailhawk": [
+      "driver convenience system, not a substitute for active"
+    ],
+    "Limited": [
+      "driver must remain aware of traffic conditions and be prepared to use the brakes to avoid collisions. (7) This system is a"
+    ]
+  }
+}

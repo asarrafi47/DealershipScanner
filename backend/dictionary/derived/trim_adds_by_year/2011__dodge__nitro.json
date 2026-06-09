@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2011|dodge|nitro",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Nitro",
+  "ladder_id": "brochure_llm_2011__dodge__nitro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NITRO SHOCK",
+    "NITRO DETONATOR",
+    "NITRO HEAT 4.0",
+    "NITRO HEAT"
+  ],
+  "adds_by_trim": {
+    "NITRO SHOCK": [
+      "Leather-trimmed seats with accent-color stitching",
+      "Heated front seats",
+      "Power sunroof standard",
+      "20-inch painted and polished cast aluminum wheels",
+      "Body-color lower sill moldings and front air dam",
+      "Accent-color hood stripe"
+    ],
+    "NITRO DETONATOR": [
+      "4.0-liter SOHC V6 engine",
+      "5-speed automatic transmission",
+      "20-inch painted and polished cast aluminum wheels",
+      "Body-color lower sill moldings and front air dam",
+      "Accent-color hood stripe",
+      "9 amplified speakers with powered subwoofer",
+      "Overhead console with trip computer, temperature, and compass display"
+    ],
+    "NITRO HEAT 4.0": [
+      "4.0-liter SOHC V6 engine",
+      "5-speed automatic transmission",
+      "9 amplified speakers including powered subwoofer",
+      "Uconnect Voice Command",
+      "Speed control",
+      "Auto-dimming rearview mirror",
+      "Security alarm"
+    ],
+    "NITRO HEAT": [
+      "3.7-liter SOHC V6 engine with 4-speed automatic transmission",
+      "20-inch chrome-clad cast aluminum wheels",
+      "Four-wheel disc antilock brakes",
+      "Electronic Stability Control with Electronic Roll Mitigation",
+      "Deep-tint sunscreen glass and rear defroster",
+      "Power windows with driver's one-touch up/down",
+      "60/40 split-fold-flat reclining rear seat",
+      "Fold-flat front-passenger seat",
+      "Media Center 130 CD/MP3 radio with audio jack and 6 speakers",
+      "Advanced multistage front air bags with side-curtain supplements"
+    ]
+  }
+}

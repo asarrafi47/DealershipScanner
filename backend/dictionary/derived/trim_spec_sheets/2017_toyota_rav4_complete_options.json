@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2017_toyota_rav4_complete_options",
+  "make": "Toyota",
+  "models": [
+    "RAV4",
+    "RAV4"
+  ],
+  "year_min": 2015,
+  "year_max": 2019,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); All-Wheel Drive"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ]
+  }
+}

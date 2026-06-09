@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2011|porsche|boxster",
+  "year": 2011,
+  "make": "Porsche",
+  "model": "Boxster",
+  "ladder_id": "brochure_llm_2011__porsche__boxster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Boxster S",
+    "Boxster Spyder",
+    "Boxster"
+  ],
+  "adds_by_trim": {
+    "Boxster S": [
+      "Enhanced engine performance compared to base Boxster",
+      "Short shifter available as option",
+      "Sports exhaust system available as option",
+      "19-inch Carrera Sport wheels available as option",
+      "Wheels painted in different exterior colour option"
+    ],
+    "Boxster Spyder": [
+      "Sports exhaust system with sports tailpipe",
+      "Short shifter standard",
+      "Roll-over bars integrated design",
+      "Lightweight performance focus compared to Boxster S"
+    ],
+    "Boxster": [
+      "Base roadster configuration with 2.7-liter flat-six engine",
+      "Manual transmission with standard shifter",
+      "Standard wheels and suspension setup",
+      "Convertible top with manual or powered operation",
+      "Core interior with leather and Alcantara trim options"
+    ]
+  }
+}

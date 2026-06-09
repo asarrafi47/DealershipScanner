@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2010|kia|rio",
+  "year": 2010,
+  "make": "Kia",
+  "model": "Rio",
+  "status": "draft",
+  "quality": "none",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "no_text",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_text_extracted"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2013|infiniti|g",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "G",
+  "ladder_id": "brochure_llm_2013__infiniti__g",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IPL G Coupe",
+    "IPL G Coupe 6MT",
+    "G Coupe Sport 6MT",
+    "G Coupe Journey (AWD)",
+    "G Coupe Journey"
+  ],
+  "adds_by_trim": {
+    "IPL G Coupe": [
+      "348 hp 3.7L IPL-tuned V6 engine with IPL engine cover",
+      "276 lb-ft torque at 5,200 rpm",
+      "IPL-tuned high-flow dual exhaust system",
+      "IPL-tuned independent double-wishbone front suspension with sport stabilizer bar",
+      "IPL-tuned independent multi-link rear suspension with sport stabilizer bar",
+      "185.1-inch overall length versus 183.7 inches on Sport"
+    ],
+    "IPL G Coupe 6MT": [
+      "Close-ratio 6-speed manual transmission with short-throw shifter and Downshift Rev Matching"
+    ],
+    "G Coupe Sport 6MT": [
+      "330 hp 3.7L V6 engine",
+      "270 lb-ft torque at 5,200 rpm",
+      "Close-ratio 6-speed manual transmission with short-throw shifter and Downshift Rev Matching",
+      "Sport-tuned suspension",
+      "14.7:1 sport-tuned steering gear",
+      "36.1-foot turning diameter"
+    ],
+    "G Coupe Journey (AWD)": [
+      "Intelligent All-Wheel Drive system",
+      "Snow Mode for throttle response control",
+      "Viscous Limited-Slip Differential"
+    ],
+    "G Coupe Journey": [
+      "3.7-liter 24-valve V6 engine with 330 hp and 270 lb-ft torque",
+      "Electronically controlled 7-speed automatic transmission with Adaptive Shift Control and Drive Sport mode",
+      "Vehicle-speed-sensitive power steering",
+      "Rear-wheel drive with Viscous Limited-Slip Differential",
+      "Independent double-wishbone front and multi-link rear suspension with Dual Flow Path shock absorbers"
+    ]
+  }
+}

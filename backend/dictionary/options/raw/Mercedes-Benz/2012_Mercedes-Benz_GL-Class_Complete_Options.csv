@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Mercedes-Benz,GL-Class,GL450 4matic,4.7L V8,4.7L V8 Turbo,Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,4.7,13,18,15,,,,,
+2012,Mercedes-Benz,GL-Class,GL550 4matic,5.5L V8,5.5L V8 Turbo,Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,5.5,12,17,14,,,,,

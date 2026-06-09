@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2018|chevrolet|colorado",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2018__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZR2",
+    "Z71",
+    "LT",
+    "WT",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "ZR2": [
+      "Multimatic DSSV Damping System",
+      "Front and rear electronic locking differentials",
+      "4-wheel disc brakes",
+      "Duralife brake rotors",
+      "Full-size bed-mounted spare tire carrier"
+    ],
+    "Z71": [
+      "Z71 emblem and body-color grille",
+      "17-inch Black-painted wheels with Goodyear Wrangler DuraTrac all-terrain tires",
+      "Spray-on bedliner and all-weather floor liner with Chevrolet logo"
+    ],
+    "LT": [
+      "Foglamps",
+      "Outside heated power-adjustable manual-folding body-color mirrors",
+      "Remote vehicle starter system",
+      "EZ Lift & Lower tailgate",
+      "Sliding rear window with electronic rear-window defogger"
+    ],
+    "WT": [
+      "Remote Keyless Entry and theft-deterrent system",
+      "Electronic cruise control",
+      "EZ Lift & Lower tailgate"
+    ],
+    "BASE": [
+      "2.5L 4-cylinder engine with 200 hp and 191 lb-ft torque",
+      "6-speed manual transmission standard on Extended Cab 2WD",
+      "Manual tilt steering column",
+      "Theft-deterrent system",
+      "4-way power driver seat"
+    ]
+  }
+}

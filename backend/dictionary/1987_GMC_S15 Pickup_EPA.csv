@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1987,GMC,S15 Pickup,2WD,2.5L I4 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.5,18,22,20,,,,,,2.5L I4 Turbo,Turbocharged
-1987,GMC,S15 Pickup,2WD,2.5L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.5,18,25,21,,,,,,2.5L I4 Turbo,Turbocharged
-1987,GMC,S15 Pickup,2WD,2.5L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.5,19,24,21,,,,,,2.5L I4 Turbo,Turbocharged
-1987,GMC,S15 Pickup,2WD,2.5L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.5,20,26,22,,,,,,2.5L I4 Turbo,Turbocharged
-1987,GMC,S15 Pickup,2WD,2.8L V6 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,2.8,15,18,16,,,,,,2.8L V6,
-1987,GMC,S15 Pickup,2WD,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,2.8,15,22,18,,,,,,2.8L V6,
-1987,GMC,S15 Pickup,2WD,2.8L V6 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,2.8,16,21,18,,,,,,2.8L V6,
-1987,GMC,S15 Pickup,2WD,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,2.8,16,22,18,,,,,,2.8L V6,

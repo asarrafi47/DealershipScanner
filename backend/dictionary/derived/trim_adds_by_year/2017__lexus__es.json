@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2017|lexus|es",
+  "year": 2017,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2017__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Lexus Safety System+ with Pre-Collision System",
+      "Adds Pedestrian Detection System",
+      "Adds Lane Departure Alert with Steering Assist",
+      "Adds Intelligent high beams",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds backup camera",
+      "Adds Bluetooth connectivity",
+      "Adds SmartAccess keyless entry system"
+    ],
+    "Luxury": [
+      "Adds panoramic glass roof",
+      "Adds Scout GPS Link navigation",
+      "Adds integrated Navigation System",
+      "Adds Siri voice control integration"
+    ]
+  }
+}

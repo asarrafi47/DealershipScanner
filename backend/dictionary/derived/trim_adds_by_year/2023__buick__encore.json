@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2023|buick|encore",
+  "year": 2023,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2023__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Essence",
+    "Select",
+    "Preferred"
+  ],
+  "adds_by_trim": {
+    "Essence": [
+      "Leather-appointed front seats standard",
+      "Available in-vehicle air ionizer",
+      "Available heated steering wheel",
+      "Available dual-zone automatic climate control",
+      "Available panoramic moonroof"
+    ],
+    "Select": [
+      "Cloth with leatherette seating",
+      "Available leather-appointed seating upgrade"
+    ],
+    "Preferred": [
+      "Cloth with leatherette seating standard",
+      "Forward Collision Alert standard",
+      "Automatic Emergency Braking standard",
+      "Lane Keep Assist with Lane Departure Warning standard",
+      "Following Distance Indicator standard",
+      "IntelliBeam auto high beams standard",
+      "Front Pedestrian Braking standard"
+    ]
+  }
+}

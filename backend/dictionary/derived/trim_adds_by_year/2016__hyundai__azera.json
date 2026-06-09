@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|hyundai|azera",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_llm_2016__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "2016 AZERA"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Smart Cruise Control with stop/start",
+      "Electronic Parking Brake with automatic vehicle hold",
+      "Interior ambient lighting",
+      "Power rear sunshade",
+      "Manual rear side-window sunshades",
+      "Lane Departure Warning",
+      "Forward Collision Warning",
+      "Automatic High Beam Assist",
+      "Rear parking sensors",
+      "Panoramic tilt-and-slide sunroof"
+    ],
+    "2016 AZERA": [
+      "293 hp, 3.3L Gasoline Direct Injection DOHC V6 engine",
+      "6-speed automatic transmission with SHIFTRONIC",
+      "Proximity key entry with push-button start",
+      "Dual zone automatic temperature control",
+      "Premium leather seating surfaces",
+      "Ventilated and heated front seats",
+      "Heated rear seats",
+      "Power driver and front-passenger seats",
+      "9-airbag safety system with advanced dual front airbags",
+      "Vehicle Stability Management and Electronic Stability Control"
+    ]
+  }
+}

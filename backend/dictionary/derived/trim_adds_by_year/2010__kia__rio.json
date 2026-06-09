@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2010|kia|rio",
+  "year": 2010,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_web_2010__kia__rio",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Rio 5-Door S IVT",
+    "Rio S IVT",
+    "Rio LX IVT"
+  ],
+  "adds_by_trim": {
+    "Rio 5-Door S IVT": [
+      "Five-door hatchback body style with 17.4 cubic feet cargo space"
+    ],
+    "Rio S IVT": [
+      "LED headlights with Good IIHS rating",
+      "4.2-inch instrument display",
+      "Automatic climate control",
+      "Push-button ignition",
+      "Rear disc brakes",
+      "Rear USB port on sedan model",
+      "Technology package option with forward collision avoidance and pedestrian detection"
+    ],
+    "Rio LX IVT": [
+      "8.0-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "Six-speaker sound system",
+      "1.6-liter four-cylinder engine with 120 hp and 112 lb-ft torque",
+      "CVT automatic transmission",
+      "Electronic stability control",
+      "Hill-start assist",
+      "32/41 mpg city/highway fuel economy"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/rio/"
+}

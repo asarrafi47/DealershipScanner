@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2026_volkswagen_golf_gti_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Golf GTI",
+    "Golf GTI"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "R": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "In terms of interior technology, the Golf featured a 12.3\" TFT display as an opt"
+      }
+    ],
+    "GTI": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      }
+    ]
+  }
+}

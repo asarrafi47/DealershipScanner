@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2014|audi|a7",
+  "year": 2014,
+  "make": "Audi",
+  "model": "A7",
+  "ladder_id": "brochure_2014__audi__a7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "A7"
+  ],
+  "adds_by_trim": {
+    "A7": [
+      "Adds six-cylinder engine options: 3.0T supercharged or TDI turbocharged",
+      "Adds eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Adds Audi ultra lightweight technology with aluminum exterior panels",
+      "Adds five-link front suspension with trapezoidal-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds ventilated front and rear disc brakes",
+      "Adds seating capacity for 5 passengers"
+    ],
+    "Sport": [
+      "Adds Sport suspension calibration",
+      "Adds 19-inch Sport package wheels"
+    ],
+    "Limited": [],
+    "S line": [
+      "Adds sport suspension calibration"
+    ],
+    "Premium": [
+      "Adds 20-inch Sport package wheels",
+      "Adds Cold Weather package",
+      "Adds Driver Assistance package",
+      "Adds Innovation package"
+    ]
+  }
+}

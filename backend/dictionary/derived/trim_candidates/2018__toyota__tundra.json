@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2018|toyota|tundra",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Tundra",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "1794",
+    "Platinum",
+    "Limited",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "SR",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Adds to or replaces features offered on Limited Adds to or replaces features offered on Platinum",
+      "Drivetrain Drivetrain TRD Sport Package",
+      "5.7-Liter Aluminum i-Force V8 DOHC 32-Valve with Dual Independent \u2022 5.7-Liter Aluminum i-Force V8 DOHC 32-Valve with Dual Independent \u2022 TRD Sport Package (requires SR5 Upgrade Package) includes:",
+      "Variable Valve Timing with intelligence (VVT-i) Variable Valve Timing with intelligence (VVT-i) \u2013 20-in. 6-spoke TRD Sport Package alloy wheels with black",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i) \u2013 TRD front and rear sway bars",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD \u2022 Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD \u2013 Color-keyed mirror caps",
+      "Exterior Features Exterior Features \u2013 LED headlights and LED fog lights",
+      "20-in. alloy wheels \u2022 Chrome billet-style grille \u2013 TRD shift knob",
+      "Black honeycomb-style grille with color-keyed grille surround \u2022 Chrome front bumper endcaps \u2013 Hood scoop",
+      "Color-keyed bumpers \u2022 1794 Edition badging \u2013 Bedside TRD Sport decal",
+      "Chrome heated auto-dimming and power-folding mirrors \u2022 38-gallon fuel tank",
+      "Front and rear parking assist sonar35 Interior Features"
+    ],
+    "SR5": [
+      "Adds to or replaces features offered on SR Adds to or replaces features offered on SR5",
+      "Choice of Drivetrain Choice of Drivetrain Drivetrain",
+      "5.7-Liter Aluminum i-Force V8 DOHC 32-Valve with Dual Independent \u2022 5.7-Liter Aluminum i-Force V8 DOHC 32-Valve with Dual Independent \u2022 5.7-Liter Aluminum i-Force V8 DOHC 32-Valve with Dual Independent",
+      "Variable Valve Timing with intelligence (VVT-i) Variable Valve Timing with intelligence (VVT-i) Variable Valve Timing with intelligence (VVT-i)",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i)",
+      "4.6-Liter Aluminum i-Force V8 DOHC 32-Valve with Dual Independent \u2022 4.6-Liter Aluminum i-Force V8 DOHC 32-Valve with Dual Independent \u2022 Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD",
+      "Variable Valve Timing with intelligence (VVT-i) Variable Valve Timing with intelligence (VVT-i)",
+      "LED headlights",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i)",
+      "20-in. machined-finish alloy wheels",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD \u2022 Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD",
+      "Chrome heated outside mirrors"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

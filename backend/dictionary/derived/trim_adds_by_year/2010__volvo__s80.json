@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|volvo|s80",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "S80",
+  "ladder_id": "brochure_llm_2010__volvo__s80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S80 V8 AWD",
+    "S80 T6 AWD",
+    "S80 3.2"
+  ],
+  "adds_by_trim": {
+    "S80 V8 AWD": [
+      "4.4-liter V8 engine with 311 hp and 325 ft./lbs. torque",
+      "0–60 mph acceleration in 6.0 seconds",
+      "All-wheel drive system with electronically controlled engagement",
+      "Four catalytic converters for ULEV II emissions compliance",
+      "236 ft./lbs. torque available at only 2000 rpm"
+    ],
+    "S80 T6 AWD": [
+      "3.0-liter turbocharged six-cylinder engine with 281 hp",
+      "295 ft./lbs. maximum torque from 1500–4800 rpm",
+      "0–60 mph acceleration in 6.5 seconds",
+      "All-wheel drive system with electronically controlled engagement",
+      "Improved fuel economy at 16/24 mpg city/highway"
+    ],
+    "S80 3.2": [
+      "3.2-liter naturally aspirated inline six-cylinder engine with 235 hp",
+      "236 ft./lbs. maximum torque at 3200 rpm",
+      "Front-wheel drive configuration",
+      "0–60 mph acceleration in 7.4 seconds",
+      "Best fuel economy at 18/27 mpg city/highway",
+      "ULEV II environmental classification",
+      "Six-speed Geartronic automatic transmission",
+      "Power-assisted anti-lock disc brakes with advanced safety systems"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2014|jeep|compass",
+  "year": 2014,
+  "make": "Jeep",
+  "model": "Compass",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

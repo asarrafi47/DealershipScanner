@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2025|subaru|outback",
+  "year": 2025,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "2025_subaru_outback",
+  "source": "manual_brochure_review",
+  "trims_available": ["Base", "Premium", "Limited", "Touring", "Wilderness"],
+  "adds_by_trim": {
+    "Premium": [
+      "Power moonroof and Hands-Free Power Rear Gate",
+      "10-way power driver seat and Harman Kardon 12-speaker audio",
+      "All-Weather Package: heated mirrors, heated seats, wiper de-icer"
+    ],
+    "Limited": [
+      "Nappa leather upholstery and 12-way power driver seat",
+      "3-mode ventilated front seats and smart auto-dimming mirror with HomeLink",
+      "Heated outboard rear seats"
+    ],
+    "Touring": [
+      "Includes Limited plus Touring XT 260-hp turbo powertrain available",
+      "Navigation with 3-year map updates and premium audio"
+    ],
+    "Wilderness": [
+      "260-hp turbo, Advanced Dual-Mode X-MODE, and 9.5-inch ground clearance",
+      "17-inch matte black wheels with Geolandar AT tires and Wilderness cladding",
+      "Gray StarTex upholstery with copper accents and ladder-style roof rails"
+    ]
+  }
+}

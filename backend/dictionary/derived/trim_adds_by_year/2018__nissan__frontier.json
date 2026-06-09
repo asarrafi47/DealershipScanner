@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|nissan|frontier",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2018__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRO-4X",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PRO-4X": [
+      "4.0-liter DOHC 24-valve V6 engine with 261 hp",
+      "PRO-4X embroidered leather-appointed seats",
+      "8-way power adjustable driver's seat",
+      "4-way power adjustable front-passenger's seat",
+      "Heated outside mirrors",
+      "Power sliding glass moonroof with tilt feature",
+      "Roof rack with crossbars",
+      "White contrast interior stitching",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SV": [
+      "4.0-liter DOHC 24-valve V6 engine option with 261 hp",
+      "Utili-track Channel System with 4 tie-down cleats",
+      "Fog lights",
+      "Rear Sonar System",
+      "Vehicle Security System",
+      "Dual Zone Automatic Temperature Control",
+      "Heated front seats",
+      "Sliding bed extender",
+      "Auto-dimming rearview mirror with digital compass and outside temperature display",
+      "Tow hitch receiver Class IV"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine with 152 hp",
+      "Automatic on/off headlights",
+      "Skid plates for oil pan, fuel tank, and transfer case",
+      "Splash guards standard on 4x4",
+      "Factory-applied spray-on bedliner",
+      "All-season floor mats",
+      "Bed rail caps"
+    ]
+  }
+}

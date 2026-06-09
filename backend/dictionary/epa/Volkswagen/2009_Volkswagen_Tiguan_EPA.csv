@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Volkswagen,Tiguan,Tiguan,2.0L I4,2.0L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 2WD,4,2.0,19,26,21,,,,,
+2009,Volkswagen,Tiguan,Tiguan,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 2WD,4,2.0,18,24,21,,,,,
+2009,Volkswagen,Tiguan,4motion,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,4,2.0,18,24,20,,,,,

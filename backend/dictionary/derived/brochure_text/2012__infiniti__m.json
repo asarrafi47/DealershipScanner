@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2012|infiniti|m",
+  "year": 2012,
+  "make": "Infiniti",
+  "model": "M",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2012_Infiniti_M_Brochure.pdf",
+  "page_count": 8,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

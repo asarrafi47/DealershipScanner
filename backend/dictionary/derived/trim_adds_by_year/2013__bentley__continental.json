@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2013|bentley|continental",
+  "year": 2013,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_llm_2013__bentley__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Continental GT V8",
+    "Continental GTC V8"
+  ],
+  "adds_by_trim": {
+    "Continental GT V8": [
+      "Eliade cloth headlining",
+      "Flying buttress centre stack with open illuminated stowage",
+      "Cobra-head seats with integrated headrests",
+      "Shorter centre console emphasizing sports car feel",
+      "Dark Fiddleback Eucalyptus wood veneer with 3D effect",
+      "Monotone hide interior in Beluga, Newmarket Tan, Porpoise or Imperial Blue",
+      "Optional Colour, Touring, Mulliner Driving or Convenience Specification packages"
+    ],
+    "Continental GTC V8": [
+      "Convertible configuration with power-operated boot",
+      "Ski hatch available as individual option",
+      "Twin front armrests available as individual option",
+      "Central rear hide armrest with further storage space",
+      "Adaptive Cruise Control with radar sensor in Convenience Specification"
+    ]
+  }
+}

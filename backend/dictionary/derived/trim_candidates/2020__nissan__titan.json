@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2020|nissan|titan",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Titan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum Reserve",
+    "Platinum",
+    "SL",
+    "Pro-4X",
+    "SV",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2022|volkswagen|atlas",
+  "year": 2022,
+  "make": "Volkswagen",
+  "model": "Atlas",
+  "ladder_id": "brochure_llm_2022__volkswagen__atlas",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL R-Line® Premium",
+    "SEL R-Line®",
+    "SEL",
+    "SE w/ Tech.",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL R-Line® Premium": [
+      "21-inch two-tone machined alloy wheels with all-season tires",
+      "Power auto-folding side mirrors",
+      "Chrome upper surrounds on side windows with gloss black B-pillars",
+      "R-Line® bumpers and exterior trim with body-color lower bumpers"
+    ],
+    "SEL R-Line®": [
+      "20-inch dark graphite twin 5-spoke alloy wheels",
+      "R-Line® bumpers and exterior trim with body-color lower bumpers and side cladding",
+      "Black R-Line® side badging with gloss black trim strips",
+      "Blacked-out grille and front/rear fascias with black trim accents",
+      "Black side mirror caps instead of body color",
+      "All-matte black side window surrounds",
+      "20-inch black 5-spoke alloy wheels (late availability Q1/2022)"
+    ],
+    "SEL": [
+      "4MOTION® all-wheel drive standard",
+      "20-inch 5-spoke two-tone machined alloy wheels",
+      "Adaptive Front-lighting System with dynamic cornering lights",
+      "Side mirrors with position memory and reverse-activated passenger auto-tilt",
+      "Silver anodized roof rails",
+      "Chrome trim on lower door panels and rear bumper",
+      "Panoramic power sunroof standard"
+    ],
+    "SE w/ Tech.": [
+      "V6 engine standard or 2.0T turbocharged option",
+      "4MOTION® all-wheel drive available",
+      "20-inch silver 5-spoke alloy wheels standard",
+      "20-inch black 5-spoke alloy wheels available (requires factory option P29)",
+      "Panoramic sunroof available"
+    ],
+    "SE": [
+      "2.0L TSI turbocharged 4-cylinder engine with 235 HP",
+      "8-speed automatic transmission with Tiptronic®",
+      "Front-wheel drive standard",
+      "18-inch 5-spoke two-tone machined alloy wheels",
+      "LED headlights with Daytime Running Lights and front turn signals",
+      "Automatic headlights with Coming Home/Leaving Home feature",
+      "Heated power-adjustable side mirrors with integrated turn signals",
+      "Four-wheel independent suspension with vented front and solid rear disc brakes",
+      "Prepared for trailer hitch (2,000 lbs. towing capacity, 2.0T models only)"
+    ]
+  }
+}

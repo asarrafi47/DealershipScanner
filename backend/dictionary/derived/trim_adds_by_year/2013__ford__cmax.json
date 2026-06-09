@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2013|ford|cmax",
+  "year": 2013,
+  "make": "Ford",
+  "model": "C-Max",
+  "ladder_id": "brochure_llm_2013__ford__cmax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "C-MAX Energi",
+    "C-MAX Hybrid SEL",
+    "C-MAX Hybrid SE"
+  ],
+  "adds_by_trim": {
+    "C-MAX Energi": [
+      "2.0L iVCT Atkinson-cycle I-4 plug-in hybrid electric vehicle (PHEV) engine",
+      "Larger Lithium-Ion Battery Pack System",
+      "120-volt charge cord",
+      "EV Mode button with EV Now, EV Later and EV Auto modes",
+      "External charge port with LED-illuminated state-of-charge indicator",
+      "MyFord Mobile application with 5-year data subscription and 2 key fob transmitters",
+      "MyFord Touch with two 4.2\" configurable LCD displays, 8\" LCD touch screen, unique plug-in driving screens",
+      "42.8 cu. ft. cargo volume behind front seats, 19.2 cu. ft. behind rear seats"
+    ],
+    "C-MAX Hybrid SEL": [
+      "Heated front bucket seats with 10-way power driver seat and power lumbar support",
+      "Leather-trimmed seating with rear-seat center fold-down armrest",
+      "Auto-dimming rearview mirror",
+      "Intelligent Access with push-button start",
+      "MyFord Touch with two 4.2\" configurable LCD displays, 8\" LCD touch screen, unique hybrid driving screens",
+      "Body-color power heated manually folding sideview mirrors with turn signal indicators and blind spot mirrors",
+      "Chrome beltline moldings",
+      "Fog lamps",
+      "Rain-sensing windshield wipers",
+      "Reverse Sensing System"
+    ],
+    "C-MAX Hybrid SE": [
+      "2.0L iVCT Atkinson-cycle I-4 hybrid electric vehicle (HEV) engine with permanent-magnet AC-synchronous electric motor",
+      "Advanced Lithium-Ion Battery Pack System",
+      "6-way manual driver and 4-way manual front-passenger seats with cloth seating",
+      "AM/FM stereo with single-CD player, MP3 capability, 6 speakers with speed-compensated volume",
+      "MyFord Touch with two 4.2\" configurable LCD displays, 8\" LCD touch screen, unique hybrid screens",
+      "SYNC voice-activated in-vehicle connectivity system with SYNC Services",
+      "Body-color power manually folding sideview mirrors with turn signal indicators and integrated blind spot mirrors",
+      "Satin-chrome grille with Piano Black accents",
+      "Universal garage door opener",
+      "52.6 cu. ft. cargo volume behind front seats, 24.5 cu. ft. behind rear seats"
+    ]
+  }
+}

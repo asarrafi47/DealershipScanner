@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_audi_rs_3_complete_options",
+  "make": "Audi",
+  "models": [
+    "RS 3",
+    "RS 3"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Volkswagen EA888 1,984 cc (121.1 cu in) 330 hp (246 kW; 335 PS) I4 turbocharged front-mounted, FWD"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Volkswagen EA888 1,984 cc (121.1 cu in) 330 hp (246 kW; 335 PS) I4 turbocharged front-mounted, FWD"
+      }
+    ]
+  }
+}

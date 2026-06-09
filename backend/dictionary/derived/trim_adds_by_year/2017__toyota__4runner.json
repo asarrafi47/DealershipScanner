@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2017|toyota|4runner",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_2017__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds SofTex-trimmed 40/20/40 split reclining and fold-flat second-row seat",
+      "Adds HomeLink universal transceiver",
+      "Adds auto-dimming rearview mirror"
+    ],
+    "SR5": [
+      "Adds SofTex-trimmed 50/50 split fold-flat third-row seat with sliding second row and one-touch access",
+      "Adds leather-trimmed tilt/telescopic steering wheel with audio and Bluetooth hands-free phone",
+      "Adds Downhill Assist Control (DAC) on 4x4 models",
+      "Adds engine/front suspension and fuel tank skid plates",
+      "Adds running boards"
+    ],
+    "TRD": [
+      "Adds Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "Adds Hill Start Assist Control (HAC), Multi-terrain Select and Crawl Control (CRAWL)",
+      "Adds locking rear differential",
+      "Adds color-keyed front and rear bumpers with silver accents and color-keyed hood scoop",
+      "Adds TRD Off-Road external hard badges",
+      "Adds overhead console with Multi-terrain Select and Crawl Control switches"
+    ],
+    "TRD Off-Road": [
+      "Adds TRD Bilstein high-performance shocks with rear remote reservoirs",
+      "Adds TRD-tuned front springs",
+      "Adds TRD shift knob",
+      "Adds TRD Off-Road floor mats"
+    ],
+    "TRD Pro": [
+      "Adds TRD-stamped aluminum front skid plate",
+      "Adds unique TOYOTA front grille",
+      "Adds black TRD PRO external hard badges",
+      "Adds TRD PRO floor mats"
+    ],
+    "Limited": [
+      "Adds heated power outside mirrors with turn signal indicators",
+      "Adds power tilt/slide moonroof with sunshade",
+      "Adds front and rear parking assist sonar",
+      "Adds 20-inch split 6-spoke alloy wheels",
+      "Adds Smart Key System with Push Button Start and remote illuminated entry",
+      "Adds auto on/off headlight feature",
+      "Adds dual zone automatic climate control with air filter and second-row vents"
+    ]
+  }
+}

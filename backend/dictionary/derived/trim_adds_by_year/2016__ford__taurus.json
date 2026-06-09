@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2016|ford|taurus",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_web_2016__ford__taurus",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SHO",
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SHO": [
+      "Twin-turbo 3.5-liter V-6 engine with 365 hp and 350 lb-ft torque",
+      "Standard all-wheel drive",
+      "20-inch black alloy wheels",
+      "Black mesh grille with rear spoiler",
+      "HID headlights",
+      "Leather-trimmed seating upholstery",
+      "Aluminum pedal caps and branded floor mats",
+      "Sport-tuned suspension"
+    ],
+    "Limited": [
+      "19-inch alloy wheels",
+      "Auto-dimming side mirrors with chrome caps",
+      "Perforated leather seating upholstery",
+      "Heated and cooled front seats",
+      "Heated second-row seats and steering wheel",
+      "Power-adjustable pedals",
+      "Ambient interior lighting",
+      "Premium Sony audio system",
+      "Blind-spot monitoring",
+      "Rain-sensing windshield wipers with automatic high beams"
+    ],
+    "SEL": [
+      "Body color side mirror caps",
+      "Heated power-adjustable side mirrors",
+      "LED front parking lights",
+      "Premium cloth seating upholstery",
+      "Leather-wrapped steering wheel and shifter",
+      "8.0-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Covered front-row storage area",
+      "Rear parking sensors",
+      "Dual-zone automatic climate control",
+      "Push-button start"
+    ],
+    "SE": [
+      "18-inch alloy wheels",
+      "Black side mirror caps",
+      "Power-adjustable side mirrors",
+      "LED taillights and chrome exhaust tips",
+      "Solar-insulating window tint",
+      "Cloth seating upholstery",
+      "Power-adjustable front seats",
+      "4.2-inch infotainment display with one USB port",
+      "Capless fuel filler",
+      "Driver auto up/down window with auto on/off headlights"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/taurus/"
+}

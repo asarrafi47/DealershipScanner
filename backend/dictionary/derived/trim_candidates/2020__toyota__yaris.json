@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|toyota|yaris",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Yaris",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds to or replaces features offered on L AAddddss ttoo oorr rreeppllaacceess ffeeaattuurreess ooffffeerreedd oonn LLEE",
+      "Exterior Features Exterior Features Exterior Features",
+      "Sporty front fascia with gloss-black mesh-pattern grille \u2022 Fog lights \u2022 LED auto on/off headlights",
+      "Halogen headlights \u2022 Color-keyed heated power outside mirrors with turn signal indicators \u2022 LED Daytime Running Lights (DRL) integrated into headlights",
+      "Daytime Running Lights (DRL) integrated into headlights \u2022 Rear spoiler \u2022 Rain-sensing variable intermittent windshield wipers",
+      "Color-keyed power outside mirrors \u2022 16-in. dark gray split-spoke alloy wheels with P185/60R16 tires Interior Features",
+      "15-in. styled steel wheels with P185/65R15 tires Interior Features \u2022 Automatic climate control",
+      "Chrome-tipped exhaust \u2022 Smart Key System16 with Push Button Start \u2022 Leatherette-trimmed sport front bucket seats",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "Safety \u2022 Leather-trimmed tilt/telescopic 3-spoke steering wheel",
+      "Interior Features \u2022 Low-Speed Pre-Collision System17 Safety",
+      "7-in. touch-screen display2 \u2022 Active Safety System \u2014 includes Dynamic Stability Control (DSC),18 \u2022 Low-Speed Pre-Collision System17"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

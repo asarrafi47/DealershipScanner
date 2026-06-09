@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2022|mini|mini",
+  "year": 2022,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_llm_2022__mini__mini",
+  "source": "brochure_llm",
+  "trims_available": [
+    "John Cooper Works",
+    "Cooper S",
+    "Cooper"
+  ],
+  "adds_by_trim": {
+    "John Cooper Works": [
+      "228 hp and 235 lb-ft torque (Hardtop/Convertible) or 301 hp and 331 lb-ft torque (Clubman/Countryman)",
+      "Electronic Differential Lock Control for enhanced cornering",
+      "Race-inspired performance engineering"
+    ],
+    "Cooper S": [
+      "189 hp and 206 lb-ft of torque with Dual Clutch Transmission",
+      "Enhanced thrills and sportier performance versus Cooper"
+    ],
+    "Cooper": [
+      "134 hp and 162 lb-ft of torque with Dual Clutch Transmission",
+      "Sporty and spirited driving character",
+      "Digital instrument cluster behind steering wheel",
+      "Center display with 8.8-inch touchscreen",
+      "LED headlights with auto-leveling system",
+      "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning",
+      "Dynamic Traction Control",
+      "Rear View Camera",
+      "Anti-lock Brake System with Corner Brake Control"
+    ]
+  }
+}

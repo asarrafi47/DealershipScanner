@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2020|jeep|cherokee",
+  "year": 2020,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_2020__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 2.0L Turbo I-4 engine",
+      "Adds Uconnect infotainment system",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds Bluetooth Hands-Free Profile phone connectivity",
+      "Adds SiriusXM Radio with 12-month trial",
+      "Adds electronic drive aids and driver convenience systems",
+      "Adds front vehicle alert system",
+      "Adds seat belt safety systems",
+      "Adds SOS emergency button"
+    ],
+    "Latitude": [
+      "Adds enhanced connectivity features"
+    ],
+    "Trailhawk": [
+      "Adds 2-speed Power Transfer Unit with rear locking axle",
+      "Adds low-range 4x4 capability"
+    ],
+    "Limited": [
+      "Adds SiriusXM Guardian connected services",
+      "Adds Send & Go remote destination feature",
+      "Adds Vehicle Finder functionality",
+      "Adds Remote Vehicle Start capability",
+      "Adds Voice Texting feature",
+      "Adds Wi-Fi Hotspot with 3-month/1GB trial",
+      "Adds Theft Alarm Notification",
+      "Adds Roadside Assistance Call service",
+      "Adds Amazon Alexa integration"
+    ]
+  }
+}

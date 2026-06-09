@@ -10,6 +10,8 @@ from typing import Any
 from urllib.parse import urljoin
 
 from backend.parsers.vdp_urls import dealer_style_vdp_url_candidates, suggest_dealer_style_vdp_url
+from backend.parsers.inventory_carfax import extract_carfax_url
+from backend.utils.listing_description_extract import strip_dealer_description_intro
 from backend.parsers.base import (
     clean_image_url,
     dedupe_urls_order_prefer_large,
@@ -255,7 +257,8 @@ def _extract_inventory_description(obj: dict) -> str | None:
     ):
         s = _opt_str(obj.get(key))
         if s and len(s) >= 40:
-            return s[:4000]
+            cleaned = strip_dealer_description_intro(s) or s
+            return cleaned[:4000]
     arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
     if isinstance(arr, list):
         for attr_name in (
@@ -270,87 +273,9 @@ def _extract_inventory_description(obj: dict) -> str | None:
             if v is not None:
                 s = _opt_str(norm_str(v))
                 if s and len(s) >= 40:
-                    return s[:4000]
+                    cleaned = strip_dealer_description_intro(s) or s
+                    return cleaned[:4000]
     return None
-
-
-def _first_carfax_http_url(val: Any) -> str | None:
-    if isinstance(val, str):
-        s = norm_str(val)
-        if s.startswith("http") and "carfax" in s.lower():
-            return s
-        return None
-    if isinstance(val, dict):
-        for k in ("url", "href", "link", "value", "src", "uri"):
-            hit = _first_carfax_http_url(val.get(k))
-            if hit:
-                return hit
-        return None
-    if isinstance(val, list):
-        for item in val:
-            hit = _first_carfax_http_url(item)
-            if hit:
-                return hit
-    return None
-
-
-def _inventory_signals_carfax(obj: dict) -> bool:
-    for key in (
-        "carfaxOneOwner",
-        "showCarfax",
-        "hasCarfaxReport",
-        "carfaxAvailable",
-        "displayCarfax",
-        "carfax",
-    ):
-        v = obj.get(key)
-        if v in (True, 1, "1", "true", "True", "yes", "Yes"):
-            return True
-    for key in ("callout", "callouts", "badges", "Badges", "highlightedAttributes", "highlighted_attributes"):
-        val = obj.get(key)
-        if isinstance(val, list):
-            for item in val:
-                if isinstance(item, str) and "carfax" in item.lower():
-                    return True
-                if isinstance(item, dict):
-                    blob = " ".join(
-                        str(item.get(k) or "")
-                        for k in ("text", "label", "name", "value", "title")
-                    ).lower()
-                    if "carfax" in blob:
-                        return True
-        elif isinstance(val, str) and "carfax" in val.lower():
-            return True
-    return False
-
-
-def _extract_carfax_url(obj: dict, vin: str) -> str | None:
-    """Resolve Carfax / vehicle-history URL from inventory JSON when available."""
-    explicit = norm_str(
-        obj.get("carfax_url")
-        or obj.get("carfaxUrl")
-        or obj.get("carfaxLink")
-        or obj.get("history_report_url")
-        or obj.get("vehicleHistoryUrl")
-        or obj.get("vehicle_history_url")
-        or ""
-    )
-    if explicit.startswith("http"):
-        return explicit
-
-    for key in ("callout", "callouts", "badges", "Badges", "highlightedAttributes", "highlighted_attributes"):
-        hit = _first_carfax_http_url(obj.get(key))
-        if hit:
-            return hit
-
-    vhr_url = obj.get("vhr_url") or obj.get("carfax_token")
-    if vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
-        return norm_str(vhr_url)
-    if vhr_url and vin and not vin.startswith("unknown"):
-        return f"https://vhr.carfax.com/main?vin={vin}"
-    if _inventory_signals_carfax(obj) and vin and not vin.startswith("unknown"):
-        return f"https://vhr.carfax.com/main?vin={vin}"
-    return explicit if explicit.startswith("http") else None
 
 
 def _pick_vehicle_detail_url(obj: dict, base_url: str) -> str | None:
@@ -528,7 +453,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
     exterior_color = _extract_exterior_color(obj)
     fuel_type = _opt_str(obj.get("fuelType") or obj.get("fuel_type"))
     description = _extract_inventory_description(obj)
-    carfax_url = _extract_carfax_url(obj, vin)
+    carfax_url = extract_carfax_url(obj, vin)
 
     cyl = norm_int(obj.get("cylinders") or 0)
     if not cyl:
@@ -551,6 +476,14 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         from backend.scanner.dealer_location import extract_location_from_inventory_object
 
         lot_location = extract_location_from_inventory_object(obj)
+    except ImportError:
+        pass
+
+    condition: str | None = None
+    try:
+        from backend.parsers.inventory_condition import normalize_inventory_condition
+
+        condition = normalize_inventory_condition(obj, mileage=mileage)
     except ImportError:
         pass
 
@@ -582,6 +515,13 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "description": description,
         "cylinders": cyl or None,
     }
+    try:
+        from backend.parsers.inventory_mpg import apply_inventory_mpg
+
+        apply_inventory_mpg(obj, out)
+    except ImportError:
+        pass
+
     if detail_url:
         out["_detail_url"] = detail_url
         out["source_url"] = detail_url
@@ -589,6 +529,12 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         out["_detail_url_alternates"] = detail_alternates[:12]
     if lot_location:
         out["_lot_location"] = lot_location
+    if condition:
+        out["condition"] = condition
+        if condition == "Certified":
+            out["is_cpo"] = 1
+        elif condition == "Used":
+            out["is_cpo"] = 0
     return out
 
 

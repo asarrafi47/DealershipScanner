@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2016|volvo|xc90",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "XC90",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "T8",
+    "Ultra"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

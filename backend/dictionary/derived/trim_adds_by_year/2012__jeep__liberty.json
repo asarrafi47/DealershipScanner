@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2012|jeep|liberty",
+  "year": 2012,
+  "make": "Jeep",
+  "model": "Liberty",
+  "ladder_id": "brochure_2012__jeep__liberty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 210-hp 3.7L V6 engine with Electronic Throttle Control",
+      "Adds leather-wrapped steering wheel with audio controls",
+      "Adds Infinity sound system with eight speakers, subwoofer, and 368-watt amplifier",
+      "Adds blacked-out headlamps",
+      "Adds body-color front fascia with bright insert",
+      "Adds chrome bodyside molding"
+    ],
+    "Sport": [
+      "Adds reversible cargo tray with carpeted and washable sides",
+      "Adds 60/40 split-folding rear seats"
+    ],
+    "Limited": [
+      "Upgraded to premium leather-trimmed interior with leather-wrapped center console armrest, door armrest, and shift knob",
+      "Adds passenger grab handle with leather trim",
+      "Adds leather-wrapped parking brake boot",
+      "Adds available Trail Rated Selec-Trac II for full-time 4WD action",
+      "Adds available Sky Slider fully retractable roof with front-to-back and back-to-front opening capability",
+      "Adds available remote start system operating up to 300 feet with climate control activation"
+    ]
+  }
+}

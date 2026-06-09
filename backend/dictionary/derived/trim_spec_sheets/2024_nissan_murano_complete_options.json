@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2024_nissan_murano_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Murano",
+    "Murano"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "2022 Nissan Murano Specs, Features & Options Here's everything you need to know; 2022 Nissan Murano Specs, Features & Options Here's everything you need to know about each trim in the 2022 Nissan Murano lineup."
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "2022 Nissan Murano Specs, Features & Options Here's everything you need to know; 2022 Nissan Murano Specs, Features & Options Here's everything you need to know about each trim in the 2022 Nissan Murano lineup.; (2016, based on Euro NCAP 2008) Gasoline hybrid: The crossover was only offered in the LE trim and had the same engine as a stand The crossover was only offered in the LE trim and had the same engine as a standard Murano."
+      },
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "front doors, with structural reinforcement from the A-pillar rearward"
+      }
+    ]
+  }
+}

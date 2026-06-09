@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2022|alfaromeo|stelvio",
+  "year": 2022,
+  "make": "alfa romeo",
+  "model": "stelvio",
+  "ladder_id": "brochure_llm_2022__alfaromeo__stelvio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "VELOCE",
+    "Ti",
+    "SPRINT"
+  ],
+  "adds_by_trim": {
+    "VELOCE": [
+      "Mechanical limited-slip rear differential",
+      "21-inch Dark 5-hole aluminum wheels",
+      "255/45R20 All-Season performance tires",
+      "Body-color body kit",
+      "Sport rear diffuser",
+      "Gloss Black window surrounds and roof rails",
+      "115-volt cargo area outlet"
+    ],
+    "Ti": [
+      "20-inch Dark Sport 5-hole aluminum wheels available",
+      "19-inch Sport 5-hole aluminum wheels standard",
+      "235/55R19 All-Season performance tires",
+      "Genuine Dark Gray Oak Wood interior trim",
+      "Gray-color body kit",
+      "Bright V-Scudetto grille",
+      "Headlamp washers",
+      "Hands-free liftgate",
+      "Paddle shifter delete option"
+    ],
+    "SPRINT": [
+      "All-aluminum 2.0L Turbocharged 4-cylinder engine with 280 hp and 306 lb-ft torque",
+      "8-speed automatic transmission with Q4 All-Wheel Drive",
+      "8.8-inch multi-touch display with Navigation",
+      "Apple CarPlay and Android Auto",
+      "Leather-trimmed seats with 10-way power front seats and lumbar support",
+      "Heated Sport steering wheel with paddle shifters",
+      "35-watt Bi-xenon headlamps with LED daytime running lamps",
+      "Forward Collision Warning with Full-Speed Stop and Adaptive Cruise Control",
+      "18-inch Vesuvio Gray multi-spoke aluminum wheels with 235/60R18 tires",
+      "Passive entry and keyless-go with remote start"
+    ]
+  }
+}

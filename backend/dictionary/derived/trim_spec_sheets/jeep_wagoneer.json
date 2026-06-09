@@ -1,0 +1,47 @@
+{
+  "ladder_id": "jeep_wagoneer",
+  "make": "Jeep",
+  "models": [
+    "Wagoneer",
+    "Wagoneer L"
+  ],
+  "year_min": 2022,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "L Series III": [
+      {
+        "label": "Interior Materials",
+        "value": "Premium leather and wood trim"
+      }
+    ],
+    "L Series II": [
+      {
+        "label": "Engine Options",
+        "value": "Extended-wheelbase with mid-level Series II content"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Upgraded audio and convenience features"
+      }
+    ],
+    "Series III": [
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior and technology package"
+      }
+    ],
+    "Series II": [
+      {
+        "label": "Engine Options",
+        "value": "Mid-level Series II equipment"
+      }
+    ],
+    "Obsidian": [
+      {
+        "label": "Interior Materials",
+        "value": "Blacked-out exterior and interior theme"
+      }
+    ]
+  }
+}

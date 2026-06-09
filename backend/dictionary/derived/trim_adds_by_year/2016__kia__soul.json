@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2016|kia|soul",
+  "year": 2016,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2016__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "! exclaim",
+    "+ plus",
+    "Soul"
+  ],
+  "adds_by_trim": {
+    "! exclaim": [
+      "2.0L Gasoline Direct Injection 4-cylinder engine with 164 hp",
+      "6-speed electronically controlled Sportmatic transmission with overdrive",
+      "18-inch alloy wheels with 235/45R18 tires",
+      "LED projector headlights with LED accent lights and auto-leveling",
+      "LED taillights with LED high-mount stoplight",
+      "Automatic temperature control with cluster ionizer",
+      "7-inch touchscreen infotainment system",
+      "Forward Collision Warning System",
+      "Lane Departure Warning System",
+      "Rear-Camera Display"
+    ],
+    "+ plus": [
+      "2.0L Gasoline Direct Injection 4-cylinder engine with 164 hp",
+      "17-inch alloy wheels with 215/55R17 tires",
+      "Automatic temperature control with cluster ionizer",
+      "Bluetooth wireless technology",
+      "Power windows with driver and front passenger one-touch auto up/down",
+      "Rear-center armrest with cup holders",
+      "Roof-rack-ready mounting points",
+      "Rear-window defroster"
+    ],
+    "Soul": [
+      "1.6L Gasoline Direct Injection 4-cylinder engine with 130 hp",
+      "6-speed manual transmission",
+      "16-inch alloy wheels with 205/60R16 tires",
+      "Air conditioning",
+      "AM/FM/MP3/SiriusXM Satellite Radio",
+      "USB and auxiliary input jacks",
+      "Power door locks with two-turn entry system",
+      "Steering-wheel-mounted audio and cruise controls",
+      "Privacy glass",
+      "Rear-window defroster"
+    ]
+  }
+}

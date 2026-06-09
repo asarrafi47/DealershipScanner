@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|bmw|x6",
+  "year": 2011,
+  "make": "BMW",
+  "model": "X6",
+  "ladder_id": "brochure_llm_2011__bmw__x6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ActiveHybrid X6",
+    "X6 xDrive50i",
+    "X6 xDrive35i",
+    "X6 xDrive30i"
+  ],
+  "adds_by_trim": {
+    "ActiveHybrid X6": [
+      "Hybrid electric and combustion power system",
+      "Brake Energy Regeneration technology",
+      "Reduced fuel consumption and CO2 emissions"
+    ],
+    "X6 xDrive50i": [
+      "32-valve TwinPower Turbo 4.4-liter V-8 engine",
+      "Dynamic Performance Control with rear power transfer",
+      "Adaptive Drive system with Active Roll Stabilization and Electronic Damping Control"
+    ],
+    "X6 xDrive35i": [
+      "TwinPower Turbo engine technology",
+      "xDrive intelligent all-wheel drive system"
+    ],
+    "X6 xDrive30i": [
+      "Standard all-wheel drive with power distribution to front and rear axles",
+      "Dynamic Stability Control with four brake optimization features",
+      "Hill Descent Control for steep downhill grades",
+      "i-Drive infotainment system with entertainment and communication options",
+      "iDrive hard drive with 10GB storage capacity for up to 10,000 songs"
+    ]
+  }
+}

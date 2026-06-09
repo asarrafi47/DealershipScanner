@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_audi_q7_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q7",
+    "Q7"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Premium Plus": [
+      {
+        "label": "Engine Options",
+        "value": "L TDI V6"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "L TDI V6"
+      }
+    ]
+  }
+}

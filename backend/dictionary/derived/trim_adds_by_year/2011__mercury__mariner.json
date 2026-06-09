@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2011|mercury|mariner",
+  "year": 2011,
+  "make": "Mercury",
+  "model": "Mariner",
+  "ladder_id": "brochure_web_2011__mercury__mariner",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Premier",
+    "Hybrid Premier",
+    "Hybrid",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.5L Duratec engine with 171 horsepower",
+      "Front-wheel drive",
+      "Five-passenger seating",
+      "Power windows, locks, and mirrors",
+      "Air conditioning",
+      "AM/FM stereo with CD player",
+      "16-inch steel wheels with all-season tires",
+      "Electronic stability control",
+      "Six airbags"
+    ],
+    "Hybrid": [
+      "2.5L Atkinson hybrid engine with net 188 hp",
+      "CVT transmission",
+      "Hybrid-specific gauges and display",
+      "17-inch alloy wheels"
+    ],
+    "Hybrid Premier": [
+      "Hybrid powertrain with 188 net horsepower",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Dual-zone automatic climate control",
+      "Power liftgate",
+      "Roof rails",
+      "17-inch alloy wheels",
+      "Four-wheel independent suspension upgrade"
+    ],
+    "Premier": [
+      "2.5L Duratec engine with 171 hp",
+      "Leather-trimmed seating surfaces",
+      "Heated front seats",
+      "Dual-zone automatic climate control",
+      "Power liftgate",
+      "Roof rails",
+      "17-inch alloy wheels",
+      "Premium sound system",
+      "Four-wheel independent suspension"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mercury/mariner/"
+}

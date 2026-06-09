@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2012|suzuki|equator",
+  "year": 2012,
+  "make": "Suzuki",
+  "model": "Equator",
+  "ladder_id": "brochure_llm_2012__suzuki__equator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crew Cab RMZ-4",
+    "Crew Cab Sport",
+    "Extended Cab Sport",
+    "Extended Cab with Comfort Pkg"
+  ],
+  "adds_by_trim": {
+    "Crew Cab RMZ-4": [
+      "4WD with 2-speed transfer case and low-range gearing",
+      "Hill Descent Control (HDC)",
+      "Bilstein high-performance shocks",
+      "16-inch off-road alloy wheels with BF Goodrich Rugged Trail tires",
+      "Skid plates for oil pan, transfer case, and fuel tank",
+      "Dana 44 rear axle with electronic locking rear differential",
+      "RMZ-4 seating materials",
+      "Height-adjustable driver's seat with lumbar support",
+      "Leather-wrapped steering wheel",
+      "Front foglamps"
+    ],
+    "Crew Cab Sport": [
+      "4.0-liter DOHC 24-valve V6 with 261-hp and 281 lb-ft torque",
+      "5-speed Automatic Transmission",
+      "4WD with 2-speed transfer case and low-range gearing",
+      "Hill Hold Control (HHC) and Hill Descent Control (HDC)",
+      "17-inch aluminum alloy wheels with P265/65R17 tires",
+      "Upgraded front-brake rotors",
+      "Four full-size doors with 5-passenger seating",
+      "Cargo-bed track-type tie-down system",
+      "AM/FM/CD audio system with six speakers and dual front-door tweeters"
+    ],
+    "Extended Cab Sport": [
+      "4.0-liter DOHC 24-valve V6 with 261-hp and 281 lb-ft torque",
+      "5-speed Automatic Transmission",
+      "4WD with 2-speed transfer case and low-range gearing",
+      "Hill Hold Control (HHC) and Hill Descent Control (HDC)",
+      "17-inch aluminum alloy wheels with P265/65R17 tires",
+      "Upgraded front-brake rotors",
+      "Cruise control and Remote Keyless Entry",
+      "Power windows and power door locks",
+      "Dual power outside mirrors with aluminum silver front bumper inserts"
+    ],
+    "Extended Cab with Comfort Pkg": [
+      "2.5-liter DOHC 16-valve 4-cylinder with 152-hp and 171 lb-ft torque",
+      "5-speed Manual Transmission",
+      "Fully boxed ladder-frame construction",
+      "Independent front suspension with front stabilizer bar",
+      "Overslung multi-leaf rear suspension",
+      "15-inch styled steel wheels",
+      "6-foot cargo bed with rope hooks and detachable tailgate",
+      "Spray-on bed liner and rear-bumper-mounted Class III tow-hitch",
+      "Air conditioning and AM/FM/CD audio system",
+      "Vehicle Dynamic Control (VDC), 4-wheel ABS with EBD, and dual-stage airbags"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Mitsubishi,Montero,Montero,2.6L I4 ((FFS)),2.6L I4,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.6,15,16,16,,,,,
+1986,Mitsubishi,Montero,Montero,2.6L I4 ((FFS)),2.6L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.6,16,18,17,,,,,

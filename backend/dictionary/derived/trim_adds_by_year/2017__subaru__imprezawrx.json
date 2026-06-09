@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2017|subaru|imprezawrx",
+  "year": 2017,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2017__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX STI",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "High-luster finish 18-inch BBS aluminum-alloy wheels",
+      "Leather-trimmed upholstery with red bolster accents",
+      "8-way power adjustable driver's seat",
+      "SUBARU STARLINK 7.0 Multimedia Navigation System with voice-activated GPS",
+      "Keyless Access with Push-button Start and PIN-code vehicle access",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Power-tilt/sliding moonroof",
+      "Welcome lighting"
+    ],
+    "WRX STI": [
+      "305-hp turbocharged 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Driver Controlled Center Differential (DCCD) All-Wheel Drive",
+      "Front and rear limited-slip differentials",
+      "6-speed close-ratio manual transmission",
+      "Brembo performance braking system",
+      "High-performance STI sport-tuned suspension",
+      "18-inch aluminum-alloy wheels",
+      "STI trunk spoiler",
+      "L.E.D. low-beam headlights and fog lights",
+      "Alcantara/leather-trimmed upholstery with red bolster accents"
+    ],
+    "WRX Limited": [
+      "L.E.D. low-beam headlights",
+      "Auto on/off wiper linked headlights",
+      "Leather-trimmed upholstery",
+      "8-way power adjustable driver's seat",
+      "Welcome lighting",
+      "SUBARU STARLINK 7.0 Multimedia Plus system with Pandora, iHeart Radio, Stitcher, Aha",
+      "STARLINK Safety Plus enabled"
+    ],
+    "WRX Premium": [
+      "Optional Sport Lineartronic Transmission with paddle shifters, 6- and 8-speed manual modes and SI-DRIVE",
+      "18-inch aluminum-alloy wheels",
+      "Fog lights",
+      "Power-tilt/sliding moonroof",
+      "All-Weather Package"
+    ],
+    "WRX": [
+      "268-hp twin scroll turbocharged 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with 6-speed manual transmission",
+      "Sport-tuned suspension",
+      "17-inch aluminum-alloy wheels",
+      "Low profile trunk spoiler",
+      "Cloth upholstery",
+      "Leather-wrapped flat-bottom steering wheel",
+      "SUBARU STARLINK 6.2 Multimedia system with Pandora, iHeart Radio, Stitcher, Aha",
+      "Sport-design electroluminescent gauges with 3.5-inch color LCD display",
+      "Rear-Vision Camera"
+    ]
+  }
+}

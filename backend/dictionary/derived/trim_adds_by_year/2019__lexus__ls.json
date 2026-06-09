@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2019|lexus|ls",
+  "year": 2019,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2019__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LS500 FSPORT",
+    "LS500"
+  ],
+  "adds_by_trim": {
+    "LS500 FSPORT": [
+      "F SPORT-exclusive exterior styling and design elements",
+      "High-friction performance brake system with enhanced stopping power",
+      "19- or 20-inch performance tires with sportier handling characteristics",
+      "F SPORT-tuned suspension for enhanced driving dynamics"
+    ],
+    "LS500": [
+      "3.5-liter twin-turbo V6 engine with 416 horsepower",
+      "Lexus Limited Warranty: four-year/50,000-mile coverage",
+      "Powertrain Warranty: six-year/70,000-mile coverage",
+      "Corrosion Perforation Warranty: six-year/unlimited-mileage coverage",
+      "Intelligent High Beams system operating above 25 mph",
+      "Rear-seat leg rest and ottoman comfort features",
+      "Mark Levinson premium audio system",
+      "Apple CarPlay and Siri voice control integration",
+      "Navigation system with real-time traffic information",
+      "Panoramic View Monitor with surround-view camera system"
+    ]
+  }
+}

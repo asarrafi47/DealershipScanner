@@ -8,12 +8,17 @@ def _fresh_app(monkeypatch, tmp_path, *, production: bool = False):
         monkeypatch.setenv("FLASK_ENV", "production")
         monkeypatch.setenv("SECRET_KEY", "pytest-secret-key-do-not-use-in-deployment")
         monkeypatch.setenv("ADMIN_PASSWORD", "pytest-admin-bootstrap-do-not-use-in-deployment")
+        from conftest import apply_production_credential_encryption_env
+
+        apply_production_credential_encryption_env(monkeypatch)
     else:
         monkeypatch.setenv("FLASK_ENV", "development")
     monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
     monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users_test.db"))
     monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_users_test.db"))
-    monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
+    if not production:
+        monkeypatch.delenv("USERS_DB_ENCRYPTION_KEY", raising=False)
+        monkeypatch.delenv("DEV_USERS_DB_ENCRYPTION_KEY", raising=False)
     # Import after env wiring so backend.main initializes with our temp DB path
     import backend.main as main
 

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|chrysler|towncountry",
+  "year": 2014,
+  "make": "Chrysler",
+  "model": "Town & Country",
+  "ladder_id": "generic_chrysler_towncountry",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Touring",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "trademark of blu-ray",
+      "sirius, Xm and all related marks and logos are",
+      "Chrysler Town & Country. Mile after mile, you'll"
+    ],
+    "Touring": [
+      "Perforated leather-trimmed seats",
+      "2nd- and 3rd-row window shades",
+      "Power passenger seat",
+      "17-inch painted aluminum wheels",
+      "Chrome mirrors with signals",
+      "SafetyTec package",
+      "Blind spot monitoring",
+      "Rear cross-path detection",
+      "Rain-sensing wipers",
+      "Premium tire pressure system and rear park assist with auto high-beam headlamp control"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Premium": 3
+    }
+  }
+}

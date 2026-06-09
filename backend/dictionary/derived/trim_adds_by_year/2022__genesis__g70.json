@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2022|genesis|g70",
+  "year": 2022,
+  "make": "genesis",
+  "model": "G70",
+  "ladder_id": "brochure_llm_2022__genesis__g70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "G70 3.3T SPORT PRESTIGE",
+    "G70 3.3T SPORT ADVANCED",
+    "G70 3.3T STANDARD",
+    "G70 2.0T PRESTIGE",
+    "G70 2.0T STANDARD"
+  ],
+  "adds_by_trim": {
+    "G70 3.3T SPORT PRESTIGE": [
+      "Heads-up Display",
+      "Surround View Monitor with Blind-Spot View Monitor",
+      "19-inch Unique Sport Alloy Wheels",
+      "Nappa Leather Seating Surfaces with Microfiber Suede Headliner",
+      "Ventilated Front Seats",
+      "Brembo Performance Braking System",
+      "Mechanical Limited-Slip Differential",
+      "Electronically Controlled Suspension",
+      "Heated Steering Wheel standard"
+    ],
+    "G70 3.3T SPORT ADVANCED": [
+      "19-inch Alloy Wheels",
+      "Parking Distance Warning – Forward & Reverse",
+      "Power Tilt-and-Slide Wide Sunroof",
+      "Aluminum Trim with Sport Pattern",
+      "Lexicon 15-Speaker Premium Audio System with QuantumLogic Surround",
+      "Wireless Device Charging",
+      "Power Driver Seat Side Bolsters and Cushion Extension",
+      "Genesis Digital Key"
+    ],
+    "G70 3.3T STANDARD": [
+      "3.3L Twin-Turbo GDI V6 engine 365 HP/376 lb-ft",
+      "Variable Exhaust Valve System",
+      "Launch Control",
+      "Sport-tuned Suspension",
+      "Mechanical Limited-Slip Differential",
+      "Electronically Controlled Suspension",
+      "Brembo Braking System",
+      "Variable Gear Ratio Steering",
+      "Surround View Monitor and Blind-Spot View Monitor",
+      "Heads-up Display"
+    ],
+    "G70 2.0T PRESTIGE": [
+      "19-inch Machined Finish Dark Gray Alloy Wheels",
+      "Leather Seating Surfaces and Aluminum Trim",
+      "Power Tilt-and-Slide Wide Sunroof",
+      "Lexicon 15-Speaker Premium Audio System with QuantumLogic Surround",
+      "Parking Distance Warning – Forward & Reverse",
+      "Power Folding Auto-Dimming Side Mirrors with Genesis Logo Approach Lights",
+      "Rain-Sensing Wipers",
+      "Heated Steering Wheel"
+    ],
+    "G70 2.0T STANDARD": [
+      "2.0L Turbo GDI 4-cylinder engine 252 HP/260 lb-ft",
+      "8-speed Shift-by-Wire automatic transmission with Paddle Shifters",
+      "MacPherson strut front and multi-link rear suspension",
+      "Proximity Key with Push-Button Start",
+      "12-way Power Driver Seat with 4-way Power Lumbar",
+      "8-way Power Front Passenger Seat",
+      "Heated Front Seats",
+      "10.25-inch Touchscreen Navigation System with Connected Routing",
+      "Apple CarPlay and Android Auto",
+      "8-airbag safety system with Forward Collision-Avoidance Assist"
+    ]
+  }
+}

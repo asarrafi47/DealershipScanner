@@ -1,0 +1,91 @@
+{
+  "catalog_key": "2019|hyundai|ioniq",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "ladder_id": "brochure_llm_2019__hyundai__ioniq",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited",
+    "Hybrid SEL",
+    "Hybrid Blue",
+    "Plug-in Hybrid Limited",
+    "Plug-in Hybrid",
+    "Electric Limited",
+    "Electric"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited": [
+      "Power tilt-and-slide sunroof",
+      "HID headlights with LED accent lighting and Dynamic Bending Light",
+      "High Beam Assist",
+      "17-inch alloy wheels with 225/45R17 tires",
+      "8-inch touchscreen navigation system",
+      "Infinity Premium Audio System with 8 speakers and Clari-Fi Music Restoration",
+      "Floor console-mounted rear seat vents",
+      "Retractable cargo-area cover",
+      "Driver Integrated Memory System",
+      "Wireless charging pad"
+    ],
+    "Hybrid SEL": [
+      "Power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "7-inch color LCD instrument cluster",
+      "Blind Spot Detection with Rear Cross-traffic Alert and Lane Change Assist",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Smart Cruise Control",
+      "Lane Keep Assist"
+    ],
+    "Hybrid Blue": [
+      "Proximity Key entry with push button start",
+      "60/40 split-folding rear seats",
+      "7-inch high-resolution touchscreen audio display",
+      "SiriusXM Satellite Radio with 3 months complimentary service",
+      "Android Auto and Apple CarPlay compatibility"
+    ],
+    "Plug-in Hybrid Limited": [
+      "45 kW permanent magnet motor with enhanced power density",
+      "Power tilt-and-slide sunroof",
+      "HID headlights with LED accent lighting and Dynamic Bending Light",
+      "High Beam Assist",
+      "17-inch alloy wheels",
+      "8-inch touchscreen navigation system",
+      "Infinity Premium Audio System with 8 speakers and Clari-Fi",
+      "Driver Integrated Memory System",
+      "Wireless charging pad"
+    ],
+    "Plug-in Hybrid": [
+      "45 kW permanent magnet motor for extended all-electric range",
+      "Power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "Leather seating surfaces",
+      "7-inch color LCD instrument cluster",
+      "Blind Spot Detection with Rear Cross-traffic Alert and Lane Change Assist",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Smart Cruise Control and Lane Keep Assist"
+    ],
+    "Electric Limited": [
+      "HID headlights with Dynamic Bending Light",
+      "Power tilt-and-slide sunroof",
+      "Leather seating surfaces",
+      "Driver Integrated Memory System",
+      "8-inch touchscreen navigation system",
+      "Infinity Premium Audio System with 8 speakers and Clari-Fi",
+      "LED interior lighting",
+      "Wireless charging pad",
+      "Rear parking sensors"
+    ],
+    "Electric": [
+      "88 kW permanent magnet electric motor with 28 kWh lithium-ion battery",
+      "DC Fast Charging capability",
+      "LED headlights",
+      "Heated front seats",
+      "16-inch alloy wheels with 205/55R16 tires",
+      "7-inch high-resolution touchscreen audio display",
+      "SiriusXM Satellite Radio with 3 months complimentary service",
+      "Android Auto and Apple CarPlay compatibility",
+      "Hyundai Blue Link Connected Car System with 3 years complimentary service"
+    ]
+  }
+}

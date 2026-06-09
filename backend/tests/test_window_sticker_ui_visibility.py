@@ -18,15 +18,26 @@ def test_is_sticker_media_url_detects_monroney_gallery_path() -> None:
     assert is_sticker_media_url("https://cdn.dealer.com/exterior/front.jpg") is False
 
 
-def test_show_window_sticker_ui_cdjr_without_listing_signal(monkeypatch) -> None:
-    car = {"vin": "1C6RRFFG0ZZ999999", "make": "Ram", "gallery": []}
+def test_show_window_sticker_ui_cdjr_2018_plus_without_listing_signal(monkeypatch) -> None:
+    car = {"vin": "1C6RRFFG0ZZ999999", "make": "Ram", "year": 2019, "gallery": []}
+    assert is_cdjr_stellantis_car(car) is True
+    monkeypatch.setattr(
+        "backend.enrichment.window_sticker_service.window_sticker_has_visual",
+        lambda _c: False,
+    )
+    assert show_window_sticker_panel(car) is True
+    assert should_auto_fetch_oem_window_sticker(car) is True
+
+
+def test_show_window_sticker_ui_cdjr_pre_2018_hidden_without_sticker(monkeypatch) -> None:
+    car = {"vin": "1C4RJFAG0HC123456", "make": "Jeep", "year": 2017, "gallery": []}
     assert is_cdjr_stellantis_car(car) is True
     monkeypatch.setattr(
         "backend.enrichment.window_sticker_service.window_sticker_has_visual",
         lambda _c: False,
     )
     assert show_window_sticker_panel(car) is False
-    assert should_auto_fetch_oem_window_sticker(car) is True
+    assert should_auto_fetch_oem_window_sticker(car) is False
 
 
 def test_show_window_sticker_ui_bmw_hidden_without_listing_sticker() -> None:

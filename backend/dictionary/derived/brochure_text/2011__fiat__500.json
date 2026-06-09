@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|fiat|500",
+  "year": 2011,
+  "make": "Fiat",
+  "model": "500",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Fiat_500_Brochure.pdf",
+  "page_count": 9,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

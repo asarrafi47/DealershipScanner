@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2009_porsche_carrera_4_s_coupe_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Carrera 4 S Coupe",
+    "Carrera 4 S Coupe"
+  ],
+  "year_min": 2007,
+  "year_max": 2011,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ],
+    "Carrera": [
+      {
+        "label": "Engine Options",
+        "value": "3.8L V6 Turbo; Automatic 5-spd"
+      }
+    ]
+  }
+}

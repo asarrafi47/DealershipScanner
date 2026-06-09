@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2020|mazda|cx30",
+  "year": 2020,
+  "make": "Mazda",
+  "model": "CX-30",
+  "ladder_id": "brochure_llm_2020__mazda__cx30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM PACKAGE",
+    "PREFERRED PACKAGE",
+    "SELECT PACKAGE",
+    "MAZDA CX-30"
+  ],
+  "adds_by_trim": {
+    "PREMIUM PACKAGE": [
+      "Perforated leather-trimmed seats",
+      "Power sliding-glass moonroof with one-touch open and tilt",
+      "Cylinder Deactivation",
+      "LED headlights with signature lighting",
+      "Steering-wheel-mounted paddle shifters",
+      "LED combination taillights with signature lighting",
+      "Adaptive Front-lighting System",
+      "Rear Power Liftgate",
+      "Roof rails"
+    ],
+    "PREFERRED PACKAGE": [
+      "Bose 12-speaker premium audio system",
+      "SiriusXM Satellite Radio with 3-month All Access subscription",
+      "8-way power-adjustable driver's seat with lumbar support and memory",
+      "Heated front seats with three-level adjustment",
+      "Overhead console with sunglasses holder",
+      "Power side mirrors with memory function",
+      "Shark fin antenna",
+      "Front grille with gloss finish",
+      "Driver and passenger illuminated vanity mirrors"
+    ],
+    "SELECT PACKAGE": [
+      "Leatherette-trimmed seats",
+      "Leather-wrapped steering wheel and gear selector",
+      "Apple CarPlay integration",
+      "Android Auto integration",
+      "Mazda Advanced Keyless Entry System",
+      "Dual-zone automatic climate control",
+      "Rear air conditioning vents",
+      "18-inch alloy wheels with P215/55 R18 tires",
+      "Body-color power side mirrors with integrated turn signals",
+      "Rear privacy glass"
+    ],
+    "MAZDA CX-30": [
+      "SKYACTIV-G 2.5L 16-valve 4-cylinder engine with VVT",
+      "SKYACTIV-Drive 6-speed automatic with manual-shift and Sport modes",
+      "SKYACTIV-VEHICLE DYNAMICS with G-Vectoring Control Plus",
+      "16-inch alloy wheels with P215/65 R16 tires",
+      "Air conditioning and push button start",
+      "Cloth-trimmed sport seats",
+      "8.8-inch MAZDA CONNECT infotainment with Commander control",
+      "8-speaker audio system with Mazda Harmonic Acoustics",
+      "Bluetooth hands-free phone and audio streaming",
+      "LED headlights, combination taillights, and daytime running lights"
+    ]
+  }
+}

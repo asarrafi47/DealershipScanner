@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2017|kia|sportage",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Sportage",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_bmw_m2_complete_options",
+  "make": "BMW",
+  "models": [
+    "M2",
+    "M2"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive (xDrive)"
+      }
+    ]
+  }
+}

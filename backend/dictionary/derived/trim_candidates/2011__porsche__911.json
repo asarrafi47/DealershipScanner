@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|porsche|911",
+  "year": 2011,
+  "make": "Porsche",
+  "model": "911",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Carrera"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

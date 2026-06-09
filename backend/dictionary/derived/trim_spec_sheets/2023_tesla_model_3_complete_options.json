@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_tesla_model_3_complete_options",
+  "make": "Tesla",
+  "models": [
+    "Model 3",
+    "Model 3"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Performance": [
+      {
+        "label": "Engine Options",
+        "value": ", 79 or 82 kWh lithium ion (LFP and lithium-NMC); Discontinued: 54, 60, 62, 75, 78.1 kWh (NCA/NMC)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Electric motor; Tesla sources these batteries from CATL in China. Engineering and changes["
+      }
+    ]
+  }
+}

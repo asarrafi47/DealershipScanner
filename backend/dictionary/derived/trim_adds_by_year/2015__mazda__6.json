@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|mazda|6",
+  "year": 2015,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2015__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Standard SKYACTIV-Drive 6-speed Sport automatic transmission",
+      "Power sliding-glass moonroof",
+      "19-inch alloy wheels with Platinum Silver finish",
+      "Rear lip spoiler",
+      "Heated front seats",
+      "Leather-trimmed seats",
+      "8-way power-adjustable driver's seat with power lumbar and memory",
+      "4-way power-adjustable passenger's seat",
+      "Bi-Xenon headlights with Adaptive Front-lighting System",
+      "LED daytime running lights"
+    ],
+    "Touring": [
+      "Dual-zone automatic climate control",
+      "Rear seat heat and A/C vents",
+      "19-inch alloy wheels",
+      "Mazda Advanced Keyless Entry System",
+      "6-way power-adjustable driver's seat",
+      "Bluetooth hands-free phone and audio streaming",
+      "5.8-inch full-color touch-screen display",
+      "Blind Spot Monitoring and Rear Cross Traffic Alert",
+      "Leatherette-trimmed seats",
+      "Illuminated driver and front-passenger vanity mirrors"
+    ],
+    "Sport": [
+      "184-hp 2.5L SKYACTIV-G DOHC 16-valve 4-cylinder with variable valve timing",
+      "Standard SKYACTIV-MT 6-speed manual transmission or SKYACTIV-Drive automatic",
+      "Halogen headlights with auto off and halogen daytime running lights",
+      "Remote keyless entry and push button start",
+      "Tilt and telescopic steering column",
+      "60/40 split fold-down rear seatback",
+      "AM/FM/CD/MP3-compatible audio with 6 speakers and auxiliary input",
+      "17-inch alloy wheels with P225/55 R17 all-season tires",
+      "Air conditioning with pollen filter",
+      "6-way manually adjustable driver's seat with manual lumbar support"
+    ]
+  }
+}

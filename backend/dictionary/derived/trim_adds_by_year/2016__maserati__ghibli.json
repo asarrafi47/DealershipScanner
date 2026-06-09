@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2016|maserati|ghibli",
+  "year": 2016,
+  "make": "maserati",
+  "model": "ghibli",
+  "ladder_id": "brochure_web_2016__maserati__ghibli",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ghibli Trofeo 334 Ultima RWD",
+    "Ghibli Modena Ultima Q4 AWD"
+  ],
+  "adds_by_trim": {
+    "Ghibli Trofeo 334 Ultima RWD": [
+      "Twin-turbocharged 3.8-liter Ferrari-built V-8 engine with 572 hp and 538 lb-ft torque",
+      "0-60 mph acceleration in approximately 3.7 seconds with top speed above 200 mph",
+      "Rear-wheel drive with eight-speed automatic transmission",
+      "Carbon-fiber exterior pieces",
+      "Exclusive Scià di Persia teal paint with red 334 fender badging",
+      "Unique model-specific wheels, tires, and interior finishings",
+      "Limited to 103 examples worldwide"
+    ],
+    "Ghibli Modena Ultima Q4 AWD": [
+      "Twin-turbocharged 3.0-liter V-6 engine with 424 hp and 406 lb-ft torque",
+      "Maserati Q4 all-wheel-drive system with eight-speed automatic transmission",
+      "Heated and ventilated front sport seats with heated rear seats",
+      "Soft-close doors and power rear-window sunshade",
+      "Harman Kardon premium audio system",
+      "Black leather upholstery with red contrast stitching",
+      "Sporty front and rear bumpers with red brake calipers",
+      "21-inch wheels",
+      "10.1-inch infotainment touchscreen with navigation, Apple CarPlay, and Android Auto",
+      "Front automatic emergency braking, blind-spot monitoring, lane keep assist, adaptive cruise control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/ghibli/"
+}

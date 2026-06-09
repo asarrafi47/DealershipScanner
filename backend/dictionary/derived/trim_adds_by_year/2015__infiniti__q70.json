@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2015|infiniti|q70",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "Q70",
+  "ladder_id": "brochure_llm_2015__infiniti__q70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q70L 5.6",
+    "Q70L 3.7",
+    "Q70 5.6",
+    "Q70 3.7"
+  ],
+  "adds_by_trim": {
+    "Q70L 5.6": [
+      "Long wheelbase configuration for increased rear legroom",
+      "5.6-liter 32-valve V8 engine with 420 horsepower",
+      "417 lb-ft torque at 4,400 rpm"
+    ],
+    "Q70L 3.7": [
+      "Long wheelbase configuration for increased rear legroom",
+      "3.7-liter 24-valve V6 engine with 330 horsepower"
+    ],
+    "Q70 5.6": [
+      "5.6-liter 32-valve V8 engine with 420 horsepower",
+      "417 lb-ft torque at 4,400 rpm",
+      "20 x 9.0-inch split 5-spoke aluminum wheels with 245/40R20 tires"
+    ],
+    "Q70 3.7": [
+      "3.7-liter 24-valve V6 engine with 330 horsepower",
+      "270 lb-ft torque at 5,200 rpm",
+      "18 x 8.0-inch double 5-spoke aluminum wheels with 245/50R18 tires",
+      "6-speaker AM/FM/CD audio system with MP3 and RDS",
+      "7-inch color vehicle information display",
+      "Dual Zone Automatic Temperature Control system",
+      "Infiniti Intelligent Key with push button ignition",
+      "Rear View Monitor with sonar system"
+    ]
+  }
+}

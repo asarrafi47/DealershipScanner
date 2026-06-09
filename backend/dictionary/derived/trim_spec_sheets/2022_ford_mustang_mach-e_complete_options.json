@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_ford_mustang_mach-e_complete_options",
+  "make": "Ford",
+  "models": [
+    "Mustang Mach-E",
+    "Mustang Mach-E"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "Manual 6-spd; Rear-Wheel Drive"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "V6 Premium convertible"
+      }
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2013|toyota|prius",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_web_2013__toyota__prius",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "12.3-inch infotainment display",
+      "Eight-speaker JBL audio system",
+      "Fixed glass roof",
+      "Heated power front seats",
+      "Ventilated front seats",
+      "Driver memory function",
+      "Digital rearview mirror"
+    ],
+    "XLE": [
+      "19-inch alloy wheels",
+      "Eight-way power driver's seat",
+      "Synthetic leather seating",
+      "Rain-sensing wipers",
+      "Keyless entry",
+      "Wireless phone charger",
+      "Parking sensors with automatic braking",
+      "Heated steering wheel",
+      "Two additional rear cupholders"
+    ],
+    "LE": [
+      "17-inch alloy wheels with wheel covers",
+      "8.0-inch infotainment display",
+      "Six USB-C ports",
+      "Electronic parking brake",
+      "Blind-spot monitoring with rear cross-traffic alert",
+      "Adaptive cruise control",
+      "Lane keeping assist",
+      "Automatic emergency braking",
+      "Traffic sign monitoring",
+      "Automatic high-beams"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/prius/"
+}

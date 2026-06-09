@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2013|cadillac|xts",
+  "year": 2013,
+  "make": "Cadillac",
+  "model": "XTS",
+  "ladder_id": "brochure_web_2013__cadillac__xts",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XTS 3.6L V6 Turbo Vsport AWD Platinum",
+    "XTS 3.6L V6 AWD Platinum",
+    "XTS 3.6L V6 FWD Platinum",
+    "XTS 3.6L V6 AWD Premium Luxury",
+    "XTS 3.6L V6 FWD Premium Luxury",
+    "XTS 3.6L V6 AWD Luxury",
+    "XTS 3.6L V6 FWD Luxury",
+    "XTS 3.6L V6 FWD"
+  ],
+  "adds_by_trim": {
+    "XTS 3.6L V6 Turbo Vsport AWD Platinum": [
+      "410-hp twin-turbocharged V-6 engine replacing naturally aspirated V-6",
+      "All-wheel-drive configuration standard",
+      "5.2-second 0-60 mph acceleration capability"
+    ],
+    "XTS 3.6L V6 AWD Platinum": [
+      "All-wheel-drive configuration",
+      "Rear seat radio controls in center console"
+    ],
+    "XTS 3.6L V6 FWD Platinum": [
+      "Rear seat radio controls in center console"
+    ],
+    "XTS 3.6L V6 AWD Premium Luxury": [
+      "All-wheel-drive configuration",
+      "Magnetic Ride Control with electric current adjusting shock absorber stiffness"
+    ],
+    "XTS 3.6L V6 FWD Premium Luxury": [
+      "Magnetic Ride Control with electric current adjusting shock absorber stiffness"
+    ],
+    "XTS 3.6L V6 AWD Luxury": [
+      "All-wheel-drive configuration"
+    ],
+    "XTS 3.6L V6 FWD Luxury": [
+      "Enhanced trim designation over base model"
+    ],
+    "XTS 3.6L V6 FWD": [
+      "304-hp naturally aspirated 3.6L V-6 engine",
+      "Six-speed automatic transmission",
+      "Brembo front brakes",
+      "LED lighting front and rear",
+      "Apple CarPlay and Android Auto compatibility",
+      "Active noise cancellation with three microphones in headliner"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/xts/"
+}

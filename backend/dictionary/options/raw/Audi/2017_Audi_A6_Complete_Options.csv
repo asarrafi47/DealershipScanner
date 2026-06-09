@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,Audi,A6,quattro,3.0L V6 (SIDI),3.0L V6 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,21,29,24,,,,,
+2017,Audi,A6,quattro,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,22,31,25,,,,,
+2017,Audi,A6,A6,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (AM-S7),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,34,28,,,,,

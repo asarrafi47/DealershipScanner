@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2020_ford_f-150_complete_options",
+  "make": "Ford",
+  "models": [
+    "F-150",
+    "F-150"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Raptor": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+      }
+    ],
+    "XLT": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Twin Turbo; Automatic (S10)"
+      }
+    ],
+    "XL": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Twin Turbo; Automatic (S10)"
+      }
+    ]
+  }
+}

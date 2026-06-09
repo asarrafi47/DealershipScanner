@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2010|honda|pilot",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "inventory_honda_pilot",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX",
+    "Nhl"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "Leather-Wrapped Steering Wheel",
+      "Automatic Dimming Rearview Mirror",
+      "Conversation Mirror with Sunglasses Holder"
+    ],
+    "Nhl": [
+      "trademark of Microsoft Corporation in the United States and/or other countries. 12 HomeLink and the HomeLink house are registered",
+      "trademarks of Johnson Controls.® 13 Kelley Blue Book’s kbb.com awarded Honda six Best Resale Value Awards for the 2009 Civic, the 2009 Civic Hybrid, the 2009 CR-V, the 2009 Fit, the 2009"
+    ],
+    "LX": [
+      "Body-Colored Door Handles Black",
+      "Heat-Rejecting Green-Tinted Glass",
+      "Acoustic Windshield EX-L",
+      "Integrated Class III Trailer Hitch",
+      "Auto-On/Off Multi-Reflector Halogen Headlights",
+      "Body-Colored Parking Sensors (front/rear)",
+      "Chrome Exhaust Finishers"
+    ],
+    "EX": [
+      "MacPherson strut front suspension with multi-link rear arms",
+      "18-inch alloy wheels",
+      "Power window, door and tailgate locks",
+      "Cruise control",
+      "Security system",
+      "Six airbags",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Vehicle Stability Assist with traction control"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix",
+    "dot_feature_matrix",
+    "inline_trim_bullet_rows"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "EX": 0,
+      "LX": 7,
+      "Nhl": 2
+    }
+  }
+}

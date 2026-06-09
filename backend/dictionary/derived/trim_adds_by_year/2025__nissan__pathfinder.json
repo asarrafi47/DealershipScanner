@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2025|nissan|pathfinder",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2025__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "ROCK CREEK",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch machine-finished aluminum-alloy wheels",
+      "Motion Activated Liftgate",
+      "Panoramic moonroof",
+      "Tow hitch receiver with 7-pin wiring harness",
+      "Power folding outside mirrors with reverse tilt-down feature",
+      "Chrome body side moldings",
+      "Power tilt and telescoping steering column",
+      "Memory System for driver's seat, steering wheel, and outside mirrors",
+      "Rain-sensing windshield wipers",
+      "Semi-aniline leather seats with quilted inserts, climate-controlled front, heated outboard 2nd-row"
+    ],
+    "ROCK CREEK": [
+      "3.5-liter V6 engine with 295 hp and 270 lb-ft of torque",
+      "Standard Intelligent 4x4",
+      "Intelligent Around View Monitor with Off-Road Mode",
+      "Off-road tuned suspension",
+      "18-inch black-painted beadlock-style wheels with P265/60R18 all-terrain tires",
+      "Black tubular roof rack",
+      "LED fog lights",
+      "Second-row fold-down captain's chairs with tip-up easy entry",
+      "Exclusive Rock Creek leatherette seats with unique badging and contrast stitching"
+    ],
+    "SL": [
+      "ProPILOT Assist with Navi-link",
+      "Intelligent Around View Monitor",
+      "Front and Rear Sonar System",
+      "Traffic Sign Recognition",
+      "18-inch machine-finished aluminum-alloy wheels, silver roof rails",
+      "Rear sunshades and rear door remote keyless entry",
+      "Auto-dimming inside rearview mirror and HomeLink Universal Transceiver",
+      "10-way power adjustable front-passenger seat with 2-way power lumbar",
+      "Leather-appointed seats for 1st and 2nd rows",
+      "NissanConnect 9-inch touchscreen with wireless Apple CarPlay and wireless charger"
+    ],
+    "SV": [
+      "ProPILOT Assist and Intelligent Lane Intervention",
+      "Intelligent Blind Spot Intervention",
+      "Power body-color outside mirrors with LED turn signal indicators",
+      "Heated outside mirrors and black roof rails",
+      "Power liftgate with Remote Engine Start System and Intelligent Climate Control",
+      "10-way power adjustable driver's seat with 2-way power lumbar",
+      "Heated front seats and leather-wrapped steering wheel",
+      "NissanConnect Services powered by SiriusXM with Wi-Fi Hotspot",
+      "12.3-inch digital dashboard with fully digital gauges and Head-Up Display",
+      "Bose Premium Audio System with 13 speakers"
+    ],
+    "S": [
+      "3.5-liter V6 engine with 284 hp and 259 lb-ft of torque",
+      "9-speed automatic transmission with available Intelligent 4x4",
+      "Forward Collision Warning and Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, and Rear Cross Traffic Alert",
+      "Rear Sonar System and Rear Automatic Braking",
+      "18-inch dark-painted aluminum-alloy wheels with LED headlights",
+      "Tri-Zone Automatic Temperature Control",
+      "7-inch Advanced Drive-Assist Display",
+      "NissanConnect 8-inch touchscreen with Apple CarPlay, Android Auto, and Bluetooth",
+      "EZ FLEX Seating System with 3rd-row 60/40-split fold-flat reclining bench seat"
+    ]
+  }
+}

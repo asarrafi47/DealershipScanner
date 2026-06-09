@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2020|landrover|defender",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Defender",
+  "ladder_id": "brochure_llm_2020__landrover__defender",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DEFENDER 110 FIRST EDITION",
+    "DEFENDER 90 FIRST EDITION",
+    "DEFENDER S",
+    "DEFENDER"
+  ],
+  "adds_by_trim": {
+    "DEFENDER 110 FIRST EDITION": [
+      "Sliding panoramic roof",
+      "Black contrast roof with Black Exterior Pack",
+      "Front center console refrigerator compartment",
+      "Domestic Plug Socket",
+      "Grained leather and Robust Woven Textile seat facings with 12-way heated, electric memory front seats",
+      "Meridian Sound System 400W with 10 speakers plus subwoofer",
+      "20-inch Style 5098 Gloss Silver wheels",
+      "Terrain Response 2 with Configurable Terrain Response"
+    ],
+    "DEFENDER 90 FIRST EDITION": [
+      "Pangea Green Metallic Paint with White contrast roof",
+      "Folding fabric roof",
+      "Premium LED headlights with signature DRL and front fog lights",
+      "First Edition badge and Metal Treadplates with First Edition branding",
+      "Grained leather and Robust Woven Textile seat facings with 12-way heated, electric memory front seats",
+      "Meridian Sound System 400W with 10 speakers plus subwoofer",
+      "20-inch Style 5098 Gloss Silver wheels with off-road tires",
+      "Tow Hitch Receiver"
+    ],
+    "DEFENDER S": [
+      "LED headlights with Auto High Beam Assist",
+      "19-inch Style 6010 Gloss Silver wheels",
+      "Grained leather and Robust Woven Textile seat facings on 12-way semi-powered front seats",
+      "10-inch Pivi Pro with Interactive Driver Display",
+      "Click & Go integrated base unit"
+    ],
+    "DEFENDER": [
+      "Body-colored roof and door handles",
+      "LED headlights with heated, electric, power fold door mirrors with approach lights and auto-dimming",
+      "18-inch Style 5093 Gloss White Steel wheels with all-season tires",
+      "Fabric 8-way semi-powered front seats",
+      "10-inch Pivi Pro with Smartphone Pack and Connected Navigation Pro",
+      "180W Sound System with 6 speakers and Wireless Device Charging",
+      "3D Surround Camera, 360-degree Parking Aid, Wade Sensing, Lane Keep Assist, Emergency Braking, Traffic Sign Recognition and Adaptive Speed Limiter, Blind Spot Assist",
+      "All Wheel Drive with Twin-speed Transfer Box and Electronic Air Suspension with Adaptive Dynamics",
+      "Terrain Response with Cruise Control and Speed Limiter",
+      "Heated leather steering wheel, Cross car beam, Center console with armrest, Garage Door Opener, Auto-dimming interior rear view mirror, Carpet Mats"
+    ]
+  }
+}

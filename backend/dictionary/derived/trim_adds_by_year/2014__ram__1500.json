@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2014|ram|1500",
+  "year": 2014,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2014__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie",
+    "Rebel",
+    "Big Horn",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Laramie": [
+      "12-inch reconfigurable touchscreen with customizable Home Screen",
+      "Laramie Longhorn theme on driver information display with gold tones",
+      "Apple CarPlay and Android Auto smartphone integration",
+      "SiriusXM Guardian connected services with 1-year trial",
+      "SiriusXM Traffic Plus and Travel Link with 5-year trial",
+      "Uconnect Smartphone App access",
+      "4G LTE WiFi Hotspot with 1GB/3-month trial",
+      "Full-screen Uconnect Navigation with Pinch-to-Zoom capability",
+      "Siri Eyes Free integration"
+    ],
+    "Rebel": [
+      "Rebel-exclusive theme on 7-inch display with red-lit badge and dark ruby red accents",
+      "Model-specific driver information display customization"
+    ],
+    "Big Horn": [
+      "3.5-inch or 7-inch driver information display depending on configuration"
+    ],
+    "Tradesman": [
+      "3.6L Pentastar V6 with eTorque or 5.7L HEMI V8 engine options",
+      "8-speed automatic transmission standard",
+      "Electronic parking brake with five operational modes",
+      "High-strength steel frame with 98% high-strength steel composition",
+      "Dynamic front crumple zones for impact absorption",
+      "Side-impact door beams for cabin protection",
+      "Twin-tube heavy-duty shocks with Frequency Response Damping",
+      "Progressive-rate rear springs and axles",
+      "Up to 7,100-lb GVWR with 9.25-inch rear axle"
+    ]
+  }
+}

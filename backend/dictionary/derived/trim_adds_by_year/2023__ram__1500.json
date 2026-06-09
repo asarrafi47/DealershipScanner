@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2023|ram|1500",
+  "year": 2023,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2023__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRX",
+    "Limited",
+    "Longhorn",
+    "Rebel",
+    "Power Wagon",
+    "Big Horn",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "TRX": [
+      "Supercharged 6.2L HEMI V8 — 702 hp and 650 lb-ft torque",
+      "8-speed automatic transmission with steering-wheel-mounted paddle shifters",
+      "Bilstein Black Hawk e2 adaptive performance shocks with remote reservoirs",
+      "Wide-body fenders with 35-inch all-terrain tires and raised suspension travel",
+      "Electronic full-time 4WD transfer case",
+      "15-inch front and rear brake rotors",
+      "Dual exhaust with black tips",
+      "Leather-/suede-wrapped flat-bottom perforated steering wheel with paddle shifters",
+      "19-speaker Harman Kardon premium audio system",
+      "Uconnect 5 NAV with 12-inch touchscreen display",
+      "Rear underseat storage bins (Crew Cab)",
+      "Ventilated rear seats with 3 adjustment levels"
+    ],
+    "Limited": [
+      "Jeweled bright shifter",
+      "Leather-wrapped real-wood steering wheel",
+      "Dual-pane power-operated sunroof (Crew Cab)",
+      "Harman Kardon 19-speaker sound system",
+      "Uconnect 5 NAV with 12-inch touchscreen"
+    ],
+    "Longhorn": [
+      "Leather-wrapped steering wheel with integrated paddle shifters",
+      "Center console-mounted leather-wrapped shifter",
+      "Advanced multistage airbags with supplemental side systems",
+      "Adaptive Cruise Control with Stop and Go",
+      "Alpine 10-speaker premium audio system"
+    ],
+    "Rebel": [
+      "Selec-Speed Control for terrain management",
+      "Uconnect 5 NAV with 8.4-inch touchscreen",
+      "Steering wheel-mounted radio controls",
+      "SiriusXM with 360L integrated",
+      "TomTom Navigation with Traffic & Travel"
+    ],
+    "Power Wagon": [
+      "Selec-Speed Control for off-road capability",
+      "Uconnect 5 with 8.4-inch touchscreen",
+      "Trailer Sway Damping technology",
+      "Electronic Stability Control system",
+      "Hill Start Assist for steep terrain"
+    ],
+    "Big Horn": [
+      "8-way power driver and passenger seats",
+      "4-way power lumbar adjustment (driver and passenger)",
+      "Heated steering wheel",
+      "Heated front and rear seats",
+      "Uconnect 5 with 8.4-inch touchscreen display"
+    ],
+    "Tradesman": [
+      "Keyless push-button start",
+      "Rotary shifter",
+      "Power windows with 1-touch driver/passenger up/down",
+      "Cruise control",
+      "Uconnect 3 with 5-inch touchscreen display"
+    ]
+  }
+}

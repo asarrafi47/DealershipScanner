@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2017|landrover|rangeroversport",
+  "year": 2017,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2017__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVR",
+    "AUTOBIOGRAPHY",
+    "HSE SUPERCHARGED",
+    "HSE DYNAMIC",
+    "SE DYNAMIC"
+  ],
+  "adds_by_trim": {
+    "SVR": [
+      "5.0L Supercharged V8 engine with 550 horsepower",
+      "0-60 mph acceleration in 4.5 seconds",
+      "Maximum speed of 162 mph",
+      "14.96-inch ventilated front disc brakes",
+      "14.37-inch ventilated rear disc brakes"
+    ],
+    "AUTOBIOGRAPHY": [
+      "5.0L Supercharged V8 engine with 510 horsepower",
+      "0-60 mph acceleration in 5.0 seconds"
+    ],
+    "HSE SUPERCHARGED": [
+      "3.0L Supercharged V6 engine with 380 horsepower",
+      "14.96-inch ventilated front disc brakes",
+      "14.37-inch ventilated rear disc brakes",
+      "27.7-gallon fuel tank capacity"
+    ],
+    "HSE DYNAMIC": [
+      "3.0L Supercharged V6 engine with 340 horsepower",
+      "27.7-gallon fuel tank capacity"
+    ],
+    "SE DYNAMIC": [
+      "3.0L TDV6 diesel engine with 254 horsepower",
+      "8-speed automatic transmission with CommandShift®",
+      "4-wheel drive (4WD)",
+      "Intelligent Stop/Start system",
+      "Electronic power-assisted steering (EPAS)",
+      "Electronic air suspension",
+      "Diesel Particulate Filter (DPF)",
+      "Hill Descent Control (HDC®)",
+      "Anti-lock braking system (ABS) with cornering brake control"
+    ]
+  }
+}

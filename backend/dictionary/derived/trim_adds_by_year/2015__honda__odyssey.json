@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2015|honda|odyssey",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2015__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring Elite",
+    "EX-L w/Navigation",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Touring Elite": [
+      "High-Intensity Discharge (HID) headlights with auto-on/off",
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Honda DVD Ultrawide Rear Entertainment System with 16-GB audio memory and HDMI",
+      "Panoramic moonroof with one-touch power and tilt feature",
+      "Cool box storage compartment",
+      "Fog lights",
+      "HD Radio"
+    ],
+    "EX-L w/Navigation": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Honda DVD Rear Entertainment System with 115-volt power outlet",
+      "Audio touch-screen interface"
+    ],
+    "EX-L": [
+      "18-inch alloy wheels",
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "Memory-linked side mirrors with reverse gear tilt-down",
+      "Leather-trimmed interior",
+      "Heated power side mirrors",
+      "Heated front seats",
+      "Blind-spot information system (BSI)",
+      "Tri-zone automatic climate control with humidity control and air filtration",
+      "HondaVAC",
+      "SiriusXM Radio"
+    ],
+    "EX": [
+      "17-inch alloy wheels",
+      "Power sliding doors",
+      "Forward Collision Warning (FCW)",
+      "Lane Departure Warning (LDW)",
+      "Power tailgate",
+      "One-touch 60/40 split 3rd-row Magic Seat",
+      "Multi-angle rearview camera with guidelines"
+    ],
+    "LX": [
+      "248-hp 3.5-liter i-VTEC V-6 engine",
+      "6-speed automatic transmission",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Advanced Compatibility Engineering (ACE)",
+      "Tilt and telescopic steering column",
+      "Driver's seat with 8-way power adjustment",
+      "Front passenger's seat with 4-way power adjustment",
+      "Bluetooth HandsFreeLink and streaming audio",
+      "Rearview camera with guidelines",
+      "i-MID with 8-inch high-resolution customizable screen"
+    ]
+  }
+}

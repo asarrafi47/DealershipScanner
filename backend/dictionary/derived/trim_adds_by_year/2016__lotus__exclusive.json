@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|lotus|exclusive",
+  "year": 2016,
+  "make": "Lotus",
+  "model": "exclusive",
+  "ladder_id": "brochure_web_2016__lotus__exclusive",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Evora 400",
+    "Evora S",
+    "Evora"
+  ],
+  "adds_by_trim": {
+    "Evora 400": [
+      "3.5L supercharged V6 engine with 400 hp, up from 345 hp",
+      "Enhanced suspension tuning and upgraded brakes",
+      "Carbon fiber aero package",
+      "Alcantara steering wheel and shift knob",
+      "Premium leather interior upgrades"
+    ],
+    "Evora S": [
+      "Supercharged 3.5L V6 engine with 345 hp",
+      "Enhanced interior trim and leather appointments",
+      "Sport-tuned suspension",
+      "Premium audio system"
+    ],
+    "Evora": [
+      "3.5L supercharged V6 engine, 345 hp",
+      "Aluminum frame and composite body construction",
+      "6-speed manual transmission",
+      "Leather-trimmed interior with power seats",
+      "Dual-zone automatic climate control",
+      "Multilevel traction control system",
+      "Standard 18-inch alloy wheels"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/exclusive/"
+}

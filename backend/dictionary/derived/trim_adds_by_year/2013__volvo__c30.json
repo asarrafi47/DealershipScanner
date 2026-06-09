@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2013|volvo|c30",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "C30",
+  "ladder_id": "brochure_llm_2013__volvo__c30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "PREMIER PLUS",
+    "PREMIER"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Active Dual Xenon Headlamps",
+      "Keyless Drive with hands-free door unlock and push-button start",
+      "Navigation System with Real Time Traffic (RTT) and Map Care",
+      "SiriusXM Satellite Radio with 6-month subscription",
+      "Volvo Premium Sound System with Dolby Pro Logic II Surround and Class D amplification",
+      "Power Passenger Seat"
+    ],
+    "PREMIER PLUS": [
+      "Active Dual Xenon Headlamps",
+      "Keyless Drive with hands-free door unlock and push-button start",
+      "LED Daytime Running Lights (DRL)"
+    ],
+    "PREMIER": [
+      "Power Driver Seat with Memory",
+      "Power Glass Moonroof",
+      "Load cover, soft",
+      "Auto-dimming Rearview Mirror with Digital Compass (R-DESIGN only)",
+      "Aluminum inlays (standard R-DESIGN)",
+      "Dynamic Stability and Traction Control (DSTC) anti-skid system",
+      "Rain sensor with automatic wiper engagement"
+    ]
+  }
+}

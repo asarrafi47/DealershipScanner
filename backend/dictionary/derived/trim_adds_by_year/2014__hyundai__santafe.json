@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2014|hyundai|santafe",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2014__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GLS",
+    "Sport 2.0T",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Panoramic sunroof",
+      "Navigation system with 8-inch touchscreen",
+      "550-Watt Infinity Logic 7 surround-sound premium audio with 12 speakers",
+      "Ventilated front seats",
+      "19-inch Hyper Silver alloy wheels",
+      "Integrated Memory System",
+      "High Intensity Discharge Xenon Headlights",
+      "Heated steering wheel",
+      "LED taillights",
+      "Heated rear seats"
+    ],
+    "GLS": [
+      "Power front-passenger seat",
+      "Power liftgate",
+      "Electroluminescent gauge cluster with color LCD trip computer",
+      "Proximity key entry with push-button start",
+      "Dual-zone automatic temperature control with CleanAir ionizer",
+      "Leather seating surfaces",
+      "Auto-dimming rearview mirror with HomeLink and compass",
+      "Side mirror-mounted turn-signal indicators",
+      "Blind Spot Detection System"
+    ],
+    "Sport 2.0T": [
+      "264-HP 2.0L Gasoline Direct Injection twin-scroll turbo 4-cylinder engine",
+      "Chrome twin-tip exhaust system",
+      "Navigation system with 8-inch touchscreen",
+      "550-Watt Infinity Logic 7 surround-sound premium audio with 12 speakers",
+      "19-inch alloy wheels",
+      "Integrated Memory System",
+      "High Intensity Discharge Xenon Headlights",
+      "Heated steering wheel",
+      "LED taillights"
+    ],
+    "Sport": [
+      "190-HP 2.4L Gasoline Direct Injection 4-cylinder engine",
+      "6-speed SHIFTRONIC automatic transmission",
+      "Driver Selectable Steering Mode with Comfort, Normal and Sport settings",
+      "Remote keyless entry system with alarm",
+      "Air conditioning with cabin air filter",
+      "YES Essentials stain-resistant cloth seats",
+      "AM/FM/SiriusXM/CD/MP3 audio system with 6 speakers",
+      "Bluetooth hands-free phone system with voice recognition",
+      "40/20/40 split fold-down 2nd row seats with 60/40 recline",
+      "7-airbag safety system with driver knee airbag"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2023|dodge|hornet",
+  "year": 2023,
+  "make": "Dodge",
+  "model": "Hornet",
+  "ladder_id": "brochure_llm_2023__dodge__hornet",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T PLUS",
+    "R/T",
+    "GT PLUS",
+    "GT"
+  ],
+  "adds_by_trim": {
+    "R/T PLUS": [
+      "Leather-trimmed seats with perforated leather and embroidered Dodge logo",
+      "12-way power driver and front-passenger seats",
+      "Ventilated driver and front-passenger seats",
+      "Power sunroof",
+      "Harman Kardon premium sound system with 14 speakers and subwoofer",
+      "Power liftgate",
+      "Wireless charging pad"
+    ],
+    "R/T": [
+      "1.3L turbocharged direct-injection engine with 288 HP and 383 lb-ft torque on eAWD",
+      "Class-exclusive PowerShot",
+      "18-inch Graphite Gray wheels",
+      "Black-painted side molding",
+      "Dual exhaust tips",
+      "Brembo front fixed brake calipers",
+      "Column-mounted aluminum paddle shifters",
+      "12-way power driver seat with memory",
+      "Heated driver and front-passenger seats",
+      "Heated steering wheel"
+    ],
+    "GT PLUS": [
+      "Leather-trimmed seats",
+      "12-way power driver and front-passenger seats",
+      "Heated and ventilated driver and front-passenger seats",
+      "Driver seat with memory",
+      "Heated steering wheel",
+      "Power sunroof",
+      "Harman Kardon premium sound system with 14 speakers and subwoofer",
+      "Power liftgate",
+      "Wireless charging pad"
+    ],
+    "GT": [
+      "17-inch Silver wheels standard",
+      "Auto-dimming rearview mirror",
+      "HomeLink universal garage door opener",
+      "Remote start capability",
+      "Level 1 home charger cable included"
+    ]
+  }
+}

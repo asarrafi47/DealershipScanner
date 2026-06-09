@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2018|volvo|s60",
+  "year": 2018,
+  "make": "Volvo",
+  "model": "S60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Ultimate",
+    "Platinum",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

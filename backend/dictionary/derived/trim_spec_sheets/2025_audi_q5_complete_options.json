@@ -1,0 +1,65 @@
+{
+  "ladder_id": "2025_audi_q5_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q5",
+    "Q5"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Screen Size",
+        "value": "11.9-inch digital instrument cluster; 10.9-inch passenger display"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Engine Options",
+        "value": "Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with; Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with Ultra Technology’."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with; Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with Ultra Technology’."
+      }
+    ],
+    "S line": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "7-inch infotainment screen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Equipment Interior Harman/Becker Automotive Systems produced Audi's new u; For the 2019 model year, heated front seats, rear electric child locks, 7-inch i"
+      }
+    ],
+    "L Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "7-inch infotainment screen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "For the 2019 model year, heated front seats, rear electric child locks, 7-inch i"
+      }
+    ]
+  }
+}

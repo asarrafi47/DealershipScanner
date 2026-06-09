@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2013|gmc|savana",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Savana",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Pro",
+    "Limited",
+    "Premium",
+    "LT",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

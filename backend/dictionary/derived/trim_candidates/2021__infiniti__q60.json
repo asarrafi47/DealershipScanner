@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2021|infiniti|q60",
+  "year": 2021,
+  "make": "Infiniti",
+  "model": "Q60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxe",
+    "Pure",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

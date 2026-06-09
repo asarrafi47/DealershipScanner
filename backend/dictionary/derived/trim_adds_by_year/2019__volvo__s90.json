@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2019|volvo|s90",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "S90",
+  "ladder_id": "brochure_llm_2019__volvo__s90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Inscription",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Inscription": [
+      "Highly sophisticated expression of Swedish luxury"
+    ],
+    "Momentum": [
+      "12.3-inch Digital Driver Display with automatic brightness adjustment",
+      "9-inch Sensus Touchscreen with voice control and navigation",
+      "High Performance audio system with 10 speakers",
+      "Smartphone integration with Apple CarPlay and Android Auto",
+      "City Safety collision avoidance technology",
+      "Pilot Assist semi-autonomous driving with adaptive cruise control",
+      "Lane keeping aid and lane departure warning",
+      "Road sign information and run-off road mitigation",
+      "LED headlights with automatic adjustment",
+      "18-inch or 19-inch alloy wheels depending on engine"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|lexus|hs",
+  "year": 2010,
+  "make": "lexus",
+  "model": "HS",
+  "ladder_id": "brochure_2010__lexus__hs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds four-year/50,000-mile Lexus Limited Warranty",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero-deductible warranty coverage",
+      "Adds hybrid powertrain",
+      "Adds Pre-Collision System with Driver Attention Monitor",
+      "Adds Lane Departure Warning and Lane Keep Assist",
+      "Adds backup camera",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds engine immobilizer anti-theft system"
+    ],
+    "Premium": [
+      "Adds Lexus Enform premium services with Destination Assist",
+      "Adds Safety Connect services",
+      "Adds Navigation System with XM NavTraffic and XM NavWeather",
+      "Adds Wide Front-view Monitor",
+      "Adds XM Radio with Sports and Stocks",
+      "Adds SmartAccess keyless entry system"
+    ],
+    "Luxury": [
+      "Upgraded to Mark Levinson premium audio system"
+    ]
+  }
+}

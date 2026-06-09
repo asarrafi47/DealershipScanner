@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2013|ford|mustang",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_llm_2013__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Shelby® GT500®",
+    "Boss® 302",
+    "GT Premium",
+    "GT"
+  ],
+  "adds_by_trim": {
+    "Shelby® GT500®": [
+      "5.8L DOHC 32-valve V8 engine with 650 hp @ 6,500 rpm and 600 lb.-ft. torque",
+      "15.0 psi boost supercharger",
+      "Forged-steel crankshaft and connecting rods",
+      "Tuned stainless steel H-pipe exhaust with quad outlets and 3.5\" tips",
+      "Strut tower brace",
+      "Shelby GT500 badging and Le Mans racing stripes",
+      "HID headlamps with autolamp",
+      "Power dome hood with heat extractor",
+      "19\" x 9\" front and 19\" x 9.5\" rear black-painted aluminum wheels with Pirelli P Zero summer-only tires"
+    ],
+    "Boss® 302": [
+      "Hi-Po 302 Ti-VCT V8 engine with 444 hp @ 7,400 rpm and 380 lb.-ft. torque",
+      "3.73:1 gear ratio with limited-slip rear differential",
+      "Adjustable shocks/struts with 5 settings",
+      "Unique intake manifold with production number plate and racing stripes",
+      "Brembo 14\" vented front rotors with 6-piston calipers and 11.8\" vented rear rotors",
+      "25-mm rear stabilizer bar",
+      "Unique front and rear springs",
+      "Leather-trimmed front sport bucket seats with Alcantara suede trim and embroidered \"BOSS 302\" logo",
+      "19\" x 9.5\" front and 20\" x 9.5\" rear premium painted forged-aluminum wheels with Goodyear Eagle F1 Supercar G:2 tires",
+      "Low-gloss black \"1970 Boss 302 Livery\" inspired hood and hockey stick side stripes"
+    ],
+    "GT Premium": [
+      "6-way power driver's seat with power lumbar support",
+      "Leather-trimmed front bucket seats",
+      "4.2\" color LCD display in instrument cluster with MyColor illumination and Track Apps",
+      "Auto-dimming rearview mirror",
+      "Bright-aluminum instrument panel, pedal and door-sill scuff plates",
+      "Shaker Audio System with AM/FM stereo/single-CD player and MP3 capability with 8 speakers including 2 subwoofers",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "SYNC with steering wheel-mounted cruise, audio and 5-way message center controls"
+    ],
+    "GT": [
+      "5.0L Ti-VCT V8 engine with 420 hp @ 6,500 rpm and 390 lb.-ft. torque",
+      "6-speed manual transmission",
+      "3.31:1 gear ratio with limited-slip rear differential",
+      "SVT-tuned suspension with unique shocks and springs",
+      "Charcoal Black cloth front bucket seats",
+      "4-gauge instrument cluster with chrome accents",
+      "Leather-wrapped steering wheel",
+      "Premium AM/FM stereo/single-CD audio system",
+      "Single-zone manual air conditioning",
+      "18\" Sparkle Silver-painted aluminum wheels with P235/50R18 W-rated tires"
+    ]
+  }
+}

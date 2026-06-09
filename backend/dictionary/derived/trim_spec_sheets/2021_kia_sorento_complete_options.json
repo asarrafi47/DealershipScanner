@@ -1,0 +1,47 @@
+{
+  "ladder_id": "2021_kia_sorento_complete_options",
+  "make": "Kia",
+  "models": [
+    "Sorento",
+    "Sorento"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "SX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Three powertrain options are available: 2.2-litre CRDi turbocharged diesel, 1.6- (was The 1.6-litre Plug-in Hybrid petrol was added to the lineup in October 2021, for the GT Line grade.)"
+      }
+    ],
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The 1.6-litre Plug-in Hybrid petrol was added to the lineup in October 2021, for the GT Line grade. (was A plug-in hybrid variation and additional petrol engine options are also being p)"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: A plug-in hybrid variation and additional petrol engine options are also being p (was The Base and LX both come standard with the 2.4-litre straight-4 175 hp (130 kW))"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The Base and LX both come standard with the 2.4-litre straight-4 175 hp (130 kW) (was For 2015, the six-speed manual transmission option, previously only available on)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: For 2015, the six-speed manual transmission option, previously only available on"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: 12.3-inch curved display"
+      }
+    ]
+  }
+}

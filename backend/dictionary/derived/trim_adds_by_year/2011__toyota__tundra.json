@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2011|toyota|tundra",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_2011__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 4.0L DOHC 24-Valve V6 engine with 270 hp and 278 lb.-ft. torque",
+      "Adds 5-speed Electronically Controlled Transmission with sequential shift mode",
+      "Adds front independent coil-spring double-wishbone suspension with nitrogen gas shocks",
+      "Adds hydraulic power rack-and-pinion steering",
+      "Adds power-assisted 4-wheel Anti-lock Brake System",
+      "Adds Automatic Limited-Slip Differential"
+    ],
+    "SR5": [
+      "Adds optional 4.6L DOHC 32-Valve i-FORCE V8 with 310 hp and 327 lb.-ft. torque",
+      "Adds optional 5.7L DOHC 32-Valve i-FORCE V8 with 381 hp and 401 lb.-ft. torque",
+      "Adds 6-speed Electronically Controlled Transmission with TOW/HAUL mode",
+      "Adds optional 4WDemand system with electronically controlled 2-speed transfer case"
+    ],
+    "TRD": [],
+    "TRD Sport": [],
+    "Limited": [
+      "Adds standard 6-speed Electronically Controlled Transmission with TOW/HAUL mode",
+      "Adds standard 4WDemand system with electronically controlled 2-speed transfer case"
+    ],
+    "Platinum": [
+      "Platinum Package with premium appointments and styling"
+    ]
+  }
+}

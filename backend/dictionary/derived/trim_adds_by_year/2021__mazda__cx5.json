@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2021|mazda|cx5",
+  "year": 2021,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2021__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-5 SIGNATURE",
+    "CX-5 GRAND TOURING RESERVE",
+    "CX-5 GRAND TOURING",
+    "CX-5 CARBON EDITION",
+    "CX-5 CARBON EDITION TURBO"
+  ],
+  "adds_by_trim": {
+    "CX-5 SIGNATURE": [
+      "Caturra Brown Nappa leather-trimmed seats",
+      "Genuine layered wood trim",
+      "SiriusXM Traffic and Travel Link Services with 3-year subscription",
+      "Mazda Navigation System",
+      "Interior trim with Bright Silver finish and Black headliner",
+      "Leather-wrapped steering wheel with unique stitching",
+      "Heated rear seats",
+      "Frameless auto-dimming rearview mirror with HomeLink",
+      "360° View Monitor and front/rear parking sensors",
+      "Signature trim badge"
+    ],
+    "CX-5 GRAND TOURING RESERVE": [
+      "SKYACTIV-G 2.5 Dynamic Pressure Turbo engine",
+      "i-ACTIV AWD with Off-road Traction Assist",
+      "Automatic power-folding side mirrors",
+      "Windshield wiper de-icer",
+      "Turbo rear badge",
+      "Windshield-projected Active Driving Display"
+    ],
+    "CX-5 GRAND TOURING": [
+      "Adaptive Front-lighting System",
+      "LED fog lights",
+      "LED combination taillights",
+      "LED daytime running lights",
+      "Power sliding-glass moonroof with tilt feature",
+      "Rear Power Liftgate with programmable height adjustment",
+      "Dual heated side mirrors",
+      "Leather-trimmed seats",
+      "8-way power-adjustable driver's seat with power-adjustable lumbar support",
+      "6-way power-adjustable front passenger's seat"
+    ],
+    "CX-5 CARBON EDITION": [
+      "19-inch alloy wheels with Black Metallic finish",
+      "Black power side mirrors with integrated LED turn signals",
+      "Leather-wrapped steering wheel with red stitching",
+      "Leather-wrapped gear selector with red stitching",
+      "10-speaker Bose surround sound system with Centerpoint 2 and AudioPilot 2",
+      "8-way power-adjustable driver's seat with power lumbar support and 2-position memory",
+      "6-way power-adjustable front passenger's seat",
+      "Black interior accents",
+      "Unique Black grille",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "CX-5 CARBON EDITION TURBO": [
+      "SKYACTIV-G 2.5 Dynamic Pressure Turbo engine",
+      "Turbo rear badge",
+      "Windshield-projected Active Driving Display"
+    ]
+  }
+}

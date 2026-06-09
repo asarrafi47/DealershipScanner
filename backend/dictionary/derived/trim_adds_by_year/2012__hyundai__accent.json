@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2012|hyundai|accent",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2012__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "GS",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "16-inch alloy wheels with P195/50R all-season tires",
+      "Premium cloth seating surfaces",
+      "Leather-wrapped steering wheel and shift knob",
+      "Front fog lights",
+      "Rear spoiler",
+      "Bluetooth hands-free phone system with voice recognition",
+      "Steering-wheel-mounted audio controls"
+    ],
+    "GS": [
+      "6-speed automatic transmission with SHIFTRONIC manual shift mode",
+      "Sliding armrest storage box",
+      "Driver's seat armrest",
+      "Cruise control",
+      "Remote keyless entry system with panic alert"
+    ],
+    "GLS": [
+      "14-inch covered steel wheels with P175/70R all-season tires",
+      "1.6L Gasoline Direct Injection DOHC 4-cylinder engine",
+      "6-speed manual transmission",
+      "Independent front suspension with MacPherson struts",
+      "4-wheel disc brakes with ABS and Electronic Brake-force Distribution",
+      "Air conditioning",
+      "Power windows and power door locks",
+      "Tilt steering wheel"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2020|kia|sorento",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2020__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "L V6",
+    "LX/LX V6",
+    "S"
+  ],
+  "adds_by_trim": {
+    "L V6": [
+      "3.3L Gasoline Direct Injection V6 engine with 290 hp @ 6,400 rpm",
+      "8-speed Sportmatic® transmission",
+      "19-inch sport black alloy wheels",
+      "Acoustic sound-reducing glass in windshield and front side windows",
+      "Push Button Start with Smart Key",
+      "10-way power-adjustable driver's seat",
+      "Heated front seats",
+      "Dynamax fully active AWD with up to 5,000-lb. towing capacity"
+    ],
+    "LX/LX V6": [
+      "3.3L Gasoline Direct Injection V6 engine option with 290 hp @ 6,400 rpm",
+      "8-speed Sportmatic® transmission option",
+      "Essentials® cloth-trimmed seats",
+      "Parking Distance Warning — Reverse",
+      "Forward Collision Avoidance safety system",
+      "Rear Cross-Traffic Collision Warning"
+    ],
+    "S": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine with 185 hp @ 6,000 rpm",
+      "6-speed Sportmatic® transmission",
+      "17-inch alloy wheels",
+      "Independent rear suspension",
+      "Acoustic sound-reducing glass in windshield",
+      "Auto-On/Off Headlights with LED Positioning Lights",
+      "7-inch touchscreen with Apple CarPlay and Android Auto",
+      "Bluetooth wireless technology with steering wheel controls",
+      "Remote keyless entry",
+      "Rear View Monitor with Parking Guidance"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|lincoln|mkc",
+  "year": 2019,
+  "make": "Lincoln",
+  "model": "MKC",
+  "ladder_id": "brochure_2019__lincoln__mkc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Select",
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes SYNC 3 infotainment system with voice-activated controls",
+      "Adds Apple CarPlay and Android Auto compatibility",
+      "Adds Includes SiriusXM 6-month All Access trial subscription",
+      "Adds 6-year prepaid SiriusXM Traffic and Travel Link subscription",
+      "Adds Includes Voice-Activated Touchscreen Navigation System with 3-D maps",
+      "Adds Features Enhanced THX II Certified Audio System with 14 speakers",
+      "Adds Lincoln Connect 4G LTE Wi-Fi hotspot supporting up to 10 devices",
+      "Adds Includes Lincoln Pickup & Delivery service",
+      "Adds complimentary 6-month CLEAR membership",
+      "Adds Includes 24/7 Lincoln Concierge service"
+    ],
+    "Standard": [],
+    "Select": [
+      "Wollsdorf leather-wrapped steering wheel"
+    ],
+    "Reserve": [
+      "Wollsdorf leather-wrapped steering wheel"
+    ],
+    "Black Label": []
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2013|nissan|cube",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Cube",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "S",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

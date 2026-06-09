@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2016|jeep|wrangler",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2016__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon Hard Rock Edition",
+    "Rubicon"
+  ],
+  "adds_by_trim": {
+    "Rubicon Hard Rock Edition": [
+      "Power convenience group with power door locks, auto-dimming rearview mirror, power heated mirrors, power windows, remote keyless entry",
+      "Rock-Trac 4WD system with Tru-Lok front and rear locking differentials",
+      "Front sway bar disconnect system",
+      "Dana 44 heavy-duty axles",
+      "Performance suspension with high-pressure monotube shocks and tunable valves",
+      "Mopar rock rails",
+      "17-inch polished aluminum wheels in mineral gray",
+      "Black leather-trimmed seats with heated front seats",
+      "Remote start system with integrated key fob controls"
+    ],
+    "Rubicon": [
+      "3.6L Pentastar V6 engine with 6-speed manual transmission and 4.10 rear axle ratio",
+      "Power dome hood with functional vents and drainage",
+      "Steel off-road front bumper with fog lamps and winch capability",
+      "Steel off-road rear bumper with spare-tire carrier capability",
+      "Red front and rear dual tow hooks",
+      "17-inch polished black wheels",
+      "32-inch BFGoodrich Mud terrain tires",
+      "Radio 430N navigation with AM/FM, CD/DVD/MP3, 6.5-inch touchscreen, SiriusxM satellite radio",
+      "Automatic headlamps, air conditioning, electronic stability control, hill start assist"
+    ]
+  }
+}

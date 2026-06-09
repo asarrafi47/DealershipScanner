@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2015|ford|transitconnect",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_web_2015__ford__transitconnect",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Titanium",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "Integrated navigation system",
+      "Nine-speaker premium audio system",
+      "6.5-inch touchscreen display with Apple CarPlay and Android Auto"
+    ],
+    "XLT": [
+      "6.5-inch touchscreen display with Apple CarPlay and Android Auto",
+      "Blind-spot monitoring",
+      "Rear cross-traffic alert",
+      "Lane keep assist",
+      "Automatic high-beams",
+      "Rear parking sensors on passenger configuration"
+    ],
+    "XL": [
+      "Front automatic emergency braking",
+      "4.2-inch infotainment screen"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/transit-connect/"
+}

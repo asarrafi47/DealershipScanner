@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_mercedes_gla-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "GLA-Class",
+    "GLA-Class"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "L OM651 turbo I4; Your Mercedes-Benz dealer is helping make service and maintenance even more conv"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "L OM651 turbo I4; Your Mercedes-Benz dealer is helping make service and maintenance even more conv"
+      }
+    ]
+  }
+}

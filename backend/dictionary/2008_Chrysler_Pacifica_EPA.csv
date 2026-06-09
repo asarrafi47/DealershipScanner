@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2008,Chrysler,Pacifica,FWD,3.8L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.8,15,22,18,,,,,,3.8L V6,
-2008,Chrysler,Pacifica,FWD,4.0L V6,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,15,23,17,,,,,,4.0L V6,
-2008,Chrysler,Pacifica,AWD,4.0L V6,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,14,22,17,,,,,,4.0L V6,

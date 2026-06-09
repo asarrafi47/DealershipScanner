@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2021|kia|telluride",
+  "year": 2021,
+  "make": "Kia",
+  "model": "Telluride",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX",
+    "EX",
+    "S",
+    "LX",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

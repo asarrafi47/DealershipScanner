@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Mercedes-Benz,CLE-Class,CLE300 4matic (Convertible),Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic 9-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,32,26,,,,,
+2026,Mercedes-Benz,CLE-Class,CLE300 4matic (Coupe),Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic 9-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,33,27,,,,,
+2026,Mercedes-Benz,CLE-Class,CLE450 4matic (Convertible),Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic 9-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,23,32,26,,,,,
+2026,Mercedes-Benz,CLE-Class,CLE450 4matic (Coupe),Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic 9-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,23,33,26,,,,,
+2026,Mercedes-Benz,CLE-Class,AMG CLE53 4matic Plus (convertible),Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic 9-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,26,22,,,,,
+2026,Mercedes-Benz,CLE-Class,AMG CLE53 4matic Plus (coupe),Hybrid 3.0L V6 (SIDI; Mild Hybrid),3.0L V6 Turbo,Turbocharged,Automatic 9-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,27,23,,,,,

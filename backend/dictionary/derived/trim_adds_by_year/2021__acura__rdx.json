@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2021|acura|rdx",
+  "year": 2021,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_2021__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology",
+    "A-Spec"
+  ],
+  "adds_by_trim": {
+    "A-Spec": [
+      "Adds SH-AWD (Super Handling All-Wheel Drive) capability",
+      "Adds AcuraWatch suite with Collision Mitigation Braking System (CMBS)",
+      "Adds Adaptive Cruise Control (ACC) with Low-Speed Follow",
+      "Adds Forward Collision Warning (FCW)",
+      "Adds HandsFreeLink connectivity",
+      "Adds Maintenance Minder system",
+      "Adds Vehicle Stability Assist (VSA)"
+    ],
+    "Technology": [
+      "Adds AcuraLink Real-Time Traffic integration",
+      "Adds True Touchpad Interface for infotainment control",
+      "Adds advanced smartphone integration with Android Auto and Apple CarPlay",
+      "Adds Song By Voice voice recognition",
+      "Adds Jewel Eye LED headlights",
+      "Adds ELS Studio premium audio system"
+    ]
+  }
+}

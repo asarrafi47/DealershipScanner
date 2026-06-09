@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_mazda_cx-3_complete_options",
+  "make": "Mazda",
+  "models": [
+    "CX-3",
+    "CX-3"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Select": [
+      {
+        "label": "Engine Options",
+        "value": "Battery 61.1 kWh lithium ion (CX-30 EV e-Skyactiv - China); Engines"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Battery 61.1 kWh lithium ion (CX-30 EV e-Skyactiv - China); Engines"
+      }
+    ]
+  }
+}

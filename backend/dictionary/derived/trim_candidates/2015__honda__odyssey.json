@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2015|honda|odyssey",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Odyssey",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Elite",
+    "Touring",
+    "EX-L",
+    "EX",
+    "LX",
+    "SE",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

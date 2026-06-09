@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2025|nissan|versa",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2025__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S",
+    "S+"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Black-painted heated outside mirrors with LED turn signal indicators",
+      "Intelligent Cruise Control",
+      "8-inch NissanConnect color touchscreen display",
+      "NissanConnect Services powered by SiriusXM with 5-year Select and 3-year Premium trial",
+      "AM/FM audio system with six speakers",
+      "3-month SiriusXM trial access included",
+      "Leather-wrapped steering wheel",
+      "Heated front seats",
+      "Prima-Tex dash trim and sport cloth seat trim"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist Display",
+      "7-inch NissanConnect color touchscreen with Apple CarPlay and Android Auto",
+      "Wireless charger",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Body-color outside mirrors and exterior door handles",
+      "Center console with armrest and storage",
+      "60/40-split fold-down rear seatbacks",
+      "Intelligent Driver Alertness and Rear Door Alert",
+      "Premium cloth seat trim"
+    ],
+    "S": [
+      "122-hp 1.6-liter DOHC 4-cylinder engine",
+      "5-speed manual transmission with available Xtronic CVT",
+      "LED headlights with LED signature",
+      "7-inch color touchscreen display",
+      "Automatic Emergency Braking with Pedestrian Detection and Rear Automatic Braking",
+      "Lane Departure Warning and High Beam Assist with RearView Monitor",
+      "Bluetooth hands-free phone system with streaming audio",
+      "AM/FM audio system with four speakers",
+      "Voice Recognition and Hands-free Text Messaging Assistant",
+      "Air conditioning with in-cabin microfilter"
+    ],
+    "S+": [
+      "16-inch aluminum-alloy wheels",
+      "7-inch NissanConnect color touchscreen display",
+      "Apple CarPlay integration and Android Auto compatibility",
+      "60/40-split fold-down rear seatbacks"
+    ]
+  }
+}

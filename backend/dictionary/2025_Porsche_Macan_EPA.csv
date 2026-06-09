@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2025,Porsche,Macan,Macan,2.0L I4 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,19,25,21,,,,,,2.0L I4 Turbo,Turbocharged
-2025,Porsche,Macan,S,2.9L V6 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,2.9,17,23,19,,,,,,2.9L V6 Turbo,Turbocharged
-2025,Porsche,Macan,T,2.0L I4 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,19,25,21,,,,,,2.0L I4 Turbo,Turbocharged
-2025,Porsche,Macan,4 Electric,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,107,89,98,,,,,,EV Electricity,
-2025,Porsche,Macan,4S Electric,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,98,83,91,,,,,,EV Electricity,
-2025,Porsche,Macan,Turbo Electric,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,99,84,91,,,,,,EV Electricity,
-2025,Porsche,Macan,GTS,2.9L V6 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,2.9,17,22,19,,,,,,2.9L V6 Turbo,Turbocharged
-2025,Porsche,Macan,Electric,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,108,90,99,,,,,,EV Electricity,

@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2017|subaru|impreza",
+  "year": 2017,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2017__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Limited",
+    "2.0i Sport",
+    "2.0i Premium",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "2.0i Limited": [
+      "17-inch alloy wheels",
+      "LED Steering Responsive Headlights",
+      "Fog lights",
+      "6-way power adjustable driver's seat",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shifter handle with silver stitching",
+      "Automatic climate control system with air filtration",
+      "High-grade instrument cluster with color LCD display"
+    ],
+    "2.0i Sport": [
+      "5-speed manual transmission with STI short-throw shifter or optional Lineartronic CVT",
+      "Active Torque Vectoring",
+      "Sport-tuned suspension",
+      "18-inch alloy wheels",
+      "LED Daytime Running Lights",
+      "Active grille shutter",
+      "Sport cloth interior with red stitching",
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with navigation and SiriusXM",
+      "Keyless Access with Push-button Start and PIN-code vehicle access",
+      "Sport instrument cluster with color LCD display"
+    ],
+    "2.0i Premium": [
+      "Lineartronic CVT with 7-speed manual-mode and paddle shifters",
+      "16-inch alloy wheels",
+      "Roof rails with silver finish on 5-door",
+      "Body-color side mirrors",
+      "6 speakers",
+      "All-Weather Package with heated mirrors, dual-mode heated front seats, windshield wiper de-icer",
+      "Auto-on/off headlights",
+      "Welcome lighting",
+      "Cargo area cover on 5-door",
+      "STARLINK Safety Plus with collision notification and roadside assistance"
+    ],
+    "2.0i": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic CVT",
+      "16-inch steel wheels with covers",
+      "Cloth upholstery",
+      "Black simulated carbon fiber interior accent trim",
+      "6-way manually adjustable driver's seat and 4-way front passenger seat",
+      "Auto-up/down power windows",
+      "SUBARU STARLINK 6.5-inch Multimedia with Apple CarPlay and Android Auto",
+      "Manually adjustable air conditioning, electronic cruise control, and Rear-Vision Camera"
+    ]
+  }
+}

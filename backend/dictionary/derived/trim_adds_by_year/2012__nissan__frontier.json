@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2012|nissan|frontier",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2012__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "PRO-4X",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "5-speed automatic transmission standard",
+      "4-wheel Active Brake Limited Slip (ABLS)",
+      "18-inch 12-spoke aluminum-alloy wheels",
+      "P265/60R18 BFGoodrich Radial Long Trail T/A tires"
+    ],
+    "PRO-4X": [
+      "6-speed manual transmission standard",
+      "Electronic locking rear differential",
+      "Bilstein off-road performance shock absorbers",
+      "Oil pan skid plate",
+      "Fuel tank skid plate",
+      "Transfer case skid plate",
+      "P265/75R16 BFGoodrich Rugged Trail T/A tires",
+      "16-inch 6-spoke aluminum-alloy wheels",
+      "32.6-degree approach angle (V6)",
+      "23.3-degree departure angle (V6)"
+    ],
+    "SV": [
+      "16-inch 5-spoke aluminum-alloy wheels (4-cyl. and V6)",
+      "P265/70R16 BFGoodrich Radial Long Trail T/A tires",
+      "4-wheel Active Brake Limited Slip (ABLS) on V6",
+      "Hill descent control and hill start assist on V6 4x4 automatic"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine standard",
+      "5-speed manual transmission (4-cyl.)",
+      "6-speed manual transmission (V6)",
+      "15-inch 6-spoke steel wheels (4-cyl.)",
+      "16-inch 6-spoke steel wheels (V6)",
+      "P235/75/15 General Grabber all-season tires (4-cyl.)",
+      "Full-size spare tire",
+      "4-wheel Anti-lock Braking System (ABS)"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2025|hyundai|ioniq6",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Ioniq 6",
+  "ladder_id": "2025_hyundai_ioniq6",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "Upgraded EV powertrain and driver-assist package vs SE",
+      "Heated front seats and 12.3-inch digital cluster content",
+      "H-Tex seating and wireless phone charger"
+    ],
+    "Limited": [
+      "Ventilated front seats and Bose premium audio",
+      "Integrated Memory System and Highway Driving Assist",
+      "Highest Ioniq 6 luxury trim in 2025 brochure"
+    ],
+    "SE": [
+      "12.3-inch digital instrument cluster",
+      "12.3-inch navigation system",
+      "Proximity Key with push button start",
+      "Leather-wrapped tilt-and-telescopic steering wheel",
+      "Bose® premium audio with 8 speakers",
+      "SiriusXM® Satellite Radio and HD Radio™",
+      "Apple CarPlay® and Android Auto™",
+      "Bluetooth® multiple device connection",
+      "Bluelink+ Connected Car System with Remote Charge Access",
+      "8-way power driver seat and heated front seats"
+    ]
+  }
+}

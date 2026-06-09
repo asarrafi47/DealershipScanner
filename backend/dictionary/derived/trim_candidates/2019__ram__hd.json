@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2019|ram|hd",
+  "year": 2019,
+  "make": "ram",
+  "model": "HD",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Night Edition",
+    "Big Horn",
+    "Tradesman",
+    "Platinum",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2015|nissan|titan",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_llm_2015__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL CREW CAB",
+    "PRO-4X® CREW CAB",
+    "SV CREW CAB",
+    "S CREW CAB"
+  ],
+  "adds_by_trim": {
+    "SL CREW CAB": [
+      "Rockford Fosgate®-powered audio system with SiriusXM® Satellite Radio and Traffic/Travel Link",
+      "20\" aluminum-alloy wheels with P275/60R20 tires",
+      "Automatic on/off headlights and fog lights",
+      "Dual Zone Automatic Temperature Control (ATC)",
+      "Leather-appointed seats with heated front captain's chairs and Driver's Memory System",
+      "HomeLink® Universal Transceiver",
+      "Rear Sonar System with Class IV tow hitch receiver"
+    ],
+    "PRO-4X® CREW CAB": [
+      "Dark-finished 18\" aluminum-alloy wheels with BFGoodrich® Rugged Trail T/A® tires",
+      "Satin chrome-finished front grille and body-color bumpers",
+      "PRO-4X® off-road bedside graphics",
+      "Rancho® shock absorbers with lower final gear ratio (3.36:1)",
+      "Transfer case and lower radiator skid plates",
+      "Electronic locking rear differential",
+      "White-faced gauges"
+    ],
+    "SV CREW CAB": [
+      "18\" aluminum-alloy wheels with P265/70R18 tires",
+      "Chrome bumpers, grille, and step rails",
+      "Body side moldings",
+      "Remote keyless entry with power door locks and windows",
+      "Power outside mirrors and cruise control",
+      "Vehicle Security System with Nissan Vehicle Immobilizer",
+      "NissanConnectSM with Navigation and Mobile Apps with RearView Monitor"
+    ],
+    "S CREW CAB": [
+      "5.6-liter Endurance V8 engine with 5-speed automatic transmission and Tow/Haul Mode",
+      "4-wheel Anti-lock Braking System (ABS) and Vehicle Dynamic Control (VDC)",
+      "Six standard air bags",
+      "18\" painted steel wheels with P265/70R18 tires",
+      "AM/FM/CD audio system",
+      "Air conditioning and rear tailgate spoiler",
+      "Power windows and power door locks with auto-locking feature",
+      "40/20/40 split front bench seat and 60/40 split fold-up rear bench seat",
+      "Rear privacy glass and rear reading lights",
+      "6-passenger capacity"
+    ]
+  }
+}

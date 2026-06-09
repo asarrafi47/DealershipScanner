@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2013|acura|zdx",
+  "year": 2013,
+  "make": "acura",
+  "model": "zdx",
+  "ladder_id": "brochure_2013__acura__zdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "NavWeather is only available in select markets. 5 The USB"
+    ],
+    "Technology": [
+      "Adds AcuraLink Real-Time Traffic and Weather with one- and three-day forecasts",
+      "Adds Traffic Rerouting capability",
+      "Adds GPS-linked, solar-sensing, dual-zone, dual-mode adaptive climate control with humidity control and air filtration",
+      "Adds Lane Departure Warning (LDW) system",
+      "Adds Blind spot information (BSI) system",
+      "Adds Multi-view rear camera",
+      "Adds Keyless Access System with smart entry, pushbutton ignition and Acura personalized settings",
+      "Adds Bluetooth HandsFreeLink wireless telephone interface with phone-book exchange"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2013|honda|accord",
+  "year": 2013,
+  "make": "Honda",
+  "model": "Accord",
+  "ladder_id": "brochure_llm_2013__honda__accord",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX",
+    "LX SPORT",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "17-inch alloy wheels",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry keyless system",
+      "Heated, body-colored power side mirrors with integrated turn indicators and Expanded View Driver's Mirror",
+      "Honda LaneWatch driver's side mirror camera",
+      "Engine Start/Stop button",
+      "Power windows with auto-up/down for driver and front passenger",
+      "160-watt AM/FM/CD audio system with 6 speakers"
+    ],
+    "LX SPORT": [
+      "189-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "6-speed CVT with Sport Mode and paddle shifters",
+      "EPA mileage ratings: CVT 26/35/29 mpg",
+      "Front shock tower bar",
+      "18-inch alloy wheels",
+      "Body-colored decklid spoiler",
+      "Fog lights",
+      "Dual chrome exhaust finishers",
+      "Leather-wrapped steering wheel",
+      "Driver's seat with 10-way power adjustment including power lumbar support"
+    ],
+    "LX": [
+      "185-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "6-speed manual or CVT with Sport Mode available",
+      "EPA mileage ratings: 6MT 24/34/28 mpg, CVT 27/36/30 mpg",
+      "Drive-by-Wire throttle system",
+      "Eco Assist system",
+      "Active Noise Cancellation and Active Sound Control",
+      "Hill start assist",
+      "MacPherson strut front and multi-link rear suspension",
+      "Electric power-assisted steering",
+      "16-inch alloy wheels"
+    ]
+  }
+}

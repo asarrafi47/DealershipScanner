@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2016|chevrolet|camaro",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_2016__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SS",
+    "RS",
+    "LT",
+    "Limited",
+    "Premium",
+    "Sport",
+    "EX",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 3.6L V6 engine with automatic or manual transmission",
+      "Adds Standard tire sealant and compressor kit",
+      "Adds Includes 5-year/60,000-mile Powertrain Limited Warranty",
+      "Adds Includes 3-year/36,000-mile Bumper-to-Bumper Warranty",
+      "Adds Includes 6 years/100,000 miles Rust-Through Protection",
+      "Adds Includes OnStar Basic Plan with select RemoteLink mobile app features",
+      "Adds Includes 6 months OnStar Guidance Plan",
+      "Adds Includes Chevrolet Owner Center access",
+      "Adds Includes Chevrolet Complete Care coverage"
+    ],
+    "SE": [],
+    "EX": [],
+    "Sport": [
+      "Adds Includes 100,000-mile/5-year transferable Powertrain Limited Warranty",
+      "Adds Includes 36,000-mile/3-year New Vehicle Limited Warranty coverage",
+      "Adds Includes 2-year/24,000-mile scheduled maintenance program with oil and filter changes",
+      "Adds Includes 100,000-mile/5-year 24/7 Roadside Assistance Program",
+      "Adds Includes Courtesy Transportation Program",
+      "Adds Includes tire sealant and compressor kit for emergency tire repair"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "LT": [],
+    "RS": [],
+    "SS": []
+  }
+}

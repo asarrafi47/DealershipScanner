@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2020|toyota|chr",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "CH-R",
+  "ladder_id": "brochure_llm_2020__toyota__chr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Leather-trimmed heated front bucket seats with 8-way power adjustable driver's seat",
+      "Leather-trimmed tilt/telescopic steering wheel with illuminated vanity mirrors",
+      "LED projector beam headlights with Adaptive Front-Lighting System",
+      "High-performance LED fog lights",
+      "Sporty turbine-styled 18-inch alloy wheels with temporary spare",
+      "Heated power auto-folding mirrors with turn signal and blind spot warning indicators"
+    ],
+    "XLE": [
+      "Vortex-styled 18-inch sporty alloy wheels with temporary spare",
+      "Heated power auto-folding mirrors with turn signal and blind spot warning indicators",
+      "Chrome window trim",
+      "Smart Key System on front doors"
+    ],
+    "LE": [
+      "2.0-liter 4-cylinder engine with 144 hp at 6100 rpm",
+      "Continuously variable transmission with Shift Mode",
+      "17-inch steel wheels and temporary spare",
+      "Multi-reflector LED headlights with LED daytime running lights",
+      "Heated power outside mirrors with turn signal indicators",
+      "8-inch touchscreen with integrated backup camera and Apple CarPlay and Android Auto",
+      "4.2-inch multi-information display",
+      "Sport fabric-trimmed front bucket seats with 3-passenger rear seating",
+      "Dual zone auto climate control system",
+      "Toyota Safety Sense P with pre-collision system, lane departure alert, and dynamic radar cruise control"
+    ]
+  }
+}

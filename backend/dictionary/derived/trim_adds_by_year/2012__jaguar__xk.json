@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2012|jaguar|xk",
+  "year": 2012,
+  "make": "Jaguar",
+  "model": "XK",
+  "ladder_id": "brochure_llm_2012__jaguar__xk",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XKR-S Coupe",
+    "XKR Convertible",
+    "XKR Coupe",
+    "XK Convertible",
+    "XK Coupe"
+  ],
+  "adds_by_trim": {
+    "XKR-S Coupe": [
+      "5.0L supercharged V8 with 550 HP and 502 lb-ft torque",
+      "0-60 mph in 4.2 seconds; top speed 186 mph",
+      "Performance seats standard with 16-way electric adjustment and integrated head restraints",
+      "Carbon and soft grain leather with contrast micro-piping throughout interior",
+      "Poltrona Frau Jet leather headliner",
+      "Nubuck edged premium carpet mats with Jaguar script and logo"
+    ],
+    "XKR Convertible": [
+      "5.0L supercharged V8 with 510 HP and 461 lb-ft torque",
+      "0-60 mph in 4.6 seconds; top speed 174 mph with Dynamic Pack",
+      "Convertible body style with automatically deployable roll-over protection hoops",
+      "Optional Performance seats with integrated head restraints and sculpted side bolsters"
+    ],
+    "XKR Coupe": [
+      "5.0L supercharged V8 with 510 HP and 461 lb-ft torque",
+      "0-60 mph in 4.6 seconds; top speed 155 mph standard, 174 mph with Dynamic Pack",
+      "Performance seats available as option with 16-way electric positioning and memory",
+      "Coupe body style with fixed roof"
+    ],
+    "XK Convertible": [
+      "Convertible body style with automatically deployable roll-over protection hoops",
+      "7-inch touchscreen navigation system with DVD mapping",
+      "Bowers & Wilkins 525W surround sound system with Dolby Pro Logic II",
+      "16-way adjustable Luxury seats in twin-stitched soft grain leather with heating and cooling"
+    ],
+    "XK Coupe": [
+      "5.0L naturally aspirated V8 with 385 HP and 380 lb-ft torque",
+      "0-60 mph in 5.2 seconds; top speed 155 mph",
+      "Aluminum monocoque bodyshell with exceptional torsional stiffness",
+      "Servotronic 2 steering system with adaptive assistance",
+      "ZF 6HP28 6-speed automatic transmission with adaptive shift logic",
+      "JaguarDrive Control with Dynamic, Winter, and Standard modes",
+      "Dynamic Stability Control with individual wheel braking",
+      "16-way adjustable Luxury seats in twin-stitched soft grain leather with heating and cooling"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|subaru|tribeca",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "Tribeca",
+  "ladder_id": "brochure_2013__subaru__tribeca",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 256-hp 3.6-liter DOHC 24-valve horizontally-opposed SUBARU BOXER engine",
+      "Adds 5-speed adaptive electronic direct-control automatic transmission with manual shift control",
+      "Adds Subaru Symmetrical All-Wheel Drive",
+      "Adds 4-wheel independent suspension with strut-type front and double-wishbone rear",
+      "Adds 4-wheel disc antilock braking system with Electronic Brake-force Distribution",
+      "Adds Vehicle Dynamics Control electronic stability control with Traction Control System",
+      "Adds dual-stage deployment front airbags with side-curtain and seat-mounted side-impact airbags",
+      "Adds 385-watt 10-speaker Harman Kardon 6-CD audio system with amplifier and subwoofer",
+      "Adds 18-inch 5-dual-spoke aluminum-alloy wheels",
+      "Adds Bluetooth hands-free phone connectivity and HomeLink remote transmitter"
+    ],
+    "Limited": [
+      "Adds leather-trimmed upholstery throughout cabin",
+      "Adds 8-way power adjustable driver's seat with 2-position memory",
+      "Adds 4-way power adjustable front-passenger seat",
+      "Adds leather-wrapped 3-spoke steering wheel with audio system buttons",
+      "Adds dual-zone automatic climate control system",
+      "Adds 3-stage heated front seats",
+      "Adds auto-dimming rearview mirror with integrated backup camera in 3.3-inch display",
+      "Adds power tilt/sliding-glass moonroof with 99% UV light reduction",
+      "Adds fog lights",
+      "Adds Heated side mirrors and windshield wiper de-icer"
+    ]
+  }
+}

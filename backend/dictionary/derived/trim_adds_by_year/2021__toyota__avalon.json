@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2021|toyota|avalon",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_web_2021__toyota__avalon",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Avalon Hybrid Limited",
+    "Avalon Touring",
+    "Avalon Limited",
+    "Avalon Hybrid XSE Nightshade",
+    "Avalon Hybrid XLE",
+    "Avalon XLE"
+  ],
+  "adds_by_trim": {
+    "Avalon Hybrid Limited": [
+      "Hybrid powertrain with 2.5L four-cylinder and dual electric motors (215 hp combined)",
+      "CVT automatic transmission",
+      "43/43-44 mpg city/highway fuel economy",
+      "Genuine wood trim interior accents"
+    ],
+    "Avalon Touring": [
+      "Adaptive variable suspension for sharper handling",
+      "Engine sound enhancement",
+      "Gloss black exterior accents",
+      "Heated rear seats",
+      "Aluminum pedal covers"
+    ],
+    "Avalon Limited": [
+      "Genuine wood trim interior accents",
+      "Enhanced comfort-oriented features versus Touring"
+    ],
+    "Avalon Hybrid XSE Nightshade": [
+      "Black grille, black rear spoiler, and black window trim exterior styling",
+      "LED headlights with smoked chrome bezels",
+      "Aluminum interior trim and aluminum pedal covers",
+      "Sport-tuned suspension"
+    ],
+    "Avalon Hybrid XLE": [
+      "Hybrid powertrain with 2.5L four-cylinder and dual electric motors (215 hp combined)",
+      "CVT automatic transmission",
+      "43/43-44 mpg city/highway fuel economy"
+    ],
+    "Avalon XLE": [
+      "3.5L V-6 engine with 301 hp and 267 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "22/31-32 mpg city/highway fuel economy",
+      "9.0-inch touchscreen with Apple CarPlay and Android Auto",
+      "Eight-speaker sound system",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane departure alert with steering assist",
+      "Adaptive cruise control",
+      "Blind-spot monitor and rear cross-traffic alert"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/avalon/"
+}

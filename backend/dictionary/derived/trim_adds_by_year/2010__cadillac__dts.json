@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2010|cadillac|dts",
+  "year": 2010,
+  "make": "Cadillac",
+  "model": "DTS",
+  "ladder_id": "brochure_llm_2010__cadillac__dts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM COLLECTION",
+    "PREMIUM COLLECTION",
+    "LUXURY COLLECTION",
+    "DTS"
+  ],
+  "adds_by_trim": {
+    "PLATINUM COLLECTION": [
+      "4.6L Northstar V8 high-performance engine with 292 hp and 288 lb-ft torque",
+      "Magnetic Ride Control computer-controlled suspension with adjustable shock absorbers",
+      "18-inch Chrome-Tech wheels",
+      "Ambient lighting with front and rear footwell illumination",
+      "Genuine light ash wood trim with decorative inlay"
+    ],
+    "PREMIUM COLLECTION": [
+      "Bose Centerpoint Surround Sound audio system",
+      "Side Blind Zone Alert and Lane Departure Warning safety systems",
+      "Computer-controlled DVD navigation with touch-screen and voice recognition",
+      "XM NavTraffic traffic information service",
+      "IntelliBeam headlamps with automatic high-/low-beam switching",
+      "Dark burled walnut wood trim on center stack, console, and door panels",
+      "Power tilt and telescoping steering column with memory capability"
+    ],
+    "LUXURY COLLECTION": [
+      "In-dash six-disc CD changer",
+      "Bluetooth Wireless Technology for select phones",
+      "Tri-zone automatic climate controls with individual driver, passenger, and rear settings",
+      "Front heated and cooled bucket seats",
+      "Rear heated outboard seats",
+      "Ultrasonic parking assist with front and rear sensors and LED indicators",
+      "17-inch chrome wheels with wreath and crest center caps"
+    ],
+    "DTS": [
+      "Five-passenger seating with front bucket seats and eight-way power adjustment",
+      "Four-way power lumbar control on front seats",
+      "Nuance leather seating surfaces throughout",
+      "Tilt-adjustable steering wheel with leather wrap and fingertip controls",
+      "OnStar Directions & Connections with turn-by-turn navigation standard first year",
+      "Four-wheel disc brakes with ABS and Dynamic Rear Proportioning",
+      "Bifunctional Xenon HID front headlamps with nighttime flash-to-pass",
+      "StabiliTrak electronic stability control with Brake Assist",
+      "Speed-sensitive variable-assist power steering",
+      "Four-wheel independent suspension with automatic rear level control"
+    ]
+  }
+}

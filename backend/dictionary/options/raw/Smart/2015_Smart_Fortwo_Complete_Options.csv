@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Smart,Fortwo,coupe,1.0L I3,1.0L I3,,Automatic (AM5),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,1.0,34,38,36,,,,,
+2015,Smart,Fortwo,cabriolet,1.0L I3,1.0L I3,,Automatic (AM5),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,1.0,34,38,36,,,,,
+2015,Smart,Fortwo,electric drive convertible,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Two Seaters,,,122,93,107,,,,,
+2015,Smart,Fortwo,electric drive coupe,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Two Seaters,,,122,93,107,,,,,

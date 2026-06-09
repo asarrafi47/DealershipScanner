@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2017|cadillac|ct6",
+  "year": 2017,
+  "make": "Cadillac",
+  "model": "CT6",
+  "ladder_id": "brochure_llm_2017__cadillac__ct6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premium Luxury",
+    "Luxury",
+    "CT6"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch 5-split spoke aluminum wheels with Manoogian silver pockets and chrome inserts"
+    ],
+    "Premium Luxury": [
+      "19-inch ultrabright machined aluminum wheels with Manoogian silver pockets",
+      "20-inch ultrabright machined aluminum wheels with Manoogian silver pockets available"
+    ],
+    "Luxury": [
+      "19-inch ultrabright machined aluminum wheels with pearl nickel pockets",
+      "20-inch ultrabright machined aluminum wheels with Manoogian silver pockets available"
+    ],
+    "CT6": [
+      "18-inch multi-spoke aluminum wheels with blade silver painted finish",
+      "19-inch multi-spoke aluminum wheels with sterling silver premium painted finish available",
+      "OnStar with immediate help and vehicle management available"
+    ]
+  }
+}

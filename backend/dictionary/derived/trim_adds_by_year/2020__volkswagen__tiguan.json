@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2020|volkswagen|tiguan",
+  "year": 2020,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_llm_2020__volkswagen__tiguan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL PREM R-LINE",
+    "SEL",
+    "SE BLACK R-LINE",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL PREM R-LINE": [
+      "Leather seating surfaces",
+      "Leather-wrapped steering wheel with R-Line badge and stainless steel pedal caps",
+      "3-position memory function for driver's seat",
+      "Fender Premium Audio System",
+      "SiriusXM All Access with 3-month trial subscription"
+    ],
+    "SEL": [
+      "Discover Media touchscreen navigation system with 8-inch color display",
+      "App-Connect",
+      "Wireless smartphone charger",
+      "2 front USB data ports and 1 rear USB charging port",
+      "Adaptive Cruise Control",
+      "Lane Keeping System",
+      "Park Distance Control",
+      "Overhead View Camera"
+    ],
+    "SE BLACK R-LINE": [
+      "R-Line front bumper and badging",
+      "Black painted mirror caps",
+      "Black window trim and side sills",
+      "Black roof rails",
+      "20-inch black machined alloy wheels"
+    ],
+    "SE": [
+      "Composition Media touchscreen sound system with 8-inch color display",
+      "Heated front seats",
+      "10-way power driver's seat with power-adjustable lumbar support",
+      "Multi-function steering wheel",
+      "Climatronic dual-zone automatic climate control",
+      "Blind Spot Monitor",
+      "Rear Traffic Alert",
+      "17-inch wide multi-spoke two-tone machined alloy wheels"
+    ],
+    "S": [
+      "2.0L TSI turbocharged 4-cylinder engine, 184 hp, 221 lb-ft torque",
+      "8-speed automatic transmission with Tiptronic and Sport modes",
+      "Front-wheel drive standard",
+      "LED Daytime Running Lights",
+      "Automatic headlights",
+      "Foglights with low-speed corner-illuminating feature",
+      "Power-operated side mirrors",
+      "Rain-sensing windshield wipers",
+      "Composition Color touchscreen sound system with 6.5-inch color display",
+      "Forward Collision Warning and Autonomous Emergency Braking"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1996,Toyota,Truck/T100,T100 2WD,2.7L I4 ((FFS)),2.7L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,4,2.7,17,20,18,,,,,
+1996,Toyota,Truck/T100,T100 2WD,2.7L I4 ((FFS)),2.7L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,4,2.7,18,23,20,,,,,
+1996,Toyota,Truck/T100,T100 2WD,3.4L V6 ((FFS)),3.4L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.4,15,19,17,,,,,
+1996,Toyota,Truck/T100,T100 2WD,3.4L V6 ((FFS)),3.4L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.4,15,20,17,,,,,
+1996,Toyota,Truck/T100,T100 4WD,3.4L V6 ((FFS)),3.4L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.4,15,17,15,,,,,
+1996,Toyota,Truck/T100,T100 4WD,3.4L V6 ((FFS)),3.4L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.4,15,18,16,,,,,

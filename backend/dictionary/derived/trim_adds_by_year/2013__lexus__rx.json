@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|lexus|rx",
+  "year": 2013,
+  "make": "lexus",
+  "model": "RX",
+  "ladder_id": "brochure_llm_2013__lexus__rx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RX F SPORT",
+    "RXh",
+    "RX"
+  ],
+  "adds_by_trim": {
+    "RX F SPORT": [
+      "Eight-speed automatic transmission with paddle shifters",
+      "19-inch split-five-spoke alloy wheels with Superchrome finish",
+      "Sport Appearance Package available"
+    ],
+    "RXh": [
+      "Atkinson-cycle 3.5L V6 with dual electric-drive motors",
+      "295 hp total system horsepower with EV mode",
+      "Eight-speed electronically controlled transmission with paddle shifters",
+      "32/28/30 mpg EPA fuel economy (FWD)",
+      "Certified Super Ultra-Low Emission Vehicle (SULEV II)",
+      "Premium unleaded 91 octane fuel requirement"
+    ],
+    "RX": [
+      "3.5L 60° V6 engine with 270 hp at 6,200 RPM",
+      "248 lb-ft torque at 4,700 RPM",
+      "Six-speed automatic transmission with Sequential Shift and Snow modes",
+      "18-inch five-spoke alloy wheels standard",
+      "18/25/21 mpg EPA fuel economy (FWD)",
+      "Regular unleaded 87 octane fuel requirement",
+      "Class-leading 10 airbags with active front headrests",
+      "21 Active Safety features including Smart Stop Technology",
+      "Available Blind Spot Monitor and Pre-Collision System"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2023|toyota|venza",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Venza",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Hybrid engine: 2.5L 4-cylinder with 219 net hp Hybrid engine: 2.5L 4-cylinder with 219 net hp Hybrid engine: 2.5L 4-cylinder with 219 net hp",
+      "Electronically controlled Continuously Variable 40 city/37 highway/39 combined EPA-est. mpg8 40/37/39 combined EPA-est. mpg8",
+      "Transmission (ECVT) with sequential shift mode",
+      "Exterior Features Exterior Features",
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "LED fog lights Black \u201cVENZA\u201d and grade badge",
+      "Normal, Eco, EV40 and Sport drive modes",
+      "Low-profile silver roof rails2 Black rear Toyota emblem",
+      "Color-keyed with gloss-black-accent rear spoiler with Low-profile black roof rails2",
+      "LED projector headlights with dual LED full-width LED center stop light Black roof-mounted shark-fin antenna",
+      "DRL and auto on/off feature"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on XLE",
+      "Hybrid engine: 2.5L 4-cylinder with 219 net hp",
+      "C olor-keyed heated power outside mirrors with Venza",
+      "Perforated SofTex\u00ae-trimmed3 seats",
+      "Heated and ventilated front seats",
+      "Digital rearview mirror with HomeLink\u00ae5 universal",
+      "Panoramic View Monitor (PVM)48 with 360-degree",
+      "Overhead View in low-speed drive and reverse,",
+      "Heated leather-trimmed power tilt/telescopic",
+      "Center stack with Intelligent Touch capacitive controls",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Apple CarPlay\u00ae27 & Android Auto\u212226 compatibility,"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

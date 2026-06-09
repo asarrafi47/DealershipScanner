@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2018|lincoln|mkz",
+  "year": 2018,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_2018__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Lincoln Drive Control featuring Adaptive Suspension, Electric Power-Assisted Steering, and Active Noise Control",
+      "Adds power disc brakes with Anti-Lock Brake System and Torque Vectoring Control",
+      "Adds Autolamp automatic on/off headlamps",
+      "Adds Reverse Sensing System",
+      "Adds SYNC 3 Enhanced Voice Recognition with 8-inch color LCD touchscreen, 911 Assist, AppLink, Apple CarPlay, and Android Auto",
+      "Adds Lincoln Premium Sound System with AM/FM stereo, CD player, and SiriusXM Radio",
+      "Adds Wollsdorf leather-wrapped steering wheel",
+      "Adds 10.1-inch configurable color LCD instrument cluster screen with memory feature",
+      "Adds dual-zone electronic automatic temperature control",
+      "Adds Personal Safety System with dual-stage front airbags, driver and front-passenger knee airbags, front-seat side airbags, and side-curtain airbags"
+    ],
+    "Limited": [
+      "Adds illuminated exterior door handle pockets",
+      "Adds Lincoln logo welcome mat",
+      "Adds Welcome/Farewell elements"
+    ],
+    "Standard": [
+      "Adds EcoSelect button for efficient driving mode",
+      "Adds Lincoln Connect powered by Lincoln Way app with 4G LTE Wi-Fi hotspot capability",
+      "Adds push-button shift transmission",
+      "Adds Remote Start System",
+      "Adds SmartGauge with EcoGuide instrument cluster with configurable 4.2-inch color LCD screens",
+      "Adds adaptive HID headlamps with LED signature lighting",
+      "Adds power-adjustable heated sideview mirrors with memory and integrated blind spot mirrors"
+    ]
+  }
+}

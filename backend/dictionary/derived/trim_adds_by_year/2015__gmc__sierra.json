@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2015|gmc|sierra",
+  "year": 2015,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2015__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Sierra"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "6.2L V-8 EcoTec3 engine standard",
+      "Magnetic Ride Control Suspension System",
+      "20\" machined aluminum wheels NZG standard",
+      "20\" chrome aluminum wheels with Denali logo RTL standard",
+      "20\" ultra-bright machined wheels NZT available in polished finish"
+    ],
+    "SLT": [
+      "6.2L V-8 EcoTec3 engine available",
+      "18\" polished aluminum wheels RCW standard",
+      "20\" polished aluminum wheels RD5 available",
+      "Heated and leather-wrapped steering wheel with audio/cruise controls available",
+      "Front and rear park assist ultrasonic available with SLT Preferred Package"
+    ],
+    "SLE": [
+      "5.3L V-8 EcoTec3 engine available",
+      "17\" bright machined wheels Q5W standard",
+      "18\" bright machined wheels UHN available",
+      "18\" chrome aluminum wheels RT5 included with All-Terrain Package",
+      "20\" ultra-bright machined wheels with dark argent accents NZH available"
+    ],
+    "Sierra": [
+      "4.3L V-6 EcoTec3 engine standard",
+      "17\" painted steel wheels RD6 standard",
+      "17\" stainless-steel clad wheels RD7 available",
+      "Tilt-wheel manual steering column standard",
+      "Front 3-passenger cloth 40/20/40 split bench seat standard"
+    ]
+  }
+}

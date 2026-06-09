@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2015|audi|q7",
+  "year": 2015,
+  "make": "Audi",
+  "model": "Q7",
+  "ladder_id": "brochure_llm_2015__audi__q7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q7 3.0T S line® Prestige",
+    "Q7 3.0T",
+    "Q7 TDI®"
+  ],
+  "adds_by_trim": {
+    "Q7 3.0T S line® Prestige": [
+      "333 horsepower six-cylinder supercharged TFSI engine with 325 lb-ft torque",
+      "6.9-second 0–60 mph acceleration",
+      "Audi adaptive air suspension system",
+      "S line® exterior styling and design elements"
+    ],
+    "Q7 3.0T": [
+      "280 horsepower six-cylinder supercharged TFSI engine with 295 lb-ft torque",
+      "7.7-second 0–60 mph acceleration",
+      "Eight-speed Tiptronic® automatic transmission with quattro® all-wheel drive"
+    ],
+    "Q7 TDI®": [
+      "240 horsepower six-cylinder turbocharged TDI® diesel engine with 406 lb-ft torque",
+      "Fuel-efficient diesel powertrain with enhanced low-end torque delivery"
+    ]
+  }
+}

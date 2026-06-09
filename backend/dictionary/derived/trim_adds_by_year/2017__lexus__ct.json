@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2017|lexus|ct",
+  "year": 2017,
+  "make": "lexus",
+  "model": "CT",
+  "ladder_id": "brochure_2017__lexus__ct",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F Sport",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Hybrid powertrain with eight-year/100,000-mile Hybrid System Warranty",
+      "Adds four-year/50,000-mile Lexus Limited Warranty with zero deductible",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Pre-Collision System for frontal collision assistance",
+      "Adds Vehicle Stability Control electronic system",
+      "Adds backup camera system"
+    ],
+    "Limited": [
+      "Adds Intuitive Parking Assist system",
+      "Adds Bluetooth connectivity for hands-free phone system",
+      "Adds Navigation System with real-time traffic functionality"
+    ],
+    "F Sport": [
+      "Adds 17-inch performance tires",
+      "Adds Dynamic Radar Cruise Control system",
+      "Adds Brake Assist system",
+      "Adds SmartAccess system with keyless entry",
+      "Adds engine immobilizer anti-theft technology",
+      "Adds HD Radio technology",
+      "Adds Siri Eyes Free integration for voice control"
+    ]
+  }
+}

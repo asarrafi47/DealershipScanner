@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2019|jeep|compass",
+  "year": 2019,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_llm_2019__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Trailhawk",
+    "Limited",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Trailhawk": [
+      "Jeep Active Drive Low with single-speed 4WD and 20:1 crawl ratio",
+      "30.3° approach angle and 33.6° departure angle for off-road capability",
+      "8.5 inches ground clearance",
+      "35.3-foot turning diameter with 4x4 Low configuration",
+      "9-speed automatic transmission standard"
+    ],
+    "Limited": [
+      "6-speed automatic transmission standard on FWD models",
+      "9-speed automatic transmission standard on 4x4 models",
+      "8.2 inches ground clearance on 4x4"
+    ],
+    "Latitude": [
+      "6-speed automatic transmission standard on FWD models",
+      "6-speed manual transmission standard on 4x4 models",
+      "Jeep Active Drive single-speed 4WD on 4x4"
+    ],
+    "Sport": [
+      "2.4L Tigershark MultiAir 2 engine with 180 horsepower and 175 lb-ft torque",
+      "6-speed manual transmission standard",
+      "27.2 cubic feet cargo volume with rear seats up",
+      "7.8 inches ground clearance"
+    ]
+  }
+}

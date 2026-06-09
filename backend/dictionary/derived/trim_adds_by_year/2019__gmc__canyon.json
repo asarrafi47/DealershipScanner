@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2019|gmc|canyon",
+  "year": 2019,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_web_2019__gmc__canyon",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "360-degree camera standard",
+      "11.0-inch digital instrument cluster",
+      "Bose premium audio with seven speakers",
+      "Heated front seats"
+    ],
+    "AT4": [
+      "Canyon Safety Plus package standard",
+      "ProGrade Trailering System standard",
+      "Off-road suspension setup",
+      "Hill descent control",
+      "Underbody cameras for trail visibility",
+      "Rocker protectors"
+    ],
+    "Elevation": [
+      "11.3-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "Rear sliding window and rear window defogger standard",
+      "Outside heated power mirrors standard",
+      "Canyon Safety Plus package standard",
+      "ProGrade Trailering System standard",
+      "8.0-inch digital instrument cluster",
+      "Six-speaker audio system",
+      "2.7-liter turbocharged four-cylinder engine with 310 hp and 430 lb-ft torque"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/canyon/"
+}

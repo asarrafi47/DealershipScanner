@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2013|scion|iq",
+  "year": 2013,
+  "make": "Scion",
+  "model": "iQ",
+  "ladder_id": "brochure_web_2013__scion__iq",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "iQ Limited",
+    "iQ",
+    "iQ Base"
+  ],
+  "adds_by_trim": {
+    "iQ Limited": [
+      "Leather-trimmed steering wheel and shift knob",
+      "Power windows and power locks",
+      "Air conditioning",
+      "Back-up camera with display on 3.5-inch touchscreen",
+      "AM/FM CD audio with aux input and USB",
+      "Bluetooth hands-free phone and audio streaming",
+      "Eight airbags including side-curtain airbags"
+    ],
+    "iQ": [
+      "Power windows and power locks vs base",
+      "Air conditioning",
+      "Back-up camera with 3.5-inch touchscreen display",
+      "AM/FM CD audio with aux input and USB",
+      "Bluetooth hands-free phone and audio streaming",
+      "Eight airbags including side-curtain airbags"
+    ],
+    "iQ Base": [
+      "1.3-liter four-cylinder engine producing 94 horsepower",
+      "Five-speed manual transmission",
+      "Power steering",
+      "Dual front airbags",
+      "Anti-lock brakes with electronic brake force distribution",
+      "Stability control and traction control",
+      "AM/FM radio",
+      "Manual windows and manual locks",
+      "Air conditioning"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/iq/"
+}

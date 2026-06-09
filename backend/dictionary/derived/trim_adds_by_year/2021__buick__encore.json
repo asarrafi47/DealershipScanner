@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2021|buick|encore",
+  "year": 2021,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2021__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Encore (Preferred)",
+    "Encore (1SV)"
+  ],
+  "adds_by_trim": {
+    "Encore (Preferred)": [
+      "Shale Cloth Seats with Shale and Ebony Leatherette Accents",
+      "Access to premium exterior paint colors (White Frost Tricoat, Cinnabar Metallic, Quicksilver Metallic, Ebony Twilight Metallic, Dark Moon Blue Metallic)"
+    ],
+    "Encore (1SV)": [
+      "Ebony Cloth Seats with Ebony Leatherette Accents",
+      "18-inch 10-Spoke Aluminum Wheels with Technical Gray Pockets",
+      "Limited to Summit White and standard exterior color palette"
+    ]
+  }
+}

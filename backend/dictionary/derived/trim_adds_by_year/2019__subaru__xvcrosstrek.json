@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2019|subaru|xvcrosstrek",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2019__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crosstrek Limited",
+    "Crosstrek Premium",
+    "Crosstrek"
+  ],
+  "adds_by_trim": {
+    "Crosstrek Limited": [
+      "Gray leather upholstery",
+      "Black leather upholstery"
+    ],
+    "Crosstrek Premium": [
+      "Black cloth upholstery with orange stitching",
+      "Gray cloth upholstery with orange stitching"
+    ],
+    "Crosstrek": [
+      "Black cloth upholstery",
+      "Gray cloth upholstery",
+      "8.7 inches ground clearance",
+      "Symmetrical all-wheel drive standard",
+      "EyeSight driver assist technology",
+      "Adaptive cruise control",
+      "Pre-collision system with automatic braking"
+    ]
+  }
+}

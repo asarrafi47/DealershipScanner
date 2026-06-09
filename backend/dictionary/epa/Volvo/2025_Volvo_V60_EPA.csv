@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,Volvo,V60,CC B5 AWD,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,24,31,27,,,,,
+2025,Volvo,V60,T8 AWD,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),2.0L I4,,Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Small Station Wagons,4,2.0,30,33,31,,,,,

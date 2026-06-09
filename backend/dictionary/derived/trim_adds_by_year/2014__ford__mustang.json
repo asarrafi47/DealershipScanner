@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2014|ford|mustang",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_llm_2014__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Shelby GT500",
+    "GT",
+    "V6"
+  ],
+  "adds_by_trim": {
+    "Shelby GT500": [
+      "5.8L dohc Supercharged V8 with 662 hp and 631 lb.-ft. torque",
+      "6-speed transmission with manual or automatic options",
+      "15 city/24 hwy/18 combined mpg (manual) or 18 city/25 hwy/20 combined mpg (automatic)"
+    ],
+    "GT": [
+      "5.0L Ti-VCT V8 with 420 hp and 390 lb.-ft. torque",
+      "6-speed transmission with manual or automatic options",
+      "15 city/26 hwy/19 combined mpg (manual) or 18 city/25 hwy/20 combined mpg (automatic)",
+      "19-inch California Special wheels",
+      "Rear spoiler",
+      "Sport pedals",
+      "Fog lamps"
+    ],
+    "V6": [
+      "3.7L Ti-VCT V6 with 305 hp and 280 lb.-ft. torque",
+      "6-speed manual or automatic transmission",
+      "19 city/29 hwy/22 combined mpg (manual) or 19 city/31 hwy/23 combined mpg (automatic)",
+      "4-wheel disc Anti-Lock Brake System with all-speed traction control",
+      "Coil-over-strut front suspension with coil spring 3-link solid-axle rear",
+      "Selectable-effort electric power-assisted steering in Standard, Comfort, and Sport modes",
+      "Front bucket seats with 50/50 split-fold rear seat (coupe only)",
+      "Power windows, power door locks, tilt steering column",
+      "Cruise control with remote keyless entry system",
+      "HID headlamps with rear sequential LED turn signal lamps"
+    ]
+  }
+}

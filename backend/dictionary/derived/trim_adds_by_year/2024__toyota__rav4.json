@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2024|toyota|rav4",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_llm_2024__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "TRD Off-Road",
+    "Adventure",
+    "Hybrid Woodland Edition",
+    "Hybrid XLE",
+    "Hybrid LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "LED projector headlights with LED DRL accent lights and turn signals",
+      "Dark gray metallic hexagon patterned front grille",
+      "Chrome-accented color keyed outside door handles",
+      "Power liftgate with jam protection",
+      "Up to 27 city/35 highway/30 combined EPA-estimated mpg",
+      "12.3-inch digital Multi-Information Display",
+      "Front and Rear Parking Assist with Automated Braking",
+      "Panoramic View Monitor with 360-degree overhead view"
+    ],
+    "TRD Off-Road": [
+      "Multi-Terrain Select with MUD, SAND, ROCK, DIRT, and SNOW modes",
+      "TRD-tuned suspension",
+      "18-inch 6-spoke matte-black TRD flow-formed alloy wheels",
+      "Falken WILDPEAK All-Terrain tires",
+      "Red-painted coil springs",
+      "TRD-stamped stainless steel front skid plate",
+      "SofTex-trimmed seats with red accents and TRD stitching",
+      "TRD all-weather floor mats and cargo liner"
+    ],
+    "Adventure": [
+      "Dynamic Torque Vectoring All-Wheel Drive with Rear Driveline Disconnect",
+      "3500-lb towing capacity",
+      "Unique split-bar front upper grille",
+      "Active grille shutters",
+      "Larger black overfenders",
+      "Unique raised black roof rails",
+      "19-inch split 5-spoke alloy wheels with matte black accents",
+      "SofTex-trimmed seats with orange accents and stitching"
+    ],
+    "Hybrid Woodland Edition": [
+      "TRD-tuned suspension",
+      "18-inch 6-spoke bronze-colored TRD flow-formed alloy wheels",
+      "Falken WILDPEAK All-Terrain tires",
+      "Integrated LED foglights",
+      "Front and rear mudguards",
+      "Black heated power outside mirrors with turn signal indicators",
+      "38 city/35 highway/37 combined EPA-estimated mpg"
+    ],
+    "Hybrid XLE": [
+      "Color-keyed outside door handles with front-row touch sensors",
+      "Color-keyed heated power outside mirrors with folding feature",
+      "Blind spot warning indicators",
+      "Dual zone automatic climate control with rear-seat vents",
+      "8-way power-adjustable driver's seat with lumbar support",
+      "Smart Key System on front doors and liftgate"
+    ],
+    "Hybrid LE": [
+      "Hybrid engine: 2.5L 4-Cylinder with 219 net combined hp",
+      "Electronically controlled Continuously Variable Transmission with sequential shift",
+      "Electronic On-Demand All-Wheel Drive",
+      "Drive mode dial with Normal, Eco, and Sport modes",
+      "TRAIL and EV Mode select buttons",
+      "LED projector headlights with DRL function and chrome accents",
+      "Active grille shutters",
+      "17-inch 5-spoke light gray metallic alloy wheels"
+    ]
+  }
+}

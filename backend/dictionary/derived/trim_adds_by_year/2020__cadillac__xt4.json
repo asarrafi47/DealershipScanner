@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2020|cadillac|xt4",
+  "year": 2020,
+  "make": "Cadillac",
+  "model": "XT4",
+  "ladder_id": "brochure_llm_2020__cadillac__xt4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT",
+    "PREMIUM LUXURY",
+    "LUXURY"
+  ],
+  "adds_by_trim": {
+    "SPORT": [
+      "18-inch 10-spoke alloy wheels with Diamond-Cut/Argent Metallic finish",
+      "Gloss black finish on front grille, side window surround, and roof rails",
+      "Interior trim with sport accents",
+      "Sport steering wheel",
+      "Available 20-inch split 7-spoke alloy wheels with polished finish"
+    ],
+    "PREMIUM LUXURY": [
+      "Front and rear park assist",
+      "Lane change alert with side blind zone alert",
+      "Rear camera mirror for wider, less obstructed rear view",
+      "Interior ambient lighting",
+      "Carbon-fiber or genuine wood interior décor options"
+    ],
+    "LUXURY": [
+      "Automatic emergency braking",
+      "LED headlamps and taillamps",
+      "Rear park assist",
+      "Cadillac user experience with rotary infotainment controller",
+      "Phone integration with Apple CarPlay and Android Auto compatibility",
+      "Hands-free power liftgate",
+      "2.0L turbo four-cylinder engine with 237 hp and 258 lb-ft torque",
+      "Front-wheel drive or all-wheel drive options",
+      "Standard safety features including forward collision alert and eight airbags"
+    ]
+  }
+}

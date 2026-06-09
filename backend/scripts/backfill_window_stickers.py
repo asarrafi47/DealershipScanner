@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-Backfill window stickers for non-CDJR inventory, grouped by dealership.
+Backfill window stickers for inventory, grouped by dealership.
 
-Learns dealer sticker_provider (iPacket / listing embed / none) while fetching.
+Non-CDJR: learns dealer sticker_provider (iPacket / listing embed / none) while fetching.
+CDJR 2018+: fetches Stellantis OEM Monroney PDFs by VIN.
 
 Usage:
   INVENTORY_DB_PATH=inventory.db python backend/scripts/backfill_window_stickers.py
   INVENTORY_DB_PATH=inventory.db python backend/scripts/backfill_window_stickers.py --limit 100
+  INVENTORY_DB_PATH=inventory.db python backend/scripts/backfill_window_stickers.py --cdjr-only
 """
 from __future__ import annotations
 
@@ -37,6 +39,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Backfill listing/OEM window stickers by dealership.")
     ap.add_argument("--limit", type=int, default=0, help="Max cars to process (0 = all active)")
     ap.add_argument("--sleep", type=float, default=1.5, help="Seconds between cars")
+    ap.add_argument(
+        "--cdjr-only",
+        action="store_true",
+        help="Only backfill CDJR/Stellantis 2018+ OEM window stickers",
+    )
     args = ap.parse_args()
 
     from backend.db.inventory_db import get_car_by_id, init_inventory_db
@@ -46,7 +53,10 @@ def main() -> int:
         window_sticker_available,
     )
     from backend.scanner.dealer_sticker_provider import get_dealer_sticker_provider
-    from backend.scanner.window_sticker import is_cdjr_stellantis_car
+    from backend.scanner.window_sticker import (
+        cdjr_oem_window_sticker_eligible,
+        is_cdjr_stellantis_car,
+    )
     import sqlite3
 
     init_inventory_db()
@@ -74,7 +84,8 @@ def main() -> int:
 
     stats = {
         "total": len(ids),
-        "skipped_cdjr": 0,
+        "skipped_cdjr_ineligible": 0,
+        "skipped_non_cdjr": 0,
         "skipped_cached": 0,
         "skipped_none_dealer": 0,
         "attempted": 0,
@@ -86,15 +97,20 @@ def main() -> int:
         car = get_car_by_id(car_id, include_inactive=True)
         if not car:
             continue
-        if is_cdjr_stellantis_car(car):
-            stats["skipped_cdjr"] += 1
+        cdjr_eligible = cdjr_oem_window_sticker_eligible(car)
+        if args.cdjr_only:
+            if not cdjr_eligible:
+                stats["skipped_non_cdjr"] += 1
+                continue
+        elif is_cdjr_stellantis_car(car) and not cdjr_eligible:
+            stats["skipped_cdjr_ineligible"] += 1
             continue
         reg = car.get("dealership_registry_id")
         try:
             reg_i = int(reg) if reg is not None else None
         except (TypeError, ValueError):
             reg_i = None
-        if reg_i and get_dealer_sticker_provider(reg_i) == "none":
+        if not cdjr_eligible and reg_i and get_dealer_sticker_provider(reg_i) == "none":
             if window_sticker_available(car) and not car_sticker_packages_need_analysis(car):
                 stats["skipped_cached"] += 1
                 continue

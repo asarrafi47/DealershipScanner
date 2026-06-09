@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2017|gmc|terrain",
+  "year": 2017,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_llm_2017__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE-2",
+    "SLE-1",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Denali-specific grille with chrome surround",
+      "Heated power-adjustable manual-folding satin chrome outside mirrors",
+      "Front and rear bumpers with body-color and silver painted rear skid plate"
+    ],
+    "SLT": [
+      "Power liftgate with programmable height control and Universal Home Remote",
+      "Heated power-adjustable manual-folding chrome outside mirrors",
+      "Luggage rails with chrome inserts and crossbars",
+      "Charcoal grille with chrome surround and accents",
+      "Remote vehicle start with extended-range keyless entry"
+    ],
+    "SLE-2": [
+      "IntelliLink with Bluetooth streaming, Pandora, and Stitcher integration",
+      "Color Touch Navigation System with GPS and NavTraffic",
+      "Pioneer premium 8-speaker audio system with subwoofer and amplifier",
+      "LED daytime running lamps",
+      "Driver Alert Package 1 and 2 available",
+      "Luggage rails with charcoal finish",
+      "Heated power-adjustable manual-folding body-color outside mirrors"
+    ],
+    "SLE-1": [
+      "SiriusXM satellite radio with 3 trial months included",
+      "Heated power-adjustable manual-folding body-color outside mirrors",
+      "OnStar 5-year Basic Plan and 6 months Guidance Plan"
+    ],
+    "LS": [
+      "6-speaker audio system",
+      "Color Touch Audio System with 7-inch touchscreen and USB port",
+      "Power-adjustable manual-folding black outside mirrors",
+      "Bluetooth connectivity for phone",
+      "Remote keyless entry and power door locks",
+      "Air bags with Passenger Sensing System and side-impact protection",
+      "Child safety locks and LATCH system",
+      "OnStar 5-year Basic Plan",
+      "Halogen projector-beam headlamps with daytime running lamps"
+    ]
+  }
+}

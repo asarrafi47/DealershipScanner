@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2020|acura|rlx",
+  "year": 2020,
+  "make": "acura",
+  "model": "rlx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Technology",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

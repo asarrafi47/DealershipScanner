@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2017|volkswagen|jetta",
+  "year": 2017,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GLI",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

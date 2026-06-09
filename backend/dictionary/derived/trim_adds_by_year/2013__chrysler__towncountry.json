@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2013|chrysler|towncountry",
+  "year": 2013,
+  "make": "Chrysler",
+  "model": "Town & Country",
+  "ladder_id": "brochure_llm_2013__chrysler__towncountry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring-L",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "17-inch polished aluminum wheels"
+    ],
+    "Touring-L": [
+      "17-inch painted aluminum wheels",
+      "17-inch polished aluminum wheels available"
+    ],
+    "Touring": [
+      "17-inch aluminum wheels standard",
+      "Uconnect infotainment system"
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2018|honda|pilot",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "brochure_llm_2018__honda__pilot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE",
+    "TOURING",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "ELITE": [
+      "Intelligent Variable Torque Management (i-VTM4) AWD system",
+      "Blind spot information system with cross traffic monitor",
+      "Rain-sensing windshield wipers",
+      "Panoramic roof",
+      "Heated steering wheel",
+      "Perforated heated and ventilated front seats",
+      "Perforated heated 2nd-row captain's chairs"
+    ],
+    "TOURING": [
+      "9-speed automatic transmission with Shift-By-Wire and paddle shifters",
+      "20-inch alloy wheels",
+      "Body-colored parking sensors",
+      "Driver's seat with two-position memory and memory-linked side mirrors with reverse gear tilt-down",
+      "Blu-ray Rear Entertainment System with 115-volt power outlet, HDMI interface, and integrated 2nd-row sunshades",
+      "Blue ambient LED lighting",
+      "2nd-row 2.5 amp USB charging ports (2 of 5 total)",
+      "Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic",
+      "540-watt premium audio system with 10 speakers including subwoofer",
+      "SiriusXM Radio and Pandora compatibility"
+    ],
+    "EX-L": [
+      "One-touch power moonroof with tilt feature",
+      "Power tailgate",
+      "One-touch 2nd-row seats",
+      "Front passenger's seat with 4-way power adjustment",
+      "Leather-trimmed interior",
+      "Heated front seats",
+      "Available Rear Entertainment System with 115-volt power outlet and HDMI interface",
+      "Available Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic"
+    ],
+    "EX": [
+      "LED Daytime Running Lights",
+      "Smart Entry with Walk Away Auto Lock",
+      "Fog lights",
+      "Honda LaneWatch",
+      "Tri-zone automatic climate control system with humidity control and air filtration",
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "SMS text message function",
+      "8-inch Display Audio with electrostatic touch-screen",
+      "Apple CarPlay and Android Auto integration"
+    ],
+    "LX": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "9-speed automatic transmission",
+      "Variable Cylinder Management (VCM)",
+      "Hill start assist",
+      "Intelligent Variable Torque Management (i-VTM4) AWD system available",
+      "18-inch alloy wheels",
+      "Multi-angle rearview camera with guidelines",
+      "Tire Pressure Monitoring System with Tire Fill Assist",
+      "One-touch turn indicators",
+      "Push button start with capless fuel filler"
+    ]
+  }
+}

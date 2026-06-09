@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|hyundai|equus",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Equus",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

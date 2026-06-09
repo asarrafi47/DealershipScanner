@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Lucid,Air,Pure RWD with 19 inch wheels,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,140,134,137,,,,,
+2024,Lucid,Air,Pure RWD with 20 inch wheels,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,134,126,130,,,,,
+2024,Lucid,Air,Sapphire AWD,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,108,101,105,,,,,
+2024,Lucid,Air,G Touring XR AWD with19 inch wheels,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,130,128,129,,,,,
+2024,Lucid,Air,G Touring XR AWD with 20 inch wheels,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,123,119,121,,,,,
+2024,Lucid,Air,G Touring XR AWD with 21 inch wheels,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,115,111,113,,,,,
+2024,Lucid,Air,Touring AWD with 19 inch wheels,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,135,131,133,,,,,
+2024,Lucid,Air,Touring AWD with 20 inch wheels,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,125,120,123,,,,,
+2024,Lucid,Air,Touring AWD with 21inch wheels,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,121,114,118,,,,,

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2015|porsche|911",
+  "year": 2015,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2015__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "911 Carrera 4S Cabriolet",
+    "911 Carrera 4S",
+    "911 Carrera 4 Cabriolet",
+    "911 Carrera 4",
+    "911 Carrera S Cabriolet",
+    "911 Carrera S",
+    "911 Carrera Cabriolet",
+    "911 Carrera"
+  ],
+  "adds_by_trim": {
+    "911 Carrera 4S Cabriolet": [
+      "All-wheel drive system",
+      "Electric glass slide/tilt sunroof standard",
+      "Rear wiper standard",
+      "Side window trims in aluminium"
+    ],
+    "911 Carrera 4S": [
+      "All-wheel drive system",
+      "Side window trims in aluminium",
+      "Rear wiper standard"
+    ],
+    "911 Carrera 4 Cabriolet": [
+      "All-wheel drive system",
+      "Electric glass slide/tilt sunroof standard",
+      "Rear wiper standard",
+      "Side window trims in aluminium"
+    ],
+    "911 Carrera 4": [
+      "All-wheel drive system",
+      "Side window trims in aluminium",
+      "Rear wiper standard"
+    ],
+    "911 Carrera S Cabriolet": [
+      "Electric glass slide/tilt sunroof standard",
+      "Rear wiper standard"
+    ],
+    "911 Carrera S": [
+      "Rear wiper standard"
+    ],
+    "911 Carrera Cabriolet": [
+      "Electric glass slide/tilt sunroof standard",
+      "Rear wiper standard"
+    ],
+    "911 Carrera": [
+      "HomeLink programmable garage door opener",
+      "Cruise control",
+      "Adaptive cruise control with Porsche Active Safe",
+      "Porsche Dynamic Light System LED headlights",
+      "Automatically dimming exterior and interior mirrors with rain sensor",
+      "Windscreen with grey top-tint",
+      "Metallic and special paint options available",
+      "Leather interior packages in multiple colors available"
+    ]
+  }
+}

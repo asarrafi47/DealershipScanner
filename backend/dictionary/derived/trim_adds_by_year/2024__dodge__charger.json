@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2024|dodge|charger",
+  "year": 2024,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "2024_dodge_charger",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "R/T",
+    "Scat Pack"
+  ],
+  "adds_by_trim": {
+    "Scat Pack": [
+      "ADDS TO R/T Technology: Stage 2 kit for 500-kW (670-hp) total output",
+      "Performance-tuned suspension and black 6-piston Brembo front calipers",
+      "16-inch digital cluster, Head-Up Display, and Dodge Connect",
+      "20x11-inch Satin Carbon wheels with 305/35R20 tires and Track Pack options"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 engine with 370 hp and 395 lb-ft of torque",
+      "High-speed engine controller",
+      "2.62 rear axle ratio",
+      "Active exhaust with integrated dual bright exhaust tips",
+      "20 by 8-inch Satin Carbon aluminum wheels",
+      "R/T badge",
+      "Tire service kit"
+    ]
+  }
+}

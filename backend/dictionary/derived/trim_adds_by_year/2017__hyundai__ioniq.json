@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2017|hyundai|ioniq",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "ladder_id": "brochure_web_2017__hyundai__ioniq",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ioniq Plug-In Hybrid Limited",
+    "Ioniq Hybrid Limited",
+    "Ioniq Plug-In Hybrid SEL",
+    "Ioniq Hybrid SEL",
+    "Ioniq Plug-In Hybrid SE",
+    "Ioniq Hybrid SE",
+    "Ioniq Hybrid Blue"
+  ],
+  "adds_by_trim": {
+    "Ioniq Plug-In Hybrid Limited": [
+      "Plug-in hybrid powertrain with 45-kW motor and 8.9-kWh battery"
+    ],
+    "Ioniq Hybrid Limited": [
+      "Premium interior appointments and top-tier comfort features"
+    ],
+    "Ioniq Plug-In Hybrid SEL": [
+      "Plug-in hybrid powertrain with 45-kW motor and 8.9-kWh battery"
+    ],
+    "Ioniq Hybrid SEL": [
+      "Enhanced comfort and convenience features over SE trim"
+    ],
+    "Ioniq Plug-In Hybrid SE": [
+      "Plug-in hybrid powertrain with 45-kW motor and 8.9-kWh battery"
+    ],
+    "Ioniq Hybrid SE": [
+      "Heated side mirrors with LED daytime running lights",
+      "10-way power driver seat with lumbar support",
+      "Heated front seats",
+      "Blue Link connected car system",
+      "Blind-spot monitoring with rear cross-traffic alert"
+    ],
+    "Ioniq Hybrid Blue": [
+      "1.6-liter four-cylinder engine with 32-kW electric motor",
+      "1.6-kWh hybrid battery system",
+      "Six-speed dual-clutch automatic transmission",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane keep assist and automatic high-beams",
+      "8.0-inch touchscreen with wireless Android Auto and Apple CarPlay",
+      "4.2-inch instrument cluster display",
+      "Seating for five with 60/40 split-folding rear seatback"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/ioniq/"
+}

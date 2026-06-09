@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2025|dodge|durango",
+  "year": 2025,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "2025_dodge_durango",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "GT",
+    "Citadel"
+  ],
+  "adds_by_trim": {
+    "Citadel": [
+      "5.7L HEMI V8 with Multi-Displacement System (replaces 3.6L Pentastar on GT)",
+      "20-inch Fine Silver or available Black Noise / Satin Carbon wheels",
+      "Nappa leather-trimmed seats with ventilated front and heated second row (2TH package)",
+      "Power sunroof, rain-sensitive wipers, and memory system on premium package"
+    ],
+    "GT": [
+      "Dual exhaust with bright tips",
+      "Leather flat-bottom steering wheel",
+      "Power liftgate with remote start system",
+      "Delete roof rails option",
+      "7-passenger seating standard"
+    ]
+  }
+}

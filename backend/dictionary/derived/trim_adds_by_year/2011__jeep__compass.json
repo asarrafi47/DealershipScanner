@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2011|jeep|compass",
+  "year": 2011,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_llm_2011__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Leather-trimmed seating with six-way power driver's seat",
+      "Heated front seats with leather trim",
+      "Automatic temperature control",
+      "Rear reclining 60/40 split seats and front-passenger fold-flat seatback",
+      "Power, heated foldaway mirrors",
+      "Body-color liftgate appliqué and front door handles",
+      "Vehicle information center standard",
+      "Tire Pressure Monitoring Display standard"
+    ],
+    "Latitude": [
+      "Deluxe cloth seat coverings",
+      "Heated front seats with premium cloth",
+      "Projector fog lamps in front bumper",
+      "Power windows with driver's one-touch down",
+      "Remote keyless and illuminated entry",
+      "Deep-tinted glass on rear doors and cargo area",
+      "115-volt outlet with 150-watt capacity"
+    ],
+    "Sport": [
+      "4-wheel antilock disc brakes or ventilated front disc with rear drum",
+      "2.4L or 2.0L DOHC 16V dual VVT 4-cylinder engine options",
+      "Front-wheel drive or four-wheel drive available",
+      "Power rack-and-pinion steering",
+      "Electronic Stability Control with Electronic Roll Mitigation",
+      "Advanced multistage driver and front-passenger air bags",
+      "Media Center 130 AM/FM/CD radio with MP3/WMA support",
+      "Four speakers"
+    ]
+  }
+}

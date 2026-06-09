@@ -1,0 +1,61 @@
+{
+  "ladder_id": "2025_honda_pilot_complete_options",
+  "make": "Honda",
+  "models": [
+    "Pilot",
+    "Pilot"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Elite": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); All-Wheel Drive"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); All-Wheel Drive"
+      }
+    ],
+    "EX-L": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD)"
+      }
+    ],
+    "TrailSport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); All-Wheel Drive"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD)"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2006–present)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
+      }
+    ]
+  }
+}

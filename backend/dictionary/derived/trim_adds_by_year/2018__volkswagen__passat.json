@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2018|volkswagen|passat",
+  "year": 2018,
+  "make": "Volkswagen",
+  "model": "Passat",
+  "ladder_id": "brochure_web_2018__volkswagen__passat",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Passat 2.0T Limited Edition Auto",
+    "Passat 2.0T R-Line Auto",
+    "Passat 2.0T SE Auto"
+  ],
+  "adds_by_trim": {
+    "Passat 2.0T Limited Edition Auto": [
+      "18-inch wheels",
+      "Fully upgraded LED headlights with adaptive front lighting",
+      "Front and rear parking sensors",
+      "Hands-free opening trunk",
+      "Power folding mirrors",
+      "Navigation integrated into infotainment",
+      "Nine-speaker Fender premium audio system",
+      "Leather seat upholstery",
+      "Heated front and rear seats",
+      "Power passenger seat with memory settings for driver seat"
+    ],
+    "Passat 2.0T R-Line Auto": [
+      "Nine-speaker Fender premium audio system"
+    ],
+    "Passat 2.0T SE Auto": [
+      "2.0-liter turbocharged inline-four engine with 174 hp and 206 lb-ft torque",
+      "Six-speed automatic transmission",
+      "Forward collision warning with automatic emergency braking",
+      "Blind-spot monitoring",
+      "Adaptive cruise control",
+      "Automatic windshield wipers and high-beams",
+      "6.3-inch infotainment screen",
+      "Six-speaker sound system",
+      "Three USB ports",
+      "15.9 cubic feet trunk space"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/passat/"
+}

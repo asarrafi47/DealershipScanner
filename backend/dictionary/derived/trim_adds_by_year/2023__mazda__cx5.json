@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2023|mazda|cx5",
+  "year": 2023,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2023__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "GT"
+  ],
+  "adds_by_trim": {
+    "Signature": [
+      "360° View Monitor for comprehensive surround visibility",
+      "Smart City Brake Support Rear (SCBS-R) automatic braking system",
+      "Driver Attention Alert safety feature",
+      "Windshield-projected colour Active Driving Display (ADD)",
+      "Traffic Sign Recognition system (TSR)"
+    ],
+    "GT": [
+      "Windshield-projected colour Active Driving Display (ADD)",
+      "Traffic Sign Recognition system (TSR)"
+    ]
+  }
+}

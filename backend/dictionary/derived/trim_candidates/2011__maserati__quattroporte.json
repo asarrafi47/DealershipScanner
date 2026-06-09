@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2011|maserati|quattroporte",
+  "year": 2011,
+  "make": "maserati",
+  "model": "quattroporte",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|subaru|xvcrosstrek",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2013__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Limited",
+    "2.0i Premium"
+  ],
+  "adds_by_trim": {
+    "2.0i Limited": [
+      "Leather-trimmed steering wheel",
+      "Leather-wrapped automatic transmission shifter handle",
+      "Leather-trimmed upholstery",
+      "Automatic climate control system with full controls",
+      "6-speaker single-CD audio system with 4.3-inch LCD display and HD Radio"
+    ],
+    "2.0i Premium": [
+      "Subaru Symmetrical All-Wheel Drive (AWD)",
+      "SUBARU BOXER engine",
+      "4-wheel antilock brakes with Electronic Brake-force Distribution",
+      "Brake Assist and Brake Override System",
+      "Vehicle Dynamics Control and Traction Control System",
+      "Tire Pressure Monitoring System and Daytime Running Lights",
+      "6-way manually adjustable driver's seat with 4-way front-passenger seat",
+      "60/40-split flat-folding rear seatback",
+      "Cloth upholstery",
+      "Manually adjustable CFC-free air-conditioning system"
+    ]
+  }
+}

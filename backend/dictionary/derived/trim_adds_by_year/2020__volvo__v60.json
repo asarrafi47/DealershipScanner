@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2020|volvo|v60",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "V60",
+  "ladder_id": "brochure_llm_2020__volvo__v60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Polestar",
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Polestar": [
+      "2.0L supercharged and turbocharged engine with electric motor producing 415 hp",
+      "0-60 mph acceleration in 4.3 seconds",
+      "494 lb-ft maximum torque",
+      "Polestar Engineered Optimization powertrain software for enhanced performance",
+      "21/31/25 mpg city/highway/combined fuel economy",
+      "15.9 gallon fuel tank capacity",
+      "53.9 cubic feet maximum cargo space"
+    ],
+    "Inscription": [
+      "Charcoal Perforated Fine Nappa Leather interior with Driftwood Inlays"
+    ],
+    "R-Design": [
+      "R-Design exterior styling package"
+    ],
+    "Momentum": [
+      "2.0L turbocharged inline 4-cylinder engine producing 250 hp",
+      "258 lb-ft maximum torque from 1,500-4,800 rpm",
+      "8-speed automatic Geartronic transmission",
+      "6.5 seconds 0-60 mph acceleration",
+      "14.5 gallon fuel tank capacity",
+      "50.9 cubic feet maximum cargo space"
+    ]
+  }
+}

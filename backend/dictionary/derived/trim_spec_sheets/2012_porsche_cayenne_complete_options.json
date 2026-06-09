@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2012_porsche_cayenne_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Cayenne",
+    "Cayenne"
+  ],
+  "year_min": 2010,
+  "year_max": 2014,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim.; 4.8L V8 Twin Turbo"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "4.8L V8 Turbo; Automatic 6-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2021|ford|explorer",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_llm_2021__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "LIMITED"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Ebony & Brunello luxury leather-trimmed seating",
+      "Available Premium Technology Package",
+      "Available Dual-Headrest Rear Seat Entertainment System",
+      "Available E-Z Entry 2nd-row seats",
+      "Available 2nd-row step-over center floor console"
+    ],
+    "LIMITED": [
+      "Available hands-free, foot-activated liftgate",
+      "Available 2nd-row USB and USB-C charge ports with 110V/150W AC power outlet",
+      "Available Cargo Area Management System with movable dividers",
+      "Available PowerFold feature for 2nd- and 3rd-row seats",
+      "Convenient step pads inside rear doors for cargo loading"
+    ]
+  }
+}

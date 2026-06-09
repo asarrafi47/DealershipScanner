@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2018|lexus|lc",
+  "year": 2018,
+  "make": "lexus",
+  "model": "LC",
+  "ladder_id": "brochure_2018__lexus__lc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds four-year/50,000-mile Lexus Limited Warranty",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds eight-year/100,000-mile Hybrid System Warranty",
+      "Adds zero-deductible coverage across all warranties"
+    ],
+    "Premium": [
+      "Adds infrared interior lighting available for additional charge",
+      "Upgraded to Mark Levinson premium audio system"
+    ]
+  }
+}

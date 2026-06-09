@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2021|toyota|mirai",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_2021__toyota__mirai",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Vehicle Stability Control system",
+      "Adds Includes Brake Assist technology",
+      "Adds Includes Smart Stop Technology",
+      "Adds Includes airbag supplemental restraint systems",
+      "Adds Includes engine immobilizer anti-theft system",
+      "Adds Includes Tire Pressure Monitor System",
+      "Adds Includes front and rear parking assist with automatic braking"
+    ],
+    "XLE": [
+      "Adds Intelligent Parking Assist system",
+      "Adds Qi wireless charging capability",
+      "Adds Safety Connect connected service trial"
+    ],
+    "Limited": [
+      "Adds Service Connect trial subscription",
+      "Adds Remote Connect connected service trial",
+      "Adds Wi-Fi Connect with 2GB trial data",
+      "Adds Destination Assist trial service",
+      "Adds Stolen Vehicle Locator capability"
+    ]
+  }
+}

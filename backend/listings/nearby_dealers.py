@@ -9,6 +9,45 @@ from typing import Any
 _DEFAULT_CAP = max(1, int(os.environ.get("NEARBY_DEALER_LIST_CAP", "10")))
 
 
+def _active_listing_counts(registry_ids: list[int]) -> dict[int, int]:
+    """Active inventory count per dealership registry id (missing ids → omitted; use ``.get(id, 0)``)."""
+    ids: list[int] = []
+    for raw in registry_ids:
+        try:
+            rid = int(raw)
+        except (TypeError, ValueError):
+            continue
+        if rid > 0:
+            ids.append(rid)
+    if not ids:
+        return {}
+
+    from backend.db.inventory_db import get_conn
+
+    placeholders = ",".join("?" * len(ids))
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT CAST(dealership_registry_id AS INTEGER) AS rid, COUNT(*) AS n
+        FROM cars
+        WHERE COALESCE(listing_active, 1) = 1
+          AND CAST(dealership_registry_id AS INTEGER) IN ({placeholders})
+        GROUP BY CAST(dealership_registry_id AS INTEGER)
+        """,
+        ids,
+    )
+    rows = cur.fetchall()
+    conn.close()
+    out: dict[int, int] = {}
+    for rid_raw, count_raw in rows:
+        try:
+            out[int(rid_raw)] = int(count_raw)
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
 def _dealers_with_inventory_near(
     lat: float,
     lon: float,

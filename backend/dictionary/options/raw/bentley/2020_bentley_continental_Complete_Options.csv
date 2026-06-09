@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2020,bentley,continental,GT,4.0L V8 (SIDI),4.0L V8 Twin Turbo,Twin Turbocharged,Automatic (AM-S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,16,26,19,,,,,
+2020,bentley,continental,GT Convertible,6.0L V12 (SIDI & PFI),6.0L V12 Twin Turbo,Twin Turbocharged,Automatic (AM-S8),All-Wheel Drive,Premium Gasoline,Minicompact Cars,12,6.0,12,19,15,,,,,
+2020,bentley,continental,GT,6.0L V12 (SIDI & PFI),6.0L V12 Twin Turbo,Twin Turbocharged,Automatic (AM-S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,12,6.0,12,20,15,,,,,

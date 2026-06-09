@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2023|acura|rdx",
+  "year": 2023,
+  "make": "acura",
+  "model": "rdx",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2023_acura_rdx_Brochure.pdf",
+  "page_count": 19,
+  "all_pages": false,
+  "trim_hint_pages": [
+    2,
+    3
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 2,
+      "trim_hint": true,
+      "text": "2023\nTable of Contents\nPricing 2\nPackages 3\nTechnology Package 3\nAdvance Package 4\nA-Spec\u00ae Package 5\nA-Spec\u00ae Advance Package 6\nSpecifications 7\nStandard Features 12\nWarranties 16\nDisclaimers 17\n\u00a92022 Acura Page 1 of 18",
+      "table_lines": [
+        "2023\nTable of Contents\nPricing 2\nPackages 3\nTechnology Package 3\nAdvance Package 4\nA-Spec\u00ae Package 5\nA-Spec\u00ae Advance Package 6\nSpecifications 7\nStandard Features 12\nWarranties 16\nDisclaimers 17\n\u00a92022 Acura Page 1 of 18"
+      ]
+    },
+    {
+      "page": 3,
+      "trim_hint": true,
+      "text": "2023\nPri cing\n2023 RDX TRIM LEVELS (Configuration Options)\nRDX 2.0L Turbo 10-AT FWD Starting at: $41,7501\nRDX 2.0L Turbo 10-AT FWD with Technology Package Starting at: $44,4001\nRDX 2.0L Turbo 10-AT FWD with A-Spec\u00ae Package Starting at: $47,4001\nRDX 2.0L Turbo 10-AT SH-AWD\u00ae Starting at: $43,9501\nRDX 2.0L Turbo 10-AT SH-AWD with Technology Package Starting at: $46,6001\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Package Starting at: $49,6001\nRDX 2.0L Turbo 10-AT SH-AWD with Advance Package Starting at: $51,7501\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package Starting at: $53,7501\n\u00a92022 Acura Page 2 of 18",
+      "table_lines": [
+        "2023\nPri cing\n2023 RDX TRIM LEVELS (Configuration Options)\nRDX 2.0L Turbo 10-AT FWD Starting at: $41,7501\nRDX 2.0L Turbo 10-AT FWD with Technology Package Starting at: $44,4001\nRDX 2.0L Turbo 10-AT FWD with A-Spec\u00ae Package Starting at: $47,4001\nRDX 2.0L Turbo 10-AT SH-AWD\u00ae Starting at: $43,9501\nRDX 2.0L Turbo 10-AT SH-AWD with Technology Package Starting at: $46,6001\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Package Starting at: $49,6001\nRDX 2.0L Turbo 10-AT SH-AWD with Advance Package Starting at: $51,7501\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package Starting at: $53,7501\n\u00a92022 Acura Page 2 of 18",
+        "RDX 2.0L Turbo 10-AT FWD with Technology Package | Starting at: $44,4001",
+        "RDX 2.0L Turbo 10-AT SH-AWD with Technology Package | Starting at: $46,6001",
+        "RDX 2.0L Turbo 10-AT SH-AWD with Advance Package | Starting at: $51,7501",
+        "RDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package Starting at: $53,7501"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\n2023\nTable of Contents\nPricing 2\nPackages 3\nTechnology Package 3\nAdvance Package 4\nA-Spec\u00ae Package 5\nA-Spec\u00ae Advance Package 6\nSpecifications 7\nStandard Features 12\nWarranties 16\nDisclaimers 17\n\u00a92022 Acura Page 1 of 18\n\n2023\nTable of Contents\nPricing 2\nPackages 3\nTechnology Package 3\nAdvance Package 4\nA-Spec\u00ae Package 5\nA-Spec\u00ae Advance Package 6\nSpecifications 7\nStandard Features 12\nWarranties 16\nDisclaimers 17\n\u00a92022 Acura Page 1 of 18\n\n--- page 3 ---\n2023\nPri cing\n2023 RDX TRIM LEVELS (Configuration Options)\nRDX 2.0L Turbo 10-AT FWD Starting at: $41,7501\nRDX 2.0L Turbo 10-AT FWD with Technology Package Starting at: $44,4001\nRDX 2.0L Turbo 10-AT FWD with A-Spec\u00ae Package Starting at: $47,4001\nRDX 2.0L Turbo 10-AT SH-AWD\u00ae Starting at: $43,9501\nRDX 2.0L Turbo 10-AT SH-AWD with Technology Package Starting at: $46,6001\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Package Starting at: $49,6001\nRDX 2.0L Turbo 10-AT SH-AWD with Advance Package Starting at: $51,7501\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package Starting at: $53,7501\n\u00a92022 Acura Page 2 of 18\n\n2023\nPri cing\n2023 RDX TRIM LEVELS (Configuration Options)\nRDX 2.0L Turbo 10-AT FWD Starting at: $41,7501\nRDX 2.0L Turbo 10-AT FWD with Technology Package Starting at: $44,4001\nRDX 2.0L Turbo 10-AT FWD with A-Spec\u00ae Package Starting at: $47,4001\nRDX 2.0L Turbo 10-AT SH-AWD\u00ae Starting at: $43,9501\nRDX 2.0L Turbo 10-AT SH-AWD with Technology Package Starting at: $46,6001\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Package Starting at: $49,6001\nRDX 2.0L Turbo 10-AT SH-AWD with Advance Package Starting at: $51,7501\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package Starting at: $53,7501\n\u00a92022 Acura Page 2 of 18\nRDX 2.0L Turbo 10-AT FWD with Technology Package | Starting at: $44,4001\nRDX 2.0L Turbo 10-AT SH-AWD with Technology Package | Starting at: $46,6001\nRDX 2.0L Turbo 10-AT SH-AWD with Advance Package | Starting at: $51,7501\nRDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package Starting at: $53,7501"
+}

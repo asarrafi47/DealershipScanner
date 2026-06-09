@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2015|toyota|4runner",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2015__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trail Premium",
+    "Trail",
+    "SR5 Premium",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Front and rear parking assist sonar",
+      "Smart Key System with Push Button Start and remote illuminated entry",
+      "X-REAS Sport Enhancement Suspension",
+      "20-inch split 6-spoke alloy wheels with P245/60R20 tires",
+      "Perforated leather-trimmed, heated and ventilated front seats with driver memory",
+      "Entune Premium JBL Audio with Navigation and App Suite",
+      "Dual zone automatic climate control with air filter and second-row vents",
+      "Leather-trimmed 50/50 split fold-flat third-row seat with one-touch access"
+    ],
+    "Trail Premium": [
+      "Power tilt/slide moonroof with sunshade",
+      "Heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed, heated front seats with 8-way power-adjustable driver seat and lumbar",
+      "SofTex-trimmed 40/20/40 split reclining fold-flat second-row seat",
+      "Entune Premium Audio with Navigation, App Suite, and 6.1-inch touchscreen"
+    ],
+    "Trail": [
+      "Downhill Assist Control (DAC) on all models",
+      "Overhead console with Multi-terrain Select and Crawl Control switches",
+      "Locking rear differential",
+      "17-inch 7-spoke alloy wheels with P265/70R17 tires",
+      "Skid plates on engine, front suspension, fuel tank, and transfer case",
+      "Integrated fog lights"
+    ],
+    "SR5 Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "Power tilt/slide moonroof with sunshade",
+      "SofTex-trimmed, heated front seats with 8-way power-adjustable driver seat and lumbar",
+      "SofTex-trimmed 40/20/40 split reclining fold-flat second-row seat",
+      "Entune Premium Audio with Navigation, App Suite, and 6.1-inch touchscreen"
+    ],
+    "SR5": [
+      "4.0-liter DOHC 24-valve V6 engine with 270 hp and 278 lb-ft torque",
+      "5-speed electronically controlled automatic transmission with sequential shift mode",
+      "Projector-beam headlights with smoked trim",
+      "17-inch 6-spoke alloy wheels with P265/70R17 tires",
+      "Fabric-trimmed front seats with 8-way power-adjustable driver and 4-way passenger",
+      "Fabric-trimmed 40/20/40 split reclining fold-flat second-row seat",
+      "Entune Audio Plus with 6.1-inch touchscreen, HD Radio, and SiriusXM"
+    ]
+  }
+}

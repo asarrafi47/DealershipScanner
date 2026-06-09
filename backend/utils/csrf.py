@@ -24,6 +24,8 @@ def validate_csrf_form() -> Response | None:
     supplied = (request.form.get("csrf_token") or "").strip()
     if not expected or not supplied or not secrets.compare_digest(supplied, expected):
         ep = request.endpoint or ""
+        if ep in ("dev.admin_login", "dev.admin_register"):
+            return redirect(url_for("dev.admin_login", _error="session_expired"))
         if "login" in ep:
             return redirect(url_for("login_page", _error="session_expired"))
         abort(403)

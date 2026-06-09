@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2017|hyundai|azera",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Azera",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

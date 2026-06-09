@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2014|lexus|gs",
+  "year": 2014,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "brochure_web_2014__lexus__gs",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "GS 350 F SPORT Black Line AWD",
+    "GS 350 F SPORT Black Line RWD",
+    "GS 350 F SPORT AWD",
+    "GS 350 F SPORT RWD",
+    "GS 350 RWD",
+    "GS 350 AWD"
+  ],
+  "adds_by_trim": {
+    "GS 350 F SPORT RWD": [
+      "19-inch machined finish alloy wheels",
+      "F Sport front and rear fascias",
+      "Sport-tuned adaptive variable suspension",
+      "Upsized front brakes",
+      "Rear lip spoiler",
+      "Aluminum interior trim",
+      "F Sport door sill plates",
+      "Unique perforated leather interior",
+      "Black headliner",
+      "LFA-inspired instrument cluster"
+    ],
+    "GS 350 F SPORT AWD": [
+      "All-wheel drive capability with six-speed automatic transmission"
+    ],
+    "GS 350 F SPORT Black Line RWD": [
+      "Black Line limited edition styling package"
+    ],
+    "GS 350 F SPORT Black Line AWD": [
+      "All-wheel drive capability with six-speed automatic transmission",
+      "Black Line limited edition styling package"
+    ],
+    "GS 350 RWD": [
+      "3.5-liter V-6 engine with 311 hp and 280 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "18-inch alloy wheels",
+      "LED headlights and daytime running lights",
+      "Heated auto-dimming power-folding side mirrors with puddle lights",
+      "Power moonroof",
+      "Leatherette upholstery",
+      "10-way power front seats",
+      "Power tilt and telescope steering wheel",
+      "12.3-inch infotainment system with built-in navigation"
+    ],
+    "GS 350 AWD": [
+      "All-wheel drive capability with six-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lexus/gs/"
+}

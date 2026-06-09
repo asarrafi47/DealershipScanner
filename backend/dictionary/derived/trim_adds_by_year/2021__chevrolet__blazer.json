@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2021|chevrolet|blazer",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Blazer",
+  "ladder_id": "brochure_llm_2021__chevrolet__blazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "3LT",
+    "2LT",
+    "1LT",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "Signature bright chrome-accented grille with chrome header",
+      "Silver-painted roof rails and chrome-accented door handles",
+      "20-inch aluminum wheels or available 21-inch Pearl Nickel-painted wheels",
+      "Integrated rectangular dual-outlet exhaust",
+      "Standard 2.0L Turbo or available 3.6L V6 engine",
+      "Maple Sugar or Jet Black leather-appointed seating with sueded microfiber inserts",
+      "Heated and ventilated front seats and heated rear outboard seats"
+    ],
+    "RS": [
+      "3.6L V6 engine standard, generating 308 horsepower and 270 lb.-ft. torque"
+    ],
+    "3LT": [
+      "2.0L Turbo standard with 227 horsepower and 258 lb.-ft. torque",
+      "Available 3.6L V6 engine option"
+    ],
+    "2LT": [
+      "2.0L Turbo standard with 227 horsepower and 258 lb.-ft. torque",
+      "Available 3.6L V6 engine option"
+    ],
+    "1LT": [
+      "2.5L engine standard with 193 horsepower and 188 lb.-ft. torque",
+      "Available trailering equipment capacity of 4,500 lbs."
+    ],
+    "L": [
+      "2.5L engine standard with 193 horsepower and 188 lb.-ft. torque",
+      "High-intensity discharge headlamps",
+      "Automatic on/off headlamps with automatic delay",
+      "Manual liftgate",
+      "Body-color door handles"
+    ]
+  }
+}

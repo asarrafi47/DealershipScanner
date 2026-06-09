@@ -1,0 +1,58 @@
+{
+  "ladder_id": "bmw_x5",
+  "make": "BMW",
+  "models": [
+    "X5",
+    "X5 M",
+    "X5 xDrive40i",
+    "X5 xDrive50i",
+    "X5 xDrive45e",
+    "X5 M60i",
+    "X5 M50i"
+  ],
+  "year_min": 2014,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M Competition": [
+      {
+        "label": "Engine Options",
+        "value": "617 hp twin-turbo V8"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "M Carbon exterior package and bucket seats"
+      }
+    ],
+    "M60i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "523 hp twin-turbo V8 with mild hybrid; 3.0L I6 Turbo"
+      }
+    ],
+    "xDrive50i": [
+      {
+        "label": "Engine Options",
+        "value": "456 hp twin-turbo V8 with xDrive AWD (2019–2020); 523 hp twin-turbo V8 on 2021–2023 model years; 4.4L V8 Twin Turbo"
+      }
+    ],
+    "xDrive40i": [
+      {
+        "label": "Engine Options",
+        "value": "375 hp turbocharged inline-six with xDrive AWD"
+      }
+    ],
+    "sDrive40i": [
+      {
+        "label": "Engine Options",
+        "value": "375 hp turbocharged inline-six with rear-wheel drive"
+      }
+    ],
+    "xDrive45e": [
+      {
+        "label": "Engine Options",
+        "value": "Plug-in hybrid inline-six with xDrive AWD; Combined turbo and electric output"
+      }
+    ]
+  }
+}

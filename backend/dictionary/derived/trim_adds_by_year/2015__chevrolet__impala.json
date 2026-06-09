@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2015|chevrolet|impala",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2015__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Impala LTZ",
+    "Impala 3LT Bi-Fuel CNG",
+    "Impala LT",
+    "Impala 2FL Bi-Fuel CNG",
+    "Impala LS"
+  ],
+  "adds_by_trim": {
+    "Impala LTZ": [
+      "3.6L DOHC V6 engine with 305 hp and 264 lb-ft torque",
+      "Dual-outlet exhaust with bright tips integrated into fascia",
+      "19-inch machined-face aluminum wheels",
+      "High-intensity discharge HID headlamps",
+      "Leather-appointed seating",
+      "8-way power-adjustable front passenger seat",
+      "Heated front seats",
+      "Interior ambient lighting",
+      "Chrome door handles with body-color strip",
+      "Keyless Access with Push-Button Start"
+    ],
+    "Impala 3LT Bi-Fuel CNG": [
+      "3.6L DOHC V6 Bi-Fuel CNG engine with dual-fuel capability",
+      "245 hp on gas, 206 hp on CNG with corresponding torque ratings"
+    ],
+    "Impala LT": [
+      "18-inch painted-aluminum wheels",
+      "Outside heated power-adjustable mirrors with body-color caps and turn signal indicators",
+      "Upper and lower LED daytime running lamps",
+      "Chevrolet MyLink 7-inch radio with 8-inch diagonal color touchscreen",
+      "Bluetooth audio streaming",
+      "Three USB ports including two in center console",
+      "SD card reader",
+      "6-speaker sound system with 100-watt amplifier",
+      "Remote Keyless Entry",
+      "Rear window defogger"
+    ],
+    "Impala 2FL Bi-Fuel CNG": [
+      "3.6L DOHC V6 engine with Bi-Fuel Compressed Natural Gas CNG fuel system"
+    ],
+    "Impala LS": [
+      "ECOTEC 2.5L direct-injected 4-cylinder engine with stop/start technology",
+      "6-speed automatic transmission with overdrive",
+      "10 standard air bags including dual-stage frontal and thorax side-impact",
+      "StabiliTrak Electronic Stability Control System",
+      "Dual-zone automatic climate control",
+      "Hill Start Assist",
+      "18-inch steel wheels with fascia-spoke wheel covers",
+      "Projector-beam halogen headlamps",
+      "Outside power-adjustable black mirrors",
+      "Leather-wrapped steering wheel and shift knob"
+    ]
+  }
+}

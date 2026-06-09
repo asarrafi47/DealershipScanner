@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2022|hyundai|accent",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Accent",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

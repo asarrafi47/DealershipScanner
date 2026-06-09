@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2017|gmc|acadia",
+  "year": 2017,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_llm_2017__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT-2",
+    "SLT-1",
+    "SLE-2",
+    "SLE-1",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "High-Intensity Discharge headlamps with IntelliBeam automatic high-beam on/off",
+      "Signature Denali grille",
+      "Denali-specific body-color bodyside molding with chrome insert and rocker molding",
+      "Bright Denali-specific roof rails",
+      "Power liftgate with programmable hands-free operation",
+      "Driver Alert Package II: Lane Departure Warning, Low-Speed Front Automatic Braking, Front Pedestrian Braking",
+      "Memory package for driver seat and outside rearview mirrors",
+      "Heated power-adjustable mirrors with driver-side auto-dimming and memory feature"
+    ],
+    "SLT-2": [
+      "8-inch diagonal Color Touch Audio System with navigation and NavTraffic",
+      "Heated power-adjustable mirrors with driver-side auto-dimming and memory feature on SLT-2",
+      "Power liftgate with programmable operation",
+      "Memory package for driver seat and outside rearview mirrors"
+    ],
+    "SLT-1": [
+      "8-inch diagonal Color Touch Audio System with HD Radio and Bluetooth",
+      "Traileering Package: Class III hitch with 4000-lb capacity and 7-pin wiring harness",
+      "Active Tow System",
+      "Front halogen projector-type fog lamps",
+      "Heated power-adjustable mirrors with manual-folding and memory feature",
+      "Silver roof rails",
+      "Driver Alert Package I: Lane Change Alert with Side Blind Zone Alert and Rear Park Assist"
+    ],
+    "SLE-2": [
+      "7-inch diagonal Color Touch Audio System with Apple CarPlay and Android Auto",
+      "SiriusXM Satellite Radio with 3 trial months",
+      "Front halogen projector-type fog lamps",
+      "LED daytime running lamps",
+      "Rear USB charge-only ports in second and third rows",
+      "Driver Alert Package I available: Lane Change Alert with Side Blind Zone Alert and Rear Park Assist",
+      "8-speaker Bose premium sound system with subwoofer available"
+    ],
+    "SLE-1": [
+      "7-inch diagonal Color Touch Audio System with Apple CarPlay and Android Auto",
+      "SiriusXM Satellite Radio with 3 trial months",
+      "LED daytime running lamps",
+      "Rear USB charge-only ports in second and third rows",
+      "6-speaker audio system",
+      "OnStar 5-year Basic Plan with 6 months Guidance Plan"
+    ],
+    "LS": [
+      "Dual halogen projector-beam headlamps",
+      "LED taillamps and daytime running lamps",
+      "Heated power-adjustable manual-folding body-color outside mirrors",
+      "Manual liftgate",
+      "Privacy Solar-Ray glass except windshield and front side windows",
+      "Chrome grille surround and accents",
+      "Active grille shutters on 4-cylinder models",
+      "Front and rear intermittent wipers with washers",
+      "OnStar 5-year Basic Plan with 6 months Guidance Plan and 4G LTE Wi-Fi hotspot",
+      "Tire Pressure Monitoring System and Vehicle Theft-Deterrent System"
+    ]
+  }
+}

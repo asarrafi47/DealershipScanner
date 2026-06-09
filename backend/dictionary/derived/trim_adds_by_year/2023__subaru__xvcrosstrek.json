@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2023|subaru|xvcrosstrek",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2023__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crosstrek Limited",
+    "Crosstrek Sport",
+    "Crosstrek Special Edition",
+    "Crosstrek Premium",
+    "Crosstrek"
+  ],
+  "adds_by_trim": {
+    "Crosstrek Limited": [
+      "2.5-liter BOXER engine with 182 hp and 176 lb-ft torque",
+      "X-MODE with dual Snow/Dirt and Deep Snow/Mud modes standard",
+      "Hill Descent Control (HDC) incorporated with X-MODE",
+      "CVT with 28/33/30 mpg fuel economy"
+    ],
+    "Crosstrek Sport": [
+      "2.5-liter BOXER engine with 182 hp and 176 lb-ft torque",
+      "X-MODE with dual Snow/Dirt and Deep Snow/Mud modes standard",
+      "Hill Descent Control (HDC) incorporated with X-MODE",
+      "CVT with 28/33/30 mpg fuel economy"
+    ],
+    "Crosstrek Special Edition": [
+      "X-MODE with single mode system standard",
+      "Hill Descent Control (HDC) incorporated with X-MODE"
+    ],
+    "Crosstrek Premium": [
+      "SI-DRIVE with two distinctive performance modes",
+      "Auto Start-Stop System",
+      "Lineartronic CVT with 8-speed manual-mode and paddle shifters",
+      "X-MODE available as optional feature"
+    ],
+    "Crosstrek": [
+      "2.0-liter BOXER engine with 152 hp and 145 lb-ft torque",
+      "Fully synchronized 6-speed manual transmission with Incline Start Assist",
+      "Subaru Symmetrical All-Wheel Drive",
+      "Vehicle Dynamics Control with Traction Control System",
+      "Active Torque Vectoring for sharper cornering"
+    ]
+  }
+}

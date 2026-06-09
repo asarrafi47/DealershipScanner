@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2007,Volvo,V50,AWD,2.5L V5,2.5L V5 Turbo,Turbocharged,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,5,2.5,17,25,20,,,,,
+2007,Volvo,V50,AWD,2.5L V5,2.5L V5 Turbo,Turbocharged,Automatic (S5),All-Wheel Drive,Premium Gasoline,Small Station Wagons,5,2.5,18,26,21,,,,,
+2007,Volvo,V50,FWD,2.4L V5,2.4L V5 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,5,2.4,19,27,22,,,,,
+2007,Volvo,V50,FWD,2.4L V5,2.4L V5 Turbo,Turbocharged,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Small Station Wagons,5,2.4,20,28,23,,,,,
+2007,Volvo,V50,FWD,2.5L V5,2.5L V5 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,5,2.5,18,27,22,,,,,
+2007,Volvo,V50,FWD,2.5L V5,2.5L V5 Turbo,Turbocharged,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Small Station Wagons,5,2.5,19,28,22,,,,,

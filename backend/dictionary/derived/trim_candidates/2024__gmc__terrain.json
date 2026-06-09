@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2024|gmc|terrain",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Terrain",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "SLT",
+    "SLE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

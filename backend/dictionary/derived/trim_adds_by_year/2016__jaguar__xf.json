@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2016|jaguar|xf",
+  "year": 2016,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_2016__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes Jaguar InControl infotainment system",
+      "Adds Features SiriusXM satellite radio with 3-month trial subscription",
+      "Adds Includes standard safety features and driver assistance systems"
+    ],
+    "SE": [
+      "All-wheel drive system",
+      "296 hp turbocharged four-cylinder engine with 295 lb-ft torque",
+      "0–60 mph acceleration in 6.5 seconds",
+      "22/30 mpg city/highway fuel economy"
+    ],
+    "Sport": [
+      "Sport style front bumper with body-colored finish",
+      "Grained Black front grille with Bright Chrome surround",
+      "Bright Chrome window and trunk plinth finishers",
+      "Bright Chrome side power vents",
+      "Sport-style front seats",
+      "'R-SPORT' badging on side power vents and door sill finishers",
+      "Rear spoiler with body-colored trunk-mounted design",
+      "Rear folding 40/20/40 split seat"
+    ],
+    "LT": [],
+    "Premium": [
+      "3-stage heated rear seats",
+      "Blue halo illumination on door signature lines and release buttons"
+    ],
+    "Limited": [],
+    "Platinum": []
+  }
+}

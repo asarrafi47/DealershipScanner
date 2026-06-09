@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2023|nissan|versa",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2023__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "17-inch machine-finished aluminum-alloy wheels",
+      "LED headlights with LED signature and LED turn signal indicators",
+      "Black-painted heated outside mirrors",
+      "Intelligent Cruise Control",
+      "NissanConnect 8-inch color touchscreen display",
+      "NissanConnect Services powered by SiriusXM with 5-year Select and 6-month Premium trial",
+      "AM/FM audio system with six speakers",
+      "Leather-wrapped steering wheel",
+      "Heated front seats",
+      "Prima-Tex-appointed dash trim with sport cloth seat trim"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "7-inch advanced drive-assist display",
+      "NissanConnect 7-inch color touchscreen display",
+      "Apple CarPlay integration",
+      "Android Auto compatibility",
+      "One USB-A port and two USB-C ports with wireless charger",
+      "Blind spot warning",
+      "Rear cross traffic alert",
+      "Remote keyless entry with push button ignition",
+      "Body-color outside mirrors"
+    ],
+    "S": [
+      "122-hp 1.6-liter DOHC 4-cylinder engine",
+      "5-speed manual transmission with available Xtronic CVT",
+      "Intelligent forward collision warning with automatic emergency braking and pedestrian detection",
+      "Rear automatic braking",
+      "Lane departure warning",
+      "High beam assist",
+      "RearView monitor",
+      "7-inch color touchscreen display",
+      "Bluetooth hands-free phone system with streaming audio",
+      "Siri Eyes Free"
+    ]
+  }
+}

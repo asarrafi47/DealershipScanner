@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|tesla|models",
+  "year": 2016,
+  "make": "tesla",
+  "model": "Model S",
+  "ladder_id": "brochure_llm_2016__tesla__models",
+  "source": "brochure_llm",
+  "trims_available": [
+    "85 kWh Performance All-Wheel Drive",
+    "85 kWh All-Wheel Drive",
+    "85 kWh Rear Wheel Drive",
+    "70 kWh All-Wheel Drive"
+  ],
+  "adds_by_trim": {
+    "85 kWh Performance All-Wheel Drive": [
+      "Carbon fiber spoiler",
+      "Tesla red brake calipers"
+    ],
+    "85 kWh All-Wheel Drive": [
+      "All-wheel drive powertrain versus rear-wheel drive"
+    ],
+    "85 kWh Rear Wheel Drive": [
+      "85 kWh battery capacity versus 70 kWh"
+    ],
+    "70 kWh All-Wheel Drive": [
+      "Forward-looking camera, radar, and 360-degree sonar sensors",
+      "Automatic keyless entry",
+      "Power-folding and heated mirrors",
+      "LED daytime running lights",
+      "Parking sensors",
+      "Lane departure warning",
+      "Automatic emergency braking",
+      "Supercharging enabled",
+      "GPS enabled Homelink",
+      "8-year, infinite-mile battery and drive unit warranty"
+    ]
+  }
+}

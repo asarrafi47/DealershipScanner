@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2014|ford|taurus",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_llm_2014__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "Equipment Group 200A with SYNC with MyFord Touch voice-activated connectivity",
+      "8-inch LCD color touch screen in center stack with media hub",
+      "2 USB ports, SD card reader, and audio/video input jacks",
+      "Additional center channel speaker for audio system",
+      "Power-adjustable pedals",
+      "Reverse Sensing System with rear view camera",
+      "18-inch Sparkle Silver-painted aluminum wheels with P235/55R18 all-season tires",
+      "Body-color, power, heated sideview mirrors with security approach lamps",
+      "LED supplemental park lamps"
+    ],
+    "SE": [
+      "3.5L Ti-VCT V6 engine with 6-speed SelectShift automatic transmission",
+      "Sport Mode and shifter button activation",
+      "Front-wheel drive (FWD)",
+      "6-way power driver and front-passenger seats with manual lumbar adjustment",
+      "Cloth seats",
+      "Dual-zone electronic automatic temperature control",
+      "Leather-wrapped steering wheel and shift knob with chrome trim",
+      "Auto-dimming rearview mirror",
+      "Message center with compass and outside temperature display",
+      "Remote Start System"
+    ]
+  }
+}

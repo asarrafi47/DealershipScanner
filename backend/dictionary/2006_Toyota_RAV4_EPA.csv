@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2006,Toyota,RAV4,2WD,2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,21,27,24,,,,,,2.4L I4,
-2006,Toyota,RAV4,2WD,3.5L V6,Automatic 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.5,19,27,22,,,,,,3.5L V6,
-2006,Toyota,RAV4,4WD,2.4L I4,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.4,20,25,22,,,,,,2.4L I4,
-2006,Toyota,RAV4,4WD,3.5L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.5,19,26,21,,,,,,3.5L V6,

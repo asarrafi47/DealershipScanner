@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2024_chevrolet_equinox_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Equinox",
+    "Equinox"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "LT": [
+      {
+        "label": "Interior Materials",
+        "value": "Leather seating became available on LT models with the Confidence and Convenience Package."
+      }
+    ],
+    "LS": [
+      {
+        "label": "Engine Options",
+        "value": "Years Engine Power Torque"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Standard interior features include heated front seats, leather seating inserts,"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Bose audio | 7-speaker system; [Brochure] Bose audio | 7-speaker system"
+      }
+    ]
+  }
+}

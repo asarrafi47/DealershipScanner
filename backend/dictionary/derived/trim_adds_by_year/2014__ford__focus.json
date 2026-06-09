@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|ford|focus",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_llm_2014__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ST",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "ST": [
+      "Body kit with custom graphics and molded splash guards",
+      "Rear spoiler",
+      "18-inch Rado Gray wheels",
+      "ST full vehicle cover",
+      "Roof-mounted crossbars by THULE",
+      "Interior light kit with painted pockets",
+      "Illuminated gear shift knob (manual transmission)",
+      "Portable DVD rear-seat entertainment system by NextBase",
+      "Rear bumper protector"
+    ],
+    "SE": [
+      "5-person seating capacity",
+      "4-way manual driver's seat adjustment",
+      "2-way manual front-passenger seat adjustment",
+      "4-way adjustable front head restraints",
+      "Removable rear head restraints",
+      "Rear fold-down bench seat",
+      "Tilt/telescoping steering column",
+      "Power door locks"
+    ],
+    "S": [
+      "2.0L Ti-VCT GDI I-4 FFV engine with 160 hp",
+      "Active grille shutters",
+      "Anti-lock brake system (ABS)",
+      "Front-wheel drive with independent MacPherson strut suspension",
+      "Torque vectoring control",
+      "5-speed manual or PowerShift 6-speed automatic transmission",
+      "Easy Fuel capless fuel filler",
+      "Quad-beam halogen headlamps",
+      "Rear-window defroster",
+      "Solar-tinted glass with variable-intermittent wipers"
+    ]
+  }
+}

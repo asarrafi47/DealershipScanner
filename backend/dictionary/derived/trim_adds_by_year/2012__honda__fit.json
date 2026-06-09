@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2012|honda|fit",
+  "year": 2012,
+  "make": "Honda",
+  "model": "Fit",
+  "ladder_id": "generic_honda_fit",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "usb devices with security software and digital rights-protected files may not work. please see your honda dealer for details. 5 windows media® is a trademark or registered trademark of microsoft corporation in the united states and/or other countries."
+    ],
+    "Sport": [
+      "Steering wheel-mounted paddle shifters on 5-speed automatic transmission models",
+      "16-inch alloy wheels replacing 15-inch steel wheels",
+      "Power windows, door locks, and side mirrors",
+      "Tire Pressure Monitoring System",
+      "Vehicle Stability Assist with traction control on navigation model",
+      "Security system with remote entry",
+      "Fog lights",
+      "Body-colored underbody kit and rear roofline spoiler",
+      "Chrome exhaust finisher",
+      "Cruise control with illuminated steering wheel-mounted controls"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "LE": 1
+    }
+  }
+}

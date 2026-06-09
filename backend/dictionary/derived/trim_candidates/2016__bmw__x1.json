@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2016|bmw|x1",
+  "year": 2016,
+  "make": "BMW",
+  "model": "X1",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

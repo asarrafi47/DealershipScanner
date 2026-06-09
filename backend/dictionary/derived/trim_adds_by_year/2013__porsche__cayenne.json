@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|porsche|cayenne",
+  "year": 2013,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "2011_porsche_cayenne_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Turbo",
+    "GTS",
+    "Carrera",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Turbo": [
+      "Comfort and transport"
+    ],
+    "GTS": [
+      "ransport Comfort and t"
+    ],
+    "Carrera": [
+      "ransport Comfort and t"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.3333333333333333,
+    "per_trim_add_counts": {
+      "GTS": 1,
+      "Carrera": 0,
+      "Sport": 0
+    }
+  }
+}

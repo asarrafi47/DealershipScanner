@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|volkswagen|golf",
+  "year": 2019,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "brochure_llm_2019__volkswagen__golf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "8-inch color touchscreen Media sound system (vs. 6.5-inch Composition)",
+      "Volkswagen Car-Net App-Connect with smartphone integration",
+      "Heated front seats",
+      "V-Tex leatherette seating surfaces",
+      "Adaptive Cruise Control (ACC) with Driver Assistance Package",
+      "Lane Keeping System (Lane Assist) with Driver Assistance Package",
+      "High Beam Control (Light Assist) with Driver Assistance Package",
+      "16-inch split-V alloy wheels (vs. 15-inch base)",
+      "17-inch alloy wheel option"
+    ],
+    "S": [
+      "1.4L TSI turbocharged 4-cylinder engine with 147 hp and 184 lb-ft torque",
+      "6-speed manual or 8-speed automatic transmission with Tiptronic and Sport mode",
+      "6.5-inch color touchscreen Composition Media sound system",
+      "LED daytime running lights and LED taillights",
+      "Power tilting/sliding panoramic sunroof",
+      "15-inch alloy wheels",
+      "6-way partial power-adjustable front seats",
+      "Leather-wrapped multi-function steering wheel",
+      "Rear View Camera System",
+      "Forward Collision Warning and Autonomous Emergency Braking (Front Assist)"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2010|volvo|s40",
+  "year": 2010,
+  "make": "Volvo",
+  "model": "S40",
+  "ladder_id": "brochure_llm_2010__volvo__s40",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T5 AWD",
+    "T5",
+    "2.4i"
+  ],
+  "adds_by_trim": {
+    "T5 AWD": [
+      "2.5-liter turbocharged five-cylinder engine with 227 hp",
+      "Electronically controlled all-wheel drive system",
+      "236 ft-lbs torque at 1500-4800 rpm",
+      "0-60 mph in 6.6 seconds",
+      "Six-speed manual transmission",
+      "15 gallon fuel tank"
+    ],
+    "T5": [
+      "2.5-liter turbocharged five-cylinder engine with 227 hp",
+      "Light-pressure turbocharger with dual-charge air coolers",
+      "236 ft-lbs torque at 1500-4800 rpm",
+      "0-60 mph in 6.7 seconds automatic",
+      "Six-speed manual transmission option",
+      "15.9 gallon fuel tank"
+    ],
+    "2.4i": [
+      "2.4-liter five-cylinder engine with 168 hp",
+      "170 ft-lbs torque at 4400 rpm",
+      "Front wheel drive",
+      "Five-speed manual or Geartronic automatic transmission",
+      "Power-assisted electro-hydraulic rack and pinion steering with 2.9 turns lock to lock",
+      "McPherson front suspension with anti-dive and anti-lift",
+      "Multilink independent rear suspension",
+      "Power-assisted anti-lock disc brakes with EBA and EBD"
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2024|toyota|corollacross",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Corolla Cross",
+  "ladder_id": "brochure_llm_2024__toyota__corollacross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Nightshade",
+    "Hybrid SE",
+    "Hybrid S",
+    "XLE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Hybrid Nightshade": [
+      "Nightshade-exclusive dark-accented LED projector headlights with Automatic High Beams and auto on/off",
+      "18-inch Nightshade-exclusive alloy wheels with black-painted machined finish",
+      "Black rear spoiler and black cross bars",
+      "Black outside door handles and black rear liftgate garnish",
+      "Nightshade-exclusive Black/Red fabric-trimmed seating with red contrast stitching",
+      "Red contrast stitching on leather-trimmed steering wheel and shift boot",
+      "All-weather floor and cargo liners"
+    ],
+    "Hybrid SE": [
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators",
+      "17-inch silver-colored sport alloy wheels",
+      "Black roof rails and rear privacy glass",
+      "Rear windshield wiper",
+      "Leather-trimmed steering wheel with sport paddle shifters",
+      "Four total USB-C charging outlets"
+    ],
+    "Hybrid S": [
+      "Sport styling with sport front grille and front/rear bumpers with smoke-finished front Toyota emblem",
+      "All-black badging including AWD badge",
+      "Color-keyed rear spoiler and color-keyed outside door handles",
+      "LED projector low- and high-beam headlights and LED stop lights",
+      "Heated power outside mirrors",
+      "17-inch silver-colored sport alloy wheels"
+    ],
+    "XLE": [
+      "LED projector low- and high-beam headlights, LED front turn signals, LED taillights, and LED fog lights",
+      "18-inch alloy wheels with black-painted machined finish",
+      "Black grille with metallic paint surround",
+      "SofTex-trimmed seating with 10-way power-adjustable driver's seat with lumbar support",
+      "Heated front seats and satin-finish door handles",
+      "Leather shift knob",
+      "Front automatic dual-zone air conditioning"
+    ],
+    "LE": [
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators",
+      "17-inch silver-colored alloy wheels",
+      "Black roof rails and rear privacy glass",
+      "Rear windshield wiper",
+      "Leather-trimmed steering wheel",
+      "Four total USB-C charging outlets",
+      "Qi-compatible wireless smartphone charging",
+      "Smart Key System with Push Button Start"
+    ],
+    "L": [
+      "2.0-Liter 4-Cylinder engine with 169 hp and Continuously Variable Transmission",
+      "Front-Wheel Drive or available All-Wheel Drive",
+      "Color-keyed rear spoiler and color-keyed outside door handles",
+      "LED projector low- and high-beam headlights and LED stop lights",
+      "Heated power outside mirrors with 17-inch steel wheels and silver wheel covers",
+      "Fabric-trimmed seating with 60/40 split fold-flat second-row seats",
+      "Overhead console with maplights and Safety Connect button",
+      "4.2-inch Multi-Information Display, 8-inch touchscreen, wireless Android Auto and Apple CarPlay",
+      "Toyota Safety Sense 3.0, Star Safety System, and nine airbags"
+    ]
+  }
+}

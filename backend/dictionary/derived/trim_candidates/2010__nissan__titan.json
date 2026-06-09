@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|nissan|titan",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Titan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Pro-4X",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|acura|tsx",
+  "year": 2011,
+  "make": "acura",
+  "model": "tsx",
+  "ladder_id": "brochure_llm_2011__acura__tsx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TSX Technology Package",
+    "TSX"
+  ],
+  "adds_by_trim": {
+    "TSX Technology Package": [
+      "Acura Navigation System with Voice Recognition and Traffic Rerouting",
+      "Rearview camera",
+      "Acura/ELS Surround 415-watt Premium Audio System with 10 speakers and HDD media storage",
+      "DVD-Audio player with Dolby Pro Logic II",
+      "AcuraLink Real-Time Traffic and Weather",
+      "GPS-linked solar-sensing dual-zone automatic climate control",
+      "Song By Voice voice control",
+      "Remote-linked power-operated tailgate on Sport Wagon"
+    ],
+    "TSX": [
+      "201-hp 2.4-liter 16-valve DOHC i-VTEC 4-cylinder engine or 280-hp 3.5-liter V-6",
+      "5-speed automatic transmission with Sequential SportShift paddle shifters",
+      "6-speed manual transmission available on 4-cylinder Sedan",
+      "Front-wheel drive with double wishbone front and multi-link rear suspension",
+      "Electric variable power-assisted rack-and-pinion steering",
+      "17-inch or 18-inch aluminum-alloy wheels with high-performance all-season tires",
+      "Advanced Compatibility Engineering ACE body structure with Vehicle Stability Assist",
+      "Dual-stage multiple-threshold front airbags and side curtain airbags",
+      "Dual-zone automatic climate control with air filtration",
+      "Bluetooth HandsFreeLink wireless telephone interface"
+    ]
+  }
+}

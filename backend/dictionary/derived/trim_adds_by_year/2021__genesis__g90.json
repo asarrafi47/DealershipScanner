@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2021|genesis|g90",
+  "year": 2021,
+  "make": "genesis",
+  "model": "G90",
+  "ladder_id": "generic_genesis_g90",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "overlap front, side, roof strength and head restraint Google Assistant are trademarks of Google Inc. 24Genesis Connected Services is complimentary for 3 years and requires an active"
+    ],
+    "Limited": [
+      "overlap front, moderate"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Premium": 1
+    }
+  }
+}

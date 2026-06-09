@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|lexus|rc",
+  "year": 2018,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "brochure_llm_2018__lexus__rc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RC300 AWD FSPORT",
+    "RC300 AWD",
+    "RC300 FSPORT",
+    "RC300"
+  ],
+  "adds_by_trim": {
+    "RC300 FSPORT": [
+      "F SPORT-tuned suspension and steering",
+      "F SPORT-exclusive interior and exterior styling",
+      "Performance-oriented driving dynamics"
+    ],
+    "RC300 AWD": [
+      "All-wheel drive system with TORSEN limited-slip differential"
+    ],
+    "RC300 AWD FSPORT": [
+      "F SPORT-tuned suspension and steering",
+      "F SPORT-exclusive interior and exterior styling",
+      "All-wheel drive system with TORSEN limited-slip differential",
+      "Performance-oriented driving dynamics"
+    ],
+    "RC300": [
+      "Lexus Safety System+ with Pre-Collision System",
+      "Pedestrian Detection System",
+      "Lane Departure Alert with Steering Assist",
+      "Dynamic Radar Cruise Control",
+      "Intelligent high beams",
+      "Brake Assist with ABS",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty"
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2024|toyota|sienna",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2024__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Woodland Edition",
+    "XSE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Signature Bi-LED projector headlights with LED-strip DRL and auto on/off",
+      "Panoramic View Monitor (PVM)",
+      "Rain-sensing variable windshield wipers",
+      "Heated and ventilated front seats",
+      "Heated second-row captain's chairs with super-long-slide and ottomans",
+      "Leather-trimmed power tilt/telescopic steering wheel",
+      "10-in. color Head-Up Display (HUD)"
+    ],
+    "Limited": [
+      "Dark gray metallic front grille",
+      "18-in. bright wheels",
+      "Chrome roof rails",
+      "Rear lower bumper in black with chrome accent",
+      "Chrome-accented Sienna liftgate logo",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "Second-row captain's chairs with super-long-slide feature and ottomans"
+    ],
+    "Woodland Edition": [
+      "Increased ground clearance",
+      "Standard All-Wheel Drive (AWD)",
+      "Available in Cement or Midnight Black Metallic",
+      "Black lower grille garnish",
+      "Dark chrome upper grille garnish",
+      "Towing hitch receiver",
+      "18-in. dark wheels",
+      "Black roof rails with cross bars",
+      "Black Sienna liftgate logo and Black Toyota emblem"
+    ],
+    "XSE": [
+      "Sport-tuned suspension",
+      "Metallic black sport mesh front grille",
+      "Black heated power outside mirrors",
+      "20-in. dark wheels",
+      "Black rear lower bumper with sport mesh",
+      "Black roof-mounted shark-fin antenna",
+      "Driver Easy Speak",
+      "SofTex sport-trimmed seats with heated front seats"
+    ],
+    "XLE": [
+      "Available All-Wheel Drive (AWD)",
+      "Integrated wide-angle LED fog lights",
+      "Hands-free dual power sliding side doors",
+      "Power liftgate with jam protection and hands-free feature",
+      "Front and Rear Parking Assist with Automatic Rear Braking",
+      "Four-zone automatic climate control",
+      "Wireless charging surface",
+      "1500W power outlet",
+      "All-weather floor mats",
+      "Leather-trimmed tilt/telescopic steering wheel"
+    ],
+    "LE": [
+      "2.5L hybrid 4-cylinder engine with 245 net hp",
+      "Electronically controlled Continuously Variable Transmission with sequential shift",
+      "Normal, Eco, EV and Sport drive modes",
+      "LED headlights and LED DRL with auto on/off",
+      "LED taillights and stop lights",
+      "Dual power sliding side doors",
+      "17-in. alloy wheels",
+      "Three-zone automatic climate control",
+      "Seating for eight with second-row bench and stowable center seat",
+      "9-in. touchscreen with six speakers and SiriusXM trial"
+    ]
+  }
+}

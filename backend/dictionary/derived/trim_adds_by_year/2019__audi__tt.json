@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2019|audi|tt",
+  "year": 2019,
+  "make": "Audi",
+  "model": "TT",
+  "ladder_id": "brochure_llm_2019__audi__tt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TTS",
+    "TT"
+  ],
+  "adds_by_trim": {
+    "TTS": [
+      "2.0-liter turbocharged TFSI engine with 288 hp and 280 lb-ft torque",
+      "4.4-second 0–60 mph acceleration and 155 mph top track speed",
+      "13.3-inch ventilated front disc and 12.2-inch ventilated rear disc brakes",
+      "Audi magnetic ride suspension for enhanced handling and comfort",
+      "Four-piston fixed front calipers with S badging and red brake calipers",
+      "20-inch Audi Sport 10-Y-spoke or 5-V-spoke forged wheel options",
+      "S line sport suspension available as optional upgrade"
+    ],
+    "TT": [
+      "2.0-liter turbocharged TFSI engine with 228 hp and 258 lb-ft torque",
+      "5.2-second 0–60 mph acceleration and 130 mph top track speed",
+      "12.3-inch ventilated front disc and 11.8-inch solid rear disc brakes",
+      "MacPherson strut front and four-link rear suspension standard",
+      "18-inch 5-double-spoke forged dynamic design wheels standard",
+      "Aluminum hybrid construction with progressive steering",
+      "Multiple interior leather and Alcantara color options available"
+    ]
+  }
+}

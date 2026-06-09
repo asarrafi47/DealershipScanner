@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2022|subaru|outback",
+  "year": 2022,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_2022__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring XT",
+    "Touring",
+    "Wilderness",
+    "Limited XT",
+    "Limited",
+    "Onyx Edition",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [],
+    "Premium": [
+      "Adds body-color side mirrors with integrated turn signals",
+      "Adds privacy glass",
+      "Adds All-Weather Package with heated exterior mirrors and 3-mode heated front seats",
+      "Adds windshield wiper de-icer",
+      "Adds 10-way power-adjustable driver seat with manual lumbar support",
+      "Adds Apple CarPlay and Android Auto"
+    ],
+    "Onyx Edition": [
+      "Upgraded to 260-hp 2.4-liter turbocharged SUBARU BOXER engine with direct-injection and auto start-stop technology",
+      "Upgraded to Lineartronic CVT with 8-speed manual-mode paddle shifters",
+      "Upgraded to Dual-Mode X-MODE with Snow/Dirt and High Beam Assist Plus"
+    ],
+    "Limited": [
+      "Adds 18-inch aluminum-alloy wheels",
+      "Adds silver metallic finish front and rear bumper underguards",
+      "Adds Advanced Dual-Mode X-MODE with Snow/Dirt High Torque with low speed/low ratio gradient control and medium-to-high-speed gravel/dirt functions"
+    ],
+    "Limited XT": [
+      "Adds Hands-Free Power Rear Gate with vehicle lock button"
+    ],
+    "Wilderness": [
+      "Adds automatic tilt-down passenger side mirror",
+      "Adds Keyless Access with Push-Button Start"
+    ],
+    "Touring": [
+      "Adds roof rails with silver finish integrated retractable crossbars and 4 tie-down points",
+      "Adds body-color door handles with chrome inserts"
+    ],
+    "Touring XT": [
+      "Adds DriverFocus Distraction Mitigation System",
+      "Adds automatic power-folding exterior mirrors with satin chrome finish"
+    ]
+  }
+}

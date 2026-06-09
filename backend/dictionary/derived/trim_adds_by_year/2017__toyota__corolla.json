@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2017|toyota|corolla",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2017__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE",
+    "SE",
+    "SE 6MT",
+    "LE Eco",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Multi-LED headlights with LED accent lights",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Entune Audio Plus with Connected Navigation App and 7-inch touch-screen",
+      "SiriusXM Satellite Radio with 3-month complimentary trial",
+      "SofTex-trimmed front seats with 8-way power-adjustable driver's seat",
+      "Smart Key System with Push Button Start",
+      "Premium instrumentation cluster with 4.2-inch color TFT display",
+      "HD Radio Technology with traffic and weather"
+    ],
+    "SE": [
+      "Sporty front fascia with gloss-black mesh-pattern grille",
+      "17-inch machined alloy wheels with black-painted accents",
+      "Rear spoiler",
+      "Chrome-tipped exhaust",
+      "SofTex-trimmed front sport seats with premium fabric inserts",
+      "Sport instrumentation cluster with 4.2-inch color TFT display",
+      "Rear combination taillights with LED backup lights",
+      "Entune Audio Plus with Connected Navigation App and 7-inch display"
+    ],
+    "SE 6MT": [
+      "6-speed manual transmission",
+      "27 city/35 hwy/30 combined estimated mpg"
+    ],
+    "LE Eco": [
+      "1.8L 4-Cylinder Engine with Valvematic technology and 140 hp",
+      "30 city/40 hwy/34 combined estimated mpg",
+      "Rear spoiler",
+      "Multi-LED headlights with LED accent lights",
+      "CVT ECO Mode",
+      "LE Eco Premium Package option with moonroof and navigation"
+    ],
+    "LE": [
+      "Color-keyed heated power outside mirrors",
+      "16-inch machined alloy wheels with dark accents",
+      "Automatic climate control with dust and pollen filter",
+      "Premium fabric-trimmed 6-way adjustable driver's seat",
+      "Instrumentation cluster with 3.5-inch monochrome TFT Multi-Information Display",
+      "Metallic interior trim with chrome interior door handles",
+      "Integrated backup camera with projected path",
+      "Dynamic Radar Cruise Control and Lane Departure Alert with Steering Assist"
+    ],
+    "L": [
+      "1.8L 4-Cylinder Engine with 132 hp",
+      "Continuously Variable Transmission with intelligence and Shift Mode",
+      "Bi-LED headlights with LED Daytime Running Lights",
+      "15-inch styled steel wheels",
+      "Entune Audio with 6.1-inch touch-screen and Bluetooth connectivity",
+      "Tilt/telescopic steering wheel with audio and phone controls",
+      "Fabric-trimmed 6-way adjustable driver's seat",
+      "60/40 split fold-down rear seat",
+      "Toyota Safety Sense P with Pre-Collision System and eight airbags"
+    ]
+  }
+}

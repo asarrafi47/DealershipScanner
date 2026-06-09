@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2017|ford|edge",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_llm_2017__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium",
+    "Sport",
+    "SEL",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "Enhanced Active Park Assist with Parallel, Park Out, Reverse Perpendicular Parking and Forward/Side Sensing",
+      "Front 180-degree camera with washer",
+      "HID headlamps with auto high beams",
+      "Rain-sensing windshield wipers",
+      "Inflatable rear safety belts in outboard seating positions",
+      "Voice-activated Navigation System with pinch-to-zoom",
+      "Integrated SiriusXM Traffic and Travel Link with 5-year subscription",
+      "BLIS with cross-traffic alert",
+      "Remote Start System",
+      "Auto-dimming driver's sideview mirror"
+    ],
+    "Sport": [
+      "Lane-Keeping System",
+      "Enhanced Active Park Assist with Parallel, Park Out, Reverse Perpendicular Parking and Forward/Side Sensing",
+      "Front 180-degree camera with washer",
+      "HID headlamps with auto high beams",
+      "Rain-sensing windshield wipers",
+      "Heated and cooled front seats",
+      "Heated rear outboard seats",
+      "Panoramic Vista Roof"
+    ],
+    "SEL": [
+      "Perforated leather-trimmed seats",
+      "Heated and cooled front seats",
+      "Heated rear outboard seats",
+      "Panoramic Vista Roof",
+      "Voice-activated Navigation System with pinch-to-zoom",
+      "Integrated SiriusXM Traffic and Travel Link with 5-year subscription",
+      "BLIS with cross-traffic alert",
+      "Remote Start System",
+      "Auto-dimming driver's sideview mirror",
+      "110-volt converter power outlet"
+    ],
+    "ES": [
+      "SYNC 3 with 8-inch color LCD capacitive touchscreen and swiping capability",
+      "911 Assist",
+      "Two smart-charging USB ports",
+      "Leather-trimmed seats with heated front seats",
+      "Premium Audio System with 9 speakers"
+    ]
+  }
+}

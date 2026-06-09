@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2014|toyota|camry",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "2.5L 4-Cylinder Engine with 178 hp @ \u2022 2.5L 4-Cylinder Engine with 178 hp @ \u2022 2.5L 4-Cylinder Engine with 178 hp @ \u2022 Entune\u2122 Premium Audio with Navigation4",
+      "25 city/35 hwy/28 combined est. mpg12 \u2022 25 city/35 hwy/28 combined est. mpg12 est. mpg12 (includes SE Sport) Multimedia Bundle26 (6.1-in. high-resolution",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 3.5L V6 Engine with 268 hp @ 6200 rpm touch-screen with split-screen display, AM/",
+      "Exterior Features Exterior Features 25 combined est. mpg12 jack, USB 2.0 port8 with iPod\u00ae27 connectivity",
+      "6-speed automatic transmission and control, advanced voice recognition,7",
+      "16-in. steel wheels with wheel covers \u2022 Projector-beam halogen headlights with auto hands-free phone capability, phone book",
+      "Projector-beam halogen headlights on/off feature Exterior Features access and music streaming via Bluetooth\u00ae6",
+      "Color-keyed power outside mirrors with \u2022 Side rocker panels with chrome inserts wireless technology), HD Radio,\u212228 HD",
+      "Interior Features \u2022 18-in. alloy wheels (Sport and V6 only) overlay, AM/FM cache radio, SiriusXM",
+      "Interior Features \u2022 Remote keyless entry system \u2022 Projector-beam halogen headlights with Radio9 with 90-day All Access trial, and"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2017|ford|f150",
+  "year": 2017,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2017__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RAPTOR",
+    "LIMITED",
+    "KING RANCH",
+    "LARIAT",
+    "PLATINUM",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "RAPTOR": [
+      "Ready-for-anything off-road capability and performance focus"
+    ],
+    "LIMITED": [
+      "Ultimate luxury positioning and refinement"
+    ],
+    "KING RANCH": [
+      "Southwestern luxury styling and heritage branding"
+    ],
+    "LARIAT": [
+      "Large cabin with well-appointed interior appointments"
+    ],
+    "PLATINUM": [
+      "10-way power heated and cooled multicontour leather-trimmed driver and front-passenger seats",
+      "Rich luxury leather interior with Brunello color option",
+      "Flow-through front center console with leather-trimmed console lid and leather-wrapped floor shifter",
+      "Aluminum appliqué on center stack and console with ambient lighting in 7 hues",
+      "Heated rear outboard seats",
+      "New SYNC Connect standard",
+      "Sony audio system with 10 speakers and subwoofer",
+      "Heated steering wheel",
+      "8-inch productivity screen",
+      "Twin-panel moonroof on SuperCrew"
+    ],
+    "XLT": [
+      "Rugged exterior styling with chrome exhaust tip",
+      "Heavy-duty splash guards with stainless steel inserts",
+      "Step bars and stowable load ramps",
+      "Spray-in bedliner and hard-folding tonneau cover",
+      "Fog lamps",
+      "Carpeted floor mats",
+      "Hood deflector and side window deflectors"
+    ],
+    "XL": [
+      "Work-tough base truck configuration",
+      "40/20/40 seating configuration accommodating up to 6 passengers on SuperCrew and SuperCab",
+      "Enormous center console storage and storage pockets throughout cabin",
+      "SuperCrew and SuperCab body style options available"
+    ]
+  }
+}

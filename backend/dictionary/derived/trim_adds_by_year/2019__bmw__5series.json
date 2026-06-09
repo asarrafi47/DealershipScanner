@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2019|bmw|5series",
+  "year": 2019,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "brochure_llm_2019__bmw__5series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M550i xDrive",
+    "5 Series Sedan"
+  ],
+  "adds_by_trim": {
+    "M550i xDrive": [
+      "TwinPower Turbo engine with enhanced performance specifications",
+      "xDrive all-wheel drive system with rear bias for sporty handling",
+      "Active Roll Stabilization for improved stability and cornering",
+      "Adaptive M Suspension for dynamic ride quality adjustment",
+      "M Sport Brakes for enhanced stopping power",
+      "19-inch M Double-spoke wheels, style 664M",
+      "Full Merino Leather upholstery options (Caramel/Black or Tartufo)",
+      "Nappa Leather upholstery options with Dark Coffee dashboard accents"
+    ],
+    "5 Series Sedan": [
+      "8.8-inch Dynamic Digital Instrument Cluster",
+      "Bowers & Wilkins Diamond Surround Sound System",
+      "Intelligent lightweight construction",
+      "Integral Active Steering for first-class handling",
+      "Multiple exterior color options (non-metallic, metallic, and BMW Individual)",
+      "Dakota Leather and SensaTec upholstery selections",
+      "Multiple interior trim finishes (aluminum, wood, piano black)",
+      "18-inch to 20-inch wheel options with run-flat or non-run-flat tires",
+      "Comprehensive package options (Convenience, Luxury, M Sport, Premium, Driving Assistance Plus)"
+    ]
+  }
+}

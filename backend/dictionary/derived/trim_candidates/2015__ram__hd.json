@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2015|ram|hd",
+  "year": 2015,
+  "make": "ram",
+  "model": "HD",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Big Horn",
+    "Lone Star",
+    "Tradesman",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

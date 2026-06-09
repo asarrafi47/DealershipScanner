@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|mitsubishi|lancer",
+  "year": 2015,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_llm_2015__mitsubishi__lancer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LANCER EVOLUTION MR",
+    "LANCER EVOLUTION GSR",
+    "LANCER RALLIART",
+    "LANCER GT",
+    "LANCER SE",
+    "LANCER ES"
+  ],
+  "adds_by_trim": {
+    "LANCER EVOLUTION MR": [
+      "Performance-tuned suspension and braking system for Evolution MR variant"
+    ],
+    "LANCER EVOLUTION GSR": [
+      "Lancer Evolution GSR specific tuning and performance enhancements"
+    ],
+    "LANCER RALLIART": [
+      "Enhanced performance features over standard GT trim"
+    ],
+    "LANCER GT": [
+      "Upgraded interior and exterior styling compared to SE trim"
+    ],
+    "LANCER SE": [
+      "Enhanced standard features and convenience options"
+    ],
+    "LANCER ES": [
+      "Base model with standard seating, climate control, and essential safety systems"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2019|jaguar|ftype",
+  "year": 2019,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_llm_2019__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F-TYPE SVR",
+    "F-TYPE R",
+    "F-TYPE R-Dynamic",
+    "F-TYPE"
+  ],
+  "adds_by_trim": {
+    "F-TYPE SVR": [
+      "Carbon Fiber side power vents, hood vents, mirror caps, front bumper splitter, rear venturi",
+      "20-inch 10-spoke forged alloy wheels with Satin Black Diamond Turned finish",
+      "398mm front and 380mm carbon ceramic brakes with yellow calipers",
+      "SVR Carbon Ceramic Brake Package standard"
+    ],
+    "F-TYPE R": [
+      "Black Exterior Package standard with gloss black accents and vents",
+      "Bright metal pedals standard",
+      "Performance seats with suedecloth and Windsor leather available",
+      "380HP engine capability"
+    ],
+    "F-TYPE R-Dynamic": [
+      "Black Exterior Package standard with gloss black window surrounds and grille surround",
+      "Body-colored or carbon fiber exterior design packages available",
+      "Additional exterior styling options versus base F-TYPE",
+      "Performance-oriented exterior enhancements"
+    ],
+    "F-TYPE": [
+      "Bluetooth connectivity standard",
+      "10-inch Touch Pro infotainment system available",
+      "Navigation Pro available",
+      "Sirius XM satellite radio with 3-month trial subscription",
+      "Meridian Sound System 380W or 770W surround sound options",
+      "Climate Package options with heated steering wheel and seats",
+      "Windsor Leather or Suedecloth interior packages available",
+      "Aluminum roof standard with panoramic glass roof option"
+    ]
+  }
+}

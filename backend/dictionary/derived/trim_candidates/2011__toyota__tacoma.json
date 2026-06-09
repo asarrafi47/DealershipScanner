@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|toyota|tacoma",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "TRD Off-Road",
+    "TRD Sport",
+    "Limited",
+    "TRD",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

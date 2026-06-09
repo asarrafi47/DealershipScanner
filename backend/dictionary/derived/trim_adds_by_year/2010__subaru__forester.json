@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2010|subaru|forester",
+  "year": 2010,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "inventory_subaru_forester",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base",
+    "Platinum"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "inches (with moonroof: 40.0"
+    ],
+    "Limited": [
+      "Fog lights",
+      "Panoramic moonroof",
+      "Body-color side mirrors",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver's seat with power adjustable lumbar support",
+      "Removable cargo-area tray",
+      "Backup camera standard"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.3333333333333333,
+    "per_trim_add_counts": {
+      "Premium": 1,
+      "Base": 0,
+      "Platinum": 0
+    }
+  }
+}

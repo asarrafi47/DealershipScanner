@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2013|ford|f150",
+  "year": 2013,
+  "make": "Ford",
+  "model": "F-150",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Raptor",
+    "Platinum",
+    "King Ranch",
+    "Lariat",
+    "STX",
+    "FX4",
+    "XLT",
+    "XL",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

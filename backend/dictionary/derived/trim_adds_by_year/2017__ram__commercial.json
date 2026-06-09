@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|ram|commercial",
+  "year": 2017,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_2017__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Big Horn",
+    "Tradesman",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes BusinessLink dealer network support",
+      "Adds Includes 2-year lube/oil/filter service for gas engines"
+    ],
+    "Tradesman": [
+      "ased on light-duty pickups. [10] B"
+    ],
+    "Big Horn": [
+      "Cloth or upgraded upholstery options",
+      "Power windows, locks, and mirrors",
+      "Chrome bumpers and grille",
+      "AM/FM radio with integrated Bluetooth",
+      "Manual driver seat adjustments",
+      "Cruise control"
+    ],
+    "Laramie": [
+      "Laramie badging",
+      "Chrome surround grille with chrome insert",
+      "Halogen bifunctional projector headlamps",
+      "Power multifunction trailer-tow mirrors with heated manual-folding chrome finish",
+      "Center stack woodgrain insert",
+      "Dual-zone temperature control air conditioning",
+      "18 x 8-inch polished aluminum wheels on 3500 SRW",
+      "19.5 x 6-inch polished aluminum wheels on 4500/5500",
+      "Electric shift part-time transfer case on 4x4"
+    ],
+    "Laramie Longhorn": [
+      "ased on 250/2500 and 350/3500 pickups. [9] B"
+    ],
+    "Limited": [
+      "ased on latest available competitive information. Class b"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "ladder_id": "2024_chevrolet_corvette_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Corvette",
+    "Corvette"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "ZR1": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 6.2 L LT2 crossplane OHV V8 (2020–2026); L LS6 crossplane OHV V8 (2027–)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Z06": [
+      {
+        "label": "Engine Options",
+        "value": "Chevrolet says this allows the Z06 to accelerate from 0–60 mph (0–97 km/h) in 2.6 seconds.; 5.5 L LT6 flat-plane crank DOHC V8"
+      }
+    ],
+    "Stingray": [
+      {
+        "label": "Engine Options",
+        "value": "6.2 L LT2 crossplane OHV V8"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Rear mid-engine, rear-wheel-drive; Engine 6.2 L LT2 crossplane OHV V8 (2020–2026)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Rear mid-engine, rear-wheel-drive; Engine 6.2 L LT2 crossplane OHV V8 (2020–2026)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ]
+  }
+}

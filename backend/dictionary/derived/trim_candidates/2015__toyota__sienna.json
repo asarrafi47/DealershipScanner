@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|toyota|sienna",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Sienna",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2010|toyota|4runner",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2010__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4x4 Limited V6 5-Speed Auto",
+    "4x2 Limited V6 5-Speed Auto",
+    "Trail Edition V6 4x4 5-Speed Auto",
+    "4x4 SR5 V6 5-Speed Auto",
+    "4x2 SR5 V6 5-Speed Auto"
+  ],
+  "adds_by_trim": {
+    "4x4 Limited V6 5-Speed Auto": [
+      "4x4 drivetrain with Multi-Terrain ABS on Trail model"
+    ],
+    "4x2 Limited V6 5-Speed Auto": [
+      "Limited trim designation"
+    ],
+    "Trail Edition V6 4x4 5-Speed Auto": [
+      "Multi-Terrain ABS for enhanced off-road braking control",
+      "Approach angle 33 degrees and departure angle 26 degrees for off-road capability",
+      "Ground clearance increased to 9.6 inches"
+    ],
+    "4x4 SR5 V6 5-Speed Auto": [
+      "4x4 drivetrain with transfer case",
+      "Ground clearance of 9.6 inches",
+      "Departure angle 24 degrees, approach angle 25 degrees"
+    ],
+    "4x2 SR5 V6 5-Speed Auto": [
+      "4.0-liter DOHC 24-valve V6 engine with 270 hp and 278 lb-ft torque",
+      "5-speed electronically controlled automatic transmission with sequential shift mode",
+      "Power-assisted 4-wheel ventilated disc brakes with ABS and Brake Assist",
+      "Engine speed-sensing variable flow control power steering",
+      "Reinforced body-on-frame construction with coil-spring independent suspension"
+    ]
+  }
+}

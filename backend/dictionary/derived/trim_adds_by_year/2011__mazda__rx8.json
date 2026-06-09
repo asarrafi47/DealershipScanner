@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2011|mazda|rx8",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "RX-8",
+  "ladder_id": "brochure_llm_2011__mazda__rx8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RX-8 Grand Touring",
+    "RX-8 R3",
+    "RX-8 Sport"
+  ],
+  "adds_by_trim": {
+    "RX-8 Grand Touring": [
+      "DVD-based navigation system with 7-inch LCD touchscreen",
+      "300-watt Bose 9-speaker Centerpoint Surround Sound with AudioPilot 2",
+      "In-dash 6-disc CD changer",
+      "Heated front seats with 8-way power driver's seat and lumbar support",
+      "Power sliding-glass moonroof with 1-touch up/down",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Torque-sensing conical limited-slip differential on manual transmission",
+      "Leather-trimmed seats with leather-wrapped parking-brake handle",
+      "Rear wing spoiler available on automatic transmission"
+    ],
+    "RX-8 R3": [
+      "Sport-tuned suspension with Bilstein shock absorbers",
+      "19-inch forged aluminum alloy wheels with P225/40R19 tires",
+      "Recaro front sport seats with leather side bolsters",
+      "Unique sport front bumper with side sill extensions",
+      "Xenon self-leveling low-beam headlights and fog lights",
+      "Steering-wheel-mounted paddle shifters for Sport AT transmission",
+      "Lightweight carbon-fiber driveshaft on manual transmission",
+      "Dynamic Stability Control with Traction Control System"
+    ],
+    "RX-8 Sport": [
+      "Dynamic Stability Control with Traction Control System",
+      "1.3-liter RENESIS 2-rotor rotary engine with 232 hp manual / 212 hp automatic",
+      "6-speed manual or 6-speed Sport automatic transmission",
+      "18-inch alloy wheels with 225/45R18 high-performance tires",
+      "Dual front airbags with side-impact airbags and air curtains",
+      "100-watt AM/FM/CD/MP3 stereo with 6 speakers",
+      "Leather-wrapped 3-spoke tilt steering wheel with audio controls",
+      "Power door locks with remote keyless entry and two transmitters"
+    ]
+  }
+}

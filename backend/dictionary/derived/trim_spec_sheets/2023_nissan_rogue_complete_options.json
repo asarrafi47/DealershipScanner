@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2023_nissan_rogue_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Rogue",
+    "Rogue"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "SV": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The Rogue Select was offered only in the S trim level, with AWD being an option.; Rogue Hybrid (was Rogue Hybrid)"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Rogue Hybrid (was Automatic (AV-S8); Front-Wheel Drive)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Adds Audio System Layout: [Brochure] Bose audio"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Automatic (AV-S8); Front-Wheel Drive; Automatic (AV-S8)"
+      }
+    ]
+  }
+}

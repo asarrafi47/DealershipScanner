@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2022|toyota|highlander",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2022__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Platinum",
+    "Hybrid Limited",
+    "Hybrid Bronze Edition",
+    "Hybrid XLE",
+    "Hybrid LE",
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Hybrid Platinum": [
+      "Reduced head room in front (38.4 inches vs 41.2 inches)",
+      "Approach angle 18.1/22.7 degrees (vs 18.1/23.0 degrees)",
+      "Curb weight 4,430 lbs"
+    ],
+    "Hybrid Limited": [
+      "Reduced head room in front (39.6 inches vs 41.2 inches)",
+      "Approach angle 18.1/22.7 degrees (vs 18.1/23.0 degrees)",
+      "Curb weight 4,430 lbs"
+    ],
+    "Hybrid Bronze Edition": [
+      "Specific Bronze Edition trim designation"
+    ],
+    "Hybrid XLE": [
+      "Reduced head room in front (39.6 inches vs 41.2 inches on LE)",
+      "Standard all-season tires",
+      "Curb weight 4,365 lbs"
+    ],
+    "Hybrid LE": [
+      "Hybrid powertrain with 36/35/36 mpg city/highway/combined",
+      "Reduced fuel tank capacity 17.1 gallons (vs 17.9 gallons V6)",
+      "Towing capacity 3,500 lbs (vs 5,000 lbs V6)",
+      "Standard all-season tires and temporary spare tire"
+    ],
+    "Platinum": [
+      "Reduced head room in front (38.4 inches vs 39.6 inches)",
+      "Approach angle 16.9/21.1 degrees (vs 18.1/23.0 degrees)",
+      "Curb weight 4,260 lbs",
+      "Seven-seat standard configuration"
+    ],
+    "Limited": [
+      "Reduced head room in front (39.6 inches vs 41.2 inches)",
+      "Standard seven-seat configuration",
+      "Curb weight 4,260 lbs"
+    ],
+    "XSE": [
+      "Reduced head room in front (39.6 inches vs 41.2 inches)",
+      "Optional seven-seat seating configuration",
+      "Curb weight 4,205 lbs"
+    ],
+    "XLE": [
+      "Reduced head room in front (39.6 inches vs 41.2 inches)",
+      "Optional seven-seat seating configuration",
+      "Curb weight 4,195 lbs",
+      "Standard all-season tires and temporary spare tire"
+    ],
+    "LE": [
+      "V6 FWD engine with 21/29/24 mpg city/highway/combined",
+      "Fuel tank capacity 17.9 gallons",
+      "Towing capacity 5,000 lbs",
+      "Standard eight-seat seating configuration",
+      "Standard Trailer-Sway Control and all-season tires"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2022|nissan|sentra",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Sentra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SV",
+    "SR",
+    "Midnight Edition",
+    "S",
+    "Premium",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

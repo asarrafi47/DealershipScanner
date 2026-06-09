@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|buick|lacrosse",
+  "year": 2010,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "2010_buick_lacrosse",
+  "source": "manual_brochure_review",
+  "trims_available": ["CX", "CXL", "CXS"],
+  "adds_by_trim": {
+    "CXL": [
+      "Dual-zone automatic climate control (replaces single-zone on CX)",
+      "Leather-appointed seating (replaces cloth on CX)",
+      "Heated driver and front passenger seats",
+      "8-way power front passenger seat available",
+      "All-wheel drive with electronic limited-slip rear differential available",
+      "Auto-dimming inside rearview mirror and Universal Home Remote",
+      "Bluetooth phone connectivity and Harman Kardon 11-speaker audio available"
+    ],
+    "CXS": [
+      "3.6L VVT direct-injection V6 (replaces 3.0L V6 on CX and CXL)",
+      "Perforated leather-appointed seating",
+      "Magnetic variable-effort rack-and-pinion steering (replaces standard power steering on CX)",
+      "Multi-color enhanced driver information display",
+      "384-watt Harman Kardon 11-speaker premium audio standard",
+      "Heated leather-and-wood-grain steering wheel available",
+      "Dual stainless exhaust with bright tips; real-time adaptive suspension available"
+    ]
+  }
+}

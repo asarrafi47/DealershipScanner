@@ -1,0 +1,52 @@
+{
+  "ladder_id": "audi_a8",
+  "make": "Audi",
+  "models": [
+    "A8",
+    "A8 L",
+    "S8"
+  ],
+  "year_min": 2018,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "L": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic (S8)"
+      }
+    ],
+    "60 TFSI": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L twin-turbo V8 mild hybrid"
+      }
+    ],
+    "55 TFSI": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L turbocharged V6 mild hybrid"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Interior Materials",
+        "value": "Ventilated front seats"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Bang & Olufsen audio available"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Screen Size",
+        "value": "MMI navigation plus"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather seating surfaces"
+      }
+    ]
+  }
+}

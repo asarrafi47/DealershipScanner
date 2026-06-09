@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2011|lexus|es",
+  "year": 2011,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_2011__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Features Vehicle Stability Control (VSC)",
+      "Adds Includes Brake Assist system",
+      "Adds Includes engine immobilizer anti-theft system",
+      "Adds Features Tire Pressure Monitor System",
+      "Adds Includes Smart Stop Technology",
+      "Adds Includes SmartAccess keyless entry system"
+    ],
+    "Premium": [
+      "Adds Dynamic Radar Cruise Control",
+      "Adds Pre-Collision System",
+      "Adds Adaptive Front Lighting System",
+      "Adds Lexus Enform telematics services with Safety Connect",
+      "Adds available Navigation System with XM services capability",
+      "Adds Lexus Personalized Settings (LPS) programmability"
+    ],
+    "Luxury": [
+      "Adds premium leather seating surfaces",
+      "Adds enhanced climate control with comfort sensors",
+      "Adds Bluetooth audio connectivity with A2DP and AVRCP support",
+      "Adds iPod integration capabilities"
+    ]
+  }
+}

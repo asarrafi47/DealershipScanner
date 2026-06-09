@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2000,Suzuki,Vitara,2Door 2WD,1.6L I4,1.6L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,1.6,22,25,23,,,,,
+2000,Suzuki,Vitara,2Door 2WD,1.6L I4,1.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,1.6,22,26,24,,,,,
+2000,Suzuki,Vitara,2Door 2WD,2.0L I4,2.0L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,20,23,21,,,,,
+2000,Suzuki,Vitara,2Door 2WD,2.0L I4,2.0L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,20,22,21,,,,,
+2000,Suzuki,Vitara,4Door 2WD,2.0L I4,2.0L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,20,23,21,,,,,
+2000,Suzuki,Vitara,4Door 2WD,2.0L I4,2.0L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,19,23,21,,,,,
+2000,Suzuki,Vitara,2Door 4WD,1.6L I4,1.6L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,1.6,21,24,22,,,,,
+2000,Suzuki,Vitara,2Door 4WD,1.6L I4,1.6L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,1.6,22,25,23,,,,,
+2000,Suzuki,Vitara,2Door 4WD,2.0L I4,2.0L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.0,20,23,21,,,,,
+2000,Suzuki,Vitara,2Door 4WD,2.0L I4,2.0L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.0,20,22,21,,,,,
+2000,Suzuki,Vitara,4Door 4WD,2.0L I4,2.0L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.0,20,23,21,,,,,
+2000,Suzuki,Vitara,4Door 4WD,2.0L I4,2.0L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.0,19,23,21,,,,,

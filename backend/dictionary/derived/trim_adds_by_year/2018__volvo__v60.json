@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2018|volvo|v60",
+  "year": 2018,
+  "make": "Volvo",
+  "model": "V60",
+  "ladder_id": "brochure_llm_2018__volvo__v60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V60 R-Design",
+    "V60 Cross Country",
+    "V60 Dynamic"
+  ],
+  "adds_by_trim": {
+    "V60 R-Design": [
+      "302 hp Supercharged and Turbocharged Drive-E Engine",
+      "R-Design Leather Sport Seats with unique styling",
+      "R-Design Leather Sport Steering Wheel and Gearshift Knob",
+      "Unique Aluminum Inlay and Sport Pedals",
+      "19-inch Ixion Diamond Cut/Black Alloy Wheels",
+      "R-Design Front Bumper with Rear Diffuser and Polished Tailpipes",
+      "Unique Rear and Lower Front Spoiler",
+      "Side Window Frames in Silk Metal",
+      "Exclusive Blue Adaptive Digital TFT Display"
+    ],
+    "V60 Cross Country": [
+      "7.9 inches of ground clearance",
+      "Standard AWD with Hill Descent Control",
+      "Front and Rear Black Fender Extensions",
+      "18-inch NESO Diamond Cut/Black Alloy Wheels",
+      "Black Roof Rails and Black Mirror Caps",
+      "Rugged Body Cladding",
+      "Front and Rear Skid Plate",
+      "Side Scuff Plates",
+      "Honeycomb Grill",
+      "Roll Stability Control"
+    ],
+    "V60 Dynamic": [
+      "Milled Aluminum Inlay",
+      "Leather Sport Seats",
+      "Power Moonroof",
+      "18-inch Tucan Diamond Cut/Black Alloy Wheels",
+      "Active Dual Xenon Headlights with Automatic High Beams",
+      "Harman Kardon Premium Sound System",
+      "Advanced Stability Control",
+      "Round Beveled Chrome Exhaust"
+    ]
+  }
+}

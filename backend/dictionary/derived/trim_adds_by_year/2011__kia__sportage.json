@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|kia|sportage",
+  "year": 2011,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_web_2011__kia__sportage",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "X-Pro Prestige",
+    "X-Pro",
+    "EX",
+    "X-Line",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "X-Pro Prestige": [
+      "Premium package with panoramic sunroof",
+      "Hands-free liftgate",
+      "Standard all-wheel drive"
+    ],
+    "X-Pro": [
+      "Standard all-wheel drive",
+      "Gloss black accents and black badges"
+    ],
+    "EX": [
+      "Available Premium package with panoramic sunroof and hands-free liftgate",
+      "12.3-inch fully digital touchscreen with navigation"
+    ],
+    "X-Line": [
+      "All-wheel drive available",
+      "Gloss black accents and black badges"
+    ],
+    "LX": [
+      "2.5-liter naturally aspirated four-cylinder engine with 187 hp and 178 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Front-wheel drive standard",
+      "Front automatic emergency braking and lane keep assist",
+      "12.3-inch touchscreen with Apple CarPlay and Android Auto"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/sportage/"
+}

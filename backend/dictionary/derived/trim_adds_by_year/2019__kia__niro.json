@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2019|kia|niro",
+  "year": 2019,
+  "make": "Kia",
+  "model": "Niro",
+  "ladder_id": "brochure_2019__kia__niro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX",
+    "LX",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds UVO eServices/eco connectivity platform",
+      "Adds Apple CarPlay and Android Auto smartphone integration",
+      "Adds Driver Attention Alert safety feature",
+      "Adds 24-hour Roadside Assistance service plan",
+      "Adds Vehicle Diagnostics monitoring system"
+    ],
+    "Touring": [
+      "18-inch tires with alloy wheels",
+      "Power tilt-slide sunroof",
+      "HID headlights",
+      "LED daytime running lights",
+      "Fog lamps",
+      "Gloss-black grille surround",
+      "Combination cloth and leather seat trim",
+      "Heated and ventilated front seats",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Driver's memory seat and mirror system"
+    ],
+    "Premium": [
+      "Upgraded to Premium Navigation system with UVO eServices integration"
+    ],
+    "Limited": [],
+    "LX": [
+      "Push-button start with Smart Key",
+      "LED rear combination lights",
+      "Roof rails",
+      "Dual-zone automatic temperature control"
+    ],
+    "EX": [
+      "Power-folding outside mirrors",
+      "Blind Spot Detection with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Combination cloth and leather seat trim",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and gearshift knob"
+    ]
+  }
+}

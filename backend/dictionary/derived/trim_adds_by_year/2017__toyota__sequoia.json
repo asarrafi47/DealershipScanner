@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|toyota|sequoia",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_llm_2017__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Blind Spot Monitor with lane change assist",
+      "20-inch diamond-cut-finish alloy wheels",
+      "Entune Premium JBL Audio with Integrated Navigation and App Suite",
+      "Rear-seat Blu-ray Disc player with 9-inch display and wireless headphones",
+      "Perforated leather-trimmed heated and ventilated front seats with power thigh and lumbar support",
+      "7-passenger seating with perforated leather captain's chairs and multi-function center console",
+      "Perforated leather-trimmed 60/40 split power reclining fold-flat third-row seat with folding headrests",
+      "Electronic Modulated Air Suspension with Adaptive Variable Suspension system"
+    ],
+    "Limited": [
+      "Chrome auto-dimming heated power outside mirrors with power folding and turn signal indicators",
+      "Power liftgate with jam protection",
+      "20-inch alloy wheels",
+      "Entune Premium Audio with Integrated Navigation and App Suite",
+      "Leather-trimmed and heated front seats with 10-way power driver's seat adjustment",
+      "Leather-trimmed 40/20/40 split second-row seat with one-touch third-row access",
+      "Leather-trimmed tilt/telescopic steering wheel with audio and Bluetooth controls",
+      "Auto-dimming rearview mirror with compass and HomeLink universal transceiver"
+    ],
+    "SR5": [
+      "Multi-reflector halogen headlights with auto-off feature and headlight cleaners",
+      "Integrated fog lights",
+      "Color-keyed heated power outside mirrors",
+      "18-inch alloy wheels",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Automatic three-zone front and rear climate control with air filter",
+      "Entune Multimedia Bundle with AM/FM CD player and touch-screen display",
+      "Easy-clean fabric-trimmed front seats with 8-way power driver's seat"
+    ]
+  }
+}

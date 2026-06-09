@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2021|infiniti|q50",
+  "year": 2021,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_llm_2021__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RED SPORT 400",
+    "LUXE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "RED SPORT 400": [
+      "Matte Black Carbon Fiber interior trim with red contrast stitching",
+      "Genuine performance-oriented cabin styling with attitude"
+    ],
+    "LUXE": [
+      "Around View® Monitor with Moving Object Detection for 360° parking assistance",
+      "Backup Collision Intervention that can brake if rear cross traffic detected",
+      "Expanded suite of visionary technology for added confidence"
+    ],
+    "Base": [
+      "Predictive Forward Collision Warning alerting two cars ahead",
+      "Blind Spot Intervention® with sensors to detect and help avoid collisions",
+      "Active Lane Control on ProACTIVE Package to maintain lane centering",
+      "Intelligent Cruise Control with automatic speed and distance maintenance",
+      "INFINITI InTouch™ with Apple CarPlay® and Android Auto™ integration",
+      "Dual-screen infotainment with navigation and climate controls",
+      "Enhanced Wi-Fi Hotspot standard for passenger connectivity",
+      "Driver memory system recalling 200+ personalized settings",
+      "Available interior color options: Gallery White, Stone, Graphite, Saddle Brown",
+      "Available interior trim: Textured Aluminum, Black Open Pore Wood, Matte Black Carbon Fiber"
+    ]
+  }
+}

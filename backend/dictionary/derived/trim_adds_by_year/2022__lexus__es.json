@@ -1,0 +1,87 @@
+{
+  "catalog_key": "2022|lexus|es",
+  "year": 2022,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "brochure_llm_2022__lexus__es",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ES300h ULTRA LUXURY",
+    "ES350 ULTRA LUXURY",
+    "ES250 ULTRA LUXURY AWD",
+    "ES350 F SPORT",
+    "ES300h F SPORT",
+    "ES250 F SPORT AWD",
+    "ES350 LUXURY",
+    "ES300h LUXURY",
+    "ES250 LUXURY AWD",
+    "ES350",
+    "ES300h",
+    "ES250 AWD"
+  ],
+  "adds_by_trim": {
+    "ES300h ULTRA LUXURY": [
+      "Includes ES300h and ES250 Ultra Luxury AWD features"
+    ],
+    "ES350 ULTRA LUXURY": [
+      "Includes ES350 and ES250 Ultra Luxury AWD features"
+    ],
+    "ES250 ULTRA LUXURY AWD": [
+      "Navigation System with 12.3-inch touchscreen multimedia display",
+      "Perforated NuLuxe interior trim",
+      "10-way power-adjustable front seats",
+      "Power open/close trunk with kick sensor",
+      "Bi-LED headlamps",
+      "Lateral performance dampers"
+    ],
+    "ES350 F SPORT": [
+      "Includes ES350 and ES250 F SPORT AWD features"
+    ],
+    "ES300h F SPORT": [
+      "Includes ES300h and applicable ES250 F SPORT AWD features"
+    ],
+    "ES250 F SPORT AWD": [
+      "19-inch split-five-spoke alloy wheels with Gloss Black finish",
+      "F SPORT suspension tuning with lateral performance dampers",
+      "F SPORT bolstered heated and ventilated front seats",
+      "F SPORT interior with Hadori Aluminum trim and aluminum pedals",
+      "Unique front bumper and grille styling",
+      "Performance-inspired instrumentation with sliding bezel"
+    ],
+    "ES350 LUXURY": [
+      "Includes ES350 and ES250 Luxury AWD features"
+    ],
+    "ES300h LUXURY": [
+      "Includes ES300h and ES250 Luxury AWD features"
+    ],
+    "ES250 LUXURY AWD": [
+      "302-horsepower V6 engine with performance dampers",
+      "Quilted and perforated semi-aniline leather interior trim",
+      "Heated wood and leather steering wheel",
+      "Wireless charger",
+      "Power moonroof",
+      "Wood trim with ambient lighting",
+      "14-way power-adjustable driver's seat with power cushion extender"
+    ],
+    "ES350": [
+      "302-horsepower V6 engine",
+      "Concealed exhaust",
+      "Rear spoiler"
+    ],
+    "ES300h": [
+      "215-total-system-horsepower hybrid engine",
+      "Hybrid-Acoustics sound dampening",
+      "Concealed exhaust",
+      "Rear spoiler"
+    ],
+    "ES250 AWD": [
+      "203-horsepower in-line 4 engine",
+      "SmartAccess with push-button Start/Stop",
+      "Drive Mode Select",
+      "Paddle shifters",
+      "Lexus Multimedia System with 8.0-inch touchscreen display",
+      "Lexus 10-speaker Premium Sound System",
+      "Lexus Safety System+ 2.5 with Pre-Collision and Lane Tracing Assist"
+    ]
+  }
+}

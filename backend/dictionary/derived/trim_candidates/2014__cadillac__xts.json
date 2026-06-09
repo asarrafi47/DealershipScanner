@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2014|cadillac|xts",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "XTS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Luxury",
+    "Sport",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

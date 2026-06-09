@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2014_bmw_x3_complete_options",
+  "make": "BMW",
+  "models": [
+    "X3",
+    "X3"
+  ],
+  "year_min": 2012,
+  "year_max": 2016,
+  "source": "generated",
+  "trims": {
+    "xDrive35i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "xDrive28i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

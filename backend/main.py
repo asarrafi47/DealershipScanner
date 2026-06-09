@@ -6,12 +6,16 @@ load_project_dotenv()
 
 import gzip
 import inspect
+import json
 import logging
 import os
+import re
 import secrets
 import sqlite3
 import time
+from datetime import timedelta
 from pathlib import Path
+from typing import Any
 
 from flask import Flask, abort, g, jsonify, make_response, redirect, render_template, request, send_from_directory, session, url_for
 from werkzeug.exceptions import HTTPException
@@ -50,6 +54,7 @@ from backend.db.user_history_db import (
     record_compare_session,
 )
 from backend.db.users_db import (
+    authenticate_app_user,
     check_user,
     get_user_by_login,
     get_user_profile,
@@ -64,7 +69,7 @@ from backend.listings.geo_session import (
 )
 from backend.listings.routes import listings_page
 from backend.utils.car_serialize import format_display_value, serialize_car_for_api
-from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS, listing_missing_field_codes
+from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
 from backend.utils.car_chat_policy import car_chat_rate_limits, car_chat_user_daily_limit, web_research_playwright_allowed
 from backend.utils.client_ip import client_ip as _client_ip_from_request
 from backend.utils.csrf import ensure_csrf_token, validate_csrf_form, validate_csrf_header
@@ -131,6 +136,7 @@ _SMART_SEARCH_RPM = int(os.environ.get("RATE_LIMIT_SMART_SEARCH_PER_MIN", "90"))
 _LOGIN_RPM = int(os.environ.get("RATE_LIMIT_LOGIN_PER_MIN", "30"))
 _REGISTER_RPM = int(os.environ.get("RATE_LIMIT_REGISTER_PER_MIN", "10"))
 _DEALER_LOCATOR_RPM = int(os.environ.get("RATE_LIMIT_DEALER_LOCATOR_PER_MIN", "30"))
+_NHTSA_RECALLS_RPM = int(os.environ.get("RATE_LIMIT_NHTSA_RECALLS_PER_MIN", "30"))
 
 
 def _client_ip() -> str:
@@ -186,14 +192,17 @@ app.config["MAX_CONTENT_LENGTH"] = _MAX_REQUEST_BODY
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=14)
+app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
 from backend.utils.production_security import assert_production_security_config
+
+assert_production_security_config()
 
 init_users_db()
 init_admin_db()
 init_inventory_db()
 init_dealer_portal_db()
-assert_production_security_config()
 
 
 def _prewarm_listings_inventory_cache() -> None:
@@ -202,11 +211,28 @@ def _prewarm_listings_inventory_cache() -> None:
 
     def _run() -> None:
         try:
-            from backend.db.inventory_db import listings_grid_serialized_cars
+            from backend.db.inventory_db import (
+                _incomplete_car_ids_for_listings,
+                listings_grid_serialized_cars,
+            )
 
             t0 = time.perf_counter()
+            _incomplete_car_ids_for_listings()
             n = len(listings_grid_serialized_cars())
-            _logger.info("Listings grid cache prewarmed (%d cars, %.1fs)", n, time.perf_counter() - t0)
+            _logger.info(
+                "Listings grid cache prewarmed (%d cars, %.1fs)",
+                n,
+                time.perf_counter() - t0,
+            )
+            from backend.enrichment.dictionary_catalog import _epa_paths_by_make_norm
+
+            t1 = time.perf_counter()
+            makes = len(_epa_paths_by_make_norm())
+            _logger.info(
+                "EPA dictionary index prewarmed (%d makes, %.1fs)",
+                makes,
+                time.perf_counter() - t1,
+            )
         except Exception:
             _logger.exception("Listings grid prewarm failed")
 
@@ -258,7 +284,7 @@ def inject_csrf_and_flags():
         "csrf_token": ensure_csrf_token(),
         "csp_nonce": getattr(g, "csp_nonce", "") or "",
         "is_production": is_production_env(),
-        "logged_in_user": session.get("username"),
+        "logged_in_user": session.get("username") or session.get("admin_username"),
         "is_admin": _is_admin,
         "has_paid_access": _session_has_paid_access(),
         "billing_stripe_enabled": _billing_enabled(),
@@ -329,6 +355,7 @@ def _csrf_mutating_requests():
         "api_toggle_save",
         "api_session_listings_geo",
         "api_car_packages_ensure",
+        "api_car_vehicle_history_intelligence",
         "api_auth_login",
         "api_auth_register",
         "api_auth_logout",
@@ -337,9 +364,21 @@ def _csrf_mutating_requests():
     return None
 
 
+def _dev_operator_grants_premium() -> bool:
+    """Authenticated ``/dev`` operator (scan lab, dashboard) — local tooling, not public users."""
+    try:
+        from backend.dev.routes import _admin_session_ok
+
+        return _admin_session_ok()
+    except Exception:
+        return False
+
+
 def _session_has_paid_access() -> bool:
     """Premium, active org subscription, or app admin (matches context_processor ``has_paid_access``)."""
     if is_admin_role(session.get("user_role")):
+        return True
+    if _dev_operator_grants_premium():
         return True
     if bool(session.get("user_is_premium")):
         return True
@@ -409,6 +448,8 @@ def _require_premium_feature() -> tuple[bool, str]:
     Paid surfaces require login in production; when Stripe billing is enabled, also require
     premium/subscription/admin. Returns (ok, error_code).
     """
+    if _dev_operator_grants_premium():
+        return True, ""
     uid = session.get("user_id")
     if not uid:
         if _billing_enabled() or is_production_env():
@@ -461,13 +502,13 @@ def _csp_header_value_enforced(nonce: str) -> str:
         "base-uri 'self'; "
         "form-action 'self'; "
         "frame-ancestors 'none'; "
-        "object-src 'self'; "
+        "object-src 'none'; "
         "frame-src 'self'; "
         "img-src 'self' data: https: http: blob:; "
         "font-src 'self' https://fonts.gstatic.com data:; "
         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
         f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
-        "connect-src 'self' https://esm.sh https://fonts.googleapis.com; "
+        "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
         "worker-src 'self'; "
     )
 
@@ -483,7 +524,7 @@ _CSP_REPORT_ONLY = (
     "font-src 'self' https://fonts.gstatic.com data:; "
     "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
     "script-src 'self' https://esm.sh; "
-    "connect-src 'self' https://esm.sh https://fonts.googleapis.com; "
+    "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
     "worker-src 'self'; "
 )
 
@@ -632,14 +673,9 @@ def login_page():
         password = (request.form.get("password") or "").strip()
         if not login_input or not password:
             return render_template("login.html", error="Enter username/email and password.")
-        if check_user(login_input, password):
-            u = get_user_by_login(login_input)
-            if not u:
-                return render_template("login.html", error="Invalid username/email or password.")
+        u = authenticate_app_user(login_input, password)
+        if u:
             sync_env_admin_user_row(int(u["id"]))
-            u = get_user_by_login(login_input)
-            if not u:
-                return render_template("login.html", error="Invalid username/email or password.")
             session.clear()
             if not _finalize_app_session(int(u["id"])):
                 return render_template("login.html", error="Login failed. Try again.")
@@ -720,15 +756,10 @@ def api_auth_login():
     password = (data.get("password") or "").strip()
     if not login_input or not password:
         return jsonify({"ok": False, "error": "missing_credentials"}), 400
-    if not check_user(login_input, password):
-        return jsonify({"ok": False, "error": "invalid_credentials"}), 401
-    u = get_user_by_login(login_input)
+    u = authenticate_app_user(login_input, password)
     if not u:
         return jsonify({"ok": False, "error": "invalid_credentials"}), 401
     sync_env_admin_user_row(int(u["id"]))
-    u = get_user_by_login(login_input)
-    if not u:
-        return jsonify({"ok": False, "error": "invalid_credentials"}), 401
     session.clear()
     if not _finalize_app_session(int(u["id"])):
         return jsonify({"ok": False, "error": "login_failed"}), 500
@@ -877,7 +908,11 @@ def _similar_recommendation_rows(
     """Cars matching recent make/model, excluding viewed ids; optional ZIP radius via ``geo_kw``."""
     if not seen_mm:
         return []
-    candidates = search_cars_by_make_model_pairs(seen_mm[:5], **geo_kw)
+    candidates = search_cars_by_make_model_pairs(
+        seen_mm[:5],
+        sql_limit=max(limit * 6, 60),
+        **geo_kw,
+    )
     seen_rec: set[int] = set()
     recs: list[dict] = []
     for c in candidates:
@@ -904,7 +939,13 @@ def _make_model_pairs_from_cars(cars: list[dict]) -> list[tuple[str, str]]:
     return seen_mm
 
 
-def _recommendations_for_user(user_id: int, limit: int = 20, **geo_kw: object) -> tuple[list[dict], dict[str, str]]:
+def _recommendations_for_user(
+    user_id: int,
+    limit: int = 20,
+    *,
+    serialize: bool = True,
+    **geo_kw: object,
+) -> tuple[list[dict] | int, dict[str, str]]:
     """Return serialized carousel rows and heading copy for the dashboard."""
     default_heading = {
         "eyebrow": "Based on your history",
@@ -914,12 +955,12 @@ def _recommendations_for_user(user_id: int, limit: int = 20, **geo_kw: object) -
     viewed_ids = get_recent_viewed_car_ids(user_id, limit=30)
     compared_ids = get_recent_compared_car_ids(user_id, limit=30)
     if not viewed_ids and not compared_ids:
-        return [], default_heading
+        return (0 if not serialize else []), default_heading
 
     viewed_cars = get_cars_by_ids(viewed_ids) if viewed_ids else []
     compared_cars = get_cars_by_ids(compared_ids) if compared_ids else []
     if not viewed_cars and not compared_cars:
-        return [], default_heading
+        return (0 if not serialize else []), default_heading
 
     by_id: dict[int, dict] = {}
     for c in viewed_cars + compared_cars:
@@ -1005,7 +1046,10 @@ def _recommendations_for_user(user_id: int, limit: int = 20, **geo_kw: object) -
             seen_out.add(cid_i)
 
     if not out_cars:
-        return [], default_heading
+        return (0 if not serialize else []), default_heading
+
+    if not serialize:
+        return len(out_cars[:limit]), heading
 
     return (
         [serialize_car_for_listings_grid(c) for c in out_cars[:limit]],
@@ -1021,6 +1065,17 @@ def _recently_compared_for_user(user_id: int, limit: int = 12) -> list[dict]:
     raw = get_cars_by_ids(compared_ids)
     by_id = {int(c["id"]): c for c in raw if c.get("id") is not None}
     ordered = [by_id[cid] for cid in compared_ids if cid in by_id]
+    return [serialize_car_for_listings_grid(c) for c in ordered]
+
+
+def _recently_viewed_for_user(user_id: int, limit: int = 12) -> list[dict]:
+    """Serialized listing rows for cars the user recently opened."""
+    viewed_ids = get_recent_viewed_car_ids(user_id, limit=limit)
+    if not viewed_ids:
+        return []
+    raw = get_cars_by_ids(viewed_ids)
+    by_id = {int(c["id"]): c for c in raw if c.get("id") is not None}
+    ordered = [by_id[cid] for cid in viewed_ids if cid in by_id]
     return [serialize_car_for_listings_grid(c) for c in ordered]
 
 
@@ -1045,6 +1100,7 @@ def _render_personal_home():
     recommendations = []
     saved_cars_list = []
     recently_compared = []
+    recently_viewed = []
     recommendations_eyebrow = ""
     recommendations_title = ""
     recommendations_hint = ""
@@ -1058,11 +1114,13 @@ def _render_personal_home():
         raw_saved = get_cars_by_ids(saved_ids)
         saved_cars_list = [serialize_car_for_listings_grid(c) for c in raw_saved]
         recently_compared = _recently_compared_for_user(uid)
+        recently_viewed = _recently_viewed_for_user(uid)
     return render_template(
         "home.html",
         saved_cars=saved_cars_list,
         recommendations=recommendations,
         recently_compared=recently_compared,
+        recently_viewed=recently_viewed,
         recommendations_eyebrow=recommendations_eyebrow,
         recommendations_title=recommendations_title,
         recommendations_hint=recommendations_hint,
@@ -1077,12 +1135,12 @@ def dashboard():
     uid = int(session["user_id"])
     geo = listings_geo_kwargs_from_session(session)
     saved_ids = get_saved_car_ids(uid)
-    recommendations, _ = _recommendations_for_user(uid, limit=20, **geo)
+    reco_count, _ = _recommendations_for_user(uid, limit=20, serialize=False, **geo)
     return render_template(
         "dashboard.html",
         viewed_count=count_viewed_cars(uid),
         saved_count=len(saved_ids),
-        reco_count=len(recommendations),
+        reco_count=reco_count,
         geo_zip=geo.get("zip_code") or "",
         geo_radius=geo.get("radius_miles"),
         browse_trends=_browse_trends_for_user(uid),
@@ -1241,6 +1299,261 @@ def api_coords_to_zip():
         return jsonify({"error": "lookup failed"}), 500
 
 
+_LIVE_GAS_PRICES_PATH = (
+    Path(__file__).resolve().parent / "dictionary" / "derived" / "live_gas_prices.json"
+)
+_FUEL_TIER_ALIASES: dict[str, str] = {
+    "regular": "regular",
+    "mid": "mid",
+    "midgrade": "mid",
+    "mid-grade": "mid",
+    "mid_grade": "mid",
+    "premium": "premium",
+    "diesel": "diesel",
+}
+_FUEL_TIER_JSON_KEYS: dict[str, tuple[str, ...]] = {
+    "regular": ("regular", "Regular"),
+    "mid": ("mid", "midgrade", "midGrade", "mid-grade", "Mid-Grade", "Mid Grade"),
+    "premium": ("premium", "Premium"),
+    "diesel": ("diesel", "Diesel"),
+}
+_live_gas_prices_cache: dict[str, Any] | None = None
+_live_gas_prices_cache_mtime: float | None = None
+
+
+def _normalize_fuel_tier_param(raw: str | None) -> str:
+    key = (raw or "regular").strip().lower().replace(" ", "-")
+    if key in _FUEL_TIER_ALIASES:
+        return _FUEL_TIER_ALIASES[key]
+    if "premium" in key:
+        return "premium"
+    if "diesel" in key:
+        return "diesel"
+    if "mid" in key:
+        return "mid"
+    return "regular"
+
+
+def _load_live_gas_prices_payload() -> dict[str, Any] | None:
+    global _live_gas_prices_cache, _live_gas_prices_cache_mtime
+    path = _LIVE_GAS_PRICES_PATH
+    if not path.is_file():
+        return None
+    try:
+        mtime = path.stat().st_mtime
+    except OSError:
+        return None
+    if _live_gas_prices_cache is not None and _live_gas_prices_cache_mtime == mtime:
+        return _live_gas_prices_cache
+    try:
+        with path.open(encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (OSError, json.JSONDecodeError) as exc:
+        _logger.warning("live_gas_prices.json unreadable: %s", exc)
+        return None
+    if not isinstance(payload, dict):
+        return None
+    _live_gas_prices_cache = payload
+    _live_gas_prices_cache_mtime = mtime
+    return payload
+
+
+def _fuel_market_payload() -> dict[str, Any]:
+    """Load cached EIA market data, falling back to 2026 anchors when missing."""
+    payload = _load_live_gas_prices_payload()
+    if payload:
+        return payload
+    from backend.cron.sync_gas_prices import fallback_payload
+
+    return fallback_payload()
+
+
+def _live_gas_region_block(payload: dict[str, Any], state_code: str) -> dict[str, Any] | None:
+    raw = (state_code or "").strip()
+    if not raw:
+        return None
+    code = raw.lower() if raw.lower() == "national" else raw.upper()
+    states = payload.get("states")
+    if isinstance(states, dict):
+        for key in (code, raw, raw.upper(), raw.lower()):
+            block = states.get(key)
+            if isinstance(block, dict):
+                return block
+    for key in (code, raw, raw.upper(), raw.lower()):
+        block = payload.get(key)
+        if isinstance(block, dict):
+            return block
+    return None
+
+
+def _live_gas_region_name(block: dict[str, Any], state_code: str, *, used_national: bool) -> str:
+    for key in ("region_name", "regionName", "name", "region", "label"):
+        val = block.get(key)
+        if isinstance(val, str) and val.strip():
+            return val.strip()
+    if used_national:
+        return "National Average"
+    return state_code
+
+
+def _live_gas_rate_from_block(block: dict[str, Any], fuel_tier: str) -> float | None:
+    keys = _FUEL_TIER_JSON_KEYS.get(fuel_tier, (fuel_tier,))
+    for key in keys:
+        raw = block.get(key)
+        if raw is None:
+            continue
+        try:
+            rate = float(raw)
+        except (TypeError, ValueError):
+            continue
+        if rate > 0:
+            return rate
+    prices = block.get("prices")
+    if isinstance(prices, dict):
+        for key in keys:
+            raw = prices.get(key)
+            if raw is None:
+                continue
+            try:
+                rate = float(raw)
+            except (TypeError, ValueError):
+                continue
+            if rate > 0:
+                return rate
+    return None
+
+
+def _live_electricity_rate_from_block(block: dict[str, Any]) -> float | None:
+    for key in ("electricity_rate", "electricityRate", "residential_electricity_rate"):
+        raw = block.get(key)
+        if raw is None:
+            continue
+        try:
+            rate = float(raw)
+        except (TypeError, ValueError):
+            continue
+        if rate > 0:
+            return rate
+    return None
+
+
+def _resolve_live_gas_lookup(state_code: str, fuel_tier: str) -> tuple[float, str] | None:
+    payload = _fuel_market_payload()
+    state_block = _live_gas_region_block(payload, state_code)
+    used_national = False
+    if state_block is None:
+        state_block = _live_gas_region_block(payload, "national")
+        used_national = True
+    if state_block is None:
+        return None
+    rate = _live_gas_rate_from_block(state_block, fuel_tier)
+    if rate is None and not used_national:
+        national_block = _live_gas_region_block(payload, "national")
+        if national_block is not None:
+            rate = _live_gas_rate_from_block(national_block, fuel_tier)
+            if rate is not None:
+                state_block = national_block
+                used_national = True
+    if rate is None:
+        return None
+    region_name = _live_gas_region_name(state_block, state_code, used_national=used_national)
+    return rate, region_name
+
+
+def _resolve_live_electricity_lookup(state_code: str) -> tuple[float, str]:
+    payload = _fuel_market_payload()
+    state_block = _live_gas_region_block(payload, state_code)
+    used_national = False
+    if state_block is None:
+        state_block = _live_gas_region_block(payload, "national")
+        used_national = True
+    if state_block is None:
+        national = payload.get("national")
+        if isinstance(national, dict):
+            state_block = national
+            used_national = True
+    rate = _live_electricity_rate_from_block(state_block or {})
+    if rate is None and not used_national:
+        national_block = _live_gas_region_block(payload, "national")
+        if national_block is not None:
+            rate = _live_electricity_rate_from_block(national_block)
+            if rate is not None:
+                state_block = national_block
+                used_national = True
+    if rate is None:
+        national = payload.get("national")
+        if isinstance(national, dict):
+            rate = _live_electricity_rate_from_block(national)
+            if rate is not None:
+                state_block = national
+                used_national = True
+    if rate is None:
+        from backend.cron.sync_gas_prices import FALLBACK_NATIONAL_ELECTRICITY
+
+        rate = FALLBACK_NATIONAL_ELECTRICITY
+        state_block = state_block or {"region_name": "National Average"}
+        used_national = True
+    region_name = _live_gas_region_name(state_block, state_code, used_national=used_national)
+    return rate, region_name
+
+
+def _resolve_fuel_lookup_state(request, session_obj: object) -> tuple[str, str | None]:
+    """Resolve a two-letter state for fuel lookup; optional ZIP used for resolution."""
+    zip_raw = (request.args.get("zip_code") or request.args.get("zip") or "").strip()
+    if not zip_raw:
+        geo = listings_geo_kwargs_from_session(session_obj)
+        zip_raw = str(geo.get("zip_code") or "").strip()
+    if zip_raw:
+        zip_code = zip_raw[:5]
+        if re.fullmatch(r"\d{5}", zip_code):
+            try:
+                from backend.db.geo import us_postal_meta_for_zip
+
+                meta = us_postal_meta_for_zip(zip_code)
+                if meta and meta.get("state_code"):
+                    return str(meta["state_code"]).strip().upper(), zip_code
+            except Exception:
+                pass
+    state_raw = (request.args.get("state") or "NC").strip().upper()
+    state_code = state_raw[:2] if re.fullmatch(r"[A-Z]{2}", state_raw[:2] or "") else "NC"
+    return state_code, None
+
+
+@app.route("/api/fuel/lookup", methods=["GET"])
+def api_fuel_lookup():
+    """Cached EIA regional fuel and residential electricity rates for TCO."""
+    fuel_tier = _normalize_fuel_tier_param(request.args.get("fuel_tier"))
+    state_code, zip_code = _resolve_fuel_lookup_state(request, session)
+    resolved = _resolve_live_gas_lookup(state_code, fuel_tier)
+    electricity_rate, electricity_region = _resolve_live_electricity_lookup(state_code)
+    payload_data = _fuel_market_payload()
+    if resolved is None:
+        national = payload_data.get("national")
+        if isinstance(national, dict):
+            rate = _live_gas_rate_from_block(national, fuel_tier)
+            region_name = str(national.get("region_name") or "National Average")
+        else:
+            from backend.cron.sync_gas_prices import fallback_payload
+
+            fb = fallback_payload()
+            national_fb = fb.get("national") or {}
+            rate = _live_gas_rate_from_block(national_fb, fuel_tier) or 4.29
+            region_name = str(national_fb.get("region_name") or "National Average")
+    else:
+        rate, region_name = resolved
+    payload: dict[str, Any] = {
+        "rate": rate,
+        "electricity_rate": electricity_rate,
+        "region_name": region_name,
+        "electricity_region_name": electricity_region,
+        "state": state_code,
+        "source": payload_data.get("source"),
+    }
+    if zip_code:
+        payload["zip_code"] = zip_code
+    return jsonify(payload)
+
+
 def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     uid = session.get("user_id")
     car_is_saved = False
@@ -1255,20 +1568,20 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
             pass
     ctx = prepare_car_detail_context(car_raw)
     from backend.enrichment.window_sticker_service import (
-        ensure_sticker_preview_png,
         window_sticker_available,
         window_sticker_has_visual,
-        window_sticker_visual_local_path,
     )
     from backend.scanner.window_sticker import (
         car_listing_may_have_sticker,
         car_listing_sticker_urls,
+        cdjr_oem_window_sticker_eligible,
         get_window_sticker_url,
         is_cdjr_stellantis_car,
         show_window_sticker_panel,
         sticker_embed_preview_url,
     )
 
+    cdjr_sticker_eligible = cdjr_oem_window_sticker_eligible(car_raw)
     show_sticker_ui = show_window_sticker_panel(car_raw, ctx)
     sticker_ready = show_sticker_ui and window_sticker_available(car_raw)
     sticker_visual = show_sticker_ui and window_sticker_has_visual(car_raw)
@@ -1276,16 +1589,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     listing_sticker_image_url = listing_sticker_urls[0] if listing_sticker_urls else None
     premium_viewer = _viewer_sees_premium_features()
     sticker_preview_api = _car_window_sticker_preview_url(car_id)
-    if show_sticker_ui and premium_viewer and not sticker_visual:
-        from backend.enrichment.window_sticker_service import ensure_window_sticker_for_car
-
-        try:
-            ensure_window_sticker_for_car(car_id, allow_vision_fallback=False)
-        except Exception:
-            pass
-        sticker_ready = window_sticker_available(car_raw)
-        sticker_visual = window_sticker_has_visual(car_raw)
-        car_raw = get_car_by_id(car_id, include_inactive=False) or car_raw
+    # Window sticker fetch runs async via car_packages.js — avoid blocking VDP render.
     sticker_preview_embed_url = (
         sticker_embed_preview_url(
             car_raw,
@@ -1296,27 +1600,17 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         else None
     )
     sticker_fetch_pending = bool(
-        show_sticker_ui and not sticker_ready and listing_sticker_image_url
+        show_sticker_ui and not sticker_ready and (listing_sticker_image_url or cdjr_sticker_eligible)
     )
-    if sticker_visual and premium_viewer:
-        local_pdf = window_sticker_visual_local_path(
-            car_raw.get("vin"),
-            dealer_id=car_raw.get("dealer_id"),
-            dealership_registry_id=car_raw.get("dealership_registry_id"),
-        )
-        if local_pdf:
-            ensure_sticker_preview_png(local_pdf)
 
     window_sticker_oem_url = None
     window_sticker_pdf_url = None
+    if cdjr_sticker_eligible:
+        window_sticker_oem_url = get_window_sticker_url(str(car_raw.get("vin") or ""))
     if show_sticker_ui and premium_viewer:
-        if sticker_visual:
+        if sticker_visual or cdjr_sticker_eligible:
             window_sticker_pdf_url = url_for("api_car_window_sticker", car_id=car_id)
-        elif is_cdjr_stellantis_car(car_raw):
-            window_sticker_pdf_url = url_for("api_car_window_sticker", car_id=car_id)
-        if is_cdjr_stellantis_car(car_raw):
-            window_sticker_oem_url = get_window_sticker_url(str(car_raw.get("vin") or ""))
-        elif listing_sticker_urls:
+        if not window_sticker_oem_url and listing_sticker_urls:
             window_sticker_oem_url = listing_sticker_urls[0]
     if show_sticker_ui and premium_viewer and not sticker_preview_embed_url:
         sticker_preview_embed_url = sticker_preview_api if sticker_visual else None
@@ -1326,7 +1620,9 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         include_verified=False,
         verified_specs=ctx.get("verified_specs") or {},
     )
-    _missing_codes = listing_missing_field_codes(car_raw, for_public_filter=False)
+    from backend.db.incomplete_listings_db import get_missing_field_codes_for_car_id
+
+    _missing_codes = get_missing_field_codes_for_car_id(car_id)
     listing_incomplete_fields = [
         {"code": c, "label": INCOMPLETE_FIELD_LABELS.get(c, c.replace("_", " ").title())}
         for c in _missing_codes
@@ -1346,6 +1642,9 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
                         dealer_info[url_key] = normalize_optional_url(dealer_info.get(url_key))
         except Exception:
             pass
+    from backend.listings.dealer_map import build_dealer_map_for_car
+
+    dealer_map = build_dealer_map_for_car(car_raw, dealer_info)
     market_intel = None
     trim_ladder = None
     if _session_has_paid_access():
@@ -1358,20 +1657,27 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
             radius_miles=geo.get("radius_miles"),
         )
     if _viewer_sees_premium_features():
-        from backend.enrichment.trim_ladder import resolve_trim_ladder
+        try:
+            ladder_year = int(car_raw.get("year") or 0)
+        except (TypeError, ValueError):
+            ladder_year = 0
+        if not ladder_year or ladder_year >= 2010:
+            from backend.enrichment.trim_ladder import resolve_trim_ladder
 
-        trim_ladder = resolve_trim_ladder(
-            make=car_raw.get("make"),
-            model=car_raw.get("model"),
-            year=car_raw.get("year"),
-            trim=car_raw.get("trim"),
-        )
+            trim_ladder = resolve_trim_ladder(
+                make=car_raw.get("make"),
+                model=car_raw.get("model"),
+                year=car_raw.get("year"),
+                trim=car_raw.get("trim"),
+            )
+    listings_geo = listings_geo_kwargs_from_session(session)
     return {
         "car": car,
         "market_intel": market_intel,
         "trim_ladder": trim_ladder,
         "car_is_saved": car_is_saved,
         "logged_in": bool(uid),
+        "listings_geo_zip": listings_geo.get("zip_code") or "",
         "listing_incomplete_fields": listing_incomplete_fields,
         "gallery_images": ctx.get("gallery_images") or [],
         "verified_specs": ctx.get("verified_specs") or {},
@@ -1399,12 +1705,14 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         "listing_sticker_image_url": listing_sticker_image_url,
         "sticker_fetch_pending": sticker_fetch_pending,
         "is_cdjr_stellantis": is_cdjr_stellantis_car(car_raw),
+        "cdjr_window_sticker_eligible": cdjr_sticker_eligible,
         "window_sticker_preview_api_url": sticker_preview_api,
         "window_sticker_preview_url": sticker_preview_embed_url,
         "hide_photo_analysis": bool(ctx.get("hide_photo_analysis")),
         "window_sticker_oem_url": window_sticker_oem_url,
         "window_sticker_pdf_url": window_sticker_pdf_url,
         "dealer_info": dealer_info,
+        "dealer_map": dealer_map,
     }
 
 
@@ -1416,7 +1724,9 @@ def car_detail(car_id):
     embed = request.args.get("embed") in ("1", "true", "yes")
     ctx = _build_car_detail_view_context(car_id, car_raw)
     ctx["car_embed"] = embed
-    return render_template("car.html", **ctx)
+    resp = make_response(render_template("car.html", **ctx))
+    resp.headers["Cache-Control"] = "private, max-age=180"
+    return resp
 
 
 @app.route("/api/cars/<int:car_id>", methods=["GET"])
@@ -1481,6 +1791,38 @@ def api_car_window_sticker_preview(car_id: int):
     return _serve_car_window_sticker_preview(car_id)
 
 
+@app.route("/api/cars/<int:car_id>/nhtsa-recalls", methods=["GET"])
+def api_car_nhtsa_recalls(car_id: int):
+    """NHTSA recall campaigns for a listing VIN (public JSON)."""
+    car = get_car_by_id(car_id, include_inactive=False)
+    if not car:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    payload, status = _nhtsa_recalls_lookup_payload(
+        vin_raw=str(car.get("vin") or "").strip(),
+        make=str(car.get("make") or "").strip() or None,
+        model=str(car.get("model") or "").strip() or None,
+        year=str(car.get("year") or "").strip() or None,
+        rate_key=f"nhtsa-recalls-api:{_client_ip()}",
+    )
+    return jsonify(payload), status
+
+
+@app.route("/api/cars/<int:car_id>/vehicle-history-intelligence", methods=["GET"])
+def api_car_vehicle_history_intelligence(car_id: int):
+    """NHTSA recalls + vPIC validation + listing title flags (premium; no Carfax)."""
+    ok, err = _require_premium_feature()
+    if not ok:
+        return jsonify({"ok": False, "error": err}), 403
+    car = get_car_by_id(car_id, include_inactive=False)
+    if not car:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    from backend.enrichment.vehicle_history_intelligence import build_vehicle_history_intelligence
+
+    payload = build_vehicle_history_intelligence(car)
+    status = 200 if payload.get("ok") else 400
+    return jsonify(payload), status
+
+
 @app.route("/api/cars/<int:car_id>/packages/ensure", methods=["POST"])
 def api_car_packages_ensure(car_id: int):
     """Fetch/analyze window sticker and merge packages (premium only)."""
@@ -1510,6 +1852,7 @@ def api_car_packages_ensure(car_id: int):
     from backend.enrichment.window_sticker_service import sticker_panel_payload, window_sticker_available, window_sticker_has_visual
     from backend.scanner.window_sticker import (
         car_listing_sticker_urls,
+        cdjr_oem_window_sticker_eligible,
         get_window_sticker_url,
         is_cdjr_stellantis_car,
         show_window_sticker_panel,
@@ -1531,13 +1874,13 @@ def api_car_packages_ensure(car_id: int):
     )
     vin = str(car2.get("vin") or "")
     if show_sticker and vin:
-        if is_cdjr_stellantis_car(car2):
+        if cdjr_oem_window_sticker_eligible(car2):
             status["window_sticker_oem_url"] = get_window_sticker_url(vin)
         else:
             listing_urls = car_listing_sticker_urls(car2)
             if listing_urls:
                 status["window_sticker_oem_url"] = listing_urls[0]
-    if show_sticker and is_cdjr_stellantis_car(car2):
+    if show_sticker and cdjr_oem_window_sticker_eligible(car2):
         status["window_sticker_view_url"] = url_for("api_car_window_sticker", car_id=car_id)
     elif status.get("window_sticker_visual_available"):
         status["window_sticker_view_url"] = url_for(
@@ -1581,6 +1924,105 @@ def api_nearby_dealers():
 @app.route("/find-dealers")
 def find_dealers_page():
     return render_template("find_dealers.html")
+
+
+def _nhtsa_recalls_lookup_payload(
+    *,
+    vin_raw: str,
+    make: str | None = None,
+    model: str | None = None,
+    year: str | None = None,
+    rate_key: str,
+) -> tuple[dict, int]:
+    """Shared NHTSA recall lookup for HTML page and JSON API."""
+    from backend.enrichment.vehicle_history_intelligence import fetch_nhtsa_recalls
+    from backend.utils.hybrid_search import _normalize_listings_vin_query
+
+    if not allow_request(
+        rate_key,
+        max_events=_NHTSA_RECALLS_RPM,
+        window_seconds=60.0,
+    ):
+        return {"ok": False, "error": "rate_limited", "recalls": []}, 429
+
+    vin_norm = _normalize_listings_vin_query(vin_raw) if vin_raw else None
+    ymm_make = (make or "").strip() or None
+    ymm_model = (model or "").strip() or None
+    ymm_year = (year or "").strip() or None
+    vehicle_label = (
+        f"{ymm_year} {ymm_make} {ymm_model}".strip()
+        if ymm_make and ymm_model and ymm_year
+        else None
+    )
+
+    if vin_raw and not vin_norm:
+        return {
+            "ok": False,
+            "error": "invalid_vin",
+            "vin": None,
+            "vin_raw": vin_raw,
+            "recalls": [],
+            "vehicle_label": vehicle_label,
+        }, 400
+    if not vin_norm:
+        return {
+            "ok": False,
+            "error": "missing_vin",
+            "recalls": [],
+            "vehicle_label": vehicle_label,
+        }, 400
+
+    recalls, api_err = fetch_nhtsa_recalls(
+        vin_norm,
+        make=ymm_make,
+        model=ymm_model,
+        year=ymm_year,
+    )
+    payload: dict = {
+        "ok": api_err is None,
+        "vin": vin_norm,
+        "recalls": recalls,
+        "vehicle_label": vehicle_label,
+        "error": api_err,
+    }
+    if api_err:
+        return payload, 502
+    return payload, 200
+
+
+@app.route("/api/nhtsa-recalls", methods=["GET"])
+def api_nhtsa_recalls_lookup():
+    """JSON NHTSA recall lookup for inline VDP (same inputs as /nhtsa-recalls)."""
+    payload, status = _nhtsa_recalls_lookup_payload(
+        vin_raw=(request.args.get("vin") or "").strip(),
+        make=request.args.get("make"),
+        model=request.args.get("model"),
+        year=request.args.get("year") or request.args.get("modelYear"),
+        rate_key=f"nhtsa-recalls-api:{_client_ip()}",
+    )
+    return jsonify(payload), status
+
+
+@app.route("/nhtsa-recalls")
+def nhtsa_recalls_lookup():
+    """VIN recall lookup using NHTSA public API (auto-runs on page load)."""
+    vin_raw = (request.args.get("vin") or "").strip()
+    payload, status = _nhtsa_recalls_lookup_payload(
+        vin_raw=vin_raw,
+        make=request.args.get("make"),
+        model=request.args.get("model"),
+        year=request.args.get("year") or request.args.get("modelYear"),
+        rate_key=f"nhtsa-recalls:{_client_ip()}",
+    )
+    return render_template(
+        "nhtsa_recalls.html",
+        vin=payload.get("vin"),
+        vin_raw=vin_raw,
+        recalls=payload.get("recalls") or [],
+        lookup_error=payload.get("error"),
+        rate_limited=payload.get("error") == "rate_limited" or status == 429,
+        vehicle_label=payload.get("vehicle_label"),
+    )
 
 
 @app.route("/api/dealer-locator")
@@ -1721,6 +2163,23 @@ def _highlight_params_from_filters(filters: dict) -> list[str]:
     return keys
 
 
+@app.route("/api/search/smart/parse", methods=["GET"])
+def api_search_smart_parse():
+    """Fast parse-only for listings instant preview (no DB search)."""
+    ip = _client_ip()
+    if not allow_request(f"smart:{ip}", max_events=_SMART_SEARCH_RPM, window_seconds=60.0):
+        return jsonify({"ok": False, "error": "rate_limited"}), 429
+    q = (request.args.get("query") or request.args.get("q") or "").strip()
+    filters = parse_natural_query(q)
+    return jsonify(
+        {
+            "ok": True,
+            "filters": filters,
+            "highlight": _highlight_params_from_filters(filters),
+        }
+    )
+
+
 @app.route("/api/search/smart", methods=["POST"])
 def api_search_smart():
     """Listings search bar: local ``parse_natural_query`` + SQL/pgvector only (no Claude)."""
@@ -1758,6 +2217,7 @@ def api_search_smart():
         empty_message = NO_PARSE_MATCH_MESSAGE
     return jsonify(
         {
+            "ok": True,
             "filters": filters,
             "results": safe_results,
             "highlight": _highlight_params_from_filters(filters),
@@ -1830,6 +2290,7 @@ def api_car_chat(car_id: int):
         pass
 
     body = request.get_json() or {}
+
     message = (body.get("message") or body.get("q") or "").strip()
     if not message:
         return jsonify({"ok": False, "error": "message_required"}), 400

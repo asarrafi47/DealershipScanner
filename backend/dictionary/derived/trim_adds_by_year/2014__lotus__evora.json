@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2014|lotus|evora",
+  "year": 2014,
+  "make": "Lotus",
+  "model": "Evora",
+  "ladder_id": "brochure_llm_2014__lotus__evora",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Evora S",
+    "Evora"
+  ],
+  "adds_by_trim": {
+    "Evora S": [
+      "Sport Pack with active exhaust valve control via sport button"
+    ],
+    "Evora": [
+      "6-speed manual or 6-speed IPS automatic transmission options",
+      "Dynamic Performance Management with selectable Sport mode for enhanced stability",
+      "Bi-Xenon headlamps with LED rear brake cluster",
+      "Integrated rear boot spoiler for functional and styling benefits",
+      "Free-flowing exhaust system with bypass valve for increased power output",
+      "Choice of 18/19 or 19/20 inch lightweight alloy wheels",
+      "Pirelli P-Zero or P-Zero Corsa tires",
+      "Magnesium steering wheel with ergonomic design"
+    ]
+  }
+}

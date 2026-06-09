@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2024|nissan|leaf",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2024__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV PLUS",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV PLUS": [
+      "60 kWh lithium-ion battery (vs. 40 kWh)",
+      "160 kW AC synchronous electric motor with 214 hp and 250 lb-ft of torque",
+      "High-output Quick Charge port — 100 kW (CHAdeMO)",
+      "17\" aluminum-alloy wheels",
+      "Front bumper chin spoiler",
+      "Electronic parking brake with automatic brake hold",
+      "ProPILOT Assist",
+      "Intelligent Around View® Monitor",
+      "Intelligent Driver Alertness",
+      "LED headlights with LED signature Daytime Running Lights and fog lights"
+    ],
+    "S": [
+      "40 kWh lithium-ion battery",
+      "110 kW AC synchronous electric motor with 147 hp and 236 lb-ft of torque",
+      "6.6 kW onboard charger",
+      "Portable charge cable (120-V/240-V)",
+      "Quick Charge port — 50 kW (CHAdeMO)",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Lane Intervention",
+      "Intelligent Blind Spot Intervention",
+      "Rear Cross Traffic Alert"
+    ]
+  }
+}

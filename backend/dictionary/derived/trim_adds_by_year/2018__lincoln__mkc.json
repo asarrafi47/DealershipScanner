@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|lincoln|mkc",
+  "year": 2018,
+  "make": "Lincoln",
+  "model": "MKC",
+  "ladder_id": "brochure_llm_2018__lincoln__mkc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Reserve",
+    "Select",
+    "Premiere",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Reserve": [
+      "Wollsdorf leather-wrapped steering wheel"
+    ],
+    "Select": [
+      "Wollsdorf leather-wrapped steering wheel"
+    ],
+    "Premiere": [
+      "Fade-up ambient lighting"
+    ],
+    "Base": [
+      "6-speed SelectShift automatic transmission with paddle activation",
+      "Active Grille Shutters",
+      "Electric parking brake",
+      "Electric Power-Assisted Steering (EPAS)",
+      "Power disc brakes with Anti-Lock Brake System",
+      "Torque Vectoring Control",
+      "Lincoln Premium Sound System with 9 speakers and subwoofer",
+      "SYNC 3 with 8-inch color LCD touchscreen and Apple CarPlay/Android Auto",
+      "12-way power adjustable front driver seat with memory",
+      "Dual-zone electronic automatic temperature control"
+    ]
+  }
+}

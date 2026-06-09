@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2021_audi_q8_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q8",
+    "Q8"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Petrol plug-in hybrid: (was L TFSI V6; The SQ8 features 21-inch wheels with 285/45 tires, however 22- and 23-inch optio)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L TFSI V6; The SQ8 features 21-inch wheels with 285/45 tires, however 22- and 23-inch optio (was For the unrelated battery electric vehicle previously marketed as the Audi e-tron, see Audi Q8 e-tron.; Petrol plug-in hybrid:)"
+      },
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "Adds Speaker Count & Breakdown: Meanwhile, the midrange Premium Plus trim gets a heated steering wheel as standard and off"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: For the unrelated battery electric vehicle previously marketed as the Audi e-tron, see Audi Q8 e-tron.; Petrol plug-in hybrid:"
+      }
+    ]
+  }
+}

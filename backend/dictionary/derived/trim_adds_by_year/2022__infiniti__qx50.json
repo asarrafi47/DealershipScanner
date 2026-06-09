@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2022|infiniti|qx50",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_web_2022__infiniti__qx50",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "QX50 SPORT AWD",
+    "QX50 LUXE AWD",
+    "QX50 PURE AWD"
+  ],
+  "adds_by_trim": {
+    "QX50 SPORT AWD": [
+      "Stylish dark exterior accents and upgraded lighting",
+      "12-speaker premium Bose audio system",
+      "360-degree camera system",
+      "Heated steering wheel",
+      "Front seats with heating and ventilation"
+    ],
+    "QX50 LUXE AWD": [
+      "Higher trim level features between Pure and Sport"
+    ],
+    "QX50 PURE AWD": [
+      "2.0-liter turbocharged four-cylinder engine with 268 hp and 280 lb-ft torque",
+      "CVT automatic transmission with standard all-wheel drive",
+      "7.0-inch digital gauge cluster display",
+      "Dual central touchscreens: 8.0-inch and 7.0-inch",
+      "Apple CarPlay and Android Auto compatibility",
+      "Wireless phone charger",
+      "Power front seats",
+      "Remote start and power liftgate",
+      "Six-speaker audio system",
+      "Standard driver assist features including automatic emergency braking with pedestrian detection and ProPilot Assist"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/qx50/"
+}

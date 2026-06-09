@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|scion|xb",
+  "year": 2013,
+  "make": "Scion",
+  "model": "xB",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

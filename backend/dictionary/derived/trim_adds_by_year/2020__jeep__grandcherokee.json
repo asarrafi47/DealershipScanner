@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2020|jeep|grandcherokee",
+  "year": 2020,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "brochure_llm_2020__jeep__grandcherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Trackhawk®",
+    "SRT®",
+    "Summit®",
+    "Overland®",
+    "Limited",
+    "Trailhawk®",
+    "Laredo"
+  ],
+  "adds_by_trim": {
+    "Trackhawk®": [
+      "6.2L Supercharged V8 engine with 707 horsepower and 645 lb-ft torque",
+      "Adaptive electronic transmission with 7 drive modes: Auto, Sport, Track, Snow, Tow, Eco, Valet",
+      "SRT-tuned electric steering with 3.2 lock-to-lock turns",
+      "Bilstein Adaptive Damping Suspension with SRT tuning",
+      "15.75 x 1.42 inch Brembo performance brakes with 6-piston fixed calipers",
+      "Standard upgraded metal bezels and accents throughout interior",
+      "65.7-inch front and rear track width",
+      "8.1-inch ground clearance with 18-degree approach angle"
+    ],
+    "SRT®": [
+      "6.4L HEMI V8 engine with 470 horsepower and 645 lb-ft torque",
+      "Adaptive electronic transmission with driver-interactive paddle shifters and Eco-Mode",
+      "13.78 x 1.10 inch Brembo performance brakes with 4-piston calipers",
+      "Bilstein Adaptive Damping Suspension with SRT tuning on front and rear",
+      "65.7-inch front and rear track width",
+      "Standard upgraded metal bezels and accents throughout interior",
+      "8.1-inch ground clearance"
+    ],
+    "Summit®": [
+      "Available 8.4-inch color touchscreen with fluid design and Piano Black detail",
+      "Available leather-trimmed seats with cushioned and quilted upscale leather",
+      "Available leather-wrapped steering wheel, doors, center console, glove box, armrests",
+      "Available SiriusXM Guardian with 4G Wi-Fi Hotspot capability",
+      "Standard upgraded metal bezels and accents throughout interior",
+      "Maximum towing capacity of 7,200 pounds with 5.7L and 6.4L engines"
+    ],
+    "Overland®": [
+      "Available upgraded metal bezels and accents with real textured metal",
+      "Available 8.4-inch color touchscreen with smartphone integration and voice commands",
+      "5.7L V8 engine with Fuel Saver Technology option"
+    ],
+    "Limited": [
+      "Available upgraded metal bezels and accents with real textured metal",
+      "Available 8.4-inch color touchscreen with pinch-to-zoom capability"
+    ],
+    "Trailhawk®": [
+      "Available upgraded metal bezels and accents with real textured metal",
+      "36.1-degree approach angle and 22.8-degree breakover angle",
+      "22.6-inch maximum water fording depth capability"
+    ],
+    "Laredo": [
+      "Leather-wrapped steering wheel as standard premium feature",
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Available 5.7L V8 engine with Fuel Saver Technology",
+      "8.5-inch ground clearance with 26.2-degree approach angle",
+      "Multilink rear suspension with coil springs and gas-charged shock absorbers"
+    ]
+  }
+}

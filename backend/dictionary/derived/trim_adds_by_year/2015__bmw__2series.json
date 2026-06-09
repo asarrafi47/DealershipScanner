@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|bmw|2series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "2 Series",
+  "ladder_id": "brochure_llm_2015__bmw__2series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Sport Line"
+  ],
+  "adds_by_trim": {
+    "M Sport": [
+      "M Sport suspension",
+      "M Aerodynamic kit with special front air dam, side skirts, rear spoiler",
+      "Kidney grille slats in high-gloss black",
+      "Shadowline trim with high-gloss black side window surrounds and mirror accents",
+      "Chrome exhaust pipe tips",
+      "Leather-wrapped multi-function M sport steering wheel",
+      "Door-sill finishers in aluminum with M lettering",
+      "M footrest",
+      "Red highlight and red contrasting rings on instrument cluster",
+      "Interior illumination with variable color effects in Orange-Red or White"
+    ],
+    "Sport Line": [
+      "Sport seats for driver and front passenger",
+      "Front and rear bumpers specially designed in high-gloss black",
+      "Kidney grille slats, front and rear bumper accents, exterior mirror caps in high-gloss black",
+      "Black chrome exhaust pipe tips",
+      "M Sport suspension",
+      "Door-sill finishers in aluminum with BMW Sport lettering",
+      "Red contrast stitching on multi-function sport steering wheel",
+      "Choice of Dakota Leather with Red or Dark Oyster highlight"
+    ]
+  }
+}

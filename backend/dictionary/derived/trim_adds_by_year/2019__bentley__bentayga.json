@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|bentley|bentayga",
+  "year": 2019,
+  "make": "bentley",
+  "model": "bentayga",
+  "ladder_id": "brochure_2019__bentley__bentayga",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adds seven standard paint colours: Beluga, Dark Sapphire, Glacier White, Moonbeam, Onyx, St. James' Red, Thunder",
+      "Adds 21-inch five twin-spoke alloy wheel painted",
+      "Adds brake system with Electronic Stability Programme, Traction Control System, Anti-lock Braking System, Electronic Brake Force Distribution, Hydraulic Brake Assist, Drag Torque Control, Electronic Differential Lock",
+      "Adds electronic parking brake with drive away assist",
+      "Adds Electronic Tyre Pressure Monitoring System",
+      "Adds front suspension with four-link double wishbones and rear suspension with trapezoidal multi-link",
+      "Adds air springs with Continuous Damping Control",
+      "Adds four floating adaptive LED headlamps with integrated headlamp washer",
+      "Adds full LED tail lamps and front and rear fog lamps",
+      "Adds infotainment system with 8-inch capacitive touchscreen, digital radio, HDD navigation, AMI, DVD/CD slot, SD card slots, Bluetooth and Wi-Fi streaming"
+    ],
+    "Limited": [
+      "Adds 56 additional exterior paint colours, duotone paints and bespoke colour matching service",
+      "Adds choice of seven additional veneers: Burr Walnut, Dark Stained Burr Walnut, Dark Stained Madrona, Liquid Amber, Madrona, Piano Black, Tamo Ash",
+      "Adds carbon fibre fascia, centre console, door waistrails and picnic tables on four seat specification",
+      "Adds choice of ten additional hide colours: Brunel, Imperial Blue, Newmarket Tan, Porpoise, Linen, Magnolia, Portland, Saddle",
+      "Adds full leather interior including upper trim",
+      "Adds Nairn for Bentley premium audio system",
+      "Adds Bentley Rear Entertainment with Digital TV tuner and digital radio",
+      "Adds Mulliner Driving Specification package",
+      "Adds multiple interior mood lighting colours and bespoke styling specifications",
+      "Adds Mulliner biometric secure stowage and refrigerated bottle cooler"
+    ]
+  }
+}

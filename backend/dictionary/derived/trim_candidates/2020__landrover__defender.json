@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2020|landrover|defender",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Defender",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "HSE",
+    "SE",
+    "Standard",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

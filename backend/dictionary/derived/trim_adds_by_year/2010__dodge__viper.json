@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|dodge|viper",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Viper",
+  "ladder_id": "brochure_web_2010__dodge__viper",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "SRT10 ACR",
+    "SRT10"
+  ],
+  "adds_by_trim": {
+    "SRT10 ACR": [
+      "Track-focused aerodynamics with larger rear wing and front splitter",
+      "Lighter weight construction optimized for circuit performance",
+      "Adjustable suspension tuning for racing applications",
+      "Michelin Pilot Sport PS2 tires sized for track use",
+      "Racing-spec engine calibration and cooling upgrades",
+      "Stripped interior with minimal sound deadening for weight reduction",
+      "Unique ACR-specific styling and badging"
+    ],
+    "SRT10": [
+      "8.3L V10 naturally aspirated engine producing 645 horsepower",
+      "6-speed manual transmission",
+      "Viper Red Striped leather appointed interior",
+      "Power windows and locks",
+      "Air conditioning with dual-zone climate control",
+      "Michelin Pilot Sport PS2 performance tires",
+      "Dodge Electronic Stability Program with traction control",
+      "Four-wheel disc brakes with ABS",
+      "Rigid frame-mounted roll hoops for safety",
+      "Premium sound system with single-disc CD player"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/dodge/viper"
+}

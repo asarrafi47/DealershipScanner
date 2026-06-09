@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2020_mazda_cx-5_complete_options",
+  "make": "Mazda",
+  "models": [
+    "CX-5",
+    "CX-5"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Signature": [
+      {
+        "label": "Engine Options",
+        "value": "The facelifted CX-5 was released in Japan on 8 November 2021. The facelift model saw the (25T) engine discontinued and, leaving only two gasoline models: 20S, and 25S. The XD grade has been consolidated into two grades: XD Proactive, and XD L Package."
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Initially, the only engine available was a direct-injected Skyactiv-G 2.0-litre; The facelifted CX-5 was released in Japan on 8 November 2021. The facelift model saw the (25T) engine discontinued and, leaving only two gasoline models: 20S, and 25S. The XD grade has been consolidated into two grades: XD Proactive, and XD L Package."
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "The facelifted CX-5 was released in Japan on 8 November 2021. The facelift model saw the (25T) engine discontinued and, leaving only two gasoline models: 20S, and 25S. The XD grade has been consolidated into two grades: XD Proactive, and XD L Package."
+      }
+    ]
+  }
+}

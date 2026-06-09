@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2022|ford|mustangmache",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Mustang Mach-E",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "GT",
+    "Active",
+    "Base",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

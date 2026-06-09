@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2019|mazda|mx5",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2019__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Club"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Leather seats"
+    ],
+    "Club": [
+      "Red-stitched cloth seats",
+      "Bose Surround Sound audio system with nine speakers",
+      "Two speakers positioned in each headrest",
+      "SKYACTIV-G 2.0L DOHC 16-valve 4-cylinder engine with 181 hp",
+      "SKYACTIV-MT 6-speed manual transmission with short-throw shifter",
+      "Available 6-speed Sport automatic transmission with paddle shifters",
+      "MAZDA CONNECT infotainment system with Bluetooth and Commander control",
+      "HD Radio and Pandora support"
+    ]
+  }
+}

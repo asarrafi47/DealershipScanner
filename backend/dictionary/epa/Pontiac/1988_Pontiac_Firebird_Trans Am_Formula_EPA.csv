@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,2.8L V6 ((FFS)),2.8L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,17,25,20,,,,,
+1988,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,2.8L V6 ((FFS)),2.8L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,15,24,18,,,,,
+1988,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,5.0L V8 ((FFS) (SPFI)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,
+1988,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,5.0L V8 ((FFS) (MPFI)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,15,22,17,,,,,
+1988,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,5.0L V8 ((FFS) (SPFI)),5.0L V8,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,23,17,,,,,
+1988,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,5.0L V8 ((FFS) (MPFI)),5.0L V8,,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,
+1988,Pontiac,Firebird/Trans Am/Formula,Firebird/Trans Am,5.7L V8 ((350 V8) (FFS)),5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.7,15,23,18,,,,,

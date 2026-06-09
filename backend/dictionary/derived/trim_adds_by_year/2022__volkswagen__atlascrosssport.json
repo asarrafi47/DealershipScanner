@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2022|volkswagen|atlascrosssport",
+  "year": 2022,
+  "make": "Volkswagen",
+  "model": "Atlas Cross Sport",
+  "ladder_id": "brochure_llm_2022__volkswagen__atlascrosssport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL R-Line® Premium",
+    "SEL R-Line®",
+    "SEL",
+    "SE w/ Tech.",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL R-Line® Premium": [
+      "21-inch alloy wheels with all-season tires",
+      "Power auto-folding side mirrors",
+      "Gloss black B-pillars",
+      "Black roof rails and black side window surrounds",
+      "Blacked-out grille, front/rear fascias, and trim elements",
+      "Black R-Line® side badging with gloss black lower trim"
+    ],
+    "SEL R-Line®": [
+      "R-Line® bumpers and exterior trim with body-color lower elements",
+      "Black side mirror caps",
+      "20-inch dark graphite twin 5-spoke alloy wheels",
+      "Black roof rails and powder-coated side window surrounds"
+    ],
+    "SEL": [
+      "4MOTION® all-wheel drive standard with Active Control and Driving Mode Selection",
+      "Adaptive Front-lighting System with dynamic cornering lights",
+      "Side mirrors with position memory and reverse-activated passenger auto-tilt",
+      "Panoramic sunroof with power tilting and sliding front section",
+      "20-inch 5-spoke two-tone machined alloy wheels",
+      "Chrome upper surrounds on side windows and chrome lower door panel trim"
+    ],
+    "SE w/ Tech.": [
+      "20-inch silver 5-spoke alloy wheels",
+      "Optional 20-inch black 5-spoke alloy wheels (requires factory option P20)",
+      "Optional panoramic sunroof",
+      "4MOTION® all-wheel drive available with Active Control"
+    ],
+    "SE": [
+      "2.0L TSI® turbocharged 4-cylinder engine with 235 HP and 258 lb-ft torque",
+      "8-speed automatic transmission with Tiptronic®",
+      "Front-wheel drive standard",
+      "LED headlights, daytime running lights, and front turn signals",
+      "Poor Weather Lights for improved inclement weather visibility",
+      "Automatic headlights with Coming Home/Leaving Home feature",
+      "LED taillights and rear license plate lights",
+      "Heated, foldable, power-adjustable side mirrors with integrated turn signals",
+      "18-inch 5-spoke two-tone machined alloy wheels",
+      "Four-wheel independent suspension with vented front and solid rear disc brakes"
+    ]
+  }
+}

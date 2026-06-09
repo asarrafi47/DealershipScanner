@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2016|toyota|camry",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_llm_2016__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE V6",
+    "XSE 4-Cylinder",
+    "SPECIAL EDITION",
+    "SE",
+    "XLE V6",
+    "XLE 4-Cylinder",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XSE V6": [
+      "3.5L V6 Engine with 268 hp @ 6200 rpm and 248 lb-ft torque",
+      "21 city/31 hwy/25 combined estimated mpg",
+      "Sport-tuned shock absorbers, springs, strut tower and trunk-mounted braces",
+      "Paddle shifters on 6-speed automatic transmission"
+    ],
+    "XSE 4-Cylinder": [
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm",
+      "Sport-tuned shock absorbers, springs, strut tower and trunk-mounted braces",
+      "Paddle shifters on 6-speed automatic transmission"
+    ],
+    "SPECIAL EDITION": [
+      "Leather-trimmed multi-stage heated front seats with 8-way power-adjustable driver's seat and power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel with Bluetooth hands-free controls",
+      "Smart Key System with Push Button Start"
+    ],
+    "SE": [
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm",
+      "Sport-tuned shock absorbers, springs, strut tower and trunk-mounted braces",
+      "Paddle shifters on 6-speed automatic transmission"
+    ],
+    "XLE V6": [
+      "3.5L V6 Engine with 268 hp @ 6200 rpm and 248 lb-ft torque",
+      "21 city/31 hwy/25 combined estimated mpg",
+      "LED low- and high-beam headlights with auto on/off feature",
+      "LED Daytime Running Lights",
+      "Power tilt/slide moonroof",
+      "Dual chrome-tipped exhaust",
+      "Acoustic noise-reducing front windshield",
+      "Entune Premium Audio with Integrated Navigation and App Suite including 7-inch high-resolution touchscreen"
+    ],
+    "XLE 4-Cylinder": [
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm",
+      "25 city/35 hwy/28 combined estimated mpg",
+      "LED Daytime Running Lights",
+      "17-inch alloy wheels with SuperChrome paint",
+      "Chrome-tipped exhaust",
+      "Dual zone automatic climate control with rear-seat vents",
+      "Entune Audio Plus with Connected Navigation App including 7-inch high-resolution touchscreen"
+    ],
+    "LE": [
+      "2.5L 4-Cylinder Engine with 178 hp @ 6000 rpm",
+      "25 city/35 hwy/28 combined estimated mpg",
+      "6-speed automatic transmission",
+      "Projector-beam halogen headlights with auto on/off feature",
+      "Color-keyed heated power outside mirrors with manual folding",
+      "16-inch steel wheels with wheel covers",
+      "17-inch alloy wheels with SuperChrome paint",
+      "Entune Audio with 6.1-inch touchscreen, USB 2.0 port, Bluetooth wireless technology, Siri Eyes Free",
+      "Backup camera",
+      "Dual zone automatic climate control with rear-seat vents"
+    ]
+  }
+}

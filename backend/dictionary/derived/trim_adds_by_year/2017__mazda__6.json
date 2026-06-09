@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|mazda|6",
+  "year": 2017,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2017__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA6 GRAND TOURING",
+    "MAZDA6 TOURING",
+    "MAZDA6 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA6 GRAND TOURING": [
+      "LED headlights with Adaptive Front-lighting System",
+      "LED fog lights",
+      "LED grille lighting accent",
+      "19-inch alloy wheels with Dark Silver finish and P225/45 R19 tires",
+      "Smart Brake Support with pre-collision warning",
+      "Mazda Radar Cruise Control with Distance Recognition Support",
+      "Lane Departure Warning System and Lane-keep Assist",
+      "Traffic Sign Recognition System",
+      "Leather-trimmed seats with 8-way power-adjustable driver's seat with lumbar",
+      "Available Premium Package with i-ELOOP regenerative braking, Nappa leather, heated rear seats"
+    ],
+    "MAZDA6 TOURING": [
+      "LED combination taillights",
+      "LED daytime running lights",
+      "Dual power side mirrors with integrated turn signal indicators",
+      "Heated side mirrors",
+      "19-inch alloy wheels with P225/45 R19 all-season tires",
+      "Advanced Blind Spot Monitoring and Rear Cross Traffic Alert",
+      "Leatherette-trimmed seats",
+      "Power sliding-glass moonroof",
+      "Navigation system with MAZDA CONNECT 7.0-inch touchscreen",
+      "Bose Centerpoint 2 Surround Sound with 11 speakers"
+    ],
+    "MAZDA6 SPORT": [
+      "184-hp 2.5L SKYACTIV-G DOHC engine with variable valve timing",
+      "SKYACTIV-MT 6-speed manual or SKYACTIV-Drive 6-speed Sport automatic transmission",
+      "17-inch alloy wheels with P225/55 R17 all-season tires",
+      "Halogen headlights with auto off and daytime running lights",
+      "6-way power-adjustable driver's seat",
+      "Dual-zone automatic climate control with pollen filter",
+      "AM/FM/CD/MP3 audio system with 6 speakers",
+      "Mazda Advanced Keyless Entry System with push-button start",
+      "Rain-sensing windshield wipers",
+      "Advanced front and side-impact airbags with Dynamic Stability Control"
+    ]
+  }
+}

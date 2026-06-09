@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|buick|enclave",
+  "year": 2018,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2018__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AVENIR",
+    "PREMIUM",
+    "ESSENCE",
+    "ENCLAVE (1SV)"
+  ],
+  "adds_by_trim": {
+    "AVENIR": [
+      "Chestnut perforated leather-appointed seating first and second rows with real wood-accented steering wheel",
+      "8-inch diagonal reconfigurable enhanced driver information center",
+      "Wireless charging pad",
+      "Black Ice grille with 20-inch Pearl Nickel wheels and unique Avenir badging",
+      "Avenir Technology Package: adaptive cruise control, forward automatic braking, premium ride suspension with continuously variable real-time damping"
+    ],
+    "PREMIUM": [
+      "Heated second-row captain's chairs",
+      "Third-row power-folding seats",
+      "Heated steering wheel",
+      "Ventilated front seats",
+      "Lane keep assist with lane departure warning",
+      "Safety alert seat",
+      "Front park assist",
+      "Forward collision alert",
+      "IntelliBeam automatic high-beam headlamps",
+      "Bose performance-enhanced premium 10-speaker system with amplifier and subwoofer"
+    ],
+    "ESSENCE": [
+      "Air ionizer",
+      "Perforated leather-appointed seats first and second rows",
+      "Lane change alert with side blind zone alert",
+      "Rear cross traffic alert",
+      "Driver Confidence Package"
+    ],
+    "ENCLAVE (1SV)": [
+      "3.6L V6 engine with 9-speed transmission and stop/start",
+      "Third-row 60/40 split bench seating",
+      "LED headlamps",
+      "Hands-free power programmable liftgate",
+      "QuietTuning with active noise cancellation",
+      "Heated front seats",
+      "Apple CarPlay and Android Auto compatibility"
+    ]
+  }
+}

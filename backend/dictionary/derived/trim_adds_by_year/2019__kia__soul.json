@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2019|kia|soul",
+  "year": 2019,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_2019__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes UVO eServices with complimentary 5-year subscription",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds Includes SiriusXM audio and data services trial",
+      "Adds Bluetooth wireless technology connectivity",
+      "Adds Includes 24-hour Roadside Assistance service"
+    ],
+    "Limited": [
+      "Upgraded to eServices with Premium Navigation",
+      "Adds Premium Navigation system",
+      "Adds My Car Zone feature with smartphone data integration"
+    ]
+  }
+}

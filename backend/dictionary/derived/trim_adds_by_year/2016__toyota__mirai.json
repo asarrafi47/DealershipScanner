@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2016|toyota|mirai",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_web_2016__toyota__mirai",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "Advanced"
+  ],
+  "adds_by_trim": {
+    "Advanced": [
+      "Pre-Collision System with pedestrian detection",
+      "Adaptive cruise control with lane-keep assist",
+      "Panoramic moonroof",
+      "Premium Lexicon sound system with 10 speakers",
+      "Navigation system with voice recognition",
+      "Heated front seats",
+      "Power driver seat with lumbar support",
+      "Blind spot monitor with rear cross-traffic alert",
+      "18-inch alloy wheels"
+    ],
+    "Limited": [
+      "4.2-inch color multi-information display",
+      "6.1-inch touchscreen with Entune infotainment",
+      "Fuel cell electric powertrain with 300-mile range",
+      "Toyota Safety Sense with adaptive cruise control",
+      "Bluetooth connectivity and USB audio interface",
+      "Steering wheel audio controls",
+      "17-inch alloy wheels",
+      "Automatic climate control",
+      "Smart key system with push-button start"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/mirai/"
+}

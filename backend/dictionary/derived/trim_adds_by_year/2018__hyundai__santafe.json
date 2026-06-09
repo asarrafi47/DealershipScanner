@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2018|hyundai|santafe",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_2018__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes standard IIHS Top Safety Pick rating",
+      "Adds Blue Link complimentary for first 3 years of ownership",
+      "Adds Includes 24/7 Roadside Assistance",
+      "Adds 10-year New Vehicle Limited Warranty coverage",
+      "Adds 5-year Powertrain Limited Warranty coverage"
+    ],
+    "Blue": [
+      "Adds 6-passenger seating with 2nd-row captain's chairs",
+      "Adds hands-free smart liftgate with auto-open"
+    ],
+    "Limited": [
+      "Adds Lane Departure Warning as standard",
+      "Adds Lane Change Assist as standard",
+      "Adds Multi-view Camera as standard",
+      "Adds Smart Cruise Control as standard"
+    ]
+  }
+}

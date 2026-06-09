@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2013|volvo|xc60",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2013__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premier Plus",
+    "Premier"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Power retractable door mirrors with ground lighting",
+      "All Premier Plus features carried forward"
+    ],
+    "Premier Plus": [
+      "HomeLink® Integrated Garage Door Opener",
+      "Power retractable door mirrors with ground lighting",
+      "All Premier features carried forward"
+    ],
+    "Premier": [
+      "Navigation System with Voice Control and Map Care",
+      "Active Dual Xenon Headlamps",
+      "Volvo Premium Sound System",
+      "Laminated Panoramic Roof with Power Sunshade",
+      "Park Assist, Front & Rear",
+      "Rear Park Assist Camera",
+      "Power Passenger Seat",
+      "Keyless Drive with Personal Car Communicator",
+      "Power Operated Tailgate with Programmable Memory Setting"
+    ]
+  }
+}

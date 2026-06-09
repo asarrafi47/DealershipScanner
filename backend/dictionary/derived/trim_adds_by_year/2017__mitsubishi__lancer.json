@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2017|mitsubishi|lancer",
+  "year": 2017,
+  "make": "Mitsubishi",
+  "model": "Lancer",
+  "ladder_id": "brochure_llm_2017__mitsubishi__lancer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "seL",
+    "se 2.4L",
+    "es 2.4L",
+    "es 2.0L"
+  ],
+  "adds_by_trim": {
+    "seL": [
+      "Leather seating surfaces",
+      "Leather-wrapped steering wheel with silver accent",
+      "Leather-wrapped shift knob",
+      "Heated front seats",
+      "Auto on/off headlights",
+      "Rain-sensing windshield wipers",
+      "Auto-dimming rearview mirror",
+      "18-inch machine finish 2-tone alloy wheels",
+      "FAST-key passive entry system with panic alarm",
+      "Power glass sunroof with tilt and slide"
+    ],
+    "se 2.4L": [
+      "18-inch machine finish 2-tone alloy wheels",
+      "Heated front seats",
+      "Keyless entry with panic alarm feature",
+      "SiriusXM satellite radio with 3-month subscription",
+      "140-watt AM/FM/CD/MP3 audio system with 6 speakers"
+    ],
+    "es 2.4L": [
+      "2.4L engine",
+      "Roof carrier plug-in accommodation",
+      "AWC badge",
+      "140-watt AM/FM/CD/MP3 audio system with 6 speakers",
+      "SiriusXM satellite radio available as option"
+    ],
+    "es 2.0L": [
+      "2.0L engine",
+      "LED running lights",
+      "Fog lights",
+      "Side air dams",
+      "Sport front grille and bumper",
+      "Color-keyed folding power side view mirrors with turn signals",
+      "Heated side view mirrors",
+      "16-inch machine finish 2-tone alloy wheels",
+      "Deluxe fabric seating surfaces",
+      "6-way adjustable driver's seat"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2018|kia|sportage",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_llm_2018__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX TURBO",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX TURBO": [
+      "2.0L Turbo Gasoline Direct Injection 4-cylinder engine with 240 horsepower",
+      "19-inch tires with alloy wheels",
+      "Panoramic sunroof with power sunshade",
+      "Front and rear metal-style accent plates",
+      "Bi-Xenon HID headlights with Dynamic Bending Light",
+      "Front LED fog lights with gloss black and satin trim",
+      "Sport-tuned suspension",
+      "Harman Kardon 320-watt premium audio system with 8 speakers",
+      "Ventilated front seats",
+      "Steering-wheel-mounted paddle shifters"
+    ],
+    "EX": [
+      "18-inch tires with alloy wheels",
+      "Roof rails",
+      "Leather seat trim",
+      "UVO link Infotainment System with 7-inch touchscreen and navigation",
+      "Blind-Spot Detection with Lane-Change Assist",
+      "Rear USB charger",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Heated front seats"
+    ],
+    "LX": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine with 181 horsepower",
+      "17-inch tires with alloy wheels",
+      "Cloth seat trim with YES Essentials fabric treatment",
+      "6-speed Sportmatic transmission",
+      "Rear-Camera Display",
+      "Bluetooth wireless technology and USB/auxiliary input jacks",
+      "Cruise control with steering-wheel-mounted audio controls",
+      "Dual-level cargo floor",
+      "AM/FM/MP3/SiriusXM audio system"
+    ]
+  }
+}

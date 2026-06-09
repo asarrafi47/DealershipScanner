@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2020|subaru|ascent",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Ascent",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

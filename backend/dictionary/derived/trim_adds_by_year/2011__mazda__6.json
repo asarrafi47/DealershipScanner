@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2011|mazda|6",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_2011__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Touring",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 2.5L DOHC 16-valve 4-cylinder engine with 170 hp",
+      "Adds Features AM/FM/CD/MP3 audio system with 6 speakers",
+      "Adds Includes reclining front bucket seats with adjustable headrests",
+      "Adds dual body-color power remote outside mirrors",
+      "Adds Includes clear-lens halogen headlights with automatic shutoff",
+      "Adds Features variable-intermittent front windshield wipers",
+      "Adds Includes power windows, power door locks, and cruise control"
+    ],
+    "Touring": [
+      "Upgraded to 17-inch alloy wheels with all-season tires",
+      "Adds in-dash 6-disc CD/MP3 changer",
+      "Adds Bluetooth audio and hands-free phone capability",
+      "Adds 8-way power-adjustable driver's seat with manual lumbar support",
+      "Adds halogen fog lights",
+      "Adds power-adjustable sliding armrest with covered dual storage compartments",
+      "Adds trip computer display",
+      "Adds SIRIUS Satellite Radio-ready head unit"
+    ],
+    "Sport": [
+      "Upgraded to 3.7L DOHC 24-valve V6 engine with 272 hp",
+      "Adds power sliding-glass moonroof with one-touch open/close",
+      "Adds dual folding outside mirror with side marker lights and ground illumination",
+      "Adds Blind Spot Monitoring System",
+      "Adds chrome dual exhaust finishers",
+      "Adds leather-trimmed seats",
+      "Adds antitheft alarm system",
+      "Adds heated front seats"
+    ]
+  }
+}

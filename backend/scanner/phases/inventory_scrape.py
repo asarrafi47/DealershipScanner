@@ -5,6 +5,16 @@ import asyncio
 import logging
 from typing import Any
 
+from backend.scanner.scrapers.dealer_com_bulk_fetch import (
+    dealer_com_bulk_fetch_enabled,
+    default_dealer_com_inventory_api_url,
+    fetch_dealer_com_inventory_bulk,
+    nudge_dealer_com_inventory_api,
+    is_dealer_com_inventory_post_url,
+    merge_post_template,
+    parse_post_template,
+)
+
 from backend.parsers import parse
 from backend.scanner.constants import MAX_PAGINATION_CLICKS, NEXT_SELECTORS
 from backend.scanner.phases.nav import (
@@ -69,6 +79,31 @@ async def scrape_inventory_path(
             pass
 
     page = await context.new_page()
+    post_template: dict[str, Any] | None = None
+    api_post_url: str | None = None
+
+    async def handle_request(request: Any) -> None:
+        nonlocal post_template, api_post_url
+        try:
+            if (request.method or "").upper() != "POST":
+                return
+            rurl = str(getattr(request, "url", "") or "")
+            if "getinventory" not in rurl.lower():
+                return
+            parsed = parse_post_template(getattr(request, "post_data", None))
+            if not parsed:
+                return
+            post_template = merge_post_template(post_template, parsed)
+            if is_dealer_com_inventory_post_url(rurl):
+                api_post_url = rurl.split("?", 1)[0]
+            elif api_post_url is None and "getinventoryandfacets" in rurl.lower():
+                api_post_url = rurl.split("?", 1)[0].replace(
+                    "getInventoryAndFacets", "getInventory"
+                )
+        except Exception:
+            pass
+
+    page.on("request", handle_request)
 
     async def handle_response(response: Any) -> None:
         nonlocal url_denied
@@ -142,6 +177,8 @@ async def scrape_inventory_path(
                 # Clear any intercepts captured before the filter applied and wait for fresh data.
                 local_records.clear()
                 found_data["value"] = False
+                post_template = None
+                api_post_url = None
                 try:
                     await page.wait_for_event("response", pred, timeout=inv_wait_ms)
                 except Exception:
@@ -155,6 +192,48 @@ async def scrape_inventory_path(
                 break
         await asyncio.sleep(0.5)
         await _capture_card_locations()
+
+        if dealer_com_bulk_fetch_enabled() and not post_template:
+            await nudge_dealer_com_inventory_api(page, dealer_name=dealer_name, path=path)
+            for _ in range(24):
+                if post_template:
+                    break
+                await asyncio.sleep(0.25)
+            if post_template and not api_post_url:
+                api_post_url = default_dealer_com_inventory_api_url(page.url or full_url)
+
+        bulk_complete = False
+        if (
+            dealer_com_bulk_fetch_enabled()
+            and post_template
+            and api_post_url
+        ):
+            try:
+                bulk_bodies = await fetch_dealer_com_inventory_bulk(
+                    page,
+                    api_post_url,
+                    post_template,
+                    dealer_name=dealer_name,
+                    path=path,
+                )
+                if bulk_bodies:
+                    local_records = [(api_post_url, body) for body in bulk_bodies]
+                    found_data["value"] = True
+                    bulk_complete = True
+                    logger.info(
+                        "Dealer.com bulk fetch complete [%s]%s — %d page(s), %d intercept row(s)",
+                        dealer_name,
+                        path,
+                        len(bulk_bodies),
+                        len(local_records),
+                    )
+            except Exception as e:
+                logger.debug(
+                    "Dealer.com bulk fetch skipped [%s]%s: %s",
+                    dealer_name,
+                    path,
+                    str(e)[:200],
+                )
 
         # Quick viewport ping when JSON hasn't landed — avoids dead wait when API-backed payloads are slow
         if not found_data["value"]:
@@ -246,7 +325,11 @@ async def scrape_inventory_path(
             return vehicles
 
         prev_unique_vins = 0
-        for pag_iter in range(MAX_PAGINATION_CLICKS):
+        if bulk_complete:
+            pag_iters = 0
+        else:
+            pag_iters = MAX_PAGINATION_CLICKS
+        for pag_iter in range(pag_iters):
             total_count = effective_lot_total_from_intercepts(local_records, base_url)
             by_vin: dict[str, dict[str, Any]] = {}
             for _ru, body in local_records:

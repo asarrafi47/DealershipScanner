@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|volvo|crosscountry",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "Cross Country",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

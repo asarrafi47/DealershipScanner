@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2023|buick|enclave",
+  "year": 2023,
+  "make": "Buick",
+  "model": "Enclave",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Avenir",
+    "Essence",
+    "Sport Touring",
+    "Select",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

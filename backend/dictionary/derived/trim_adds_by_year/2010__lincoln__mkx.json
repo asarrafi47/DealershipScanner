@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|lincoln|mkx",
+  "year": 2010,
+  "make": "Lincoln",
+  "model": "MKX",
+  "ladder_id": "brochure_llm_2010__lincoln__mkx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ULTIMATE PACKAGE",
+    "MIDNIGHT LIMITED EDITION PACKAGE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "ULTIMATE PACKAGE": [
+      "18-inch 10-spoke polished-aluminum wheels"
+    ],
+    "MIDNIGHT LIMITED EDITION PACKAGE": [
+      "22-inch 10-spoke bright polished-aluminum wheels"
+    ],
+    "Base": [
+      "3.5L DOHC 24-valve Duratec aluminum V-6 engine with 265 hp",
+      "18-inch 8-spoke machined-aluminum wheels with euroflange",
+      "Auto-dimming rearview mirror",
+      "6-year/70,000-mile powertrain limited warranty with no deductible",
+      "6 years/70,000 miles roadside assistance",
+      "4-year/50,000-mile bumper-to-bumper limited warranty",
+      "Complimentary maintenance for first year or 15,000 miles"
+    ]
+  }
+}

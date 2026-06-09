@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2017|chevrolet|suburban",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2017__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LT Midnight Edition",
+    "Z71 Midnight Edition",
+    "LT Signature",
+    "TL",
+    "LT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "LT Midnight Edition": [
+      "20-inch Black-painted aluminum wheels with all-season blackwall tires",
+      "Front and rear Black bowtie emblems",
+      "Black exterior paint",
+      "Leather-appointed interior"
+    ],
+    "Z71 Midnight Edition": [
+      "Z71 Off-Road Suspension with 3.42 rear axle ratio",
+      "Autotrac 2-speed active transfer case",
+      "Hill Descent Control",
+      "18-inch Black-painted aluminum wheels with off-road tires",
+      "Unique Z71 Midnight grille",
+      "Black exterior paint and leather-appointed interior",
+      "Z71 skid plates and tubular assist steps"
+    ],
+    "LT Signature": [
+      "20-inch chrome-aluminum wheels with all-season blackwall tires",
+      "Bright bodyside moldings",
+      "Chrome grille insert",
+      "Polished exhaust tip",
+      "Chrome recovery hooks and chrome assist steps"
+    ],
+    "TL": [
+      "Enhanced Driver Alert Package with Forward Collision Alert and Lane Keep Assist",
+      "Sun, Entertainment and Destinations Package with power sunroof and rear-seat Blu-ray"
+    ],
+    "LT": [
+      "Luxury Package with keyless open and start",
+      "Power-fold third-row bench seat and power-release second-row bench seat",
+      "Heated second-row seats and heated steering wheel",
+      "Wireless charging pad on front center armrest",
+      "Hands-free power liftgate with Front and Rear Park Assist",
+      "Side Blind Zone Alert with Lane Change Alert"
+    ],
+    "SL": [
+      "Standard seating and comfort features",
+      "Basic infotainment system",
+      "Standard safety features",
+      "Fabric interior"
+    ]
+  }
+}

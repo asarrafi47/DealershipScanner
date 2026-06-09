@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2023|kia|niro",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Niro",
+  "ladder_id": "2023_kia_niro",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LX",
+    "EX",
+    "SX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "Hybrid/EV EX convenience and tech upgrades"
+    ],
+    "SX": [
+      "SX premium features and Harman Kardon available",
+      "Highest Niro trim"
+    ],
+    "LX": [
+      "1.6L turbocharged three-cylinder engine with 180 horsepower",
+      "Six-speed automatic transmission",
+      "Front-wheel drive",
+      "Air conditioning",
+      "Power windows and locks",
+      "Tilt and telescopic steering wheel",
+      "AM/FM radio with four speakers"
+    ]
+  }
+}

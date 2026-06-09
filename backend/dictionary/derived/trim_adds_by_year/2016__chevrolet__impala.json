@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2016|chevrolet|impala",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2016__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "19-inch machined-face aluminum wheels",
+      "Chevrolet MyLink Radio with Navigation, GPS, SiriusXM NavTraffic and Travel Link",
+      "CD/MP3 player with MyLink Navigation",
+      "Advanced Technology Package: Premium 11-speaker Bose Centerpoint Surround Sound, wireless charging, 120-volt power outlet"
+    ],
+    "2LT": [
+      "Chevrolet MyLink Radio with 8-inch touchscreen, smartphone integration, Siri Eyes Free, Bluetooth audio streaming",
+      "19-inch painted-aluminum wheels",
+      "Available Technology Package with Bose premium sound and wireless charging",
+      "Available Driver Confidence Package with Forward Collision Alert, Lane Departure Warning, Side Blind Zone Alert"
+    ],
+    "LS": [
+      "AM/FM stereo with 4.2-inch color display and auxiliary input jack",
+      "18-inch steel wheels with fascia-spoke wheel cover",
+      "OnStar Basic Plan for five years with RemoteLink mobile app features",
+      "Acoustic-laminated front-side and windshield glass"
+    ]
+  }
+}

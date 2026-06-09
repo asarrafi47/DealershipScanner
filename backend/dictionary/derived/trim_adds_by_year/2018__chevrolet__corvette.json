@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2018|chevrolet|corvette",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_llm_2018__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3LZ",
+    "3LT",
+    "2LT",
+    "1LT",
+    "Stingray"
+  ],
+  "adds_by_trim": {
+    "3LZ": [
+      "Hand-stretched, leather-wrapped instrument panel with meticulous fit and finish",
+      "Lightweight aluminum accents on doors, pedals, shifter and cockpit instrumentation",
+      "Napa leather seating surfaces"
+    ],
+    "3LT": [
+      "Hand-stretched, leather-wrapped instrument panel with meticulous fit and finish",
+      "Lightweight aluminum accents on doors, pedals, shifter and cockpit instrumentation",
+      "Napa leather seating surfaces",
+      "Available heated and ventilated seats with interior temperature control"
+    ],
+    "Stingray": [
+      "Leather-appointed seating surfaces",
+      "Flat-bottom steering wheel with leather wrapping and power tilt/telescopic adjustment",
+      "Steering wheel controls for Bluetooth wireless technology, cruise control, audio system and Driver Information Center",
+      "Passenger air vent with interior temperature control and indicator",
+      "Run-flat Michelin Pilot Super Sport ZP summer-only tires"
+    ],
+    "2LT": [
+      "Heated and ventilated seat availability",
+      "Passenger air vent with interior temperature control and indicator"
+    ],
+    "1LT": [
+      "Leather seating surfaces standard",
+      "Flat-bottom steering wheel with leather wrapping and power tilt/telescopic adjustment",
+      "Steering wheel controls for Bluetooth wireless technology, cruise control, audio system",
+      "Run-flat Michelin ZP summer-only tires"
+    ]
+  }
+}

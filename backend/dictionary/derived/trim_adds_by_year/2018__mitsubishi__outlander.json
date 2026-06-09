@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|mitsubishi|outlander",
+  "year": 2018,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2018__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT S-AWC",
+    "SEL 2WD/S-AWC",
+    "SE 2WD/S-AWC",
+    "ES 2WD/AWC"
+  ],
+  "adds_by_trim": {
+    "GT S-AWC": [
+      "Blind Spot Warning with Lane Change Assist and Rear Cross Traffic Alert",
+      "Adaptive Cruise Control with Forward Collision Mitigation and Lane Departure Warning",
+      "Automatic High Beam headlights",
+      "Electric Parking Brake with Auto Hold",
+      "Available GT Touring Package with enhanced safety and convenience features"
+    ],
+    "SEL 2WD/S-AWC": [
+      "Adaptive Cruise Control, Forward Collision Mitigation, Lane Departure Warning (available via SEL Premium and Touring Packages)",
+      "Automatic High Beam headlights (via SEL Premium and Touring Packages)",
+      "Electric Parking Brake with Auto Hold",
+      "SEL Premium Package option: 710-watt Rockford Fosgate premium audio, LED headlights, Multi-View Camera system",
+      "SEL Touring Package option: includes Premium Package plus Adaptive Cruise Control, Forward Collision Mitigation, Lane Departure Warning, Automatic High Beam"
+    ],
+    "SE 2WD/S-AWC": [
+      "SE Sunroof Package option: power glass sunroof with tilt, slide, and one-touch open/close",
+      "LED fog lights available",
+      "Sunroof wind deflector available",
+      "Entertainment Package option: rear seat DVD player with remote control and infrared wireless headphones"
+    ],
+    "ES 2WD/AWC": [
+      "ECO drive mode switch",
+      "Cruise control",
+      "Power door locks",
+      "Power windows with driver's auto up/down",
+      "Three 12-volt accessory outlets",
+      "Hill Start Assist",
+      "Anti-lock Braking System with Electronic Brakeforce Distribution and Brake Assist",
+      "Multiple airbags and advanced safety features",
+      "Halogen fog lights available"
+    ]
+  }
+}

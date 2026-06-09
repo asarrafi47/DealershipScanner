@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_bentley_continental_complete_options",
+  "make": "Bentley",
+  "models": [
+    "Continental",
+    "Continental"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "GT Speed": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM-S8)"
+      }
+    ],
+    "GTC Speed": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM-S8)"
+      }
+    ]
+  }
+}

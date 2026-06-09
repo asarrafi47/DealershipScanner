@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2022|gmc|sierra",
+  "year": 2022,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_web_2022__gmc__sierra",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "SL",
+    "XFE",
+    "Work Truck"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Unique chrome grille and wheels for distinguished appearance",
+      "Upscale dash with attractive metallic and wood grain accents",
+      "Premium door panel treatment with luxury styling",
+      "Full center console with high-end fit and finish"
+    ],
+    "SLT": [
+      "Upscale dash compared to SLE with better quality materials",
+      "Metallic and wood grain interior accents for luxury touch",
+      "Full center console for storage and convenience"
+    ],
+    "SLE": [
+      "Cloth seats and carpeting instead of rubber/vinyl",
+      "Optional bucket seats with center console available",
+      "Slightly improved interior fit and finish"
+    ],
+    "SL": [
+      "Extended cab configuration with wide rear doors"
+    ],
+    "XFE": [
+      "Cylinder deactivation system for improved fuel economy",
+      "Engineering focused on efficiency"
+    ],
+    "Work Truck": [
+      "Hill-start control and trailer sway control as standard",
+      "Electronic stability system with rollover mitigation technology",
+      "Anti-lock disc brakes and standard stability control",
+      "Power door locks and cruise control as standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/sierra/"
+}

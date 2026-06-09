@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2013|gmc|sierra",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2013__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DENALI",
+    "SLT",
+    "SLE",
+    "LS",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "DENALI": [
+      "12-way power seat adjusters with heated and cooled perforated leather",
+      "Heated, leather-wrapped color-keyed steering wheel",
+      "Premium front leather-appointed seating with Nuance trim",
+      "Front buckets with power lumbar, heated seats, driver memory",
+      "Dual-zone automatic air conditioning with individual settings",
+      "Auto-dimming rearview mirror on 3500HD models"
+    ],
+    "SLT": [
+      "10-way power seat adjusters with heated leather seats",
+      "Front buckets with power lumbar and heated seat cushions",
+      "Premium Cloth seat trim standard",
+      "Dual-zone automatic air conditioning",
+      "MP3-compatible 6-disc CD player with USB and auxiliary input",
+      "Power windows with front passenger express-down"
+    ],
+    "SLE": [
+      "Dark Titanium Cloth seat trim",
+      "6-way power driver seat adjuster",
+      "60/40 folding rear bench on extended/Crew Cab models",
+      "Driver Information Center with compass and outside temperature",
+      "CD player with MP3 playback, USB port, auxiliary input",
+      "Rear-vision camera system on Crew Cab models"
+    ],
+    "LS": [
+      "Dark Titanium vinyl seat trim with rubberized vinyl floor",
+      "Cruise control standard",
+      "AM/FM stereo with seek-and-scan and digital clock",
+      "40/20/40 split-bench front seating with center armrest"
+    ],
+    "WT": [
+      "Single-zone manual air conditioning",
+      "Dark Titanium Cloth seat trim with manual seat adjuster and lumbar",
+      "AM/FM stereo with seek-and-scan",
+      "Tilt-wheel steering column with brake/transmission shift interlock"
+    ]
+  }
+}

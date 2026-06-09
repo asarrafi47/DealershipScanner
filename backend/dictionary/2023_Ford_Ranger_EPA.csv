@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2023,Ford,Ranger,2WD,2.3L I4 (SIDI & PFI),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.3,20,26,22,,,,,,2.3L I4 Turbo,Turbocharged
-2023,Ford,Ranger,2WD,2.3L I4 (SIDI & PFI; with Stop-start),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.3,21,26,23,,,,,,2.3L I4 Turbo,Turbocharged
-2023,Ford,Ranger,4WD,2.3L I4 (SIDI & PFI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.3,19,24,21,,,,,,2.3L I4 Turbo,Turbocharged
-2023,Ford,Ranger,4WD,2.3L I4 (SIDI & PFI; with Stop-start),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.3,20,24,22,,,,,,2.3L I4 Turbo,Turbocharged
-2023,Ford,Ranger,Tremor 4WD,2.3L I4 (SIDI; with Stop-start),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.3,19,19,19,,,,,,2.3L I4 Turbo,Turbocharged

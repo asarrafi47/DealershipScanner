@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2012|audi|a4",
+  "year": 2012,
+  "make": "Audi",
+  "model": "A4",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "S line",
+    "Sport",
+    "Limited",
+    "LT",
+    "SE",
+    "LE",
+    "S4"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

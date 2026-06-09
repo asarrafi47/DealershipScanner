@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|jaguar|xj",
+  "year": 2010,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "generic_jaguar_xj",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "standard wheelbase. Additional features as",
+      "r window electric sunblind and rear passenge",
+      "seats with embossed leapers on headrests, contrast stitch and piping. Driver\u2019s and passenger\u2019s electric Upgrade XJ to XJL Interior Theme including interior/exterior colorways, 20/20 way front"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Premium": 0
+    }
+  }
+}

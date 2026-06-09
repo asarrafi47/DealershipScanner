@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2010|mazda|cx9",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2010__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Dark-silver-and-wood-pattern interior trim replaces piano black",
+      "8-way power driver's seat with power lumbar (3-memory settings)",
+      "Auto-dimming rearview mirror with compass and HomeLink",
+      "Blind Spot Monitoring (BSM) System",
+      "Chrome door handles",
+      "Navigation System with DVD, voice command, 7-inch LCD touchscreen, rearview camera"
+    ],
+    "Touring": [
+      "4-way power front passenger seat",
+      "8-way power driver's seat with manual lumbar support and heated front seats",
+      "Piano black interior trim",
+      "Dual body-color heated power remote outside mirrors",
+      "Power Liftgate Package option with Mazda Advanced Keyless Entry & Start",
+      "Rear-Seat Entertainment System option with 9-inch LCD screen and Bose surround"
+    ],
+    "Sport": [
+      "3.7L DoHC 24-valve V6 engine with 273 hp and 270 lb-ft torque",
+      "6-speed Sport automatic transmission",
+      "7-passenger seating capacity",
+      "Tilt/telescopic steering wheel",
+      "Cruise control with steering-wheel controls",
+      "Three-Zone Automatic Climate Control",
+      "AM/FM/CD stereo with 6 speakers and Bluetooth hands-free capability",
+      "Power windows with front one-touch auto up/down",
+      "Power door locks with 2-stage unlocking"
+    ]
+  }
+}

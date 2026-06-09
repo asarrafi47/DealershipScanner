@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1996,Plymouth,Voyager/Grand Voyager,2WD,2.4L I4 ((FFS)),2.4L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.4,18,24,20,,,,,
+1996,Plymouth,Voyager/Grand Voyager,2WD,2.4L I4 ((FFS)),2.4L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.4,16,23,19,,,,,
+1996,Plymouth,Voyager/Grand Voyager,2WD,3.0L V6 ((FFS)),3.0L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,17,23,19,,,,,
+1996,Plymouth,Voyager/Grand Voyager,2WD,3.3L V6 ((FFS)),3.3L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.3,16,22,18,,,,,
+1996,Plymouth,Voyager/Grand Voyager,4WD,3.8L V6 ((FFS)),3.8L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.8,14,20,16,,,,,

@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2016|ford|f150",
+  "year": 2016,
+  "make": "Ford",
+  "model": "F-150",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "King Ranch",
+    "Lariat",
+    "Sport",
+    "XLT",
+    "XL",
+    "Active",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

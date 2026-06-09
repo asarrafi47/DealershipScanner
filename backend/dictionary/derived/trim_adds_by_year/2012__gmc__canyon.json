@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2012|gmc|canyon",
+  "year": 2012,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2012__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLt",
+    "SLe-2",
+    "SLe-1",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "SLt": [
+      "Leather-appointed front bucket seats with 8-way power driver and 6-way power passenger adjusters",
+      "Heated driver and front passenger seats with power lumbar control",
+      "145-amp alternator with available 5.3L V-8 engine",
+      "Z71 High-Stance off-road Suspension Package standard",
+      "17-inch chrome-clad wheels with P265/70R17 on-/off-road blackwall tires",
+      "Front halogen fog lamps",
+      "Solar-ray deep-tinted glass on all windows except windshield",
+      "2 frame-mounted recovery hooks standard"
+    ],
+    "SLe-2": [
+      "Deluxe Cloth front bucket seats with center floor console and armrest",
+      "CD/MP3 stereo with 6 speakers, RDS, speed-compensated volume",
+      "SiriusXM satellite radio with 3 trial months",
+      "Inside rearview auto-dimming mirror with compass and temperature display",
+      "Power windows, power door locks with lockout protection, outside power-adjustable mirrors",
+      "Rear sliding window",
+      "Z71 High-Stance off-road Suspension Package standard on extended Cab",
+      "Body-color power-adjustable manual-folding outside mirrors"
+    ],
+    "SLe-1": [
+      "3.7L I-5 VVT engine standard",
+      "4-speed automatic transmission standard",
+      "Trailer hitch and 7-wire harness with 5-cyl engine",
+      "Insta-trac electronic shift transfer case on 4WD models"
+    ],
+    "WT": [
+      "2.9L I-4 variable valve timing engine",
+      "5-speed manual transmission with overdrive",
+      "AM/FM stereo with seek-and-scan and digital clock",
+      "4 speakers in regular Cab",
+      "Manual windows and door locks for driver and front passenger",
+      "Manual day/night inside rearview mirror",
+      "Manual-folding black outside mirrors",
+      "Heavy-duty maintenance-free 590 CCA battery",
+      "Front disc/rear drum 4-wheel antilock brakes",
+      "Tilt-wheel steering column with leather-wrapped steering wheel"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|toyota|sienna",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_2010__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds Includes basic powertrain with engine and transmission",
+      "Adds Features Vehicle Stability Control electronic system",
+      "Adds Includes Brake Assist system",
+      "Adds Includes tire pressure monitoring system",
+      "Adds Standard 6-disc in-dash CD changer"
+    ],
+    "LE": [
+      "Adds auto up/down power windows with jam protection",
+      "Adds adjustable seatbelt anchors on second-row seats"
+    ],
+    "XLE": [
+      "Adds auto up/down power windows with jam protection",
+      "Adds adjustable seatbelt anchors on second-row seats"
+    ],
+    "Limited": [
+      "Adds auto up/down power windows with jam protection",
+      "Adds adjustable seatbelt anchors on second-row seats"
+    ]
+  }
+}

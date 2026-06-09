@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2019|cadillac|escalade",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_web_2019__cadillac__escalade",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Escalade-V",
+    "Sport Platinum",
+    "Premium Luxury Platinum",
+    "Sport",
+    "Premium Luxury",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "Escalade-V": [
+      "Supercharged 6.2L V-8 engine with 682 hp and 653 lb-ft torque",
+      "0-60 mph in 4.7 seconds",
+      "4WD-only configuration",
+      "Carbon-fiber theme interior",
+      "Exclusive high-performance variant"
+    ],
+    "Sport Platinum": [
+      "Premium Luxury Platinum features plus Sport styling",
+      "Available Renaissance Red interior with quilted and perforated leather seats",
+      "Dark open pore wood veneer",
+      "Enhanced comfort and luxury appointments over Sport trim"
+    ],
+    "Premium Luxury Platinum": [
+      "Executive Second Row package available with massaging seats",
+      "Stowable tray tables and 12.6-inch personal screens",
+      "Dual wireless phone charging pads",
+      "36-speaker or optional 40-speaker audio system",
+      "Top-tier luxury features over Premium Luxury"
+    ],
+    "Sport": [
+      "Sport-specific exterior and interior styling",
+      "Enhanced driving dynamics versus Premium Luxury"
+    ],
+    "Premium Luxury": [
+      "Upgraded interior materials and trim details",
+      "Enhanced comfort features versus base Luxury"
+    ],
+    "Luxury": [
+      "6.2L V-8 engine with 420 hp and 460 lb-ft torque",
+      "55.0-inch digital dashboard display with dual screens",
+      "Tablet-style climate control screen",
+      "Full-color head-up display",
+      "5G Wi-Fi hotspot and HD streaming",
+      "126-color LED ambient lighting",
+      "19-speaker AKG Studio audio system",
+      "Super Cruise hands-free driving technology",
+      "Adaptive air suspension",
+      "Seating for up to eight passengers with bench or captain's chairs"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/escalade/"
+}

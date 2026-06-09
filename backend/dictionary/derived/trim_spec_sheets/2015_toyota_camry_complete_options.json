@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2015_toyota_camry_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Camry",
+    "Camry"
+  ],
+  "year_min": 2013,
+  "year_max": 2017,
+  "source": "generated",
+  "trims": {
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ]
+  }
+}

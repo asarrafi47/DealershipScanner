@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2013,Buick,Regal,eAssist,Hybrid 2.4L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,25,36,29,,,,,,2.4L I4,
-2013,Buick,Regal,Regal,FFV 2.0L I4 (SIDI; FFV; Sport Transmission),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,4,2.0,18,28,22,,,,,,2.0L I4,
-2013,Buick,Regal,Regal,FFV 2.0L I4 (SIDI; FFV),Manual 6-spd,Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,4,2.0,20,31,24,,,,,,2.0L I4,
-2013,Buick,Regal,Regal,FFV 2.0L I4 (SIDI; FFV),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,4,2.0,18,28,22,,,,,,2.0L I4,
-2013,Buick,Regal,Regal,2.0L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,19,27,22,,,,,,2.0L I4,
-2013,Buick,Regal,Regal,FFV 2.4L I4 (SIDI; FFV),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,4,2.4,19,30,23,,,,,,2.4L I4,
-2013,Buick,Regal,Regal,2.4L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,19,30,23,,,,,,2.4L I4,
-2013,Buick,Regal,Regal,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,19,26,22,,,,,,2.0L I4,

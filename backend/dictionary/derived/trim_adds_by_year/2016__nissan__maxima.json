@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2016|nissan|maxima",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2016__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "19-inch diamond-cut machine-finished aluminum-alloy wheels with P245/40R19 W-rated tires",
+      "Paddle shifters with Integrated Dynamics-control Module for Active Ride Control and Active Trace Control",
+      "Sport-tuned suspension with front performance chassis damper",
+      "LED low-beam headlights",
+      "Premium Ascot leather seats with diamond-quilted Alcantara inserts",
+      "Premium Ascot leather-wrapped steering wheel with Alcantara insert",
+      "Liquid Chrome faceted interior trim with aluminum sport pedals",
+      "Removes Dual Panel Power Panoramic Moonroof from SL"
+    ],
+    "PLATINUM": [
+      "Memory system for driver's seat, steering wheel, and outside mirrors",
+      "Auto-dimming driver-side outside mirror",
+      "Rear-window power sunshade",
+      "NissanConnect services powered by SiriusXM",
+      "Mahogany wood-tone faceted interior trim"
+    ],
+    "SL": [
+      "Dual Panel Power Panoramic Moonroof with one-touch open/close",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Intelligent Cruise Control with Predictive Forward Collision Warning",
+      "Forward Emergency Braking",
+      "Adjustable ambient LED interior lighting",
+      "Heated steering wheel",
+      "Bose Premium Audio System with 11 speakers and center channel",
+      "19-inch diamond-cut machine-finished aluminum-alloy wheels with P245/40R19 W-rated tires",
+      "Paddle shifters with Integrated Dynamics-control Module"
+    ],
+    "SV": [
+      "Leather-appointed seats with heated front seats",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Around View Monitor with Moving Object Detection",
+      "Power tilt/telescoping steering column",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start with Intelligent Climate Control",
+      "Driver's seat power lumbar support and manual thigh support extension",
+      "Driver Attention Alert and Front/Rear Sonar System"
+    ],
+    "S": [
+      "300 horsepower 3.5-liter DOHC 24-valve V6 engine with Xtronic CVT transmission",
+      "18-inch machine-finished aluminum-alloy wheels with P245/45R18 V-rated all-season tires",
+      "Drive Mode Selector with Sport and Normal modes",
+      "LED Daytime Running Lights and halogen headlights with fog lights",
+      "Advanced Drive-Assist Display with 7.0-inch display",
+      "NissanConnect with Navigation and 8.0-inch multi-touch control monitor with voice recognition",
+      "Bluetooth hands-free phone system with hands-free text messaging",
+      "RearView Monitor and dual-zone automatic temperature control",
+      "Nissan Advanced Air Bag System and Vehicle Dynamic Control with Traction Control"
+    ]
+  }
+}

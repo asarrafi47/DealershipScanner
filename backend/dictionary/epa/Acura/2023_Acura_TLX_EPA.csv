@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Acura,TLX,AWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S10),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,21,29,24,,,,,
+2023,Acura,TLX,FWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S10),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,22,31,25,,,,,
+2023,Acura,TLX,AWD A-SPEC,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S10),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,21,29,24,,,,,
+2023,Acura,TLX,FWD A-SPEC,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S10),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,22,30,25,,,,,
+2023,Acura,TLX,Type-S,3.0L V6 (SIDI),3.0L V6 Turbo,Turbocharged,Automatic (S10),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,19,25,21,,,,,
+2023,Acura,TLX,Type-S Perf Tire,3.0L V6 (SIDI),3.0L V6 Turbo,Turbocharged,Automatic (S10),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,19,24,21,,,,,

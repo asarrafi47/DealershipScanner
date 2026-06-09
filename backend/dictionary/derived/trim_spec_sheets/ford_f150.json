@@ -1,0 +1,78 @@
+{
+  "ladder_id": "ford_f150",
+  "make": "Ford",
+  "models": [
+    "F-150",
+    "F150",
+    "F 150"
+  ],
+  "year_min": 2021,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "XL": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel drive; Added to the lineup was a new Tremor trim level (the name derived from that of t"
+      },
+      {
+        "label": "Screen Size",
+        "value": "12-inch Sync 4 screen (2024+)"
+      }
+    ],
+    "STX": [
+      {
+        "label": "Engine Options",
+        "value": "L Power Stroke turbo V6; Electric motor 35 kW (47 hp) BorgWarner HVH250 (hybrid)"
+      }
+    ],
+    "XLT": [
+      {
+        "label": "Engine Options",
+        "value": "L Cyclone V6; Gasoline Hybrid:"
+      }
+    ],
+    "Lariat": [
+      {
+        "label": "Engine Options",
+        "value": "L Coyote V8; L PowerBoost twin-turbo V6"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather seating and premium interior"
+      }
+    ],
+    "King Ranch": [
+      {
+        "label": "Engine Options",
+        "value": "L PowerBoost twin-turbo V6; In terms of trim-level changes, the STX is now offered as a separate trim level"
+      },
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "Premium tech and towing features"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Western luxury with unique leather"
+      }
+    ],
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "L PowerBoost twin-turbo V6; In terms of trim-level changes, the STX is now offered as a separate trim level"
+      }
+    ],
+    "Tremor": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Twin Turbo; Automatic (S10)"
+      }
+    ],
+    "Raptor": [
+      {
+        "label": "Engine Options",
+        "value": "Raptor R adds supercharged V8; 3.5L V6 Twin Turbo"
+      }
+    ]
+  }
+}

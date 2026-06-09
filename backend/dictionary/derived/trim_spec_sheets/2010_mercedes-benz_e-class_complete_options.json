@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2010_mercedes-benz_e-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "E-Class",
+    "E-Class"
+  ],
+  "year_min": 2008,
+  "year_max": 2012,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "6.2L V8 Twin Turbo; Automatic (S7)"
+      }
+    ],
+    "E350": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "E550": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

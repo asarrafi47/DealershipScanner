@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|pontiac|vibe",
+  "year": 2010,
+  "make": "Pontiac",
+  "model": "Vibe",
+  "ladder_id": "brochure_llm_2010__pontiac__vibe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Vibe GT",
+    "Vibe AWD",
+    "Vibe 2.4L",
+    "Vibe 1.8L"
+  ],
+  "adds_by_trim": {
+    "Vibe GT": [
+      "2.4L VVT-i four-cylinder engine with 158 hp",
+      "Five-speed automatic transmission with Driver Shift Control",
+      "Sport front bucket seats with leather accents and GT embroidery",
+      "Rear spoiler",
+      "18-inch Sport polished-aluminum wheels with painted inserts",
+      "Monsoon seven-speaker premium 320-watt sound system with amplifier and subwoofer",
+      "Air conditioning standard",
+      "Power sunroof included"
+    ],
+    "Vibe AWD": [
+      "All-wheel drive capability",
+      "2.4L VVT-i four-cylinder engine with 158 hp",
+      "Four-speed automatic transmission with overdrive",
+      "Center rails luggage rack",
+      "17-inch chrome-clad aluminum wheels available",
+      "Fog lamps standard"
+    ],
+    "Vibe 2.4L": [
+      "2.4L VVT-i four-cylinder engine with 158 hp versus 1.8L",
+      "Four-speed automatic transmission option or five-speed automatic with Driver Shift Control",
+      "Center rails luggage rack optional",
+      "Rear cargo storage system standard"
+    ],
+    "Vibe 1.8L": [
+      "1.8L VVT-i four-cylinder engine with 132 hp",
+      "Five-speed manual transmission",
+      "Front bucket seats with cloth and adjustable head restraints",
+      "Rear 60/40 flat-folding split-bench seating",
+      "Dual-stage frontal and seat-mounted side-impact air bags with head-curtain protection",
+      "Four-wheel antilock disc brakes",
+      "StabiliTrak Vehicle Stability enhancement System",
+      "AM/FM stereo with CD player and four-speaker system"
+    ]
+  }
+}

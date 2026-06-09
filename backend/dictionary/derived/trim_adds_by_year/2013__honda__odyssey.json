@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2013|honda|odyssey",
+  "year": 2013,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2013__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING ELITE",
+    "TOURING",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "TOURING ELITE": [
+      "650-Watt AM/FM/CD Premium Audio System with 12 Speakers and 5.1 Surround Sound Theater Mode"
+    ],
+    "TOURING": [
+      "246-Watt AM/FM/CD Audio System with 7 Speakers, Including Subwoofer with Navigation",
+      "Hard Disk Drive (HDD) with 15-GB Audio Memory"
+    ],
+    "EX-L": [
+      "XM Radio with 90-day trial subscription",
+      "Exterior Temperature Indicator and Compass"
+    ],
+    "EX": [
+      "Bluetooth Streaming Audio",
+      "USB Audio Interface",
+      "MP3/Auxiliary Input Jack"
+    ],
+    "LX": [
+      "Vehicle Stability Assist (VSA) with Traction Control and Brake Assist",
+      "Anti-Lock Braking System (ABS) with Electronic Brake Distribution",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Daytime Running Lights (DRL)",
+      "Dual-Stage, Multiple-Threshold Front Airbags (SRS)",
+      "Front Side Airbags with Passenger-Side Occupant Position Detection System",
+      "Three-Row Side Curtain Airbags with Rollover Sensor",
+      "229-Watt AM/FM/CD Audio System with 7 Speakers and Subwoofer",
+      "2-GB CD Library",
+      "Multi-Information Display (MID)"
+    ]
+  }
+}

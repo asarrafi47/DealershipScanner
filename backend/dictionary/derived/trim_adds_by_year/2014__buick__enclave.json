@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2014|buick|enclave",
+  "year": 2014,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2014__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Group 1",
+    "Leather Group",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium Group 1": [
+      "8-way power heated front seats with driver memory",
+      "Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "19-inch aluminum wheels",
+      "Bose Sound System"
+    ],
+    "Leather Group": [
+      "Leather-appointed seating throughout",
+      "8-way power heated front seats with driver memory",
+      "Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "19-inch chrome-clad aluminum wheels",
+      "Power-folding heated outside mirrors with memory",
+      "Articulating headlamps",
+      "Power-tilt and telescoping steering wheel",
+      "Forward Collision Alert and Lane Departure Warning",
+      "Cooled and heated front seats"
+    ],
+    "Base": [
+      "3.6L V-6 VVT engine with 288 hp and 270 lb-ft torque",
+      "6-speed automatic transmission with FWD",
+      "7-passenger seating with second-row captain's chairs",
+      "Deluxe cloth seating in Titanium",
+      "Buick IntelliLink infotainment with AM/FM/HD Radio and 6-speaker audio",
+      "High-intensity discharge xenon headlamps with projector beams",
+      "Remote Vehicle Starter System and programmable remote keyless entry",
+      "Tri-zone automatic climate control with individual rear settings",
+      "OnStar 6 months directions and connections plan",
+      "18-inch painted aluminum wheels with all-season tires"
+    ]
+  }
+}

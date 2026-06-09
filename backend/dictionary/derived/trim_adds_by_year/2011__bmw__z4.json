@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|bmw|z4",
+  "year": 2011,
+  "make": "BMW",
+  "model": "Z4",
+  "ladder_id": "brochure_llm_2011__bmw__z4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Z4 sDrive35is",
+    "Z4 sDrive30i",
+    "Z4 sDrive28i"
+  ],
+  "adds_by_trim": {
+    "Z4 sDrive35is": [
+      "35-valve Twin Power Turbo engine with 335 hp at 5,800 rpm",
+      "3.0-liter inline six-cylinder engine",
+      "Multi-Spoke Style 262 light alloy wheels",
+      "Enhanced performance and driving dynamics"
+    ],
+    "Z4 sDrive30i": [
+      "Twin Power Turbo engine with 300 hp",
+      "3.0-liter inline six-cylinder engine",
+      "Multi-Spoke Style 262 light alloy wheels"
+    ],
+    "Z4 sDrive28i": [
+      "Standard seating with enhanced headroom",
+      "Retractable aluminum hardtop convertible",
+      "Sport seats with shoulder and elbow room",
+      "Sun-Reflective Technology to keep leather cooler",
+      "Ivory White Nappa Leather interior with Anthracite Wood trim",
+      "Double-Clutch Transmission with manual and automatic modes",
+      "Driving Dynamics Control with NORMAL and SPORT settings",
+      "Adaptive M Suspension for customizable ride quality"
+    ]
+  }
+}

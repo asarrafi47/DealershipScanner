@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2014|chevrolet|malibu",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "inventory_chevrolet_malibu",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Gm",
+    "Suv"
+  ],
+  "adds_by_trim": {
+    "Suv": [
+      "Chevrolet A notE on cHild sAfEty. Always use safety belts and the correct restraint for your cHEvrolEt.com/sAfEty."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Suv": 1
+    }
+  }
+}

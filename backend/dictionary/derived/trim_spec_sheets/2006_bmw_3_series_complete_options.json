@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2006_bmw_3_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "3 Series",
+    "3 Series"
+  ],
+  "year_min": 2004,
+  "year_max": 2008,
+  "source": "generated",
+  "trims": {
+    "330i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "325i": [
+      {
+        "label": "Engine Options",
+        "value": "2.5L I6 Turbo; Manual 5-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.5L I6 Turbo; Manual 5-spd"
+      }
+    ]
+  }
+}

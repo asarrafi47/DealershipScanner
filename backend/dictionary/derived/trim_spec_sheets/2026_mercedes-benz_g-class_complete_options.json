@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2026_mercedes-benz_g-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "G-Class",
+    "G-Class"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG G63": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Interior Materials",
+        "value": "The new ARTICO upholstery colour, cognac, was added to black and grey interior c; The new ARTICO upholstery colour, cognac, was added to black and grey interior colour options."
+      }
+    ]
+  }
+}

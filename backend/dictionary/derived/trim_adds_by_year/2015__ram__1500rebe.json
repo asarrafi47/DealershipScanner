@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2015|ram|1500rebe",
+  "year": 2015,
+  "make": "ram",
+  "model": "1500-Rebe;",
+  "ladder_id": "brochure_2015__ram__1500rebe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Rebel",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 3.6-liter Pentastar V6 engine mated to TorqueFlite eight-speed automatic",
+      "Adds Features standard cloth seating surfaces",
+      "Adds Includes core safety features and LED taillamps"
+    ],
+    "Premium": [],
+    "Rebel": [
+      "Adds unique Black cloth seating with Red and Gray accent stitching and tire-tread embossed treatment",
+      "Adds fog lamps",
+      "Adds sport hood with aggressive Ram-centric grille in Black and Silver",
+      "Swaps standard wheels for unique 17-inch aluminum wheels wrapped in 33-inch Toyo Open Country tires",
+      "Adds five exterior color choices with standard Brilliant Black Crystal lower",
+      "Adds available 7-inch instrument cluster screen and available 8.4-inch touchscreen radio with Rebel-themed background",
+      "Adds unique Rebel-themed interior accents including Red stitching on doors, center console, and instrument panel",
+      "Adds innovative RamBox Cargo Management System as available option"
+    ],
+    "Limited": []
+  }
+}

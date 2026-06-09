@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|bmw|4series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "4 Series",
+  "ladder_id": "brochure_llm_2015__bmw__4series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "435i xDrive Coupe",
+    "435i Coupe",
+    "428i xDrive Coupe",
+    "428i Coupe"
+  ],
+  "adds_by_trim": {
+    "435i xDrive Coupe": [
+      "TwinPower Turbo inline-6 engine with increased horsepower and torque output",
+      "xDrive all-wheel drive system for enhanced traction and handling",
+      "Improved weight distribution and performance characteristics"
+    ],
+    "435i Coupe": [
+      "TwinPower Turbo inline-6 engine with increased horsepower and torque output",
+      "Superior acceleration and top speed versus 428i models"
+    ],
+    "428i xDrive Coupe": [
+      "xDrive all-wheel drive system for enhanced traction and handling",
+      "TwinPower Turbo inline-4 engine as base powertrain"
+    ]
+  }
+}

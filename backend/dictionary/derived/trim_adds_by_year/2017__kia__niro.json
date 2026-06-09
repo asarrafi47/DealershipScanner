@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2017|kia|niro",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Niro",
+  "ladder_id": "brochure_llm_2017__kia__niro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "Touring Launch Edition",
+    "EX",
+    "LX",
+    "FE"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Wireless phone-charging system for Qi-compatible smartphones",
+      "HID headlights with anti-fog functionality",
+      "110-volt power inverter"
+    ],
+    "Touring Launch Edition": [
+      "Charcoal leather interior upholstery",
+      "Light gray leather interior upholstery option"
+    ],
+    "EX": [
+      "Power glass sunroof",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Forward Collision Warning system",
+      "Autonomous Emergency Braking",
+      "Lane Departure Warning System",
+      "Smart Cruise Control"
+    ],
+    "LX": [
+      "Charcoal cloth with leather upholstery",
+      "Gray cloth with leather upholstery option"
+    ],
+    "FE": [
+      "1.6L Atkinson cycle 4-cylinder aluminum engine",
+      "Full parallel hybrid system with magnet electric motor",
+      "7-inch touch-screen UVO eServices infotainment display",
+      "Manual-folding outside mirrors",
+      "Rear-camera display with dynamic guidelines",
+      "10-year/100,000-mile limited powertrain warranty"
+    ]
+  }
+}

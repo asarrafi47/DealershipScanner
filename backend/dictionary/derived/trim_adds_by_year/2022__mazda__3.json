@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2022|mazda|3",
+  "year": 2022,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_web_2022__mazda__3",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Premium Plus",
+    "Premium",
+    "Preferred Plus",
+    "Preferred",
+    "2.5 S",
+    "2.5 Core"
+  ],
+  "adds_by_trim": {
+    "Premium Plus": [
+      "Bose premium sound system with 12 speakers",
+      "Leather upholstery and heated front seats",
+      "Power moonroof with power sunshade",
+      "Adaptive LED headlights with auto-leveling",
+      "Blind spot monitoring with rear cross-traffic alert",
+      "Power adjustable driver seat with lumbar support",
+      "Smart device integration premium features"
+    ],
+    "Premium": [
+      "8.8-inch touchscreen infotainment system",
+      "Leather-trimmed steering wheel and shifter",
+      "Heated front seats",
+      "SiriusXM satellite radio with 3-month trial",
+      "Blind spot monitoring with rear cross-traffic alert",
+      "Keyless entry and push-button start"
+    ],
+    "Preferred Plus": [
+      "Heated front seats",
+      "6.5-inch touchscreen display",
+      "Apple CarPlay and Android Auto compatibility",
+      "Rear parking sensors",
+      "Keyless entry with push-button start",
+      "SiriusXM satellite radio trial"
+    ],
+    "Preferred": [
+      "6.5-inch touchscreen infotainment system",
+      "Bluetooth connectivity with voice control",
+      "Apple CarPlay and Android Auto",
+      "Rear view camera",
+      "Dual-zone automatic climate control"
+    ],
+    "2.5 S": [
+      "4.2-inch color driver information display",
+      "Auxiliary audio input and USB port",
+      "Cloth upholstery",
+      "Manual air conditioning with rear vents",
+      "Standard safety suite with i-Activsense"
+    ],
+    "2.5 Core": [
+      "2.5L SKYACTIV-G engine with 186 horsepower",
+      "6-speed automatic transmission",
+      "Cloth interior",
+      "Power windows, locks, and side mirrors",
+      "Mazda i-Activsense safety technology package",
+      "Advanced airbag system with seven airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mazda/3/"
+}

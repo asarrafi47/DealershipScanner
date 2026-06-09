@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|nissan|cube",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Cube",
+  "ladder_id": "brochure_llm_2012__nissan__cube",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1.8 SL",
+    "1.8 S",
+    "1.8"
+  ],
+  "adds_by_trim": {
+    "1.8 SL": [
+      "Xtronic CVT standard (vs. manual on 1.8 S)",
+      "15-inch 4-split spoke aluminum-alloy wheels",
+      "P195/55VR16 all-season tires",
+      "Torsion beam rear suspension with integrated stabilizer bar",
+      "Power-assisted vented front disc/rear drum brakes with ABS"
+    ],
+    "1.8 S": [
+      "15-inch 6-split spoke aluminum-alloy wheels",
+      "P195/60HR15 all-season tires",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "6-speed manual transmission standard"
+    ],
+    "1.8": [
+      "1.8-liter DOHC 16-valve 4-cylinder engine (122 hp, 127 lb-ft torque)",
+      "Front-Wheel Drive",
+      "Independent strut front suspension with stabilizer bar",
+      "Vehicle-speed-sensitive electric power steering",
+      "Electronic Brake force Distribution and Brake Assist",
+      "15-inch steel wheels with bolt-on wheel covers"
+    ]
+  }
+}

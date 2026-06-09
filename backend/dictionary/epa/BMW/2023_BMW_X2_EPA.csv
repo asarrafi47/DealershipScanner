@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,BMW,X2,M35i,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,31,27,,,,,
+2023,BMW,X2,xDrive28i,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,31,27,,,,,
+2023,BMW,X2,sDrive28i,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,32,27,,,,,

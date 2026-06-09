@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|nissan|leaf",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_web_2012__nissan__leaf",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Leaf SV Plus",
+    "Leaf S"
+  ],
+  "adds_by_trim": {
+    "Leaf SV Plus": [
+      "62-kWh battery pack with 210 miles range versus 40-kWh with 150 miles",
+      "214 hp electric motor with 250 lb-ft torque versus 147 hp with 236 lb-ft",
+      "17-inch wheels with modern styling versus 16-inch steel wheels with plastic covers",
+      "LED headlights versus halogen headlights",
+      "Power-adjustable driver's seat versus manual adjustment",
+      "Heated front seats and heated steering wheel",
+      "Six-speaker audio system versus four-speaker",
+      "360-degree camera with built-in navigation",
+      "ProPilot Assist highway driving assist with adaptive cruise and lane keep",
+      "Heated side mirrors, auto-dimming rearview mirror, and foglights"
+    ],
+    "Leaf S": [
+      "40-kWh battery pack with approximately 150 miles electric range",
+      "147 hp electric motor producing 236 lb-ft torque",
+      "8.0-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "6.0-inch gauge cluster display",
+      "Four USB ports standard",
+      "Four-speaker audio system",
+      "Front and rear automatic emergency braking",
+      "Lane departure warning and rear cross-traffic alert",
+      "Blind-spot monitoring",
+      "Manually adjustable driver's seat with basic interior features"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/nissan/leaf/"
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if vin %}NHTSA recalls — {{ vin }}{% else %}NHTSA recall lookup{% endif %} — Sarrafi Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+</head>
+<body class="nhtsa-recalls-page">
+
+<div class="page">
+
+    {% set nav_active = "" %}
+    {% include "_nav_public.html" %}
+
+    <section class="nhtsa-recalls-section">
+        <header class="nhtsa-recalls-header">
+            <h1>NHTSA recall lookup</h1>
+            {% if vin %}
+            <p class="nhtsa-recalls-lead">
+                Recall campaigns for VIN <strong class="nhtsa-recalls-vin">{{ vin }}</strong>
+                {% if vehicle_label %} ({{ vehicle_label }}){% endif %}
+                from the federal NHTSA database.
+            </p>
+            {% elif vin_raw %}
+            <p class="nhtsa-recalls-lead nhtsa-recalls-lead--error">“{{ vin_raw }}” is not a valid 17-character VIN.</p>
+            {% else %}
+            <p class="nhtsa-recalls-lead">Open this page from a vehicle listing to run an automatic recall check.</p>
+            {% endif %}
+        </header>
+
+        {% if rate_limited %}
+        <p class="nhtsa-recalls-status nhtsa-recalls-status--error">Too many requests. Please wait a minute and try again.</p>
+        {% elif lookup_error and lookup_error != 'invalid_vin' %}
+        <p class="nhtsa-recalls-status nhtsa-recalls-status--error">Could not reach NHTSA right now ({{ lookup_error }}). Try again shortly.</p>
+        {% elif vin %}
+            {% if recalls %}
+            <ul class="vehicle-history-recalls-list nhtsa-recalls-list">
+                {% for r in recalls %}
+                <li>
+                    {% if r.campaign or r.component %}
+                    <strong>{{ r.campaign }}{% if r.campaign and r.component %} — {% endif %}{{ r.component }}</strong>
+                    {% endif %}
+                    {% if r.summary %} {{ r.summary }}{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="nhtsa-recalls-status nhtsa-recalls-status--clear">No open recalls were returned for this VIN.</p>
+            {% endif %}
+        {% endif %}
+
+        <p class="nhtsa-recalls-disclaimer">Campaign list is by vehicle year, make, and model (NHTSA public API). Whether this VIN has an open repair requires the official VIN lookup below.</p>
+        <p class="nhtsa-recalls-official">
+            <a href="https://www.nhtsa.gov/recalls{% if vin %}?vin={{ vin | e }}{% endif %}" target="_blank" rel="noopener noreferrer" class="btn btn-nhtsa-safety nhtsa-recalls-official-link">Open NHTSA.gov recall search</a>
+        </p>
+    </section>
+
+</div>
+
+</body>
+</html>

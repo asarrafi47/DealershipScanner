@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|kia|optima",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2015__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SX Turbo",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Turbocharged 2.0L GDI engine with 274 horsepower",
+      "HID headlights with LED accent lamps",
+      "LED fog lights and rear taillights"
+    ],
+    "SX Turbo": [
+      "Turbocharged 2.0L GDI engine with 274 horsepower",
+      "Sportmatic six-speed automatic transmission with manual shift capability"
+    ],
+    "EX": [
+      "192-horsepower 2.4L gasoline direct injection engine",
+      "Six-speed Sportmatic transmission standard"
+    ],
+    "LX": [
+      "192-horsepower 2.4L GDI engine",
+      "Six-speed Sportmatic automatic transmission with clutch-free manual shifting",
+      "Four-wheel independent suspension with MacPherson struts and multi-link rear design",
+      "Dual front and front seat-mounted side airbags with full-length side curtain airbags",
+      "Front seat belt pretensioners and height-adjustable anchors",
+      "Vehicle Stability Management system",
+      "Blind-spot detection with rear cross-traffic alert available",
+      "Active Eco System for optimized fuel efficiency"
+    ]
+  }
+}

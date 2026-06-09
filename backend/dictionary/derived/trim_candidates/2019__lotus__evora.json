@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2019|lotus|evora",
+  "year": 2019,
+  "make": "Lotus",
+  "model": "Evora",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

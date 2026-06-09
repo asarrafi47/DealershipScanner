@@ -1,0 +1,61 @@
+{
+  "ladder_id": "2024_honda_pilot_complete_options",
+  "make": "Honda",
+  "models": [
+    "Pilot",
+    "Pilot"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Elite": [
+      {
+        "label": "Engine Options",
+        "value": "3.5-liter V6 engine has direct-injection and a start-stop"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 3.5 L J35Z4 V6"
+      }
+    ],
+    "EX-L": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD)"
+      }
+    ],
+    "TrailSport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S9); All-Wheel Drive"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD)"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2006–present)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
+      }
+    ]
+  }
+}

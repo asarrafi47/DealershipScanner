@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|chevrolet|avalanche",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Avalanche",
+  "ladder_id": "brochure_web_2013__chevrolet__avalanche",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Black Diamond Avalanche 4WD LTZ",
+    "Black Diamond Avalanche 2WD LTZ",
+    "Black Diamond Avalanche 4WD LT",
+    "Black Diamond Avalanche 2WD LT",
+    "Black Diamond Avalanche 4WD LS",
+    "Black Diamond Avalanche 2WD LS"
+  ],
+  "adds_by_trim": {
+    "Black Diamond Avalanche 4WD LTZ": [
+      "LTZ trim level with premium features"
+    ],
+    "Black Diamond Avalanche 2WD LTZ": [
+      "LTZ trim level with premium features"
+    ],
+    "Black Diamond Avalanche 4WD LT": [
+      "LT trim level with mid-range features"
+    ],
+    "Black Diamond Avalanche 2WD LT": [
+      "LT trim level with mid-range features"
+    ],
+    "Black Diamond Avalanche 4WD LS": [
+      "Four-wheel drive capability"
+    ],
+    "Black Diamond Avalanche 2WD LS": [
+      "5.3-liter V-8 engine with 320 hp and 335 lb-ft torque",
+      "Six-speed automatic transmission",
+      "Innovative mid-gate expandable cargo feature",
+      "Foglights",
+      "Remote start",
+      "Power-adjustable pedals",
+      "Rearview camera",
+      "Rear park assist",
+      "Black Diamond special badging",
+      "Body-color bed trim"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/chevrolet/avalanche/"
+}

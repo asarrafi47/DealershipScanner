@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|ford|superduty",
+  "year": 2018,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_2018__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "King Ranch",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper coverage",
+      "Adds Includes 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion protection on aluminum body panels",
+      "Adds Includes 5-year/60,000-mile Roadside Assistance coverage"
+    ],
+    "King Ranch": [
+      "Adds King Ranch exterior trim kits",
+      "Adds hood deflector and side window deflectors",
+      "Adds chrome front tow hooks and fog lamps",
+      "Adds rear wheel-well liners",
+      "Adds fifth-wheel hitch kit capability"
+    ],
+    "Limited": [
+      "Adds wireless charging",
+      "Adds strobe and work task lights",
+      "Adds warning sensor systems",
+      "Adds in-vehicle safe",
+      "Adds interior light kit"
+    ]
+  }
+}

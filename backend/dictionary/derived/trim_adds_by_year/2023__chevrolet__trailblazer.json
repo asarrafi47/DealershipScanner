@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2023|chevrolet|trailblazer",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Trailblazer",
+  "ladder_id": "brochure_llm_2023__chevrolet__trailblazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS",
+    "ACTIV",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "RS": [
+      "Camaro-inspired front grille",
+      "18-inch high-gloss Black machined-aluminum wheels",
+      "Dual-outlet exhaust with round polished tips",
+      "Black Chevrolet bowtie emblems",
+      "Sporty Jet Black cloth and leatherette seating with Red accents",
+      "Heated leather-wrapped flat-bottom steering wheel",
+      "Leather-wrapped shift knob with RS logo"
+    ],
+    "ACTIV": [
+      "ECOTEC 1.3L Turbo engine (standard on all ACTIV)",
+      "Special shocks and sport terrain tires",
+      "LED fog lamps",
+      "Heated front seats",
+      "Remote vehicle starter system",
+      "Keyless Open and Start",
+      "Electronic cruise control",
+      "8-way power driver seat with 2-way power lumbar control",
+      "Heated leather-wrapped steering wheel and leather-wrapped shift knob",
+      "Titanium chrome-plated front and rear fascias with bold side cladding"
+    ],
+    "LT": [
+      "Silver-painted front and rear fascias and roof rails",
+      "LED fog lamps",
+      "Deep-tinted rear windows and liftgate glass",
+      "Heated power-adjustable mirrors with body-color caps",
+      "Heated front seats",
+      "Remote vehicle starter system",
+      "Keyless Open and Start",
+      "Electronic cruise control",
+      "Leatherette seating surfaces"
+    ],
+    "LS": [
+      "ECOTEC 1.2L Turbo engine (FWD) or 1.3L Turbo (AWD)",
+      "Driver Mode Selector (AWD models)",
+      "17-inch Silver-painted aluminum wheels",
+      "Jet Black cloth interior",
+      "Fold-flat front passenger seatback",
+      "Wireless Apple CarPlay and Android Auto compatibility",
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen",
+      "6-speaker audio system",
+      "Single-zone automatic air conditioning",
+      "Chevy Safety Assist standard"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2012|ferrari|california",
+  "year": 2012,
+  "make": "Ferrari",
+  "model": "california",
+  "ladder_id": "brochure_2012__ferrari__california",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "F1"
+  ],
+  "adds_by_trim": {
+    "F1": [
+      "Adds 4.3L V8 engine with 490 CV at 7750 rpm",
+      "Adds F1 dual-clutch 7-speed gearbox with reverse",
+      "Adds 505 Nm maximum torque at 5000 rpm",
+      "Adds retractable aluminum hard-top convertible roof",
+      "Adds double wishbone front suspension with multilink rear",
+      "Adds carbon-ceramic brakes with F1 TRAC stability control",
+      "Adds 19-inch Pirelli tires (245/40 front, 285/40 rear)",
+      "Adds 0-62 mph acceleration in less than 3.8 seconds",
+      "Adds 194 mph maximum speed capability"
+    ],
+    "LE": [
+      "Adds optional 20-inch wheel upgrade (245/35 front, 285/35 rear)"
+    ]
+  }
+}

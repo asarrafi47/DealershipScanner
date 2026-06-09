@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2016_volkswagen_golf_gti_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Golf GTI",
+    "Golf GTI"
+  ],
+  "year_min": 2014,
+  "year_max": 2018,
+  "source": "generated",
+  "trims": {
+    "R": [
+      {
+        "label": "Audio System Layout",
+        "value": "8-speaker system; 8-speaker system; [Brochure] 8-speaker system | [Brochure] 8-speaker system"
+      }
+    ],
+    "GTI": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S6)"
+      }
+    ]
+  }
+}

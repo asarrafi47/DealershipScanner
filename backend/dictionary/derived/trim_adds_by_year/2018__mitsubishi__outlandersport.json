@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|mitsubishi|outlandersport",
+  "year": 2018,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2018__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL 2.4 AWC",
+    "SE 2.4 AWC",
+    "ES 2.0 AWC"
+  ],
+  "adds_by_trim": {
+    "SEL 2.4 AWC": [
+      "2.4-liter engine (vs. 2.0-liter on ES)",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Forward Collision Mitigation (FCM) via Touring Package",
+      "Lane Departure Warning (LDW) via Touring Package",
+      "Automatic High Beam (AHB) headlights via Touring Package",
+      "Panoramic glass roof with adjustable LED lighting via Touring Package",
+      "710-watt 9-speaker Rockford Fosgate premium audio system via Touring Package"
+    ],
+    "SE 2.4 AWC": [
+      "2.4-liter engine (vs. 2.0-liter on ES)",
+      "All-Wheel Control (AWC) capability"
+    ],
+    "ES 2.0 AWC": [
+      "Cruise control",
+      "Power door locks",
+      "Power windows with driver's auto up/down",
+      "12-volt accessory outlets (x2)",
+      "Hill Start Assist (HSA)",
+      "Anti-lock Braking System (ABS) with Electronic Brakeforce Distribution",
+      "Active Stability Control (ASC)",
+      "Traction Control Logic (TCL)",
+      "Multiple airbags including side curtain and knee airbag",
+      "Tire Pressure Monitoring System (TPMS)"
+    ]
+  }
+}

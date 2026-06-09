@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2012|bmw|z4",
+  "year": 2012,
+  "make": "BMW",
+  "model": "Z4",
+  "ladder_id": "brochure_2012__bmw__z4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Competition",
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Touring",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds BMW TwinPower Turbo technology with twin-scroll charger",
+      "Adds High Precision Direct Injection with piezo injectors",
+      "Adds Auto Start-Stop function for fuel efficiency",
+      "Adds 6-speed Sport Automatic transmission",
+      "Adds Leatherette upholstery in Black",
+      "Adds Silver Matte interior trim",
+      "Adds Alpine White exterior color option",
+      "Adds Efficient Dynamics emissions reduction technology"
+    ],
+    "SE": [
+      "Upgraded to Kansas Leather upholstery",
+      "Adds Beige upholstery color option",
+      "Adds Walnut upholstery color option",
+      "Adds Coral Red upholstery color option",
+      "Adds Ash Grain Wood interior trim option"
+    ],
+    "Sport": [
+      "Upgraded to Extended Kansas Leather upholstery",
+      "Adds Brushed Aluminum interior trim option",
+      "Adds Aluminum Carbon Shadow interior trim option"
+    ],
+    "Touring": [
+      "Upgraded to Extended Merino Leather upholstery",
+      "Adds Canyon Brown upholstery color option",
+      "Adds Anthracite Wood interior trim option"
+    ],
+    "Limited": [
+      "Adds Black Alcantara/Nappa Leather Combo upholstery",
+      "Adds Piano Black Wood interior trim option",
+      "Adds Black Sapphire Metallic exterior color option"
+    ],
+    "Premium": [
+      "Adds Exclusive Canyon Brown Package",
+      "Adds Melbourne Red Metallic exterior color option",
+      "Adds Deep Sea Blue Metallic exterior color option"
+    ],
+    "M Sport": [
+      "Adds M Sport Package with enhanced performance tuning",
+      "Adds M Sport/Canyon Brown Package option",
+      "Adds M Sport/Citrus Yellow Package option",
+      "Adds Atacama Yellow exterior color option",
+      "Adds Space Gray Metallic exterior color option"
+    ],
+    "Competition": [
+      "Adds premium M Sport suspension enhancements",
+      "Adds exclusive interior appointments",
+      "Adds extended M Sport styling packages"
+    ]
+  }
+}

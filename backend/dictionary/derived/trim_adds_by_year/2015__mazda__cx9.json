@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|mazda|cx9",
+  "year": 2015,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2015__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA CX-9 GRAND TOURING",
+    "MAZDA CX-9 TOURING",
+    "MAZDA CX-9 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA CX-9 GRAND TOURING": [
+      "Bi-Xenon HID headlights with auto on/off and LED daytime running lights",
+      "20-inch alloy wheels with Platinum Silver finish",
+      "Blind Spot Monitoring System with Rear Cross Traffic Alert",
+      "Rearview camera with automatic activation in reverse",
+      "8-way power-adjustable driver's seat with position memory",
+      "Leather-trimmed seats on first and second row outboard positions",
+      "Heated front seats",
+      "DVD Rear-Seat Entertainment System with 9-inch fold-down LCD screen",
+      "Rain-sensing windshield wipers"
+    ],
+    "MAZDA CX-9 TOURING": [
+      "Auto-off headlights",
+      "18-inch alloy wheels",
+      "Heated side mirrors",
+      "Halogen fog lights",
+      "Power open/close rear liftgate",
+      "Bright-finish door handles",
+      "Rearview camera with automatic activation in reverse",
+      "Rear backup sensors"
+    ],
+    "MAZDA CX-9 SPORT": [
+      "3.7L DOHC 24-valve V6 engine with 273 horsepower",
+      "6-speed automatic transmission",
+      "Front-wheel drive standard",
+      "Steering-wheel-mounted audio and cruise controls",
+      "Bluetooth hands-free phone and audio streaming",
+      "Three-zone automatic climate control",
+      "6-speaker MP3 player-compatible audio system with HD Radio",
+      "USB audio input port",
+      "Dynamic Stability Control and Traction Control System",
+      "Advanced dual front air bags with weight sensors"
+    ]
+  }
+}

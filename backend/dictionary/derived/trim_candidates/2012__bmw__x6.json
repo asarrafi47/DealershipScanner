@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2012|bmw|x6",
+  "year": 2012,
+  "make": "BMW",
+  "model": "X6",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

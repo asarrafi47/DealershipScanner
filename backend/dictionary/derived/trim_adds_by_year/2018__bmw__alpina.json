@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|bmw|alpina",
+  "year": 2018,
+  "make": "BMW",
+  "model": "Alpina",
+  "ladder_id": "brochure_llm_2018__bmw__alpina",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BMW ALPINA B7",
+    "BMW ALPINA B6"
+  ],
+  "adds_by_trim": {
+    "BMW ALPINA B7": [
+      "4.4-liter ALPINA Bi-Turbo V-8 engine with 600 hp at 5750–6250 rpm",
+      "590 lb-ft torque from 3000–5000 rpm",
+      "0–60 mph acceleration in 3.6 seconds",
+      "16 city / 24 highway mpg fuel economy",
+      "ALPINA Classic light alloy wheels, 20x8.5 front / 20x10.0 rear",
+      "Extended interior dimensions with 39.9 inches front headroom",
+      "Multiple exclusive interior trim options including ALPINA Myrtle Wood",
+      "Full range of extended and full Merino leather upholstery options"
+    ],
+    "BMW ALPINA B6": [
+      "4.4-liter ALPINA Bi-Turbo V-8 engine with 600 hp at 6000 rpm",
+      "590 lb-ft torque from 3500–4500 rpm",
+      "0–60 mph acceleration in 3.7 seconds",
+      "15 city / 24 highway mpg fuel economy",
+      "ALPINA Classic light alloy wheels, 20x8.5 front / 20x10.0 rear",
+      "Multiple interior trim options including ALPINA Myrtle Wood and Piano Black",
+      "Full Merino leather upholstery with varied color combinations available"
+    ]
+  }
+}

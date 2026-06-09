@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2025|nissan|frontier",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2025__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "PRO-4X® CREW CAB",
+    "PRO-X® CREW CAB",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "17-inch dark-painted machine-finished aluminum-alloy wheels",
+      "Intelligent Around View® Monitor with 360-degree camera",
+      "Wireless smartphone charger",
+      "Factory-applied spray-on bedliner",
+      "Utili-track® Channel System with two adjustable tie-down cleats",
+      "Bed-mounted 120-volt AC power outlet",
+      "120-volt AC power outlet in rear center console",
+      "Class IV tow hitch with 7-pin wiring harness",
+      "Heated outside mirrors and heated leather-wrapped steering wheel",
+      "Heated front seats and LED under-rail bed lighting"
+    ],
+    "PRO-4X® CREW CAB": [
+      "Switch-operated 2-speed transfer case for 4x4 capability",
+      "Hill descent control for off-road performance",
+      "Electronic locking rear differential",
+      "Steel underbody skid plates protecting oil pan and fuel tank",
+      "PRO-4X embroidered cloth seats and floor mats",
+      "PRO-4X bed side decal",
+      "Aluminum front skid plate"
+    ],
+    "PRO-X® CREW CAB": [
+      "17-inch PRO aluminum-alloy wheels",
+      "Bilstein® off-road performance shock absorbers",
+      "LED signature headlights, LED Daytime Running Lights, LED fog lights",
+      "Lava Red painted tow hooks and contrast interior stitching",
+      "Upper body-color and lower black front bumper with black overfenders",
+      "4-way power passenger's seat",
+      "Leather-wrapped steering wheel and shift knob",
+      "Tow-Haul Mode switch",
+      "PRO-X embroidered cloth seats with Lava Red accents",
+      "Tailgate finisher"
+    ],
+    "SV": [
+      "17-inch aluminum-alloy wheels",
+      "Upper body-color and lower silver front bumper",
+      "Body-color door handles and rear bumper",
+      "Dual power outside mirrors",
+      "6-way power driver's seat with 2-way power lumbar support",
+      "Vehicle Security System",
+      "NissanConnect® 12.3-inch color touchscreen display",
+      "Wireless Apple CarPlay® and Android Auto™ integration",
+      "SiriusXM® with 3-month Platinum trial subscription",
+      "AM/FM audio system with six speakers and Fender® premium audio"
+    ],
+    "S": [
+      "3.8-liter V6 engine with 9-speed automatic transmission",
+      "16-inch styled steel wheels",
+      "Safety Shield® 360 with automatic emergency braking and pedestrian detection",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert, Rear Automatic Braking",
+      "RearView Monitor with Rear Sonar System",
+      "Hill start assist and full-length boxed ladder frame",
+      "7-inch Advanced Drive-Assist® Display",
+      "NissanConnect® 8-inch color touchscreen with SiriusXM® trial access",
+      "Apple CarPlay® and Android Auto™ compatibility",
+      "Wi-Fi Hotspot capability"
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "catalog_key": "2021|toyota|sequoia",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_llm_2021__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD Pro",
+    "Platinum",
+    "Nightshade Special Edition",
+    "Limited",
+    "TRD Sport",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "SR5": [
+      "5.7-liter V8 engine with 381 horsepower",
+      "6-speed automatic transmission",
+      "Rear-wheel drive standard with available 4WD",
+      "Up to 7400-lb towing capacity",
+      "LED high- and low-beam headlights with DRL",
+      "Integrated LED fog lights",
+      "Seating for seven passengers",
+      "Easy-clean fabric-trimmed seats",
+      "18-inch 5-spoke alloy wheels",
+      "Toyota Safety Sense P with eight airbags"
+    ],
+    "TRD Sport": [
+      "TRD Sport performance-tuned Bilstein shocks",
+      "TRD Sport performance-tuned sway bars",
+      "Black heated power outside mirrors",
+      "Satin-black TRD Sport front door logos",
+      "Chrome grille with gloss black insert",
+      "20-inch TRD Sport black alloy wheels",
+      "Seating for eight with captain's chairs",
+      "Leather-trimmed seats",
+      "10-way power-adjustable driver's seat",
+      "TRD Sport stitched floor mats"
+    ],
+    "Limited": [
+      "Chrome auto-dimming heated power outside mirrors with power-folding and turn signals",
+      "Power liftgate with jam protection",
+      "20-inch machined-finish split-spoke with dark silver accent alloy wheels",
+      "40/20/40 split reclining and fold-flat second-row seat",
+      "60/40 split power reclining and fold-flat third-row seat",
+      "Second- and third-row retractable window sunshades",
+      "Cargo net",
+      "Premium Audio with 7.0-inch touchscreen and 12 speakers",
+      "Dynamic Navigation with Destination Assist",
+      "Android Auto and Apple CarPlay compatible"
+    ],
+    "Nightshade Special Edition": [
+      "Black auto-dimming heated power outside mirrors with puddle lights",
+      "Color-keyed grille surround",
+      "Black door handles",
+      "Darkened chrome body side molding",
+      "Black roof rack",
+      "Black grade badge on passenger rear doors",
+      "Black Toyota front and rear emblem",
+      "20-inch black split-spoke alloy wheels"
+    ],
+    "Platinum": [
+      "Adaptive Variable Suspension system",
+      "Perforated leather-trimmed seats",
+      "Heated and ventilated front seats",
+      "Heated second-row captain's chairs",
+      "Birds-eye maple-style accent steering wheel, shift knob and door panels",
+      "Three 12V and one 120V AC power outlets in console",
+      "Premium Audio with JBL includes 14 speakers with subwoofer",
+      "7.0-inch touchscreen"
+    ],
+    "TRD Pro": [
+      "TRD front and rear coil-springs",
+      "TRD FOX shocks with piggyback reservoirs",
+      "Up to 7100-lb towing capacity",
+      "Rigid Industries LED fog lights",
+      "TOYOTA grille with color-keyed surround",
+      "Black TRD Pro front door and liftgate logos",
+      "TRD black roof rack",
+      "TRD front skid plate",
+      "18-inch Black BBS forged-aluminum TRD Pro alloy wheels with P275/65R18 tires",
+      "Black-cast aluminum running boards"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2014|volvo|xc60",
+  "year": 2014,
+  "make": "Volvo",
+  "model": "XC60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Plus",
+    "Platinum",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

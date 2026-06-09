@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2015|chevrolet|silverado",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "Z71",
+    "LT",
+    "Custom",
+    "LS",
+    "WT",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

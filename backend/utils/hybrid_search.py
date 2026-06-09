@@ -132,10 +132,10 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
     """Map parse_natural_query() output to search_cars() keyword arguments.
 
     Optional ``package_contains`` / ``packages_json_contains`` (substring, case-insensitive)
-    maps to ``search_cars(..., packages_json_contains=...)`` for JSON text in ``cars.packages``
-    (e.g. ``packages_normalized`` from listing-description parse). ``parse_natural_query`` emits
-    this for equipment keywords and known package names; GET ``package`` checkboxes map to
-    ``packages_json_contains_list``.
+    maps to equipment fields on ``search_cars`` (``packages``, ``description``, ``title``,
+    ``trim``, ``engine_description``). ``parse_natural_query`` emits ``packages_json_contains``
+    for one feature or ``packages_json_contains_all`` when the user names several (AND).
+    GET ``package`` checkboxes map to ``packages_json_contains_list`` (OR across selections).
     """
     if not filters:
         return {}
@@ -221,23 +221,31 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
         out["max_price"] = filters["max_price"]
     if filters.get("max_mileage") is not None:
         out["max_mileage"] = filters["max_mileage"]
-    pkg = filters.get("packages_json_contains") or filters.get("package_contains")
-    if isinstance(pkg, list):
-        needles = [str(p).strip() for p in pkg if str(p).strip()]
+    pkg_all = filters.get("packages_json_contains_all")
+    if isinstance(pkg_all, list):
+        needles = [str(p).strip() for p in pkg_all if str(p).strip()]
         if needles:
-            out["packages_json_contains_list"] = needles
-    elif isinstance(pkg, str) and pkg.strip():
-        out["packages_json_contains"] = pkg.strip()
-    pkg_list = filters.get("packages_json_contains_list") or filters.get("package")
-    if isinstance(pkg_list, list):
-        needles = [str(p).strip() for p in pkg_list if str(p).strip()]
-        if needles:
-            existing = out.get("packages_json_contains_list") or []
-            if isinstance(existing, str):
-                existing = [existing]
-            merged = list(dict.fromkeys([*(existing if isinstance(existing, list) else []), *needles]))
-            out["packages_json_contains_list"] = merged
-            out.pop("packages_json_contains", None)
+            out["packages_json_contains_all"] = needles
+    else:
+        pkg = filters.get("packages_json_contains") or filters.get("package_contains")
+        if isinstance(pkg, list):
+            needles = [str(p).strip() for p in pkg if str(p).strip()]
+            if needles:
+                out["packages_json_contains_list"] = needles
+        elif isinstance(pkg, str) and pkg.strip():
+            out["packages_json_contains"] = pkg.strip()
+        pkg_list = filters.get("packages_json_contains_list") or filters.get("package")
+        if isinstance(pkg_list, list):
+            needles = [str(p).strip() for p in pkg_list if str(p).strip()]
+            if needles:
+                existing = out.get("packages_json_contains_list") or []
+                if isinstance(existing, str):
+                    existing = [existing]
+                merged = list(
+                    dict.fromkeys([*(existing if isinstance(existing, list) else []), *needles])
+                )
+                out["packages_json_contains_list"] = merged
+                out.pop("packages_json_contains", None)
     ft = filters.get("fuel_type")
     if ft:
         from backend.utils.field_clean import fuel_types_for_filter
@@ -454,6 +462,7 @@ _STRUCTURED_FILTER_KEYS = frozenset(
         "engine_displacement_l_max",
         "packages_json_contains",
         "packages_json_contains_list",
+        "packages_json_contains_all",
         "fully_loaded",
         "trim_contains",
         "vehicle_or",
@@ -494,6 +503,7 @@ _FACET_SQL_KWARG_KEYS = frozenset(
         "engine_displacement_l_max",
         "packages_json_contains",
         "packages_json_contains_list",
+        "packages_json_contains_all",
         "vehicle_or",
     }
 )
@@ -552,12 +562,20 @@ def _collect_package_needles(filters: dict[str, Any] | None) -> list[str]:
             if low and low not in seen:
                 seen.add(low)
                 needles.append(low)
+    raw_all = filters.get("packages_json_contains_all")
+    if isinstance(raw_all, list):
+        for item in raw_all:
+            low = str(item or "").strip().lower()
+            if low and low not in seen:
+                seen.add(low)
+                needles.append(low)
     return needles
 
 
 def _package_haystack(car: dict) -> str:
     parts = [
         str(car.get("packages") or ""),
+        str(car.get("description") or ""),
         str(car.get("title") or ""),
         str(car.get("trim") or ""),
         str(car.get("engine_description") or ""),
@@ -623,9 +641,12 @@ def _rank_smart_search_results(
         if order:
             vector_rank = {int(cid): i for i, cid in enumerate(order)}
 
+    from backend.utils.listings_sort import listing_sort_depriority
+
     def sort_key(car: dict) -> tuple:
         cid = int(car.get("id") or 0)
         return (
+            *listing_sort_depriority(car),
             -_package_match_count(car, needles),
             -_packages_json_richness(car) if fully_loaded else 0,
             vector_rank.get(cid, 10**9),
@@ -634,17 +655,6 @@ def _rank_smart_search_results(
         )
 
     return sorted(rows, key=sort_key)
-
-
-def _maybe_strip_multi_package_sql(filters: dict[str, Any] | None, sql_kwargs: dict[str, Any]) -> dict[str, Any]:
-    """When several equipment terms are parsed, score in Python instead of OR-filtering in SQL."""
-    needles = _collect_package_needles(filters)
-    if len(needles) >= 2:
-        out = dict(sql_kwargs)
-        out.pop("packages_json_contains", None)
-        out.pop("packages_json_contains_list", None)
-        return out
-    return sql_kwargs
 
 
 def _rerank_rows_by_vector(query_text: str, rows: list[dict], *, vector_top_k: int) -> list[dict]:
@@ -657,9 +667,12 @@ def _rerank_rows_by_vector(query_text: str, rows: list[dict], *, vector_top_k: i
     if not vector_order:
         return rows
     rank = {int(cid): i for i, cid in enumerate(vector_order)}
+    from backend.utils.listings_sort import listing_sort_depriority
+
     return sorted(
         rows,
         key=lambda c: (
+            *listing_sort_depriority(c),
             rank.get(int(c.get("id") or 0), 10**9),
             -(float(c.get("data_quality_score") or 0) or compute_data_quality_score(c)),
             _price_key(c),
@@ -685,7 +698,6 @@ def hybrid_smart_search(
     """
     q = (query_text or "").strip()
     sql_kwargs = filters_dict_to_search_cars_kwargs(filters or {})
-    sql_kwargs = _maybe_strip_multi_package_sql(filters, sql_kwargs)
     if listing_geo_kwargs:
         sql_kwargs = {**sql_kwargs, **listing_geo_kwargs}
     meta_extra: dict[str, Any] = {"parsed_filters": dict(filters) if filters else {}}
@@ -747,9 +759,12 @@ def _price_key(c: dict) -> float:
 
 
 def _sort_sql_rows(rows: list[dict]) -> list[dict]:
+    from backend.utils.listings_sort import listing_sort_depriority
+
     return sorted(
         rows,
         key=lambda c: (
+            *listing_sort_depriority(c),
             -(float(c.get("data_quality_score") or 0) or compute_data_quality_score(c)),
             _price_key(c),
         ),

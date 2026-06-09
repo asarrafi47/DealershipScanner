@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|maserati|levante",
+  "year": 2020,
+  "make": "maserati",
+  "model": "levante",
+  "ladder_id": "brochure_2020__maserati__levante",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes eight-speed ZF automatic gearbox with Auto Normal Mode",
+      "Adds Includes Auto Sport Mode with faster gear changes and open exhaust valves",
+      "Adds Includes Manual Normal Mode with paddle shifters",
+      "Adds Includes Manual Sport Mode with overboost and aggressive throttle mapping",
+      "Adds Includes Manual Off-Road Mode for terrain management",
+      "Adds Includes Auto Off-Road Mode with automatic shifting",
+      "Adds Includes I.C.E. Mode for icy or low-grip conditions",
+      "Adds Includes Electronic Stability Program with sport tuning capability"
+    ],
+    "Premium": [
+      "Adds Corsa Mode with Launch Control and dynamic suspension tuning",
+      "Adds Harman Kardon and Bowers & Wilkins premium audio system options",
+      "Adds Open Pore Regimental wooden interior trim with artisan finish",
+      "Adds Matte Carbon Fiber Weave interior trim",
+      "Adds High-Gloss Metal Weave interior trim with chevron pattern",
+      "Adds premium personalization options for interior cabin ambience",
+      "Adds Skyhook performance suspension control integration"
+    ]
+  }
+}

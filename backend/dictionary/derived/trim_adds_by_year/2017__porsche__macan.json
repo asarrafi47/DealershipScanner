@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2017|porsche|macan",
+  "year": 2017,
+  "make": "Porsche",
+  "model": "Macan",
+  "ladder_id": "brochure_web_2017__porsche__macan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Macan GTS",
+    "Macan S",
+    "Macan T",
+    "Macan"
+  ],
+  "adds_by_trim": {
+    "Macan GTS": [
+      "2.9-liter twin-turbo V-6 engine with 434 hp and 405 lb-ft of torque",
+      "0–60 mph acceleration in as little as 3.6 seconds",
+      "Surface coated brakes standard (no longer offered on other grades)"
+    ],
+    "Macan S": [
+      "2.9-liter twin-turbo V-6 engine with 375 hp and 383 lb-ft of torque",
+      "0–60 mph acceleration in 4.6 seconds",
+      "23 mpg highway (vs 17 city)"
+    ],
+    "Macan T": [
+      "Standard Sport Chrono package",
+      "0–60 mph acceleration in 5.3 seconds with turbo four-cylinder",
+      "Same 2.0-liter turbo four-cylinder engine as base Macan"
+    ],
+    "Macan": [
+      "2.0-liter turbo four-cylinder engine with 261 hp and 295 lb-ft of torque",
+      "Seven-speed automatic transmission standard on all trims",
+      "10.9-inch touchscreen with Apple CarPlay and eight speakers",
+      "Adaptive cruise control, automatic emergency braking, and parking sensors",
+      "Lane keeping warning system standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/macan/"
+}

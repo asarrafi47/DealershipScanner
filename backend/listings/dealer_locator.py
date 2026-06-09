@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 from thefuzz import fuzz
 
 from backend.db.geo import haversine
+from backend.utils.safe_listing_url import normalize_safe_http_url
 
 _MATCH_DISTANCE_MI = 0.35
 _MATCH_NAME_SCORE = 85
@@ -79,7 +80,10 @@ def _registry_row_to_dealer(row: dict[str, Any], listing_count: int) -> dict[str
         "distance_miles": row.get("distance_miles"),
         "in_database": True,
         "listing_count": listing_count,
-        "website_url": (row.get("dealer_website_url") or row.get("website_url") or "").strip(),
+        "website_url": normalize_safe_http_url(
+            row.get("dealer_website_url") or row.get("website_url") or ""
+        )
+        or "",
         "source": "database",
     }
 
@@ -120,7 +124,10 @@ def _google_candidate_to_row(candidate: Any, center_lat: float, center_lon: floa
         "latitude": lat,
         "longitude": lon,
         "distance_miles": round(haversine(center_lat, center_lon, lat, lon), 2),
-        "website_url": (candidate.dealer_website_url or candidate.website_url or "").strip(),
+        "website_url": normalize_safe_http_url(
+            candidate.dealer_website_url or candidate.website_url or ""
+        )
+        or "",
     }
 
 

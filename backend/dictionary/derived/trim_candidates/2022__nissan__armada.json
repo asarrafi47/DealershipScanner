@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2022|nissan|armada",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Armada",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Midnight Edition",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

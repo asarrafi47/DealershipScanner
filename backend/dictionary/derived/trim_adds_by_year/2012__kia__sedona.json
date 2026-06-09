@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|kia|sedona",
+  "year": 2012,
+  "make": "Kia",
+  "model": "Sedona",
+  "ladder_id": "brochure_llm_2012__kia__sedona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "Voice-command navigation system",
+      "Tri-zone air conditioning with advanced ionized air-filtration system",
+      "P235/60R17 tires (vs. P225/70R16 on LX)",
+      "Luxury Package with premium comfort features"
+    ],
+    "LX": [
+      "3.5L V6 engine with 271 horsepower and 248 lb.-ft. torque",
+      "6-speed Sportmatic transmission with manual shift mode",
+      "3,500 lbs. towing capacity",
+      "Four-wheel disc brakes with ABS",
+      "Power windows, door locks, and outside mirrors",
+      "Standard USB/auxiliary input jacks for MP3 players",
+      "Electronic Stability Control (ESC) and active front headrests",
+      "MacPherson-strut front and multi-link rear suspension",
+      "Seating for seven with flexible 2nd and 3rd row configurations"
+    ]
+  }
+}

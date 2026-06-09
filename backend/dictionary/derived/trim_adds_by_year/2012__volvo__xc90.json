@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2012|volvo|xc90",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2012__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premier Plus",
+    "R-DESIGN"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Climate Package with heated front seats",
+      "Navigation System with Map Care",
+      "Volvo Premium Sound System with 12 speakers and 5x130 watts digital class D amplifier",
+      "Rear Park Assist Camera",
+      "Interior Air Quality System (IAQS)"
+    ],
+    "Premier Plus": [
+      "Active Dual Xenon Headlights with Active Bending Lights",
+      "Headlight washers",
+      "Rain sensor"
+    ],
+    "R-DESIGN": [
+      "Active Dual Xenon Headlights (standard on this trim)",
+      "Digital Compass",
+      "HomeLink® Integrated Garage Door Opener",
+      "Grocery Bag Holder"
+    ]
+  }
+}

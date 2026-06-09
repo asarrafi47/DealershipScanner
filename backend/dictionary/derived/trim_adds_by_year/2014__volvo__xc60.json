@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2014|volvo|xc60",
+  "year": 2014,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2014__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "PREMIER PLUS",
+    "PREMIER",
+    "R-Design"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Power-operated tailgate with programmable memory setting",
+      "Inscription branded floormats",
+      "Leather front tunnel storage cover",
+      "Linear Doxology wood interior trim",
+      "Leather-covered dashboard",
+      "Anthracite black headliner",
+      "Sovereign Hide leather seating"
+    ],
+    "PREMIER PLUS": [
+      "Tan/Taupe or Taupe/Exotic Upholstery option",
+      "R-Design leather-clad sports steering wheel",
+      "R-Design leather-clad gear lever knob",
+      "R-Design aluminum interior trim"
+    ],
+    "PREMIER": [
+      "Leather seating surfaces",
+      "Laminated panoramic roof with power sunshade",
+      "Power passenger seat",
+      "Tinted rear seat and cargo area windows",
+      "Silver accent side décor",
+      "Silver roof rails",
+      "Keyless drive with Personal Car Communicator",
+      "Complimentary factory scheduled maintenance"
+    ],
+    "R-Design": [
+      "6-cylinder 240 HP engine with 6-speed automatic transmission",
+      "ABS anti-lock brakes with EBA",
+      "City Safety low-speed collision avoidance system",
+      "Driver and front passenger dual-threshold airbags",
+      "Dynamic stability and traction control",
+      "Power windows with driver/passenger auto up/down",
+      "Rear window defroster with automatic timer",
+      "Auto-dimming mirror",
+      "Tilt/telescopic steering wheel with illuminated cruise control",
+      "SiriusXM satellite radio with 6-month subscription"
+    ]
+  }
+}

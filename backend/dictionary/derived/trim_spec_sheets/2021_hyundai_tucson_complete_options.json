@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2021_hyundai_tucson_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Tucson",
+    "Tucson"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front engine, all-wheel-drive; Both engines are available in front and all-wheel drive versions. Available (was Layout Front engine, front-wheel-drive; In 2007, the GL and GLS trims were respectively renamed to GLS and SE to match the standard for all…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front engine, front-wheel-drive; In 2007, the GL and GLS trims were respectively renamed to GLS and SE to match the standard for all new Hyundai vehicles. The SE comes with a sport utility rack, has 4-wheel drive, and is a 6-cylinder engine. (was…"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front engine, front-wheel-drive; Front engine, all-wheel-drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: The GLS also got improved cloth seats with the option of a heating element."
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Infinity audio; [Brochure] Infinity audio"
+      }
+    ]
+  }
+}

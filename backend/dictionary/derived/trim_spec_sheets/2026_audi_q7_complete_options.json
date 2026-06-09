@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_audi_q7_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q7",
+    "Q7"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "L TDI V6"
+      }
+    ],
+    "Quattro": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

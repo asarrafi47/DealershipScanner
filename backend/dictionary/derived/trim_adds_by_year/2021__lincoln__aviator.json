@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2021|lincoln|aviator",
+  "year": 2021,
+  "make": "Lincoln",
+  "model": "Aviator",
+  "ladder_id": "brochure_web_2021__lincoln__aviator",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Premiere"
+  ],
+  "adds_by_trim": {
+    "Black Label": [
+      "AWD powertrain standard (RWD not available)",
+      "Available 30-way power adjustable front seats with lumbar support",
+      "Premium interior trim and material upgrades"
+    ],
+    "Reserve": [
+      "Enhanced interior appointments compared to Premiere",
+      "Premium material selections and finishes"
+    ],
+    "Premiere": [
+      "Twin-turbocharged 3.0L V6 engine with 400 hp and 415 lb-ft torque",
+      "10-speed automatic transmission with RWD standard or AWD available",
+      "BlueCruise hands-free driving system standard for four years",
+      "Lincoln Co-Pilot 360 2.1 suite with adaptive cruise control",
+      "13.2-inch touchscreen with Lincoln Digital Experience infotainment",
+      "12.4-inch digital gauge cluster",
+      "Heated and ventilated front seats standard",
+      "Panoramic sunroof on all models",
+      "20-inch wheels with adaptive suspension dampers",
+      "Wireless smartphone charging pad and phone-as-key functionality"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/aviator/"
+}

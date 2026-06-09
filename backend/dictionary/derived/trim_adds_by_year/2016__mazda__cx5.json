@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2016|mazda|cx5",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2016__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA CX-5 GRAND TOURING",
+    "MAZDA CX-5 TOURING",
+    "MAZDA CX-5 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA CX-5 GRAND TOURING": [
+      "SKYACTIV-G 2.5L 4-cylinder engine with 184 hp and 185 lb-ft torque",
+      "19-inch aluminum alloy wheels with P225/55 R19 tires",
+      "Smart City Brake Support with i-ACTIVSENSE Package",
+      "LED headlights with auto leveling and Adaptive Front-lighting System",
+      "LED fog lights and LED daytime running lights",
+      "LED combination tail lights with auto-dimming mirror and HomeLink",
+      "Bose Centerpoint 2 Surround Sound System with 9 speakers",
+      "Navigation System with MAZDA CONNECT Infotainment",
+      "Leather-trimmed sport seats with 8-way power-adjustable driver seat with lumbar"
+    ],
+    "MAZDA CX-5 TOURING": [
+      "SKYACTIV-G 2.5L 4-cylinder engine with 184 hp and 185 lb-ft torque",
+      "SKYACTIV-Drive 6-speed automatic transmission with manual-shift and Sport modes",
+      "Halogen fog lights",
+      "Power sliding-glass moonroof",
+      "Heated front seats with 3-level adjustment",
+      "Heated side mirrors",
+      "Blind Spot Monitoring and Rear Cross Traffic Alert",
+      "Dual-zone automatic climate control",
+      "Rearview Camera with Parking Assist",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "MAZDA CX-5 SPORT": [
+      "SKYACTIV-G 2.0L 4-cylinder engine with 155 hp and 150 lb-ft torque (MT) or SKYACTIV-G 2.5L available on AT models",
+      "SKYACTIV-MT 6-speed manual transmission or SKYACTIV-Drive 6-speed automatic available",
+      "17-inch aluminum alloy wheels with P225/65 R17 tires",
+      "Auto on/off halogen headlights with daytime running lights",
+      "Rain-sensing windshield wipers with variable-intermittent control",
+      "6-way power-adjustable driver seat with manual lumbar support",
+      "Push Button Start with Mazda Advanced Keyless Entry System",
+      "AM/FM/CD/MP3 audio system with 6 speakers",
+      "40/20/40 dual split fold-down rear seatback",
+      "Air conditioning with pollen filter"
+    ]
+  }
+}

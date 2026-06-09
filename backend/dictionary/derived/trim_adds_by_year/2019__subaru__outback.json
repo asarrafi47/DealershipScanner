@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2019|subaru|outback",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2019__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Touring",
+    "3.6R Limited",
+    "2.5i Touring",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Touring": [
+      "3.6-liter DOHC 24-valve horizontally-opposed Boxer engine with DAVCS, 256 hp, 247 lb-ft torque",
+      "Lineartronic HCVT High-Torque CVT with 6-speed manual mode and paddle shifters",
+      "18 x 7.0-inch aluminum-alloy wheels with dark gray machine finish",
+      "225/60 R18 all-season tires"
+    ],
+    "3.6R Limited": [
+      "3.6-liter DOHC 24-valve horizontally-opposed Boxer engine with DAVCS, 256 hp, 247 lb-ft torque",
+      "Lineartronic HCVT High-Torque CVT with 6-speed manual mode and paddle shifters",
+      "18 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/60 R18 all-season tires"
+    ],
+    "2.5i Touring": [
+      "18 x 7.0-inch aluminum-alloy wheels with dark gray machine finish",
+      "225/60 R18 all-season tires"
+    ],
+    "2.5i Limited": [
+      "18 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/60 R18 all-season tires"
+    ],
+    "2.5i Premium": [
+      "17 x 7.0-inch aluminum-alloy wheels with silver finish",
+      "225/65 R17 all-season tires"
+    ],
+    "2.5i": [
+      "2.5-liter DOHC 16-valve horizontally-opposed Boxer engine with AVCS, 175 hp, 174 lb-ft torque",
+      "Lineartronic CVT with 6-speed manual mode and paddle shifters",
+      "Subaru Symmetrical All-Wheel Drive",
+      "X-MODE with Hill Descent Control",
+      "4-wheel independent raised suspension with MacPherson strut front and double-wishbone rear",
+      "4-wheel disc brakes with ABS and Electronic Brake-force Distribution",
+      "Electronic Parking Brake",
+      "Vehicle Dynamics Control with Active Torque Vectoring",
+      "25 city / 32 highway / 28 combined mpg",
+      "18.5-gallon fuel capacity"
+    ]
+  }
+}

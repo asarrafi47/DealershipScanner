@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|ford|edge",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_llm_2019__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ST",
+    "Titanium",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "ST": [
+      "335 horsepower performance-enhanced 2.0L EcoBoost engine",
+      "Athletic new front and rear styling exclusive to ST",
+      "Performance-tuned suspension and handling"
+    ],
+    "Titanium": [
+      "B&O Sound System with 12 high-performance speakers",
+      "Wireless charging pad for mobile devices",
+      "Enhanced interior sophistication and modern styling"
+    ],
+    "SEL": [
+      "Ford Co-Pilot360 suite of 5 standard driver-assist technologies",
+      "Rear View Camera with Washer",
+      "BLIS with Cross-Traffic Alert",
+      "Lane-Keeping System with steering wheel vibration alerts",
+      "Pre-Collision Assist with Automatic Emergency Braking",
+      "Auto High-Beam Headlamps",
+      "8-inch SYNC 3 touchscreen with voice activation",
+      "FordPass Connect 4G LTE Wi-Fi hotspot connecting up to 10 devices",
+      "8-speed automatic transmission with rotary gear shift dial",
+      "Apple CarPlay and Android Auto compatibility"
+    ]
+  }
+}

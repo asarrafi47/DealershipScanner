@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2006_mercedes-benz_c-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "C-Class",
+    "C-Class"
+  ],
+  "year_min": 2004,
+  "year_max": 2008,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.2L V6 Turbo; Automatic 5-spd"
+      }
+    ],
+    "C230": [
+      {
+        "label": "Engine Options",
+        "value": "1.8L I4 Turbo; Automatic 5-spd"
+      }
+    ]
+  }
+}

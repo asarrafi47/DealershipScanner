@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|chevrolet|traverse",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2015__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Power-folding, heated, body-color mirrors with auto-dimming and Side Blind Zone Alert",
+      "Tri-zone automatic climate control",
+      "8-way power-adjustable front passenger seat with power lumbar and recline",
+      "Auto-dimming rearview mirror",
+      "Enhanced Driver Information Center with digital compass and low fluid indicators"
+    ],
+    "2LT": [
+      "Power-remote liftgate",
+      "Rear manual climate control",
+      "Rear Park Assist with audible warning",
+      "Remote vehicle starter system"
+    ],
+    "1LT": [
+      "Manual-folding, power-adjustable, heated, body-color mirrors with turn signal indicators",
+      "Rear Park Assist with audible warning",
+      "Remote vehicle starter system"
+    ],
+    "LS": [
+      "Manual liftgate",
+      "Manual-folding, power-adjustable, black mirrors",
+      "Single-zone front manual climate control",
+      "First-row console with two cup holders and covered storage",
+      "AM/FM radio with SiriusXM Satellite Radio and CD player"
+    ]
+  }
+}

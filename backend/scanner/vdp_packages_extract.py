@@ -62,6 +62,16 @@ def _section_is_package_like(section: str) -> bool:
     return any(h in s for h in _PACKAGE_SECTION_HINTS)
 
 
+def _section_allows_flat_named_options(section: str) -> bool:
+    """Dealer.com BMW lists many options as single lines under Included Packages."""
+    s = (section or "").lower()
+    if "included_packages" in s or "included_options" in s:
+        return True
+    if s.endswith("_package") or s.endswith("_packages"):
+        return True
+    return False
+
+
 def _should_keep_structured_item(item: dict[str, Any]) -> bool:
     section = str(item.get("section") or "").lower()
     kind = str(item.get("kind") or "").lower()
@@ -69,6 +79,9 @@ def _should_keep_structured_item(item: dict[str, Any]) -> bool:
         return False
     if not _section_is_package_like(section):
         return False
+    name = str(item.get("name") or "").strip()
+    if _section_allows_flat_named_options(section) and len(name) >= 2:
+        return True
     price = item.get("price")
     feats = item.get("features") or []
     if price is not None and int(price) > 0:
@@ -131,7 +144,7 @@ def structured_items_from_bundle(bundle: dict[str, Any] | None) -> list[dict[str
             norm = _normalize_structured_item(raw) if isinstance(raw, dict) else None
             if norm:
                 items.append(norm)
-    return items[:30]
+    return items[:40]
 
 
 def _load_packages_dict(vehicle: dict[str, Any]) -> dict[str, Any]:
@@ -184,7 +197,7 @@ def merge_vdp_packages_into_vehicle(vehicle: dict[str, Any], bundle: dict[str, A
     if added == 0:
         return False
 
-    pkg["packages_normalized"] = existing_norm[:40]
+    pkg["packages_normalized"] = existing_norm[:50]
     sections = bundle.get("domPackagesSections") if isinstance(bundle, dict) else None
     if isinstance(sections, list) and sections:
         pkg["vdp_packages_sections"] = sections[:12]

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|honda|pilot",
+  "year": 2012,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "brochure_llm_2012__honda__pilot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "246-Watt AM/FM/CD audio system with 7 speakers and subwoofer",
+      "Hard disk drive with 15-GB audio memory and Song By Voice",
+      "650-Watt premium audio system with 10 speakers and subwoofer",
+      "Trailer harness standard for towing",
+      "Tire pressure monitoring with location and pressure indicators"
+    ],
+    "EX-L": [
+      "Driver's seat with 10-way power adjustment including two-position memory",
+      "Leather-trimmed interior with heated front seats",
+      "Honda Satellite-Linked Navigation System available",
+      "DVD rear entertainment system available separately",
+      "246-Watt AM/FM/CD audio system with navigation integration"
+    ],
+    "EX": [
+      "Passenger's seat with 4-way power adjustment",
+      "XM Radio and USB audio interface",
+      "Bluetooth streaming audio capability",
+      "229-Watt AM/FM/CD audio system with 7 speakers and subwoofer"
+    ],
+    "LX": [
+      "Dual-stage multiple-threshold front airbags",
+      "Front side airbags with occupant position detection system",
+      "Three-row side curtain airbags with rollover sensor",
+      "Vehicle stability assist with traction control and brake assist",
+      "60/40 split flat-folding sliding and reclining second-row bench seat",
+      "60/40 split flat-folding third-row bench seat",
+      "MP3 and auxiliary input jack",
+      "Daytime running lights",
+      "LATCH child seat anchors in second and third rows"
+    ]
+  }
+}

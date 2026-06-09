@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2021|toyota|chr",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "CH-R",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XLE",
+    "LE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE",
+      "Mechanical and Performance Mechanical and Performance Mechanical and Performance Mechanical and Performance",
+      "2.0-Liter 4-Cylinder Engine \u2022 2.0-Liter 4-Cylinder Engine \u2022 2.0-Liter 4-Cylinder Engine \u2022 2.0-Liter 4-Cylinder Engine",
+      "Continuously Variable Transmission \u2022 Continuously Variable Transmission \u2022 Continuously Variable Transmission \u2022 Continuously Variable Transmission",
+      "144 hp @ 6100 rpm \u2022 144 hp @ 6100 rpm \u2022 144 hp @ 6100 rpm \u2022 144 hp @ 6100 rpm",
+      "Exterior Features Exterior Features Exterior Features Exterior Features",
+      "17-in. steel wheels and temporary spare \u2022 Vortex-style 18-in. sport alloy wheels \u2022 18-in. black sport alloy wheels with black \u2022 Turbine-style 18-in. sport alloy wheels",
+      "Multi-reflector LED headlights with temporary spare lug nuts with temporary spare",
+      "LED Daytime Running Lights \u2022 Heated power auto-folding mirrors with turn \u2022 Black exterior accents including chin spoiler, \u2022 LED projector beam headlights with",
+      "Heated power outside mirrors",
+      "Front, passenger and hatchback door handles \u2022 Black roof \u2022 Chrome window trim",
+      "Interior Features with touch-sensor lock/unlock feature"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

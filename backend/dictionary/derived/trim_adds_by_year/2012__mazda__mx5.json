@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2012|mazda|mx5",
+  "year": 2012,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2012__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "17-inch wheels with 205/45R17 W-speed-rated tires",
+      "Curb weight 2511 lbs (manual) or 2542 lbs (automatic)"
+    ],
+    "Touring": [
+      "17-inch wheels with 205/45R17 W-speed-rated tires",
+      "Curb weight 2480 lbs (manual) or 2542 lbs (automatic)"
+    ],
+    "Sport": [
+      "MZR 2.0L DOHC 16-valve engine with variable valve timing",
+      "167 hp at 7000 rpm (manual) or 158 hp at 6700 rpm (automatic)",
+      "140 lb-ft torque at 5000 rpm",
+      "5-speed or 6-speed manual transmission with short-throw shifter",
+      "6-speed automatic with Adaptive Shift Logic and paddle shifters",
+      "16-inch wheels with 205/50R16 V-speed-rated tires",
+      "Rear-wheel drive with available torque-sensing limited-slip differential",
+      "4-wheel independent suspension with double wishbone front and multilink rear",
+      "4-wheel disc brakes with ABS and Electronic Brakeforce Distribution",
+      "Advanced front and side-impact air bags"
+    ]
+  }
+}

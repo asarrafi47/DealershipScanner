@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2013|lincoln|navigator",
+  "year": 2013,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_llm_2013__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Lincoln Navigator L",
+    "Equipment Group 101A",
+    "Equipment Group 100A"
+  ],
+  "adds_by_trim": {
+    "Lincoln Navigator L": [
+      "33.5-gallon fuel tank (versus 28.0-gallon on base)",
+      "42.6 cubic feet cargo space behind 3rd-row seat",
+      "Cargo Management System"
+    ],
+    "Equipment Group 101A": [
+      "Power moonroof",
+      "Dual head restraint DVD by INVISION rear-seat entertainment system"
+    ],
+    "Equipment Group 100A": [
+      "5.4L SOHC 3-valve V8 engine, 310 hp, 365 lb-ft torque",
+      "6-speed automatic transmission with tow/haul mode",
+      "18-inch 7-spoke aluminum wheels with all-season tires",
+      "Power 4-wheel disc brakes with ABS",
+      "Class III/IV Standard-Duty Trailer Tow Package with frame-mounted hitch",
+      "Projector-style HID headlamps with autolamp feature",
+      "THX II Certified 5.1 Surround Audio System with 14 speakers",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link",
+      "3-point safety belts all rows; dual front airbags and side airbags",
+      "Safety Canopy System with 3-row side-curtain airbags and rollover sensor"
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2016|honda|odyssey",
+  "year": 2016,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2016__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE",
+    "TOURING",
+    "EX-L",
+    "EX",
+    "SE",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "LX": [
+      "248-hp 3.5-liter i-VTEC V-6 engine",
+      "6-speed automatic transmission",
+      "Vehicle Stability Assist with traction control",
+      "i-MID with 8-inch high-resolution customizable screen",
+      "Rearview camera with guidelines",
+      "Bluetooth HandsFreeLink and streaming audio",
+      "SMS text message function",
+      "Tilt and telescopic steering column",
+      "8-way power driver seat adjustment",
+      "4-way power front passenger seat adjustment"
+    ],
+    "SE": [
+      "17-inch alloy wheels",
+      "Power sliding doors",
+      "Multi-angle rearview camera with guidelines",
+      "Heated power side mirrors",
+      "Smart Entry system",
+      "Tri-zone automatic climate control with humidity control",
+      "Push button start"
+    ],
+    "EX": [
+      "18-inch alloy wheels",
+      "Fog lights",
+      "Memory-linked side mirrors with reverse gear tilt-down",
+      "Rear Entertainment System with 115-volt power outlet",
+      "SiriusXM Radio",
+      "650-watt AM/FM/CD premium audio with 12 speakers and subwoofer",
+      "HD Radio"
+    ],
+    "EX-L": [
+      "3rd-row folding center armrest",
+      "Forward Collision Warning",
+      "Lane Departure Warning",
+      "One-touch power moonroof with tilt feature",
+      "10-way power driver seat with lumbar support",
+      "Honda LaneWatch",
+      "HondaLink with Aha compatibility",
+      "Audio touch-screen"
+    ],
+    "TOURING": [
+      "Power tailgate",
+      "Panoramic 60/40 split 3rd-row Magic Seat compatibility",
+      "Leather-trimmed interior"
+    ],
+    "ELITE": [
+      "HID headlights with high-intensity/discharge capability"
+    ]
+  }
+}

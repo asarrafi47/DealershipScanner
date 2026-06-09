@@ -1,0 +1,42 @@
+{
+  "ladder_id": "porsche_taycan",
+  "make": "Porsche",
+  "models": [
+    "Taycan",
+    "Taycan Cross Turismo",
+    "Taycan Sport Turismo"
+  ],
+  "year_min": 2020,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Turbo S": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A2)"
+      }
+    ],
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "High-performance dual motor; EV Electricity"
+      }
+    ],
+    "GTS": [
+      {
+        "label": "Engine Options",
+        "value": "kWh (82.3 kWh net battery energy content) liquid-cooled lithium-ion; awarded the Taycan five stars out of five in its review of the car. In Apri"
+      }
+    ],
+    "4S": [
+      {
+        "label": "Engine Options",
+        "value": "Dual-motor all-wheel drive; EV Electricity"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior"
+      }
+    ]
+  }
+}

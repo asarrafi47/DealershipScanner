@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|toyota|mirai",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_web_2015__toyota__mirai",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "Advanced"
+  ],
+  "adds_by_trim": {
+    "Advanced": [
+      "Premium triple-zone climate control with driver and passenger seat heating",
+      "Panoramic moonroof with power tilt and slide",
+      "Premium JBL audio system with 12.3-inch display screen",
+      "Navigation system with voice recognition and Bluetooth connectivity",
+      "Semi-aniline leather-trimmed seats with power adjustment",
+      "LED headlights with auto on/off and high-beam assist",
+      "Heated exterior mirrors with blind spot mirrors",
+      "Pre-collision system with pedestrian detection and adaptive cruise control",
+      "Push-button start with smart key system",
+      "Exclusive 18-inch premium alloy wheels"
+    ],
+    "Limited": [
+      "Hydrogen fuel cell powertrain with 153 horsepower",
+      "Approximately 300-mile driving range on one tank",
+      "Eco Drive Monitor for efficiency feedback",
+      "Entune Audio Plus with 8-inch touchscreen and Bluetooth",
+      "Toyota Safety Sense suite: pre-collision, lane departure alert, adaptive cruise",
+      "Rearview camera with dynamic gridlines",
+      "Dual automatic climate control",
+      "6-way power driver seat with lumbar adjustment",
+      "17-inch alloy wheels with Bridgestone Ecopia tires",
+      "USB and auxiliary audio inputs for connectivity"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/mirai/"
+}

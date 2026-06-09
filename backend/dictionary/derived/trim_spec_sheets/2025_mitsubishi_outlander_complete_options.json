@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2025_mitsubishi_outlander_complete_options",
+  "make": "Mitsubishi",
+  "models": [
+    "Outlander",
+    "Outlander"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S6); Front-Wheel Drive"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] BOSE audio"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Front-engine, all-wheel-drive (S-AWC)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] BOSE audio"
+      }
+    ]
+  }
+}

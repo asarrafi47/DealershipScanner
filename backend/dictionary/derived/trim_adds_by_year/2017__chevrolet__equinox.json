@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2017|chevrolet|equinox",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2017__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "TL",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Chrome door handles",
+      "Halogen foglamps",
+      "Chrome manual-folding power-adjustable heated mirrors",
+      "Roof rack side rails",
+      "3.6L V6 engine with 301 hp and 272 lb.-ft. torque",
+      "Front dual-flow dampers",
+      "Auto-dimming rearview mirror",
+      "Automatic climate control",
+      "Power tilt/sliding sunroof with express-open feature",
+      "8-way power driver seat and 8-way power passenger seat"
+    ],
+    "TL": [
+      "Programmable power liftgate with fixed glass",
+      "Body-color manual-folding power-adjustable heated mirrors",
+      "Roof rack side rails",
+      "3.6L V6 engine option with 301 hp and 272 lb.-ft. torque",
+      "Rear Cross Traffic Alert and Rear Park Assist",
+      "Side Blind Zone Alert",
+      "Memory settings for driver seat and exterior mirrors",
+      "Heated driver and front passenger seats",
+      "Leather-appointed seats with perforated inserts",
+      "8-way power driver seat"
+    ],
+    "SL": [
+      "Front and rear carpeted floor mats",
+      "Automatic climate control",
+      "Remote vehicle starter system",
+      "Power tilt/sliding sunroof with express-open feature",
+      "Rear vision camera"
+    ],
+    "L": [
+      "6-speed automatic transmission with overdrive",
+      "Hill Start Assist",
+      "StabiliTrak Electronic Stability Control with Traction Control",
+      "Six airbags with Passenger Sensing System",
+      "LATCH system for child safety seats",
+      "OnStar Guidance Plan with Automatic Crash Response",
+      "Rear vision camera",
+      "Manual climate control",
+      "Power driver seat with lumbar and height adjustment",
+      "Premium cloth seats with Multi-Flex sliding rear seat"
+    ]
+  }
+}

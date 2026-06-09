@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1989,Toyota,MR2,MR2,1.6L I4 ((4A-GE) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,4,1.6,22,28,24,,,,,,1.6L I4,
-1989,Toyota,MR2,MR2,1.6L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,19,25,22,,,,,,1.6L I4,
-1989,Toyota,MR2,MR2,1.6L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,21,27,23,,,,,,1.6L I4,
-1989,Toyota,MR2,MR2,1.6L I4 ((4A-GE) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,4,1.6,23,29,25,,,,,,1.6L I4,

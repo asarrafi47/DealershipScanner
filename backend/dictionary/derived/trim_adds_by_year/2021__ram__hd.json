@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2021|ram|hd",
+  "year": 2021,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2021__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2TM",
+    "2TK",
+    "2TH",
+    "2TP",
+    "2TZ",
+    "2TA"
+  ],
+  "adds_by_trim": {
+    "2TM": [
+      "Chrome tow hooks standard",
+      "Black tow hooks with electronic locking rear differential"
+    ],
+    "2TK": [
+      "Optional chrome tow hooks",
+      "Optional electronic locking rear differential"
+    ],
+    "2TH": [
+      "Standard 220-amp alternator with diesel engines",
+      "Single 180-amp alternator standard with gas engine"
+    ],
+    "2TP": [
+      "Bilstein performance-tuned front and rear shocks",
+      "Transfer case skid plate protection",
+      "Fuel tank skid plate protection",
+      "Ram Articulink suspension system",
+      "Electronic disconnecting front stabilizer bar",
+      "4.10 rear axle ratio availability"
+    ],
+    "2TZ": [
+      "Optional dual 160+220-amp alternator with gas engine",
+      "Optional 6.7L Cummins High Output diesel engine"
+    ],
+    "2TA": [
+      "Optional dual 220-amp alternator with diesel engines",
+      "Optional Auto-Level Rear Air Suspension",
+      "Optional 6.7L Cummins High Output diesel engine"
+    ]
+  }
+}

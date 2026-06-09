@@ -1,0 +1,33 @@
+{
+  "ladder_id": "bmw_x2",
+  "make": "BMW",
+  "models": [
+    "X2",
+    "X2 M35i",
+    "X2 xDrive28i",
+    "X2 sDrive28i"
+  ],
+  "year_min": 2018,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M35i": [
+      {
+        "label": "Engine Options",
+        "value": "302 hp turbocharged 2.0L with M Sport tuning"
+      }
+    ],
+    "xDrive28i": [
+      {
+        "label": "Engine Options",
+        "value": "228 hp turbocharged 2.0L with xDrive AWD; 2.0L I4 Turbo"
+      }
+    ],
+    "sDrive28i": [
+      {
+        "label": "Engine Options",
+        "value": "228 hp turbocharged 2.0L with front-wheel drive; 2.0L I4 Turbo"
+      }
+    ]
+  }
+}

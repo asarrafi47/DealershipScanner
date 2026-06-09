@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2010|ram|hd",
+  "year": 2010,
+  "make": "ram",
+  "model": "HD",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "TRX",
+    "Laramie",
+    "Big Horn",
+    "Lone Star",
+    "Premium",
+    "LT",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

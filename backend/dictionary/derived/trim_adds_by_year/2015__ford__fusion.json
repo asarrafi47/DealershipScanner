@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2015|ford|fusion",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_llm_2015__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "10-way power driver's seat with power lumbar and power recline",
+      "6-way power front-passenger seat with fore/aft/up/down adjustment",
+      "17-inch Sparkle Silver-painted aluminum wheels",
+      "4.2-inch color LCD center stack display",
+      "Body-color power sideview mirrors with blind spot mirrors",
+      "60/40 split fold-flat rear seat",
+      "Body-color door handles",
+      "Single exhaust with bright tip"
+    ],
+    "S": [
+      "2.5L iVCT I-4 engine with 6-speed SelectShift automatic transmission",
+      "6-way manual driver's seat and 4-way manual front-passenger seat",
+      "60/40 split fold-flat rear seat with spring-assisted operation",
+      "17-inch Sparkle Silver-painted aluminum wheels with all-season tires",
+      "Body-color power heated sideview mirrors with blind spot mirrors",
+      "AM/FM stereo with single-CD player and MP3 capability",
+      "Cruise control and day/night rearview mirror",
+      "SecuriCode invisible keypad and Intelligent Access with push-button start"
+    ]
+  }
+}

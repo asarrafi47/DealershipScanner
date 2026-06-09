@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|chevrolet|avalanche",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Avalanche",
+  "ladder_id": "brochure_llm_2012__chevrolet__avalanche",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AVALANCHE LTZ",
+    "AVALANCHE LT",
+    "AVALANCHE LS"
+  ],
+  "adds_by_trim": {
+    "AVALANCHE LTZ": [
+      "Perforated leather-appointed front bucket seats with 12-way power; heated and cooled",
+      "20-inch polished aluminum wheels",
+      "SiriusXM NavTraffic standard for three trial months",
+      "Navigation radio with rearview camera system",
+      "8-speaker Bose Centerpoint Surround Sound system",
+      "Heated steering wheel",
+      "Universal Home Remote Transmitter",
+      "Outside heated power-adjustable, power-folding mirrors with driver-side auto-dimming and ground illumination",
+      "Inside rearview auto-dimming mirror",
+      "Bright chrome grille inserts, door handles, bodyside molding accents and mirror caps"
+    ],
+    "AVALANCHE LT": [
+      "Leather-appointed front bucket seats with six-way power; heated front seats",
+      "Power-adjustable pedals",
+      "Remote vehicle starter system",
+      "Dual-zone automatic climate control",
+      "7-speaker Bose sound system",
+      "Rear Parking Assist",
+      "Available Z71 Off-Road Suspension Package"
+    ],
+    "AVALANCHE LS": [
+      "Premium cloth seats",
+      "CD/MP3 player and SiriusXM Radio with three-month trial",
+      "OnStar standard for six months with Directions and Connections",
+      "USB port and Bluetooth wireless technology for select phones",
+      "17-inch aluminum wheels",
+      "Roof-mounted luggage rack side and center rails",
+      "Outside heated, power-adjustable mirrors"
+    ]
+  }
+}

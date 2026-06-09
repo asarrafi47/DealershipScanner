@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|acura|mdx",
+  "year": 2019,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_2019__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "A-Spec",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds HandsFreeLink connectivity",
+      "Adds AcuraLink mobile app integration",
+      "Adds Collision Mitigation Braking System (CMBS)",
+      "Adds Lane Keeping Assist System (LKAS)",
+      "Adds Lane Departure Warning (LDW)",
+      "Adds Adaptive Cruise Control (ACC) with Low-Speed Follow",
+      "Adds rearview camera display",
+      "Adds Vehicle Stability Assist (VSA)"
+    ],
+    "A-Spec": [
+      "A-Spec trim-specific grille treatment on front fascia",
+      "Updated 20-inch wheel designs",
+      "A-Spec exterior styling details"
+    ],
+    "Technology": [
+      "Adds On Demand Multi-Use Display (ODMD)",
+      "Adds Traffic Rerouting",
+      "Adds AcuraLink Real-Time Traffic"
+    ],
+    "Advance": [
+      "Adds Total Luxury Care (TLC) program access",
+      "Adds Acura Concierge 24-hour service",
+      "Adds trip-interruption benefits",
+      "Adds 24-Hour Roadside Assistance program"
+    ]
+  }
+}

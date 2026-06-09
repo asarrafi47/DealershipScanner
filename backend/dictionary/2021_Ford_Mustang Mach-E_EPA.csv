@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2021,Ford,Mustang Mach-E,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,100,86,93,,,,,,EV Electricity,
-2021,Ford,Mustang Mach-E,AWD Extended,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,96,84,90,,,,,,EV Electricity,
-2021,Ford,Mustang Mach-E,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Station Wagons,,,105,93,100,,,,,,EV Electricity,
-2021,Ford,Mustang Mach-E,RWD Extended,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Station Wagons,,,104,90,97,,,,,,EV Electricity,
-2021,Ford,Mustang Mach-E,RWD California Route 1,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Station Wagons,,,108,94,101,,,,,,EV Electricity,
-2021,Ford,Mustang Mach-E,GT,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,90,77,84,,,,,,EV Electricity,
-2021,Ford,Mustang Mach-E,GT Performance,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Station Wagons,,,88,75,82,,,,,,EV Electricity,

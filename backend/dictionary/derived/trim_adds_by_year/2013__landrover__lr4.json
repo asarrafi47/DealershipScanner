@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2013|landrover|lr4",
+  "year": 2013,
+  "make": "landrover",
+  "model": "LR4",
+  "ladder_id": "brochure_2013__landrover__lr4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds full color Touch-screen infotainment system with audio and navigation controls",
+      "Adds five inch Thin Film Transistor (TFT) instrument panel display",
+      "Adds standard in-car entertainment options",
+      "Adds HD Radio capability",
+      "Adds Sirius satellite radio availability"
+    ],
+    "Standard": [
+      "Upgraded to harman/kardon LOGIC7 Premium audio system with theater-style audio quality"
+    ]
+  }
+}

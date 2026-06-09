@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2021|chevrolet|trailblazer",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Trailblazer",
+  "ladder_id": "brochure_llm_2021__chevrolet__trailblazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "ACTIV",
+    "TL",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "1.3L Turbo engine with 155 hp and 174 lb-ft torque standard",
+      "All-wheel drive standard",
+      "9-speed automatic transmission with overdrive",
+      "Sport 3-spoke leather-wrapped steering wheel with flat-bottom design",
+      "LED headlamps",
+      "Two-tone roof options in Mosaic Black and Scarlet Red Metallic",
+      "HD Rear Vision Camera with Technology Package",
+      "4.2-inch multi-color driver information display",
+      "Adaptive Cruise Control with Technology Package"
+    ],
+    "ACTIV": [
+      "Two-tone roof options in Zeus Bronze and Mosaic Black Metallic",
+      "HD Rear Vision Camera available with Technology Package",
+      "Technology Package with Adaptive Cruise Control available",
+      "Leather-wrapped 3-spoke steering wheel with contrasting stitching"
+    ],
+    "TL": [
+      "1.3L Turbo engine standard on LT AWD",
+      "Automatic single-zone air conditioning",
+      "4.2-inch multi-color driver information display",
+      "Auto-dimming rearview mirror",
+      "120-volt power outlet on rear of center console",
+      "Remote vehicle starter system",
+      "Leather-wrapped shift knob",
+      "Panoramic power sunshade roof",
+      "Power programmable hands-free liftgate with LED logo projection"
+    ],
+    "SL": [
+      "All-wheel drive available",
+      "Active Noise Cancellation on AWD models",
+      "Electronic cruise control with Set and Resume Speed",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "Rear Park Assist"
+    ],
+    "L": [
+      "1.2L Turbo ECOTEC engine with 137 hp and 162 lb-ft torque",
+      "Manual rear liftgate",
+      "Front MacPherson strut suspension with compound crank rear",
+      "CVT transmission with Driver Shift Control",
+      "Manual single-zone air conditioning",
+      "3-spoke steering wheel",
+      "Lane Keep Assist with Lane Departure Warning",
+      "Rear Vision Camera",
+      "Full suite of airbags and safety features",
+      "OnStar Safety & Security coverage up to 3 months"
+    ]
+  }
+}

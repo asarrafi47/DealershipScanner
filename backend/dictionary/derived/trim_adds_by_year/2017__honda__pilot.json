@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2017|honda|pilot",
+  "year": 2017,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "brochure_llm_2017__honda__pilot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE",
+    "TOURING",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "ELITE": [
+      "Perforated heated and ventilated front seats",
+      "Perforated heated 2nd-row captain's chairs",
+      "Blue ambient LED lighting",
+      "540-watt premium audio system with 10 speakers and subwoofer",
+      "Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic"
+    ],
+    "TOURING": [
+      "9-speed automatic transmission with Shift-By-Wire and paddle shifters",
+      "20-inch alloy wheels",
+      "Body-colored parking sensors",
+      "Driver's seat with two-position memory and memory-linked side mirrors with reverse gear tilt-down",
+      "Tri-zone automatic climate control system with humidity control and air filtration",
+      "Blu-ray Rear Entertainment System with 15-volt power outlet, HDMI Interface and integrated 2nd-row sunshades",
+      "2nd-row 2.5 amp USB charging ports, 5 ports total"
+    ],
+    "EX-L": [
+      "Blind spot information system with cross traffic monitor",
+      "One-touch power moonroof with tilt feature",
+      "Power tailgate",
+      "Automatic high-beam headlights with auto-on/off",
+      "Heated steering wheel",
+      "Front passenger's seat with 4-way power adjustment",
+      "Leather-trimmed interior",
+      "Heated front seats",
+      "HD Radio",
+      "Available Rear Entertainment System with 15-volt power outlet and HDMI Interface"
+    ],
+    "EX": [
+      "LED Daytime Running Lights",
+      "Smart Entry",
+      "Fog lights",
+      "Intelligent Variable Torque Management i-VTM4 AWD system",
+      "Honda LaneWatch",
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "8-inch Display Audio with electrostatic touch-screen",
+      "HondaLink",
+      "Apple CarPlay and Android Auto",
+      "Available Honda Sensing suite of safety and driver-assistive features"
+    ],
+    "LX": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "6-speed automatic transmission",
+      "Variable Cylinder Management and Hill start assist",
+      "Intelligent Traction Management and Remote engine start",
+      "18-inch alloy wheels",
+      "Multi-angle rearview camera with guidelines",
+      "Tire Pressure Monitoring System",
+      "One-touch turn indicators",
+      "Rear privacy glass",
+      "Push button start and Tilt and telescopic steering column"
+    ]
+  }
+}

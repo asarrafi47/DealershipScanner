@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2012|hyundai|santafe",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2012__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Well-equipped trim level with enhanced features"
+    ],
+    "SE": [
+      "Sporty styling and character",
+      "3,500-pound towing capacity on V6 models"
+    ],
+    "GLS": [
+      "Eco-efficient engine focus",
+      "Spacious interior with high-quality materials and fit-and-finish",
+      "Modern-day conveniences",
+      "Award-winning safety features",
+      "America's Best Warranty coverage"
+    ]
+  }
+}

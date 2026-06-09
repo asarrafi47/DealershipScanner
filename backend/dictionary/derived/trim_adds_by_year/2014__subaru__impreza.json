@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2014|subaru|impreza",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2014__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Sport Limited 5-door",
+    "2.0i Sport Premium 5-door",
+    "2.0i Limited 4-door and 5-door",
+    "2.0i Premium 4-door and 5-door",
+    "2.0i 4-door and 5-door"
+  ],
+  "adds_by_trim": {
+    "2.0i Sport Limited 5-door": [
+      "Auto-on/off headlights"
+    ],
+    "2.0i Sport Premium 5-door": [
+      "Lineartronic CVT with manual-mode paddle shifters",
+      "Leather-trimmed upholstery",
+      "Automatic climate control system",
+      "6-speaker single-CD audio with 4.3-inch LCD display and HD Radio",
+      "Rear-Vision Camera"
+    ],
+    "2.0i Limited 4-door and 5-door": [
+      "17-inch aluminum-alloy wheels with gray finish",
+      "Roof rails with black finish",
+      "Striped cloth upholstery",
+      "Leather-wrapped steering wheel and shift handle",
+      "Lineartronic CVT with manual-mode paddle shifters",
+      "Fog lights",
+      "All-Weather Package"
+    ],
+    "2.0i Premium 4-door and 5-door": [
+      "16-inch aluminum-alloy wheels",
+      "Body-color side mirrors",
+      "6-speaker single-CD audio with USB port and Bluetooth",
+      "Electronic Cruise Control",
+      "All-Weather Package"
+    ],
+    "2.0i 4-door and 5-door": [
+      "148-hp 2.0-liter 4-cylinder Subaru Boxer engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic CVT",
+      "4-speaker single-CD audio with USB port and Bluetooth connectivity",
+      "Multifunction display",
+      "15-inch steel wheels with covers",
+      "Cloth upholstery"
+    ]
+  }
+}

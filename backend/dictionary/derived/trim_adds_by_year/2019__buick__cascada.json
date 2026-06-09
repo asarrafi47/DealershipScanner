@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2019|buick|cascada",
+  "year": 2019,
+  "make": "Buick",
+  "model": "Cascada",
+  "ladder_id": "brochure_llm_2019__buick__cascada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport Touring",
+    "Premium",
+    "Cascada (1SV)"
+  ],
+  "adds_by_trim": {
+    "Sport Touring": [
+      "20-inch Dynamic Twin-Spoke wheels with blacked-out pockets",
+      "Jet Black Perforated Leather-Appointed Seating with red stitching",
+      "Dark Moon Blue Metallic exterior color",
+      "Sport Red exterior color",
+      "Malbec interior color",
+      "Sweet Mocha interior color"
+    ],
+    "Premium": [
+      "20-inch Dynamic Twin-Spoke bi-color finish wheels",
+      "Light Neutral Perforated Leather-Appointed Seating option",
+      "Jet Black Perforated Leather-Appointed Seating with red stitching option",
+      "Rioja Red Metallic, Smoked Pearl Metallic, Flip Chip Silver Metallic exterior colors",
+      "Premium paint charges apply",
+      "Malbec and Sweet Mocha interior color availability"
+    ],
+    "Cascada (1SV)": [
+      "20-inch Diamond Graphic Twin-Spoke bi-color finish wheels standard",
+      "Jet Black Leather-Appointed Seating standard",
+      "Summit White, Ebony, and Twilight Metallic exterior colors",
+      "Convertible top available in multiple colors",
+      "OnStar and Buick Connected Services capable",
+      "4 years/50,000 miles bumper-to-bumper limited warranty",
+      "6 years/70,000 miles powertrain limited warranty with roadside assistance",
+      "6 years/100,000 miles body and sheet metal rust-through corrosion warranty"
+    ]
+  }
+}

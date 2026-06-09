@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_toyota_mirai_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Mirai",
+    "Mirai"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "FCV (PEFC) Hydrogen; Automatic (variable gear ratios)"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "FCV (PEFC) Hydrogen; Automatic (variable gear ratios)"
+      }
+    ]
+  }
+}

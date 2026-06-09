@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_audi_a6_complete_options",
+  "make": "AUDI",
+  "models": [
+    "A6",
+    "A6"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: L 12V/30V V6; L 32V V8"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: 15 speaker"
+      }
+    ]
+  }
+}

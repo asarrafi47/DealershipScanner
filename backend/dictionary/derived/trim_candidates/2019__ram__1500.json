@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2019|ram|1500",
+  "year": 2019,
+  "make": "ram",
+  "model": "1500",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Rebel",
+    "Big Horn",
+    "Tradesman",
+    "Platinum",
+    "Premium",
+    "LT",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2017|nissan|370z",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2017__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO TECH ROADSTER",
+    "NISMO ROADSTER",
+    "TOURING SPORT COUPE",
+    "TOURING ROADSTER",
+    "SPORT TECH COUPE",
+    "370Z ROADSTER",
+    "370Z SPORT COUPE"
+  ],
+  "adds_by_trim": {
+    "NISMO TECH ROADSTER": [
+      "Nissan Hard Drive Navigation System with touchscreen and Voice Recognition",
+      "NavTraffic and NavWeather provided by SiriusXM",
+      "RearView Monitor for parking assistance",
+      "SynchroRev Match on manual transmission"
+    ],
+    "NISMO ROADSTER": [
+      "350 hp, 276 lb.-ft. torque 3.7L V6 engine",
+      "NISMO-tuned free-flow dual exhaust with H-pipe",
+      "NISMO aerodynamic body design with front/rear fascia and spoiler",
+      "19-inch NISMO forged alloy RAYS wheels",
+      "Bridgestone Potenza S001 high-performance Y-rated tires",
+      "NISMO Recaro leather seats with Alcantara inserts",
+      "NISMO-tuned suspension with increased spring and dampening rates",
+      "Nissan sport brakes with 14.0-inch 4-piston front and red calipers"
+    ],
+    "TOURING SPORT COUPE": [
+      "19-inch RAYS forged alloy wheels",
+      "Bridgestone Potenza RE050A high-performance W-rated tires"
+    ],
+    "TOURING ROADSTER": [
+      "6-speed manual transmission standard or 7-speed automatic with Downshift Rev Matching",
+      "Nissan Hard Drive Navigation System with touchscreen and Voice Recognition",
+      "NavTraffic and NavWeather provided by SiriusXM",
+      "RearView Monitor for parking assistance",
+      "Auto-dimming rearview mirror",
+      "Driver adjustable lumbar support",
+      "Ventilated leather-appointed seats with climate control heated and cooled",
+      "Aluminum-trimmed pedals",
+      "Bose Premium Audio with eight speakers and two subwoofers"
+    ],
+    "SPORT TECH COUPE": [
+      "Nissan Hard Drive Navigation System with touchscreen and Voice Recognition",
+      "NavTraffic and NavWeather provided by SiriusXM",
+      "RearView Monitor for parking assistance",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming rearview mirror",
+      "Streaming audio via Bluetooth wireless technology"
+    ],
+    "370Z ROADSTER": [
+      "Power convertible soft-top with glass window",
+      "Rear glass window deflector",
+      "Power moving tonneau cover",
+      "Paddle shifters on automatic transmission",
+      "Bluetooth Hands-free Phone System",
+      "Nissan Intelligent Key with Push Button Ignition"
+    ],
+    "370Z SPORT COUPE": [
+      "332 hp, 270 lb.-ft. torque 3.7L V6 engine",
+      "6-speed manual transmission standard or 7-speed automatic with Downshift Rev Matching",
+      "Ripple-control and sport-tuned shock absorbers",
+      "3-point front strut tower brace",
+      "18-inch black-finish aluminum-alloy wheels",
+      "Yokohama ADVAN Sport high-performance W-rated tires",
+      "High Intensity Discharge bi-functional xenon headlights",
+      "LED taillights and Daytime Running Lights",
+      "8-way adjustable driver seat with thigh support",
+      "Bluetooth Hands-free Phone System and Nissan Intelligent Key"
+    ]
+  }
+}

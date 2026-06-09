@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2022|chevrolet|malibu",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2022__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT",
+    "RS",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "2.0L turbocharged engine with 9-speed automatic transmission",
+      "LED headlamps",
+      "19-inch aluminum wheels",
+      "Leather-appointed seating",
+      "Bose premium 9-speaker audio system",
+      "Chevrolet Infotainment 3 Plus system with Navigation",
+      "Heated steering wheel",
+      "Dual-panel power sunroof with power sunshade",
+      "Chrome door handles with body-color inserts",
+      "Bright sill plates"
+    ],
+    "LT": [
+      "LED daytime running lamps and taillamps",
+      "Outside heated power-adjustable mirrors with body-color caps",
+      "17-inch aluminum wheels",
+      "Remote vehicle starter system",
+      "SiriusXM 3-month trial subscription",
+      "Dual-zone automatic climate control",
+      "Power windows with driver express-up/-down",
+      "8-way power driver seat with power lumbar control",
+      "Rear-seat armrest with cup holders"
+    ],
+    "RS": [
+      "Black Chevrolet bowtie emblems and Black Malibu and Red RS badging",
+      "Chrome grille surround with Black grille inserts",
+      "Exclusive 18-inch aluminum wheels",
+      "Dual exhaust outlets",
+      "Rear spoiler",
+      "Outside power-adjustable mirrors with body-color caps",
+      "Leather-wrapped steering wheel",
+      "8-way power driver seat with power lumbar control"
+    ],
+    "LS": [
+      "1.5L turbocharged 4-cylinder engine",
+      "Outside power-adjustable mirrors with Black caps",
+      "Keyless Open and Start",
+      "16-inch aluminum wheels",
+      "Chevrolet Infotainment 3 system with 8-inch diagonal color touchscreen",
+      "6-speaker sound system",
+      "Bluetooth audio streaming",
+      "USB ports (one Type-A, one Type-C)",
+      "Steering wheel-mounted controls for audio, phone, and cruise",
+      "Tilt and telescopic steering column"
+    ]
+  }
+}

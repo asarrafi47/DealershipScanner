@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2018|maserati|quattroporte",
+  "year": 2018,
+  "make": "maserati",
+  "model": "quattroporte",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

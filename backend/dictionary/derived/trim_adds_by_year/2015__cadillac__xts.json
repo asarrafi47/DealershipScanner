@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2015|cadillac|xts",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "XTS",
+  "ladder_id": "brochure_llm_2015__cadillac__xts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM VSPORT",
+    "PREMIUM VSPORT",
+    "PLATINUM",
+    "PREMIUM",
+    "LUXURY",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "PLATINUM VSPORT": [
+      "3.6L Twin Turbo Direct-Injection V6 with 410 hp and 369 lb.-ft. torque",
+      "All-Wheel Drive with Advanced Torque Vectoring and electronic Limited-Slip Differential"
+    ],
+    "PREMIUM VSPORT": [
+      "3.6L Twin Turbo Direct-Injection V6 with 410 hp and 369 lb.-ft. torque"
+    ],
+    "PLATINUM": [
+      "All-Wheel Drive with Advanced Torque Vectoring and electronic Limited-Slip Differential standard",
+      "UltraView Power Sunroof with tilt-sliding motion and express open/close",
+      "22-way power driver and front passenger seat adjusters with massaging feature"
+    ],
+    "PREMIUM": [
+      "Semi-aniline full-leather seats",
+      "Heated front and outboard rear seats",
+      "Power rear window sunshade",
+      "UltraView Power Sunroof available"
+    ],
+    "LUXURY": [
+      "Leather seating surfaces",
+      "Leather-wrapped instrument panel, door trim upper and floor console",
+      "Microfiber sueded headliner including sail panels and pillars"
+    ],
+    "STANDARD": [
+      "3.6L Direct-Injection V6 with 304 hp and 264 lb.-ft. torque",
+      "Front-Wheel Drive with 6-speed automatic transmission",
+      "Magnetic Ride Control with Tour and Sport modes",
+      "Speed-sensitive variable-effort power steering",
+      "4-wheel independent suspension with HiPer Strut front and air springs rear",
+      "High-Intensity Discharge headlamps with Twilight Sentinel and IntelliBeam",
+      "LED taillamps with center high-mounted stop lamp",
+      "Full-color Driver Information Center with reconfigurable display themes",
+      "Push-button start with two remote transmitters",
+      "Passive entry keyless access on front and rear doors"
+    ]
+  }
+}

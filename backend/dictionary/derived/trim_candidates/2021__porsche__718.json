@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2021|porsche|718",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "718",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Carrera"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

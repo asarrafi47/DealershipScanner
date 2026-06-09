@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2013|mitsubishi|outlander",
+  "year": 2013,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2013_Mitsubishi_Outlander_Brochure.pdf",
+  "page_count": 28,
+  "all_pages": false,
+  "trim_hint_pages": [
+    22
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 22,
+      "trim_hint": true,
+      "text": "Build Your Own\nCOLOR / TRIM / SPECIFICATIONS\nMITSUBISHICARS.COM\nExterior vehicle colors not available for all trim levels",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 22 ---\nBuild Your Own\nCOLOR / TRIM / SPECIFICATIONS\nMITSUBISHICARS.COM\nExterior vehicle colors not available for all trim levels"
+}

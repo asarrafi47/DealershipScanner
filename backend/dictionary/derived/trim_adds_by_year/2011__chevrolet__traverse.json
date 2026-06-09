@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2011|chevrolet|traverse",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2011__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "3.6L VVT V6 with 288 hp and 270 lb.-ft. torque (vs. 281 hp/266 lb.-ft. on lower trims)",
+      "Dual exhaust with chrome tips",
+      "Power-adjustable front passenger seat with four-way control and lumbar",
+      "Leather-appointed first and second rows with perforated inserts",
+      "Heated and cooled seats for driver and front passenger",
+      "Auto-dimming rearview mirror",
+      "Power windows with driver and passenger Express-Up/Down",
+      "Bose 10-speaker audio system with CD/MP3/USB",
+      "Rearview camera integrated into navigation radio",
+      "Remote vehicle starter with extended-range Remote Keyless Entry"
+    ],
+    "2LT": [
+      "Power liftgate with remote control",
+      "Rearview camera system integrated into rearview mirror",
+      "Rearview camera option integrated into navigation radio",
+      "AM/FM stereo with CD/MP3, USB port and Bose 10-speaker system",
+      "Seven-passenger seating with captain's chairs option",
+      "Ultrasonic Rear Parking Assist",
+      "Heated seats for driver and front passenger",
+      "Leather-appointed seating option"
+    ],
+    "1LT": [
+      "Power-adjustable driver seat with eight-way and memory for seat/mirrors",
+      "Variable-effort power steering",
+      "Foldaway power-adjustable heated mirrors with turn-signal indicators and blind spot mirrors",
+      "Remote vehicle starter option",
+      "Universal Home Remote transmitter option",
+      "Personal Connectivity Package with Bluetooth wireless technology"
+    ],
+    "LS": [
+      "3.6L VVT V6 engine with 281 hp and 266 lb.-ft. torque",
+      "Six-speed automatic transmission with TAPshift manual shift control",
+      "Seven-seating capacity with 60/40 split flat-folding bench seats",
+      "Four-wheel antilock disc brakes",
+      "Driver and front passenger frontal and pelvic/thorax side-impact air bags",
+      "Head-curtain side-impact air bags for all rows",
+      "Halogen headlamps with Automatic Exterior Lamp Control",
+      "Front and rear intermittent wipers with washers",
+      "Chrome door handles and roof rail moldings",
+      "AM/FM stereo with CD/MP3 player and six-speaker system"
+    ]
+  }
+}

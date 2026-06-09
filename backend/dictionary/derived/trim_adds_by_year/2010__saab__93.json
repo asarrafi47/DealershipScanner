@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|saab|93",
+  "year": 2010,
+  "make": "Saab",
+  "model": "9-3",
+  "ladder_id": "brochure_llm_2010__saab__93",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Aero",
+    "Vector",
+    "Linear"
+  ],
+  "adds_by_trim": {
+    "Aero": [
+      "Black Leather/textile sport upholstery with Aero sports steering wheel",
+      "Unique front and rear design styling",
+      "17-inch alloy wheels with performance tyres",
+      "Integrated foglights and dual sports exhaust",
+      "Sports chassis tuned and lowered 10mm for enhanced stability",
+      "Firmer springs and stiffer shock absorbers for better body control",
+      "Saab XWD cross-wheel drive system available with 2.0 Turbo",
+      "Performance package with electronically controlled limited slip differential",
+      "Extra-large high-performance brakes",
+      "18 or 19-inch 3-spoke Twin alloy wheels with Performance package"
+    ],
+    "Vector": [
+      "Parchment Leather/textile sport upholstery",
+      "Exudes performance and dynamics for inspired driving experience"
+    ],
+    "Linear": [
+      "Black Leatherette/textile woven textile upholstery",
+      "Timeless Scandinavian design philosophy with clean lines and modern simplicity"
+    ]
+  }
+}

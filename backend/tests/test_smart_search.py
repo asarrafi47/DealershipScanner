@@ -96,16 +96,20 @@ def test_filters_kwargs_vehicle_or() -> None:
 
 def test_parse_feature_keyword_packages_json_contains() -> None:
     f = parse_natural_query("Honda Accord with heated seats under 30k")
-    pkg = f.get("packages_json_contains_list") or []
-    assert "heated" in pkg
+    assert f.get("packages_json_contains") == "heated"
+    assert "packages_json_contains_all" not in f
     assert f.get("make") == "Honda"
     assert f.get("model") == "Accord"
 
 
 def test_parse_named_package_phrase() -> None:
     f = parse_natural_query("BMW X5 with M Sport package")
-    pkg = f.get("packages_json_contains_list") or []
-    assert any("m sport" in str(p).lower() for p in pkg)
+    pkg_needles: list[str] = []
+    if f.get("packages_json_contains"):
+        pkg_needles.append(str(f["packages_json_contains"]))
+    pkg_needles.extend(f.get("packages_json_contains_all") or [])
+    joined = " ".join(pkg_needles).lower()
+    assert "m sport" in joined
     assert f.get("make") == "BMW"
 
 
@@ -124,7 +128,7 @@ def test_parse_complex_bmw_equipment_query() -> None:
     assert f.get("exterior_color") == ["blue"]
     assert f.get("fully_loaded") is True
     assert f.get("trim_contains") != "and"
-    pkg = f.get("packages_json_contains_list") or []
+    pkg = f.get("packages_json_contains_all") or []
     joined = " ".join(pkg).lower()
     assert "bowers" in joined
     assert "head-up" in joined
@@ -152,9 +156,37 @@ def test_rank_smart_search_prefers_more_equipment_matches() -> None:
             "title": "BMW X5",
         },
     ]
-    filters = {"packages_json_contains_list": ["bowers", "head-up", "360"], "fully_loaded": True}
+    filters = {"packages_json_contains_all": ["bowers", "head-up", "360"], "fully_loaded": True}
     ranked = _rank_smart_search_results(rows, "bmw x5 bowers head-up 360", filters, vector_top_k=10)
     assert [r["id"] for r in ranked][:2] == [2, 1]
+
+
+def test_api_search_smart_parse_route() -> None:
+    from backend.main import app
+
+    client = app.test_client()
+    r = client.get("/api/search/smart/parse?query=AWD+Accord+under+30000")
+    assert r.status_code == 200
+    data = r.get_json()
+    assert data.get("ok") is True
+    assert data.get("filters", {}).get("max_price") == 30000
+    assert "AWD" in (data.get("filters", {}).get("drivetrain") or [])
+
+
+def test_parse_awd_not_body_style_trim_label() -> None:
+    f = parse_natural_query("Apple CarPlay, AWD, and leather seats under $25k")
+    assert f.get("drivetrain") == ["AWD", "4WD"]
+    assert "body_style" not in f
+    assert f.get("packages_json_contains_all") == ["carplay", "leather"]
+    assert f.get("max_price") == 25000
+
+
+def test_parse_multi_feature_filters_kwargs_and() -> None:
+    f = parse_natural_query("AWD with carplay and leather under 30k")
+    kw = filters_dict_to_search_cars_kwargs(f)
+    assert kw.get("packages_json_contains_all") == ["carplay", "leather"]
+    assert kw.get("drivetrains") == ["AWD", "4WD"]
+    assert "packages_json_contains_list" not in kw
 
 
 def test_hybrid_smart_search_mercedes_s580() -> None:

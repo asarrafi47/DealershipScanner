@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2013|suzuki|sx4",
+  "year": 2013,
+  "make": "Suzuki",
+  "model": "SX4",
+  "ladder_id": "generic_suzuki_sx4",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "ed SportBack and the sophisticat",
+      "trademarks. Audio player sold separately. Pandora is a registered",
+      "passengers could be subject to data service overage charges should the drivers and/or"
+    ],
+    "LE": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with 150-hp",
+      "Front-Wheel Drive",
+      "6-speed manual or CVT automatic transmission",
+      "4-wheel disc brakes with Bosch ABS",
+      "Electronic Brake-Force Distribution",
+      "Halogen headlamps",
+      "Power steering and power windows",
+      "Manual air conditioning with pollen filter",
+      "4-speaker AM/FM/CD with MP3 playback and XM capability",
+      "Information display showing MPG, range, temperature, average speed"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "LE": 0
+    }
+  }
+}

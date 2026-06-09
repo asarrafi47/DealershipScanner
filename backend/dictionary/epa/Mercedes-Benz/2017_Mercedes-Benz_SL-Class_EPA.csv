@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,Mercedes-Benz,SL-Class,SL550,4.7L V8 (SIDI),4.7L V8 Turbo,Turbocharged,Automatic 9-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.7,17,25,20,,,,,
+2017,Mercedes-Benz,SL-Class,SL450,3.0L V6 (SIDI),3.0L V6 Turbo,Turbocharged,Automatic 9-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,20,28,23,,,,,
+2017,Mercedes-Benz,SL-Class,AMG SL63,5.5L V8 (SIDI),5.5L V8 Twin Turbo,Twin Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,5.5,16,25,19,,,,,
+2017,Mercedes-Benz,SL-Class,AMG SL65,6.0L V12,6.0L V12 Turbo,Turbocharged,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,12,6.0,13,22,16,,,,,

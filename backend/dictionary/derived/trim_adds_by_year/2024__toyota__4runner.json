@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2024|toyota|4runner",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2024__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "TRD Off-Road Premium",
+    "TRD Off-Road",
+    "SR5 Premium",
+    "TRD Sport",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Available full-time 4WD system with Active Traction Control and Torsen limited-slip center differential",
+      "Power tilt/slide moonroof with sunshade",
+      "20-in. split 6-spoke alloy wheels with P245/60R20 tires",
+      "Front and rear parking assist sonar",
+      "Perforated leather-trimmed seats",
+      "Dual zone automatic climate control with air filter and second-row vents",
+      "8-way power-adjustable driver's seat with memory function and power lumbar support",
+      "Premium Audio with JBL speaker system"
+    ],
+    "TRD Off-Road Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed seats with heated front seats",
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Auto-dimming rearview mirror",
+      "Premium Audio with 8.0-inch touchscreen and eight speakers"
+    ],
+    "TRD Off-Road": [
+      "Part-time 4WD system with Active Traction Control, Multi-Terrain Select and Crawl Control",
+      "Locking rear differential",
+      "17-in. 7-spoke alloy wheels with black-painted accents",
+      "Color-keyed front and rear bumpers with silver accents",
+      "TRD Off-Road external hard badges",
+      "Overhead console with Multi-Terrain Select and Crawl Control switches",
+      "Audio Plus with 8.0-inch touchscreen and eight speakers"
+    ],
+    "SR5 Premium": [
+      "Available part-time 4WD system with Active Traction Control",
+      "Heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed seats with heated front seats",
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Auto-dimming rearview mirror",
+      "Premium Audio with Dynamic Navigation and Destination Assist"
+    ],
+    "TRD Sport": [
+      "Part-time 4WD system with Active Traction Control",
+      "X-REAS Sport Enhancement Suspension",
+      "Color-keyed TRD hood scoop",
+      "LED headlights, fog lights, and taillights",
+      "17-in. 6-spoke alloy wheels with P265/70R17 tires",
+      "TRD shift knob and TRD carpet floor mats",
+      "Premium Audio Package with 8.0-inch touchscreen"
+    ],
+    "SR5": [
+      "4.0-Liter V6 engine with 270 horsepower and 5-speed automatic transmission",
+      "Rear-Wheel Drive with available part-time 4WD and Active Traction Control",
+      "Automatic Limited-Slip Differential",
+      "Hill Start Assist Control and available Downhill Assist Control",
+      "Skid plates on engine, front suspension, fuel tank and transfer case",
+      "17-in. 6-spoke alloy wheels with P265/70R17 tires",
+      "LED headlights and fog lights",
+      "Smart Key System with Push Button Start and remote illuminated entry",
+      "Backup camera with projected path",
+      "Fabric-trimmed seats with 8-way power driver's seat and split second-row"
+    ]
+  }
+}

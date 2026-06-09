@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2011|lexus|ls",
+  "year": 2011,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2011__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LS 460 L",
+    "LS 460"
+  ],
+  "adds_by_trim": {
+    "LS 460 L": [
+      "Extended wheelbase with increased rear legroom for five-passenger or optional four-passenger premium configuration",
+      "Available Variable Gear-Ratio Steering (VGRS) for enhanced steering response",
+      "Coil-over monotube shock absorbers standard suspension setup",
+      "Increased curb weight of 4,333 lb (RWD) and 4,697 lb (AWD) reflecting extended body",
+      "Turning circle of 37.4 ft (RWD) and 38.7 ft (AWD) compared to LS 460"
+    ],
+    "LS 460": [
+      "90-degree V8 4.6-liter engine with direct and port fuel injection producing 380 hp (RWD) or 357 hp (AWD)",
+      "Eight-speed sequential-shift automatic Electronically Controlled Transmission with intelligence (ECT-i)",
+      "Standard Vehicle Dynamics Integrated Management (VDIM) system for rear-wheel drive models",
+      "Electronic Power Steering system with 3.2 turns lock-to-lock",
+      "Four-wheel power-assisted disc brakes with Anti-lock Braking System and Electronic Brakeforce Distribution",
+      "18-inch 10-spoke alloy wheels with 235/50VR18 all-season tires standard; 19-inch available",
+      "Certified Ultra-Low Emission Vehicle (ULEV II) emission rating"
+    ]
+  }
+}

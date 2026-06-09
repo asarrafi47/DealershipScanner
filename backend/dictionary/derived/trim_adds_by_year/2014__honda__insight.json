@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2014|honda|insight",
+  "year": 2014,
+  "make": "Honda",
+  "model": "Insight",
+  "ladder_id": "brochure_llm_2014__honda__insight",
+  "source": "brochure_llm",
+  "trims_available": [
+    "INSIGHT EX with Navigation",
+    "INSIGHT EX",
+    "INSIGHT LX",
+    "INSIGHT"
+  ],
+  "adds_by_trim": {
+    "INSIGHT EX with Navigation": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Rearview camera with guidelines",
+      "Illuminated steering wheel-mounted navigation controls"
+    ],
+    "INSIGHT EX": [
+      "Security system",
+      "Cruise control",
+      "Continuously variable transmission (CVT) with paddle shifters",
+      "15-inch alloy wheels",
+      "Bluetooth HandsFreeLink with audio controls",
+      "Illuminated steering wheel-mounted cruise and audio controls",
+      "Perforated leather-wrapped steering wheel and shift knob",
+      "160-watt AM/FM/CD audio system with 6 speakers",
+      "Floor mats",
+      "Heated side mirrors with integrated turn indicators"
+    ],
+    "INSIGHT LX": [
+      "Brake Assist system",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Remote entry system",
+      "Projector-beam halogen headlights with blue-tinted chrome bezels",
+      "LED brake lights",
+      "Automatic headlight control",
+      "160-watt AM/FM/CD audio system with 4 speakers",
+      "USB Audio Interface",
+      "Driver and passenger vanity mirrors"
+    ],
+    "INSIGHT": [
+      "1.3-liter i-VTEC 4-cylinder engine with Integrated Motor Assist IMA producing 98 hp",
+      "123 lb-ft of torque at 1000–1700 rpm combined",
+      "Continuously variable transmission (CVT)",
+      "41/44/42 mpg EPA ratings (city/highway/combined)",
+      "ULEV/AT-PZEV CARB emissions rating",
+      "Eco Assist system",
+      "15-inch wheels with full covers",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Map lights in cabin"
+    ]
+  }
+}

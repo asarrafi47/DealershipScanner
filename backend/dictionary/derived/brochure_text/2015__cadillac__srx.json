@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2015|cadillac|srx",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "SRX",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2015_Cadillac_SRX_Brochure.pdf",
+  "page_count": 22,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": false,
+      "text": "2 0 1 5 S R X\ncadillac.com/srx",
+      "table_lines": []
+    },
+    {
+      "page": 2,
+      "trim_hint": false,
+      "text": "2 0 1 5 S R X\ncadillac.com/srx",
+      "table_lines": []
+    },
+    {
+      "page": 5,
+      "trim_hint": false,
+      "text": "cillateM\nrevliS\ntnaidaR\n/\nnoitcelloC\nmuimerP\nXRS",
+      "table_lines": [
+        "cillateM\nrevliS\ntnaidaR\n/\nnoitcelloC\nmuimerP\nXRS"
+      ]
+    },
+    {
+      "page": 22,
+      "trim_hint": false,
+      "text": "2 0 1 5 S R X\ncadillac.com/srx",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 1 ---\n2 0 1 5 S R X\ncadillac.com/srx\n\n--- page 2 ---\n2 0 1 5 S R X\ncadillac.com/srx\n\n--- page 5 ---\ncillateM\nrevliS\ntnaidaR\n/\nnoitcelloC\nmuimerP\nXRS\n\ncillateM\nrevliS\ntnaidaR\n/\nnoitcelloC\nmuimerP\nXRS\n\n--- page 22 ---\n2 0 1 5 S R X\ncadillac.com/srx"
+}

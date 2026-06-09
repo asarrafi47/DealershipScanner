@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2024|gmc|terrain",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Terrain",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2024_GMC_Terrain_Brochure.pdf",
+  "page_count": 13,
+  "all_pages": false,
+  "trim_hint_pages": [
+    1,
+    2,
+    12
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": true,
+      "text": "TERRAIN MODELS\n2024 FEATURES, SPECS AND OPTIONS\nWe have tried to make this guide comprehensive and factual. We reserve the right, however, to make changes at any time, without notice,\nin prices, colors, materials, equipment, specifications, models and availability. Specifications, dimensions, measurements, ratings\nand other numbers in this guide and other printed materials provided at the dealership or affixed to vehicles are approximations based\non design and engineering drawings, prototypes and laboratory tests. Your vehicle may differ due to variations in manufacture and equipment.\nSince some information may have been updated since the time of publication, please check with your GMC dealer for complete details.",
+      "table_lines": []
+    },
+    {
+      "page": 2,
+      "trim_hint": true,
+      "text": "2 TABLE OF CONTENTS\nTABLE OF CONTENTS\n03. 04. 05-09. 10.\nMODEL OVERVIEW HIGHLIGHTS MODEL OVERVIEW HIGHLIGHTS KEY FEATURES MODEL PACKAGES\nTerrain SLE Terrain AT4 Exterior Select packages available\nTerrain SLT Terrain Denali Interior\nCapability\nSafety and technology\n11. 12. 13.\nMODEL SPECS POWERTRAIN SPECS ACCESSORIES\nDimensions Specifications Key available accessories\nEngine specifications\nTransmission specifications",
+      "table_lines": []
+    },
+    {
+      "page": 12,
+      "trim_hint": true,
+      "text": "12 POWERTRAIN SPECS\nSPECIFICATIONS\nENGINE MODEL MAX GVWR (LBS)1 AXLE RATIO MAX TRAILER WEIGHT RATING (LBS)2\n1.5L Turbo I4 SLE/SLT/AT4/Denali 4,630 3.47 1,500\nENGINE SPECIFICATIONS\nENGINE BORE & STROKE (IN./MM) BLOCK MATERIAL CYLINDER HEAD MATERIAL COMPRESSION RATIO VALVETRAIN FUEL DELIVERY HORSEPOWER TORQUE (LB-FT)\nDual overhead camshafts;\n1.5L Turbo I4 2.93 x 3.409 (74.4 x 86.6) Cast aluminum Cast aluminum 10.0:1 Direct injection 175 @ 5800 203 @ 2000-4000\nfour valves per cylinder\nTRANSMISSION SPECIFICATIONS\nTRANSMISSION TYPE GEAR RATIOS (:1) FIRST SECOND THIRD FOURTH FIFTH SIXTH SEVENTH EIGHTH NINTH REVERSE FINAL DRIVE RATIO\n9T45 9-speed automatic 9T45 4.69 3.31 3.01 2.44 1.92 1.44 1.00 0.75 0.62 2.96 3.47\n1 Maximum Gross Vehicle Weight Rating (GVWR). When properly equipped; includes weight of vehicle, passengers, cargo and equipment. 2Maximum trailering ratings are intended for comparison purposes only. Before you buy a vehicle or use it for trailering, carefully review the trailering\nsection of the Owner\u2019s Manual. The trailering capacity of your specific vehicle may vary. The weight of passengers, cargo and options or accessories may reduce the amount you can trailer.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 1 ---\nTERRAIN MODELS\n2024 FEATURES, SPECS AND OPTIONS\nWe have tried to make this guide comprehensive and factual. We reserve the right, however, to make changes at any time, without notice,\nin prices, colors, materials, equipment, specifications, models and availability. Specifications, dimensions, measurements, ratings\nand other numbers in this guide and other printed materials provided at the dealership or affixed to vehicles are approximations based\non design and engineering drawings, prototypes and laboratory tests. Your vehicle may differ due to variations in manufacture and equipment.\nSince some information may have been updated since the time of publication, please check with your GMC dealer for complete details.\n\n--- page 2 ---\n2 TABLE OF CONTENTS\nTABLE OF CONTENTS\n03. 04. 05-09. 10.\nMODEL OVERVIEW HIGHLIGHTS MODEL OVERVIEW HIGHLIGHTS KEY FEATURES MODEL PACKAGES\nTerrain SLE Terrain AT4 Exterior Select packages available\nTerrain SLT Terrain Denali Interior\nCapability\nSafety and technology\n11. 12. 13.\nMODEL SPECS POWERTRAIN SPECS ACCESSORIES\nDimensions Specifications Key available accessories\nEngine specifications\nTransmission specifications\n\n--- page 12 ---\n12 POWERTRAIN SPECS\nSPECIFICATIONS\nENGINE MODEL MAX GVWR (LBS)1 AXLE RATIO MAX TRAILER WEIGHT RATING (LBS)2\n1.5L Turbo I4 SLE/SLT/AT4/Denali 4,630 3.47 1,500\nENGINE SPECIFICATIONS\nENGINE BORE & STROKE (IN./MM) BLOCK MATERIAL CYLINDER HEAD MATERIAL COMPRESSION RATIO VALVETRAIN FUEL DELIVERY HORSEPOWER TORQUE (LB-FT)\nDual overhead camshafts;\n1.5L Turbo I4 2.93 x 3.409 (74.4 x 86.6) Cast aluminum Cast aluminum 10.0:1 Direct injection 175 @ 5800 203 @ 2000-4000\nfour valves per cylinder\nTRANSMISSION SPECIFICATIONS\nTRANSMISSION TYPE GEAR RATIOS (:1) FIRST SECOND THIRD FOURTH FIFTH SIXTH SEVENTH EIGHTH NINTH REVERSE FINAL DRIVE RATIO\n9T45 9-speed automatic 9T45 4.69 3.31 3.01 2.44 1.92 1.44 1.00 0.75 0.62 2.96 3.47\n1 Maximum Gross Vehicle Weight Rating (GVWR). When properly equipped; includes weight of vehicle, passengers, cargo and equipment. 2Maximum trailering ratings are intended for comparison purposes only. Before you buy a vehicle or use it for trailering, carefully review the trailering\nsection of the Owner\u2019s Manual. The trailering capacity of your specific vehicle may vary. The weight of passengers, cargo and options or accessories may reduce the amount you can trailer."
+}

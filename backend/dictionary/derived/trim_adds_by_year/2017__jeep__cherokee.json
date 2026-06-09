@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|jeep|cherokee",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_2017__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Overland",
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Advanced Front Air Bags certified to U.S. Federal regulations",
+      "Adds Bluetooth Hands-Free Profile connectivity",
+      "Adds Electronic Stability Control (ESC)",
+      "Adds Forward Collision Warning (FCW) system",
+      "Adds SiriusXM satellite radio capability"
+    ],
+    "Latitude": [
+      "Adds Uconnect Access mobile services with 9-1-1 Emergency Call button",
+      "Adds Roadside Assistance Service direct-dial access",
+      "Adds ParkView rearview camera system"
+    ],
+    "Trailhawk": [
+      "Adds 2-speed power transfer unit (PTU) with rear locking axle",
+      "Adds low-range 4x4 capability",
+      "Adds Jeep Selec-Terrain with 5 drive modes including snow setting",
+      "Adds Trail Rated off-road performance package"
+    ],
+    "Limited": [
+      "Adds Uconnect Wi-Fi Hotspot with mobile connectivity",
+      "Adds ParkSense parking assist sensors",
+      "Adds Bluetooth Message Access Profile (MAP) for Voice Text Reply and Voice Texting"
+    ],
+    "Overland": [
+      "Adds Uconnect vehicle theft alarm notification system",
+      "Adds Siri Eyes Free integration for iPhone users",
+      "Adds CommandView panoramic sunroof"
+    ]
+  }
+}

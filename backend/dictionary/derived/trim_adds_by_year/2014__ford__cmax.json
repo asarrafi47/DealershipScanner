@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2014|ford|cmax",
+  "year": 2014,
+  "make": "Ford",
+  "model": "C-Max",
+  "ladder_id": "brochure_llm_2014__ford__cmax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "C-MAX Energi",
+    "C-MAX Hybrid"
+  ],
+  "adds_by_trim": {
+    "C-MAX Energi": [
+      "Plug-in hybrid powertrain with electric-only driving capability",
+      "PlugIntoFord.com access for interactive electrified lifestyle learning tools",
+      "8-year/100,000-mile hybrid/electric unique component coverage"
+    ],
+    "C-MAX Hybrid": [
+      "Electronically controlled continuously variable transmission (eCVT)",
+      "Regenerative braking system with energy management",
+      "Intelligent oil-life monitor",
+      "Active grille shutters for aerodynamic efficiency",
+      "Next-generation SmartGauge with EcoGuide",
+      "Torque vectoring control",
+      "5-passenger seating with front bucket seats",
+      "Personal safety system with dual-stage front airbags and safety restraints",
+      "AdvanceTrac with roll stability control and curve control",
+      "17-inch machined aluminum wheels with P225/50R17 tires"
+    ]
+  }
+}

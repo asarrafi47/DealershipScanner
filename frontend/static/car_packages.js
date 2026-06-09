@@ -608,13 +608,6 @@
             ensurePanelVisible();
             if (showStickerUi && !stickerHasDisplayableContent(data)) {
                 hideWindowStickerBlock();
-                if (
-                    section &&
-                    !serverRenderedPanelHasContent() &&
-                    !(data && data.packages_panel_has_content)
-                ) {
-                    section.hidden = true;
-                }
             }
             let hasContent =
                 shown || stickerIsVisible() || serverRenderedPanelHasContent();
@@ -655,6 +648,8 @@
                     empty.textContent = "Session expired. Refresh the page and try again.";
                 } else if (err === "premium_required") {
                     empty.textContent = "Premium subscription required for window sticker analysis.";
+                } else if (err === "login_required") {
+                    empty.textContent = "Sign in required to load factory options. Use /dev/scan-lab for operator access.";
                 } else {
                     empty.textContent = "Could not load package data. Try refreshing the page.";
                 }
@@ -692,18 +687,26 @@
         stickerLoading.hidden = false;
     }
 
-    runEnsure()
-        .then(function (wrapped) {
-            finish(wrapped.data, wrapped.ok);
-        })
-        .catch(function () {
-            if (loading) loading.hidden = true;
-            hideStickerLoading();
-            ensurePanelVisible();
-            const oemUrl = (section.getAttribute("data-oem-sticker-url") || "").trim();
-            if (empty && !oemUrl && !serverRenderedPanelHasContent()) {
-                empty.textContent = "Could not load package data. Try refreshing the page.";
-                empty.hidden = false;
-            }
-        });
+    function startEnsure() {
+        runEnsure()
+            .then(function (wrapped) {
+                finish(wrapped.data, wrapped.ok);
+            })
+            .catch(function () {
+                if (loading) loading.hidden = true;
+                hideStickerLoading();
+                ensurePanelVisible();
+                const oemUrl = (section.getAttribute("data-oem-sticker-url") || "").trim();
+                if (empty && !oemUrl && !serverRenderedPanelHasContent()) {
+                    empty.textContent = "Could not load package data. Try refreshing the page.";
+                    empty.hidden = false;
+                }
+            });
+    }
+
+    if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(startEnsure, { timeout: 2500 });
+    } else {
+        window.setTimeout(startEnsure, 50);
+    }
 })();

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|lexus|ls",
+  "year": 2010,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "generic_lexus_ls",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "ubscription available only with new vehicle purchase of Lexus Enform-equipped vehicles.",
+      "subscription term selected. 11. Lexus Enform premium services Destination Assist and eDestination will",
+      "function in Hawaii and limited areas of Alaska for vehicles that contain map data",
+      "ollisions only. The included Driver Attention Monitor",
+      "the driver\u2019s face appears to be turned away. They are not collision-avoidance systems and are",
+      ", XM NavWeather and XM Sports and Stocks require a monthly service fee and hardware. XM NavTraffic is designed to provide real-time",
+      "Navigation System Owner\u2019s Manual for further details. 20. Functioning XM Radio requires a",
+      "activate the service, call the XM Listener Care Center. Subscriptions are governed by the XM Customer Agreement available at xmradio.com/"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 8.0,
+    "per_trim_add_counts": {
+      "Limited": 8
+    }
+  }
+}

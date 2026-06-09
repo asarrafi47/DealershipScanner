@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2020|cadillac|ct4",
+  "year": 2020,
+  "make": "Cadillac",
+  "model": "CT4",
+  "ladder_id": "brochure_2020__cadillac__ct4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes 6-year/70,000-mile transferable powertrain limited warranty",
+      "Adds Features 24/7 roadside assistance and courtesy transportation",
+      "Adds Includes 4-year/50,000-mile bumper-to-bumper limited warranty with no deductible"
+    ],
+    "Luxury": []
+  }
+}

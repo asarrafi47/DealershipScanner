@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2020|acura|ilx",
+  "year": 2020,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "brochure_llm_2020__acura__ilx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A-Spec®",
+    "Technology",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "A-Spec®": [
+      "18 x 7.5 Shark Gray 15-Spoke aluminum-alloy wheels with 225/40 R18 high-performance all-season tires",
+      "Sport A-Spec® seats with perforated Milano premium leather and Ultrasuede®-trimmed interior",
+      "Stainless steel sport pedals",
+      "Graphite and chrome dash trim",
+      "Machine-finished ebony headliner",
+      "LED fog lights",
+      "Decklid spoiler and side underbody spoilers"
+    ],
+    "Technology": [
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic™ with street and freeway conditions",
+      "Traffic Rerouting™",
+      "AcuraLink® Connected Services",
+      "Multi-View Rear Camera with dynamic guidelines",
+      "Acura/ELS Studio® Premium Audio System with 10 speakers",
+      "Song By Voice®",
+      "On Demand Multi-Use Display™ (ODMD™) 2.0"
+    ],
+    "Premium": [
+      "GPS-linked climate control",
+      "HomeLink®",
+      "Blind spot information (BSI) system",
+      "Rear cross traffic monitor",
+      "Sport seats with perforated Milano premium leather-trimmed interior",
+      "Front passenger's 4-way power seat with power lumbar support",
+      "Heated front seats",
+      "Automatic-dimming rearview mirror",
+      "Apple CarPlay® and Android Auto™ integration",
+      "Acura Premium Audio System with 7 speakers and subwoofer"
+    ],
+    "Base": [
+      "2.4L aluminum-alloy 4-cylinder DOHC i-VTEC® engine with 201 hp and direct fuel injection",
+      "8-speed dual-clutch transmission with torque converter and sequential sportshift paddle shifters",
+      "Front-wheel drive with MacPherson strut front and multi-link rear suspension",
+      "Dual-zone automatic climate control with humidity control and air filtration",
+      "Sport seats with leatherette-trimmed interior",
+      "Driver's 8-way power seat with power lumbar support",
+      "Keyless access system with Acura personalized settings and pushbutton ignition",
+      "Jewel Eye® LED headlights and LED-illuminated taillights",
+      "Moonroof with tilt and slide function",
+      "Multi-view rear camera"
+    ]
+  }
+}

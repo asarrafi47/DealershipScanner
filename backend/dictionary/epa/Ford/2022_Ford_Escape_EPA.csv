@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Ford,Escape,FWD,1.5L I3 (SIDI),1.5L I3,,Automatic 8-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,3,1.5,28,34,30,,,,,
+2022,Ford,Escape,FWD HEV,Hybrid 2.5L I4 (Hybrid),2.5L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,44,37,41,,,,,
+2022,Ford,Escape,AWD HEV,Hybrid 2.5L I4 (Hybrid),2.5L I4,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,43,37,40,,,,,
+2022,Ford,Escape,AWD,1.5L I3 (SIDI),1.5L I3,,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.5,26,31,28,,,,,
+2022,Ford,Escape,AWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,22,31,26,,,,,
+2022,Ford,Escape,FWD PHEV,Plug-in Hybrid 2.5L I4 (PHEV),2.5L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline / Electricity,Small Sport Utility Vehicle 2WD,4,2.5,43,38,40,,,,,

@@ -19,12 +19,16 @@ from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 import requests
 
 from backend.discovery.candidate import DealerCandidate
+from backend.discovery.google_place_rating import rating_from_place_dict
 from backend.discovery.normalize import normalize_url, normalize_us_state_to_code, normalize_zip
 
 logger = logging.getLogger(__name__)
 
 NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby"
-FIELD_MASK = "places.id,places.displayName,places.websiteUri,places.formattedAddress,places.addressComponents,places.location"
+FIELD_MASK = (
+    "places.id,places.displayName,places.websiteUri,places.formattedAddress,"
+    "places.addressComponents,places.location,places.rating,places.userRatingCount"
+)
 
 # searchNearby hard cap per Google docs
 _MAX_RADIUS_M = 50_000.0
@@ -140,6 +144,8 @@ def _parse_place(place: dict[str, Any]) -> DealerCandidate | None:
         if nu:
             clean_url = nu
 
+    rating_fields = rating_from_place_dict(place)
+
     return DealerCandidate(
         name=name,
         city=city,
@@ -151,6 +157,9 @@ def _parse_place(place: dict[str, Any]) -> DealerCandidate | None:
         dealer_website_url=clean_url,
         website_url=clean_url,
         source_web=True,
+        google_place_id=rating_fields.place_id if rating_fields else None,
+        google_rating=rating_fields.rating if rating_fields else None,
+        google_review_count=rating_fields.review_count if rating_fields else None,
     )
 
 

@@ -1,0 +1,113 @@
+{
+  "ladder_id": "2024_chevrolet_silverado_ld_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Silverado LD",
+    "Silverado LD"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "High Country": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "LTZ": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "ZR2": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 10-spd; Four-Wheel Drive"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "LT Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "RST": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Custom Trail Boss": [
+      {
+        "label": "Engine Options",
+        "value": "LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS); L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "Custom": [
+      {
+        "label": "Engine Options",
+        "value": "LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS); L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ],
+    "WT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); L5P Duramax 6.6 L V8 (2017-20) 445 hp (332 kW; 451 PS)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ]
+  }
+}

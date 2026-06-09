@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2011|dodge|dakota",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Dakota",
+  "ladder_id": "generic_dodge_dakota",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Crew"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "chrome bodyside molding,"
+    ],
+    "Limited": [
+      "chrome grille with matching billets,"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Premium": 1,
+      "Crew": 0
+    }
+  }
+}

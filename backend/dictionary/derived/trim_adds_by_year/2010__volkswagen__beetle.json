@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2010|volkswagen|beetle",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Beetle",
+  "ladder_id": "brochure_web_2010__volkswagen__beetle",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "LSR",
+    "S",
+    "SE",
+    "2.5"
+  ],
+  "adds_by_trim": {
+    "2.5": [
+      "2.5L 5-cylinder engine with 170 hp",
+      "5-speed manual transmission standard",
+      "Air conditioning",
+      "Power windows and locks",
+      "AM/FM radio with CD player",
+      "Fold-flat rear seats",
+      "Cloth upholstery"
+    ],
+    "SE": [
+      "Automatic transmission option (5-speed)",
+      "Cruise control",
+      "Upgraded interior trim and décor",
+      "Security system with alarm"
+    ],
+    "S": [
+      "17-inch alloy wheels",
+      "Heated front seats",
+      "Leatherette seat trim",
+      "Panoramic sunroof",
+      "Monsoon premium audio system",
+      "Fog lights"
+    ],
+    "LSR": [
+      "Leather seating surfaces",
+      "Automatic headlights with rain sensing",
+      "Bluetooth connectivity",
+      "RNS 310 touchscreen navigation system",
+      "Premium Dynaudio sound system",
+      "XDS electronic differential lock",
+      "Alloy pedals and steering wheel trim"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/volkswagen/beetle"
+}

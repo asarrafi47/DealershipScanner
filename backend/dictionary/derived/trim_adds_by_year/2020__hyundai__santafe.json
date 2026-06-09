@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2020|hyundai|santafe",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_2020__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL Premium",
+    "SEL",
+    "SE",
+    "Blue",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Adds Smart Cruise Control with Stop & Go",
+      "Adds High Beam Assist",
+      "Adds Lane Keeping Assist",
+      "Adds Driver Attention Warning",
+      "Adds Rearview Camera",
+      "Adds Safe Exit Assist",
+      "Adds Rear Occupant Alert",
+      "Adds Apple CarPlay and Android Auto standard",
+      "Adds Blue Link Connected Care for 3 years complimentary"
+    ],
+    "Premium": [
+      "Adds Blind-Spot Collision-Avoidance Assist",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist"
+    ],
+    "Blue": [
+      "Adds Blind-Spot Collision-Avoidance Assist",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist"
+    ],
+    "SE": [
+      "Adds Blind-Spot Collision-Avoidance Assist",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist"
+    ],
+    "SEL": [
+      "Adds Blind-Spot Collision-Avoidance Assist",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist"
+    ],
+    "SEL Premium": [
+      "Adds Blind-Spot Collision-Avoidance Assist",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist"
+    ],
+    "Limited": [
+      "Adds Blind-Spot Collision-Avoidance Assist",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist"
+    ]
+  }
+}

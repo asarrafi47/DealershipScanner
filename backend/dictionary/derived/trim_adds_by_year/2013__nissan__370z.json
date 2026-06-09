@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2013|nissan|370z",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_2013__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Nismo",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "High Intensity Discharge (HID) bi-functional xenon headlights",
+      "LED Daytime Running Lights",
+      "LED taillights",
+      "Front chin aero deflector",
+      "Body-color rear spoiler",
+      "Aluminum hood, doors and hatch",
+      "3-point front strut tower brace",
+      "Sport-tuned shock absorbers"
+    ],
+    "Touring": [
+      "Upgraded to 7-speed automatic transmission with paddle shifters and Downshift Rev Matching",
+      "Upgraded to 350 hp engine output",
+      "Adds 19-inch forged alloy RAYS wheels with premium Bridgestone Potenza tires",
+      "Adds HID bi-functional xenon headlights with LED daytime running lights",
+      "Adds Nissan Hard Drive Navigation System with 7-inch VGA touch-screen",
+      "Adds Bose audio system with eight speakers and dual subwoofers",
+      "Adds leather-appointed sport seats with ventilation",
+      "Adds power convertible soft-top with glass window",
+      "Adds Nissan Intelligent Key with Push Button Ignition",
+      "Adds Bluetooth Hands-free Phone System"
+    ],
+    "Premium": [
+      "Adds ventilated leather-appointed sport seats with enhanced comfort",
+      "Adds heated seats with cooling function for Roadster",
+      "Adds driver's adjustable lumbar support",
+      "Adds power heated outside mirrors",
+      "Adds automatic temperature control with in-cabin microfilter",
+      "Adds RearView Monitor for backup visibility",
+      "Adds SiriusXM Satellite Radio integration",
+      "Adds Fine Vision electroluminescent gauges with multi-function drive computer",
+      "Upgraded to higher specification brake components"
+    ],
+    "Limited": [
+      "Adds NISMO aerodynamic body design with performance front and rear fascia",
+      "Adds NISMO-tuned suspension with increased spring and dampening rates",
+      "Adds NISMO reinforced 3-point front strut tower brace",
+      "Adds NISMO front and rear performance body dampers",
+      "Adds NISMO-embroidered cloth seats with red stitching",
+      "Adds NISMO smooth leather-wrapped steering wheel and shift knob",
+      "Adds NISMO plaque of authenticity with serial number",
+      "Adds NISMO signature red interior stitching",
+      "Adds NISMO tachometer display"
+    ],
+    "Nismo": [
+      "Upgraded to 19-inch NISMO forged alloy ADVAN Sport wheels with premium tires",
+      "Upgraded to NISMO-tuned free-flow dual exhaust with H-pipe configuration",
+      "Upgraded to Ripple-control shock absorbers for enhanced performance",
+      "Adds Bose Package with enhanced audio and speed-sensitive volume control",
+      "Adds DVD video playback capability with auxiliary video input jacks",
+      "Adds Navigation Package features including USB iPod interface",
+      "Adds streaming audio via Bluetooth wireless technology",
+      "Adds aluminum-trimmed pedals",
+      "Adds Radio Data System with speed-sensitive volume"
+    ]
+  }
+}

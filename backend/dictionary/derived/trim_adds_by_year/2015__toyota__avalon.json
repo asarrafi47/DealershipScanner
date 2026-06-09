@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|toyota|avalon",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2015__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "XLE Premium",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "18-inch silver-painted alloy wheels",
+      "High Intensity Discharge (HID) Quadrabeam headlights with LED Daytime Running Lights",
+      "Premium perforated leather-trimmed heated and ventilated front seats; heated rear seats",
+      "Entune™ Premium JBL® Audio with Navigation and App Suite with 7-inch touchscreen",
+      "Blind Spot Monitor (BSM) with Rear Cross-Traffic Alert (RCTA)"
+    ],
+    "Touring": [
+      "18-inch anthracite-painted alloy wheels",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Wide-angle fog lights",
+      "Auto-dimming rearview mirror with HomeLink®",
+      "Rain-sensing wipers",
+      "Driver's seat memory systems",
+      "Entune™ Premium Audio with Navigation and App Suite with 7-inch touchscreen",
+      "Integrated backup camera with projected path display"
+    ],
+    "XLE Premium": [
+      "Leather-trimmed tilt/telescopic steering wheel with paddle shifters",
+      "Leather-trimmed multi-stage heated front seats",
+      "Entune™ Audio Plus with 6.1-inch touchscreen, HD Radio, and SiriusXM All Access Radio"
+    ],
+    "XLE": [
+      "3.5-liter V6 engine with 268 hp",
+      "6-speed automatic transmission",
+      "17-inch silver-painted alloy wheels",
+      "Quadrabeam halogen headlights with auto on/off and Daytime Running Lights",
+      "Smart Key System on driver's-side front door with Push Button Start",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Entune™ Audio Plus with 6.1-inch touchscreen and eight speakers",
+      "Dual chrome-tipped integrated exhaust"
+    ]
+  }
+}

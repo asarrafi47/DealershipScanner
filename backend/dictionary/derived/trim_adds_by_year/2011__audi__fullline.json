@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2011|audi|fullline",
+  "year": 2011,
+  "make": "Audi",
+  "model": "Full Line",
+  "ladder_id": "brochure_2011__audi__fullline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S line",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Bluetooth phone preparation with hands-free functionality",
+      "Adds MMI infotainment system",
+      "Adds Audi 24/7 Roadside Assistance",
+      "Adds twelve-year limited warranty against corrosion perforation"
+    ],
+    "S line": [
+      "Upgraded to S line exterior styling package",
+      "Adds S line branded design elements"
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2020|nissan|pathfinder",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2020__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL Rock Creek Edition",
+    "SL",
+    "SV Rock Creek Edition",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Dual Panel Panoramic Moonroof",
+      "Bose Premium Audio System with 13 speakers and Acoustic Waveguide technology"
+    ],
+    "SL Rock Creek Edition": [
+      "Black front grille and unique lower front fascia",
+      "Black overfenders and roof rails",
+      "Rock Creek Edition black badging and exterior styling",
+      "Splash guards"
+    ],
+    "SL": [
+      "Leather-wrapped steering wheel and shift knob",
+      "Premium metallic interior trim",
+      "Stainless steel front kick plates",
+      "Chrome body side moldings"
+    ],
+    "SV Rock Creek Edition": [
+      "Nissan Navigation System",
+      "NissanConnect Services powered by SiriusXM with complimentary trial access",
+      "SiriusXM Traffic with 3-year complimentary trial access",
+      "Heated front cloth seats",
+      "Heated steering wheel",
+      "Dual power heated outside mirrors",
+      "Rock Creek Edition black badging and styling elements"
+    ],
+    "SV": [
+      "Climate-controlled front seats with heating and cooling",
+      "Heated second-row outboard seats",
+      "Dual power outside mirrors with LED turn signal indicators",
+      "Outside mirrors with reverse tilt-down interior feature",
+      "Motion Activated Liftgate Infotainment",
+      "Advanced Drive Assist Display",
+      "NissanConnect 8-inch touch-screen display",
+      "Nissan Navigation System",
+      "SiriusXM with 3-year Select and 6-month Premium Plus complimentary trial"
+    ],
+    "S": [
+      "3.5-liter Direct Injection Gasoline DOHC 24-valve V6 engine producing 284 hp and 259 lb-ft torque",
+      "Continuously Variable Valve Timing Control on intake and exhaust valves",
+      "Xtronic CVT transmission with Intelligent 4x4 capability",
+      "4-wheel vented disc brakes with ABS and EBD",
+      "Automatic Emergency Braking with Brake Assist",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "RearView Monitor and Intelligent Around View Monitor",
+      "Vehicle Dynamic Control with Rear Sonar System",
+      "Independent strut front and multi-link rear suspension with dual flow path shock absorbers",
+      "7-passenger seating capacity with 137.8 cubic feet interior volume"
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2016|toyota|4runner",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2016__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD Pro",
+    "Limited",
+    "Trail Premium",
+    "SR5 Premium",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "TRD Pro": [
+      "TRD Bilstein high-performance shocks with rear remote reservoirs",
+      "TRD-tuned front springs",
+      "TRD-stamped aluminum front skid plate",
+      "TRD 17-inch matte-black alloy wheels with P265/70R17 A/T tires",
+      "Black TRD PRO external hard badges",
+      "Unique TOYOTA front grille",
+      "Auto on/off headlight feature",
+      "TRD PRO floor mats and TRD shift knob"
+    ],
+    "Limited": [
+      "Front and rear parking assist sonar",
+      "Smart Key System with Push Button Start and remote illuminated entry",
+      "X-REAS Sport Enhancement Suspension",
+      "20-inch split 6-spoke alloy wheels with P245/60R20 tires",
+      "Perforated leather-trimmed heated and ventilated front seats with memory function",
+      "Entune Premium JBL Audio with Integrated Navigation and 6.1-inch display",
+      "Dual zone automatic climate control with air filter and second-row vents"
+    ],
+    "Trail Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "Power tilt/slide moonroof with sunshade",
+      "SofTex-trimmed heated front seats with 8-way power driver and 4-way passenger",
+      "SofTex-trimmed 40/20/40 split reclining second-row seat",
+      "Entune Premium Audio with Integrated Navigation and 6.1-inch display"
+    ],
+    "SR5 Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "Power tilt/slide moonroof with sunshade",
+      "SofTex-trimmed heated front seats with 8-way power driver and 4-way passenger",
+      "SofTex-trimmed 40/20/40 split reclining second-row seat",
+      "Entune Premium Audio with Integrated Navigation and 6.1-inch display"
+    ],
+    "SR5": [
+      "Downhill Assist Control on all models",
+      "Backup camera with projected path",
+      "Hill Start Assist Control",
+      "Integrated fog lights",
+      "Projector-beam headlights with smoked trim",
+      "17-inch 6-spoke alloy wheels with P265/70R17 tires",
+      "Leather-trimmed tilt/telescopic steering wheel with audio and Bluetooth controls",
+      "8-way power-adjustable driver seat with lumbar; 4-way passenger seat",
+      "40/20/40 split reclining second-row seat",
+      "Entune Audio Plus with Navigation and 6.1-inch display"
+    ]
+  }
+}

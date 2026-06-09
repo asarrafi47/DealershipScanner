@@ -2236,22 +2236,22 @@ body.listings-page .filter-top-row.listings-filters-compact {
     body.listings-page .listings-intro,
     body.listings-page .smart-search-hint,
     body.listings-page .listings-search-card {
-        animation: listings-hero-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+        animation: listings-hero-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
 
     body.listings-page .smart-search-hint {
-        animation-delay: 0.05s;
+        animation-delay: 0.02s;
     }
 
     body.listings-page .listings-search-card {
-        animation-delay: 0.1s;
+        animation-delay: 0.04s;
     }
 }
 
 @keyframes listings-hero-in {
     from {
         opacity: 0;
-        transform: translateY(18px);
+        transform: translateY(8px);
     }
 
     to {
@@ -2608,6 +2608,83 @@ body.car-detail-page .car-detail {
     letter-spacing: 0.14em;
 }
 
+.dealer-reputation-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    margin: 0 0 12px;
+    max-width: 100%;
+}
+
+.dealer-reputation-block--card {
+    margin: 0 0 10px;
+}
+
+.dealer-reputation-block[hidden] {
+    display: none !important;
+}
+
+.reputation-stars {
+    color: #f59e0b;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+}
+
+#dealer-review-count {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.3;
+}
+
+#dealer-trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    max-width: 100%;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: left;
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+@media (max-width: 640px) {
+    .dealer-reputation-block {
+        gap: 6px 8px;
+        margin-bottom: 10px;
+    }
+
+    #dealer-trust-badges {
+        gap: 5px;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+}
+
 .car-detail-title {
     font-size: clamp(1.5rem, 2.8vw, 2rem);
     font-weight: 700;
@@ -2641,6 +2718,9 @@ body.car-detail-page .car-detail {
 }
 
 .car-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-top: 14px;
 }
 
@@ -2841,7 +2921,7 @@ body.car-detail-page .car-detail {
 }
 
 .car-vdp-panel {
-    animation: car-vdp-panel-in 0.28s ease;
+    animation: car-vdp-panel-in 0.18s ease;
 }
 
 .car-vdp-panel[hidden] {
@@ -2996,6 +3076,29 @@ body.car-detail-page .car-detail {
     border-radius: var(--vdp-radius-sm);
 }
 
+.car-dealer-map {
+    height: 220px;
+    margin: 14px 0 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    z-index: 0;
+}
+
+.car-dealer-map-actions {
+    margin: 0;
+    font-size: 14px;
+}
+
+.car-dealer-map-actions-sep {
+    margin: 0 6px;
+    color: var(--text-muted);
+}
+
+.dealer-card-link--maps {
+    font-weight: 600;
+}
+
 .car-vdp-panel .car-specs.car-spec-sheet {
     margin-top: 0;
     border-radius: var(--vdp-radius-sm);
@@ -3052,11 +3155,23 @@ body.car-detail-page .car-detail {
     letter-spacing: 0.02em;
 }
 
-.car-trim-ladder__lead {
-    margin: 0 0 20px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--text-muted);
+.car-trim-ladder__chevron {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    margin-left: auto;
+    border-right: 2px solid var(--navy);
+    border-bottom: 2px solid var(--navy);
+    transform: rotate(45deg);
+    transition: transform 0.28s ease;
+}
+
+.car-trim-ladder__step--active .car-trim-ladder__chevron {
+    transform: rotate(225deg);
+}
+
+.car-trim-ladder__card--expandable {
+    cursor: pointer;
 }
 
 .car-trim-ladder__timeline {
@@ -3070,11 +3185,10 @@ body.car-detail-page .car-detail {
 .car-trim-ladder__timeline::before {
     content: "";
     position: absolute;
-    left: 50%;
+    left: 11px;
     top: 8px;
     bottom: 8px;
     width: 3px;
-    transform: translateX(-50%);
     background: linear-gradient(180deg, var(--navy) 0%, var(--chrome-line) 100%);
     border-radius: 2px;
 }
@@ -3082,8 +3196,8 @@ body.car-detail-page .car-detail {
 .car-trim-ladder__step {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 40px 1fr;
-    gap: 12px;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 10px;
     align-items: start;
     margin-bottom: 18px;
 }
@@ -3093,12 +3207,12 @@ body.car-detail-page .car-detail {
 }
 
 .car-trim-ladder__node {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 6px 0 0;
+    padding: 10px 0 0;
     margin: 0;
     border: none;
     background: transparent;
@@ -3117,8 +3231,8 @@ body.car-detail-page .car-detail {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    border: 3px solid var(--chrome-line);
-    background: var(--bg-card);
+    border: 3px solid var(--navy);
+    background: var(--navy-soft);
     box-shadow: 0 0 0 3px var(--bg-elevated);
     transition:
         border-color 0.28s ease,
@@ -3127,16 +3241,6 @@ body.car-detail-page .car-detail {
         width 0.28s ease,
         height 0.28s ease,
         box-shadow 0.28s ease;
-}
-
-.car-trim-ladder__step--passed .car-trim-ladder__dot {
-    border-color: var(--navy);
-    background: var(--navy-soft);
-}
-
-.car-trim-ladder__step--current .car-trim-ladder__dot {
-    border-color: var(--navy);
-    background: var(--navy-soft);
 }
 
 .car-trim-ladder__step--active .car-trim-ladder__dot {
@@ -3149,6 +3253,7 @@ body.car-detail-page .car-detail {
 }
 
 .car-trim-ladder__card {
+    grid-column: 2;
     grid-row: 1;
     padding: 12px 14px;
     border-radius: var(--vdp-radius-sm);
@@ -3170,22 +3275,11 @@ body.car-detail-page .car-detail {
     outline-offset: 2px;
 }
 
-.car-trim-ladder__step--left .car-trim-ladder__card {
-    grid-column: 1;
-    text-align: right;
-}
-
-.car-trim-ladder__step--right .car-trim-ladder__card {
-    grid-column: 3;
-    text-align: left;
-}
-
 .car-trim-ladder__step--active .car-trim-ladder__card {
     border-color: var(--navy);
     background: var(--navy-soft);
     box-shadow: var(--vdp-shadow-soft);
     padding: 14px 16px;
-    transform: translateX(2px);
 }
 
 .car-trim-ladder__card-head {
@@ -3193,10 +3287,7 @@ body.car-detail-page .car-detail {
     flex-wrap: wrap;
     align-items: center;
     gap: 8px;
-}
-
-.car-trim-ladder__step--left .car-trim-ladder__card-head {
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .car-trim-ladder__name {
@@ -3237,7 +3328,7 @@ body.car-detail-page .car-detail {
 }
 
 .car-trim-ladder__step--active .car-trim-ladder__panel {
-    max-height: 520px;
+    max-height: 2400px;
     opacity: 1;
     margin-top: 12px;
     visibility: visible;
@@ -3249,6 +3340,39 @@ body.car-detail-page .car-detail {
         visibility 0s;
 }
 
+.car-trim-ladder__specs {
+    margin: 0;
+    padding: 0;
+}
+
+.car-trim-ladder__spec-row {
+    display: grid;
+    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+    gap: 8px 12px;
+    padding: 8px 0;
+    border-top: 1px solid var(--chrome-line);
+}
+
+.car-trim-ladder__spec-row:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.car-trim-ladder__spec-row dt {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.4;
+}
+
+.car-trim-ladder__spec-row dd {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
 .car-trim-ladder__panel-label {
     margin: 0 0 8px;
     font-size: 12px;
@@ -3258,18 +3382,19 @@ body.car-detail-page .car-detail {
     color: var(--navy);
 }
 
+.car-trim-ladder__panel-empty {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-muted, #6b7280);
+    font-style: italic;
+}
+
 .car-trim-ladder__adds {
     margin: 0;
     padding-left: 18px;
     line-height: 1.5;
     font-size: 13px;
     color: var(--text-secondary);
-}
-
-.car-trim-ladder__step--left .car-trim-ladder__adds {
-    padding-left: 0;
-    padding-right: 18px;
-    list-style-position: inside;
 }
 
 .car-trim-ladder-upsell {
@@ -3302,42 +3427,6 @@ body.car-detail-page .car-detail {
     scrollbar-width: thin;
 }
 
-.car-specs-split__col--ladder .car-trim-ladder__timeline::before {
-    left: 11px;
-    transform: none;
-}
-
-.car-specs-split__col--ladder .car-trim-ladder__step {
-    grid-template-columns: 24px minmax(0, 1fr);
-    gap: 10px;
-}
-
-.car-specs-split__col--ladder .car-trim-ladder__node {
-    grid-column: 1;
-    padding-top: 10px;
-}
-
-.car-specs-split__col--ladder .car-trim-ladder__step--active .car-trim-ladder__card {
-    transform: none;
-}
-
-.car-specs-split__col--ladder .car-trim-ladder__card,
-.car-specs-split__col--ladder .car-trim-ladder__step--left .car-trim-ladder__card,
-.car-specs-split__col--ladder .car-trim-ladder__step--right .car-trim-ladder__card {
-    grid-column: 2;
-    text-align: left;
-}
-
-.car-specs-split__col--ladder .car-trim-ladder__step--left .car-trim-ladder__card-head {
-    justify-content: flex-start;
-}
-
-.car-specs-split__col--ladder .car-trim-ladder__step--left .car-trim-ladder__adds {
-    text-align: left;
-    padding-left: 18px;
-    padding-right: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
     .car-trim-ladder__dot,
     .car-trim-ladder__card,
@@ -3361,35 +3450,8 @@ body.car-detail-page .car-detail {
 }
 
 @media (max-width: 640px) {
-    .car-trim-ladder__timeline::before {
-        left: 11px;
-        transform: none;
-    }
-
     .car-trim-ladder__step {
         grid-template-columns: 28px 1fr;
-        gap: 10px;
-    }
-
-    .car-trim-ladder__node {
-        grid-column: 1;
-    }
-
-    .car-trim-ladder__card,
-    .car-trim-ladder__step--left .car-trim-ladder__card,
-    .car-trim-ladder__step--right .car-trim-ladder__card {
-        grid-column: 2;
-        text-align: left;
-    }
-
-    .car-trim-ladder__step--left .car-trim-ladder__card-head {
-        justify-content: flex-start;
-    }
-
-    .car-trim-ladder__step--left .car-trim-ladder__adds {
-        padding-right: 0;
-        padding-left: 18px;
-        list-style-position: outside;
     }
 }
 
@@ -3909,6 +3971,551 @@ button.back-link.car-back-link {
     border-color: var(--navy);
 }
 
+/* Negotiation leverage tracker (User Story #7) */
+#negotiation-radar-widget,
+.negotiation-radar-widget {
+    margin: 0 0 20px;
+    padding: 20px;
+    border-radius: var(--vdp-radius-sm);
+    border: 1px solid var(--border-light);
+    background: linear-gradient(165deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+    box-shadow: var(--vdp-shadow-soft);
+}
+
+#negotiation-radar-widget h4,
+.negotiation-radar-widget h4 {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+}
+
+#negotiation-radar-widget .days-on-lot-text,
+.negotiation-radar-widget .days-on-lot-text {
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+#negotiation-radar-widget #days-count,
+.negotiation-radar-widget #days-count {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--navy);
+}
+
+#negotiation-badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.radar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    border: 1px solid transparent;
+}
+
+.radar-badge.high-leverage {
+    color: var(--deal-above);
+    background: var(--deal-above-bg);
+    border-color: color-mix(in srgb, var(--deal-above) 28%, transparent);
+}
+
+.radar-badge.mid-leverage {
+    color: #b45309;
+    background: rgba(180, 83, 9, 0.1);
+    border-color: rgba(180, 83, 9, 0.22);
+}
+
+.radar-badge.low-leverage {
+    color: var(--deal-below);
+    background: var(--deal-below-bg);
+    border-color: color-mix(in srgb, var(--deal-below) 28%, transparent);
+}
+
+.price-history-timeline {
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.price-history-timeline h5 {
+    margin: 0 0 10px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.price-history-empty {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.price-history-steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.price-history-step {
+    position: relative;
+    padding: 10px 12px 10px 28px;
+    border-radius: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Market turnaround velocity heatmap (User Story #13) */
+#market-velocity-card,
+.market-velocity-card {
+    margin: 0 0 20px;
+    padding: 20px;
+    border-radius: var(--vdp-radius-sm);
+    border: 1px solid var(--border-light);
+    background: linear-gradient(165deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+    box-shadow: var(--vdp-shadow-soft);
+}
+
+#market-velocity-card h4,
+.market-velocity-card h4 {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+}
+
+.market-velocity-summary {
+    margin: 0 0 14px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+#velocity-days-projection {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--navy);
+}
+
+.velocity-heatmap-track {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    margin: 0 0 10px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        #94a3b8 0%,
+        #cbd5e1 18%,
+        #f59e0b 50%,
+        #34d399 82%,
+        #059669 100%
+    );
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.12);
+}
+
+#velocity-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 18px;
+    margin-top: -9px;
+    margin-left: -5px;
+    border-radius: 4px 4px 10px 10px;
+    background-color: #d97706;
+    border: 2px solid #d97706;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.28);
+    transform: translateX(-50%);
+    transition: left 0.8s ease-out, background-color 0.8s ease-out, border-color 0.8s ease-out;
+    pointer-events: none;
+}
+
+.velocity-labels {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.velocity-labels span {
+    flex: 1;
+    line-height: 1.3;
+}
+
+.velocity-labels span:nth-child(2) {
+    text-align: center;
+}
+
+.velocity-labels span:nth-child(3) {
+    text-align: right;
+}
+
+.price-history-step::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    border-radius: 50%;
+    background: var(--navy);
+    box-shadow: 0 0 0 2px var(--navy-soft);
+}
+
+/* Standalone NHTSA VIN recall lookup (/nhtsa-recalls) */
+.nhtsa-recalls-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+}
+
+.nhtsa-recalls-header h1 {
+    margin: 0 0 10px;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.nhtsa-recalls-lead {
+    margin: 0 0 20px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.nhtsa-recalls-lead--error {
+    color: #b45309;
+}
+
+.nhtsa-recalls-vin {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.04em;
+}
+
+.nhtsa-recalls-status {
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    border-radius: var(--vdp-radius-sm);
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.nhtsa-recalls-status--clear {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+
+.nhtsa-recalls-status--error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.nhtsa-recalls-list {
+    margin: 0 0 20px;
+    padding-left: 1.25rem;
+}
+
+.nhtsa-recalls-disclaimer {
+    margin: 20px 0 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.nhtsa-recalls-official {
+    margin: 0;
+}
+
+.nhtsa-recalls-official-link {
+    display: inline-flex;
+    width: auto;
+    min-width: 240px;
+}
+
+/* Vehicle history tools (History tab) */
+.car-vdp-panel .vehicle-history-tools {
+    margin-top: 20px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.vehicle-history-tools-heading {
+    margin: 0 0 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.vehicle-history-actions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vehicle-history-actions-row .carfax-report-btn {
+    margin: 0;
+}
+
+.vehicle-history-premium-btn {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    border: 1px solid var(--border-medium);
+    border-radius: 10px;
+    background: var(--bg-card);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    transition: border-color 0.18s ease, background 0.18s ease;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.vehicle-history-premium-btn:hover:not(:disabled) {
+    border-color: var(--navy);
+    background: var(--bg-elevated);
+}
+
+.vehicle-history-premium-btn:disabled {
+    opacity: 0.72;
+    cursor: wait;
+}
+
+.vehicle-history-tools-note {
+    margin: 12px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+.vehicle-history-tools-note a {
+    color: var(--navy);
+    font-weight: 600;
+}
+
+/* Legacy hero button styles (nhtsa recalls page) */
+.btn.btn-nhtsa-safety {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 240px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+    background: var(--navy);
+    transition: background 0.2s ease, transform 0.15s ease;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.btn.btn-nhtsa-safety:hover {
+    color: #fff;
+    background: var(--navy-deep);
+    transform: translateY(-1px);
+}
+
+/* Vehicle history hero actions (User Story #4) — legacy, kept for embeds */
+.vehicle-history-action-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.btn.btn-history {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+    background: var(--navy);
+    transition: background 0.2s ease, transform 0.15s ease;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.btn.btn-history:hover {
+    color: #fff;
+    background: var(--navy-deep);
+    transform: translateY(-1px);
+}
+
+.btn.btn-premium-history {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    border: 1px solid var(--border-medium);
+    border-radius: 10px;
+    background: var(--bg-card);
+    transition: border-color 0.18s ease, background 0.18s ease;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.btn.btn-premium-history:hover:not(:disabled) {
+    border-color: var(--navy);
+    background: var(--bg-elevated);
+}
+
+.btn.btn-premium-history:disabled {
+    opacity: 0.72;
+    cursor: wait;
+}
+
+.premium-history-upsell {
+    padding: 16px 18px;
+    border-radius: var(--vdp-radius-sm);
+    border: 1px dashed var(--border-medium);
+    background: var(--bg-elevated);
+}
+
+.premium-history-upsell__title {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.premium-history-upsell__dismiss {
+    margin-top: 10px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.vehicle-history-intelligence-results {
+    margin-top: 4px;
+}
+
+.vehicle-history-intelligence-panel {
+    padding: 14px 16px;
+    border-radius: var(--vdp-radius-sm);
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+}
+
+.vehicle-history-intelligence-title {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.vehicle-history-intelligence-flags {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.vehicle-history-flag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.vehicle-history-flag:last-child {
+    border-bottom: none;
+}
+
+.vehicle-history-flag--warning .vehicle-history-flag__value {
+    color: #b45309;
+    font-weight: 600;
+}
+
+.vehicle-history-flag__label {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.vehicle-history-intelligence-disclaimer,
+.vehicle-history-intelligence-loading,
+.vehicle-history-intelligence-error,
+.vehicle-history-intelligence-empty {
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+.vehicle-history-recalls-details {
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.vehicle-history-recalls-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.vehicle-history-recalls-list {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    color: var(--text-secondary);
+}
+
 .oem-vin-lookup-hint {
     font-size: 13px;
     line-height: 1.45;
@@ -4070,26 +4677,26 @@ body.db-page {
 
 @media (prefers-reduced-motion: no-preference) {
     .db-reveal {
-        animation: db-reveal-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+        animation: db-reveal-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
 
     .db-layout > .db-panel.db-reveal:nth-child(1) {
-        animation-delay: 0.06s;
+        animation-delay: 0.02s;
     }
 
     .db-layout > .db-panel.db-reveal:nth-child(2) {
-        animation-delay: 0.14s;
+        animation-delay: 0.05s;
     }
 
     .db-layout > .db-panel.db-reveal:nth-child(3) {
-        animation-delay: 0.22s;
+        animation-delay: 0.08s;
     }
 }
 
 @keyframes db-reveal-up {
     from {
         opacity: 0;
-        transform: translateY(32px);
+        transform: translateY(12px);
     }
 
     to {
@@ -4612,6 +5219,26 @@ body.hub-page {
     50% { opacity: 0.45; }
 }
 
+#ds-car-nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100000;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent, #2563eb), #60a5fa);
+    pointer-events: none;
+    transition: width 0.25s ease;
+}
+
+a.is-car-nav-pending,
+.reco-card.is-car-nav-pending,
+.saved-card.is-car-nav-pending,
+.result-card-link.is-car-nav-pending {
+    opacity: 0.82;
+    cursor: wait;
+}
+
 .listings-inventory-loading {
     grid-column: 1 / -1;
     padding: 48px 16px;
@@ -4729,6 +5356,825 @@ body.hub-page {
     gap: 16px;
     flex-wrap: wrap;
     margin-bottom: 0;
+}
+
+/* ── VDP finance estimate (client-side calculator) ── */
+
+.car-finance-estimate {
+    margin-top: 18px;
+    width: 100%;
+}
+
+.car-finance-estimate-card {
+    padding: 16px 18px 18px;
+    border-radius: var(--main-radius);
+    border: 1px solid #c5ccd6;
+    background: linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--navy) 4%, var(--bg-card)) 0%,
+        var(--bg-elevated) 100%
+    );
+    box-shadow: var(--vdp-shadow-soft);
+}
+
+.car-finance-estimate-hero {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.car-finance-monthly-label {
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.car-finance-monthly-display {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--deal-below);
+    font-variant-numeric: tabular-nums;
+}
+
+.car-finance-monthly-suffix {
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: color-mix(in srgb, var(--deal-below) 75%, var(--text-muted));
+}
+
+.car-finance-estimate-details {
+    margin: 0;
+}
+
+.car-finance-customize-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 0;
+    border-radius: var(--main-radius);
+    border: 1.5px solid color-mix(in srgb, var(--navy) 22%, var(--border-medium));
+    background: var(--bg-card);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition:
+        border-color 0.22s ease,
+        background 0.22s ease,
+        box-shadow 0.22s ease,
+        margin-bottom 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.car-finance-customize-trigger::-webkit-details-marker {
+    display: none;
+}
+
+.car-finance-customize-trigger:hover {
+    border-color: var(--navy);
+    background: color-mix(in srgb, var(--navy) 3%, var(--bg-card));
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.car-finance-estimate-details.is-open > .car-finance-customize-trigger {
+    border-color: var(--navy);
+    background: color-mix(in srgb, var(--navy) 6%, var(--bg-card));
+    box-shadow: 0 0 0 3px var(--navy-soft);
+    margin-bottom: 12px;
+}
+
+.car-finance-customize-trigger__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--navy) 10%, var(--bg-elevated));
+    color: var(--navy);
+}
+
+.car-finance-customize-trigger__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.car-finance-customize-trigger__title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy-deep);
+}
+
+.car-finance-customize-trigger__hint {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text-muted);
+}
+
+.car-finance-customize-trigger__chevron {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), color 0.22s ease;
+}
+
+.car-finance-estimate-details.is-open > .car-finance-customize-trigger .car-finance-customize-trigger__chevron {
+    transform: rotate(90deg);
+    color: var(--navy);
+}
+
+.car-finance-estimate-panel-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+        grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.34s ease;
+}
+
+.car-finance-estimate-details.is-open .car-finance-estimate-panel-wrap {
+    grid-template-rows: 1fr;
+    opacity: 1;
+}
+
+.car-finance-estimate-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+    overflow: hidden;
+    padding: 16px;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    transform: translateY(-6px);
+    transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.car-finance-estimate-details.is-open .car-finance-estimate-panel {
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .car-finance-customize-trigger,
+    .car-finance-customize-trigger__chevron,
+    .car-finance-estimate-panel-wrap,
+    .car-finance-estimate-panel {
+        transition: none;
+    }
+
+    .car-finance-estimate-panel {
+        transform: none;
+    }
+}
+
+.car-finance-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.car-finance-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.01em;
+}
+
+.car-finance-input,
+.car-finance-select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.car-finance-select {
+    cursor: pointer;
+    appearance: none;
+    background-color: var(--bg-card);
+    background-image: var(--select-chevron);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 34px;
+}
+
+.car-finance-input:focus,
+.car-finance-select:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px var(--navy-soft);
+}
+
+.car-finance-disclaimer {
+    margin: 4px 0 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.car-finance-trade-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.car-finance-toggle-group {
+    display: inline-flex;
+    gap: 0;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-medium);
+    overflow: hidden;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.car-finance-toggle-btn {
+    padding: 8px 18px;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.car-finance-toggle-btn + .car-finance-toggle-btn {
+    border-left: 1px solid var(--border-medium);
+}
+
+.car-finance-toggle-btn:hover {
+    color: var(--text);
+    background: var(--bg-elevated);
+}
+
+.car-finance-toggle-btn--active {
+    background: var(--navy);
+    color: #fff;
+}
+
+.car-finance-toggle-btn--active:hover {
+    background: var(--navy-deep);
+    color: #fff;
+}
+
+.car-finance-trade-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+    padding: 14px 14px 14px 16px;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-light);
+    border-left: 3px solid var(--deal-below);
+    background: color-mix(in srgb, var(--deal-below) 6%, var(--bg-card));
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0 0 0 3px;
+    transition:
+        max-height 0.35s ease,
+        opacity 0.28s ease,
+        margin-top 0.28s ease,
+        padding 0.28s ease,
+        border-color 0.28s ease;
+}
+
+.car-finance-trade-panel--open {
+    max-height: 420px;
+    opacity: 1;
+    margin-top: 6px;
+    padding: 14px 14px 14px 16px;
+    border-width: 1px 1px 1px 3px;
+}
+
+.car-finance-field--checkbox {
+    margin-top: 2px;
+}
+
+.car-finance-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+}
+
+.car-finance-checkbox {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--navy);
+    cursor: pointer;
+}
+
+/* ── VDP EV battery intelligence (client-side degradation model) ── */
+
+#ev-battery-intelligence-block {
+    margin: 20px 0 0;
+    padding: 16px 18px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(28, 53, 82, 0.14);
+    border-left: 3px solid #3b6ea5;
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, #5b7fa8 8%, var(--bg-card)) 0%,
+        color-mix(in srgb, #1c3552 5%, var(--bg-elevated)) 100%
+    );
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+#ev-battery-intelligence-block .ev-battery-metric {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text);
+}
+
+#ev-battery-intelligence-block .ev-battery-range-row {
+    margin: 0 0 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+#ev-battery-intelligence-block #display-battery-health,
+#ev-battery-intelligence-block #display-real-world-range {
+    font-weight: 700;
+    color: var(--navy);
+}
+
+#ev-battery-intelligence-block .factory-range-muted {
+    color: var(--text-faint);
+    font-size: 12px;
+}
+
+.ev-battery-upsell {
+    margin: 20px 0 0;
+}
+
+.ev-battery-upsell__title {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+}
+
+.battery-gauge-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: #e2e6ec;
+    box-shadow: inset 0 1px 3px rgba(28, 53, 82, 0.12);
+    overflow: hidden;
+}
+
+#battery-gauge-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease-in-out;
+    background: var(--deal-below);
+}
+
+#battery-gauge-fill.battery-gauge-fill--green {
+    background: linear-gradient(90deg, #15803d 0%, #22c55e 100%);
+}
+
+#battery-gauge-fill.battery-gauge-fill--orange {
+    background: linear-gradient(90deg, #c2410c 0%, #f97316 100%);
+}
+
+#battery-gauge-fill.battery-gauge-fill--red {
+    background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%);
+}
+
+/* ── VDP 5-year TCO intelligence card ── */
+
+#tco-intelligence-card {
+    margin: 20px 0 8px;
+    padding: clamp(16px, 2.2vw, 20px) clamp(16px, 2.5vw, 22px);
+    border: 1px solid #c5ccd6;
+    border-radius: var(--main-radius);
+    background: linear-gradient(
+        165deg,
+        color-mix(in srgb, #64748b 6%, var(--bg-card)) 0%,
+        var(--bg-elevated) 100%
+    );
+    box-shadow: var(--vdp-shadow-soft);
+}
+
+#tco-intelligence-card h4 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+}
+
+.tco-metrics-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(10px, 2vw, 16px);
+    margin-bottom: 16px;
+}
+
+.tco-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 14px;
+    border-radius: var(--vdp-radius-sm);
+    background: color-mix(in srgb, var(--bg-card) 88%, #94a3b8 12%);
+    border: 1px solid rgba(100, 116, 139, 0.22);
+}
+
+.tco-metric--total {
+    border-color: rgba(28, 53, 82, 0.28);
+    background: color-mix(in srgb, var(--navy) 6%, var(--bg-card));
+}
+
+.tco-metric__label {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.tco-metric__value,
+#tco-maintenance-cost,
+#tco-fuel-cost,
+#tco-total-combined {
+    font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--navy-deep);
+    font-variant-numeric: tabular-nums;
+}
+
+.tco-metric--total .tco-metric__value,
+#tco-total-combined {
+    color: var(--navy);
+    font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+}
+
+.tco-bar-chart {
+    margin-top: 4px;
+}
+
+.tco-bar-chart__track {
+    display: flex;
+    width: 100%;
+    height: 14px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e2e8f0;
+    box-shadow: inset 0 1px 2px rgba(28, 53, 82, 0.1);
+}
+
+.tco-bar-chart__segment {
+    height: 100%;
+    min-width: 0;
+    transition: width 0.55s ease-in-out;
+}
+
+.tco-bar-chart__segment--fuel {
+    background: linear-gradient(90deg, #4a7ba7 0%, #5b8fb8 55%, #6b9dc4 100%);
+}
+
+.tco-bar-chart__segment--maintenance {
+    background: linear-gradient(90deg, #8b7355 0%, #a08b6e 50%, #b5a089 100%);
+}
+
+.tco-bar-chart__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.tco-bar-chart__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tco-bar-chart__legend-item::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.tco-bar-chart__legend-item--fuel::before {
+    background: #5b8fb8;
+}
+
+.tco-bar-chart__legend-item--maintenance::before {
+    background: #a08b6e;
+}
+
+.tco-fuel-price-control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 12px;
+}
+
+.tco-fuel-price-control__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.tco-fuel-price-control__field {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 10px;
+    border: 1px solid #c5ccd6;
+    border-radius: 6px;
+    background: var(--bg-elevated);
+}
+
+.tco-fuel-price-control__prefix,
+.tco-fuel-price-control__suffix {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.tco-fuel-price-control__input {
+    width: 4.5rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--navy-deep);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.tco-fuel-price-control__input::-webkit-outer-spin-button,
+.tco-fuel-price-control__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.tco-fuel-price-control__input:focus {
+    outline: none;
+}
+
+.tco-fuel-price-control__field:focus-within {
+    outline: 2px solid color-mix(in srgb, #2563eb 35%, transparent);
+    outline-offset: 1px;
+    border-color: #2563eb;
+}
+
+.tco-electricity-price-control__input {
+    width: 5.25rem;
+}
+
+.tco-fillup-estimate {
+    margin: 14px 0 0;
+    padding: 10px 12px;
+    border-radius: var(--vdp-radius-sm);
+    background: color-mix(in srgb, var(--bg-card) 92%, #4a7ba7 8%);
+    border: 1px solid rgba(74, 123, 167, 0.22);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--navy-deep);
+}
+
+.tco-fillup-estimate strong,
+#tco-fillup-cost {
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--navy);
+}
+
+.tco-fillup-estimate__detail {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.tco-disclaimer {
+    margin: 12px 0 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--text-faint);
+}
+
+.tco-cost-subtitle {
+    margin: 16px 0 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-faint);
+}
+
+.tco-cost-chart-frame {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 14px 16px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+#tcoCostCanvas {
+    display: block;
+    touch-action: pan-y;
+}
+
+.tco-cost-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.tco-cost-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.tco-cost-legend__swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+    .tco-metrics-dashboard {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── VDP 5-year depreciation forecast card ── */
+
+#depreciation-forecast-card {
+    margin: 16px 0 8px;
+    padding: clamp(16px, 2.2vw, 20px) clamp(16px, 2.5vw, 22px);
+    border: 1px solid #c5ccd6;
+    border-radius: var(--main-radius);
+    background: linear-gradient(
+        165deg,
+        color-mix(in srgb, #3b82f6 5%, var(--bg-card)) 0%,
+        var(--bg-elevated) 100%
+    );
+    box-shadow: var(--vdp-shadow-soft);
+}
+
+#depreciation-forecast-card h4 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+}
+
+.depreciation-subtitle {
+    margin: -6px 0 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-faint);
+}
+
+.depreciation-chart-frame {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 14px 16px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+#depreciationCanvas {
+    display: block;
+    touch-action: pan-y;
+}
+
+.depreciation-legend {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.depreciation-legend li {
+    margin: 0;
+}
+
+.depreciation-legend__rate {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px !important;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-faint);
+}
+
+.depreciation-mileage-select__label {
+    font-weight: 500;
+    color: var(--text-faint);
+}
+
+.depreciation-mileage-select {
+    min-width: 7.5rem;
+    padding: 4px 28px 4px 10px;
+    border: 1px solid #c5ccd6;
+    border-radius: 6px;
+    background: var(--bg-elevated) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M2.5 4.5 6 8l3.5-3.5'/%3E%3C/svg%3E") no-repeat right 8px center;
+    color: var(--navy-deep);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.depreciation-mileage-select:hover {
+    border-color: #94a3b8;
+}
+
+.depreciation-mileage-select:focus {
+    outline: 2px solid color-mix(in srgb, #2563eb 35%, transparent);
+    outline-offset: 1px;
+    border-color: #2563eb;
+}
+
+#depreciation-forecast-card #dep-y1-mi,
+#depreciation-forecast-card #dep-y5-mi {
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+}
+
+#depreciation-forecast-card #dep-y1,
+#depreciation-forecast-card #dep-y5 {
+    font-weight: 800;
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    letter-spacing: -0.02em;
+    color: var(--navy-deep);
+    font-variant-numeric: tabular-nums;
 }
 
 .save-btn {
@@ -5156,6 +6602,34 @@ body.hub-page {
 }
 
 .dev-hint code {
+    font-size: 12px;
+    background: var(--navy-soft);
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.dev-hint--compact {
+    margin-top: 12px;
+    margin-bottom: 0;
+}
+
+.dev-todo-list {
+    margin: 12px 0 0;
+    padding-left: 1.25rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    max-width: 720px;
+}
+
+.dev-todo-list li {
+    margin-bottom: 10px;
+}
+
+.dev-todo-list li:last-child {
+    margin-bottom: 0;
+}
+
+.dev-todo-list code {
     font-size: 12px;
     background: var(--navy-soft);
     padding: 2px 6px;
@@ -9478,4 +10952,32 @@ body.find-dealers-page {
     .vdp-back:hover .sc-icon {
         transform: none;
     }
+}
+
+.scan-lab-vdp-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin: 0 0 1rem;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    background: #1a2332;
+    color: #e8eef7;
+    font-size: 0.9rem;
+}
+
+.scan-lab-vdp-banner a {
+    color: #9ec5ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.scan-lab-vdp-banner a:hover {
+    text-decoration: underline;
+}
+
+.scan-lab-vdp-banner-user {
+    margin-left: auto;
+    opacity: 0.85;
 }

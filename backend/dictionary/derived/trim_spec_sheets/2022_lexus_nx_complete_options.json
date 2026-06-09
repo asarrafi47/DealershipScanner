@@ -1,0 +1,47 @@
+{
+  "ladder_id": "2022_lexus_nx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "NX",
+    "NX"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid drivetrain Power-split (NX 300h)"
+      }
+    ],
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S6)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S6)"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; Electric motor"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive"
+      },
+      {
+        "label": "Screen Size",
+        "value": "A head-up display and wireless smartphone charging are both optional."
+      }
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2012|ford|expedition",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2012__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "King Ranch",
+    "Limited",
+    "XLT Premium",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "King Ranch": [
+      "Chaparral leather trim on all 3 rows of seating",
+      "King Ranch logo on front fender and liftgate",
+      "Pale Adobe lower bodyside moldings, wheel-lip moldings, bumpers and running boards",
+      "Chaparral leather trim on steering wheel insert, center console lid and door-panel inserts",
+      "Woodgrain trim on center console, switch panels and instrument panel",
+      "1st- and 2nd-row carpeted floor mats with embroidered King Ranch logo"
+    ],
+    "Limited": [
+      "Heavy-Duty Trailer Tow Package with Class IV hitch and transmission oil cooler",
+      "1st-row 10-way power-adjustable heated and cooled bucket seats with power lumbar and memory",
+      "Perforated leather-trimmed 1st- and 2nd-row seating",
+      "Body-color power-adjustable/-folding heated sideview mirrors with auto-dimming driver's side and memory",
+      "Power liftgate",
+      "Complex-Reflector System headlamps with blackout treatment",
+      "Rear view camera",
+      "Front park assist",
+      "Rain-sensing wipers"
+    ],
+    "XLT Premium": [
+      "1st-row bucket seats with 10-way power-adjustable driver's seat with power lumbar and memory",
+      "6-way power front-passenger seat",
+      "Leather-trimmed 1st- and 2nd-row seating",
+      "PowerFold 3rd-row seat",
+      "110-volt power outlet",
+      "Dual-zone electronic automatic temperature control",
+      "Leather-wrapped shift knob",
+      "Power-adjustable pedals with memory",
+      "Premium Sound System with 7 speakers and 340-watt subwoofer"
+    ],
+    "XLT": [
+      "Equipment Group 200A: Ford SYNC voice-activated in-vehicle connectivity system",
+      "Message center",
+      "Power-adjustable pedals",
+      "Power rear quarter windows",
+      "Steering wheel-mounted audio controls",
+      "Universal garage door opener",
+      "18-inch machined aluminum wheels",
+      "Body-color lower bodyside moldings and bumpers",
+      "Chrome exhaust tip",
+      "Reverse Sensing System"
+    ],
+    "XL": [
+      "5.4L 3-valve V8 FFV engine with 310 horsepower and 365 lb.-ft. torque",
+      "6-speed automatic transmission with tow/haul mode",
+      "4-wheel independent suspension with coil-over shocks",
+      "4-wheel power disc brakes with ABS and brake assist",
+      "28-gallon fuel tank (33.5-gallon on EL model)",
+      "17-inch aluminum wheels on non-EL models",
+      "3-point safety belts all positions with dual-stage front airbags",
+      "AdvanceTrac with RSC Roll Stability Control",
+      "Premium Sound System with single-CD player and 6 speakers",
+      "SecuriCode keyless entry keypad"
+    ]
+  }
+}

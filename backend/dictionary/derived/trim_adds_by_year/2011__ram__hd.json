@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2011|ram|hd",
+  "year": 2011,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2011__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie",
+    "Power Wagon",
+    "Outdoorsman",
+    "Big Horn",
+    "SLT",
+    "ST"
+  ],
+  "adds_by_trim": {
+    "Laramie": [
+      "Power multifunction heated folding chrome mirrors with position memory and exterior courtesy lamps",
+      "Two-tone paint with accent fender flares and Light graystone Pearl lower color",
+      "Luxury group including overhead console with universal garage door opener",
+      "Body-color front fascia with headlamp filler",
+      "Chrome grille surround with chrome insert"
+    ],
+    "Power Wagon": [
+      "LT285/70R17D BSW All-Terrain tires",
+      "Front electric WARN winch with 12,000-lb capacity",
+      "Electronic front stabilizer bar disconnect",
+      "5.7L HeMi V8 with VVT engine standard"
+    ],
+    "Outdoorsman": [
+      "Two-tone paint with accent fender flares and Mineral gray Metallic lower color",
+      "Popular Equipment group including fog lamps and LT265/70R17E OWL on/off road tires"
+    ],
+    "Big Horn": [
+      "Big Horn badging",
+      "Chrome rear bumper",
+      "Chrome front bumper",
+      "17 x 8.0-inch steel chrome-clad wheels"
+    ],
+    "SLT": [
+      "SLT badging",
+      "Automatic headlamps",
+      "Quad halogen headlamps",
+      "Power heated folding Black mirrors with exterior courtesy lamps and supplemental turn signal"
+    ],
+    "ST": [
+      "Ram's Head badging",
+      "160-amp alternator",
+      "Manual power steering on 4x2 models",
+      "Power recirculating ball steering on 4x4 models",
+      "Heavy-duty front and rear shock absorbers",
+      "Front stabilizer bar",
+      "Class IV trailer hitch receiver with four and seven-pin harness",
+      "Locking tailgate",
+      "Variable-intermittent windshield wipers",
+      "Power door locks"
+    ]
+  }
+}

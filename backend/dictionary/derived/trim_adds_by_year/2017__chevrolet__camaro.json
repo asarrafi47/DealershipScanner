@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|chevrolet|camaro",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2017__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZL1",
+    "2SS",
+    "1SS",
+    "2LT",
+    "1LS/1LT"
+  ],
+  "adds_by_trim": {
+    "ZL1": [
+      "Supercharged engine with enhanced performance",
+      "Rear differential cooler",
+      "Summer-only high-performance tires",
+      "Electronic Limited-Slip Differential (eLSD)"
+    ],
+    "2SS": [
+      "Extra-capacity cooling system",
+      "Rear differential cooler",
+      "Limited-slip differential",
+      "Summer-only performance tires"
+    ],
+    "1SS": [
+      "Limited-slip differential",
+      "Extra-capacity cooling system"
+    ],
+    "2LT": [
+      "Heated power-adjustable body-color mirrors with driver-side auto-dimming",
+      "High-intensity discharge headlamps with automatic control"
+    ],
+    "1LS/1LT": [
+      "Power-adjustable body-color mirrors",
+      "High-intensity discharge headlamps with automatic control",
+      "Dual-stage frontal and knee air bags",
+      "Head-curtain and thorax side-impact air bags for driver and front passenger",
+      "OnStar services with 4G LTE connectivity",
+      "Tire Pressure Monitoring System"
+    ]
+  }
+}

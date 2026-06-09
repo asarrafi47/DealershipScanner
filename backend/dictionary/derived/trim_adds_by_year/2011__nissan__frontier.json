@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2011|nissan|frontier",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_web_2011__nissan__frontier",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SL",
+    "Pro-4X",
+    "Pro-X",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Leather seats",
+      "Heated leather-wrapped steering wheel",
+      "LED exterior lighting",
+      "Fender sound system with 10 speakers",
+      "Four-way power passenger seat",
+      "360-degree camera",
+      "Wireless phone charger",
+      "Traffic sign recognition"
+    ],
+    "Pro-4X": [
+      "Steel skidplates",
+      "Optional 360-degree camera with off-road mode"
+    ],
+    "Pro-X": [
+      "All-terrain tires",
+      "Bilstein off-road suspension components",
+      "Red tow hooks",
+      "Rugged appearance upgrades",
+      "Embroidered cloth seats"
+    ],
+    "SV": [
+      "Upgraded cloth seats",
+      "12.3-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "Six-speaker audio",
+      "17-inch alloy wheels",
+      "Six-way power driver seat with two-way power lumbar"
+    ],
+    "S": [
+      "Cloth seats",
+      "Six-way manual passenger seat",
+      "Four-speaker audio",
+      "16-inch steel wheels",
+      "8.0-inch touchscreen with wired Apple CarPlay and Android Auto",
+      "Lane departure warning, automatic high-beams, adaptive cruise control",
+      "Blind-spot warning, rear cross-traffic alert, rear parking sensors",
+      "Telescopic steering wheel",
+      "Sliding rear window and sunglasses holder in overhead console"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/nissan/frontier/"
+}

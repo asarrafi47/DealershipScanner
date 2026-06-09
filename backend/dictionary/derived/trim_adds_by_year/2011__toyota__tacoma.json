@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|toyota|tacoma",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "generic_toyota_tacoma",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "TRD Off-Road",
+    "TRD Sport",
+    "Limited",
+    "TRD",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Sport": [
+      "74.6 | 74.0"
+    ],
+    "TRD Off-Road": [
+      "74.6 | 72.2"
+    ],
+    "Sport": [
+      "208.1 | 221.3",
+      "127.4 | 140.6",
+      ".1 | 55.8/43",
+      "3500 | 3400 | 340024/– |"
+    ],
+    "TRD": [
+      "73.5 | 60.3 | 60.3"
+    ],
+    "Limited": [
+      "8100 (11,100) | – | –/",
+      "severe collisions: frontal and knee ABs typically inflate in frontal collisions; side and side curtain ABs in side collisions; Roll-Sensing Curtain ABs at a",
+      "passenger seat. The force of an inflating AB may cause serious injury or death. See your Owner’s Manual for further information/warnings. 17. Do not use rearward-facing child seats in any front",
+      "driver maintain vehicle control under adverse conditions. It is not a substitute for safe driving practices. Factors including speed, road conditions and",
+      "vehicle and may not be financed together with the new",
+      "Toyota Car, Truck and SUV is built to exceptional standards. And that’s not idle boasting. For Genuine",
+      "details. For complete",
+      "Accessories: For Genuine Toyota",
+      "the Toyota Rewards Visa® adds even more value to doing the things you love. conditions and restrictions apply and are fully described in",
+      "Toyota dealers and 1 point for every $1 spent everywhere else Visa is accepted.* dealerships in the continental U.S. and Alaska. Points cannot be redeemed for cash. Please contact your participating",
+      "Toyota Financial Services (TFS)† is a leading provider of automotive financial services, offering an extensive line of"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Kia,Sorento,Hybrid FWD,Hybrid 1.6L I4 (SIDI; Hybrid),1.6L I4 Turbo,Turbocharged,Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,1.6,39,35,37,,,,,
+2024,Kia,Sorento,Hybrid AWD,Hybrid 1.6L I4 (SIDI; Hybrid),1.6L I4 Turbo,Turbocharged,Automatic (AM-S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.6,36,33,34,,,,,
+2024,Kia,Sorento,Plug-in Hybrid,Plug-in Hybrid 1.6L I4 (SIDI; PHEV),1.6L I4,,Automatic (AM-S6),All-Wheel Drive,Regular Gasoline / Electricity,Small Sport Utility Vehicle 4WD,4,1.6,35,33,34,,,,,
+2024,Kia,Sorento,FWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,23,31,26,,,,,
+2024,Kia,Sorento,FWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (AM-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,20,29,23,,,,,
+2024,Kia,Sorento,AWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,23,28,25,,,,,
+2024,Kia,Sorento,AWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (AM-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,20,27,23,,,,,

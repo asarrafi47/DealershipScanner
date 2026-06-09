@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2020|ford|ecosport",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Ecosport",
+  "ladder_id": "brochure_2020__ford__ecosport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Titanium",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper warranty coverage",
+      "Adds Includes 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion perforation coverage"
+    ],
+    "Titanium": [
+      "Adds hood deflector",
+      "Adds side window deflectors",
+      "Adds front and rear molded splash guards",
+      "Adds keyless entry keypad",
+      "Adds roof crossbars",
+      "Adds roof-mounted bike carrier",
+      "Adds wheel lock kit"
+    ],
+    "Limited": [
+      "Adds SYNC Connect with 4G LTE Wi-Fi hotspot for up to 10 devices",
+      "Adds remote vehicle start, stop, lock, and unlock via FordPass",
+      "Adds remote fuel level and mileage monitoring",
+      "Adds FordPass smartphone app with 24/7 Ford Guides support"
+    ]
+  }
+}

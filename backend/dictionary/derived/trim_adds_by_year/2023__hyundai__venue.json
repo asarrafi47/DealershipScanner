@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2023|hyundai|venue",
+  "year": 2023,
+  "make": "Hyundai",
+  "model": "Venue",
+  "ladder_id": "2023_hyundai_venue",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "17-inch alloy wheels and proximity key with push-button start",
+      "8-inch display with wireless Android Auto and Apple CarPlay",
+      "Heated front seats and automatic climate control"
+    ],
+    "SE": [
+      "Smartstream 1.6L DPI 4-cylinder engine with 121 hp and 113 lb-ft torque",
+      "Smartstream Intelligent Variable Transmission with SHIFTRONIC",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Lane Keeping Assist and Driver Attention Warning",
+      "High Beam Assist and Motor-Driven Power Steering",
+      "6-airbag safety system with Occupant Classification System",
+      "Vehicle Stability Management with Electronic Stability Control and Traction Control",
+      "Wireless Apple CarPlay and Android Auto on 8-inch touchscreen",
+      "Rearview camera with dynamic guidelines",
+      "Front and rear skid plate accents"
+    ]
+  }
+}

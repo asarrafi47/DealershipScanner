@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|volvo|xc90",
+  "year": 2018,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2018__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Excellence",
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Excellence": [
+      "Lavish four-seat SUV configuration epitomizing finest Scandinavian design and craftsmanship"
+    ],
+    "Inscription": [
+      "Highly sophisticated expression with premium interior appointments and refined styling"
+    ],
+    "R-Design": [
+      "Spirited sporty style inside and out with responsiveness and control emphasis"
+    ],
+    "Momentum": [
+      "19-inch alloy wheels with bright deco exterior design elements",
+      "LED headlights with automatic lever adjuster and LED foglights",
+      "9-inch Sensus touchscreen with voice control and smartphone integration",
+      "High-performance audio system with 10 speakers",
+      "Sensus Navigation with Apple CarPlay and Android Auto",
+      "City Safety collision avoidance technology",
+      "Pilot Assist semi-autonomous drive with adaptive cruise control",
+      "Lane keeping aid, road sign information, and run-off road mitigation",
+      "Leather upholstery on T6 and T8; Leatherette on T5",
+      "Power-operated tailgate with comfort-opening hands-free function"
+    ]
+  }
+}

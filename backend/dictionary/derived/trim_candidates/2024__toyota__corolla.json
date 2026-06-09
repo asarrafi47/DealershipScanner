@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2024|toyota|corolla",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Hybrid",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on SE",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) Normal, Sport and Eco driving modes Normal, Sport and Eco driving modes",
+      "Front-Wheel Drive (FWD) Dynamic-Shift Continuously Variable Transmission (CVT) Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "Exterior Features 31 city/40 highway/34 combined est. mpg36 31 city/40 highway/34 combined est. mpg36",
+      "LED headlights, LED taillights, and Daytime Running Exterior Features Exterior Features",
+      "Lights (DRL) LED headlights, LED taillights and Daytime Running LED headlights, LED taillights, and Daytime",
+      "Color-keyed roof-mounted shark-fin antenna Sport mesh gloss black front grille Black heated power outside mirrors",
+      "Interior Features Gray metallic sport side rocker Sport mesh gloss black front grille",
+      "Automatic climate control",
+      "Single exhaust with dual chrome tips 18-in. bronze-finished alloy wheels2",
+      "Fabric-trimmed seats include:",
+      "60/40 split fold-down rear seat with center armrest Interior Features Blackout badging"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on Hybrid SE Adds to or replaces features offered on Hybrid LE",
+      "Normal, Sport and Eco driving modes Electronically controlled Continuously",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Variable Transmission (ECVT) Front-Wheel Drive (FWD)",
+      "Front-Wheel Drive (FWD) 53 city/46 highway/50 combined est. mpg7",
+      "Available Electronic On-Demand Exterior Features",
+      "All-Wheel Drive (AWD)",
+      "LED headlights and Daytime Running Lights (DRL)",
+      "Up to 50 city/43 highway/47 combined",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "LED headlights, LED taillights, and Daytime 16-in. alloy wheels",
+      "Running Lights (DRL) accent lighting"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

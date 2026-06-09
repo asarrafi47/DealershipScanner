@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|ford|fusion",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_llm_2019__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium V6 Sport",
+    "Titanium",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium V6 Sport": [
+      "325-horsepower V6 engine with 93-octane fuel requirement"
+    ],
+    "Titanium": [
+      "Luxurious appointments and premium interior finishes"
+    ],
+    "SEL": [
+      "Ford Co-Pilot360 Assist suite with adaptive cruise control and stop-and-go capability",
+      "Voice-activated navigation with SiriusXM Traffic and Travel Link"
+    ],
+    "SE": [
+      "Ford Co-Pilot360 Assist available with additional safety and convenience technologies"
+    ],
+    "S": [
+      "Rear view camera with full-color LCD display on instrument panel",
+      "BLIS with cross-traffic alert while reversing and approaching from sides",
+      "Pre-Collision Assist with Automatic Emergency Braking for frontal collision avoidance",
+      "Lane-Keeping System with steering wheel vibration alerts and steering wheel torque assist",
+      "Auto high-beam headlamps that detect vehicles and street lights ahead"
+    ]
+  }
+}

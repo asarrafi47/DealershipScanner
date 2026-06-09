@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2022_dodge_challenger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Challenger",
+    "Challenger"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "SRT Hellcat Redeye Widebody": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ],
+    "SRT Hellcat Redeye": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ],
+    "SRT Hellcat": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ],
+    "R/T": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ]
+  }
+}

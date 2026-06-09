@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2014|jaguar|ftype",
+  "year": 2014,
+  "make": "Jaguar",
+  "model": "F-Type",
+  "ladder_id": "brochure_llm_2014__jaguar__ftype",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F-TYPE R",
+    "F-TYPE V8 S",
+    "F-TYPE S",
+    "F-TYPE"
+  ],
+  "adds_by_trim": {
+    "F-TYPE R": [
+      "Performance Seat with Premium leather and R badge on headrest as standard",
+      "Enhanced lateral support during rapid cornering"
+    ],
+    "F-TYPE V8 S": [
+      "Full leather seat facings",
+      "14-way fully-electric seat adjustment with memory"
+    ],
+    "F-TYPE S": [
+      "Sport Seat with leather and Suedecloth facings",
+      "6-way power and manual seat adjustment"
+    ],
+    "F-TYPE": [
+      "3.0L V6 340 HP Supercharged engine",
+      "Sport Exhaust",
+      "Jaguar Performance Braking System",
+      "18-inch wheels",
+      "Sport Suspension with Dynamic Mode",
+      "Sport Seat with leather and Suedecloth facings",
+      "6-way power and manual seat adjustment",
+      "Intelligent Venting System with automatic deployment air vents",
+      "Available in Convertible and Coupe bodystyles"
+    ]
+  }
+}

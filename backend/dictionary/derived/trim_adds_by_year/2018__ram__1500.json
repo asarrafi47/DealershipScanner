@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2018|ram|1500",
+  "year": 2018,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2018__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARAMIE®",
+    "REBEL®",
+    "BIG HORN® HARVEST",
+    "EXPRESS",
+    "TRADESMAN®",
+    "TRADESMAN® HFE"
+  ],
+  "adds_by_trim": {
+    "LARAMIE®": [
+      "Leather-trimmed 40/20/40 bench seat with heated driver and front-passenger seats",
+      "Heated steering wheel with ventilated driver and front-passenger seats",
+      "Power-adjustable pedals with memory",
+      "Power 10-way memory driver seat and 6-way power passenger seat",
+      "Premium II 10-speaker audio system with subwoofer",
+      "Instrument-panel woodgrain bezel",
+      "SiriusXM Satellite Radio with one-year trial subscription"
+    ],
+    "REBEL®": [
+      "Unique Rebel premium cloth bucket seats with embossed tread pattern",
+      "Unique Rebel interior accents and door trim panels",
+      "Heated leather-wrapped steering wheel with red accent stitching",
+      "Power 10-way driver's seat with power lumbar adjuster",
+      "115-volt auxiliary power outlet",
+      "Premium instrument cluster with 7-inch driver information display",
+      "Uconnect 4C radio with Bluetooth and voice command"
+    ],
+    "BIG HORN® HARVEST": [
+      "Premium cloth bucket seats with full-length floor center console",
+      "Chrome 6 x 9-inch power heated/folding mirrors with supplemental lighting",
+      "Uconnect 4C NAV radio with Bluetooth and voice command",
+      "Spray-in bedliner",
+      "Cab-length black tubular side steps",
+      "17-inch chrome-clad aluminum wheels",
+      "Tow hooks and skid plates",
+      "ParkSense front and rear park assist"
+    ],
+    "EXPRESS": [
+      "Premium cloth 40/20/40 bench seat",
+      "Leather-wrapped steering wheel",
+      "Rearview auto-dimming mirror with microphone",
+      "Black 6 x 9-inch power heated/folding mirrors with supplemental lighting",
+      "Premium instrument cluster with 7-inch driver information display",
+      "Uconnect 4C radio with Bluetooth and voice command",
+      "Dual-zone automatic temperature control",
+      "20-inch chrome-clad aluminum wheels",
+      "Class IV hitch receiver"
+    ],
+    "TRADESMAN®": [
+      "Heavy-duty vinyl 40/20/40 split bench seat",
+      "Front armrest with three cup holders",
+      "Power windows and locks on Quad Cab and Crew Cab",
+      "2nd-row in-floor storage bins on Crew Cab",
+      "Rear folding seat on Quad Cab and Crew Cab",
+      "Manual air conditioning",
+      "Instrument cluster with 3.5-inch driver information display",
+      "Six-speaker audio system with media hub and USB port"
+    ],
+    "TRADESMAN® HFE": [
+      "Vinyl 40/20/40 front bench seat with vinyl folding rear seat",
+      "Underseat rear compartment storage",
+      "Tri-folding tonneau cover",
+      "Wheel-to-wheel side steps",
+      "20-inch aluminum wheels",
+      "800-amp battery with 230-amp alternator",
+      "3.55 axle ratio",
+      "Active grille shutters"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2017|audi|q3",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Q3",
+  "ladder_id": "brochure_llm_2017__audi__q3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "PremiumPlus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "19-inch 10-spoke design wheels with titanium-matte finish",
+      "19-inch 5-double-spoke Offroad design wheels"
+    ],
+    "PremiumPlus": [
+      "19-inch 5-double-spoke Offroad design wheels available"
+    ],
+    "Premium": [
+      "18-inch 5-arm turbine design wheels standard",
+      "Black leather standard seats",
+      "Rock Gray leather standard seats",
+      "Chestnut Brown leather standard seats",
+      "Micrometallic Silver interior inlay standard",
+      "Aluminum Satellite interior inlay optional",
+      "Balsamic Brown Walnut Wood interior inlay optional",
+      "Sport seats available as optional upgrade"
+    ]
+  }
+}

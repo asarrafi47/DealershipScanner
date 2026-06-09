@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2014|nissan|pathfinder",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2014__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch aluminum-alloy wheels",
+      "Tow hitch receiver",
+      "Nissan Hard Drive Navigation System with 8-inch VGA touch-screen and voice recognition",
+      "NavTraffic and NavWeather satellite navigation services",
+      "Zagat Survey restaurant reviews",
+      "Around View Monitor with multi-angle camera system",
+      "Bose audio system with 13 speakers and DVD video playback",
+      "Streaming audio via Bluetooth wireless technology",
+      "120-volt AC power outlet",
+      "Climate-controlled front seats, heated steering wheel, power-tilt/telescoping steering column with position memory"
+    ],
+    "SL": [
+      "Leather-appointed seats and door trim",
+      "Fog lights",
+      "Chrome body side moldings",
+      "Power liftgate",
+      "Heated outside mirrors with reverse tilt-down feature",
+      "Remote Engine Start System",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver and digital compass",
+      "Heated front and rear seats",
+      "Driver's seat and outside mirrors position memory with power lumbar support",
+      "4-way power adjustable passenger's seat and wood-tone trim with stainless steel kick plates"
+    ],
+    "SV": [
+      "8-way power adjustable driver's seat",
+      "Smart Auto Headlights",
+      "Roof rails",
+      "7-inch QVGA color monitor with RearView Monitor",
+      "Rear Sonar System with individual tire pressure display",
+      "Bluetooth Hands-free Phone System",
+      "Nissan Intelligent Key with power windows front one-touch auto-up/down",
+      "Variable intermittent speed-sensitive flat-blade windshield wipers",
+      "Dual illuminated visor vanity mirrors",
+      "Leather-wrapped steering wheel and shift knob with AM/FM/CD audio and SiriusXM Satellite Radio"
+    ],
+    "S": [
+      "260 hp 3.5-liter V6 engine with Xtronic CVT transmission",
+      "Available All-Mode 4x4-i intuitive 4WD system with hill start assist",
+      "18-inch aluminum-alloy wheels",
+      "7-passenger seating capacity with EZ Flex Seating System",
+      "Tri-Zone Automatic Temperature Control",
+      "Advanced Drive-Assist Display",
+      "Remote keyless entry and Push Button Ignition",
+      "AM/FM/in-dash 6-CD audio system with six speakers and MP3/WMA playback",
+      "Auxiliary audio input jack with steering wheel-mounted audio controls",
+      "Nissan Advanced Air Bag System, Vehicle Dynamic Control with Traction Control, and Tire Pressure Monitoring System"
+    ]
+  }
+}

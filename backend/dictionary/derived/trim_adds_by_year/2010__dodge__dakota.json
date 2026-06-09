@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2010|dodge|dakota",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Dakota",
+  "ladder_id": "brochure_llm_2010__dodge__dakota",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie",
+    "TRX",
+    "Big Horn",
+    "SLT"
+  ],
+  "adds_by_trim": {
+    "Laramie": [
+      "Premium two-tone cloth bucket seats with Stain Repel seat fabric",
+      "Heated front seats",
+      "Rear 60/40 folding seats",
+      "Media Center 730N AM/FM/CD/DVD/MP3 radio with navigation",
+      "SIRIUS Satellite Radio with Traffic and audio input jack",
+      "UCONNECT Web internet connection and Wi-Fi hotspot capability"
+    ],
+    "TRX": [
+      "TRX-specific premium bolstered bucket seats",
+      "Front 40/20/40 leather-trimmed split bench seating",
+      "Rear 40/40 split-folding seats",
+      "Crate 'n Go storage system for Crew Cab",
+      "Media Center 230 AM/FM/CD/DVD/MP3 radio with voice commands"
+    ],
+    "Big Horn": [
+      "Media Center 130 AM/FM/CD/MP3 radio with audio input jack",
+      "Chrome grille with black honeycomb insert",
+      "Chrome door handles with body-color trim",
+      "Front and rear rubber floor mats"
+    ],
+    "SLT": [
+      "Air conditioning with manual temperature control",
+      "Cloth bucket seats with weather-trimmed upholstery",
+      "Front 40/20/40 cloth split-bench seating",
+      "Power one-touch driver window",
+      "Rear dome lamp with on/off switch"
+    ]
+  }
+}

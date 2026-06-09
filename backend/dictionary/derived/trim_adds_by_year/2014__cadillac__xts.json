@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|cadillac|xts",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "XTS",
+  "ladder_id": "generic_cadillac_xts",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Wood",
+    "Trim"
+  ],
+  "adds_by_trim": {
+    "Trim": [
+      "he driver needs to remain attentive to traffic and road conditions and provide the steering, braking or other inputs necessary to retain control of the vehicle. 4. Standard on 3.6L Twin",
+      "ncluded with rear seat entertainment system 7. Requires a subscription, sold separately by SiriusXM after the trial period. SiriusXM Radio service only available"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "Trim": 2
+    }
+  }
+}

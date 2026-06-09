@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2013|toyota|landcruiser",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "ladder_id": "generic_toyota_landcruiser",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "ressure should be checked regularly with a gauge; do not rely solely on the monitor system. See your Owner’s",
+      "subscription term selected. 19. Vehicle Stability Control (VSC) is an electronic system",
+      "collisions; Roll-Sensing Curtain ABs at a severe tilt degree, roll or lateral G-force. In all other accidents, the ABs will not",
+      "Key fob, your Toyota dealer can help. Alternatively, you"
+    ],
+    "Limited": [
+      "ressure is critically low. For optimal tire wear and performance, tire p",
+      "subscription terms available; charges vary by",
+      "collisions; side and side curtain ABs in side",
+      "Key fob, it can be costly to replace. If you lose a key or Smart",
+      "the Toyota Rewards Visa Cardmember Agreement and"
+    ],
+    "Land Cruiser": [
+      "12.3-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "12.3-inch driver information display",
+      "Power heated and ventilated front seats",
+      "Sound system with 10 or 14 speakers",
+      "Head-up display via Premium package",
+      "Digital rearview mirror via Premium package"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 2,
+    "avg_adds_upper": 4.5,
+    "per_trim_add_counts": {
+      "Limited": 5,
+      "SE": 4
+    }
+  }
+}

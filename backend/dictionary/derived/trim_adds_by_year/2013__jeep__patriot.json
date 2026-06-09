@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|jeep|patriot",
+  "year": 2013,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "brochure_llm_2013__jeep__patriot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LATITUDE",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "2.4L DOHC 16V dual VVT 4-cylinder engine",
+      "Continuously Variable Automatic Transaxle II (CVT2) with AutoStick",
+      "Uconnect 6-CD/DVD/MP3 audio system",
+      "SiriusXM Satellite Radio",
+      "Front and rear leather-trimmed seats",
+      "Power six-way adjustable driver's seat with manual lumbar adjuster",
+      "Automatic Temperature Control (ATC)",
+      "Electronic Vehicle Information Center",
+      "Power windows with driver one-touch",
+      "Bright roof side rails"
+    ],
+    "LATITUDE": [
+      "2.0L DOHC 16V dual VVT 4-cylinder engine with CVT2 automatic transmission",
+      "17-inch cast aluminum wheels",
+      "Power, heated, folding mirrors",
+      "Body-color exterior door handles and liftgate brow",
+      "Illuminated remote keyless entry",
+      "Air conditioning",
+      "Heated front cloth seats",
+      "Driver's seat height adjuster",
+      "115-volt auxiliary power outlet",
+      "Remote start with CVT transmission"
+    ],
+    "SPORT": [
+      "2.0L DOHC 16V dual VVT 4-cylinder engine",
+      "5-speed manual transmission with Hill Start Assist (HSA)",
+      "Advanced multistage front and side-curtain front/rear air bags",
+      "Electronic Stability Control (ESC) and Electronic Roll Mitigation (ERM)",
+      "Fully independent touring-tuned suspension",
+      "Front driver and passenger active head restraints",
+      "Sentry Key antitheft engine immobilizer",
+      "Tire pressure monitoring warning lamp",
+      "16-inch styled steel wheels",
+      "Fog lamps"
+    ]
+  }
+}

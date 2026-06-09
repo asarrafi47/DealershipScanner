@@ -1,0 +1,100 @@
+{
+  "catalog_key": "2021|toyota|rav4",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_2021__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XSE",
+    "XLE",
+    "TRD Off-Road",
+    "TRD",
+    "Adventure",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Standard 7-inch touchscreen infotainment system"
+    ],
+    "Premium": [
+      "Adds dual zone automatic climate control with rear-seat vents",
+      "Adds leather-trimmed steering wheel",
+      "Adds color-keyed heated power outside mirrors with turn signal and blind spot warning indicators"
+    ],
+    "LE": [
+      "Adds LED projector headlights with chrome bezels and auto on/off feature",
+      "Adds LED Daytime Running Lights accent lighting",
+      "Adds integrated fog lights",
+      "Adds color-keyed outside door handles with front-row touch sensors",
+      "Adds SiriusXM with 3-month All Access trial subscription",
+      "Adds Connected Services with Safety Connect trial"
+    ],
+    "SE": [
+      "12.3-inch reconfigurable driver display",
+      "10.5-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "LED headlights and taillights",
+      "Cloth seat upholstery",
+      "Automatic climate control",
+      "Six-speaker sound system",
+      "48/42 mpg city/highway on hybrid FWD variant"
+    ],
+    "Adventure": [
+      "Adds Dynamic Torque-Vectoring All-Wheel Drive with Rear Driveline Disconnect",
+      "Adds Multi-Terrain Select with MUD & SAND, ROCK & DIRT, and SNOW modes",
+      "Adds unique split-bar front upper grille with active grille shutters",
+      "Adds larger black overfenders and unique raised roof rails",
+      "Adds heated front seats",
+      "Adds 7-inch digital Multi-Information Display",
+      "Adds one 120V/100W deck-mounted power outlet",
+      "Adds orange-accented interior with stitching"
+    ],
+    "TRD": [],
+    "TRD Off-Road": [
+      "Adds integrated LED fog lights",
+      "Adds black rear bumper with metallic gray insert",
+      "Adds TRD-stamped stainless steel front skid plate",
+      "Adds 18-inch 6-spoke matte-black TRD flow-formed alloy wheels",
+      "Adds Falken WILDPEAK all-terrain tires",
+      "Adds red-accented interior with TRD stitching in front headrests",
+      "Adds TRD all-weather floor mats and cargo liner"
+    ],
+    "XLE": [
+      "Adds available All-Wheel Drive with multi-terrain capability",
+      "Adds power tilt/slide moonroof with one-touch open/close",
+      "Adds power liftgate with jam protection",
+      "Adds 8-inch touchscreen with 11 JBL speakers including subwoofer and amplifier",
+      "Adds Service Connect with 10-year trial and Remote Connect with 1-year trial"
+    ],
+    "XSE": [
+      "Adds sport-tuned suspension",
+      "Adds SofTex-trimmed seats with sporty blue stitching and fabric seat inserts",
+      "Adds blue-accented interior with blue stitching on dash, doors and seats",
+      "Adds blue ambient interior lighting",
+      "Adds 7-inch Multi-Information Display with hybrid power meter",
+      "Adds digital rearview mirror with HomeLink universal transceiver",
+      "Adds black headliner"
+    ],
+    "XLE Premium": [
+      "Adds 18-inch 5-spoke Super Chrome-finished alloy wheels",
+      "Adds power tilt/slide moonroof with one-touch open/close",
+      "Adds power liftgate with jam protection",
+      "Adds dual zone automatic climate control system with front center-vent flow controls and rear-seat vents",
+      "Adds heated leather-trimmed steering wheel",
+      "Adds heated front seats",
+      "Adds rain-sensing variable intermittent windshield wipers with de-icer function",
+      "Adds Front and Rear Parking Assist with Automatic Braking",
+      "Adds digital display rearview mirror with HomeLink universal transceiver",
+      "Adds Qi-compatible wireless smartphone charging"
+    ],
+    "Limited": [
+      "Adds 19-inch multi-spoke Super Chrome-finished alloy wheels",
+      "Adds all premium comfort and safety features from XLE Premium tier"
+    ]
+  }
+}

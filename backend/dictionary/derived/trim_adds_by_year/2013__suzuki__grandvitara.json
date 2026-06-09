@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|suzuki|grandvitara",
+  "year": 2013,
+  "make": "Suzuki",
+  "model": "Grand Vitara",
+  "ladder_id": "brochure_web_2013__suzuki__grandvitara",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "XLT",
+    "LX",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "Leather-trimmed seats with heating for driver and front passenger",
+      "Power driver seat with lumbar support adjustment",
+      "Dual-zone automatic climate control",
+      "Roof rails and integrated roof rack system",
+      "Automatic headlights with delay-off feature",
+      "Proximity key with push-button start ignition",
+      "Premium sound system with six speakers",
+      "All-weather floor mats"
+    ],
+    "LX": [
+      "Air conditioning with manual temperature control",
+      "Power windows, locks, and mirrors",
+      "Remote keyless entry system",
+      "Five-speed automatic transmission",
+      "AM/FM CD stereo with four speakers",
+      "Fabric seating surfaces"
+    ],
+    "Base": [
+      "2.4-liter four-cylinder engine producing 166 horsepower",
+      "All-wheel drive standard on all trims",
+      "Five-speed automatic transmission",
+      "Power steering and power front disc brakes with ABS",
+      "Dual front airbags and side curtain airbags",
+      "Electronic stability control and traction control",
+      "Air conditioning system",
+      "Manual windows and door locks",
+      "Cloth interior seating surfaces",
+      "60/40 split-folding rear seats with cargo versatility"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/suzuki/grand-vitara/"
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|landrover|rangerover",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_2020__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Autobiography",
+    "HSE",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds all-round exterior LED lighting",
+      "Adds Electronic Air Suspension with 2.9-inch raise capability",
+      "Adds All Wheel Drive system",
+      "Adds All Terrain Progress Control",
+      "Adds 355HP or 395HP 6-cylinder Gas MHEV engines",
+      "Adds Touch Pro Duo infotainment system",
+      "Adds full-color Head-up Display",
+      "Adds seven-mode Terrain Response with Comfort Mode",
+      "Adds Stop/Start technology and smart regenerative charging",
+      "Adds Advanced Tow Assist"
+    ],
+    "Limited": [
+      "Upgraded to 340 HP Supercharged V6 gasoline engine"
+    ],
+    "Standard": [
+      "Upgraded to 380 HP Supercharged V6 gasoline engine"
+    ],
+    "HSE": [
+      "Unpainted brake calipers as standard",
+      "Touch Pro Duo dual 10-inch high-definition touchscreens",
+      "12.3-inch Interactive Driver Display with configurable steering wheel controls",
+      "Full color Head-up Display second generation",
+      "10-inch Rear Seat Entertainment with touchscreens available",
+      "Rear Executive Class seating option with power deployable center console",
+      "Command Driving Position for enhanced road visibility",
+      "Configurable Ambient Lighting and Enhanced Task Lighting",
+      "Cabin Air Ionization system for fresh environment",
+      "Up to seven USB ports, five 12V power sockets, and 4G Wi-Fi connectivity"
+    ],
+    "Autobiography": [
+      "Adds executive rear seating",
+      "Upgraded to premium interior refinement and craftsmanship"
+    ]
+  }
+}

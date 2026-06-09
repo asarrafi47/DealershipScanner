@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|infiniti|qx5680",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2015__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 with Deluxe Technology Package",
+    "QX80 Limited Package",
+    "QX80"
+  ],
+  "adds_by_trim": {
+    "QX80 with Deluxe Technology Package": [
+      "22 x 8.0-inch 14-spoke dark finish forged aluminum-alloy wheels with 275/50R22 tires",
+      "Driver Assistance Package with Backup Collision Intervention and Blind Spot Warning",
+      "Intelligent Cruise Control Full-Speed Range with Distance Control Assist",
+      "Intelligent Brake Assist with Forward Emergency Braking and Predictive Forward Collision Warning",
+      "Steering Wheel Switch for Safety Shield Technologies",
+      "Theater Package requiring Driver Assistance Package"
+    ],
+    "QX80 Limited Package": [
+      "22 x 8.0-inch 14-spoke dark finish forged aluminum-alloy wheels with 275/50R22 all-season tires"
+    ],
+    "QX80": [
+      "5.6-liter 32-valve V8 engine with 400 hp and 413 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control and manual shift mode",
+      "Infiniti All-Mode AWD with Auto, 4H, and 4L settings",
+      "Bose 13-speaker Premium Audio system with subwoofers and CD/DVD player",
+      "8-inch WVGA color touch-screen with Infiniti Hard Drive Navigation and Voice Recognition",
+      "Leather-appointed seating with 10-way power driver and 8-way power passenger seats",
+      "Power moonroof with one-touch auto-open and sliding sunshade",
+      "Around View Monitor with Moving Object Detection and front rear sonar system",
+      "Tri-Zone Automatic Temperature Control with microfilter",
+      "Infiniti Advanced Air Bag System with dual-stage front and side-impact air bags"
+    ]
+  }
+}

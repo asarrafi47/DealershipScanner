@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2021_bmw_m5_complete_options",
+  "make": "BMW",
+  "models": [
+    "M5",
+    "M5"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: 3.0L I6 Turbo; Manual 6-spd (was Engine 5.0 L S85 Uneven firing 90° V10); 3.0L I6 Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Two new upholstery options were added to the interior those being black leather"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Engine 5.0 L S85 Uneven firing 90° V10"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Two new upholstery options were added to the interior those being black leather"
+      }
+    ]
+  }
+}

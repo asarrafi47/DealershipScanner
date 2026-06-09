@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2019|audi|a3",
+  "year": 2019,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_llm_2019__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS 3",
+    "S3",
+    "A3 Prestige",
+    "A3 Premium Plus",
+    "A3 Premium",
+    "A3"
+  ],
+  "adds_by_trim": {
+    "RS 3": [
+      "19-inch 5-arm-rotor design wheels in matte titanium finish",
+      "Rotor Gray Fine Nappa leather with Anthracite contrast diamond aluminum race inlays",
+      "Black Fine Nappa leather with Rock Gray contrast diamond stitching and perforation",
+      "Crescendo Red contrast diamond stitching and perforation interior color option"
+    ],
+    "S3": [
+      "18-inch 5-arm-dynamic design wheels standard",
+      "Audi Sport 19-inch 5-arm-rotor wheels available in matte titanium finish",
+      "Black Fine Nappa leather with Magma Red leather and Mistral Brushed Aluminum inlays",
+      "Black Fine Nappa leather with Rock Gray contrast diamond stitching",
+      "Available Black optic package with 19-inch bi-color titanium wheels in staggered fitment"
+    ],
+    "A3 Prestige": [
+      "18-inch 5-arm design bi-color wheels with anthracite/polished finish",
+      "19-inch 5-arm-wing design wheels available in bi-color titanium finish",
+      "Black leather with Micrometallic Silver Aluminum inlays",
+      "Rock Gray leather with Rock Gray contrast stitching available"
+    ],
+    "A3 Premium Plus": [
+      "18-inch 5-arm design bi-color wheels with anthracite/polished finish standard",
+      "19-inch 5-arm-wing design wheels available in bi-color titanium finish",
+      "Black Fine Nappa leather with Magma Red leather interior color option"
+    ],
+    "A3 Premium": [
+      "17-inch 5-arm design wheels standard",
+      "18-inch 5-arm design bi-color wheels available",
+      "Black leather with Micrometallic Silver Aluminum inlays standard"
+    ],
+    "A3": [
+      "17-inch 5-arm design wheels standard",
+      "Black leather interior standard",
+      "Rock Gray leather interior standard",
+      "Chestnut Brown leather interior standard"
+    ]
+  }
+}

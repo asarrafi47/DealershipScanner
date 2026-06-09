@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2013|maserati|ghibli",
+  "year": 2013,
+  "make": "maserati",
+  "model": "ghibli",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2013_maserati_ghibli_Brochure.pdf",
+  "page_count": 36,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

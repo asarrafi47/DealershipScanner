@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2023|lexus|ux",
+  "year": 2023,
+  "make": "lexus",
+  "model": "UX",
+  "ladder_id": "2021_lexus_ux_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "F Sport",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "F Sport": [
+      "vehicle purchase, the Lexus Accessory Warranty coverage is in effect for 48 months/50,000 miles from the"
+    ],
+    "Luxury": [
+      "vehicle and use mirrors to confirm clearance. See Owner\u2019s Manual for additional limitations and details. 40. For accessories purchased at the time of the new"
+    ],
+    "Limited": [
+      "vehicle\u2019s in-service date, which is the same coverage as the new"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.6666666666666666,
+    "per_trim_add_counts": {
+      "F Sport": 1,
+      "Limited": 1,
+      "Sport": 0
+    }
+  }
+}

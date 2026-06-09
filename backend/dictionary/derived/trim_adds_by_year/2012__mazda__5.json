@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2012|mazda|5",
+  "year": 2012,
+  "make": "Mazda",
+  "model": "5",
+  "ladder_id": "brochure_llm_2012__mazda__5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Standard power sliding-glass moonroof with interior sunshade",
+      "Xenon High-Intensity-Discharge (HID) headlights with automatic on/off",
+      "Rain-sensing front windshield wipers",
+      "Leather-trimmed seats with heated front seats",
+      "Matching cloth door panel inserts"
+    ],
+    "Touring": [
+      "Standard 5-speed Sport automatic transmission",
+      "17-inch alloy wheels with P205/50R17 all-season tires",
+      "Side sill extensions and rear liftgate spoiler",
+      "Bluetooth hands-free phone and audio capability",
+      "Trip computer"
+    ],
+    "Sport": [
+      "Standard 6-speed manual transmission with available 5-speed Sport automatic",
+      "Power windows, mirrors, and door locks",
+      "Fully automatic climate control",
+      "3-row seating with 2nd-row captain's chairs and 50/50 split folding 3rd-row seatback",
+      "Dual sliding rear doors",
+      "6 standard airbags",
+      "Dynamic Stability Control with Traction Control System"
+    ]
+  }
+}

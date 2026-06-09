@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2016|jaguar|xf",
+  "year": 2016,
+  "make": "Jaguar",
+  "model": "XF",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

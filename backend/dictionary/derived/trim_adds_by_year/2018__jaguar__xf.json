@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2018|jaguar|xf",
+  "year": 2018,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_llm_2018__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S",
+    "R-SPORT",
+    "PORTFOLIO",
+    "PRESTIGE",
+    "PREMIUM",
+    "FX"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Gloss Black mesh front grille with Satin Chrome surround",
+      "Gloss Black window and trunk plinth finishers with Satin Chrome accents",
+      "Gloss Black side power vents and side sills",
+      "Gloss Black rear valance",
+      "Full LED headlights with 'S' script front grille badging",
+      "'S' script on steering wheel and door sill finishers",
+      "Red brake calipers with 'Jaguar' script",
+      "Fixed panoramic roof on XF Sportbrake",
+      "14x14 way front seats with 14x14 electric movements and manual winged headrest"
+    ],
+    "R-SPORT": [
+      "Sport style front bumper with body-colored finish",
+      "Grained Black front grille with Bright Chrome surround",
+      "Bright Chrome window and trunk plinth finishers",
+      "Bright Chrome side power vents",
+      "Sport-style front seats",
+      "'R-SPORT' badging on side power vents and door sill finishers",
+      "Rear spoiler with body-colored trunk-mounted design",
+      "Rear folding 40/20/40 split seat"
+    ],
+    "PORTFOLIO": [
+      "Dual bright exhaust tips",
+      "Full LED headlights",
+      "Adaptive Front Lighting and Cornering Lights",
+      "Auto High Beam Assist",
+      "Power-folding exterior mirrors with electrochromic and puddle lights",
+      "Passenger side mirror dip in reverse",
+      "4-way power lumbar front seats",
+      "3-stage heated and cooled active ventilated front seats",
+      "Power adjustable steering column"
+    ],
+    "PRESTIGE": [
+      "16x16 way front seats with 14x14 electric movements and winged headrests",
+      "Front passenger seat memory function",
+      "Electric rear window sunblind",
+      "Manual rear side window blinds",
+      "Four-zone Climate Control with auto-recirculation",
+      "Illuminated door sill finishers with Jaguar script",
+      "Premium floor mats with Nubuck edge and twin-needle stitching",
+      "Glove box illumination",
+      "10 color selectable variable illumination throughout interior and puddle lights"
+    ],
+    "PREMIUM": [
+      "3-stage heated rear seats",
+      "Blue halo illumination on door signature lines and release buttons"
+    ],
+    "PREMIUM PRESTIGE": [
+      "Grained Black front grille with Bright Chrome surround",
+      "Bright Chrome window and trunk finishers",
+      "Full LED headlights with Adaptive Front Lighting"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2022|infiniti|qx50",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "QX50",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

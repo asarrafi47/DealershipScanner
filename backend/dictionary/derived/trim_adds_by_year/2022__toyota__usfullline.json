@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2022|toyota|usfullline",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "ladder_id": "brochure_web_2022__toyota__usfullline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Premium leather-trimmed seats with heating and power adjustment",
+      "Panoramic moonroof with power tilt/slide",
+      "Adaptive Dynamic Suspension (ADS) for improved handling",
+      "Triple-beam LED headlights with automatic high-beam",
+      "Panoramic power rear window with defrost",
+      "Rear seat sunshades"
+    ],
+    "XLE": [
+      "SofTex fabric seating with heating",
+      "Dual-zone automatic climate control",
+      "Power driver's seat with lumbar support",
+      "Integrated blind-spot mirror and backup camera",
+      "8-inch touchscreen with Toyota Safety Sense 2.5",
+      "SiriusXM satellite radio with 3-month trial"
+    ],
+    "LE": [
+      "6.1-inch touchscreen infotainment system",
+      "Toyota Safety Sense 2.5 standard",
+      "Apple CarPlay and Android Auto compatibility",
+      "Bluetooth audio streaming and hands-free calling",
+      "Rearview camera with dynamic gridlines",
+      "17-inch alloy wheels",
+      "Four-cylinder 2.5L engine with 203 horsepower",
+      "ECT-i intelligent eight-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/us-fullline/"
+}

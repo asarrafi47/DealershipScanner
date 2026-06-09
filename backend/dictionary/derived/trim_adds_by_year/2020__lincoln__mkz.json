@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2020|lincoln|mkz",
+  "year": 2020,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_web_2020__lincoln__mkz",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "MKZ Reserve AWD",
+    "MKZ Reserve FWD",
+    "MKZ Hybrid Reserve FWD",
+    "MKZ Standard AWD",
+    "MKZ Standard FWD"
+  ],
+  "adds_by_trim": {
+    "MKZ Reserve AWD": [
+      "All-wheel drive powertrain"
+    ],
+    "MKZ Reserve FWD": [
+      "19-inch alloy wheels",
+      "Panoramic moonroof",
+      "Power-folding side mirrors",
+      "Power-operated trunk lid",
+      "Leather seating upholstery",
+      "Heated 14-way power-adjustable front seats",
+      "Wood trim accents",
+      "Ambient lighting",
+      "Rear-window power sunshade",
+      "Second-row USB charge ports"
+    ],
+    "MKZ Hybrid Reserve FWD": [
+      "2.0-liter hybrid powertrain with 188 horsepower",
+      "Continuously variable automatic transmission",
+      "Dual 4.2-inch gauge cluster displays with analog speedometer",
+      "Air compressor with tire sealant"
+    ],
+    "MKZ Standard AWD": [
+      "All-wheel drive powertrain"
+    ],
+    "MKZ Standard FWD": [
+      "2.0-liter turbocharged four-cylinder engine with 245 horsepower",
+      "18-inch alloy wheels",
+      "HID headlights",
+      "LED taillights",
+      "Leatherette seating upholstery",
+      "Heated 12-way power-adjustable front seats",
+      "Leather-wrapped steering wheel",
+      "Illuminated door sills",
+      "10.1-inch digital gauge cluster display",
+      "11-speaker audio system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/mkz/"
+}

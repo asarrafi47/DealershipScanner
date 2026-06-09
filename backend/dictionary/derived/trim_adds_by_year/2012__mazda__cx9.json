@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2012|mazda|cx9",
+  "year": 2012,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_llm_2012__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "8-way power driver's seat with memory for up to three preset positions",
+      "Automatic seat adjustment via Mazda Advanced Keyless Entry system",
+      "DVD Rear-Seat Entertainment System with 9-inch fold-down LCD screen",
+      "Bose Centerpoint Surround Sound System with AudioPilot, 10 speakers, 277 watts",
+      "Leather upholstery",
+      "Power open/close rear liftgate",
+      "Navigation system with 7-inch touch-screen display and voice command"
+    ],
+    "Touring": [
+      "Leather upholstery",
+      "4-way power front passenger seat",
+      "8-way power driver's seat with manual lumbar and heated front seats",
+      "60/40 split fold-down 2nd-row seatback with armrest and walk-in access",
+      "Bose Premium Centerpoint Surround Sound System with 11 speakers",
+      "Bluetooth wireless audio capability from compatible devices",
+      "Rearview camera integrated with Multi Information Display",
+      "Cruise control with steering-wheel-mounted illuminated controls"
+    ],
+    "Sport": [
+      "3.7L DOHC 24-valve V6 engine with 273 horsepower and 267 lb-ft torque",
+      "6-speaker MP3-compatible audio system with SiriusXM Satellite Radio ready",
+      "Auxiliary input jack for portable music devices",
+      "Bluetooth hands-free phone system",
+      "Rearview camera with automatic reverse activation",
+      "7-passenger seating capacity",
+      "Tilt/telescopic steering wheel",
+      "Three-zone automatic climate control"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2015|cadillac|ats",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "ATS",
+  "ladder_id": "brochure_2015__cadillac__ats",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds OnStar Directions & Connections Plan (1 year standard)",
+      "Adds OnStar Hands-Free Calling capability",
+      "Adds OnStar RemoteLink mobile app access",
+      "Adds Automatic Crash Response emergency service",
+      "Adds OnStar Diagnostics with monthly email status reports",
+      "Adds Stolen Vehicle Slowdown and Remote Ignition Block security features",
+      "Adds 6-year or 70,000-mile Powertrain Limited Warranty",
+      "Adds 4-year or 50,000-mile Bumper-to-Bumper Warranty",
+      "Adds 6-year or 70,000-mile Roadside Assistance Program",
+      "Adds Cadillac Premium Care Maintenance for 4 years or 50,000 miles"
+    ],
+    "Limited": [
+      "Upgraded to OnStar with 4G LTE and built-in Wi-Fi hotspot",
+      "Adds Wi-Fi hotspot capable of supporting up to seven wireless devices"
+    ],
+    "Luxury": [
+      "Adds MyCadillac App for advanced smartphone integration on iPhone and Android platforms"
+    ]
+  }
+}

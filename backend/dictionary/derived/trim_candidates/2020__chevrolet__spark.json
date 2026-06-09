@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2020|chevrolet|spark",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

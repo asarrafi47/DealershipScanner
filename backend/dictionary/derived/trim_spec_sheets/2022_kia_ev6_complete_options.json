@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2022_kia_ev6_complete_options",
+  "make": "Kia",
+  "models": [
+    "EV6",
+    "EV6"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: However, compared to regular EV6 models, the EV6 GT does not come with ventilated seat functionality, electric seat adjustment, auto dip-down wing mirrors when reversing, and has less claimed driving range with higher energy consumption.; Pricing and…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Electric motor Permanent magnet synchronous motor; The EV6's boot space is 520 L (18.4 cu ft) (VDA standard) and it can be increase; Screen Size: synchronous motor Transmission Single-speed reduction gear The EV6"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "14-speaker; 6-speaker system | suede seating; [Brochure] 14-speaker; 6-speaker system | suede seating"
+      }
+    ]
+  }
+}

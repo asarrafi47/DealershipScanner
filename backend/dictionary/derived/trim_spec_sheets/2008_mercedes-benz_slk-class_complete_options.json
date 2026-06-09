@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2008_mercedes-benz_slk-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SLK-Class",
+    "SLK-Class"
+  ],
+  "year_min": 2006,
+  "year_max": 2010,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.4L V8 Turbo; Automatic (S7)"
+      }
+    ],
+    "SLK 55 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SLK 350": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SLK 280": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

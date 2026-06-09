@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2024|nissan|altima",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2024__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Leather appointments on seating surfaces",
+      "Premium interior appointments and styling enhancements",
+      "Intelligent All-Wheel Drive capability",
+      "ProPILOT Assist semi-autonomous driving system",
+      "Intelligent Around View Monitor with 360-degree virtual composite view"
+    ],
+    "SR": [
+      "Enhanced safety features and technology upgrades",
+      "VC-Turbo engine option with 248 hp and 273 lb-ft torque on 93-octane fuel",
+      "Advanced driver assistance systems",
+      "Rear Automatic Braking capability",
+      "Blind Spot Warning and Rear Cross Traffic Alert"
+    ],
+    "SV": [
+      "Intelligent All-Wheel Drive option",
+      "Enhanced comfort and convenience features",
+      "ProPILOT Assist availability",
+      "Improved audio system and connectivity options",
+      "Easy-Fill Tire Alert system"
+    ],
+    "S": [
+      "Standard VC-Turbo engine with variable compression technology",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Forward Collision Warning system",
+      "Lane Departure Warning and Intelligent Lane Intervention",
+      "RearView Monitor and Tire Pressure Monitoring System",
+      "Intelligent Driver Alertness monitoring",
+      "Rear Door Alert System",
+      "SiriusXM with 360L trial subscription included"
+    ]
+  }
+}

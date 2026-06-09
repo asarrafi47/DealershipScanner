@@ -1,0 +1,84 @@
+{
+  "catalog_key": "2010|kia|optima",
+  "year": 2010,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_web_2010__kia__optima",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Optima SX",
+    "Optima EX Premium",
+    "Optima EX",
+    "Optima Special Edition",
+    "Optima S",
+    "Optima LX"
+  ],
+  "adds_by_trim": {
+    "Optima LX": [
+      "2.4-liter naturally aspirated engine with 185 hp and 178 lb-ft torque",
+      "Six-speed automatic transmission",
+      "16-inch alloy wheels",
+      "LED daytime running lights",
+      "Heated side mirrors",
+      "3.5-inch LCD gauge cluster display",
+      "6-way manually adjustable front seats",
+      "8.0-inch touchscreen infotainment with Apple CarPlay and Android Auto",
+      "Six-speaker audio system",
+      "Kia Drive Wise active safety features including forward collision avoidance with pedestrian detection"
+    ],
+    "Optima S": [
+      "18-inch alloy wheels",
+      "Front fog lights",
+      "LED taillights",
+      "Dual chrome exhaust tips",
+      "Body-color spoiler",
+      "Black cloth and leatherette seat trim",
+      "10-way power-adjustable driver's seat with power lumbar support",
+      "Leather-wrapped steering wheel",
+      "Push-button start"
+    ],
+    "Optima Special Edition": [
+      "Black 18-inch alloy wheels",
+      "Black side mirrors with LED turn-signal indicators",
+      "Panoramic sunroof",
+      "Black leather seat trim",
+      "Heated front seats",
+      "Heated steering wheel"
+    ],
+    "Optima EX": [
+      "1.6-liter turbocharged four-cylinder engine with 178 hp and 195 lb-ft torque",
+      "Seven-speed dual-clutch automatic transmission",
+      "17-inch alloy wheels",
+      "Acoustic front door windows",
+      "Body-color side mirrors with LED turn signal indicators",
+      "Wood grain trim",
+      "Electronic parking brake",
+      "Leather-wrapped gearshift knob",
+      "Wireless charging",
+      "Adaptive cruise control"
+    ],
+    "Optima EX Premium": [
+      "Panoramic sunroof",
+      "Ambient interior lighting",
+      "12-way power adjustable driver's seat with memory",
+      "10-way power adjustable passenger seat",
+      "Ventilated front seats",
+      "Heated steering wheel",
+      "Navigation-equipped infotainment system",
+      "Harman Kardon 10-speaker premium audio system"
+    ],
+    "Optima SX": [
+      "2.0-liter turbocharged four-cylinder engine with 245 hp and 260 lb-ft torque",
+      "Six-speed automatic transmission",
+      "Paddle shifters",
+      "Sport-tuned suspension",
+      "18-inch black alloy wheels",
+      "Auto-leveling LED headlights",
+      "LED fog lights",
+      "Gloss black exterior trim",
+      "4.3-inch LCD gauge cluster display",
+      "Black sport leather seating with red stitching and flat-bottom steering wheel"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/optima/"
+}

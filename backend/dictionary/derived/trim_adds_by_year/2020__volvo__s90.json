@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|volvo|s90",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "S90",
+  "ladder_id": "brochure_llm_2020__volvo__s90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S90 Inscription",
+    "S90 R-Design",
+    "S90 Momentum"
+  ],
+  "adds_by_trim": {
+    "S90 Inscription": [
+      "Highly sophisticated expression of Swedish luxury with exclusive styling"
+    ],
+    "S90 R-Design": [
+      "Sporty styling and precise control for a sedan designed to perform"
+    ],
+    "S90 Momentum": [
+      "12.3-inch Digital Driver Display with automatic brightness adaptation",
+      "9-inch Sensus Touchscreen with voice control and navigation",
+      "High Performance audio system with 10 speakers and Bluetooth",
+      "2-zone electronically controlled climate system",
+      "LED headlights with automatic adjustment",
+      "Park Assist, Rear with retractable side-view mirrors",
+      "City Safety Collision Avoidance Technology",
+      "Pilot Assist with Adaptive Cruise Control and Lane Keeping Aid",
+      "Road Sign Information and Run-off Road Mitigation",
+      "Power-adjustable 4-way lumbar support with leather-wrapped steering wheel"
+    ]
+  }
+}

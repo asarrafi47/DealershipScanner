@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|toyota|avalon",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Avalon",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

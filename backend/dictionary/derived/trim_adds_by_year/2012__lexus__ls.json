@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|lexus|ls",
+  "year": 2012,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_2012__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds four-year/50,000-mile Lexus Limited Warranty with zero deductible",
+      "Adds eight-year/70,000-mile Powertrain Warranty with zero deductible",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty with zero deductible",
+      "Adds Includes Advanced Pre-Collision System with Driver Attention Monitor",
+      "Adds Includes Dynamic Radar Cruise Control",
+      "Adds Includes Lane Departure Warning system",
+      "Adds Includes Lane Keep Assist",
+      "Adds Includes Active Pedestrian Detection System",
+      "Adds Includes Adaptive Front Lighting System"
+    ],
+    "Limited": [
+      "ubscription available only with new vehicle purchase of Lexus Enform-equipped vehicles.",
+      "subscription term selected. 11. Lexus Enform premium services Destination Assist and eDestination will",
+      "function in Hawaii and limited areas of Alaska for vehicles that contain map data",
+      "ollisions only. The included Driver Attention Monitor",
+      "the driver’s face appears to be turned away. They are not collision-avoidance systems and are",
+      ", XM NavWeather and XM Sports and Stocks require a monthly service fee and hardware. XM NavTraffic is designed to provide real-time",
+      "Navigation System Owner’s Manual for further details. 20. Functioning XM Radio requires a",
+      "activate the service, call the XM Listener Care Center. Subscriptions are governed by the XM Customer Agreement available at xmradio.com/"
+    ],
+    "Premium": [],
+    "Luxury": [
+      "Adds Advanced Parking Guidance System",
+      "Adds Mark Levinson premium audio system",
+      "Adds Lexus Enform with Destination Assist and eDestination services",
+      "Adds Safety Connect telematics services with one-year trial subscription",
+      "Adds SiriusXM satellite radio services with trial period"
+    ]
+  }
+}

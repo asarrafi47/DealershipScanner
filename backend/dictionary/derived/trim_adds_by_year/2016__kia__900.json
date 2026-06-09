@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|kia|900",
+  "year": 2016,
+  "make": "Kia",
+  "model": "900",
+  "ladder_id": "brochure_llm_2016__kia__900",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LUXURY V8",
+    "LUXURY V6",
+    "PREMIUM V6"
+  ],
+  "adds_by_trim": {
+    "LUXURY V8": [
+      "5.0L Gasoline Direct Injection V8 engine with 420 hp and 376 lb.-ft. torque",
+      "LED headlights with Dynamic Bending Light instead of HID headlights",
+      "19-inch chrome-finish alloy wheels with 245/45R19 front and 275/40R19 rear tires",
+      "Shift-by-wire gear selector",
+      "Steering-wheel-mounted paddle shifters",
+      "12.3-inch Thin-Film Transistor LCD supervision meter cluster",
+      "Quilted Nappa leather seat trim with wood trimmed heated steering wheel",
+      "Power-reclining rear seats with power lumbar support and ventilated outboard seats"
+    ],
+    "LUXURY V6": [
+      "3.8L Gasoline Direct Injection V6 engine with 311 hp and 293 lb.-ft. torque",
+      "HID headlights with Dynamic Bending Light",
+      "18-inch alloy wheels with 245/50R18 tires",
+      "Shift-by-cable gear selector",
+      "Nappa leather seat trim and accents",
+      "16-way adjustable driver's seat with power headrest and seat cushion extension",
+      "12-way power-adjustable front passenger seat with lumbar support",
+      "Genuine wood trim accents and wood trimmed heated steering wheel",
+      "Power-reclining rear seats with power lumbar support and ventilated outboard seats"
+    ],
+    "PREMIUM V6": [
+      "3.8L Gasoline Direct Injection V6 engine with 311 hp",
+      "18-inch alloy wheels with 245/50R18 tires",
+      "Leather seat trim and accents",
+      "12-way power-adjustable front passenger seat with lumbar support",
+      "Heated and ventilated front seats",
+      "Aluminum accent trim",
+      "AM/FM/CD/HD/SiriusXM audio system",
+      "9.2-inch HD touchscreen infotainment with navigation and SiriusXM Traffic",
+      "Front and rear camera display with surround-view monitor capability",
+      "All standard safety systems including Autonomous Emergency Braking and Lane Departure Warning"
+    ]
+  }
+}

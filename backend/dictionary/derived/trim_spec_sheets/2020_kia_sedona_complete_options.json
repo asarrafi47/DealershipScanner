@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_kia_sedona_complete_options",
+  "make": "Kia",
+  "models": [
+    "Sedona",
+    "Sedona"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "SX": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ]
+  }
+}

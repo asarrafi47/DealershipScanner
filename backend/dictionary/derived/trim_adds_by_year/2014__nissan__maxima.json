@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2014|nissan|maxima",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2014__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV with Sport Package",
+    "SV with Premium Package",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV with Sport Package": [
+      "Sport-tuned suspension",
+      "19-inch Dark Hyper Silver aluminum-alloy wheels with P245/40R19 tires",
+      "Dark-finish sport grille and smoked headlights",
+      "Rear spoiler",
+      "Leather-wrapped heated steering wheel with paddle shifters"
+    ],
+    "SV with Premium Package": [
+      "Dual Panel Moonroof with power retractable sunshades",
+      "Rear-window power sunshade",
+      "Premium mood lighting",
+      "Atlantic Cherry wood-tone trim",
+      "Leather-wrapped heated steering wheel with paddle shifters",
+      "Bose audio system with nine speakers"
+    ],
+    "SV": [
+      "High Intensity Discharge xenon headlights",
+      "Fog lights",
+      "Outside mirrors with LED turn signal indicators",
+      "HomeLink Universal Transceiver",
+      "Digital compass in rearview mirror",
+      "Leather-appointed seats",
+      "AM/FM/CD audio system with auxiliary audio and video input jacks",
+      "SiriusXM Satellite Radio",
+      "USB connection port for iPod interface",
+      "RearView Monitor"
+    ],
+    "S": [
+      "290-hp 3.5-liter V6 engine",
+      "Xtronic CVT with DS mode, manual mode, and paddle shifters",
+      "18-inch Fine Silver aluminum-alloy wheels with P245/45R18 tires",
+      "Power sliding moonroof",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Climate-controlled driver's seat",
+      "8-way power driver's seat",
+      "4-way power front-passenger's seat",
+      "Piano-hairline trim",
+      "Vehicle Dynamic Control with Traction Control System"
+    ]
+  }
+}

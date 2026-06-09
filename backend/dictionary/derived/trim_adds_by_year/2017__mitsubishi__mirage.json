@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2017|mitsubishi|mirage",
+  "year": 2017,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2017__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MIRAGE GT",
+    "MIRAGE SE",
+    "MIRAGE ES",
+    "MIRAGE G4 SE",
+    "MIRAGE G4 ES"
+  ],
+  "adds_by_trim": {
+    "MIRAGE GT": [
+      "Bi-xenon HID headlights with light tube",
+      "Rear combination LED tail lights",
+      "Continuous Variable Transmission (CVT) standard",
+      "Chrome grille accents"
+    ],
+    "MIRAGE SE": [
+      "15-inch dark chrome alloy wheels",
+      "Fog lights standard",
+      "Color-keyed folding side-view mirrors with turn signals",
+      "Chrome-plated front inner door handles",
+      "6-way adjustable driver's seat with 4-way passenger adjustment",
+      "Automatic air conditioning climate control",
+      "Leather-wrapped steering wheel",
+      "Continuous Variable Transmission (CVT) standard"
+    ],
+    "MIRAGE ES": [
+      "14-inch steel wheels with wheel covers",
+      "Manual air conditioning climate control",
+      "Keyless entry with panic alarm feature",
+      "AM/FM/CD/MP3 audio system with 4 speakers"
+    ],
+    "MIRAGE G4 SE": [
+      "15-inch dark chrome alloy wheels",
+      "Fog lights standard",
+      "Color-keyed folding side-view mirrors with turn signals",
+      "Chrome-plated front inner door handles",
+      "6-way adjustable driver's seat with 4-way passenger adjustment",
+      "Automatic air conditioning climate control",
+      "Leather-wrapped steering wheel",
+      "Continuous Variable Transmission (CVT) standard"
+    ],
+    "MIRAGE G4 ES": [
+      "1.2L MIVEC DOHC 12-valve inline 3-cylinder engine with 78 hp",
+      "5-speed manual transmission standard",
+      "14-inch steel wheels with wheel covers",
+      "Halogen headlights",
+      "Power side-view mirrors",
+      "6.5-inch Display Audio with Smartphone Link and 4 speakers",
+      "Bluetooth hands-free phone system",
+      "Anti-lock Braking System (ABS) with Electronic Brakeforce Distribution"
+    ]
+  }
+}

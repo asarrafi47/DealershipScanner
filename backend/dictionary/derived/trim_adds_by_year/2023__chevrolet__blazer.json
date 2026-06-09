@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2023|chevrolet|blazer",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Blazer",
+  "ladder_id": "brochure_llm_2023__chevrolet__blazer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "3LT",
+    "2LT"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "3.6L V6 engine with RS-specific steering ratio and tuned dampers",
+      "Signature bright chrome-accented grille with chrome header bar",
+      "Silver-painted roof rails",
+      "Integrated rectangular dual-chrome outlet exhaust",
+      "Premier-specific 20-inch machined-face aluminum wheels",
+      "Chrome-accented body-color door handles with bright front sill plates",
+      "Jet Black or Jet Black/Maple Sugar perforated leather with sueded microfiber accents",
+      "Chevrolet Infotainment 3 Premium system with Navigation"
+    ],
+    "RS": [
+      "3.6L V6 engine",
+      "RS-specific steering ratio and tuned dampers",
+      "Available two-tone roof",
+      "Custom Black mesh grille with hexagonal design and Black Ice header bar",
+      "RS-specific 20-inch Technical Gray-painted aluminum wheels",
+      "Hands-free power liftgate with Chevrolet emblem projection",
+      "Red-accented or Nightshift Blue-accented interior available"
+    ],
+    "3LT": [
+      "Programmable power liftgate",
+      "Perforated leather-appointed seating surfaces",
+      "6-way power front passenger seat",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Auto-dimming interior rearview mirror",
+      "Universal Home Remote",
+      "Chevrolet Infotainment 3 Plus system with 10.2-inch diagonal color touchscreen"
+    ],
+    "2LT": [
+      "2.0L Turbo engine with 9-speed automatic transmission",
+      "Signature Black grille with bright chrome header bar",
+      "Circular dual-outlet exhaust",
+      "18-inch Bright Silver-painted aluminum wheels",
+      "Remote vehicle starter system",
+      "8-way power driver seat",
+      "Dual-zone automatic climate controls",
+      "Keyless Open and Start",
+      "Chevy Safety Assist with Automatic Emergency Braking and Lane Keep Assist",
+      "Chevrolet Infotainment 3 Plus with 10.2-inch touchscreen"
+    ]
+  }
+}

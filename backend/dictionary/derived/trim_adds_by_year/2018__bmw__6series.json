@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2018|bmw|6series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "6 Series",
+  "ladder_id": "brochure_llm_2018__bmw__6series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "650i xDrive",
+    "650i",
+    "640i xDrive",
+    "640i"
+  ],
+  "adds_by_trim": {
+    "650i xDrive": [
+      "4.4-liter Twinpower Turbo V-8 engine with 445 hp and 480 lb-ft torque",
+      "All-wheel drive system",
+      "0-60 mph in 4.3-4.4 seconds depending on body style"
+    ],
+    "650i": [
+      "4.4-liter Twinpower Turbo V-8 engine with 445 hp and 480 lb-ft torque",
+      "0-60 mph in 4.5 seconds (Coupe) or 4.5 seconds (Convertible)"
+    ],
+    "640i xDrive": [
+      "All-wheel drive system",
+      "0-60 mph in 5.1 seconds (Coupe) or 5.3 seconds (Convertible)"
+    ],
+    "640i": [
+      "3.0-liter Twinpower Turbo inline 6-cylinder engine with 315 hp and 330 lb-ft torque",
+      "0-60 mph in 5.3 seconds (Coupe) or 5.4 seconds (Convertible)",
+      "EPA-estimated 21/30/24 mpg city/highway/combined (Coupe) or 23/20/29 (Convertible)"
+    ]
+  }
+}

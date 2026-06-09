@@ -1,0 +1,65 @@
+{
+  "ladder_id": "2024_jeep_renegade_complete_options",
+  "make": "Jeep",
+  "models": [
+    "Renegade",
+    "Renegade"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L GSE T3 I3 turbo; L FIRE I4 turbo"
+      },
+      {
+        "label": "Screen Size",
+        "value": "The Sound Group adds the Uconnect 5.0BT AM/FM stereo with USB, iPod, and 3.5-mil; Uconnect 5.0BT AM"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "And/or could include more \"optional\" things like heated seats."
+      },
+      {
+        "label": "Subwoofer",
+        "value": "subwoofer"
+      }
+    ],
+    "Trailhawk": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 9-spd; All-Wheel Drive"
+      }
+    ],
+    "Altitude": [
+      {
+        "label": "Engine Options",
+        "value": "L GSE T3 I3 turbo"
+      }
+    ],
+    "Latitude": [
+      {
+        "label": "Engine Options",
+        "value": "L GSE T3 I3 turbo"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L GSE T3 I3 turbo; L GSE T4 I4 turbo"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Uconnect 5.0BT AM"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "WHEEL 19-inch Granite- painted aluminum Looking every part the hero, Renegade®(RED) Editio"
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_tesla_model_y_complete_options",
+  "make": "Tesla",
+  "models": [
+    "Model Y",
+    "Model Y"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Long Range": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "Standard Range": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

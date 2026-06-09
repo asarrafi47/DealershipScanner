@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2011|chrysler|towncountry",
+  "year": 2011,
+  "make": "Chrysler",
+  "model": "Town & Country",
+  "ladder_id": "brochure_llm_2011__chrysler__towncountry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring - L",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Driver's seat memory feature for power adjustable pedals",
+      "Power adjustable pedals with memory feature",
+      "Media Center 730N with GPS Navigation, SIRIUS Satellite Radio, and ParkView camera",
+      "SIRIUS Backseat TV with one-year subscription",
+      "Uconnect Phone with auto-dimming rearview mirror and USB port",
+      "Radio memory feature",
+      "Nine amplified speakers with 506-watt amplifier and subwoofer"
+    ],
+    "Touring - L": [
+      "Intermediate luxury buckets with rear fold-in-floor seating (late availability)",
+      "Power one-touch folding third-row seat with power recline",
+      "Media Center 430N with Garmin Navigation and ParkView camera",
+      "Heated second-row seats (included in Driver Convenience Group)",
+      "Mopar Exterior Appearance Group with floor mats, door sills, running boards, splash guards",
+      "Mopar running boards",
+      "Mopar Uconnect Web"
+    ],
+    "Touring": [
+      "Eight-way power driver and front-passenger seats with two-way power lumbar adjustment",
+      "Driver's seat memory feature",
+      "Stow 'n Go Seating with fold-in-floor intermediate bucket seats and 60/40 split bench",
+      "Heated front-row seats (included in Driver Convenience Group)",
+      "Media Center 430 CD/DVD/MP3/HDD with 6.5-inch touch screen",
+      "SIRIUS Satellite Radio with one-year subscription",
+      "Blind Spot Monitoring with Rear Cross Path Detection",
+      "ParkSense Rear Park Assist System",
+      "Electronic Stability Control with Brake Assist"
+    ]
+  }
+}

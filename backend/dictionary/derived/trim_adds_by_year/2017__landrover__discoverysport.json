@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|landrover|discoverysport",
+  "year": 2017,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "ladder_id": "brochure_2017__landrover__discoverysport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 2.0 Liter Turbocharged I-4 engine with 240 hp",
+      "Adds 5 + 2 seating configuration",
+      "Adds Includes All Terrain Progress Control",
+      "Adds Hill Descent Control (HDC)",
+      "Adds Includes Adaptive Dynamics",
+      "Adds Torque Vectoring",
+      "Adds Includes Active Driveline"
+    ],
+    "Premium": [
+      "Upgraded to Meridian Sound Systems",
+      "Adds enhanced comfort features and interior options"
+    ],
+    "Limited": [
+      "Adds premium interior color and finish selections"
+    ],
+    "Standard": [
+      "Adds Complete Dynamic Design Package",
+      "Adds Includes expanded wheel style options",
+      "Adds comprehensive accessory customization options"
+    ]
+  }
+}

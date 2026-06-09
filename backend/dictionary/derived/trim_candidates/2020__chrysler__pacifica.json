@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2020|chrysler|pacifica",
+  "year": 2020,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Touring L",
+    "Touring",
+    "Select",
+    "Hybrid",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

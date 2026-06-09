@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2025|toyota|corolla",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2025__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE HYBRID",
+    "SE HYBRID",
+    "LE HYBRID",
+    "FX",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XSE HYBRID": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "31 city/40 highway/34 combined estimated mpg",
+      "LED headlights, LED taillights, and Daytime Running Lights accent lighting",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Gray metallic sport side rocker panels and rear spoiler",
+      "SofTex-trimmed seats with heated front seats and sport fabric inserts",
+      "Steering-wheel-mounted paddle shifters",
+      "7-in. Digital Gauge Cluster",
+      "10.5-inch touchscreen with wireless Apple CarPlay and Android Auto"
+    ],
+    "SE HYBRID": [
+      "1.8L 4-cylinder engine with 138 hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Up to 50 city/43 highway/47 combined estimated mpg",
+      "Sport mesh gloss black front grille",
+      "Gray metallic sport side rocker panels and color-keyed spoiler",
+      "18-in. graphite-colored alloy wheels",
+      "Sport seats with sport fabric inserts",
+      "8-in. touchscreen with wireless Apple CarPlay and Android Auto"
+    ],
+    "LE HYBRID": [
+      "1.8L 4-cylinder engine with 138 hp and 138 horsepower",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Up to 53 city/46 highway/50 combined estimated mpg",
+      "LED headlights, LED taillights, and Daytime Running Lights accent lighting",
+      "16-in. steel wheels with covers",
+      "Automatic climate control",
+      "4.2-in. Multi-Information Display",
+      "Fabric-trimmed seats with 60/40 split fold-down rear seat"
+    ],
+    "FX": [
+      "Lowering springs for sport suspension",
+      "FX-enhanced rear spoiler",
+      "18-in. satin black-finished alloy wheels with machined accents and black lug nuts",
+      "Blackout badging",
+      "Black roof-mounted shark-fin antenna",
+      "Sport seats with orange stitching and sport fabric inserts",
+      "Orange accent stitching throughout interior",
+      "7-in. Digital Gauge Cluster",
+      "Qi-compatible wireless smartphone charging"
+    ],
+    "SE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Normal, Sport and Eco driving modes",
+      "31 city/40 highway/34 combined estimated mpg",
+      "Sport mesh gloss black front grille",
+      "Gray metallic sport side rocker panels and color-keyed spoiler",
+      "18-in. graphite-colored alloy wheels",
+      "Single exhaust with dual chrome tips",
+      "Sport seats with sport fabric inserts",
+      "8-in. touchscreen with wireless Apple CarPlay and Android Auto"
+    ],
+    "LE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "32 city/41 highway/35 combined estimated mpg",
+      "LED headlights, LED taillights, and Daytime Running Lights",
+      "16-in. steel wheels with covers",
+      "Automatic climate control",
+      "4.2-in. Multi-Information Display (MID)",
+      "Fabric-trimmed seats with 60/40 split fold-down rear seat and center armrest",
+      "8-in. touchscreen with wireless Apple CarPlay and Android Auto"
+    ]
+  }
+}

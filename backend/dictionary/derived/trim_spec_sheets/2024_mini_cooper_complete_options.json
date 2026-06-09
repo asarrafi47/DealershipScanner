@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_mini_cooper_complete_options",
+  "make": "MINI",
+  "models": [
+    "Cooper",
+    "Cooper"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

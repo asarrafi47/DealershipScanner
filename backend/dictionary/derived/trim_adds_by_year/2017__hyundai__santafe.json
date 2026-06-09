@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2017|hyundai|santafe",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2017__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED ULTIMATE Tech Package",
+    "LIMITED",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "LIMITED ULTIMATE Tech Package": [
+      "Ultimate Tech Package with advanced safety and connectivity features",
+      "Blue Link Connected Care with one year subscription included"
+    ],
+    "LIMITED": [
+      "Upgraded trim level with enhanced features compared to SE base model"
+    ],
+    "SE": [
+      "Lane Departure Warning system operating above 44 mph",
+      "Smart Cruise Control for highway use",
+      "Automatic Emergency Braking with pedestrian detection (5-50 mph vehicles, 5-43 mph pedestrians)",
+      "Rear Cross-traffic Alert when reversing below 6 mph",
+      "Electronic Stability Control system",
+      "Supplemental Restraint System with airbags",
+      "5,000-pound towing capacity with trailer brakes"
+    ]
+  }
+}

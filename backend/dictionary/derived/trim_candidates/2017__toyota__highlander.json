@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|toyota|highlander",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Highlander",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on SE",
+      "Exterior Features Exterior Features",
+      "Projector-beam halogen dark-black-accent headlights w/LED \u2022 19-in. 5-spoke Chromtec\u00ae alloy wheels",
+      "Daytime Running Lights (DRL) \u2022 Rear parking assist sonar38",
+      "19-in. multi-spoke machined alloy wheels with black finish \u2022 LED Daytime Running Lights (DRL)",
+      "Dark-painted roof rails \u2022 Blind Spot Monitor (BSM)2 and Rear Cross-Traffic Alert (RCTA)37",
+      "Sport-tuned suspension \u2022 Color-keyed heated power outside mirrors with turn signal indicators",
+      "Interior Features and puddle lamps with Highlander projection",
+      "Seating for up to seven",
+      "Soft-touch upper door trim with technical pattern accent \u2022 Seating for up to eight",
+      "Black leather-trimmed seats with unique ribbon inserts and \u2022 Available all-new Saddle Tan interior color",
+      "Blue LED ambient lighting in interior of front and rear doors App Suite,16 and 8-in. high-resolution touch-screen display"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE Plus",
+      "Exterior Features Exterior Features Exterior Features",
+      "Projector-beam halogen smoked-chrome-accent headlights \u2022 Integrated fog lights \u2022 Power tilt/slide moonroof with sunshade and jam protection",
+      "LED taillights and stop lights \u2022 Flip-up rear hatch window \u2022 Chromtec\u00ae roof rails",
+      "18-in. split 5-spoke machined alloy wheels \u2022 Height-adjustable power liftgate with jam protection \u2022 18-in. turbine-look alloy wheels",
+      "Windshield wiper de-icer Interior Features \u2022 Blind Spot Monitor (BSM)2 and Rear Cross-Traffic Alert (RCTA)37",
+      "Color-keyed heated power outside mirrors with turn signal Interior Features",
+      "Entune\u2122 Audio Plus with Connected Navigation App12 \u2014 includes \u2022 Seating for up to eight",
+      "Seating for up to eight controls, Bluetooth\u00ae10 wireless technology, advanced voice and 8-in. high-resolution touch-screen display",
+      "Soft-touch in-dash shelf with easy cable management \u2022 4.2-in. color LCD Multi-Information Display (MID) with",
+      "Five total USB ports6 \u2014 3 front, 2 second row \u2022 SofTex\u00ae/cloth seats with contrast stitching turn-by-turn navigation15",
+      "24.5-liter soft-touch roll-top center console with removable utility tray \u2022 8-way power-adjustable driver\u2019s seat \u2022 Leather-trimmed seats with heated front seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

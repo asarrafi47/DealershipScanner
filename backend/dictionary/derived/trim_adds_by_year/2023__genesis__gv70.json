@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2023|genesis|gv70",
+  "year": 2023,
+  "make": "genesis",
+  "model": "GV70",
+  "ladder_id": "brochure_llm_2023__genesis__gv70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT",
+    "VOLUME"
+  ],
+  "adds_by_trim": {
+    "SPORT": [
+      "3.5T AWD engine with premium fuel (19/24/21 MPG EPA estimates)",
+      "19-inch wheels standard"
+    ],
+    "VOLUME": [
+      "2.5T AWD engine (22/28/24 MPG EPA estimates with 18-inch wheels)",
+      "18-inch wheels standard"
+    ]
+  }
+}

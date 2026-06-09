@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2016|bmw|3series",
+  "year": 2016,
+  "make": "BMW",
+  "model": "3 Series",
+  "ladder_id": "brochure_llm_2016__bmw__3series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "340i xDrive",
+    "340i",
+    "328i",
+    "320i"
+  ],
+  "adds_by_trim": {
+    "340i xDrive": [
+      "All-wheel drive system",
+      "New six-cylinder engine with 320 hp",
+      "Adaptive M Suspension chassis available",
+      "Enhanced traction and control in all weather conditions"
+    ],
+    "340i": [
+      "New six-cylinder engine with 320 hp",
+      "Adaptive M Suspension chassis available",
+      "Sport Line elements standard",
+      "Superior performance and driving pleasure"
+    ],
+    "328i": [
+      "Sport Line elements standard",
+      "TwinPower Turbo technology",
+      "8-speed Sport Automatic transmission or 6-speed manual"
+    ],
+    "320i": [
+      "Dynamic new styling with emotional design",
+      "Available Adaptive LED Headlights",
+      "8-speed Sport Automatic transmission or 6-speed manual",
+      "Near-perfect 50/50 weight distribution",
+      "Dynamic Stability Control",
+      "Refined steering and improved handling"
+    ]
+  }
+}

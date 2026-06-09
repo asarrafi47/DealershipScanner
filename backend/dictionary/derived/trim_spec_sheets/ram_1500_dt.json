@@ -1,0 +1,107 @@
+{
+  "ladder_id": "ram_1500_dt",
+  "make": "Ram",
+  "models": [
+    "1500",
+    "1500 (DT)",
+    "Ram 1500",
+    "1500 DT"
+  ],
+  "year_min": 2019,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Tradesman": [
+      {
+        "label": "Screen Size",
+        "value": "Uconnect 3 with 5-inch display"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Entry work-truck trim with vinyl or cloth seating"
+      }
+    ],
+    "Tradesman HFE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ],
+    "Lone Star": [
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "Off-Road Group available: locking rear diff, skid plates, tow hooks"
+      }
+    ],
+    "Laramie": [
+      {
+        "label": "Screen Size",
+        "value": "Leather seating and upgraded Uconnect infotainment"
+      }
+    ],
+    "Laramie Longhorn": [
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "Trailer Tow Group with integrated trailer aids"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Navigation and premium audio standard"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Western luxury interior with wood and leather"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "Blind spot monitoring, rear cross path detection, trailer detection"
+      },
+      {
+        "label": "Screen Size",
+        "value": "12-inch Uconnect touchscreen with navigation"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon premium audio"
+      }
+    ],
+    "TRX": [
+      {
+        "label": "Engine Options",
+        "value": "Supercharged 6.2L HEMI V8 — 702 hp and 650 lb-ft torque; 8-speed automatic transmission"
+      },
+      {
+        "label": "Suspension",
+        "value": "Bilstein Black Hawk e2 adaptive performance shocks with remote reservoirs; wide-body desert-rated suspension"
+      },
+      {
+        "label": "Screen Size",
+        "value": "12-inch Uconnect 5 NAV touchscreen with navigation"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "19-speaker Harman Kardon premium audio system"
+      }
+    ],
+    "Tungsten": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L Hurricane twin-turbo inline-six engine"
+      },
+      {
+        "label": "Screen Size",
+        "value": "14.5-inch Uconnect 5 touchscreen with navigation"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Elite interior with quilted leather and suede headliner"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Power deployable running boards and premium sound"
+      }
+    ]
+  }
+}

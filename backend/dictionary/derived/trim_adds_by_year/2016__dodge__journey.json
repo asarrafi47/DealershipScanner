@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2016|dodge|journey",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2016__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "Crossroad Plus",
+    "Crossroad",
+    "SXT",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "R/T": [
+      "3.6-liter Pentastar V6 engine with 6-speed automatic transmission",
+      "High-performance suspension tuning",
+      "Dual bright exhaust tips",
+      "LED taillamps with Gloss Black bezels",
+      "Power 6-way driver seat with lumbar adjuster",
+      "Front passenger forward fold-flat seat with Flip 'n Stow storage",
+      "Dimple leather-wrapped steering wheel with Red stitching",
+      "Easy-entry 2nd-row Tilt 'n Slide with 3rd-row fold-flat seating"
+    ],
+    "Crossroad Plus": [
+      "All-Wheel Drive standard",
+      "Performance-tuned suspension with AWD capability",
+      "8.4-inch touchscreen Radio with CD/DVD player and SiriusXM",
+      "Dual-Zone Automatic Temperature Control",
+      "Remote Start System standard",
+      "Security Alarm included"
+    ],
+    "Crossroad": [
+      "8.4-inch touchscreen Radio with CD/DVD player",
+      "Dual-Zone Automatic Temperature Control",
+      "Fog lamps with Gloss Black surrounds",
+      "LED taillamps",
+      "Performance fascia with Platinum Chrome accents",
+      "Platinum Chrome roof rails",
+      "Platinum Chrome extended side sills"
+    ],
+    "SXT": [
+      "2.4-liter I4 engine with 4-speed automatic transmission standard",
+      "Normal-duty or Touring suspension options",
+      "Fog lamps standard",
+      "Automatic halogen headlamps with off time delay",
+      "Power windows with front-row 1-touch up/down",
+      "Power heated body-color mirrors",
+      "3-Zone Manual Temperature Control with Flexible Seating Group"
+    ],
+    "ES": [
+      "2.4-liter I4 DOHC 16-valve engine with dual VVT",
+      "4-speed automatic transmission",
+      "Front-wheel drive",
+      "160-amp alternator and maintenance-free battery",
+      "All-speed traction control system",
+      "Advanced multistage front airbags with side-curtain airbags",
+      "Remote keyless entry with illuminated entry",
+      "SiriusXM radio with 1-year service contract",
+      "Tire pressure monitoring display"
+    ]
+  }
+}

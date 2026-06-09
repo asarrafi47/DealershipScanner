@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2021|ford|ecosport",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Ecosport",
+  "ladder_id": "brochure_2021__ford__ecosport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Titanium"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "Adds 1.0L EcoBoost engine with standard powertrain",
+      "Adds front-wheel drive (FWD) as base drivetrain option",
+      "Adds intelligent 4WD as available drivetrain upgrade",
+      "Adds 3-year/36,000-mile bumper-to-bumper coverage",
+      "Adds 5-year/60,000-mile powertrain warranty"
+    ],
+    "Limited": [
+      "Upgraded to 2.0L Ti-VCT I-4 engine",
+      "Adds enhanced EPA-estimated fuel economy ratings"
+    ]
+  }
+}

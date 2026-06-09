@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|toyota|avalon",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Avalon",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "LE",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "Adds to or replaces features offered on XLE Premium Adds to or replaces features offered on Touring",
+      "Powertrain Powertrain",
+      "3.5-liter V6 engine \u2022 3.5-liter V6 engine",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "268 hp @ 6200 rpm \u2022 268 hp @ 6200 rpm",
+      "21 city/30 hwy/24 combined est. mpg41 \u2022 21 city/30 hwy/24 combined est. mpg41",
+      "Exterior Features Exterior Features",
+      "18-in. dark gray painted alloy wheels2 \u2022 18-in. Super Chrome alloy wheels2",
+      "Touring-specific suspension \u2022 High Intensity Discharge (HID) Quadrabeam headlights with",
+      "L ED (light-emitting diode) headlights with auto on/off feature and auto on/off feature and LED Daytime Running Lights (DRL)",
+      "LED Daytime Running Lights (DRL) with on/off feature with on/off feature",
+      "C hrome front grille surround with piano-black insert \u2022 Color-keyed heated, auto-dimming power outside mirrors with"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Plus",
+      "Powertrain Powertrain Powertrain",
+      "3.5-liter V6 engine \u2022 3.5-liter V6 engine \u2022 3.5-liter V6 engine",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "268 hp @ 6200 rpm \u2022 268 hp @ 6200 rpm \u2022 268 hp @ 6200 rpm",
+      "21 city/30 hwy/24 combined est. mpg41 \u2022 21 city/30 hwy/24 combined est. mpg41 \u2022 21 city/30 hwy/24 combined est. mpg41",
+      "Exterior Features Exterior Features Interior Features",
+      "Smoked LED taillights \u2022 Power tilt/slide moonroof with sliding sunshade \u2022 Entune\u2122 Premium Audio with Integrated Navigation14 and App",
+      "17-in. dark gray painted alloy wheels with machined finish \u2022 Smart Key System18 on front doors and trunk with Push Button Start Suite15 \u2014 includes the Entune\u2122 Multimedia Bundle4 (7-in. high-",
+      "Quadrabeam halogen headlights with auto on/off feature and and remote illuminated entry resolution touch-screen with split-screen display, AM/FM CD",
+      "Daytime Running Lights (DRL) with on/off feature Interior Features",
+      "Dual chrome-tipped integrated exhaust with chrome-accented cover"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

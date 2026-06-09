@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|acura|ilx",
+  "year": 2022,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "brochure_llm_2022__acura__ilx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ILX with A-Spec® and Technology Packages",
+    "ILX with A-Spec® and Premium Packages",
+    "ILX with Premium Package",
+    "ILX"
+  ],
+  "adds_by_trim": {
+    "ILX with A-Spec® and Technology Packages": [
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with Street and Freeway Conditions",
+      "Traffic Rerouting",
+      "GPS-Linked Climate Control",
+      "ELS Studio Premium Audio System with 10 Speakers",
+      "AcuraLink Connected Services",
+      "Song By Voice"
+    ],
+    "ILX with A-Spec® and Premium Packages": [
+      "18-inch Shark Gray 15-Spoke Noise-Reducing Wheels",
+      "225/40 R18 High-Performance All-Season Tires",
+      "LED Fog Lights",
+      "Dark Internal Headlights and Taillights",
+      "Piano Black Decklid Spoiler and Rear Diffuser",
+      "Sport A-Spec Seats with Perforated Milano Leather and Ultrasuede Interior",
+      "Leather-Wrapped A-Spec Steering Wheel",
+      "Exclusive A-Spec Red Instrument Panel Illumination",
+      "Stainless Steel Sport Pedals"
+    ],
+    "ILX with Premium Package": [
+      "17-inch Pewter Silver Metallic Machine-Finished Y-Spoke Noise-Reducing Wheels",
+      "Sport Seats with Perforated Milano Premium Leather-Trimmed Interior",
+      "Front Passenger's 4-Way Power Seat with Power Lumbar Support",
+      "Blind Spot Information System",
+      "Rear Cross Traffic Monitor",
+      "Acura Premium Audio System with 7 Speakers including Subwoofer",
+      "On Demand Multi-Use Display 2.0",
+      "Apple CarPlay and Android Auto Integration",
+      "SiriusXM Satellite Radio",
+      "Automatic-Dimming Rearview Mirror"
+    ],
+    "ILX": [
+      "Standard ILX base trim with core features"
+    ]
+  }
+}

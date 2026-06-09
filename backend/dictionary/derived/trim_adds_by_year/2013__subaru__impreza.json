@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|subaru|impreza",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2013__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Sport Limited",
+    "2.0i Sport Premium",
+    "2.0i Premium",
+    "2.0i Limited",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "2.0i Sport Limited": [
+      "Body-color folding side mirrors with chrome accents on door handles",
+      "Leather-trimmed upholstery",
+      "6-speaker single-CD audio with 4.3-inch LCD, HD Radio and iTunes tagging",
+      "Automatic climate control system",
+      "Automatic transmission manual-mode paddle shifters"
+    ],
+    "2.0i Sport Premium": [
+      "Leather-trimmed steering wheel and automatic transmission shifter handle",
+      "Center console with adjustable armrest lid",
+      "Electronic cruise control",
+      "3-spoke steering wheel with audio, cruise and Bluetooth hands-free controls"
+    ],
+    "2.0i Premium": [
+      "Body-color folding side mirrors and door handles",
+      "Heated side mirrors, windshield wiper de-icer and heated front seats",
+      "6-speaker single-CD audio with USB/iPod control and Bluetooth",
+      "Center console with adjustable armrest lid",
+      "Electronic cruise control"
+    ],
+    "2.0i Limited": [
+      "Body-color door handles",
+      "6-speaker single-CD audio with USB/iPod control and Bluetooth",
+      "Center console with adjustable armrest lid",
+      "Electronic cruise control",
+      "3-spoke steering wheel with audio and Bluetooth hands-free controls"
+    ],
+    "2.0i": [
+      "Subaru Symmetrical All-Wheel Drive",
+      "Subaru Boxer engine with 4-wheel antilock brakes and Electronic Brake-force Distribution",
+      "Vehicle Dynamics Control and Traction Control System",
+      "Dual-stage deployment front airbags and side-curtain airbags",
+      "4-speaker single-CD audio with USB/iPod and Bluetooth connectivity"
+    ]
+  }
+}

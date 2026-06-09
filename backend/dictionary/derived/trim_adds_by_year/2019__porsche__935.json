@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2019|porsche|935",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "935",
+  "ladder_id": "brochure_2019__porsche__935",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT3",
+    "Turbo",
+    "Limited",
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [],
+    "Sport": [],
+    "Limited": [
+      "Adds unique dash plaque design indicating Limited Edition number"
+    ],
+    "Turbo": [],
+    "GT3": []
+  }
+}

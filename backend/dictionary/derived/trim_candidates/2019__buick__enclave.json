@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2019|buick|enclave",
+  "year": 2019,
+  "make": "Buick",
+  "model": "Enclave",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Avenir",
+    "Essence",
+    "Preferred",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

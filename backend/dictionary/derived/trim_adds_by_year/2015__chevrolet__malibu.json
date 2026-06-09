@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|chevrolet|malibu",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2015__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTz",
+    "3LT",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTz": [
+      "Leather-appointed seating with vinyl perimeter accents",
+      "8-way power passenger seat adjuster with lumbar control"
+    ],
+    "3LT": [
+      "Premium Cloth with leatherette bolsters seating",
+      "8-way power driver seat adjuster with lumbar control"
+    ],
+    "2LT": [
+      "Premium Cloth with leatherette bolsters seating"
+    ],
+    "1LT": [
+      "Premium Cloth with leatherette bolsters seating option",
+      "8-way power driver seat adjuster with lumbar control"
+    ],
+    "LS": [
+      "ECOTEC 2.5L DOHC 4-cylinder engine with Direct Injection and stop/start technology",
+      "196 hp @ 6300 rpm, 186 lb.-ft. torque @ 4400 rpm",
+      "Cloth seating with front bucket seats and 60/40 split-folding rear seatback",
+      "2-way power vertical seat adjusters with adjustable head restraints",
+      "Tire sealant and compressor kit for temporary puncture sealing"
+    ]
+  }
+}

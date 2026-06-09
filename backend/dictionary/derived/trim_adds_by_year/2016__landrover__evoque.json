@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|landrover|evoque",
+  "year": 2016,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_llm_2016__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Autobiography",
+    "HSE Dynamic",
+    "HSE",
+    "SE Premium",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Autobiography": [
+      "Perforated Oxford leather seating",
+      "Dark Grey Oak Wood trim finisher",
+      "Figured Macassar Wood trim finisher option",
+      "Ivory/Espresso or Espresso/Ivory interior colorways"
+    ],
+    "HSE Dynamic": [
+      "Perforated Oxford leather seating with Dual Tone option",
+      "Gloss Black Strata trim finisher",
+      "Textured Aluminum trim finisher",
+      "Expanded exterior color palette including Scotia Grey and Santorini Black"
+    ],
+    "HSE": [
+      "Perforated Oxford leather seating",
+      "Gloss Black Strata trim finisher",
+      "Ivory/Ebony interior colorway option",
+      "Dark Grey Oak Wood trim finisher availability"
+    ],
+    "SE Premium": [
+      "Perforated Grained leather seating option",
+      "Satin Brushed Aluminum trim finisher",
+      "Textured Aluminum trim finisher",
+      "Lunar/Ivory interior colorway"
+    ],
+    "SE": [
+      "Grained leather seating",
+      "Satin Brushed Aluminum trim finisher",
+      "Textured Aluminum trim finisher",
+      "Gloss Black Strata trim finisher",
+      "Loadspace Treadplate stainless steel finisher availability"
+    ]
+  }
+}

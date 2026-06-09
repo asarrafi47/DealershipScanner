@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2025|toyota|tundra",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Tundra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Capstone",
+    "1794",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "SR",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

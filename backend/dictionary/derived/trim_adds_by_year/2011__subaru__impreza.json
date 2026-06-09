@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|subaru|impreza",
+  "year": 2011,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2011__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.5i Premium Sport",
+    "2.5i Premium",
+    "2.5i Outback"
+  ],
+  "adds_by_trim": {
+    "2.5i Premium Sport": [
+      "Silver-painted door handles",
+      "Front and rear bumper underguards",
+      "Leather-wrapped 3-spoke steering wheel with audio and Bluetooth controls",
+      "Leather-wrapped shifter handle",
+      "6-speaker audio system with CD/MP3/WMA and Bluetooth connectivity",
+      "Optional TomTom Navigation System with 6-speaker audio and 4.3-inch touchscreen"
+    ],
+    "2.5i Premium": [
+      "Leather-wrapped 3-spoke steering wheel with audio and Bluetooth controls",
+      "6-speaker audio system with CD/MP3/WMA and Bluetooth connectivity",
+      "Heated front seats with All-Weather Package",
+      "Power tilt/sliding-glass moonroof with optional Power Moonroof Value Package",
+      "Optional TomTom Navigation System with integrated 6-speaker audio and 4.3-inch display"
+    ],
+    "2.5i Outback": [
+      "Subaru Symmetrical All-Wheel Drive standard",
+      "SUBARU BOXER engine standard",
+      "Vehicle Dynamics Control and Traction Control System",
+      "4-wheel antilock braking system with Electronic Brake-force Distribution",
+      "3-spoke steering wheel with cruise control buttons",
+      "Tricot upholstery",
+      "4-speaker audio system with single-disc CD player and MP3/WMA playback",
+      "Manually adjustable CFC-free air-conditioning system",
+      "Roof Carrier Bars available",
+      "Body side moldings available"
+    ]
+  }
+}

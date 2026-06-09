@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2026_audi_q8_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q8",
+    "Q8"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Petrol plug-in hybrid:"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A2)"
+      }
+    ],
+    "Quattro": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A2)"
+      }
+    ]
+  }
+}

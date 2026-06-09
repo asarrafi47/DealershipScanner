@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|chevrolet|camaro",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2018__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZL1",
+    "2SS",
+    "1SS",
+    "2LT",
+    "1LT",
+    "1LS"
+  ],
+  "adds_by_trim": {
+    "ZL1": [
+      "Summer-only performance tires standard",
+      "20-inch 5-split-spoke Satin Graphite forged-aluminum wheels (20x10 front, 20x11 rear)"
+    ],
+    "2SS": [
+      "20-inch Black-painted aluminum wheels with Red accents (20x8.5 front, 20x9.5 rear)",
+      "Summer-only performance tires standard"
+    ],
+    "1SS": [
+      "Available 1LE Performance Package option"
+    ],
+    "2LT": [
+      "Available Ceramic White Interior Accent Trim Package with White seat inserts and stitching"
+    ],
+    "1LT": [
+      "Available Redline Edition with Black front and rear bowtie emblems"
+    ],
+    "1LS": [
+      "OnStar Basic Plan for five years with myChevrolet Mobile App remote features",
+      "Chevrolet MyLink navigation screen capability",
+      "Standard safety and security features"
+    ]
+  }
+}

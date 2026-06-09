@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2011|hyundai|veracruz",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Veracruz",
+  "ladder_id": "brochure_llm_2011__hyundai__veracruz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Power tilt-and-slide sunroof with power tailgate",
+      "Auto-dimming interior mirror with HomeLink®",
+      "Auto-dimming tilt-in-reverse exterior mirrors",
+      "Heated front seats on FWD models",
+      "Windshield wiper de-icer",
+      "Navigation system with Landaivre® and USB/auxiliary jack",
+      "Premium seat cloth and leather seating options"
+    ],
+    "GLS": [
+      "3.8L DOHC 24-valve V6 engine with CVVT and variable intake",
+      "6-speed automatic transmission with SHIFTRONIC® and electronic overdrive",
+      "17-inch five-split-spoke alloy wheels",
+      "Electronic Stability Control with Traction Control",
+      "ABS with Electronic Brake-force Distribution and Brake Assist",
+      "Advanced front airbags, front seat-mounted side airbags, side curtain airbags",
+      "Active front head restraints",
+      "Roof side rails and rear spoiler",
+      "Backup warning system",
+      "Leather-wrapped steering wheel and shift knob"
+    ]
+  }
+}

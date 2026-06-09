@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|lotus|exige",
+  "year": 2019,
+  "make": "Lotus",
+  "model": "Exige",
+  "ladder_id": "brochure_web_2019__lotus__exige",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Sport 410",
+    "Sport 410 20th Anniversary Edition"
+  ],
+  "adds_by_trim": {
+    "Sport 410": [
+      "3.5L supercharged V6 engine producing 410 horsepower",
+      "6-speed manual transmission",
+      "Independent double-wishbone suspension front and rear",
+      "Brembo brakes with ABS",
+      "17-inch forged aluminum wheels",
+      "Leather-wrapped steering wheel",
+      "Air conditioning",
+      "Power steering",
+      "Minimal sound deadening for lightweight performance"
+    ],
+    "Sport 410 20th Anniversary Edition": [
+      "All Sport 410 features",
+      "Exclusive 20th Anniversary badging and trim",
+      "Special exterior color and design elements",
+      "Enhanced interior appointments",
+      "Commemorative details celebrating model heritage"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/exige/"
+}

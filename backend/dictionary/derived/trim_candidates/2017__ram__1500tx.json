@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2017|ram|1500tx",
+  "year": 2017,
+  "make": "ram",
+  "model": "1500TX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Rebel",
+    "Big Horn",
+    "Lone Star",
+    "Tradesman",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

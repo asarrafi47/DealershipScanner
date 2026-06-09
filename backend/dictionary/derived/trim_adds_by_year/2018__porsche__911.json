@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2018|porsche|911",
+  "year": 2018,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2018__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "2TG",
+    "119"
+  ],
+  "adds_by_trim": {
+    "2TG": [
+      "Sport Chrono stopwatch instrument dial in white or Guards Red",
+      "Interior package painted in exterior colour",
+      "Air vents painted in exterior colour",
+      "Sports bucket seatbelt passages painted in exterior colour"
+    ],
+    "119": [
+      "Chrono Package with lap trigger preparation",
+      "Factory collection in Leipzig with intensive driving induction",
+      "Exclusive Alcantara® interior trim options including door panels and storage lids",
+      "Carbon fibre door sill guards and floor mats with leather edging",
+      "Porsche Exclusive Manufaktur personalisation options throughout interior"
+    ],
+    "SR": [
+      "7-speed Porsche Doppelkupplung PDK transmission",
+      "Porsche Ceramic Composite Brake PCCB system",
+      "Porsche Communication Management with online navigation and voice control",
+      "Connect Plus module with LTE telephone and wireless internet access",
+      "Porsche Track Precision App and Sound Package Plus",
+      "Front-axle lift system for ground clearance management",
+      "Leather interior in black and red standard",
+      "White Gold Metallic high-gloss painted wheels"
+    ]
+  }
+}

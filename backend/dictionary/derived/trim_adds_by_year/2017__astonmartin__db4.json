@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2017|astonmartin|db4",
+  "year": 2017,
+  "make": "Aston Martin",
+  "model": "db4",
+  "ladder_id": "brochure_web_2017__astonmartin__db4",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "DB4 Zagato",
+    "DB4"
+  ],
+  "adds_by_trim": {
+    "DB4": [
+      "4.7L V8 engine with 510 horsepower",
+      "6-speed manual transmission",
+      "Leather upholstery throughout interior",
+      "Power-adjustable front seats with lumbar support",
+      "Climate control air conditioning",
+      "Power windows and locks",
+      "AM/FM radio with CD player",
+      "17-inch alloy wheels"
+    ],
+    "DB4 Zagato": [
+      "Exclusive Zagato design and bodywork",
+      "Carbon fiber body panels and trim details",
+      "Upgraded interior leather and Alcantara combinations",
+      "Enhanced suspension tuning",
+      "Unique wheel design specific to Zagato variant"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/aston-martin/db4/"
+}

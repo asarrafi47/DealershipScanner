@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|lexus|gx",
+  "year": 2017,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2017__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes four-year/50,000-mile Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Features Intuitive Parking Assist system",
+      "Adds Includes Navigation System",
+      "Adds Features Crawl Control for off-road terrain",
+      "Adds Includes Downhill Assist Control and Hill-start Assist Control",
+      "Adds Features Trailer Sway Control system",
+      "Adds Includes single-disc DVD player with dual-screen capability"
+    ],
+    "Premium": [
+      "Adds Dynamic Radar Cruise Control",
+      "Adds Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert system",
+      "Adds Pre-Collision System with frontal collision detection",
+      "Adds Driver Attention Monitor",
+      "Adds Wide-view Front and Side Monitor system",
+      "Adds backup camera",
+      "Upgraded to Mark Levinson premium audio system",
+      "Adds Bluetooth hands-free phone system with HD Radio capability",
+      "Adds Enform Safety Connect services with remote vehicle access"
+    ]
+  }
+}

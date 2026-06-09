@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2020|landrover|rangeroversport",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2020__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Range Rover Sport SVR",
+    "Range Rover Sport Autobiography",
+    "Range Rover Sport P400",
+    "Range Rover Sport P360",
+    "Range Rover Sport P400e",
+    "Range Rover Sport TDV6"
+  ],
+  "adds_by_trim": {
+    "Range Rover Sport SVR": [
+      "5.0L V8 Supercharged engine with 518 HP and 516 lb-ft torque",
+      "0-60 mph acceleration in 4.3 seconds",
+      "Maximum speed of 176 mph",
+      "380mm front ventilated disc brakes with enhanced stopping power",
+      "Sportier exterior design cues and muscular stance"
+    ],
+    "Range Rover Sport Autobiography": [
+      "Premium interior design and materials",
+      "Enhanced comfort and luxury appointments",
+      "Advanced technology package integration",
+      "Distinctive styling elements"
+    ],
+    "Range Ranger Sport P400": [
+      "5.0L V8 Supercharged engine with 518 HP and 516 lb-ft torque",
+      "0-60 mph acceleration in 5.0 seconds",
+      "Maximum speed of 140 mph",
+      "380mm front ventilated disc brakes"
+    ],
+    "Range Rover Sport P360": [
+      "3.0L Gas engine with 355 HP and 365 lb-ft torque",
+      "0-60 mph acceleration in 6.2 seconds",
+      "363mm front ventilated disc brakes",
+      "27.6 gallon fuel tank capacity"
+    ],
+    "Range Rover Sport P400e": [
+      "2.0L Turbocharged gas engine with 141 HP electric motor (398 HP combined)",
+      "472 lb-ft combined torque from engine and electric motor",
+      "Plug-in Hybrid Electric Vehicle (PHEV) technology",
+      "Integrated Starter Generator for virtually instant engine starting",
+      "0-60 mph acceleration in 6.3 seconds",
+      "Electric motor produces maximum torque from standstill",
+      "Enhanced off-road capabilities with low-speed electric motor assistance"
+    ],
+    "Range Rover Sport TDV6": [
+      "3.0L TDV6 Diesel engine with 254 HP and 443 lb-ft torque",
+      "Mild Hybrid Electric Vehicle (MHEV) Stop/Start technology",
+      "Smart regenerative charging system",
+      "0-60 mph acceleration in 7.2 seconds",
+      "22.7 gallon fuel tank capacity",
+      "Clean and efficient diesel combustion"
+    ]
+  }
+}

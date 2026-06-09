@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2023|hyundai|santacruz",
+  "year": 2023,
+  "make": "Hyundai",
+  "model": "Santa Cruz",
+  "ladder_id": "brochure_llm_2023__hyundai__santacruz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL Premium",
+    "NIGHT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "20-inch alloy wheels",
+      "Dark gray leather interior with orange accents",
+      "Apple CarPlay standard connectivity"
+    ],
+    "SEL Premium": [
+      "Available wireless charging pad for smartphones",
+      "Available front seat heating or ventilation controls",
+      "Audio Video Navigation System 5.0 or Display Audio 2.0"
+    ],
+    "NIGHT": [
+      "Dark gray leather interior with orange accents option"
+    ],
+    "SEL": [
+      "Gray cloth interior option",
+      "18-inch alloy wheels standard"
+    ],
+    "SE": [
+      "Black cloth interior",
+      "Wired or wireless Apple CarPlay and Android Auto",
+      "Dual front USB charge ports standard",
+      "Bluelink connectivity with three-year trial included"
+    ]
+  }
+}

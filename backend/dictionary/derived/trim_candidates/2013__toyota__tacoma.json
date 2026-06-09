@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2013|toyota|tacoma",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "TRD"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

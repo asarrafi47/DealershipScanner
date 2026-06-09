@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2011|audi|q5",
+  "year": 2011,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2011__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q5 Prestige",
+    "Q5 Premium Plus",
+    "Q5 Premium"
+  ],
+  "adds_by_trim": {
+    "Q5 Prestige": [
+      "Available on 3.2L engine with six-speed Tiptronic automatic transmission",
+      "Additional optional packages and accessories beyond Premium Plus offerings"
+    ],
+    "Q5 Premium Plus": [
+      "Eight-speed Tiptronic automatic transmission with sport and manual shift programs on 2.0T",
+      "Popular options combined and available as packages"
+    ],
+    "Q5 Premium": [
+      "Five-link front suspension with upper and lower control arms and stabilizer bar",
+      "Independent trapezoidal-link rear suspension with rigid subframe and stabilizer bar",
+      "Servotronic speed-sensitive power steering varying assistance based on vehicle speed",
+      "quattro permanent all-wheel drive system with torque-sensing center differential",
+      "Trailer hitch preparation with 4400 lbs maximum towing capacity",
+      "Fully galvanized steel unibody with multistep anti-corrosion protection and aluminum hood/tailgate",
+      "Advanced dual-stage airbags and seat-mounted side thorax airbags",
+      "Sideguard head curtain airbags with rollover sensor for both rows",
+      "Electronic Stabilization Program with rollover mitigation and crossbar detection",
+      "Anti-lock Brake System with Electronic Brake-pressure Distribution"
+    ]
+  }
+}

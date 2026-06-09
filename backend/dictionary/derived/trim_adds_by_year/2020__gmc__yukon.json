@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2020|gmc|yukon",
+  "year": 2020,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "brochure_web_2020__gmc__yukon",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali Ultimate",
+    "AT4 Ultimate",
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali Ultimate": [
+      "24-inch machined wheels",
+      "6.2-liter V-8 engine with 420 hp and 460 lb-ft torque",
+      "22-speaker Bose sound system",
+      "Open-pore wood interior with laser-etched topographical patterns",
+      "Heated, ventilated, and massaging second-row executive seats",
+      "Available head-up display for Night Vision thermal camera alerts"
+    ],
+    "AT4 Ultimate": [
+      "20-inch wheels",
+      "Four-corner adaptive air suspension with 2.0 inches extra ground clearance",
+      "6.2-liter V-8 engine with 420 hp and 460 lb-ft torque",
+      "Plush appointments with rugged off-road capability"
+    ],
+    "Denali": [
+      "6.2-liter V-8 engine with 420 hp and 460 lb-ft torque standard",
+      "Second-row executive seating option",
+      "Premium luxury interior appointments"
+    ],
+    "AT4": [
+      "5.3-liter V-8 engine standard with 355 hp and 383 lb-ft torque",
+      "Off-road focused trim with rugged capability",
+      "6.2-liter V-8 engine optional"
+    ],
+    "Elevation": [
+      "5.3-liter V-8 engine with 355 hp and 383 lb-ft torque",
+      "11.0-inch digital instrument cluster",
+      "16.8-inch infotainment screen",
+      "8.0-inch climate control screen available for rear passengers",
+      "Front pedestrian and bicyclist braking",
+      "Intersection automatic emergency braking",
+      "Rear cross-traffic braking",
+      "Side bicyclist alert",
+      "Super Cruise hands-free highway driving available with trailering",
+      "Night Vision with thermal cameras"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/yukon/"
+}

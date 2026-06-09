@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2021|ford|f150",
+  "year": 2021,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2021__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "KING RANCH",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "KING RANCH": [
+      "Del Rio leather front and rear seats",
+      "King Ranch fender badges, logo wheel ornaments and floor mats",
+      "Ford Co-Pilot360 Assist 2.0 with adaptive steering",
+      "LED projector headlamps with dynamic bending",
+      "Real Sapele wood interior accents",
+      "Wireless charging pad",
+      "B&O 8-speaker sound system",
+      "Historic King Ranch Carriage House cab etching"
+    ],
+    "XLT": [
+      "Ford Co-Pilot360 2.0 safety suite",
+      "Power windows and locks",
+      "Manual-folding sideview mirrors with power heated glass",
+      "Fog lamps",
+      "MyKey vehicle management system"
+    ],
+    "XL": [
+      "40/20/40 split bench seating on Regular Cab",
+      "Available bucket seats with center console on SuperCab",
+      "Available SuperCrew configuration with 5.5-foot or 6.5-foot box",
+      "Choice of 6.5-foot or 8-foot cargo box options"
+    ]
+  }
+}

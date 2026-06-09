@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2021_porsche_718_complete_options",
+  "make": "Porsche",
+  "models": [
+    "718",
+    "718"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V6 Turbo; Manual 6-spd"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "[Brochure] Bose audio"
+      }
+    ]
+  }
+}

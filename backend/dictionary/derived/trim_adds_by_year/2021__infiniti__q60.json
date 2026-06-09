@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|infiniti|q60",
+  "year": 2021,
+  "make": "Infiniti",
+  "model": "Q60",
+  "ladder_id": "brochure_llm_2021__infiniti__q60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RED SPORT 400",
+    "Q60",
+    "Q60 LUXE",
+    "Q60 PURE"
+  ],
+  "adds_by_trim": {
+    "RED SPORT 400": [
+      "3.0-liter twin-turbocharged V6 engine with 400 hp and 350 lb-ft torque",
+      "Dynamic Digital Suspension",
+      "Sport brakes with red finish calipers",
+      "20-inch staggered aluminum-alloy sport wheels",
+      "Front and rear sonar system",
+      "Steering wheel-mounted paddle shifters",
+      "Black-painted front grille surround, fender vent and side mirrors",
+      "Genuine matte black carbon fiber interior trim",
+      "Exclusive dark chrome interior accents",
+      "Dashboard and shifter with red contrast stitching"
+    ],
+    "Q60": [
+      "Power sliding/tinted glass moonroof and sliding sunshade",
+      "Semi-aniline leather-appointed seats",
+      "Driver's seat power lumbar and side bolsters",
+      "Heated front seats and steering wheel",
+      "Aluminum accented sport pedals",
+      "Intelligent Cruise Control with full-speed range",
+      "Distance Control Assist",
+      "Bose Performance Series Audio with 13-speaker stereo and Bose CenterPoint simulated surround",
+      "HomeLink universal transceiver",
+      "Auto-dimming rearview mirror with compass"
+    ],
+    "Q60 LUXE": [
+      "INFINITI InTouch dual HD display system",
+      "Apple CarPlay integration",
+      "Android Auto compatibility",
+      "SiriusXM Radio with Advanced Audio Features and 3-month trial",
+      "Streaming audio via Bluetooth",
+      "1 USB Type-A and 1 USB Type-C ports",
+      "Automatic Collision Notification and Emergency Call",
+      "Wi-Fi Hotspot",
+      "Dual Zone Automatic Temperature Control System",
+      "INFINITI Intelligent Key with push button start"
+    ],
+    "Q60 PURE": [
+      "3.0-liter twin-turbocharged V6 engine with 300 hp and 295 lb-ft torque",
+      "7-speed automatic transmission with manual shift mode and downshift rev matching",
+      "Rack electronic power steering",
+      "Rear-wheel drive or INFINITI Intelligent All-Wheel Drive",
+      "LED automatic-on/off headlights with signature daytime running lights",
+      "LED signature taillights and front fog lights",
+      "19-inch aluminum-alloy wheels with 255/40R19 run-flat all-season tires",
+      "RearView monitor",
+      "Anti-lock braking system with brake assist",
+      "Leatherette seating with brushed aluminum interior trim"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "ladder_id": "2021_mitsubishi_rvr_complete_options",
+  "make": "Mitsubishi",
+  "models": [
+    "RVR",
+    "RVR"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Automatic Transmission shift lock was mechanism instead of an electrical control, a unique method that deregulation was mechanically wire extending from the brake pedal. This was also the advantage of being unaffected by the battery. (was The mid-model…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The mid-model sports model with a detuned type of turbo engine 4G63 is also carr; cc 4D68 turbo I4 (was cc 4G63T 16V turbo DOHC I4; Originally installed with a naturally aspirated 2.0L/1.8L petrol engine, it was)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The optional sliding bench rear seats could accommodate three people, with the s"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: cc 4G63T 16V turbo DOHC I4; Originally installed with a naturally aspirated 2.0L/1.8L petrol engine, it was (was cc 4D65 turbo I4; In North America, a 2.4 L (2,351 cc) 135 hp (101 kW) engine was available on FWD)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: The optional sliding bench rear seats could accommodate three people, with the s"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: cc 4D65 turbo I4; In North America, a 2.4 L (2,351 cc) 135 hp (101 kW) engine was available on FWD"
+      }
+    ]
+  }
+}

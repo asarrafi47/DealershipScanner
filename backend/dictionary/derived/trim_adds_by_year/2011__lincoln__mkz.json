@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2011|lincoln|mkz",
+  "year": 2011,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_2011__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 17-in. 9-spoke machined aluminum wheels with painted pockets"
+    ],
+    "Limited": [
+      "optional equipment. Features shown may be"
+    ],
+    "Standard": [
+      "Adds Sport Appearance Package with 18-in. 10-spoke polished aluminum wheels"
+    ]
+  }
+}

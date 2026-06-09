@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2017|chevrolet|corvette",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Z06",
+    "Stingray",
+    "Limited",
+    "Sport",
+    "Z51",
+    "Z07"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

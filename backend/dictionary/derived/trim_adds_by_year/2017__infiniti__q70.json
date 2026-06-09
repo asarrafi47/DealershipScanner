@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2017|infiniti|q70",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "Q70",
+  "ladder_id": "brochure_llm_2017__infiniti__q70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q70L 5.6",
+    "Q70L 3.7",
+    "Q70 5.6",
+    "Q70 Hybrid",
+    "Q70 3.7"
+  ],
+  "adds_by_trim": {
+    "Q70L 5.6": [
+      "Long wheelbase configuration for extended rear legroom",
+      "5.6-liter V8 engine with 416 hp and 414 lb-ft torque"
+    ],
+    "Q70L 3.7": [
+      "Long wheelbase configuration for extended rear legroom",
+      "3.7-liter V8 engine with 330 hp and 270 lb-ft torque"
+    ],
+    "Q70 5.6": [
+      "5.6-liter V8 engine with 416 hp and 414 lb-ft torque",
+      "20-inch split 5-spoke aluminum wheels with 245/40R20 all-season performance tires"
+    ],
+    "Q70 Hybrid": [
+      "3.5-liter V6 with INFINITI Direct Response Hybrid system, 360 hp net power",
+      "Hybrid Regenerative Braking System for improved efficiency",
+      "EPA estimated 28 city/33 highway mpg fuel economy"
+    ],
+    "Q70 3.7": [
+      "3.7-liter V8 engine with 330 hp and 270 lb-ft torque",
+      "18-inch double 5-spoke aluminum wheels with 245/50R18 all-season performance tires",
+      "Electronically controlled 7-speed automatic transmission with Adaptive Shift Control",
+      "Vehicle-speed-sensitive power steering",
+      "Automatic on/off LED headlights with wiper interlock",
+      "LED front fog lights and rear brake lights with center high-mounted stoplight",
+      "Power sliding tinted glass moonroof with auto-open/close and sunshade",
+      "Power folding heated auto-dimming outside mirrors with reverse tilt-down feature"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2016|lexus|nx",
+  "year": 2016,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "brochure_llm_2016__lexus__nx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NX 200t F SPORT",
+    "NX 200t",
+    "NX 300h"
+  ],
+  "adds_by_trim": {
+    "NX 200t F SPORT": [
+      "17-inch performance tires (greater wear expected than conventional tires)",
+      "F SPORT exterior and interior styling"
+    ],
+    "NX 200t": [
+      "2.0-liter turbocharged inline-4 engine",
+      "235 horsepower total system output"
+    ],
+    "NX 300h": [
+      "2.5-liter inline-4 engine with Lexus Hybrid Drive",
+      "EPA 35/31/33 city/highway/combined mpg (FWD)",
+      "Eight-year/100,000-mile Hybrid System Warranty"
+    ]
+  }
+}

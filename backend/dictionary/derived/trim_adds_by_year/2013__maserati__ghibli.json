@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2013|maserati|ghibli",
+  "year": 2013,
+  "make": "maserati",
+  "model": "ghibli",
+  "ladder_id": "brochure_web_2013__maserati__ghibli",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ghibli Trofeo 334 Ultima RWD",
+    "Ghibli Modena Ultima Q4 AWD"
+  ],
+  "adds_by_trim": {
+    "Ghibli Trofeo 334 Ultima RWD": [
+      "Twin-turbocharged 3.8-liter V-8 engine with 572 hp and 538 lb-ft torque",
+      "0-60 mph acceleration in approximately 3.7 seconds",
+      "Top speed of 208 mph (334 kph), claimed fastest combustion-powered sedan",
+      "Rear-wheel drive instead of all-wheel drive",
+      "Carbon-fiber exterior pieces and unique wheels and tires",
+      "Model-specific interior finishings",
+      "Red fender badging and exclusive Scià di Persia teal paint",
+      "Limited to 103 examples worldwide"
+    ],
+    "Ghibli Modena Ultima Q4 AWD": [
+      "Twin-turbocharged 3.0-liter V-6 engine with 424 hp and 406 lb-ft torque",
+      "Maserati Q4 all-wheel drive system",
+      "Eight-speed automatic transmission",
+      "Heated and ventilated front sport seats with red contrast stitching",
+      "Heated rear seats",
+      "Soft-close doors and power rear-window sunshade",
+      "Harman Kardon premium audio system",
+      "10.1-inch infotainment touchscreen with navigation, Apple CarPlay, and Android Auto",
+      "21-inch wheels with red brake calipers",
+      "Sporty front and rear bumpers"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/ghibli/"
+}

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2015|audi|q5",
+  "year": 2015,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2015__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q5 3.0T",
+    "Q5 TDI",
+    "Q5 hybrid",
+    "Q5 2.0T"
+  ],
+  "adds_by_trim": {
+    "Q5 3.0T": [
+      "3.0-liter six-cylinder supercharged engine with 272 horsepower",
+      "295 lb-ft torque at 2,150 rpm",
+      "6.0 second 0–60 mph acceleration",
+      "13.6-inch ventilated front and rear disc brakes",
+      "Adaptive damping suspension available on Prestige trim",
+      "Dynamic steering available on Prestige trim"
+    ],
+    "Q5 TDI": [
+      "2.967-liter six-cylinder turbocharged diesel engine with 240 horsepower",
+      "428 lb-ft torque at 1,750–2,250 rpm",
+      "6.5 second 0–60 mph acceleration",
+      "24/31/27 EPA mileage estimates city/highway/combined",
+      "Ultra-low-sulfur diesel fuel requirement",
+      "13.6-inch ventilated front and rear disc brakes"
+    ],
+    "Q5 hybrid": [
+      "54-hp water-cooled three-phase hybrid AC electric motor and generator",
+      "266-volt 72-cell lithium-ion hybrid battery system",
+      "Combined 245 horsepower and 350 lb-ft torque output",
+      "24/30/26 EPA mileage estimates city/highway/combined",
+      "6.8 second 0–60 mph acceleration",
+      "19.0 gallon fuel tank capacity"
+    ],
+    "Q5 2.0T": [
+      "2.0-liter four-cylinder turbocharged TFSI engine with 220 horsepower",
+      "258 lb-ft torque at 1,500 rpm",
+      "7.0 second 0–60 mph acceleration",
+      "12.6-inch ventilated front and 11.8-inch solid rear disc brakes",
+      "4,090 lb curb weight baseline model"
+    ]
+  }
+}

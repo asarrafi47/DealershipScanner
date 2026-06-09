@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2023|gmc|terrain",
+  "year": 2023,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "2023_gmc_terrain",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SLE",
+    "Elevation",
+    "AT4",
+    "Denali"
+  ],
+  "adds_by_trim": {
+    "Elevation": [
+      "Monochromatic exterior and upgraded wheels vs SLE",
+      "Premium convenience package content"
+    ],
+    "AT4": [
+      "AT4 off-road appearance and traction enhancements over Elevation"
+    ],
+    "Denali": [
+      "Denali luxury trim with premium interior and advanced tech",
+      "Highest Terrain trim in 2024 brochure"
+    ],
+    "SLE": [
+      "1.5L Turbo I4 engine with 175 hp and 203 lb-ft torque",
+      "9-speed automatic transmission",
+      "1,500 lbs maximum trailer weight rating",
+      "3.47 axle ratio",
+      "4,630 lbs GVWR"
+    ]
+  }
+}

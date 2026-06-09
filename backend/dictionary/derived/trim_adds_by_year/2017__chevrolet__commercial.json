@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|chevrolet|commercial",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "brochure_llm_2017__chevrolet__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Z71",
+    "LT",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "Z71": [
+      "Automatic locking rear differential standard",
+      "StabiliTrak Electronic Stability Control with rollover mitigation",
+      "4-wheel ABS brakes with Duralife rotors",
+      "Full-color Driver Information Center with tire pressure readouts",
+      "Underseat storage standard"
+    ],
+    "LT": [
+      "Underseat storage standard",
+      "Available Chevrolet MyLink 8-inch touchscreen display",
+      "Available full-color Driver Information Center",
+      "Automatic locking rear differential available"
+    ],
+    "WT": [
+      "Underseat storage standard",
+      "Electric Power Steering standard",
+      "StabiliTrak Electronic Stability Control with rollover mitigation",
+      "4-wheel ABS brakes with Duralife rotors",
+      "Available automatic locking rear differential",
+      "Trailering Package option with GearOn System available"
+    ]
+  }
+}

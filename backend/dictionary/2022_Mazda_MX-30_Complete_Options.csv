@@ -1,10 +1,1 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,exteriorColors,Packages,packageDetails,Options,optionDetails
-2022,Mazda,MX-30,"Wheelbase 2,655 mm (104.5 in)","Front-engine, all-wheel-drive (MHEV)[a]",Transmission,Hybrid drivetrain,The MX-30 made the 10 Best List of the 2020-2021 Car of the Year Japan Awards. It also won the 2020 Red Dot Design Award in the Electric Vehicle category.,This version is powered by Mazda's 2.0 L e-Skyactiv-G four-cylinder engine.,"This version is powered by Mazda's 2.0 L e-Skyactiv-G four-cylinder engine. Markets Asia Indonesia The MX-30 EV was launched in Indonesia on 11 November 2024, in a sole variant. Japan The MX-30 went on sale in Japan in 8 October 2020, in a sole grade with four combination packages available.",,
-,,,"The MX-30 was launched in New Zealand in May 2021 in a sole variant, the e-Skyactiv BEV in the Takami trim. In October 2021, the e-Skyactiv-G M Hybrid powertrain in the Limited trim followed.",kW (143 hp; 145 PS) (MHEV)[a],,,,,,,
-,,,,Battery 35.5 kWh prismatic lithium ion,,,,,,,
-,,,,Electric range 200 km (124 mi) (WLTP) 100 mi (161 km) (EPA),,,,,,,
-,,,,DC:[b] 40 kW,,,,,,,
-,,,,AC: 6.6 kW,,,,,,,
-,,,,"The MX-30 features clamshell doors, marketed as freestyle doors by Mazda and previously used on the rotary-engined RX-8 sports car. It uses MacPherson strut front suspension and torsion beam rear suspension.",,,,,,,
-,,,,"In November 2023, the MX-30 with the e-Skyactiv-R powertrain was introduced in Japan as the Rotary Plug-in Hybrid, with a special edition Edition R variant available.",,,,,,,
-,,,,"The MX-30 was launched in New Zealand in May 2021 in a sole variant, the e-Skyactiv BEV in the Takami trim. In October 2021, the e-Skyactiv-G M Hybrid powertrain in the Limited trim followed.",,,,,,,
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails

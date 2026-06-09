@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|lexus|es",
+  "year": 2010,
+  "make": "lexus",
+  "model": "ES",
+  "ladder_id": "inventory_lexus_es",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "iiinnnflflflaaattteee ooonnnlllyyy uunder certain",
+      "iiinnnflflflaaattteee ooonnnlll | yyy uunder certain"
+    ],
+    "Limited": [
+      "iiinnnssstttaaalllllleeeddd))) aaarrreee dddeeesssiiigggnnneeeddd tttooo"
+    ],
+    "Premium": [
+      "iiinnnttt SSSyyysssttteeemmmsss... AAAllllll AAABBBsss (((iiifff"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.3333333333333333,
+    "per_trim_add_counts": {
+      "Premium": 1,
+      "Limited": 1,
+      "LE": 2
+    }
+  }
+}

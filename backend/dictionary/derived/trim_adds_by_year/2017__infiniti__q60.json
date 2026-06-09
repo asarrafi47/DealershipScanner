@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2017|infiniti|q60",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "Q60",
+  "ladder_id": "brochure_llm_2017__infiniti__q60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q60 Red Sport 400",
+    "Q60 3.0t Sport",
+    "Q60 3.0t Premium",
+    "Q60 2.0t Sport",
+    "Q60 2.0t Premium"
+  ],
+  "adds_by_trim": {
+    "Q60 Red Sport 400": [
+      "3.0-liter V6 twin turbo 400 engine with 400 hp at 6,400 rpm",
+      "350 lb-ft torque at 1,600–5,200 rpm",
+      "Red fish 4-piston opposed front calipers with 14.00 x 1.3-inch vented sport discs",
+      "19 x 9.5-inch unique aluminum-alloy wheels with summer conventional tires on RWD",
+      "19 x 9.0-inch unique aluminum-alloy wheels with all-season run-flat tires on AWD",
+      "Continuously variable electronically controlled shock absorbers for dynamic damping response",
+      "19/26 mpg EPA estimated fuel economy on AWD models"
+    ],
+    "Q60 3.0t Sport": [
+      "3.0-liter V6 twin turbo 300 engine with 300 hp at 6,400 rpm",
+      "295 lb-ft torque at 1,600–5,200 rpm",
+      "19 x 9.0-inch unique aluminum-alloy wheels with summer conventional or all-season run-flat tires",
+      "Continuously variable electronically controlled shock absorbers with dynamic digital suspension",
+      "19/28 mpg EPA estimated fuel economy on RWD and 19/27 mpg on AWD"
+    ],
+    "Q60 3.0t Premium": [
+      "3.0-liter V6 twin turbo 300 engine with water-cooled air charging system",
+      "Multi-link independent rear suspension with coil springs and stabilizer bar",
+      "Dual automatic transmission fluid coolers",
+      "Continuously variable electronically controlled shock absorbers"
+    ],
+    "Q60 2.0t Sport": [
+      "2.0-liter I4 turbocharged engine with 208 hp at 5,500 rpm",
+      "258 lb-ft torque at 1,500–3,500 rpm",
+      "Unique aluminum-alloy wheels with summer conventional or all-season run-flat tires",
+      "Continuously variable electronically controlled shock absorbers",
+      "19/28 mpg EPA estimated fuel economy on RWD and 19/27 mpg on AWD"
+    ],
+    "Q60 2.0t Premium": [
+      "2.0-liter I4 turbocharged engine with Idle Stop/Start standard",
+      "208 hp at 5,500 rpm with 258 lb-ft torque",
+      "Double overhead camshaft with variable valve timing control system",
+      "Independent double-wishbone front suspension with Dual Flow Path shock absorbers",
+      "19-inch split 5-spoke aluminum-alloy wheels with all-season run-flat tires",
+      "22/30 mpg EPA estimated fuel economy on RWD and 21/28 mpg on AWD",
+      "Automatic on/off LED headlights with daytime running lights",
+      "Remote keyless entry with door handle touch selective unlocking",
+      "Power sliding tinted glass moonroof with one-touch auto-open/close"
+    ]
+  }
+}

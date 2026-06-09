@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2016|volvo|xc70",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "XC70",
+  "ladder_id": "brochure_llm_2016__volvo__xc70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "PREMIER",
+    "Value"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Harman Kardon Premium Sound System",
+      "Active dual xenon headlights with headlight washers",
+      "Keyless Drive",
+      "Power operated tailgate",
+      "Rear Park Assist Camera",
+      "Accent lighting"
+    ],
+    "PREMIER": [
+      "Leather seating surfaces",
+      "Heated front seats",
+      "Heated rear seats",
+      "Sensus Navigation with Mapcare",
+      "Auto dimming rearview mirror",
+      "Adaptive Digital TFT display",
+      "Tinted rear seat and cargo area windows",
+      "2.5L 250 hp 5 cylinder Turbocharged engine option"
+    ],
+    "Value": [
+      "8-way power adjustable driver and passenger seats with power lumbar support",
+      "3-position memory for driver's seat and exterior mirrors",
+      "City safety collision avoidance system",
+      "Dual-zone electronic climate control with pollen filter",
+      "High Performance Audio System with AUX, USB, and iPod inputs",
+      "Bluetooth handsfree and audio streaming",
+      "SiriusXM Satellite Radio with 6-month subscription",
+      "2.0L 240 hp turbocharged 4-cylinder Drive-E engine",
+      "6-speed Geartronic automatic transmission",
+      "18-inch Pan alloy wheels"
+    ]
+  }
+}

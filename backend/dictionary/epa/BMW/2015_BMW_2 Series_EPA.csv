@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,BMW,2 Series,228i,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,35,27,,,,,
+2015,BMW,2 Series,228i,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,33,26,,,,,
+2015,BMW,2 Series,228i xDrive,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,34,27,,,,,
+2015,BMW,2 Series,M235i,3.0L V6 (SIDI),3.0L I6 Turbo,Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,31,25,,,,,
+2015,BMW,2 Series,M235i,3.0L V6 (SIDI),3.0L I6 Turbo,Turbocharged,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,28,22,,,,,
+2015,BMW,2 Series,M235i xDrive,3.0L V6 (SIDI),3.0L I6 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,23,,,,,
+2015,BMW,2 Series,228i Convertible,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,33,26,,,,,
+2015,BMW,2 Series,228i xDrive Convertible,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,32,26,,,,,

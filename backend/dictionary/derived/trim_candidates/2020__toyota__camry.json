@@ -1,0 +1,93 @@
+{
+  "catalog_key": "2020|toyota|camry",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Camry",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XSE",
+    "XLE",
+    "TRD",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds to or replaces features offered on L \u2022 Audio Plus \u2014 includes 8-in. touch-screen with Android \u2022 Overhead console with maplights and HomeLink\u00ae39 universal",
+      "Auto\u21224 & Apple CarPlay\u00ae5 & Amazon Alexa6 compatibility transceiver (sunglasses storage not available with",
+      "Powertrain \u2022 7-in. TFT Multi-Information Display (MID) with panoramic roof)",
+      "2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm customizable settings \u2022 Dual sun visors with sliding extensions and",
+      "28 city/39 hwy/32 combined est. mpg58 \u2022 Qi-compatible wireless smartphone charging28 illuminated vanity mirrors",
+      "Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Leather-trimmed multi-stage heated front seats with seatback Options and Packages",
+      "Exterior Features \u2022 Rear adjustable headrests JBL\u00ae w/Clari-Fi\u00ae22",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel",
+      "17-in. alloy wheels and P215/55R17 tires with audio, Multi-Information Display (MID) and Bluetooth\u00ae9 \u2022 Driver Assist Package includes",
+      "Interior and Safety Features hands-free phone controls \u2013 Intelligent Clearance Sonar (ICS)51 with Rear Cross-Traffic",
+      "Fabric-trimmed front seats with passenger-side seatback \u2022 3-mode switch (ECO, Normal, Sport) Braking (RCTB)52",
+      "60/40 split fold-down rear seat with center armrest \u2022 Auto-dimming rearview mirror"
+    ],
+    "XSE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on SE Adds to or replaces features offered on XSE",
+      "Powertrain Powertrain Powertrain",
+      "2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm \u2022 2.5-Liter Dynamic Force 4-Cylinder Engine with 206 hp @ 6600 rpm \u2022 3.5-Liter V6 with 301 hp @ 6600 rpm",
+      "28 city/39 hwy/32 combined est. mpg58 \u2022 27 city/38 hwy/31 combined est. mpg58 \u2022 22 city/32 hwy/26 combined est. mpg58",
+      "Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Direct Shift-8AT (8-Speed Electronically Controlled",
+      "Available All-Wheel Drive (AWD) \u2022 Available All-Wheel Drive (AWD) Exterior Features",
+      "Exterior Features Exterior Features \u2022 Panoramic glass roof with front power tilt/slide moonroof",
+      "Black front grille with sport mesh insert \u2022 LED headlights with fully integrated LED Daytime Running Interior and Safety Features",
+      "Color-keyed sport side rocker panels Lights (DRL) with auto on/off feature",
+      "Audio Plus with JBL\u00ae w/Clari-Fi\u00ae22 \u2014 includes nine speakers",
+      "18-in. black machined-finish alloy wheels and P235/45R18 tires \u2022 LED taillights",
+      "Color-keyed rear spoiler \u2022 Gloss-black front grille with sport mesh insert AM/FM/HD Radio,\u212217 CD player, USB media port,7 two USB"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Powertrain Powertrain Powertrain",
+      "2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm \u2022 2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm \u2022 3.5-Liter V6 with 301 hp @ 6600 rpm",
+      "29 city/41 hwy/34 combined est. mpg58 \u2022 27 city/38 hwy/31 combined est. mpg58 \u2022 22 city/33 hwy/26 combined est. mpg58",
+      "Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Direct Shift-8AT (8-Speed Electronically Controlled",
+      "Exterior Features \u2022 Available All-Wheel Drive (AWD) Exterior Features",
+      "Bi-LED combination headlights with auto on/off feature Exterior Features \u2022 Panoramic glass roof with front power tilt/slide moonroof",
+      "LED Daytime Running Lights (DRL) with on/off feature \u2022 LED headlights with fully integrated LED Daytime Running \u2022 Dual exhaust with chrome finisher",
+      "16-in. steel wheels and P205/65R16 tires Lights (DRL) with auto on/off feature Interior and Safety Features",
+      "Shark-fin antenna \u2022 LED taillights",
+      "Audio Plus with JBL\u00ae w/Clari-Fi\u00ae22 \u2014 includes nine speakers",
+      "Interior and Safety Features \u2022 Bright metallic front grille including subwoofer and amplifier, 8-in. touch-screen,"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on SE Adds to or replaces features offered on SE",
+      "Powertrain Powertrain",
+      "3.5-Liter V6 with 301 hp @ 6600 rpm \u2022 2.5-Liter Dynamic Force 4-Cylinder Engine with 203 hp @ 6600 rpm",
+      "22 city/31 hwy/25 combined est. mpg58 \u2022 28 city/39 hwy/32 combined est. mpg58",
+      "Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Direct Shift-8AT (8-Speed Electronically Controlled",
+      "Exterior Features \u2022 Available All-Wheel Drive (AWD)",
+      "Black-housing Bi-LED combination headlights with Exterior Features",
+      "Gloss-black front grille with sport mesh insert and window trim",
+      "Black-painted power outside mirrors and window trim \u2022 18-in. black-painted alloy wheels with P235/45R18 tires",
+      "19-in. x 8.5-in. TRD matte-black alloy wheels with \u2022 Black-painted rear spoiler",
+      "P235/40R19 tires \u2022 Black-painted shark fin antenna",
+      "TRD gloss-black pedestal rear spoiler \u2022 Black rear Toyota emblem and \"CAMRY\" lettering"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on Hybrid LE Adds to or replaces features offered on Hybrid LE",
+      "Powertrain Powertrain Powertrain",
+      "Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine \u2022 Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine \u2022 Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine",
+      "Hybrid system net power: 208 hp (155 kW) \u2022 Hybrid system net power: 208 hp (155 kW) \u2022 Hybrid system net power: 208 hp (155 kW)",
+      "51 city/53 hwy/52 combined est. mpg66 \u2022 44 city/47 hwy/46 combined est. mpg58 \u2022 44 city/47 hwy/46 combined est. mpg58",
+      "Electronically controlled Continuously Variable \u2022 Electronically controlled Continuously Variable \u2022 Electronically controlled Continuously Variable",
+      "Transmission (ECVT) Transmission (ECVT) Transmission (ECVT)",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED combination headlights with auto on/off feature \u2022 Black front grille with sport mesh insert \u2022 LED headlights with fully integrated LED Daytime Running",
+      "LED Daytime Running Lights (DRL) with on/off feature \u2022 Color-keyed sport side rocker panels Lights (DRL) with auto on/off feature",
+      "Dark gray front grille \u2022 18-in. black machined-finish alloy wheels and P235/45R18 tires \u2022 LED taillights",
+      "16-in. steel wheels and P205/65R16 tires \u2022 Color-keyed rear spoiler \u2022 Bright metallic front grille"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

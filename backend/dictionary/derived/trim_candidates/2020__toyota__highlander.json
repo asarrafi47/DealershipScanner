@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|toyota|highlander",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Highlander",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on Limited",
+      "Powertrain Exterior Features Powertrain",
+      "Available Dynamic Torque Vectoring All-Wheel Drive (AWD) \u2022 LED projector headlights with Adaptive Front-Lighting \u2022 2.5-Liter L4HV engine",
+      "Exterior Features Running Lights (DRL) Transmission (ECVT)",
+      "Rain-sensing washer-linked variable intermittent \u2022 Available electronic AWD with Trail Mode",
+      "Color-keyed heated power outside mirrors with puddle lights",
+      "LED projector headlights with LED-strip Daytime \u2022 Rear lower bumper accent blind spot warning indicators,3 and manual folding feature",
+      "Running Lights (DRL) \u2022 Power panoramic view moonroof with sunshade and \u2022 LED fog lights",
+      "High-output LED fog lights one-touch open/close with jam protection \u2022 18-in. alloy wheels with temporary spare",
+      "20-in. chrome wheels with temporary spare \u2022 Rear bumper scuff plate \u2022 Height-adjustable power liftgate with jam protection",
+      "Hands-free power liftgate with jam protection6 Interior Features \u2022 Grille shutters",
+      "Interior Features \u2022 Digital rearview mirror with HomeLink\u00ae8 universal transceiver Interior Features"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Powertrain Exterior Features Exterior Features",
+      "3.5-liter V6 engine with 295 hp @ 6600 rpm \u2022 Color-keyed heated power outside mirrors with turn signal and \u2022 18-in. machined-finish alloy wheels with temporary spare",
+      "Direct shift-8AT (8-speed Electronically Controlled blind spot warning indicators,3 and manual folding feature \u2022 Power tilt/slide moonroof with sunshade",
+      "Available All-Wheel Drive (AWD) with Multi-Terrain Select \u2022 Height-adjustable power liftgate with jam protection Interior Features",
+      "Exterior Features Interior Features",
+      "Qi-compatible wireless smartphone charging7",
+      "Smart Key System2 with Push Button Start \u2022 Leather-trimmed shift knob and steering wheel \u2022 Auto-dimming rearview mirror with HomeLink\u00ae8",
+      "LED headlights \u2022 Audio Plus with six speakers, 8-in. touch-screen, and Android universal transceiver",
+      "LED taillights and stop lights Auto\u212218 & Apple CarPlay\u00ae19 & Amazon Alexa20 compatibility \u2022 SofTex\u00ae9-trimmed front- and second-row seats with",
+      "18-in. alloy wheels with temporary spare \u2022 Blind Spot Monitor (BSM)3 with Rear Cross-Traffic Alert (RCTA)56 heated front seats",
+      "Color-keyed heated power outside mirrors with turn signal Safety Features \u2022 7-in. color LCD Multi-Information Display (MID)"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

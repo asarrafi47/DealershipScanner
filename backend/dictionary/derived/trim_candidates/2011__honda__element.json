@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2011|honda|element",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Element",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "EX",
+    "LX",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

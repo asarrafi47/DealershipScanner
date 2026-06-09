@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2020|subaru|imprezawrx",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2020__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX STI",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "2.5-liter turbocharged engine with 310 hp and 290 lb-ft torque",
+      "High-flow intercooler with 16.2 psi maximum boost pressure",
+      "Close-ratio 6-speed manual transmission",
+      "Driver Controlled Center Differential (DCCD) all-wheel drive",
+      "19 x 8.5-inch dark gray aluminum wheels with machine finish",
+      "245/35 R19 summer-performance tires",
+      "Brembo high-performance braking system with cross-drilled/ventilated discs",
+      "6-piston front and dual-piston rear calipers with Super Sport ABS"
+    ],
+    "WRX STI": [
+      "2.5-liter turbocharged engine with 310 hp and 290 lb-ft torque",
+      "High-flow intercooler with 16.2 psi maximum boost pressure",
+      "Close-ratio 6-speed manual transmission",
+      "Driver Controlled Center Differential (DCCD) all-wheel drive",
+      "19 x 8.5-inch dark gray aluminum wheels with machine finish",
+      "245/35 R19 summer-performance tires",
+      "Brembo high-performance braking system with cross-drilled/ventilated discs",
+      "6-piston front and dual-piston rear calipers with Super Sport ABS"
+    ],
+    "WRX Limited": [
+      "18 x 8.5-inch dark gray high-luster aluminum wheels",
+      "245/40 R18 summer-performance tires",
+      "Inverted-strut-type front suspension standard",
+      "Optional Sport Lineartronic transmission with paddle shifters"
+    ],
+    "WRX Premium": [
+      "18 x 8.5-inch dark gray high-luster aluminum wheels",
+      "245/40 R18 summer-performance tires",
+      "Inverted-strut-type front suspension",
+      "Optional Sport Lineartronic transmission with paddle shifters"
+    ],
+    "WRX": [
+      "2.0-liter turbocharged DIT engine with 268 hp and 258 lb-ft torque",
+      "Twin-scroll turbocharger with intercooler and 15.9 psi boost",
+      "6-speed manual transmission with carbon synchros and Incline Start Assist",
+      "Subaru Symmetrical all-wheel drive",
+      "17 x 8.0-inch dark gray aluminum wheels",
+      "235/45 R17 summer-performance tires",
+      "Sport-tuned independent suspension with inverted struts on higher trims",
+      "Brembo performance braking with dual-piston front and single-piston rear calipers"
+    ]
+  }
+}

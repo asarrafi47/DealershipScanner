@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|porsche|911",
+  "year": 2010,
+  "make": "Porsche",
+  "model": "911",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo",
+    "Carrera S",
+    "Carrera",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

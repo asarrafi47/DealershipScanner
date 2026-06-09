@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2011|subaru|forester",
+  "year": 2011,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2011__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.5XT Touring",
+    "2.5XT Premium",
+    "2.5X Touring",
+    "2.5X Limited",
+    "2.5X Premium",
+    "2.5X"
+  ],
+  "adds_by_trim": {
+    "2.5XT Touring": [
+      "Turbo engine with functional hood scoop feeding turbocharger intercooler",
+      "Rear spoiler for aerodynamic styling",
+      "Aluminum-alloy pedal covers",
+      "One-touch folding rear seatbacks",
+      "Body-color side mirrors with integrated turn signals and raised silver roof rails",
+      "HID low-beam and multireflector halogen high-beam headlights",
+      "Analog speedometer with eco fuel economy and temperature gauges with electroluminescent lighting"
+    ],
+    "2.5XT Premium": [
+      "Turbo engine with functional hood scoop feeding turbocharger intercooler",
+      "Fog lights",
+      "Body-color side mirrors",
+      "All-Weather Package: windshield wiper de-icer, heated side mirrors and heated front seats",
+      "Raised black roof rails",
+      "10-way power adjustable driver's seat with power adjustable lumbar support"
+    ],
+    "2.5X Touring": [
+      "Leather-wrapped steering wheel and shifter handle",
+      "Leather-trimmed upholstery",
+      "One-touch folding rear seatbacks",
+      "Fog lights",
+      "Panoramic moonroof",
+      "Body-color side mirrors",
+      "Manually adjustable tilt/telescoping steering column"
+    ],
+    "2.5X Limited": [
+      "Fog lights",
+      "Panoramic moonroof",
+      "Body-color side mirrors",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver's seat with power adjustable lumbar support",
+      "Removable cargo-area tray",
+      "Backup camera standard"
+    ],
+    "2.5X Premium": [
+      "10-way power adjustable driver's seat with power adjustable lumbar support",
+      "Panoramic moonroof",
+      "Body-color side mirrors",
+      "Windshield wiper de-icer and heated side mirrors with All-Weather Package",
+      "Heated front seats",
+      "Reclining rear seats",
+      "Retractable rear tray with dual cup holders",
+      "Driver's auto up/down power window and manually adjustable tilt/telescoping steering column"
+    ],
+    "2.5X": [
+      "Subaru Symmetrical All-Wheel Drive (AWD)",
+      "SUBARU BOXER 2.5-liter engine",
+      "4-wheel ABS with Electronic Brake-force Distribution (EBD)",
+      "Vehicle Dynamics Control (VDC)",
+      "Brake Assist with Daytime Running Lights (DRL)",
+      "Front and side-impact airbags with rollover sensor",
+      "6-way manually adjustable driver's seat and 4-way manually adjustable front-passenger's seat",
+      "60/40-split flat-folding rear seatbacks",
+      "4-speaker audio system with single-disc CD player and MP3/WMA playback",
+      "3-spoke steering wheel with cruise control buttons"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2021|chevrolet|spark",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2021__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEATA",
+    "TL2",
+    "TL1",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "SEATA": [
+      "Leatherette seating surfaces",
+      "Heated driver and front passenger seats"
+    ],
+    "TL2": [
+      "Leatherette seating surfaces",
+      "Heated driver and front passenger seats"
+    ],
+    "TL1": [
+      "Leatherette seating surfaces replacing cloth"
+    ],
+    "SL": [
+      "Cloth seating",
+      "Front high-back buckets with adjustable head restraints",
+      "Rear 60/40 split flip-and-fold seat",
+      "Driver 4-way manual and front passenger 2-way manual seats with recline"
+    ]
+  }
+}

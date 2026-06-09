@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|audi|a6",
+  "year": 2019,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_2019__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "A6"
+  ],
+  "adds_by_trim": {
+    "A6": [
+      "Adds Includes 3.0-liter turbocharged TFSI six-cylinder engine with 335 horsepower",
+      "Adds Features quattro all-wheel drive with torque vectoring",
+      "Adds Includes five-link adaptive suspension with dynamic all-wheel steering",
+      "Adds Standard 19-inch 5-double-spoke bi-color wheels"
+    ],
+    "Sport": [
+      "Adds sport suspension calibration"
+    ],
+    "Limited": [
+      "Adds sport suspension calibration"
+    ],
+    "S line": [],
+    "Premium": [
+      "Adds 3.0T six-cylinder supercharged engine with 310 hp",
+      "Upgraded to eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Upgraded to ventilated front disc brakes (14.0 in)",
+      "Adds sport suspension calibration"
+    ],
+    "Prestige": [
+      "Adds premium Perforated Valcona leather seating options with contrast stitching and piping",
+      "Adds available 21-inch 10-Y-spoke design wheel package option",
+      "Adds Includes premium interior inlay options with natural wood and fine grain ash finishes"
+    ]
+  }
+}

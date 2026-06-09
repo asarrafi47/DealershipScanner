@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1987,Ford,E250 Econoline,2WD,4.9L V6 ((FFS)),4.9L V6 Twin Turbo,Twin Turbocharged,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.9,13,15,14,,,,,
+1987,Ford,E250 Econoline,2WD,5.0L V8 ((FFS)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.0,11,16,13,,,,,
+1987,Ford,E250 Econoline,2WD,5.8L V8 ((FFS)),5.8L V8,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.8,10,12,11,,,,,
+1987,Ford,E250 Econoline,2WD,5.8L V8 ((FFS)),5.8L V8,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.8,10,12,11,,,,,

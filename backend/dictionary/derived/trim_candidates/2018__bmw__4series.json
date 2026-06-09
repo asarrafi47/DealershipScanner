@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2018|bmw|4series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "4 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Competition",
+    "Executive",
+    "Sport",
+    "M4"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

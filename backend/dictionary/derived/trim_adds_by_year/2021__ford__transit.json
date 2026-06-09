@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2021|ford|transit",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Transit",
+  "ladder_id": "generic_ford_transit",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Active",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "00 6,900 7,300 7,1",
+      "7,100 6,900 7,300"
+    ],
+    "Active": [
+      "LENGTH EXTENDED"
+    ]
+  }
+}

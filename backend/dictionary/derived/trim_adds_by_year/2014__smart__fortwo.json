@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|smart|fortwo",
+  "year": 2014,
+  "make": "Smart",
+  "model": "Fortwo",
+  "ladder_id": "brochure_llm_2014__smart__fortwo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "passion",
+    "pure"
+  ],
+  "adds_by_trim": {
+    "passion": [
+      "Wheels/tires 175/55 R15 (rear) versus 155/60 R15 (pure rear)"
+    ],
+    "pure": [
+      "3-cylinder in-line engine, 999 cc, 70 hp",
+      "Automated manual 5-speed transmission",
+      "Rear-wheel drive layout",
+      "Maximum speed 90 mph",
+      "0-60 acceleration 12.8 seconds",
+      "34/38 mpg estimated city/highway",
+      "Wheels/tires 155/60 R15 front, 175/55 R15 rear",
+      "Disc brakes front, drum brakes rear with electronic distribution",
+      "Vehicle length 8.8 feet, wheelbase 6.1 feet",
+      "9-gallon fuel tank capacity"
+    ]
+  }
+}

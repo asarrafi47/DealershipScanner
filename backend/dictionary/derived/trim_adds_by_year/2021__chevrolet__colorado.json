@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2021|chevrolet|colorado",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2021__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2RZ",
+    "Z71",
+    "LT",
+    "TW"
+  ],
+  "adds_by_trim": {
+    "2RZ": [
+      "Driver-selectable full locking front and rear differential",
+      "Black rear bumper",
+      "186 hp Duramax 2.8L Turbo-Diesel engine with 369 lb-ft torque",
+      "HD Rear Vision Camera with Chevrolet Infotainment 3 Plus and Navigation"
+    ],
+    "Z71": [
+      "Fog lamps with ZR2 Bison Edition",
+      "Heated power-adjustable manual-folding mirrors with Black caps",
+      "Automatic locking rear differential",
+      "2.8L Turbo-Diesel engine option with 181 hp and 369 lb-ft torque",
+      "HD Rear Vision Camera with navigation system",
+      "Automatic single-zone air conditioning",
+      "Heated steering wheel",
+      "Sliding rear window with defogger"
+    ],
+    "LT": [
+      "Available fog lamps with LT Convenience Package",
+      "Heated power-adjustable manual-folding mirrors",
+      "3.6L DOHC V6 engine with 308 hp and 275 lb-ft torque standard",
+      "8-speed automatic transmission with 3.6L V6",
+      "Available 2.8L Turbo-Diesel with integrated trailer brake controller",
+      "Remote vehicle starter system",
+      "Automatic single-zone air conditioning with Luxury Package",
+      "Heated steering wheel with Luxury Package"
+    ],
+    "TW": [
+      "Manual-adjustable manual-folding mirrors standard",
+      "Manual air conditioning with single-zone control",
+      "Locking tailgate standard",
+      "Electronic cruise control with Set and Resume Speed",
+      "Extended-range Remote Keyless Entry",
+      "Rear Vision Camera",
+      "3 Frontal airbags, seat-mounted side-impact, and head-curtain airbags",
+      "Teen Driver technology",
+      "Up to 3 months OnStar Safety & Security coverage"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2014|infiniti|qx5680",
+  "year": 2014,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "generic_infiniti_qx5680",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "backing up. 11 The Front and Rear Sonar System is a convenience, but not a substitute for proper parking procedures and/or",
+      "network coverage, once the 2G",
+      "mark of Apple Inc. Android and Google Play are trademarks of Google Inc. Formula 1 is a trade"
+    ],
+    "Limited": [
+      "backing procedures. Always turn to check what is behind you before",
+      "network availability. Like other devices that rely on 2G",
+      "mark of Apple Inc. iPad is a registered trade"
+    ],
+    "Touring": [
+      "Hydraulic Body Motion Control system for decreased body lean",
+      "Climate-controlled front seats",
+      "Bose Cabin Surround 5.1-decoding system with 15 speakers",
+      "Semi-aniline leather seating with Mocha Burl trim",
+      "Second-row footwell courtesy lights",
+      "Advanced Climate Control System with Plasmacluster air purifier",
+      "Headlight washers"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.5,
+    "per_trim_add_counts": {
+      "Premium": 3,
+      "Touring": 0
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2016|acura|rdx",
+  "year": 2016,
+  "make": "acura",
+  "model": "rdx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "Base",
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

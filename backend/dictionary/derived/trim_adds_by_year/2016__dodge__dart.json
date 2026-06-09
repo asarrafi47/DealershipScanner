@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2016|dodge|dart",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Dart",
+  "ladder_id": "brochure_llm_2016__dodge__dart",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SXT",
+    "SE Rallye",
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "2.4L I4 Tigershark engine with 6-speed manual transmission standard",
+      "2.4L I4 Tigershark with 6-speed PowerTech automatic transmission available",
+      "6-way power driver's seat",
+      "Leather-wrapped shift knob with automatic transmission"
+    ],
+    "SXT": [
+      "6-way manual front-passenger seat",
+      "Rear-seat armrest with cup holders and storage",
+      "60/40 split-folding rear seats with trunk pass-through",
+      "1.4L I4 16V Turbo engine options available",
+      "2.0L I4 DOHC Tigershark engine options available"
+    ],
+    "SE Rallye": [
+      "Black headlamp bezel and Black grille crosshair with Black surround",
+      "Touring suspension",
+      "17-inch Granite Crystal aluminum wheels"
+    ],
+    "SE": [
+      "Uconnect Voice Command with remote USB port",
+      "Driver's manual height adjuster on seats",
+      "Front seatback pockets",
+      "Steering wheel with mounted audio controls available"
+    ],
+    "ES": [
+      "2.0L I4 DOHC Tigershark with 6-speed manual transmission",
+      "205/55R16 All-Season tires",
+      "Electronic Stability Control",
+      "Traction Control — All-Speed",
+      "Sentry Key antitheft engine immobilizer"
+    ]
+  }
+}

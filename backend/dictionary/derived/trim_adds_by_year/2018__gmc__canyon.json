@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2018|gmc|canyon",
+  "year": 2018,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2018__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Canyon",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Perforated leather-appointed front bucket seats",
+      "Heated, leather-wrapped steering wheel with mounted audio controls",
+      "Under-rail LED cargo box lighting",
+      "Heated, power-adjustable chrome mirrors with driver-side spotter mirror",
+      "8-inch color touchscreen navigation with SiriusXM and Bose premium 7-speaker system"
+    ],
+    "SLT": [
+      "8-inch color touchscreen with GMC Infotainment System, SiriusXM, and Bose premium 7-speaker system",
+      "Leather-appointed front bucket seats",
+      "Heated, power-adjustable body-color mirrors with driver-side spotter mirror",
+      "Front fog lamps",
+      "All Terrain X Package available with black step bars, all-weather liners, and all-terrain tires"
+    ],
+    "SLE": [
+      "Rear-window electric defogger and EZ-Lift and Lower Tailgate",
+      "Single-zone automatic climate control with rear sliding window",
+      "8-inch color touchscreen with GMC Infotainment System",
+      "Front fog lamps",
+      "Spray-on bedliner with GMC or Denali logo",
+      "Eaton heavy-duty automatic locking rear differential"
+    ],
+    "Canyon": [
+      "Electronic cruise control (automatic, included on Canyon models only)",
+      "Canyon Convenience Package with remote keyless entry, rear-window defogger, and theft-deterrent system",
+      "7-inch diagonal color touchscreen with GMC Infotainment System and Bluetooth streaming"
+    ],
+    "SL": [
+      "4-wheel antilock disc brakes with Duralife rotors",
+      "Overhead cargo box lighting",
+      "Engine block heater",
+      "Projector-type headlamps with signature lighting",
+      "Capless fuel fill",
+      "StabiliTrak stability control with Trailer Sway Control"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2026_nissan_sentra_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Sentra",
+    "Sentra"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "SL": [
+      {
+        "label": "Engine Options",
+        "value": "L MR16DDT turbo I4"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Bose audio | Premium cloth seating; [Brochure] Bose audio | Premium cloth seating"
+      }
+    ],
+    "SR": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|bmw|7series",
+  "year": 2011,
+  "make": "BMW",
+  "model": "7 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

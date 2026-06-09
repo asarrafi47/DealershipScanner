@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2024|nissan|rogue",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2024__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "19-inch unique aluminum-alloy wheels",
+      "Dual Panel Panoramic Moonroof",
+      "Outside mirrors with reverse tilt-down feature",
+      "Memory system for driver's seat and outside mirrors",
+      "Remote-folding rear seats",
+      "Quilted semi-aniline leather-appointed seats",
+      "Bose Premium Audio System with dual-driver woofer"
+    ],
+    "SL": [
+      "ProPILOT Assist 1.1 with adaptive cruise control",
+      "HD Enhanced Intelligent Around View Monitor",
+      "Front, Rear, and Side Sonar System",
+      "Traffic Sign Recognition",
+      "19-inch aluminum-alloy wheels",
+      "Outside mirrors with LED turn signal indicators",
+      "Roof rails",
+      "Auto-dimming inside rearview mirror",
+      "Divide-N-Hide cargo system",
+      "12.3-inch digital dashboard with fully digital gauges"
+    ],
+    "SV": [
+      "ProPILOT Assist with intelligent lane intervention",
+      "Intelligent Blind Spot Intervention",
+      "18-inch aluminum-alloy wheels",
+      "Heated outside mirrors",
+      "Power liftgate",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "8-way power driver's seat with 2-way power lumbar support",
+      "In-vehicle data and Wi-Fi",
+      "Four USB-C ports"
+    ],
+    "S": [
+      "1.5-liter DOHC 12-valve Variable Compression Turbo engine",
+      "Intelligent All-Wheel Drive with Drive Mode Dial",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Rear Automatic Braking",
+      "High Beam Assist",
+      "Intelligent Driver Alertness"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2014|jeep|cherokee",
+  "year": 2014,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_llm_2014__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "3.2L V6 Pentastar engine with 9-speed transmission",
+      "HID headlamps packaged with Luxury Group",
+      "Premium ventilated leather-trimmed seating with Nappa leather and perforation",
+      "Memory system for radio presets, driver seat, mirrors, and HVAC",
+      "Uconnect 5.0 infotainment system",
+      "SiriusXM satellite radio",
+      "Dual-Zone Automatic Temperature Control with humidity sensor",
+      "Power liftgate packaged with Luxury Group"
+    ],
+    "Trailhawk": [
+      "Jeep Active Drive Lock, 2-speed 4WD with rear locker",
+      "Off-road suspension with 2-speed power takeoff",
+      "17-inch Trailhawk polished/painted off-road aluminum wheels with OWL all-terrain tires",
+      "Off-road wheel flares",
+      "Leather Interior Group with heated front seats and power 8-way driver seat",
+      "Uconnect 8.4AN touchscreen with Multi-View Display"
+    ],
+    "Latitude": [
+      "Jeep Active Drive II, 2-speed 4WD",
+      "Power-locking fuel filler door",
+      "Automatic headlamps packaged with Comfort/Convenience Group",
+      "Power mirrors with supplemental turn signals and courtesy lamps",
+      "Accent-color roof rails and mirror surrounds",
+      "Dual-Zone Automatic Temperature Control",
+      "Auto-dimming rearview mirror with microphone",
+      "Uconnect 8.4A touchscreen with 7-inch Multi-View Display"
+    ],
+    "Sport": [
+      "2.4L TigerShark MultiAir 2 engine with 9-speed transmission standard",
+      "Single rear exhaust with bright tip",
+      "Selec-Terrain floor dial with up to five traction control settings on 4x4 models",
+      "Chrome grille surround",
+      "Fog lamps",
+      "Black headlamp bezels and LED daytime running lamps",
+      "Power mirrors with heating element",
+      "Bright roof rails",
+      "6-speaker audio system",
+      "Uconnect 5.0 infotainment system base option"
+    ]
+  }
+}

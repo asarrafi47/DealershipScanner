@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2021|fiat|500",
+  "year": 2021,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2021__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLUS",
+    "SPORT",
+    "TREKKING",
+    "POP"
+  ],
+  "adds_by_trim": {
+    "PLUS": [
+      "8-speaker audio system with Beats Audio Premium Sound System and subwoofer",
+      "Premium perforated leather-trimmed bucket seats in Black or Brown",
+      "8-way power driver's seat with 4-way lumbar adjust",
+      "Dual-Zone Automatic Temperature Control",
+      "Rearview auto-dimming mirror",
+      "Overhead ambient surround lighting",
+      "Sunscreen deep-tint glass",
+      "Uconnect 4 NAV with 7-inch touchscreen and navigation",
+      "Auto High-Beam Headlamp Control",
+      "Black with Chrome belt line DLO accent moldings"
+    ],
+    "SPORT": [
+      "Sport leather-trimmed bucket seats in Black",
+      "Flat-bottom Sport steering wheel with Alcantara inserts and Red stitching with paddle shifters",
+      "Sport cloth bucket seats in Black",
+      "Sport front and rear floor mats with Red and Grey accent stitching",
+      "Sport Dark Grey instrument panel bezel with Alcantara cluster brow",
+      "Black headliner including pillars",
+      "17-inch Matte Black machined aluminum wheels",
+      "215/55R18 All-Season Performance tires",
+      "Bright pedal covers",
+      "Sport fascia with Dark Grey accents and dual bright exhaust tips"
+    ],
+    "TREKKING": [
+      "Body-color-painted side moldings",
+      "Satin Silver door handles",
+      "Satin accent body-color front and rear fascias",
+      "17-inch Silver aluminum wheels",
+      "215/60R17 All-Season tires",
+      "Carpeted front and rear floor mats",
+      "Exterior body-color instrument panel bezel"
+    ],
+    "POP": [
+      "1.3L MultiAir Turbo Direct-Injection I-4 engine with Engine Stop/Start technology",
+      "9-speed Automatic transmission",
+      "All-Wheel Drive",
+      "Electric power steering with tilt/telescoping column",
+      "MacPherson front and Chapman rear suspension with KONI shock absorbers",
+      "Cloth low-back bucket seats in Black",
+      "6-way manual driver's seat adjustment",
+      "Uconnect 4 with 7-inch touchscreen display",
+      "Integrated Voice Command with Bluetooth for hands-free communications",
+      "Apple CarPlay and Android Auto compatibility"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2023|dodge|charger",
+  "year": 2023,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2023__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT® JAILBREAK",
+    "SXT AWD",
+    "SXT RWD"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT® JAILBREAK": [
+      "717 hp and 650 lb-ft of torque supercharged V8 engine",
+      "6-piston Brembo® brakes with selectable caliper colors",
+      "Adaptive Damping Suspension with competition tuning",
+      "SRT Power Chiller® and after-run cooling system",
+      "Bi-functional High Intensity Discharge (HID) headlamps",
+      "Heated and ventilated front seats, heated rear seats",
+      "Harman Kardon® Audio Group with premium sound",
+      "220-mph speedometer and Jailbreak instrument-panel badge",
+      "SRT leather-wrapped steering wheel with lit LED logo",
+      "20 by 11-inch performance wheels with 305/35ZR20 3-Season tires"
+    ],
+    "SXT AWD": [
+      "300-hp All-Wheel-Drive (AWD) system with live-axle disconnect",
+      "AWD suspension tuning",
+      "Performance brakes",
+      "Uconnect 4 with 8.4-inch touchscreen display",
+      "Performance steering wheel with paddle shifters",
+      "Black fascia graphics",
+      "235/55R19 BSW All-Season Performance tires"
+    ],
+    "SXT RWD": [
+      "292-hp 3.6L Pentastar® V6 engine",
+      "8-speed automatic transmission",
+      "Touring suspension with live-axle disconnect",
+      "4-wheel Antilock Brake System (ABS)",
+      "Electronic Stability Control (ESC)",
+      "Integrated dual bright exhaust tips",
+      "ParkView® Rear Back-Up Camera and ParkSense® Rear Park Assist System",
+      "Automatic LED headlamps with Daytime Running Lamps (DRLs)",
+      "Uconnect® 4 with 7-inch touchscreen display",
+      "Apple CarPlay® and Android Auto™ connectivity"
+    ]
+  }
+}

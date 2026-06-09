@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2011|subaru|legacy",
+  "year": 2011,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2011__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5GT Limited",
+    "3.6R Premium",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "3.6L SUBARU BOXER engine replacing 2.5L",
+      "Dual chrome exhaust outlets",
+      "Fog lights",
+      "Aluminum-alloy pedal covers",
+      "Carbon fiber-patterned accent trim on doors and console",
+      "Leather-trimmed upholstery",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "4-way power front-passenger's seat"
+    ],
+    "2.5GT Limited": [
+      "2.5L turbocharged SUBARU BOXER engine",
+      "Functional hood scoop feeding turbocharger intercooler",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "4-way power front-passenger's seat",
+      "Leather-trimmed upholstery",
+      "Woodgrain-patterned accent trim on doors and console",
+      "6-disc in-dash CD changer",
+      "Automatic transmission paddle shifters"
+    ],
+    "3.6R Premium": [
+      "Body-color folding side mirrors",
+      "Power tilt/sliding-glass moonroof",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "Heated front seats and heated side mirrors with windshield wiper de-icer",
+      "Silver metallic trim on doors and console",
+      "Leather-wrapped 3-spoke steering wheel with Bluetooth and cruise control buttons"
+    ],
+    "2.5i Premium": [
+      "Body-color folding side mirrors",
+      "Single chrome exhaust outlet",
+      "10-way power driver's seat with power adjustable lumbar support",
+      "Power tilt/sliding-glass moonroof",
+      "Heated front seats and heated side mirrors with windshield wiper de-icer",
+      "Silver metallic trim on doors and console",
+      "Leather-wrapped 3-spoke steering wheel with Bluetooth and cruise control buttons",
+      "6-disc in-dash CD changer"
+    ],
+    "2.5i": [
+      "Subaru Symmetrical All-Wheel Drive (AWD) standard",
+      "2.5L SUBARU BOXER engine",
+      "Projector-beam low-beam and multireflector high-beam headlights with auto-on",
+      "4-wheel antilock brakes with Electronic Brake-force Distribution",
+      "Daytime Running Lights",
+      "Vehicle Dynamics Control and Traction Control System",
+      "8 cup holders and overhead console with dual maplights",
+      "4-speaker audio system with CS audio enhancement and MP3/WMA/AAC playback",
+      "Manually adjustable tilt/telescoping steering column",
+      "6-way manually adjustable driver's seat"
+    ]
+  }
+}

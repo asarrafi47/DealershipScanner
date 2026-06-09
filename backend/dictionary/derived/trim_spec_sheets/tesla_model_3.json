@@ -1,0 +1,40 @@
+{
+  "ladder_id": "tesla_model_3",
+  "make": "Tesla",
+  "models": [
+    "Model 3"
+  ],
+  "year_min": 2017,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Plaid": [
+      {
+        "label": "Engine Options",
+        "value": "Tri-motor performance"
+      }
+    ],
+    "Performance": [
+      {
+        "label": "Engine Options",
+        "value": "Dual-motor performance tuning"
+      }
+    ],
+    "Long Range": [
+      {
+        "label": "Engine Options",
+        "value": "Dual-motor all-wheel drive; EV Electricity"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior"
+      }
+    ],
+    "Standard Range": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

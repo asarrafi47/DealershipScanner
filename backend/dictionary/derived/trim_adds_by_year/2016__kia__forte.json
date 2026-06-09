@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|kia|forte",
+  "year": 2016,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_llm_2016__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX",
+    "LX",
+    "S"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "2.0L Gasoline Direct Injection engine (Sedan) or 1.6L Turbo engine option",
+      "6-speed Sportmatic automatic transmission standard",
+      "Active Eco System standard",
+      "17-inch alloy wheels standard (Sedan/Forte5)",
+      "18-inch alloy wheels option",
+      "Power-folding outside mirrors",
+      "Front LED accent lights",
+      "Leather seat trim",
+      "Ventilated driver's seat",
+      "8-way power-adjustable driver's seat"
+    ],
+    "LX": [
+      "1.8L Multipoint Injection engine standard",
+      "6-speed manual transmission standard",
+      "16-inch alloy wheels (Koup)",
+      "Front fog lights",
+      "4.2-inch TFT color LCD meter cluster",
+      "Auto on/off headlights (Forte5 standard)",
+      "Cruise control standard (Forte5)",
+      "Sliding dual visor with mirror and light (Forte5 standard)",
+      "60/40 split-folding rear seats",
+      "Rear-seat center armrest with cup holders (Forte5 standard)"
+    ],
+    "S": [
+      "1.8L Multipoint Injection 4-cylinder engine",
+      "6-speed manual transmission",
+      "15-inch steel wheels (Sedan) or 16-inch steel wheels (Forte5)",
+      "Cloth seat trim",
+      "6-way manually adjustable driver's seat",
+      "AM/FM/CD/MP3/SiriusXM audio system with 4 speakers",
+      "Power door locks, windows, and remote keyless entry",
+      "Dual front advanced airbags and side curtain airbags",
+      "Anti-lock Braking System and Electronic Stability Control",
+      "Tire-Pressure Monitoring System"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2027_bmw_i5_complete_options",
+  "make": "BMW",
+  "models": [
+    "i5",
+    "i5"
+  ],
+  "year_min": 2025,
+  "year_max": 2029,
+  "source": "generated",
+  "trims": {
+    "xDrive40": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "eDrive40": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

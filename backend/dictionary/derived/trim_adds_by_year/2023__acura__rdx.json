@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2023|acura|rdx",
+  "year": 2023,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_llm_2023__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A-Spec Advance Package SH-AWD",
+    "Advance Package SH-AWD",
+    "A-Spec Package SH-AWD",
+    "Technology Package SH-AWD",
+    "SH-AWD",
+    "A-Spec Package FWD",
+    "Technology Package FWD",
+    "FWD"
+  ],
+  "adds_by_trim": {
+    "A-Spec Advance Package SH-AWD": [
+      "A-Spec styling and design elements over base Advance Package"
+    ],
+    "Advance Package SH-AWD": [
+      "Additional premium features over A-Spec Package SH-AWD"
+    ],
+    "A-Spec Package SH-AWD": [
+      "A-Spec exterior styling and unique design features",
+      "SH-AWD Super Handling All-Wheel Drive system"
+    ],
+    "Technology Package SH-AWD": [
+      "Advanced technology and infotainment features",
+      "SH-AWD Super Handling All-Wheel Drive system"
+    ],
+    "SH-AWD": [
+      "SH-AWD Super Handling All-Wheel Drive system"
+    ],
+    "A-Spec Package FWD": [
+      "A-Spec exterior styling and unique design features"
+    ],
+    "Technology Package FWD": [
+      "Advanced technology and infotainment features"
+    ],
+    "FWD": [
+      "2.0L Turbocharged engine with 10-speed automatic transmission",
+      "Front-wheel drive configuration"
+    ]
+  }
+}

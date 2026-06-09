@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2019|hyundai|nexo",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Nexo",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2019_Hyundai_Nexo_Brochure.pdf",
+  "page_count": 8,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "pages": [
+    {
+      "page": 7,
+      "trim_hint": false,
+      "text": "NEXO Blue Limited NEXO Blue Limited\nPower & Handling Advanced Safety Features\nZero-emission hydrogen fuel cell powertrain Rear View Monitor with Parking Guidance\n95 kW fuel cell and 40 kW (1.56 kWh) lithium-ion Rear Cross-Traffic Collision Warning\npolymer battery\nFront and Rear Parking Distance Warning\n120 kW (161 hp) permanent magnet electric motor\nLane Follow Assist\nwith 291 lb-ft torque\nSurround View Monitor \u2014\n14.0 lbs hydrogen tank capacity\nBlind View Monitor \u2014\nSingle-speed automatic transmission\nDriver Attention Warning\nPush button drive selector\nHigh Beam Assist\nFront Wheel Drive\nSmart Cruise Control with Stop & Go\nMulti-link rear suspension\nRegenerative brake level control paddles Audio & Connected Car Technology\nExterior Features 12.3\u02ddhigh-resolution color touchscreen navigation\nAndroid Auto\u2122 and Apple CarPlay\u2122\nLED headlights/taillights and Daytime Running Lights\n17\u02ddalloy wheels with 225/60R17 tires \u2014 SiriusXM\u00ae Satellite Radio and HD Radio\u2122 Technology\n19\u02ddalloy wheels with 245/45R19 tires \u2014 Blue Link\u00ae Connected Car System (3 years complimentary)\nPower folding, heated side mirrors Wireless charging pad\nwith LED turn signal indicators Krell\u00ae 440-Watt Premium Audio system\n\u2014\nBodycolor flush auto-retracting door handles with 8 speakers and Live Dynamic Algorithm\nDual front USB charge ports\nAutomatic on/off headlights\nRear spoiler with hidden rear window wiper Standard Optional \u2014 Not Available\nPower tilt-and-slide wide sunroof \u2014\nExterior / Interior Dimensions\nRoof side rails \u2014\nSolar control front windows Blue/Limited\nHands-free smart liftgate with auto open \u2014 Wheelbase 109.8 in\nInterior Features Overall Length 183.9 in\nProximity Key entry with push button start Overall Width 73.2 in\n7\u02ddLCD multi-info display Overall Height (with roof side rails) 64.2 (64.6) in\nWhite Pearl\nTilt-and-telescopic steering wheel with audio, Coefficient of Drag 0.32 Cd\nBluetooth\u00ae phone and cruise controls Head Room - front (with sunroof) / rear 39.4 (38.0) / 38.0 in\nDual automatic temperature control Leg Room - front / rear 41.5 / 38.6 in\nFloor console-mounted rear vents Shoulder Room - front / rear 57.2 / 55.5 in\nRemote Smart Parking Assist \u2014 Hip Room - front / rear 54.0 / 53.5 in\nElectronic Parking Brake with Automatic Vehicle Hold\nLeather-wrapped steering wheel EPA Estimated MPGe10\nSynthetic leather seating Blue Limited\n8-way power driver seat with power lumbar support City 65 59\n6-way power front passenger seat Highway 58 54\nHeated front seats Combined 61 57\nVentilated front seats \u2014 Max Driving Range 380 354 Dusk Blue\nHeated steering wheel \u2014\n60/40 split-folding rear seats w/ adjustable head restraints\nRear-seat center armrest with dual cupholders\nAuto-dimming rearview mirror with HomeLink\u00ae 161hp\n380\nCargo-area cover \u2014 MI\nAdvanced Safety Features\n291Ib-ft\nMAX DRIVING\nRANGE9\nForward Collision-Avoidance Assist\nBlind-Spot Collision Warning",
+      "table_lines": [
+        "NEXO | Blue | Limited",
+        "Exterior Features",
+        "\u2014",
+        "\u2014\n\u2014",
+        "\u2014",
+        "Interior Features",
+        "\u2014",
+        "\u2014",
+        "\u2014",
+        "\u2014",
+        "Advanced Safety Features",
+        "O | Blue | Limited",
+        "\u2014",
+        "\u2014",
+        "io & Connected Car Technology",
+        "\u2014",
+        "Blue/Limited",
+        "elbase | 109.8 in",
+        "rall Length | 183.9 in",
+        "rall Width | 73.2 in",
+        "rall Height (with roof side rails) | 64.2 (64.6) in",
+        "fficient of Drag | 0.32 Cd",
+        "d Room - front (with sunroof) / rear | 39.4 (38.0) / 38.0 in",
+        "Room - front / rear | 41.5 / 38.6 in",
+        "ulder Room - front / rear | 57.2 / 55.5 in",
+        "Room - front / rear | 54.0 / 53.5 in",
+        "Blue | Limited",
+        "65 | 59",
+        "hway | 58 | 54",
+        "bined | 61 | 57",
+        "Driving Range | 380 | 354"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 7 ---\nNEXO Blue Limited NEXO Blue Limited\nPower & Handling Advanced Safety Features\nZero-emission hydrogen fuel cell powertrain Rear View Monitor with Parking Guidance\n95 kW fuel cell and 40 kW (1.56 kWh) lithium-ion Rear Cross-Traffic Collision Warning\npolymer battery\nFront and Rear Parking Distance Warning\n120 kW (161 hp) permanent magnet electric motor\nLane Follow Assist\nwith 291 lb-ft torque\nSurround View Monitor \u2014\n14.0 lbs hydrogen tank capacity\nBlind View Monitor \u2014\nSingle-speed automatic transmission\nDriver Attention Warning\nPush button drive selector\nHigh Beam Assist\nFront Wheel Drive\nSmart Cruise Control with Stop & Go\nMulti-link rear suspension\nRegenerative brake level control paddles Audio & Connected Car Technology\nExterior Features 12.3\u02ddhigh-resolution color touchscreen navigation\nAndroid Auto\u2122 and Apple CarPlay\u2122\nLED headlights/taillights and Daytime Running Lights\n17\u02ddalloy wheels with 225/60R17 tires \u2014 SiriusXM\u00ae Satellite Radio and HD Radio\u2122 Technology\n19\u02ddalloy wheels with 245/45R19 tires \u2014 Blue Link\u00ae Connected Car System (3 years complimentary)\nPower folding, heated side mirrors Wireless charging pad\nwith LED turn signal indicators Krell\u00ae 440-Watt Premium Audio system\n\u2014\nBodycolor flush auto-retracting door handles with 8 speakers and Live Dynamic Algorithm\nDual front USB charge ports\nAutomatic on/off headlights\nRear spoiler with hidden rear window wiper Standard Optional \u2014 Not Available\nPower tilt-and-slide wide sunroof \u2014\nExterior / Interior Dimensions\nRoof side rails \u2014\nSolar control front windows Blue/Limited\nHands-free smart liftgate with auto open \u2014 Wheelbase 109.8 in\nInterior Features Overall Length 183.9 in\nProximity Key entry with push button start Overall Width 73.2 in\n7\u02ddLCD multi-info display Overall Height (with roof side rails) 64.2 (64.6) in\nWhite Pearl\nTilt-and-telescopic steering wheel with audio, Coefficient of Drag 0.32 Cd\nBluetooth\u00ae phone and cruise controls Head Room - front (with sunroof) / rear 39.4 (38.0) / 38.0 in\nDual automatic temperature control Leg Room - front / rear 41.5 / 38.6 in\nFloor console-mounted rear vents Shoulder Room - front / rear 57.2 / 55.5 in\nRemote Smart Parking Assist \u2014 Hip Room - front / rear 54.0 / 53.5 in\nElectronic Parking Brake with Automatic Vehicle Hold\nLeather-wrapped steering wheel EPA Estimated MPGe10\nSynthetic leather seating Blue Limited\n8-way power driver seat with power lumbar support City 65 59\n6-way power front passenger seat Highway 58 54\nHeated front seats Combined 61 57\nVentilated front seats \u2014 Max Driving Range 380 354 Dusk Blue\nHeated steering wheel \u2014\n60/40 split-folding rear seats w/ adjustable head restraints\nRear-seat center armrest with dual cupholders\nAuto-dimming rearview mirror with HomeLink\u00ae 161hp\n380\nCargo-area cover \u2014 MI\nAdvanced Safety Features\n291Ib-ft\nMAX DRIVING\nRANGE9\nForward Collision-Avoidance Assist\nBlind-Spot Collision Warning\n\nNEXO | Blue | Limited\nExterior Features\n\u2014\n\u2014\n\u2014\n\u2014\nInterior Features\n\u2014\n\u2014\n\u2014\n\u2014\nAdvanced Safety Features\nO | Blue | Limited\n\u2014\n\u2014\nio & Connected Car Technology\n\u2014\nBlue/Limited\nelbase | 109.8 in\nrall Length | 183.9 in\nrall Width | 73.2 in\nrall Height (with roof side rails) | 64.2 (64.6) in\nfficient of Drag | 0.32 Cd\nd Room - front (with sunroof) / rear | 39.4 (38.0) / 38.0 in\nRoom - front / rear | 41.5 / 38.6 in\nulder Room - front / rear | 57.2 / 55.5 in\nRoom - front / rear | 54.0 / 53.5 in\nBlue | Limited\n65 | 59\nhway | 58 | 54\nbined | 61 | 57\nDriving Range | 380 | 354"
+}

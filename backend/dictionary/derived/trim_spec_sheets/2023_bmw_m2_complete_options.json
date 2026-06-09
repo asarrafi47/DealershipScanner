@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_bmw_m2_complete_options",
+  "make": "BMW",
+  "models": [
+    "M2",
+    "M2"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L B38 I3 turbo; L N20/B48 I4 turbo"
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2025|toyota|crown",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Crown",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on XLE Adds to or replaces features offered on Limited",
+      "Hybrid engine: 2.5-Liter Dynamic Force 4-Cylinder Hybrid engine: 2.5-Liter Dynamic Force 4-Cylinder Hybrid engine: 2.5-Liter Dynamic Force 4-Cylinder",
+      "Electronically controlled Continuously Variable Electronically controlled Continuously Variable Electronically controlled Continuously Variable",
+      "Transmission (ECVT) Transmission (ECVT)",
+      "All-Wheel Drive (AWD) All-Wheel Drive (AWD)",
+      "All-Wheel Drive (AWD)",
+      "Eco, Normal, Sport drive modes Eco, Normal, Sport drive modes",
+      "Eco, Normal, Sport drive modes",
+      "Exterior Features Exterior Features",
+      "Bi-LED projector low- and high-beam headlights Quad-LED projector low- and high-beam headlights Quad-LED projector low- and high-beam",
+      "LED taillights and stop lights Panoramic fixed-glass roof with power sunshade Panoramic fixed-glass roof with power sunshade",
+      "Color-keyed outside door handles with touch-sensor Interior Features D ark badging"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

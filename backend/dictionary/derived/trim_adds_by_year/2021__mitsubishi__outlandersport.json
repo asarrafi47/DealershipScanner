@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2021|mitsubishi|outlandersport",
+  "year": 2021,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2021__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SE",
+    "BE",
+    "LE",
+    "ES",
+    "S"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "2.4L engine instead of 2.0L",
+      "AWC standard (all-wheel control)",
+      "Auto-dimming rearview mirror",
+      "Homelink® integrated into rearview mirror",
+      "Combination soft-touch seating surfaces"
+    ],
+    "SE": [
+      "Gloss black and satin silver grille accents",
+      "Heated front seats",
+      "Blind Spot Warning (BSW)",
+      "Rear Cross Traffic Alert (RCTA)",
+      "Fast-Key Entry System with push button start"
+    ],
+    "BE": [
+      "Spoiler in body color",
+      "Alloy fuel door",
+      "Black tailgate trim",
+      "Black front and rear lower trim with red bezels",
+      "Black door handle trim with red wheel and side graphics"
+    ],
+    "LE": [
+      "8.0-inch Smartphone-link Display Audio (SDA)",
+      "18-inch black painted alloy wheels",
+      "Black side mirrors",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "Black fabric seating with red stitch",
+      "Apple CarPlay and Android Auto",
+      "SiriusXM with 3-month all access trial"
+    ],
+    "ES": [
+      "18-inch two-tone alloy wheels",
+      "Fog lights",
+      "2WD or AWC available"
+    ],
+    "S": [
+      "5-passenger seating",
+      "7-inch display audio",
+      "Electric power steering",
+      "Automatic headlights",
+      "Forward Collision Mitigation with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Heated power side mirrors",
+      "Active Stability Control",
+      "Automatic High Beam",
+      "Rear view camera"
+    ]
+  }
+}

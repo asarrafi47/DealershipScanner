@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2017|mazda|mx5",
+  "year": 2017,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2017__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Club",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Bose Premium Sound System with 9 speakers including 45mm UltraNearfield speakers in headrests",
+      "Bose AudioPilot 2 Noise Compensation Technology",
+      "Two USB audio inputs for MP3 playback"
+    ],
+    "Club": [
+      "Bose Premium Sound System with 9 speakers including 45mm UltraNearfield speakers in headrests",
+      "Bose AudioPilot 2 Noise Compensation Technology",
+      "Two USB audio inputs for MP3 playback"
+    ],
+    "Sport": [
+      "SKYACTIV-G 2.0L DOHC 16-valve 4-cylinder engine with variable intake-valve timing",
+      "SKYACTIV-MT 6-speed manual transmission with short-throw shifter or 6-speed Sport automatic with paddle shifters",
+      "Aluminum Power Plant Frame with Aluminum alloy engine block and cylinder head",
+      "Rack-and-pinion electric power steering with 15.5:1 ratio",
+      "Double-wishbone front suspension with independent multilink rear suspension",
+      "11-inch ventilated front and solid rear disc brakes with ABS and Electronic Brakeforce Distribution",
+      "Front and rear stabilizer bars with gas-charged shock absorbers"
+    ]
+  }
+}

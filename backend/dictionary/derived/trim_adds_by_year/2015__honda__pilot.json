@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2015|honda|pilot",
+  "year": 2015,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "brochure_llm_2015__honda__pilot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Pilot Touring",
+    "Pilot EX-L with Navigation",
+    "Pilot EX-L with RES",
+    "Pilot EX-L",
+    "Pilot EX",
+    "Pilot SE",
+    "Pilot LX"
+  ],
+  "adds_by_trim": {
+    "Pilot Touring": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "Honda DVD Rear Entertainment System with 10 speakers",
+      "Trailer harness standard (not accessory)",
+      "Multi-angle rearview camera with guidelines and compass",
+      "Leather-trimmed interior",
+      "SiriusXM Radio with Song By Voice"
+    ],
+    "Pilot EX-L with Navigation": [
+      "Honda Satellite-Linked Navigation System with voice recognition",
+      "Multi-angle rearview camera with guidelines"
+    ],
+    "Pilot EX-L with RES": [
+      "Honda DVD Rear Entertainment System",
+      "115-volt power outlet"
+    ],
+    "Pilot EX-L": [
+      "Unique 18-inch alloy wheels",
+      "One-touch power moonroof with tilt",
+      "Power tailgate",
+      "Integrated sunshades (2nd-row)",
+      "i-MID with 8-inch screen, customizable settings and interface dial",
+      "Automatic-dimming rearview mirror",
+      "Fog lights"
+    ],
+    "Pilot EX": [
+      "MacPherson strut front suspension with multi-link rear arms",
+      "18-inch alloy wheels",
+      "Power window, door and tailgate locks",
+      "Cruise control",
+      "Security system",
+      "Six airbags",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Vehicle Stability Assist with traction control"
+    ],
+    "Pilot SE": [
+      "Integrated Class III trailer hitch",
+      "Pre-wired for trailer harness",
+      "12-volt power outlets in front, 2nd-row and cargo area",
+      "i-MID with 8-inch screen",
+      "Bluetooth HandsFreeLink with streaming audio",
+      "MP3 and auxiliary input jack",
+      "Body-colored parking sensors front and rear",
+      "Roof rails"
+    ],
+    "Pilot LX": [
+      "250-hp 3.5-liter i-VTEC V6 engine",
+      "5-speed Automatic transmission",
+      "Tri-zone automatic climate control",
+      "2-GB CD library",
+      "SiriusXM XM Radio with 6 speakers",
+      "Rearview camera with guidelines",
+      "Daytime Running Lights",
+      "Remote entry",
+      "Tilt and telescopic steering column",
+      "Map lights all rows"
+    ]
+  }
+}

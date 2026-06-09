@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2010|hyundai|accent",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2010__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GLS",
+    "SE",
+    "GS",
+    "Blue"
+  ],
+  "adds_by_trim": {
+    "GLS": [
+      "Power tilt-and-slide glass sunroof",
+      "Rear-seat center armrest with cupholders",
+      "Premium Package with ABS and EBD",
+      "172-watt AM/FM/XM/CD/MP3 audio system with six speakers",
+      "iPod/USB and MP3 auxiliary input jacks"
+    ],
+    "SE": [
+      "Front fog lights",
+      "Leather-wrapped steering wheel and shift knob",
+      "16-inch alloy wheels with P205/45R16 tires",
+      "Sport-tuned suspension",
+      "B&M Racing Sport Shifter on manual models"
+    ],
+    "GS": [
+      "1.6-liter DOHC 4-cylinder engine with Continuously Variable Valve Timing",
+      "5-speed manual transmission standard or 4-speed automatic transmission available",
+      "Sport-tuned power-assisted rack-and-pinion steering",
+      "Sporty cloth seats with 6-way adjustable driver seat",
+      "Remote keyless entry system with alarm and panic alert"
+    ],
+    "Blue": [
+      "1.6-liter DOHC 4-cylinder engine with Continuously Variable Valve Timing",
+      "5-speed high-efficiency manual transmission with EcoShift indicator",
+      "Air conditioning",
+      "Body color bumpers and front grill",
+      "Rear spoiler and side marker lights",
+      "Rear window defroster",
+      "Dual illuminated vanity mirrors with map lights",
+      "60/40 split fold-down rear seatback",
+      "Tilt steering wheel",
+      "Dual front cupholders and front map pockets with bottle holders"
+    ]
+  }
+}

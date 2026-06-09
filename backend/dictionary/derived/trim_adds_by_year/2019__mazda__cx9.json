@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|mazda|cx9",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_2019__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds SKYACTIV-G 2.5T DOHC 4-cylinder turbocharged engine",
+      "Adds SKYACTIV-Drive 6-speed automatic transmission with manual shift and Sport modes",
+      "Adds front-wheel drive as standard drivetrain",
+      "Adds Blind Spot Monitoring",
+      "Adds Rear Cross Traffic Alert",
+      "Adds Lane Departure Warning System",
+      "Adds High Beam Control",
+      "Adds Smart Brake Support with Collision Warning"
+    ],
+    "Signature": [
+      "Upgraded to i-ACTIV AWD as standard drivetrain",
+      "Adds 360° View Monitor",
+      "Adds Lane-Keep Assist",
+      "Adds Adaptive Front-Lighting System",
+      "Adds Smart City Brake Support",
+      "Adds Advanced Smart City Brake Support with Pedestrian Detection",
+      "Adds Mazda Radar Cruise Control with Stop & Go",
+      "Adds Traffic Sign Recognition System"
+    ]
+  }
+}

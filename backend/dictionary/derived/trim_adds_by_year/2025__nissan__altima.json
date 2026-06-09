@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2025|nissan|altima",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2025__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "8-way power adjustable driver's seat",
+      "Heated front seats",
+      "Leather-appointed seats",
+      "19-inch machine-finished aluminum-alloy wheels",
+      "Power sliding glass moonroof",
+      "Chrome door handles",
+      "NissanConnect 12.3-inch color touchscreen with multi-touch control",
+      "Dual zone automatic temperature control"
+    ],
+    "SR": [
+      "17-inch black-finished aluminum-alloy wheels",
+      "Sport cloth seat trim",
+      "Sport-tuned suspension",
+      "Chrome V-Motion grille",
+      "NissanConnect 8-inch color touchscreen with multi-touch control"
+    ],
+    "SV": [
+      "17-inch machine-finished aluminum-alloy wheels",
+      "4-way power adjustable front-passenger seat",
+      "Cloth seat trim",
+      "LED projector headlights with LED signature",
+      "Dual power outside mirrors with LED turn signal indicators",
+      "Advanced Drive-Assist 7-inch display"
+    ],
+    "S": [
+      "2.5-liter Direct Injection Gasoline DOHC 16-valve 4-cylinder engine with 188 hp",
+      "Front-Wheel Drive with Xtronic CVT transmission",
+      "6-way adjustable driver's seat",
+      "16-inch steel wheels with wheel covers",
+      "5-inch multi-function information display",
+      "Intelligent Auto Headlights",
+      "Body-color door handles",
+      "Cruise control",
+      "Power windows with one-touch driver-side auto-up/down",
+      "Power door locks with auto-locking feature"
+    ]
+  }
+}

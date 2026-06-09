@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2021|lincoln|nautilus",
+  "year": 2021,
+  "make": "Lincoln",
+  "model": "Nautilus",
+  "ladder_id": "inventory_lincoln_nautilus",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "eatures may be offered only in combination with other options or subject to additional ordering requirements/limitations. Dimensions shown may vary due to optional f"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Premium": 0
+    }
+  }
+}

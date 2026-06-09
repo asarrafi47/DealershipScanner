@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|bmw|6series",
+  "year": 2010,
+  "make": "BMW",
+  "model": "6 Series",
+  "ladder_id": "brochure_2010__bmw__6series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 18\" wheels as standard",
+      "Adds Features sport-tuned suspension",
+      "Adds Includes four-function braking capabilities (Brake Stand-by, Brake Drying, Start-off Assistant, Brake Fade Compensation)"
+    ],
+    "SE": [
+      "Adds Active Roll Stabilization to reduce body roll in tight corners",
+      "Adds Premium Sound Package with Logic7 audio system and iPod/USB adapter compatibility"
+    ],
+    "Sport": [
+      "Adds Active Steering feature that varies steering ratio based on vehicle speed"
+    ],
+    "Limited": [
+      "Adds HD Radio with free digital broadcasts and CD-quality sound",
+      "Adds multicast FM stations and innovative data services"
+    ],
+    "Premium": [
+      "Adds Head-up Display feature for critical driving information in driver's line of vision",
+      "Adds Active Cruise Control with Stop & Go feature for automated braking capability",
+      "Adds Sun-Reflective Technology in leather for temperature management"
+    ]
+  }
+}

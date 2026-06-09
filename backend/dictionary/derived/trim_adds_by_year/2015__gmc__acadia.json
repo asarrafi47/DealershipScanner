@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2015|gmc|acadia",
+  "year": 2015,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_llm_2015__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT-2",
+    "SLT-1",
+    "SLE-2",
+    "SLE-1"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Dual exhaust with flow-through fascia design",
+      "Premium Denali-specific carpeted floor mats for all 3 rows",
+      "Premium acoustical package",
+      "Perforated leather-appointed seating in first and second rows",
+      "Heated and cooled front seats",
+      "8-way power front-passenger seat",
+      "Power tilt and telescopic steering wheel",
+      "Heated leather-wrapped steering wheel with mahogany wood trim",
+      "Illuminated front sill plate",
+      "288 hp and 270 lb-ft of torque engine"
+    ],
+    "SLT-2": [
+      "All-wheel drive option",
+      "Tri-zone air conditioning with individual climate settings",
+      "Leather-appointed seating in first and second rows",
+      "8-way power driver seat with power recline, lumbar, and 2-position memory",
+      "Auto-dimming inside rearview mirror",
+      "2-panel dual skyscape sunroof with tilt-sliding front and fixed rear",
+      "Head-up display with digital multifunction readouts",
+      "Technology package with high-intensity discharge projector headlamps",
+      "Color touch navigation with IntelliLink and 6.5-inch display",
+      "Universal home remote 3-channel programmable"
+    ],
+    "SLT-1": [
+      "All-wheel drive option",
+      "Tri-zone air conditioning with individual climate settings",
+      "Leather-appointed seating in first and second rows",
+      "8-way power driver seat with power recline and lumbar control",
+      "Auto-dimming inside rearview mirror",
+      "Color touch radio with IntelliLink and 6.5-inch display",
+      "Universal home remote with overhead console",
+      "7-passenger seating with flat-folding captain's chairs and smart slide",
+      "Remote vehicle start"
+    ],
+    "SLE-2": [
+      "8-way power driver seat with power recline and lumbar control",
+      "2-way power front-passenger seat with manual recline and lumbar control",
+      "Heated front seats",
+      "Remote vehicle start",
+      "Variable effort power steering",
+      "Power windows with driver express-up and -down and passenger express-down",
+      "7-passenger seating with flat-folding captain's chairs and smart slide",
+      "Enhanced driver information center with digital compass and tire pressure monitor"
+    ],
+    "SLE-1": [
+      "4-wheel antilock disc brakes",
+      "3.6L direct-injection V-6 VVT engine with 281 hp and 266 lb-ft of torque",
+      "6-speed automatic transmission with overdrive",
+      "Front and rear independent suspension",
+      "StabiliTrak stability and traction control",
+      "Power door locks and remote keyless entry",
+      "Premium cloth seat trim with 4-way manual driver and 2-way manual passenger buckets",
+      "Rear vision camera system with dynamic grid lines",
+      "Ultrasonic rear parking assist",
+      "10 cupholders and overhead console with map lights"
+    ]
+  }
+}

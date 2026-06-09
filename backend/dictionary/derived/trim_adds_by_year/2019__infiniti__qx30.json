@@ -1,0 +1,82 @@
+{
+  "catalog_key": "2019|infiniti|qx30",
+  "year": 2019,
+  "make": "Infiniti",
+  "model": "QX30",
+  "ladder_id": "brochure_llm_2019__infiniti__qx30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX30 SPORT",
+    "QX30 ESSENTIAL AWD",
+    "QX30 LUXE AWD",
+    "QX30 ESSENTIAL",
+    "QX30 LUXE",
+    "QX30 PURE"
+  ],
+  "adds_by_trim": {
+    "QX30 SPORT": [
+      "Sport front and rear lower fascias with LED front fog lights",
+      "Lowered sport-tuned suspension",
+      "19-inch Gun Metallic double 5-spoke aluminum-alloy wheels with 235/45R19 summer run-flat tires",
+      "Cross-drilled front brake rotors with INFINITI-branded calipers",
+      "Body-color side sill panel",
+      "Gloss black grille paint and black outside mirror caps",
+      "Chrome dual exhaust finishers",
+      "Sport seats with integrated headrests and leatherette/suede-like upholstery",
+      "Flat bottom leather-wrapped steering wheel",
+      "8-way power front seats with 4-way power lumbar support"
+    ],
+    "QX30 ESSENTIAL AWD": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "1.2-inch raised AWD suspension",
+      "Unique front and rear AWD styling",
+      "Extended overfenders",
+      "Unique sills in black mold-in color",
+      "Unique 18-inch machine-finished aluminum-alloy wheels"
+    ],
+    "QX30 LUXE AWD": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "1.2-inch raised AWD suspension",
+      "Unique front and rear AWD styling",
+      "Extended overfenders",
+      "Unique sills in black mold-in color",
+      "Unique 18-inch machine-finished aluminum-alloy wheels"
+    ],
+    "QX30 ESSENTIAL": [
+      "Bose 10-speaker premium audio system",
+      "Leather-appointed seats",
+      "Rain-sensing front windshield wipers",
+      "Heated windshield washers",
+      "LED headlights with auto levelizer",
+      "Adaptive Front Lighting System (AFS)",
+      "LED front fog lights",
+      "Blind Spot Warning (BSW)",
+      "Enhanced Interior LED illumination",
+      "Aluminum kick plates and Metallic Cargo Area Finisher"
+    ],
+    "QX30 LUXE": [
+      "Panoramic moonroof with power sunshade",
+      "Leatherette and textile seats",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver",
+      "Memory system for front seats and mirrors",
+      "8-way power front seats",
+      "4-way front-passenger power lumbar support",
+      "Heated front seats",
+      "Driver's seatback pocket",
+      "Rear armrest and ski hatch",
+      "Roof rails"
+    ],
+    "QX30 PURE": [
+      "2.0-liter turbocharged I4 engine with Idle Stop/Start",
+      "7-speed double clutch automatic transmission",
+      "LED signature daytime running lights",
+      "Halogen automatic on/off headlights",
+      "18-inch aluminum-alloy wheels with 235/50R18 all-season run-flat tires",
+      "Power folding and heated outside mirrors",
+      "Auto-dimming driver's outside mirror",
+      "Puddle lights with body-color outside mirror caps",
+      "Forward Emergency Braking (FEB) and Hill start assist",
+      "RearView Monitor with INFINITI InTouch 7-inch touchscreen, Intelligent Key, and Bluetooth"
+    ]
+  }
+}

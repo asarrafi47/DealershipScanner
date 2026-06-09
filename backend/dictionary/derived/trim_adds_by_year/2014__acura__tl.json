@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2014|acura|tl",
+  "year": 2014,
+  "make": "acura",
+  "model": "tl",
+  "ladder_id": "brochure_llm_2014__acura__tl",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL SH-AWD Advance Package",
+    "TL Advance Package",
+    "TL SH-AWD Technology Package",
+    "TL Technology Package",
+    "TL Special Edition",
+    "TL"
+  ],
+  "adds_by_trim": {
+    "TL SH-AWD Advance Package": [
+      "Power moonroof with tilt feature",
+      "Blind-spot information system (BSI)",
+      "Auto-on/off xenon HID headlights",
+      "Ventilated and heated front seats",
+      "Fog lights",
+      "19-inch aluminum-alloy wheels with P245/40 R19 tires"
+    ],
+    "TL Advance Package": [
+      "Power moonroof with tilt feature",
+      "Blind-spot information system (BSI)",
+      "Auto-on/off xenon HID headlights",
+      "Ventilated and heated front seats",
+      "Fog lights",
+      "18-inch aluminum-alloy wheels with increased size"
+    ],
+    "TL SH-AWD Technology Package": [
+      "305-hp 3.7-liter V-6 engine with intake/exhaust VTEC",
+      "Super Handling All-Wheel Drive (SH-AWD)",
+      "Hill start assist",
+      "Close-ratio 6-speed manual transmission available",
+      "Acura Navigation System with Voice Recognition",
+      "Acura/ELS Surround Premium Audio with HDD and 10 speakers",
+      "Song By Voice and AcuraLink Real-Time Traffic and Weather",
+      "Rearview camera with keyless access and smart entry",
+      "Perforated Milano Premium Leather-trimmed interior",
+      "18-inch aluminum-alloy wheels with P245/45 R18 tires"
+    ],
+    "TL Technology Package": [
+      "280-hp 3.5-liter V-6 engine with VTEC",
+      "Acura Navigation System with Voice Recognition",
+      "Acura/ELS Surround Premium Audio with HDD and 10 speakers",
+      "Song By Voice and AcuraLink Real-Time Traffic and Weather",
+      "Rearview camera with keyless access and smart entry",
+      "GPS-linked solar-sensing dual-zone adaptive climate control",
+      "Perforated Milano Premium Leather-trimmed interior"
+    ],
+    "TL Special Edition": [
+      "Exclusive 18-inch aluminum alloy wheels with chrome-look finish",
+      "Body-colored decklid spoiler",
+      "Contrast stitching for leather trimmed interior",
+      "Special Edition badge"
+    ],
+    "TL": [
+      "280-hp 3.5-liter 24-valve SOHC VTEC V-6 engine",
+      "6-speed automatic transmission with sport mode and paddle shifters",
+      "Front-wheel drive with 4-wheel independent suspension",
+      "17-inch aluminum-alloy wheels with P245/50 R17 tires",
+      "Dual-zone dual-mode adaptive climate control system",
+      "Leather-trimmed interior with heated power-adjustable front seats",
+      "Acura Premium Sound System with 8 speakers and subwoofer",
+      "Bluetooth HandsFreeLink telephone interface",
+      "USB Audio Interface with iPod integration",
+      "Remote entry system with personalized settings"
+    ]
+  }
+}

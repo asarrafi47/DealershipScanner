@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2022|toyota|avalon",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Avalon",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "Premium",
+    "Touring",
+    "LT",
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on XLE Hybrid Adds to or replaces features offered on XLE Hybrid",
+      "Hybrid engine: 2.5L 4-cylinder with 215 net hp Hybrid engine with 215 net hp Hybrid engine with 215 net hp",
+      "Electronically controlled Continuously Variable Sport-tuned suspension 43 city/43 highway/43 combined est. mpg4",
+      "Transmission (ECVT) with sequential shift mode 43 city/43 highway/43 combined est. mpg4 Exterior Features",
+      "Normal, Eco, EV39 and Sport drive modes",
+      "Exterior Features LED headlights with smoked chrome bezels, on/off",
+      "Front-Wheel Drive (FWD)",
+      "LED reflector headlights with smoked feature and Adaptive Cornering Lights",
+      "Exterior Features Front piano-black grille with sport mesh insert Color-keyed heated power outside mirrors with",
+      "LED reflector headlights and LED DRL Gloss-black rear spoiler memory feature and driver\u2019s-side auto-dimming",
+      "LED taillights Black door handles Interior Features",
+      "Front chrome grille surround with dark gray Gloss-black window trim Premium leather-trimmed seats"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE",
+      "Transmission with intelligence (ECT-i) with Front-Wheel Drive (FWD) 22 city/31 highway/25 combined combined est. mpg4",
+      "Sport-tuned suspension Exterior Features",
+      "Normal, Eco and Sport drive modes",
+      "Adaptive Variable Suspension (AVS)",
+      "Front-Wheel Drive (FWD) LED headlights with smoked chrome bezels, on/off",
+      "Exterior Features LED taillights with dynamic turn signals",
+      "LED headlights with smoked chrome bezels, on/off Color-keyed heated power outside mirrors with",
+      "LED reflector headlights and LED DRL with auto feature and Adaptive Cornering Lights memory feature and driver\u2019s-side auto-dimming",
+      "Front piano-black grille with sport mesh insert Interior Features",
+      "Front chrome grille surround with dark gray insert",
+      "Gloss-black heated power outside mirrors with Premium leather-trimmed seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

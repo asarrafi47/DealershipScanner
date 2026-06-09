@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2019|mazda|6",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2019__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA6 SIGNATURE",
+    "MAZDA6 GRAND TOURING RESERVE",
+    "MAZDA6 GRAND TOURING",
+    "MAZDA6 TOURING",
+    "MAZDA6 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA6 SPORT": [
+      "SKYACTIV-G 2.5L DOHC 16-valve 4-cylinder engine with Cylinder Deactivation",
+      "SKYACTIV-Drive 6-speed automatic transmission with manual shift and Sport modes",
+      "LED headlights with auto on/off and LED Daytime Running Lights",
+      "17-inch alloy wheels with Gun Metallic finish and P225/55 R17 tires",
+      "8-inch full-color touchscreen MAZDA CONNECT infotainment with voice command and Bluetooth",
+      "Advanced front air bags, front side-impact air bags, and side-impact air curtains",
+      "Mazda Radar Cruise Control with Stop & Go and Lane Departure Warning",
+      "Advanced Smart City Brake Support with Pedestrian Detection",
+      "Dual-zone automatic climate control and power windows with one-touch auto up/down",
+      "6-way manually adjustable driver's seat with manual lumbar support"
+    ],
+    "MAZDA6 TOURING": [
+      "6-way power-adjustable driver's seat with manual lumbar support",
+      "Heated front seats and leatherette-trimmed sport seats",
+      "Rear A/C vents with 2 USB charging ports in rear center armrest",
+      "Power sliding-glass moonroof with tilt feature",
+      "19-inch alloy wheels with Gun Metallic finish and P225/45 R19 tires",
+      "Apple CarPlay and Android Auto integration"
+    ],
+    "MAZDA6 GRAND TOURING": [
+      "SKYACTIV-G 2.5T DOHC 16-valve 4-cylinder Dynamic Pressure Turbo engine",
+      "Bose Centerpoint 2 Surround Sound audio system with AudioPilot and 11 speakers",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "Auto-dimming driver-side mirror and auto-dimming rearview mirror with HomeLink",
+      "Leather-wrapped steering wheel with paddle shifters"
+    ],
+    "MAZDA6 GRAND TOURING RESERVE": [
+      "8-way power-adjustable driver's seat with power lumbar adjustment and memory settings",
+      "6-way power-adjustable passenger seat with ventilated front seats",
+      "Heated steering wheel and heated rear seats",
+      "Heated side mirrors with automatic power folding",
+      "19-inch alloy wheels with Brilliant Silver finish and rear decklid spoiler",
+      "LED headlights with Adaptive Front-lighting System and windshield wiper de-icer",
+      "Windshield-projected full-color Active Driving Display and Traffic Sign Recognition System"
+    ],
+    "MAZDA6 SIGNATURE": [
+      "Mazda Navigation System and 7-inch LCD Meter Display",
+      "360-degree View Monitor and front and rear parking sensors",
+      "Nappa leather-trimmed seats with Ultrasuede interior accents and genuine Senwood accents",
+      "Leather-wrapped steering wheel with unique stitching and paddle shifters",
+      "Interior LED lighting in footwells, vanity mirror, glove box, and cargo area",
+      "Black headliner and Bright Silver interior trim with gunmetal front grille",
+      "Frameless rearview mirror and SiriusXM Traffic and Travel Link Services"
+    ]
+  }
+}

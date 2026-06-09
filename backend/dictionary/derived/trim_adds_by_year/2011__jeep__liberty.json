@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2011|jeep|liberty",
+  "year": 2011,
+  "make": "Jeep",
+  "model": "Liberty",
+  "ladder_id": "generic_jeep_liberty",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "registered trademark of Apple Inc. SIRIUS, XM and all Respect the rights of others, including private property owners and all recreational trail users,"
+    ],
+    "LE": [
+      "registered trademark owned by Johnson Controls, Inc. iPhone is a"
+    ],
+    "Premium": [
+      "registered in one or more countries, including the U.S. HomeLink is a"
+    ],
+    "Sport": [
+      "registered trademarks of Garmin, Ltd. or its subsidiaries and are"
+    ],
+    "Limited": [
+      "Maximum payload capacity of 1,150 pounds versus 950 pounds on Sport"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 5,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "Premium": 1,
+      "LE": 1,
+      "Base": 1
+    }
+  }
+}

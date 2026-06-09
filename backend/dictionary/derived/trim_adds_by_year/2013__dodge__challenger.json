@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2013|dodge|challenger",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_2013__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T Plus",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT Plus",
+    "SXT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "P245/45R20 all-season performance tires",
+      "Body-color rear spoiler with back-up camera",
+      "Steering wheel-mounted paddle shifters with automatic transmission"
+    ],
+    "SXT": [
+      "Adds dual rear exhaust with bright tips",
+      "Adds twin hood scoops",
+      "Adds remote keyless entry",
+      "Adds UConnect 130 AM/FM/CD/MP3 radio with 6 speakers",
+      "Adds active front head restraints"
+    ],
+    "SXT Plus": [
+      "Upgraded to premium nappa leather-trimmed seats",
+      "Adds heated front seats",
+      "Adds fog lamps",
+      "Adds automatic headlamps",
+      "Adds ParkSense rear park assist",
+      "Upgraded to UConnect hands-free phone with microphone",
+      "Adds auto-dimming rearview mirror",
+      "Upgraded to 6 Boston Acoustics speakers with 276-watt amplifier",
+      "Adds SiriusXM satellite radio with 1-year subscription"
+    ],
+    "Premium": [
+      "Adds sun visors with illuminated vanity mirrors",
+      "Adds remote USB port"
+    ],
+    "Limited": [
+      "this catalog may have"
+    ],
+    "R/T": [
+      "Upgraded to 5.7L HEMI VVT V8 engine with fuel saver technology",
+      "Upgraded to TreMec 6-speed manual transmission",
+      "Adds body-color rear spoiler",
+      "Adds performance steering",
+      "Adds performance suspension",
+      "Adds antispin rear differential with 6-speed manual transmission",
+      "Adds bright pedals with 6-speed manual transmission"
+    ],
+    "R/T Plus": [
+      "Upgraded to performance nappa leather-trimmed seats",
+      "Adds power heated mirrors",
+      "Adds temperature and compass gauge",
+      "Adds universal garage door opener",
+      "Adds security alarm",
+      "Adds tire pressure monitoring display",
+      "Adds remote start",
+      "Adds steering wheel-mounted paddle shifters with 5-speed automatic transmission",
+      "Adds high-intensity discharge headlamps"
+    ]
+  }
+}

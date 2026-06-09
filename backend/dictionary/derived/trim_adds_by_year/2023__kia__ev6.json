@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2023|kia|ev6",
+  "year": 2023,
+  "make": "Kia",
+  "model": "EV6",
+  "ladder_id": "brochure_llm_2023__kia__ev6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT-Line",
+    "Wind",
+    "Light"
+  ],
+  "adds_by_trim": {
+    "GT-Line": [
+      "168 kW rear drive motor with 225 hp or e-AWD dual motor with 320 hp",
+      "77.4 kWh lithium-ion battery (standard)",
+      "Vegan leather and suede seating surfaces",
+      "Ventilated front seats",
+      "Power passenger seat",
+      "LED ambient interior lighting",
+      "Alloy pedals",
+      "14-speaker Meridian Premium Audio System",
+      "AR HUD (Augmented Reality Head-Up Display)",
+      "GT-Line design front and rear fascia with wheel arch moldings"
+    ],
+    "Wind": [
+      "77.4 kWh lithium-ion battery",
+      "168 kW rear drive motor with 225 hp or e-AWD dual motor with 320 hp",
+      "Vegan leather seating surfaces",
+      "Ventilated front seats",
+      "Power passenger seat",
+      "14-speaker Meridian Premium Audio System",
+      "Smart Power Liftgate",
+      "Blind-Spot View Monitor",
+      "Surround View Monitor",
+      "Remote Smart Parking Assist"
+    ],
+    "Light": [
+      "58 kWh lithium-ion battery with 232-mile range",
+      "125 kW rear drive motor with 167 hp",
+      "Fabric and vegan leather seating surfaces",
+      "Heated front seats",
+      "Heated steering wheel",
+      "6-speaker audio system",
+      "12.3-inch TFT gauge cluster with 12.3-inch touchscreen navigation",
+      "Navigation with integrated telematics modem",
+      "Dual Zone Automatic Climate Control",
+      "Smart Key with Push Button Start"
+    ]
+  }
+}

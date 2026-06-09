@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|bmw|x5",
+  "year": 2014,
+  "make": "BMW",
+  "model": "X5",
+  "ladder_id": "brochure_2014__bmw__x5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Luxury Line",
+    "xLine",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds BMW ConnectedDrive services as standard",
+      "Adds BMW Assist eCall safety feature",
+      "Adds BMW TeleService vehicle monitoring",
+      "Adds BMW Maintenance Program coverage",
+      "Adds New Vehicle Limited Warranty protection",
+      "Adds BMW Roadside Assistance",
+      "Adds Enhanced USB and Bluetooth with Smartphone Integration"
+    ],
+    "Limited": [
+      "Adds BMW Navigation system with turn-by-turn directions",
+      "Adds Google Maps database integration to iDrive Display"
+    ],
+    "Premium": [
+      "Adds BMW Assist Safety Plan with four-year coverage",
+      "Adds Automatic Collision Notification and Emergency Request features",
+      "Adds Enhanced Roadside Assistance with Door Unlock and Stolen Vehicle Recovery",
+      "Adds BMW TeleService continuous monitoring of wear-and-tear components"
+    ],
+    "xLine": [],
+    "Luxury Line": [
+      "Adds optional Concierge Services with Critical Calling",
+      "Adds Remote Door Unlock capability",
+      "Adds Stolen Vehicle Recovery access",
+      "Adds My BMW Remote app control functionality",
+      "Adds MyInfo business location integration with Navigation"
+    ],
+    "M Sport": [
+      "Adds BMW Performance Driving School access",
+      "Adds BMW Performance Center Delivery experience"
+    ]
+  }
+}

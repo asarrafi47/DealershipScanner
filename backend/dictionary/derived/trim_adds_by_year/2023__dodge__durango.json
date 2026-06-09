@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2023|dodge|durango",
+  "year": 2023,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2023__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT®",
+    "SRT® 392",
+    "CITADEL",
+    "R/T",
+    "GT PLUS"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT®": [
+      "6.2L Supercharged HEMI® V8 engine",
+      "Red Brembo® brakes with 2-piece front rotors",
+      "Competition suspension",
+      "SRT Hellcat exterior badges",
+      "Performance rear spoiler"
+    ],
+    "SRT® 392": [
+      "6.4L 392 HEMI® V8 engine",
+      "Brembo® 6-piston brakes",
+      "Bilstein® adaptive damping suspension",
+      "Performance-tuned All-Wheel-Drive system",
+      "392 fender badge",
+      "Heated SRT flat-bottom performance steering wheel with SRT paddle shifters",
+      "SRT Drive Modes",
+      "Active Noise Cancellation"
+    ],
+    "CITADEL": [
+      "Wrapped instrument panel with accent stitching",
+      "Crypto Sweep hydro wheels with laser etch",
+      "Liquid titanium-painted speaker trims",
+      "Platinum chrome door handles, grille and mirrors",
+      "Black roof rails",
+      "Power sunroof",
+      "Forward Collision Warning with Active Braking",
+      "Adaptive Cruise Control with Stop",
+      "LaneSense® Lane Departure Warning with Lane Keep Assist",
+      "Ventilated front seats"
+    ],
+    "R/T": [
+      "5.7L HEMI® V8 engine",
+      "Performance steering and sport suspension",
+      "Rear load-leveling suspension",
+      "Performance hood",
+      "SmartBeam™ High Intensity Discharge headlamps",
+      "12-way power passenger seat",
+      "Power tilt/telescoping steering wheel",
+      "Uconnect® 5 NAV with 10.1-inch touchscreen",
+      "Alpine® Premium Audio System with 9 speakers and subwoofer"
+    ],
+    "GT PLUS": [
+      "3.6L V6 engine with Engine Stop/Start technology",
+      "Uconnect® 5 NAV with 10.1-inch touchscreen display",
+      "Alpine® Premium Audio System with 9 speakers and subwoofer",
+      "Wireless charging pad",
+      "ParkSense® Front Park Assist",
+      "LED auxiliary low beams",
+      "LED Amber turn signal"
+    ]
+  }
+}

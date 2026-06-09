@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2019|toyota|sequoia",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_llm_2019__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Sport",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Electronic modulated rear air suspension with adaptive variable suspension system",
+      "Perforated leather-trimmed heated and ventilated front seats with power thigh and lumbar support",
+      "Entune Premium JBL Synthesis 22 audio with integrated navigation and app suite",
+      "Rear-seat Blu-ray Disc player with 9-inch display and wireless headphones",
+      "20-inch diamond-cut-finish alloy wheels"
+    ],
+    "Limited": [
+      "Entune Premium Audio with integrated navigation and Entune App Suite",
+      "Leather-trimmed and heated front seats with 10-way power adjustment",
+      "Leather-trimmed 40/20/40 split reclining second-row captain's chairs with one-touch third-row access",
+      "Leather-trimmed tilt/telescopic steering wheel with audio and voice controls",
+      "Dynamic Radar Cruise Control and Lane Departure Alert with Sway Warning System",
+      "20-inch alloy wheels",
+      "Chrome auto-dimming heated power outside mirrors with memory and turn signal indicators",
+      "Power liftgate with jam protection and puddle lights"
+    ],
+    "TRD Sport": [
+      "TRD Sport performance-tuned Bilstein shocks and sway bars front and rear",
+      "20-inch TRD Sport black alloy wheels",
+      "Satin-black TRD Sport front door logos",
+      "Gloss-black heated power outside mirrors",
+      "7-passenger seating with easy-clean fabric-trimmed seats and captain's chairs",
+      "Entune Premium Audio with integrated navigation and Entune App Suite"
+    ],
+    "SR5": [
+      "LED high- and low-beam headlights with auto-off feature",
+      "Integrated LED fog lights",
+      "Color-keyed heated power outside mirrors",
+      "18-inch alloy wheels",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Automatic three-zone front and rear climate control with air filter",
+      "Easy-clean fabric-trimmed front seats with 8-way power-adjustable driver's seat",
+      "40/20/40 split reclining fold-flat second-row seat with one-touch third-row access",
+      "Toyota Safety Sense P with pre-collision system, lane departure alert, and automatic high beams",
+      "Blind Spot Monitor with rear cross-traffic alert"
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2021|chevrolet|traverse",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2021__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "RS",
+    "LT Leather",
+    "LT Cloth",
+    "SL/L"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "Enhanced Automatic Emergency Braking with Adaptive Cruise Control",
+      "Chrome roof rails",
+      "Power programmable hands-free liftgate with Chevrolet emblem projection",
+      "HD Surround Vision camera system",
+      "SkyScape power tilt-sliding sunroof with fixed rear skylight",
+      "Rear Camera Mirror with auto-dimming and full camera display",
+      "120-volt power outlet on rear center console"
+    ],
+    "Premier": [
+      "Power programmable hands-free liftgate with Chevrolet emblem projection",
+      "Chrome roof rails",
+      "Automatic heated steering wheel with Chevy Safety Assist",
+      "Heavy-duty trailering equipment with Hitch Guidance and Hitch View",
+      "SkyScape power tilt-sliding sunroof with fixed rear skylight",
+      "HD Surround Vision camera system",
+      "Rear Camera Mirror with auto-dimming display"
+    ],
+    "RS": [
+      "Automatic heated steering wheel with Chevy Safety Assist",
+      "SkyScape power tilt-sliding sunroof with fixed rear skylight on AWD",
+      "HD Surround Vision camera system",
+      "Rear Camera Mirror with auto-dimming display",
+      "120-volt power outlet on rear center console"
+    ],
+    "LT Leather": [
+      "Leather-wrapped steering wheel with audio, cruise and phone controls",
+      "Automatic heated steering wheel with Chevy Safety Assist",
+      "4.2-inch enhanced multi-color Driver Information Center display",
+      "HD Rear Vision Camera with Rear Park Assist capability",
+      "HD Surround Vision camera system available",
+      "Rear Camera Mirror with auto-dimming available",
+      "SkyScape power sunroof and 120-volt outlet via LT Premium Package"
+    ],
+    "LT Cloth": [
+      "Leather-wrapped steering wheel with audio, cruise and phone controls",
+      "4.2-inch enhanced multi-color Driver Information Center display standard on AWD",
+      "Remote vehicle starter system standard on AWD",
+      "HD Rear Vision Camera and Rear Park Assist available",
+      "Lane Change Alert with Side Blind Zone Alert available",
+      "Rear Cross Traffic Alert available",
+      "Universal Home Remote programmable with garage door opener"
+    ],
+    "SL/L": [
+      "3.6L DOHC V6 engine with 310 hp and Variable Valve Timing",
+      "9-speed automatic transmission with Driver Shift Control",
+      "4-wheel independent suspension and power rack-and-pinion steering",
+      "Automatic tri-zone air conditioning with humidity sensor",
+      "Comprehensive airbag system with Passenger Sensing System",
+      "Rear Vision Camera and manual day/night rearview mirror",
+      "3.5-inch monochromatic Driver Information Center display",
+      "Teen Driver technology and theft-deterrent system",
+      "3 months OnStar Safety & Security coverage included"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2015|nissan|armada",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2015__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM RESERVE",
+    "PLATINUM",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM RESERVE": [
+      "Chocolate-color heated leather-wrapped steering wheel",
+      "Light Anigre genuine wood trim",
+      "Chocolate-trimmed instrument panel with dark satin chrome interior accents",
+      "2-tone Chocolate/Almond premium leather-appointed seats with Almond contrast stitching",
+      "Chocolate-color carpeting and Platinum Reserve embroidered floor mats",
+      "Dark chrome grille, side molding inserts, and outside mirrors",
+      "Painted roof rack with dark satin chrome accents",
+      "Body-color front door handles",
+      "Center console cup holder lid"
+    ],
+    "PLATINUM": [
+      "Rear air conditioning with rear controls",
+      "20-inch 7-spoke chrome-clad aluminum-alloy wheels",
+      "NavTraffic and NavWeather provided by SiriusXM",
+      "8-way power driver's seat with power lumbar support",
+      "4-way power front-passenger's seat",
+      "Power sliding glass moonroof",
+      "Power flip-out rear windows",
+      "Power adjustable pedals",
+      "Heated second-row seats",
+      "Heated leather-wrapped steering wheel"
+    ],
+    "SL": [
+      "Up to 9,000 lbs towing with hitch receiver and trailer brake pre-wiring",
+      "Auto-leveling rear suspension",
+      "20-inch 6-spoke aluminum-alloy wheels",
+      "Fog lights",
+      "Chrome grille, outside mirrors, and side molding inserts",
+      "Chrome roof rack with crossbars",
+      "Power liftgate",
+      "RearView Monitor",
+      "Nissan Intelligent Key keyless entry and ignition system",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver"
+    ],
+    "SV": [
+      "317-hp Endurance 5.6-liter V8 engine",
+      "Available 2WD or All-Mode 4WD",
+      "8-passenger capacity seating",
+      "4-wheel independent suspension",
+      "18-inch 6-spoke aluminum-alloy wheels",
+      "Automatic on/off headlights",
+      "Dual power heated outside mirrors",
+      "Rear Sonar System and Front Sonar System",
+      "SiriusXM Satellite Radio with dual head restraints",
+      "Bluetooth Hands-free Phone System with USB iPod interface"
+    ]
+  }
+}

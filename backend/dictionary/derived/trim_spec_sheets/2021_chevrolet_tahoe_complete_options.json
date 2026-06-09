@@ -1,0 +1,53 @@
+{
+  "ladder_id": "2021_chevrolet_tahoe_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Tahoe",
+    "Tahoe"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "LTZ": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: 6.2 L Vortec V8 395 hp (was L Detroit Diesel L56 turbo V8; The chassis borrowed several components from the Z60 option package (RWD police)"
+      }
+    ],
+    "Z71": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L Detroit Diesel L56 turbo V8; The chassis borrowed several components from the Z60 option package (RWD police (was L 285 hp (213 kW) Vortec 5300 V8)"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L 285 hp (213 kW) Vortec 5300 V8 (was L Detroit Diesel L56 turbo V8; Year Engine Power Torque RPO Code VIN Code (8th Digit) Notes)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L Detroit Diesel L56 turbo V8; Year Engine Power Torque RPO Code VIN Code (8th Digit) Notes (was Engine 4.8 L 275 hp (205 kW) Vortec 4800 V8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine 4.8 L 275 hp (205 kW) Vortec 4800 V8 (was Chevrolet Tahoe (base trim), with sealed-beam headlights.)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Chevrolet Tahoe (base trim), with sealed-beam headlights."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Along with heated front seats, rear-seat air conditioning was introduced as an o; Along with heated front seats, rear-seat air conditioning was introduced as an option."
+      }
+    ]
+  }
+}

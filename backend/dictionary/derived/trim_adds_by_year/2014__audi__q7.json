@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|audi|q7",
+  "year": 2014,
+  "make": "Audi",
+  "model": "Q7",
+  "ladder_id": "brochure_llm_2014__audi__q7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q7 3.0T S line Prestige",
+    "Q7 3.0T",
+    "Q7 TDI"
+  ],
+  "adds_by_trim": {
+    "Q7 3.0T S line Prestige": [
+      "333 horsepower supercharged TFSI engine with 325 lb-ft torque",
+      "0–60 mph acceleration of 6.9 seconds",
+      "Audi adaptive air suspension"
+    ],
+    "Q7 3.0T": [
+      "280 horsepower supercharged TFSI engine with 295 lb-ft torque",
+      "0–60 mph acceleration of 7.7 seconds"
+    ],
+    "Q7 TDI": [
+      "240 horsepower turbocharged TDI diesel engine with 406 lb-ft torque",
+      "Cast-iron and aluminum-alloy engine block construction",
+      "16.8:1 compression ratio for diesel efficiency"
+    ]
+  }
+}

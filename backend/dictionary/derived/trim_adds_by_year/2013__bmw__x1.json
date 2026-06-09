@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2013|bmw|x1",
+  "year": 2013,
+  "make": "BMW",
+  "model": "X1",
+  "ladder_id": "2013_bmw_x1_epa",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "authorized BMW center or bmwusa.com.",
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is u nder license. iPhone, iPad and iPod are registered",
+      "trademarks and trade names are the property of their respective owners.",
+      "Drive\uea02 \uea08 i | X\uea01 xDrive\uea03 \uea05 i",
+      "cylinder | TwinPower Turbo Inline \uea04 / \uea04 TwinPower Turbo Inline \uea04 / \uea04 | TwinPower Turbo Inline \uea06 / \uea04",
+      "\uea02\uea04\uea0a / \uea05\uea0a\uea0a\uea0a-\uea06\uea05\uea0a\uea0a \uea03\uea0a\uea0a / \uea05\uea08\uea0a\uea0a",
+      "\uea04.\uea07\uea01 / \uea03.\uea01\uea04 / \uea02.\uea01\uea01 / \uea01.\uea06\uea07 \uea04.\uea07\uea01 / \uea02.\uea03\uea04 / \uea01.\uea05\uea02 / \uea01.\uea01\uea04"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 7.0,
+    "per_trim_add_counts": {
+      "Na": 7
+    }
+  }
+}

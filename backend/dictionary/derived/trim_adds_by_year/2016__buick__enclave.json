@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|buick|enclave",
+  "year": 2016,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2016__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM GROUP",
+    "LEATHER GROUP",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "PREMIUM GROUP": [
+      "8-Way power heated front seats with driver memory",
+      "Side Blind Zone Alert and Rear Cross Traffic Alert",
+      "Forward Collision Alert and Lane Departure Warning",
+      "Cooled and heated front seats",
+      "All-Wheel-Drive System available",
+      "8-passenger seating configuration",
+      "Audio System with Navigation, 6.5-inch touchscreen, Bose 5.1 surround",
+      "Rear-seat entertainment with 8-inch screen and wireless headphones",
+      "Power-folding heated outside mirrors with memory",
+      "Articulating headlamps and moonroof available"
+    ],
+    "LEATHER GROUP": [
+      "Heated steering wheel",
+      "Leather-appointed seating",
+      "8-Way power heated front seats with driver memory",
+      "Side Blind Zone Alert and Rear Cross Traffic Alert",
+      "Audio System with Navigation, 6.5-inch touchscreen, Bose sound system",
+      "Rear-seat entertainment with 8-inch screen and wireless headphones",
+      "Power-folding heated outside mirrors with memory",
+      "Forward Collision Alert and Lane Departure Warning",
+      "PJH 19-inch chrome-clad cast aluminum wheels",
+      "All-Wheel-Drive System available"
+    ],
+    "BASE": [
+      "3.6L V-6 VVT engine with direct injection, 288 hp",
+      "6-speed automatic transmission with front-wheel drive",
+      "7-passenger seating with captain's chairs and flat-folding third row",
+      "Buick IntelliLink with 6.5-inch touchscreen, AM/FM, CD, USB, MP3",
+      "6-speaker audio system",
+      "Tri-zone automatic climate control",
+      "8-way power driver seat with power lumbar",
+      "Heated power-adjustable outside mirrors",
+      "HID xenon projector headlamps with automatic on/off",
+      "Rear vision camera and rear park assist"
+    ]
+  }
+}

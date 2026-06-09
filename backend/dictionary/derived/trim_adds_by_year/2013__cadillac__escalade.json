@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2013|cadillac|escalade",
+  "year": 2013,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_web_2013__cadillac__escalade",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Escalade-V",
+    "Sport Platinum",
+    "Premium Luxury Platinum",
+    "Sport",
+    "Premium Luxury",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "Escalade-V": [
+      "Supercharged 6.2L V-8 engine with 682 hp and 653 lb-ft of torque",
+      "0-60 mph acceleration in 4.7 seconds",
+      "4WD-only configuration",
+      "Carbon-fiber theme interior",
+      "High-performance V-Series exclusive styling"
+    ],
+    "Sport Platinum": [
+      "Premium Luxury Platinum base features plus Sport styling elements"
+    ],
+    "Premium Luxury Platinum": [
+      "Executive Second Row package with massaging seats and stowable tray tables",
+      "12.6-inch personal screens for rear passengers",
+      "Dual wireless phone charging pads",
+      "40-speaker available sound system upgrade"
+    ],
+    "Sport": [
+      "Sport-specific exterior styling and design elements"
+    ],
+    "Premium Luxury": [
+      "Enhanced interior materials and trim upgrades over base Luxury"
+    ],
+    "Luxury": [
+      "6.2L V-8 engine with 420 hp and 460 lb-ft of torque",
+      "55.0-inch dual digital display spanning dashboard",
+      "19-speaker AKG Studio sound system standard",
+      "Super Cruise hands-free driving technology",
+      "5G Wi-Fi hotspot with HD streaming",
+      "126-color LED ambient lighting",
+      "Full-color head-up display",
+      "Adaptive air suspension",
+      "10-speed automatic transmission",
+      "Seating for up to eight passengers with bench seat option"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/escalade/"
+}

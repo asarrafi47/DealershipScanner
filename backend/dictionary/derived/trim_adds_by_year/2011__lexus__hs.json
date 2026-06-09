@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|lexus|hs",
+  "year": 2011,
+  "make": "lexus",
+  "model": "HS",
+  "ladder_id": "brochure_2011__lexus__hs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adds Lexus Enform and Safety Connect telematics services",
+      "Adds Backup Camera system",
+      "Adds Lane Keep Assist and Lane Departure Warning",
+      "Adds Pre-Collision System with collision detection",
+      "Adds Driver Attention Monitor",
+      "Adds Wide Front-view Monitor",
+      "Adds Adaptive Front Lighting System",
+      "Adds Bluetooth connectivity",
+      "Adds SmartAccess keyless entry system with engine immobilizer",
+      "Adds Brake Assist with ABS"
+    ],
+    "Limited": [
+      "Adds four-year/50,000-mile Lexus Limited Warranty",
+      "Adds six-year/70,000-mile Powertrain Warranty",
+      "Adds six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds zero-deductible warranty coverage",
+      "Adds hybrid powertrain",
+      "Adds Pre-Collision System with Driver Attention Monitor",
+      "Adds Lane Departure Warning and Lane Keep Assist",
+      "Adds backup camera",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds engine immobilizer anti-theft system"
+    ],
+    "Premium": [
+      "Adds Lexus Enform premium services with Destination Assist",
+      "Adds Safety Connect services",
+      "Adds Navigation System with XM NavTraffic and XM NavWeather",
+      "Adds Wide Front-view Monitor",
+      "Adds XM Radio with Sports and Stocks",
+      "Adds SmartAccess keyless entry system"
+    ],
+    "Luxury": [
+      "Adds Mark Levinson premium audio system"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2018|alfaromeo|4c",
+  "year": 2018,
+  "make": "alfa romeo",
+  "model": "4c",
+  "ladder_id": "brochure_llm_2018__alfaromeo__4c",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4C Spider",
+    "4C Coupe"
+  ],
+  "adds_by_trim": {
+    "4C Spider": [
+      "Retractable soft top convertible body style"
+    ],
+    "4C Coupe": [
+      "1.75L turbocharged all-aluminum 4-cylinder engine with 237 hp",
+      "ALFA TCT 6-speed dual-clutch transmission with paddle controls and Launch Control",
+      "Alfa DNA Pro drive mode selector with Race mode",
+      "Carbon fiber monocoque chassis",
+      "Double-wishbone front suspension and MacPherson rear suspension",
+      "Brembo 4-piston front brakes with 305mm cross-drilled discs",
+      "Electronic limited-slip differential",
+      "Pirelli Three-Season Performance tires",
+      "0–60 mph in 4.1 seconds, 160 mph top speed",
+      "2-seat sports car configuration"
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 /**
- * Smart search: instant client preview + debounced POST /api/search/smart.
+ * Smart search: instant client filter on every keystroke + debounced authoritative POST.
  */
 function listingsCsrfToken() {
     const m = document.querySelector('meta[name="csrf-token"]');
@@ -11,7 +11,29 @@ const SMART_SEARCH_STOP_WORDS = new Set([
     "inside", "outside", "miles", "mile", "loaded", "fully", "display", "camera",
 ]);
 
+const SMART_SEARCH_FULL_DEBOUNCE_MS = 50;
+const _VIN_FULL_RE = /^[A-HJ-NPR-Z0-9]{17}$/i;
+const _LISTING_ID_RE = /^(?:#|(?:id|car|carid)\s*:\s*)?(\d{1,10})\s*$/i;
+
+function smartFiltersLookActionable(filters, q) {
+    const keys = filters && typeof filters === "object" ? Object.keys(filters) : [];
+    if (keys.length) return true;
+    const s = (q || "").trim();
+    if (!s) return false;
+    if (_VIN_FULL_RE.test(s.replace(/\s+/g, ""))) return true;
+    if (/^\d{1,10}$/.test(s)) return true;
+    if (_LISTING_ID_RE.test(s)) return true;
+    return false;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    const guestDismiss = document.getElementById("guest-banner-dismiss");
+    if (guestDismiss) {
+        guestDismiss.addEventListener("click", () => {
+            guestDismiss.closest(".guest-banner")?.remove();
+        });
+    }
+
     const input = document.getElementById("smart-search-input");
     const chips = document.getElementById("smart-parse-chips");
     const form = document.getElementById("search-form");
@@ -22,9 +44,11 @@ document.addEventListener("DOMContentLoaded", () => {
         window.__DS_ensureListingsCarsLoaded().catch(() => {});
     }
 
-    let debounceTimer = null;
-    let activeController = null;
-    let previewSeq = 0;
+    let fullSearchTimer = null;
+    let parseController = null;
+    let searchController = null;
+    let inputSeq = 0;
+    let pendingFullSearch = false;
 
     function setSearchLoading(on) {
         input.classList.toggle("smart-search-input--loading", on);
@@ -32,39 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
         input.setAttribute("aria-busy", on ? "true" : "false");
     }
 
-    function carsForInstantPreview() {
-        if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) return window.ALL_CARS;
-        if (Array.isArray(window.INITIAL_GRID_CARS) && window.INITIAL_GRID_CARS.length) {
-            return window.INITIAL_GRID_CARS;
-        }
-        if (Array.isArray(window.BOOTSTRAP_GRID_CARS) && window.BOOTSTRAP_GRID_CARS.length) {
-            return window.BOOTSTRAP_GRID_CARS;
-        }
-        return [];
-    }
-
-    function runInstantPreview(q) {
-        const cars = carsForInstantPreview();
-        if (!cars.length) return;
-        const terms = q.toLowerCase().split(/\s+/).filter((t) => t.length >= 2 && !SMART_SEARCH_STOP_WORDS.has(t));
-        if (!terms.length) return;
-        const preview = cars.filter((c) => {
-            const hay = [
-                c.make,
-                c.model,
-                c.trim,
-                c.title,
-                c.fuel_type,
-                c.drivetrain,
-                c.exterior_color,
-                c.interior_color,
-                ...(c.package_names || []),
-            ].filter(Boolean).join(" ").toLowerCase();
-            return terms.every((t) => hay.includes(t));
-        });
-        if (preview.length) {
-            window.__DS_renderCarGrid(preview.slice(0, 100), { preserveOrder: false, resetPage: true });
-        }
+    function formScalar(name) {
+        const vals = [...document.querySelectorAll(`#search-form [name="${name}"]`)]
+            .map((el) => (el.value || "").trim())
+            .filter(Boolean);
+        return vals[0] || "";
     }
 
     function clearHighlights() {
@@ -125,11 +121,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const trims = filters.trim_contains;
         const trimList = Array.isArray(trims) ? trims : (trims ? [trims] : []);
         trimList.forEach((t) => parts.push(`Trim: ${t}`));
-        const pkgList = filters.packages_json_contains_list;
-        if (Array.isArray(pkgList) && pkgList.length) {
-            pkgList.forEach((p) => parts.push(`Equipment: ${p}`));
-        } else if (filters.packages_json_contains) {
-            parts.push(`Equipment: ${filters.packages_json_contains}`);
+        const pkgAll = filters.packages_json_contains_all;
+        if (Array.isArray(pkgAll) && pkgAll.length) {
+            parts.push(`Equipment (all): ${pkgAll.join(" · ")}`);
+        } else {
+            const pkgList = filters.packages_json_contains_list;
+            if (Array.isArray(pkgList) && pkgList.length) {
+                pkgList.forEach((p) => parts.push(`Equipment: ${p}`));
+            } else if (filters.packages_json_contains) {
+                parts.push(`Equipment: ${filters.packages_json_contains}`);
+            }
         }
         const hasYear = filters.min_year != null || filters.max_year != null;
         if (hasYear) {
@@ -175,49 +176,104 @@ document.addEventListener("DOMContentLoaded", () => {
         if (parts.length) chips.classList.add("smart-parse-active");
     }
 
-    if (form) {
-        form.addEventListener("submit", () => {
-            const h = document.getElementById("form-q-sync");
-            if (h && input) h.value = (input.value || "").trim();
+    /** Immediate token filter while parse/API are in flight. */
+    function runTokenPreview(q) {
+        const source =
+            typeof window.__DS_getListingsInventorySource === "function"
+                ? window.__DS_getListingsInventorySource()
+                : [];
+        if (!source.length) return;
+        const terms = q
+            .toLowerCase()
+            .split(/\s+/)
+            .filter((t) => t.length >= 2 && !SMART_SEARCH_STOP_WORDS.has(t));
+        if (!terms.length) return;
+        const preview = source.filter((c) => {
+            const hay = [
+                c.make,
+                c.model,
+                c.trim,
+                c.title,
+                c.fuel_type,
+                c.drivetrain,
+                c.exterior_color,
+                c.interior_color,
+                c.engine_description,
+                ...(c.package_names || []),
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+            return terms.every((t) => hay.includes(t));
         });
+        window.__DS_renderCarGrid(preview, { preserveOrder: false, resetPage: true });
     }
 
-    function formScalar(name) {
-        const vals = [...document.querySelectorAll(`#search-form [name="${name}"]`)]
-            .map((el) => (el.value || "").trim())
-            .filter(Boolean);
-        return vals[0] || "";
-    }
-
-    function runSmartSearch() {
+    function applyParsedFilters(filters, opts) {
         const q = (input.value || "").trim();
-        if (!q) {
-            if (activeController) { activeController.abort(); activeController = null; }
-            setSearchLoading(false);
-            clearHighlights();
-            if (typeof window.__DS_applySmartFilters === "function") {
-                window.__DS_applySmartFilters({});
-            }
-            if (typeof window.__DS_runFilterRender === "function") {
-                window.__DS_runFilterRender();
-            }
-            return;
+        if (!smartFiltersLookActionable(filters, q)) return;
+        applyHighlights((opts && opts.highlight) || []);
+        fillParseChips(filters);
+        if (typeof window.__DS_applySmartFilters === "function") {
+            window.__DS_applySmartFilters(filters, { skipCascade: true });
         }
+        if (typeof window.__DS_renderFromSmartFilters === "function") {
+            window.__DS_renderFromSmartFilters(filters, {
+                emptyMessage: (opts && opts.emptyMessage) || null,
+            });
+        }
+    }
 
-        const seq = ++previewSeq;
-        if (activeController) activeController.abort();
-        activeController = new AbortController();
-        const signal = activeController.signal;
+    function runParseRequest(seq) {
+        const q = (input.value || "").trim();
+        if (!q || seq !== inputSeq) return;
+
+        if (parseController) parseController.abort();
+        parseController = new AbortController();
+        const params = new URLSearchParams({ query: q });
+        const zip_code = formScalar("zip_code");
+        const radius = formScalar("radius");
+        if (zip_code) params.set("zip_code", zip_code);
+        if (radius) params.set("radius", radius);
+
+        fetch(`/api/search/smart/parse?${params.toString()}`, {
+            credentials: "same-origin",
+            signal: parseController.signal,
+        })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((data) => {
+                if (seq !== inputSeq) return;
+                parseController = null;
+                if (!data || !data.ok) return;
+                applyParsedFilters(data.filters || {}, { highlight: data.highlight || [] });
+                if (!pendingFullSearch) setSearchLoading(false);
+            })
+            .catch((err) => {
+                if (err.name === "AbortError") return;
+                if (seq !== inputSeq) return;
+                parseController = null;
+            });
+    }
+
+    function runFullSmartSearch(seq) {
+        const q = (input.value || "").trim();
+        if (!q || seq !== inputSeq) return;
+
+        pendingFullSearch = true;
+        if (searchController) searchController.abort();
+        searchController = new AbortController();
+        const signal = searchController.signal;
         setSearchLoading(true);
 
         const headers = { "Content-Type": "application/json" };
         const t = listingsCsrfToken();
         if (t) headers["X-CSRF-Token"] = t;
+        const payload = { query: q };
         const zip_code = formScalar("zip_code");
         const radius = formScalar("radius");
-        const payload = { query: q };
         if (zip_code) payload.zip_code = zip_code;
         if (radius) payload.radius = radius;
+
         fetch("/api/search/smart", {
             method: "POST",
             headers,
@@ -230,8 +286,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 return r.json();
             })
             .then((data) => {
-                if (seq !== previewSeq) return;
-                activeController = null;
+                if (seq !== inputSeq) return;
+                searchController = null;
+                pendingFullSearch = false;
                 setSearchLoading(false);
                 const filters = data.filters || {};
                 window.__DS_renderCarGrid(data.results || [], {
@@ -241,34 +298,79 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 applyHighlights(data.highlight || []);
                 fillParseChips(filters);
-                if (typeof window.__DS_applySmartFilters === "function") {
-                    window.__DS_applySmartFilters(filters);
+                const syncSidebar = () => {
+                    if (typeof window.__DS_applySmartFilters === "function") {
+                        window.__DS_applySmartFilters(filters);
+                    }
+                };
+                if (typeof requestIdleCallback === "function") {
+                    requestIdleCallback(syncSidebar, { timeout: 800 });
+                } else {
+                    setTimeout(syncSidebar, 0);
                 }
             })
             .catch((err) => {
                 if (err.name === "AbortError") return;
-                if (seq !== previewSeq) return;
-                activeController = null;
+                if (seq !== inputSeq) return;
+                searchController = null;
+                pendingFullSearch = false;
                 setSearchLoading(false);
-                clearHighlights();
-                if (typeof window.__DS_runFilterRender === "function") {
-                    window.__DS_runFilterRender();
-                }
             });
     }
 
-    input.addEventListener("input", () => {
+    function onSmartInput() {
         const q = (input.value || "").trim();
-        clearTimeout(debounceTimer);
-        if (q) runInstantPreview(q);
-        debounceTimer = setTimeout(runSmartSearch, 200);
-    });
+        const seq = ++inputSeq;
+
+        clearTimeout(fullSearchTimer);
+        if (parseController) parseController.abort();
+        if (searchController) searchController.abort();
+        parseController = null;
+        searchController = null;
+        pendingFullSearch = false;
+
+        if (!q) {
+            setSearchLoading(false);
+            clearHighlights();
+            if (typeof window.__DS_applySmartFilters === "function") {
+                window.__DS_applySmartFilters({});
+            }
+            if (typeof window.__DS_runFilterRenderInstant === "function") {
+                window.__DS_runFilterRenderInstant();
+            } else if (typeof window.__DS_runFilterRender === "function") {
+                window.__DS_runFilterRender();
+            }
+            return;
+        }
+
+        requestAnimationFrame(() => {
+            if (seq !== inputSeq) return;
+            runTokenPreview(q);
+        });
+
+        requestAnimationFrame(() => {
+            if (seq !== inputSeq) return;
+            runParseRequest(seq);
+        });
+
+        fullSearchTimer = setTimeout(() => runFullSmartSearch(seq), SMART_SEARCH_FULL_DEBOUNCE_MS);
+    }
+
+    if (form) {
+        form.addEventListener("submit", () => {
+            const h = document.getElementById("form-q-sync");
+            if (h && input) h.value = (input.value || "").trim();
+        });
+    }
+
+    input.addEventListener("input", onSmartInput);
 
     if ((input.value || "").trim()) {
+        const boot = () => onSmartInput();
         if (typeof window.__DS_whenListingsGeoReady === "function") {
-            window.__DS_whenListingsGeoReady(runSmartSearch);
+            window.__DS_whenListingsGeoReady(boot);
         } else {
-            runSmartSearch();
+            boot();
         }
     }
 

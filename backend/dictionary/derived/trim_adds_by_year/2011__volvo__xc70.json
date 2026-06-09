@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2011|volvo|xc70",
+  "year": 2011,
+  "make": "Volvo",
+  "model": "XC70",
+  "ladder_id": "brochure_llm_2011__volvo__xc70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XC70 T6 AWD",
+    "XC70 3.2 AWD"
+  ],
+  "adds_by_trim": {
+    "XC70 T6 AWD": [
+      "3.0-liter turbocharged inline six-cylinder engine with 300 hp",
+      "325 ft-lbs torque at 1500–4800 rpm",
+      "0-60 mph acceleration in 7.1 seconds",
+      "Twin-scroll turbocharger technology for quick turbo boost",
+      "Intake valve train automatically switches between economy and performance modes"
+    ],
+    "XC70 3.2 AWD": [
+      "3.2-liter inline six-cylinder engine with 240 hp (230 hp PZEV)",
+      "236 ft-lbs torque at 3200 rpm",
+      "0-60 mph acceleration in 8.4 seconds",
+      "Six-speed Geartronic automatic transmission with manual shifting capability",
+      "All-wheel drive with Instant Traction and Hill Descent Control standard",
+      "Front McPherson spring struts with anti-dive and anti-lift function",
+      "Active multi-link independent rear suspension",
+      "DSTC Dynamic Stability and Traction Control",
+      "8.2 inches ground clearance for all-road capability",
+      "18.5 US gallon fuel tank capacity"
+    ]
+  }
+}

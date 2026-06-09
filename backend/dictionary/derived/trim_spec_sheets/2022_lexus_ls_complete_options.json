@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2022_lexus_ls_complete_options",
+  "make": "Lexus",
+  "models": [
+    "LS",
+    "LS"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": ",608 cc (281 cu in) 1UR-FSE V8; ,969 cc (303 cu in) 2UR-FSE V8 hybrid (LS 600h)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Intel modeled the \"Internet of Things\" on what was learned from Toyota's LS 400 quality standards. Industrial significance LS 400 cutaway model displaying internal construction at the Wroughton Classic The Lexus LS marked a successful entrant of a Japanese manufacturer into the…; \"2021 Lexus LS facelift finally adds a damn touchscreen\"."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": ",608 cc (281 cu in) 1UR-FSE V8; ,969 cc (303 cu in) 2UR-FSE V8 hybrid (LS 600h)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Intel modeled the \"Internet of Things\" on what was learned from Toyota's LS 400 quality standards. Industrial significance LS 400 cutaway model displaying internal construction at the Wroughton Classic The Lexus LS marked a successful entrant of a Japanese manufacturer into the…; \"2021 Lexus LS facelift finally adds a damn touchscreen\"."
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ladder_id": "audi_a3",
+  "make": "Audi",
+  "models": [
+    "A3",
+    "A3 Sedan",
+    "S3",
+    "S3 Sportback"
+  ],
+  "year_min": 2015,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Premium Plus": [
+      {
+        "label": "Engine Options",
+        "value": "Top A3 equipment level"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Leather seating surfaces"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Screen Size",
+        "value": "MMI touch display"
+      }
+    ],
+    "S line": [
+      {
+        "label": "Interior Materials",
+        "value": "S line interior trim"
+      }
+    ]
+  }
+}

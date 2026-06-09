@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2013|nissan|titan",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_2013__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "Pro-4X",
+    "SV",
+    "S",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes 18-inch aluminum-alloy wheels",
+      "Adds Features overhead center console",
+      "Adds cruise control with steering wheel-mounted controls",
+      "Adds Includes sliding back window and rear privacy glass on King Cab",
+      "Adds remote keyless entry on Crew Cab",
+      "Adds Features basic AM/FM/CD audio system"
+    ],
+    "Premium": [
+      "Adds Popular Equipment Package with enhanced convenience features",
+      "Upgraded to Class IV tow hitch receiver and 7-pin wiring harness",
+      "Adds trailer brake controller pre-wiring",
+      "Adds power heated extendable tow mirrors",
+      "Adds lower final gear ratio",
+      "Adds front tow hooks on 4x2 models"
+    ],
+    "Limited": [],
+    "S": [
+      "5.6-liter Endurance V8 engine",
+      "5-speed automatic transmission with Tow/Haul Mode",
+      "4-wheel Anti-lock Braking System",
+      "Six standard air bags",
+      "Vehicle Dynamic Control stability system",
+      "18-inch painted steel wheels with P265/70R18 tires",
+      "AM/FM/CD audio system",
+      "Air conditioning and power windows",
+      "Power door locks with auto-locking feature",
+      "Rear tailgate spoiler"
+    ],
+    "SV": [
+      "Adds Value Truck Package with front captain's chairs and floor shifter",
+      "Upgraded to 8-way power adjustable driver's seat",
+      "Adds fold-down front-passenger's seat",
+      "Adds rear air conditioning vents on Crew Cab",
+      "Adds fog lights",
+      "Adds RearView Monitor",
+      "Upgraded to SiriusXM Satellite Radio",
+      "Adds Bluetooth Hands-free Phone System",
+      "Adds USB connection port for iPod interface",
+      "Adds center console-mounted 120-volt AC power outlet"
+    ],
+    "Pro-4X": [
+      "Adds DVD Package option with 8-inch flip-down monitor and DVD player",
+      "Adds Nissan Mobile Entertainment System with auxiliary inputs",
+      "Adds Includes PRO-4X Premium Utility Package",
+      "Adds Utili-track Channel System with four tie-down cleats",
+      "Adds factory-applied spray-on bedliner",
+      "Adds lockable bedside storage",
+      "Adds bed-mounted 120-volt AC power outlet",
+      "Adds tailgate area illumination"
+    ],
+    "SL": [
+      "Adds SL Max Utility Package with enhanced features",
+      "Adds chrome outside mirrors and door handles",
+      "Adds chrome billet grille",
+      "Adds NissanConnect with Navigation including 5.8-inch color touch-screen monitor",
+      "Adds NavTraffic and NavWeather",
+      "Adds embroidered PRO-4X logo leather-appointed seats",
+      "Adds heated front seats",
+      "Adds memory system for driver's seat, pedals and outside mirrors",
+      "Adds in-cabin microfilter on Crew Cab"
+    ]
+  }
+}

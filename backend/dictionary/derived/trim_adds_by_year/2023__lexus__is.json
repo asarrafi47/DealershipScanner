@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2023|lexus|is",
+  "year": 2023,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2023__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS 350 F SPORT",
+    "IS 350 F SPORT DESIGN",
+    "IS 300"
+  ],
+  "adds_by_trim": {
+    "IS 350 F SPORT": [
+      "F SPORT-tuned suspension",
+      "F SPORT bolstered heated and ventilated front seats",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Four-way adjustable headrests",
+      "F SPORT 19-in split-five-spoke staggered-width alloy wheels with Dark Metallic finish",
+      "Summer or all-season tires depending on RWD or AWD"
+    ],
+    "IS 350 F SPORT DESIGN": [
+      "Heated front seats",
+      "F SPORT exterior styling with unique front and rear bumpers, grille surround, rear spoiler, and exhaust tips",
+      "F SPORT Design exterior badging",
+      "Black Geometric interior trim",
+      "Aluminum pedals",
+      "F SPORT 19-in split-five-spoke alloy wheels with Dark Metallic finish"
+    ],
+    "IS 300": [
+      "LED headlamps, taillamps, and daytime running lights",
+      "Performance-inspired instrumentation with sliding bezel",
+      "NuLuxe interior trim",
+      "Eight-way power front seats",
+      "F SPORT heated leather-trimmed steering wheel",
+      "Dual-zone climate control",
+      "Heated outside mirrors",
+      "Apple CarPlay integration, Alexa compatibility, and Android Auto",
+      "8.0-inch Lexus Multimedia System touchscreen",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert and backup camera with dynamic gridlines"
+    ]
+  }
+}

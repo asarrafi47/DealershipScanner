@@ -1,0 +1,40 @@
+{
+  "ladder_id": "tesla_model_y",
+  "make": "Tesla",
+  "models": [
+    "Model Y"
+  ],
+  "year_min": 2020,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Plaid": [
+      {
+        "label": "Engine Options",
+        "value": "Tri-motor performance SUV"
+      }
+    ],
+    "Performance": [
+      {
+        "label": "Engine Options",
+        "value": "Dual-motor performance tuning; EV Electricity"
+      }
+    ],
+    "Long Range": [
+      {
+        "label": "Engine Options",
+        "value": "Dual-motor all-wheel drive; EV Electricity"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior"
+      }
+    ],
+    "Standard Range": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

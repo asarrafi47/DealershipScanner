@@ -1,0 +1,88 @@
+{
+  "catalog_key": "2017|nissan|frontier",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_2017__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "Pro-4X",
+    "SV",
+    "S",
+    "Limited",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds 2.5-liter 4-cylinder engine with 5-speed manual transmission",
+      "Adds 15-inch 6-spoke steel wheels",
+      "Adds 5.0-inch color display",
+      "Adds AM/FM/CD audio system with four speakers",
+      "Adds Bluetooth Hands-free Phone System",
+      "Adds USB connection port for iPod interface",
+      "Adds Active Brake Limited Slip (ABLS)",
+      "Adds Vehicle Dynamic Control (VDC)",
+      "Adds Tire Pressure Monitoring System (TPMS)"
+    ],
+    "SE": [],
+    "Limited": [
+      "Adds 2.5-liter 4-cylinder engine",
+      "Adds 5-speed manual transmission",
+      "Adds 15-inch steel wheels with mud-and-snow-rated all-season tires",
+      "Adds Active Brake Limited Slip (ABLS)",
+      "Adds 4-wheel Anti-lock Braking System (ABS)",
+      "Adds full-length, fully boxed ladder frame",
+      "Adds AM/FM/CD audio system",
+      "Adds air conditioning",
+      "Adds six standard air bags",
+      "Adds Vehicle Dynamic Control (VDC)"
+    ],
+    "S": [
+      "Adds hands-free text messaging assistant",
+      "Adds streaming audio via Bluetooth wireless technology",
+      "Adds Siri Eyes Free",
+      "Adds rear access doors and second-row under-seat storage in Crew Cab",
+      "Upgraded to 4.0-liter V6 engine in Crew Cab with 6-speed manual transmission",
+      "Upgraded to 6-speaker audio system in Crew Cab",
+      "Adds available 5-speed automatic transmission in Crew Cab"
+    ],
+    "SV": [
+      "Upgraded to 16-inch 6-split spoke aluminum-alloy wheels",
+      "Adds body-color front bumper",
+      "Adds SiriusXM Satellite Radio",
+      "Adds remote keyless entry",
+      "Adds tilt steering column",
+      "Adds power door locks and windows",
+      "Adds sliding rear window",
+      "Upgraded to 4.0-liter V6 engine in V6 models with 5-speed automatic transmission",
+      "Adds bed rail caps in V6 models",
+      "Upgraded to 6-speaker audio system in Crew Cab"
+    ],
+    "Pro-4X": [
+      "Adds Bilstein off-road performance shocks",
+      "Adds electronic locking rear differential",
+      "Adds clutch start/cancel for manual transmission",
+      "Adds skid plates",
+      "Upgraded to 16-inch 6-spoke aluminum-alloy wheels with all-terrain tires",
+      "Adds automatic on/off headlights and fog lights",
+      "Adds Utili-track Channel System",
+      "Adds satin chrome grille",
+      "Adds body-color rear bumper and outside mirrors",
+      "Adds PRO-4X bedside decal"
+    ],
+    "SL": [
+      "Upgraded to 18-inch 6-split spoke aluminum-alloy wheels",
+      "Adds automatic on/off headlights and fog lights",
+      "Adds chrome front bumper",
+      "Adds outside mirrors and door handles in chrome",
+      "Adds NissanConnect with Navigation and Mobile Apps",
+      "Upgraded to 5.8-inch color touch-screen display",
+      "Adds Nissan Voice Recognition for navigation and audio",
+      "Adds SiriusXM Traffic and Travel Link",
+      "Upgraded to Rockford Fosgate-powered audio system with ten speakers",
+      "Adds HomeLink Universal Transceiver"
+    ]
+  }
+}

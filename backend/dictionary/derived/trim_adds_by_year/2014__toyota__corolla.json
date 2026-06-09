@@ -1,0 +1,97 @@
+{
+  "catalog_key": "2014|toyota|corolla",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2014__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S Plus (6MT)",
+    "S Premium",
+    "S Plus",
+    "LE Premium",
+    "LE Plus",
+    "S",
+    "LE Eco Plus",
+    "LE Eco",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "S Plus (6MT)": [
+      "6-speed manual transmission",
+      "Smart Key System with Push Button Start",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Entune Premium Audio with Navigation and App Suite including 6.1-inch high-resolution touch-screen, HD Radio, SiriusXM Radio with 90-day trial"
+    ],
+    "S Premium": [
+      "SofTex-trimmed heated front seats",
+      "8-way power-adjustable driver's seat",
+      "4-way adjustable front passenger seat with seatback pocket"
+    ],
+    "S Plus": [
+      "8-way power-adjustable driver's seat",
+      "4-way adjustable front passenger seat with seatback pocket",
+      "17-inch alloy wheels",
+      "Rear disc brakes"
+    ],
+    "LE Premium": [
+      "SofTex-trimmed heated front seats",
+      "8-way power-adjustable driver's seat",
+      "4-way adjustable front passenger seat with seatback pocket"
+    ],
+    "LE Plus": [
+      "16-inch alloy wheels",
+      "Integrated fog lights",
+      "SofTex-trimmed heated front seats"
+    ],
+    "S": [
+      "Rear deck spoiler",
+      "Integrated fog lights",
+      "Mixed Media seats with sport bolsters and sport fabric inserts",
+      "16-inch alloy wheels",
+      "Sport drive mode",
+      "Sport instrumentation with TFT display",
+      "Leather-trimmed steering wheel",
+      "Automatic climate control",
+      "Piano-black center stack",
+      "Premium Paddle shifters"
+    ],
+    "LE Eco Plus": [
+      "16-inch alloy wheels",
+      "Heated power outside mirrors with turn signal indicators",
+      "ECO drive mode"
+    ],
+    "LE Eco": [
+      "1.8L 4-cylinder engine with Valvematic technology",
+      "Continuously Variable Transmission",
+      "15-inch steel wheels",
+      "Heated power outside mirrors",
+      "Rear deck spoiler",
+      "Integrated fog lights"
+    ],
+    "LE": [
+      "LED low-beam headlights with halogen high beams",
+      "LED Daytime Running Lights with on/off feature",
+      "Heated power outside mirrors",
+      "Entune Audio with 6.1-inch touch-screen display, CD player, six speakers, USB 2.0 port with iPod connectivity",
+      "Integrated backup camera",
+      "Automatic climate control",
+      "Multi-Information Display with Bluetooth hands-free phone voice-command controls",
+      "Cruise control",
+      "Remote keyless entry system"
+    ],
+    "L": [
+      "1.8L 4-cylinder engine",
+      "6-speed manual or 4-speed automatic transmission option",
+      "16-inch steel wheels",
+      "LED low-beam headlights with halogen high beams",
+      "LED Daytime Running Lights with on/off feature",
+      "Power outside mirrors",
+      "Tech Audio with AM/FM CD player, four speakers, USB 2.0 port with iPod connectivity and Bluetooth",
+      "Fabric-trimmed seats",
+      "6-way adjustable driver's seat",
+      "Power door locks with automatic locking feature"
+    ]
+  }
+}

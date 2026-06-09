@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|acura|tl",
+  "year": 2010,
+  "make": "acura",
+  "model": "tl",
+  "ladder_id": "brochure_llm_2010__acura__tl",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL SH-AWD",
+    "TL"
+  ],
+  "adds_by_trim": {
+    "TL SH-AWD": [
+      "305-hp, 3.7-liter V-6 engine with intake/exhaust VTEC versus 280-hp, 3.5-liter",
+      "Super Handling All-Wheel Drive (SH-AWD) with torque distribution 100:0 to 0:100",
+      "31.0 mm front and 20.0 mm rear stabilizer bars versus 30.0 mm and 19.0 mm",
+      "18-inch aluminum-alloy wheels with P245/45 R18 high-performance tires standard",
+      "Available close-ratio 6-speed manual transmission requiring Technology Package",
+      "Hill start assist",
+      "Optional 19-inch high-performance tire and wheel package",
+      "Integrated quad-outlet sport exhaust",
+      "Exclusive front sport seats and steering-wheel design",
+      "Black carpeting"
+    ],
+    "TL": [
+      "280-hp, 3.5-liter, 24-valve, SOHC V-6 engine with VTEC",
+      "Front-wheel drive with torque distribution 90:10 to 30:70",
+      "5-speed automatic transmission with Sequential SportShift paddle shifters and Grade Logic Control",
+      "17-inch aluminum-alloy wheels with P245/50 R17 all-season tires",
+      "4-wheel independent double-wishbone suspension with 30.0 mm front stabilizer bar",
+      "Electric variable power-assisted rack-and-pinion steering (EPS)",
+      "Acura 276-watt Premium Sound System with 6-disc CD changer and 8 speakers",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Dual-stage multiple-threshold front airbags and six-airbag system"
+    ]
+  }
+}

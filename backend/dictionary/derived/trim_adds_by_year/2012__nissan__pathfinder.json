@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2012|nissan|pathfinder",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2012__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "Silver edition",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "5.6-liter V8 engine with 310 hp and 388 lb-ft torque",
+      "All-Mode 4WD with 2-speed transfer case",
+      "18-inch 12-spoke machine-finished aluminum-alloy wheels",
+      "P265/60R18 BFGoodrich Long Trail T/A tires"
+    ],
+    "Silver edition": [
+      "17-inch 6-spoke machine-finished aluminum-alloy wheels",
+      "P265/65R17 BFGoodrich Long Trail T/A tires"
+    ],
+    "SV": [
+      "5-speed automatic transmission with manual mode",
+      "17-inch 6-spoke aluminum-alloy wheels",
+      "P265/65R17 BFGoodrich Long Trail T/A tires",
+      "Optional Shift-on-the-fly 4x4 switch-operated 2-speed transfer case"
+    ],
+    "S": [
+      "4.0-liter V6 engine with 266 hp and 288 lb-ft torque",
+      "5-speed automatic transmission",
+      "16-inch 5-spoke aluminum-alloy wheels",
+      "P245/75R16 General Grabber tires",
+      "Independent double-wishbone front and rear suspension",
+      "4-wheel vented disc brakes with ABS and electronic brake force distribution",
+      "Engine-speed-sensitive power steering",
+      "Optional Shift-on-the-fly 4x4 switch-operated 2-speed transfer case"
+    ]
+  }
+}

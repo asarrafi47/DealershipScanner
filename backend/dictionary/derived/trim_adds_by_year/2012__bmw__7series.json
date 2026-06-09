@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2012|bmw|7series",
+  "year": 2012,
+  "make": "BMW",
+  "model": "7 Series",
+  "ladder_id": "brochure_llm_2012__bmw__7series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "750Li xDrive ActiveHybrid",
+    "750Li ActiveHybrid",
+    "750i xDrive",
+    "750i",
+    "740Li xDrive",
+    "740Li",
+    "740i xDrive",
+    "740i",
+    "ActiveHybrid 7"
+  ],
+  "adds_by_trim": {
+    "750Li xDrive ActiveHybrid": [
+      "20-hp electric motor with 120-volt lithium-ion battery for hybrid capability",
+      "All-wheel drive (xDrive) system",
+      "Long-wheelbase configuration for increased rear legroom"
+    ],
+    "750Li ActiveHybrid": [
+      "20-hp electric motor with 120-volt lithium-ion battery for hybrid capability",
+      "Long-wheelbase configuration for increased rear legroom"
+    ],
+    "750i xDrive": [
+      "All-wheel drive (xDrive) system"
+    ],
+    "750i": [
+      "Larger displacement twin-turbo V8 engine"
+    ],
+    "740Li xDrive": [
+      "All-wheel drive (xDrive) system",
+      "Long-wheelbase configuration for increased rear legroom"
+    ],
+    "740Li": [
+      "Long-wheelbase configuration for increased rear legroom"
+    ],
+    "740i xDrive": [
+      "All-wheel drive (xDrive) system"
+    ],
+    "740i": [
+      "Twin-turbocharged inline-6 engine with TwinPower technology"
+    ],
+    "ActiveHybrid 7": [
+      "20-hp electric motor with 120-volt lithium-ion battery system for hybrid efficiency"
+    ]
+  }
+}

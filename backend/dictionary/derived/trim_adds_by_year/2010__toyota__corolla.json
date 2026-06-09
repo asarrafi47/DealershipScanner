@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2010|toyota|corolla",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "2010_toyota_corolla",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LE",
+    "S",
+    "XLE",
+    "XRS"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Sport Package: sport-tuned appearance and available 16-inch alloy wheels",
+      "Rear decklid spoiler",
+      "Available JBL 6-disc audio with Bluetooth (requires Power Package)"
+    ],
+    "XLE": [
+      "Remote keyless entry system (standard on XLE)",
+      "Available moonroof and JBL AM/FM 6-disc in-dash CD with Bluetooth",
+      "Available touch-screen DVD navigation with XM NavTraffic",
+      "Upgraded interior fabrics and convenience vs S/LE"
+    ],
+    "XRS": [
+      "2.4L performance engine with sport-calibrated chassis",
+      "17-inch alloy wheels with brake-cooling airflow design",
+      "Deeply bolstered sport front seats and standard rear deck spoiler",
+      "Cruise control standard",
+      "Available Power Package and leather trim"
+    ],
+    "LE": [
+      "ervices (TFS)† is a leading provider of automotive financial s"
+    ]
+  }
+}

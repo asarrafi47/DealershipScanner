@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2017_mercedes-benz_gls-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLS-Class",
+    "GLS-Class"
+  ],
+  "year_min": 2015,
+  "year_max": 2019,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG GLS63": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "GLS550": [
+      {
+        "label": "Engine Options",
+        "value": "4.7L V8 Turbo; Automatic 9-spd"
+      }
+    ],
+    "GLS450": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

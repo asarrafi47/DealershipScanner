@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2022|toyota|corolla",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_2022__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Hybrid",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [],
+    "Limited": [],
+    "Hybrid": [
+      "Upgraded to 1.8L 4-Cylinder Hybrid engine with 121 hp",
+      "Replaces CVT with Electronically Controlled Continuously Variable Transmission (ECVT)",
+      "Adds Normal, Power and Eco driving modes",
+      "Upgraded to High-grade LED headlights and accent lighting"
+    ],
+    "LE": [
+      "Upgraded to 1.8L 4-Cylinder engine with 139 hp",
+      "Adds 15-in. alloy wheels"
+    ],
+    "XLE": [
+      "Adds Normal and Sport driving modes",
+      "Adds 16-in. wheels"
+    ],
+    "SE": [
+      "Upgraded to 2.0L 4-Cylinder Dynamic Force Engine with 169 hp",
+      "Replaces grille with sport mesh gray metallic front grille",
+      "Adds LED taillights and stop lights with smoked sport trim",
+      "Adds power tilt/slide moonroof with sliding sunshade",
+      "Adds gray metallic sport side rocker panels and color-keyed spoiler",
+      "Adds premium sport seats with sport fabric inserts",
+      "Adds steering-wheel-mounted paddle shifters",
+      "Adds 4.2-in. Multi-Information Display (MID)"
+    ],
+    "XSE": [
+      "Adds 7-in. Multi-Information Display (MID)",
+      "Adds Blind Spot Monitor (BSM) with Rear Cross-Traffic Alert (RCTA)",
+      "Adds Qi-compatible wireless smartphone charging"
+    ]
+  }
+}

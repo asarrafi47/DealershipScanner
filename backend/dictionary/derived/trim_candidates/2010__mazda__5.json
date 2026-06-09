@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2010|mazda|5",
+  "year": 2010,
+  "make": "Mazda",
+  "model": "5",
+  "status": "draft",
+  "quality": "none",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "no_text",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_text_extracted"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2010|jeep|patriot",
+  "year": 2010,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "generic_jeep_patriot",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "connected — features and availability may vary by state. (3)Based on 2009 EPA"
+    ],
+    "Sport": [
+      "connect, you’re always"
+    ],
+    "Limited": [
+      "2.4L DOHC 16V dual VVT 4-cylinder engine",
+      "Continuously Variable Automatic Transaxle II (CVT2) with AutoStick",
+      "Uconnect 6-CD/DVD/MP3 audio system",
+      "SiriusXM Satellite Radio",
+      "Front and rear leather-trimmed seats",
+      "Power six-way adjustable driver's seat with manual lumbar adjuster",
+      "Automatic Temperature Control (ATC)",
+      "Electronic Vehicle Information Center",
+      "Power windows with driver one-touch",
+      "Bright roof side rails"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "Base": 1
+    }
+  }
+}

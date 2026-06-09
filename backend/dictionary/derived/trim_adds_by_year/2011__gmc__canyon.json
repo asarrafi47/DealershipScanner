@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2011|gmc|canyon",
+  "year": 2011,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "inventory_gmc_canyon",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Pp3",
+    "Pp2",
+    "P67"
+  ],
+  "adds_by_trim": {
+    "Pp2": [
+      "2wd 4wd 2wd/z85/v-87"
+    ],
+    "P67": [
+      "Z85 heAVY-DuTY assuming\u0007a\u0007base\u0007vehicle,\u0007except\u0007for\u0007any\u0007option(s)\u0007necessary\u0007to\u0007achieve\u0007the\u0007rating,\u0007plus\u0007driver.\u0007The\u0007weight\u0007of\u0007other\u0007optional\u0007",
+      "3.73 | 5500 | 3.42/3.73",
+      "3.73 | 5500 | 3.42/4.10"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "Pp2": 1,
+      "P67": 3
+    }
+  }
+}

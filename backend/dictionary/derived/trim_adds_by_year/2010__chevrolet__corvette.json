@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2010|chevrolet|corvette",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "2010_chevrolet_corvette",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "1LT",
+    "2LT",
+    "3LT",
+    "4LT",
+    "Z06",
+    "ZR1"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Bose AM/FM stereo with one-year XM subscription (replaces base 7-speaker on 1LT)",
+      "Sport seats with perforated leather and adjustable lumbar",
+      "Memory Package and Head-Up Display available"
+    ],
+    "3LT": [
+      "Navigation radio and enhanced interior convenience vs 2LT",
+      "Power passenger seat and power telescoping steering column"
+    ],
+    "4LT": [
+      "Heated seats and Universal Home Remote",
+      "Highest non-Z06/ZR1 trim with full luxury convenience features"
+    ],
+    "Z06": [
+      "7.0L LS7 V8 — 505 hp with dry-sump oil system (replaces 6.2L LS3 430 hp)",
+      "Aluminum frame, carbon-fiber fenders, and fixed-roof structure for 3,175-lb curb weight",
+      "Z06-specific suspension, brakes, and 20-inch forged aluminum wheels",
+      "Unique interior with sport seats and performance instrumentation"
+    ],
+    "ZR1": [
+      "6.2L LS9 supercharged V8 — 638 hp and 604 lb-ft of torque",
+      "Carbon-fiber roof, hood, rockers, and splitter; visible carbon weave",
+      "Carbon-ceramic Brembo brakes and Magnetic Ride with Performance Traction Management",
+      "205 mph capability — fastest GM production car of the era"
+    ],
+    "1LT": [
+      "6.2 Liter LS3 V8 engine with 430 hp and launch control",
+      "Six-way power driver seat with leather surfaces",
+      "Dual-zone automatic climate control and cabin air filtration",
+      "Active Handling System with Traction Control and ABS",
+      "Keyless Access with Push-Button Start",
+      "Xenon high-intensity discharge headlamps with automatic activation and foglamps",
+      "Dual power-adjustable heated sport mirrors with auto-dimming",
+      "Seven-speaker audio system with XM Radio three-month trial",
+      "OnStar with Directions and Connections Plan for six months"
+    ]
+  }
+}

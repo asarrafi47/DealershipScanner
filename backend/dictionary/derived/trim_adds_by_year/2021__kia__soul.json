@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2021|kia|soul",
+  "year": 2021,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2021__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT-LINE, TURBO",
+    "X-LINE",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "GT-LINE, TURBO": [
+      "18-inch alloy wheels"
+    ],
+    "X-LINE": [
+      "18-inch alloy wheels"
+    ],
+    "EX": [
+      "17-inch alloy wheels"
+    ],
+    "S": [
+      "16-inch alloy wheels"
+    ],
+    "LX": [
+      "16-inch steel wheels"
+    ]
+  }
+}

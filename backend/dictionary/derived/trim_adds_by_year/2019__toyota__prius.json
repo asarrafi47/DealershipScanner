@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2019|toyota|prius",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2019__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE AWD-e",
+    "LE AWD-e",
+    "XLE",
+    "LE",
+    "L Eco"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Entune Premium JBL Audio with Integrated Navigation and 11.6-inch HD multimedia display",
+      "Color Head-Up Display with speedometer, navigation and Hybrid System Indicator",
+      "Safety Connect",
+      "Adaptive Front-Lighting System with auto-leveling headlights",
+      "Premium Convenience Package with power moonroof and 15-inch alloy wheels"
+    ],
+    "XLE AWD-e": [
+      "Electronic On-Demand Compact All-Wheel Drive (AWD-e)",
+      "52 city/48 highway estimated mpg",
+      "Integrated fog lights and LED accent lights",
+      "Bi-LED projector headlights with auto on/off feature",
+      "Rain-sensing variable intermittent windshield wipers"
+    ],
+    "LE AWD-e": [
+      "Electronic On-Demand Compact All-Wheel Drive (AWD-e)",
+      "52 city/48 highway estimated mpg",
+      "Integrated fog lights and LED accent lights",
+      "15-inch 5-spoke alloy wheels with two-tone wheel covers"
+    ],
+    "XLE": [
+      "Bi-LED projector headlights with auto on/off feature",
+      "Rain-sensing variable intermittent windshield wipers",
+      "SofTex-trimmed heated front seats with 8-way power driver adjustment",
+      "Smart Key System on three doors with Push Button Start",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Qi-compatible wireless smartphone charging",
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires",
+      "Advanced Technology Package available"
+    ],
+    "LE": [
+      "Intermittent rear window wiper",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert",
+      "Intelligent Clearance Sonar with Intelligent Parking Assist",
+      "54 city/50 highway estimated mpg",
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires"
+    ],
+    "L Eco": [
+      "1.8L 4-Cylinder Engine with Hybrid Synergy Drive and ECVT",
+      "58 city/53 highway estimated mpg",
+      "Bi-LED projector headlights with auto-off feature",
+      "LED Daytime Running Lights with on/off feature",
+      "LED taillights and clearance lights",
+      "Active grille shutter",
+      "Heated power outside mirrors with folding",
+      "Smart Key System on driver door with Push Button Start",
+      "Toyota Safety Sense P with Pre-Collision and Lane Departure Alert",
+      "Eight airbags and Star Safety System"
+    ]
+  }
+}

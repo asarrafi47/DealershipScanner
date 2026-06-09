@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2014|bmw|4series",
+  "year": 2014,
+  "make": "BMW",
+  "model": "4 Series",
+  "ladder_id": "brochure_llm_2014__bmw__4series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Sport Line",
+    "Luxury Line"
+  ],
+  "adds_by_trim": {
+    "M Sport": [
+      "Leather-wrapped multi-function M Sport steering wheel",
+      "Power sport seats for driver and front passenger",
+      "Aluminum Hexagon interior trim with Matte Estoril Blue or High Gloss Black",
+      "M Sport suspension",
+      "M Aerodynamic kit with front and rear bumpers, side skirts, and rear spoiler",
+      "M Sport brakes with blue fixed calipers and large discs",
+      "Speedometer and tachometer with red readouts",
+      "Interior illumination with variable color effects in Orange-Red or White",
+      "Signature M Sport key fob with blue trim"
+    ],
+    "Sport Line": [
+      "Leather-wrapped sport steering wheel with red contrast stitching",
+      "Sport seats in Black SensaTec with contrasting Red highlight",
+      "Dakota Leather upholstery with contrasting highlight",
+      "High Gloss Black interior trim with Red highlight or Fineline Anthracite Wood trim",
+      "Instrument cluster with red highlight and red contrasting rings",
+      "Kidney grille slats and B-pillar accents in high-gloss black",
+      "Black exterior mirror caps and chrome black exhaust pipe tips",
+      "M Sport suspension",
+      "Signature key fob with red trim"
+    ],
+    "Luxury Line": [
+      "Dakota Leather upholstery with exclusive stitching",
+      "Door-sill finishers in aluminum with BMW Luxury lettering"
+    ]
+  }
+}

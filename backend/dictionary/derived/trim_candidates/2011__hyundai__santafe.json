@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2011|hyundai|santafe",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Blue",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

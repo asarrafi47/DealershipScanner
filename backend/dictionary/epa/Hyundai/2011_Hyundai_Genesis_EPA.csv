@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2011,Hyundai,Genesis,Coupe,2.0L I4,2.0L I4,,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,29,23,,,,,
+2011,Hyundai,Genesis,Coupe,2.0L I4,2.0L I4,,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,21,30,24,,,,,
+2011,Hyundai,Genesis,Coupe,3.8L V6,3.8L V6,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,27,20,,,,,
+2011,Hyundai,Genesis,Coupe,3.8L V6,3.8L V6,,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,26,20,,,,,
+2011,Hyundai,Genesis,Genesis,3.8L V6,3.8L V6,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,6,3.8,18,27,21,,,,,
+2011,Hyundai,Genesis,Genesis,4.6L V8,4.6L V8,,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,4.6,17,24,20,,,,,

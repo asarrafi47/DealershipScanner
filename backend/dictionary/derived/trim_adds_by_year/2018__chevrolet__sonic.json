@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2018|chevrolet|sonic",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "ladder_id": "brochure_llm_2018__chevrolet__sonic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier Hatchback",
+    "Premier Sedan",
+    "LT Hatchback",
+    "LT Sedan",
+    "LS Sedan"
+  ],
+  "adds_by_trim": {
+    "Premier Hatchback": [
+      "17-inch black-painted aluminum wheels",
+      "RS Package with sport body kit and foglamps",
+      "Integrated rear sport spoiler",
+      "Black Chevrolet bowtie emblems and RS lettering",
+      "3-spoke leather-wrapped flat-bottom sport steering wheel",
+      "Piano Black-accented instrument panel",
+      "Deluxe carpeted front and rear floor mats",
+      "Driver Confidence Package with Forward Collision Alert and Lane Departure Warning"
+    ],
+    "Premier Sedan": [
+      "17-inch painted-aluminum wheels",
+      "RS Package with sport body kit and foglamps",
+      "Integrated rear decklid spoiler",
+      "Black Chevrolet bowtie emblems and RS lettering",
+      "3-spoke leather-wrapped flat-bottom sport steering wheel",
+      "Piano Black-accented instrument panel",
+      "Deluxe carpeted front and rear floor mats",
+      "Driver Confidence Package with Forward Collision Alert and Lane Departure Warning"
+    ],
+    "LT Hatchback": [
+      "16-inch aluminum wheels",
+      "RS Package available with sport body kit and foglamps",
+      "3-spoke leather-wrapped flat-bottom sport steering wheel option",
+      "Integrated rear sport spoiler",
+      "Driver Confidence Package available"
+    ],
+    "LT Sedan": [
+      "15-inch aluminum wheels",
+      "RS Package available with sport body kit and foglamps",
+      "Integrated rear decklid spoiler option",
+      "Heated driver and front passenger seats with Keyless Open and Start available",
+      "Convenience Package with 6-way power driver seat and enhanced Driver Information Center"
+    ],
+    "LS Sedan": [
+      "15-inch steel wheels with bolt-on wheel cover",
+      "Compact spare tire",
+      "10 air bags with Passenger Sensing System",
+      "4-wheel antilock brakes with Panic Brake Assist",
+      "LED daytime running lamps"
+    ]
+  }
+}

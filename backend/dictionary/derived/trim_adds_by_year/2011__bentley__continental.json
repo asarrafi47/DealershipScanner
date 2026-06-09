@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|bentley|continental",
+  "year": 2011,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_web_2011__bentley__continental",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Speed",
+    "GT",
+    "GTC"
+  ],
+  "adds_by_trim": {
+    "Speed": [
+      "6.0L twin-turbocharged W12 engine producing 600 horsepower",
+      "All-wheel drive with dynamic stability control",
+      "Leather upholstery throughout interior",
+      "10-speaker audio system",
+      "Xenon headlights with power washers",
+      "18-inch alloy wheels",
+      "Dual-zone climate control",
+      "Power windows, locks, and mirrors"
+    ],
+    "GT": [
+      "Sport-tuned suspension for enhanced handling",
+      "Upgraded 20-inch alloy wheels",
+      "Sport body kit with unique exterior styling",
+      "Upgraded leather seating surfaces",
+      "Premium sound system with additional speakers",
+      "Red brake calipers",
+      "Unique front and rear fascia"
+    ],
+    "GTC": [
+      "Retractable fabric convertible top",
+      "Convertible-specific structural reinforcement",
+      "Heated leather seats with massage function",
+      "Premium 8-speaker audio system",
+      "Power convertible top with one-touch operation",
+      "Wind deflector for convertible driving"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/bentley/continental"
+}

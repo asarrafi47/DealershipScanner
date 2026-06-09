@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2018|toyota|4runner",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_2018__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds Entune Premium Audio with Integrated Navigation and App Suite",
+      "Adds 50/50 split fold-flat third-row seat with sliding second row"
+    ],
+    "Base": [],
+    "SR5": [
+      "Adds Hill Start Assist Control and Downhill Assist Control on 4x4 models",
+      "Replaces fabric seats with SofTex-trimmed heated front seats",
+      "Adds 4-way power-adjustable front passenger seat",
+      "Adds skid plates on engine, front suspension, fuel tank, and transfer case"
+    ],
+    "TRD": [
+      "Adds Part-time 4WD system with Multi-terrain Select and Crawl Control",
+      "Adds Locking rear differential",
+      "Replaces wheels with 17-in 7-spoke alloy wheels with black-painted accents",
+      "Adds color-keyed front and rear bumpers with silver accents and hood scoop",
+      "Adds Overhead console with Multi-terrain Select and Crawl Control switches"
+    ],
+    "TRD Off-Road": [
+      "Replaces drivetrain to Rear-Wheel Drive or full-time 4WD with Active Traction Control and Torsen limited-slip center differential with locking feature",
+      "Adds X-REAS Sport Enhancement Suspension",
+      "Adds Heated power outside mirrors with turn signal indicators",
+      "Adds Power tilt/slide moonroof with sunshade",
+      "Adds front and rear parking assist sonar"
+    ],
+    "TRD Pro": [
+      "Replaces suspension with TRD Bilstein high-performance shocks with rear remote reservoirs",
+      "Adds TRD-tuned front springs",
+      "Replaces wheels with TRD 17-in matte-black alloy wheels with P265/70R17 A/T tires",
+      "Adds Unique TOYOTA front grille with TRD PRO external hard badges",
+      "Adds TRD-stamped aluminum front skid plate",
+      "Adds Auto on/off headlight feature",
+      "Adds TRD floor mats and TRD shift knob as standard"
+    ],
+    "Limited": [
+      "Adds Leather-trimmed 50/50 split fold-flat third-row seat with sliding second row",
+      "Adds Sliding rear cargo deck with under-floor storage box",
+      "Adds Dual zone automatic climate control with air filter and second-row vents",
+      "Adds Smart Key System with Push Button Start and illuminated remote entry",
+      "Adds Auto-dimming rearview mirror",
+      "Adds Dual zone automatic climate control with second-row vents"
+    ]
+  }
+}

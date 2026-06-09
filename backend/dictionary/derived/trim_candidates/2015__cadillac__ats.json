@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2015|cadillac|ats",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "ATS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

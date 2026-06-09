@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2017|alfaromeo|giulia",
+  "year": 2017,
+  "make": "alfa romeo",
+  "model": "giulia",
+  "ladder_id": "brochure_web_2017__alfaromeo__giulia",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Giulia Intensa AWD",
+    "Giulia Intensa RWD",
+    "Giulia Special Edition AWD",
+    "Giulia Special Edition RWD",
+    "Giulia Tributo Italiano RWD",
+    "Giulia AWD",
+    "Giulia RWD"
+  ],
+  "adds_by_trim": {
+    "Giulia Intensa AWD": [
+      "All-wheel drive system"
+    ],
+    "Giulia Intensa RWD": [
+      "Adaptive suspension"
+    ],
+    "Giulia Special Edition AWD": [
+      "All-wheel drive system",
+      "Two-tone exterior special edition styling"
+    ],
+    "Giulia Special Edition RWD": [
+      "Two-tone exterior special edition styling"
+    ],
+    "Giulia Tributo Italiano RWD": [
+      "19-inch model-specific wheels",
+      "Italian Tricolore badges on side mirror caps",
+      "Adaptive suspension",
+      "Harman Kardon premium audio system",
+      "Panoramic sunroof",
+      "Sport seats with red stitching and embroidered Italian Tricolore flag on front headrests"
+    ],
+    "Giulia AWD": [
+      "All-wheel drive system"
+    ],
+    "Giulia RWD": [
+      "2.0-liter turbocharged inline-four engine with 280 hp and 306 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "12.3-inch reconfigurable driver display",
+      "8.8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Automatic emergency braking, lane keeping, and blind-spot monitoring",
+      "Heated front and rear seats",
+      "Wireless phone charger",
+      "Remote engine start",
+      "17-inch wheels",
+      "Dark V Scudetto grille with acoustic glass"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/alfa-romeo/giulia/"
+}

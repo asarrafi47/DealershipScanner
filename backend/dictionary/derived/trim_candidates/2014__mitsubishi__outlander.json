@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|mitsubishi|outlander",
+  "year": 2014,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

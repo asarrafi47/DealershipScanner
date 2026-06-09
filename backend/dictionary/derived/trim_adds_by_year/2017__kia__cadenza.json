@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|kia|cadenza",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Cadenza",
+  "ladder_id": "brochure_llm_2017__kia__cadenza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM TECHNOLOGY LIMITED",
+    "PREMIUM TECHNOLOGY",
+    "LIMITED"
+  ],
+  "adds_by_trim": {
+    "PREMIUM TECHNOLOGY LIMITED": [
+      "Surround-View Monitor for 360-degree parking visibility",
+      "Head-Up Display showing vehicle information",
+      "Power rear-window sunshade and rear side-window sunshades",
+      "Quilted Nappa leather seat trim",
+      "Heated rear outboard seat cushions",
+      "Dual-opening center console",
+      "Genuine dashboard stitching",
+      "Exclusive floor mats and trunk mat",
+      "Chrome-accented base on outside mirrors",
+      "Power rear-window sunshade"
+    ],
+    "PREMIUM TECHNOLOGY": [
+      "LED headlights with High-Beam Assist",
+      "Unique vertical design front grille",
+      "Front LED fog lights",
+      "Windshield wiper de-icer and auto rain-sensing wipers",
+      "Smart Power Trunk with power trunk lid",
+      "Wireless charging system",
+      "Supervision meter cluster with 7-inch TFT color LCD",
+      "Steering-wheel-mounted paddle shifters",
+      "Ventilated front seats",
+      "Heated leather-wrapped steering wheel"
+    ],
+    "LIMITED": [
+      "Panoramic sunroof with power sunshade",
+      "Power-folding outside mirrors with LED turn-signal indicators",
+      "Rear-Camera Display with Dynamic Guideline",
+      "Rear Park Assist System",
+      "Blind-Spot Detection with Lane-Change Assist",
+      "Rear Cross-Traffic Alert",
+      "AM/FM/HD Radio Technology with SiriusXM and CD player",
+      "7-inch UVO eServices touchscreen with Apple CarPlay, Android Auto",
+      "Overhead LED front and rear reading lamps",
+      "HomeLink and compass"
+    ]
+  }
+}

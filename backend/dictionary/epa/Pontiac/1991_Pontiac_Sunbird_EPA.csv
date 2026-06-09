@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1991,Pontiac,Sunbird,Sunbird,2.0L I4 ((FFS)),2.0L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,21,29,24,,,,,
+1991,Pontiac,Sunbird,Sunbird,2.0L I4 ((FFS)),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,23,33,26,,,,,
+1991,Pontiac,Sunbird,Sunbird,3.1L V6 ((FFS)),3.1L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.1,18,25,20,,,,,
+1991,Pontiac,Sunbird,Sunbird,3.1L V6 ((FFS)),3.1L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.1,17,26,20,,,,,
+1991,Pontiac,Sunbird,Convertible,2.0L I4 ((FFS)),2.0L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,28,23,,,,,
+1991,Pontiac,Sunbird,Convertible,2.0L I4 ((FFS)),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,21,30,24,,,,,
+1991,Pontiac,Sunbird,Convertible,3.1L V6 ((FFS)),3.1L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.1,18,25,20,,,,,
+1991,Pontiac,Sunbird,Convertible,3.1L V6 ((FFS)),3.1L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.1,17,26,20,,,,,

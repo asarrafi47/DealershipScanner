@@ -1,0 +1,63 @@
+{
+  "ladder_id": "2025_gmc_sierra_complete_options",
+  "make": "GMC",
+  "models": [
+    "Sierra",
+    "Sierra"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "AT4X": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 10-spd; Four-Wheel Drive"
+      }
+    ],
+    "AT4": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 10-spd; Four-Wheel Drive"
+      }
+    ],
+    "SLT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "The newer design for turbodiesel models offers increased horsepower and torque for improve"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Battery 0.45 kWh lithium-ion (eAssist mild hybrid)"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "L8B EcoTec3 5.3 L V8 355 hp (265 kW; 360 PS); LY6 Vortec 6000 6.0 L V8 360 hp (268 kW; 365 PS)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive; LV3 EcoTec3 4.3 L V6 285 hp (213 kW; 289 PS)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "2016 Silverado and Sierra models optioned with the 8-inch touch screen featured; 8-inch touch screen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Trucks ordered with bucket seats and center console now featured a wireless char"
+      }
+    ]
+  }
+}

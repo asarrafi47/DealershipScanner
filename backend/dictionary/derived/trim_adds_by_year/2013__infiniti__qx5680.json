@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2013|infiniti|qx5680",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_web_2013__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX56 4WD with Technology Package",
+    "QX56 4WD with Deluxe Touring Package",
+    "QX56 4WD with Tire and Wheel Package",
+    "QX56 4WD",
+    "QX56 2WD with Technology Package",
+    "QX56 2WD with Deluxe Touring Package",
+    "QX56 2WD with Tire and Wheel Package",
+    "QX56 2WD"
+  ],
+  "adds_by_trim": {
+    "QX56 2WD": [
+      "5.6L V8 engine with 400 hp and 413 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control and manual mode",
+      "Rear-wheel drive with Hill Start Assist",
+      "Independent double-wishbone suspension front and rear",
+      "13.78-inch ventilated front and rear disc brakes with 4-wheel ABS",
+      "20-inch 7-spoke aluminum wheels with 275/60R20 all-season tires",
+      "Engine-speed-sensitive power steering with 41.6-foot turning diameter"
+    ],
+    "QX56 2WD with Tire and Wheel Package": [
+      "22-inch 9-spoke forged aluminum wheels with 275/50R22 all-season tires"
+    ],
+    "QX56 2WD with Deluxe Touring Package": [
+      "Hydraulic Body Motion Control system for decreased body lean",
+      "Climate-controlled front seats",
+      "Bose Cabin Surround 5.1-decoding system with 15 speakers",
+      "Semi-aniline leather seating with Mocha Burl trim",
+      "Second-row footwell courtesy lights",
+      "Advanced Climate Control System with Plasmacluster air purifier",
+      "Headlight washers"
+    ],
+    "QX56 2WD with Technology Package": [
+      "Intelligent Cruise Control with Full-Speed Range",
+      "Lane Departure Warning and Lane Departure Prevention systems",
+      "Distance Control Assist",
+      "Intelligent Brake Assist with Forward Collision Warning",
+      "Blind Spot Warning and Blind Spot Intervention systems",
+      "Front Pre-Crash Seat Belts",
+      "Adaptive Front Lighting System with auto-leveling headlights"
+    ],
+    "QX56 4WD": [
+      "Infiniti All-Mode 4WD with computer-controlled transfer case and Auto/4H/4L settings",
+      "4-wheel Active Brake Limited Slip system"
+    ],
+    "QX56 4WD with Tire and Wheel Package": [
+      "22-inch 9-spoke forged aluminum wheels with 275/50R22 all-season tires"
+    ],
+    "QX56 4WD with Deluxe Touring Package": [
+      "Hydraulic Body Motion Control system for decreased body lean",
+      "Climate-controlled front seats",
+      "Bose Cabin Surround 5.1-decoding system with 15 speakers",
+      "Semi-aniline leather seating with Mocha Burl trim",
+      "Second-row footwell courtesy lights",
+      "Advanced Climate Control System with Plasmacluster air purifier",
+      "Headlight washers"
+    ],
+    "QX56 4WD with Technology Package": [
+      "Intelligent Cruise Control with Full-Speed Range",
+      "Lane Departure Warning and Lane Departure Prevention systems",
+      "Distance Control Assist",
+      "Intelligent Brake Assist with Forward Collision Warning",
+      "Blind Spot Warning and Blind Spot Intervention systems",
+      "Front Pre-Crash Seat Belts",
+      "Adaptive Front Lighting System with auto-leveling headlights"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/infiniti/qx56-80/"
+}

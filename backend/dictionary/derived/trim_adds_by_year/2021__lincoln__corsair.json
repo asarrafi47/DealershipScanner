@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2021|lincoln|corsair",
+  "year": 2021,
+  "make": "Lincoln",
+  "model": "Corsair",
+  "ladder_id": "brochure_web_2021__lincoln__corsair",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Reserve AWD",
+    "Reserve FWD",
+    "Premiere AWD",
+    "Premiere FWD"
+  ],
+  "adds_by_trim": {
+    "Reserve AWD": [
+      "All-wheel drive capability",
+      "Higher trim positioning with enhanced luxury features"
+    ],
+    "Reserve FWD": [
+      "Upgraded interior with soft leathers and rich veneers",
+      "Enhanced comfort and styling compared to Premiere"
+    ],
+    "Premiere AWD": [
+      "All-wheel drive system"
+    ],
+    "Premiere FWD": [
+      "Turbocharged 2.0-liter engine with 250 hp and 275 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "13.2-inch infotainment touchscreen with navigation",
+      "Wireless Apple CarPlay and Android Auto",
+      "12.3-inch digital gauge cluster display",
+      "Lincoln Co-Pilot360 suite with front automatic emergency braking and blind-spot monitoring",
+      "Nine-speaker audio system",
+      "Front-row USB ports and optional wireless charging pad"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/corsair/"
+}

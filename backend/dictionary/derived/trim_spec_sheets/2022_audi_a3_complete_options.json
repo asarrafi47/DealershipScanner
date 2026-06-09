@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2022_audi_a3_complete_options",
+  "make": "Audi",
+  "models": [
+    "A3",
+    "A3"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "In late 2000, the A3 range was updated with new headlights and taillights, an improved interior, and other minor cosmetic changes alongside the introduction of a six-speed manual gearbox on the 180 PS (132 kW; 178 hp) 1.8T and new 130 PS (96 kW; 128 hp) 1.9 TDI.; Petrol engines"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+      }
+    ],
+    "S3 Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "In late 2000, the A3 range was updated with new headlights and taillights, an improved interior, and other minor cosmetic changes alongside the introduction of a six-speed manual gearbox on the 180 PS (132 kW; 178 hp) 1.8T and new 130 PS (96 kW; 128 hp) 1.9 TDI.; Petrol engines"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Options include a Bose sound system, boot/trunk or in-dash mounted 6-disc CD cha"
+      }
+    ]
+  }
+}

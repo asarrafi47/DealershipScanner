@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2020|subaru|outback",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2020__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Outback Touring/XT",
+    "Outback Limited/XT",
+    "Outback Onyx Edition XT",
+    "Outback Premium",
+    "Outback"
+  ],
+  "adds_by_trim": {
+    "Outback Touring/XT": [
+      "2.4-liter turbocharged BOXER engine with 260 hp and 277 lb-ft torque",
+      "18 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/60 R18 100H all-season tires"
+    ],
+    "Outback Limited/XT": [
+      "2.4-liter turbocharged BOXER engine with 260 hp and 277 lb-ft torque",
+      "18 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/60 R18 100H all-season tires",
+      "3,500 lbs maximum towing capacity"
+    ],
+    "Outback Onyx Edition XT": [
+      "2.4-liter turbocharged BOXER engine with 260 hp and 277 lb-ft torque",
+      "X-MODE dual mode system with Snow/Dirt and Deep Snow/Mud modes",
+      "18 x 7.0-inch aluminum-alloy wheels with black finish",
+      "225/60 R18 100H all-season tires",
+      "Full-size spare tire",
+      "3,500 lbs maximum towing capacity"
+    ],
+    "Outback Premium": [
+      "2.5-liter BOXER engine with 182 hp and 176 lb-ft torque",
+      "17 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/65 R17 102H all-season tires",
+      "2,700 lbs maximum towing capacity"
+    ],
+    "Outback": [
+      "2.5-liter BOXER engine with 182 hp and 176 lb-ft torque",
+      "X-MODE single mode system with standard engagement",
+      "Subaru Symmetrical All-Wheel Drive",
+      "4-wheel independent raised suspension",
+      "4-wheel disc brakes with ventilated front and rear",
+      "Vehicle Dynamics Control electronic stability control",
+      "Active Torque Vectoring system",
+      "Automatic Start-Stop System",
+      "Auto Vehicle Hold functionality"
+    ]
+  }
+}

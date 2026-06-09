@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|toyota|fjcruiser",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "FJ Cruiser",
+  "ladder_id": "brochure_llm_2010__toyota__fjcruiser",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FJ Cruiser 4x4 5-Speed Auto",
+    "FJ Cruiser 4x4 6-Speed Manual",
+    "FJ Cruiser 4x2 5-Speed Auto"
+  ],
+  "adds_by_trim": {
+    "FJ Cruiser 4x4 5-Speed Auto": [
+      "Part-time 4WD drivetrain with 3.72:1 rear axle ratio",
+      "Skid plates on engine, front suspension, and fuel tank",
+      "34-degree approach angle and 31-degree departure angle",
+      "9.6 inches minimum ground clearance",
+      "5570 lb. Gross Vehicle Weight Rating",
+      "Active Traction Control (A-TRAC) available"
+    ],
+    "FJ Cruiser 4x4 6-Speed Manual": [
+      "Full-time 4WD drivetrain with 3.91:1 rear axle ratio",
+      "6-speed manual transmission",
+      "Skid plates on engine, front suspension, fuel tank, and transfer case",
+      "34-degree approach angle and 31-degree departure angle",
+      "9.6 inches minimum ground clearance",
+      "4332 lb. curb weight"
+    ],
+    "FJ Cruiser 4x2 5-Speed Auto": [
+      "4.0-liter DOHC 24-valve V6 engine with 258 hp and 270 lb.-ft. torque",
+      "5-speed electronically controlled automatic transmission",
+      "Rear-wheel 2WD drivetrain with limited-slip differential",
+      "High-mounted double-wishbone front suspension with stabilizer bar",
+      "4-link rear suspension with lateral rod and coil springs",
+      "Power-assisted variable-gear rack-and-pinion steering",
+      "ABS, EBD, and Brake Assist standard",
+      "Vehicle Stability Control and Traction Control standard",
+      "32-degree approach angle and 30-degree departure angle",
+      "8.7 inches minimum ground clearance"
+    ]
+  }
+}

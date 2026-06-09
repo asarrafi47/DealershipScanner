@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|hyundai|tucson",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2013__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "GLS",
+    "GL"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Proximity keyless entry with electronic push-button start",
+      "Dual automatic temperature control with CleanAir Ionizer",
+      "Leather seating surfaces",
+      "Power driver seat with lumbar support",
+      "Auto-dimming rearview mirror with HomeLink®",
+      "Lower door sill scuff plates",
+      "Retractable rear cargo cover",
+      "Chrome/piano black front grille accents",
+      "Chrome door handle accents",
+      "Front windshield wiper de-icer"
+    ],
+    "GLS": [
+      "2.4L DOHC 4-cylinder engine with 176 HP",
+      "6-speed automatic transmission with SHIFTRONIC® and Active ECO system",
+      "Sachs® premium shock absorbers",
+      "Heated front seats",
+      "Leatherette bolster seats with cloth inserts",
+      "Leather-wrapped steering wheel and shift knob",
+      "Tilt-and-telescopic steering wheel",
+      "Steering wheel audio, phone and cruise controls",
+      "Auto up/down driver power window",
+      "Bluetooth® hands-free phone system"
+    ],
+    "GL": [
+      "165 HP 2.0L DOHC 4-cylinder engine with Continuously Variable Valve Timing",
+      "5-speed manual transmission or 6-speed automatic with SHIFTRONIC® and Active ECO",
+      "4-wheel independent front MacPherson strut and rear multi-link suspension",
+      "Motor driven power steering",
+      "Remote keyless entry with alarm",
+      "Air conditioning with cabin air filtration",
+      "Premium cloth seating surfaces",
+      "6-way adjustable driver seat with manual lumbar adjustment",
+      "Tilt steering wheel",
+      "Power door locks and windows with driver auto-down"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|subaru|legacy",
+  "year": 2015,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2015__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine",
+      "Lineartronic HCVT transmission with 6-speed manual-mode paddle shifters",
+      "HID low-beam headlights",
+      "Dual bright-finish exhaust outlets",
+      "12.4-inch front brake discs"
+    ],
+    "2.5i Limited": [
+      "Premium audio system with 12 Harman Kardon GreenEdge speakers and subwoofer",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "All-Weather Package with heated exterior mirrors and heated front and rear seats",
+      "Leather-trimmed upholstery",
+      "18-inch machine finish two-tone aluminum-alloy wheels",
+      "Fog lights",
+      "Woodgrain-patterned matte finish accent trim"
+    ],
+    "2.5i Premium": [
+      "Upgraded 7.0-inch high-resolution LCD touchscreen with voice-activated controls",
+      "6-speaker AM/FM/CD player with HD Radio, dual USB ports, and SiriusXM Satellite Radio",
+      "17-inch aluminum-alloy wheels with silver finish",
+      "10-way power adjustable driver's seat with 2-position memory and 4-way power adjustable passenger seat",
+      "All-Weather Package with heated exterior mirrors and heated front seats",
+      "Dual-zone automatic climate control",
+      "Leather-wrapped steering wheel and shifter handle"
+    ],
+    "2.5i": [
+      "175-hp 2.5-liter 4-cylinder SUBARU BOXER engine with Active Torque Vectoring",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6.2-inch high-resolution LCD touchscreen with HD Radio and USB/iPod control",
+      "4-speaker AM/FM/CD player with Bluetooth audio streaming and hands-free connectivity",
+      "Cloth upholstery",
+      "6-way manually adjustable driver's seat and 4-way manually adjustable passenger seat",
+      "17-inch steel wheels with covers",
+      "Lineartronic CVT with 6-speed manual-mode paddle shifters"
+    ]
+  }
+}

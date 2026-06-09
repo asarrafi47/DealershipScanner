@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2023,Jeep,Wagoneer,2WD,Hybrid 5.7L V8 (Mild Hybrid) Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 2WD,8,5.7,16,22,18,,,,,,5.7L V8,
-2023,Jeep,Wagoneer,4WD,Hybrid 5.7L V8 (Mild Hybrid) Midgrade Gasoline,Automatic 8-spd,All-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 4WD,8,5.7,15,20,17,,,,,,5.7L V8,
-2023,Jeep,Wagoneer,2WD,3.0L V6 (SIDI),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,17,24,20,,,,,,3.0L V6,
-2023,Jeep,Wagoneer,L 2WD,3.0L V6 (SIDI),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,17,24,20,,,,,,3.0L V6,
-2023,Jeep,Wagoneer,4WD,3.0L V6 (SIDI),Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,16,23,19,,,,,,3.0L V6,
-2023,Jeep,Wagoneer,L 4WD,3.0L V6 (SIDI),Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,16,23,19,,,,,,3.0L V6,

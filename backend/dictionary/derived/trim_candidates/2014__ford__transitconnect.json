@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2014|ford|transitconnect",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Titanium",
+    "XLT",
+    "XL",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

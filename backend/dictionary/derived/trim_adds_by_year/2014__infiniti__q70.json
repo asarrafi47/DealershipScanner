@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|infiniti|q70",
+  "year": 2014,
+  "make": "Infiniti",
+  "model": "Q70",
+  "ladder_id": "brochure_llm_2014__infiniti__q70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q70 5.6 AWD",
+    "Q70 5.6",
+    "Q70 3.7 AWD",
+    "Q70 3.7",
+    "Q70 Hybrid AWD"
+  ],
+  "adds_by_trim": {
+    "Q70 5.6 AWD": [
+      "5.6-liter 32-valve V6 with 420 hp and 417 lb-ft torque",
+      "Intelligent All-Wheel Drive (AWD) system",
+      "Sport Package with 20x9.0-inch split 5-spoke wheels and 245/40R20 all-season tires",
+      "Sport-tuned suspension"
+    ],
+    "Q70 5.6": [
+      "5.6-liter 32-valve V6 with 420 hp and 417 lb-ft torque",
+      "Rear-wheel drive configuration",
+      "Sport Package with 20x9.0-inch split 5-spoke wheels and 245/40R20 summer performance tires"
+    ],
+    "Q70 3.7 AWD": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "3.7-liter V6 with 330 hp and 270 lb-ft torque",
+      "Sport Package with 20x9.0-inch split 5-spoke wheels and 245/40R20 all-season tires",
+      "Sport-tuned suspension"
+    ],
+    "Q70 3.7": [
+      "3.7-liter V6 with 330 hp and 270 lb-ft torque",
+      "Rear-wheel drive configuration",
+      "18-inch double 5-spoke aluminum wheels with 245/50R18 all-season tires",
+      "Bose 2-channel 10-speaker premium audio system"
+    ],
+    "Q70 Hybrid AWD": [
+      "3.5-liter V6 Direct Response Hybrid with lithium-ion battery and 50 kW electric motor",
+      "360 hp hybrid net power with 258 lb-ft peak engine and 199 lb-ft peak motor torque",
+      "Intelligent All-Wheel Drive (AWD) system",
+      "Hybrid Regenerative Braking System",
+      "Estimated 29 city/34 highway mpg fuel economy",
+      "Energy usage instrument meter with split-screen hybrid system display"
+    ]
+  }
+}

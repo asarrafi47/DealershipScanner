@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2018_mercedes-benz_e-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "E-Class",
+    "E-Class"
+  ],
+  "year_min": 2016,
+  "year_max": 2020,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG E43": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG E63": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "E400": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

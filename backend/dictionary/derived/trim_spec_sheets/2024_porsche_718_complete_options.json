@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2024_porsche_718_complete_options",
+  "make": "Porsche",
+  "models": [
+    "718",
+    "718"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ],
+    "GTS": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V6 Turbo; Manual 6-spd"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

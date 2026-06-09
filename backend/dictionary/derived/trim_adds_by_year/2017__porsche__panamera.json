@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2017|porsche|panamera",
+  "year": 2017,
+  "make": "Porsche",
+  "model": "Panamera",
+  "ladder_id": "brochure_web_2017__porsche__panamera",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Panamera Turbo S E-Hybrid",
+    "Panamera Turbo E-Hybrid",
+    "Panamera GTS",
+    "Panamera 4S E-Hybrid",
+    "Panamera 4 E-Hybrid",
+    "Panamera 4",
+    "Panamera"
+  ],
+  "adds_by_trim": {
+    "Panamera": [
+      "Automatic emergency braking, parking sensors, and driver attention monitor standard",
+      "LED matrix headlights and auto-dimming interior and exterior mirrors",
+      "Apple CarPlay and Android Auto with wireless phone charger",
+      "Heated front seats and steering wheel",
+      "Hands-free power tailgate and soft-close doors",
+      "Driver's seat memory",
+      "10-speaker audio system",
+      "12.6-inch gauge cluster screen and 12.3-inch infotainment touchscreen",
+      "2.9-liter twin-turbo V-6 with 348 hp and 8-speed twin-clutch transmission",
+      "Rear-wheel drive configuration"
+    ],
+    "Panamera 4": [
+      "All-wheel drive instead of rear-wheel drive",
+      "Same 2.9-liter twin-turbo V-6 engine with 348 hp"
+    ],
+    "Panamera 4 E-Hybrid": [
+      "2.9-liter twin-turbo V-6 plug-in hybrid with 463 hp and 479 lb-ft torque",
+      "56 miles of all-electric range with 87 mph electric-only top speed",
+      "0-60 mph in 3.9 seconds"
+    ],
+    "Panamera 4S E-Hybrid": [
+      "2.9-liter twin-turbo V-6 plug-in hybrid with 536 hp and 553 lb-ft torque",
+      "0-60 mph in 3.5 seconds"
+    ],
+    "Panamera GTS": [
+      "4.0-liter twin-turbo V-8 engine with 493 hp and 486 lb-ft torque",
+      "0-60 mph in 3.6 seconds",
+      "Sportier tuning and styling over 4S E-Hybrid"
+    ],
+    "Panamera Turbo E-Hybrid": [
+      "4.0-liter twin-turbo V-8 plug-in hybrid with 670 hp and 685 lb-ft torque",
+      "0-60 mph in 3.0 seconds",
+      "Enhanced plug-in hybrid powertrain over GTS"
+    ],
+    "Panamera Turbo S E-Hybrid": [
+      "4.0-liter twin-turbo V-8 plug-in hybrid with 771 hp and 737 lb-ft torque",
+      "0-60 mph in 2.8 seconds",
+      "Range-topping performance sedan with highest output"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/panamera/"
+}

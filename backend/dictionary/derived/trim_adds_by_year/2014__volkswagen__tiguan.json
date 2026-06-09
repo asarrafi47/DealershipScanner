@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2014|volkswagen|tiguan",
+  "year": 2014,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_web_2014__volkswagen__tiguan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Tiguan 2.0T SEL R-Line 4MOTION",
+    "Tiguan 2.0T SE R-Line Black 4MOTION",
+    "Tiguan 2.0T SE R-Line Black FWD",
+    "Tiguan 2.0T SE 4MOTION",
+    "Tiguan 2.0T SE FWD",
+    "Tiguan 2.0T S 4MOTION",
+    "Tiguan 2.0T S FWD"
+  ],
+  "adds_by_trim": {
+    "Tiguan 2.0T S FWD": [
+      "2.0-liter turbocharged four-cylinder engine with 201 hp",
+      "12.9-inch touchscreen display",
+      "10.3-inch digital driver display",
+      "Automatic emergency braking with pedestrian detection",
+      "Adaptive cruise control and lane keeping assistance",
+      "Blind-spot and rear cross-traffic monitors",
+      "Travel Assist semi-autonomous driving assistance",
+      "Emergency Assist semi-automated driving assistance",
+      "Automatic high-beams and parking sensors",
+      "Vehicle exit warning and 10 total airbags"
+    ],
+    "Tiguan 2.0T S 4MOTION": [
+      "All-wheel drive (4MOTION) system"
+    ],
+    "Tiguan 2.0T SE FWD": [
+      "15.0-inch center display on more upscale trims",
+      "Enhanced interior features and materials"
+    ],
+    "Tiguan 2.0T SE 4MOTION": [
+      "All-wheel drive (4MOTION) system"
+    ],
+    "Tiguan 2.0T SE R-Line Black FWD": [
+      "R-Line exterior styling package",
+      "Black exterior accents and trim"
+    ],
+    "Tiguan 2.0T SE R-Line Black 4MOTION": [
+      "All-wheel drive (4MOTION) system"
+    ],
+    "Tiguan 2.0T SEL R-Line 4MOTION": [
+      "Premium cabin materials with walnut accents",
+      "Savona leather upholstery",
+      "Wrapped center console",
+      "Harman Kardon premium audio system",
+      "Head-up display",
+      "Atmospheres mood lighting with customizable interior moods",
+      "Ventilated and massaging power front seats",
+      "Heated rear seats and steering wheel",
+      "Hands-free power liftgate with illuminated logo"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/tiguan/"
+}

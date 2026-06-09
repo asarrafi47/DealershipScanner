@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2021|chevrolet|camaro",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SS",
+    "RS",
+    "LT",
+    "Custom",
+    "LS",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

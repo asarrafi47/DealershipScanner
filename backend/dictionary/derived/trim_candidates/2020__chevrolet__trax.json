@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2020|chevrolet|trax",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Trax",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LT",
+    "LS",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

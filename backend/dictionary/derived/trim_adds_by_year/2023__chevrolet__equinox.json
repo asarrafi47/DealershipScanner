@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2023|chevrolet|equinox",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2023__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "18-inch machined-face wheels",
+      "Hands-free 7-pin power liftgate with Chevrolet emblem projection",
+      "Fog lamps",
+      "Leather-appointed seating with heated front seats",
+      "Heated steering wheel",
+      "Memory settings for driver seat and outside mirrors",
+      "Chevrolet Infotainment 3 Plus with 8-inch diagonal HD touchscreen",
+      "Wireless charging pad",
+      "Front and Rear Park Assist",
+      "8-way power front passenger seat with 2-way lumbar control"
+    ],
+    "RS": [
+      "Blacked-out grille and surround with Red RS badging",
+      "Black Chevrolet bowtie emblems and Equinox badging",
+      "19-inch Dark Android-painted wheels",
+      "Programmable power liftgate",
+      "LED taillamps",
+      "Unique RS interior with Red stitching and Black Ice chrome accents",
+      "Heated front seats",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Available Safety and Infotainment Package"
+    ],
+    "LT": [
+      "Body-color mirror caps",
+      "Deep-tinted rear glass",
+      "Bright lower window trim",
+      "Available bright roof rails",
+      "8-way power driver seat with power lumbar control",
+      "Second-row mechanical seat release levers in cargo area",
+      "Programmable power liftgate",
+      "LED taillamps",
+      "Chevrolet Infotainment 3 Plus with 8-inch diagonal touchscreen",
+      "Heated front seats"
+    ],
+    "LS": [
+      "LED headlamps",
+      "Wireless Apple CarPlay and Android Auto compatibility",
+      "Outside heated power-adjustable manual-folding mirrors",
+      "Available Rear Cross Traffic Alert",
+      "Available Lane Change Alert with Side Blind Zone Alert",
+      "Available Rear Park Assist",
+      "Available remote vehicle starter system",
+      "Chevrolet Infotainment 3 with 7-inch touchscreen",
+      "USB ports and auxiliary input jack",
+      "Available Wi-Fi Hotspot"
+    ]
+  }
+}

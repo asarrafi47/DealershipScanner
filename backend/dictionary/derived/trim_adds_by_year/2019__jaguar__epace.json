@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2019|jaguar|epace",
+  "year": 2019,
+  "make": "Jaguar",
+  "model": "E-Pace",
+  "ladder_id": "brochure_llm_2019__jaguar__epace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "E-PACE R-Dynamic HSE",
+    "E-PACE R-Dynamic SE",
+    "E-PACE R-Dynamic S",
+    "E-PACE SE",
+    "E-PACE S",
+    "E-PACE"
+  ],
+  "adds_by_trim": {
+    "E-PACE R-Dynamic HSE": [
+      "20-inch 5 split-spoke 'Style 5051' alloy wheels with satin grey diamond turned finish"
+    ],
+    "E-PACE R-Dynamic SE": [
+      "19-inch 5 spoke 'Style 5049' alloy wheels standard",
+      "R-Dynamic body kit with unique front bumper and gloss black finish front grille",
+      "Ebony sportmesh sport seats with contrast stitching",
+      "R-Dynamic soft grain steering wheel with satin black gearshift paddles",
+      "Front fog lights",
+      "Satin chrome side vents",
+      "Ebony headlining",
+      "Bright metal pedals",
+      "Metal treadplates with R-Dynamic script"
+    ],
+    "E-PACE R-Dynamic S": [
+      "18-inch 5 spoke 'Style 5048' alloy wheels standard",
+      "R-Dynamic body kit with unique front bumper and gloss black finish front grille",
+      "Ebony sportmesh sport seats with contrast stitching",
+      "R-Dynamic soft grain steering wheel with satin black gearshift paddles",
+      "Front fog lights",
+      "Satin chrome side vents",
+      "Ebony headlining",
+      "Bright metal pedals",
+      "Metal treadplates with R-Dynamic script"
+    ],
+    "E-PACE SE": [
+      "19-inch 10 spoke 'Style 1039' alloy wheels standard"
+    ],
+    "E-PACE S": [
+      "18-inch 9 spoke 'Style 9008' alloy wheels standard"
+    ],
+    "E-PACE": [
+      "17-inch 10 spoke 'Style 1005' alloy wheels with all-season tires",
+      "10-inch touchscreen with 5-inch instrument panel display",
+      "180-watt sound system with AM/FM radio and Bluetooth connectivity",
+      "Fabric seats with 8-way manual front seat adjustment",
+      "Leather steering wheel with integrated voice control",
+      "Anti-lock braking system with electronic brake-force distribution and emergency brake assist",
+      "Front and full-length side window curtain airbags with occupant detector",
+      "All Surface Progress Control and hill launch assist",
+      "Torque vectoring by braking and dynamic stability control",
+      "Two-zone climate control with second row air vents"
+    ]
+  }
+}

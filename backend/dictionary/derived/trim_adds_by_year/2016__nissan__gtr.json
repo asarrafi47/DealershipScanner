@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2016|nissan|gtr",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2016__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT-R® NISMO®",
+    "45TH ANNIVERSARY GOLD EDITION",
+    "BLACK EDITION",
+    "PREMIUM"
+  ],
+  "adds_by_trim": {
+    "GT-R® NISMO®": [
+      "NISMO®-tuned 600-hp, 3.8-liter high-turbocharged V6 engine",
+      "NISMO®-tuned suspension with 17.3-mm hollow rear stabilizer bar",
+      "NISMO® Black 20-inch super-lightweight RAYS® forged-alloy wheels",
+      "NISMO® Recaro® leather-appointed front seats with red Alcantara® inserts",
+      "NISMO® Black/Red interior treatment",
+      "NISMO® aerodynamic body design with carbon-fiber front/rear fascia and side sills",
+      "NISMO® Alcantara®-wrapped steering wheel and gauge hood",
+      "NISMO® tachometer",
+      "Additional front and rear brake cooling air ducts",
+      "Carbon-fiber trunk lid"
+    ],
+    "45TH ANNIVERSARY GOLD EDITION": [
+      "Unique 45th Anniversary Gold exterior color",
+      "Commemorative interior plaque",
+      "Gold-tone VIN plate in engine compartment"
+    ],
+    "BLACK EDITION": [
+      "20-inch special dark-finished super-lightweight forged-alloy RAYS® wheels",
+      "Dry carbon-fiber rear spoiler"
+    ],
+    "PREMIUM": [
+      "3.8-liter twin-turbo V6 engine with dual-clutch 6-speed transmission",
+      "Multi-LED headlights with signature lighting",
+      "ATTESA E-TS® All-Wheel Drive system",
+      "20-inch Super-lightweight RAYS® forged-alloy wheels",
+      "Dunlop® SP Sport MAXX GT600 DSST CTT high-performance run-flat tires",
+      "Nissan/Brembo® braking system",
+      "Bilstein® DampTronic® suspension system",
+      "Advanced Vehicle Dynamic Control with three driver-selectable modes",
+      "Nissan Hard Drive Navigation System",
+      "Driver-configurable Multi-Function Display with Bose® audio and Active Noise Cancellation"
+    ]
+  }
+}

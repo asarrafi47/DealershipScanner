@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2022|kia|rio",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Rio",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GT",
+    "GT-Line",
+    "EX",
+    "LX",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

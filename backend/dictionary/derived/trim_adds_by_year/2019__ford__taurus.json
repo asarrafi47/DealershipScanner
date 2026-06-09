@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2019|ford|taurus",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_2019__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "Sport",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds 8-inch SYNC 3 touchscreen with voice-activated technology",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds two smart-charging USB ports",
+      "Adds SYNC 3 AppLink for compatible mobile apps"
+    ],
+    "Sport": [
+      "Adds sport pedals",
+      "Adds remote start system"
+    ],
+    "SEL": [
+      "Adds voice-activated navigation with turn-by-turn directions and 3-D maps",
+      "Adds Google Maps and Waze compatibility",
+      "Adds pinch-to-zoom capability on SYNC 3 touchscreen",
+      "Adds all-weather floor mats",
+      "Adds rear spoilers"
+    ],
+    "Limited": [
+      "Adds FordPass smartphone app integration for fuel pricing and parking reservation",
+      "Adds SiriusXM Traffic & Travel Link for real-time traffic avoidance and fuel pricing",
+      "Adds Ford+Alexa app compatibility for voice-controlled services",
+      "Adds smoked moonroof deflector",
+      "Adds side window deflectors",
+      "Adds molded splash guards",
+      "Adds chrome mirror caps",
+      "Adds chrome-plated wheel lock kit"
+    ]
+  }
+}

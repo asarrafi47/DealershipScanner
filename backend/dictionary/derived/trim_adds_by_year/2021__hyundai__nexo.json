@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2021|hyundai|nexo",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Nexo",
+  "ladder_id": "brochure_web_2021__hyundai__nexo",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited",
+    "Blue"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Larger wheels reducing driving range to 354 miles",
+      "Camera-based blind-spot monitoring",
+      "Remote parking assist",
+      "360-degree camera system",
+      "Eight-speaker premium audio system",
+      "USB-C ports for second row"
+    ],
+    "Blue": [
+      "10.3-inch digital gauge display",
+      "12.3-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Built-in navigation",
+      "Wireless charging pad",
+      "Adaptive cruise control",
+      "Front automatic emergency braking",
+      "Rear cross-traffic alert",
+      "Automatic high-beams",
+      "Lane keep assist",
+      "380-mile driving range"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/nexo/"
+}

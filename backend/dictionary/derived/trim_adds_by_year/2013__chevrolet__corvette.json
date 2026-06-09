@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2013|chevrolet|corvette",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_web_2013__chevrolet__corvette",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "ZR1",
+    "Z06",
+    "E-Ray",
+    "Stingray"
+  ],
+  "adds_by_trim": {
+    "ZR1": [
+      "5.5-liter twin-turbo V-8 engine with 1,064 hp and 828 lb-ft torque",
+      "LT7 flat-plane-crank engine with unique internals, cams, and cylinder heads",
+      "Extra oil scavenge stage and supplementary port fuel-injection system",
+      "Aero kit enabling 215 mph top speed",
+      "Quarter-mile capability under 9.7 seconds at 150 mph"
+    ],
+    "Z06": [
+      "5.5-liter naturally aspirated flat-plane-crank V-8 with 670 hp and 460 lb-ft torque",
+      "0-60 mph in 2.6-2.8 seconds",
+      "RWD configuration"
+    ],
+    "E-Ray": [
+      "All-wheel-drive system with electric motor powering front wheels",
+      "1.9-kWh battery pack enabling up to 45 mph electric-only driving",
+      "655 hp combined V-8 and electric motor output with 595 lb-ft torque",
+      "Charge+ and Stop/Start buttons on console",
+      "Magnetic Ride Control 4.0 adaptive suspension",
+      "Brembo carbon ceramic brake kit",
+      "3.6-inch lower ride height than Stingray",
+      "Staggered 20- and 21-inch wheels",
+      "Optional Electric Blue racing stripe and carbon-fiber aero accents"
+    ],
+    "Stingray": [
+      "6.2-liter naturally aspirated V-8 engine with 490 hp and 465 lb-ft torque",
+      "Eight-speed dual-clutch automatic transmission standard",
+      "Rear-wheel-drive configuration",
+      "0-60 mph in 2.8-3.3 seconds",
+      "8.0-inch touchscreen infotainment with Apple CarPlay and Android Auto",
+      "12.0-inch digital instrument cluster",
+      "10-speaker Bose audio system",
+      "Performance Data Recorder with dash camera for lap logging"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/chevrolet/corvette/"
+}

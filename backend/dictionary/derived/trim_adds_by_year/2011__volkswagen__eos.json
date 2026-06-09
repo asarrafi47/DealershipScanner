@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|volkswagen|eos",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Eos",
+  "ladder_id": "generic_volkswagen_eos",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "GTI",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "trademark of Dr. Ing. h.c. F. Porsche AG. \u201cDynaudio\u201d is a registered"
+    ],
+    "Sport": [
+      "trademark of Audi AG. \u201cTiptronic\u201d is a registered"
+    ],
+    "Premium": [
+      "trademarks of Volkswagen Group of America, Inc. \u201cFSI\u201d is a registered"
+    ],
+    "Limited": [
+      "trademark and the Carefree Maintenance logo and \u201cSide Curtain Protection\u201d are registered"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 5,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Premium": 1,
+      "Sport": 1,
+      "LE": 1
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|nissan|titan",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Titan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "Pro-4X",
+    "SV",
+    "S",
+    "Limited",
+    "Premium",
+    "T/A"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

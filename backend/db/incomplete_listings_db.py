@@ -10,6 +10,8 @@ import json
 import logging
 import os
 import sqlite3
+import threading
+import time
 from datetime import datetime, timezone
 
 from backend.db.inventory_db import DB_PATH as _INVENTORY_DB_PATH
@@ -24,6 +26,17 @@ DB_PATH = os.environ.get(
     os.path.join(os.path.dirname(_INVENTORY_DB_PATH), "incomplete_listings.db"),
 )
 _META_BOOTSTRAP_KEY = "index_bootstrap_v1"
+_bootstrap_lock = threading.Lock()
+
+
+def incomplete_index_db_mtime() -> float:
+    """Modification time for cache invalidation (sidecar SQLite or 60s bucket on Postgres)."""
+    if is_inventory_postgres():
+        return float(int(time.time()) // 60)
+    try:
+        return os.path.getmtime(DB_PATH)
+    except OSError:
+        return 0.0
 
 
 def get_conn():
@@ -67,12 +80,39 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+def _clear_listings_caches_after_index_write() -> None:
+    try:
+        from backend.db.inventory_db import clear_inventory_listings_cache
+
+        clear_inventory_listings_cache()
+    except Exception:
+        logger.debug("Could not clear listings cache after incomplete index write", exc_info=True)
+
+
 def delete_incomplete_record(car_id: int) -> None:
     conn = get_conn()
     _ensure_schema(conn)
     conn.execute("DELETE FROM incomplete_listings WHERE car_id = ?", (car_id,))
     conn.commit()
     conn.close()
+
+
+def get_missing_field_codes_for_car_id(car_id: int) -> list[str]:
+    """Fast read from incomplete index; empty list when the listing is complete."""
+    conn = get_conn()
+    _ensure_schema(conn)
+    row = conn.execute(
+        "SELECT missing_fields_json FROM incomplete_listings WHERE car_id = ?",
+        (int(car_id),),
+    ).fetchone()
+    conn.close()
+    if not row:
+        return []
+    try:
+        raw = json.loads(row[0])
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return []
+    return [str(c) for c in raw if c] if isinstance(raw, list) else []
 
 
 def sync_incomplete_listing_for_car_id(car_id: int) -> None:
@@ -110,38 +150,14 @@ def sync_incomplete_listing_for_car_id(car_id: int) -> None:
 
 def rebuild_incomplete_listings_index() -> int:
     """Full rescan of inventory ``cars``; returns count of rows left in the incomplete index."""
-    from backend.db.inventory_db import get_conn as inv_get_conn
-
-    conn_inc = get_conn()
-    _ensure_schema(conn_inc)
-    conn_inc.execute("DELETE FROM incomplete_listings")
-    conn_inc.commit()
-    conn_inc.close()
-
-    inv = inv_get_conn()
-    inv.row_factory = sqlite3.Row
-    cur = inv.cursor()
-    cur.execute("SELECT id FROM cars")
-    ids = [int(r[0]) for r in cur.fetchall()]
-    inv.close()
-    for cid in ids:
-        sync_incomplete_listing_for_car_id(cid)
-
-    conn_inc = get_conn()
-    cur = conn_inc.cursor()
-    cur.execute("SELECT COUNT(*) FROM incomplete_listings")
-    n = int(cur.fetchone()[0])
-    conn_inc.close()
-    return n
+    return fast_rebuild_incomplete_listings_index()
 
 
 def fast_rebuild_incomplete_listings_index() -> int:
     """
     Full resync of the incomplete_listings index using the same rules as
     :func:`sync_incomplete_listing_for_car_id` / the car detail page
-    (:func:`listing_missing_field_codes`). This includes display-only trim derivation
-    (e.g. BMW ``apply_bmw_model_trim_display``), so the dev incomplete list matches
-    what operators see on ``/car/<id>``.
+    (:func:`listing_missing_field_codes`).
 
     Returns the number of incomplete rows.
     """
@@ -165,19 +181,27 @@ def fast_rebuild_incomplete_listings_index() -> int:
 
     conn_inc = get_conn()
     _ensure_schema(conn_inc)
-    conn_inc.execute("DELETE FROM incomplete_listings")
-    conn_inc.executemany(
-        "INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at) VALUES (?,?,?,?)",
-        rows_to_upsert,
-    )
-    conn_inc.commit()
-    conn_inc.close()
+    try:
+        conn_inc.execute("BEGIN IMMEDIATE")
+        conn_inc.execute("DELETE FROM incomplete_listings")
+        if rows_to_upsert:
+            conn_inc.executemany(
+                "INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at) VALUES (?,?,?,?)",
+                rows_to_upsert,
+            )
+        conn_inc.commit()
+    except Exception:
+        conn_inc.rollback()
+        raise
+    finally:
+        conn_inc.close()
 
     logger.info(
         "fast_rebuild_incomplete_listings_index: %d incomplete / %d total",
         len(rows_to_upsert),
         len(all_cars),
     )
+    _clear_listings_caches_after_index_write()
     return len(rows_to_upsert)
 
 
@@ -193,37 +217,36 @@ def _mark_bootstrapped() -> None:
 
 
 def ensure_incomplete_index_built() -> None:
+    with _bootstrap_lock:
+        conn = get_conn()
+        _ensure_schema(conn)
+        cur = conn.cursor()
+        cur.execute("SELECT v FROM incomplete_listings_meta WHERE k = ?", (_META_BOOTSTRAP_KEY,))
+        row = cur.fetchone()
+        conn.close()
+        if row:
+            return
+        try:
+            n = fast_rebuild_incomplete_listings_index()
+            _mark_bootstrapped()
+            logger.info("Built incomplete_listings index (%d row(s) flagged).", n)
+        except Exception:
+            logger.exception("Failed to build incomplete_listings index")
+
+
+def get_incomplete_listings_count() -> int:
+    """Count of rows in the incomplete index (cheap query for dev SSR)."""
+    ensure_incomplete_index_built()
     conn = get_conn()
     _ensure_schema(conn)
     cur = conn.cursor()
-    cur.execute("SELECT v FROM incomplete_listings_meta WHERE k = ?", (_META_BOOTSTRAP_KEY,))
+    cur.execute("SELECT COUNT(*) FROM incomplete_listings")
     row = cur.fetchone()
     conn.close()
-    if row:
-        return
     try:
-        n = rebuild_incomplete_listings_index()
-        _mark_bootstrapped()
-        logger.info("Built incomplete_listings index (%d row(s) flagged).", n)
-    except Exception:
-        logger.exception("Failed to build incomplete_listings index")
-
-
-def _attach_listing_display_for_dev(cars: list[dict]) -> None:
-    """
-    Match ``/car/<id>`` spec-line display: BMW trim/model normalization lives in
-    :func:`serialize_car_for_api` (not always equal to raw ``cars.trim``).
-    Mutates each dict in place with ``listing_trim_display`` / ``listing_model_display``.
-    """
-    from backend.enrichment.knowledge_engine import prepare_car_detail_context
-    from backend.utils.car_serialize import serialize_car_for_api
-
-    for c in cars:
-        ctx = prepare_car_detail_context(dict(c))
-        vs = ctx.get("verified_specs") or {}
-        ser = serialize_car_for_api(dict(c), include_verified=False, verified_specs=vs)
-        c["listing_trim_display"] = ser.get("trim")
-        c["listing_model_display"] = ser.get("model")
+        return max(0, int(row[0] if row else 0))
+    except (TypeError, ValueError, IndexError):
+        return 0
 
 
 def get_incomplete_car_id_set() -> set[int]:
@@ -259,5 +282,4 @@ def get_incomplete_cars_for_dev() -> list[dict]:
     cars = get_cars_by_ids(ids)
     for c in cars:
         c["incomplete_missing_fields"] = fields_by_id.get(int(c["id"]), [])
-    _attach_listing_display_for_dev(cars)
     return cars

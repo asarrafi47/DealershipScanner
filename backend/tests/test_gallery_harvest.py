@@ -77,6 +77,13 @@ class GalleryHarvestTest(unittest.TestCase):
         self.assertEqual(diag.get("action"), "extend")
         self.assertIn("https://new.example/x.jpg", v["gallery"])
 
+    def test_merge_vdp_uncapped_when_max_gallery_none(self) -> None:
+        v = {"vin": "1M8GDM9AXKP042788", "gallery": [f"https://keep.example/{i}.jpg" for i in range(4)]}
+        candidates = [f"https://new.example/{i}.jpg" for i in range(60)]
+        diag = merge_vdp_gallery_into_vehicle(v, candidates, max_gallery=None)
+        self.assertEqual(diag.get("action"), "extend")
+        self.assertGreaterEqual(len(v["gallery"]), 60)
+
     def test_merge_inventory_duplicate_rows(self) -> None:
         dst = {
             "vin": "1M8GDM9AXKP042788",

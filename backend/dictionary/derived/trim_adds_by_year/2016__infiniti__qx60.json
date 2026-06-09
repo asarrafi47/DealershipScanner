@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2016|infiniti|qx60",
+  "year": 2016,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2016__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX60 3.5 AWD Hybrid",
+    "QX60 3.5 AWD",
+    "QX60 3.5",
+    "QX60 Hybrid"
+  ],
+  "adds_by_trim": {
+    "QX60 3.5 AWD Hybrid": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "2.5-liter supercharged I4 with hybrid electric motor and lithium-ion battery",
+      "Electric Active Control Engine Mount (E-ACM)",
+      "Hybrid Regenerative Braking System",
+      "250 hp @ 5,600 rpm and 243 lb-ft torque @ 3,600 rpm",
+      "25/28 EPA estimated fuel economy (city/highway)",
+      "Roof rails with crossbars",
+      "Power rear liftgate"
+    ],
+    "QX60 3.5 AWD": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "3.5-liter V6 engine with 265 hp @ 6,400 rpm",
+      "248 lb-ft torque @ 4,400 rpm",
+      "19/26 EPA estimated fuel economy (city/highway)",
+      "5,000 lbs towing capacity"
+    ],
+    "QX60 3.5": [
+      "Front-wheel drive",
+      "3.5-liter V6 engine with 265 hp @ 6,400 rpm",
+      "248 lb-ft torque @ 4,400 rpm",
+      "21/27 EPA estimated fuel economy (city/highway)",
+      "3,500 lbs towing capacity"
+    ],
+    "QX60 Hybrid": [
+      "2.5-liter supercharged I4 with hybrid electric motor",
+      "250 hp @ 5,600 rpm and 243 lb-ft torque @ 3,600 rpm",
+      "26/28 EPA estimated fuel economy (city/highway)",
+      "Hybrid Regenerative Braking System",
+      "Front-wheel drive"
+    ]
+  }
+}

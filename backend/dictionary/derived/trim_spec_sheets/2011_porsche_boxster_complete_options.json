@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2011_porsche_boxster_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Boxster",
+    "Boxster"
+  ],
+  "year_min": 2009,
+  "year_max": 2013,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2024|dodge|durango",
+  "year": 2024,
+  "make": "Dodge",
+  "model": "Durango",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Citadel",
+    "R/T Plus",
+    "R/T",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "Platinum",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2016|hyundai|santafe",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2016__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Santa Fe SE",
+    "Santa Fe Limited",
+    "Santa Fe Sport"
+  ],
+  "adds_by_trim": {
+    "Santa Fe SE": [
+      "7-passenger seating configuration",
+      "3.3L V6 engine with 290 horsepower",
+      "18-inch alloy wheels standard"
+    ],
+    "Santa Fe Limited": [
+      "6-passenger seating configuration",
+      "Panoramic sunroof",
+      "19-inch alloy wheels",
+      "Ventilated front seats",
+      "Heated steering wheel",
+      "2nd-row captain's chairs",
+      "Blind spot detection",
+      "Rear parking assistance sensors",
+      "Hands-free smart power liftgate"
+    ],
+    "Santa Fe Sport": [
+      "5-passenger seating configuration",
+      "2.4L base engine with 190 horsepower",
+      "2.0T turbocharged engine option with 265 horsepower",
+      "17-inch alloy wheels standard",
+      "Seven airbags standard",
+      "Blue Link connected car system standard",
+      "Advanced driving assist technologies standard"
+    ]
+  }
+}

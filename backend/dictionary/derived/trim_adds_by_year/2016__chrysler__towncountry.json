@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2016|chrysler|towncountry",
+  "year": 2016,
+  "make": "Chrysler",
+  "model": "Town & Country",
+  "ladder_id": "brochure_llm_2016__chrysler__towncountry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOWN & COUNTRY LIMITED PLATINUM",
+    "TOWN & COUNTRY LIMITED",
+    "TOWN & COUNTRY TOURING-L",
+    "TOWN & COUNTRY S",
+    "TOWN & COUNTRY TOURING",
+    "TOWN & COUNTRY LX"
+  ],
+  "adds_by_trim": {
+    "TOWN & COUNTRY LIMITED PLATINUM": [
+      "Fully polished sunroof",
+      "Nappa premium leather-trimmed seats with silver stitching",
+      "Heated wood/leather-wrapped steering wheel",
+      "High intensity discharge (HID) headlamps",
+      "Memory seats, mirrors, and adjustable pedals"
+    ],
+    "TOWN & COUNTRY LIMITED": [
+      "SafetyTech package with blind spot and rear cross-path detection",
+      "Navigation system",
+      "Alcantara suede and leather-trimmed seats",
+      "Rain-sensing windshield wipers",
+      "Heated first and second-row seats",
+      "Heated steering wheel",
+      "Power third-row folding seat",
+      "Power-folding mirrors",
+      "8-way power passenger seat"
+    ],
+    "TOWN & COUNTRY TOURING-L": [
+      "Satin silver fully painted 17-inch cast-aluminum wheels",
+      "Bright door handles",
+      "Perforated leather-trimmed seats",
+      "Dual-DVD/Blu-ray entertainment system",
+      "Second and third-row window shades",
+      "ParkSense rear park assist"
+    ],
+    "TOWN & COUNTRY S": [
+      "Tech silver fully painted 17-inch cast-aluminum wheels",
+      "Blacked-out headlamps",
+      "Black chrome grille",
+      "Piano black interior accents",
+      "S badging",
+      "Leather-trimmed seats with fabric inserts",
+      "Auto high-beam headlamp control",
+      "Super console"
+    ],
+    "TOWN & COUNTRY TOURING": [
+      "Hyper black fully painted 17-inch cast-aluminum wheels",
+      "Chrome mirrors with signals",
+      "Fog lamps",
+      "Remote start",
+      "Automatic three-zone HVAC",
+      "Power 8-way driver's seat",
+      "Leather-trimmed seating",
+      "Stow N Place roof rack system"
+    ],
+    "TOWN & COUNTRY LX": [
+      "3.6L Pentastar V6 engine with 283 horsepower",
+      "17-inch cast-aluminum wheels",
+      "Single-DVD player",
+      "Radio 430 with back-up camera",
+      "6 speakers with SiriusXM satellite radio",
+      "6.5-inch touchscreen display",
+      "Leather-trimmed seating with Stow 'n Go",
+      "Uconnect voice command with Bluetooth",
+      "Manual three-zone HVAC",
+      "Power sliding doors and liftgate"
+    ]
+  }
+}

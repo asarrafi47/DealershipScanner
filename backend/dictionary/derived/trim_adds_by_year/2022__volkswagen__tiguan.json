@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2022|volkswagen|tiguan",
+  "year": 2022,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_llm_2022__volkswagen__tiguan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL R-Line®",
+    "SE R-Line® Black",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL R-Line®": [
+      "Standard 4MOTION® all-wheel drive with Active Control and Eco mode",
+      "20-inch two-tone machined alloy wheels",
+      "Adaptive Front-lighting System with dynamic cornering lights",
+      "Poor Weather Lights for improved visibility in inclement weather",
+      "Projector headlamps with signature DRLs and integrated light bar",
+      "Power auto-folding side mirrors with position memory",
+      "Chrome trim on lower door panels and rear bumper",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "SE R-Line® Black": [
+      "19-inch black twin 5-spoke alloy wheels",
+      "R-Line® grille, badging, intakes, side sills, bumpers, and exterior trim",
+      "Black accents in R-Line® grille, front bumper, side sills, and exterior trim",
+      "Gloss black side mirror caps",
+      "Black roof rails, powder coated",
+      "Black side window surrounds",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "SE": [
+      "18-inch dark graphite 10-spoke alloy wheels",
+      "Silver anodized roof rails",
+      "Chrome surrounds on side windows",
+      "Panoramic sunroof with power tilting and sliding front section"
+    ],
+    "S": [
+      "2.0L TSI 184 HP turbocharged 4-cylinder engine with direct fuel injection",
+      "8-speed automatic transmission with Tiptronic®",
+      "17-inch two-tone machined twin 5-spoke alloy wheels",
+      "LED headlights with Daytime Running Lights and automatic headlights",
+      "LED taillights and rear license plate lights",
+      "Heated, foldable, power adjustable side mirrors with integrated turn signals",
+      "Four-wheel independent suspension with vented front and solid rear disc brakes",
+      "All-season tires with security wheel locks",
+      "Body color upper bumpers and door handles",
+      "Tinted privacy glass for 2nd/3rd row and cargo area windows"
+    ]
+  }
+}

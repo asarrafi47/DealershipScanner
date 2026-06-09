@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|mini|mini",
+  "year": 2015,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_web_2015__mini__mini",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Cooper S",
+    "Cooper",
+    "Cooper Hardtop"
+  ],
+  "adds_by_trim": {
+    "Cooper S": [
+      "1.6L turbocharged 4-cylinder engine with 189 hp vs 121 hp naturally aspirated",
+      "6-speed manual transmission standard; 6-speed automatic available",
+      "Sport suspension tuning",
+      "Unique front grille and badging",
+      "17-inch wheels standard"
+    ],
+    "Cooper": [
+      "1.6L naturally aspirated 4-cylinder engine with 121 hp",
+      "5-speed manual transmission standard; 6-speed automatic available",
+      "17-inch wheels",
+      "Standard safety features including multiple airbags"
+    ],
+    "Cooper Hardtop": [
+      "Base model with 1.6L naturally aspirated 4-cylinder engine",
+      "5-speed manual transmission standard",
+      "16-inch wheels standard",
+      "Cloth upholstery",
+      "Power windows, locks, and mirrors",
+      "Bluetooth connectivity",
+      "6.5-inch display screen"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mini/mini/"
+}

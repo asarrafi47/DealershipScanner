@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2021|genesis|g70",
+  "year": 2021,
+  "make": "genesis",
+  "model": "G70",
+  "ladder_id": "brochure_llm_2021__genesis__g70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "G70 3.3T SPORT",
+    "G70 3.3T PRESTIGE",
+    "G70 2.0T SPORT M/T",
+    "G70 2.0T PRESTIGE",
+    "G70 2.0T ELITE"
+  ],
+  "adds_by_trim": {
+    "G70 3.3T SPORT": [
+      "19-inch aluminum alloy sport wheels with summer or all-season tires",
+      "Electronically controlled suspension",
+      "Copper headlight bezel accents",
+      "Dark tinted taillight covers",
+      "Dark chrome grille and side window surround",
+      "Black Nappa leather seats with sport quilting and red or gray stitching",
+      "Power trunk"
+    ],
+    "G70 3.3T PRESTIGE": [
+      "3.3L Twin-Turbo V6 engine with 365 HP and 376 lb-ft torque",
+      "Heads-up Display",
+      "Surround View Monitor",
+      "Nappa leather seating surfaces with luxury quilting",
+      "Heated rear seats",
+      "Microfiber suede headliner"
+    ],
+    "G70 2.0T SPORT M/T": [
+      "6-speed manual transmission",
+      "19-inch aluminum alloy wheels with summer tires",
+      "Limited-slip differential",
+      "Brembo performance braking system",
+      "Sport exhaust",
+      "Aluminum trim on doors and center console",
+      "Heated and ventilated front seats",
+      "Integrated Memory System",
+      "Power tilt-and-telescopic steering wheel"
+    ],
+    "G70 2.0T PRESTIGE": [
+      "Heads-up Display",
+      "8-inch touchscreen navigation system",
+      "Wireless charging pad",
+      "Ventilated front seats",
+      "Front passenger seat walk-in device",
+      "Power tilt-and-slide wide sunroof",
+      "Lexicon 15-speaker premium audio system with QuantumLogic Surround",
+      "Low Beam Assist",
+      "Rain-sensing wipers"
+    ],
+    "G70 2.0T ELITE": [
+      "Front and rear parking sensors",
+      "19-inch aluminum alloy wheels",
+      "Integrated Memory System with driver seat and side mirror memory",
+      "Power tilt-and-telescopic steering wheel",
+      "Heated front seats"
+    ]
+  }
+}

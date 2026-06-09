@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2010|mercury|milan",
+  "year": 2010,
+  "make": "Mercury",
+  "model": "Milan",
+  "ladder_id": "brochure_llm_2010__mercury__milan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Milan Hybrid",
+    "Milan"
+  ],
+  "adds_by_trim": {
+    "Milan Hybrid": [
+      "2.5L iVCT Atkinson-Cycle I-4 engine with permanent-magnet AC-synchronous electric motor",
+      "Electronically controlled continuously variable transmission (eCVT)",
+      "41 mpg city/36 hwy EPA-estimated fuel economy",
+      "11.8 cu. ft. cargo volume"
+    ],
+    "Milan": [
+      "2.5L iVCT DURATEC I-4 engine with 175 hp and 172 lb.-ft. torque",
+      "6-speed manual or 6-speed automatic transmission options",
+      "22-23 mpg city/29-34 hwy EPA-estimated fuel economy",
+      "16.5 cu. ft. cargo volume",
+      "3.0L iVCT DURATEC V-6 FFV engine option with 240 hp and 223 lb.-ft. torque"
+    ]
+  }
+}

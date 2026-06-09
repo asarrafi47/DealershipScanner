@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2024|nissan|pathfinder",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2024__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "Rock Creek",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Leather appointments",
+      "Premium interior styling and appointments"
+    ],
+    "SL": [
+      "Enhanced comfort and convenience features"
+    ],
+    "Rock Creek": [
+      "Off-road styling and capability enhancements",
+      "Specialized Rock Creek exterior design"
+    ],
+    "SV": [
+      "Mid-level convenience and comfort upgrades"
+    ],
+    "S": [
+      "3.5L V6 engine with standard power",
+      "Standard Nissan Safety Shield 360 technologies",
+      "8-inch touchscreen infotainment system",
+      "Intelligent 4x4 with all-terrain capability",
+      "Bluetooth connectivity and phone integration"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|landrover|lr2",
+  "year": 2010,
+  "make": "landrover",
+  "model": "LR2",
+  "ladder_id": "brochure_llm_2010__landrover__lr2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE LUX",
+    "HSE"
+  ],
+  "adds_by_trim": {
+    "HSE LUX": [
+      "Twin rear headphone modules with 3.5mm jack and independent volume/source control"
+    ],
+    "HSE": [
+      "8-way adjustable driver's seat with optional electric control and seat memory",
+      "Leather seat facings with color-coordinated door casing inserts and instrument panel",
+      "Dual-zone climate control with pollen filter and humidity sensor",
+      "Steering wheel mounted cruise control and audio controls",
+      "Hands-free telephone operation available with Bluetooth integration",
+      "Terrain Response system with four selectable driving programs",
+      "Hill Descent Control and Gradient Release Control",
+      "6-speed automatic CommandShift transmission with manual sequential gear changes",
+      "3.2-liter straight-six engine with Cam Profile Switching and Variable Valve Timing",
+      "Panoramic sunroof with electrically operated front section and infrared filtering glass"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2014|lamborghini|aventador",
+  "year": 2014,
+  "make": "Lamborghini",
+  "model": "aventador",
+  "ladder_id": "brochure_llm_2014__lamborghini__aventador",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Bicolore Elegante Trim",
+    "Bicolore Sportivo Trim",
+    "Unicolor Interior with Contrast Stitching Trim",
+    "Unicolor Interior Trim"
+  ],
+  "adds_by_trim": {
+    "Bicolore Elegante Trim": [
+      "Two-tone interior color scheme with elegant styling approach"
+    ],
+    "Bicolore Sportivo Trim": [
+      "Two-tone interior color scheme with sportivo styling approach"
+    ],
+    "Unicolor Interior with Contrast Stitching Trim": [
+      "Contrast stitching detail on single-color interior upholstery"
+    ],
+    "Unicolor Interior Trim": [
+      "V12 6498cc 700 PS engine with 690 Nm torque",
+      "7-speed ISR automatic transmission with Haldex generation IV 4WD",
+      "Push-rod suspension system with independent front and rear dampers",
+      "Carbon fiber monocoque chassis with aluminum front and rear frames",
+      "Dual stage front airbags and side head-thorax airbags",
+      "Three-position moveable rear spoiler managed by drive select mode",
+      "Pirelli 255/35 ZR19 front and 335/30 ZR20 rear tires",
+      "19-inch front and 20-inch rear aluminum alloy wheels",
+      "0-100 km/h acceleration in 3 seconds, top speed 350 km/h"
+    ]
+  }
+}

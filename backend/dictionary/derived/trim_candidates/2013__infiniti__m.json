@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2013|infiniti|m",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "M",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

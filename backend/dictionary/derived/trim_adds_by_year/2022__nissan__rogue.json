@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2022|nissan|rogue",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2022__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Variable Compression Turbo (VC-Turbo) engine with 201 hp and 225 lb-ft torque",
+      "Intelligent All-Wheel Drive with Drive Mode Dial and Snow/Off-Road Modes",
+      "ProPILOT Assist with Navi-link and Nissan Door to Door Navigation",
+      "Traffic Sign Recognition and premium SiriusXM packages with 5-year Select/Plus options",
+      "9-inch NissanConnect color touchscreen display",
+      "Bose Premium Audio System with dual-driver woofer",
+      "Wireless charger",
+      "Quilted semi-aniline leather-appointed seats with heated rear seats",
+      "Head-Up Display Package available"
+    ],
+    "SL": [
+      "19-inch aluminum-alloy wheels",
+      "Front, Rear, and Side Sonar System",
+      "Intelligent Around View Monitor",
+      "LED fog lights",
+      "Motion Activated Liftgate",
+      "Tri-Zone Automatic Temperature Control",
+      "Auto-dimming inside rearview mirror with reverse tilt-down outside mirrors",
+      "4-way power front-passenger seat with memory system for driver seat and mirrors",
+      "Leather-appointed seats, leather-wrapped steering wheel, heated front seats and steering wheel",
+      "Divide-N-Hide cargo system"
+    ],
+    "SV": [
+      "ProPILOT Assist standard",
+      "Intelligent Blind Spot Intervention and Intelligent Lane Intervention",
+      "18-inch aluminum-alloy wheels",
+      "Heated outside mirrors with LED turn signal indicators",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition and four door request switches",
+      "Two USB-A ports and two USB-C ports",
+      "Dual Panel Panoramic Moonroof",
+      "Remote Engine Start System with Intelligent Climate Control",
+      "8-way power driver's seat with 2-way power lumbar support"
+    ],
+    "S": [
+      "Variable Compression Turbo (VC-Turbo) engine with 201 hp and 225 lb-ft torque",
+      "Available Intelligent All-Wheel Drive with Drive Mode Dial and Snow/Off-Road Modes",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert, Rear Automatic Braking",
+      "High Beam Assist Standard Safety Shield 360",
+      "Intelligent Driver Alertness",
+      "17-inch aluminum-alloy wheels",
+      "LED headlights with LED Daytime Running Lights and LED taillights",
+      "Rear Door Alert",
+      "Advanced Drive-Assist Display with 8-inch NissanConnect touchscreen, Apple CarPlay and Android Auto"
+    ]
+  }
+}

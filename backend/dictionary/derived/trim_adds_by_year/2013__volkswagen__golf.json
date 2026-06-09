@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|volkswagen|golf",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "brochure_llm_2013__volkswagen__golf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TP Technology Package",
+    "SN Sunroof and Navigation",
+    "CS Convenience and Sunroof",
+    "C Convenience"
+  ],
+  "adds_by_trim": {
+    "TP Technology Package": [
+      "Bi-Xenon high-intensity headlights with LED DRL and Adaptive Front-lighting System",
+      "Keyless access with push-button start",
+      "Dynaudio premium sound system with 8 high-end speakers and 300-watt amplifier",
+      "6-speed DSG automatic transmission with Tiptronic and Sport mode"
+    ],
+    "SN Sunroof and Navigation": [
+      "RNS 315 navigation and entertainment system with 5-inch color touchscreen and SD memory card reader",
+      "Power tilting/sliding tinted sunroof"
+    ],
+    "CS Convenience and Sunroof": [
+      "Power tilting/sliding tinted sunroof",
+      "Premium VIII touchscreen sound system with HD Radio, MP3/WMA in-dash 6-disc CD changer, SD reader",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "Media Device Interface (MDI) with iPod cable",
+      "Bluetooth with audio streaming",
+      "3-spoke leather-wrapped multi-function steering wheel"
+    ],
+    "C Convenience": [
+      "2.5L 170-hp 5-valve DOHC in-line 5-cylinder engine with 177 lbs/ft torque",
+      "5-speed manual transmission standard",
+      "6-speed automatic transmission with Tiptronic and Sport mode available",
+      "15-inch steel wheels with all-season tires",
+      "4-wheel independent suspension with MacPherson front struts and 4-link rear",
+      "Electromechanical speed-sensitive power steering",
+      "Anti-theft vehicle alarm system and Immobilizer III",
+      "Daytime Running Lights (DRL)",
+      "Climatic climate control",
+      "Power windows with pinch protection and automatic 1-touch feature"
+    ]
+  }
+}

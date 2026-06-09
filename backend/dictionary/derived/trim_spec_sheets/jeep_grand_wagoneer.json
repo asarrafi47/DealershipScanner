@@ -1,0 +1,35 @@
+{
+  "ladder_id": "jeep_grand_wagoneer",
+  "make": "Jeep",
+  "models": [
+    "Grand Wagoneer",
+    "Grand Wagoneer L"
+  ],
+  "year_min": 2022,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Summit Reserve": [
+      {
+        "label": "Interior Materials",
+        "value": "Top Grand Wagoneer with premium leather and real wood"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "McIntosh audio and advanced driver assistance"
+      }
+    ],
+    "Summit": [
+      {
+        "label": "Interior Materials",
+        "value": "High-end Summit trim with premium interior content"
+      }
+    ],
+    "Series II": [
+      {
+        "label": "Engine Options",
+        "value": "Mid-level Series II trim content"
+      }
+    ]
+  }
+}

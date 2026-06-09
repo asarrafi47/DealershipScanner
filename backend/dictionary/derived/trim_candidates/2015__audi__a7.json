@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2015|audi|a7",
+  "year": 2015,
+  "make": "Audi",
+  "model": "A7",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport",
+    "A7"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

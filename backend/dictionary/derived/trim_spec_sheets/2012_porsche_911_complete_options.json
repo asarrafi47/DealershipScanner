@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2012_porsche_911_complete_options",
+  "make": "Porsche",
+  "models": [
+    "911",
+    "911"
+  ],
+  "year_min": 2010,
+  "year_max": 2014,
+  "source": "generated",
+  "trims": {
+    "Turbo S": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo S trim.; 3.8L V6 Twin Turbo"
+      }
+    ],
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim.; 3.8L V6 Twin Turbo"
+      }
+    ],
+    "Carrera S": [
+      {
+        "label": "Engine Options",
+        "value": "3.6L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "Carrera": [
+      {
+        "label": "Engine Options",
+        "value": "3.6L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

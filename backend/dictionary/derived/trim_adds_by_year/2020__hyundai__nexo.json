@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2020|hyundai|nexo",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Nexo",
+  "ladder_id": "brochure_llm_2020__hyundai__nexo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NEXO Blue Limited",
+    "NEXO Limited"
+  ],
+  "adds_by_trim": {
+    "NEXO Blue Limited": [
+      "Krell premium audio system with 8 speakers and Live Dynamic sound algorithm",
+      "Hands-free smart liftgate with auto open",
+      "Roof side rails",
+      "Remote seat heating and cooling via MyHyundai app"
+    ],
+    "NEXO Limited": [
+      "95 kW fuel cell with 40 kWh lithium-ion polymer battery",
+      "161 hp permanent magnet electric motor with 291 lb-ft torque",
+      "14.0 lbs hydrogen tank capacity",
+      "Single-speed automatic transmission with Shift-by-Wire push-button selector",
+      "Front Wheel Drive with multi-link rear suspension and regenerative braking",
+      "Forward Collision-Avoidance Assist, Blind-Spot Collision Warning, Lane Following Assist",
+      "Blind-Spot View Monitor and Surround View Monitor with parking sensors",
+      "Smart Cruise Control with Stop & Go and High Beam Assist",
+      "12.3-inch LCD touchscreen navigation with Apple CarPlay and Android Auto",
+      "LED headlights and taillights with Daytime Running Lights and auto on/off"
+    ]
+  }
+}

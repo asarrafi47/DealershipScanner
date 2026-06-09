@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2025_toyota_celica_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Celica",
+    "Celica"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "ST with 2T engine and live rear axle (TA60); These were the basic cars for Group B Celica Twincam Turbo (TA64) which were bui"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive (1970–1985); Front-engine, front-wheel-drive (1985–2006)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The interior had manual windows and locks, bucket seats and an AM/FM receiver as; The interior had manual windows and locks, bucket seats and an AM/FM receiver as standard features."
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive (1970–1985); Front-engine, front-wheel-drive (1985–2006)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The interior had manual windows and locks, bucket seats and an AM/FM receiver as; The interior had manual windows and locks, bucket seats and an AM/FM receiver as standard features."
+      }
+    ]
+  }
+}

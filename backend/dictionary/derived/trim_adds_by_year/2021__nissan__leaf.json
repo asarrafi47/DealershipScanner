@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2021|nissan|leaf",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2021__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL PLUS",
+    "SV PLUS",
+    "SV",
+    "S PLUS",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL PLUS": [
+      "ProPILOT Assist semi-autonomous driving",
+      "Intelligent Around View 360-degree camera system",
+      "Intelligent Driver Alertness monitoring",
+      "LED headlights with LED signature daytime running lights",
+      "Outside mirrors with integrated LED turn signal indicators",
+      "Leather-appointed seats",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver",
+      "8-way power adjustable driver's bucket seat with 2-way adjustable lumbar",
+      "Bose Energy Efficient Series Premium Audio System with seven speakers",
+      "Removable cargo cover"
+    ],
+    "SV PLUS": [
+      "Intelligent Cruise Control adaptive cruise control",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Fog lights",
+      "Heated leather-wrapped steering wheel",
+      "Nissan Door to Door Navigation with Premium Traffic real-time updates",
+      "SiriusXM Traffic and Travel Link with 3-month trial access",
+      "Hybrid Heater System for extended range",
+      "Heated front seats",
+      "NissanConnect EV & Services with 3-year trial access",
+      "AM/FM audio system with six speakers"
+    ],
+    "SV": [
+      "Quick Charge port 50 kW DC fast charging",
+      "17-inch machine-finished aluminum-alloy wheels",
+      "Fog lights",
+      "Heated leather-wrapped steering wheel",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "Heated outside mirrors",
+      "Hybrid Heater System",
+      "Heated front seats",
+      "NissanConnect EV & Services with 3-year trial access",
+      "SiriusXM Traffic and Travel Link with 3-month trial"
+    ],
+    "S PLUS": [
+      "62 kWh lithium-ion battery for extended range",
+      "160 kW AC synchronous electric motor with 214 hp and 250 lb-ft torque",
+      "Quick Charge port 100 kW DC fast charging",
+      "Portable 120-V/240-V charge cable",
+      "16-inch aluminum-alloy wheels",
+      "Front bumper chin spoiler"
+    ],
+    "S": [
+      "40 kWh lithium-ion battery pack",
+      "110 kW AC synchronous electric motor with 147 hp and 236 lb-ft torque",
+      "6.6 kW onboard charger",
+      "Portable trickle-charge 120-V cable",
+      "e-Pedal one-pedal driving",
+      "NissanConnect 8-inch touchscreen display with Apple CarPlay and Android Auto",
+      "Automatic Temperature Control climate system",
+      "Nissan Intelligent Key with Push Button Start",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection"
+    ]
+  }
+}

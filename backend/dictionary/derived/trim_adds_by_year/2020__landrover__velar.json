@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2020|landrover|velar",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Velar",
+  "ladder_id": "brochure_llm_2020__landrover__velar",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVAutobiography Dynamic Edition",
+    "P380",
+    "P340",
+    "P250"
+  ],
+  "adds_by_trim": {
+    "SVAutobiography Dynamic Edition": [
+      "Exclusive SVAutobiography design and luxury appointments",
+      "Customizable interior materials, veneers, and finishers",
+      "Grand Black veneer or Steel Weave Carbon Fiber trim options",
+      "Enhanced personalization options for headlining colors"
+    ],
+    "P380": [
+      "3.0L supercharged engine with 5.3-second 0-60 acceleration",
+      "170 mph maximum speed capability",
+      "350mm front ventilated disc brakes with single piston sliding calipers",
+      "Enhanced performance over P340 model"
+    ],
+    "P340": [
+      "3.0L supercharged engine with 5.9-second 0-60 acceleration",
+      "155 mph maximum speed",
+      "350mm front ventilated disc brakes",
+      "Improved performance over base P250 model"
+    ],
+    "P250": [
+      "2.0L turbocharged gasoline engine with 6.7-second 0-60 acceleration",
+      "Two seamlessly integrated 10-inch touchscreens with Touch Pro Duo technology",
+      "Twin sliding independent armrests",
+      "Sports Command Driving Position",
+      "Standard sliding panoramic roof",
+      "Configurable Ambient Interior Lighting with ten color options",
+      "Shadow Aluminum trim finisher",
+      "Ebony suedecloth headlining",
+      "Optional Windsor leather with Diamond Cut pattern"
+    ]
+  }
+}

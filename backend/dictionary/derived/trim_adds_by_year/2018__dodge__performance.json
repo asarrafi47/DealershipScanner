@@ -1,0 +1,91 @@
+{
+  "catalog_key": "2018|dodge|performance",
+  "year": 2018,
+  "make": "Dodge",
+  "model": "Performance",
+  "ladder_id": "brochure_llm_2018__dodge__performance",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HELLCAT TRS",
+    "TACLLEH TRS",
+    "TRS® TACLLEH",
+    "TRS®",
+    "293® KCAP TACS",
+    "293® IMEH A/T",
+    "T/R KCAP 293",
+    "REKAHS TACS T/R",
+    "SULP T/R",
+    "SULP A/T",
+    "T/R SULP",
+    "TG T/R A/T",
+    "REKAHS T/R",
+    "SULP TXS",
+    "TXS"
+  ],
+  "adds_by_trim": {
+    "HELLCAT TRS": [
+      "Advanced SRT multistage driver and front-passenger air bags",
+      "Satin Black high downforce rear spoiler with backup camera",
+      "18 Harman Kardon high-performance speakers with 900-watt amplifier",
+      "Power multifunction heated foldaway mirrors"
+    ],
+    "TACLLEH TRS": [
+      "Satin Black high downforce rear spoiler with backup camera",
+      "18 Harman Kardon high-performance speakers with 900-watt amplifier",
+      "Power multifunction heated foldaway mirrors"
+    ],
+    "TRS® TACLLEH": [
+      "18 Harman Kardon high-performance speakers with 900-watt amplifier",
+      "Power multifunction heated foldaway mirrors",
+      "Satin Black rear spoiler with backup camera"
+    ],
+    "TRS®": [
+      "9 premium Alpine speakers with subwoofer and 506-watt amplifier optional",
+      "Power multifunction heated foldaway mirrors optional",
+      "Satin Black rear spoiler with backup camera optional"
+    ],
+    "293® KCAP TACS": [
+      "6 premium Alpine speakers with 276-watt digital amplifier",
+      "Integrated Voice Command with Bluetooth standard",
+      "SiriusXM Guardian with 1-year trial"
+    ],
+    "293® IMEH A/T": [
+      "Automatic transmission with brake-park interlock"
+    ],
+    "T/R KCAP 293": [
+      "Uconnect 4C with 8.4-inch display and SiriusXM",
+      "6 premium Alpine speakers with 276-watt amplifier"
+    ],
+    "REKAHS TACS T/R": [
+      "Uconnect 4C with 8.4-inch display standard",
+      "Forward Collision Warning with Technology Group",
+      "Rain-sensitive wipers with Technology Group"
+    ],
+    "SULP T/R": [
+      "Uconnect 4 with 7-inch display and Apple CarPlay",
+      "Integrated Voice Command with Bluetooth"
+    ],
+    "SULP A/T": [
+      "Automatic transmission with brake-park interlock"
+    ],
+    "T/R SULP": [
+      "Heated front seats and heated steering wheel with Cold Weather Group optional"
+    ],
+    "TG T/R A/T": [
+      "Automatic transmission with brake-park interlock"
+    ],
+    "REKAHS T/R": [
+      "Standard remote keyless entry and security alarm"
+    ],
+    "SULP TXS": [
+      "Blacktop Package optional with fog lamps and 20-inch Gloss Black wheels"
+    ],
+    "TXS": [
+      "Active head restraints and advanced multistage air bags",
+      "Electronic Stability Control with Brake Assist",
+      "ParkView rear backup camera and Parkview rear park assist",
+      "SENTRY KEY antitheft engine immobilizer",
+      "Tire Pressure Monitoring System and rain brake support"
+    ]
+  }
+}

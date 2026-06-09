@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2020|lexus|lc",
+  "year": 2020,
+  "make": "lexus",
+  "model": "LC",
+  "ladder_id": "brochure_llm_2020__lexus__lc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LC h",
+    "LC"
+  ],
+  "adds_by_trim": {
+    "LC h": [
+      "Hybrid powertrain with improved fuel efficiency",
+      "Eight-year/100,000-mile Hybrid System Warranty"
+    ],
+    "LC": [
+      "Premium unleaded gasoline engine requiring 91+ octane",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Choice of four leather interior colors: Bespoke White, Toasted Caramel, Rioja Red, Black"
+    ]
+  }
+}

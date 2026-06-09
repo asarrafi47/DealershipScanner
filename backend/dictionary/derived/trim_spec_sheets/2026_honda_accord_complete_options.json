@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2026_honda_accord_complete_options",
+  "make": "Honda",
+  "models": [
+    "Accord",
+    "Accord"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; In order to manage development costs, leverage the technology of the Civic, and"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "It was one of the first Japanese sedans with features like cloth seats, a tachom"
+      }
+    ]
+  }
+}

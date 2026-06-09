@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|toyota|venza",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Venza",
+  "ladder_id": "brochure_llm_2010__toyota__venza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "VENZA AWD V6 6-Speed Automatic",
+    "VENZA FWD V6 6-Speed Automatic",
+    "VENZA AWD 4-Cyl. 6-Speed Automatic",
+    "VENZA FWD 4-Cyl. 6-Speed Automatic"
+  ],
+  "adds_by_trim": {
+    "VENZA AWD V6 6-Speed Automatic": [
+      "3.5-liter DOHC 24-valve dual VVT-i V6 engine with 268 hp and 246 lb.-ft. torque",
+      "Active Torque Control All-Wheel Drive system"
+    ],
+    "VENZA FWD V6 6-Speed Automatic": [
+      "3.5-liter DOHC 24-valve dual VVT-i V6 engine with 268 hp and 246 lb.-ft. torque"
+    ],
+    "VENZA AWD 4-Cyl. 6-Speed Automatic": [
+      "Active Torque Control All-Wheel Drive system"
+    ],
+    "VENZA FWD 4-Cyl. 6-Speed Automatic": [
+      "2.7-liter DOHC 16-valve dual VVT-i 4-cylinder engine with 182 hp and 182 lb.-ft. torque",
+      "6-speed Electronically Controlled automatic transmission with ECT-i and sequential shift mode",
+      "Electric Power Steering with rack-and-pinion power-assist",
+      "Power-assisted ventilated front and solid rear disc brakes with ABS and EBD",
+      "4-wheel independent MacPherson strut suspension with stabilizer bars",
+      "Ultra Low Emission Vehicle II (ULEV-II) rating",
+      "Seating capacity for 5 passengers"
+    ]
+  }
+}

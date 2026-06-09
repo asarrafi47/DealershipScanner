@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2017|lincoln|continental",
+  "year": 2017,
+  "make": "Lincoln",
+  "model": "Continental",
+  "ladder_id": "brochure_llm_2017__lincoln__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RESERVE",
+    "SELECT",
+    "PREMIERE"
+  ],
+  "adds_by_trim": {
+    "RESERVE": [
+      "3.0-liter GTDI V6 engine with 400 hp and 400 lb.-ft. torque",
+      "20-inch high-performance summer compound tires",
+      "Dynamic Torque Vectoring with intelligent all-wheel drive",
+      "Floor liners",
+      "Rear-Seat Package with 40/20/40 split seats and Active Motion",
+      "Technology Package with 360-degree camera and Adaptive Cruise Control"
+    ],
+    "SELECT": [
+      "2.7-liter GTDI V6 engine with 335 hp and 380 lb.-ft. torque",
+      "Intelligent all-wheel drive option",
+      "Heated and cooled front seats",
+      "Perforated leather-trimmed seats",
+      "Dual-panel moonroof with power sunshade",
+      "Rear seat smart-charging USB ports"
+    ],
+    "PREMIERE": [
+      "3.7-liter Ti-VCT V6 engine with 305 hp and 280 lb.-ft. torque",
+      "10-way Perfect Position front seats with driver memory and power lumbar",
+      "Hands-free power trunk lid",
+      "Power-cinch door closing",
+      "Autofold sideview mirrors",
+      "Embedded modem integrating Lincoln App features",
+      "Leather-wrapped steering wheel with genuine wood accent"
+    ]
+  }
+}

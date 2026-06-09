@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2015|ford|explorer",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_2015__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper warranty coverage",
+      "Adds Includes 5-year/60,000-mile powertrain warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion protection coverage",
+      "Adds roadside assistance for 5 years or 60,000 miles"
+    ],
+    "Active": [
+      "6-speaker audio system",
+      "18-inch wheels with LED headlights and taillights",
+      "Black roof rails and black side mirror caps",
+      "Cloth seat upholstery with power-adjustable driver's seat",
+      "13.2-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "12.3-inch digital gauge display",
+      "Eight USB ports across three rows",
+      "Ford Co-Pilot360 suite with automatic emergency braking and lane-keep assist"
+    ],
+    "XLT": [
+      "3.5L Ti-VCT V6 engine standard",
+      "6-speed SelectShift automatic transmission",
+      "Front-wheel drive",
+      "1st-row bucket seats with 6-way power driver's seat and manual lumbar",
+      "Leather-wrapped steering wheel and shift knob",
+      "AM/FM stereo with single CD player and 6 speakers",
+      "MyFord with 4.2-inch color LCD display",
+      "18-inch painted aluminum wheels with all-season tires",
+      "Remote Keyless Entry System with 2 integrated keyhead remotes",
+      "Reverse Sensing System"
+    ],
+    "Limited": [
+      "10-way power driver's seat with power lumbar, recline, and memory feature",
+      "Heated front bucket seats with 4-way adjustable head restraints",
+      "Leather-trimmed seating surfaces",
+      "MyFord Touch with two 4.2-inch LCD displays and 8-inch touchscreen",
+      "20-inch painted aluminum wheels with P255/50R20 all-season tires",
+      "Body-color power-folding heated sideview mirrors with LED turn signals and driver memory",
+      "Rear view camera",
+      "Reverse Sensing System",
+      "Power-adjustable pedals with memory",
+      "Auto-dimming rearview mirror"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2024|subaru|brz",
+  "year": 2024,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2024__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ tS",
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ tS": [
+      "Brembo performance braking system with 4-piston front and dual-piston rear calipers",
+      "Larger brake discs: 12.8 inches front / 12.4 inches rear",
+      "STI-tuned dampers for sport-tuned suspension",
+      "18-inch dark gray metallic finish aluminum-alloy wheels",
+      "Ultrasuede and leather-trimmed upholstery with blue accents and stitching",
+      "Leather-wrapped 3-spoke steering wheel with blue stitching",
+      "STI-branded digital gauge cluster with Cherry red accents",
+      "STI engine start button",
+      "Crystal Black Silica shark-fin antenna"
+    ],
+    "BRZ Limited": [
+      "6-speed automatic transmission option with manual-mode paddle shifters and rev-matching downshift",
+      "18-inch matte dark gray finish aluminum-alloy wheels with Michelin Pilot Sport 4 tires",
+      "LED Steering Responsive Headlights",
+      "Heated body-color exterior mirrors",
+      "Ultrasuede and leather-trimmed upholstery",
+      "Aluminum-alloy sill cover inserts",
+      "8 speakers with 2-channel amplifier",
+      "Dual-mode heated front seats",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Reverse Automatic Braking"
+    ],
+    "BRZ Premium": [
+      "228-hp 2.4-liter direct injection SUBARU BOXER 4-cylinder engine",
+      "Close-ratio 6-speed manual transmission",
+      "Sport-tuned suspension system with independent double-wishbone rear",
+      "17-inch high-luster gray finish aluminum-alloy wheels with summer-performance tires",
+      "Auto-on/off LED headlights and LED taillights with Daytime Running Lights",
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with Apple CarPlay and Android Auto",
+      "EyeSight Driver Assist Technology with Adaptive Cruise Control",
+      "7 airbags including dual-stage frontal and side-curtain deployment",
+      "Keyless Access with Push-Button Start",
+      "Dual-zone automatic digital climate control system"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2011|dodge|charger",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2011__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Charger Max",
+    "Charger R/T Track",
+    "Charger Super Track Pak",
+    "Charger Rallye",
+    "Charger Plus",
+    "Charger"
+  ],
+  "adds_by_trim": {
+    "Charger Max": [
+      "5.7L HEMI VVT V8 with Fuel Saver Technology engine",
+      "20-inch chrome-clad aluminum wheels",
+      "Performance 4-wheel disc antilock brakes with vented front and rear discs",
+      "180-amp alternator"
+    ],
+    "Charger R/T Track": [
+      "5.7L HEMI VVT V8 with Fuel Saver Technology engine",
+      "20-inch polished forged aluminum wheels",
+      "Performance independent front and rear suspension with stabilizer"
+    ],
+    "Charger Super Track Pak": [
+      "Performance-tuned steering included",
+      "Hill Start Assist feature",
+      "20-inch chrome-clad aluminum wheels",
+      "Rallye Appearance Group included"
+    ],
+    "Charger Rallye": [
+      "18-inch painted/polished aluminum wheels standard",
+      "Performance independent front and rear suspension with stabilizer",
+      "Rallye Appearance Group with rear body-color spoiler",
+      "Matte Black grille with black honeycomb"
+    ],
+    "Charger Plus": [
+      "18-inch painted/polished aluminum wheels",
+      "Heated and cooled front seats",
+      "Dual-Zone Automatic Temperature control with humidity sensor",
+      "19-inch painted/polished aluminum wheels for AWD models"
+    ],
+    "Charger": [
+      "3.6L PENTASTAR VVT V6 engine",
+      "5-Speed AutoStick transmission",
+      "17-inch painted aluminum wheels",
+      "4-wheel disc antilock brakes with All-Speed Traction control",
+      "Advanced multistage driver and front-passenger air bags",
+      "Power steering and rack-and-pinion configuration",
+      "Electronic Stability Control with Brake Assist",
+      "Keyless Enter 'N Go with remote proximity entry"
+    ]
+  }
+}

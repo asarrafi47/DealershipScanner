@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2022|genesis|gv70",
+  "year": 2022,
+  "make": "genesis",
+  "model": "GV70",
+  "ladder_id": "brochure_2022__genesis__gv70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport Prestige",
+    "Prestige",
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Forward Collision-Avoidance Assist (FCA)",
+      "Adds Includes Smart Cruise Control with Stop & Go (SCC)",
+      "Adds Includes Lane Following Assist (LFA)",
+      "Adds Includes Blind Spot View Monitor (BVM)",
+      "Adds Includes Surround View Camera System (SVCS)",
+      "Adds Includes Advanced Rear Occupant Alert (AROA)",
+      "Adds Includes Highway Driving Assist (HDA)",
+      "Adds Includes Highway Auto Curve Slowdown",
+      "Adds Includes Forward Collision-Avoidance Assist with Junction Turning"
+    ],
+    "Premium": [
+      "Adds Genesis Connected Services (GCS) subscription support",
+      "Adds SiriusXM satellite radio capability",
+      "Adds web search function via active GCS subscription"
+    ],
+    "Limited": [
+      "Adds smart liftgate with Proximity Key detection",
+      "Adds Qi wireless smartphone charging"
+    ],
+    "Advanced": [
+      "Adds Remote Smart Parking Assist capability",
+      "Adds Audio Video Navigation System 5.0 with NFC digital smartphone key support"
+    ],
+    "Prestige": [
+      "Adds Connected Routing with real-time traffic and road conditions",
+      "Adds Over the Air (OTA) Genesis Connected Services Updates"
+    ],
+    "Sport Prestige": [
+      "3.5T AWD engine with premium fuel (19/24/21 MPG EPA estimates)",
+      "19-inch wheels standard"
+    ]
+  }
+}

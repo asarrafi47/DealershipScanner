@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2019|toyota|tacoma",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_llm_2019__toyota__tacoma",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD PRO",
+    "LIMITED",
+    "TRD OFF-ROAD",
+    "TRD SPORT",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "TRD PRO": [
+      "TRD-tuned off-road suspension with 2.5-inch FOX Internal Bypass coil-overs and rear remote reservoir shocks",
+      "TRD Pro cat-back exhaust",
+      "Overall height increased to 71.6 inches",
+      "Track width increased to 64.0/64.2 inches front/rear"
+    ],
+    "LIMITED": [
+      "Available only in Double Cab configuration",
+      "Increased rear headroom of 38.3 inches compared to Access Cab's 34.9 inches"
+    ],
+    "TRD OFF-ROAD": [
+      "TRD-tuned off-road suspension with Bilstein shocks",
+      "Overall width increased to 75.2 inches",
+      "Double Cab includes Active Traction Control with manual transmission"
+    ],
+    "TRD SPORT": [
+      "6-speed manual transmission available",
+      "TRD sport-tuned suspension",
+      "Overall width increased to 75.2 inches",
+      "Active Traction Control with manual transmission on Double Cab"
+    ],
+    "SR5": [
+      "3.5-Liter V6 engine as standard across all SR5 trims"
+    ],
+    "SR": [
+      "2.7-Liter 4-cylinder engine standard on Access Cab",
+      "3.5-Liter V6 engine standard on Double Cab",
+      "6-speed electronically controlled automatic transmission standard",
+      "Variable-assist power rack-and-pinion steering",
+      "Power-assisted ventilated front disc brakes with Star Safety System"
+    ]
+  }
+}

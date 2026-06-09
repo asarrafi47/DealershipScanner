@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2020_chevrolet_ss_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "SS",
+    "SS"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "SS": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Automatic (S6); Rear-Wheel Drive (was Chevrolet HHR: 2.0 L (120 cu in) turbocharged Ecotec LNF I4 producing 260 hp (194 kW) 2008–2010); Automatic (S6)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Chevrolet HHR: 2.0 L (120 cu in) turbocharged Ecotec LNF I4 producing 260 hp (194 kW) 2008–2010 (was Chevrolet Blazer EV: A 615 hp (459 kW) EV using the Ultium battery pack.; Super Sport SS 396 logo on a Chevrolet Chevelle Product type Performance cars)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Chevrolet Blazer EV: A 615 hp (459 kW) EV using the Ultium battery pack.; Super Sport SS 396 logo on a Chevrolet Chevelle Product type Performance cars"
+      }
+    ]
+  }
+}

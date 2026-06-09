@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2024|jeep|compass",
+  "year": 2024,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_llm_2024__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LATITUDE LUX",
+    "LATITUDE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Elite Group with Diamond Black door cladding, wheel flares, fascias, and side sills",
+      "LED projector headlamps with LED low-/high-beam and cornering functionality",
+      "Premium LED taillamps",
+      "19-inch Diamond-Cut aluminum wheels with Gloss Black pockets",
+      "235/45R19 BSW All-Season tires",
+      "Premium perforated leather-trimmed seats with ventilated driver and front-passenger seats",
+      "Driver's-seat memory and power 8-way front-passenger seat with 2-way lumbar",
+      "Foot-activated Open 'n Go power liftgate",
+      "Dual-Pane Panoramic Power Sunroof",
+      "Uconnect 5 NAV with 10.1-inch touchscreen, GPS, 20 HD radio, and 4G LTE Wi-Fi"
+    ],
+    "LATITUDE LUX": [
+      "18-inch Satin Carbon-painted aluminum wheels with 225/55R18 BSW tires",
+      "Leatherette seats with Burnished Copper interior accent stitching",
+      "Mopar Graphics Package with Hood Graphic and Bodyside Graphic",
+      "Mopar Interior Premium Package with all-season floor mats",
+      "Mopar Rock Rails standard"
+    ],
+    "LATITUDE": [
+      "17-inch Fine Silver-painted aluminum wheels",
+      "Fog lamps with cornering",
+      "Auto High-Beam Headlamp Control",
+      "Black roof rails and body-color door handles",
+      "Premium vinyl and cloth seats with McKinley vinyl and Kimberlite cloth",
+      "Overhead cupola interior LED lamps",
+      "Premium-wrapped steering wheel and leather-wrapped shift knob",
+      "Keyless Enter 'n Go with engine immobilizer for front-door locks",
+      "Convenience Group with power 8-way driver's seat, heated front seats and steering wheel"
+    ]
+  }
+}

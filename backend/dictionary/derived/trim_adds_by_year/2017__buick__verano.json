@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|buick|verano",
+  "year": 2017,
+  "make": "Buick",
+  "model": "Verano",
+  "ladder_id": "brochure_llm_2017__buick__verano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LEATHER GROUP",
+    "SPORT TOURING GROUP",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "LEATHER GROUP": [
+      "Leather-appointed seating with premium grade materials",
+      "Auto-dimming inside rearview mirror with adaptive remote operation",
+      "Push-button start with E-Z Key passive entry system",
+      "Ultrasonic rear park assist",
+      "Bose premium 9-speaker audio system with 7-channel digital amplifier and subwoofers",
+      "Heated, leather-wrapped steering wheel with adaptive remote activation",
+      "Power windows with driver and front-passenger express-up/-down, rear-passenger express-up/-down",
+      "Chrome door handle accents",
+      "18-inch RV3 multi-spoke machined alloy wheels with sterling silver finished pockets",
+      "Available Exterior Package with rear spoiler and silver grille with bright chrome accents"
+    ],
+    "SPORT TOURING GROUP": [
+      "Leather-wrapped shift knob",
+      "Leather-wrapped steering wheel with chrome trim and 3-spoke design",
+      "Heated outside power mirrors with body-color finish",
+      "Remote vehicle starter system",
+      "7-inch diagonal high-resolution LED color touchscreen with Buick IntelliLink smartphone control",
+      "SiriusXM satellite radio with 3-month trial service",
+      "USB port for digital media and MP3 player connectivity",
+      "18-inch Q6X aluminum alloy wheels with black pockets",
+      "Fog lamps",
+      "Available Driver Confidence Package with forward collision alert, lane departure warning, and more"
+    ],
+    "BASE": [
+      "2.4L DOHC 4-cylinder SIDI engine with 180 hp and 171 lb-ft torque",
+      "6-speed automatic transmission with overdrive and driver shift control",
+      "Front-wheel drive with independent MacPherson strut suspension",
+      "Power electric steering with power-assisted rack-and-pinion",
+      "4-wheel anti-lock disc brakes with brake assist and StabiliTrak stability control",
+      "10 air bags including driver and front passenger side-impact air bags",
+      "AM/FM stereo with CD player, MP3 playback, and 6 speakers",
+      "Dual-zone automatic climate control",
+      "Tilt and telescopic steering wheel",
+      "8-way manual driver seat adjuster with leather-accented leatherette bolsters"
+    ]
+  }
+}

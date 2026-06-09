@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|infiniti|ex",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "EX",
+  "ladder_id": "brochure_llm_2013__infiniti__ex",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX37 Journey AWD",
+    "EX37 Journey",
+    "EX37 AWD",
+    "EX37"
+  ],
+  "adds_by_trim": {
+    "EX37 Journey AWD": [
+      "Intelligent All-Wheel Drive system",
+      "36.0-foot turning diameter (vs 34.8 feet RWD)"
+    ],
+    "EX37 Journey": [
+      "Rear-wheel drive configuration"
+    ],
+    "EX37 AWD": [
+      "Intelligent All-Wheel Drive system",
+      "36.0-foot turning diameter (vs 34.8 feet RWD)"
+    ],
+    "EX37": [
+      "3.7-liter 325 hp V6 engine with CVTCS and VVEL",
+      "7-speed automatic transmission with manual shift mode and Downshift Rev Matching",
+      "Snow mode for throttle response control",
+      "Vehicle-speed-sensitive power steering",
+      "Independent double-wishbone front suspension with coil springs",
+      "Independent multi-link rear suspension with coil springs",
+      "4-wheel ABS with 12.6-inch front ventilated disc brakes",
+      "18-inch 8-spoke aluminum-alloy wheels with 225/55R18 all-season tires",
+      "Temporary use spare tire",
+      "34.8-foot turning diameter"
+    ]
+  }
+}

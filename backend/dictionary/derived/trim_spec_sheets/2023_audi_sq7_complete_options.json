@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_audi_sq7_complete_options",
+  "make": "Audi",
+  "models": [
+    "SQ7",
+    "SQ7"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Premium Plus": [
+      {
+        "label": "Engine Options",
+        "value": "L TDI V6"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "L TDI V6"
+      }
+    ]
+  }
+}

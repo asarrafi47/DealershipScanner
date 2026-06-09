@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2021|jeep|cherokee",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_2021__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Altitude",
+    "Limited",
+    "Trailhawk",
+    "Willys",
+    "Altitude",
+    "Latitude",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Blind Spot Monitoring system with illuminated sideview mirror icons",
+      "Adds Rear Cross-Path Detection system with audible chime alerts",
+      "Adds Full-Speed Forward Collision Warning with Active Braking and 1.5-second brake assistance",
+      "Adds LaneSense Lane Departure Warning with Lane Keep Assist and tactile feedback",
+      "Adds rain-sensitive windshield wipers",
+      "Adds ParkView Rear Back-up Camera with Uconnect screen display",
+      "Adds Premium LED headlamps, daytime running lamps, and LED taillamps across all trims"
+    ],
+    "Latitude": [
+      "Adds enhanced connectivity features"
+    ],
+    "Altitude": [
+      "Altitude Lux deluxe treatment with premium safety options",
+      "Featured brochure trim with 8.4-inch NAV"
+    ],
+    "Willys": [],
+    "Trailhawk": [
+      "Adds 2-speed Power Transfer Unit with rear locking axle",
+      "Adds low-range 4x4 capability"
+    ],
+    "Limited": [
+      "Adds 18-inch Diamond-Cut aluminum wheels",
+      "Adds chrome accent exterior details",
+      "Adds premium leather-trimmed heated seats",
+      "Adds heated steering wheel"
+    ],
+    "High Altitude": []
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2015|volvo|xc70",
+  "year": 2015,
+  "make": "Volvo",
+  "model": "XC70",
+  "ladder_id": "brochure_llm_2015__volvo__xc70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XC70 T6 AWD Platinum",
+    "XC70 T6 AWD Premier Plus",
+    "XC70 T5 FWD Platinum",
+    "XC70 T5 FWD Premier Plus",
+    "XC70 T6 AWD",
+    "XC70 T5 FWD Premier",
+    "XC70 T5 FWD"
+  ],
+  "adds_by_trim": {
+    "XC70 T6 AWD Platinum": [
+      "3.0L turbocharged I-6 engine with 300 hp and 325 lb-ft torque versus T5's 240 hp engine",
+      "All-wheel drive system versus front-wheel drive",
+      "6-speed Geartronic transmission with Advanced Quick Shift versus 8-speed with Start/Stop"
+    ],
+    "XC70 T6 AWD Premier Plus": [
+      "Accent lighting package adds interior ambient lighting"
+    ],
+    "XC70 T5 FWD Platinum": [
+      "Leather seating surfaces replace textile upholstery",
+      "Shimmer Graphite Aluminum interior trim accents",
+      "Power Glass Sunroof",
+      "Dark Walnut Wood Inlays",
+      "Keyless Drive with Personal Car Communicator",
+      "Connected Navigation system",
+      "Harman Kardon Premium Sound system"
+    ],
+    "XC70 T5 FWD Premier Plus": [
+      "Power Passenger Seat and Heated Front Seats",
+      "All the premium features of Platinum trim level"
+    ],
+    "XC70 T6 AWD": [
+      "3.0L turbocharged I-6 with 300 hp and 325 lb-ft torque versus T5's 240 hp turbo four",
+      "All-wheel drive standard versus front-wheel drive",
+      "6-speed Geartronic with Advanced Quick Shift",
+      "Leather seating surfaces",
+      "18-inch Zephyrus alloy wheels",
+      "SiriusTM Satellite Radio with 6-month subscription included",
+      "Connected Navigation and Harman Kardon Premium Sound"
+    ],
+    "XC70 T5 FWD Premier": [
+      "Power Passenger Seat",
+      "Heated Front Seats"
+    ],
+    "XC70 T5 FWD": [
+      "240 hp direct-injected turbocharged engine with 258 lb-ft torque",
+      "8-speed Geartronic transmission with Start/Stop and Adaptive Shift",
+      "Volvo On Call connected services",
+      "7-inch color touchscreen display with Volvo Sensus",
+      "Bluetooth audio streaming integration",
+      "City Safety collision avoidance system",
+      "Power driver seat with memory and exterior mirror memory",
+      "Rear Park Assist Camera",
+      "17-inch Valder alloy wheels with all-season tires",
+      "LED daytime running lights"
+    ]
+  }
+}

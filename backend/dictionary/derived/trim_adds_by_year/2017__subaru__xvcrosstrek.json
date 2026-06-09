@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2017|subaru|xvcrosstrek",
+  "year": 2017,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2017__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Limited",
+    "2.0i Premium",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "2.0i": [
+      "148-hp 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission",
+      "Fog lights",
+      "17-inch aluminum-alloy wheels",
+      "Black finish roof rails",
+      "Cloth upholstery",
+      "SUBARU STARLINK 6.2-inch multimedia with Pandora, iHeart Radio, Stitcher, Aha integration",
+      "6-way manually adjustable driver seat, 4-way front passenger seat",
+      "Rear-Vision Camera"
+    ],
+    "2.0i Premium": [
+      "Optional Lineartronic CVT with manual-mode paddle shifters",
+      "Body-color side mirrors",
+      "Cloth upholstery with orange stitching",
+      "Leather-wrapped 3-spoke steering wheel with orange stitching",
+      "Leather-wrapped shifter handle",
+      "Sliding center console lid with orange stitching",
+      "Cargo-area cover and tray",
+      "All-Weather Package: heated exterior mirrors, dual-mode heated front seats, windshield wiper de-icer"
+    ],
+    "2.0i Limited": [
+      "Lineartronic CVT with manual-mode paddle shifters standard",
+      "Body-color side mirrors with integrated turn signals",
+      "Leather-trimmed upholstery with orange stitching",
+      "Shifter handle with leather boot, orange stitching, gloss black trim",
+      "Automatic climate control system",
+      "Auto-on/off headlights",
+      "Welcome lighting",
+      "SUBARU STARLINK 7.0-inch Multimedia Plus with voice-activated controls and SiriusXM All Access Radio",
+      "STARLINK Safety Plus: Automatic Collision Notification, SOS Emergency Assistance, Enhanced Roadside Assistance",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert"
+    ]
+  }
+}

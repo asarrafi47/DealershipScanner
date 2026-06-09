@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2018|subaru|impreza",
+  "year": 2018,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2018__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Limited",
+    "2.0i Sport",
+    "2.0i Premium",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "2.0i": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic CVT",
+      "16-inch steel wheels with covers",
+      "Cloth upholstery with black simulated carbon fiber interior trim",
+      "6-way manually adjustable driver's seat, 4-way manually adjustable front-passenger seat",
+      "Auto-up/down driver's and front-passenger power windows",
+      "SUBARU STARLINK 6.5-inch Multimedia with Apple CarPlay and Android Auto",
+      "Manually adjustable air conditioning with air filtration",
+      "Electronic cruise control and Rear-Vision Camera"
+    ],
+    "2.0i Premium": [
+      "Lineartronic CVT with 7-speed manual-mode and paddle shifters standard",
+      "16-inch alloy wheels",
+      "Roof rails in silver finish on 5-door models",
+      "Body-color side mirrors",
+      "6 speakers instead of 4",
+      "All-Weather Package: heated exterior mirrors, dual-mode heated front seats, windshield wiper de-icer",
+      "Auto-on/off headlights and welcome lighting",
+      "Cargo area cover on 5-door models",
+      "STARLINK Safety Plus: Automatic Collision Notification, SOS Emergency Assistance, Enhanced Roadside Assistance"
+    ],
+    "2.0i Sport": [
+      "5-speed manual transmission with short-throw shifter or Lineartronic CVT option",
+      "Active Torque Vectoring",
+      "Sport-tuned suspension",
+      "18-inch alloy wheels",
+      "Body-color door mirrors with integrated turn signals and trunk spoiler on sedan",
+      "Body-color side rocker spoilers and LED Daytime Running Lights",
+      "Active grille shutter",
+      "Sport cloth interior with red stitching",
+      "Leather-wrapped steering wheel and shifter with red stitching",
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with navigation, SiriusXM, and Yelp integration"
+    ],
+    "2.0i Limited": [
+      "17-inch alloy wheels",
+      "LED Steering Responsive Headlights",
+      "Fog lights",
+      "Body-color side mirrors with integrated turn signals",
+      "Active grille shutter",
+      "6-way power adjustable driver's seat",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shifter with silver stitching and leather boot",
+      "Gloss simulated carbon fiber and silver interior accent trim",
+      "Automatic climate control system with air filtration"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2010|chevrolet|traverse",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "2010_chevrolet_traverse",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LS",
+    "1LT",
+    "2LT",
+    "LTZ"
+  ],
+  "adds_by_trim": {
+    "1LT": [
+      "Leather-wrapped steering wheel with audio controls",
+      "Bluetooth for select phones",
+      "Upgraded interior trim vs LS"
+    ],
+    "2LT": [
+      "Power driver seat and enhanced convenience package content",
+      "Bose audio with USB available",
+      "Rear camera and park assist options"
+    ],
+    "LTZ": [
+      "LTZ Premium Package leather seating and heated front buckets",
+      "Bose surround audio and navigation with XM NavTraffic",
+      "Tri-zone climate control and memory driver settings",
+      "Highest Traverse trim before special editions"
+    ],
+    "LS": [
+      "3.6L VVT V6 engine with 281 hp and 266 lb.-ft. torque",
+      "Six-speed automatic transmission with TAPshift manual shift control",
+      "Seven-seating capacity with 60/40 split flat-folding bench seats",
+      "Four-wheel antilock disc brakes",
+      "Driver and front passenger frontal and pelvic/thorax side-impact air bags",
+      "Head-curtain side-impact air bags for all rows",
+      "Halogen headlamps with Automatic Exterior Lamp Control",
+      "Front and rear intermittent wipers with washers",
+      "Chrome door handles and roof rail moldings",
+      "AM/FM stereo with CD/MP3 player and six-speaker system"
+    ]
+  }
+}

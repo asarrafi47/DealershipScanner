@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2022|hyundai|palisade",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Palisade",
+  "ladder_id": "brochure_llm_2022__hyundai__palisade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PALISADE Calligraphy",
+    "PALISADE Limited",
+    "PALISADE SEL",
+    "PALISADE SE"
+  ],
+  "adds_by_trim": {
+    "PALISADE Calligraphy": [
+      "Premium Nappa leather seating surfaces with perforated leather-wrapped steering wheel",
+      "Microfiber suede headliner and quilted leather door panel inserts",
+      "Exclusive grille and front bumper with premium side door garnish",
+      "Premium rear accent lighting with side mirror approach lights (puddle lamps)",
+      "Ambient LED interior lighting with 64 adjustable colors",
+      "Wide dual sunroof with sliding sunshade",
+      "Rain-sensing windshield wipers with acoustic-laminated windshield and solar front glass"
+    ],
+    "PALISADE Limited": [
+      "12.3-inch digital instrument cluster with full color Heads-up Display",
+      "Harman Kardon 12-speaker premium audio with QuantumLogic Surround and Clari-Fi Music Restoration",
+      "Ventilated front seats and 2nd-row captain's chairs with heated 2nd-row seats",
+      "3rd-row power folding/reclining seats with one-touch 2nd-row sliding seat access",
+      "Hands-free smart liftgate with auto open and adjustable height setting",
+      "Proximity Key entry with push button start and key fob remote engine start",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Power tilt-and-slide sunroof with Dual automatic temperature control with CleanAir Ionizer",
+      "Roof side rails and satin chrome exterior door handles"
+    ],
+    "PALISADE SEL": [
+      "Auto-leveling rear suspension with 2nd-row side-window sunshades",
+      "Leather-trimmed seating surfaces with integrated memory system for driver seat and mirrors",
+      "8-way power front passenger seat with 8-way power driver seat and lumbar support",
+      "Heated 2nd-row seats and heated steering wheel",
+      "LED taillights and low/high-beam LED projector headlights with High Beam Assist",
+      "10.25-inch touchscreen navigation system with SiriusXM Satellite Radio",
+      "Wireless device charging",
+      "Dual 3rd-row USB charge ports",
+      "Bluelink Connected Car System with 3 years complimentary service"
+    ],
+    "PALISADE SE": [
+      "3.8L GDI V6 engine with 291 hp and 262 lb-ft torque with Idle Stop & Go",
+      "8-speed automatic transmission with SHIFTRONIC manual-shift mode and paddle shifters",
+      "HTRAC All Wheel Drive with AWD lock and Downhill Brake Control",
+      "Forward and Reverse Parking Distance Warning with Rear View Monitor and Parking Guidance",
+      "Forward Collision-Avoidance Assist, Lane Keeping Assist, and Blind-Spot Collision-Avoidance Assist",
+      "Rear Cross-Traffic Collision-Avoidance Assist with Safe Exit Assist",
+      "Smart Cruise Control with Stop & Go and Highway Driving Assist",
+      "8-inch AM/FM/HD Radio Display Audio with 5 USB charge ports and wireless Apple CarPlay/Android Auto",
+      "LED Daytime Running Lights with automatic on/off headlights",
+      "20-inch alloy wheels with multi-link independent rear suspension"
+    ]
+  }
+}

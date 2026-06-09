@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2025|infiniti|qx50",
+  "year": 2025,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "2025_infiniti_qx50",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Pure",
+    "Luxe",
+    "Sport",
+    "Sensory"
+  ],
+  "adds_by_trim": {
+    "Luxe": [
+      "Panoramic moonroof and power auto-folding outside mirrors",
+      "20-inch dark-painted machine-finished wheels with run-flat tires",
+      "Silver Metallic Weave interior trim and climate-controlled front seats"
+    ],
+    "Sport": [
+      "Includes Luxe plus 20-inch dark-painted wheels and sport exterior accents",
+      "Sport-tuned appearance package content"
+    ],
+    "Sensory": [
+      "Includes Luxe plus premium interior and driver-assist upgrades",
+      "Highest QX50 luxury trim in 2025 brochure"
+    ],
+    "Pure": [
+      "2.0L VC-Turbo 4-cylinder engine with 268 hp and 280 lb-ft torque",
+      "Continuously Variable Transmission with manual shift mode and paddle shifters",
+      "Front-Wheel Drive or INFINITI Intelligent All-Wheel Drive",
+      "Electronic parking brake with automatic brake hold",
+      "LED automatic on/off headlights",
+      "ProPILOT Assist with Steering Assist and Intelligent Cruise Control with full-speed range",
+      "INFINITI InTouch dual display system with 8-inch and 7-inch LCD touchscreens",
+      "Wireless charging pad and 6-speaker audio system",
+      "Forward Emergency Braking with Pedestrian Detection and Predictive Forward Collision Warning",
+      "Lane Departure Warning and Prevention with Blind Spot Warning and Intervention"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2024|toyota|highlander",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2024__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited Platinum",
+    "Hybrid XLE Nightshade",
+    "Hybrid LE Nightshade",
+    "Hybrid Limited",
+    "Hybrid XSE",
+    "Hybrid XLE",
+    "Hybrid LE",
+    "4-cylinder Limited",
+    "4-cylinder XSE",
+    "4-cylinder XLE",
+    "4-cylinder LE"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited Platinum": [
+      "Panoramic moonroof (vs. standard moonroof on Hybrid XLE Nightshade)",
+      "Reduced departure angle 22.7 degrees (vs. 23.5 degrees)",
+      "Curb weight 4430 lbs, GVWR 5960 lbs"
+    ],
+    "Hybrid XLE Nightshade": [
+      "Nightshade exterior styling package",
+      "Standard moonroof",
+      "7-seat or 7/8-seat configuration option"
+    ],
+    "Hybrid LE Nightshade": [
+      "Nightshade exterior styling package",
+      "8-seat seating capacity"
+    ],
+    "Hybrid Limited": [
+      "Head room 38.4 inches front, 37.1 inches second row (vs. standard head room)",
+      "Reduced departure angle 22.7 degrees (vs. 23.5 degrees)",
+      "7-seat or 7/8-seat configuration option"
+    ],
+    "Hybrid XSE": [
+      "7-seat standard configuration",
+      "Head room 39.6 inches front, 39.4 inches second row"
+    ],
+    "Hybrid XLE": [
+      "7-seat standard configuration",
+      "Head room 39.6 inches front, 39.4 inches second row",
+      "Moonroof standard"
+    ],
+    "Hybrid LE": [
+      "8-seat standard seating capacity",
+      "Head room 41.2 inches front, 39.4 inches second row",
+      "No moonroof",
+      "Fuel tank capacity 17.1 gallons",
+      "Towing capacity 3500 lbs",
+      "36/35/36 mpg combined"
+    ],
+    "4-cylinder Limited": [
+      "5000 lbs towing capacity (vs. 3500 lbs hybrid)",
+      "22/29/25 mpg combined"
+    ],
+    "4-cylinder XSE": [
+      "5000 lbs towing capacity",
+      "22/29/25 mpg combined"
+    ],
+    "4-cylinder XLE": [
+      "5000 lbs towing capacity",
+      "22/29/25 mpg combined"
+    ],
+    "4-cylinder LE": [
+      "4-cylinder gas engine",
+      "5000 lbs towing capacity",
+      "17.9 gallon fuel tank",
+      "All-season tires and temporary spare tire standard",
+      "Trailer-Sway Control standard",
+      "22/29/25 mpg city/highway/combined"
+    ]
+  }
+}

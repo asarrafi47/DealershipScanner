@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2011_mercedes-benz_sl-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SL-Class",
+    "SL-Class"
+  ],
+  "year_min": 2009,
+  "year_max": 2013,
+  "source": "generated",
+  "trims": {
+    "SL 65 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "6.2L V8 Twin Turbo; Automatic (S7)"
+      }
+    ],
+    "SL 63 AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "SL 550": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

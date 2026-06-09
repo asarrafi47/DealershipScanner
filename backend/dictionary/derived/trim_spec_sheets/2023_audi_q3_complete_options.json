@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_audi_q3_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q3",
+    "Q3"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "PPE (Premium Platform Electric)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "MEB (Modular Electric-drive Toolkit')"
+      }
+    ],
+    "A1 Sportback Concept": [
+      {
+        "label": "Engine Options",
+        "value": "MEB (Modular Electric-drive Toolkit')"
+      }
+    ]
+  }
+}

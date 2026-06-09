@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2020_volvo_xc90_complete_options",
+  "make": "Volvo",
+  "models": [
+    "XC90",
+    "XC90"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: In 2010, all XC90 models received painted wheel arches (previously they were opt; In 2010, all XC90 models received painted wheel arches (previously they were optional). (was L B5254T2 turbo I5)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L B5254T2 turbo I5 (was The XC90 offers luxury for up to seven, luxury for up to seven, with the option; The XC90 offers luxury for up to seven, luxury for up to seven, with the option of six seats.)"
+      }
+    ],
+    "T8": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: The XC90 offers luxury for up to seven, luxury for up to seven, with the option; The XC90 offers luxury for up to seven, luxury for up to seven, with the option of six seats."
+      }
+    ]
+  }
+}

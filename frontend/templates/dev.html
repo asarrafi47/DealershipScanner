@@ -30,7 +30,7 @@
         <header class="dev-hero">
             <p class="db-eyebrow">Internal tools</p>
             <h1 class="dev-title">Developer Dashboard</h1>
-            <p class="dev-sub">Paste one dealer URL per line for Smart Import (discovery + full inventory scrape; registry row when city/state resolve). Project-root <code>dealers.json</code> updates after a successful inventory persist so <code>python scanner.py --dealer-id …</code> works even if the registry row still needs a manual geocode. The public <a href="{{ url_for('listings') }}">Listings</a> page hides incomplete cars. Sign in at <code>/dev/login</code>. Bulk jobs run sequentially; the log shows the active job.</p>
+            <p class="dev-sub">Paste one dealer URL per line for Smart Import (discovery + full inventory scrape; registry row when city/state resolve). Project-root <code>dealers.json</code> updates after a successful inventory persist so <code>python scanner.py --dealer-id …</code> works even if the registry row still needs a manual geocode. The public <a href="{{ url_for('listings') }}">Listings</a> page hides incomplete cars. <a href="{{ url_for('dev.scan_lab_home') }}"><strong>Scan lab</strong></a> (92694 / 25 mi manifest, Claude-free scan + results). Sign in at <code>/dev/login</code>. Bulk jobs run sequentially; the log shows the active job.</p>
         </header>
 
         <section class="db-section dev-section">
@@ -135,11 +135,28 @@
         </section>
 
         <section class="db-section dev-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Dictionary</p>
+                <h2 class="db-section-title">Trim ladder — follow-up</h2>
+            </div>
+            <p class="dev-hint">Brochure + web extraction is mostly done (~2,400 overlays). Car detail trim steps use <code>derived/trim_adds_by_year/*.json</code>. Track manual cleanup here.</p>
+            <ul class="dev-todo-list">
+                <li><strong>~30 YMMs still empty</strong> — no overlay after <code>analyze_brochure_with_llm</code> + <code>analyze_trim_adds_with_web</code>. Usually exotics, sparse guides, or brochure slim text with no trim tables. Add curated JSON under <code>backend/dictionary/derived/trim_adds_by_year/</code> or mark <code>manual_brochure_review</code>.</li>
+                <li><strong>Missing bullets inside overlays</strong> — lineup exists but some trims have empty <code>adds_by_trim</code>. Run <code>python -m backend.scripts.backfill_missing_trim_adds</code>.</li>
+                <li><strong>Spot-check web-derived rows</strong> — source <code>brochure_llm_web</code> / <code>brochure_llm_knowledge</code> came from MotorTrend/Car and Driver or model knowledge, not OEM PDFs. Verify high-traffic models (Palisade, F-150, etc.) against manufacturer trim charts.</li>
+                <li><strong>Brochure slim page selection</strong> — some slim files are warranty-only; re-run <code>python -m backend.scripts.build_brochure_text_slim --overwrite</code> after fixing trim page hints in full brochure JSON.</li>
+                <li><strong>Find gaps</strong> — compare slim catalog keys to overlay files, or grep logs for <code>empty:parse_failed</code> from the last web batch.</li>
+            </ul>
+            <p class="dev-hint dev-hint--compact">Last web batch: <strong>764 written</strong>, <strong>30 empty</strong>. Re-run missing only: <code>python -m backend.scripts.analyze_trim_adds_with_web</code></p>
+        </section>
+
+        <section class="db-section dev-section">
             <div class="db-section-header dev-tools-header">
                 <div>
                     <p class="db-eyebrow">Data quality</p>
-                    <h2 class="db-section-title">Missing data
-                        <span class="dev-incomplete-count" id="dev-incomplete-count">{{ incomplete_cars|length }}</span>
+                    <h2 class="db-section-title">
+                        Incomplete listings
+                        <span class="dev-incomplete-count" id="dev-incomplete-count">{{ incomplete_count }}</span>
                     </h2>
                 </div>
                 <div class="dev-tool-actions">
@@ -148,17 +165,13 @@
             </div>
             <p class="dev-hint">Indexed in <code>incomplete_listings.db</code> when the car detail spec sheet (year through VIN) has a gap. Public <a href="{{ url_for('listings') }}">listings</a> hide rows that fail the shorter public checklist (see <code>listing_completeness.py</code>). MPG is not part of this index.</p>
 
-            {% if incomplete_cars %}
             <div class="dev-incomplete-toolbar-panel">
                 <p class="db-eyebrow dev-incomplete-toolbar-eyebrow">Incomplete listings</p>
                 <div class="dev-incomplete-toolbar">
                     <div class="dev-incomplete-filter">
                         <label for="dev-incomplete-issue-filter">Show only cars missing</label>
-                        <select id="dev-incomplete-issue-filter" autocomplete="off">
+                        <select id="dev-incomplete-issue-filter" autocomplete="off" disabled>
                             <option value="">All gap types</option>
-                            {% for row in incomplete_issues_summary %}
-                            <option value="{{ row.code }}">{{ row.label }}</option>
-                            {% endfor %}
                         </select>
                     </div>
                     <button
@@ -172,106 +185,12 @@
                 <p class="dev-incomplete-filter-hint" id="dev-incomplete-filter-hint" hidden>No cars in this list are missing that field.</p>
                 <p class="dev-incomplete-action-msg" id="dev-incomplete-action-msg" aria-live="polite"></p>
             </div>
-            <div class="dev-incomplete-issues" id="dev-incomplete-issues" aria-label="Most common incomplete listing gaps">
-                {% if incomplete_issues_summary %}
-                <h3 class="dev-incomplete-issues-title">What to fix first</h3>
-                <p class="dev-incomplete-issues-lead">Counts are across all <strong>{{ incomplete_cars|length }}</strong> incomplete row(s) below (a car can have multiple gaps).</p>
-                <ol class="dev-incomplete-issues-list">
-                    {% for row in incomplete_issues_summary %}
-                    <li>
-                        <span class="dev-incomplete-issues-label">{{ row.label }}</span>
-                        <span class="dev-incomplete-issues-meta">{{ row.count }} car{% if row.count != 1 %}s{% endif %} ({{ row.pct }}%)</span>
-                    </li>
-                    {% endfor %}
-                </ol>
-                {% endif %}
-            </div>
+            <div class="dev-incomplete-issues" id="dev-incomplete-issues" aria-label="Most common incomplete listing gaps" hidden></div>
             <div class="dev-incomplete-grid" id="dev-incomplete-grid">
-                {% for c in incomplete_cars %}
-                <div class="result-card dev-incomplete-card" data-car-id="{{ c.id }}" data-incomplete-codes="{{ (c.incomplete_missing_fields or [])|sort|join(',') }}">
-                    <div class="result-image-wrap">
-                        {% set gallery = c.gallery if c.gallery is iterable and c.gallery is not string else [] %}
-                        {% set img_src = gallery[0] if gallery|length > 0 and gallery[0] else (c.image_url or '') %}
-                        {% set img_src = img_src if img_src and img_src.startswith('http') else '/static/placeholder.svg' %}
-                        <div class="result-image" style="background-image:url('{{ img_src }}')"></div>
-                        <span class="dev-incomplete-badge">Incomplete</span>
-                    </div>
-                    <div class="result-content">
-                        <h2>{{ c.title or 'No title' }}</h2>
-                        <p class="result-trim">{{ c.listing_trim_display or c.trim or '' }}</p>
-                        <p class="result-price">
-                            {% if c.price and c.price > 0 %}
-                                ${{ "{:,.0f}".format(c.price) }}
-                            {% else %}
-                                No price
-                            {% endif %}
-                        </p>
-                        <p class="result-meta">
-                            {% if c.mileage %}{{ "{:,}".format(c.mileage) }} mi{% else %}-- mi{% endif %}
-                            &middot; {{ c.fuel_type or '--' }}
-                            &middot; {{ c.drivetrain or '--' }}
-                        </p>
-                        <p class="result-dealer">{{ c.dealer_name or 'Unknown dealer' }}</p>
-                        <div class="dev-incomplete-missing">
-                            {% set miss_labels = {
-                                'title': 'Title', 'images': 'Images / photos', 'price': 'Price', 'year': 'Year',
-                                'make': 'Make', 'model': 'Model', 'trim': 'Trim', 'engine': 'Engine',
-                                'transmission': 'Transmission', 'drivetrain': 'Drivetrain', 'body_style': 'Body style',
-                                'fuel_type': 'Fuel type', 'condition': 'Condition', 'cylinders': 'Cylinders',
-                                'exterior_color': 'Exterior color', 'interior_color': 'Interior color', 'vin': 'VIN'
-                            } %}
-                            {% if c.get('incomplete_missing_fields') %}
-                                {% for code in c.incomplete_missing_fields %}
-                                <span class="dev-missing-tag">{{ miss_labels.get(code, code) }}</span>
-                                {% endfor %}
-                            {% else %}
-                            {% set bad = ['', 'n/a', 'na', 'null', 'none', 'unknown', 'undefined', '-', '--', '---'] %}
-                            {% set placeholders = ['n/a', 'na', 'null', 'none', 'unknown', 'undefined', '-', '--', '---'] %}
-                            {% if not c.title or c.title|lower in bad %}
-                                <span class="dev-missing-tag">No title</span>
-                            {% endif %}
-                            {% if not img_src or img_src == '/static/placeholder.svg' %}
-                                <span class="dev-missing-tag">No images</span>
-                            {% endif %}
-                            {% if not c.make or c.make|lower in bad %}
-                                <span class="dev-missing-tag">No make</span>
-                            {% endif %}
-                            {% if not c.model or c.model|lower in bad %}
-                                <span class="dev-missing-tag">No model</span>
-                            {% endif %}
-                            {% if not c.price or c.price == 0 %}
-                                <span class="dev-missing-tag">No price</span>
-                            {% endif %}
-                            {% if c.transmission and c.transmission|lower in placeholders %}
-                                <span class="dev-missing-tag">Transmission: {{ c.transmission }}</span>
-                            {% endif %}
-                            {% if c.drivetrain and c.drivetrain|lower in placeholders %}
-                                <span class="dev-missing-tag">Drivetrain: {{ c.drivetrain }}</span>
-                            {% endif %}
-                            {% if c.fuel_type and c.fuel_type|lower in placeholders %}
-                                <span class="dev-missing-tag">Fuel type: {{ c.fuel_type }}</span>
-                            {% endif %}
-                            {% if c.exterior_color and c.exterior_color|lower in placeholders %}
-                                <span class="dev-missing-tag">Ext. color: {{ c.exterior_color }}</span>
-                            {% endif %}
-                            {% if c.interior_color and c.interior_color|lower in placeholders %}
-                                <span class="dev-missing-tag">Int. color: {{ c.interior_color }}</span>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        <div class="dev-incomplete-actions">
-                            <a href="/car/{{ c.id }}" class="dev-view-site-btn" target="_blank">View</a>
-                            <button type="button" class="dev-delete-btn dev-delete-car-btn" data-car-id="{{ c.id }}">Delete</button>
-                        </div>
-                    </div>
+                <div class="dev-incomplete-empty" id="dev-incomplete-loading">
+                    <p>Loading incomplete listings…</p>
                 </div>
-                {% endfor %}
             </div>
-            {% else %}
-            <div class="dev-incomplete-empty">
-                <p>All cars have complete data.</p>
-            </div>
-            {% endif %}
         </section>
 
         <section class="db-section dev-section">

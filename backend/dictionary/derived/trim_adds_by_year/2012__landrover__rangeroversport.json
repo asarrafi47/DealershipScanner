@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2012|landrover|rangeroversport",
+  "year": 2012,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_2012__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "SE",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 3.0L SDV6 Diesel engine with 180kW (245PS) and 600Nm torque",
+      "Adds six-speed adaptive automatic gearbox with CommandShift and high/low range",
+      "Adds permanent four-wheel drive with active rear E-differential",
+      "Adds full-colour Touch-screen infotainment with dual view technology",
+      "Adds Hill Descent Control with Gradient Release Control",
+      "Adds Four-wheel Electronic Traction Control",
+      "Adds four-corner air suspension with Terrain Response",
+      "Adds full suite of airbags and Dynamic Stability Control (DSC)",
+      "Adds Roll Stability Control (RSC)",
+      "Adds ventilated disc brakes with four-channel ABS"
+    ],
+    "Limited": [],
+    "Standard": [],
+    "SE": [
+      "Upgraded to 5.0L V8 Petrol engine with 276kW (375PS) and 510Nm torque",
+      "Adds Dynamic Pack"
+    ],
+    "HSE": [
+      "Upgraded to 5.0L V8 Supercharged petrol engine with 375kW (510PS) and 625Nm torque",
+      "Adds Adaptive Dynamics with Dynamic Program",
+      "Adds Dynamic Pack"
+    ]
+  }
+}

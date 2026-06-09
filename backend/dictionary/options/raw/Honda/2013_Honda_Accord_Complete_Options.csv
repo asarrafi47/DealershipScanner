@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2013,Honda,Accord,Accord,2.4L I4 (SIDI),2.4L I4,,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,26,34,29,,,,,
+2013,Honda,Accord,Accord,2.4L I4 (SIDI),2.4L I4,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,24,34,27,,,,,
+2013,Honda,Accord,Accord,3.5L V6,3.5L V6,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,21,33,25,,,,,
+2013,Honda,Accord,Accord,3.5L V6,3.5L V6,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,21,31,24,,,,,
+2013,Honda,Accord,Accord,3.5L V6,3.5L V6,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,18,28,21,,,,,
+2013,Honda,Accord,Accord,2.4L I4 (SIDI),2.4L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,26,35,30,,,,,

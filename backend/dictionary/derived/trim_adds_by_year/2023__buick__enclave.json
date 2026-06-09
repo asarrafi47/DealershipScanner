@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2023|buick|enclave",
+  "year": 2023,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2023__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Avenir",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Avenir": [
+      "Distinctive grille, rear fascia and taillamps design",
+      "20-inch aluminum wheels with Pearl Nickel finish",
+      "Unique clear taillamps",
+      "Available enhanced-design LED headlamps",
+      "Available Rich Garnet Metallic exterior paint",
+      "Unique diamond-quilted theme seating surface design in all three rows",
+      "Distinctive piping on seating surfaces",
+      "Piano Black and Agallocha wood-tone accents",
+      "Available Ebony-themed cabin"
+    ],
+    "S": [
+      "310-hp 3.6L V6 engine",
+      "Advanced 9-speed automatic transmission",
+      "Innovative five-link rear suspension",
+      "Available intelligent All-Wheel Drive",
+      "Three rows of premium seating",
+      "Automatic Emergency Braking",
+      "Following Distance Indicator",
+      "Forward Collision Alert",
+      "Front Pedestrian Braking",
+      "IntelliBeam auto high beams"
+    ]
+  }
+}

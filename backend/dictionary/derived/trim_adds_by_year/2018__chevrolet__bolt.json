@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2018|chevrolet|bolt",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "ladder_id": "brochure_llm_2018__chevrolet__bolt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Body-color door handles with chrome strip",
+      "IntelliBeam automatic high beam assist",
+      "Heated power-adjustable mirrors with integrated turn signal indicators",
+      "Roof-mounted side rail luggage rack",
+      "Rear Camera Mirror with full camera display",
+      "Surround Vision bird's-eye view camera system"
+    ],
+    "LT": [
+      "200 hp electric drive unit with 266 lb.-ft. motoring torque",
+      "60 kWh lithium-ion rechargeable energy storage system",
+      "7.2 kW onboard high-voltage charger with DC Fast Charging capability",
+      "Location-based GPS-enabled charge control with programmable home charging",
+      "Performance Ride and Handling independent front suspension",
+      "Electronic parking brake with Regen on Demand steering wheel paddle",
+      "High-intensity discharge headlamps with automatic on/off",
+      "LED daytime running lamps with signature styling",
+      "Teen Driver technology",
+      "Comprehensive air bag system with head-curtain side-impact protection"
+    ]
+  }
+}

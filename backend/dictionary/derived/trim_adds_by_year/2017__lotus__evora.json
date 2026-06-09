@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|lotus|evora",
+  "year": 2017,
+  "make": "Lotus",
+  "model": "Evora",
+  "ladder_id": "brochure_2017__lotus__evora",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [],
+    "SE": [
+      "Adds automatic transmission option",
+      "Adds carbon fiber rear diffuser",
+      "Adds carbon fiber roof panel",
+      "Adds full Alcantara® seat trimming with contrast stitching",
+      "Adds yellow brake calipers",
+      "Adds sound insulation pack",
+      "Adds titanium exhaust system",
+      "Adds power-fold and heated door mirrors"
+    ],
+    "Sport": [
+      "Upgraded to full leather interior with premium color options",
+      "Adds leather trim pack",
+      "Adds interior color pack with alternative finishes",
+      "Adds full Alcantara® steering wheel",
+      "Adds carbon fiber door sill inserts",
+      "Adds Tartan trim pack option",
+      "Adds rear parking sensors",
+      "Adds interior personalization options including stitching colors and finishes"
+    ]
+  }
+}

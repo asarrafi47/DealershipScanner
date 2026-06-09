@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2022|mitsubishi|mirage",
+  "year": 2022,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2022__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "BE",
+    "LE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Specific SE-level features not detailed in provided brochure text"
+    ],
+    "BE": [
+      "Specific BE-level features not detailed in provided brochure text"
+    ],
+    "LE": [
+      "Specific LE-level features not detailed in provided brochure text"
+    ],
+    "ES": [
+      "1.2L MIVEC DOHC 3-cylinder engine",
+      "5-speed manual or continuously variable transmission",
+      "9.2-gallon fuel capacity",
+      "ECI-MULTI fuel system",
+      "5-year/60,000-mile limited warranty"
+    ]
+  }
+}

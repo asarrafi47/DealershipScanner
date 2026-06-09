@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2014|dodge|challenger",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2014__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Challenger SRT 392",
+    "Challenger SRT Core",
+    "Challenger Rallye Redline",
+    "Challenger R/T Classic",
+    "Challenger R/T Plus",
+    "Challenger R/T",
+    "Challenger SXT Plus",
+    "Challenger SXT"
+  ],
+  "adds_by_trim": {
+    "Challenger SRT 392": [
+      "392-cu-in SRT HEMI V8 with 470 horsepower and 470 lb-ft of torque",
+      "TREMEC 6-speed manual transmission or 5-speed automatic with autostick"
+    ],
+    "Challenger SRT Core": [
+      "392-cu-in SRT HEMI V8 with 470 horsepower and 470 lb-ft of torque",
+      "TREMEC 6-speed manual transmission or 5-speed automatic with autostick"
+    ],
+    "Challenger Rallye Redline": [
+      "20-inch black chrome aluminum wheels with red lip and backbone",
+      "Red center stripe and rear body-color spoiler",
+      "Sport mode and performance steering with suspension",
+      "4-wheel antilock performance disc brakes and 3.07 rear axle ratio"
+    ],
+    "Challenger R/T Classic": [
+      "5.7L HEMI VVT V8 with 375 horsepower and 410 lb-ft of torque",
+      "TREMEC 6-speed manual transmission",
+      "Unique 20-inch polished aluminum wheels with gloss black pockets",
+      "HID headlamps and functional hood scoops",
+      "Dual R/T bodyside stripes and classic challenger script badge"
+    ],
+    "Challenger R/T Plus": [
+      "Premium nappa leather-trimmed seats and heated front seats",
+      "6 Boston Acoustics speakers with 276-watt amplifier",
+      "Power heated mirrors and temperature/compass gauge",
+      "Universal garage door opener and tire pressure monitoring display",
+      "Remote start and security alarm"
+    ],
+    "Challenger R/T": [
+      "5.7L HEMI VVT V8 with 375 horsepower and 410 lb-ft of torque",
+      "TREMEC 6-speed manual transmission",
+      "Fog lamps and automatic headlamps",
+      "Body-color rear spoiler and sun visors with illuminated vanity mirrors",
+      "Auto-dimming rearview mirror with microphone and UCONNECT voice command"
+    ],
+    "Challenger SXT Plus": [
+      "Fog lamps and automatic headlamps",
+      "Premium nappa leather-trimmed seats and heated front seats",
+      "6 Boston Acoustics speakers with 276-watt amplifier",
+      "Power heated mirrors and auto-dimming rearview mirror with microphone",
+      "UCONNECT voice command with Bluetooth and SiriusXM satellite radio"
+    ],
+    "Challenger SXT": [
+      "3.6L DOHC Pentastar VVT 24V V6 with 305 horsepower and 268 lb-ft of torque",
+      "5-speed automatic transmission with autostick",
+      "18-inch aluminum wheels and twin hood scoops",
+      "Dual rear exhaust with bright tips and power adjustable exterior mirrors",
+      "Premium cloth seating with power 10-way driver's seat and lumbar adjust",
+      "Leather-wrapped steering wheel with cruise and audio controls",
+      "Power windows and locks with trip computer"
+    ]
+  }
+}

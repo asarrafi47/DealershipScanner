@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_gmc_yukon_xl_complete_options",
+  "make": "GMC",
+  "models": [
+    "Yukon XL",
+    "Yukon XL"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Denali": [
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "rear door configuration (split tailgate or Suburban-style barn doors) and a center-console cellular telephone (dealer…"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "L 285 hp (213 kW) Vortec 5300 V8"
+      }
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2014|toyota|highlander",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "2014_toyota_highlander_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      ". See footnote 11 in Disclosures section.",
+      ". See footnote 29 in Disclosures section.",
+      ". See footnote 33 in"
+    ],
+    "XLE": [
+      ". See footnote 8 in Disclosures section. 4",
+      ". See footnote 18 in Disclosures section. 9",
+      ". See footnote 32 in Disclosures section. 14"
+    ],
+    "Limited": [
+      ". See footnote 10 in Disclosures section. 3",
+      ". See footnote 14 in Disclosures section. 8",
+      ". See footnote 31 in Disclosures section. 13"
+    ],
+    "Platinum": [
+      ". See footnote 4 in Disclosures section. 2",
+      ". See footnote 13 in Disclosures section. 7",
+      ". See footnote 30 in Disclosures section. 12"
+    ],
+    "LE": [
+      "2.7-Liter 4-Cylinder DOHC 16-Valve engine with 185 hp standard option",
+      "3.5-Liter V6 DOHC 24-Valve engine with 270 hp available",
+      "Projector-beam halogen smoked-chrome-accent headlights",
+      "18-inch split 5-spoke alloy wheels",
+      "Windshield wiper de-icer",
+      "Color-keyed heated power outside mirrors with turn signal indicators and folding feature",
+      "Entune Audio with 6.1-inch high-resolution touch-screen, Bluetooth and voice recognition",
+      "Seating for eight with 60/40 split second and third-row fold-flat seating",
+      "Integrated backup camera with projected path",
+      "6-way adjustable driver's seat and 4-way adjustable front passenger seat"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 5,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.25,
+    "per_trim_add_counts": {
+      "Limited": 3,
+      "XLE": 3,
+      "LE": 0,
+      "Premium": 3
+    }
+  }
+}

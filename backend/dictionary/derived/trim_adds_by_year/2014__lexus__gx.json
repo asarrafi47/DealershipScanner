@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2014|lexus|gx",
+  "year": 2014,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2014__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Includes zero-deductible coverage on all warranties"
+    ],
+    "Premium": [
+      "Adds Wide-view Front and Side Monitor system",
+      "Adds Wide-view Side Monitor for front passenger-side visibility",
+      "Adds Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert system",
+      "Adds Mark Levinson premium audio system",
+      "Adds dual-screen DVD entertainment system",
+      "Adds SmartAccess keyless entry system",
+      "Adds navigation system with HD Radio technology support"
+    ]
+  }
+}

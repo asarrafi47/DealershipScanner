@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2014|toyota|prius",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2014__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FIVE",
+    "FOUR",
+    "THREE",
+    "TWO"
+  ],
+  "adds_by_trim": {
+    "FIVE": [
+      "LED headlights with auto level control, auto on/off feature and headlight cleaners",
+      "Integrated fog lights",
+      "17-in. 5-spoke alloy wheels with P215/45R17 tires",
+      "SofTex®-trimmed heated front seats with 8-way power-adjustable driver's seat and power lumbar support",
+      "SofTex®-trimmed tilt/telescopic steering wheel with audio, climate, and Bluetooth® controls",
+      "Dynamic Radar Cruise Control (DRCC)"
+    ],
+    "FOUR": [
+      "Projector-beam halogen headlights with auto on/off feature",
+      "Display Audio with Navigation, Entune® App Suite and JBL® with 6.1-in. touch-screen and backup camera",
+      "JBL® GreenEdge™ speakers with eight speakers total",
+      "SiriusXM Radio with 90-day All Access trial and HD Radio™",
+      "Power tilt/slide moonroof with Solar Powered Ventilation System and Remote Air Conditioning System"
+    ],
+    "THREE": [
+      "Display Audio with Navigation, Entune® App Suite with 6.1-in. touch-screen and integrated backup camera",
+      "SiriusXM Radio with 90-day All Access trial and HD Radio™",
+      "Power tilt/slide moonroof with Solar Powered Ventilation System and Remote Air Conditioning System"
+    ],
+    "TWO": [
+      "Projector-beam halogen headlights with auto-off feature",
+      "LED Daytime Running Lights (DRL) with on/off feature",
+      "LED tail and stop lights",
+      "Display Audio with 6.1-in. touch-screen, AM/FM CD player, six speakers, and Bluetooth® connectivity",
+      "Automatic climate control with dust and pollen filtration mode",
+      "Heated power outside mirrors with folding feature",
+      "Cruise control",
+      "15-in. 5-spoke alloy wheels with full wheel covers and P195/65R15 tires",
+      "Fabric-trimmed front seats with 6-way adjustable driver's seat"
+    ]
+  }
+}

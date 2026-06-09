@@ -359,13 +359,14 @@ def collect_raw_spec_heuristic_updates(raw: dict[str, Any]) -> dict[str, Any]:
     from backend.utils.field_clean import normalize_body_style_for_car
 
     bs_corrected = normalize_body_style_for_car(
-        c.get("body_style"),
+        raw.get("body_style"),
         make=c.get("make"),
         model=c.get("model"),
         trim=c.get("trim"),
         title=c.get("title"),
     )
-    if bs_corrected and str(c.get("body_style") or "").strip() != bs_corrected:
+    raw_bs = str(raw.get("body_style") or "").strip()
+    if bs_corrected and raw_bs != bs_corrected:
         out["body_style"] = bs_corrected
 
     # Normalize title to remove redundant door count patterns

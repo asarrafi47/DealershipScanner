@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2020|bentley|flyingspur",
+  "year": 2020,
+  "make": "bentley",
+  "model": "flying spur",
+  "ladder_id": "brochure_llm_2020__bentley__flyingspur",
+  "source": "brochure_llm",
+  "trims_available": [
+    "First Edition Specification",
+    "Mulliner Driving Specification",
+    "Touring Specification",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "First Edition Specification": [
+      "Leather pillars and headliner in 15 hide colours",
+      "Bentley branded brake callipers in red",
+      "Contrast stitching to seats and cabin trim including steering wheel",
+      "Hand cross stitching throughout cabin",
+      "Embroidered Bentley emblems on seats"
+    ],
+    "Mulliner Driving Specification": [
+      "22-inch Mulliner 10-spoke alloy wheels, dark grey or polished finish",
+      "Sports pedals",
+      "Contrast binding to deep pile overmats",
+      "Lambswool rugs front and rear in addition to standard overmats"
+    ],
+    "Touring Specification": [
+      "Heated windscreen",
+      "Park heater with remote activation"
+    ],
+    "Standard": [
+      "12.3-inch HD touchscreen infotainment with navigation and Apple CarPlay",
+      "Bang & Olufsen 16-speaker 1500-watt audio system",
+      "Full LED matrix headlamps with high-beam assist and LED tail lamps",
+      "Three-chamber air suspension with Continuous Damping Control",
+      "Speed-sensitive All Wheel Steering with torque vectoring by brake",
+      "24-way power front seats with heating, ventilation, massage and memory",
+      "14-way power rear seats with heating, ventilation, massage and memory",
+      "21-inch 10 twin-spoke alloy wheels with summer Pirelli tyres",
+      "Multi-zone automatic climate control with deep pile cabin carpets",
+      "Nappa leather seats and lower cabin in 15 colours"
+    ]
+  }
+}

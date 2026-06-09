@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2014|lincoln|mkz",
+  "year": 2014,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_llm_2014__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MKZ Hybrid Premiere",
+    "MKZ Premiere"
+  ],
+  "adds_by_trim": {
+    "MKZ Hybrid Premiere": [
+      "2.0L iVCT Atkinson-cycle I-4 engine with permanent-magnet AC-synchronous electric motor producing 188 total system hp",
+      "Electronically controlled continuously variable transmission (eCVT) instead of 6-speed SelectShift automatic",
+      "Regenerative Braking System",
+      "State-of-the-art lithium-ion battery system",
+      "SmartGauge with EcoGuide instrument cluster with 2 configurable color LCD screens",
+      "EPA-estimated 45 city/45 hwy/45 combined mpg FWD with 13.5-gallon fuel capacity",
+      "110-volt power outlet capability"
+    ],
+    "MKZ Premiere": [
+      "2.0L EcoBoost I-4 turbocharged direct injection engine with 240 hp and 270 lb.-ft. torque",
+      "6-speed SelectShift automatic transmission with paddle activation",
+      "3.7L Ti-VCT 24-valve V6 engine option with 300 hp and 277 lb.-ft. torque",
+      "Available all-wheel drive (AWD)",
+      "Front-wheel drive with hill start assist and Battery Management System",
+      "Anti-lock braking system with electronic brakeforce distribution and power 4-wheel disc brakes",
+      "18-inch premium painted aluminum wheels with all-season tires",
+      "Premium leather-trimmed seats with 10-way power, heated driver and front-passenger seats",
+      "Lincoln Premium Sound System with AM/FM stereo, single-CD player and 11 speakers",
+      "SiriusXM Satellite Radio with 6-month trial subscription"
+    ]
+  }
+}

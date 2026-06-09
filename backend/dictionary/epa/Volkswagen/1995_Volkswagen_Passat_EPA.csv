@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1995,Volkswagen,Passat,Passat,2.0L I4 ((FFS)),2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,18,25,20,,,,,
+1995,Volkswagen,Passat,Passat,2.0L I4 ((FFS)),2.0L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,18,27,21,,,,,
+1995,Volkswagen,Passat,Passat,2.8L V6 ((FFS)),2.8L V6 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.8,16,23,18,,,,,
+1995,Volkswagen,Passat,Passat,2.8L V6 ((FFS)),2.8L V6 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.8,16,23,19,,,,,
+1995,Volkswagen,Passat,Wagon,2.8L V6 ((FFS)),2.8L V6 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,2.8,16,23,18,,,,,
+1995,Volkswagen,Passat,Wagon,2.8L V6 ((FFS)),2.8L V6 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,2.8,16,23,19,,,,,

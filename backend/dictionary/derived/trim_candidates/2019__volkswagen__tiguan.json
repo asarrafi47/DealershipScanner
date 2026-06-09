@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2019|volkswagen|tiguan",
+  "year": 2019,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

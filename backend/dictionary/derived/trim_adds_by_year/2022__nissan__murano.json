@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|nissan|murano",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2022__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLAT",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLAT": [
+      "Semi-aniline leather-appointed seats",
+      "Heated steering wheel",
+      "Premium Plus packages available"
+    ],
+    "SL": [
+      "Leather-appointed seats",
+      "Heated front seats",
+      "8-inch color display with multi-touch control"
+    ],
+    "SV": [
+      "Leatherette seats",
+      "Climate-controlled front seats (heated and cooled)",
+      "Heated rear outboard seats",
+      "Power outside mirrors with LED turn signal indicators",
+      "Active Grille Shutters"
+    ],
+    "S": [
+      "3.5-liter DOHC 24-valve V6 engine with 260 hp",
+      "6-way manual driver's seat",
+      "Cloth seat trim",
+      "Cloth-wrapped A-pillar",
+      "LED headlights with LED signature daytime running lights",
+      "LED fog lights",
+      "LED taillights",
+      "Automatic on/off headlights",
+      "19.0-gallon fuel tank",
+      "Front-wheel drive or available Intelligent All-Wheel Drive"
+    ]
+  }
+}

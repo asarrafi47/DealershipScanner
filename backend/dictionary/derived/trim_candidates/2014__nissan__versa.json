@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2014|nissan|versa",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Versa",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S",
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

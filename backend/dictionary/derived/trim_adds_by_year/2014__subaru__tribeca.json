@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|subaru|tribeca",
+  "year": 2014,
+  "make": "Subaru",
+  "model": "Tribeca",
+  "ladder_id": "brochure_2014__subaru__tribeca",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 256-hp 3.6-liter DOHC 6-cylinder horizontally-opposed Subaru Boxer engine",
+      "Adds 5-speed adaptive electronic direct-control automatic transmission with manual shift control",
+      "Adds Subaru Symmetrical All-Wheel Drive",
+      "Adds Vehicle Dynamics Control (VDC) electronic stability control",
+      "Adds Traction Control System (TCS)",
+      "Adds 4-wheel disc antilock braking system with electronic brake-force distribution",
+      "Adds dual-stage deployment front airbags and advanced frontal airbag system",
+      "Adds side-curtain airbags protecting front and outboard 2nd-row occupants",
+      "Adds seat-mounted front side-impact airbags",
+      "Adds Harman Kardon 6-CD audio system with 10 speakers and SiriusXM satellite radio"
+    ],
+    "Limited": [
+      "Adds 18-inch 5-dual-spoke aluminum-alloy wheels",
+      "Adds All-Weather Package with heated side mirrors, windshield wiper de-icer, and 3-stage heated front seats",
+      "Adds Power Moonroof Package with power tilt/sliding-glass moonroof featuring UV light reduction",
+      "Adds leather-trimmed upholstery",
+      "Adds 8-way power adjustable driver's seat with 2-position memory and 4-way power adjustable front-passenger's seat",
+      "Adds leather-wrapped 3-spoke steering wheel with audio system buttons",
+      "Adds auto-dimming rearview mirror with integrated backup camera",
+      "Adds Bluetooth hands-free phone connectivity",
+      "Adds HomeLink remote transmitter with three memory settings",
+      "Adds dual-zone automatic climate control system"
+    ]
+  }
+}

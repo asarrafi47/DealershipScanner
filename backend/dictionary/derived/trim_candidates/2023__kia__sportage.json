@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2023|kia|sportage",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Sportage",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX Prestige",
+    "SX",
+    "EX",
+    "X-Line",
+    "LX",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

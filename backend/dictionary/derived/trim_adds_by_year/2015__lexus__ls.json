@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|lexus|ls",
+  "year": 2015,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2015__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LSh",
+    "LS F SPORT",
+    "LS AWD",
+    "LS RWD"
+  ],
+  "adds_by_trim": {
+    "LSh": [
+      "5.0L V8 engine with 438 hp and 8-speed electronically controlled automatic transmission",
+      "8-way power-adjustable rear seats with memory and two-way power lumbar support",
+      "Right-rear power recliner with ottoman and shiatsu massage",
+      "Rear-Seat Entertainment System with Blu-ray/DVD player and 9.0-inch screen",
+      "Four-zone Climate Concierge with air purifier and infrared rear-passenger temperature sensor",
+      "Power rear-door sunshades and leather-trimmed instrument panel",
+      "Rear seat-mounted side airbags and Blind Spot Monitor with Rear Cross-Traffic Alert",
+      "Heated steering wheel and Mark Levinson 19-speaker 450-watt audio system"
+    ],
+    "LS F SPORT": [
+      "4.6L V8 engine with 386 hp",
+      "19-inch split-10-spoke forged alloy wheels by BBS",
+      "Brembo opposed six-piston front brake calipers with 14.8-inch ventilated discs",
+      "FSPORT-tuned lowered Adaptive Variable Air Suspension with tuned stabilizer bars",
+      "TORSEN limited-slip rear differential and downshift rev-matching",
+      "Black leather interior with white perforations and FSPORT bolstered front seats",
+      "Paddle shifters and black Alcantara headliner",
+      "Aluminum pedals and FSPORT exterior styling with unique grille and diffuser"
+    ],
+    "LS AWD": [
+      "All-Wheel Drive with 360 hp from 4.6L V8 engine",
+      "Heated outboard rear seats",
+      "Heated steering wheel as standard"
+    ],
+    "LS RWD": [
+      "4.6L V8 engine with 386 hp and 8-speed electronically controlled automatic transmission",
+      "SmartAccess with push-button start/stop and Navigation System with 12.3-inch display",
+      "Front-seat Climate Concierge with climate-comfort heated front seats",
+      "Four-zone automatic climate control with interior air filter and smog sensor",
+      "Lexus Enform Destinations, Safety Connect, and Remote app with one-year trial",
+      "10 standard airbags and Intuitive Parking Assist",
+      "LED daytime running lights and LED foglamps",
+      "Mark Levinson audio system available"
+    ]
+  }
+}

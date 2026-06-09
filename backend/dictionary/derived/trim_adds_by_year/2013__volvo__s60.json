@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2013|volvo|s60",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2013__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier Plus",
+    "Premier",
+    "R-DESIGN",
+    "T6",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "Premier Plus": [
+      "Keyless Drive with Personal Car Communicator (PCC)",
+      "HomeLink® integrated in sun visor for remote home appliance control"
+    ],
+    "Premier": [
+      "Keyless Drive with Personal Car Communicator (PCC)",
+      "Private Locking function for glove compartment and boot lid security"
+    ],
+    "R-DESIGN": [
+      "Keyless Drive with Personal Car Communicator (PCC) standard",
+      "HomeLink® standard for garage door and home automation control"
+    ],
+    "T6": [
+      "Keyless Drive with Personal Car Communicator (PCC) standard",
+      "Power retractable door mirrors with ground lighting",
+      "Approach and Home Safe Lighting convenience features"
+    ],
+    "T5": [
+      "Whiplash Protection System (WHIPS) integrated in front seats",
+      "Pre-prepared restraints with windscreen laser-sensor technology",
+      "Side Impact Protection System (SIPS) with side airbags and Inflatable Curtain",
+      "Energy-absorbing frontal structure with deformation zones",
+      "Pedestrian protection with rounded front, flush headlamps, energy-absorbing bonnet",
+      "Available leather upholstery in multiple color combinations"
+    ]
+  }
+}

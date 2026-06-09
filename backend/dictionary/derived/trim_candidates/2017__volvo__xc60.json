@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2017|volvo|xc60",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "XC60",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2011_chevrolet_silverado_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Silverado",
+    "Silverado"
+  ],
+  "year_min": 2009,
+  "year_max": 2013,
+  "source": "generated",
+  "trims": {
+    "C15": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 4-spd; Rear-Wheel Drive"
+      }
+    ],
+    "C15 Xfe": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 4-spd; Rear-Wheel Drive"
+      }
+    ],
+    "K15": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 4-spd; All-Wheel Drive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|jeep|cherokee",
+  "year": 2019,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_2019__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Overland",
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds standard infotainment system with smartphone integration",
+      "Adds Bluetooth Hands-Free Profile connectivity",
+      "Adds core safety features including Advanced Front Air Bags",
+      "Adds electronic stability control system",
+      "Adds standard seating and interior appointments"
+    ],
+    "Latitude": [
+      "Adds enhanced connectivity features"
+    ],
+    "Trailhawk": [
+      "Adds 2-speed power transfer unit with rear locking axle",
+      "Adds low-range 4x4 capability",
+      "Adds Jeep Selec-Terrain with 5 settings including Snow mode"
+    ],
+    "Limited": [
+      "Adds premium feature enhancements over mid-tier offerings"
+    ],
+    "Overland": [
+      "Adds top-tier premium appointments and exclusive features"
+    ]
+  }
+}

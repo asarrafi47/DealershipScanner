@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2022_mercedes-benz_cla-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "CLA-Class",
+    "CLA-Class"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM7)"
+      }
+    ],
+    "AMG CLA35": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM7)"
+      }
+    ],
+    "AMG CLA45": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM7)"
+      }
+    ]
+  }
+}

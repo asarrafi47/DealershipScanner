@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2023|ram|commercial",
+  "year": 2023,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "generic_ram_commercial",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Tradesman": [
+      "Membership helps us to identify you as a small business owner so we can provide you",
+      "properly equipped vehicle and 150-lb allowance for driver\u0000 Additional options, equipment, passengers and cargo weight must be subtracted\u0000 See dealer for details\u0000 3 Class is based on large commercial",
+      "van segment (Class 2)\u0000 Based upon the latest available current competitive information\u0000 5 Based on the latest competitive information\u0000 Class is based on 250/2500 and 350/3500 pickups\u0000 6 Based on",
+      "the latest competitive information\u0000 Class is based on 250/2500 pickups\u0000 8 Visit Mopar\u0000com for complete details and a copy of the Powertrain Limited",
+      "SiriusXM service will automatically stop at the end of your trial unless you decide to subscribe\u0000 If you decide to continue service after the trial, the subscription plan chosen will automatically renew and be charged according to",
+      "methods or calling 1-866-635-2349.",
+      "This system is a driver convenience system, not",
+      "a substitute for conscientious driving\u0000 Always be aware of your",
+      "Always wear your seat belt and obey traffic laws\u0000 19",
+      "customer (provided by the dealer)\u0000 22 Allowance varies by graphic program\u0000 See dealer",
+      "is a registered trademark of Cummins, Inc\u0000 AISIN",
+      "Sirius XM Radio Inc\u0000 Facebook and logo are registered trademarks of Meta Platforms, Inc\u0000 The Twitter logo is a service"
+    ],
+    "Limited": [
+      "Leather upholstery on seating surfaces",
+      "Power running boards with approach light",
+      "Automatic headlight leveling",
+      "Premium steering wheel with leather wrapping",
+      "Heated front seats",
+      "Remote keyless entry with extended range"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 12.0,
+    "per_trim_add_counts": {
+      "Tradesman": 12
+    }
+  }
+}

@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2018,Tesla,Model X,75D,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,91,95,93,,,,,
+2018,Tesla,Model X,100D,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,86,89,87,,,,,
+2018,Tesla,Model X,P100D,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,83,89,85,,,,,

@@ -1,0 +1,73 @@
+{
+  "ladder_id": "2023_kia_forte_complete_options",
+  "make": "Kia",
+  "models": [
+    "Forte",
+    "Forte"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "SX": [
+      {
+        "label": "Engine Options",
+        "value": "Kia Forte LPI Hybrid; The SX has the 2.4-litre engine with a six-speed manual or optional five-speed a"
+      }
+    ],
+    "GT": [
+      {
+        "label": "Interior Materials",
+        "value": "When combined with the EX trim, leather is utilized for the upholstery, steering"
+      }
+    ],
+    "GT-Line": [
+      {
+        "label": "Interior Materials",
+        "value": "When combined with the EX trim, leather is utilized for the upholstery, steering"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Kia Forte LPI Hybrid; The SX has the 2.4-litre engine with a six-speed manual or optional five-speed a"
+      },
+      {
+        "label": "Screen Size",
+        "value": "4.3-inch touchscreen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "When paired with the SX trim, it includes only heated leather seats and the sunr"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Kia Forte LPI Hybrid; The SX has the 2.4-litre engine with a six-speed manual or optional five-speed a"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "When combined with the EX trim, leather is utilized for the upholstery, steering"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Kia Forte LPI Hybrid; The SX has the 2.4-litre engine with a six-speed manual or optional five-speed a"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Interior Materials",
+        "value": "When paired with the SX trim, it includes only heated leather seats and the sunr"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive"
+      }
+    ]
+  }
+}

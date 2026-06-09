@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_nissan_leaf_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Leaf",
+    "Leaf"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "SL": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: From 2019, a Leaf e+ (Leaf Plus in North America) variant was offered with a larger 62 kWh battery (59 kWh usable) providing an EPA range of 364 km (226 miles), and a new 160 kW motor. It can use CHAdeMO chargers up to 100 kW."
+      }
+    ],
+    "SV": [
+      {
+        "label": "Audio System Layout",
+        "value": "Audio System Layout: Tekna adds from N-Connecta ProPILOT Advanced Driver Assistance System, Bose spea"
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2015|ford|transit",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Transit",
+  "ladder_id": "brochure_llm_2015__ford__transit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "10-way power driver and 2-way power front-passenger seats with inboard armrests",
+      "Pewter leather or Charcoal cloth seating surfaces",
+      "6.5-inch color LCD touchscreen with SYNC and MyFord Touch Navigation",
+      "SiriusXM Satellite Radio with 5-year trial subscription and HD Radio",
+      "8 speakers (4 front and 4 rear) with leather-wrapped steering wheel",
+      "Carpeted front and rear flooring",
+      "Rear dome light with map lights and theater-dimming feature"
+    ],
+    "XL": [
+      "AM/FM stereo with single-CD player and 6 speakers (2 front and 4 rear)",
+      "Pewter cloth or vinyl seating with 2-way manual driver and front-passenger seats",
+      "4-inch multifunction display with digital clock",
+      "16-inch steel wheels with hubcaps or mini-cap and lug nut covers",
+      "Vinyl or carpeted front flooring options",
+      "Air conditioning (front only or front and rear)",
+      "12V powerpoint located in rear of vehicle",
+      "SecuriLock Passive Anti-Theft System and perimeter anti-theft alarm",
+      "Cruise control with full trip computer and engine-hour meter"
+    ]
+  }
+}

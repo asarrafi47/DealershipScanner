@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2022|ram|promaster",
+  "year": 2022,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_web_2022__ram__promaster",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SLT+",
+    "SLT",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "SLT+": [
+      "Enhanced trim positioning above SLT with increased standard features and equipment"
+    ],
+    "SLT": [
+      "Mid-level trim with more features than base Tradesman model"
+    ],
+    "Tradesman": [
+      "3.6-liter V-6 engine with 276 hp and 250 lb-ft of torque",
+      "9-speed automatic transmission",
+      "Front-wheel drive only",
+      "7.0-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "Front automatic emergency braking, driver attention monitoring, road sign recognition",
+      "Crosswind stability assist and standard driver assist features",
+      "3.5-inch gauge cluster display",
+      "Dual Bluetooth connectivity and two USB ports",
+      "Wi-Fi hotspot capability"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ram/promaster/"
+}

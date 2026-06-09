@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2016|gmc|sierra",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2016__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Sierra"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Magnetic Ride Control suspension system for enhanced handling",
+      "12-way driver and front-passenger power seat adjusters with 4-way power lumbar",
+      "Embroidered Denali branding on front seats",
+      "Heated and vented perforated leather-appointed front bucket seats",
+      "8-speed automatic transmission with Tow/Haul mode"
+    ],
+    "SLT": [
+      "Heated and leather-wrapped steering wheel with audio and cruise controls",
+      "Front and rear park assist with ultrasonic sensors",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "SLT Preferred Package and All Terrain SLT Premium Package options"
+    ],
+    "SLE": [
+      "Dual-zone automatic climate control",
+      "Remote vehicle starter system",
+      "Tilt-Wheel manual telescopic steering column operation",
+      "High-capacity air cleaner with Z71 package",
+      "Eaton heavy-duty automatic locking rear differential standard on 4WD"
+    ],
+    "Sierra": [
+      "4.3L V-6 EcoTec3 engine standard",
+      "17\" painted steel wheels RD6 standard",
+      "17\" stainless-steel clad wheels RD7 available",
+      "Tilt-wheel manual steering column standard",
+      "Front 3-passenger cloth 40/20/40 split bench seat standard"
+    ]
+  }
+}

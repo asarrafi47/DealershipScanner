@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2017|audi|a7",
+  "year": 2017,
+  "make": "Audi",
+  "model": "A7",
+  "ladder_id": "brochure_llm_2017__audi__a7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS 7 performance",
+    "RS 7",
+    "S7",
+    "A7 3.0T competition",
+    "A7"
+  ],
+  "adds_by_trim": {
+    "RS 7 performance": [
+      "4.0T twin-turbocharged engine",
+      "Audi Sport 21-inch 5-double-arm design wheels with titanium-matte finish",
+      "RS 7 performance Sport Seat with Black leather/Alcantara and Mercato Blue contrast honeycomb stitching",
+      "Daytona Gray matte exterior color option",
+      "Aluminum Race interior inlay"
+    ],
+    "RS 7": [
+      "4.0T twin-turbocharged engine",
+      "Tornado Gray metallic exterior color standard",
+      "Audi Sport 20-inch 7-twin-spoke forged design wheels standard",
+      "RS 7 Sport Seat with Lunar Silver Valcona leather and Dark Silver diamond stitching"
+    ],
+    "S7": [
+      "4.0T twin-turbocharged engine",
+      "Audi Sport 21-inch 5-spoke-blade design wheels available",
+      "S7 Sport Seat with Arras Red Valcona leather and Granite Gray contrast diamond stitching",
+      "Arras Red Valcona leather Audi design selection interior",
+      "Oolong Gray metallic and Moonlight Blue metallic exterior colors"
+    ],
+    "A7 3.0T competition": [
+      "3.0T turbocharged engine",
+      "A7 3.0T competition Sport Seat with Black Valcona leather and Korso Red diamond stitching",
+      "Audi Sport 19-inch 7-double-spoke design wheels standard",
+      "Matador Red metallic and Java Brown metallic exterior colors",
+      "Brushed Aluminum interior inlay option"
+    ],
+    "A7": [
+      "3.0T turbocharged engine",
+      "A7 Standard Seat with Black leather",
+      "Audi Sport 19-inch 5-spoke-V design wheels standard",
+      "A7 Ventilated Seat with multiple leather and color options",
+      "Brilliant Black and Ibis White exterior colors standard",
+      "Achat Gray Fine Grain Birch Wood interior inlay"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2016|jeep|grandcherokee",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "empty",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "pdf_open_failed:[Errno 2] No such file or directory: 'backend/data/brochures/2016_Jeep_Grand_Cherokee_Brochure.pdf'"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2020|volkswagen|atlascrosssport",
+  "year": 2020,
+  "make": "Volkswagen",
+  "model": "Atlas Cross Sport",
+  "ladder_id": "brochure_web_2020__volkswagen__atlascrosssport",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SEL Premium R-Line",
+    "SEL R-Line Black",
+    "SEL",
+    "SE with Technology",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SEL Premium R-Line": [
+      "Massaging front seats",
+      "Color-adjustable ambient lighting",
+      "Harman Kardon premium audio system"
+    ],
+    "SEL R-Line Black": [
+      "Black exterior accents",
+      "R-Line styling package"
+    ],
+    "SEL": [
+      "Upgraded interior materials and design"
+    ],
+    "SE with Technology": [
+      "Heated steering wheel",
+      "Heated and ventilated front seats",
+      "Auto-dimming rearview mirror",
+      "Power-operated tailgate",
+      "Adaptive cruise control",
+      "Four USB-C ports",
+      "Front and rear parking sensors"
+    ],
+    "SE": [
+      "12.0-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "10.2-inch digital gauge cluster",
+      "Wireless charging pad",
+      "USB ports in both rows",
+      "IQ Drive active safety suite with automatic high-beams",
+      "Turbocharged 2.0L inline four-cylinder engine producing 269 hp",
+      "Eight-speed automatic transmission",
+      "Standard FWD or available 4Motion AWD"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/atlas-cross-sport/"
+}

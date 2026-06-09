@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2023_audi_q5_e_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q5 e",
+    "Q5 e"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Screen Size",
+        "value": "11.9-inch digital instrument cluster; 10.9-inch passenger display"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Engine Options",
+        "value": "Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with; Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with Ultra Technology’."
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with; Audi's Quattro all-wheel drive system is standard, however it uses ‘Quattro with Ultra Technology’."
+      }
+    ],
+    "S line": [
+      {
+        "label": "Engine Options",
+        "value": "Model Year Engine type Power, torque at rpm"
+      }
+    ]
+  }
+}

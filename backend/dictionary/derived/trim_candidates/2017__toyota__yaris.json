@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|toyota|yaris",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Yaris",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "LE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "1.5L 4-Cyl. Engine \u2022 1.5L 4-Cyl. Engine \u2022 1.5L 4-Cyl. Engine",
+      "5-speed manual or available 4-speed automatic transmission \u2022 4-speed automatic transmission \u2022 5-speed manual or available 4-speed automatic transmission",
+      "30 city/36 hwy/33 combined EPA-est. mpg2 (manual) \u2022 30 city/35 hwy/32 combined EPA-est. mpg2 \u2022 30 city/36 hwy/33 combined EPA-est. mpg2 (manual)",
+      "30 city/35 hwy/32 combined EPA-est. mpg2 (automatic) Exterior Features \u2022 30 city/35 hwy/32 combined EPA-est. mpg2 (automatic)",
+      "Exterior Features Exterior Features",
+      "Black front grille with chrome accent",
+      "Black front grille \u2022 Color-keyed power outside mirrors \u2022 Projector-beam headlights with black sport trim and",
+      "Multi-reflector halogen headlights with chrome accents \u2022 15-in. alloy wheels LED light bar accent",
+      "Daytime Running Lights (DRL) Interior Features \u2022 LED Daytime Running Lights (DRL)",
+      "Color-keyed outside mirrors \u2022 Integrated fog lights with chrome surround"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2011|subaru|tribeca",
+  "year": 2011,
+  "make": "Subaru",
+  "model": "Tribeca",
+  "ladder_id": "brochure_llm_2011__subaru__tribeca",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Touring",
+    "3.6R Limited",
+    "3.6R Premium"
+  ],
+  "adds_by_trim": {
+    "3.6R Touring": [
+      "High intensity discharge (HID) low-beam headlights with multireflector halogen high-beams",
+      "Body-color side sills and front/rear lower bumper area",
+      "Power tilt/sliding-glass moonroof",
+      "385-watt 10-speaker Harman Kardon premium audio system with subwoofer and XM Satellite Radio",
+      "Bluetooth hands-free phone connectivity"
+    ],
+    "3.6R Limited": [
+      "2-position driver's seat memory",
+      "Leather-trimmed upholstery",
+      "Auto-dimming rearview mirror with integrated 3.5-inch back-up camera display",
+      "HomeLink remote transmitter with 3 memory settings",
+      "Overhead console with Bluetooth hands-free module"
+    ],
+    "3.6R Premium": [
+      "Projector low-beam and multireflector high-beam headlights",
+      "100-watt 6-speaker audio system with single-disc CD player and MP3 capability",
+      "Premium cloth upholstery",
+      "Overhead console with dual maplights and sunglasses storage",
+      "Power front and rear windows with driver's auto-down",
+      "Leather-wrapped 3-spoke steering wheel with audio system buttons",
+      "Dual-zone automatic climate control with rear cabin air conditioner",
+      "4-wheel ABS with Vehicle Dynamics Control and Traction Control"
+    ]
+  }
+}

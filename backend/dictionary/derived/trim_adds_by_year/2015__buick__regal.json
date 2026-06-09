@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|buick|regal",
+  "year": 2015,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2015__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS",
+    "PREMIUM II",
+    "PREMIUM I"
+  ],
+  "adds_by_trim": {
+    "GS": [
+      "2.4L DOHC DI engine with eAssist technology, 182 hp",
+      "Interactive Drive Control System",
+      "GS-specific fascias and rockers",
+      "GS-specific dual exhaust",
+      "GS-specific badging",
+      "GS-specific sport seats with heated steering wheel",
+      "Sport pedals",
+      "Brembo front brakes",
+      "HiPer strut front suspension",
+      "Satin finish surround moldings and rear lip spoiler"
+    ],
+    "PREMIUM II": [
+      "E-Z Key passive entry system",
+      "Remote vehicle start system",
+      "Push-button start",
+      "10-way power front passenger seating",
+      "Universal garage-door opener",
+      "Rear parking assist",
+      "110-volt AC power outlet",
+      "Heated steering wheel",
+      "Thorax rear seat air bags",
+      "Bose premium audio system with HID bi-xenon headlamps"
+    ],
+    "PREMIUM I": [
+      "E-Z Key passive entry system",
+      "Remote vehicle start system",
+      "Push-button start",
+      "10-way power front passenger seating",
+      "Universal garage-door opener",
+      "Power 110-volt AC outlet",
+      "Heated steering wheel",
+      "Thorax rear seat air bags",
+      "Bose premium audio system",
+      "HID bi-xenon headlamps with audio system navigation"
+    ]
+  }
+}

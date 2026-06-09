@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2023_ford_explorer_complete_options",
+  "make": "Ford",
+  "models": [
+    "Explorer",
+    "Explorer"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Timberline": [
+      {
+        "label": "Engine Options",
+        "value": "2.3L I4 Turbo; Automatic (S10)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L Cologne OHV V6 (1995–2000); L Cologne SOHC V6 (1997–2003)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The interior received redesigned front and rear seats; alongside second-generati"
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2012|ford|mustang",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_web_2012__ford__mustang",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Mustang Dark Horse Fastback",
+    "Mustang GT Premium Convertible",
+    "Mustang GT Premium Fastback",
+    "Mustang GT Fastback",
+    "Mustang EcoBoost Premium Convertible",
+    "Mustang EcoBoost Convertible",
+    "Mustang EcoBoost Premium Fastback",
+    "Mustang EcoBoost Fastback"
+  ],
+  "adds_by_trim": {
+    "Mustang Dark Horse Fastback": [
+      "5.0-liter naturally aspirated V-8 engine with 500 hp and 418 lb-ft torque",
+      "0-60 acceleration of 3.7-4.1 seconds depending on configuration",
+      "Dark Horse exclusive styling and performance tuning"
+    ],
+    "Mustang GT Premium Convertible": [
+      "Convertible body style with power soft top",
+      "10.3 cubic feet cargo space in convertible configuration"
+    ],
+    "Mustang GT Premium Fastback": [
+      "Premium interior appointments and upgraded materials",
+      "5.0-liter V-8 engine with 486 hp and 418 lb-ft torque"
+    ],
+    "Mustang GT Fastback": [
+      "5.0-liter V-8 engine with 486 hp and 418 lb-ft torque",
+      "0-60 acceleration of 3.9-4.3 seconds depending on configuration",
+      "Six-speed manual transmission available on V-8 models",
+      "13.3 cubic feet cargo space in fastback configuration"
+    ],
+    "Mustang EcoBoost Premium Convertible": [
+      "Premium interior and exterior styling upgrades",
+      "Convertible body style with power soft top"
+    ],
+    "Mustang EcoBoost Convertible": [
+      "Convertible body style with power soft top",
+      "10.3 cubic feet cargo space"
+    ],
+    "Mustang EcoBoost Premium Fastback": [
+      "Premium interior appointments and upgraded materials",
+      "Enhanced exterior styling elements"
+    ],
+    "Mustang EcoBoost Fastback": [
+      "2.3-liter turbocharged inline-four engine with 315 hp and 350 lb-ft torque",
+      "0-60 acceleration of 4.9 seconds with Performance Package",
+      "21-22 city and 29-33 highway mpg efficiency",
+      "Dual-zone climate control standard across lineup",
+      "Ford Co-Pilot360 suite with adaptive cruise control and lane keeping assistance",
+      "13.3 cubic feet cargo space in fastback configuration"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/mustang/"
+}

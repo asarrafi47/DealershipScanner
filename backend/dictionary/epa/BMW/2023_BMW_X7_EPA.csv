@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,BMW,X7,xDrive40i,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),3.0L I6 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,21,25,22,,,,,
+2023,BMW,X7,M60i xDrive,Hybrid 4.4L V8 (SIDI; Mild Hybrid),4.4L V8 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,4.4,16,21,18,,,,,
+2023,BMW,X7,Alpina XB7,Hybrid 4.4L V8 (SIDI; Mild Hybrid),4.4L V8 Twin Turbo,Twin Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,4.4,16,20,17,,,,,

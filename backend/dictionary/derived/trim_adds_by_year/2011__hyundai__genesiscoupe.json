@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2011|hyundai|genesiscoupe",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "ladder_id": "brochure_2011__hyundai__genesiscoupe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Touring": [
+      "Adds power driver seat",
+      "Upgraded to 360-watt Infinity AM/FM/XM/CD/MP3 audio system with 10 speakers",
+      "Adds navigation system with 6.5\" touchscreen and XM NavTraffic",
+      "Upgraded to automatic temperature control",
+      "Adds proximity key with push-button start",
+      "Adds electrochromic auto-dimming rearview mirror with compass",
+      "Adds HomeLink integrated transceiver",
+      "Adds power tilt-and-slide glass sunroof"
+    ],
+    "Premium": [
+      "Adds High Intensity Discharge Xenon headlights",
+      "Adds aluminum pedals",
+      "Adds aero wiper blades",
+      "Adds rear spoiler"
+    ],
+    "Blue": [
+      "Upgraded to 3.8L DOHC V6 engine with Dual CVVT",
+      "Upgraded to ZF 6-speed automatic transmission with paddle-shift SHIFTRONIC",
+      "Upgraded to 19\" alloy wheels with summer tires",
+      "Upgraded to track-tuned suspension",
+      "Upgraded to Brembo braking system with 4-piston fixed calipers",
+      "Adds Torsen limited-slip differential",
+      "Upgraded to leather seating surfaces with heated front seats",
+      "Adds metalgrain and chrome interior accents"
+    ],
+    "Limited": [
+      "Adds High Intensity Discharge Xenon headlights",
+      "Adds aluminum pedals",
+      "Adds aero wiper blades",
+      "Adds rear spoiler",
+      "Adds premium door sill plates",
+      "Adds heated outside mirrors with turn signal indicators",
+      "Adds chrome front fascia accents"
+    ]
+  }
+}

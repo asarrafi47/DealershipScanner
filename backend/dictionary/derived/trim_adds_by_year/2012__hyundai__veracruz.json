@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2012|hyundai|veracruz",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Veracruz",
+  "ladder_id": "brochure_2012__hyundai__veracruz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds Includes America's Best Warranty coverage",
+      "Adds Features 24/7 roadside assistance",
+      "Adds Includes powertrain limited warranty protection"
+    ],
+    "Blue": [
+      "Adds Athens Blue and Marine Blue exterior color options",
+      "Adds Pandora media streaming capability"
+    ],
+    "Limited": [
+      "Adds Sahara Bronze exterior color option"
+    ]
+  }
+}

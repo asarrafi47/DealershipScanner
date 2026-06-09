@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2017|toyota|mirai",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Mirai",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2017_Toyota_Mirai_Brochure.pdf",
+  "page_count": 2,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

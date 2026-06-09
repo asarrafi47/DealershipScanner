@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2020|jeep|gladiator",
+  "year": 2020,
+  "make": "Jeep",
+  "model": "Gladiator",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Overland",
+    "Limited",
+    "Rubicon",
+    "Sport S",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

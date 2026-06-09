@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2017|gmc|yukon",
+  "year": 2017,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "inventory_gmc_yukon",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Els",
+    "Tls"
+  ],
+  "adds_by_trim": {
+    "Tls": [
+      "that your vehicle includes the equipment you ordered or, if there are changes, that they",
+      "trademark of Google, Inc. Sirius, XM and all related marks and logos are"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "Tls": 2
+    }
+  }
+}

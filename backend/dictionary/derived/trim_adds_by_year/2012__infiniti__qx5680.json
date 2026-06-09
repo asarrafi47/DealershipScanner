@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|infiniti|qx5680",
+  "year": 2012,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_web_2012__infiniti__qx5680",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Signature",
+    "Theater Package",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Signature": [
+      "Premium Leather seating with heating and cooling",
+      "Around View Monitor with Moving Object Detection",
+      "Premium Bose audio system with 13 speakers",
+      "Power moonroof and power rear liftgate",
+      "Infiniti InTouch navigation with backup camera",
+      "Heated steering wheel and heated second row seats",
+      "Premium wood and leather interior trim",
+      "Rain-sensing windshield wipers"
+    ],
+    "Theater Package": [
+      "Dual-screen rear seat entertainment system",
+      "Premium Leather seating upgrades",
+      "Around View Monitor with 360-degree camera",
+      "Bose premium audio system",
+      "Infiniti InTouch navigation system"
+    ],
+    "Base": [
+      "5.6L V8 engine with 400 horsepower",
+      "Automatic transmission with manual shift mode",
+      "Four-wheel drive standard",
+      "Infiniti InTouch with 7-inch touchscreen display",
+      "Backup camera with guidelines",
+      "Cloth seating for up to eight passengers",
+      "Bluetooth connectivity for phone and audio",
+      "Dual-zone automatic climate control",
+      "Proximity key with pushbutton start",
+      "Tire Pressure Monitoring System and stability control"
+    ]
+  },
+  "web_source_url": "https://www.carwow.co.uk/infiniti/qx56-80/2012/specifications"
+}

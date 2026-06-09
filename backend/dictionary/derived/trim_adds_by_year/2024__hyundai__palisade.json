@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2024|hyundai|palisade",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Palisade",
+  "ladder_id": "brochure_llm_2024__hyundai__palisade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "SEL Premium",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "Black Nappa Leather or Beige Nappa Leather interior upholstery",
+      "20-inch alloy wheels",
+      "Exclusive Calligraphy exterior color option (Abyss Black)",
+      "Premium interior color combinations available"
+    ],
+    "Limited": [
+      "Black Leather or Beige Leather interior upholstery",
+      "20-inch alloy wheels",
+      "Expanded exterior color palette including Robust Emerald and Moonlight Cloud"
+    ],
+    "SEL Premium": [
+      "Black H-Tex or Gray H-Tex upholstery",
+      "20-inch alloy wheels",
+      "XRT Night Edition variant available with exclusive styling"
+    ],
+    "XRT": [
+      "Specialized XRT trim variant with distinct exterior treatment",
+      "20-inch alloy wheels standard"
+    ],
+    "SEL": [
+      "Black H-Tex or Gray H-Tex upholstery options",
+      "Choice of 18-inch or 20-inch alloy wheels"
+    ],
+    "SE": [
+      "Black Cloth or Gray Cloth interior upholstery",
+      "18-inch alloy wheels standard",
+      "Full seven-passenger three-row seating configuration"
+    ]
+  }
+}

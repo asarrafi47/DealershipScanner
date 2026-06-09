@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2018|jeep|wrangler",
+  "year": 2018,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Rubicon",
+    "Sahara",
+    "Willys",
+    "Sport S",
+    "Sport",
+    "Platinum",
+    "Premium",
+    "LT",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

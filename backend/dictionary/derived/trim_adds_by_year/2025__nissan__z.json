@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2025|nissan|z",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Z",
+  "ladder_id": "brochure_llm_2025__nissan__z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO",
+    "PERFORMANCE",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "NISMO": [
+      "NISMO-tuned 3.0-liter twin-turbo V6 engine with 420 hp",
+      "NISMO/Akebono 4-piston front, 2-piston rear red-painted aluminum calipers",
+      "15.0-inch front and 13.8-inch rear vented discs",
+      "NISMO-tuned suspension and steering",
+      "19-inch NISMO RAYS forged-alloy wheels",
+      "255/40R19 front and 285/35R19 rear high-performance tires",
+      "NISMO aerodynamic body design",
+      "NISMO Recaro leather-appointed seats with Alcantara inserts",
+      "NISMO Alcantara-wrapped steering wheel"
+    ],
+    "PERFORMANCE": [
+      "SynchroRev Match and GT-R-inspired paddle shifters",
+      "Launch control and mechanical clutch-type limited-slip differential",
+      "Akebono 4-piston front, 2-piston rear red-painted aluminum calipers",
+      "14.0-inch front and 13.8-inch rear vented discs",
+      "19-inch RAYS forged-alloy wheels",
+      "255/40R19 front and 275/35R19 rear high-performance tires",
+      "Chin and rear spoilers",
+      "Heated outside mirrors and 4-way power adjustable driver's seat",
+      "4-way power adjustable passenger's seat and heated seats",
+      "9-inch NissanConnect color touchscreen with navigation and premium services"
+    ],
+    "SPORT": [
+      "3.0-liter twin-turbo V6 engine with 400 hp and 350 lb-ft torque",
+      "6-speed manual transmission with EXEDY high-performance clutch",
+      "Available 9-speed automatic transmission with paddle shifters and launch control",
+      "18-inch aluminum-alloy wheels with 245/45R18 high-performance tires",
+      "12.3-inch fully digital dashboard with 3-bay gauge cluster",
+      "8-inch NissanConnect color touchscreen with Apple CarPlay and Android Auto",
+      "LED headlights with signature Daytime Running Lights",
+      "LED double ring 3D signature taillights",
+      "Automatic Temperature Control and Nissan Intelligent Key with Push Button Ignition",
+      "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2027_bmw_x7_complete_options",
+  "make": "BMW",
+  "models": [
+    "X7",
+    "X7"
+  ],
+  "year_min": 2025,
+  "year_max": 2029,
+  "source": "generated",
+  "trims": {
+    "xDrive40i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L N63 twin-turbo V8; L S68 twin-turbo V8"
+      }
+    ]
+  }
+}

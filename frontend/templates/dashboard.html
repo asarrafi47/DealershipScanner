@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard — Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
 </head>
 <body class="hub-page">
 
@@ -110,33 +111,5 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
-<script nonce="{{ csp_nonce }}">
-(function () {
-    let carsPrefetchStarted = false;
-    function prefetchListingsCars() {
-        if (carsPrefetchStarted) return;
-        carsPrefetchStarted = true;
-        fetch("/listings", { credentials: "same-origin" }).catch(() => {});
-        fetch("/api/listings/cars", { credentials: "same-origin" })
-            .then((r) => {
-                if (!r.ok) return null;
-                const etag = r.headers.get("ETag");
-                if (etag) window.__DS_listingsCarsEtag = etag;
-                if (r.status === 304) return null;
-                return r.json();
-            })
-            .then((data) => {
-                if (!data || !data.ok || !Array.isArray(data.cars)) return;
-                window.__DS_prefetchCars = data.cars;
-            })
-            .catch(() => {});
-    }
-    document.querySelectorAll("[data-nav-listings]").forEach((el) => {
-        el.addEventListener("mouseenter", prefetchListingsCars, { once: true });
-        el.addEventListener("focus", prefetchListingsCars, { once: true });
-    });
-})();
-</script>
 </body>
 </html>

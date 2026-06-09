@@ -153,12 +153,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return null;
     }
 
+    function enrichCarWithMarket(car) {
+        if (!window.__DS_MARKET_STATS || !car || typeof car !== "object") return car;
+        if (car.market) return car;
+        const market = marketIntelForCar(car);
+        if (market) car.market = market;
+        return car;
+    }
+
     function enrichCarsWithMarket(cars) {
         if (!window.__DS_MARKET_STATS) return cars;
-        return cars.map((c) => {
-            const market = marketIntelForCar(c);
-            return market ? Object.assign({}, c, { market }) : c;
-        });
+        return cars.map((c) => enrichCarWithMarket(c));
     }
 
     let _marketStatsReloadTimer = null;
@@ -204,11 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
             if (typeof requestIdleCallback === "function") {
-                requestIdleCallback(run, { timeout: 1200 });
+                requestIdleCallback(run, { timeout: 600 });
             } else {
                 run();
             }
-        }, 500);
+        }, 150);
     }
 
     // Haversine formula: calculate distance in miles between two lat/lon points
@@ -394,6 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         }
         invalidateCarGeoIndex();
+        clearListingsRadiusCache();
         window.__DS_listingsGeoCoordsReady = true;
     }
 
@@ -414,19 +420,43 @@ document.addEventListener("DOMContentLoaded", () => {
         window.__DS_listingsAssetPrefetchStarted = true;
 
         if (!listingsDealerCoordsReady()) {
-            window.__DS_listingsGeoPrefetchPromise = fetch("/api/listings/geo-coords", {
-                credentials: "same-origin",
-            })
-                .then((r) => (r.ok ? r.json() : null))
-                .then((data) => {
-                    mergeListingsGeoCoordsPayload(data);
+            if (window.__DS_listingsGeoPrefetchPromise) {
+                window.__DS_listingsGeoPrefetchPromise = window.__DS_listingsGeoPrefetchPromise.then(() => {
+                    if (listingsDealerCoordsReady()) return;
+                    return fetch("/api/listings/geo-coords", { credentials: "same-origin" })
+                        .then((r) => (r.ok ? r.json() : null))
+                        .then((data) => mergeListingsGeoCoordsPayload(data));
+                }).catch(() => {});
+            } else {
+                window.__DS_listingsGeoPrefetchPromise = fetch("/api/listings/geo-coords", {
+                    credentials: "same-origin",
                 })
-                .catch(() => {});
+                    .then((r) => (r.ok ? r.json() : null))
+                    .then((data) => {
+                        mergeListingsGeoCoordsPayload(data);
+                    })
+                    .catch(() => {});
+            }
         } else {
             window.__DS_listingsGeoCoordsReady = true;
         }
 
         if (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length) {
+            if (Array.isArray(window.__DS_prefetchCars) && window.__DS_prefetchCars.length) {
+                applyListingsCarsPayload({ ok: true, cars: window.__DS_prefetchCars });
+            } else if (window.__DS_listingsCarsPrefetchPromise) {
+                window.__DS_listingsCarsPrefetchPromise = window.__DS_listingsCarsPrefetchPromise
+                    .then(() => {
+                        if (
+                            Array.isArray(window.__DS_prefetchCars)
+                            && window.__DS_prefetchCars.length
+                            && (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length)
+                        ) {
+                            applyListingsCarsPayload({ ok: true, cars: window.__DS_prefetchCars });
+                        }
+                    })
+                    .catch(() => {});
+            } else {
             const headers = {};
             if (window.__DS_listingsCarsEtag) {
                 headers["If-None-Match"] = window.__DS_listingsCarsEtag;
@@ -458,21 +488,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 })
                 .catch(() => {});
+            }
         }
     }
 
-    // Listings-only fade-in (hides unfiltered grid flash). Never dim non-listings pages —
-    // car detail / dashboard / auth pages load this file too and must stay visible.
     const _dsListingsPage = !!document.getElementById("ds-listings-car-rows");
-    if (_dsListingsPage) {
-        function revealListingsPage() {
-            document.body.style.transition = "opacity 0.5s ease";
-            document.body.style.opacity = 1;
-        }
-        document.body.style.opacity = 0;
-        setTimeout(revealListingsPage, 50);
-        window.addEventListener("load", revealListingsPage, { once: true });
-    }
 
     if (!_dsListingsPage || typeof CAR_ROWS === "undefined") return;
 
@@ -540,17 +560,59 @@ document.addEventListener("DOMContentLoaded", () => {
         return selected.some((s) => fams.includes(s));
     }
 
+    function carListingCondition(car) {
+        const raw = car && car.condition != null ? String(car.condition).trim() : "";
+        if (raw && raw !== "—" && raw !== "-") return raw.toLowerCase();
+        const mi = car && car.mileage != null && car.mileage !== "" ? Number(car.mileage) : null;
+        if (Number.isFinite(mi) && mi > 0) return "used";
+        if (Number.isFinite(mi) && mi === 0) return "new";
+        const yr = car && car.year != null ? Number(car.year) : null;
+        if (Number.isFinite(yr) && yr < 2024) return "pre-owned";
+        return "";
+    }
+
+    function passesInventoryConditionFilter(car, inventoryCondition) {
+        if (!inventoryCondition) return true;
+        const cond = carListingCondition(car);
+        if (inventoryCondition === "new") return cond === "new";
+        if (inventoryCondition === "pre_owned") {
+            if (!cond) return false;
+            return cond !== "new";
+        }
+        return true;
+    }
+
     // Collect unique checked values (pill + accordion share names, deduplicate)
+    let _checkedCache = null;
+    let _compatRowCache = null;
+
+    function invalidateCheckedCache() {
+        _checkedCache = null;
+    }
+
     function checked(name) {
-        const seen = new Set();
-        return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
-            .map(cb => cb.value)
-            .filter(v => seen.has(v) ? false : seen.add(v));
+        if (!_checkedCache) {
+            _checkedCache = new Map();
+            const seenByName = {};
+            document.querySelectorAll('input[type=checkbox][name]').forEach((cb) => {
+                if (!cb.checked || !cb.name) return;
+                if (!seenByName[cb.name]) seenByName[cb.name] = new Set();
+                if (seenByName[cb.name].has(cb.value)) return;
+                seenByName[cb.name].add(cb.value);
+                if (!_checkedCache.has(cb.name)) _checkedCache.set(cb.name, []);
+                _checkedCache.get(cb.name).push(cb.value);
+            });
+        }
+        return _checkedCache.get(name) || [];
     }
 
     let RADIUS_CAR_ROWS = null; // non-null when ZIP+radius are active; cascade uses this subset
 
     function compatibleRows(excluding, alsoExclude = []) {
+        const cacheKey = `${excluding}|${alsoExclude.join(",")}`;
+        if (_compatRowCache && _compatRowCache.has(cacheKey)) {
+            return _compatRowCache.get(cacheKey);
+        }
         const skip = v => v === excluding || alsoExclude.includes(v);
         const makes  = skip("make")       ? [] : checked("make");
         const models = skip("model")      ? [] : checked("model");
@@ -560,7 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const bodies = skip("body_style") ? [] : checked("body_style");
         const cyls   = skip("cylinders")  ? [] : checked("cylinders");
 
-        return (RADIUS_CAR_ROWS !== null && RADIUS_CAR_ROWS.length > 0 ? RADIUS_CAR_ROWS : CAR_ROWS).filter(r => {
+        const rows = (RADIUS_CAR_ROWS !== null && RADIUS_CAR_ROWS.length > 0 ? RADIUS_CAR_ROWS : CAR_ROWS).filter(r => {
             if (makes.length  && !valueInListCI(makes, r.make))        return false;
             if (models.length && !valueInListCI(models, r.model))      return false;
             if (trims.length  && !valueInListCI(trims, r.trim))        return false;
@@ -570,14 +632,19 @@ document.addEventListener("DOMContentLoaded", () => {
             if (cyls.length   && !cyls.includes(String(r.cyl))) return false;
             return true;
         });
+        if (_compatRowCache) _compatRowCache.set(cacheKey, rows);
+        return rows;
     }
 
     // ── Cascade engine ─────────────────────────────────────────────────
     // Both pill dropdowns and accordion bodies share the same input names
     // so checking one automatically syncs the other — we just need to
     // cascade visibility across all containers with matching option ids.
+    // Cascade runs when opening a filter panel, not on every checkbox tick.
 
     function runCascade() {
+        invalidateCheckedCache();
+        _compatRowCache = new Map();
         cascadeParam("make",        r => r.make,        ["options-make",        "acc-options-make"]);
         cascadeMakeByCountry();
         cascadeParam("model",       r => r.model,       ["options-model",       "acc-options-model"]);
@@ -594,6 +661,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cascadePackages();
         updateCylinders();
         updateAllCounts();
+        _compatRowCache = null;
     }
 
     function cascadeMakeByCountry() {
@@ -806,7 +874,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ── Wire all checkboxes → sync twin + cascade + live render ───────
+    // ── Wire all checkboxes → sync twin + live render (cascade on panel open) ───────
 
     document.querySelectorAll(".filter-option input[type=checkbox]").forEach(cb => {
         cb.addEventListener("change", () => {
@@ -814,8 +882,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(`input[type=checkbox][name="${cb.name}"]`).forEach(twin => {
                 if (twin !== cb && twin.value === cb.value) twin.checked = cb.checked;
             });
-            runCascade();
-            renderResults();
+            invalidateCheckedCache();
+            scheduleFilterRender();
         });
     });
 
@@ -896,9 +964,13 @@ document.addEventListener("DOMContentLoaded", () => {
             syncSearchFormZipInputs(el.value);
             _syncingZipInputs = false;
             if (listingsHasValidZip()) {
+                const zipNow = scalarVal("zip_code");
+                persistListingsZipLocal(zipNow);
+                patchListingCarLinkZips(zipNow);
                 scheduleDebouncedZipChips();
                 scheduleListingsZipRefresh();
             } else {
+                clearListingsZipLocal();
                 clearTimeout(_listingsZipInputTimer);
                 _listingsZipInputTimer = null;
                 _listingsGeoRenderGen += 1;
@@ -949,6 +1021,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let _listingsZipChipsTimer = null;
     let _listingsZipUrlTimer = null;
     let _listingsZipIncompleteTimer = null;
+    let _listingsUiSyncRaf = null;
     let _syncingZipInputs = false;
     let _radiusFilteredCars = null;
     let _radiusFilterKey = "";
@@ -977,10 +1050,11 @@ document.addEventListener("DOMContentLoaded", () => {
         _listingsZipIncompleteTimer = null;
         clearTimeout(_listingsZipChipsTimer);
         _listingsZipChipsTimer = null;
-        if (_filterRenderRaf) {
-            cancelAnimationFrame(_filterRenderRaf);
-            _filterRenderRaf = null;
+        if (_filterRenderFrame) {
+            cancelAnimationFrame(_filterRenderFrame);
+            _filterRenderFrame = null;
         }
+        _pendingFilterRenderOpts = null;
         if (_radiusRenderRaf) {
             cancelAnimationFrame(_radiusRenderRaf);
             _radiusRenderRaf = null;
@@ -997,19 +1071,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function scheduleDebouncedZipChips() {
-        clearTimeout(_listingsZipChipsTimer);
-        _listingsZipChipsTimer = setTimeout(() => {
-            _listingsZipChipsTimer = null;
-            syncActiveFilterChips();
-        }, 180);
+        scheduleListingsUiSync();
     }
 
     function scheduleDebouncedListingsUrlSync() {
-        clearTimeout(_listingsZipUrlTimer);
-        _listingsZipUrlTimer = setTimeout(() => {
-            _listingsZipUrlTimer = null;
+        scheduleListingsUiSync();
+    }
+
+    function scheduleListingsUiSync() {
+        if (_listingsUiSyncRaf) cancelAnimationFrame(_listingsUiSyncRaf);
+        _listingsUiSyncRaf = requestAnimationFrame(() => {
+            _listingsUiSyncRaf = null;
+            syncActiveFilterChips();
             syncUrl();
-        }, 450);
+        });
     }
 
     function scheduleListingsZipIncomplete() {
@@ -1019,10 +1094,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (listingsHasValidZip()) return;
             const gen = bumpListingsGeoRenderGen();
             _listingsGeoLastSent = null;
-            syncActiveFilterChips();
-            syncUrl();
+            scheduleListingsUiSync();
             refreshRadiusAndRenderNow(gen);
-        }, 280);
+        }, 40);
     }
 
     function scheduleListingsZipRefresh() {
@@ -1030,25 +1104,33 @@ document.addEventListener("DOMContentLoaded", () => {
         clearTimeout(_listingsZipIncompleteTimer);
         _listingsZipIncompleteTimer = null;
         const zipNow = scalarVal("zip_code");
-        if (isValidUsZip(zipNow)) {
-            resolveListingsZipOrigin(zipNow);
+        if (!isValidUsZip(zipNow)) return;
+
+        resolveListingsZipOrigin(zipNow);
+        hideListingsZipCallout();
+        if (!window.__DS_listingsGeoState.ready) {
+            markListingsGeoReady();
         }
-        _listingsZipInputTimer = setTimeout(() => {
+
+        const runRefresh = () => {
             _listingsZipInputTimer = null;
             if (!listingsHasValidZip()) return;
             const gen = bumpListingsGeoRenderGen();
-            hideListingsZipCallout();
             if (!Array.isArray(window.ALL_CARS) || !window.ALL_CARS.length) {
                 showInventoryLoading();
-            }
-            if (!window.__DS_listingsGeoState.ready) {
-                markListingsGeoReady();
             }
             refreshRadiusAndRenderNow(gen);
             if (typeof window.__DS_scheduleReloadNearbyDealers === "function") {
                 window.__DS_scheduleReloadNearbyDealers();
             }
-        }, 280);
+        };
+
+        // Instant when ZIP coords are already known; short debounce while fetching.
+        if (zipCoordsJS(zipNow)) {
+            runRefresh();
+            return;
+        }
+        _listingsZipInputTimer = setTimeout(runRefresh, 30);
     }
 
     function deferListingsIdleWork(fn, timeoutMs) {
@@ -1240,9 +1322,13 @@ document.addEventListener("DOMContentLoaded", () => {
             + `<input type="checkbox" class="result-compare-cb" data-car-id="${idStr}"${inCompare ? " checked" : ""}>`
             + `<span>Compare</span></label>`
             : "";
+        const zipForUrl = typeof scalarVal === "function" ? scalarVal("zip_code") : "";
+        const carHref = zipForUrl && /^\d{5}$/.test(String(zipForUrl).trim())
+            ? `/car/${idStr}?zip_code=${encodeURIComponent(String(zipForUrl).trim())}`
+            : `/car/${idStr}`;
         return `
             <article class="result-card${c.public_incomplete ? " result-card--incomplete" : ""}">
-                <a href="/car/${idStr}" class="result-card-link">
+                <a href="${carHref}" class="result-card-link">
                     <div class="result-image-wrap">
                         <img class="result-image" src="${imgSrcAttr}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/static/placeholder.svg';">
                         ${dealBadge ? `<div class="result-deal-badge-wrap">${dealBadge}</div>` : ""}
@@ -1293,14 +1379,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const compareIds = typeof window.__DS_compareReadIds === "function"
             ? window.__DS_compareReadIds()
             : [];
+        const enrichPage = window.__DS_MARKET_STATS && getListingsSortMode() !== "deal";
 
-        resultsGrid.innerHTML = pageCars.map((c) => renderCardHtml(c, savedSet, compareIds)).join("");
+        resultsGrid.innerHTML = pageCars.map((c) => {
+            const row = enrichPage ? enrichCarWithMarket(c) : c;
+            return renderCardHtml(row, savedSet, compareIds);
+        }).join("");
         updatePaginationUI(total, _listingsPage, perPage);
-        syncUrl();
-        syncActiveFilterChips();
+        scheduleListingsUiSync();
         wireResultSaveButtons();
         if (typeof window.__DS_compareSyncTray === "function") {
             window.__DS_compareSyncTray();
+        }
+        if (typeof window.__DS_wirePrefetchLinks === "function") {
+            window.__DS_wirePrefetchLinks(resultsGrid);
+        }
+        if (typeof window.__DS_prefetchVisibleCarLinks === "function") {
+            window.__DS_prefetchVisibleCarLinks(resultsGrid, 8);
         }
         if (opts && opts.scroll) scrollListingsResultsIntoView();
     }
@@ -1316,8 +1411,32 @@ document.addEventListener("DOMContentLoaded", () => {
         return haversineJS(origin[0], origin[1], coords[0], coords[1]);
     }
 
+    function listingCallForPrice(c) {
+        const p = Number(c.price);
+        return !Number.isFinite(p) || p <= 0;
+    }
+
+    function listingPhotoCount(c) {
+        const pc = Number(c.photo_count);
+        if (Number.isFinite(pc) && pc >= 0) return pc;
+        const gallery = Array.isArray(c.gallery) ? c.gallery : [];
+        if (gallery.length) return gallery.length;
+        return c.image_url ? 1 : 0;
+    }
+
+    function listingDepriorityCompare(a, b) {
+        const aCall = listingCallForPrice(a) ? 1 : 0;
+        const bCall = listingCallForPrice(b) ? 1 : 0;
+        if (aCall !== bCall) return aCall - bCall;
+        const aSingle = listingPhotoCount(a) <= 1 ? 1 : 0;
+        const bSingle = listingPhotoCount(b) <= 1 ? 1 : 0;
+        return aSingle - bSingle;
+    }
+
     function sortListingsCars(cars, mode, preserveOrder) {
-        if (preserveOrder && mode === "relevance") return cars;
+        if (preserveOrder && mode === "relevance") {
+            return cars.slice().sort((a, b) => listingDepriorityCompare(a, b));
+        }
         const arr = cars.slice();
         const priceKey = (c) => {
             const p = Number(c.price);
@@ -1340,24 +1459,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const d = carDistanceMiles(c);
             return d == null ? Infinity : d;
         };
+        const withDepriority = (cmp) => (a, b) => listingDepriorityCompare(a, b) || cmp(a, b);
 
         if (mode === "price_asc") {
-            arr.sort((a, b) => priceKey(a) - priceKey(b) || distKey(a) - distKey(b));
+            arr.sort(withDepriority((a, b) => priceKey(a) - priceKey(b) || distKey(a) - distKey(b)));
         } else if (mode === "price_desc") {
-            arr.sort((a, b) => priceKey(b) - priceKey(a) || distKey(a) - distKey(b));
+            arr.sort(withDepriority((a, b) => priceKey(b) - priceKey(a) || distKey(a) - distKey(b)));
         } else if (mode === "mileage_asc") {
-            arr.sort((a, b) => mileageKey(a) - mileageKey(b) || priceKey(a) - priceKey(b));
+            arr.sort(withDepriority((a, b) => mileageKey(a) - mileageKey(b) || priceKey(a) - priceKey(b)));
         } else if (mode === "year_desc") {
-            arr.sort((a, b) => yearKey(b) - yearKey(a) || priceKey(a) - priceKey(b));
+            arr.sort(withDepriority((a, b) => yearKey(b) - yearKey(a) || priceKey(a) - priceKey(b)));
         } else if (mode === "deal") {
-            arr.sort((a, b) => dealKey(a) - dealKey(b) || priceKey(a) - priceKey(b));
+            arr.sort(withDepriority((a, b) => dealKey(a) - dealKey(b) || priceKey(a) - priceKey(b)));
         } else if (!preserveOrder) {
-            arr.sort((a, b) => {
-                const aHasImg = !!(a.image_url || (Array.isArray(a.gallery) && a.gallery.length));
-                const bHasImg = !!(b.image_url || (Array.isArray(b.gallery) && b.gallery.length));
-                if (aHasImg !== bHasImg) return aHasImg ? -1 : 1;
-                return priceKey(a) - priceKey(b);
-            });
+            arr.sort(withDepriority((a, b) => priceKey(a) - priceKey(b)));
         }
         return arr;
     }
@@ -1496,8 +1611,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     : "0 vehicles";
             }
             if (zeroHintEl) zeroHintEl.hidden = geoSearchActive || !_lastFilterAction;
-            syncActiveFilterChips();
-            syncUrl();
+            scheduleListingsUiSync();
             return;
         }
 
@@ -1506,13 +1620,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cars = enrichCarsWithMarket(cars);
         }
 
-        if (preserveOrder && sortMode === "relevance") {
-            const withImg = cars.filter(c => !!(c.image_url || (Array.isArray(c.gallery) && c.gallery.length)));
-            const noImg = cars.filter(c => !(c.image_url || (Array.isArray(c.gallery) && c.gallery.length)));
-            cars = [...withImg, ...noImg];
-        } else {
-            cars = sortListingsCars(cars, sortMode, preserveOrder);
-        }
+        cars = sortListingsCars(cars, sortMode, preserveOrder);
 
         if (emptyState) emptyState.style.display = "none";
         if (zeroHintEl) zeroHintEl.hidden = true;
@@ -1523,20 +1631,7 @@ document.addEventListener("DOMContentLoaded", () => {
             renderListingsPage();
         };
 
-        const deferMarketEnrich = cars.length > 400
-            && window.__DS_MARKET_STATS
-            && !needsMarketForSort
-            && !(opts && opts.skipMarketEnrich);
-
-        if (deferMarketEnrich) {
-            paintGrid(cars);
-            deferListingsIdleWork(() => {
-                paintGrid(enrichCarsWithMarket(cars));
-            }, 400);
-            return;
-        }
-
-        paintGrid(enrichCarsWithMarket(cars));
+        paintGrid(cars);
     }
 
     let _listingsGeoPersistTimer = null;
@@ -1619,23 +1714,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /** Premium dealership filter: non-empty only when a strict subset is selected (iOS parity). */
-    function selectedDealerRegistryIds() {
+    function buildDealerFilterIdSet() {
         const radiusMi = parseFloat(scalarVal("radius")) || null;
-        if (!listingsHasValidZip() || !radiusMi || radiusMi > 50) return [];
+        if (!listingsHasValidZip() || !radiusMi || radiusMi > 50) return null;
         const { total, checkedCount, checkedBoxes } = dealerRegistryCheckboxState();
-        if (!total || checkedCount === 0 || checkedCount === total) return [];
-        return checkedBoxes
-            .map((cb) => parseInt(cb.value, 10))
-            .filter((n) => Number.isFinite(n) && n > 0);
+        if (!total || checkedCount === 0 || checkedCount === total) return null;
+        const set = new Set();
+        for (const cb of checkedBoxes) {
+            const n = parseInt(cb.value, 10);
+            if (Number.isFinite(n) && n > 0) set.add(n);
+        }
+        return set.size ? set : null;
     }
 
-    function passesDealerFilter(c) {
-        const ids = selectedDealerRegistryIds();
-        if (!ids.length) return true;
-        const reg = typeof carDealershipRegistryId === "function"
-            ? carDealershipRegistryId(c)
-            : parseInt(c.dealership_registry_id, 10);
-        return reg > 0 && ids.includes(reg);
+    function selectedDealerRegistryIds() {
+        const set = buildDealerFilterIdSet();
+        return set ? [...set] : [];
+    }
+
+    function carRegistryIdCached(car) {
+        if (!car || typeof car !== "object") return 0;
+        if (car._dsRegId !== undefined) return car._dsRegId;
+        const reg = carDealershipRegistryId(car);
+        car._dsRegId = reg;
+        return reg;
+    }
+
+    function carMatchesDealerFilter(c, dealerFilterSet) {
+        if (!dealerFilterSet) return true;
+        const reg = carRegistryIdCached(c);
+        return reg > 0 && dealerFilterSet.has(reg);
+    }
+
+    function passesDealerFilter(c, dealerFilterSet) {
+        const set = dealerFilterSet !== undefined ? dealerFilterSet : buildDealerFilterIdSet();
+        return carMatchesDealerFilter(c, set);
     }
 
     function syncUrl() {
@@ -1659,7 +1772,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const radiusForUrl = scalarVal("radius");
             if (radiusForUrl) params.set("radius", radiusForUrl);
         }
-        for (const name of ["max_price", "max_mileage"]) {
+        for (const name of ["max_price", "max_mileage", "inventory_condition"]) {
             const val = scalarVal(name);
             if (val) params.set(name, val);
         }
@@ -1706,38 +1819,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     window.__DS_ensureListingsGeoCoordsLoaded = ensureListingsGeoCoordsLoaded;
 
-    let _filterRenderRaf = null;
-    function renderResultsNow(opts) {
-        if (!resultsGrid) return;
-
-        const smartIn = document.getElementById("smart-search-input");
-        if (smartIn && (smartIn.value || "").trim()) return;
-
-        const renderGen = opts && opts.renderGen != null ? opts.renderGen : _listingsGeoRenderGen;
-        if (renderGen != null && listingsZipRenderStale(renderGen)) return;
-
-        resetListingsPage();
-
-        const makes       = checked("make");
-        const models      = checked("model");
-        const zipCode     = scalarVal("zip_code");
-        const radiusMi    = parseFloat(scalarVal("radius"))      || null;
-        const radiusPrefiltered = !!(opts && opts.radiusPrefiltered);
-
-        const trims       = checked("trim");
-        const fuels       = checked("fuel_type");
-        const cyls        = checked("cylinders");
-        const trans       = checked("transmission");
-        const drives      = checked("drivetrain");
-        const bodies      = checked("body_style");
-        const extColors   = checked("exterior_color");
-        const intColors   = checked("interior_color");
-        const countries   = checked("country");
+    function collectFacetFilterState() {
+        const makes = checked("make");
+        const models = checked("model");
+        const trims = checked("trim");
+        const fuels = checked("fuel_type");
+        const cyls = checked("cylinders");
+        const trans = checked("transmission");
+        const drives = checked("drivetrain");
+        const bodies = checked("body_style");
+        const extColors = checked("exterior_color");
+        const intColors = checked("interior_color");
+        const countries = checked("country");
         const maxPriceRaw = scalarVal("max_price");
-        const maxPrice    = maxPriceRaw !== "" ? parseFloat(maxPriceRaw) : null;
+        const maxPrice = maxPriceRaw !== "" ? parseFloat(maxPriceRaw) : null;
         const maxMileageRaw = scalarVal("max_mileage");
-        const maxMileage  = maxMileageRaw !== "" ? parseInt(maxMileageRaw, 10) : null;
-        const pkgs        = checked("package");
+        const maxMileage = maxMileageRaw !== "" ? parseInt(maxMileageRaw, 10) : null;
+        const inventoryCondition = scalarVal("inventory_condition");
+        const pkgs = checked("package");
 
         let makesFilter = makes.slice();
         if (countries.length && typeof COUNTRY_TO_MAKES === "object") {
@@ -1746,6 +1845,60 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? makesFilter.filter(m => valueInListCI(fromCountries, m))
                 : fromCountries;
         }
+
+        return {
+            makesFilter,
+            models,
+            trims,
+            fuels,
+            cyls,
+            trans,
+            drives,
+            bodies,
+            extColors,
+            intColors,
+            maxPrice,
+            maxMileage,
+            inventoryCondition,
+            pkgs,
+        };
+    }
+
+    function carMatchesFacetFilters(c, state, dealerFilterSet) {
+        if (state.makesFilter.length && !valueInListCI(state.makesFilter, c.make)) return false;
+        if (state.models.length && !valueInListCI(state.models, c.model)) return false;
+        if (state.trims.length && !valueInListCI(state.trims, c.trim)) return false;
+        if (state.fuels.length && !valueInListCI(state.fuels, c.fuel_type)) return false;
+        if (state.cyls.length && !state.cyls.includes(String(c.cylinders))) return false;
+        if (state.trans.length && !valueInListCI(state.trans, c.transmission)) return false;
+        if (state.drives.length && !valueInListCI(state.drives, c.drivetrain)) return false;
+        if (state.bodies.length && !valueInListCI(state.bodies, c.body_style)) return false;
+        if (state.extColors.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", state.extColors)) return false;
+        if (state.intColors.length && !carMatchesPaintFamilyBuckets(c, "interior_color", state.intColors)) return false;
+        if (state.pkgs.length) {
+            const carPkgs = (c.package_names || []).map(n => n.toLowerCase());
+            if (!state.pkgs.some(p => carPkgs.includes(p.toLowerCase()))) return false;
+        }
+        if (state.maxPrice != null && Number.isFinite(state.maxPrice) && c.price > state.maxPrice) return false;
+        if (state.maxMileage != null && Number.isFinite(state.maxMileage) && c.mileage > state.maxMileage) return false;
+        if (!passesInventoryConditionFilter(c, state.inventoryCondition)) return false;
+        if (!carMatchesDealerFilter(c, dealerFilterSet)) return false;
+        return true;
+    }
+
+    function renderResultsNowCore(opts) {
+        if (!resultsGrid) return;
+
+        const renderGen = opts && opts.renderGen != null ? opts.renderGen : _listingsGeoRenderGen;
+        if (renderGen != null && listingsZipRenderStale(renderGen)) return;
+
+        resetListingsPage();
+        invalidateCheckedCache();
+
+        const facetState = collectFacetFilterState();
+        const dealerFilterSet = buildDealerFilterIdSet();
+        const zipCode = scalarVal("zip_code");
+        const radiusMi = parseFloat(scalarVal("radius")) || null;
 
         let inventorySource = (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length)
             ? window.ALL_CARS
@@ -1763,26 +1916,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inventorySource = _radiusFilteredCars;
         }
 
-        let cars = inventorySource.filter(c => {
-            if (makesFilter.length && !valueInListCI(makesFilter, c.make))     return false;
-            if (models.length     && !valueInListCI(models, c.model))          return false;
-            if (trims.length      && !valueInListCI(trims, c.trim))            return false;
-            if (fuels.length      && !valueInListCI(fuels, c.fuel_type))       return false;
-            if (cyls.length       && !cyls.includes(String(c.cylinders)))      return false;
-            if (trans.length      && !valueInListCI(trans, c.transmission))    return false;
-            if (drives.length     && !valueInListCI(drives, c.drivetrain))     return false;
-            if (bodies.length     && !valueInListCI(bodies, c.body_style)) return false;
-            if (extColors.length  && !carMatchesPaintFamilyBuckets(c, "exterior_color", extColors)) return false;
-            if (intColors.length  && !carMatchesPaintFamilyBuckets(c, "interior_color", intColors)) return false;
-            if (pkgs.length) {
-                const carPkgs = (c.package_names || []).map(n => n.toLowerCase());
-                if (!pkgs.some(p => carPkgs.includes(p.toLowerCase()))) return false;
-            }
-            if (maxPrice != null && Number.isFinite(maxPrice) && c.price > maxPrice) return false;
-            if (maxMileage != null && Number.isFinite(maxMileage) && c.mileage > maxMileage) return false;
-            if (!passesDealerFilter(c)) return false;
-            return true;
-        });
+        let cars = inventorySource.filter(c => carMatchesFacetFilters(c, facetState, dealerFilterSet));
 
         if (hasRadiusCache && listingsHasValidZip() && radiusMi) {
             renderCarGrid(cars, { resetPage: true });
@@ -1803,26 +1937,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
                 const radiusCars = applyListingsRadiusFilter(origin, radiusMi, zipCode);
-                let filtered = radiusCars.filter((c) => passesDealerFilter(c));
-                filtered = filtered.filter((c) => {
-                    if (makesFilter.length && !valueInListCI(makesFilter, c.make)) return false;
-                    if (models.length && !valueInListCI(models, c.model)) return false;
-                    if (trims.length && !valueInListCI(trims, c.trim)) return false;
-                    if (fuels.length && !valueInListCI(fuels, c.fuel_type)) return false;
-                    if (cyls.length && !cyls.includes(String(c.cylinders))) return false;
-                    if (trans.length && !valueInListCI(trans, c.transmission)) return false;
-                    if (drives.length && !valueInListCI(drives, c.drivetrain)) return false;
-                    if (bodies.length && !valueInListCI(bodies, c.body_style)) return false;
-                    if (extColors.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", extColors)) return false;
-                    if (intColors.length && !carMatchesPaintFamilyBuckets(c, "interior_color", intColors)) return false;
-                    if (pkgs.length) {
-                        const carPkgs = (c.package_names || []).map((n) => n.toLowerCase());
-                        if (!pkgs.some((p) => carPkgs.includes(p.toLowerCase()))) return false;
-                    }
-                    if (maxPrice != null && Number.isFinite(maxPrice) && c.price > maxPrice) return false;
-                    if (maxMileage != null && Number.isFinite(maxMileage) && c.mileage > maxMileage) return false;
-                    return true;
-                });
+                const filtered = radiusCars.filter(c => carMatchesFacetFilters(c, facetState, dealerFilterSet));
                 renderCarGrid(filtered);
             };
 
@@ -1851,26 +1966,206 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCarGrid(cars, { resetPage: true });
     }
 
+    let _filterRenderFrame = null;
+    let _pendingFilterRenderOpts = null;
+
+    function scheduleFilterRender(opts) {
+        _pendingFilterRenderOpts = opts;
+        if (_filterRenderFrame) return;
+        _filterRenderFrame = requestAnimationFrame(() => {
+            _filterRenderFrame = null;
+            const pending = _pendingFilterRenderOpts;
+            _pendingFilterRenderOpts = null;
+            updateAllCounts();
+            renderResultsNowCore(pending);
+        });
+    }
+
+    function renderResultsNow(opts) {
+        if (_filterRenderFrame) {
+            cancelAnimationFrame(_filterRenderFrame);
+            _filterRenderFrame = null;
+        }
+        _pendingFilterRenderOpts = null;
+        updateAllCounts();
+        renderResultsNowCore(opts);
+    }
+
     window.__DS_refreshListingsMarketBadges = function refreshListingsMarketBadges() {
         if (!_listingsAllCars.length) return;
-        _listingsAllCars = enrichCarsWithMarket(_listingsAllCars);
-        window.__DS_listingsAllCars = _listingsAllCars;
         renderListingsPage();
     };
 
     function renderResults() {
-        if (_filterRenderRaf) cancelAnimationFrame(_filterRenderRaf);
-        _filterRenderRaf = requestAnimationFrame(() => {
-            _filterRenderRaf = null;
-            renderResultsNow();
-        });
+        scheduleFilterRender();
     }
 
     window.__DS_renderCarGrid = renderCarGrid;
     window.__DS_runFilterRender = renderResults;
+    window.__DS_runFilterRenderInstant = renderResultsNow;
 
-    window.__DS_applySmartFilters = function(filters) {
+    function carSmartEquipmentHaystack(c) {
+        if (!c || typeof c !== "object") return "";
+        return [
+            ...(c.package_names || []),
+            c.title,
+            c.trim,
+            c.engine_description,
+            c.make,
+            c.model,
+            c.fuel_type,
+            c.drivetrain,
+            c.exterior_color,
+            c.interior_color,
+            c.body_style,
+        ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+    }
+
+    function valueInListCISmart(list, val) {
+        if (!list || !list.length || val == null || val === "") return false;
+        const v = String(val).trim().toLowerCase();
+        return list.some((x) => String(x).trim().toLowerCase() === v);
+    }
+
+    function carMatchesSmartFilters(c, filters) {
+        if (!filters || typeof filters !== "object") return true;
+
+        const vehicleOr = filters.vehicle_or;
+        if (Array.isArray(vehicleOr) && vehicleOr.length) {
+            const branchHit = vehicleOr.some((vf) => {
+                if (!vf || typeof vf !== "object") return false;
+                if (vf.make && !valueInListCISmart([vf.make], c.make)) return false;
+                if (vf.model) {
+                    const md = String(c.model || "").toLowerCase();
+                    const want = String(vf.model).toLowerCase();
+                    if (md !== want && !md.startsWith(want + " ") && !md.startsWith(want + "-")) {
+                        return false;
+                    }
+                }
+                if (vf.trim_contains) {
+                    const blob = `${c.trim || ""} ${c.title || ""}`.toLowerCase();
+                    if (!blob.includes(String(vf.trim_contains).toLowerCase())) return false;
+                }
+                return true;
+            });
+            if (!branchHit) return false;
+        } else {
+            const makes = filters.make;
+            const makeList = Array.isArray(makes) ? makes : makes ? [makes] : [];
+            if (makeList.length && !valueInListCISmart(makeList, c.make)) return false;
+            const models = filters.model;
+            const modelList = Array.isArray(models) ? models : models ? [models] : [];
+            if (modelList.length) {
+                const md = String(c.model || "").toLowerCase();
+                const ok = modelList.some((m) => {
+                    const want = String(m).toLowerCase();
+                    return md === want || md.startsWith(want + " ") || md.startsWith(want + "-");
+                });
+                if (!ok) return false;
+            }
+        }
+
+        const trimNeedles = filters.trim_contains;
+        const trimList = Array.isArray(trimNeedles) ? trimNeedles : trimNeedles ? [trimNeedles] : [];
+        if (trimList.length) {
+            const blob = `${c.trim || ""} ${c.title || ""}`.toLowerCase();
+            if (!trimList.some((t) => blob.includes(String(t).toLowerCase()))) return false;
+        }
+
+        const drives = filters.drivetrain;
+        const driveList = Array.isArray(drives) ? drives : drives ? [drives] : [];
+        if (driveList.length && !valueInListCISmart(driveList, c.drivetrain)) return false;
+
+        if (filters.fuel_type && !valueInListCISmart([filters.fuel_type], c.fuel_type)) return false;
+
+        if (filters.cylinders != null && String(c.cylinders) !== String(filters.cylinders)) return false;
+
+        const bodies = filters.body_style;
+        const bodyList = Array.isArray(bodies) ? bodies : bodies ? [bodies] : [];
+        if (bodyList.length && !valueInListCISmart(bodyList, c.body_style)) return false;
+
+        const ext = filters.exterior_color;
+        const extList = Array.isArray(ext) ? ext : ext ? [ext] : [];
+        if (extList.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", extList)) return false;
+
+        const intc = filters.interior_color;
+        const intList = Array.isArray(intc) ? intc : intc ? [intc] : [];
+        if (intList.length && !carMatchesPaintFamilyBuckets(c, "interior_color", intList)) return false;
+
+        if (filters.max_price != null) {
+            const cap = Number(filters.max_price);
+            if (Number.isFinite(cap) && Number(c.price) > cap) return false;
+        }
+        if (filters.max_mileage != null) {
+            const cap = Number(filters.max_mileage);
+            if (Number.isFinite(cap) && Number(c.mileage) > cap) return false;
+        }
+        if (filters.min_year != null) {
+            const y = Number(c.year);
+            if (!Number.isFinite(y) || y < Number(filters.min_year)) return false;
+        }
+        if (filters.max_year != null) {
+            const y = Number(c.year);
+            if (!Number.isFinite(y) || y > Number(filters.max_year)) return false;
+        }
+
+        const hay = carSmartEquipmentHaystack(c);
+        const pkgAll = filters.packages_json_contains_all;
+        if (Array.isArray(pkgAll) && pkgAll.length) {
+            if (!pkgAll.every((needle) => hay.includes(String(needle).toLowerCase()))) return false;
+        } else {
+            const pkgOne = filters.packages_json_contains;
+            const pkgList = filters.packages_json_contains_list;
+            const needles = [];
+            if (pkgOne) needles.push(String(pkgOne));
+            if (Array.isArray(pkgList)) needles.push(...pkgList.map(String));
+            if (needles.length) {
+                const lows = needles.map((n) => n.toLowerCase());
+                if (!lows.some((needle) => hay.includes(needle))) return false;
+            }
+        }
+
+        return true;
+    }
+
+    window.__DS_getListingsInventorySource = function getListingsInventorySource() {
+        const radiusCacheKey = listingsRadiusFilterKey();
+        if (
+            radiusCacheKey
+            && _radiusFilterKey === radiusCacheKey
+            && Array.isArray(_radiusFilteredCars)
+        ) {
+            return _radiusFilteredCars;
+        }
+        if (Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) return window.ALL_CARS;
+        if (Array.isArray(window.INITIAL_GRID_CARS) && window.INITIAL_GRID_CARS.length) {
+            return window.INITIAL_GRID_CARS;
+        }
+        if (Array.isArray(window.BOOTSTRAP_GRID_CARS) && window.BOOTSTRAP_GRID_CARS.length) {
+            return window.BOOTSTRAP_GRID_CARS;
+        }
+        return [];
+    };
+
+    window.__DS_renderFromSmartFilters = function renderFromSmartFilters(filters, opts) {
+        const source = window.__DS_getListingsInventorySource();
+        const dealerFilterSet = buildDealerFilterIdSet();
+        const filtered = source.filter(
+            (c) => carMatchesSmartFilters(c, filters) && passesDealerFilter(c, dealerFilterSet)
+        );
+        renderCarGrid(filtered, {
+            preserveOrder: false,
+            resetPage: true,
+            emptyMessage: (opts && opts.emptyMessage) || null,
+        });
+    };
+
+    window.__DS_applySmartFilters = function(filters, opts) {
         if (!filters) return;
+        const skipCascade = !!(opts && opts.skipCascade);
         // Uncheck all filter checkboxes without triggering change events
         document.querySelectorAll(".filter-option input[type=checkbox]").forEach(cb => {
             cb.checked = false;
@@ -1930,12 +2225,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (filters.max_price != null) setScalarSelect("max_price", filters.max_price);
         if (filters.max_mileage != null) setScalarSelect("max_mileage", filters.max_mileage);
+        if (filters.inventory_condition) setScalarSelect("inventory_condition", filters.inventory_condition);
         if (filters.packages_json_contains) {
             checkFilter("package", filters.packages_json_contains);
+        }
+        const pkgAll = filters.packages_json_contains_all;
+        if (Array.isArray(pkgAll)) {
+            pkgAll.forEach((p) => checkFilter("package", p));
         }
         const pkgList = filters.packages_json_contains_list;
         if (Array.isArray(pkgList)) {
             pkgList.forEach((p) => checkFilter("package", p));
+        }
+        if (skipCascade) {
+            updateAllCounts();
+            return;
         }
         runCascade();
         updateAllCounts();
@@ -2033,7 +2337,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (typeof window.__DS_scheduleReloadNearbyDealers === "function") {
                     window.__DS_scheduleReloadNearbyDealers();
                 }
-            }, 1200);
+            }, 250);
         };
 
         const runWithOrigin = () => {
@@ -2071,6 +2375,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function refreshRadiusAndRender() {
+        const cacheKey = listingsRadiusFilterKey();
+        if (cacheKey && _radiusFilterKey === cacheKey && Array.isArray(_radiusFilteredCars)) {
+            refreshRadiusAndRenderNow();
+            return;
+        }
         if (_radiusRenderRaf) cancelAnimationFrame(_radiusRenderRaf);
         _radiusRenderRaf = requestAnimationFrame(() => {
             _radiusRenderRaf = null;
@@ -2112,6 +2421,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!Array.isArray(data.cars)) return false;
         window.ALL_CARS = data.cars;
         invalidateCarGeoIndex();
+        for (const car of data.cars) {
+            if (car && typeof car === "object") delete car._dsRegId;
+        }
         if (typeof window.__DS_buildCarRowsFromCars === "function") {
             window.CAR_ROWS = window.__DS_buildCarRowsFromCars(data.cars);
         }
@@ -2298,7 +2610,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         searchForm.addEventListener("change", (e) => {
             recordFilterAction(e.target);
-            syncActiveFilterChips();
         });
     }
 
@@ -2307,7 +2618,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cylinders: "Cylinders", transmission: "Trans.", drivetrain: "Drive",
         body_style: "Body", exterior_color: "Exterior", interior_color: "Interior",
         country: "Country", package: "Package",
-        max_price: "Price", max_mileage: "Mileage",
+        max_price: "Price", max_mileage: "Mileage", inventory_condition: "Condition",
         zip_code: "ZIP", radius: "Radius", q: "Search",
     };
 
@@ -2319,6 +2630,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (name === "max_mileage" && val) {
             const n = Number(val);
             return Number.isFinite(n) ? `Under ${n.toLocaleString()} mi` : val;
+        }
+        if (name === "inventory_condition" && val) {
+            if (val === "new") return "New";
+            if (val === "pre_owned") return "Pre-owned";
         }
         if (name === "radius" && val) return `${val} mi radius`;
         if (name === "zip_code" && val) return val;
@@ -2362,7 +2677,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 chips.push({ param: "radius", value: radiusChip, label: scalarChipLabel("radius", radiusChip) });
             }
         }
-        for (const name of ["max_price", "max_mileage"]) {
+        for (const name of ["max_price", "max_mileage", "inventory_condition"]) {
             const val = scalarVal(name);
             if (!val) continue;
             chips.push({ param: name, value: val, label: scalarChipLabel(name, val) });
@@ -2429,9 +2744,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
             if (typeof window.__DS_reloadNearbyDealers === "function") {
-                window.__DS_reloadNearbyDealers();
+                window.__DS_syncActiveDealerIdsFromDom();
             }
-        } else if (["max_price", "max_mileage", "radius"].includes(param)) {
+        } else if (["max_price", "max_mileage", "inventory_condition", "radius"].includes(param)) {
             document.querySelectorAll(`#search-form [name="${param}"]`).forEach((el) => { el.value = ""; });
         } else {
             document.querySelectorAll(`input[name="${param}"]`).forEach((cb) => {
@@ -2439,7 +2754,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
         resetListingsPage();
-        runCascade();
         updateAllCounts();
         renderResults();
     }
@@ -2523,8 +2837,44 @@ document.addEventListener("DOMContentLoaded", () => {
     let _listingsGeoReadyCallbacks = [];
     window.__DS_listingsGeoState = { ready: false, blocked: false };
 
+    const LISTINGS_ZIP_STORAGE_KEY = "ds_listings_geo_zip";
+
     function isValidUsZip(zip) {
         return /^\d{5}$/.test(String(zip || "").trim());
+    }
+
+    function persistListingsZipLocal(zip) {
+        const z = String(zip || "").trim();
+        if (!isValidUsZip(z)) return;
+        try {
+            localStorage.setItem(LISTINGS_ZIP_STORAGE_KEY, z);
+        } catch (_) {}
+    }
+
+    function readListingsZipLocal() {
+        try {
+            const z = localStorage.getItem(LISTINGS_ZIP_STORAGE_KEY);
+            return isValidUsZip(z) ? String(z).trim() : "";
+        } catch (_) {
+            return "";
+        }
+    }
+
+    function clearListingsZipLocal() {
+        try {
+            localStorage.removeItem(LISTINGS_ZIP_STORAGE_KEY);
+        } catch (_) {}
+    }
+
+    function patchListingCarLinkZips(zip) {
+        const z = String(zip || "").trim();
+        if (!isValidUsZip(z)) return;
+        document.querySelectorAll(".result-card-link").forEach((a) => {
+            const href = a.getAttribute("href") || "";
+            const m = href.match(/^\/car\/(\d+)/);
+            if (!m) return;
+            a.setAttribute("href", `/car/${m[1]}?zip_code=${encodeURIComponent(z)}`);
+        });
     }
 
     function setListingsZipCode(zip) {
@@ -2533,6 +2883,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('[name="zip_code"]').forEach((el) => {
             el.value = z;
         });
+        persistListingsZipLocal(z);
+        patchListingCarLinkZips(z);
         syncUrl();
     }
 
@@ -2605,6 +2957,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function resolveListingsGeo() {
         if (isValidUsZip(scalarVal("zip_code"))) {
+            persistListingsZipLocal(scalarVal("zip_code"));
             markListingsGeoReady();
             return;
         }
@@ -2666,6 +3019,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!isOpen) {
                 dropdown.classList.add("open");
                 trigger.classList.add("open");
+                runCascade();
             }
         });
     });
@@ -2700,6 +3054,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const isOpen = body.classList.contains("open");
             body.classList.toggle("open", !isOpen);
             trigger.classList.toggle("open", !isOpen);
+            if (!isOpen) runCascade();
         });
     });
 
@@ -2735,5 +3090,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    function syncListingsCompareFromStorage() {
+        if (typeof window.__DS_compareSyncTray === "function") {
+            window.__DS_compareSyncTray();
+        }
+    }
+
+    window.addEventListener("pageshow", syncListingsCompareFromStorage);
+    window.addEventListener("ds-compare-changed", syncListingsCompareFromStorage);
 
 });

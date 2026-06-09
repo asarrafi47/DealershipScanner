@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|alfaromeo|4c",
+  "year": 2015,
+  "make": "alfa romeo",
+  "model": "4c",
+  "ladder_id": "brochure_llm_2015__alfaromeo__4c",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4C Spider",
+    "4C Coupe"
+  ],
+  "adds_by_trim": {
+    "4C Spider": [
+      "Soft top convertible roof, easily removed and stowed in trunk case",
+      "Available carbon fiber hard top for additional convertible versatility",
+      "Carbon fiber windshield surround and carbon fiber halo",
+      "Center-mounted exhaust with carbon fiber surround",
+      "Seven exclusive exterior colors including exclusive new Yellow",
+      "Six exclusive wheel design choices in 18-inch front/19-inch rear or 17-inch front/18-inch rear",
+      "Four brake caliper color options: Gray, Red, Yellow, or Black",
+      "Carbon fiber mirror covers for open-air design aesthetic"
+    ],
+    "4C Coupe": [
+      "Race-ready seats available in Black fabric with Red stitching or leather trim options",
+      "Wing mirror covers in carbon fiber, body-color, or Satin Titanium finishes",
+      "Wheel options: 17-inch/18-inch alloy or 18-inch/19-inch five-hole alloy in standard or Matte Black finish",
+      "Rear spoiler available in matching dark body-color or carbon fiber finishes",
+      "Brake calipers available in Gray, Red, Yellow, or Black colors",
+      "Interior trim options including Black leather, Red leather, and Microfiber with Red stitching"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "ladder_id": "bmw_5_series",
+  "make": "BMW",
+  "models": [
+    "5 Series",
+    "530i",
+    "540i",
+    "530e",
+    "M550i",
+    "550i",
+    "528i",
+    "535i",
+    "535d",
+    "520d",
+    "525d"
+  ],
+  "year_min": 2010,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "M550i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "523 hp twin-turbo V8 with xDrive AWD; 3.0L I6 Turbo"
+      }
+    ],
+    "550e xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "Plug-in hybrid inline-six with xDrive AWD; 489 hp combined system output"
+      }
+    ],
+    "540i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "375 hp turbocharged inline-six with xDrive AWD; 3.0L I6 Turbo"
+      }
+    ],
+    "540i": [
+      {
+        "label": "Engine Options",
+        "value": "375 hp turbocharged inline-six with rear-wheel drive"
+      }
+    ],
+    "530i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "248 hp turbocharged 2.0L with xDrive AWD; 3.0L I6 Turbo"
+      }
+    ],
+    "530i": [
+      {
+        "label": "Engine Options",
+        "value": "248 hp turbocharged 2.0L with rear-wheel drive"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Standard iDrive with navigation"
+      }
+    ],
+    "530e xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "Plug-in hybrid 2.0L with xDrive AWD; Combined turbo and electric output"
+      }
+    ],
+    "530e": [
+      {
+        "label": "Engine Options",
+        "value": "Plug-in hybrid 2.0L with rear-wheel drive; Efficient hybrid powertrain"
+      }
+    ]
+  }
+}

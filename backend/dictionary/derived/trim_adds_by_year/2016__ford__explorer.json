@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2016|ford|explorer",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_2016__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "SE",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 3.5L Ti-VCT V6 engine",
+      "Adds 1st-row bucket seats with 8-way power driver's seat with manual lumbar",
+      "Adds cloth seating surfaces",
+      "Adds 18\" painted aluminum wheels with P245/60R18 all-season tires",
+      "Adds AM/FM stereo with single-CD player and 6 speakers",
+      "Adds Ford SYNC voice-activated system with 4.2\" color LCD screens",
+      "Adds manual day/night rearview mirror",
+      "Adds power windows with front one-touch-up/-down",
+      "Adds SecuriCode invisible keypad",
+      "Adds Remote Keyless Entry System with 2 keyhead transmitter remotes"
+    ],
+    "SE": [
+      "Adds 230-amp alternator",
+      "Adds heavy-duty front and rear brake calipers",
+      "Adds Intelligent Access with push-button start",
+      "Adds perimeter alarm",
+      "Adds leather-wrapped steering wheel and shift knob",
+      "Adds SiriusXM Satellite Radio with 6-month trial subscription",
+      "Adds cargo security cover",
+      "Adds heated steering wheel"
+    ],
+    "XLT": [
+      "Adds 10-way power driver's seat with power lumbar support",
+      "Adds 6-way power front-passenger seat with manual lumbar",
+      "Adds Galvano instrument panel and door-trim appliqués",
+      "Adds 1st- and 2nd-row carpeted floor mats",
+      "Adds 1st- and 2nd-row door-sill scuff plates with embossed Explorer logo",
+      "Adds black metallic center stack appliqué",
+      "Adds Dark Galvano door-trim appliqués",
+      "Adds Dark Foundry Metallic-painted grille with chrome bars"
+    ],
+    "Limited": [
+      "Adds 2nd-row center console for bucket seat configuration",
+      "Adds 10-way power front-passenger seat",
+      "Adds dual-zone automatic temperature control",
+      "Adds MyFord Touch voice-activated connectivity system with SD card reader",
+      "Adds Dual Headrest DVD by INVISION display",
+      "Adds Remote Start System capability"
+    ]
+  }
+}

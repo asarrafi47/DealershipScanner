@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2013|bmw|7series",
+  "year": 2013,
+  "make": "BMW",
+  "model": "7 Series",
+  "ladder_id": "bmw_7_series",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      " | ",
+      " /  |  / ",
+      " | "
+    ],
+    "Limited": [
+      " / "
+    ],
+    "M Sport": [
+      " | ",
+      " /  |  / ",
+      " | "
+    ]
+  }
+}

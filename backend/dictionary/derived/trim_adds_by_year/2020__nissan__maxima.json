@@ -1,0 +1,80 @@
+{
+  "catalog_key": "2020|nissan|maxima",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2020__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM RESERVE",
+    "PLATINUM",
+    "SR",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM RESERVE": [
+      "Semi-aniline leather-appointed seats with dynamic diamond-quilted leather inserts",
+      "Leather-wrapped steering wheel with contrast insert",
+      "Satin Bronze faceted interior trim",
+      "Heated steering wheel",
+      "Charcoal headliner"
+    ],
+    "PLATINUM": [
+      "19-inch machine-finished aluminum-alloy wheels with diamond-quilted leather inserts",
+      "Power-tilt/telescoping steering column",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Rear-window power sunshade",
+      "Satin Birdseye Maple Wood faceted interior trim",
+      "NissanConnect Services powered by SiriusXM with 3-year Select trial",
+      "Bose Premium Audio System with 11 speakers and Centerpoint surround",
+      "Active Noise Cancellation",
+      "Two USB ports and two USB-C ports"
+    ],
+    "SR": [
+      "Paddle shifters",
+      "Sport-tuned suspension with retuned dampers, stiffer springs, larger stabilizer bar",
+      "19-inch gloss black aluminum-alloy wheels",
+      "LED fog lights",
+      "Sport spoiler",
+      "Premium Ascot leather-appointed seats with diamond-quilted Alcantara inserts",
+      "Premium Ascot leather-wrapped steering wheel with Alcantara insert",
+      "Satin Dark Chrome faceted interior trim",
+      "Aluminum sport pedals",
+      "Active Sound Enhancement"
+    ],
+    "SL": [
+      "Heated rear seats",
+      "Front and rear sonar system",
+      "Dual panel panoramic moonroof with one-touch open/close",
+      "HomeLink Universal Transceiver",
+      "Adjustable ambient LED lighting",
+      "Front-passenger seat power lifter",
+      "Leather-appointed seats",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "HD Radio",
+      "SiriusXM Traffic and Travel Link with 3-month trial"
+    ],
+    "SV": [
+      "Intelligent Cruise Control",
+      "Traffic Sign Recognition",
+      "Heated outside mirrors with LED turn signal indicators",
+      "8-way power driver's seat with power lumbar support",
+      "Heated front seats",
+      "19-inch dark hyper silver aluminum-alloy wheels"
+    ],
+    "S": [
+      "3.5-liter V6 engine with 300 hp and 261 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "Drive Mode Selector with Sport and Normal modes",
+      "Intelligent Forward Collision Warning with automatic emergency braking",
+      "Pedestrian detection and rear automatic braking",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "RearView Monitor with rear sonar system",
+      "Vehicle Dynamic Control with Traction Control System",
+      "18-inch machine-finished aluminum-alloy wheels",
+      "LED headlights with LED signature daytime running lights"
+    ]
+  }
+}

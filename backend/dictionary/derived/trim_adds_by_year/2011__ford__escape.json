@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|ford|escape",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2011__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "XLS",
+    "Hybrid Limited",
+    "Hybrid"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "6-speed automatic transmission (3.0L V6 FFV engine option)",
+      "Duratec 30 3.0L V6 FFV engine producing 240 hp and 223 lb-ft torque"
+    ],
+    "XLT": [
+      "6-speed automatic transmission option (2.5L I-4 engine)",
+      "Duratec 30 3.0L V6 FFV engine option with 240 hp"
+    ],
+    "XLS": [
+      "5-speed manual transmission standard (2.5L I-4 engine)"
+    ],
+    "Hybrid Limited": [
+      "Hybrid powertrain with 2.5L Atkinson-Cycle I-4 engine and electric motor"
+    ],
+    "Hybrid": [
+      "4-wheel independent suspension with AdvanceTrac RSC",
+      "Front bucket seats and 60/40 split-fold rear bench seat",
+      "Air conditioning, cruise control, power windows and door locks",
+      "Safety systems: dual-stage front airbags, side-curtain airbags with rollover sensor",
+      "2.5L Atkinson-Cycle I-4 engine with 155 hp and permanent-magnet AC electric motor with 94 hp"
+    ]
+  }
+}

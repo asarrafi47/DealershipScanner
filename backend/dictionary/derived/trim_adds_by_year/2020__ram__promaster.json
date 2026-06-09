@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2020|ram|promaster",
+  "year": 2020,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2020__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cutaway Cab",
+    "Chassis Cab",
+    "Windowed Van",
+    "Cargo Van"
+  ],
+  "adds_by_trim": {
+    "Cutaway Cab": [
+      "3.6L Pentastar V6 engine with 6-speed automatic transmission",
+      "Electronic Stability Control (ESC) and Electronic Vehicle Tracking System",
+      "Power steering and full-size spare tire",
+      "24-gallon fuel tank with auxiliary fuel tap",
+      "Remote keyless entry and air bags (driver, front-passenger, side-curtain, front-seat side)",
+      "Headlamps and daytime running lights",
+      "UConnect 3 with 5-inch display, Media Hub, USB, and Bluetooth",
+      "Rear-speaker wiring prep with upfit interface connectors"
+    ],
+    "Chassis Cab": [
+      "ParkView rear back-up camera as standard feature",
+      "240-degree rear door opening with fixed glass",
+      "Left-side door with fixed-glass window and grate option",
+      "Right-side door with fixed glass and window grate",
+      "Rear clearance lamps in addition to front clearance lamps"
+    ],
+    "Windowed Van": [
+      "Left-side second-row fixed window available on High Roof models",
+      "Rear window defroster available with rear doors with glass",
+      "Rear taillamp extension wiring standard",
+      "Rear heater/air conditioning pre-wiring available"
+    ],
+    "Cargo Van": [
+      "3.6L Pentastar V6 engine with 6-speed automatic transmission",
+      "Electronic Stability Control (ESC) and Electronic Vehicle Tracking System",
+      "Power steering and full-size spare tire",
+      "24-gallon fuel tank with auxiliary fuel tap",
+      "Remote keyless entry and air bags (driver, front-passenger, side-curtain, front-seat side)",
+      "Headlamps and daytime running lights",
+      "UConnect 3 with 5-inch display, Media Hub, USB, and Bluetooth",
+      "Rear-speaker wiring prep with upfit interface connectors"
+    ]
+  }
+}

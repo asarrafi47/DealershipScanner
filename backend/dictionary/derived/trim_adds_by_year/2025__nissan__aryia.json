@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2025|nissan|aryia",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Aryia",
+  "ladder_id": "brochure_llm_2025__nissan__aryia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM+",
+    "EVOLVE+",
+    "ENGAGE+"
+  ],
+  "adds_by_trim": {
+    "PLATINUM+": [
+      "ProPILOT Assist 2.0 with advanced autonomous driving capabilities",
+      "ProPILOT Park semi-autonomous parking system",
+      "Nappa leather-appointed seats with premium upholstery",
+      "Climate-controlled front seats with temperature regulation",
+      "Bose Premium Audio System for enhanced sound quality",
+      "LED fog lights for improved visibility and styling",
+      "Motion Activated Power Liftgate for hands-free trunk access",
+      "Heated steering wheel for cold weather comfort",
+      "Multi-color contextual line illumination throughout cabin"
+    ],
+    "EVOLVE+": [
+      "Intelligent Around View Monitor for 360-degree vehicle visibility",
+      "Intelligent Rear View Mirror with integrated display",
+      "Panoramic Moonroof for open-air driving experience",
+      "Power liftgate for convenient trunk access",
+      "Rain-sensing windshield wipers for automatic operation",
+      "HomeLink Universal Transceiver for garage door integration",
+      "8-way power front-passenger seat with memory functionality",
+      "Leatherette-appointed seats with enhanced comfort"
+    ],
+    "ENGAGE+": [
+      "8-way power driver's seat with memory system for personalized positioning",
+      "Power-sliding center console for flexible interior storage",
+      "Leatherette-appointed seats for durable interior upholstery",
+      "Heated front and rear outboard seats for cold weather comfort",
+      "Heated steering wheel for improved grip and comfort",
+      "Wireless charger for compatible mobile devices",
+      "ProPILOT Assist with Navi-link for navigation-integrated driving assistance"
+    ]
+  }
+}

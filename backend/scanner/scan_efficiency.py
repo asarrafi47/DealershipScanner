@@ -89,6 +89,7 @@ def apply_scan_only_env_defaults() -> None:
         "SCANNER_POST_ENRICH_VISION",
         "SCANNER_GALLERY_VISION_POST",
         "SCANNER_GALLERY_VISION_INLINE",
+        "SCANNER_VDP_DOWNLOAD_IMAGES",
     ):
         os.environ.setdefault(key, "0")
 
@@ -269,6 +270,16 @@ def effective_vdp_concurrency() -> int:
         except ValueError:
             pass
     return 4
+
+
+def vdp_gallery_carousel_only() -> bool:
+    """
+    When true (default), VDP gallery merge uses carousel/DOM harvest only — not page-wide
+    network image capture or dataLayer JSON walks (avoids badges, logos, marketing tiles).
+    Set ``SCANNER_VDP_GALLERY_CAROUSEL_ONLY=0`` to restore the wider harvest.
+    """
+    raw = (os.environ.get("SCANNER_VDP_GALLERY_CAROUSEL_ONLY") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
 
 
 def vdp_gallery_url_max() -> int | None:

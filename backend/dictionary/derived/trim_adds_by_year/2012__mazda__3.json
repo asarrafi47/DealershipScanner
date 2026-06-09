@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2012|mazda|3",
+  "year": 2012,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2012__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mazda3s GrandTouring",
+    "Mazda3s Touring",
+    "Mazda3i GrandTouring",
+    "Mazda3i Touring",
+    "Mazda3i SV Sport"
+  ],
+  "adds_by_trim": {
+    "Mazda3s GrandTouring": [
+      "Mazda3s model with premium features over Touring"
+    ],
+    "Mazda3s Touring": [
+      "Mazda3s 2.5L engine with increased performance"
+    ],
+    "Mazda3i GrandTouring": [
+      "GrandTouring appointments and enhanced features"
+    ],
+    "Mazda3i Touring": [
+      "Touring-level trim with enhanced interior and exterior styling"
+    ],
+    "Mazda3i SV Sport": [
+      "Base SV and Sport models with standard features"
+    ]
+  }
+}

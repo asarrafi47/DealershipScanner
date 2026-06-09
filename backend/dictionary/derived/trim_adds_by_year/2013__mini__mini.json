@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|mini|mini",
+  "year": 2013,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_web_2013__mini__mini",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Cooper S",
+    "Cooper",
+    "Cooper Hardtop"
+  ],
+  "adds_by_trim": {
+    "Cooper S": [
+      "1.6L turbocharged 4-cylinder engine with 181 horsepower",
+      "Sport-tuned suspension",
+      "17-inch alloy wheels",
+      "Unique Cooper S exterior styling and badging",
+      "Enhanced performance braking system"
+    ],
+    "Cooper": [
+      "1.6L 4-cylinder engine with 121 horsepower",
+      "16-inch alloy wheels",
+      "Air conditioning",
+      "Power windows and locks",
+      "Cruise control",
+      "6-speaker stereo system"
+    ],
+    "Cooper Hardtop": [
+      "Fixed metal roof configuration",
+      "Base 1.6L 4-cylinder engine with 121 horsepower",
+      "Air conditioning",
+      "Power windows and locks",
+      "Cruise control",
+      "16-inch alloy wheels"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mini/mini/"
+}

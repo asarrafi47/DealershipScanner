@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2016|audi|q3",
+  "year": 2016,
+  "make": "Audi",
+  "model": "Q3",
+  "ladder_id": "brochure_2016__audi__q3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds 2.0T turbocharged four-cylinder engine with 200 hp",
+      "Adds six-speed Tiptronic automatic transmission",
+      "Adds MacPherson strut front suspension",
+      "Adds four-link rear suspension",
+      "Adds electromechanical power steering system",
+      "Adds ventilated front disc and solid rear disc brakes",
+      "Adds fully galvanized steel unibody with aluminum hood and tailgate",
+      "Adds 16-valve DOHC valvetrain",
+      "Adds seating capacity for 5 passengers"
+    ],
+    "S line": [
+      "connections, for both the Audi"
+    ],
+    "Premium": [
+      "228 hp turbocharged 2.0L engine with 258 lb-ft torque"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|jeep|commander",
+  "year": 2010,
+  "make": "Jeep",
+  "model": "Commander",
+  "ladder_id": "brochure_2010__jeep__commander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 5-speed automatic transmission with Electronic Range Select",
+      "Adds front independent short/long arm suspension with coil springs and gas-charged shock absorbers",
+      "Adds rear solid axle with 5-link suspension and twin-tube coil-over shock absorbers",
+      "Adds power-assisted rack-and-pinion steering",
+      "Adds 4-channel electronic stability control with antilock brakes and traction control",
+      "Adds Quadra-Trac I full-time four-wheel-drive system with single-speed transfer case",
+      "Adds power-assisted disc brakes front and rear",
+      "Adds seating capacity for 7 adults across 3 rows",
+      "Adds sequential multipoint electronic fuel injection"
+    ],
+    "Limited": [
+      "Upgraded to variable valve timing technology for improved engine performance",
+      "Upgraded to Multi-displacement System for enhanced fuel economy during steady speeds",
+      "Upgraded to Quadra-Trac II active full-time four-wheel-drive with 2-speed transfer case and low range",
+      "Adds electronically controlled clutch pack coupling in center differential",
+      "Adds electronic torque distribution management",
+      "Adds Uconnect infotainment system connectivity",
+      "Adds SIRIUS Satellite Radio with one-year subscription and 130+ channels",
+      "Adds Electronic Roll Mitigation and Brake Assist safety features"
+    ]
+  }
+}

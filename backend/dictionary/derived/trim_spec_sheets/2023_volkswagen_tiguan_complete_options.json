@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2023_volkswagen_tiguan_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Tiguan",
+    "Tiguan"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "R-Line": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Hybrid drivetrain Plug-in hybrid (eHybrid) (was Front-engine, front-wheel-drive; L TSI I4 eHybrid)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel-drive; L TSI I4 eHybrid (was Front-engine, all-wheel-drive; Hybrid drivetrain Plug-in hybrid (eHybrid))"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, all-wheel-drive; Hybrid drivetrain Plug-in hybrid (eHybrid)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: 6-speaker system | Leather-trimmed seating; [Brochure] 6-speaker system | Leather-trimmed seating"
+      }
+    ]
+  }
+}

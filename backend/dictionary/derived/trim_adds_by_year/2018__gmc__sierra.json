@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2018|gmc|sierra",
+  "year": 2018,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2018__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "All Terrain",
+    "SLT",
+    "SLE",
+    "Sierra"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Heated and ventilated perforated leather-appointed front bucket seats with 12-way power adjustment",
+      "Embroidered Denali logo on front seats",
+      "4-way power lumbar control",
+      "Active noise cancellation with 6.2L V-8 engine",
+      "Power sunroof on Crew Cab models",
+      "Denali Ultimate Package option with 6.2L EcoTec3 V-8 and 22-inch aluminum wheels"
+    ],
+    "All Terrain": [
+      "Front leather-appointed bucket seats with 10-way power seat adjusters and power lumbar control",
+      "Heated seat cushions and seatbacks",
+      "2-position driver memory for seat position",
+      "All Terrain X Package with performance exhaust and 18-inch Goodyear Wrangler DuraTrac tires",
+      "All Terrain Premium Package with 20-inch machined aluminum wheels and 4-inch black assist steps"
+    ],
+    "SLT": [
+      "Front cloth bucket seats with 10-way driver and 6-way passenger power adjustment",
+      "Heated seat cushions and seatbacks",
+      "Floor console with storage pockets",
+      "SLT Preferred Package with Front and Rear Park Assist and heated steering wheel",
+      "SLT Premium Package with 6-inch chrome assist steps and Bose premium audio system"
+    ],
+    "SLE": [
+      "Front 3-passenger cloth 40/20/40 split bench seat with driver manual recline",
+      "Dual-zone automatic climate control",
+      "Power windows with driver express-up and -down",
+      "Remote vehicle starter system",
+      "SLE Value Package with 10-way driver seat power adjuster and Universal Home Remote",
+      "SLE Convenience Package with power-adjustable pedals and rear power-sliding window"
+    ],
+    "Sierra": [
+      "Front 3-passenger vinyl 40/20/40 split bench with manual recline and head restraints",
+      "Single-zone manual air conditioning",
+      "Graphite-colored rubberized vinyl floor covering",
+      "Manual day/night rearview mirror",
+      "Steering-wheel-mounted cruise control",
+      "Power door locks",
+      "Remote keyless entry with remote locking tailgate"
+    ]
+  }
+}

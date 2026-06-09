@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2012_gmc_sierra_complete_options",
+  "make": "GMC",
+  "models": [
+    "Sierra",
+    "Sierra"
+  ],
+  "year_min": 2010,
+  "year_max": 2014,
+  "source": "generated",
+  "trims": {
+    "C15": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 4-spd; Rear-Wheel Drive"
+      }
+    ],
+    "C15 Xfe": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 4-spd; Rear-Wheel Drive"
+      }
+    ],
+    "K15": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 4-spd; Four-Wheel Drive"
+      }
+    ]
+  }
+}

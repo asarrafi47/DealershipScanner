@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2019|toyota|avalon",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Avalon",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XSE",
+    "XLE",
+    "Premium",
+    "Touring",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XSE",
+      "Powertrain Powertrain Powertrain",
+      "3.5-Liter V6 with 301 hp @ 6600 rpm \u2022 3.5-Liter V6 with 301 hp @ 6600 rpm \u2022 3.5-Liter V6 with 301 hp @ 6600 rpm",
+      "22 city/32 hwy/26 combined est. mpg58 \u2022 22 city/31 hwy/25 combined est. mpg52 \u2022 22 city/31 hwy/25 combined est. mpg52",
+      "Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Direct Shift-8AT (8-Speed Electronically Controlled \u2022 Direct Shift-8AT (8-Speed Electronically Controlled",
+      "Exterior Features Exterior Features Exterior Features",
+      "LED reflector headlights and LED Daytime Running Lights (DRL) \u2022 Sport-tuned suspension \u2022 Adaptive Variable Suspension (AVS) system",
+      "Front chrome grille surround with dark gray insert \u2022 Power tilt/slide moonroof \u2022 LED headlights with smoked chrome bezels and on/off feature;",
+      "Color-keyed heated power outside mirrors with turn signal and \u2022 LED reflector headlights with smoked chrome bezels and on/off fully integrated LED Daytime Running Lights (DRL) with auto",
+      "17-in. silver-painted alloy wheels with P215/55R17 tires \u2022 Front piano-black grille with sport mesh insert",
+      "LED taillights with laser-ablation design and dynamic auxiliary",
+      "Dual exhaust with chrome tips \u2022 Piano-black heated power outside mirrors, turn signal and blind"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on Hybrid XLE",
+      "Powertrain Powertrain Powertrain",
+      "3.5-Liter V6 with 301 hp @ 6600 rpm \u2022 Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine \u2022 Hybrid: 2.5-Liter Dynamic Force 4-Cylinder Engine",
+      "22 city/31 hwy/25 combined est. mpg52 \u2022 Hybrid system net power: 215 net hp (160 kW) \u2022 Hybrid system net power: 215 net hp (160 kW)",
+      "Direct Shift-8AT (8-Speed Electronically Controlled \u2022 43 city/44 hwy/44 combined est. mpg57 \u2022 43 city/43 hwy/43 combined est. mpg52",
+      "Exterior Features Exterior Features Exterior Features",
+      "LED headlights with smoked chrome bezels and on/off feature; \u2022 LED reflector headlights and LED Daytime Running Lights (DRL) \u2022 Sport-tuned suspension",
+      "Front chrome grille surround with dark gray insert and \u2022 LED reflector headlights with smoked chrome bezels and",
+      "17-in. silver-painted alloy wheels with P215/55R17 tires on/off feature",
+      "LED taillights with laser-ablation design and dynamic auxiliary",
+      "Color-keyed heated, auto-dimming power outside mirrors, turn Interior Features",
+      "Piano-black heated power outside mirrors, turn signal and blind"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Polestar,3,Long Range Dual Motor (21 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,95,84,90,,,,,
+2026,Polestar,3,Long Range Dual Motor (22 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,85,76,81,,,,,
+2026,Polestar,3,Long Range Dual Motor Performance Pack,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,85,76,81,,,,,
+2026,Polestar,3,Long Range Single Motor (20 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,102,88,95,,,,,
+2026,Polestar,3,Long Range Single Motor (21 Inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,105,89,97,,,,,

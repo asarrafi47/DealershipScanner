@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2012|subaru|forester",
+  "year": 2012,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2012__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.5XT Touring",
+    "2.5XT Premium",
+    "2.5X Touring",
+    "2.5X Limited",
+    "2.5X Premium",
+    "2.5X"
+  ],
+  "adds_by_trim": {
+    "2.5XT Touring": [
+      "Turbo SUBARU BOXER engine with functional hood scoop feeding intercooler",
+      "HID low-beam headlights with multireflector halogen high-beam headlights",
+      "Rear spoiler",
+      "Aluminum-alloy pedal covers",
+      "Body-color side mirrors with integrated turn signals",
+      "Raised roof rails in silver finish",
+      "One-touch folding rear seatbacks"
+    ],
+    "2.5XT Premium": [
+      "Turbo SUBARU BOXER engine with functional hood scoop feeding intercooler",
+      "Aluminum-alloy pedal covers",
+      "Body-color side mirrors with integrated turn signals",
+      "Panoramic moonroof with 99% UV light reducing",
+      "Heated front seats via All-Weather Package"
+    ],
+    "2.5X Touring": [
+      "Panoramic moonroof with 99% UV light reducing",
+      "Raised roof rails in black finish",
+      "One-touch folding rear seatbacks",
+      "Retractable rear tray with dual cup holders",
+      "Removable cargo-area tray",
+      "Leather-wrapped steering wheel and shifter handle",
+      "7-speaker audio system with HD Radio and integrated navigation"
+    ],
+    "2.5X Limited": [
+      "10-way power adjustable driver's seat with power lumbar support",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Panoramic moonroof with 99% UV light reducing",
+      "Reclining rear seats",
+      "6-speaker audio system with HD Radio and integrated navigation",
+      "Rear-Vision Camera"
+    ],
+    "2.5X Premium": [
+      "10-way power adjustable driver's seat with power lumbar support",
+      "Body-color side mirrors",
+      "Windshield wiper de-icer and heated side mirrors via All-Weather Package",
+      "Heated front seats via All-Weather Package",
+      "Reclining rear seats",
+      "Retractable rear tray with dual cup holders",
+      "Manually adjustable tilt/telescoping steering column",
+      "3-spoke steering wheel with audio, cruise control and Bluetooth buttons",
+      "8 cup holders",
+      "Driver's auto up/down power window"
+    ],
+    "2.5X": [
+      "SUBARU Symmetrical All-Wheel Drive system",
+      "Vehicle Dynamics Control (VDC)",
+      "4-wheel ABS with Electronic Brake-force Distribution",
+      "Brake Assist and Daytime Running Lights",
+      "Driver and front-passenger front airbags with advanced frontal system",
+      "Seat-mounted front side-impact airbags and side-curtain airbags",
+      "Rollover sensor and height-adjustable front seat head restraints",
+      "Rear child-safety door locks and LATCH system",
+      "6-way manually adjustable driver and passenger seats",
+      "60/40-split flat-folding rear seatbacks"
+    ]
+  }
+}

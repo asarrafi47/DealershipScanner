@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|chevrolet|tahoe",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2016__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Bose Centerpoint Surround Sound premium 10-speaker audio system",
+      "Chevrolet MyLink 4 Radio with Navigation and 8-inch touchscreen",
+      "Rear-Seat Blu-ray Entertainment System with wireless headphones",
+      "Adaptive Cruise Control with Front Automatic Braking"
+    ],
+    "LT": [
+      "Second-row power-release bucket seats",
+      "OnStar with 4G LTE and built-in Wi-Fi hotspot for seven devices"
+    ],
+    "LS": [
+      "5.3L EcoTec3 V8 engine with 355 hp and 383 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "Front bucket seats with 10-way power driver and 6-way power cushion",
+      "3-passenger 40/20/40 split-bench front seat available",
+      "OnStar Basic Plan for five years with RemoteLink mobile app",
+      "Driver Information Center with 8-inch multi-color display",
+      "18-inch painted-aluminum wheels"
+    ]
+  }
+}

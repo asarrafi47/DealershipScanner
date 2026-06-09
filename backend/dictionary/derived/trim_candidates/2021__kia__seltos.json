@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2021|kia|seltos",
+  "year": 2021,
+  "make": "Kia",
+  "model": "Seltos",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX",
+    "EX",
+    "S",
+    "LX",
+    "Limited",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

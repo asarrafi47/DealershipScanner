@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|toyota|supra",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Supra",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "3.0 Premium",
+    "3.0",
+    "2.0",
+    "Platinum",
+    "Limited",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "3.0 Premium": [
+      "Includes these key features Adds to or replaces features offered on 2.0 Adds to or replaces features offered on 3.0",
+      "Top racetrack speed: 155 mph4 (electronically controlled) 382 hp;3 368 lb.-ft. of torque 382 hp;3 368 lb.-ft. of torque",
+      "Active exhaust Top racetrack speed: 155 mph4 (electronically controlled) Top racetrack speed: 155 mph4 (electronically controlled)",
+      "Launch Control23 Active exhaust Active exhaust",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires24 Launch Control23 Launch Control23",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires36 High-performance Michelin\u00ae Pilot\u00ae Super Sport tires36",
+      "Built-in rear spoiler 6-lens auto-leveling LED headlights (three low-beam, 6-lens auto-leveling LED headlights (three low-beam,",
+      "Gloss-black auto-folding, heated outside mirrors",
+      "Smart Key System25 with Smart Entry and Start",
+      "Interior Features Interior Features",
+      "Black Alcantara\u00ae-trimmed2/leather-trimmed sport seats",
+      "Carbon-fiber interior trim 14-way power-adjustable sport seats with"
+    ],
+    "3.0": [
+      "Adds to or replaces features offered on 3.0 Premium",
+      "Top racetrack speed: 155 mph4 (electronically controlled)",
+      "Active rear sport differential",
+      "High-performance Michelin\u00ae Pilot\u00ae Super Sport tires36",
+      "Exterior Features Red leather trim",
+      "Carbon-fiber front splitter and canards",
+      "Carbon-fiber side rockers and rear canards",
+      "Carbon-fiber duckbill rear spoiler",
+      "Turbulence Gray Tungsten",
+      "Smart Key System25 with Smart Entry and Start Black/Red Alcantara\u00ae2 trim/",
+      "B lack/Red Alcantara\u00ae-trimmed2/leather-trimmed leather trim",
+      "Carbon-fiber interior trim"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

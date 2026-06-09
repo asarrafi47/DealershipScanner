@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2018|toyota|landcruiser",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "ladder_id": "brochure_2018__toyota__landcruiser",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes standard Bluetooth connectivity",
+      "Adds Features Vehicle Stability Control",
+      "Adds Includes Tire Pressure Monitor"
+    ],
+    "Limited": [
+      "Adds SiriusXM audio services with trial subscription",
+      "Adds Qi wireless charging capability",
+      "Adds Includes Dynamic Radar Cruise Control system"
+    ],
+    "Land Cruiser": [
+      "Adds Multi-terrain Monitor display",
+      "Adds TSS Pre-Collision System with Pedestrian Detection",
+      "Adds Includes Lane Departure Alert system",
+      "Adds Automatic High Beams functionality"
+    ]
+  }
+}

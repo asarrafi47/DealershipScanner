@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2024_bmw_m3_complete_options",
+  "make": "BMW",
+  "models": [
+    "M3",
+    "M3"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Also called BMW i3 (battery electric, China); Front-engine, rear-wheel-drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive (xDrive)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The interior gets a significant update, with the dashboard being shaped by a new; iDrive with BMW Operating System 8. With the 2025 model year"
+      }
+    ]
+  }
+}

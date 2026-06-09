@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|volkswagen|beetle",
+  "year": 2013,
+  "make": "Volkswagen",
+  "model": "Beetle",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

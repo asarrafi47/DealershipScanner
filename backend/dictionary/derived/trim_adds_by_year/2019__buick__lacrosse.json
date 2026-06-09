@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2019|buick|lacrosse",
+  "year": 2019,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2019__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Avenir",
+    "Premium",
+    "Essence",
+    "Sport Touring",
+    "Preferred",
+    "1SV"
+  ],
+  "adds_by_trim": {
+    "Avenir": [
+      "Exclusive Chestnut Perforated Leather-Appointed Seating",
+      "20-inch Machined Aluminum Alloy wheels with Pearl Nickel Finish",
+      "Available Dynamic Drive Package with 20-inch wheels",
+      "Premium paint colors included at no charge"
+    ],
+    "Premium": [
+      "Brandy Perforated Leather-Appointed Seating",
+      "19-inch or 20-inch Aluminum Alloy wheel options",
+      "Available Dynamic Drive Package",
+      "Premium paint colors with additional charge"
+    ],
+    "Essence": [
+      "Ebony Perforated Leather-Appointed Seating",
+      "19-inch Aluminum Alloy wheel option",
+      "Available Dynamic Drive Package",
+      "Premium paint color options"
+    ],
+    "Sport Touring": [
+      "Perforated Leather-Appointed Seating in multiple colors",
+      "18-inch Ultra-Bright Machine-Faced Aluminum wheels standard",
+      "19-inch Aluminum Alloy wheel option",
+      "Premium paint colors included at no charge",
+      "Access to Dynamic Drive Package"
+    ],
+    "Preferred": [
+      "Light Neutral Leatherette standard seating",
+      "18-inch Aluminum wheels standard",
+      "Available premium paint color options"
+    ],
+    "1SV": [
+      "Base cloth seating material",
+      "18-inch Aluminum wheels standard"
+    ]
+  }
+}

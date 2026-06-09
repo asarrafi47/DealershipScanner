@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2014|mitsubishi|outlander",
+  "year": 2014,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2014__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT S-AWC",
+    "SE S-AWC",
+    "SE FWD",
+    "ES FWD"
+  ],
+  "adds_by_trim": {
+    "GT S-AWC": [
+      "All-wheel drive system (S-AWC)",
+      "Available Beige Leather interior option",
+      "Available Beige Premium Sport Fabric interior option"
+    ],
+    "SE S-AWC": [
+      "All-wheel drive system (S-AWC)",
+      "Available Beige Leather interior option",
+      "Available Beige Premium Sport Fabric interior option"
+    ],
+    "SE FWD": [
+      "Black Leather interior option",
+      "Expanded exterior color availability including Copper"
+    ],
+    "ES FWD": [
+      "Black Premium Sport Fabric standard interior",
+      "Available in Cool Silver, Mercury Gray, Cosmic Blue, Diamond White, Labrador Black"
+    ]
+  }
+}

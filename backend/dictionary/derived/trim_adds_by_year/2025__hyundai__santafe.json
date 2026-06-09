@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2025|hyundai|santafe",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "ladder_id": "brochure_llm_2025__hyundai__santafe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Calligraphy": [
+      "Quilted premium Nappa leather seating surfaces",
+      "Driver seat with Relaxation function",
+      "2nd-row captain's chairs with power reclining and tilting",
+      "Full color Head-up Display",
+      "Dual wireless phone charger",
+      "Bose premium audio with 12 speakers"
+    ],
+    "Limited": [
+      "Ventilated front seats and heated 2nd-row seats",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Dual-pane sunroof and power-folding side mirrors",
+      "Leather-trimmed seating surfaces",
+      "Integrated Memory System for driver's seat",
+      "Remote Smart Parking Assist",
+      "Parking Distance Warning – Forward/Side/Reverse",
+      "Camera-based rearview mirror"
+    ],
+    "XRT": [
+      "Higher ground clearance and all-terrain tires",
+      "Dark chrome C-pillar Assist Handle",
+      "12.3-inch navigation system",
+      "Rugged interior trim and accents",
+      "HTRAC All Wheel Drive and 4,500-lb towing capacity with trailer brakes"
+    ],
+    "SEL": [
+      "Raised roof side rails",
+      "Dual automatic temperature control",
+      "H-Tex seating surfaces and heated front seats",
+      "8-way power driver seat plus power lumbar support",
+      "Digital Key 2",
+      "Premium wireless phone charger"
+    ],
+    "SE": [
+      "Height-adjustable hands-free smart liftgate with auto open",
+      "Bi-directional center console armrest with two-level storage",
+      "12.3-inch color touchscreen display with AM/FM/HD Radio",
+      "Wireless Android Auto and Apple CarPlay",
+      "Optional HTRAC All Wheel Drive"
+    ]
+  }
+}

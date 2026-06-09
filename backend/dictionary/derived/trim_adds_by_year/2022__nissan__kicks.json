@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|nissan|kicks",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Kicks",
+  "ladder_id": "brochure_llm_2022__nissan__kicks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV",
+    "SR",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "Front and rear disc brakes",
+      "Electronic Parking Brake",
+      "Automatic Brake Hold",
+      "17-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist Display",
+      "Intelligent Cruise Control",
+      "8-inch NissanConnect color touchscreen with three USB-A and one USB-C port",
+      "SiriusXM Radio with 3-month subscription",
+      "Rear Door Alert",
+      "Automatic Temperature Control"
+    ],
+    "SR": [
+      "LED headlights with LED signature accents and automatic on/off",
+      "LED Daytime Running Lights with LED turn signal indicators",
+      "Follow Me Home headlights",
+      "Intelligent Around View Monitor",
+      "Leather-wrapped steering wheel",
+      "Sport Cloth seat trim with orange accent stitching",
+      "Integrated Dynamics-control Module",
+      "Prima-Tex-appointed dash with contrast stitching",
+      "Rear roof spoiler",
+      "Black roof rails"
+    ],
+    "S": [
+      "1.6-liter DOHC 16-valve 4-cylinder engine",
+      "Xtronic CVT with Hill start assist",
+      "Anti-lock Braking System with Brake Assist and Electronic Brake force Distribution",
+      "16-inch steel wheels with wheel covers",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking and Lane Departure Warning",
+      "High Beam Assist, Blind Spot Warning, and Rear Cross Traffic Alert",
+      "Rear Sonar System",
+      "Remote Keyless Entry with push button ignition",
+      "Power windows and door locks"
+    ]
+  }
+}

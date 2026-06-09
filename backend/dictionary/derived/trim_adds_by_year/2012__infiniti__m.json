@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2012|infiniti|m",
+  "year": 2012,
+  "make": "Infiniti",
+  "model": "M",
+  "ladder_id": "brochure_web_2012__infiniti__m",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "M56",
+    "M37",
+    "M35"
+  ],
+  "adds_by_trim": {
+    "M56": [
+      "V-8 engine with greater horsepower and performance compared to M37 V-6"
+    ],
+    "M37": [
+      "V-6 engine with improved performance compared to M35 V-6"
+    ],
+    "M35": [
+      "V-6 engine",
+      "5-seat seating capacity",
+      "Rear-wheel drive or all-wheel drive options",
+      "11-15 cubic feet cargo capacity",
+      "Sport package available for improved grip"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/infiniti/m"
+}

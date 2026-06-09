@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2017|hyundai|tucson",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2017__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Eco",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Blue Link Connected Care with one year subscription included"
+    ],
+    "Sport": [
+      "Standard Apple CarPlay compatibility for iPhone 5s and later"
+    ],
+    "Eco": [
+      "Apple CarPlay available as optional feature"
+    ],
+    "SE": [
+      "Apple CarPlay available as optional feature"
+    ]
+  }
+}

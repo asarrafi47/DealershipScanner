@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2019|chevrolet|corvette",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_llm_2019__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3ZR",
+    "3LZ",
+    "3LT",
+    "1LT",
+    "2LT"
+  ],
+  "adds_by_trim": {
+    "3ZR": [
+      "Hand-stretched Napa leather with sueded instrument panel",
+      "Microfiber-wrapped steering wheel",
+      "Lightweight aluminum accents on doors, pedals, and shifter",
+      "Competition Sport cockpit instrumentation"
+    ],
+    "3LZ": [
+      "Hand-stretched Napa leather with sueded instrument panel",
+      "Microfiber-wrapped steering wheel",
+      "Lightweight aluminum accents on doors, pedals, and shifter"
+    ],
+    "3LT": [
+      "Hand-stretched Napa leather with sueded instrument panel",
+      "Microfiber-wrapped steering wheel",
+      "Heated and ventilated seats available",
+      "Passenger air vent with temperature control and indicator"
+    ],
+    "2LT": [
+      "Leather seating surfaces",
+      "Racing-style flat-bottom steering wheel with leather wrap",
+      "Leather-wrapped power tilt and telescopic steering wheel",
+      "Steering wheel controls for Bluetooth, cruise control, and audio"
+    ],
+    "1LT": [
+      "Leather seating surfaces",
+      "Racing-style flat-bottom steering wheel with more knee room",
+      "Steering wheel controls for Bluetooth and cruise control",
+      "Run-flat Michelin Pilot Super Sport ZP summer-only tires"
+    ]
+  }
+}

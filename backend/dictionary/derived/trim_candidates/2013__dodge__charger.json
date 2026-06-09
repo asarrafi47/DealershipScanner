@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2013|dodge|charger",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Charger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "R/T Plus",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

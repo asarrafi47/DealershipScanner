@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2026|nissan|sentra",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2026__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "215/45R18 all-season tires",
+      "LED headlight signature lights",
+      "Outside mirrors with LED turn signal indicators",
+      "Black outside mirrors",
+      "Black side sill extensions",
+      "Sport rear design",
+      "Black rear spoiler"
+    ],
+    "SR": [
+      "215/50R17 all-season tires",
+      "LED headlights with LED daytime running lights",
+      "Heated outside mirrors",
+      "Premium cloth seat trim",
+      "Sport cloth seat trim with contrast stitching",
+      "Heated front seats",
+      "Heated steering wheel",
+      "Power sliding glass moonroof"
+    ],
+    "SV": [
+      "18-inch aluminum-alloy wheels",
+      "Intelligent Auto Headlights",
+      "V-Motion grille",
+      "Heated outside mirrors",
+      "Leatherette seats with contrast stitching",
+      "Heated front seats",
+      "Heated steering wheel",
+      "Remote engine start system"
+    ],
+    "S": [
+      "2.0-liter Direct Injection Gasoline DOHC engine with 149 hp",
+      "Xtronic CVT continuously variable transmission",
+      "Front-wheel drive",
+      "17-inch aluminum-alloy wheels",
+      "205/60R16 all-season tires",
+      "Cloth seat trim",
+      "60/40-split fold-down rear seatbacks",
+      "Intelligent Cruise Control",
+      "ProPILOT Assist",
+      "7-inch Advanced Drive-Assist Display"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2025|toyota|86",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "brochure_llm_2025__toyota__86",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GR86 Hakone Edition",
+    "GR86 Premium",
+    "GR86"
+  ],
+  "adds_by_trim": {
+    "GR86 Hakone Edition": [
+      "18-inch matte-bronze-painted alloy wheels with gloss-black lug nuts",
+      "MacPherson strut front suspension and multi-link rear with SACHS dampers",
+      "Brembo 4-piston front disc brakes with 12.8-inch ventilated rotors",
+      "Two-stage heated sport seats with tan leather-trimmed bolsters and contrast stitching",
+      "GR leather-trimmed sport steering wheel with tan contrast stitching",
+      "Leather-trimmed shift lever with matte-bronze stripe",
+      "Hakone Edition badging, puddle lights, commemorative plaque, and floor mats",
+      "Limited Ridge Green color option",
+      "Tan contrast-stitched armrests and Hakone Edition owner's folio with key glove"
+    ],
+    "GR86 Premium": [
+      "18-inch matte-black-painted alloy wheels with Michelin Pilot Sport 4 tires",
+      "Adaptive Front-Lighting System (AFS)",
+      "Color-keyed duckbill rear spoiler",
+      "Two-stage heated sport seats with leather-trimmed bolsters and Ultrasuede inserts",
+      "GR leather-trimmed sport steering wheel with silver contrast stitching and paddle shifters",
+      "Connected Services with Safety Connect, Service Connect, and Remote Connect trials",
+      "GR86 Audio with 8-inch touchscreen and eight speakers including amplifier"
+    ],
+    "GR86": [
+      "FA24 2.4L naturally aspirated horizontally-opposed 4-cylinder boxer engine with 228 hp and 184 lb-ft torque",
+      "6-speed close-ratio manual transmission or 6-speed electronically controlled automatic transmission",
+      "Torsen limited-slip differential",
+      "GR circuit-tuned coil springs and shock absorbers with iron front knuckles",
+      "Auto-leveling dual LED headlights with DRL and LED rear combination lights",
+      "17-inch machined-finish alloy wheels",
+      "Sport front bucket seats with black side bolsters and 6-way driver adjustment",
+      "GR digital gauge cluster with Normal/Sport/Track modes",
+      "Dual zone automatic climate control",
+      "GR86 Audio with 8-inch touchscreen, six speakers, Apple CarPlay, Android Auto, and SiriusXM trial"
+    ]
+  }
+}

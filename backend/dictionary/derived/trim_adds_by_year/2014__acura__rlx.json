@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2014|acura|rlx",
+  "year": 2014,
+  "make": "acura",
+  "model": "rlx",
+  "ladder_id": "brochure_llm_2014__acura__rlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RLX with Advance Package",
+    "RLX with Krell Audio Package",
+    "RLX with Technology Package",
+    "RLX with Navigation",
+    "Standard RLX"
+  ],
+  "adds_by_trim": {
+    "RLX with Navigation": [
+      "Acura Navigation System with 3D view and turn-by-turn guidance",
+      "Acura Real-Time Traffic with exclusive street and freeway conditions",
+      "Next-generation AcuraLink with personalized settings",
+      "Color Multi-Information Display (MID)"
+    ],
+    "RLX with Technology Package": [
+      "Acura/ELS Studio premium Audio System with hard disk drive and 14 speakers",
+      "Blind Spot Information (BSI) system",
+      "19-inch aluminum-alloy noise-reducing wheels with 245/40 R19 tires",
+      "Power-folding side mirrors",
+      "Acoustic front and rear side glass"
+    ],
+    "RLX with Krell Audio Package": [
+      "Krell premium Audio System with hard disk drive and 14 speakers",
+      "Power rear and manual rear side sunshades"
+    ],
+    "RLX with Advance Package": [
+      "Collision Mitigation Braking System (CMBS) with heads-up warning",
+      "Adaptive Cruise Control (ACC) with low-speed follow",
+      "Lane Keeping Assist System (LKAS)",
+      "Heated and ventilated front seats",
+      "Heated rear seats"
+    ],
+    "Standard RLX": [
+      "310-hp 3.5-liter 24-valve SOHC i-VTEC direct injection V-6 engine",
+      "Variable Cylinder Management (VCM)",
+      "6-speed automatic transmission with Sport Mode and Sequential SportShift",
+      "Front-wheel drive with Precision All-Wheel Steer (P-AWS) System",
+      "Agile Handling Assist system",
+      "4-wheel independent double wishbone suspension with Amplitude Reactive Dampers",
+      "18-inch aluminum-alloy wheels with 245/45 R18 tires",
+      "Jewel Eye LED headlights",
+      "Acura/ELS Audio System with hard disk drive and 10 speakers",
+      "Tri-zone automatic climate control with air quality sensor"
+    ]
+  }
+}

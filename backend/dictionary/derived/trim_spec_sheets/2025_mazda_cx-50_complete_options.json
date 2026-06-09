@@ -1,0 +1,41 @@
+{
+  "ladder_id": "2025_mazda_cx-50_complete_options",
+  "make": "Mazda",
+  "models": [
+    "CX-50",
+    "CX-50"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Premium Plus": [
+      {
+        "label": "Audio System Layout",
+        "value": "Bose audio | 12-speaker system | leather-trimmed seating; [Brochure] Bose audio | 12-speaker system | leather-trimmed seating"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Audio System Layout",
+        "value": "Bose audio | 12-speaker system | leather-trimmed seating; [Brochure] Bose audio | 12-speaker system | leather-trimmed seating"
+      }
+    ],
+    "Preferred": [
+      {
+        "label": "Audio System Layout",
+        "value": "12-speaker system"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, all-wheel-drive; The turbocharged engine option is reserved for Base (Turbo), Premium, and Premiu"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Bose audio | 12-speaker system | leather-trimmed seating; [Brochure] Bose audio | 12-speaker system | leather-trimmed seating"
+      }
+    ]
+  }
+}

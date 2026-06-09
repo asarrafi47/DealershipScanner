@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2019|nissan|370z",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2019__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT TOURING",
+    "HERITAGE EDITION",
+    "SPORT",
+    "370Z"
+  ],
+  "adds_by_trim": {
+    "SPORT TOURING": [
+      "Nissan Hard Drive Navigation System with touch-screen monitor and Voice Recognition",
+      "NavTraffic® and NavWeather® provided by SiriusXM®",
+      "HomeLink® Universal Transceiver",
+      "Rear cargo cover",
+      "Driver's manual adjustable lumbar support",
+      "Leather-appointed, power heated sport seats with synthetic suede inserts",
+      "Aluminum-trimmed pedals",
+      "Bluetooth® streaming audio",
+      "Active Noise Cancellation",
+      "Active Sound Enhancement"
+    ],
+    "HERITAGE EDITION": [
+      "Heritage Edition exterior graphics",
+      "Gloss black outside mirrors",
+      "Yellow interior trim details",
+      "Cloth seat with contrast yellow trim and bolster stitching",
+      "Leather-wrapped steering wheel and shift knob with yellow trim"
+    ],
+    "SPORT": [
+      "SynchroRev Match®",
+      "Nissan sport brakes – 14.0 inch 4-piston front/13.8 inch 2-piston rear with red calipers",
+      "Viscous Limited-slip Rear Differential",
+      "19 inch RAYS® forged alloy wheels",
+      "Bridgestone® Potenza® S007 high-performance W-rated tires",
+      "LED illuminated Z side marker emblems",
+      "Front chin aero deflector",
+      "Body-color rear spoiler",
+      "Bose® Premium Audio System with eight speakers including two subwoofers",
+      "Active Noise Cancellation and Active Sound Enhancement"
+    ],
+    "370Z": [
+      "332 hp, 270 lb-ft torque 3.7-liter V6 with twin-intake system",
+      "6-speed manual transmission with optional 7-speed automatic",
+      "EXEDY® high-performance clutch for manual transmission",
+      "Sport-tuned shock absorbers",
+      "3-point front strut tower brace",
+      "18 inch black-finish aluminum-alloy wheels with Yokohama® ADVAN Sport® tires",
+      "HID bi-functional xenon headlights with smoked housing",
+      "LED Daytime Running Lights and smoked LED taillights",
+      "8-way adjustable driver's seat and 4-way adjustable passenger's seat",
+      "Bluetooth® Hands-free Phone System and Nissan Intelligent Key® with Push Button Ignition"
+    ]
+  }
+}

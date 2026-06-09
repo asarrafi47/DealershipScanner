@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2019_hyundai_santa_fe_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Santa Fe",
+    "Santa Fe"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ],
+    "XL Ultimate": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Front-Wheel Drive"
+      }
+    ]
+  }
+}

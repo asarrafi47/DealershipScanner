@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2019_lexus_gs_complete_options",
+  "make": "lexus",
+  "models": [
+    "GS",
+    "GS"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Rear-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Rear-Wheel Drive"
+      }
+    ]
+  }
+}

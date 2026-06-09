@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2022|jeep|wagoneer",
+  "year": 2022,
+  "make": "Jeep",
+  "model": "Wagoneer",
+  "ladder_id": "brochure_web_2022__jeep__wagoneer",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Series III",
+    "Carbide",
+    "Series II",
+    "Overland",
+    "Limited",
+    "Super",
+    "Series I"
+  ],
+  "adds_by_trim": {
+    "Series III": [
+      "19-speaker McIntosh premium audio system"
+    ],
+    "Carbide": [
+      "Specific features not detailed in brochure text"
+    ],
+    "Series II": [
+      "Wireless charger",
+      "Second-row heated captain's chairs",
+      "First-row floor console with cupholders",
+      "Nappa leather seating"
+    ],
+    "Overland": [
+      "20-inch wheels with 32-inch all-terrain tires",
+      "Steel skid plates",
+      "Quadra-Lift air suspension",
+      "Two-speed transfer case with 48:1 crawl ratio",
+      "Rock Mode for Selec-Terrain traction management",
+      "Electronic limited slip differential",
+      "Black painted roof and exterior accents",
+      "All-weather floor mats",
+      "Tri-pane panoramic sunroof"
+    ],
+    "Limited": [
+      "Body-color fender flares",
+      "Chrome exterior badging",
+      "Black lower front and rear fascias",
+      "Model-specific 22-inch wheels",
+      "Power side steps",
+      "Power-folding second and third row seats"
+    ],
+    "Super": [
+      "Specific features not detailed in brochure text"
+    ],
+    "Series I": [
+      "10.3-inch cluster display",
+      "10.1-inch infotainment touchscreen",
+      "Apple CarPlay and Android Auto compatibility",
+      "Three-zone climate control",
+      "10-speaker Alpine audio",
+      "Automatic emergency braking",
+      "Blind-spot monitoring",
+      "Parking sensors",
+      "Hill start assist",
+      "Trailer sway control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jeep/wagoneer/"
+}

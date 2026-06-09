@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|lincoln|nautilus",
+  "year": 2020,
+  "make": "Lincoln",
+  "model": "Nautilus",
+  "ladder_id": "brochure_web_2020__lincoln__nautilus",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Premiere"
+  ],
+  "adds_by_trim": {
+    "Black Label": [
+      "Upgraded LED headlights",
+      "24-way adjustable massaging front seats",
+      "Exclusive interior colorways",
+      "Illuminated tailgate lettering",
+      "28-speaker Revel audio system",
+      "22-inch wheels"
+    ],
+    "Reserve": [
+      "Adaptive suspension system",
+      "Digital Scent aromatics with three fragrance options",
+      "Panoramic sunroof",
+      "Illuminated Lincoln badge in grille",
+      "21-inch wheels"
+    ],
+    "Premiere": [
+      "48-inch digital display across dashboard",
+      "360-degree camera",
+      "Four-year BlueCruise subscription for hands-free driving",
+      "11.1-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "10-speaker audio system",
+      "Wireless charging pad",
+      "Lincoln Co-Pilot360 Vision driver assist suite",
+      "19-inch wheels",
+      "Standard AWD with turbocharged 2.0L engine"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/nautilus/"
+}

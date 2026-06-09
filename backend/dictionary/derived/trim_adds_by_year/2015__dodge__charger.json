@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2015|dodge|charger",
+  "year": 2015,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_2015__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack",
+    "R/T Scat Pack",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [],
+    "SE": [
+      "Adds UConnect voice command with Bluetooth",
+      "Adds electronic stability control with hill start assist",
+      "Adds active front head restraints",
+      "Adds 7 airbags",
+      "Adds 4-wheel antilock disc brakes",
+      "Adds Dual-Zone Temperature control",
+      "Adds keyless enter 'n go with proximity sensor and push-button start",
+      "Adds 60/40 split-folding rear seat",
+      "Adds capless fuel fill",
+      "Adds 5-inch UConnect touchscreen system"
+    ],
+    "Sport": [
+      "Upgraded to sport Appearance group"
+    ],
+    "SXT": [
+      "Upgraded to 19-inch polished aluminum wheels with graphite pockets",
+      "Adds LED fog lamps",
+      "Upgraded to 8.4-inch UConnect touchscreen system with UConnect access apps",
+      "Adds SiriusXM satellite radio with 1-year subscription",
+      "Upgraded to 6 premium speakers with 276-watt amplifier",
+      "Upgraded to premium cloth sport seats",
+      "Upgraded to 12-way power driver's seat",
+      "Adds Dual-Zone automatic Temperature control",
+      "Adds heated front seats",
+      "Adds remote start"
+    ],
+    "Premium": [
+      "Adds universal garage door opener",
+      "Adds front and rear LED-lighted map pockets",
+      "Adds illuminated front cup holders"
+    ],
+    "Limited": [
+      "Upgraded to 18-inch chrome-clad aluminum wheels",
+      "Upgraded to premium nappa leather-trimmed seats",
+      "Adds heated rear seats",
+      "Adds driver and front-passenger lower LED lamps and front overhead LED lighting",
+      "Adds security alarm",
+      "Adds illuminated, heated, and cooled front cup holders"
+    ],
+    "R/T": [
+      "8-way power driver's and front-passenger seats with 4-way lumbar",
+      "Heated front seats",
+      "Performance audio system with 552-watt amplifier and subwoofer"
+    ],
+    "R/T Scat Pack": [
+      "Performance leather-wrapped steering wheel with paddle shifters",
+      "Heated leather-trimmed seats",
+      "R/T Scat Pack specific exterior and interior styling"
+    ],
+    "Scat Pack": [],
+    "Hellcat": [
+      "Extreme performance powertrain and capability beyond SRT"
+    ],
+    "SRT Hellcat": [
+      "SRT performance leather-wrapped flat-bottom steering wheel",
+      "18 Harman Kardon high-performance speakers with 900-watt digital amplifier",
+      "Advanced safety features and performance enhancements"
+    ]
+  }
+}

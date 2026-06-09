@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2010|chevrolet|tahoe",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "2010_chevrolet_tahoe",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LS",
+    "LT",
+    "LTZ"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "Custom Leather-appointed front bucket seats with six-way power driver",
+      "Z71 Off-Road or towing and navigation packages available",
+      "Enhanced exterior chrome and convenience vs LS"
+    ],
+    "LTZ": [
+      "Custom Leather-appointed 10-way power heated front bucket seats",
+      "Autoride suspension and premium LTZ convenience content",
+      "Rearview camera and navigation options",
+      "Highest non-Hybrid Tahoe trim before special editions"
+    ],
+    "LS": [
+      "Black assist steps",
+      "Automatic headlamps and Daytime Running Lamps",
+      "Power-heated driver- and passenger-side mirrors",
+      "Remote Keyless Entry",
+      "Leather-wrapped steering wheel with audio and cruise controls",
+      "Analog instrumentation with speedometer and tachometer"
+    ]
+  }
+}

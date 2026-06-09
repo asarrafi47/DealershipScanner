@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2013|subaru|forester",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2013__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.5XT Touring",
+    "2.5XT Premium",
+    "2.5X Touring",
+    "2.5X Limited",
+    "2.5X Premium",
+    "2.5X"
+  ],
+  "adds_by_trim": {
+    "2.5XT Touring": [
+      "Turbo BOXER engine with functional hood scoop feeding intercooler",
+      "HID low-beam headlights with multireflector halogen high-beams",
+      "Rear spoiler for aerodynamic styling",
+      "Body-color side mirrors with integrated turn signals",
+      "Silver-finish raised roof rails",
+      "Aluminum-alloy pedal covers",
+      "7-speaker single-CD audio system with 4.3-inch LCD display",
+      "One-touch folding rear seatbacks"
+    ],
+    "2.5XT Premium": [
+      "Turbo BOXER engine with functional hood scoop feeding intercooler",
+      "Body-color side mirrors with integrated turn signals",
+      "Aluminum-alloy pedal covers",
+      "Leather-wrapped steering wheel and shifter handle"
+    ],
+    "2.5X Touring": [
+      "Panoramic moonroof with 99% UV light reduction",
+      "Leather-trimmed upholstery",
+      "One-touch folding rear seatbacks",
+      "Removable cargo-area tray",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Retractable rear tray with dual cup holders",
+      "6-speaker single-CD audio system with 4.3-inch LCD display"
+    ],
+    "2.5X Limited": [
+      "Panoramic moonroof with 99% UV light reduction",
+      "Leather-trimmed upholstery",
+      "Removable cargo-area tray",
+      "6-speaker single-CD audio system with 4.3-inch LCD display",
+      "Rear-Vision Camera accessory availability"
+    ],
+    "2.5X Premium": [
+      "10-way power adjustable driver's seat with lumbar support",
+      "Body-color side mirrors",
+      "Panoramic moonroof with 99% UV light reduction",
+      "Reclining rear seats",
+      "Retractable rear tray with dual cup holders",
+      "Driver's auto up/down power window",
+      "Overhead console with dual maplights and sunglasses storage",
+      "Manually adjustable tilt/telescoping steering column"
+    ],
+    "2.5X": [
+      "6-way manually adjustable driver and front-passenger seats",
+      "Fog lights",
+      "Subaru Symmetrical All-Wheel Drive",
+      "Vehicle Dynamics Control and ABS with Electronic Brake-force Distribution",
+      "6-way manually adjustable tilt steering column",
+      "4-speaker single-CD audio system with USB/iPod control",
+      "60/40-split flat-folding rear seatbacks",
+      "Cargo-area with grocery bag hooks and tiedown hooks"
+    ]
+  }
+}

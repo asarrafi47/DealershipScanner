@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|kia|ev6",
+  "year": 2022,
+  "make": "Kia",
+  "model": "EV6",
+  "ladder_id": "brochure_llm_2022__kia__ev6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT-Line",
+    "Wind",
+    "Light"
+  ],
+  "adds_by_trim": {
+    "GT-Line": [
+      "77.4 kWh battery with 310-mile range (RWD) or 274-mile range (AWD)",
+      "168 kW rear motor with 225 hp or dual-motor e-AWD with 320 hp",
+      "Vegan leather and suede seating surfaces",
+      "Ventilated front seats",
+      "Power passenger seat",
+      "Heated steering wheel",
+      "Blind-Spot View Monitor",
+      "Parking Distance Warning—Front",
+      "Surround View Monitor",
+      "AR HUD (Augmented Reality Head-Up Display)"
+    ],
+    "Wind": [
+      "77.4 kWh battery with 310-mile range (RWD) or 274-mile range (AWD)",
+      "168 kW rear motor with 225 hp or dual-motor e-AWD with 320 hp",
+      "Vegan leather seating surfaces",
+      "Ventilated front seats",
+      "Power passenger seat",
+      "Blind-Spot View Monitor",
+      "Parking Distance Warning—Front",
+      "Surround View Monitor",
+      "Remote Smart Parking Assist",
+      "Smart Power Liftgate"
+    ],
+    "Light": [
+      "58 kWh battery with 232-mile all-electric range",
+      "125 kW rear drive motor with 167 hp and 258 lb.-ft. torque",
+      "Fabric and vegan leather seating surfaces with heated front seats",
+      "GigaSteel slim design front seating",
+      "Forward Collision-Avoidance Assist with Pedestrian and Cyclist Detection",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Rear Cross-Traffic Collision-Avoidance Assist",
+      "Parking Distance Warning—Rear",
+      "Navigation-based Smart Cruise Control with Stop and Go",
+      "Highway Driving Assist"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,MINI,Countryman,Cooper Countryman,1.6L I4,1.6L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,25,29,27,,,,,
+2015,MINI,Countryman,Cooper S Countryman,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,25,31,28,,,,,
+2015,MINI,Countryman,Cooper S Countryman,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,26,32,28,,,,,
+2015,MINI,Countryman,Cooper S Countryman All4,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,23,30,26,,,,,
+2015,MINI,Countryman,Cooper S Countryman All4,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,25,30,27,,,,,
+2015,MINI,Countryman,JCW Countryman All4,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,23,30,26,,,,,
+2015,MINI,Countryman,JCW Countryman All4,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,25,30,27,,,,,
+2015,MINI,Countryman,Cooper Countryman,1.6L I4,1.6L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,27,33,29,,,,,

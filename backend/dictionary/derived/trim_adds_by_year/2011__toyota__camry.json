@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2011|toyota|camry",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_llm_2011__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE V6",
+    "XLE 4-Cylinder",
+    "SE V6",
+    "SE 4-Cylinder",
+    "LE V6",
+    "LE 4-Cylinder",
+    "Camry"
+  ],
+  "adds_by_trim": {
+    "XLE V6": [
+      "3.5-liter V6 DOHC engine with 268 hp and 248 lb-ft torque",
+      "All features from XLE 4-Cylinder"
+    ],
+    "XLE 4-Cylinder": [
+      "Leather-trimmed seats and door trim with integrated armrests",
+      "Sliding center armrest",
+      "Leather-wrapped steering wheel and shift knob",
+      "Auto-dimming power front passenger seat and wood-grain interior trim",
+      "Auto-dimming rearview mirror with compass and HomeLink universal transceiver"
+    ],
+    "SE V6": [
+      "3.5-liter V6 DOHC engine with 268 hp and 248 lb-ft torque",
+      "All features from SE 4-Cylinder"
+    ],
+    "SE 4-Cylinder": [
+      "Sport-tuned shock absorbers and springs",
+      "Strut tower and trunk-mounted braces",
+      "P215/55R17 performance tires",
+      "14.5 cubic feet cargo volume"
+    ],
+    "LE V6": [
+      "3.5-liter V6 DOHC engine with 268 hp and 248 lb-ft torque",
+      "All features from LE 4-Cylinder"
+    ],
+    "LE 4-Cylinder": [
+      "2.5-liter 4-cylinder DOHC engine with 169 hp and 167 lb-ft torque",
+      "6-speed automatic transmission standard",
+      "Front-wheel drive with unitized body and anti-vibration sub-frames",
+      "MacPherson strut suspension with gas-filled shock absorbers",
+      "Variable-assist power rack-and-pinion steering",
+      "Power-assisted ventilated front and solid rear disc brakes",
+      "ABS with Electronic Brake-force Distribution and Brake Assist standard",
+      "Vehicle Stability Control with Traction Control standard"
+    ],
+    "Camry": [
+      "2.5-liter 4-cylinder DOHC engine with 169 hp and 167 lb-ft torque",
+      "6-speed manual transmission standard",
+      "Front-wheel drive configuration",
+      "MacPherson strut suspension front and rear",
+      "Power-assisted ventilated front and solid rear disc brakes",
+      "ABS with Electronic Brake-force Distribution and Brake Assist",
+      "Vehicle Stability Control with Traction Control"
+    ]
+  }
+}

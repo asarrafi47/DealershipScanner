@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2018|hyundai|ioniq",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2018_Hyundai_Ioniq_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

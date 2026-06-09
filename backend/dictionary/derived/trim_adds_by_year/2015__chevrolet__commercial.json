@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|chevrolet|commercial",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "brochure_llm_2015__chevrolet__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Z71",
+    "LT",
+    "WT",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Z71": [
+      "Hydra-Matic 6-speed automatic transmission standard",
+      "Tow/Haul mode with available 3.6L V6 engine",
+      "Underseat storage standard"
+    ],
+    "LT": [
+      "Hydra-Matic 6-speed automatic transmission standard",
+      "Tow/Haul mode with available 3.6L V6 engine",
+      "Underseat storage standard",
+      "Available Safety Package with Forward Collision Alert and Lane Departure Warning"
+    ],
+    "WT": [
+      "Hydra-Matic 6-speed automatic transmission available on 4x4 models",
+      "Underseat storage standard",
+      "4-wheel drive available"
+    ],
+    "Base": [
+      "2.5L 4-cylinder engine with 200 hp and 191 lb.-ft. torque",
+      "6-speed manual transmission standard on 2WD Extended Cab",
+      "4-wheel antilock disc brakes with Duralife rotors",
+      "150-amp alternator",
+      "Rear vision camera standard",
+      "StabiliTrak Electronic Stability Control System standard",
+      "Available 3.6L V6 engine option"
+    ]
+  }
+}

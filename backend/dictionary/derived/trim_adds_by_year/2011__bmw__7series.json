@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2011|bmw|7series",
+  "year": 2011,
+  "make": "BMW",
+  "model": "7 Series",
+  "ladder_id": "brochure_llm_2011__bmw__7series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ActiveHybrid Li",
+    "750Li xDrive",
+    "750Li",
+    "ActiveHybrid i",
+    "750i xDrive",
+    "750i",
+    "740Li xDrive",
+    "740Li",
+    "740i"
+  ],
+  "adds_by_trim": {
+    "ActiveHybrid Li": [
+      "20-hp electric motor with high-performance 120-volt lithium-ion battery system",
+      "Long-wheelbase configuration",
+      "V-8 TwinPower Turbo engine",
+      "Performance tires"
+    ],
+    "750Li xDrive": [
+      "All-wheel drive xDrive system",
+      "Long-wheelbase configuration",
+      "V-8 TwinPower Turbo engine"
+    ],
+    "750Li": [
+      "Long-wheelbase configuration",
+      "V-8 TwinPower Turbo engine"
+    ],
+    "ActiveHybrid i": [
+      "20-hp electric motor with high-performance 120-volt lithium-ion battery system",
+      "Inline-6 TwinPower Turbo engine",
+      "Performance tires"
+    ],
+    "750i xDrive": [
+      "All-wheel drive xDrive system",
+      "V-8 TwinPower Turbo engine"
+    ],
+    "750i": [
+      "V-8 TwinPower Turbo engine"
+    ],
+    "740Li xDrive": [
+      "All-wheel drive xDrive system",
+      "Long-wheelbase configuration"
+    ],
+    "740Li": [
+      "Long-wheelbase configuration",
+      "Inline-6 TwinPower Turbo engine",
+      "All-season run-flat tires"
+    ],
+    "740i": [
+      "Inline-6 TwinPower Turbo engine",
+      "19-inch light alloy wheels",
+      "All-season run-flat tires"
+    ]
+  }
+}

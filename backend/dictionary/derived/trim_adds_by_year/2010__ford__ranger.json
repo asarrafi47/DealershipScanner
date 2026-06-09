@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2010|ford|ranger",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Ranger",
+  "ladder_id": "brochure_web_2010__ford__ranger",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Raptor",
+    "Lariat",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "Raptor": [
+      "3.0-liter twin-turbo V-6 engine with 405 hp and 430 lb-ft torque",
+      "Standard 4WD with locking differentials",
+      "Long-travel suspension for off-road capability",
+      "Reinforced frame",
+      "All-terrain tires",
+      "Off-road-specific software for different terrain surfaces"
+    ],
+    "Lariat": [
+      "12.0-inch infotainment touchscreen",
+      "12.4-inch all-digital gauge cluster"
+    ],
+    "XLT": [
+      "12.0-inch infotainment touchscreen",
+      "12.4-inch all-digital gauge cluster"
+    ],
+    "XL": [
+      "2.3-liter turbocharged inline four-cylinder engine with 270 hp and 310 lb-ft torque",
+      "10-speed automatic transmission",
+      "10.0-inch infotainment touchscreen",
+      "8.0-inch digital gauge display",
+      "Apple CarPlay and Android Auto",
+      "Front automatic emergency braking",
+      "Lane departure warning",
+      "Automatic high-beams",
+      "SuperCrew cab with 5-foot bed",
+      "Choice of RWD or 4WD"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/ranger/"
+}

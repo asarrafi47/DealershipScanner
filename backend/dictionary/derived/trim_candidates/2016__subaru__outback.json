@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|subaru|outback",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "Outback",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Wilderness",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

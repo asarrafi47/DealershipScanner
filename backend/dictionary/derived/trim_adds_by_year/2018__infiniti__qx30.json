@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2018|infiniti|qx30",
+  "year": 2018,
+  "make": "Infiniti",
+  "model": "QX30",
+  "ladder_id": "brochure_llm_2018__infiniti__qx30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX30 PREMIUM AWD",
+    "QX30 PREMIUM",
+    "QX30 LUXURY AWD",
+    "QX30 LUXURY",
+    "QX30"
+  ],
+  "adds_by_trim": {
+    "QX30 PREMIUM AWD": [
+      "Bose 10-speaker premium audio system",
+      "Panoramic moonroof with power sunshade",
+      "Roof rails for cargo carrying",
+      "Heated windshield washers",
+      "Cargo area finisher",
+      "Aluminum kick plates"
+    ],
+    "QX30 PREMIUM": [
+      "Bose 10-speaker premium audio system",
+      "Panoramic moonroof with power sunshade",
+      "Roof rails for cargo carrying",
+      "Heated windshield washers",
+      "Cargo area finisher",
+      "Aluminum kick plates"
+    ],
+    "QX30 LUXURY AWD": [
+      "Intelligent All-Wheel Drive (AWD) system",
+      "Raised AWD suspension",
+      "Unique front and rear AWD styling",
+      "Extended overfenders"
+    ],
+    "QX30 LUXURY": [
+      "Nappa leather-appointed seats",
+      "8-way power front seats with 4-way power lumbar",
+      "Leatherette dash inserts with stitching",
+      "Heated front seats",
+      "Memory seats and mirrors",
+      "Rear armrest and ski hatch",
+      "Unique 18-inch machine-finished aluminum wheels"
+    ],
+    "QX30": [
+      "2.0L turbocharged I4 engine with Idle Stop/Start",
+      "7-speed double clutch automatic transmission",
+      "LED signature daytime running lights",
+      "Halogen automatic on/off headlights",
+      "18-inch aluminum-alloy wheels with 235/50R18 all-season run-flat tires",
+      "Power folding and heated outside mirrors with puddle lights",
+      "Auto-dimming driver outside mirror",
+      "Hill start assist",
+      "RearView Monitor",
+      "INFINITI InTouch 7-inch single screen with apps"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2019|kia|optima",
+  "year": 2019,
+  "make": "Kia",
+  "model": "Optima",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

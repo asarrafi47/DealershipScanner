@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1991,GMC,Safari,AWD (cargo),4.3L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,,4.3L V6,
-1991,GMC,Safari,2WD (cargo),4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,,4.3L V6,
-1991,GMC,Safari,AWD (passenger),4.3L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Vans,6,4.3,14,18,16,,,,,,4.3L V6,
-1991,GMC,Safari,2WD (passenger),4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,16,,,,,,4.3L V6,

@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2017|dodge|performance",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Performance",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE",
+    "Touring",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

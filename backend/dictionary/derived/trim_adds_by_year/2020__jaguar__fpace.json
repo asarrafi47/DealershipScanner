@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2020|jaguar|fpace",
+  "year": 2020,
+  "make": "Jaguar",
+  "model": "F-Pace",
+  "ladder_id": "brochure_2020__jaguar__fpace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Jaguar EliteCare coverage with New Vehicle Limited Warranty",
+      "Adds Roadside Assistance program",
+      "Adds Includes Jaguar InControl Remote & Protect technology"
+    ],
+    "Premium": [
+      "Adds Meridian Audio system",
+      "Adds Includes HomeLink connectivity feature",
+      "Adds Android Auto integration",
+      "Adds Includes Bluetooth connectivity"
+    ],
+    "Limited": [
+      "Adds 4-piston aluminium monobloc fixed caliper braking system on front axle"
+    ]
+  }
+}

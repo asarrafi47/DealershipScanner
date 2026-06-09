@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|chevrolet|colorado",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2017__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZR2",
+    "Z71",
+    "LT",
+    "WT",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "ZR2": [
+      "3.6L V6 engine with 308 hp and 275 lb-ft torque",
+      "8-speed automatic transmission",
+      "Driver-selectable full locking front and rear differential",
+      "17-inch aluminum wheels",
+      "Active Aero Shutters"
+    ],
+    "Z71": [
+      "Chevrolet MyLink 8-inch touchscreen with app installation via Shop",
+      "SiriusXM Satellite Radio All Access Package with 3-month trial",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for up to seven devices",
+      "4-way power passenger seat",
+      "Manual tilt and telescoping steering column",
+      "Automatic locking rear differential"
+    ],
+    "LT": [
+      "Chevrolet MyLink 7-inch touchscreen with Android Auto and Apple CarPlay",
+      "OnStar Guidance Plan with Automatic Crash Response and navigation",
+      "Bluetooth audio streaming for compatible phones",
+      "Heated driver and front passenger seats"
+    ],
+    "WT": [
+      "AM/FM stereo with 4.2-inch display and auxiliary input",
+      "Electric 2-speed Autotrac transfer case for 4x4 models",
+      "4-way power driver seat",
+      "Content-theft alarm"
+    ],
+    "BASE": [
+      "2.5L 4-cylinder engine with 200 hp and 191 lb-ft torque",
+      "6-speed manual transmission standard on Extended Cab 2WD",
+      "Manual tilt steering column",
+      "Theft-deterrent system",
+      "4-way power driver seat"
+    ]
+  }
+}

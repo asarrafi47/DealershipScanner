@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2011|saab|95",
+  "year": 2011,
+  "make": "Saab",
+  "model": "9-5",
+  "ladder_id": "brochure_llm_2011__saab__95",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Aero XWD",
+    "Premium XWD",
+    "Turbo4 XWD",
+    "Aero",
+    "Premium",
+    "Turbo4"
+  ],
+  "adds_by_trim": {
+    "Aero XWD": [
+      "2.8L V6 turbo engine with 300 hp standard",
+      "All-wheel drive with Linked H-Arm rear suspension",
+      "HiPer Strut front suspension with anti-roll bar",
+      "Four wheel disc brakes with ventilated front and rear",
+      "DriveSense driver selectable chassis with electronic limited-slip directional control",
+      "19-inch Turbine alloy wheels with summer tires",
+      "Sport front and rear fascias with exposed twin exhaust tailpipes",
+      "Tri-zone climate control system",
+      "Auto-dimming outside mirrors",
+      "Power folding exterior mirrors with memory"
+    ],
+    "Premium XWD": [
+      "All-wheel drive with Linked H-Arm rear suspension",
+      "HiPer Strut front suspension with anti-roll bar",
+      "Four wheel disc brakes with ventilated front and rear",
+      "DriveSense driver selectable chassis with electronic limited-slip directional control",
+      "19-inch Turbine alloy wheels with summer tires",
+      "Tri-zone climate control system",
+      "Auto-dimming outside mirrors",
+      "Power folding exterior mirrors with memory",
+      "Remote start with automatic transmission"
+    ],
+    "Turbo4 XWD": [
+      "All-wheel drive with Linked H-Arm rear suspension",
+      "HiPer Strut front suspension with anti-roll bar",
+      "Four wheel disc brakes with ventilated front and rear",
+      "DriveSense driver selectable chassis with electronic limited-slip directional control",
+      "6-speed automatic with manual shift mode"
+    ],
+    "Aero": [
+      "2.8L V6 turbo engine with 300 hp",
+      "Four-link rear suspension with anti-roll bar",
+      "Four wheel disc brakes with ventilated front",
+      "19-inch Turbine alloy wheels with summer tires",
+      "Sport front and rear fascias with exposed twin exhaust tailpipes",
+      "Tri-zone climate control system",
+      "Auto-dimming outside mirrors",
+      "Power folding exterior mirrors with memory"
+    ],
+    "Premium": [
+      "Tri-zone climate control system",
+      "Auto-dimming outside mirrors",
+      "Power folding exterior mirrors with memory",
+      "Remote start with automatic transmission",
+      "High-pressure headlight washers"
+    ],
+    "Turbo4": [
+      "2.0L 4-cylinder turbo engine with 220 hp",
+      "6-speed manual transmission or 6-speed automatic with manual shift mode",
+      "MacPherson strut front suspension with anti-roll bar",
+      "Four-link rear suspension with anti-roll bar",
+      "18-inch 5-spoke Carve alloy wheels with all-season tires",
+      "Dual-zone climate control system",
+      "Anti-lock braking system with Electronic Stability Program",
+      "OnStar Safe & Sound with 12 months service",
+      "Bluetooth hands-free phone system",
+      "XM Satellite Radio with 3-month trial period"
+    ]
+  }
+}

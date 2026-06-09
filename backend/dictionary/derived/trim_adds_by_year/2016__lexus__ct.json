@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2016|lexus|ct",
+  "year": 2016,
+  "make": "lexus",
+  "model": "CT",
+  "ladder_id": "brochure_llm_2016__lexus__ct",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CT200h F SPORT",
+    "CT200h"
+  ],
+  "adds_by_trim": {
+    "CT200h F SPORT": [
+      "F SPORT-tuned suspension and steering calibration",
+      "17-inch performance tires with expected greater wear",
+      "F SPORT exterior styling and design elements"
+    ],
+    "CT200h": [
+      "1.8-liter Atkinson-cycle engine with Lexus Hybrid Drive",
+      "EPA-rated 43/40/42 city/highway/combined mpg",
+      "Dynamic Radar Cruise Control",
+      "Pre-Collision System",
+      "Backup camera",
+      "SmartAccess keyless entry system",
+      "Engine immobilizer anti-theft system",
+      "Supplemental airbag safety systems"
+    ]
+  }
+}

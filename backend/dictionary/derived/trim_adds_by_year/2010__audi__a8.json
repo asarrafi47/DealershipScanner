@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|audi|a8",
+  "year": 2010,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_llm_2010__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A8 L",
+    "A8"
+  ],
+  "adds_by_trim": {
+    "A8 L": [
+      "Fully automatic four-zone climate control system with sun sensor and activated charcoal filter",
+      "Front seat ventilation and massage",
+      "Rear seat electric lumbar support",
+      "Leather/wood segmented four-spoke multifunction steering wheel with shift paddles and wood shift knob",
+      "Contrast stitching on seats",
+      "Leather appointment upgrade with upper/lower dashboard, center console, door panels in Valcona leather",
+      "Carbon fiber decorative inlays in center console and doors with Audi Exclusive doorsills"
+    ],
+    "A8": [
+      "quattro permanent all-wheel drive with torque-sensing center differential",
+      "Audi Space Frame aluminum alloy construction",
+      "Audi adaptive air suspension with continuous damping and automatic self-leveling",
+      "Servotronic vehicle speed-sensitive power steering",
+      "Electronic Stabilization Program",
+      "Driver and front passenger dual-stage airbags with sideguard head protection for all occupants",
+      "Anti-lock brakes with Electronic Brake-pressure Distribution and hydraulic brake assist",
+      "Audi xenon plus headlights with automatic self-leveling and adaptive cornering lights",
+      "Audi Navigation plus system with MMI Advanced and retractable seven-inch color display",
+      "BOSE Sound System with AudioPilot noise compensation"
+    ]
+  }
+}

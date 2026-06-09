@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2015|volvo|v60",
+  "year": 2015,
+  "make": "Volvo",
+  "model": "V60",
+  "ladder_id": "brochure_llm_2015__volvo__v60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V60 T5 AWD Platinum",
+    "V60 T5 AWD Premier Plus",
+    "V60 T5 AWD Premier",
+    "V60 T5 AWD"
+  ],
+  "adds_by_trim": {
+    "V60 T5 AWD Platinum": [
+      "Upgraded interior appointments and premium comfort features"
+    ],
+    "V60 T5 AWD Premier Plus": [
+      "Enhanced premium trim with additional content over Premier"
+    ],
+    "V60 T5 AWD Premier": [
+      "Leather seating surfaces with contour seat design",
+      "Power driver seat with memory and exterior rearview mirror controls"
+    ],
+    "V60 T5 AWD": [
+      "2.5L I-5 engine, 250 hp, 266 lb-ft torque with 6-speed Geartronic automatic transmission",
+      "Electronically controlled AWD with instant traction",
+      "City Safety collision avoidance and advanced stability control",
+      "18-inch PAN alloy wheels with dynamic chassis",
+      "Volvo Sensus 7-inch color touchscreen with integrated navigation",
+      "High-performance audio with Bluetooth and aux input",
+      "Power glass sunroof and electronic climate control",
+      "Heated front seats with leather steering wheel",
+      "60/40 split-folding rear seats with rear park assist"
+    ]
+  }
+}

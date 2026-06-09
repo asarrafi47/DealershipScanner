@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2011|lincoln|mkx",
+  "year": 2011,
+  "make": "Lincoln",
+  "model": "MKX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Select",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

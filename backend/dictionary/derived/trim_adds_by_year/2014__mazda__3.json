@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2014|mazda|3",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2014__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mazda3 s Grand Touring",
+    "Mazda3 s",
+    "Mazda3 i Sport",
+    "Mazda3 i SV"
+  ],
+  "adds_by_trim": {
+    "Mazda3 s Grand Touring": [
+      "SKYACTIV-G 2.5L engine with 184 hp and 185 lb-ft torque",
+      "11.61-inch vented front disc brakes",
+      "18-inch aluminum alloy wheels with P215/45 R18 all-season tires",
+      "Bi-xenon headlights with auto on/off and high beam control",
+      "LED combination taillights",
+      "Adaptive front-lighting system",
+      "Rearview camera",
+      "Auto-dimming rearview mirror with blind spot monitoring and rear cross-traffic alert",
+      "Mazda Advanced Bose CenterPoint 2 surround sound system with 9 speakers",
+      "7-inch full-color touchscreen display with Bluetooth hands-free, AHA and Pandora internet radio"
+    ],
+    "Mazda3 s": [
+      "SKYACTIV-G 2.5L engine with 184 hp and 185 lb-ft torque",
+      "11.61-inch vented front disc brakes",
+      "18-inch aluminum alloy wheels with P215/45 R18 all-season tires",
+      "SKYACTIV-Drive 6-speed automatic with manual-shift mode and Sport mode"
+    ],
+    "Mazda3 i Sport": [
+      "Gloss black dual folding power side mirrors",
+      "Rear roofline spoiler and bright exhaust tip finishers on 5-door models",
+      "Rear window wiper on 5-door models",
+      "Cloth-trimmed sport seats",
+      "Cloth-trimmed door panel inserts",
+      "Steering-wheel-mounted audio and cruise controls"
+    ],
+    "Mazda3 i SV": [
+      "SKYACTIV-G 2.0L engine with 155 hp and 150 lb-ft torque",
+      "SKYACTIV-MT 6-speed manual or SKYACTIV-Drive 6-speed automatic transmission",
+      "16-inch steel wheels with full wheel covers and P205/60 R16 all-season tires",
+      "Body-colored dual folding power side mirrors and door handles",
+      "Power door locks with 2-stage unlocking and power windows with one-touch driver down",
+      "Air conditioning with pollen filter and rear window defogger",
+      "AM/FM audio with 4 speakers, CD player, auxiliary and USB audio inputs",
+      "Bluetooth hands-free phone and audio streaming",
+      "Push button start and cruise control",
+      "60/40 split fold-down rear seat with center-console armrest storage"
+    ]
+  }
+}

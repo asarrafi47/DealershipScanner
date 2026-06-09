@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|porsche|macan",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "Macan",
+  "ladder_id": "brochure_2014__porsche__macan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Turbo",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes CDR Plus audio system with high-resolution 7-inch touchscreen",
+      "Adds Features silver-colored power brake calipers",
+      "Adds Macan S logo branding"
+    ],
+    "Turbo": [
+      "Upgraded to 3.0-liter twin-turbo V6 engine with 340 hp output"
+    ]
+  }
+}

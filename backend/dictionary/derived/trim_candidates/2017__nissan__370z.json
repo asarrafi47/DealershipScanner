@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2017|nissan|370z",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "370Z",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Nismo",
+    "Limited",
+    "Premium",
+    "Touring",
+    "LT",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2026_honda_pilot_complete_options",
+  "make": "Honda",
+  "models": [
+    "Pilot",
+    "Pilot"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Elite": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); All-Wheel Drive"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); All-Wheel Drive"
+      }
+    ],
+    "TrailSport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); All-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S10); All-Wheel Drive"
+      }
+    ]
+  }
+}

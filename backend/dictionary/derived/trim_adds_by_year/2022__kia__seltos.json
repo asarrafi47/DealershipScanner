@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2022|kia|seltos",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Seltos",
+  "ladder_id": "brochure_web_2022__kia__seltos",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SX",
+    "X-Line",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "1.6-liter turbocharged engine with 195 hp and 195 lb-ft torque (AWD only)",
+      "8-speed automatic transmission",
+      "Standard rear parking sensors",
+      "Standard power liftgate"
+    ],
+    "X-Line": [
+      "1.6-liter turbocharged engine with 195 hp and 195 lb-ft torque (AWD only)",
+      "8-speed automatic transmission"
+    ],
+    "EX": [
+      "10.3-inch touchscreen and digital cluster display",
+      "Power driver's seat",
+      "Heated front seats",
+      "Power liftgate",
+      "8-speaker Bose audio system",
+      "Available ventilated front seats",
+      "Available hands-free liftgate",
+      "Available sunroof",
+      "Available power sunroof package",
+      "Standard rear parking sensors (EX and SX)"
+    ],
+    "S": [
+      "4.3-inch gauge cluster display",
+      "Driver's power window with auto up-down",
+      "New 17-inch two-tone wheels",
+      "Standard cargo cover on EX AWD"
+    ],
+    "LX": [
+      "2.0-liter naturally aspirated engine with 146 hp and 132 lb-ft torque",
+      "CVT automatic transmission",
+      "8.0-inch touchscreen",
+      "Apple CarPlay and Android Auto",
+      "6-speaker audio system",
+      "Voice recognition",
+      "Automatic emergency braking",
+      "Lane keep assist and centering",
+      "Driver focus monitor",
+      "Rear occupant alert"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/seltos/"
+}

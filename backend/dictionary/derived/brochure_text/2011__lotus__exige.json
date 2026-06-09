@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|lotus|exige",
+  "year": 2011,
+  "make": "Lotus",
+  "model": "Exige",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Lotus_Exige_Brochure.pdf",
+  "page_count": 8,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

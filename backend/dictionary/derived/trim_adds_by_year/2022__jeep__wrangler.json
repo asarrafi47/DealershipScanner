@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2022|jeep|wrangler",
+  "year": 2022,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_2022__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Altitude",
+    "Limited",
+    "Rubicon",
+    "Sahara",
+    "Willys",
+    "Altitude",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Standard 2.0L Turbo I-4 engine with ESS technology delivering 270 hp",
+      "Adds Standard 8-speed automatic transmission",
+      "Adds Standard 17-inch Black Beadlock-capable wheels",
+      "Adds Standard McKinley leather-trimmed interior in Black",
+      "Adds Standard remote proximity entry"
+    ],
+    "Premium": [
+      "registered trademark of Fox Factory,"
+    ],
+    "Sport": [
+      "Adds Command-Trac 4WD system with 6-speed manual transmission option"
+    ],
+    "Altitude": [],
+    "Willys": [
+      "Available 2.0-liter turbocharged I-4 plug-in hybrid 4xe powertrain"
+    ],
+    "Sahara": [
+      "Adds Command-Trac 4WD system with 6-speed manual transmission option"
+    ],
+    "Rubicon": [
+      "Adds Rock-Trac 4WD system with 6-speed manual transmission option",
+      "Adds 8.4-inch Radio and Premium Audio Group",
+      "Adds HD electrical switch bank",
+      "Adds leather-trimmed seats with Rubicon 392 logos and bronze accent stitching",
+      "Adds leather-wrapped heated steering wheel with paddle shifters",
+      "Adds Cold Weather Group",
+      "Adds 33-inch BFGoodrich off-road tires",
+      "Adds factory 1.5-inch lift",
+      "Adds Steel Bumper Group",
+      "Adds Advanced Safety Group"
+    ],
+    "Limited": [
+      "registered trademarks of Bridgestone Corporation. Dana and Trac-Lok are"
+    ],
+    "High Altitude": [
+      "Adds enhanced accident response system with interior lighting activation and hazard lamp flashing"
+    ]
+  }
+}

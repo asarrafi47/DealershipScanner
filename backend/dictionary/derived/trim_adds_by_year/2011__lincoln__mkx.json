@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|lincoln|mkx",
+  "year": 2011,
+  "make": "Lincoln",
+  "model": "MKX",
+  "ladder_id": "brochure_llm_2011__lincoln__mkx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited Edition",
+    "Elite",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited Edition": [
+      "20-inch polished aluminum wheels"
+    ],
+    "Elite": [
+      "20-inch chrome-clad aluminum wheels"
+    ],
+    "Premium": [
+      "18-inch polished aluminum wheels"
+    ],
+    "Base": [
+      "18-inch premium painted aluminum wheels"
+    ]
+  }
+}

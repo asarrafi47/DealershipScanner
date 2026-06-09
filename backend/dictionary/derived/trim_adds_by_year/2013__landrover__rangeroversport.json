@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2013|landrover|rangeroversport",
+  "year": 2013,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2013__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AUTOBIOGRAPHY SPORT",
+    "HSE w/LUX"
+  ],
+  "adds_by_trim": {
+    "AUTOBIOGRAPHY SPORT": [
+      "20-inch 10-spoke alloy wheel Style 8 standard",
+      "20-inch 5-spoke alloy wheel Style 7 diamond turned finish standard"
+    ],
+    "HSE w/LUX": [
+      "LR-V8 Supercharged engine option with 510 bhp and 461 ft/lbs torque",
+      "LR-V8 engine option with 375 bhp and 375 ft/lbs torque",
+      "Spray-guided direct injection technology",
+      "20-inch 5-spoke alloy wheel Style 6 diamond turned finish optional"
+    ]
+  }
+}

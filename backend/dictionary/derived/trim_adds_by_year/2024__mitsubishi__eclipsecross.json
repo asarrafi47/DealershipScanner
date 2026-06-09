@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2024|mitsubishi|eclipsecross",
+  "year": 2024,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "ladder_id": "brochure_llm_2024__mitsubishi__eclipsecross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL TOURING",
+    "SEL",
+    "SE PANORAMA PACKAGE",
+    "SE",
+    "LE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SEL TOURING": [
+      "Heated rear seats",
+      "Mitsubishi Power Sound System",
+      "Head-Up Display (HUD)",
+      "Forward Collision Mitigation with high-speed braking capability",
+      "Auto-Dimming Mirror with Homelink",
+      "Power panoramic sunroof",
+      "Black roof rails"
+    ],
+    "SEL": [
+      "Paddle shifters",
+      "Black headliner and pillars",
+      "8-way power adjustable passenger seat",
+      "Heated steering wheel",
+      "Multi-view camera system",
+      "Leather appointed seating surfaces",
+      "Body color lower side garnish"
+    ],
+    "SE PANORAMA PACKAGE": [
+      "Power panoramic sunroof",
+      "Black roof rails"
+    ],
+    "SE": [
+      "Blind Spot Warning with Lane Change Assist and Rear Cross Traffic Alert",
+      "8-way power adjustable driver seat",
+      "Synthetic suede seating surfaces",
+      "Automatic headlights",
+      "FAST-Key entry system",
+      "Power folding side mirrors",
+      "My MITSUBISHI CONNECT with Safeguard and Remote services",
+      "18-inch two-tone alloy wheels",
+      "8.0-inch Navigation system with Smartphone-link",
+      "Dual-Zone auto A/C"
+    ],
+    "LE": [
+      "LED fog lights",
+      "18-inch black painted alloy wheels",
+      "Front rain-sensing wipers",
+      "Heated front seats",
+      "Black heated side mirrors",
+      "Leather-wrapped steering wheel",
+      "8.0-inch Smartphone-link Display Audio with SiriusXM 3-month trial",
+      "Steering wheel voice recognition control",
+      "Automatic High Beam",
+      "Black door handle covers"
+    ],
+    "ES": [
+      "1.5L MIVEC DOHC 4-cylinder Direct-Injection Turbocharged engine",
+      "8-speed CVT with Sport Mode",
+      "Active Yaw Control and S-AWC",
+      "Telescopic electric power steering",
+      "Forward Collision Mitigation with pedestrian detection",
+      "Lane Departure Warning",
+      "Hill Start Assist and Active Stability Control",
+      "16-inch two-tone alloy wheels",
+      "Remote Keyless Entry",
+      "7.0-inch display audio with HD radio, Bluetooth and Steering Controls"
+    ]
+  }
+}

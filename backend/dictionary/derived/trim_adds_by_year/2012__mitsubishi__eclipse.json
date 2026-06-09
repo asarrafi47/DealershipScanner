@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2012|mitsubishi|eclipse",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "Eclipse",
+  "ladder_id": "brochure_llm_2012__mitsubishi__eclipse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SE (Special Edition)",
+    "GS Sport",
+    "GS"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "3.8-liter, 265-horsepower V6 MiVec engine",
+      "5-speed Sportronic automatic transmission",
+      "Automatic climate control",
+      "Heated leather front seating surfaces with 6-way power driver's seat"
+    ],
+    "SE (Special Edition)": [
+      "18-inch dark argent alloy wheels",
+      "Black side mirrors",
+      "SE exterior side decal"
+    ],
+    "GS Sport": [
+      "One touch power sunroof",
+      "650-watt (max) Rockford Fosgate audio system",
+      "HID projector-type headlamps"
+    ],
+    "GS": [
+      "2.4-liter, 162-horsepower 4-cylinder MiVec engine",
+      "5-speed manual or available 4-speed Sportronic automatic transmission",
+      "18-inch alloy wheels",
+      "Dual exhaust outlets"
+    ]
+  }
+}

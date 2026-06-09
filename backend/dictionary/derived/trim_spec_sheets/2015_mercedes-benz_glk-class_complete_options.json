@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2015_mercedes-benz_glk-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLK-Class",
+    "GLK-Class"
+  ],
+  "year_min": 2013,
+  "year_max": 2017,
+  "source": "generated",
+  "trims": {
+    "GLK350": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "GLK250": [
+      {
+        "label": "Engine Options",
+        "value": "2.1L I4 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2010|lincoln|mkt",
+  "year": 2010,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_llm_2010__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rapid Spec 202A with Elite Package",
+    "Rapid Spec 201A with Elite Package",
+    "Rapid Spec 102A with Elite Package",
+    "Rapid Spec 101A with Elite Package",
+    "Rapid Spec 201A",
+    "Rapid Spec 101A"
+  ],
+  "adds_by_trim": {
+    "Rapid Spec 202A with Elite Package": [
+      "Voice-activated Navigation System with integrated SIRIUS Travel Link and real-time traffic/weather/fuel-price updates",
+      "THX II Certified 5.1 Surround Audio System with 14 speakers, 10-inch subwoofer, 600 watts, 12-channel amplifier",
+      "BLIS Blind Spot Information System with Cross Traffic Alert",
+      "Power panoramic all-glass Vista Roof spanning first, second, and third rows",
+      "Active Park Assist",
+      "3rd-row one-touch 50/50 split PowerFold bench seat with tailgate fold feature",
+      "Adaptive Cruise Control and Collision Warning with Brake Support"
+    ],
+    "Rapid Spec 201A with Elite Package": [
+      "Voice-activated Navigation System with integrated SIRIUS Travel Link and real-time traffic/weather/fuel-price updates",
+      "THX II Certified 5.1 Surround Audio System with 14 speakers, 10-inch subwoofer, 600 watts, 12-channel amplifier",
+      "BLIS Blind Spot Information System with Cross Traffic Alert",
+      "Power panoramic all-glass Vista Roof spanning first, second, and third rows"
+    ],
+    "Rapid Spec 102A with Elite Package": [
+      "Voice-activated Navigation System with integrated SIRIUS Travel Link and real-time traffic/weather/fuel-price updates",
+      "THX II Certified 5.1 Surround Audio System with 14 speakers, 10-inch subwoofer, 600 watts, 12-channel amplifier",
+      "BLIS Blind Spot Information System with Cross Traffic Alert",
+      "Power panoramic all-glass Vista Roof spanning first, second, and third rows",
+      "3rd-row one-touch 50/50 split PowerFold bench seat with tailgate fold feature",
+      "Adaptive Cruise Control and Collision Warning with Brake Support"
+    ],
+    "Rapid Spec 101A with Elite Package": [
+      "Voice-activated Navigation System with integrated SIRIUS Travel Link and real-time traffic/weather/fuel-price updates",
+      "THX II Certified 5.1 Surround Audio System with 14 speakers, 10-inch subwoofer, 600 watts, 12-channel amplifier",
+      "BLIS Blind Spot Information System with Cross Traffic Alert",
+      "Power panoramic all-glass Vista Roof spanning first, second, and third rows",
+      "3rd-row one-touch 50/50 split PowerFold bench seat with tailgate fold feature",
+      "Adaptive Cruise Control and Collision Warning with Brake Support"
+    ],
+    "Rapid Spec 201A": [
+      "3.5-liter 24-valve EcoBoost V-6 engine with 355 hp and 350 lb-ft torque",
+      "Standard Intelligent All-Wheel Drive",
+      "20-inch polished-aluminum wheels with P255/45R20 all-season tires",
+      "EPA-estimated 16 mpg city/22 mpg highway with AWD"
+    ],
+    "Rapid Spec 101A": [
+      "20-inch polished-aluminum wheels",
+      "Available Intelligent All-Wheel Drive",
+      "2nd-row heated and cooled power fold-and-tumble bucket seats with power lumbar",
+      "Personal Safety System with dual-stage front airbags, safety belt pretensioners, and Front-Passenger Sensing System"
+    ]
+  }
+}

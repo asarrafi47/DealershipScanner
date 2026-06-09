@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,Ford,Ranger,2WD FFV,3.0L V6 (FFV),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.0,15,20,17,,,,,
+1999,Ford,Ranger,2WD FFV,3.0L V6 (FFV),3.0L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.0,16,21,18,,,,,
+1999,Ford,Ranger,Pickup 2WD,2.5L I4,2.5L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.5,18,23,20,,,,,
+1999,Ford,Ranger,Pickup 2WD,2.5L I4,2.5L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.5,19,24,21,,,,,
+1999,Ford,Ranger,Pickup 2WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.0,14,20,16,,,,,
+1999,Ford,Ranger,Pickup 2WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.0,16,20,17,,,,,
+1999,Ford,Ranger,4WD FFV,3.0L V6 (FFV),3.0L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.0,14,18,15,,,,,
+1999,Ford,Ranger,4WD FFV,3.0L V6 (FFV),3.0L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.0,16,20,17,,,,,
+1999,Ford,Ranger,Pickup 4WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.0,14,18,16,,,,,
+1999,Ford,Ranger,Pickup 4WD,4.0L V6,4.0L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.0,15,19,16,,,,,
+1999,Ford,Ranger,Pickup 2WD,EV (Lead Acid) Electricity,EV (Lead Acid) Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Standard Pickup Trucks 2WD,,,62,54,58,,,,,
+1999,Ford,Ranger,Pickup 2WD,EV (NiMH) Electricity,EV (NiMH) Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Standard Pickup Trucks 2WD,,,50,44,47,,,,,

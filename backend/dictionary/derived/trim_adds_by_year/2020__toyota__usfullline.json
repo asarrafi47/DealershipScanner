@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2020|toyota|usfullline",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "ladder_id": "brochure_web_2020__toyota__usfullline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Power moonroof with tilt/slide operation",
+      "Premium audio system with 8-inch touchscreen and smartphone integration",
+      "Leather-trimmed steering wheel and shift knob",
+      "Power driver seat with lumbar support adjustment",
+      "Heated front seats",
+      "Rear parking sonar with backup camera",
+      "Alloy wheels, 17-inch",
+      "Chrome door handles and window trim"
+    ],
+    "XLE": [
+      "Air conditioning with dual-zone climate control",
+      "Power windows, locks, and outside mirrors",
+      "Remote keyless entry system",
+      "6.1-inch touchscreen display with Bluetooth connectivity",
+      "16-inch alloy wheels",
+      "Body-color door handles"
+    ],
+    "LE": [
+      "Power steering with tilt and telescoping adjustment",
+      "Front power windows and power door locks",
+      "Manual air conditioning",
+      "AM/FM stereo with CD player",
+      "15-inch steel wheels with full wheel covers"
+    ],
+    "L": [
+      "2.5L 4-cylinder DOHC engine with 203 horsepower",
+      "5-speed automatic transmission",
+      "Power steering",
+      "Front independent double-wishbone suspension",
+      "Air conditioning system",
+      "Full-size spare tire"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/us-fullline/"
+}

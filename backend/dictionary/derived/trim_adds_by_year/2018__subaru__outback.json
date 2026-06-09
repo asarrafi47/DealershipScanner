@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2018|subaru|outback",
+  "year": 2018,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2018__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Touring",
+    "3.6R Limited",
+    "2.5i Touring",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "2.5i": [
+      "175-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 6-speed manual-mode paddle shifters",
+      "X-MODE with Hill Descent Control",
+      "17-inch aluminum-alloy wheels",
+      "6.5-inch SUBARU STARLINK Multimedia with Apple CarPlay and Android Auto",
+      "Cloth upholstery",
+      "6-way manually adjustable driver's seat and 4-way passenger seat",
+      "Auto-on/off wiper-linked headlights"
+    ],
+    "2.5i Premium": [
+      "8.0-inch SUBARU STARLINK Multimedia Plus with cloud-based apps including Yelp and Magellan navigation",
+      "SiriusXM All Access Radio and Travel Link",
+      "6 speakers with AM/FM/CD player and HD Radio",
+      "Fog lights",
+      "10-way power adjustable driver's seat",
+      "All-Weather Package: heated exterior mirrors, 3-mode heated front seats, windshield wiper de-icer",
+      "Dual-zone automatic climate control",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Front-passenger's auto-up/down power window"
+    ],
+    "2.5i Limited": [
+      "Leather-trimmed upholstery with distinctive stitching",
+      "10-way power adjustable driver's seat with 2-position memory and 4-way power adjustable passenger seat",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Harman Kardon premium audio system with 576-watt GreenEdge amplifier and 12 speakers",
+      "18-inch aluminum-alloy wheels in black with machine finish",
+      "Power moonroof",
+      "Keyless Access with Push-Button Start",
+      "Power rear gate with height memory functions",
+      "All-Weather Package adds dual-mode heated rear seats"
+    ],
+    "2.5i Touring": [
+      "Java Brown leather-trimmed upholstery",
+      "Heated steering wheel",
+      "LED Steering Responsive Headlights",
+      "Low-profile roof rails in silver finish",
+      "18-inch aluminum-alloy wheels in dark gray with machine finish",
+      "Lower door cladding with chrome accents",
+      "Body-color door handles with chrome inserts",
+      "8.0-inch SUBARU STARLINK Navigation system with SiriusXM All Access Radio, Traffic and Travel Link",
+      "EyeSight Driver Assist Technology and High Beam Assist",
+      "Reverse Automatic Braking"
+    ],
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine",
+      "Lineartronic HCVT (High-Torque Continuously Variable Transmission) with 6-speed manual-mode paddle shifters",
+      "Dual exhaust outlets",
+      "LED Steering Responsive Headlights"
+    ],
+    "3.6R Touring": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine",
+      "Lineartronic HCVT with 6-speed manual-mode paddle shifters",
+      "Dual exhaust outlets"
+    ]
+  }
+}

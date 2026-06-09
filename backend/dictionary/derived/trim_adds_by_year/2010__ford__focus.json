@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2010|ford|focus",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_2010__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 5-speed manual transmission",
+      "Adds Features front bucket seats with adjustable head restraints",
+      "Adds 60/40 split-folding rear seats",
+      "Adds Includes AdvanceTrac electronic stability control with 4-wheel ABS",
+      "Adds AM/FM stereo with single-CD player and MP3 capability",
+      "Adds Includes air conditioning and power door locks",
+      "Adds Features tilt steering column and remote keyless-entry system"
+    ],
+    "SEL": [
+      "4-wheel disc brakes",
+      "16-inch aluminum wheels",
+      "Body-color exterior mirrors with integrated turn signal indicators",
+      "6-speaker audio system",
+      "Fog lamps with chrome surrounds",
+      "Automatic headlamps",
+      "Steering wheel with secondary audio controls",
+      "Power front and rear windows with one-touch-down driver's side",
+      "Dual-zone electronic automatic temperature control",
+      "MyKey owner controls feature"
+    ],
+    "Limited": []
+  }
+}

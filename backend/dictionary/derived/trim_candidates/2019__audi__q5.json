@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2019|audi|q5",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Q5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Sport",
+    "Limited",
+    "Q5"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

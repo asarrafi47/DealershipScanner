@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2023_land_rover_discovery_sport_complete_options",
+  "make": "Land",
+  "models": [
+    "Rover Discovery Sport",
+    "Rover Discovery Sport"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, four-wheel-drive; Pre-facelift Discovery II V8 (was Layout Front-engine, four-wheel-drive; L 300Tdi I4-T (diesel; 1994–1998))"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: The driver benefitted from a DVD navigation system, including some optional feat"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, four-wheel-drive; L 300Tdi I4-T (diesel; 1994–1998)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: In order to make room for optional third row jump seats, the spare wheel had to; The interior was offered in a more traditional beige as well as the distinctive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2024|gmc|terrain",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_llm_2024__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "SLT",
+    "SLE"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Most luxurious trim level with premium appointments"
+    ],
+    "AT4": [
+      "All-terrain focused trim with enhanced capability"
+    ],
+    "SLT": [
+      "Mid-level trim with expanded comfort features"
+    ],
+    "SLE": [
+      "1.5L Turbo I4 engine with 175 hp and 203 lb-ft torque",
+      "9-speed automatic transmission",
+      "1,500 lbs maximum trailer weight rating",
+      "3.47 axle ratio",
+      "4,630 lbs GVWR"
+    ]
+  }
+}

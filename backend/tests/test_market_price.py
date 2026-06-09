@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from backend.utils.market_price import (
     CohortIndex,
+    _trim_key,
     attach_market_to_listing_cars,
     cohort_key,
     get_cohort_index,
@@ -25,6 +26,12 @@ def test_mileage_band_buckets():
     assert mileage_band(90000) == "75-100k"
     assert mileage_band(150000) == "100k+"
     assert mileage_band(None) == "unknown"
+
+
+def test_bmw_trim_key_merges_drivetrain_and_dealer_labels():
+    assert _trim_key("BMW", "3 Series", "330i xDrive") == ("bmw", "3 series", "330i")
+    assert _trim_key("BMW", "X5", "xDrive40i") == ("bmw", "x5", "40i")
+    assert _trim_key("BMW", "X5", "X5 40i") == ("bmw", "x5", "40i")
 
 
 def test_market_price_below_average(monkeypatch):

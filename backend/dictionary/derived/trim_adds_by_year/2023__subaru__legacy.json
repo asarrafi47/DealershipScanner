@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2023|subaru|legacy",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_llm_2023__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Legacy Touring XT",
+    "Legacy Sport",
+    "Legacy Limited",
+    "Legacy Premium",
+    "Legacy"
+  ],
+  "adds_by_trim": {
+    "Legacy Premium": [
+      "Body-color side mirrors with integrated turn signals",
+      "All-Weather Package: heated exterior mirrors, 3-mode heated front seats, windshield wiper de-icer",
+      "10-way power-adjustable driver seat with lumbar support",
+      "Leather-wrapped steering wheel and shifter handle",
+      "11.6-inch Multimedia Plus with wireless Apple CarPlay and Android Auto"
+    ],
+    "Legacy Limited": [
+      "18-inch aluminum-alloy wheels",
+      "LED fog lights",
+      "Automatic tilt-down passenger side mirror",
+      "Keyless Access with Push-Button Start",
+      "Leather-trimmed upholstery",
+      "12-way power-adjustable driver seat with 4-way lumbar support",
+      "8-way power-adjustable front-passenger seat",
+      "Two-position memory driver seat and side mirrors",
+      "Heated outboard rear seats",
+      "Harman Kardon 576-watt premium audio system with 12 speakers"
+    ],
+    "Legacy Sport": [
+      "260-hp 2.4-liter turbocharged SUBARU BOXER engine",
+      "Lineartronic CVT High-Torque with 8-speed manual-mode paddle shifters",
+      "Dual exhaust with stainless steel tips",
+      "Sport-tuned suspension",
+      "Sport front grille and Sport badges",
+      "Magnetite Gray Metallic finish trunk spoiler",
+      "18-inch aluminum-alloy wheels in gray finish",
+      "Power moonroof",
+      "Two-Tone Black and Gray cloth upholstery with red contrast stitching",
+      "Gunmetal metallic interior accents"
+    ],
+    "Legacy Touring XT": [
+      "Nappa leather-trimmed upholstery",
+      "High-grade leather-wrapped 360-degree heated steering wheel",
+      "3-mode ventilated front seats",
+      "11.6-inch Multimedia Navigation with 3 years map updates"
+    ],
+    "Legacy": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "EyeSight Driver Assist Technology",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 8-speed manual-mode paddle shifters",
+      "Auto-on/off LED Steering Responsive Headlights with High Beam Assist",
+      "17-inch aluminum-alloy wheels",
+      "Cloth upholstery",
+      "6-way manually adjustable driver seat, 4-way front-passenger seat",
+      "7.0-inch Multimedia with Apple CarPlay and Android Auto",
+      "Automatic climate control"
+    ]
+  }
+}

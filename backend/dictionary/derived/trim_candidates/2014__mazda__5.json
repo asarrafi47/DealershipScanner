@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|mazda|5",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Select",
+    "Sport",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

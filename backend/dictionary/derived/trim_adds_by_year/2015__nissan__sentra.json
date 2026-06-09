@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2015|nissan|sentra",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2015__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "FE+ S",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Leather-appointed seats",
+      "Maple wood-tone interior trim",
+      "Dual Zone Automatic Temperature Control with in-cabin microfilter",
+      "Auto-dimming rearview mirror",
+      "Rear seat heating vents"
+    ],
+    "SR": [
+      "17-inch Forked 5-spoke dark-finished aluminum-alloy wheels",
+      "Rear spoiler with integrated LED brake light",
+      "Dual power heated outside mirrors with LED turn signal indicators",
+      "Fog lights",
+      "Sport front and rear fascias with sport grille",
+      "Lower body side sill extensions",
+      "Chrome exhaust finisher",
+      "Premium sport cloth seat trim",
+      "Heated front seats",
+      "Sport Silver interior trim"
+    ],
+    "SV": [
+      "Standard Xtronic CVT transmission",
+      "NissanConnect with Mobile Apps and Hands-free text messaging",
+      "RearView Monitor",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Sliding front armrest",
+      "Premium cloth seat and door trim",
+      "Leather-wrapped steering wheel and shift knob",
+      "Fine Vision electroluminescent gauges with chrome accents",
+      "AM/FM/CD audio system with 5.0-inch color monitor and six speakers",
+      "SiriusXM Satellite Radio with Streaming audio via Bluetooth"
+    ],
+    "FE+ S": [
+      "Standard Xtronic CVT transmission",
+      "Special low rolling resistance tires",
+      "Rear spoiler",
+      "Dual Zone Automatic Temperature Control with in-cabin microfilter",
+      "Underbody and rear tire aerodynamic deflectors",
+      "Fog lights"
+    ],
+    "S": [
+      "1.8-liter 4-cylinder engine with 6-speed manual or Xtronic CVT transmission",
+      "Eco, Normal and Sport drive modes",
+      "Anti-lock Braking System and Electronic Brake Force Distribution",
+      "Halogen headlights with LED accent lights and Smart Auto Headlights",
+      "LED taillights",
+      "Bluetooth Hands-free Phone System",
+      "Fine Vision electroluminescent gauges with drive computer and outside temperature display",
+      "Power windows and door locks",
+      "17-inch Split 7-spoke aluminum-alloy wheels",
+      "11.5-inch solid rear disc brakes with Vehicle Dynamic Control and Traction Control System"
+    ]
+  }
+}

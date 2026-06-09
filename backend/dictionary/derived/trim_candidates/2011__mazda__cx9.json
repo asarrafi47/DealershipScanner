@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2011|mazda|cx9",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "CX-9",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "Touring",
+    "LT",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2013|audi|sport",
+  "year": 2013,
+  "make": "Audi",
+  "model": "sport",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "S line",
+    "Platinum",
+    "Limited",
+    "LT",
+    "Sport",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

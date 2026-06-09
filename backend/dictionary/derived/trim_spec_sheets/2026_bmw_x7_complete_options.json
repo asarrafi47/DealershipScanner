@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2026_bmw_x7_complete_options",
+  "make": "BMW",
+  "models": [
+    "X7",
+    "X7"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "M60i xDrive": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "xDrive40i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L N63 twin-turbo V8; L S68 twin-turbo V8"
+      }
+    ],
+    "Alpina XB7": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

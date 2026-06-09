@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2018|porsche|panamera",
+  "year": 2018,
+  "make": "Porsche",
+  "model": "Panamera",
+  "ladder_id": "brochure_llm_2018__porsche__panamera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Panamera 4 E-Hybrid Sport Turismo",
+    "Panamera 4 Sport Turismo"
+  ],
+  "adds_by_trim": {
+    "Panamera 4 E-Hybrid Sport Turismo": [
+      "Hybrid powertrain with electric motor and gasoline engine",
+      "0–100 km/h acceleration in 4.6 seconds with Launch Control",
+      "Combined fuel consumption of 2.5 l/100 km",
+      "Electric-only range of 25–51 km in everyday driving",
+      "Electricity consumption of 15.9 kWh/100 km",
+      "CO₂ emissions of 56 g/km",
+      "Top speed of 275 km/h",
+      "3.1 second overtaking acceleration (80–120 km/h)"
+    ],
+    "Panamera 4 Sport Turismo": [
+      "All-wheel drive instead of rear-wheel drive",
+      "Same 2.9-liter twin-turbo V-6 engine with 348 hp"
+    ]
+  }
+}

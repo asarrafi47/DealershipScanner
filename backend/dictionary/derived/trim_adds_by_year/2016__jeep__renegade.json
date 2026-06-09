@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2016|jeep|renegade",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_llm_2016__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRAILHAWK",
+    "LIMITED"
+  ],
+  "adds_by_trim": {
+    "TRAILHAWK": [
+      "Jeep Active Drive Low with disconnecting rear axle, full-time 4x4, 20:1 crawl ratio",
+      "Selec-Terrain Traction Management System including Rock mode",
+      "Hill Descent Control",
+      "0.8-inch increased ride height",
+      "Unique front and rear fascias with Black grille",
+      "Unique Trailhawk and Trail Rated badging",
+      "Hood decal in Low-Gloss Black",
+      "Tonneau cover and security alarm"
+    ],
+    "LIMITED": [
+      "2.4L Tigershark I-4 engine with 9-speed automatic transmission",
+      "Uconnect 6.5 NAV with 6.5-inch touchscreen, GPS, HD radio",
+      "Beats Audio 9-speaker premium sound system with subwoofer",
+      "Ambient LED interior lighting",
+      "8-way power driver's seat with 4-way power lumbar adjuster",
+      "40/20/40 split-folding rear seats with three head restraints",
+      "Rearview auto-dimming mirror",
+      "Black-accent roof with power heated side mirrors",
+      "Keyless Enter 'n Go with push-button start and Remote Start System",
+      "7 airbags including advanced multistage driver and front passenger"
+    ]
+  }
+}

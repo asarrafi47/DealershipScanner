@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_lexus_ux_complete_options",
+  "make": "Lexus",
+  "models": [
+    "UX",
+    "UX"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive; The 2023 Lexus UX is now a fuel-efficient hybrid SUV, one that feels halfway between a sma"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive; The 2023 Lexus UX is now a fuel-efficient hybrid SUV, one that feels halfway between a sma"
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2023|nissan|armada",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2023__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Vehicle-speed-sensitive power steering",
+      "Intelligent Back-Up Intervention",
+      "Intelligent Rear View Mirror",
+      "Traffic Sign Recognition",
+      "Climate-controlled front seats with heating and cooling",
+      "Heated outboard second-row seats",
+      "Power recline and one-touch folding third-row seats",
+      "Quilted leather-appointed seats"
+    ],
+    "SL": [
+      "Intelligent Around View Monitor",
+      "20-inch 18-spoke aluminum-alloy wheels",
+      "Body-color outside mirrors with puddle lights",
+      "Auto-dimming outside mirrors",
+      "Power sliding glass moonroof",
+      "Power liftgate",
+      "120-volt AC power outlet",
+      "Leather-appointed seats with door trim and double stitching",
+      "Heated leather-wrapped steering wheel",
+      "Bose Premium Audio System with 13 speakers and subwoofer"
+    ],
+    "SV": [
+      "Trailer brake controller",
+      "Trailer Sway Control",
+      "Power heated and folding body-color outside mirrors with LED turn signals",
+      "Rear privacy glass",
+      "Dark gray roof rails",
+      "LED fog lights",
+      "Body-color overfenders",
+      "Black grille and rear finisher"
+    ],
+    "S": [
+      "400-hp 5.6-liter V8 engine with 7-speed automatic transmission",
+      "Available Intelligent 4x4 with 2-speed transfer case",
+      "13.8-inch front and rear vented disc brakes with ABS",
+      "Independent double-wishbone suspension with auto-leveling rear",
+      "Intelligent Cruise Control and Intelligent Driver Alertness",
+      "Intelligent Lane Intervention and Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Blind Spot Intervention and Rear Cross Traffic Alert",
+      "18-inch 12-spoke aluminum-alloy wheels with LED headlights",
+      "NissanConnect 12.3-inch touchscreen with Apple CarPlay and Android Auto"
+    ]
+  }
+}

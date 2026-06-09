@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|dodge|caliber",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Caliber",
+  "ladder_id": "brochure_llm_2012__dodge__caliber",
+  "source": "brochure_llm",
+  "trims_available": [
+    "sXT Plus",
+    "sXT",
+    "sE"
+  ],
+  "adds_by_trim": {
+    "sXT Plus": [
+      "18-inch polished aluminum wheels",
+      "Sport-tuned suspension",
+      "Color-keyed instrument panel inserts",
+      "Premium cloth seats with color-keyed inserts in red, blue, or silver"
+    ],
+    "sXT": [
+      "4-wheel disc antilock brakes (ABS)",
+      "Bright grille",
+      "Fog lamps",
+      "17-inch aluminum wheels",
+      "Tachometer",
+      "Front passenger fold-flat seat and reclining rear seat",
+      "Map/dome reading lamp and removable rechargeable trouble lamp",
+      "Interior assist handles"
+    ],
+    "sE": [
+      "Body-color grille",
+      "15-inch wheel covers",
+      "Air conditioning with Chill Zone beverage storage bin",
+      "Power windows, power heated mirrors, and power door locks",
+      "Remote keyless entry",
+      "Cruise control",
+      "Illuminated cup holders and sliding armrest",
+      "Premium cloth seats with 60/40 split-folding rear seat",
+      "Media Center 130 with SiriusXM satellite radio",
+      "Electronic stability control with antilock brakes and traction control"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2019|nissan|kicks",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Kicks",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SV",
+    "SR",
+    "Sport",
+    "SE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

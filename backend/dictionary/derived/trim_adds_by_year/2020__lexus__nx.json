@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2020|lexus|nx",
+  "year": 2020,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "2018_lexus_nx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Base",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "F Sport": [
+      "Job Number: LEXNXP94102"
+    ],
+    "Base": [
+      "Job Number: LEXNXP94102"
+    ],
+    "Luxury": [
+      "Luxury trim positioning with enhanced upscale appointments"
+    ],
+    "Premium": [
+      "Premium trim level above base NX 350"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 6,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.4,
+    "per_trim_add_counts": {
+      "F Sport": 1,
+      "Premium": 0,
+      "Base": 1,
+      "Limited": 0,
+      "Sport": 0
+    }
+  }
+}

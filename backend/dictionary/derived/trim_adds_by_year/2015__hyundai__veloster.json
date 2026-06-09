@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2015|hyundai|veloster",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_llm_2015__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Veloster Turbo R-Spec",
+    "Veloster Turbo RE:FLEX Edition",
+    "Veloster Turbo",
+    "Veloster Style Package",
+    "Veloster"
+  ],
+  "adds_by_trim": {
+    "Veloster": [
+      "138 HP 1.6L Gasoline Direct Injection DOHC 4-cylinder engine with Dual CVVT",
+      "6-speed manual or available 6-speed EcoShift Dual Clutch Transmission with SHIFTRONIC paddle shifters",
+      "Remote keyless entry with alarm system",
+      "Air conditioning",
+      "Tilt-and-telescopic steering wheel with cruise, audio and phone controls",
+      "Manual 6-way adjustable driver bucket seat",
+      "7-inch LCD multimedia center console touchscreen",
+      "AM/FM/SiriusXM/CD/MP3 audio system with 6 speakers",
+      "Rearview camera with 60/40 split fold-down rear seatback",
+      "6-airbag safety system with advanced dual front airbags and Occupant Classification System"
+    ],
+    "Veloster Style Package": [
+      "450-Watt Dimension premium audio system with external amp and subwoofer",
+      "Blue Link telematics system",
+      "Power panoramic tilt-and-slide sunroof",
+      "18-inch alloy wheels with painted inserts",
+      "Chrome hood accents and chrome door handles",
+      "Projector headlights with LED accents",
+      "Piano black interior accents"
+    ],
+    "Veloster Turbo": [
+      "201 HP 1.6L twin-scroll turbo DOHC 4-cylinder engine",
+      "6-speed manual or available 6-speed SHIFTRONIC automatic transmission with paddle shifters",
+      "Active Sound Design",
+      "Torque Vectoring Control",
+      "Sport-tuned steering",
+      "Proximity key entry with push-button start",
+      "Automatic temperature control",
+      "Automatic headlight control",
+      "Backup warning sensors",
+      "18-inch alloy wheels with unique chrome accents"
+    ],
+    "Veloster Turbo RE:FLEX Edition": [
+      "Leather seating surfaces with power-adjustable lumbar support",
+      "Illuminated entrance sills",
+      "Heated front seats",
+      "Driver auto-up window",
+      "LED taillights and front fog lights",
+      "Ground effects body kit",
+      "Front projector headlights with LED accents",
+      "Rear LED taillights",
+      "Turn signal indicators on side mirrors",
+      "RE:FLEX Edition badge and floor mats"
+    ],
+    "Veloster Turbo R-Spec": [
+      "Red leatherette bolster and door inserts",
+      "B&M Racing Sport Shifter",
+      "Sport-tuned suspension and steering",
+      "R-Spec badge and floor mats"
+    ]
+  }
+}

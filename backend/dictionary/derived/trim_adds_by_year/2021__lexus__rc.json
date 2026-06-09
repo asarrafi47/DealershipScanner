@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|lexus|rc",
+  "year": 2021,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "brochure_llm_2021__lexus__rc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RCF FUJI SPEEDWAY EDITION",
+    "RCF CARBON PACKAGE",
+    "RCF PREMIUM PACKAGE",
+    "RCF"
+  ],
+  "adds_by_trim": {
+    "RCF FUJI SPEEDWAY EDITION": [
+      "Carbon fiber hood, roof, front spoiler, rocker-panel splitters, rear diffuser, fixed rear wing",
+      "Titanium mufflers",
+      "Brembo carbon-ceramic brakes with red brake calipers",
+      "Red Carbon Fiber interior trim",
+      "Circuit Red Alcantara interior trim",
+      "Black Carbon Fiber interior trim"
+    ],
+    "RCF CARBON PACKAGE": [
+      "Carbon fiber roof, front spoiler, rocker-panel splitters, rear diffuser, speed-activated rear wing",
+      "Black Carbon Fiber interior trim",
+      "Premium Triple-Beam LED headlamps",
+      "Torque Vectoring Differential"
+    ],
+    "RCF PREMIUM PACKAGE": [
+      "Premium Triple-Beam LED headlamps",
+      "Power moonroof",
+      "Orange Metallic Brembo brake calipers",
+      "Torque Vectoring Differential",
+      "Leather-trimmed interior with driver's-seat memory",
+      "Heated and ventilated front seats",
+      "Heated steering wheel"
+    ],
+    "RCF": [
+      "472-horsepower V8 with eight-speed paddle-shift transmission",
+      "Launch Control",
+      "Torsen limited-slip rear differential with lightweight hollow half shafts",
+      "F-Adaptive Variable Suspension",
+      "Drive Mode Select with Sport S/S+ and Custom modes",
+      "Bi-LED headlamps and daytime running lights",
+      "10-way power-adjustable driver's seat and eight-way front passenger sport seat",
+      "Brembo six-piston front and four-piston rear calipers",
+      "Lexus Safety System+, Blind Spot Monitor, Rear Cross-Traffic Alert",
+      "Complimentary scheduled maintenance services"
+    ]
+  }
+}

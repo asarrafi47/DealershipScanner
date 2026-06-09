@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2023_kia_stinger_complete_options",
+  "make": "Kia",
+  "models": [
+    "Stinger",
+    "Stinger"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6; Kia Motors Media Journalist Information News Select up to 3 trims to compare wit"
+      }
+    ],
+    "GT-Line": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6; Kia Motors Media Journalist Information News Select up to 3 trims to compare wit"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6; Kia Motors Media Journalist Information News Select up to 3 trims to compare wit"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L Lambda II T-GDi V6; Kia Motors Media Journalist Information News Select up to 3 trims to compare wit"
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|dodge|avenger",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Avenger",
+  "ladder_id": "brochure_llm_2014__dodge__avenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AVENGER R/T",
+    "AVENGER SXT",
+    "AVENGER SE"
+  ],
+  "adds_by_trim": {
+    "AVENGER R/T": [
+      "3.6L 283-horsepower DOHC 24V Pentastar V6 engine",
+      "Center-mounted tachometer on unique instrument panel",
+      "Sport-tuned suspension with performance power steering",
+      "18-inch polished aluminum wheels",
+      "Projector fog lamps",
+      "Unique performance seats with high-leather bolsters and red accent stitching",
+      "Dual rear exhaust with bright tips",
+      "Automatic headlamps with black bezel",
+      "UConnect 430 with 6.5-inch touchscreen CD/DVD/MP3 radio",
+      "6 Boston Acoustics speakers with 276-watt amplifier"
+    ],
+    "AVENGER SXT": [
+      "3.6L 283-horsepower DOHC 24V Pentastar V6 engine option",
+      "6-speed automatic transmission (vs 4-speed on SE I-4)",
+      "Touring suspension",
+      "Bright split crosshair grille",
+      "Body-color door handles and rear spoiler",
+      "LED taillamps",
+      "Body-color heated foldaway exterior mirrors",
+      "Overhead console with satin carbon pockets and dual storage",
+      "UConnect 430 with 6.5-inch touchscreen CD/DVD/MP3 radio",
+      "Power 8-way driver's seat with lumbar adjust"
+    ],
+    "AVENGER SE": [
+      "2.4L 173-horsepower DOHC 16V I-4 engine with 4-speed automatic",
+      "17-inch wheel covers",
+      "Tilt/telescoping steering column",
+      "Air conditioning",
+      "UConnect 130 AM/FM/CD/MP3 radio with 4 speakers",
+      "Premium cloth seats",
+      "6 airbags including advanced multistage front and side-curtain",
+      "4-wheel antilock disc brakes with traction control",
+      "Electronic stability control",
+      "60/40 split-folding rear seat"
+    ]
+  }
+}

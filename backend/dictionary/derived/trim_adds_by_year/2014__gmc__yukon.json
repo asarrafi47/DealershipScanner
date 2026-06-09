@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|gmc|yukon",
+  "year": 2014,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "2012_gmc_yukon_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Cd",
+    "Mp3"
+  ],
+  "adds_by_trim": {
+    "Mp3": [
+      "and air ducts \u25cf \u25cf \u25cf side glass.",
+      "or with bright accent on Yukon Denali \u25cf \u25cf \u25cf",
+      "sYsteM Does not monitor spare \u25cf \u25cf \u25cf",
+      "alterations) to any of the parts, components, systems or assemblies",
+      "service and GPS satellite signals to be available",
+      "differently sourced components than originally scheduled. Since some options may be unavailable when your",
+      "vehicle includes the equipment you ordered or, if there are",
+      "purchase or lease of an eligible new GM vehicle. With three cards to choose from, you\u2019re sure",
+      "schedule for up to 2 years or 24,000 miles, whichever comes first. Does not include air filters. Maximum of 4 service",
+      "t siriusxm.com/navtraffic. XM satellite service is available only to those in the 48 contiguous USA and DC.",
+      "General Motors, its subsidiaries, affiliates or"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 11.0,
+    "per_trim_add_counts": {
+      "Mp3": 11
+    }
+  }
+}

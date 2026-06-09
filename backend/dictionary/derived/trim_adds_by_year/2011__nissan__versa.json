@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2011|nissan|versa",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2011__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1.8 SL",
+    "1.8 S",
+    "1.6",
+    "1.6 Base"
+  ],
+  "adds_by_trim": {
+    "1.8 SL": [
+      "1.8-liter DOHC 16-valve engine with 122 hp and 127 lb-ft torque",
+      "15-inch 6-spoke aluminum-alloy wheels",
+      "4-speed automatic transmission standard on sedan; Xtronic CVT on hatchback",
+      "Available moonroof package with power sliding glass and tilt feature",
+      "Available navigation package with 5-inch color display and XM Satellite Radio"
+    ],
+    "1.8 S": [
+      "1.8-liter DOHC 16-valve engine with 122 hp and 127 lb-ft torque",
+      "6-speed manual transmission standard",
+      "15-inch x 5.5-inch steel wheels with wheel covers",
+      "Cruise control with steering-wheel-mounted controls on hatchback",
+      "Available Vehicle Dynamic Control (VDC) with Traction Control System package"
+    ],
+    "1.6": [
+      "Power door locks with auto-locking feature",
+      "Power windows with driver one-touch auto-up/down",
+      "Door armrest pad",
+      "Rear door pockets",
+      "5-speed manual transmission standard"
+    ],
+    "1.6 Base": [
+      "1.6-liter DOHC 16-valve engine with 107 hp and 111 lb-ft torque",
+      "5-speed manual transmission",
+      "14-inch x 5.0-inch steel wheels with wheel covers",
+      "P185/65HR14 all-season tires",
+      "Front independent strut suspension with torsion beam rear suspension"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2017|honda|fit",
+  "year": 2017,
+  "make": "Honda",
+  "model": "Fit",
+  "ladder_id": "brochure_llm_2017__honda__fit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic",
+      "HD Radio",
+      "SiriusXM Radio",
+      "180-watt audio system with 6 speakers",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "Push button start",
+      "SMS text message function"
+    ],
+    "EX": [
+      "16-inch alloy wheels",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry system",
+      "Fog lights",
+      "Multi-angle rearview camera with dynamic guidelines",
+      "Honda LaneWatch",
+      "Heated side mirrors with integrated turn indicators",
+      "7-inch Display Audio with electrostatic touchscreen",
+      "HondaLink connectivity",
+      "Pandora compatibility"
+    ],
+    "LX": [
+      "130-hp 1.5-liter i-VTEC 4-cylinder engine with direct-injection",
+      "6-speed manual or continuously variable transmission (CVT) available",
+      "Eco coaching and Econ button (CVT models)",
+      "Six airbags and Advanced Compatibility Engineering (ACE) body structure",
+      "Vehicle Stability Assist (VSA) with Traction Control",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Multi-reflector halogen headlights with auto-on/off",
+      "Body-colored power side mirrors and rear roofline spoiler",
+      "LED brake lights",
+      "160-watt audio system with 4 speakers and 5-inch color LCD screen"
+    ]
+  }
+}

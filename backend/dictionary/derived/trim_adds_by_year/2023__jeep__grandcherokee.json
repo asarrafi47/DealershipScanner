@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2023|jeep|grandcherokee",
+  "year": 2023,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "brochure_llm_2023__jeep__grandcherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Summit Reserve",
+    "Summit",
+    "Overland",
+    "Limited",
+    "Laredo"
+  ],
+  "adds_by_trim": {
+    "Summit Reserve": [
+      "Ventilated Palermo Leather with Quilted Palermo Leather Bolsters and Cognac accent stitching",
+      "Ventilated rear seats with Deluxe headliner",
+      "Window shades for 2nd row and Palermo leather door trim",
+      "Wireless charging pad and Summit Reserve badging",
+      "21-inch Polished / Painted Aluminum wheels",
+      "Rearview auto-dimming digital display mirror",
+      "Front-passenger interactive display",
+      "Head-Up Display and Night-Vision Pedestrian / Animal Detection"
+    ],
+    "Summit": [
+      "5.7L HEMI V8 Variable Valve Timing engine with 8-speed automatic transmission",
+      "20-inch fully painted Silver aluminum wheels on 3-row models",
+      "Fine Silver / Gloss Black roof rails and Black-painted roof",
+      "Quadra-Drive II with rear electronic Limited-Slip Differential",
+      "Premium McIntosh 19-speaker, 950-watt High-Performance Audio System",
+      "10.25-inch touchscreen front-passenger interactive display",
+      "360 Surround-View Camera System with video USB port",
+      "50/50 power-folding 3rd-row bench seat with 2nd-row bucket seats",
+      "Wood and leather-wrapped steering wheel with Adaptive Cruise Control Stop and Go"
+    ],
+    "Overland": [
+      "Quadra-Trac II Active Four-Wheel-Drive System with 2-speed transfer case",
+      "Quadra-Lift Air Suspension System on 4x4 models",
+      "Automatic LED headlamps with LED daytime running lamps",
+      "Gloss Black / Bright roof rails and Nappa leather-trimmed seats",
+      "McIntosh 19-speaker, 825-watt High-Performance Audio System",
+      "CommandView Dual-Pane Power Panoramic Sunroof",
+      "Rear-Seat Video Group with Amazon Fire TV built-in and video screens",
+      "Manual-folding Tip-and-Slide 2nd-row bucket seats with 3rd-row USB port"
+    ],
+    "Limited": [
+      "5.7L HEMI V8 Variable Valve Timing engine with 8-speed automatic transmission",
+      "20-inch fully polished aluminum wheels on 4x4 models",
+      "Gloss Black / Bright roof rails and Automatic LED headlamps with DRLs",
+      "Trailer Tow Package with Class IV hitch receiver and wiring harness",
+      "McIntosh 19-speaker, 825-watt High-Performance Audio System",
+      "Hands-free power liftgate and front tow hooks",
+      "Alpine Premium Audio System with 9 speakers including subwoofer",
+      "Advanced ProTech Group III with Head-Up Display and Active Driving Assist"
+    ],
+    "Laredo": [
+      "Active noise cancellation and Alpine Premium Audio System with 9 speakers",
+      "18-inch fully painted aluminum wheels",
+      "Capri Vinyl interior with Light Tungsten accent stitching",
+      "Passive entry for front and rear doors and liftgate",
+      "Power tilt/telescoping steering wheel with memory",
+      "Ventilated front seats and 4-Zone Automatic Temperature Control",
+      "Rearview auto-dimming mirror and rear back-up camera",
+      "Hill Descent Control and Interior Rear-Facing Camera"
+    ]
+  }
+}

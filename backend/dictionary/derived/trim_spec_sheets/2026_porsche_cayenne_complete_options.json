@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2026_porsche_cayenne_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Cayenne",
+    "Cayenne"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ],
+    "GTS": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, four-wheel-drive"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic (S8)"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "In October 2012, Porsche confirmed the addition of a new Cayenne Turbo S. I"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L M4851 TT V8 (Turbo/Turbo S); Turbo: 1,696 mm (66.8 in)"
+      }
+    ]
+  }
+}

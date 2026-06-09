@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2020|buick|envision",
+  "year": 2020,
+  "make": "Buick",
+  "model": "Envision",
+  "ladder_id": "brochure_llm_2020__buick__envision",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium II",
+    "Premium",
+    "Essence",
+    "Preferred",
+    "Envision"
+  ],
+  "adds_by_trim": {
+    "Premium II": [
+      "Wireless smartphone charging for compatible devices",
+      "Automatic parking assist with front and rear park assist",
+      "Head-up display",
+      "Driver Confidence Package with adaptive cruise control and surround vision",
+      "Cooled front seats"
+    ],
+    "Premium": [
+      "Intelligent all-wheel drive with active twin clutch",
+      "Bose premium audio 7-speaker system with amplifier",
+      "LED headlamps",
+      "Safety alert seat",
+      "Forward collision alert"
+    ],
+    "Essence": [
+      "Buick Infotainment System with 8-inch diagonal color touchscreen and navigation",
+      "Lane keep assist with lane departure warning",
+      "Rear cross traffic alert",
+      "In-vehicle air ionizer"
+    ],
+    "Preferred": [
+      "Tri-zone climate control",
+      "Lane change alert with side blind zone alert",
+      "Perforated leather-appointed seats",
+      "Heated rear outboard seats",
+      "Heated steering wheel"
+    ],
+    "Envision": [
+      "Hands-free power liftgate",
+      "Heated front seats",
+      "Rear vision camera",
+      "Apple CarPlay compatibility",
+      "Android Auto compatibility",
+      "Built-in Wi-Fi hotspot with 1-month data trial or 3GB",
+      "2.5L DOHC SIDI engine with 197 horsepower",
+      "Panoramic moonroof on Preferred and higher"
+    ]
+  }
+}

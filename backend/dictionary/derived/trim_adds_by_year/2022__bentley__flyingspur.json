@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2022|bentley|flyingspur",
+  "year": 2022,
+  "make": "bentley",
+  "model": "flying spur",
+  "ladder_id": "brochure_llm_2022__bentley__flyingspur",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Flying Spur W12",
+    "Flying Spur Hybrid"
+  ],
+  "adds_by_trim": {
+    "Flying Spur W12": [
+      "W12 fender badge instead of Hybrid badge",
+      "Electronic all-wheel steering system",
+      "Bentley Dynamic Ride system instead of standard air suspension",
+      "2 large oval exhaust finishers instead of quad oval",
+      "Hands-free virtual pedal power operation to boot lid",
+      "City Specification with traffic sign recognition and rear crossing traffic warning"
+    ],
+    "Flying Spur Hybrid": [
+      "8-speed dual clutch transmission with hybrid powertrain integration",
+      "Active all-wheel drive system",
+      "3-chamber air suspension with continuous damping control",
+      "Quad oval exhaust finishers",
+      "Electronic Stability Programme with TCS, ABS, EBD, HBA, MSR",
+      "Dynamic ride-height control with auto ground clearance adjustment",
+      "Torque vectoring by brake",
+      "Front vented 410x38mm disc brakes with Bentley black brake calipers",
+      "Rear vented 380x30mm disc brakes with Bentley black brake calipers",
+      "Electronic parking brake with drive away assist"
+    ]
+  }
+}

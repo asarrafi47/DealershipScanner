@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2022|toyota|4runner",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SE",
+    "LE",
+    "SR5",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Rear-Wheel Drive (RWD) Hill Start Assist Control (HAC)3 and available X-REAS Sport Enhancement Suspension",
+      "Automatic Limited-Slip Differential Downhill Assist Control (DAC)36 Hill Start Assist Control (HAC)3 and available",
+      "Up to 16 city/19 highway/17 combined est. mpg37 Downhill Assist Control (DAC)36",
+      "Available part-time 4WD system with",
+      "Active Traction Control (A-TRAC) Exterior Features Up to 16 city/19 highway/17 combined est. mpg37",
+      "Hill Start Assist Control (HAC)3 and available Yakima\u00ae LoadWarrior cargo basket Exterior Features",
+      "Downhill Assist Control (DAC)36",
+      "Up to 16 city/19 highway/17 combined est. mpg37",
+      "Black external emblem overlays \u201cTRD Sport\u201d badge on C-pillars",
+      "Interior Features Interior Features",
+      "Black fabric seating with unique tan accent stitch SofTex\u00ae-trimmed11 seats"
+    ],
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5 Adds to or replaces features offered on TRD Off-Road",
+      "Available part-time 4WD system with Part-time 4WD system with Active Traction Part-time 4WD system with Active Traction",
+      "Active Traction Control (A-TRAC) Control (A-TRAC) Control (A-TRAC)",
+      "Hill Start Assist Control (HAC)3 and available Hill Start Assist Control (HAC)3 and Multi-Terrain Hill Start Assist Control (HAC)3 and Multi-Terrain",
+      "Downhill Assist Control (DAC)36 Select (MTS) and Crawl Control (CRAWL)5 Select (MTS) and Crawl Control (CRAWL)5",
+      "Up to 16 city/19 highway/17 combined est. mpg37 Locking rear differential Locking rear differential",
+      "Exterior Features Up to 16 city/19 highway/17 combined est. mpg37 Up to 16 city/19 highway/17 combined est. mpg37",
+      "Heated power outside mirrors with turn signal indicators Exterior Features Exterior Features",
+      "Interior Features 17-in. 7-spoke alloy wheels with black-painted Heated power outside mirrors with turn signal indicators",
+      "SofTex\u00ae-trimmed11 seats Interior Features",
+      "Color-keyed front and rear bumpers with silver accents",
+      "Heated front seats and color-keyed hood scoop SofTex\u00ae-trimmed11 seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

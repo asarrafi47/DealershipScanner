@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2018|porsche|missione",
+  "year": 2018,
+  "make": "Porsche",
+  "model": "Mission E",
+  "ladder_id": "brochure_2018__porsche__missione",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Turbo",
+    "Base",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 600hp Porsche E-Performance powertrain with dual PSM motors",
+      "Adds 800-volt battery system technology",
+      "Adds on-demand E-all-wheel drive",
+      "Adds 500km+ range capability with 400km 15-minute recharge",
+      "Adds all-digital instrument cluster with eye-tracking",
+      "Adds extra-wide touchscreen display",
+      "Adds 3D touch control panel in centre console",
+      "Adds head-up display projection system",
+      "Adds anodised interior surfaces with ambient lighting",
+      "Adds Porsche Destinations App connectivity"
+    ],
+    "Limited": [
+      "Adds intelligent slat-free air-conditioning vents with touch control"
+    ],
+    "Base": [
+      "Adds cross-utility attributes including rear spoiler",
+      "Adds rock rails and rear diffuser"
+    ],
+    "Turbo": [
+      "Adds four individual seats with enhanced cabin space",
+      "Adds Turismo rear cargo design for adventure versatility"
+    ]
+  }
+}

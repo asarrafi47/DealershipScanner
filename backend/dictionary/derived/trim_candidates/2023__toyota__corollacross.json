@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2023|toyota|corollacross",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla Cross",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "LT",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features: Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "C ontinuously Variable Transmission (CVT) Continuously Variable Transmission (CVT) C ontinuously Variable Transmission (CVT)",
+      "F ront-Wheel Drive (FWD) or available Front-Wheel Drive (FWD) or available F ront-Wheel Drive (FWD) or available",
+      "All-Wheel Drive (AWD) All-Wheel Drive (AWD) All-Wheel Drive (AWD)",
+      "Exterior Features Exterior Features Exterior Features",
+      "Color-keyed rear spoiler Color-keyed heated power outside mirrors with L ED projector low- and high-beam headlights,",
+      "Color-keyed outside door handles turn signal and blind spot warning indicators40 LED front turn signals, and LED taillights",
+      "LED projector low and high-beam headlights 17-in. silver-colored alloy wheels L ED fog lights",
+      "Heated power outside mirrors Rear privacy glass B lack grille with metallic paint surround",
+      "Interior Features Interior Features S ofTex\u00ae-trimmed9 seating",
+      "F abric-trimmed seating Front automatic single-zone air conditioning with -60/40 split fold-flat second-row seats",
+      "O verhead console with maplights and Qi-compatible wireless smartphone charging14 -Heated front seats"
+    ],
+    "SE": [
+      "Adds to or replaces features offered on L: Adds to or replaces features offered on S Adds to or replaces features offered on SE",
+      "Hybrid 2.0-Liter 4-Cylinder engine with 196 hp H ybrid 2.0-Liter 4-Cylinder engine with 196 hp Hybrid 2.0-Liter 4-Cylinder engine with 196 hp",
+      "E lectronically controlled Continuously E lectronically controlled Continuously Electronically controlled Continuously",
+      "Variable Transmission (ECVT) Variable Transmission (ECVT) Variable Transmission (ECVT)",
+      "E lectronic On-Demand All-Wheel Drive (AWD) E lectronic On-Demand All-Wheel Drive (AWD) Electronic On-Demand All-Wheel Drive (AWD)",
+      "Exterior Features Exterior Features Exterior Features",
+      "Sport styling with sport front grille, front/ S port styling with sport front grille, front/rear Sport styling with sport front grille, front/",
+      "C olor-keyed rear spoiler C olor-keyed heated power outside mirrors with LED projector low- and high-beam headlights,",
+      "C olor-keyed outside door handles turn signal and blind spot warning indicators40 LED front turn signals, and LED taillights",
+      "L ED projector low- and high-beam headlights 1 7-in. silver-colored sport alloy wheels LED fog lights",
+      "H eated power outside mirrors R ear privacy glass machined finish4",
+      "Interior Features Interior Features S ofTex\u00ae-trimmed9 seating"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|ford|flex",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_llm_2013__ford__flex",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "19-inch painted aluminum wheels with P235/55R19 tires",
+      "High-intensity discharge HID headlamps",
+      "LED taillamps",
+      "Power liftgate",
+      "Rain-sensing windshield wipers",
+      "BLIS Blind Spot Information System with cross-traffic alert",
+      "Body-color power heated power-folding sideview mirrors with memory",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link",
+      "Perforated leather-trimmed heated bucket seats with 10-way power driver's seat with memory",
+      "Yoho maple woodgrain-appearance appliqués on instrument panel and door-trim panels"
+    ],
+    "SEL": [
+      "18-inch painted aluminum wheels with P235/60R18 tires",
+      "Dual-zone electronic automatic temperature control",
+      "MyFord Touch with two 4.2-inch LCD displays and 8-inch touchscreen",
+      "Media hub with 2 USB ports and SD card reader",
+      "110-volt power outlet",
+      "Intelligent Access with push-button start",
+      "Remote Start System",
+      "Power-adjustable pedals with memory",
+      "Universal garage door opener",
+      "Sony audio system with 12 speakers and single-CD player"
+    ],
+    "SE": [
+      "6-way power driver's seat with 2-way manual front-passenger seat",
+      "7-passenger seating configuration",
+      "AM/FM stereo with single-CD player and MP3 capability with 6 speakers",
+      "MyFord with 4.2-inch color LCD display in instrument cluster and center stack",
+      "Ford SYNC voice-activated in-vehicle connectivity system",
+      "17-inch painted aluminum wheels with P235/60R17 BSW tires",
+      "Black manually folding power sideview mirrors with integrated blind spot mirrors",
+      "Body-color-painted door handles",
+      "Chrome grille and bright stainless steel beltline",
+      "Fog lamps with kast silver trim ring"
+    ]
+  }
+}

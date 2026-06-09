@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2002,Suzuki,Esteem,Esteem,1.6L I4,1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,31,26,,,,,
+2002,Suzuki,Esteem,Esteem,1.8L I4,1.8L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,23,30,26,,,,,
+2002,Suzuki,Esteem,Esteem,1.8L I4,1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,24,32,27,,,,,
+2002,Suzuki,Esteem,Wagon,1.6L I4,1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,23,30,25,,,,,
+2002,Suzuki,Esteem,Wagon,1.8L I4,1.8L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.8,23,30,26,,,,,
+2002,Suzuki,Esteem,Wagon,1.8L I4,1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.8,24,31,26,,,,,

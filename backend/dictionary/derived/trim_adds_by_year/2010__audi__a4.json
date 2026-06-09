@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2010|audi|a4",
+  "year": 2010,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "2010_audi_a4",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Premium",
+    "Premium Plus",
+    "Prestige",
+    "S4"
+  ],
+  "adds_by_trim": {
+    "Premium Plus": [
+      "Audi xenon plus headlights with LED daytime running lights",
+      "HomeLink and Bluetooth hands-free phone interface",
+      "Three-zone automatic climate control",
+      "LED taillights (sedan)",
+      "Rain/light sensor for automatic headlamps and wipers",
+      "17-inch ten-spoke wheels with 245/45 all-season tires (replaces 17-inch seven-spoke on Premium)"
+    ],
+    "Prestige": [
+      "18-inch five-spoke wheels with 245/40 all-season tires",
+      "Bang & Olufsen 505-watt 14-speaker audio available",
+      "Adaptive cruise control and auto-dimming heated memory mirrors available",
+      "19-inch seven-twin-spoke wheels available (S line / 19-inch Sport Package)"
+    ],
+    "S4": [
+      "3.0L supercharged V6 with quattro Sport Rear Differential (replaces naturally aspirated 2.0T on A4)",
+      "S4 sport suspension and S4 sport seats with Alcantara or Silk Nappa leather",
+      "Dual quad chrome exhaust tailpipes",
+      "18-inch five-parallel-spoke S design wheels with 245/40 summer performance tires",
+      "Audi drive select and Servotronic speed-sensitive steering tuned for S4",
+      "Heated eight-way S sport seats with integrated head restraints"
+    ],
+    "Premium": [
+      "Eight-speed Tiptronic automatic transmission with manual shift capability",
+      "Audi drive select dynamic handling system"
+    ]
+  }
+}

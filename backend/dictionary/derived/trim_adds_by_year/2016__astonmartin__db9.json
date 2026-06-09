@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2016|astonmartin|db9",
+  "year": 2016,
+  "make": "Aston Martin",
+  "model": "db9",
+  "ladder_id": "brochure_2016__astonmartin__db9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "EX",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [],
+    "EX": [
+      "Upgraded to 1,000-watt Bang & Olufsen BeoSound audio system",
+      "Adds Bluetooth telephone preparation",
+      "Adds auto-dimming interior rear-view mirror",
+      "Adds LED map-reading lights",
+      "Adds heated rear screen",
+      "Adds powerfold exterior heated mirrors"
+    ],
+    "Sport": [
+      "Adds sports exhaust system with ICEpower technology",
+      "Adds cruise control",
+      "Adds front and rear parking sensors",
+      "Adds tyre pressure monitoring system",
+      "Adds carbon ceramic brake discs with dark anodised calipers"
+    ],
+    "Touring": [
+      "Adds satellite navigation system",
+      "Adds trip computer",
+      "Adds memory seats and exterior mirrors with three preset positions",
+      "Adds Alcantara fluted effect headlining",
+      "Adds AML Touring Pack"
+    ],
+    "Premium": [
+      "Adds Exterior Carbon Fibre Pack including mirror caps, mirror arms, side strakes, and rear lamp infills",
+      "Adds carbon fibre splitter and diffuser",
+      "Adds carbon fibre door handles",
+      "Adds Duotone leather pack with seat inserts and door inserts",
+      "Adds grain-enhanced leather interior",
+      "Adds alternative brake caliper finishes in Black, Red, Grey or Yellow"
+    ],
+    "Limited": [
+      "Adds Volante convertible body style option",
+      "Adds Organic Electroluminescent display upgrades",
+      "Adds fluted micro-perforated leather headlining",
+      "Adds colour-keyed leather steering wheel or One-77 steering wheel option",
+      "Adds matching wood door trim",
+      "Adds alarm upgrade with volumetric and tilt sensors and tracking device"
+    ]
+  }
+}

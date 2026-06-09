@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2022|toyota|camry",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_2022__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "TRD",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Standard EPA-estimated 22 city/32 highway/26 combined mpg",
+      "Adds Standard seating with fabric trim"
+    ],
+    "Premium": [],
+    "LE": [
+      "Upgraded to hybrid powertrain: 2.5L 4-Cylinder engine with 208 net hp",
+      "Adds electronically controlled Continuously Variable Transmission (ECVT) with sequential shift mode",
+      "Adds Normal, Eco, EV and Sport drive modes",
+      "Adds 16-inch steel wheels with wheel covers",
+      "Adds roof-mounted shark-fin antenna",
+      "Adds dual zone automatic climate control",
+      "Adds 4.2-inch Multi-Information Display"
+    ],
+    "SE": [
+      "Swaps grille to black with sport mesh lower insert",
+      "Adds color-keyed sport side rocker panels",
+      "Adds color-keyed rear spoiler",
+      "Adds leather-trimmed tilt/telescopic steering wheel with paddle shifters",
+      "Adds rear adjustable headrests",
+      "Adds Qi-compatible wireless charging"
+    ],
+    "TRD": [
+      "Swaps grille to gloss-black with sport mesh insert",
+      "Adds TRD gloss-black pedestal rear spoiler",
+      "Adds TRD gloss-black front splitter, side aero skirts and rear diffuser",
+      "Adds TRD cat-back dual exhaust with polished stainless steel tips",
+      "Adds red seatbelts and red TRD badge",
+      "Adds patterned metal interior trim and aluminum sport pedals"
+    ],
+    "XLE": [
+      "Adds dark gray front grille with chrome accents",
+      "Adds wood inlay interior trim",
+      "Adds ambient interior lighting",
+      "Adds 7-inch Multi-Information Display",
+      "Adds Audio Plus with 9-inch touchscreen and six speakers"
+    ],
+    "XSE": [
+      "Swaps grille to gloss-black with sport mesh lower insert",
+      "Adds ambient interior lighting upgrade",
+      "Adds Qi-compatible wireless charging"
+    ],
+    "Limited": [
+      "Adds 10-inch color Head-Up Display (HUD)",
+      "Adds panoramic glass roof with front power tilt/slide moonroof",
+      "Adds black heated power outside mirrors with turn-signal indicators",
+      "Adds Bi-LED combination headlights with auto on/off feature",
+      "Adds LED combination taillights with black trim",
+      "Adds 8-way power-adjustable driver's seat",
+      "Adds Driver Assist Package with Bird's Eye View Camera and Intelligent Clearance Sonar with Rear Cross-Traffic Braking",
+      "Adds Blind Spot Monitor with Rear Cross-Traffic Alert",
+      "Adds Navigation Upgrade Package with Premium Audio and Navigation"
+    ],
+    "Platinum": [
+      "Adds Cold Weather Package with heated steering wheel and heated front seats",
+      "Adds two-tone exterior color with color-keyed body and black roof",
+      "Adds TRD Premium Audio with nine JBL speakers option",
+      "Adds power tilt/slide moonroof option",
+      "Adds all-season or summer tire options"
+    ]
+  }
+}

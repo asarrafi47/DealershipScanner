@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|hyundai|azera",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_llm_2015__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Advanced navigation with 8-inch touchscreen and rearview camera",
+      "High Intensity Discharge Xenon headlights",
+      "Rear parking assistance system",
+      "Manual rear side window sunshades",
+      "LED fog lights",
+      "Automatic High Beam Assist",
+      "19-inch alloy wheels",
+      "Interior ambient lighting",
+      "Forward Collision Warning",
+      "Panoramic tilt-and-slide sunroof with power rear sunshade"
+    ],
+    "STANDARD": [
+      "293 HP 3.3L Gasoline Direct Injection DOHC V6 engine with Dual CVVT",
+      "6-speed automatic transmission with SHIFTRONIC",
+      "SACHS Amplitude Selective Damping suspension",
+      "Proximity key entry with push-button start",
+      "Dual zone automatic temperature control",
+      "Premium leather seating surfaces",
+      "Ventilated and heated front seats with heated rear seats",
+      "Power driver and front-passenger seats with Integrated Memory System",
+      "Driver seat cushion extension",
+      "Power tilt-and-telescopic steering wheel with leather steering wheel and shift knob"
+    ]
+  }
+}

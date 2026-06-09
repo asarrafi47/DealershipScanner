@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2014|chevrolet|suburban",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2014__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Side Blind Zone Alert safety feature",
+      "Autoride adaptive suspension system",
+      "2-speed electronic transfer case with Neutral for towing",
+      "Heated leather-wrapped steering wheel",
+      "10-speaker Bose Centerpoint surround sound system",
+      "Power sunroof with tilt-sliding and express-open/-close",
+      "18-inch aluminum wheels",
+      "Z71 Off-Road Suspension Package available with 20-inch wheels"
+    ],
+    "LT": [
+      "Power-remote liftgate",
+      "Automatic headlamps and daytime running lamps",
+      "Rear Park Assist with sensors",
+      "Custom leather-appointed heated front bucket seats with 10-way power driver",
+      "9-speaker Bose sound system",
+      "Premium Smooth Ride suspension",
+      "18-inch aluminum wheels available",
+      "Luxury Package with power second-row seats and Universal Home Remote"
+    ],
+    "LS": [
+      "Vortec 5.3L V8 with Active Fuel Management and E85 FlexFuel capability",
+      "Hydra-Matic 6-speed automatic transmission with Tow/Haul mode",
+      "10 total airbags with Passenger Sensing System",
+      "4-wheel antilock disc brakes with StabiliTrak and Traction Control",
+      "Tire Pressure Monitoring System",
+      "OnStar Directions & Connections Plan six months standard",
+      "AM/FM stereo CD/MP3 player with 6-speaker sound system",
+      "Premium Cloth front bucket seats with 6-way power driver",
+      "Bluetooth wireless technology for compatible phones",
+      "Remote Keyless Entry and vehicle starter system"
+    ]
+  }
+}

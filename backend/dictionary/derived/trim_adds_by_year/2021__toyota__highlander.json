@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2021|toyota|highlander",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2021__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "LED projector headlights with Adaptive Front-Lighting System (AFS) and auto leveling",
+      "LED-strip Daytime Running Lights (DRL)",
+      "High-output LED fog lights",
+      "20-inch chrome wheels",
+      "Height-adjustable hands-free power liftgate with jam protection",
+      "Rear bumper scuff plate",
+      "Leather-trimmed front- and second-row seats",
+      "Heated and ventilated front seats",
+      "Heated second-row captain's chairs",
+      "12.3-inch touchscreen with 11 JBL speakers and subwoofer"
+    ],
+    "Limited": [
+      "Color-keyed heated power outside mirrors with puddle lights",
+      "Integrated Highlander logo turn signal with blind spot warning",
+      "LED projector headlights with LED-strip Daytime Running Lights (DRL)",
+      "20-inch chrome wheels",
+      "Front grille in black paint with chrome-plated surround",
+      "Height-adjustable hands-free power liftgate with jam protection",
+      "Rain-sensing washer-linked variable intermittent wipers",
+      "Heated and ventilated front seats",
+      "Heated steering wheel",
+      "Faux wood door trim and ornamental dash trim"
+    ],
+    "XSE": [
+      "Sport-tuned suspension",
+      "LED projector headlights with black accents and LED-strip Daytime Running Lights (DRL)",
+      "20-inch machined-finish alloy wheels",
+      "Aggressive mesh front grille with sporty front bumper and lower spoiler",
+      "Rear lower bumper in gray metallic finish with chrome lower spoiler trim",
+      "Color-keyed side rocker panels with chrome lower trim",
+      "Black-trimmed exterior handles",
+      "SofTex-trimmed front- and second-row seats",
+      "Heated front seats",
+      "Ambient interior lighting"
+    ],
+    "XLE": [
+      "Available All-Wheel Drive (AWD)",
+      "Available Multi-Terrain Select (Mud/Sand, Rock/Dirt, Normal)",
+      "Up to 21 city/29 highway/24 combined EPA-est. mpg rating",
+      "LED projector headlights with black accents and LED-strip Daytime Running Lights (DRL)",
+      "20-inch machined-finish alloy wheels",
+      "SofTex-trimmed front- and second-row seats",
+      "Heated front seats",
+      "10-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "8.0-inch touchscreen with Android Auto and Apple CarPlay"
+    ],
+    "L": [
+      "Seating for seven",
+      "SofTex-trimmed front- and second-row seats",
+      "10-way power-adjustable driver's seat with power lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Toyota Safety Sense 2.5+ (TSS 2.5+)",
+      "Blind Spot Monitor (BSM) with Rear Cross-Traffic Alert (RCTA)",
+      "Star Safety System with eight airbags",
+      "Rear-seat reminder",
+      "8.0-inch touchscreen with Android Auto and Apple CarPlay compatible",
+      "SiriusXM with 3-month All Access trial subscription"
+    ]
+  }
+}

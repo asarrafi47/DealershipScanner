@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2010|ford|flex",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_web_2010__ford__flex",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited EcoBoost AWD",
+    "Limited AWD",
+    "Limited FWD",
+    "SEL AWD",
+    "SEL FWD",
+    "SE FWD"
+  ],
+  "adds_by_trim": {
+    "Limited EcoBoost AWD": [
+      "Twin-turbo 3.5-liter V-6 engine with 365 hp and 350 lb-ft torque"
+    ],
+    "Limited AWD": [
+      "All-wheel drive system",
+      "Universal garage door opener standard"
+    ],
+    "Limited FWD": [
+      "Universal garage door opener standard",
+      "Higher trim level styling and comfort features"
+    ],
+    "SEL AWD": [
+      "All-wheel drive system",
+      "8.0-inch touchscreen with SYNC 3 infotainment and two USB ports",
+      "Optional black roof for contrast",
+      "Optional appearance package with black wheel and grille details",
+      "Optional multi-panel glass roof with power sunshades"
+    ],
+    "SEL FWD": [
+      "8.0-inch touchscreen with SYNC 3 infotainment and two USB ports",
+      "Optional black roof for contrast",
+      "Optional appearance package with black wheel and grille details",
+      "Optional multi-panel glass roof with power sunshades",
+      "Universal garage door opener available"
+    ],
+    "SE FWD": [
+      "3.5-liter V-6 engine with 287 hp and 254 lb-ft torque",
+      "Seven-passenger capacity with cloth seats",
+      "Leather-wrapped steering wheel",
+      "4.2-inch infotainment display",
+      "17-inch wheels with all-corner disc brakes",
+      "Reverse sensors with rear camera",
+      "Keyless entry via driver door touchpad"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/flex/"
+}

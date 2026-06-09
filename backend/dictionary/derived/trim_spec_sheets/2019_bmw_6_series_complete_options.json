@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2019_bmw_6_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "6 Series",
+    "6 Series"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "650i": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "640i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

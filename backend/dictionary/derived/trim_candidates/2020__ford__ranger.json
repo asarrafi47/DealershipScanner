@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2020|ford|ranger",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Ranger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Lariat",
+    "Sport",
+    "FX4",
+    "XLT",
+    "XL",
+    "Base",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2010|hyundai|tucson",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2010__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Leather seating surfaces",
+      "Power driver seat with lumbar support",
+      "Dual front automatic temperature control with CleanAir Ionizer",
+      "Solar glass",
+      "Chrome grille and door handles",
+      "Automatic headlights",
+      "Fog lights",
+      "Front wiper de-icer",
+      "Limited badging on rear"
+    ],
+    "GLS": [
+      "2.4L Theta 2 DOHC 4-cylinder engine",
+      "6-speed manual or automatic transmission",
+      "Motor driven power steering",
+      "4-wheel independent suspension",
+      "17-inch steel wheels with wheel covers and 225/60R17 tires",
+      "Tire pressure monitoring system",
+      "Electronic stability control with traction control",
+      "Hillstart assist and downhill brake control",
+      "Anti-lock braking system with 4-wheel disc brakes",
+      "6 airbags with rollover sensors"
+    ]
+  }
+}

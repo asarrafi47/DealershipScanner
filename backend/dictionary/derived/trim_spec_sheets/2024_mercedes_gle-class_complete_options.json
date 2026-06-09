@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_mercedes_gle-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "GLE-Class",
+    "GLE-Class"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "It includes general information, revision history, and a detailed table of conte; It includes general information, revision history, and a detailed table of contents covering standard equipment, options, models, and specifications."
+      }
+    ],
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "It includes general information, revision history, and a detailed table of conte; It includes general information, revision history, and a detailed table of contents covering standard equipment, options, models, and specifications."
+      }
+    ]
+  }
+}

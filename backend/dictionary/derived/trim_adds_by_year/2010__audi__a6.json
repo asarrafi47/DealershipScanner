@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|audi|a6",
+  "year": 2010,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "2010_audi_a6",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Premium",
+    "Premium Plus",
+    "Prestige"
+  ],
+  "adds_by_trim": {
+    "Premium Plus": [
+      "Aluminum doorsill and window trim",
+      "Audi xenon plus headlights with LED daytime running lights",
+      "18-inch five-Y-spoke wheels with 245/40 all-season tires",
+      "Audi MMI navigation plus with voice control and real-time traffic",
+      "Auto-dimming compass mirror with heated memory exterior mirrors",
+      "Driver seat memory"
+    ],
+    "Prestige": [
+      "Leather multifunction steering wheel with shift paddles",
+      "BOSE 5.1 Surround Sound with 13 speakers and AudioPilot",
+      "Audi advanced key push-button start",
+      "Adaptive xenon headlights and power adjustable steering column",
+      "Rearview camera"
+    ],
+    "Premium": [
+      "3.2L V6 FSI engine with 255 hp",
+      "Multitronic Continuously Variable Transmission",
+      "quattro permanent all-wheel drive with torque-sensing center differential",
+      "Advanced dual-stage airbags and Sideguard head curtain airbags",
+      "Electronic Stabilization Program and Anti-lock Brake System",
+      "Servotronic speed-sensitive power steering",
+      "Electromechanical parking brake with Audi hill hold assist"
+    ]
+  }
+}

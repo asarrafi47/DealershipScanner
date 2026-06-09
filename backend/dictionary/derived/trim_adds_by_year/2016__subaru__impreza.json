@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2016|subaru|impreza",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2016__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Sport Limited 5-door",
+    "2.0i Limited 4-door and 5-door",
+    "2.0i Sport Premium 5-door",
+    "2.0i Premium 4-door and 5-door",
+    "2.0i 4-door and 5-door"
+  ],
+  "adds_by_trim": {
+    "2.0i Sport Limited 5-door": [
+      "Leather-trimmed upholstery",
+      "Automatic climate control system",
+      "SUBARU STARLINK™ 7.0\" Multimedia Plus system with voice-activated controls",
+      "SiriusXM® Satellite Radio and Travel Link®",
+      "STARLINK™ Safety Plus enabled with collision notification and emergency assistance",
+      "Auto-on/off headlights and welcome lighting"
+    ],
+    "2.0i Limited 4-door and 5-door": [
+      "17-inch aluminum-alloy wheels",
+      "Fog lights",
+      "Body-color side mirrors with integrated turn signals",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shifter handle",
+      "Automatic climate control system",
+      "SUBARU STARLINK™ 7.0\" Multimedia Plus system with voice-activated controls",
+      "SiriusXM® Satellite Radio and Travel Link®",
+      "STARLINK™ Safety Plus enabled",
+      "Auto-on/off headlights and welcome lighting"
+    ],
+    "2.0i Sport Premium 5-door": [
+      "Lineartronic® CVT with manual-mode paddle shifters",
+      "Fog lights and 17-inch gray-finish aluminum-alloy wheels",
+      "Roof rails with black finish",
+      "Body-color side mirrors with integrated turn signals",
+      "Striped cloth upholstery",
+      "Leather-wrapped steering wheel and shifter handle",
+      "All-Weather Package with heated exterior mirrors and dual-mode heated front seats"
+    ],
+    "2.0i Premium 4-door and 5-door": [
+      "Lineartronic® CVT with manual-mode paddle shifters and optional availability",
+      "16-inch aluminum-alloy wheels",
+      "Body-color side mirrors with integrated turn signals",
+      "SUBARU STARLINK™ 6.2\" Multimedia system with 6 speakers",
+      "All-Weather Package with heated exterior mirrors and dual-mode heated front seats"
+    ],
+    "2.0i 4-door and 5-door": [
+      "148-hp 2.0-liter 4-cylinder SUBARU BOXER® engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic® CVT",
+      "15-inch steel wheels with covers and rear spoiler",
+      "Cloth upholstery with manually adjustable seats",
+      "SUBARU STARLINK™ 6.2\" Multimedia system with 4 speakers",
+      "Manually adjustable CFC-free air conditioning with air filtration",
+      "Electronic cruise control and rear-vision camera"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2010|lincoln|mkz",
+  "year": 2010,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_llm_2010__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ultimate",
+    "Technology",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "Ultimate": [
+      "Navigation Package with voice-activated hard drive-based navigation system and 8-inch display",
+      "SIRIUS Travel Link with real-time traffic, weather, and fuel price updates",
+      "THX II Certified 5.1 Surround Audio System with single-CD/DVD/Jukebox player",
+      "BLIS Blind Spot Information System with Cross Traffic Alert",
+      "Rear View Camera",
+      "Power moonroof",
+      "17-inch 9-spoke chrome-clad aluminum wheels"
+    ],
+    "Technology": [
+      "Adaptive HID headlamps",
+      "Ambient Lighting",
+      "Rain-sensing windshield wipers",
+      "THX II Certified Audio System with 6-disc CD changer and 14 speakers including subwoofers"
+    ],
+    "Luxury": [
+      "Premium AM/FM audio system with 6-disc in-dash CD changer and 9 speakers",
+      "Lincoln SYNC voice-activated in-vehicle communications and entertainment system",
+      "SIRIUS Satellite Radio with 6-month complimentary subscription",
+      "Personal Safety System with dual-stage front airbags and safety features",
+      "AdvanceTrac electronic stability control with Brake-Actuated Traction Control",
+      "Front-seat side airbags with integrated keyhead transmitter remotes",
+      "Child-safety rear door locks and LATCH system",
+      "SecuriLock passive anti-theft ignition system"
+    ]
+  }
+}

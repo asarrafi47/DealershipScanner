@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2013|lincoln|mkx",
+  "year": 2013,
+  "make": "Lincoln",
+  "model": "MKX",
+  "ladder_id": "brochure_llm_2013__lincoln__mkx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE PACKAGE",
+    "LIMITED EDITION PACKAGE",
+    "PREMIUM PACKAGE"
+  ],
+  "adds_by_trim": {
+    "ELITE PACKAGE": [
+      "Panoramic Vista Roof with dual power sunshades",
+      "THX II Certified Audio System with 14 speakers, 8-inch subwoofer, 650 watts",
+      "Voice-activated Navigation System with SiriusXM Traffic and Travel Link integration"
+    ],
+    "LIMITED EDITION PACKAGE": [
+      "20-inch polished aluminum wheels with P245/50R20 all-season tires",
+      "Etched Lincoln Star in headlamp lenses",
+      "Limited Edition badging",
+      "Premium carpeted floor mats with embroidered logo",
+      "Premium leather-trimmed seating in Bronze Metallic with Tuxedo and Charcoal Black piping",
+      "Unique aluminum accents on instrument panel and door-trim inserts"
+    ],
+    "PREMIUM PACKAGE": [
+      "20-inch chrome-clad aluminum wheels",
+      "Adaptive HID headlamps",
+      "Ambient lighting",
+      "BLIS Blind Spot Information System with cross-traffic alert",
+      "Bridge of Weir leather-trimmed seating with Tuxedo stripe and piping",
+      "Heated rear-outboard seats",
+      "Heated steering wheel",
+      "Illuminated front scuff plates",
+      "Dual head restraint DVD by INVISION",
+      "Power-tilt/telescoping steering column with memory"
+    ]
+  }
+}

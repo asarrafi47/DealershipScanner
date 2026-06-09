@@ -1,0 +1,94 @@
+{
+  "catalog_key": "2020|hyundai|ioniq",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "ladder_id": "brochure_llm_2020__hyundai__ioniq",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited",
+    "Hybrid SEL",
+    "Hybrid SE",
+    "Hybrid Blue",
+    "Plug-in Limited",
+    "Plug-in SEL",
+    "Plug-in SE",
+    "Electric Limited",
+    "Electric SE"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited": [
+      "10.25-inch color touchscreen navigation system",
+      "Harman Kardon Premium Audio system with 8 speakers",
+      "Leather seating surfaces",
+      "Driver seat Integrated Memory System",
+      "Power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Premium door sill plates",
+      "Power-folding side mirrors with puddle lights"
+    ],
+    "Hybrid SEL": [
+      "10.25-inch color touchscreen navigation system",
+      "Harman Kardon Premium audio system with 8 speakers",
+      "Power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "Hybrid SE": [
+      "8-inch color touchscreen display audio",
+      "7-inch dual-mode color LCD instrument cluster display",
+      "Blue Link Connected Car Services",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Heated front seats"
+    ],
+    "Hybrid Blue": [
+      "4.2-inch color LCD instrument cluster display with Hybrid Technology Display",
+      "Automatic on/off headlights",
+      "LED Daytime Running Lights",
+      "Forward Collision-Avoidance Assist camera type"
+    ],
+    "Plug-in Limited": [
+      "10.25-inch color touchscreen navigation system",
+      "Harman Kardon Premium Audio system with 8 speakers",
+      "Leather seating surfaces",
+      "Driver seat Integrated Memory System",
+      "Power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "Auto-dimming rearview mirror with HomeLink",
+      "45 kW permanent magnet motor with enhanced performance"
+    ],
+    "Plug-in SEL": [
+      "10.25-inch color touchscreen navigation system",
+      "Harman Kardon Premium audio system with 8 speakers",
+      "Power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "45 kW permanent magnet motor"
+    ],
+    "Plug-in SE": [
+      "8-inch AM/FM/MP3 touchscreen display audio",
+      "45 kW permanent magnet electric motor",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Rear Cross-Traffic Collision-Avoidance Assist"
+    ],
+    "Electric Limited": [
+      "10.25-inch color touchscreen navigation system",
+      "Harman Kardon Premium Audio system with 8 speakers",
+      "Leather seating surfaces",
+      "Power driver seat with adjustable lumbar support",
+      "Heated front seats",
+      "Auto-dimming rearview mirror with HomeLink",
+      "100 kW permanent magnet electric motor",
+      "DC Fast Charging capability"
+    ],
+    "Electric SE": [
+      "8-inch AM/FM/MP3 touchscreen display audio",
+      "7-inch color LCD instrument cluster display",
+      "100 kW permanent magnet electric motor",
+      "DC Fast Charging capability",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Wireless device charging"
+    ]
+  }
+}

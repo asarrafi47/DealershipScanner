@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2010|acura|mdx",
+  "year": 2010,
+  "make": "acura",
+  "model": "mdx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2012|nissan|nv",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_llm_2012__nissan__nv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NV3500 HD",
+    "NV2500 HD",
+    "NV1500"
+  ],
+  "adds_by_trim": {
+    "NV3500 HD": [
+      "VK56DE 5.6-liter V8 engine with 317 hp and 385 lb-ft torque",
+      "LT245/75R17 all-season tires",
+      "50 State Emissions compliance"
+    ],
+    "NV2500 HD": [
+      "Optional VK56DE 5.6-liter V8 engine (in addition to standard V6)",
+      "17-inch x 7.5-inch styled steel wheels",
+      "LT245/70R17 all-season tires"
+    ],
+    "NV1500": [
+      "VQ40DE 4.0-liter V6 engine with 261 hp and 281 lb-ft torque",
+      "5-speed automatic transmission with 3.36:1 final gear ratio",
+      "17-inch x 7.5-inch steel wheels",
+      "LT245/70R17 all-season tires",
+      "4-wheel Anti-lock Braking System with 14.2-inch front and 14.4-inch rear vented disc brakes"
+    ]
+  }
+}

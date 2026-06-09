@@ -1,0 +1,77 @@
+{
+  "ladder_id": "2021_toyota_sequoia_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Sequoia",
+    "Sequoia"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Capstone": [
+      {
+        "label": "Engine Options",
+        "value": "hp (206 kW; 280 PS) (2UZ-FE)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Massaging seats were added as a standard feature on the Platinum, 1794 Edition, and Capstone trims."
+      }
+    ],
+    "1794": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: hp (206 kW; 280 PS) (2UZ-FE) (was L 3UR-FBE V8 (USK65); hp (206 kW; 280 PS) (2UZ-FE))"
+      }
+    ],
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L 3UR-FBE V8 (USK65); hp (206 kW; 280 PS) (2UZ-FE) (was Front-engine, four-wheel-drive; L 2UZ-FE V8 (UCK35/45; 2001–2004))"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Entune System was added as a standard on SR5"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Massaging seats were added as a standard feature on the Platinum, 1794 Edition, and Capstone trims."
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, four-wheel-drive; L 2UZ-FE V8 (UCK35/45; 2001–2004) (was L 2UZ-FE VVT-i V8 (UCK60/65; 2008–2009); Engines Capacity Model year Power Torque 4,608 cc (281.2 cu in) 1UR-FE V8)"
+      }
+    ],
+    "TRD Pro": [
+      {
+        "label": "Engine Options",
+        "value": "L 2UZ-FE VVT-i V8 (UCK60/65; 2008–2009); Engines Capacity Model year Power Torque 4,608 cc (281.2 cu in) 1UR-FE V8"
+      }
+    ],
+    "TRD Off-Road": [
+      {
+        "label": "Engine Options",
+        "value": "L 2UZ-FE VVT-i V8 (UCK60/65; 2008–2009); Engines Capacity Model year Power Torque 4,608 cc (281.2 cu in) 1UR-FE V8"
+      }
+    ],
+    "TRD": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L 2UZ-FE VVT-i V8 (UCK60/65; 2008–2009); Engines Capacity Model year Power Torque 4,608 cc (281.2 cu in) 1UR-FE V8 (was 4.7 L is standard on the SR5)"
+      }
+    ],
+    "SR5": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: 4.7 L is standard on the SR5"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: Entune System was added as a standard on SR5"
+      }
+    ]
+  }
+}

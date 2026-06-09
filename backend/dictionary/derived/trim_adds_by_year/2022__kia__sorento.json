@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2022|kia|sorento",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2022__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Prestige",
+    "SX",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Prestige": [
+      "Rust leather color package",
+      "Torque-vectoring all-wheel drive with center locking differential",
+      "Drive Mode Select with Snow Mode"
+    ],
+    "SX": [
+      "255/45R20 tires",
+      "12.8-inch ventilated disc brakes (front and rear)",
+      "Torque-vectoring all-wheel drive with center locking differential (optional on S)"
+    ],
+    "EX": [
+      "235/60R18 tires on FWD models",
+      "Panoramic sunroof with LED interior lighting (standard)"
+    ],
+    "S": [
+      "2.5L Turbo 4-cylinder engine with 281 hp and 311 lb-ft torque",
+      "8-speed dual-clutch automatic transmission",
+      "3,500 lb towing capacity",
+      "18-inch gloss black wheels"
+    ],
+    "LX": [
+      "2.5L 4-cylinder engine with 191 hp and 181 lb-ft torque",
+      "8-speed automatic transmission",
+      "235/65R17 tires",
+      "12.8-inch ventilated disc front and 12.0-inch ventilated disc rear brakes",
+      "2,000 lb towing capacity"
+    ]
+  }
+}

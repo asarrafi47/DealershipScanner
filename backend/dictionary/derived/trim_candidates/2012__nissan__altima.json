@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2012|nissan|altima",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Altima",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SR",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

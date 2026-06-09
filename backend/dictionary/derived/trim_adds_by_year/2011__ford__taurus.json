@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2011|ford|taurus",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_2011__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 4-wheel disc Anti-Lock Brake System (ABS)",
+      "Adds brake- and engine-actuated traction control",
+      "Adds AdvanceTrac electronic stability control",
+      "Adds Includes dual-stage front airbags with safety belt pretensioners",
+      "Adds front-seat side airbags",
+      "Adds Safety Canopy System with side-curtain airbags",
+      "Adds Includes front bucket seats with 60/40 split-fold rear seat",
+      "Adds Remote Keyless Entry System with integrated keyhead transmitter remotes",
+      "Adds Includes power door locks and tilt/telescoping steering column",
+      "Adds MyKey owner controls feature"
+    ],
+    "Limited": [
+      "Upgraded to 3.5L EcoBoost V6 engine with 365 horsepower and 350 lb.-ft. torque",
+      "Adds MyKey owner controls feature",
+      "Adds SecuriCode invisible keypad",
+      "Adds SecuriLock passive anti-theft ignition system",
+      "Adds wiper-activated halogen headlamps with autolamp",
+      "Adds solar-tinted glass",
+      "Adds SOS Post-Crash Alert System hardware"
+    ]
+  }
+}

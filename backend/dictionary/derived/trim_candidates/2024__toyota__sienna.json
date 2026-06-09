@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2024|toyota|sienna",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Sienna",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Hybrid engine: 2.5L 4-cylinder with 245 net hp Available All-Wheel Drive (AWD) Sport-tuned suspension",
+      "Electronically controlled Continuously Variable Up to 36 city/36 highway/36 combined EPA-est. mpg38 Available All-Wheel Drive (AWD)",
+      "Transmission (ECVT) with sequential shift mode Exterior Features Up to 36 city/36 highway/36 combined EPA-est. mpg38",
+      "Normal, Eco, EV37 and Sport drive modes",
+      "Integrated wide-angle LED fog lights Exterior Features",
+      "Front-Wheel Drive (FWD)",
+      "Hands-free dual power sliding side doors45 LED headlights and LED-strip DRL with auto on/off feature",
+      "Available All-Wheel Drive (AWD)",
+      "Power liftgate with jam protection with available Black side rocker panels",
+      "Up to 36 city/36 highway/36 combined EPA-est. mpg38",
+      "Exterior Features Chrome-accented color-keyed outside door handles Black heated power outside mirrors"
+    ],
+    "Limited": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Adds to or replaces features offered on Limited",
+      "Increased ground clearance Available All-Wheel Drive (AWD) Available All-Wheel Drive (AWD)",
+      "All-Wheel Drive (AWD) Up to 36 city/36 highway/36 combined EPA-est. mpg38 Up to 36 city/36 highway/36 combined EPA-est. mpg38",
+      "Exterior Features LED headlights and LED-strip DRL with auto on/off feature Signature Bi-LED projector headlights and LED-strip",
+      "Available in Cement or Midnight Black Metallic Black side rocker panels DRL with auto on/off feature",
+      "Black lower grille garnish Dark gray metallic front grille Panoramic View Monitor (PVM)47",
+      "Dark chrome upper grille garnish 18-in. bright wheels 20-in. metallic wheels",
+      "Towing hitch receiver51 Chrome roof rails Rain-sensing variable windshield wipers",
+      "Black roof rails with cross bars Chrome-accented Sienna liftgate logo Seating for seven",
+      "Black Sienna liftgate logo Color-keyed roof-mounted shark-fin antenna Leather-trimmed seats",
+      "Black Toyota emblem and grade badge Interior Features - Heated and ventilated front seats",
+      "Heated second-row captain\u2019s chairs with"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

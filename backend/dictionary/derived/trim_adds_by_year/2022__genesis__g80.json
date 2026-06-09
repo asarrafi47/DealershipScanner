@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2022|genesis|g80",
+  "year": 2022,
+  "make": "genesis",
+  "model": "G80",
+  "ladder_id": "brochure_llm_2022__genesis__g80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5T SPORT PRESTIGE",
+    "3.5T AWD SPORT",
+    "2.5T PRESTIGE",
+    "2.5T ADVANCED",
+    "2.5T STANDARD"
+  ],
+  "adds_by_trim": {
+    "3.5T SPORT PRESTIGE": [
+      "20-inch Medium Sputtering wheels with Pirelli All-Season tires",
+      "3.5T engine with premium fuel capability"
+    ],
+    "3.5T AWD SPORT": [
+      "All-wheel drive powertrain",
+      "19-inch Dark Metallic Gray wheels with machined finish",
+      "3.5T engine option"
+    ],
+    "2.5T PRESTIGE": [
+      "19-inch Hyper Silver wheels with front 19x8.5J and rear 19x9.5J sizing",
+      "Michelin All-Season tires with 245/45R19 front and 275/40R19 rear"
+    ],
+    "2.5T ADVANCED": [
+      "19-inch Hyper Silver wheels with front 19x8.5J and rear 19x9.5J sizing",
+      "Michelin All-Season tires with 245/45R19 front and 275/40R19 rear"
+    ],
+    "2.5T STANDARD": [
+      "2.5T engine with 32 city/23 highway/26 combined MPG RWD",
+      "18-inch Medium Metallic Gray wheels with machined finish",
+      "18x8.0J wheel sizing with 245/50R18 Michelin All-Season tires"
+    ]
+  }
+}

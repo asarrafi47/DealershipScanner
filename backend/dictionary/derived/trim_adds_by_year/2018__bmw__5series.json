@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|bmw|5series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "brochure_llm_2018__bmw__5series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BMW 540i xDrive Sedan",
+    "BMW 540i Sedan",
+    "BMW 530i xDrive Sedan",
+    "BMW 530i Sedan"
+  ],
+  "adds_by_trim": {
+    "BMW 540i xDrive Sedan": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 335 hp and 332 lb-ft torque",
+      "All-wheel drive (xDrive) system",
+      "0–60 mph acceleration in 4.7 seconds"
+    ],
+    "BMW 540i Sedan": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 335 hp and 332 lb-ft torque",
+      "0–60 mph acceleration in 4.9 seconds"
+    ],
+    "BMW 530i xDrive Sedan": [
+      "All-wheel drive (xDrive) system",
+      "0–60 mph acceleration in 5.8 seconds"
+    ],
+    "BMW 530i Sedan": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 248 hp and 258 lb-ft torque",
+      "0–60 mph acceleration in 6.0 seconds"
+    ]
+  }
+}

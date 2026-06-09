@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2024|hyundai|sonata",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "N Line",
+    "SEL",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2014,Honda,Accord,Plug-in Hybrid,Plug-in Hybrid 2.0L I4 (PHEV),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline / Electricity,Midsize Cars,4,2.0,47,46,46,,,,,,2.0L I4,
-2014,Honda,Accord,Accord,2.4L I4 (SIDI),Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,26,33,29,,,,,,2.4L I4,
-2014,Honda,Accord,Accord,3.5L V6,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,21,31,24,,,,,,3.5L V6,
-2014,Honda,Accord,Accord,3.5L V6,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,18,28,21,,,,,,3.5L V6,
-2014,Honda,Accord,Accord,2.4L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,24,34,27,,,,,,2.4L I4,
-2014,Honda,Accord,Accord,2.4L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,26,35,30,,,,,,2.4L I4,
-2014,Honda,Accord,Accord,3.5L V6,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,21,34,25,,,,,,3.5L V6,
-2014,Honda,Accord,Hybrid,Hybrid 2.0L I4 (HEV),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,49,45,47,,,,,,2.0L I4,

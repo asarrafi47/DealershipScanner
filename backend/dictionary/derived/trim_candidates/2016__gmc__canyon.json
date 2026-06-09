@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2016|gmc|canyon",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Canyon",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

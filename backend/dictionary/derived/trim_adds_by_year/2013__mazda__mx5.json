@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|mazda|mx5",
+  "year": 2013,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2013__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Club",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Black or Spicy Mocha cloth convertible top",
+      "17-inch aluminum alloy wheels",
+      "Cruise control",
+      "Power door locks with 2-stage unlocking",
+      "Remote keyless entry with retractable key",
+      "Automatic climate control",
+      "Leather-trimmed seats",
+      "In-dash 6-disc CD changer",
+      "Bose audio system with AudioPilot",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "Club": [
+      "Exclusive 17-inch aluminum alloy wheels with gunmetal finish",
+      "Painted black Power Retractable Hard Top and power side mirrors",
+      "Exclusive Club model badging and side graphics",
+      "Front air dam and rear diffuser",
+      "Cloth-trimmed seats with red stitching",
+      "Shock tower brace"
+    ],
+    "Sport": [
+      "16-inch aluminum alloy wheels",
+      "Halogen fog lights",
+      "Black vinyl convertible top",
+      "Air conditioning",
+      "Power side mirrors",
+      "Cloth-trimmed seats",
+      "Power windows with driver one-touch-down",
+      "Leather-wrapped steering wheel",
+      "AM/FM/CD/MP3-compatible audio system",
+      "Dual front and side-impact airbags"
+    ]
+  }
+}

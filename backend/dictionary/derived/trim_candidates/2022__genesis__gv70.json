@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2022|genesis|gv70",
+  "year": 2022,
+  "make": "genesis",
+  "model": "GV70",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport Prestige",
+    "Prestige",
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

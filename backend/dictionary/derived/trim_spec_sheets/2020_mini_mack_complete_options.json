@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_mini_mack_complete_options",
+  "make": "MINI",
+  "models": [
+    "Mack",
+    "Mack"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "SEL": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: CNET wrote a positive review on the HDMI output and the near-decent graphics cap; CNET wrote a positive review on the HDMI output and the near-decent graphics capability, citing criticisms on the limited user upgrade options and the high cost. (was…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Turbo Boost frequency — 3.1 GHz 3.3 GHz; The Apple silicon Mac Mini based on the Apple M1 chip was introduced in November 2020; however Intel-based models remained available with more RAM options until the release of an updated model based on the M2 and M2 Pro…"
+      }
+    ]
+  }
+}

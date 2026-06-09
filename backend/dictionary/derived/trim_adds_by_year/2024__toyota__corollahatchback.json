@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2024|toyota|corollahatchback",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "brochure_llm_2024__toyota__corollahatchback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "NIGHTSHADE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Dual zone automatic climate control",
+      "7-inch Fully Digital Gauge Cluster",
+      "SofTex with sport fabric insert and heated front seats with sport bolsters",
+      "Qi-compatible wireless smartphone charging",
+      "18-inch alloy wheels with graphite-colored finish",
+      "Integrated LED fog lights"
+    ],
+    "NIGHTSHADE": [
+      "18-inch bronze-finished alloy wheels",
+      "Black heated power outside mirrors with turn signal indicators",
+      "Black front lower grille surround",
+      "Blackout badging",
+      "Dual chrome-colored rear diffuser accents"
+    ],
+    "SE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift CVT with Normal, Eco and Sport driving modes",
+      "LED headlights and LED Daytime Running Lights with auto on/off",
+      "16-inch alloy wheels",
+      "Automatic climate control and Smart Key System with Push Button Start",
+      "4.2-inch Multi-Information Display",
+      "Premium leather-trimmed steering wheel and paddle shifters",
+      "Fabric sport seats with 60/40 split fold-down rear seats",
+      "Four USB-C charging ports and Electric Parking Brake with Brake Hold",
+      "8-inch touchscreen with Wireless Apple CarPlay and Android Auto"
+    ]
+  }
+}

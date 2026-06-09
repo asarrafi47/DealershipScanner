@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2011|audi|a8",
+  "year": 2011,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_llm_2011__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A8L",
+    "A8"
+  ],
+  "adds_by_trim": {
+    "A8L": [
+      "Leather-wrapped four-spoke multifunction steering wheel with shift paddles (standard)",
+      "Power rear window and rear side window sunshades",
+      "Power closing doors with door close assist feature",
+      "Power trunk with programmable opening height"
+    ],
+    "A8": [
+      "4.2-liter FSI V8 engine producing 372 hp and 328 lb-ft torque",
+      "Eight-speed Tiptronic transmission with shift-by-wire",
+      "Audi drive select system with Comfort, Auto, Dynamic, Individual modes",
+      "Audi adaptive air suspension with four selectable modes",
+      "Leather-wrapped three-spoke multifunction steering wheel with shift paddles",
+      "18-way adjustable power front seats with memory and lumbar support",
+      "MMI Navigation plus with 8-inch color LCD and 40-GB hard drive",
+      "Audi xenon plus adaptive headlights with LED daytime running lights",
+      "LED taillights with faster activation and 50% less energy consumption",
+      "19-inch ten-Y-spoke wheels with all-season tires"
+    ]
+  }
+}

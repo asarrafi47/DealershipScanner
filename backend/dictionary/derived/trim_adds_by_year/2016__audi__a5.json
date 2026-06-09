@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2016|audi|a5",
+  "year": 2016,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_llm_2016__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S5 Coupe",
+    "S5 Cabriolet",
+    "A5 2.0T Coupe",
+    "A5 2.0T Cabriolet"
+  ],
+  "adds_by_trim": {
+    "S5 Coupe": [
+      "3.0-liter supercharged six-cylinder engine with 333 horsepower",
+      "325 lb-ft torque at 2,900–5,300 rpm",
+      "0–60 mph acceleration in 4.9 seconds with manual transmission",
+      "Top track speed of 155 mph",
+      "24-valve DOHC with valve lift system",
+      "Ventilated front and rear disc brakes (13.6-inch front, 13.0-inch rear)",
+      "Seven-speed Stronic dual-clutch automatic transmission with quattro all-wheel drive"
+    ],
+    "S5 Cabriolet": [
+      "Convertible body style with power-operated soft top",
+      "Increased shoulder room in rear (46.8 inches vs. 52.8 inches in coupe)",
+      "Drag coefficient of 0.33 versus 0.31 for coupe"
+    ],
+    "A5 2.0T Coupe": [
+      "2.0-liter turbocharged four-cylinder engine with 220 horsepower",
+      "258 lb-ft torque at 1,500–4,300 rpm",
+      "0–60 mph acceleration in 6.3 seconds with manual transmission",
+      "Top track speed of 130 mph",
+      "16-valve DOHC with valve lift system",
+      "Ventilated front disc and solid rear disc brakes (12.6-inch front, 11.8-inch rear)"
+    ],
+    "A5 2.0T Cabriolet": [
+      "Convertible body style with power-operated soft top",
+      "Increased headroom in front (40.0 inches vs. 37.5 inches in coupe)",
+      "Reduced shoulder room in rear (46.8 inches vs. 52.8 inches in coupe)"
+    ]
+  }
+}

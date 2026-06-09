@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|mazda|2",
+  "year": 2013,
+  "make": "Mazda",
+  "model": "2",
+  "ladder_id": "brochure_llm_2013__mazda__2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mazda2 Touring",
+    "Mazda2 Sport"
+  ],
+  "adds_by_trim": {
+    "Mazda2 Touring": [
+      "15-inch alloy wheels (replaces steel wheels with full covers)",
+      "Halogen fog lights",
+      "Rear liftgate spoiler",
+      "Bright tip exhaust finisher",
+      "AM/FM/CD/MP3 audio system with 6 speakers (replaces 4 speakers)",
+      "Cruise control with steering-wheel-mounted controls",
+      "Leather-wrapped steering wheel",
+      "Steering-wheel-mounted audio controls",
+      "Cloth-trimmed door panel inserts",
+      "Trip computer"
+    ],
+    "Mazda2 Sport": [
+      "1.5L DOHC 4-cylinder engine with VVT",
+      "5-speed manual transmission (4-speed automatic available)",
+      "Air conditioning with pollen filter",
+      "Power windows with driver one-touch-down/up",
+      "Power door locks with 2-stage unlocking",
+      "Remote keyless entry",
+      "Tilt steering wheel",
+      "Halogen headlights",
+      "Dual color-keyed power side mirrors",
+      "15-inch steel wheels with full wheel covers"
+    ]
+  }
+}

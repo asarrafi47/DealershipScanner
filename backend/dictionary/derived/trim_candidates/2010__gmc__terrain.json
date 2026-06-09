@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2010|gmc|terrain",
+  "year": 2010,
+  "make": "GMC",
+  "model": "Terrain",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

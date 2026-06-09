@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|volvo|v90",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "V90",
+  "ladder_id": "brochure_llm_2019__volvo__v90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V90 Cross Country Volvo Ocean Race",
+    "V90 Cross Country with Luxury Package",
+    "V90 Cross Country"
+  ],
+  "adds_by_trim": {
+    "V90 Cross Country Volvo Ocean Race": [
+      "Exclusive Crystal White with Kaolin Grey and Flare Orange color scheme",
+      "Kaolin Grey front grille with Flare Orange moldings",
+      "Specially designed five-spoke 20\" diamond-cut silver alloy wheels",
+      "Stainless steel side scuff plates and silver skid plate with Flare Orange accents",
+      "Volvo Ocean Race emblem on tailgate",
+      "Carbon fiber trim on doors and dashboard with Flare Orange piping",
+      "Flare Orange seat belts and leather cladding on seat backs",
+      "Illuminated aluminum instep plates with engraved Volvo Ocean Race logotype",
+      "Water-resistant load compartment mat and protective accessories",
+      "Powerful LED flashlight in aerospace-grade aluminum with three power modes"
+    ],
+    "V90 Cross Country with Luxury Package": [
+      "Sophisticated Scandinavian refinement and intuitive technology enhancements",
+      "Enhanced comfort and style features over standard Cross Country equipment"
+    ],
+    "V90 Cross Country": [
+      "High level of standard equipment for style, comfort, capacity and safety",
+      "T6 AWD powertrain",
+      "20\" 10-Spoke Tech Matte Black Diamond Cut alloy wheels",
+      "Cross Country logo and badging",
+      "Integrated tailpipes in rear skid plate"
+    ]
+  }
+}

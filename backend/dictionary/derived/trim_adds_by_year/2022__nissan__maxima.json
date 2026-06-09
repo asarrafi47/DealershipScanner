@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|nissan|maxima",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2022__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SR",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "19-inch machine-finished aluminum-alloy wheels",
+      "LED headlights with LED signature daytime running lights",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Intelligent Auto Headlights",
+      "Rear-window power sunshade",
+      "Heated rear seats",
+      "Chrome quad-tipped exhaust finishers",
+      "Satin Birdseye Maple Wood-tone faceted interior trim",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System with Intelligent Climate Control"
+    ],
+    "SR": [
+      "Paddle shifters",
+      "LED fog lights",
+      "Sport-tuned suspension with retuned dampers, stiffer springs, and larger stabilizer bar",
+      "Outside mirrors with reverse tilt-down feature",
+      "Auto-dimming driver-side outside mirror",
+      "Dual Panel Panoramic Moonroof",
+      "HomeLink Universal Transceiver",
+      "Adjustable ambient LED lighting",
+      "Memory System for driver's seat and outside mirrors",
+      "Driver's seat manual thigh support extension"
+    ],
+    "SV": [
+      "3.5-liter DOHC 24-valve V6 engine with 300 hp and 261 lb-ft torque",
+      "Xtronic CVT with Drive Mode Selector",
+      "Intelligent Cruise Control and Intelligent Driver Alertness",
+      "Intelligent Forward Collision Warning with Automatic Emergency Braking and Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, Rear Cross Traffic Alert",
+      "RearView Monitor and Rear Sonar System",
+      "LED headlights with LED signature daytime running lights",
+      "8-way power driver's seat with lumbar support and heated front seats",
+      "Leather-appointed seats with leather-wrapped steering wheel",
+      "NissanConnect 8-inch touchscreen with Apple CarPlay and Android Auto"
+    ]
+  }
+}

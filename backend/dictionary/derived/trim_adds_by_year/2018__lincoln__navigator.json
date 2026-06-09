@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2018|lincoln|navigator",
+  "year": 2018,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_web_2018__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premiere",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Lincoln Original Accessories including remote start systems",
+      "Vehicle Security System",
+      "Floor liners and carpeted floor mats",
+      "Interior light kit",
+      "Roof crossbars by THULE with load limit specifications",
+      "Roof-mounted cargo box by THULE",
+      "Trailer towing accessories",
+      "Full vehicle cover by Covercraft",
+      "Wheel lock kits"
+    ],
+    "Premiere": []
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/navigator/"
+}

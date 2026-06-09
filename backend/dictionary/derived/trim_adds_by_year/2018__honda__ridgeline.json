@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2018|honda|ridgeline",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "ladder_id": "brochure_llm_2018__honda__ridgeline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BLACK EDITION",
+    "RTL-E",
+    "RTL-T",
+    "RTL",
+    "SPORT",
+    "RT"
+  ],
+  "adds_by_trim": {
+    "BLACK EDITION": [
+      "Crystal Black Pearl paint exclusive",
+      "Exclusive 18-inch black-painted alloy wheels",
+      "Perforated black leather seats with red under-fabric and red stitching",
+      "Gloss black door handles",
+      "Red ambient LED lighting",
+      "Black Edition badging"
+    ],
+    "RTL-E": [
+      "LED headlights with auto-on/off and auto high-beam",
+      "150-watt/400-watt truck-bed power outlet",
+      "Heated steering wheel",
+      "Blue ambient LED lighting",
+      "Driver's seat with two-position memory",
+      "540-watt premium audio system with 8 speakers and subwoofer",
+      "USB charging ports in second row (2)",
+      "Truck-Bed Audio System"
+    ],
+    "RTL-T": [
+      "One-touch power moonroof with tilt feature",
+      "Power sliding rear window",
+      "Body-colored parking sensors (front and rear)"
+    ],
+    "RTL": [
+      "Honda Sensing safety and driver-assistive features suite",
+      "Blind spot information system with cross traffic monitor",
+      "Exclusive 18-inch machine-finished alloy wheels",
+      "Acoustic windshield",
+      "Leather-wrapped steering wheel",
+      "Heated side mirrors (AWD models)",
+      "Driver's seat 10-way power with power lumbar support",
+      "Front passenger's seat 4-way power adjustment",
+      "Tri-zone automatic climate control with humidity control and air filtration",
+      "Leather-trimmed interior"
+    ],
+    "SPORT": [
+      "Intelligent Variable Torque Management (i-VTM4) AWD system available",
+      "18-inch dark gray-painted alloy wheels",
+      "Sport badging",
+      "Remote engine start",
+      "Fog lights",
+      "Heated front seats",
+      "HomeLink remote system"
+    ],
+    "RT": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "6-speed automatic transmission",
+      "Intelligent Traction Management",
+      "18-inch alloy wheels",
+      "Security system",
+      "Multi-angle rearview camera with guidelines",
+      "Dual-action tailgate",
+      "Integrated trailer hitch",
+      "Push button start",
+      "In-Bed Trunk with truck-bed lights"
+    ]
+  }
+}

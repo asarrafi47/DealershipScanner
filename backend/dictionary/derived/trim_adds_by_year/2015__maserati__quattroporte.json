@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2015|maserati|quattroporte",
+  "year": 2015,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_web_2015__maserati__quattroporte",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "S",
+    "SQ4",
+    "GTS"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "3.0L twin-turbocharged V6 engine with 404 hp",
+      "8-speed automatic transmission",
+      "Rear-wheel drive",
+      "Dual-zone climate control",
+      "8.4-inch touchscreen infotainment system",
+      "Leather-trimmed interior",
+      "Power-adjustable front seats",
+      "Xenon headlights",
+      "Parking sensors and backup camera"
+    ],
+    "SQ4": [
+      "All-wheel drive system",
+      "Upgraded 19-inch alloy wheels",
+      "All-wheel drive technology with torque vectoring",
+      "Enhanced suspension tuning"
+    ],
+    "GTS": [
+      "More aggressive exterior styling and body kit",
+      "Upgraded sport suspension with reduced ride height",
+      "20-inch Trident design forged wheels",
+      "Ventilated carbon fiber front and rear brake calipers",
+      "Enhanced engine tuning for increased performance",
+      "Panoramic sunroof",
+      "Harman Kardon premium audio system",
+      "Upgraded interior trim and leather appointments"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/quattroporte/"
+}

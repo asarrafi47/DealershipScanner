@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2023|hyundai|tucson",
+  "year": 2023,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2023__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "N Line",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "261 net hp Smartstream 1.6L Turbo GDI hybrid engine with 66.9 kW motor",
+      "Shift-by-Wire electronic push button gear selection",
+      "Memory driver's seat with power adjustment",
+      "Heated second-row seats and steering wheel",
+      "Auto-defogging windshield",
+      "Dark chrome front and rear bumper molding",
+      "Projector-type LED headlights",
+      "Panoramic sunroof",
+      "Navigation-based Smart Cruise Control with Curve Control",
+      "Blind-Spot View Monitor and Surround View Monitor"
+    ],
+    "N Line": [
+      "261 net hp Smartstream 1.6L Turbo GDI hybrid engine with 66.9 kW motor",
+      "N Line Sport Combination seats",
+      "Alloy sport pedals, scuff plates, and black headliner",
+      "N Line unique front and rear fascia",
+      "N Line grille and rear spoiler",
+      "Dark chrome accent front grille and Hyundai logo",
+      "Panoramic sunroof",
+      "Navigation-based Smart Cruise Control with Curve Control",
+      "Highway Driving Assist"
+    ],
+    "XRT": [
+      "226 net hp Smartstream 1.6L Turbo GDI hybrid engine with 44.2 kW motor",
+      "H-Tex seating surfaces",
+      "Heated second-row seats and steering wheel",
+      "Auto-defogging windshield",
+      "XRT unique front and rear fascia",
+      "Silver painted front and rear skid plates",
+      "Dark chrome accent front grille and Hyundai logo",
+      "Bose 8-speaker premium audio system",
+      "Parking Distance Warning and Parking Collision-Avoidance Assist",
+      "Blind-Spot View Monitor and Surround View Monitor"
+    ],
+    "SEL": [
+      "226 net hp Smartstream 1.6L Turbo GDI hybrid engine with 44.2 kW motor",
+      "Heated front seats",
+      "H-Tex seating surfaces",
+      "Roof side rails",
+      "Power tilt-and-slide sunroof",
+      "Hands-free smart liftgate with auto open and adjustable height",
+      "Heated side mirrors with LED turn signal indicators",
+      "10.25-inch digital instrument cluster display",
+      "10.25-inch touchscreen navigation system",
+      "Navigation-based Smart Cruise Control with Curve Control"
+    ],
+    "SE": [
+      "187 hp Smartstream 2.5L GDI/MPI 4-cylinder engine with 178 lb-ft torque",
+      "8-speed automatic transmission with SHIFTRONIC",
+      "Idle Stop & Go technology",
+      "Electronic Parking Brake with Automatic Vehicle Hold",
+      "Drive Mode Select and Downhill Brake Control",
+      "2,000-lb towing capacity with trailer pre-wiring",
+      "Automatic headlights with High Beam Assist",
+      "LED Daytime Running Lights",
+      "Proximity Key entry with push button start",
+      "Reclining 60/40 split-folding second-row seats with center armrest"
+    ]
+  }
+}

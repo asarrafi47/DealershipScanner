@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2019|chevrolet|camaro",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2019__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1LZ",
+    "SS2",
+    "SS1",
+    "TL3",
+    "TL2",
+    "TL1",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "1LZ": [
+      "Chevrolet Infotainment 3 Plus System with 8-inch HD color touchscreen",
+      "Enhanced voice recognition and in-vehicle apps",
+      "Cloud-connected personalization for infotainment and vehicle settings",
+      "Dealer upgradable to embedded navigation with subscription"
+    ],
+    "SS2": [
+      "Chevrolet Infotainment 3 Plus System with 8-inch HD color touchscreen",
+      "Bose premium 9-speaker audio system (Coupe) or 7-speaker (Convertible)",
+      "Enhanced voice recognition and cloud-connected personalization"
+    ],
+    "SS1": [
+      "Chevrolet Infotainment 3 Plus System with 8-inch HD color touchscreen",
+      "Bose premium 9-speaker audio system (Coupe) or 7-speaker (Convertible)",
+      "Performance Data Recorder and video recorder"
+    ],
+    "TL3": [
+      "Chevrolet Infotainment 3 Premium System with Navigation",
+      "Connected navigation and additional memory for in-vehicle apps",
+      "Performance Data Recorder capability"
+    ],
+    "TL2": [
+      "Chevrolet Infotainment 3 Plus System with 8-inch HD color touchscreen",
+      "Enhanced voice recognition and in-vehicle apps",
+      "Cloud-connected personalization for select infotainment and vehicle settings"
+    ],
+    "TL1": [
+      "Chevrolet Infotainment 3 Plus System with 8-inch HD color touchscreen",
+      "Enhanced voice recognition and in-vehicle apps",
+      "Cloud-connected personalization capability"
+    ],
+    "SL": [
+      "Chevrolet Infotainment 3 System with 7-inch diagonal color touchscreen",
+      "AM/FM stereo with Bluetooth audio streaming for two active devices",
+      "Voice command pass-through to compatible phone",
+      "Apple CarPlay and Android Auto compatibility"
+    ]
+  }
+}

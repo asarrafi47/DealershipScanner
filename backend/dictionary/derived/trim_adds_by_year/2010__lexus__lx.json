@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|lexus|lx",
+  "year": 2010,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2010__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Safety Connect telematics services",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds airbag supplemental restraint systems",
+      "Adds Dynamic Radar Cruise Control assistance",
+      "Adds Pre-Collision System",
+      "Adds Active Headrests for whiplash reduction",
+      "Adds Brake Assist system"
+    ],
+    "Limited": [
+      "Adds Lexus Enform premium services with Destination Assist",
+      "Adds eDestination navigation service",
+      "Adds XM Radio satellite radio capability",
+      "Adds XM NavTraffic real-time traffic service",
+      "Adds XM NavWeather real-time weather service"
+    ],
+    "Premium": [
+      "Adds Wide-view Front and Side Monitor camera system",
+      "Adds backup camera with rear-area visibility"
+    ],
+    "Luxury": [
+      "Adds Mark Levinson premium audio system",
+      "Adds XM Sports and Stocks subscription service"
+    ]
+  }
+}

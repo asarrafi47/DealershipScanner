@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2010|porsche|cayman",
+  "year": 2010,
+  "make": "Porsche",
+  "model": "Cayman",
+  "ladder_id": "brochure_llm_2010__porsche__cayman",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cayman S",
+    "Cayman"
+  ],
+  "adds_by_trim": {
+    "Cayman S": [
+      "Sport exhaust system",
+      "Sport exhaust tailpipe",
+      "Short Shifter",
+      "Storage-compartment cover with Cayman S logo available",
+      "PDK selector gate-surround painted option",
+      "Gear/handbrake levers in Aluminum II option",
+      "Handbrake lever in Aluminum II with stitching option",
+      "Door opener trim painted option"
+    ],
+    "Cayman": [
+      "Base model with standard interior trim",
+      "Door-entry guards in stainless steel option",
+      "Door-entry guards in Carbon Fiber option",
+      "Alcantara® interior package options available",
+      "Leather interior trim package options",
+      "Aluminum-Look interior trim options",
+      "Aerokit Cayman exterior package option",
+      "Exterior package in matte Aluminum-Look option"
+    ]
+  }
+}

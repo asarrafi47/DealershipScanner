@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,BMW,3 Series,330i Sedan,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,28,35,31,,,,,
+2026,BMW,3 Series,330i xDrive Sedan,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,26,34,29,,,,,
+2026,BMW,3 Series,M340i Sedan,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),3.0L I6 Turbo,Turbocharged,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,27,33,29,,,,,
+2026,BMW,3 Series,M340i xDrive Sedan,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),3.0L I6 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,26,33,29,,,,,

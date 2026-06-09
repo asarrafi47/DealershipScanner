@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2011|honda|crosstour",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Crosstour",
+  "ladder_id": "brochure_2011__honda__crosstour",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "Adds 360-Watt AM/FM/6-Disc In-Dash Audio System with 7 Speakers including Subwoofer",
+      "Adds MP3/Windows Media Audio Playback Capability with Radio Data System",
+      "Adds MP3/Auxiliary Input Jack",
+      "Adds Compass",
+      "Adds Exterior Temperature Indicator",
+      "Adds Maintenance Minder System",
+      "Adds Dual-Stage Multiple-Threshold Front Airbags",
+      "Adds Front Side Airbags with Passenger-Side Occupant Position Detection System",
+      "Adds Side Curtain Airbags with Rollover Sensor",
+      "Adds Vehicle Stability Assist with Traction Control and Brake Assist"
+    ],
+    "EX-L": [
+      "Adds USB Audio Interface with XM Radio capability",
+      "Adds Honda Satellite-Linked Navigation System"
+    ]
+  }
+}

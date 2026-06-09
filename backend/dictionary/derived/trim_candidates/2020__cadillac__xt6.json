@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2020|cadillac|xt6",
+  "year": 2020,
+  "make": "Cadillac",
+  "model": "XT6",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Premium Luxury",
+    "Luxury",
+    "Sport",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

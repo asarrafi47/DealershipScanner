@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2013|lexus|lx",
+  "year": 2013,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2013__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "LT",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds standard airbag supplemental restraint systems",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds backup camera system",
+      "Adds dynamic radar cruise control assist",
+      "Adds adaptive front lighting system"
+    ],
+    "EX": [],
+    "LT": [],
+    "Limited": [
+      "Adds Lexus Enform telematics system with destination assist",
+      "Adds Safety Connect emergency assistance services",
+      "Adds SiriusXM satellite radio subscription services"
+    ],
+    "Premium": [
+      "Adds wide-view front and side monitor system",
+      "Adds dual-screen rear-seat entertainment system with DVD player"
+    ],
+    "Luxury": [
+      "Upgraded to Mark Levinson 19-speaker reference surround sound audio system",
+      "Adds mahogany wood-trimmed door switch plates",
+      "Adds mahogany wood and leather-trimmed steering wheel",
+      "Adds semi-aniline perforated leather-trimmed interior"
+    ]
+  }
+}

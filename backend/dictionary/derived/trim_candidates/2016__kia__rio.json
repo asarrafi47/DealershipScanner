@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2016|kia|rio",
+  "year": 2016,
+  "make": "Kia",
+  "model": "Rio",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2010|volkswagen|passat",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Passat",
+  "ladder_id": "brochure_web_2010__volkswagen__passat",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Passat 2.0T Limited Edition Auto",
+    "Passat 2.0T R-Line Auto",
+    "Passat 2.0T SE Auto"
+  ],
+  "adds_by_trim": {
+    "Passat 2.0T Limited Edition Auto": [
+      "18-inch wheels",
+      "Fully upgraded LED headlights with adaptive front lighting",
+      "Front and rear parking sensors",
+      "Hands-free opening trunk",
+      "Power folding mirrors",
+      "Navigation system",
+      "Nine-speaker Fender premium audio system",
+      "Leather seats",
+      "Heated front and rear seats",
+      "Power passenger seat with memory driver seat settings"
+    ],
+    "Passat 2.0T R-Line Auto": [
+      "Nine-speaker Fender premium audio system"
+    ],
+    "Passat 2.0T SE Auto": [
+      "Turbocharged 2.0-liter four-cylinder engine with 174 hp and 206 lb-ft torque",
+      "Six-speed automatic transmission",
+      "Forward collision warning with automatic emergency braking",
+      "Blind-spot monitoring",
+      "Adaptive cruise control",
+      "Automatic windshield wipers and high-beams",
+      "6.3-inch infotainment screen with three USB ports",
+      "Six-speaker sound system",
+      "15.9 cubic feet trunk space"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/passat/"
+}

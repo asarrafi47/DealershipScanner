@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2013|jeep|wrangler",
+  "year": 2013,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2013__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon",
+    "Sahara",
+    "Sport S",
+    "Sport",
+    "Moab"
+  ],
+  "adds_by_trim": {
+    "Rubicon": [
+      "Rock-Trac 4WD system with electronic locking differentials front and rear",
+      "Front sway bar disconnect system",
+      "Dana 44 heavy-duty front and rear axles",
+      "High-pressure monotube shocks with tunable valves",
+      "Performance suspension system",
+      "17-inch polished aluminum Gray wheels",
+      "Rubicon embroidered cloth and leather seating"
+    ],
+    "Sahara": [
+      "Alpine Premium Sound System",
+      "SiriusXM Satellite Radio",
+      "18-inch Sparkle Silver wheels",
+      "Power Convenience Group with remote keyless entry and security system",
+      "Tubular side steps",
+      "Body-color fender flares",
+      "Sahara embroidered cloth and leather seating"
+    ],
+    "Sport S": [
+      "Alpine Premium Sound System",
+      "SiriusXM Satellite Radio",
+      "17-inch 5-spoke Sparkle Silver painted aluminum wheels",
+      "Leather-wrapped steering wheel with speed and audio controls"
+    ],
+    "Sport": [
+      "Halogen headlamps and fog lamps",
+      "Six-speaker audio system",
+      "Uconnect 130 infotainment system",
+      "Cloth seating",
+      "16-inch slot-spoke steel painted wheels",
+      "Reversible cargo mat with Jeep logo",
+      "Wash-out interior with removable carpet and drain plugs"
+    ],
+    "Moab": [
+      "Dana 30 front axle",
+      "Leather-trimmed seats",
+      "17-inch Medium Gloss Black wheels",
+      "Goodyear P245/75R17 Silent Armor OWL tires",
+      "Connectivity Group",
+      "Moab IP grab handle",
+      "Black fender flares",
+      "Slush mats"
+    ]
+  }
+}

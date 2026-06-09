@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2023|toyota|corollahatchback",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "brochure_llm_2023__toyota__corollahatchback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "2.0L Dynamic Force 4-cylinder DOHC engine with 169 hp and 151 lb.-ft. torque",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) with Sport Mode",
+      "Front-Wheel Drive with MacPherson strut front and multi-link rear suspension",
+      "Electric Power Steering (EPS)",
+      "Power-assisted ventilated 11.5-inch front disc and solid 10.5-inch rear disc brakes",
+      "Unitized body construction"
+    ],
+    "XSE": [
+      "Available 6-speed Intelligent Manual Transmission (iMT)",
+      "Up to 30 city/38 highway/33 combined EPA-est. mpg"
+    ]
+  }
+}

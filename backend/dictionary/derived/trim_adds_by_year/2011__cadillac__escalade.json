@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2011|cadillac|escalade",
+  "year": 2011,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_2011__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds OnStar with subscription service",
+      "Adds tire sealant and compressor kit",
+      "Adds powertrain limited warranty coverage",
+      "Adds roadside assistance program",
+      "Adds courtesy transportation program"
+    ],
+    "Premium": [
+      "22\" 7-spoke premium painted wheels with chrome inserts",
+      "Rear-seat entertainment system with 9\" screen and Blu-ray playback"
+    ],
+    "Limited": [],
+    "Platinum": [
+      "Adds brushed aluminum accents",
+      "Adds warm aluminum accents"
+    ]
+  }
+}

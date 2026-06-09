@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|chrysler|sebring",
+  "year": 2010,
+  "make": "Chrysler",
+  "model": "Sebring",
+  "ladder_id": "brochure_llm_2010__chrysler__sebring",
+  "source": "brochure_llm",
+  "trims_available": [
+    "limited",
+    "touring"
+  ],
+  "adds_by_trim": {
+    "limited": [
+      "Eight-way power heated driver and front passenger seats",
+      "Standard leather-trimmed seating for five",
+      "Four-wheel disc ABS",
+      "Tortoiseshell-style accents",
+      "Aimable LED lighting"
+    ],
+    "touring": [
+      "Premium stain-resistant, antistatic seat fabric",
+      "4-speed automatic transmission",
+      "Remote Keyless/Illuminated Entry",
+      "Power windows and locks",
+      "Air conditioning",
+      "Electronic speed control",
+      "AM/FM/CD radio with MP3 auxiliary input jack"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2010_bmw_3_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "3 Series",
+    "3 Series"
+  ],
+  "year_min": 2008,
+  "year_max": 2012,
+  "source": "generated",
+  "trims": {
+    "335i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "328i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

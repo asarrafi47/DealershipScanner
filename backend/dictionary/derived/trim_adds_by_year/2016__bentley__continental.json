@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2016|bentley|continental",
+  "year": 2016,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_llm_2016__bentley__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Continental GT V8 Convertible",
+    "Continental GT V8"
+  ],
+  "adds_by_trim": {
+    "Continental GT V8 Convertible": [
+      "Automatically folding 4-layer insulated fabric hood in 3 colours: Black, Blue, Grey",
+      "4 roof interior colours: Beluga, Blue, Grey, Saddle",
+      "Remote control roof function",
+      "Choice of 5 additional hood colours: Beige, Claret, Dark Brown, Dark Grey Metallic, Green",
+      "4 additional roof interior colours: Camel, Light Grey, Magnolia, Saffron"
+    ],
+    "Continental GT V8": [
+      "8-inch high resolution front screen infotainment with AM/FM radio, HDD navigation, DVD/CD, SD card slot",
+      "Bluetooth telephone system with privacy handset and wireless connectivity",
+      "Rear view camera with park distance control and graphic display",
+      "WiFi hotspot capability",
+      "Ventilated front seats with massage function",
+      "Multi-zone automatic climate control system",
+      "Bentley GPS tracking system provision",
+      "Volumetric ultrasonic alarm with central locking",
+      "20-inch 6 tri-spoke alloy wheels with electronic TPMS",
+      "Full premium grade hide interior in 4 colours with wood veneer options"
+    ]
+  }
+}

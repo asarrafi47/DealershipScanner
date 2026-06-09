@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|bmw|x3",
+  "year": 2011,
+  "make": "BMW",
+  "model": "X3",
+  "ladder_id": "bmw_x3",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "accuracy or completeness of information presented. This brochure shall not be used or relied upon as a substitute",
+      "r information can be obtained from your authorized BMW SAV center or bmwusa.com.",
+      "trademarks and trade names are the property of their respective owners. Printed in USA 6286-910-33",
+      "cylinder | Inline \uea06 / \uea04 | TwinPower Turbo Inline \uea06 / \uea04"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 4.0,
+    "per_trim_add_counts": {
+      "Na": 4
+    }
+  }
+}

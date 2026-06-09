@@ -4,7 +4,6 @@ from backend.db.inventory_db import (
     get_filter_options,
     get_saved_car_ids,
     listings_grid_bootstrap_cars,
-    public_listings_count,
     serialize_car_for_listings_grid,
 )
 from backend.listings.geo_session import persist_listings_geo_from_request
@@ -43,6 +42,7 @@ def listings_page(*, listings_poll_ms: int = 0):
         "package": g("package"),
         "max_price": scalar("max_price"),
         "max_mileage": scalar("max_mileage"),
+        "inventory_condition": scalar("inventory_condition"),
         "engine_l_min": scalar("engine_l_min") or scalar("engine_displacement_l_min"),
         "engine_l_max": scalar("engine_l_max") or scalar("engine_displacement_l_max"),
         "zip_code": zip_code,
@@ -76,9 +76,6 @@ def listings_page(*, listings_poll_ms: int = 0):
         except (TypeError, ValueError):
             saved_car_ids = []
 
-    inv_n = public_listings_count()
-    inv_display = f"{inv_n:,}" if inv_n > 0 else "0"
-
     bootstrap_grid_cars: list[dict] = []
     if not q_text and not has_package_filter:
         try:
@@ -108,6 +105,4 @@ def listings_page(*, listings_poll_ms: int = 0):
         bootstrap_grid_cars=bootstrap_grid_cars,
         listings_poll_ms=int(listings_poll_ms),
         saved_car_ids=saved_car_ids,
-        inventory_count=inv_n,
-        inventory_count_display=inv_display,
     )

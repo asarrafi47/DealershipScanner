@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2013|nissan|murano",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2013__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MURANO CROSSCABRIOLET CC",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "MURANO CROSSCABRIOLET CC": [
+      "Power convertible soft-top with glass window",
+      "Dual pop-up roll bar",
+      "Auto-adjusting amplifier for convertible top up or down"
+    ],
+    "SL": [
+      "Dual Panel Moonroof with power retractable sunshades",
+      "Leather-appointed seats with driver's seat memory position",
+      "Heated front seats and outside mirrors",
+      "Bose audio system",
+      "20-inch aluminum-alloy wheels",
+      "Silver-accented roof rails",
+      "High Intensity Discharge bi-functional xenon projector headlights",
+      "Heated rear seats",
+      "Power-tilt and power-telescoping steering column with memory",
+      "Heated steering wheel"
+    ],
+    "SV": [
+      "Black roof rails",
+      "Automatic on/off headlights with fog lights",
+      "8-way power driver's seat and 4-way power front-passenger seat",
+      "Auto-dimming rearview mirror with digital compass",
+      "HomeLink Universal Transceiver",
+      "RearView Monitor",
+      "Bluetooth Hands-free Phone System",
+      "USB connection port for iPod interface",
+      "SiriusXM Satellite Radio",
+      "Leather-wrapped steering wheel with illuminated audio controls"
+    ],
+    "S": [
+      "Intuitive All-Wheel Drive or Front-Wheel Drive",
+      "18-inch aluminum-alloy wheels",
+      "LED taillights",
+      "In-dash 6-CD changer with MP3 and auxiliary audio input",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "6-way manual driver's seat with lumbar support",
+      "Power windows and power door locks",
+      "60/40 split fold-down rear seatbacks",
+      "Six standard air bags with Vehicle Dynamic Control and Traction Control"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2018|maserati|granturismo",
+  "year": 2018,
+  "make": "maserati",
+  "model": "granturismo",
+  "ladder_id": "brochure_llm_2018__maserati__granturismo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GranCabrio MC",
+    "GranTurismo Sport",
+    "GranCabrio Sport",
+    "GranTurismo"
+  ],
+  "adds_by_trim": {
+    "GranCabrio MC": [
+      "Wraparound Sport seats with integrated Maserati logo headrests",
+      "Revised three-spoke Sport steering wheel with heavily profiled grip and flattened rim",
+      "Longer Trofeo Design gearshift paddles, available in carbon fiber on request",
+      "0-62 mph in 4.9 seconds with 181 mph top speed",
+      "ZF six-speed MC Auto Shift gearbox with Manual-Sport mode and automatic rev matching"
+    ],
+    "GranTurismo Sport": [
+      "0-62 mph in 4.8 seconds with 186 mph top speed",
+      "Ferrari-built 4.7-liter naturally aspirated V8 engine with 460 hp and 520 Nm torque"
+    ],
+    "GranCabrio Sport": [
+      "0-62 mph in 5.0 seconds with 179 mph top speed",
+      "Convertible GranCabrio body style with power-operated roof"
+    ],
+    "GranTurismo": [
+      "Ferrari-built 4.7-liter naturally aspirated V8 engine with 460 hp and 520 Nm torque",
+      "ZF six-speed MC Auto Shift gearbox with multiple driving modes",
+      "Perforated aluminum accelerator and brake pedals as standard",
+      "Gear-holding function allowing transmission to hold gear until driver input",
+      "Rev limiter override function and high-performance launch control feature"
+    ]
+  }
+}

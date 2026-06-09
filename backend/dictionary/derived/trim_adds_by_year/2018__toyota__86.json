@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2018|toyota|86",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "brochure_llm_2018__toyota__86",
+  "source": "brochure_llm",
+  "trims_available": [
+    "86 GT Black",
+    "86 GT",
+    "86"
+  ],
+  "adds_by_trim": {
+    "86 GT Black": [
+      "Rear wing in matte black with aerodynamic end plates and supports in Raven",
+      "Heated sport front bucket seats with leather and Granlux suede-like inserts",
+      "4.2-in. TFT Multi-Information Display with vehicle performance information",
+      "Smart Key System with Push Button Start",
+      "Dual zone automatic climate control"
+    ],
+    "86 GT": [
+      "LED fog lights",
+      "Rear wing in matte black with aerodynamic end plates",
+      "Aerodynamic underbody panel",
+      "Color-keyed heated power outside mirrors",
+      "Heated power outside mirrors in Raven"
+    ],
+    "86": [
+      "2.0L 4-Cylinder Horizontally Opposed Engine with 205 hp manual / 200 hp automatic",
+      "6-speed close-ratio manual transmission with triple-cone syncromesh",
+      "6-speed Electronically Controlled automatic Transmission with intelligence and Track Mode",
+      "LED projector-beam headlights with Daytime Running Lights and all-LED rear lights",
+      "Chrome-tipped dual exhaust",
+      "Front fender-mounted vortex generators",
+      "17-inch twisted spoke alloy wheels",
+      "Sport front bucket seats with Granlux suede-like material",
+      "Analog tachometer with programmable rev indicator",
+      "Auto-dimming rearview mirror with integrated backup camera"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2024_mazda_cx-5_complete_options",
+  "make": "Mazda",
+  "models": [
+    "CX-5",
+    "CX-5"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Signature": [
+      {
+        "label": "Interior Materials",
+        "value": "Nappa; leather-trimmed seating; [Brochure] Nappa; leather-trimmed seating"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Initially, the only engine available was a direct-injected Skyactiv-G 2.0-litre"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Nappa; leather-trimmed seating; [Brochure] Nappa; leather-trimmed seating"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Interior Materials",
+        "value": "Nappa; leather-trimmed seating; [Brochure] Nappa; leather-trimmed seating"
+      }
+    ]
+  }
+}

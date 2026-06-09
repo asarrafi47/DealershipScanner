@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_mercedes-benz_cle-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "CLE-Class",
+    "CLE-Class"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG CLE53": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

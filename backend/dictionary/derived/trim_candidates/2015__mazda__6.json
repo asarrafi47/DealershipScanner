@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2015|mazda|6",
+  "year": 2015,
+  "make": "Mazda",
+  "model": "6",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "Platinum",
+    "Limited",
+    "Touring",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

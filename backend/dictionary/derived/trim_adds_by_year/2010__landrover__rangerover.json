@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|landrover|rangerover",
+  "year": 2010,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_llm_2010__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Supercharged Autobiography",
+    "Supercharged",
+    "HSE Lux",
+    "HSE"
+  ],
+  "adds_by_trim": {
+    "Supercharged Autobiography": [
+      "20-inch 6-spoke alloys with diamond turned finish",
+      "Personalized luxury and individuality customization options"
+    ],
+    "Supercharged": [
+      "New LR-V8 Supercharged engine with more power and improved refinement",
+      "20-inch 10-spoke alloys standard",
+      "Optional 20-inch polished 10-spoke alloys"
+    ],
+    "HSE Lux": [
+      "20-inch V-spoke alloys standard"
+    ],
+    "HSE": [
+      "Interlinked electronic air suspension standard across range",
+      "Terrain Response system with enhanced version",
+      "Dynamic Stability Control with Anti-lock Brakes",
+      "Enhanced Understeer Control technology",
+      "Hydraulic Rear Brake Boost",
+      "Trailer Stability Assist",
+      "19-inch Twin 7-spoke alloys standard",
+      "Adaptive Dynamics available on certain trims"
+    ]
+  }
+}

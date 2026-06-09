@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2020|chevrolet|bolt",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "ladder_id": "brochure_llm_2020__chevrolet__bolt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "Perforated leather seat appointments",
+      "17-inch Ultra Bright machined-aluminum wheels with painted pockets",
+      "Auto-dimming rearview mirror",
+      "Rear Camera Mirror with auto-dimming and full camera display",
+      "Heated rear outboard seating positions",
+      "Ambient LED-based instrument panel lighting"
+    ],
+    "LT": [
+      "8-inch Driver Information Center with multi-color configurable display and energy-use monitors",
+      "Chevrolet Infotainment System 3 with 10.2-inch touchscreen and Apple CarPlay/Android Auto",
+      "6-speaker audio system",
+      "SiriusXM All Access Package with 3-month trial",
+      "4G LTE Wi-Fi Hotspot for up to seven devices",
+      "Chevrolet Connected Access with 10 years standard connectivity",
+      "Deluxe cloth seating",
+      "17-inch painted-aluminum wheels",
+      "Remote keyless entry with extended range",
+      "Remote vehicle starter system"
+    ]
+  }
+}

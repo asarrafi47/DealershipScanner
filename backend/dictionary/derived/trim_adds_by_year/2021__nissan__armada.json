@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2021|nissan|armada",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2021__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "MIDNIGHT EDITION®",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Vehicle-speed-sensitive power steering",
+      "Intelligent Back-Up Intervention",
+      "Intelligent Rear View Mirror",
+      "Traffic Sign Recognition",
+      "22-inch dark-finished aluminum-alloy wheels",
+      "Chrome outside mirrors",
+      "Windshield wiper deicer",
+      "Rain-sensing windshield wipers",
+      "Rear step lamp",
+      "Illuminated cup holders"
+    ],
+    "MIDNIGHT EDITION®": [
+      "20-inch black-painted machine-finished aluminum-alloy wheels",
+      "Black exterior badging",
+      "Black roof rails",
+      "Black lower center bumper fascias",
+      "Black interior trim and headliner",
+      "Black grille",
+      "Black rear finisher",
+      "Power heated folding black outside mirrors with LED turn signal indicators",
+      "Midnight Edition Floor Mats",
+      "Carpeted Cargo Area Protector"
+    ],
+    "SL": [
+      "Intelligent Around View® Monitor",
+      "Trailer Sway Control",
+      "20-inch painted aluminum-alloy wheels",
+      "LED fog lights",
+      "Body-color outside mirrors with puddle lights",
+      "Auto-dimming outside mirrors",
+      "Power sliding glass moonroof",
+      "Power liftgate",
+      "Remote Engine Start System"
+    ],
+    "SV": [
+      "400-hp Endurance® 5.6-liter V8 engine",
+      "7-speed automatic transmission",
+      "Intelligent Cruise Control with Intelligent Driver Alertness",
+      "Intelligent Lane Intervention and Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Blind Spot Intervention",
+      "Front and Rear Sonar with Rear Automatic Braking",
+      "NissanConnect® 12.3-inch color touchscreen with Apple CarPlay and Android Auto",
+      "Leather-wrapped steering wheel and shift knob",
+      "18-inch aluminum-alloy wheels"
+    ]
+  }
+}

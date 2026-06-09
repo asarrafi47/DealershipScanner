@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2014|porsche|911",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2014__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Carrera 4S Cabriolet",
+    "Carrera S Cabriolet",
+    "Carrera 4 Cabriolet",
+    "Carrera Cabriolet",
+    "Carrera 4S",
+    "Carrera S",
+    "Carrera 4",
+    "Carrera"
+  ],
+  "adds_by_trim": {
+    "Carrera 4S Cabriolet": [
+      "Porsche Dynamic Chassis Control (PDCC) with electronic torque vectoring",
+      "Convertible cabriolet body configuration with power-operated soft top",
+      "All-wheel drive system with Carrera 4S performance tuning"
+    ],
+    "Carrera S Cabriolet": [
+      "Convertible cabriolet body configuration with power-operated soft top",
+      "Enhanced engine performance over base Carrera model"
+    ],
+    "Carrera 4 Cabriolet": [
+      "Convertible cabriolet body configuration with power-operated soft top",
+      "All-wheel drive system with enhanced traction control"
+    ],
+    "Carrera Cabriolet": [
+      "Convertible cabriolet body configuration with power-operated soft top"
+    ],
+    "Carrera 4S": [
+      "Porsche Dynamic Chassis Control (PDCC) with electronic torque vectoring",
+      "PASM sports suspension lowered 20mm with 20-inch wheels",
+      "All-wheel drive system with Carrera 4S performance specifications"
+    ],
+    "Carrera S": [
+      "Enhanced engine performance with increased horsepower over base Carrera",
+      "20-inch Carrera S wheels with summer performance tires"
+    ],
+    "Carrera 4": [
+      "All-wheel drive system with Carrera 4 specific calibration",
+      "Improved traction and handling in variable weather conditions"
+    ],
+    "Carrera": [
+      "7-speed Porsche Doppelkupplung (PDK) dual-clutch automatic transmission",
+      "Porsche Active Suspension Management (PASM) with electronically controlled damping",
+      "Porsche Torque Vectoring (PTV) with mechanically locking rear differential",
+      "19-inch wheels with summer performance tires and tire pressure monitoring",
+      "Leather seats in standard colors with multifunction steering wheel",
+      "HomeLink programmable garage door opener and cruise control standard",
+      "Sport Chrono Package with lap timer and performance monitoring"
+    ]
+  }
+}

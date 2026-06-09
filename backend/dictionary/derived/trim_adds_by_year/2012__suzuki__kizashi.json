@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2012|suzuki|kizashi",
+  "year": 2012,
+  "make": "Suzuki",
+  "model": "Kizashi",
+  "ladder_id": "brochure_llm_2012__suzuki__kizashi",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT SLS",
+    "SPORT GTS",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SPORT SLS": [
+      "Rockford Fosgate 425-watt 10-speaker 8-channel AM/FM/CD audio system with subwoofer",
+      "Automatic day/night rear-view mirror",
+      "Sport body package with front fascia, side extensions, and rear spoiler",
+      "Heated outside mirrors standard",
+      "4-way power front passenger seat adjustment"
+    ],
+    "SPORT GTS": [
+      "Formula 1-style steering-wheel-mounted paddle shifters on AT models",
+      "Sport suspension tuning",
+      "18-inch sport lightweight alloy wheels",
+      "Foglamps",
+      "Leather-appointed interior with heated front seats",
+      "10-way power driver seat with 3-position memory and power lumbar"
+    ],
+    "SE": [
+      "Performance-tuned continuously variable automatic transmission",
+      "Advanced Intelligent All-Wheel Drive (i-AWD) with heated outside mirrors",
+      "18-inch alloy wheels with 235/45-R18 Dunlop all-season tires",
+      "Leather-appointed interior with heated front seats",
+      "4-way power front passenger seat adjustment",
+      "HomeLink remote wireless control system"
+    ],
+    "S": [
+      "2.4-liter DOHC 4-cylinder engine with 185-hp manual or 180-hp automatic",
+      "6-speed manual transmission or continuously variable automatic transmission",
+      "Intelligent Vehicle Stability Program (i-VSP)",
+      "4-wheel disc brakes with Akebono components and ABS with EBD",
+      "Multi-link rear suspension with Kyb performance shocks",
+      "Dual front advanced airbags with quad side-impact and side curtain airbags",
+      "TouchFree Smart Key push-button ignition and entry",
+      "Dual-zone automatic climate control with pollen filter",
+      "7-speaker AM/FM/CD/USB audio system",
+      "16-inch steel wheels with full covers and heated outside mirrors"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2022|volkswagen|passat",
+  "year": 2022,
+  "make": "Volkswagen",
+  "model": "Passat",
+  "ladder_id": "brochure_llm_2022__volkswagen__passat",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited Edition",
+    "R-Line®",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited Edition": [
+      "19-inch 5-spoke two-tone machined alloy wheels",
+      "Adaptive Front Lighting System with dynamic cornering lights",
+      "Power folding side mirrors with position memory",
+      "Black side mirror caps",
+      "Chrome side window surrounds",
+      "Power adjustable front passenger seat with lumbar support",
+      "Driver's seat position memory",
+      "Front Comfort Sport seats",
+      "Heated rear outboard seats with separate controls",
+      "Perforated Vienna Leather seating surfaces"
+    ],
+    "R-Line®": [
+      "19-inch 5-spoke two-tone machined alloy wheels",
+      "Steering wheel mounted shift paddles",
+      "R-Line® grille, front bumper, fender badges and exterior trim",
+      "Black trunk lid lip spoiler",
+      "R-Line® interior styling",
+      "Front footwell lights",
+      "Ambient interior lighting",
+      "Stainless steel pedal cluster"
+    ],
+    "SE": [
+      "2.0T 174 HP turbocharged 4-cylinder engine with direct fuel injection",
+      "6-speed automatic transmission with Tiptronic",
+      "Front-wheel drive",
+      "Four-wheel independent suspension",
+      "LED headlights with signature LED daytime running lights",
+      "LED taillights",
+      "18-inch 5-spoke two-tone machined alloy wheels",
+      "Automatic headlights with Coming Home/Leaving Home feature",
+      "Heated power adjustable side mirrors with integrated turn signals",
+      "Power tilting and sliding sunroof"
+    ]
+  }
+}

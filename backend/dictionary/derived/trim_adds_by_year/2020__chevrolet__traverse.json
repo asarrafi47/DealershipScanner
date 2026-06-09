@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2020|chevrolet|traverse",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2020__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "RS",
+    "LT Leather",
+    "LT Cloth AWD",
+    "LT Cloth FWD",
+    "L"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "Premium perforated leather-appointed front and second rows with vinyl third row",
+      "LED D-Optic bi-function projector-beam headlamps",
+      "Power liftgate with hands-free and Chevrolet emblem projection",
+      "Chrome roof rails",
+      "Heated second-row seating positions",
+      "Ventilated driver and front passenger seats",
+      "Enhanced Automatic Emergency Braking",
+      "On/off selectable all-wheel drive with automatic locking rear differential and twin clutch"
+    ],
+    "Premier": [
+      "Perforated leather-appointed front and second rows with vinyl third row",
+      "Power liftgate with programmable hands-free operation",
+      "LED D-Optic bi-function projector-beam headlamps",
+      "Chrome roof rails",
+      "Heavy-duty cooling, trailer hitch, trailer assist guidelines with Hitch Guidance and Hitch View"
+    ],
+    "RS": [
+      "Leather-appointed front and second rows with vinyl third row",
+      "Power liftgate with programmable operation",
+      "SkyScape power sunroof with fixed rear skylight and sunscreen",
+      "Following Distance Indicator and Forward Collision Alert",
+      "Front Pedestrian Braking",
+      "IntelliBeam automatic high-beam headlamps",
+      "Lane Keep Assist with Lane Departure Warning"
+    ],
+    "LT Leather": [
+      "Leather-appointed front and second rows with vinyl third row",
+      "4.2-inch enhanced multi-color Driver Information Center display",
+      "Front passenger 6-way power seat adjuster with power lumbar",
+      "Rear Camera Mirror with auto-dimming and full camera display",
+      "Power outlet 120-volt on rear of center console"
+    ],
+    "LT Cloth AWD": [
+      "4.2-inch enhanced multi-color Driver Information Center display",
+      "Driver 8-way power seat adjuster with power lumbar control",
+      "Heated driver and front passenger seats",
+      "Remote vehicle starter system",
+      "Universal Home Remote with garage door opener",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "Rear Park Assist",
+      "HD Rear Vision Camera",
+      "All-wheel drive capability"
+    ],
+    "LT Cloth FWD": [
+      "4.2-inch enhanced multi-color Driver Information Center display",
+      "Driver 8-way power seat adjuster with power lumbar control",
+      "Leather-wrapped heated steering wheel with mounted audio, cruise and phone controls",
+      "Heated driver and front passenger seats (available with Convenience and Driver Confidence Package)",
+      "Remote vehicle starter system (available with Convenience and Driver Confidence Package)"
+    ],
+    "L": [
+      "8-passenger seating with front bucket seats and second/third-row manual-folding 60/40 split-bench",
+      "3.5-inch monochromatic Driver Information Center display",
+      "Urethane comfort grip steering wheel with mounted audio, cruise and phone controls",
+      "Manual rearview day/night mirror",
+      "3.6L DOHC V6 engine with 310 hp and 266 lb-ft torque",
+      "9-speed automatic transmission with Driver Shift Control",
+      "4-wheel independent suspension with Traction Mode Select",
+      "High-intensity discharge headlamps",
+      "Rear Vision Camera",
+      "Automatic tri-zone air conditioning with humidity sensor"
+    ]
+  }
+}

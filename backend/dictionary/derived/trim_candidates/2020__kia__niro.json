@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2020|kia|niro",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Niro",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2020|kia|niro",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Niro",
+  "ladder_id": "brochure_web_2020__kia__niro",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "SX Touring",
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Touring": [
+      "Panoramic sunroof",
+      "Harman Kardon premium audio system",
+      "Leather seating surfaces",
+      "Heated front seats and steering wheel",
+      "Power driver seat with lumbar support",
+      "Blind spot view monitor",
+      "18-inch alloy wheels"
+    ],
+    "SX": [
+      "8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Wireless smartphone charging pad",
+      "Heated front seats",
+      "Proximity key with push-button start",
+      "Dual automatic temperature control",
+      "Roof side rails"
+    ],
+    "EX": [
+      "Smart power liftgate",
+      "Blind spot detection with rear cross-traffic alert",
+      "Lane keeping assist",
+      "Forward collision warning with pedestrian detection",
+      "7-inch color touchscreen",
+      "Air quality sensor"
+    ],
+    "LX": [
+      "1.6-liter turbocharged GDI engine producing 177 horsepower",
+      "6-speed automatic transmission",
+      "Standard Apple CarPlay and Android Auto integration",
+      "Rearview camera",
+      "5-inch color touchscreen display",
+      "Bluetooth connectivity",
+      "Six airbags",
+      "Electronic stability control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/niro/"
+}

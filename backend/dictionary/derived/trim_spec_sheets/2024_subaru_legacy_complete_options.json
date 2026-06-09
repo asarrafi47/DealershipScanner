@@ -1,0 +1,73 @@
+{
+  "ladder_id": "2024_subaru_legacy_complete_options",
+  "make": "Subaru",
+  "models": [
+    "Legacy",
+    "Legacy"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Touring XT": [
+      {
+        "label": "Engine Options",
+        "value": "Subaru Legacy RS Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating; [Brochure] Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Subaru Legacy RS Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating; [Brochure] Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Subaru Legacy RS Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating; [Brochure] Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Subaru Legacy RS Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating; [Brochure] Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Subaru Legacy RS Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating; [Brochure] Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Subaru Legacy RS Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating; [Brochure] Harman Kardon audio | Leather-trimmed; Nappa; leather-trimmed seating"
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|hyundai|accent",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2014__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5-DOOR SE",
+    "5-DOOR GS",
+    "4-DOOR GLS"
+  ],
+  "adds_by_trim": {
+    "5-DOOR SE": [
+      "Sport-tuned steering",
+      "Rear disc brakes",
+      "Tilt-and-telescopic steering wheel",
+      "Leather-wrapped steering wheel and shift knob",
+      "Steering-wheel audio and cruise controls",
+      "Bluetooth hands-free phone system with voice recognition",
+      "Available power tilt-and-slide one-touch glass sunroof",
+      "Driver auto-up window",
+      "Premium cloth seats",
+      "Piano Black interior accents"
+    ],
+    "5-DOOR GS": [
+      "Cruise control on automatic transmission"
+    ],
+    "4-DOOR GLS": [
+      "138 HP 1.6L Gasoline Direct Injection 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed manual or available SHIFTRONIC 6-speed automatic transmission with Active ECO and Hillstart Assist",
+      "Remote keyless entry with panic alert",
+      "Tilt steering wheel and 6-way adjustable driver seat",
+      "AM/FM/SiriusXM/CD/MP3 audio with 6 speakers",
+      "iPod/USB auxiliary input jacks",
+      "60/40 split fold-down rear seatback",
+      "Active front head restraints and adjustable head restraints for all seating positions",
+      "6-airbag safety with Occupant Classification System",
+      "Vehicle Stability Management and Electronic Stability Control with Traction Control System"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2024|mitsubishi|mirage",
+  "year": 2024,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2024_Mitsubishi_Mirage_Brochure.pdf",
+  "page_count": 34,
+  "all_pages": false,
+  "trim_hint_pages": [
+    23
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 23,
+      "trim_hint": true,
+      "text": "THE 2024 MIRAGE & MIRAGE G4 > 06 TRIMS\nES / LE / BE / SE\n> K E Y FEAT URES\n> ENGINE > FUEL CAPACITY\n1.2L MIVEC DOHC 3-cylinder 9.2 gallons\n> FRONT TRANSMISSION > FUEL SYSTEM\nContinuous Variable ECI-MULTI\nTransmission (CVT)\n> DIMENSIONS > MITSUBISHI MOTORS\nCONFIDENCE\n151.4\" L / 65.6\" W / 59.4\" H for Mirage\n169.5\u201dL / 65.7\u201dW / 59.2\u201dH for Mirage G4\n10-Year/100,000-Mile Limited Powertrain Warranty\u00b9\u2070\n5-Year/Unlimited-Mile Roadside Assistance\u00b9\u00b9\n> CARGO CAPACITY 2-Year/30,000-Mile Limited Maintenance (3 Oil Changes,\n3 Tire Rotations and 1 Cabin Filter)\u00b9\u00b2\n17.1 / 47.0 cubic ft.* for Mirage\n12.4 cubic ft.* for Mirage G4\n> FUEL ECONOMY\n39 Combined MPG for Mirage2\n37 Combined MPG for Mirage G43\n*Rear seats up/down.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 23 ---\nTHE 2024 MIRAGE & MIRAGE G4 > 06 TRIMS\nES / LE / BE / SE\n> K E Y FEAT URES\n> ENGINE > FUEL CAPACITY\n1.2L MIVEC DOHC 3-cylinder 9.2 gallons\n> FRONT TRANSMISSION > FUEL SYSTEM\nContinuous Variable ECI-MULTI\nTransmission (CVT)\n> DIMENSIONS > MITSUBISHI MOTORS\nCONFIDENCE\n151.4\" L / 65.6\" W / 59.4\" H for Mirage\n169.5\u201dL / 65.7\u201dW / 59.2\u201dH for Mirage G4\n10-Year/100,000-Mile Limited Powertrain Warranty\u00b9\u2070\n5-Year/Unlimited-Mile Roadside Assistance\u00b9\u00b9\n> CARGO CAPACITY 2-Year/30,000-Mile Limited Maintenance (3 Oil Changes,\n3 Tire Rotations and 1 Cabin Filter)\u00b9\u00b2\n17.1 / 47.0 cubic ft.* for Mirage\n12.4 cubic ft.* for Mirage G4\n> FUEL ECONOMY\n39 Combined MPG for Mirage2\n37 Combined MPG for Mirage G43\n*Rear seats up/down."
+}

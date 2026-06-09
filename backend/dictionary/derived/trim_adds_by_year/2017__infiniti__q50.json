@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2017|infiniti|q50",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_llm_2017__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q50 3.0t Red Sport 400",
+    "Q50 3.0t Sport",
+    "Q50 3.0t Premium",
+    "Q50 2.0t Sport",
+    "Q50 2.0t Premium",
+    "Q50 Hybrid Premium",
+    "Q50 2.0t Premium"
+  ],
+  "adds_by_trim": {
+    "Q50 3.0t Red Sport 400": [
+      "3.0-liter V6 twin-turbo engine with 400 hp and dual water pumps",
+      "19x9.0-inch front and 19x9.5-inch rear staggered unique aluminum-alloy wheels",
+      "Sport-tuned independent multi-link rear suspension with double piston shock absorbers",
+      "Continuously variable electronic shock absorbers with high damping at low frequency"
+    ],
+    "Q50 3.0t Sport": [
+      "3.0-liter V6 twin-turbo engine with 300 hp and water-cooled air charging",
+      "Sport-tuned independent double-wishbone front suspension with double piston shock absorbers",
+      "19x8.5-inch triple 5-spoke aluminum-alloy wheels with 245/40R19 summer run-flat tires",
+      "Sport-tuned independent multi-link rear suspension with double piston shock absorbers"
+    ],
+    "Q50 3.0t Premium": [
+      "3.0-liter V6 twin-turbo engine with 300 hp and water-cooled air charging system",
+      "Independent multi-link rear suspension with coil springs and electronically controlled shock absorbers"
+    ],
+    "Q50 2.0t Sport": [
+      "Sport-tuned independent double-wishbone front suspension with double piston shock absorbers",
+      "19x8.5-inch triple 5-spoke aluminum-alloy wheels with 245/40R19 summer run-flat tires",
+      "Sport-tuned rear suspension with double piston shock absorbers and stabilizer bar"
+    ],
+    "Q50 2.0t Premium": [
+      "2.0-liter turbocharged I4 engine with 208 hp and Idle Stop Start technology",
+      "Independent double-wishbone front suspension with coil springs and standard shock absorbers"
+    ],
+    "Q50 Hybrid Premium": [
+      "3.5-liter V6 Direct Response Hybrid with 360 hp net system power and 50 kW electric motor",
+      "Lithium-ion battery with 214 lb-ft peak electric motor torque",
+      "Hybrid Regenerative Braking System for improved fuel efficiency"
+    ]
+  }
+}

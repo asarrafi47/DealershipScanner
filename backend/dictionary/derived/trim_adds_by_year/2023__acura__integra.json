@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2023|acura|integra",
+  "year": 2023,
+  "make": "acura",
+  "model": "integra",
+  "ladder_id": "brochure_llm_2023__acura__integra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Integra with A-Spec and Technology Packages",
+    "Integra with A-Spec Package",
+    "Integra"
+  ],
+  "adds_by_trim": {
+    "Integra with A-Spec and Technology Packages": [
+      "Technology Package features"
+    ],
+    "Integra with A-Spec Package": [
+      "A-Spec Package features"
+    ],
+    "Integra": [
+      "1.5L VTEC Turbo engine",
+      "CVT transmission"
+    ]
+  }
+}

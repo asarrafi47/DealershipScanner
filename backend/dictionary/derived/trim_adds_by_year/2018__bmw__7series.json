@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2018|bmw|7series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "7 Series",
+  "ladder_id": "brochure_llm_2018__bmw__7series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M760i xDrive",
+    "750i / 750i xDrive",
+    "740i / 740i xDrive"
+  ],
+  "adds_by_trim": {
+    "M760i xDrive": [
+      "6.6-liter M Performance TwinPower Turbo V-12 engine with 600 hp and 590 lb-ft torque",
+      "0–60 mph acceleration in 3.6 seconds",
+      "20 x 8.5 front, 20 x 10.0 rear Double Spoke Bicolor wheels (Style 648M)"
+    ],
+    "750i / 750i xDrive": [
+      "4.4-liter TwinPower Turbo V-8 engine with 445 hp and 479 lb-ft torque",
+      "0–60 mph acceleration in 4.6 seconds (RWD) or 4.3 seconds (xDrive)",
+      "19 x 8.5 inch front and rear Double Spoke light alloy wheels (Style 630)"
+    ],
+    "740i / 740i xDrive": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 320 hp and 332 lb-ft torque",
+      "0–60 mph acceleration in 5.4 seconds (RWD) or 5.1 seconds (xDrive)",
+      "18 x 8.0 inch V Spoke light alloy wheels (Style 642) with 245/50 run-flat all-season tires"
+    ]
+  }
+}

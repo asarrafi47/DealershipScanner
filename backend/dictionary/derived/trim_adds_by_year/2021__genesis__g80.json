@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2021|genesis|g80",
+  "year": 2021,
+  "make": "genesis",
+  "model": "G80",
+  "ladder_id": "brochure_2021__genesis__g80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Smart Cruise Control (SCC) for highway use",
+      "Adds Blind-Spot View Monitor (BVM) with audible alerts",
+      "Adds Rear Cross-Traffic Collision-Avoidance Assist (RCCA)",
+      "Adds Parking Collision-Avoidance Assist (PCA-R)",
+      "Adds Blind-Spot Collision-Avoidance Assist (BCA)",
+      "Adds Safe Exit Assist (SEA) with child lock integration",
+      "Adds Surround View Camera System (SVCS)",
+      "Adds Forward Attention Warning (FAW)",
+      "Adds Apple CarPlay and Android Auto compatibility",
+      "Adds Qi wireless charging"
+    ],
+    "Limited": [
+      "Adds Evasive Steering Assist (ESA) for pedestrian collision avoidance",
+      "Adds Valet Mode with Genesis Connected Services subscription",
+      "Adds smart trunk with Proximity Key activation",
+      "Adds Near Field Communication (NFC) digital smartphone key",
+      "Adds Connected Routing with active traffic and road condition updates",
+      "Adds Remote Smart Parking Assist (RSPA)"
+    ]
+  }
+}

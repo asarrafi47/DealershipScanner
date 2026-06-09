@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|chevrolet|impala",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2017__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "TL",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "3.6L DOHC V6 engine with 305 hp and 264 lb-ft torque",
+      "Dual-outlet exhaust with bright tips integrated into fascia",
+      "LED lower daytime running lamps",
+      "Heated power-adjustable mirrors with chrome caps and turn signals",
+      "Adaptive Cruise Control with Front Automatic Braking",
+      "Leather-appointed perforated seats",
+      "Front passenger 8-way power seat with 2-way power lumbar",
+      "Heated front seats",
+      "Chevrolet MyLink Radio with Navigation, 8-inch touchscreen, GPS and SiriusXM",
+      "Dual-zone automatic climate control"
+    ],
+    "TL": [
+      "Available 3.6L V6 engine option",
+      "Dual-outlet hidden exhaust",
+      "Heated power-adjustable mirrors with body-color caps and turn signals",
+      "4-way adjustable front head restraints",
+      "Chevrolet MyLink Radio with 8-inch touchscreen, smartphone integration and Apple CarPlay",
+      "Premium Cloth/Leatherette seating",
+      "Power sunroof with tilt-sliding and fixed rear skylight",
+      "Front passenger 8-way power seat with 2-way lumbar control",
+      "Dual-zone automatic climate control",
+      "Floor console with covered storage"
+    ],
+    "SL": [
+      "ECOTEC 2.5L 4-cylinder engine with 197 hp and 191 lb-ft torque",
+      "Single-outlet hidden exhaust",
+      "Power-adjustable manual-folding black mirrors",
+      "AM/FM stereo with 4.2-inch color display and auxiliary input",
+      "SiriusXM Satellite Radio with 3-month trial All Access Package",
+      "Premium Cloth seating",
+      "2-way adjustable front and rear head restraints",
+      "Single-zone manual climate control",
+      "Floor console with storage compartment",
+      "Front passenger 4-way manual seat adjuster"
+    ]
+  }
+}

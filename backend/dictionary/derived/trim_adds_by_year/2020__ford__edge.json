@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2020|ford|edge",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_2020__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Titanium",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper coverage",
+      "Adds Includes 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion perforation coverage",
+      "Adds Includes 5-year/60,000-mile Roadside Assistance"
+    ],
+    "Titanium": [
+      "Adds smoked side window deflectors",
+      "Adds front and rear molded splash guards",
+      "Adds roof-mounted crossbars",
+      "Adds cargo box",
+      "Adds wheel lock kit"
+    ],
+    "Limited": [
+      "Adds Rear Seat Entertainment System",
+      "Adds interior cargo cover and cargo area protector",
+      "Adds floor liners",
+      "Adds dash cam systems"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|nissan|xterra",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Xterra",
+  "ladder_id": "brochure_llm_2015__nissan__xterra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRO-4X®",
+    "S",
+    "X"
+  ],
+  "adds_by_trim": {
+    "PRO-4X®": [
+      "Nissan Navigation System with 5.8-inch color touch-screen and Voice Recognition",
+      "SiriusXM® Traffic and Travel Link®",
+      "RearView Monitor",
+      "Rockford Fosgate®-powered AM/FM/CD audio system",
+      "16-inch aluminum-alloy wheels with P265/75R16 Hankook all-terrain tires",
+      "Bilstein® off-road performance shocks",
+      "Skid plates for transfer case, oil pan, and fuel tank",
+      "Electronic locking rear differential",
+      "Heated front seats",
+      "White-faced gauges"
+    ],
+    "S": [
+      "16-inch aluminum-alloy wheels",
+      "Front tow hook on 4x4 models",
+      "Black body side moldings",
+      "Gear box on 4x4 models",
+      "Splash guards on 4x4 models",
+      "8-way manual adjustable driver's seat",
+      "AM/FM/CD audio system with 5.0-inch color display",
+      "NissanConnect® with Mobile Apps",
+      "USB connection port for iPod® interface",
+      "SiriusXM® Satellite Radio"
+    ],
+    "X": [
+      "16-inch steel wheels with P265/70R16 BFGoodrich Radial Long Trail T/A OWL tires",
+      "Remote keyless entry",
+      "Automatic on/off headlights",
+      "Bluetooth® Hands-free Phone System",
+      "Vehicle Dynamic Control and Active Brake Limited Slip",
+      "4-wheel Anti-lock Braking System",
+      "Tubular roof rack with air dam",
+      "Power door locks and windows",
+      "Hill descent control and hill start assist",
+      "Six standard air bags"
+    ]
+  }
+}

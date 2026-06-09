@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2012|volvo|s80",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "S80",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Ultra",
+    "Plus",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

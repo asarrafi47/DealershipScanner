@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2023|jeep|gladiator",
+  "year": 2023,
+  "make": "Jeep",
+  "model": "Gladiator",
+  "ladder_id": "2023_jeep_gladiator",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Sport",
+    "Willys",
+    "Mojave",
+    "Rubicon"
+  ],
+  "adds_by_trim": {
+    "Willys": [
+      "Selec-Speed Control and Off-Road Pages with 8-speed automatic",
+      "Trail-rated hardware step above Sport"
+    ],
+    "Mojave": [
+      "Desert-rated suspension and FOX shocks with front sway bar disconnect",
+      "33-inch tires and Mojave-specific bumpers and tow hooks",
+      "Trailcam camera and Selec-Speed Control"
+    ],
+    "Rubicon": [
+      "Rock-Trac 4x4 with 4:1 low range and Tru-Lok front/rear lockers",
+      "Front sway bar disconnect and steel rock rails behind rear wheels",
+      "Highest Gladiator off-road trim in 2024 brochure"
+    ],
+    "Sport": [
+      "3.6-liter V6 engine with 285 hp and 260 lb-ft torque, four-wheel drive, eight-speed automatic transmission, 12.3-inch touchscreen with wireless Apple CarPlay and Android Auto, eight-speaker audio system, first and second-row side curtain airbags, 7,700 lbs max towing with 4.10:1 "
+    ]
+  }
+}

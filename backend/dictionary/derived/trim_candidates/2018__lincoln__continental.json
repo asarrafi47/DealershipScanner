@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2018|lincoln|continental",
+  "year": 2018,
+  "make": "Lincoln",
+  "model": "Continental",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

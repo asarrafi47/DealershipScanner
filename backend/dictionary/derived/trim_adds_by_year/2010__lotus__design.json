@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2010|lotus|design",
+  "year": 2010,
+  "make": "Lotus",
+  "model": "Design",
+  "ladder_id": "brochure_llm_2010__lotus__design",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Elite",
+    "Esprit",
+    "Eterne",
+    "Elan",
+    "Elise"
+  ],
+  "adds_by_trim": {
+    "Elite": [
+      "2+2 seater configuration instead of 2-seater",
+      "Front-mid-engine layout versus mid-engine",
+      "Hybrid transmission standard",
+      "620 PS V8 supercharged engine",
+      "3.7 second 0-100 km/h acceleration",
+      "1,650 kg curb weight"
+    ],
+    "Esprit": [
+      "Mid-engine layout versus front-mid-engine",
+      "7-speed dual-clutch transmission versus hybrid transmission",
+      "3.4 second 0-100 km/h acceleration versus 3.7 seconds",
+      "330 km/h top speed versus 315 km/h",
+      "1,450 kg curb weight versus 1,650 kg"
+    ],
+    "Eterne": [
+      "4-seater configuration instead of 2-seater",
+      "Optional all-wheel drive capability",
+      "Front-mid-engine layout versus mid-engine",
+      "4.0 second 0-100 km/h acceleration",
+      "1,800 kg curb weight"
+    ],
+    "Elan": [
+      "Optional 2+2 seater configuration",
+      "V6 supercharged 4.0-liter engine versus V8",
+      "450 PS power output versus 620 PS",
+      "3.5 second 0-100 km/h acceleration",
+      "1,295 kg curb weight"
+    ],
+    "Elise": [
+      "Mild hybrid petrol engine with start/stop option",
+      "Inline 4 turbocharged 2.0-liter engine",
+      "320 PS power output",
+      "6-speed manual transmission standard with optional DCT",
+      "1,095 kg lightweight curb weight"
+    ]
+  }
+}

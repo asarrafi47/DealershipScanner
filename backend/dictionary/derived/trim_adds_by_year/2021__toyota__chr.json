@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2021|toyota|chr",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "CH-R",
+  "ladder_id": "brochure_llm_2021__toyota__chr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLE Premium",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "LED projector beam headlights with Adaptive Front-Lighting System",
+      "High-performance LED fog lights",
+      "Leather-trimmed heated front bucket seats with 8-way power adjustable driver's seat",
+      "Leather-trimmed 60/40 split fold-flat second-row rear seat",
+      "Turbine-style 18-inch sport alloy wheels"
+    ],
+    "XLE": [
+      "Vortex-style 18-inch sport alloy wheels",
+      "Heated power auto-folding mirrors with turn signal and blind spot warning indicators",
+      "Black exterior accents including chin spoiler, door handles, and mirror puddle lights",
+      "Black badging and black roof",
+      "8-inch touchscreen with integrated backup camera display"
+    ],
+    "LE": [
+      "2.0-Liter 4-Cylinder Engine with 144 hp and Continuously Variable Transmission",
+      "17-inch steel wheels and temporary spare tire",
+      "Multi-reflector LED headlights with LED Daytime Running Lights",
+      "Heated power outside mirrors with turn signal indicators",
+      "4.2-inch Multi-Information Display",
+      "Apple CarPlay and Android Auto with Amazon Alexa compatibility",
+      "Leather-trimmed tilt/telescopic steering wheel",
+      "Dual Zone Auto Climate Control System",
+      "Toyota Safety Sense 2.5 with Pre-Collision, Lane Departure Alert, and Automatic High Beams",
+      "Sport fabric-trimmed front bucket seats with 3-passenger rear seating"
+    ]
+  }
+}

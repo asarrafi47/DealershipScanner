@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|toyota|mirai",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Mirai",
+  "ladder_id": "brochure_web_2018__toyota__mirai",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "Advanced"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "10.5-inch touchscreen display with backup camera",
+      "Qi wireless smartphone charging pad",
+      "Leather-trimmed steering wheel and shift knob",
+      "Power driver's seat with lumbar support",
+      "Dual automatic temperature control",
+      "Toyota Safety Sense 2.0 pre-collision system",
+      "LED headlights",
+      "17-inch alloy wheels",
+      "Integrated backup camera with predictive guidelines"
+    ],
+    "Advanced": [
+      "Panoramic glass roof",
+      "Premium audio system upgrade",
+      "Navigation system with real-time traffic",
+      "Leather upholstery throughout cabin",
+      "Heated front seats and steering wheel",
+      "Blind spot monitor and rear cross-traffic alert",
+      "Adaptive cruise control with lane keep assist",
+      "18-inch alloy wheels",
+      "Power rear sunshade"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/mirai/"
+}

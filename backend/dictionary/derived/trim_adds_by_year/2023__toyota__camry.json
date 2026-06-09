@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2023|toyota|camry",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "2023_toyota_camry",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LE",
+    "SE",
+    "XSE",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "18-inch multi-spoke black-finished alloy wheels and black sport mesh grille",
+      "SofTex-and-fabric seats with Smart Key and paddle shifters",
+      "12.3-inch digital gauge cluster on upper trims path; sport-tuned calibration vs LE"
+    ],
+    "XSE": [
+      "19-inch black and smoke-gray-finished alloy wheels and dual LED projector headlights",
+      "Leather-trimmed heated front seats with 8-way power adjustment",
+      "Premium LED combination taillights and sport-tuned suspension"
+    ],
+    "XLE": [
+      "18-inch two-tone machined and black-finished wheels and dark metallic gray grille",
+      "Leather-and-microfiber-trimmed heated seats with driver memory",
+      "12.3-inch Toyota Audio Multimedia and Drive Connect trial",
+      "Premium Package: JBL 9-speaker, ventilated seats, HUD, and panoramic roof available"
+    ],
+    "LE": [
+      "Hybrid engine: 2.5L 4-Cylinder with 208 net hp",
+      "Electronically controlled Continuously Variable Transmission with sequential shift mode",
+      "Normal, Eco, EV40, and Sport drive modes",
+      "51 city / 53 highway / 52 combined est. mpg",
+      "Bi-LED combination headlights with auto on/off and turn-signal indicators",
+      "LED combination taillights with black trim",
+      "Dark gray front grille",
+      "16-inch steel wheels with wheel covers",
+      "Dual zone automatic climate control",
+      "Fabric-trimmed seats with 8-way power-adjustable driver seat"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2018|acura|tlx",
+  "year": 2018,
+  "make": "acura",
+  "model": "tlx",
+  "ladder_id": "brochure_llm_2018__acura__tlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A-SPEC",
+    "Advance Package",
+    "Technology Package",
+    "TLX"
+  ],
+  "adds_by_trim": {
+    "A-SPEC": [
+      "A-Spec Milano Premium Leather interior trim",
+      "A-Spec specific exterior styling and design elements"
+    ],
+    "Advance Package": [
+      "Wireless Charge Pad",
+      "Remote Engine Start with Vehicle Feedback"
+    ],
+    "Technology Package": [
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with Street and Freeway Conditions",
+      "Traffic Rerouting",
+      "AcuraLink services",
+      "Apple CarPlay",
+      "Android Auto",
+      "Siri Eyes Free",
+      "SMS, MMS Text Message and Email Capability",
+      "On Demand Multi-Use Display (ODMD) 2.0",
+      "Color Multi-Information Display (MID) with Turn-by-Turn Guidance"
+    ],
+    "TLX": [
+      "Acura Premium Audio System with 7 Speakers",
+      "Multi-Information Display (MID)",
+      "Bluetooth HandsFreeLink Wireless Telephone Interface",
+      "Song By Voice",
+      "HD Radio",
+      "USB Audio Interface with iPod Integration",
+      "Bluetooth Streaming Audio",
+      "MP3/Auxiliary Input Jack",
+      "Speed-Sensitive Volume Compensation (SVC)",
+      "Maintenance Minder System"
+    ]
+  }
+}

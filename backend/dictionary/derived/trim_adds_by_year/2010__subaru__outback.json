@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2010|subaru|outback",
+  "year": 2010,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "inventory_subaru_outback",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "inches (with available moonroof: 38.7"
+    ],
+    "Limited": [
+      "adjustable front-passenger’s seat. s 10-way power"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Premium": 1,
+      "Base": 0
+    }
+  }
+}

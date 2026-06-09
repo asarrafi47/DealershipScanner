@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2020|infiniti|q50",
+  "year": 2020,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_llm_2020__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q50 RED SPORT 400",
+    "Q50 3.0t EDITION 30",
+    "Q50 3.0t SPORT",
+    "Q50 3.0t LUXE",
+    "Q50 3.0t PURE"
+  ],
+  "adds_by_trim": {
+    "Q50 RED SPORT 400": [
+      "3.0-liter twin-turbocharged V6 engine with 400 horsepower and 350 lb-ft torque",
+      "Sport brakes with red-painted calipers",
+      "19-inch dark finish aluminum-alloy wheels with 245/40R19 run-flat tires",
+      "Exclusive dual exhaust tips with brushed satin finish",
+      "Red 'S' exterior badge and black mirror caps",
+      "Dashboard with red contrast stitching on shifter and seats",
+      "Aluminum sport pedals",
+      "Quilted semi-aniline leather-appointed sport seats with red contrast stitching",
+      "Unique Dark Chrome interior accents",
+      "Dark metallic steering wheel-mounted paddle shifters"
+    ],
+    "Q50 3.0t EDITION 30": [
+      "'EDITION 30' badge and illuminated stainless steel kick plates",
+      "Dark chrome exterior accents on grille surround and trunk",
+      "Black grille mesh",
+      "Black mirror caps"
+    ],
+    "Q50 3.0t SPORT": [
+      "Dynamic Digital Suspension",
+      "Sport brakes with silver-painted calipers",
+      "19-inch Sport design aluminum-alloy wheels with 245/40R19 performance run-flat tires",
+      "Sport-design front and rear fascias with body color diffuser",
+      "Silver 'S' exterior badge",
+      "Steering wheel-mounted paddle shifters",
+      "Leather-appointed sport seats with thigh extension",
+      "Kacchu Aluminum interior trim accents",
+      "Graphite headliner, sun visors, and pillars",
+      "Driver's seat power lumbar and torso adjustment"
+    ],
+    "Q50 3.0t LUXE": [
+      "18-inch aluminum-alloy wheels with 225/50R18 all-season run-flat tires",
+      "Chrome front fascia finishers",
+      "Power sliding/tilting moonroof",
+      "Textured aluminum interior trim accents",
+      "HomeLink® Universal Transceiver",
+      "Leather-appointed sport seats with thigh extension",
+      "Kacchu Aluminum interior trim accents",
+      "Heated steering wheel and front seats",
+      "Bose® Performance Series Audio with 16-speaker stereo and Centerpoint®",
+      "Navigation with 3D building graphics and 5-year complimentary Premium Traffic and MapCare access"
+    ],
+    "Q50 3.0t PURE": [
+      "3.0-liter twin-turbocharged V6 engine with 300 horsepower and 295 lb-ft torque",
+      "7-speed automatic transmission with manual shift mode and Downshift Rev Matching",
+      "Rack Electronic Power Steering",
+      "17-inch aluminum-alloy wheels with 225/55R17 run-flat all-season tires",
+      "LED automatic-on/off headlights with signature Daytime Running Lights",
+      "LED front fog lights",
+      "Rain-sensing front windshield wipers",
+      "Heated outside mirrors with front door handle courtesy lights",
+      "Front door aluminum INFINITI kick plates",
+      "Leatherette seats with 8-way power adjustable front seats"
+    ]
+  }
+}

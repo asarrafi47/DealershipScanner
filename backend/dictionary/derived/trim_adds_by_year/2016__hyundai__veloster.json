@@ -1,0 +1,80 @@
+{
+  "catalog_key": "2016|hyundai|veloster",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_llm_2016__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Turbo R-Spec",
+    "Rally Edition",
+    "Turbo",
+    "Style Package",
+    "Tech Package",
+    "Veloster"
+  ],
+  "adds_by_trim": {
+    "Turbo R-Spec": [
+      "Matte Blue paint exclusive",
+      "18-inch RAYS alloy wheels",
+      "Performance-focused springs, damper and stabilizer bar",
+      "Sport seats with leather surfaces and blue accents",
+      "Aero kit accent covers with carbon fiber look",
+      "Red leatherette bolster and door inserts",
+      "Red colored seatbelts",
+      "Torque Vectoring Control",
+      "B&M Racing Sport Shifter",
+      "R-Spec badge and floor mats"
+    ],
+    "Rally Edition": [
+      "Matte Blue paint",
+      "18-inch RAYS alloy wheels",
+      "Performance-focused springs, damper and stabilizer bar",
+      "Sport seats with leather surfaces and blue accents",
+      "Aero kit accent covers with carbon fiber look",
+      "Rally Edition badge and floor mats"
+    ],
+    "Turbo": [
+      "201 HP 1.6L twin-scroll turbo DOHC 4-cylinder engine",
+      "6-speed manual or 7-speed EcoShift Dual Clutch Transmission",
+      "Active Sound Design",
+      "Sport-tuned suspension",
+      "Sport-tuned steering",
+      "Heated front seats",
+      "Proximity key entry with push-button start",
+      "Sport seats with leather seating surfaces and driver lumbar support",
+      "Dimension premium audio system with subwoofer and amplifier",
+      "18-inch alloy wheels with 225/40R18 tires"
+    ],
+    "Style Package": [
+      "Dimension premium audio system with subwoofer and amplifier",
+      "Blue Link Connected Car system",
+      "Chrome grille trim with Piano Black accents",
+      "Front fog lights",
+      "18-inch alloy wheels with 225/40R18 tires",
+      "Leatherette bolster seats and door inserts"
+    ],
+    "Tech Package": [
+      "7-inch touchscreen navigation system",
+      "Blue Link Connected Car system",
+      "SiriusXM Travel Link with complimentary trial",
+      "Proximity key entry with push-button start",
+      "Automatic temperature control with auto defog",
+      "115V power outlet",
+      "Automatic headlight control",
+      "Backup warning sensors"
+    ],
+    "Veloster": [
+      "138 HP 1.6L GDI DOHC 4-cylinder engine with Dual CVVT",
+      "6-speed manual or 6-speed EcoShift Dual Clutch Transmission with SHIFTRONIC",
+      "Hillstart Assist Control",
+      "Tilt-and-telescopic steering wheel with cruise, audio and phone controls",
+      "Manual 6-way adjustable driver bucket seat",
+      "7-inch LCD multimedia center console touchscreen",
+      "Pandora Internet Radio and Gracenote Music ID",
+      "Bluetooth hands-free phone with voice commands and audio streaming",
+      "Rearview camera",
+      "6-airbag safety system with advanced dual front airbags"
+    ]
+  }
+}

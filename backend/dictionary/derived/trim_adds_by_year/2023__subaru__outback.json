@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2023|subaru|outback",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2023__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Outback Onyx Edition XT",
+    "Outback Onyx Edition",
+    "Outback Premium",
+    "Outback"
+  ],
+  "adds_by_trim": {
+    "Outback": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "EyeSight Driver Assist Technology",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 8-speed manual-mode paddle shifters",
+      "X-MODE featuring Hill Descent Control",
+      "Auto-on/off LED Steering Responsive Headlights with High Beam Assist",
+      "LED fog lights",
+      "17-inch aluminum-alloy wheels",
+      "Roof rails with integrated retractable crossbars and 4 tie-down points",
+      "SUBARU STARLINK Dual 7.0-inch Multimedia with Apple CarPlay and Android Auto"
+    ],
+    "Outback Premium": [
+      "Crystal Black Silica finish exterior mirrors with integrated turn signals",
+      "LED rear gate light",
+      "Privacy glass",
+      "All-Weather Package with heated exterior mirrors, heated front seats, windshield wiper de-icer",
+      "10-way power-adjustable driver seat with 2-way lumbar support",
+      "SUBARU STARLINK 11.6-inch Multimedia Plus with wireless Apple CarPlay and Android Auto",
+      "4G LTE Wi-Fi capability",
+      "Single USB-A and USB-C rear-seat charge ports and A/C vents",
+      "Dual-zone automatic climate control system",
+      "Leather-wrapped steering wheel and shifter handle"
+    ],
+    "Outback Onyx Edition": [
+      "Dual-Mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "18-inch aluminum-alloy wheels with black finish",
+      "Crystal Black Silica front grille",
+      "Black badging and window moldings",
+      "Hands-Free Power Rear Gate with vehicle lock button",
+      "Gray StarTex water-repellent upholstery with green contrast stitching",
+      "Auto-up/down front and rear windows",
+      "Keyless Access with Push-Button Start",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "8 cargo-area tie-down hooks"
+    ],
+    "Outback Onyx Edition XT": [
+      "260-hp 2.4-liter 4-cylinder turbocharged SUBARU BOXER engine",
+      "Lineartronic CVT High Torque with 8-speed manual-mode paddle shifters",
+      "3,500-lb. towing capacity",
+      "Power moonroof",
+      "Full-size spare tire",
+      "8-way power-adjustable front-passenger seat",
+      "Heated outboard rear seats",
+      "SUBARU STARLINK 11.6-inch Multimedia Navigation with 3 years of free map updates"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2012|toyota|venza",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Venza",
+  "ladder_id": "brochure_llm_2012__toyota__venza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Tow Prep Package with engine oil cooler, larger radiator fan, heavy-duty alternator"
+    ],
+    "XLE": [
+      "Panoramic glass roof with front power tilt/slide moonroof",
+      "JBL Synthesis AM/FM 6-disc CD changer with MP3/WMA playback and 13 speakers",
+      "SiriusXM Satellite Radio capability with three-month XM Select trial subscription",
+      "USB port with iPod connectivity and Bluetooth wireless music streaming",
+      "Hands-free phone capability and auto sound leveling",
+      "XLE Navigation Package option with voice-activated touch-screen DVD navigation system",
+      "Navigation package includes 4-disc CD changer and NavTraffic capability",
+      "Tow Prep Package with engine oil cooler, larger radiator fan, heavy-duty alternator"
+    ],
+    "LE": [
+      "Power liftgate with jam protection",
+      "Backup camera with 3.5-inch TFT Multi-Information Display integration",
+      "Customizable instrument display settings, outside temperature, clock, fuel economy, trip information",
+      "Tow Prep Package option with engine oil cooler, larger radiator fan, heavy-duty alternator"
+    ]
+  }
+}

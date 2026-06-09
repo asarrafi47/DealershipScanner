@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2014|kia|forte",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_2014__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX",
+    "LX",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds advanced dual front airbags with front-seat-mounted side airbags",
+      "Adds side curtain airbags for front and rear seating positions",
+      "Adds airbag and seat-belt sensors with impact severity monitoring",
+      "Adds reinforced steel door beams for side-impact protection",
+      "Adds reinforced A and B pillars for body structure strength",
+      "Adds high tensile-strength steel body construction for rigidity",
+      "Adds electronic stability control (ESC) with directional stability monitoring",
+      "Adds traction control system (TCS) with engine power and brake force management",
+      "Adds brake assist system (BAS) with emergency braking force application"
+    ],
+    "Sport": [],
+    "Premium": [],
+    "Limited": [],
+    "LX": [
+      "156-hp 2.0L engine with continuously variable valve timing",
+      "60/40 split-folding rear seats",
+      "Six airbags and Electronic Stability Control standard",
+      "Bluetooth wireless technology and USB/auxiliary input jacks",
+      "SiriusXM satellite radio capability"
+    ],
+    "EX": [
+      "156-hp 2.0L engine with continuously variable valve timing",
+      "Available automatic climate control",
+      "Available power-folding outside mirrors",
+      "Available push-button start with smart key remote"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|toyota|corollaim",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Corolla iM",
+  "ladder_id": "2019_toyota_corolla_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "iBiquity Digital Corporation U.S. and Foreign Patents. HD Radio\u2122 and the HD, HD Radio, and \u201cArc\u201d logos are proprietary trademarks of",
+      "driver maintain vehicle control under adverse conditions. It is not a substitute for safe and attentive driving practices. Factors including speed, road conditions, weather and",
+      "certain conditions and in",
+      "the vehicle. The engine will only start if the code in the transponder chip inside the key/fob matches the code in",
+      "the continental U.S. and Alaska. 24. Does not include parts and fluids, except emergency fuel delivery. Valid only in",
+      "vehicles are shown with available equipment. Seatbelts should be worn at all times. For details on"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Sport": 0
+    }
+  }
+}

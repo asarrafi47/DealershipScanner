@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2013|dodge|journey",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2013__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "Crew",
+    "SXT",
+    "SE",
+    "AVP"
+  ],
+  "adds_by_trim": {
+    "R/T": [
+      "19-inch satin Carbon aluminum wheels",
+      "High-performance suspension",
+      "Monochromatic exterior with body-color door handles and grille",
+      "Premium black perforated leather seats with red stitching",
+      "Dimpled leather-wrapped shift knob and steering wheel with red stitching",
+      "Firm-feel power steering",
+      "Portable rechargeable flashlight",
+      "Automatic headlamps"
+    ],
+    "Crew": [
+      "3.6L 283-horsepower Pentastar V6 engine with 6-speed automatic transmission",
+      "19-inch satin silver aluminum wheels",
+      "Bright side roof rails and door handles",
+      "Dual bright exhaust tips",
+      "Premium leather-trimmed seats",
+      "Heated steering wheel and heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "UConnect 8.4 with 8.4-inch touchscreen and CD/DVD/MP3 radio"
+    ],
+    "SXT": [
+      "Deep-tint sunscreen glass",
+      "LED taillamps",
+      "19-inch satin silver aluminum wheels",
+      "Flexible seating group with 7-passenger seating",
+      "2nd-row integrated child booster seats",
+      "UConnect Voice Command",
+      "SiriusXM satellite radio with 1-year subscription"
+    ],
+    "SE": [
+      "Dodge Performance front and rear body-color fascias",
+      "Power heated foldaway body-color mirrors",
+      "Fog lamps",
+      "Front and rear floor mats",
+      "Cargo compartment cover and cargo net",
+      "Dual bright exhaust tips with 3.6L V6 engine",
+      "17-inch tech silver aluminum wheels",
+      "UConnect 4.3S CD/MP3 with SiriusXM satellite radio and 1-year subscription"
+    ],
+    "AVP": [
+      "2.4L 173-horsepower DOHC 16V dual VVT 4-cylinder engine",
+      "4-speed automatic transmission",
+      "Electronic Stability Control with electronic roll mitigation and trailer sway control",
+      "Advanced multistage front, side-curtain, and driver knee blocker airbags",
+      "All-wheel drive",
+      "Active front head restraints",
+      "Keyless Enter 'n Go with push button start",
+      "UConnect 4.3 CD/MP3 radio with 4.3-inch touchscreen and 6 speakers"
+    ]
+  }
+}

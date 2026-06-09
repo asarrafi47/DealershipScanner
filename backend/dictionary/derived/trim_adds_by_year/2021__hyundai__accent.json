@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|hyundai|accent",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2021__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "LED headlights and LED taillights",
+      "Power tilt-and-slide sunroof",
+      "Proximity Key entry with push button start",
+      "3.5-inch multi-information display",
+      "Tilt-and-telescopic steering wheel",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic temperature control",
+      "Auto-defogging windshield",
+      "Heated front seats",
+      "17-inch alloy wheels"
+    ],
+    "SEL": [
+      "Smartstream Intelligent Variable Transmission with SHIFTRONIC automatic",
+      "Front and rear-seat USB charge ports",
+      "7-inch color touchscreen with SiriusXM and 6 speakers",
+      "Apple CarPlay and Android Auto compatibility",
+      "Automatic headlights",
+      "Front fog lights",
+      "Chrome lower side-window molding",
+      "Side mirrors with turn signal indicators",
+      "Heated side mirrors with driver blind spot mirror",
+      "15-inch alloy wheels"
+    ],
+    "SE": [
+      "120 hp 1.6L Smartstream 4-cylinder engine with 113 lb-ft torque",
+      "6-speed manual transmission standard",
+      "5-inch color touchscreen audio system",
+      "Bluetooth hands-free phone system",
+      "Rearview camera with dynamic guidelines",
+      "6-airbag safety system with occupant classification",
+      "Vehicle Stability Management and Electronic Stability Control",
+      "Ventilated front disc brakes with power steering",
+      "Chrome grille and bodycolor exterior door handles",
+      "Power windows and power bodycolor side mirrors"
+    ]
+  }
+}

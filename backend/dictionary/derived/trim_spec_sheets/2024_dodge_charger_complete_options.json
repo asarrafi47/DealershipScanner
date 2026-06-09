@@ -1,0 +1,41 @@
+{
+  "ladder_id": "2024_dodge_charger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Charger",
+    "Charger"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Hellcat": [
+      {
+        "label": "Engine Options",
+        "value": "Users have the option of changing the colour of the car, brake callipers, wheels, badges, exhaust tips, and an option of adding the SRT spoiler. In January 2022, Dodge announced that the Hemi V8 Charger (5.7L, 6.4L, and 6.2L) would be retired at the end of the 2023 model year.…; The new, optional Jailbreak Package for 2022 Charger SRT Hellcat Redeye Widebody models unlocks ordering restrictions, allowing owners to run wild in more than 20 categories, including seven options for seats, stripes and wheels; six brake caliper colour options; five exterior…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "The standard Widebody flares out an additional 3.5 inches from the overall width; The standard Widebody flares out an additional 3.5 inches from the overall width of the Charger for a more dominating, planted presence."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "PACKAGES & EQUIPMENT GROUPS Convenience Group I — Includes power-adjustable pedals (XAP), power driver's and front-passenger seats (JPT), and power driver's and passenger four-way lumbar adjusts (JRN) (AHM) Driver's- and Passenger-Side Ballistic Door Panels (XDV/XDG) Compare…"
+      }
+    ],
+    "Daytona": [
+      {
+        "label": "Engine Options",
+        "value": "Users have the option of changing the colour of the car, brake callipers, wheels, badges, exhaust tips, and an option of adding the SRT spoiler. In January 2022, Dodge announced that the Hemi V8 Charger (5.7L, 6.4L, and 6.2L) would be retired at the end of the 2023 model year.…; The new, optional Jailbreak Package for 2022 Charger SRT Hellcat Redeye Widebody models unlocks ordering restrictions, allowing owners to run wild in more than 20 categories, including seven options for seats, stripes and wheels; six brake caliper colour options; five exterior…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "The standard Widebody flares out an additional 3.5 inches from the overall width; The standard Widebody flares out an additional 3.5 inches from the overall width of the Charger for a more dominating, planted presence."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "PACKAGES & EQUIPMENT GROUPS Convenience Group I — Includes power-adjustable pedals (XAP), power driver's and front-passenger seats (JPT), and power driver's and passenger four-way lumbar adjusts (JRN) (AHM) Driver's- and Passenger-Side Ballistic Door Panels (XDV/XDG) Compare…"
+      }
+    ]
+  }
+}

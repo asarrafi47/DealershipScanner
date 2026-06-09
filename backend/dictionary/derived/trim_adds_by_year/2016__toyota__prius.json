@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2016|toyota|prius",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2016__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FOUR Touring",
+    "FOUR",
+    "THREE Touring",
+    "THREE",
+    "TWO ECO",
+    "TWO"
+  ],
+  "adds_by_trim": {
+    "FOUR Touring": [
+      "Integrated fog lights and LED accent lights",
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires",
+      "Unique rear bumper treatment",
+      "SofTex-trimmed heated front seats with 8-way power-adjustable driver's seat",
+      "Power lumbar support on driver's seat"
+    ],
+    "FOUR": [
+      "Lithium-ion battery pack (207.2V) replacing Ni-MH battery",
+      "54 city/50 highway estimated mpg",
+      "Rain-sensing variable intermittent windshield wipers",
+      "Upgraded interior features and trim"
+    ],
+    "THREE Touring": [
+      "Integrated fog lights and LED accent lights",
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires",
+      "Unique rear bumper treatment",
+      "Touring-specific suspension tuning"
+    ],
+    "THREE": [
+      "15-inch 5-spoke alloy wheels with two-tone wheel covers",
+      "Intermittent rear window wiper",
+      "Qi-compatible wireless smartphone charging with indicator light",
+      "White center console with armrest and white accent trim",
+      "SofTex-trimmed tilt/telescopic steering wheel"
+    ],
+    "TWO ECO": [
+      "58 city/53 highway estimated mpg",
+      "Bi-LED projector headlights with auto on/off feature",
+      "Active grille shutter for improved fuel economy"
+    ],
+    "TWO": [
+      "1.8-liter 4-cylinder DOHC hybrid engine with 95 hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "54 city/50 highway estimated mpg",
+      "Bi-LED projector low- and high-beam headlights with auto-off",
+      "LED Daytime Running Lights and LED taillights",
+      "15-inch 5-spoke alloy wheels with full wheel covers",
+      "Entune Audio system",
+      "Smart Key System on driver's door with Push Button Start",
+      "Eight airbags and Star Safety System"
+    ]
+  }
+}

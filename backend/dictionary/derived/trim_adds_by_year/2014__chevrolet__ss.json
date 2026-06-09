@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|chevrolet|ss",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "SS",
+  "ladder_id": "2015_chevrolet_ss_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "SS",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "SS": [
+      "vehicle is assembled, we suggest you verify that your"
+    ],
+    "Sport": [
+      "vehicles, find financial tools or track"
+    ],
+    "Limited": [
+      "vehicle includes the equipment you build and price, find a"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.6666666666666666,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Premium": 0,
+      "Sport": 1
+    }
+  }
+}

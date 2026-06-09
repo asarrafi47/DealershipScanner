@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2025|toyota|tundra",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2025__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Capstone",
+    "TRD Pro",
+    "1794 Edition",
+    "Platinum",
+    "Limited",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "Capstone": [
+      "i-FORCE MAX 3.4L-T V6 Hybrid 4x4 powertrain exclusive to this trim",
+      "Highest trim level with premium positioning above 1794 Edition"
+    ],
+    "TRD Pro": [
+      "Off-road focused 26.2-degree approach angle and 24.2-degree departure angle",
+      "69.4-inch front and rear track width for enhanced off-road stability",
+      "81.6-inch overall height for increased ground clearance",
+      "Specialized TRD Pro suspension and off-highway capabilities"
+    ],
+    "1794 Edition": [
+      "Premium leather upholstery and cabin appointments",
+      "Available on both gas and hybrid powertrains with 4x2 and 4x4 options",
+      "Distinctive 1794 Edition styling and badging"
+    ],
+    "Platinum": [
+      "Luxury upgrade from Limited with premium materials and finishes",
+      "Available on i-FORCE MAX Hybrid in 4x2 and 4x4 configurations",
+      "Enhanced comfort and convenience appointments"
+    ],
+    "Limited": [
+      "Mid-level trim with i-FORCE MAX Hybrid 4x2 and 4x4 availability",
+      "Enhanced features and comfort upgrades from SR5",
+      "Available across all cab and bed configurations"
+    ],
+    "SR5": [
+      "Mid-range gas i-FORCE 3.4L-T V6 powertrain",
+      "Available in both 4x2 and 4x4 configurations",
+      "Offered across all cab styles and bed lengths"
+    ],
+    "SR": [
+      "Base trim with i-FORCE 3.4L-T V6 engine in 4x2 and 4x4",
+      "Standard seating for five passengers",
+      "9.3-inch minimum ground clearance on gas models",
+      "Essential truck capabilities with foundational feature set"
+    ]
+  }
+}

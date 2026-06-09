@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2017|audi|a3",
+  "year": 2017,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_llm_2017__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S3",
+    "A3 Prestige",
+    "A3 Premium Plus",
+    "A3 Premium",
+    "A3"
+  ],
+  "adds_by_trim": {
+    "S3": [
+      "292 horsepower 2.0T TFSI engine with 258 lb-ft torque",
+      "Mythos Black metallic exterior color standard",
+      "S sport seat with Black Fine Nappa leather and Rock Gray diamond stitching standard",
+      "19-inch Audi Sport 5-V-spoke titanium-matte design wheels",
+      "Aluminum Mistral and Matte Brushed Aluminum interior inlay options"
+    ],
+    "A3 Prestige": [
+      "Glacier White metallic exterior color standard",
+      "Cosmos Blue metallic exterior color standard",
+      "Daytona Gray pearl exterior color standard"
+    ],
+    "A3 Premium Plus": [
+      "Vegas Yellow exterior color available",
+      "Florett Silver metallic exterior color available",
+      "19-inch 5-parallel-spoke star design anthracite/polished finish wheels"
+    ],
+    "A3 Premium": [
+      "Vegas Yellow exterior color optional",
+      "Cosmos Blue metallic exterior color optional",
+      "17-inch 10-spoke turbine design contrasting gray/polished finish wheels optional"
+    ],
+    "A3": [
+      "186 horsepower 2.0T TFSI front-wheel drive engine standard",
+      "220 horsepower 2.0T TFSI quattro all-wheel drive engine available",
+      "Brilliant Black and Ibis White exterior colors standard",
+      "Black leather and Micrometallic Silver interior color options",
+      "Chestnut Brown leather with 3D Optic inlay standard",
+      "17-inch 5-arm design and 18-inch 5-double-spoke design wheels",
+      "Standard and Sport seat options available"
+    ]
+  }
+}

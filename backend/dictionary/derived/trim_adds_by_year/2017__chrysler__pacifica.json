@@ -1,0 +1,91 @@
+{
+  "catalog_key": "2017|chrysler|pacifica",
+  "year": 2017,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "ladder_id": "brochure_llm_2017__chrysler__pacifica",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PACIFICA LIMITED HYBRID",
+    "PACIFICA TOURING HYBRID",
+    "PACIFICA LIMITED",
+    "PACIFICA TOURING-L PLUS",
+    "PACIFICA TOURING-L",
+    "PACIFICA TOURING",
+    "PACIFICA LX"
+  ],
+  "adds_by_trim": {
+    "PACIFICA LIMITED HYBRID": [
+      "Chrome exterior mirrors replacing body-color mirrors",
+      "Hands-free liftgate and sliding doors",
+      "Uconnect 8.4 NAV radio with navigation"
+    ],
+    "PACIFICA TOURING HYBRID": [
+      "3.6L Pentastar V6 9-speed automatic transmission with hybrid powertrain",
+      "ParkView rear back-up camera",
+      "Power locks and power sliding doors",
+      "Three-zone automatic climate control",
+      "Uconnect 8.4-inch radio",
+      "Leather-wrapped steering wheel",
+      "8-way power driver seat",
+      "Fog lamps",
+      "17-inch cast aluminum wheels"
+    ],
+    "PACIFICA LIMITED": [
+      "Premium leather-trimmed seats",
+      "Second-row USB charge ports",
+      "Auto-dimming exterior driver-side mirror",
+      "Chrome exterior mirrors",
+      "Power folding third-row seat",
+      "Tri-pane panoramic sunroof",
+      "Ventilated front seats",
+      "LED fog lamps",
+      "18-inch or 20-inch cast aluminum wheels"
+    ],
+    "PACIFICA TOURING-L PLUS": [
+      "Stow N Place bright side roof rails with integrated crossbars",
+      "Uconnect Theater",
+      "Heated second-row seats",
+      "Heated steering wheel",
+      "Perforated leather-trimmed seats",
+      "13 speakers audio system",
+      "18-inch cast aluminum wheels"
+    ],
+    "PACIFICA TOURING-L": [
+      "Auto-dimming exterior driver-side mirror",
+      "Chrome exterior mirrors",
+      "Hands-free sliding doors and liftgate",
+      "High intensity discharge HID headlamps",
+      "Uconnect 8.4 NAV radio with navigation",
+      "LED fog lamps",
+      "LED taillamps",
+      "Blind spot monitoring and rear cross-path detection",
+      "Bright bodyside moldings and bright door handles",
+      "Body-color power heated mirrors"
+    ],
+    "PACIFICA TOURING": [
+      "3.6L Pentastar V6 9-speed automatic transmission",
+      "Uconnect 8.4 NAV radio",
+      "Auto-dimming exterior driver-side mirror",
+      "Chrome exterior mirrors",
+      "Hands-free sliding doors and liftgate",
+      "High intensity discharge HID headlamps",
+      "Power sliding doors",
+      "Automatic headlamps with time-off delay",
+      "Interior door handle LED lamps",
+      "Remote proximity entry on all doors"
+    ],
+    "PACIFICA LX": [
+      "3.6L Pentastar V6 9-speed automatic transmission",
+      "ParkView rear back-up camera",
+      "Power locks",
+      "Power front and second-row windows",
+      "Stow 'n Go seating",
+      "Active noise cancellation",
+      "Stow 'n Go assist on driver side",
+      "Uconnect 5.0 radio",
+      "Three-zone manual climate control",
+      "Tilt/telescoping steering wheel"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2015|chevrolet|impala",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

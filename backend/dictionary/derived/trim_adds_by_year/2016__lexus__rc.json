@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2016|lexus|rc",
+  "year": 2016,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "brochure_llm_2016__lexus__rc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RC350 F SPORT",
+    "RC350",
+    "RC300 F SPORT AWD",
+    "RC300 AWD",
+    "RC200t F SPORT",
+    "RC200t"
+  ],
+  "adds_by_trim": {
+    "RC350 F SPORT": [
+      "F SPORT-exclusive exterior styling and design elements",
+      "Performance-tuned suspension calibration",
+      "Brembo high-performance braking system with greater wear characteristics",
+      "19-inch performance tires with expected greater wear than conventional tires"
+    ],
+    "RC350": [
+      "3.5-liter V6 engine producing 306 horsepower",
+      "Premium unleaded gasoline requirement (91 octane or higher) for rated performance",
+      "Mark Levinson premium audio system",
+      "Dynamic Radar Cruise Control with adaptive cruise capability",
+      "Pre-Collision System with frontal collision mitigation"
+    ],
+    "RC300 F SPORT AWD": [
+      "F SPORT-exclusive exterior styling and design elements",
+      "Performance-tuned suspension calibration",
+      "Brembo high-performance braking system"
+    ],
+    "RC300 AWD": [
+      "All-wheel drive system for enhanced traction and stability",
+      "Vehicle Dynamics Integrated Management electronic control system",
+      "Blind Spot Monitor with visual alerts",
+      "Rear Cross-Traffic Alert system"
+    ],
+    "RC200t F SPORT": [
+      "F SPORT-exclusive exterior styling and design elements",
+      "Performance-tuned suspension calibration",
+      "18-inch performance tires with expected greater wear"
+    ],
+    "RC200t": [
+      "2.0-liter turbocharged four-cylinder engine producing 241 horsepower",
+      "SmartAccess keyless entry and ignition system",
+      "Engine immobilizer anti-theft system with transponder technology",
+      "Backup camera with rear view display",
+      "Intuitive Parking Assist system with parking guidance"
+    ]
+  }
+}

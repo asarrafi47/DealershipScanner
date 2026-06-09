@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2018|infiniti|q50",
+  "year": 2018,
+  "make": "Infiniti",
+  "model": "Q50",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sensory",
+    "Luxe",
+    "Pure",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Q50"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

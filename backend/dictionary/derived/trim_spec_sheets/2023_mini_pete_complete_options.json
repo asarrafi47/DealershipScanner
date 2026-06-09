@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2023_mini_pete_complete_options",
+  "make": "MINI",
+  "models": [
+    "Pete",
+    "Pete"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: According to Big Pete it wasn't just the mandatory regime of squat thrusts in gym class and ordering that the school serve creamed corn (Schwinger's favorite food) for every meal that earned him that reputation, it was his continuous inviting a singing…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: 2020 MINI Models | Specs Explained and Compared Published Date: 16th Jan 2020 The MINI offers several basic models and when you drill down to the trim levels, customisation options, engines and optional extras, choosing your ideal model and spec can be quite a…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Model Year 2020 MINI Lineup Pricing and Equipment Updates Woodcliff Lake, N.J.,; Model Year 2020 MINI Lineup Pricing and Equipment Updates Woodcliff Lake, N.J., July 1, 2019."
+      }
+    ]
+  }
+}

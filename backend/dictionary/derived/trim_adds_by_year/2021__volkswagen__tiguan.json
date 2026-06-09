@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2021|volkswagen|tiguan",
+  "year": 2021,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_llm_2021__volkswagen__tiguan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL Premium R-Line®",
+    "SE R-Line® Black",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL Premium R-Line®": [
+      "20-inch machined black alloy wheels with all-season tires",
+      "LED headlights with LED Daytime Running Lights and Adaptive Front Lighting System",
+      "Power folding side mirrors with position memory",
+      "Vienna leather seating surfaces",
+      "Heated steering wheel",
+      "R-Line® exterior styling with badging, intakes, side sills and bumpers",
+      "4MOTION® all-wheel drive standard"
+    ],
+    "SE R-Line® Black": [
+      "20-inch machined dark graphite alloy wheels with all-season tires",
+      "R-Line® grille, badging, intakes, side sills, bumpers and body-color lower cladding",
+      "Black accents in R-Line® grille, front bumper, side sills and exterior trim",
+      "Leather-wrapped R-Line® steering wheel"
+    ],
+    "SEL": [
+      "19-inch 5-spoke gray alloy wheels with all-season tires",
+      "Halogen front fog lights with low-speed corner illumination",
+      "Panoramic sunroof with power tilting and sliding front section",
+      "10-way power driver's seat with lumbar support"
+    ],
+    "SE": [
+      "17-inch two-tone machined and black alloy wheels with all-season tires",
+      "Chrome side window trim, protective side moldings and rear bumper trim",
+      "Leatherette-wrapped steering wheel",
+      "Perforated V-Tex leatherette seating surfaces",
+      "Leather-trimmed shifter",
+      "10-way power driver's seat with lumbar support"
+    ],
+    "S": [
+      "2.0L TSI turbocharged 4-cylinder engine with 184 horsepower and 221 lb-ft torque",
+      "8-speed automatic transmission with Tiptronic and Sport mode",
+      "Front-wheel drive standard",
+      "Four-wheel independent suspension with vented front and solid rear disc brakes",
+      "17-inch multi-spoke two-tone alloy wheels with all-season tires",
+      "Twin halogen headlights with LED Daytime Running Lights",
+      "Cloth seating surfaces",
+      "6-way manual driver's seat with height adjustment",
+      "3-spoke multi-function steering wheel with controls",
+      "Engine Start-Stop System with electro-mechanical power steering"
+    ]
+  }
+}

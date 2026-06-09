@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2020|nissan|nv",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_web_2020__nissan__nv",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Passenger SL",
+    "Passenger SV",
+    "Passenger S",
+    "Cargo SL",
+    "Cargo SV",
+    "Cargo S"
+  ],
+  "adds_by_trim": {
+    "Passenger SL": [
+      "Leather-trimmed seating surfaces",
+      "Built-in navigation",
+      "Front parking sensors",
+      "Dual-zone front climate control"
+    ],
+    "Passenger SV": [
+      "17-inch chromed steel wheels",
+      "Power-adjustable driver's seat",
+      "Rear parking sensors",
+      "Power-adjustable, chrome-finished side mirrors"
+    ],
+    "Passenger S": [
+      "Manually adjustable, black-finished side mirrors",
+      "Side window privacy tint",
+      "Driver's seat slide-out storage bin",
+      "Air vents in all rows of seats"
+    ],
+    "Cargo SL": [
+      "17-inch chromed steel wheels",
+      "Chrome grille, bumpers, door handles",
+      "Two 12-volt DC power outlets, two 120-volt 400-watt power outlets",
+      "Power-adjustable driver's seat with slide-out storage bin"
+    ],
+    "Cargo SV": [
+      "17-inch styled steel wheels",
+      "Power-adjustable side mirrors",
+      "Cruise control",
+      "Rear cargo floor liner"
+    ],
+    "Cargo S": [
+      "17-inch steel wheels",
+      "Black grille, bumpers, door handles",
+      "Power windows and door locks",
+      "Cloth seating surfaces"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/nissan/nv/"
+}

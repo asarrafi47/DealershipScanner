@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|maserati|levante",
+  "year": 2019,
+  "make": "maserati",
+  "model": "levante",
+  "ladder_id": "brochure_llm_2019__maserati__levante",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Levante S",
+    "Levante",
+    "Levante Diesel"
+  ],
+  "adds_by_trim": {
+    "Levante S": [
+      "430 CV (316 kW) petrol V6 engine with 580 Nm peak torque",
+      "5.2 second 0-100 km/h acceleration",
+      "264 km/h maximum speed",
+      "34.5 m stopping distance (100-0 km/h)"
+    ],
+    "Levante": [
+      "350 CV (257 kW) petrol V6 engine with 500 Nm peak torque",
+      "6.0 second 0-100 km/h acceleration",
+      "251 km/h maximum speed",
+      "Overboost function for maximum performance in Manual Sport mode"
+    ],
+    "Levante Diesel": [
+      "275 CV (202 kW) turbodiesel V6 engine with 600 Nm peak torque",
+      "6.9 second 0-100 km/h acceleration",
+      "230 km/h maximum speed",
+      "7.9-8.3 l/100 km fuel consumption (combined cycle)",
+      "2205 kg kerb weight"
+    ]
+  }
+}

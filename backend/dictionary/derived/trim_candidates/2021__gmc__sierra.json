@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2021|gmc|sierra",
+  "year": 2021,
+  "make": "GMC",
+  "model": "Sierra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali Ultimate",
+    "Denali",
+    "AT4",
+    "SLT",
+    "Elevation",
+    "SLE",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

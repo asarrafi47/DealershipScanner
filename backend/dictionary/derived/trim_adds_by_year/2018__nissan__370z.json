@@ -1,0 +1,87 @@
+{
+  "catalog_key": "2018|nissan|370z",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2018__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO ROADSTER",
+    "TOURING SPORT",
+    "TOURING",
+    "SPORT TECH",
+    "370Z SPORT",
+    "370Z HERITAGE EDITION",
+    "370Z"
+  ],
+  "adds_by_trim": {
+    "NISMO ROADSTER": [
+      "350 hp V6 with NISMO-tuned free-flow dual exhaust and H-pipe",
+      "6-speed manual with SynchroRev Match",
+      "Black Magnesium paddle shifters",
+      "NISMO Recaro leather seats with Alcantara inserts",
+      "NISMO-tuned suspension with increased spring and dampening rates",
+      "NISMO-reinforced 3-point front strut tower brace",
+      "19-inch NISMO forged alloy wheels by RAYS",
+      "Dunlop SP Sport Maxx GT600 high-performance Y-rated tires",
+      "NISMO aerodynamic body design with front/rear fascia and spoiler",
+      "NISMO signature red interior stitching and Alcantara-wrapped steering wheel"
+    ],
+    "TOURING SPORT": [
+      "19-inch RAYS forged alloy wheels",
+      "Bridgestone Potenza S007 high-performance Y-rated tires"
+    ],
+    "TOURING": [
+      "Nissan Hard Drive Navigation System with touchscreen and Voice Recognition",
+      "NavTraffic and NavWeather by SiriusXM",
+      "RearView Monitor",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming rearview mirror",
+      "Driver's manual adjustable lumbar support",
+      "Ventilated leather-appointed seats",
+      "Climate-controlled heated and cooled seats",
+      "Bose Premium Audio with eight speakers and two subwoofers",
+      "Bluetooth streaming audio and SiriusXM Satellite Radio"
+    ],
+    "SPORT TECH": [
+      "Nissan Hard Drive Navigation System with touchscreen and Voice Recognition",
+      "NavTraffic and NavWeather by SiriusXM",
+      "RearView Monitor",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming rearview mirror",
+      "Bluetooth streaming audio",
+      "SiriusXM Satellite Radio"
+    ],
+    "370Z SPORT": [
+      "332 hp 3.7-liter V6 with twin-intake system",
+      "6-speed manual transmission with SynchroRev Match",
+      "Optional 7-speed automatic with Downshift Rev Matching",
+      "EXEDY high-performance clutch for manual transmission",
+      "Paddle shifters on automatic transmission",
+      "19-inch RAYS forged alloy wheels",
+      "Bridgestone Potenza S007 high-performance Y-rated tires",
+      "Nissan sport brakes with 14.0-inch 4-piston front",
+      "Bose Premium Audio with eight speakers and subwoofers",
+      "Body-color rear spoiler"
+    ],
+    "370Z HERITAGE EDITION": [
+      "Heritage Edition exterior graphics",
+      "Gloss black outside mirrors",
+      "Yellow interior trim details",
+      "Cloth seat with contrast yellow trim and bolster stitching",
+      "Leather-wrapped steering wheel"
+    ],
+    "370Z": [
+      "332 hp 3.7-liter V6 with twin-intake system",
+      "6-speed manual transmission or optional 7-speed automatic",
+      "18-inch black-finish aluminum-alloy wheels",
+      "Yokohama ADVAN Sport high-performance W-rated tires",
+      "HID bi-functional xenon headlights with smoked housing",
+      "LED Daytime Running Lights and smoked LED taillights",
+      "Nissan sport brakes with 14.0-inch 4-piston front",
+      "3-point front strut tower brace",
+      "8-way adjustable driver's seat with thigh support",
+      "AM/FM/CD audio system with six speakers and USB port"
+    ]
+  }
+}

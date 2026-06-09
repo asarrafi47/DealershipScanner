@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2026|toyota|corolla",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "2026_toyota_corolla",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LE",
+    "SE",
+    "XSE",
+    "Hybrid LE",
+    "Hybrid SE",
+    "Hybrid XLE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "18-inch graphite alloy wheels with P225/40R18 tires (replaces 16-inch steel on LE)",
+      "Sport mesh gloss-black front grille and gray metallic rocker panels",
+      "Smart Key with push-button start (replaces in-key remote on LE)",
+      "Sport seats with 6-way driver and 4-way passenger adjustment"
+    ],
+    "XSE": [
+      "12.3-inch digital gauge cluster and power moonroof",
+      "Multi-link rear suspension (replaces torsion beam on LE/SE)",
+      "SofTex heated sport seats with fabric inserts",
+      "Leather steering wheel with paddle shifters"
+    ],
+    "Hybrid SE": [
+      "1.8L hybrid ECVT with Normal, Sport, and Eco modes",
+      "18-inch alloys and sport appearance package content vs Hybrid LE",
+      "Leather-trimmed steering wheel and Smart Key"
+    ],
+    "Hybrid XLE": [
+      "12.3-inch digital gauge cluster and power moonroof",
+      "Heated driver and front passenger seats",
+      "SofTex heated front seats with 8-way power driver seat",
+      "Highest hybrid Corolla sedan trim"
+    ],
+    "LE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "32 city/41 highway/35 combined estimated mpg",
+      "LED headlights, LED taillights, and Daytime Running Lights",
+      "16-in. steel wheels with covers",
+      "Automatic climate control",
+      "4.2-in. Multi-Information Display (MID)",
+      "Fabric-trimmed seats with 60/40 split fold-down rear seat and center armrest",
+      "8-in. touchscreen with wireless Apple CarPlay and Android Auto"
+    ],
+    "Hybrid LE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "31 city/40 highway/34 combined estimated mpg",
+      "LED headlights, LED taillights, and Daytime Running Lights accent lighting",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Gray metallic sport side rocker panels and rear spoiler",
+      "SofTex-trimmed seats with heated front seats and sport fabric inserts",
+      "Steering-wheel-mounted paddle shifters",
+      "7-in. Digital Gauge Cluster",
+      "10.5-inch touchscreen with wireless Apple CarPlay and Android Auto"
+    ]
+  }
+}

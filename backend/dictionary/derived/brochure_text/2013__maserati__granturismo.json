@@ -1,0 +1,256 @@
+{
+  "catalog_key": "2013|maserati|granturismo",
+  "year": 2013,
+  "make": "maserati",
+  "model": "granturismo",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2013_maserati_granturismo_Brochure.pdf",
+  "page_count": 44,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "pages": [
+    {
+      "page": 3,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 1 21/11/12 16.24",
+      "table_lines": []
+    },
+    {
+      "page": 4,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 2 21/11/12 16.24",
+      "table_lines": []
+    },
+    {
+      "page": 5,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 3 21/11/12 16.24",
+      "table_lines": []
+    },
+    {
+      "page": 6,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 4 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 7,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 5 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 8,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 6 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 9,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 7 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 10,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 8 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 11,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 9 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 12,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 10 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 13,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 11 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 14,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 12 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 15,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 13 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 16,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 14 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 17,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 15 21/11/12 16.25",
+      "table_lines": []
+    },
+    {
+      "page": 18,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 16 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 19,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 17 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 20,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 18 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 21,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 19 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 22,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 20 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 23,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 21 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 24,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 22 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 25,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 23 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 26,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 24 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 27,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 25 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 28,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 26 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 29,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 27 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 30,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 28 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 31,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 29 21/11/12 16.26",
+      "table_lines": []
+    },
+    {
+      "page": 32,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 30 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 33,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 31 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 34,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 32 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 35,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 33 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 36,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 34 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 37,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 35 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 38,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 36 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 39,
+      "trim_hint": false,
+      "text": "MASERATI woRld 37\nServices\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 37 21/11/12 16.27",
+      "table_lines": []
+    },
+    {
+      "page": 40,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 38 21/11/12 16.28",
+      "table_lines": []
+    },
+    {
+      "page": 41,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 39 21/11/12 16.29",
+      "table_lines": []
+    },
+    {
+      "page": 42,
+      "trim_hint": false,
+      "text": "S25_Leaflet_GammaGT_A5_inteno_esec.indd 40 21/11/12 16.29",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 3 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 1 21/11/12 16.24\n\n--- page 4 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 2 21/11/12 16.24\n\n--- page 5 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 3 21/11/12 16.24\n\n--- page 6 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 4 21/11/12 16.25\n\n--- page 7 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 5 21/11/12 16.25\n\n--- page 8 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 6 21/11/12 16.25\n\n--- page 9 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 7 21/11/12 16.25\n\n--- page 10 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 8 21/11/12 16.25\n\n--- page 11 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 9 21/11/12 16.25\n\n--- page 12 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 10 21/11/12 16.25\n\n--- page 13 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 11 21/11/12 16.25\n\n--- page 14 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 12 21/11/12 16.25\n\n--- page 15 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 13 21/11/12 16.25\n\n--- page 16 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 14 21/11/12 16.25\n\n--- page 17 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 15 21/11/12 16.25\n\n--- page 18 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 16 21/11/12 16.26\n\n--- page 19 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 17 21/11/12 16.26\n\n--- page 20 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 18 21/11/12 16.26\n\n--- page 21 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 19 21/11/12 16.26\n\n--- page 22 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 20 21/11/12 16.26\n\n--- page 23 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 21 21/11/12 16.26\n\n--- page 24 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 22 21/11/12 16.26\n\n--- page 25 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 23 21/11/12 16.26\n\n--- page 26 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 24 21/11/12 16.26\n\n--- page 27 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 25 21/11/12 16.26\n\n--- page 28 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 26 21/11/12 16.26\n\n--- page 29 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 27 21/11/12 16.26\n\n--- page 30 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 28 21/11/12 16.26\n\n--- page 31 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 29 21/11/12 16.26\n\n--- page 32 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 30 21/11/12 16.27\n\n--- page 33 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 31 21/11/12 16.27\n\n--- page 34 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 32 21/11/12 16.27\n\n--- page 35 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 33 21/11/12 16.27\n\n--- page 36 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 34 21/11/12 16.27\n\n--- page 37 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 35 21/11/12 16.27\n\n--- page 38 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 36 21/11/12 16.27\n\n--- page 39 ---\nMASERATI woRld 37\nServices\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 37 21/11/12 16.27\n\n--- page 40 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 38 21/11/12 16.28\n\n--- page 41 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 39 21/11/12 16.29\n\n--- page 42 ---\nS25_Leaflet_GammaGT_A5_inteno_esec.indd 40 21/11/12 16.29"
+}

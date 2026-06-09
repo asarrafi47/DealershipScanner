@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|ferrari|california",
+  "year": 2014,
+  "make": "Ferrari",
+  "model": "california",
+  "ladder_id": "brochure_2014__ferrari__california",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 560 cv 90° V8 direct-injection engine",
+      "Adds F1 dual-clutch 7-speed gearbox with Reverse",
+      "Adds carbon-ceramic braking system",
+      "Adds ESC with F1-Trac stability and traction control",
+      "Adds 19-inch forged wheels (245/40 ZR19 front, 285/40 ZR19 rear)",
+      "Adds leather seating surfaces",
+      "Adds 16 standard paint colors plus 10 historic liveries",
+      "Adds diamond forged wheel option",
+      "Adds two-tone exterior paint option",
+      "Adds customizable interior trim in leather, Alcantara, aluminum, or carbon-fiber"
+    ],
+    "LE": [
+      "Adds Rosso California and Blu California exclusive paint colors",
+      "Adds 20-inch forged wheel option (245/35 ZR20 front, 285/35 ZR20 rear)",
+      "Adds new interior color options: Beige Tradizione, Rosso Ferrari, Blu Sterling, Tortora",
+      "Adds enhanced seat upholstery configuration options",
+      "Adds carbon-fiber interior trim upgrade"
+    ]
+  }
+}

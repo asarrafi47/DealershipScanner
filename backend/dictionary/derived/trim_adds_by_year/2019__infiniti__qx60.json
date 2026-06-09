@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|infiniti|qx60",
+  "year": 2019,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2019__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX60 LUXE",
+    "QX60 PURE"
+  ],
+  "adds_by_trim": {
+    "QX60 LUXE": [
+      "Bose 13-speaker Premium Audio system with AM/FM/CD/DVD and MP3 playback",
+      "Dual-occupant memory system for driver seat, steering wheel, and outside mirrors",
+      "Entry/exit assist for driver seat and steering wheel",
+      "Outside mirrors with reverse tilt-down feature",
+      "Driver seat 2-way power lumbar support",
+      "Heated steering wheel",
+      "Remote Engine Start",
+      "Roof rails",
+      "Rear bumper protector",
+      "Power folding and heated outside mirrors with integrated turn signals"
+    ],
+    "QX60 PURE": [
+      "3.5-liter V6 engine producing 295 horsepower and 270 lb-ft torque",
+      "Continuously Variable Transmission with manual shift mode",
+      "Forward Emergency Braking with Pedestrian Detection",
+      "Predictive Forward Collision Warning",
+      "Blind Spot Warning",
+      "RearView Monitor",
+      "8-inch INFINITI InTouch color display with 8-speaker audio",
+      "INFINITI Intelligent Key with Illuminated Push Button Start",
+      "HID signature automatic-on/off bi-functional xenon headlights",
+      "LED signature taillights and front fog lights"
+    ]
+  }
+}

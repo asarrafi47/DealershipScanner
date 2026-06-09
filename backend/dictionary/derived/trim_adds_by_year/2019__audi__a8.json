@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2019|audi|a8",
+  "year": 2019,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_2019__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport",
+    "A8"
+  ],
+  "adds_by_trim": {
+    "A8": [
+      "Adds 3.0-liter turbocharged six-cylinder engine with 335 horsepower",
+      "Adds eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Adds ASF multi-material body construction with steel, aluminum and carbon composition",
+      "Adds Audi adaptive air suspension with five-link front and rear",
+      "Adds dynamic all-wheel steering system",
+      "Adds electromechanical progressive steering system",
+      "Adds ventilated disc brakes front and rear",
+      "Adds Black Valetta leather seating",
+      "Adds 19-inch 15-spoke design wheels",
+      "Adds multiple exterior color options including Mythos Black metallic and Glacier White metallic"
+    ],
+    "Sport": [
+      "Eight-cylinder turbocharged engine with 450 horsepower and 444 lb-ft torque",
+      "3,991cc displacement with 32-valve DOHC valvetrain",
+      "4.4-second 0-60 mph acceleration",
+      "Sport differential available",
+      "Dynamic steering available"
+    ],
+    "Limited": [
+      "Adds Black Perforated Valcona leather seating option",
+      "Adds Executive package interior inlays with Dark Brown Walnut Natural Wood accents",
+      "Adds 20-inch 20-spoke-structure design wheels with gray and polished finish"
+    ],
+    "Premium": [
+      "Adds Luxury package with pearl beige and sarder brown perforated Valcona leather",
+      "Adds Design package advanced with Steel Gray contrast stitching and piping",
+      "Adds Nutmeg Brown Perforated Valcona leather seating option",
+      "Adds Gray/Brown Fine Grain Natural Wood interior inlay option"
+    ]
+  }
+}

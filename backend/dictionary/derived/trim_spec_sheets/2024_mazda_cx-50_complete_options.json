@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2024_mazda_cx-50_complete_options",
+  "make": "Mazda",
+  "models": [
+    "CX-50",
+    "CX-50"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Select": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Only one engine option is available: a 2.0 Skyactiv-G petrol engine. Taiwan; Only one engine option is available: a 2.0 Skyactiv-G petrol engine. Taiwan The second-generation CX-5 was launched in Taiwan on 10 April 2017, with five variants: Sky-G…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: COMFORT PACKAGE Power glass moonroof with interior sunshade, tilt-up ventilation (was COMFORT PACKAGE Power glass moonroof with interior sunshade, tilt-up ventilation and one-t; COMFORT PACKAGE Power glass moonroof with interior sunshade, tilt-up…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Initial models were available with either a 2.0 L petrol engine or a diesel engi; Initial models were available with either a 2.0 L petrol engine or a diesel engine, with front-wheel drive and all-wheel drive as options (FWD was only available with a…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: COMFORT PACKAGE Power glass moonroof with interior sunshade, tilt-up ventilation and one-t; COMFORT PACKAGE Power glass moonroof with interior sunshade, tilt-up ventilation"
+      }
+    ]
+  }
+}

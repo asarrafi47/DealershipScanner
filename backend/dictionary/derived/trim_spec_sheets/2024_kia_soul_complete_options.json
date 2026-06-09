@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_kia_soul_complete_options",
+  "make": "Kia",
+  "models": [
+    "Soul",
+    "Soul"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "The Soul Hybrid/Eco-Soul is a concept vehicle with a Gamma 1.6L gasoline engine, an electric motor rated 15 kW (20 PS; 20 hp) and 105 N⋅m (77 lb⋅ft), continuously variable transmission, ISG (Idle Stop&Go), regenerative braking.; GT-Line Turbo Compare Trims S = Standard -- = Not Available O = Optional A = Ava"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "It includes dual chrome exhaust, polished aluminum exhaust tips featuring carbon-fiber interior sleeves, and 19-inch 5-spoke aluminum alloy wheels.; The Soul Hybrid/Eco-Soul is a concept vehicle with a Gamma 1.6L gasoline engine, an electric motor rated 15 kW (20 PS; 20 hp) and 105 N⋅m (77 lb⋅ft), continuously variable transmission, ISG (Idle Stop&Go), regenerative braking."
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2014|nissan|nv",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_llm_2014__nissan__nv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "SV Exterior Appearance Package with body-color front and rear bumpers",
+      "Body-color outside mirrors and split 5-spoke wheel covers"
+    ],
+    "S": [
+      "2.0-liter DOHC 16-valve 4-cylinder MR20DE engine with 131 hp and 139 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "Dual power heated outside mirrors",
+      "Sliding side doors on both driver's and passenger's sides",
+      "40/60 split rear cargo doors with 180-degree maximum opening",
+      "Rear window defroster",
+      "Daytime Running Lights and halogen headlights",
+      "AM/FM/CD audio system with MP3/WMA playback and auxiliary audio input",
+      "Bluetooth hands-free phone system",
+      "Nissan Advanced Air Bag System with dual-stage supplemental front air bags"
+    ]
+  }
+}

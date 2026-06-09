@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2022|hyundai|ioniq5",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Ioniq 5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE",
+    "Blue",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

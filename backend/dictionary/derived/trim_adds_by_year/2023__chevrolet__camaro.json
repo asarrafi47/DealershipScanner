@@ -1,0 +1,85 @@
+{
+  "catalog_key": "2023|chevrolet|camaro",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2023__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZL1",
+    "ZL1 1LE",
+    "SS",
+    "SS 1LE",
+    "LT1",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "ZL1": [
+      "650-horsepower supercharged 6.2L V8 engine",
+      "Available 10-speed paddle-shift automatic transmission",
+      "Brembo 6-piston front and 4-piston rear brake calipers",
+      "Performance copper-free brake system (California/Washington)",
+      "20-inch Dark Graphite-painted forged-aluminum wheels",
+      "Goodyear Eagle F1 SuperCar G:2 staggered summer-only tires",
+      "Top track speed of 198 mph",
+      "0 to 60 mph in 3.5 seconds"
+    ],
+    "ZL1 1LE": [
+      "Extreme Track Performance Package",
+      "Custom launch control with line lock",
+      "RECARO performance seats",
+      "Auxiliary engine cooler",
+      "Rear differential cooler",
+      "Transmission oil cooler",
+      "Dual-mode performance exhaust"
+    ],
+    "SS": [
+      "455-horsepower 6.2L V8 engine",
+      "6-speed manual transmission with Active Rev Matching",
+      "Magnetic Ride Control",
+      "Available 10-speed paddle-shift automatic transmission",
+      "Available performance copper-free brake system",
+      "Limited-slip differential",
+      "Performance suspension",
+      "SS-style engine hood with black bowtie emblems"
+    ],
+    "SS 1LE": [
+      "SS 1LE Track Performance Package",
+      "Brembo 6-piston front and 4-piston rear brake calipers",
+      "Auxiliary engine cooler",
+      "Rear differential cooler",
+      "Transmission oil cooler",
+      "20-inch Silver-painted aluminum wheels with summer-only tires",
+      "Available Magnetic Ride Control"
+    ],
+    "LT1": [
+      "455-horsepower 6.2L V8 engine",
+      "6-speed manual transmission with Active Rev Matching",
+      "Available 10-speed paddle-shift automatic transmission",
+      "External engine oil cooler",
+      "Limited-slip differential",
+      "Performance suspension",
+      "LT1 fender badging",
+      "20-inch Silver-painted aluminum wheels with all-season tires"
+    ],
+    "LT": [
+      "2.0L Turbo or available 3.6L V6 engine",
+      "6-speed manual transmission",
+      "Available 8-speed paddle-shift automatic transmission with 2.0L Turbo",
+      "Available 10-speed paddle-shift automatic transmission with 3.6L V6",
+      "Available 20-inch aluminum wheels",
+      "Forward Collision Alert, Lane Change Alert, Rear Cross Traffic Alert (3LT)"
+    ],
+    "LS": [
+      "275-horsepower 2.0L Turbo engine",
+      "0 to 60 mph in 5.4 seconds",
+      "6-speed manual transmission",
+      "Power-adjustable mirrors",
+      "Dual-outlet exhaust with bright tips",
+      "18-inch Silver-painted aluminum wheels",
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen",
+      "Wireless Apple CarPlay and Android Auto compatibility"
+    ]
+  }
+}

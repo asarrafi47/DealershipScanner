@@ -62,6 +62,10 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
         ("sticker_provider",  "TEXT NOT NULL DEFAULT 'unknown'"),
         ("sticker_ipacket_fail_count", "INTEGER NOT NULL DEFAULT 0"),
         ("sticker_provider_updated_at", "TEXT"),
+        ("google_place_id",       "TEXT"),
+        ("google_rating",         "REAL"),
+        ("google_review_count",   "INTEGER"),
+        ("google_rating_fetched_at", "TEXT"),
     ]
     for col, coltype in additive:
         if col not in dcols:
@@ -71,6 +75,9 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
     )
     cursor.execute(
         "CREATE INDEX IF NOT EXISTS idx_dealerships_zip ON dealerships(zip_code)"
+    )
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_dealerships_google_place ON dealerships(google_place_id)"
     )
 
 
@@ -164,6 +171,7 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
 
     if existing_id is not None:
         # Merge: fill blanks, OR provenance flags
+        rating_fetched_at = datetime.now(timezone.utc).isoformat() if row.get("google_rating") is not None or row.get("google_place_id") else None
         cursor.execute(
             """
             UPDATE dealerships SET
@@ -175,6 +183,10 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 latitude           = COALESCE(latitude,  ?),
                 longitude          = COALESCE(longitude, ?),
                 osm_id             = COALESCE(osm_id,    NULLIF(TRIM(?),'')),
+                google_place_id    = COALESCE(NULLIF(TRIM(google_place_id), ''), NULLIF(TRIM(?), '')),
+                google_rating      = COALESCE(?, google_rating),
+                google_review_count = COALESCE(?, google_review_count),
+                google_rating_fetched_at = COALESCE(?, google_rating_fetched_at),
                 source_dmv         = source_dmv | ?,
                 source_osm         = source_osm | ?,
                 source_web         = source_web | ?
@@ -188,6 +200,10 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 row.get("latitude"),
                 row.get("longitude"),
                 osm_id or "",
+                row.get("google_place_id") or "",
+                row.get("google_rating"),
+                row.get("google_review_count"),
+                rating_fetched_at,
                 int(bool(row.get("source_dmv"))),
                 int(bool(row.get("source_osm"))),
                 int(bool(row.get("source_web"))),
@@ -202,13 +218,15 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
     name = (row.get("name") or "Unknown Dealer").strip()
     city = (row.get("city") or "").strip()
     state = (row.get("state") or "").strip().upper()
+    rating_fetched_at = datetime.now(timezone.utc).isoformat() if row.get("google_rating") is not None or row.get("google_place_id") else None
     cursor.execute(
         """
         INSERT INTO dealerships
             (name, website_url, city, state, latitude, longitude, created_at,
              street_address, zip_code, dealer_website_url,
-             source_dmv, source_osm, source_web, osm_id, is_active)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1)
+             source_dmv, source_osm, source_web, osm_id, is_active,
+             google_place_id, google_rating, google_review_count, google_rating_fetched_at)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
         """,
         (
             name,
@@ -225,6 +243,10 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
             int(bool(row.get("source_osm"))),
             int(bool(row.get("source_web"))),
             osm_id,
+            row.get("google_place_id") or None,
+            row.get("google_rating"),
+            row.get("google_review_count"),
+            rating_fetched_at,
         ),
     )
     new_id = int(cursor.lastrowid)
@@ -275,7 +297,8 @@ def get_dealership_by_id(dealer_id: int) -> dict[str, Any] | None:
     cursor.execute(
         """
         SELECT id, name, website_url, city, state, latitude, longitude,
-               street_address, zip_code, dealer_website_url, is_active
+               street_address, zip_code, dealer_website_url, is_active,
+               google_place_id, google_rating, google_review_count, google_rating_fetched_at
         FROM dealerships WHERE id = ?
         """,
         (dealer_id,),
@@ -283,6 +306,63 @@ def get_dealership_by_id(dealer_id: int) -> dict[str, Any] | None:
     row = cursor.fetchone()
     conn.close()
     return dict(row) if row else None
+
+
+def list_dealers_needing_google_rating(*, limit: int = 25) -> list[dict[str, Any]]:
+    """Active registry rows that have never had a Google rating lookup."""
+    cap = max(1, int(limit))
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+    cursor.execute(
+        """
+        SELECT id, name, city, state, latitude, longitude, google_place_id
+        FROM dealerships
+        WHERE is_active = 1
+          AND duplicate_of_id IS NULL
+          AND google_rating_fetched_at IS NULL
+        ORDER BY id ASC
+        LIMIT ?
+        """,
+        (cap,),
+    )
+    rows = [dict(r) for r in cursor.fetchall()]
+    conn.close()
+    return rows
+
+
+def save_dealer_google_rating(
+    dealer_id: int,
+    *,
+    place_id: str | None,
+    rating: float | None,
+    review_count: int | None,
+) -> None:
+    """Persist Google rating cache fields on a registry dealership row."""
+    conn = get_conn()
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+    now = datetime.now(timezone.utc).isoformat()
+    cursor.execute(
+        """
+        UPDATE dealerships
+        SET google_place_id = ?,
+            google_rating = ?,
+            google_review_count = ?,
+            google_rating_fetched_at = ?
+        WHERE id = ?
+        """,
+        (
+            (place_id or "").strip() or None,
+            rating,
+            review_count,
+            now,
+            int(dealer_id),
+        ),
+    )
+    conn.commit()
+    conn.close()
 
 
 def get_dealer_sticker_provider_row(dealer_id: int) -> dict[str, Any] | None:

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Ford,Freestar,Cargo Van FWD,3.9L V6,3.9L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.9,16,22,18,,,,,
+2005,Ford,Freestar,Cargo Van FWD,4.2L V6,4.2L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,4.2,16,21,18,,,,,
+2005,Ford,Freestar,Wagon FWD,3.8L V6,3.8L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.8,16,22,18,,,,,
+2005,Ford,Freestar,Wagon FWD,4.2L V6,4.2L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,4.2,16,21,18,,,,,

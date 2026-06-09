@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2021|porsche|718",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "718",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2021_Porsche_718_Brochure.pdf",
+  "page_count": 43,
+  "all_pages": false,
+  "trim_hint_pages": [
+    3,
+    43
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 3,
+      "trim_hint": true,
+      "text": "European models shown. Some options may not be available in the U.S. Some items of equipment are available as extra-cost options only. The availability of models and options may vary\nfrom market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult your authorized Porsche dealer. All information\nregarding construction, features, design, performance, dimensions, weight, fuel consumption and running costs is correct to the best of our knowledge at the time of going to print (5/19).\nPorsche reserves the right to alter specifications, equipment and delivery scopes without prior notice. Colors may differ from those illustrated. Errors and omissions excepted.\nPlease visit www.porsche.com/disclaimer",
+      "table_lines": []
+    },
+    {
+      "page": 43,
+      "trim_hint": true,
+      "text": "Dr. Ing. h.c. F. Porsche AG is the owner of numerous by copyright. No part of this publication may be reproduced equipment that you ordered. Porsche recommends seat belt\ntrademarks, both registered and unregistered, including in any form or by any means without prior written permission usage and observance of traffic laws at all times.\nwithout limitation the Porsche Crest\u00ae, Porsche\u00ae, Boxster\u00ae, of Porsche Cars North America, Inc. Porsche Cars North\nCarrera\u00ae, Cayenne\u00ae, Cayman\u00ae, Macan\u00ae, Panamera\u00ae, Spyder\u00ae, America, Inc. believes the specifications to be correct at \u00a9 2019 Porsche Cars North America, Inc.\nTiptronic\u00ae, VarioCam\u00ae, PCM\u00ae, PDK\u00ae, 911\u00ae, 718\u00ae, RS\u00ae, 4S\u00ae, the time of printing. However, specifications, standard One Porsche Drive\n918 Spyder\u00ae, FOUR UNCOMPROMISED\u00ae, and the model equipment and options are subject to change without notice. Atlanta, GA 30354\nnumbers and distinctive shapes of the Porsche automobiles Some options may be unavailable when a car is built. Some www.porscheusa.com\nsuch as, the federally registered 911 and Boxster vehicles may be shown with non-U.S. equipment. Please\nautomobiles. The third party trademarks contained herein ask your authorized Porsche dealer for advice concerning Effective from: 06/19\nare the properties of their respective owners. All text, the current availability of options and verify the optional\nimages, and other content in this publication are protected WSLN2001000223 EN/US",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 3 ---\nEuropean models shown. Some options may not be available in the U.S. Some items of equipment are available as extra-cost options only. The availability of models and options may vary\nfrom market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult your authorized Porsche dealer. All information\nregarding construction, features, design, performance, dimensions, weight, fuel consumption and running costs is correct to the best of our knowledge at the time of going to print (5/19).\nPorsche reserves the right to alter specifications, equipment and delivery scopes without prior notice. Colors may differ from those illustrated. Errors and omissions excepted.\nPlease visit www.porsche.com/disclaimer\n\n--- page 43 ---\nDr. Ing. h.c. F. Porsche AG is the owner of numerous by copyright. No part of this publication may be reproduced equipment that you ordered. Porsche recommends seat belt\ntrademarks, both registered and unregistered, including in any form or by any means without prior written permission usage and observance of traffic laws at all times.\nwithout limitation the Porsche Crest\u00ae, Porsche\u00ae, Boxster\u00ae, of Porsche Cars North America, Inc. Porsche Cars North\nCarrera\u00ae, Cayenne\u00ae, Cayman\u00ae, Macan\u00ae, Panamera\u00ae, Spyder\u00ae, America, Inc. believes the specifications to be correct at \u00a9 2019 Porsche Cars North America, Inc.\nTiptronic\u00ae, VarioCam\u00ae, PCM\u00ae, PDK\u00ae, 911\u00ae, 718\u00ae, RS\u00ae, 4S\u00ae, the time of printing. However, specifications, standard One Porsche Drive\n918 Spyder\u00ae, FOUR UNCOMPROMISED\u00ae, and the model equipment and options are subject to change without notice. Atlanta, GA 30354\nnumbers and distinctive shapes of the Porsche automobiles Some options may be unavailable when a car is built. Some www.porscheusa.com\nsuch as, the federally registered 911 and Boxster vehicles may be shown with non-U.S. equipment. Please\nautomobiles. The third party trademarks contained herein ask your authorized Porsche dealer for advice concerning Effective from: 06/19\nare the properties of their respective owners. All text, the current availability of options and verify the optional\nimages, and other content in this publication are protected WSLN2001000223 EN/US"
+}

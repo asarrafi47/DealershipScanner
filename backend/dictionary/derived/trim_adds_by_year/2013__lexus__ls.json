@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2013|lexus|ls",
+  "year": 2013,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2013__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LSh",
+    "LS FSPORT",
+    "LS LWB",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LSh": [
+      "Hybrid powertrain with Electronically Controlled Continuously Variable Transmission (ECVT-i)",
+      "Adaptive Variable Air Suspension with integrated shock absorbers",
+      "Semi-Aniline Leather and Alcantara Upgrade Package standard",
+      "Ultra Luxury Package standard with four-zone Climate Concierge",
+      "Advanced Pre-Collision System with Active Pedestrian Detection",
+      "LED headlamps with intelligent high-beam headlamps standard",
+      "Mark Levinson 19-speaker 450-watt Reference Surround Sound system standard",
+      "Rear-Seat Entertainment System with Blu-ray/DVD player standard",
+      "Black Alcantara headliner",
+      "13.0 cu ft trunk capacity"
+    ],
+    "LS FSPORT": [
+      "FSPORT exterior styling with front bumper, grille inserts, rear diffuser",
+      "19-inch split-10-spoke forged alloy BBS wheels with summer or all-season tires",
+      "Brembo opposed six-piston front brake calipers with 14.8-inch ventilated discs",
+      "FSPORT-tuned, lowered Adaptive Variable Air Suspension with stabilizer bars",
+      "FSPORT shift knob and bolstered front seats with embossed headrests",
+      "FSPORT steering wheel with leather trim",
+      "Paddle shifters with downshift rev-matching",
+      "ECO, Normal, Comfort, Sport S, and Sport S+ Drive Modes"
+    ],
+    "LS LWB": [
+      "Extended 121.7-inch wheelbase for increased rear legroom",
+      "205.0-inch overall length for additional interior space",
+      "Power trunk open/close standard"
+    ],
+    "LS": [
+      "4.6-liter V8 engine with direct and port fuel injection",
+      "Eight-speed sequential-shift automatic transmission with ECT-i",
+      "Rear-wheel drive with optional all-wheel drive",
+      "18-inch split-five-spoke alloy wheels standard",
+      "Independent multi-link front and rear suspension with coil-over monotube shocks",
+      "Five-passenger luxury sedan configuration",
+      "22.2-gallon fuel tank capacity",
+      "18.0 cu ft trunk capacity"
+    ]
+  }
+}

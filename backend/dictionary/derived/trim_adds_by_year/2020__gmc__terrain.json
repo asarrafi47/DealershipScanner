@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2020|gmc|terrain",
+  "year": 2020,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_2020__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds leather-wrapped steering wheel",
+      "Adds authentic aluminum trim",
+      "Adds soft-touch instrument panel"
+    ],
+    "Limited": [],
+    "Denali": [
+      "Adds ventilated front seats",
+      "Adds heated second-row outboard seats"
+    ]
+  }
+}

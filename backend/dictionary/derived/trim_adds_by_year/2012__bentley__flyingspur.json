@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|bentley|flyingspur",
+  "year": 2012,
+  "make": "bentley",
+  "model": "flying spur",
+  "ladder_id": "brochure_llm_2012__bentley__flyingspur",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Continental Flying Spur Speed",
+    "Continental Flying Spur"
+  ],
+  "adds_by_trim": {
+    "Continental Flying Spur Speed": [
+      "600 bhp / 610 PS twin-turbocharged W12 engine (vs. 552 bhp base)",
+      "750 Nm torque (vs. 650 Nm base)",
+      "4.5 second 0-60 mph acceleration (vs. 4.9 seconds base)",
+      "200 mph top speed (vs. 194 mph base)"
+    ],
+    "Continental Flying Spur": [
+      "Twin-turbocharged W12 engine with 552 bhp / 560 PS",
+      "650 Nm torque between 1600-6100 rev/min",
+      "ZF 6-speed automatic transmission",
+      "Continuous all-wheel drive",
+      "20 inch wheels",
+      "90 litre fuel tank",
+      "194 mph top speed",
+      "4.9 second 0-60 mph acceleration"
+    ]
+  }
+}

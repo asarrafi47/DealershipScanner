@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2015|chevrolet|colorado",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SS",
+    "Z71",
+    "RS",
+    "LT",
+    "LS",
+    "WT",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

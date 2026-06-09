@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|suzuki|grandvitara",
+  "year": 2011,
+  "make": "Suzuki",
+  "model": "Grand Vitara",
+  "ladder_id": "brochure_llm_2011__suzuki__grandvitara",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "18-inch alloy wheels",
+      "Wood interior trim appliqué",
+      "Leather-appointed interior",
+      "Heated front seats",
+      "Power glass sunroof with tilt feature and 1-touch control",
+      "Roof rack rails",
+      "Front foglamps",
+      "SmartPass Keyless Start and Entry",
+      "Premium AM/FM/CD/AUX/MP3 7-speaker audio system",
+      "Leather-wrapped steering wheel"
+    ],
+    "Premium Limited": [
+      "4-Mode 4WD in place of Single-Mode on 4x4 models"
+    ],
+    "Premium": [
+      "Full-time 4WD system"
+    ],
+    "Base": [
+      "60/40 split-reclining and folding rear seats",
+      "Electronic Stability Program",
+      "Bosch 4-wheel disc ABS with electronic brake-force distribution",
+      "Advanced dual-stage front airbags with SRS",
+      "Front-seat-mounted side-impact airbags",
+      "Side-curtain airbags front and rear",
+      "3-point front and rear seat belts with pretensioners",
+      "ISOFIX child seat restraint anchors",
+      "Tire Pressure Monitoring System"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2018|bmw|6series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "6 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Executive",
+    "Platinum",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

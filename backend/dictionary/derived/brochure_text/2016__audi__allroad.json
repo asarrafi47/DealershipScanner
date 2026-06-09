@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2016|audi|allroad",
+  "year": 2016,
+  "make": "Audi",
+  "model": "Allroad",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2016_Audi_Allroad_Brochure.pdf",
+  "page_count": 38,
+  "all_pages": false,
+  "trim_hint_pages": [
+    31,
+    32,
+    33,
+    34,
+    35,
+    38
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 31,
+      "trim_hint": true,
+      "text": "Decorative Inlays and Wheels\nAluminum Trigon Dark Brown Walnut Wood 18\u201c 5-arm-allroad\u00ae design 18\u201c 10-arm design\nStandard Optional\nFine Grain Ash Natural Brown Wood\nStandard Optional\nOptional\nFind a local dealer\nExterior colors, interior colors, wheels and decorative inlay options will vary based on model, trim level, and package combination. See your dealer for details.",
+      "table_lines": []
+    },
+    {
+      "page": 32,
+      "trim_hint": true,
+      "text": "Exterior Colors\nBrilliant Black Ibis White Florett Silver metallic Glacier White metallic\nFull-paint finish Full-paint finish\nMonsoon Gray metallic Moonlight Blue metallic Mythos Black metallic Scuba Blue metallic\nFull-paint finish\nTornado Gray metallic Utopia Blue metallic\nBuild your allroad\u00ae\nExplore local inventory\nExterior colors will vary based on model, trim level, and package combination. See your dealer for details.",
+      "table_lines": []
+    },
+    {
+      "page": 33,
+      "trim_hint": true,
+      "text": "I nterior Colors and Seat Selections\nBlack leather Chestnut Brown leather\nStandard Seat Sport Seat\nStandard, Sport Standard, Sport\nTitanium Gray leather Velvet Beige leather\nStandard, Sport Standard\nExterior colors, interior colors, wheels and decorative inlay options will vary based on model, trim level, and package combination. See your dealer for details.",
+      "table_lines": []
+    },
+    {
+      "page": 34,
+      "trim_hint": true,
+      "text": "Technical Specifications\nEngineering | Performance allroad\u00ae\nEngine type Four-cylinder\nEngine block/Cylinder head Cast-iron/Aluminum-alloy\nDisplacement (cc)/Bore and stroke (mm) 1,984/82.5 x 92.8\nHorsepower (@ rpm) 220 @ 4,450\u20136,000\nTorque (lb-ft @ rpm) 258 @ 1,500\u20134,300\nCompression ratio 9.6:1\nValvetrain 16-valve DOHC with valvelift system\nInduction/Fuel injection Turbocharged/TFSI\u00ae\nAcceleration (0\u201360 mph) 6.4 seconds\nTop track speed1 130 mph\nTransmission | Drivetrain\nEight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive \uf06e\nBody | Suspension | Chassis\nFully galvanized steel unibody with multistep anti-corrosion protection \uf06e\nFive-link front suspension \uf06e\nTrapezoidal-link rear suspension \uf06e\nSport suspension Available\nVentilated front disc/Solid rear disc brakes (in) 12.6/11.8\nElectromechanical power steering system \uf06e\nSteering ratio 15.9:1\nTurning diameter, curb-to-curb (ft) 37.7\n\uf06e Standard \u2014\u2014 Not applicable\nFind a local dealer",
+      "table_lines": [
+        "Engine type | Four-cylinder",
+        "Displacement (cc)/Bore and stroke (mm) | 1,984/82.5 x 92.8",
+        "Torque (lb-ft @ rpm) | 258 @ 1,500\u20134,300",
+        "Valvetrain | 16-valve DOHC with valvelift system",
+        "Acceleration (0\u201360 mph) | 6.4 seconds",
+        "Eight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive | \uf06e",
+        "Fully galvanized steel unibody with multistep anti-corrosion protection | \uf06e",
+        "Trapezoidal-link rear suspension | \uf06e",
+        "Ventilated front disc/Solid rear disc brakes (in) | 12.6/11.8",
+        "Steering ratio | 15.9:1"
+      ]
+    },
+    {
+      "page": 35,
+      "trim_hint": true,
+      "text": "Technical Specifications\nExterior measurements allroad\u00ae\nWheelbase (in) 110.4\nLength (in) 185.9\nHeight (in) 58.0\nOverall width with mirrors (in) 79.0\nOverall width without mirrors (in) 72.5\nTrack (in, front/rear) 62.3/62.0\nGround clearance, loaded (in) 7.1\nCurb weight (lb) 3,891\nDrag coefficient (Cw) .36\nInterior measurements\nHead room with sunroof (in, front/rear) 38.5/38.2\nLeg room (in, front/rear) 41.3/35.2\nShoulder room (in, front/rear) 55.5/54.3\nCargo volume (cu ft, rear seatbacks up/with seats folded) 27.6/50.5\nSeating capacity 5\nEPA mileage estimates | Capacities | Emissions\nTiptronic\u00ae automatic transmission (city/highway/combined)1 NA\nEngine oil (qt) 4.9\nFuel (gal) 16.1\nRecommended fuel Premium\nEmissions rating ULEV II\nExplore local inventory\nTest drive the 2016 allroad\u00ae\nNA Information not available at time of printing\n1 2016 EPA estimates and emissions data not available at time of printing. See www.fueleconomy.gov for updated information. Your mileage and emissions will vary and depend on several factors, including your driving habits and vehicle condition.",
+      "table_lines": [
+        "Wheelbase (in) | 110.4",
+        "Height (in) | 58.0",
+        "Overall width without mirrors (in) | 72.5",
+        "Ground clearance, loaded (in) | 7.1",
+        "Drag coefficient (Cw) | .36",
+        "Head room with sunroof (in, front/rear) | 38.5/38.2",
+        "Shoulder room (in, front/rear) | 55.5/54.3",
+        "Seating capacity | 5",
+        "Engine oil (qt) | 4.9",
+        "Recommended fuel | Premium"
+      ]
+    },
+    {
+      "page": 38,
+      "trim_hint": true,
+      "text": "allroad\u00ae Note: A word about this brochure. Audi of America, Inc., believes the specifications in this brochure to be correct at the time of printing. However, specifications, standard equipment, options, fabrics, and colors are subject\n> 2016 to change without notice. Some equipment may be unavailable when your vehicle is built. Please ask your dealer for advice concerning current availability of standard and optional equipment, and your dealer will verify that\nyour vehicle will include the equipment you ordered. Vehicles in this brochure are shown with optional equipment. See your dealer for complete details on the Audi New Vehicle Limited Warranty, twelve-year limited war-\nranty against corrosion perforation, and Audi 24/7 Roadside Assistance. (Roadside assistance coverage provided by Road America in the U.S. Certain conditions apply; see your dealer for details.) Tires supplied by various\nmanufacturers. \u201cAudi,\u201d all model names, \u201cAudi connect,\u201d \u201cAudi Sport,\u201d \u201cFSI,\u201d \u201cMMI,\u201d \u201cmultitronic,\u201d \u201cquattro,\u201d \u201cSideguard,\u201d \u201cSingleframe\u201d and the Singleframe grille design, \u201cS line,\u201d \u201cS tronic,\u201d \u201cTFSI,\u201d \u201cTruth in Engineering,\u201d\nand the four rings logo are registered trademarks of AUDI AG. \u201cAlcantara\u201d is a registered trademark of Alcantara S.p.A. \u201cApple,\u201d \u201ciPhone,\u201d and \u201ciPod\u201d are registered trademarks of Apple Inc. \u201cApp Store\u201d is a service mark\nAudi of America\nof Apple Inc. \u201cBang & Olufsen\u201d is a registered trademark of Bang & Olufsen. The BLUETOOTH word mark and logos are owned by the Bluetooth SIG, Inc., and any use of such marks by AUDI AG is under license. \u201cGoogle,\u201d\nAudiusa.com\nFacebook.com/Audi \u201cGoogle Earth,\u201d \u201cGoogle Play,\u201d \u201cGoogle Street View,\u201d \u201cGoogle Voice,\u201d and \u201cGoogle Voice Search\u201d are trademarks of Google Inc. \u201cHD Radio\u201d and the HD Radio logo are proprietary trademarks of iBiquity Digital Corporation.\n_ \u201cHomelink\u201d is a registered trademark of Johnson Controls Technology Company. \u201cSiriusXM\u201d and all related marks and logos are trademarks of Sirius XM Radio Inc. and its subsidiaries. \u201cTiptronic\u201d is a registered trademark\nof Dr. Ing h.c. F. Porsche AG. \u201cWi-Fi\u201d is a trademark of the Wi-Fi Alliance. All other trademarks are the property of their respective owners. Some European models shown.\n\u00a9 2015\nAudi of America, Inc.\nPrinted in the U.S.A.\nAoA1616347\n>\n>",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 31 ---\nDecorative Inlays and Wheels\nAluminum Trigon Dark Brown Walnut Wood 18\u201c 5-arm-allroad\u00ae design 18\u201c 10-arm design\nStandard Optional\nFine Grain Ash Natural Brown Wood\nStandard Optional\nOptional\nFind a local dealer\nExterior colors, interior colors, wheels and decorative inlay options will vary based on model, trim level, and package combination. See your dealer for details.\n\n--- page 32 ---\nExterior Colors\nBrilliant Black Ibis White Florett Silver metallic Glacier White metallic\nFull-paint finish Full-paint finish\nMonsoon Gray metallic Moonlight Blue metallic Mythos Black metallic Scuba Blue metallic\nFull-paint finish\nTornado Gray metallic Utopia Blue metallic\nBuild your allroad\u00ae\nExplore local inventory\nExterior colors will vary based on model, trim level, and package combination. See your dealer for details.\n\n--- page 33 ---\nI nterior Colors and Seat Selections\nBlack leather Chestnut Brown leather\nStandard Seat Sport Seat\nStandard, Sport Standard, Sport\nTitanium Gray leather Velvet Beige leather\nStandard, Sport Standard\nExterior colors, interior colors, wheels and decorative inlay options will vary based on model, trim level, and package combination. See your dealer for details.\n\n--- page 34 ---\nTechnical Specifications\nEngineering | Performance allroad\u00ae\nEngine type Four-cylinder\nEngine block/Cylinder head Cast-iron/Aluminum-alloy\nDisplacement (cc)/Bore and stroke (mm) 1,984/82.5 x 92.8\nHorsepower (@ rpm) 220 @ 4,450\u20136,000\nTorque (lb-ft @ rpm) 258 @ 1,500\u20134,300\nCompression ratio 9.6:1\nValvetrain 16-valve DOHC with valvelift system\nInduction/Fuel injection Turbocharged/TFSI\u00ae\nAcceleration (0\u201360 mph) 6.4 seconds\nTop track speed1 130 mph\nTransmission | Drivetrain\nEight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive \uf06e\nBody | Suspension | Chassis\nFully galvanized steel unibody with multistep anti-corrosion protection \uf06e\nFive-link front suspension \uf06e\nTrapezoidal-link rear suspension \uf06e\nSport suspension Available\nVentilated front disc/Solid rear disc brakes (in) 12.6/11.8\nElectromechanical power steering system \uf06e\nSteering ratio 15.9:1\nTurning diameter, curb-to-curb (ft) 37.7\n\uf06e Standard \u2014\u2014 Not applicable\nFind a local dealer\n\nEngine type | Four-cylinder\nDisplacement (cc)/Bore and stroke (mm) | 1,984/82.5 x 92.8\nTorque (lb-ft @ rpm) | 258 @ 1,500\u20134,300\nValvetrain | 16-valve DOHC with valvelift system\nAcceleration (0\u201360 mph) | 6.4 seconds\nEight-speed Tiptronic\u00ae automatic transmission with quattro\u00ae all-wheel drive | \uf06e\nFully galvanized steel unibody with multistep anti-corrosion protection | \uf06e\nTrapezoidal-link rear suspension | \uf06e\nVentilated front disc/Solid rear disc brakes (in) | 12.6/11.8\nSteering ratio | 15.9:1\n\n--- page 35 ---\nTechnical Specifications\nExterior measurements allroad\u00ae\nWheelbase (in) 110.4\nLength (in) 185.9\nHeight (in) 58.0\nOverall width with mirrors (in) 79.0\nOverall width without mirrors (in) 72.5\nTrack (in, front/rear) 62.3/62.0\nGround clearance, loaded (in) 7.1\nCurb weight (lb) 3,891\nDrag coefficient (Cw) .36\nInterior measurements\nHead room with sunroof (in, front/rear) 38.5/38.2\nLeg room (in, front/rear) 41.3/35.2\nShoulder room (in, front/rear) 55.5/54.3\nCargo volume (cu ft, rear seatbacks up/with seats folded) 27.6/50.5\nSeating capacity 5\nEPA mileage estimates | Capacities | Emissions\nTiptronic\u00ae automatic transmission (city/highway/combined)1 NA\nEngine oil (qt) 4.9\nFuel (gal) 16.1\nRecommended fuel Premium\nEmissions rating ULEV II\nExplore local inventory\nTest drive the 2016 allroad\u00ae\nNA Information not available at time of printing\n1 2016 EPA estimates and emissions data not available at time of printing. See www.fueleconomy.gov for updated information. Your mileage and emissions will vary and depend on several factors, including your driving habits and vehicle condition.\n\nWheelbase (in) | 110.4\nHeight (in) | 58.0\nOverall width without mirrors (in) | 72.5\nGround clearance, loaded (in) | 7.1\nDrag coefficient (Cw) | .36\nHead room with sunroof (in, front/rear) | 38.5/38.2\nShoulder room (in, front/rear) | 55.5/54.3\nSeating capacity | 5\nEngine oil (qt) | 4.9\nRecommended fuel | Premium\n\n--- page 38 ---\nallroad\u00ae Note: A word about this brochure. Audi of America, Inc., believes the specifications in this brochure to be correct at the time of printing. However, specifications, standard equipment, options, fabrics, and colors are subject\n> 2016 to change without notice. Some equipment may be unavailable when your vehicle is built. Please ask your dealer for advice concerning current availability of standard and optional equipment, and your dealer will verify that\nyour vehicle will include the equipment you ordered. Vehicles in this brochure are shown with optional equipment. See your dealer for complete details on the Audi New Vehicle Limited Warranty, twelve-year limited war-\nranty against corrosion perforation, and Audi 24/7 Roadside Assistance. (Roadside assistance coverage provided by Road America in the U.S. Certain conditions apply; see your dealer for details.) Tires supplied by various\nmanufacturers. \u201cAudi,\u201d all model names, \u201cAudi connect,\u201d \u201cAudi Sport,\u201d \u201cFSI,\u201d \u201cMMI,\u201d \u201cmultitronic,\u201d \u201cquattro,\u201d \u201cSideguard,\u201d \u201cSingleframe\u201d and the Singleframe grille design, \u201cS line,\u201d \u201cS tronic,\u201d \u201cTFSI,\u201d \u201cTruth in Engineering,\u201d\nand the four rings logo are registered trademarks of AUDI AG. \u201cAlcantara\u201d is a registered trademark of Alcantara S.p.A. \u201cApple,\u201d \u201ciPhone,\u201d and \u201ciPod\u201d are registered trademarks of Apple Inc. \u201cApp Store\u201d is a service mark\nAudi of America\nof Apple Inc. \u201cBang & Olufsen\u201d is a registered trademark of Bang & Olufsen. The BLUETOOTH word mark and logos are owned by the Bluetooth SIG, Inc., and any use of such marks by AUDI AG is under license. \u201cGoogle,\u201d\nAudiusa.com\nFacebook.com/Audi \u201cGoogle Earth,\u201d \u201cGoogle Play,\u201d \u201cGoogle Street View,\u201d \u201cGoogle Voice,\u201d and \u201cGoogle Voice Search\u201d are trademarks of Google Inc. \u201cHD Radio\u201d and the HD Radio logo are proprietary trademarks of iBiquity Digital Corporation.\n_ \u201cHomelink\u201d is a registered trademark of Johnson Controls Technology Company. \u201cSiriusXM\u201d and all related marks and logos are trademarks of Sirius XM Radio Inc. and its subsidiaries. \u201cTiptronic\u201d is a registered trademark\nof Dr. Ing h.c. F. Porsche AG. \u201cWi-Fi\u201d is a trademark of the Wi-Fi Alliance. All other trademarks are the property of their respective owners. Some European models shown.\n\u00a9 2015\nAudi of America, Inc.\nPrinted in the U.S.A.\nAoA1616347\n>\n>"
+}

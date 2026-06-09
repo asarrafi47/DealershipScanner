@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|cadillac|elr",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "ELR",
+  "ladder_id": "brochure_llm_2014__cadillac__elr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELR with Luxury Package",
+    "ELR"
+  ],
+  "adds_by_trim": {
+    "ELR with Luxury Package": [
+      "20-inch 7-spoke ultra-bright aluminum wheels with midnight silver premium painted accents"
+    ],
+    "ELR": [
+      "20-inch 7-spoke ultra-bright aluminum wheels with blade silver painted accents and machined finish",
+      "P245/40R20 all-season tires",
+      "CUE infotainment system with navigation and touchscreen controls",
+      "Twin LED light-blade taillamps with etched Cadillac script",
+      "Interior materials including burl grain Olive Ash or Laurel wood, genuine carbon fiber, and premium leather",
+      "Electronic cupholder cover that opens and closes automatically",
+      "LED interior cabin lighting",
+      "OnStar RemoteLink mobile app for charging customization",
+      "Charging mode selection via multi-touch CUE system or mobile app",
+      "Side mirror charging indicator lights that pulse green during charging"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2011|audi|r8",
+  "year": 2011,
+  "make": "Audi",
+  "model": "R8",
+  "ladder_id": "brochure_llm_2011__audi__r8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R8 5.2",
+    "R8 4.2",
+    "R8 SPYDER"
+  ],
+  "adds_by_trim": {
+    "R8 5.2": [
+      "5.2-liter V10 FSI engine with increased displacement and power",
+      "Available carbon fiber sigma sideblades as optional exterior styling element"
+    ],
+    "R8 4.2": [
+      "4.2-liter V8 FSI engine with reduced displacement compared to 5.2",
+      "Available carbon fiber sigma sideblades as optional exterior styling element"
+    ],
+    "R8 SPYDER": [
+      "Convertible configuration with retractable acoustic hardtop",
+      "Available black or brown acoustic top color options",
+      "Open-air driving experience with powered soft-top mechanism"
+    ]
+  }
+}

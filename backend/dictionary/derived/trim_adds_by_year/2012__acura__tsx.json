@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2012|acura|tsx",
+  "year": 2012,
+  "make": "acura",
+  "model": "tsx",
+  "ladder_id": "generic_acura_tsx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Technology",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Traffic® and navWeather™ subscriptions. navigation-equipped vehicles include 90 days of XM nav"
+    ],
+    "Technology": [
+      "Acura Navigation System with Voice Recognition and Traffic Rerouting",
+      "Rearview camera",
+      "Acura/ELS Surround 415-watt Premium Audio System with 10 speakers and HDD media storage",
+      "DVD-Audio player with Dolby Pro Logic II",
+      "AcuraLink Real-Time Traffic and Weather",
+      "GPS-linked solar-sensing dual-zone automatic climate control",
+      "Song By Voice voice control",
+      "Remote-linked power-operated tailgate on Sport Wagon"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1
+    }
+  }
+}

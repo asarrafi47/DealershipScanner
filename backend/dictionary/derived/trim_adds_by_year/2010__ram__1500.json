@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2010|ram|1500",
+  "year": 2010,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "inventory_ram_1500",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "SE",
+    "Th"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "BusinessLinkIf your business relies on vehicles,",
+      "Insurance provided through 21st Century",
+      "(CONTINUED) SAFETY AND SECURITY",
+      "nts should NEVER ride in the front seat of a vehicle with a passenger front air bag. All occupa",
+      "out this catalog: Since the time of printing, some of the information you\u2019ll find in this catalog may have been updated. Ask your dealer for details. Some of the equipment shown or described through"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Th": 0
+    }
+  }
+}

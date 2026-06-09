@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|volvo|s80",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "S80",
+  "ladder_id": "brochure_llm_2013__volvo__s80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premier Plus",
+    "Premier"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Navigation system",
+      "Park Assist Camera",
+      "Premium Sound audio system with twelve loudspeakers and 650W amplifier",
+      "Volvo Sensus driver-control interface with integrated thumb scroll"
+    ],
+    "Premier Plus": [
+      "Active Dual Xenon headlamps with Active Bending Lights",
+      "Front blind view camera (retailer installed accessory)"
+    ],
+    "Premier": [
+      "City Safety collision avoidance technology standard",
+      "Dynamic Stability and Traction Control (DSTC)",
+      "Adaptive brake light",
+      "7-inch hi-resolution in-dash color screen",
+      "Bluetooth communication systems",
+      "MP3 and iPod connections"
+    ]
+  }
+}

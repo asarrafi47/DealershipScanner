@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
 </head>
 <body class="lp-body">
 
@@ -34,7 +35,7 @@
                         <input type="password" name="password" required>
                     </div>
 
-                    <button type="submit" class="primary-button full-width">Login</button>
+                    <button type="submit" class="primary-button full-width" id="login-submit">Login</button>
                 </form>
 
                 {% if google_signin_enabled %}
@@ -50,6 +51,16 @@
 
     </div>
 
-    <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
+    <script nonce="{{ csp_nonce }}">
+    (function () {
+        const form = document.querySelector(".auth-form");
+        const btn = document.getElementById("login-submit");
+        if (!form || !btn) return;
+        form.addEventListener("submit", function () {
+            btn.disabled = true;
+            btn.textContent = "Signing in…";
+        });
+    })();
+    </script>
 </body>
 </html>

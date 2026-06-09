@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2012|nissan|maxima",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2012__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SV TECHNOLOGY PACKAGE",
+    "3.5 SV SPORT PACKAGE",
+    "3.5 SV MONITOR PACKAGE",
+    "3.5 SV PREMIUM PACKAGE",
+    "3.5 SV COLD PACKAGE",
+    "3.5 LE LIMITED EDITION PACKAGE",
+    "3.5"
+  ],
+  "adds_by_trim": {
+    "3.5 SV TECHNOLOGY PACKAGE": [
+      "Nissan Hard Drive Navigation System with touch-screen voice activation and 7-inch display",
+      "XM NavTraffic and XM NavWeather with Zagat Survey restaurant reviews",
+      "Streaming audio via Bluetooth wireless technology",
+      "DVD video playback capability"
+    ],
+    "3.5 SV SPORT PACKAGE": [
+      "Sport-tuned suspension and trunk chassis reinforcement",
+      "19-inch aluminum-alloy Light Hyper Silver finish wheels",
+      "P245/40R19 V-rated all-season tires",
+      "Dark-finish sport grille and smoked headlights",
+      "High Intensity Discharge (HID) xenon headlights",
+      "Heated outside mirrors with reverse tilt-down feature",
+      "Rear spoiler"
+    ],
+    "3.5 SV MONITOR PACKAGE": [
+      "Dual Panel Moonroof with power retractable sunshades",
+      "Information Center with 7.0-inch color monitor",
+      "RearView Monitor",
+      "USB connection port for iPod interface",
+      "iPod storage net inside center console",
+      "Premium mood lighting"
+    ],
+    "3.5 SV PREMIUM PACKAGE": [
+      "Climate-controlled driver's seat (heated and cooled)",
+      "Information Center with 7-inch color monitor",
+      "RearView Monitor",
+      "USB connection port for iPod interface and compatible devices"
+    ],
+    "3.5 SV COLD PACKAGE": [
+      "Heated front seats, steering wheel, and outside mirrors",
+      "Atlantic Cherry wood-tone trim (replaces metallic trim)"
+    ],
+    "3.5 LE LIMITED EDITION PACKAGE": [
+      "Auto-dimming driver-side outside mirror",
+      "Driver's Memory System",
+      "18-inch aluminum-alloy Dark Hyper Silver finish wheels",
+      "Heated leather-wrapped steering wheel with paddle shifters",
+      "Dark-finish sport grille and smoked headlights",
+      "Power-tilt/telescoping steering column",
+      "High Intensity Discharge (HID) xenon headlights",
+      "Premium leather-appointed seats with heated front seats",
+      "Fog lights",
+      "Rear bucket seats with 3-passenger capacity"
+    ],
+    "3.5": [
+      "3.5-liter DOHC 24-valve V6 engine with 290 hp and 261 lb-ft torque",
+      "Front-Wheel Drive with Xtronic CVT and DS mode",
+      "18-inch aluminum-alloy Fine Silver finish wheels with P245/45R18 tires",
+      "Independent strut-type front and multi-link rear suspension",
+      "Vehicle-speed-sensitive power steering",
+      "4-wheel Anti-lock Braking System (ABS) with Electronic Brake force Distribution",
+      "Vented front and rear disc brakes"
+    ]
+  }
+}

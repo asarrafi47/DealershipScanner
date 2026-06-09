@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2023_volkswagen_taos_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Taos",
+    "Taos"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; Front-engine, all-wheel-drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "of torque, and front-wheel drive as standard.; 6-speaker system | Leather-trimmed seating"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; Front-engine, all-wheel-drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "of torque, and front-wheel drive as standard.; 6-speaker system | Leather-trimmed seating"
+      }
+    ]
+  }
+}

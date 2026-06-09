@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2013|audi|sport",
+  "year": 2013,
+  "make": "Audi",
+  "model": "sport",
+  "ladder_id": "brochure_llm_2013__audi__sport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS 5",
+    "R8 4.2"
+  ],
+  "adds_by_trim": {
+    "RS 5": [
+      "450 hp 4.2L FSI V8 engine with 317 lb-ft torque",
+      "Seven-speed Audi S tronic dual-clutch transmission",
+      "RS 5 sport suspension calibration with Audi drive select",
+      "Audi adaptive cruise control and side assist systems",
+      "Audi advanced key keyless start, stop and entry",
+      "Dynamic steering with Audi sports differential",
+      "Gloss Black Audi Singleframe grille with LED daytime running lights",
+      "RS exclusive dual oval exhaust outlets"
+    ],
+    "R8 4.2": [
+      "430 hp 4.2L FSI V8 engine with 317 lb-ft torque",
+      "Six-speed manual or R tronic automated manual transmission options",
+      "Audi quattro all-wheel drive with R8 tuned sport suspension",
+      "Audi ultra lightweight technology with ASF aluminum space frame",
+      "14.4-inch ventilated eight-piston caliper front disc brakes",
+      "19-inch 5-arm double-spoke design wheels with summer performance tires",
+      "Xenon plus headlights with LED daytime running light technology",
+      "Audi Navigation plus with six-disc CD changer or music interface",
+      "Driver and front passenger dual-stage airbags with side and head curtain airbags"
+    ]
+  }
+}

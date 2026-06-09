@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2021|maserati|levante",
+  "year": 2021,
+  "make": "maserati",
+  "model": "levante",
+  "ladder_id": "brochure_web_2021__maserati__levante",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Levante Trofeo V8 Ultima AWD",
+    "Levante Modena Ultima AWD",
+    "Levante GT Ultima AWD"
+  ],
+  "adds_by_trim": {
+    "Levante Trofeo V8 Ultima AWD": [
+      "4.0-liter twin-turbo V-8 engine with 572 hp and 538 lb-ft torque",
+      "0-60 acceleration in 3.8 seconds",
+      "Limited-edition V8 Ultima designation with special fender logo",
+      "22-inch Orione wheels",
+      "Nero Assoluto dark granite or Blu Royale exterior color options",
+      "Pale Terracotta and black leather seats"
+    ],
+    "Levante Modena Ultima AWD": [
+      "3.0-liter twin-turbo V-6 engine with 424 hp and 428 lb-ft torque",
+      "0-60 acceleration in 5.0 seconds",
+      "Sport front and rear fascia",
+      "21-inch Anteo wheels with gloss red brake calipers",
+      "Soft-close doors",
+      "Black leather interior with red stitching",
+      "Ventilated front seats and heated rear seats",
+      "14-speaker Harman Kardon audio system"
+    ],
+    "Levante GT Ultima AWD": [
+      "3.0-liter twin-turbo V-6 engine with 345 hp and 369 lb-ft torque",
+      "0-60 acceleration in 5.8 seconds",
+      "Soft-close doors standard",
+      "20-inch dark wheels with gloss black brake calipers",
+      "Black exterior trim pieces",
+      "Ventilated front seats and heated rear seats",
+      "Power sport seats with memory function",
+      "14-speaker Harman Kardon audio",
+      "8.4-inch touchscreen with Apple CarPlay and Android Auto"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/maserati/levante/"
+}

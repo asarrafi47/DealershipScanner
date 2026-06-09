@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1997,Chevrolet,Blazer,2WD,4.3L V6 ((FFS) (MPFI)),4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,15,21,17,,,,,
+1997,Chevrolet,Blazer,2WD,4.3L V6 ((FFS) (MPFI)),4.3L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,16,23,19,,,,,
+1997,Chevrolet,Blazer,AWD,4.3L V6 ((FFS) (MPFI)),4.3L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,15,20,16,,,,,
+1997,Chevrolet,Blazer,4WD,4.3L V6 ((FFS) (MPFI)),4.3L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,15,20,16,,,,,
+1997,Chevrolet,Blazer,4WD,4.3L V6 ((FFS) (MPFI)),4.3L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,15,20,17,,,,,

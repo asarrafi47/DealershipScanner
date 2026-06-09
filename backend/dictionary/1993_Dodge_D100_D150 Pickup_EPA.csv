@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1993,Dodge,D100/D150 Pickup,2WD,3.9L V6 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.9,14,16,15,,,,,,3.9L V6,
-1993,Dodge,D100/D150 Pickup,2WD,3.9L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.9,14,18,15,,,,,,3.9L V6,
-1993,Dodge,D100/D150 Pickup,2WD,3.9L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.9,14,17,15,,,,,,3.9L V6,
-1993,Dodge,D100/D150 Pickup,2WD,5.2L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.2,11,16,13,,,,,,5.2L V8,
-1993,Dodge,D100/D150 Pickup,2WD,5.2L V8 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.2,12,16,13,,,,,,5.2L V8,
-1993,Dodge,D100/D150 Pickup,2WD,5.9L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.9,11,15,13,,,,,,5.9L V8,
-1993,Dodge,D100/D150 Pickup,2WD,5.9L V8 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.9,10,14,12,,,,,,5.9L V8,

@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2016|ford|mustang",
+  "year": 2016,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "generic_ford_mustang",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "coverage, and 5-year/unlimited-mile corrosion (perforation)"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1
+    }
+  }
+}

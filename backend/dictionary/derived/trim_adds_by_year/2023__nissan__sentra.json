@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2023|nissan|sentra",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2023__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "18-inch aluminum-alloy wheels instead of 16-inch",
+      "LED headlights with LED signature daytime running lights",
+      "LED turn signal indicators",
+      "Dark chrome V-Motion grille",
+      "Black outside mirrors",
+      "Side sill extensions and sport rear design",
+      "Body-color rear spoiler with chrome exhaust finisher",
+      "Prima-Tex seats with contrast orange stitching",
+      "6-way power adjustable driver's seat with 2-way power lumbar",
+      "Bose Premium Audio System with eight speakers"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels instead of steel",
+      "Heated outside mirrors",
+      "Nissan Intelligent Key with push button ignition",
+      "Premium cloth seat trim",
+      "NissanConnect 8-inch color touchscreen display",
+      "Two USB-A ports and one USB-C port",
+      "SiriusXM with 3-month subscription included",
+      "Vehicle Security System"
+    ],
+    "S": [
+      "2.0-liter 4-cylinder engine with 149 hp and 146 lb-ft of torque",
+      "Xtronic CVT continuously variable transmission",
+      "Independent strut front and multi-link rear suspension",
+      "Intelligent Forward Collision Warning with automatic emergency braking",
+      "Lane Departure Warning and Blind Spot Warning",
+      "RearView Monitor with rear sonar system",
+      "Intelligent Cruise Control with Intelligent Auto Headlights",
+      "7-inch Advanced Drive-Assist Display",
+      "Apple CarPlay and Android Auto integration",
+      "Ten standard air bags and standard Safety Shield 360"
+    ]
+  }
+}

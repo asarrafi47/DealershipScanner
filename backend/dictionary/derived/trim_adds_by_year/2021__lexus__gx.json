@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2021|lexus|gx",
+  "year": 2021,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2021__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds Standard four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Standard six-year/70,000-mile Powertrain Warranty",
+      "Adds Standard six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Includes Crawl Control for low-speed off-road terrain",
+      "Adds Includes backup camera with rear view monitoring"
+    ],
+    "Sport": [
+      "Upgraded to performance tires (18 or 19-inch)"
+    ],
+    "Limited": [
+      "Upgraded to premium leather seating surfaces"
+    ],
+    "Premium": [
+      "Adds captain's chairs seating configuration for up to six passengers",
+      "Adds Mark Levinson premium audio system"
+    ],
+    "Luxury": [
+      "Adds captain's chairs seating configuration for up to six passengers",
+      "Adds Panoramic View Monitor for enhanced vehicle surround visibility",
+      "Adds Multi-Terrain Monitor for off-road terrain awareness"
+    ]
+  }
+}

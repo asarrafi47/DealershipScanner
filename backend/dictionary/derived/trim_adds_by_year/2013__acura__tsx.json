@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2013|acura|tsx",
+  "year": 2013,
+  "make": "acura",
+  "model": "tsx",
+  "ladder_id": "brochure_llm_2013__acura__tsx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TSX V-6 Sedan with Technology Package",
+    "TSX V-6 Sedan",
+    "TSX Special Edition",
+    "TSX with Technology Package",
+    "TSX"
+  ],
+  "adds_by_trim": {
+    "TSX V-6 Sedan with Technology Package": [
+      "280-hp 3.5-liter 24-valve SOHC VTEC V-6 engine",
+      "18-inch aluminum-alloy wheels with P235/45 R18 high-performance all-season tires",
+      "Acura Navigation System with Voice Recognition and rearview camera",
+      "Acura/ELS Surround 415-watt Premium Audio with HDD media storage and DVD-Audio",
+      "GPS-linked solar-sensing dual-zone automatic climate control",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting"
+    ],
+    "TSX V-6 Sedan": [
+      "280-hp 3.5-liter 24-valve SOHC VTEC V-6 engine",
+      "18-inch aluminum-alloy wheels with P235/45 R18 high-performance all-season tires",
+      "Active Sound Control"
+    ],
+    "TSX Special Edition": [
+      "Close-ratio 6-speed manual transmission option",
+      "Aggressive front corner spoilers and unique rear bumper fascia",
+      "Exclusive ebony Lux Suede interior with red accent stitching",
+      "Red instrument illumination and ambient cabin lighting",
+      "Silver-colored Sequential SportShift paddle shifters",
+      "Aluminum sport pedals and ebony headliner"
+    ],
+    "TSX with Technology Package": [
+      "Acura Navigation System with Voice Recognition and rearview camera",
+      "Acura/ELS Surround 415-watt Premium Audio with HDD media storage and DVD-Audio",
+      "GPS-linked solar-sensing dual-zone automatic climate control",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "Song By Voice feature"
+    ],
+    "TSX": [
+      "201-hp 2.4-liter 16-valve DOHC i-VTEC 4-cylinder engine",
+      "5-speed automatic transmission with Sequential SportShift paddle shifters",
+      "Front-wheel drive with 4-wheel independent double-wishbone suspension",
+      "17-inch aluminum-alloy wheels with P225/50 R17 high-performance all-season tires",
+      "Dual-zone automatic climate control with air filtration",
+      "Sport seats with perforated leather interior and contrast stitching",
+      "Heated power-adjustable driver and front passenger seats",
+      "Power moonroof with tilt feature",
+      "Acura 360-watt Premium Sound System with XM Radio and 7 speakers",
+      "Auto-on/off xenon HID headlights with fog lights"
+    ]
+  }
+}

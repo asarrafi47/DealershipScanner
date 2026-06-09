@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2023|chevrolet|bolt",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "ladder_id": "brochure_llm_2023__chevrolet__bolt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Leather-appointed seating surfaces",
+      "Heated front seats",
+      "8-way power driver seat",
+      "Heated leather-wrapped steering wheel",
+      "Rear Cross Traffic Alert",
+      "Rear Park Assist",
+      "HD Surround Vision",
+      "Available Adaptive Cruise Control",
+      "Lane Change Alert with Side Blind Zone Alert",
+      "17-inch machined-face aluminum wheels"
+    ],
+    "1LT": [
+      "17-inch Silver-painted aluminum wheels",
+      "DC Public Charging capable with 11.5-kW charging module",
+      "HD Rear Vision Camera",
+      "Chevy Safety Assist with Automatic Emergency Braking and Lane Keep Assist",
+      "Cloth front bucket seats",
+      "Remote vehicle starter system",
+      "Flat-bottom steering wheel with Carbon Flash-painted bowtie emblem",
+      "10.2-inch diagonal color touchscreen",
+      "Wireless Apple CarPlay and Android Auto compatibility",
+      "Keyless Open and Start"
+    ]
+  }
+}

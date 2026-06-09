@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2017|astonmartin|db11",
+  "year": 2017,
+  "make": "Aston Martin",
+  "model": "db11",
+  "ladder_id": "brochure_web_2017__astonmartin__db11",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "DB11 V12 Coupe",
+    "DB11 Volante",
+    "DB11 V8 Coupe"
+  ],
+  "adds_by_trim": {
+    "DB11 V12 Coupe": [
+      "5.2-liter twin-turbocharged V-12 engine producing 630 hp and 516 lb-ft of torque",
+      "0-60 mph in 3.5 seconds",
+      "In-house developed and produced V-12 engine",
+      "Smooth-running twelve-cylinder powerplant"
+    ],
+    "DB11 Volante": [
+      "Convertible body style with folding-top mechanism",
+      "Open-air driving with V-8 engine acoustics",
+      "Top speed of 192 mph"
+    ],
+    "DB11 V8 Coupe": [
+      "4.0-liter twin-turbocharged V-8 engine from Mercedes-AMG with 527 hp and 498 lb-ft of torque",
+      "0-60 mph in 3.9 seconds",
+      "Eight-speed automatic transmission",
+      "360-degree view camera system with front and rear parking sensors",
+      "Self-parking technology and blind-spot monitoring",
+      "8.0-inch infotainment screen with built-in navigation and Bluetooth",
+      "Eight-speaker audio system",
+      "Electronically adjustable Bilstein shocks",
+      "10.0 cubic feet trunk space",
+      "EPA-rated 18/24 mpg city/highway"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/aston-martin/db11/"
+}

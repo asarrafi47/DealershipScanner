@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2022|fiat|500",
+  "year": 2022,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2022__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT TREKKING PLUS",
+    "SPORT TREKKING",
+    "TREKKING",
+    "POP"
+  ],
+  "adds_by_trim": {
+    "SPORT TREKKING PLUS": [
+      "Dual-Zone Automatic Temperature Control",
+      "Auto High-Beam Headlamp Control",
+      "LED front fog lamps with cornering function",
+      "Bi-function LED projector headlamps",
+      "17-inch Matte Black machined aluminum wheels",
+      "Deep-tint sunscreen glass",
+      "Door courtesy lamps",
+      "Premium perforated leather-trimmed bucket seats in Black",
+      "Sport Dark Grey instrument panel with Alcantara cluster brow",
+      "3.5-inch TFT color display for vehicle information"
+    ],
+    "SPORT TREKKING": [
+      "Sport fascia with Dark Grey accents",
+      "Dark Grey door handles and mirror accents",
+      "Bright dual exhaust tips",
+      "Sport front and rear floor mats with accent stitching",
+      "Bright pedal covers",
+      "Sport leather-trimmed bucket seats in Black",
+      "3.5-inch TFT color display for vehicle information"
+    ],
+    "TREKKING": [
+      "Trekking fascia with Satin accents",
+      "Satin Silver door handles",
+      "Trekking Value Plus Package features available",
+      "Rain-sensitive windshield wiper control",
+      "Flash cloth bucket seats in Black",
+      "Tar Cold Gray instrument panel bezel",
+      "3.5-inch TFT color display for vehicle information"
+    ],
+    "POP": [
+      "1.3L MultiAir Turbo Direct-Injection I-4 Engine with Stop/Start Technology",
+      "9-speed Automatic transmission",
+      "All-Wheel Drive (AWD) system",
+      "FIAT Dynamic Selector with 3 driving modes",
+      "Electric power steering with tilt/telescoping column",
+      "MacPherson front suspension with KONI Frequency Selective Damping",
+      "LED daytime running headlamps and LED taillamps",
+      "Push-button start with keyless entry",
+      "Monogrammed cloth bucket seats in Slate Blue",
+      "3.5-inch TFT black-and-white vehicle information display"
+    ]
+  }
+}

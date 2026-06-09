@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2018|bmw|x6",
+  "year": 2018,
+  "make": "BMW",
+  "model": "X6",
+  "ladder_id": "brochure_llm_2018__bmw__x6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "X6 xDrive 50i",
+    "X6 xDrive35i",
+    "X6 sDrive35i"
+  ],
+  "adds_by_trim": {
+    "X6 xDrive 50i": [
+      "4.4-liter TwinPower Turbo V-8 engine with 445 hp and 480 lb-ft torque",
+      "0-60 mph in 4.6 seconds",
+      "Executive Package available: soft-close automatic doors, rear manual side-window shades, leather dashboard, ceramic controls"
+    ],
+    "X6 xDrive35i": [
+      "xDrive all-wheel drive system",
+      "18/24/20 combined EPA fuel economy versus 18/25/21 on sDrive35i"
+    ],
+    "X6 sDrive35i": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 300 hp and 300 lb-ft torque",
+      "Rear-wheel drive configuration",
+      "0-60 mph in 6.0 seconds",
+      "Access to Cold Weather, Driver Assistance, Driver Assistance Plus, Dynamic Handling, Luxury Seating packages"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2019|porsche|718",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "718",
+  "ladder_id": "brochure_llm_2019__porsche__718",
+  "source": "brochure_llm",
+  "trims_available": [
+    "718 Boxster S",
+    "718 Cayman S",
+    "718 Boxster",
+    "718 Cayman"
+  ],
+  "adds_by_trim": {
+    "718 Boxster S": [
+      "2.5-liter turbocharged boxer engine producing 350 horsepower and 309 lb.-ft. torque",
+      "Variable Turbine Geometry (VTG) turbocharger technology",
+      "19-inch Boxster S and Cayman S alloy wheels",
+      "4-piston aluminum monobloc fixed brake calipers in red, front and rear",
+      "Centrally positioned twin tailpipe in brushed stainless steel",
+      "Leather-lined door armrests and center console storage compartment cover"
+    ],
+    "718 Cayman S": [
+      "2.5-liter turbocharged boxer engine producing 350 horsepower and 309 lb.-ft. torque",
+      "Variable Turbine Geometry (VTG) turbocharger technology",
+      "19-inch Boxster S and Cayman S alloy wheels",
+      "4-piston aluminum monobloc fixed brake calipers in red, front and rear",
+      "Centrally positioned twin tailpipe in brushed stainless steel",
+      "Leather-lined door armrests and center console storage compartment cover"
+    ],
+    "718 Boxster": [
+      "2.0-liter turbocharged boxer engine producing 300 horsepower and 280 lb.-ft. torque",
+      "18-inch Boxster and Cayman alloy wheels",
+      "4-piston aluminum monobloc fixed brake calipers in black, front and rear",
+      "Bi-Xenon headlights",
+      "Porsche Communication Management (PCM) system with mobile phone preparation and Sound Package Plus",
+      "Net-type wind-deflector grille",
+      "Sports-look pedals and footrest",
+      "Leather-trimmed steering wheel, gear lever, door handle inlays"
+    ],
+    "718 Cayman": [
+      "2.0-liter turbocharged boxer engine producing 300 horsepower and 280 lb.-ft. torque",
+      "18-inch Boxster and Cayman alloy wheels",
+      "4-piston aluminum monobloc fixed brake calipers in black, front and rear",
+      "Bi-Xenon headlights",
+      "Porsche Communication Management (PCM) system with mobile phone preparation and Sound Package Plus",
+      "Net-type wind-deflector grille",
+      "Sports-look pedals and footrest",
+      "Leather-trimmed steering wheel, gear lever, door handle inlays"
+    ]
+  }
+}

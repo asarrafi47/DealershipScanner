@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|lamborghini|aventador",
+  "year": 2019,
+  "make": "Lamborghini",
+  "model": "aventador",
+  "ladder_id": "brochure_llm_2019__lamborghini__aventador",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Aventador SVJ",
+    "Aventador S"
+  ],
+  "adds_by_trim": {
+    "Aventador SVJ": [
+      "Active Lamborghini Aerodynamics (ALA 2.0) system with integrated vehicle dynamics",
+      "Magneto-rheological suspension with optimized damping logic for increased downforce",
+      "Stiffer anti-roll bars providing 50% increased stiffness versus SV model",
+      "Improved damping force range of 15% versus SV for enhanced track performance",
+      "Aero Vectoring system integrated with rear fixed spoiler",
+      "Higher cornering speed capability through integrated suspension and aerodynamic systems"
+    ],
+    "Aventador S": [
+      "V12 6498cc engine producing 770 CV at 8,500 rpm",
+      "7-speed ISR gearbox with drive-select dependent shifting characteristics",
+      "4WD with Haldex generation IV all-wheel drive system",
+      "Carbon-ceramic brake discs front and rear with CCB system",
+      "Lamborghini Dynamic Steering (LDS) and Rear Wheel Steering (RWS)",
+      "Push-rod magneto-rheological active suspension front and rear",
+      "Carbon fiber monocoque frame with aluminum front and rear frames",
+      "Pirelli P Zero Corsa tires 255/30 ZR20 front and 355/25 ZR21 rear",
+      "Front dual-stage driver airbag and adaptive passenger airbag system",
+      "Fixed spoiler with ALA system and Aero Vectoring capability"
+    ]
+  }
+}

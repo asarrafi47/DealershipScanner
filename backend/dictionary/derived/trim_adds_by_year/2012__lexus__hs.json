@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2012|lexus|hs",
+  "year": 2012,
+  "make": "lexus",
+  "model": "HS",
+  "ladder_id": "brochure_2012__lexus__hs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adds hybrid powertrain with 1.8L engine",
+      "Adds backup camera",
+      "Adds Lane Keep Assist with Lane Departure Warning",
+      "Adds Driver Attention Monitor",
+      "Adds Pre-Collision System",
+      "Adds SmartAccess keyless entry system with engine immobilizer",
+      "Adds Bluetooth technology phone compatibility",
+      "Adds Lexus Enform and Safety Connect telematics services"
+    ],
+    "Limited": [
+      "Upgraded to enhanced safety package",
+      "Adds Wide Front-view Monitor",
+      "Adds Adaptive Front Lighting System"
+    ],
+    "Premium": [
+      "Adds premium audio system with Mark Levinson technology",
+      "Adds SiriusXM satellite radio service"
+    ],
+    "Luxury": [
+      "Adds enhanced navigation system with premium mapping capabilities"
+    ]
+  }
+}

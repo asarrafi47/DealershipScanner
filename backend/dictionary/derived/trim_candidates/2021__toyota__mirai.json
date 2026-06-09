@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2021|toyota|mirai",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Mirai",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features Adds to or replaces features offered on XLE",
+      "T oyota Fuel Cell System (TFCS) T oyota Fuel Cell System (TFCS)",
+      "P ermanent magnet AC synchronous P ermanent magnet AC synchronous",
+      "R ear-Wheel Drive (RWD) R ear-Wheel Drive (RWD)",
+      "E CO, Normal and Sport driving modes E CO, Normal and Sport driving modes",
+      "F ront and rear multi-link suspension F ront and rear multi-link suspension",
+      "F ront and rear ventilated disc brakes F ront and rear ventilated disc brakes",
+      "Exterior Features Exterior Features",
+      "B i-beam auto-leveling LED headlights D ual fixed Panoramic View Moonroof",
+      "M ulti-LED front and rear turn signal indicators, with power sliding shade",
+      "Daytime Running Lights (DRL), clearance lights 1 9-in. black machined-finish aluminum alloy",
+      "L ED taillights and rear combination lights R ain-sensing variable windshield wipers"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

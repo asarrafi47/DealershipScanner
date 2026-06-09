@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2018|kia|forte",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_2018__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 2.0L MPI engine with 147-hp ULEV/SULEV powertrain",
+      "Adds standard Bluetooth wireless technology connectivity",
+      "Adds 24-hour Roadside Assistance service plan",
+      "Adds 10-year/100,000-mile powertrain warranty",
+      "Adds 5-year/60,000-mile basic warranty"
+    ],
+    "Sport": [],
+    "Premium": [],
+    "Limited": [],
+    "LX": [
+      "2.0L Multipoint Injection engine with 147 hp",
+      "6-speed manual or automatic transmission",
+      "Power sunroof",
+      "15-inch steel wheels with 195/65R15 tires",
+      "Basic cloth seat trim",
+      "4-speaker audio system with AM/FM/CD/MP3/SiriusXM",
+      "Tilt and telescopic steering column",
+      "Power windows and door locks"
+    ],
+    "EX": [
+      "2.0L Gasoline Direct Injection engine with 164 hp",
+      "Front LED accent lights",
+      "Rear LED taillights",
+      "Front fog lights",
+      "17-inch alloy wheels with 215/45R17 tires",
+      "Leather seat trim",
+      "Ventilated front seats",
+      "Automatic climate control with dual-zone temperature",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "SX": [
+      "1.6L turbocharged engine with 201 hp and 195 lb-ft torque",
+      "7-speed dual-clutch transmission with steering-wheel paddle shifters",
+      "HID headlights with dynamic bending light",
+      "Unique sport bumpers with red accent trim",
+      "Dual chrome exhaust tips",
+      "18-inch alloy wheels with 225/40R18 tires",
+      "D-shaped leather-wrapped steering wheel",
+      "Larger front sport suspension brakes",
+      "UVO eServices with voice-command navigation and 7-inch touchscreen"
+    ]
+  }
+}

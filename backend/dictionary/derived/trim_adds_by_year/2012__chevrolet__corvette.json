@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2012|chevrolet|corvette",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_2012__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZR1",
+    "Z06",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 100,000-mile/5-year transferable Powertrain Limited Warranty",
+      "Adds Features 24/7 Roadside Assistance Program"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "Z06": [
+      "5.5-liter naturally aspirated flat-plane-crank V-8 with 670 hp and 460 lb-ft torque",
+      "0-60 mph in 2.6-2.8 seconds",
+      "RWD configuration"
+    ],
+    "ZR1": [
+      "5.5-liter twin-turbo V-8 engine with 1,064 hp and 828 lb-ft torque",
+      "LT7 flat-plane-crank engine with unique internals, cams, and cylinder heads",
+      "Extra oil scavenge stage and supplementary port fuel-injection system",
+      "Aero kit enabling 215 mph top speed",
+      "Quarter-mile capability under 9.7 seconds at 150 mph"
+    ]
+  }
+}

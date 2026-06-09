@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2019|volkswagen|tiguan",
+  "year": 2019,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "2020_volkswagen_tiguan_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "he system to function. T",
+      "navigation route. Periodically, the mapping is updated and an update will be required in order to maintain the latest"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

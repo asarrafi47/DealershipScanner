@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2016|cadillac|cts",
+  "year": 2016,
+  "make": "Cadillac",
+  "model": "CTS",
+  "ladder_id": "brochure_llm_2016__cadillac__cts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CTS V-Sport Premium Collection",
+    "CTS V-Sport",
+    "CTS Premium Collection",
+    "CTS Performance Collection",
+    "CTS Luxury Collection",
+    "CTS"
+  ],
+  "adds_by_trim": {
+    "CTS V-Sport Premium Collection": [
+      "18-inch aluminum wheels with midnight silver painted pockets and machined finish",
+      "Performance summer-only run-flat tires"
+    ],
+    "CTS V-Sport": [
+      "18-inch aluminum wheels with midnight silver premium painted finish",
+      "Performance summer-only run-flat tires"
+    ],
+    "CTS Premium Collection": [
+      "18-inch aluminum wheels with polished finish",
+      "Available on CTS Performance and Premium Collections"
+    ],
+    "CTS Performance Collection": [
+      "18-inch aluminum wheels with premium painted finish",
+      "Available on CTS Luxury, Performance and Premium Collections"
+    ],
+    "CTS Luxury Collection": [
+      "17-inch aluminum wheels with ultrabright finish",
+      "Available wheel upgrades to 18-inch or 19-inch options"
+    ],
+    "CTS": [
+      "17-inch aluminum wheels with painted finish",
+      "Powertrain limited warranty with no deductible for 6 years/70,000 miles",
+      "Roadside Assistance Program and Courtesy Transportation Program",
+      "Bumper-to-bumper coverage for 4 years/50,000 miles",
+      "Rust-through coverage for 6 years/unlimited mileage on body sheet metal"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2019|lincoln|navigator",
+  "year": 2019,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_2019__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Select",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Lincoln Pickup & Delivery service with complimentary loaner vehicle",
+      "Adds Lincoln Way app for scheduling service and managing account",
+      "Adds Lincoln Concierge personal service team",
+      "Adds 6-month complimentary CLEAR membership for biometric airport security access",
+      "Adds Lincoln Connect remote vehicle control features",
+      "Adds Amazon Alexa integration for remote vehicle operation"
+    ],
+    "Limited": [
+      "eatures may be offered only in combination with other options or subject to additional ordering requirements/limitations. Dimensions shown may vary due to optional f"
+    ],
+    "Standard": [],
+    "Select": [
+      "Driver and front-passenger dual-stage front airbags with restraint control module",
+      "Safety Canopy® System with 3-row side-curtain airbags and rollover sensor",
+      "AdvanceTrac® with Roll Stability Control™",
+      "MyKey® system",
+      "Premium carpeted floor mats with Lincoln logo",
+      "Leather-trimmed instrument panel and door armrests",
+      "Black Velvet-painted power-deployable running boards with lower bodyside accents"
+    ],
+    "Reserve": [
+      "Trevino premium leather-trimmed 1st-, 2nd- and 3rd-row seats",
+      "Premium leather-trimmed 1st- and 2nd-row seats (SELECT has this)",
+      "Lincoln Drive Control featuring Continuously Controlled Damping (CCD)"
+    ],
+    "Black Label": [
+      "Upgraded to 12-month complimentary CLEAR membership"
+    ]
+  }
+}

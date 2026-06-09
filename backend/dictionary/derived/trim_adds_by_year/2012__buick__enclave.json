@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2012|buick|enclave",
+  "year": 2012,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2012__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Leather",
+    "Convenience",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "8-inch color screen rear-seat DVD entertainment system with 2 wireless headphones",
+      "Bose 10-speaker 5.1 Surround Sound system with rear audio controls",
+      "Navigation system with 5-inch color display and rearview camera",
+      "20-inch chrome-clad aluminum wheels",
+      "Second-row console",
+      "Available rear-seat entertainment and navigation combination audio system"
+    ],
+    "Leather": [
+      "Premium leather seating surfaces throughout vehicle",
+      "Driver seat heated with memory and 8-way power adjustment with power recline",
+      "Front passenger seat heated 4-way power with lumbar support",
+      "Power tilt/telescopic steering column",
+      "19-inch chrome-clad aluminum wheels",
+      "Bose sound system with 10-speaker configuration"
+    ],
+    "Convenience": [
+      "Ultrasonic rear parking assist with rearview camera system",
+      "Remote vehicle starter system",
+      "Bose sound system with AM/FM Stereo, CD player, MP3 playback, RDS, Theftlock",
+      "115-volt household-style power outlet and USB port",
+      "All-wheel-drive system available",
+      "8-passenger seating configuration available"
+    ],
+    "Standard": [
+      "3.6L V-6 engine with VVT and direct injection producing 288 hp",
+      "6-speed automatic transmission with front-wheel drive",
+      "7-passenger seating with captain's chairs and flat-folding bench",
+      "AM/FM Stereo with CD player and MP3 playback",
+      "Bluetooth cell-phone connectivity with 6 speakers",
+      "High-intensity discharge HID xenon projector headlamps with blue-tint lenses",
+      "Auto-dimming inside rearview mirror with compass and outside temperature display",
+      "Tri-zone automatic climate control with individual settings",
+      "Power windows with driver express-up/down and rear liftgate",
+      "QuietTuning noise and vibration reduction technology"
+    ]
+  }
+}

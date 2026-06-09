@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|ford|ecosport",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Ecosport",
+  "ladder_id": "brochure_2018__ford__ecosport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Titanium",
+    "Active",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds SYNC 3 infotainment system with voice control",
+      "Adds 2 smart-charging USB ports",
+      "Adds responsive touchscreen interface",
+      "Adds Siri Eyes Free compatibility for iPhone pairing"
+    ],
+    "Active": [
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SYNC AppLink for third-party app integration",
+      "Adds voice-activated navigation with turn-by-turn directions"
+    ],
+    "Titanium": [
+      "Adds SiriusXM Traffic & Travel Link subscription",
+      "Adds real-time traffic updates",
+      "Adds fuel station locations and price comparison",
+      "Adds weather and sports scores integration"
+    ],
+    "Limited": [
+      "Adds SYNC Connect with 4G LTE Wi-Fi hotspot for up to 10 devices",
+      "Adds remote vehicle start, stop, lock, and unlock via FordPass",
+      "Adds remote fuel level and mileage monitoring",
+      "Adds FordPass smartphone app with 24/7 Ford Guides support"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Jeep,Wrangler,4WD,2.5L I4 ((FFS)),2.5L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.5,16,19,17,,,,,
+1988,Jeep,Wrangler,4WD,4.2L V6 ((FFS)),4.2L V6,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.2,14,15,14,,,,,
+1988,Jeep,Wrangler,4WD,4.2L V6 ((FFS)),4.2L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.2,15,20,17,,,,,

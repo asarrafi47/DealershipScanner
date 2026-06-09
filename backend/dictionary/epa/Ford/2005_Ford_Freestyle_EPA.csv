@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Ford,Freestyle,FWD,3.0L V6,3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.0,18,25,20,,,,,
+2005,Ford,Freestyle,AWD,3.0L V6,3.0L V6 Twin Turbo,Twin Turbocharged,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.0,17,22,19,,,,,

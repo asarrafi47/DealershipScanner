@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2015|volvo|xc60",
+  "year": 2015,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2015__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T6 AWD R-Design Platinum",
+    "T6 AWD R-Design Premier Plus",
+    "T6 AWD R-Design"
+  ],
+  "adds_by_trim": {
+    "T6 AWD R-Design Platinum": [
+      "Inscription Package with perforated leather upholstery and Inscription logo",
+      "Leather-covered dashboard",
+      "Power lumbar support",
+      "Inscription-branded aluminum tread plates and floor mats",
+      "Linear walnut wood inlay",
+      "Anthracite black headliner"
+    ],
+    "T6 AWD R-Design Premier Plus": [
+      "Technology Package: Adaptive Cruise Control with Queue Assist",
+      "Collision Warning with Full Auto Brake",
+      "Pedestrian and Cyclist Detection with Full Auto Brake",
+      "Driver Alert Control and Lane Departure Warning",
+      "Active High Beam and Road Sign Information"
+    ],
+    "T6 AWD R-Design": [
+      "3.0L Turbocharged I-6 with 325 hp and 354 lb-ft torque",
+      "6-speed Geartronic automatic transmission with Advanced Quick Shift",
+      "Electronically Controlled AWD with Instant Traction",
+      "Active Dual Xenon Headlights",
+      "Exclusive Blue Adaptive Digital TFT Display with R-Design Graphics",
+      "R-Design Split Leather Upholstery and Unique R-Design Grille",
+      "20-inch IXION II alloy wheels",
+      "Harman Kardon Premium Sound with connected navigation",
+      "Laminated panoramic roof with power sunshade",
+      "Keyless Drive with Personal Car Communicator"
+    ]
+  }
+}

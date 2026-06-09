@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2012|kia|sorento",
+  "year": 2012,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2012__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "Stainless-steel front and rear accent plates",
+      "Body-color bumpers",
+      "Lower stance with distinctive SX styling"
+    ],
+    "EX": [
+      "UVO3 in-vehicle infotainment system with 4.3-inch color touchscreen",
+      "Microsoft voice-activation technology with speech pattern recognition",
+      "Hands-free phone control and music management via voice command"
+    ],
+    "LX": [
+      "3.5L V6 engine with 276 hp (available option)",
+      "Split-folding second-row seats",
+      "Split-folding third-row seats (available)",
+      "Six airbags with advanced sensor system",
+      "Front active headrests",
+      "Traction Control System (TCS)",
+      "Electronic Stability Control (ESC)",
+      "Tire-Pressure Monitoring System",
+      "LATCH child seat anchors for three second-row positions",
+      "6-speed automatic transmission with Sportmatic manual-shift capability"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_genesis_tahoe_complete_options",
+  "make": "Genesis",
+  "models": [
+    "Tahoe",
+    "Tahoe"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "List of Hyundai engines; Latest technology in the 2021 Chevrolet Tahoe: Compare all specifications and co"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "External links Wikimedia Commons has media related to: Genesis Motor (cate"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,BMW,i7,eDrive50 Sedan (19 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,87,95,90,,,,,
+2024,BMW,i7,eDrive50 Sedan (20 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,83,90,86,,,,,
+2024,BMW,i7,eDrive50 Sedan (21 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,86,92,88,,,,,
+2024,BMW,i7,M70 xDrive Sedan (20 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,74,80,77,,,,,
+2024,BMW,i7,M70 xDrive Sedan (21 inch Wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,79,85,81,,,,,
+2024,BMW,i7,xDrive60 Sedan (19 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),Four-Wheel Drive,Electricity,Large Cars,,,87,93,90,,,,,
+2024,BMW,i7,xDrive60 Sedan (20 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),Four-Wheel Drive,Electricity,Large Cars,,,82,87,84,,,,,
+2024,BMW,i7,xDrive60 Sedan (21 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),Four-Wheel Drive,Electricity,Large Cars,,,86,91,88,,,,,

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|dodge|charger",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2017__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat",
+    "SRT 392",
+    "R/T Scat Pack",
+    "R/T",
+    "SXT",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SRT Hellcat": [
+      "6.2L Supercharged HEMI V8 with 8-speed high-performance automatic transmission",
+      "Laguna leather with SRT Hellcat Logo seats",
+      "SRT steering wheel with leather-wrapped design",
+      "SRT interior accents"
+    ],
+    "SRT 392": [
+      "392 HEMI V8 with Fuel Saver Technology and iDFSO with 8-speed automatic transmission",
+      "Laguna leather with SRT Logo seats",
+      "SRT steering wheel with leather-wrapped design",
+      "SRT interior accents"
+    ],
+    "R/T Scat Pack": [
+      "5.7L HEMI VVT V8 with Fuel Saver Technology and iDFSO with 8-speed automatic transmission",
+      "Sport leather seats with metallic or non-metallic bolsters",
+      "10 amplified speakers with 552-watt amplifier and subwoofer"
+    ],
+    "R/T": [
+      "5.7L HEMI VVT V8 with Fuel Saver Technology and iDFSO with 8-speed automatic transmission",
+      "Sport leather seats with metallic or non-metallic bolsters",
+      "Heated front seats"
+    ],
+    "SXT": [
+      "3.6L Pentastar VVT V6 with 8-speed automatic transmission",
+      "Sport cloth seats",
+      "Dual-Zone Automatic Temperature Control with humidity sensor"
+    ],
+    "SE": [
+      "3.6L Pentastar Variable Valve Timing V6 with 8-speed automatic transmission",
+      "Cloth seats",
+      "Full-length floor console with rear climate control outlets and 12-volt power supply",
+      "6 speakers"
+    ]
+  }
+}

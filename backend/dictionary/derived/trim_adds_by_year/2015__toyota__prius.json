@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2015|toyota|prius",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2015__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FIVE",
+    "FOUR",
+    "THREE",
+    "TWO"
+  ],
+  "adds_by_trim": {
+    "FIVE": [
+      "LED headlights with auto level control, auto on/off feature and headlight cleaners",
+      "Integrated fog lights",
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires",
+      "SofTex-trimmed heated front seats with 8-way power-adjustable driver's seat and power lumbar support",
+      "SofTex-trimmed tilt/telescopic steering wheel with audio and climate controls",
+      "Premium HDD Navigation with 7-inch touchscreen, JBL speakers and Entune App Suite",
+      "Advanced Technology Package with Dynamic Radar Cruise Control, Pre-Collision System and Lane Keep Assist",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "FOUR": [
+      "Projector-beam halogen headlights with auto on/off feature",
+      "Power tilt/slide moonroof with Solar Powered Ventilation and Remote Air Conditioning",
+      "Deluxe Solar Roof Package with Head-Up Display and Premium HDD Navigation",
+      "SofTex-trimmed heated front seats with 8-way power-adjustable driver's seat",
+      "SofTex-trimmed tilt/telescopic steering wheel",
+      "Front foot-area illumination",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "THREE": [
+      "17-inch 5-spoke dark metal finish alloy wheels with P215/45R17 tires",
+      "Heated power outside mirrors with turn signal indicators and folding features",
+      "SofTex-trimmed front seats with gray stitching and 6-way driver adjustment",
+      "Display Audio with Navigation, Entune App Suite and JBL speakers",
+      "Dark chrome accents on door grips, steering wheel and shifter",
+      "Custom Persona Series exterior badge"
+    ],
+    "TWO": [
+      "Projector-beam halogen headlights with auto-off feature",
+      "Star Safety System with Enhanced Vehicle Stability Control and Traction Control",
+      "Advanced Airbag System with side airbags and side curtain airbags",
+      "Driver and front passenger active headrests",
+      "Hill Start Assist Control",
+      "Engine immobilizer",
+      "Fabric-trimmed front seats with 6-way adjustable driver's seat",
+      "Display Audio with 6.1-inch touchscreen and integrated backup camera"
+    ]
+  }
+}

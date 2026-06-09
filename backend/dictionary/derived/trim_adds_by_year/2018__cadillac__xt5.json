@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2018|cadillac|xt5",
+  "year": 2018,
+  "make": "Cadillac",
+  "model": "XT5",
+  "ladder_id": "brochure_llm_2018__cadillac__xt5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XT5 Platinum",
+    "XT5 Premium Luxury",
+    "XT5 Luxury",
+    "XT5"
+  ],
+  "adds_by_trim": {
+    "XT5 Platinum": [
+      "20-inch aluminum fully polished midnight finish wheels"
+    ],
+    "XT5 Premium Luxury": [
+      "20-inch aluminum with sterling silver painted finish and argent accents wheels"
+    ],
+    "XT5 Luxury": [
+      "18-inch aluminum with blade silver painted finish wheels"
+    ],
+    "XT5": [
+      "18-inch aluminum with bright machined finish wheels standard",
+      "OnStar available for immediate help and vehicle management",
+      "Premium Care Maintenance covering oil changes and tire rotations for 3 years/36,000 miles",
+      "6 years/70,000 miles powertrain limited warranty with roadside assistance",
+      "4 years/50,000 miles bumper-to-bumper coverage with tire defect protection"
+    ]
+  }
+}

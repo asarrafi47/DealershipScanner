@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2021|jeep|grandcherokee",
+  "year": 2021,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Trackhawk",
+    "SRT",
+    "Summit",
+    "Overland",
+    "Trailhawk",
+    "Limited",
+    "Laredo",
+    "Willys",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

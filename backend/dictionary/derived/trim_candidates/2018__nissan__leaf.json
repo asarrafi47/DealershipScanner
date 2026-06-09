@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2018|nissan|leaf",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Leaf",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

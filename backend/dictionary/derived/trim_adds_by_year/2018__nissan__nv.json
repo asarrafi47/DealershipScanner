@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|nissan|nv",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_llm_2018__nissan__nv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "AM/FM/CD audio system with 5.8-inch color display",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "Streaming audio via Bluetooth wireless technology",
+      "USB connection port",
+      "Chrome power door handles and grille",
+      "Heated outside mirrors",
+      "15-inch steel wheels with split 5-spoke silver wheel covers"
+    ],
+    "S": [
+      "AM/FM/CD audio system with 5.0-inch color display",
+      "Two speakers",
+      "Auxiliary audio input jack",
+      "MP3 CD playback capability",
+      "Black bumpers, door handles and outside mirrors",
+      "Halogen headlights",
+      "15-inch x 5.5-inch steel wheels",
+      "185/60R15 all-season tires"
+    ]
+  }
+}

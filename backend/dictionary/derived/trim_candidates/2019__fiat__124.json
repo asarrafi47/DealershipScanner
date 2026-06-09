@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2019|fiat|124",
+  "year": 2019,
+  "make": "Fiat",
+  "model": "124",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

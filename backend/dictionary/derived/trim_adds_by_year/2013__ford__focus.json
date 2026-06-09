@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2013|ford|focus",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Focus",
+  "ladder_id": "brochure_llm_2013__ford__focus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium",
+    "ST",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "Intelligent Access with push-button start",
+      "Perimeter alarm",
+      "Power front and rear disc brakes with high-performance pads",
+      "Leather-trimmed heated front seats",
+      "Audio System from Sony with 10 speakers and HD Radio",
+      "Dual-zone electronic automatic temperature control",
+      "Front and rear carpeted floor mats",
+      "Metallic finish on door pulls and register surrounds",
+      "Overhead console",
+      "SiriusXM Satellite Radio with 6-month trial subscription"
+    ],
+    "ST": [
+      "2.0L EcoBoost I-4 engine with 252 hp",
+      "6-speed manual transmission",
+      "Full-size spare tire (16 inch)",
+      "Cloth sport seats with ST logo",
+      "Unique ST sport suspension",
+      "Variable-ratio electric power-assisted steering",
+      "Aluminum pedals",
+      "Leather-wrapped shift knob with alloy bevel cap",
+      "Analog mini cluster gauges"
+    ],
+    "SE": [
+      "Cruise control",
+      "PowerShift 6-speed automatic transmission with SelectShift",
+      "Remote Start System with automatic transmission",
+      "Rear 60/40 split fold-down seat with armrest on hatchback",
+      "Leather-trimmed heated front seats",
+      "12-volt rear powerpoint",
+      "AM/FM stereo with single-CD player, MP3, and 6 speakers",
+      "Compass and outside temperature display",
+      "Driver and front-passenger seat back map pockets"
+    ],
+    "S": [
+      "2.0L Ti-VCT GDI I-4 FFV engine with 160 hp",
+      "5-speed manual transmission",
+      "Active Grille Shutter System",
+      "Easy Fuel capless fuel filler",
+      "Quad-beam halogen headlamps",
+      "Solar-tinted glass with variable-intermittent wipers",
+      "Personal Safety System with dual-stage front airbags",
+      "AdvanceTrac electronic stability control",
+      "Torque Vectoring Control",
+      "AM/FM stereo with single-CD player and MP3 capability"
+    ]
+  }
+}

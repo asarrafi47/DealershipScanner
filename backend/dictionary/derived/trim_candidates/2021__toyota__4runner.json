@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|toyota|4runner",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "LE",
+    "SR5",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Rear-Wheel Drive (RWD) Hill Start Assist Control (HAC)33 and available Hill Start Assist Control (HAC)33 and available",
+      "Downhill Assist Control (DAC)34 Downhill Assist Control (DAC)34",
+      "Automatic Limited-Slip Differential",
+      "Up to 16 city/19 highway/17 combined est. mpg35 Up to 16 city/19 highway/17 combined est. mpg35",
+      "Available part-time 4WD system with",
+      "Active Traction Control (A-TRAC) Exterior Features Exterior Features",
+      "Hill Start Assist Control (HAC)33 and available Yakima\u00ae LoadWarrior cargo basket Heated power outside mirrors with turn signal indicators",
+      "Downhill Assist Control (DAC)34",
+      "Up to 16 city/19 highway/17 combined est. mpg35",
+      "Black external emblem overlays",
+      "S ofTex\u00ae-trimmed6 seats"
+    ],
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on SR5 Adds to or replaces features offered on TRD Off-Road Adds to or replaces features offered on TRD Off-Road Premium",
+      "Part-time 4WD system with Active Traction Part-time 4WD system with Active Traction Part-time 4WD system with Active Traction",
+      "Control (A-TRAC) Control (A-TRAC) Control (A-TRAC)",
+      "Hill Start Assist Control (HAC)33 and Multi-Terrain Hill Start Assist Control (HAC)33 and Multi-Terrain Hill Start Assist Control (HAC)33 and Multi-Terrain",
+      "Select (MTS) and Crawl Control (CRAWL)2 Select (MTS) and Crawl Control (CRAWL)2 Select (MTS) and Crawl Control (CRAWL)2",
+      "Locking rear differential Locking rear differential Locking rear differential",
+      "Up to 16 city/19 highway/17 combined est. mpg35 Up to 16 city/19 highway/17 combined est. mpg35 Up to 16 city/19 highway/17 combined est. mpg35",
+      "Exterior Features Exterior Features Exterior Features",
+      "Color-keyed front and rear bumpers with silver accents Blacked-out Toyota emblems, outer door handles,",
+      "Heated front seats",
+      "8-way power-adjustable driver\u2019s seat with",
+      "Yakima\u00ae MegaWarrior cargo basket"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

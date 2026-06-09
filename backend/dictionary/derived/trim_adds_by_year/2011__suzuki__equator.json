@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2011|suzuki|equator",
+  "year": 2011,
+  "make": "Suzuki",
+  "model": "Equator",
+  "ladder_id": "brochure_llm_2011__suzuki__equator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RMZ-4",
+    "Sport",
+    "Premium",
+    "Base",
+    "Sport Short Bed",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "RMZ-4": [
+      "Electronic rear locking differential",
+      "Bilstein performance shocks",
+      "BFGoodrich Rugged Trail 16-inch off-road tires",
+      "Underbody skid plates",
+      "Foglamps",
+      "Leather-wrapped steering wheel",
+      "Vehicle security system",
+      "Driver's seat height adjustment and lumbar support",
+      "Available Rockford Fosgate premium audio system",
+      "Available sunroof and Bluetooth hands-free communication"
+    ],
+    "Sport": [
+      "Vehicle Dynamic Control (VDC)",
+      "Engine immobilizer",
+      "6,300 lbs maximum towing capacity",
+      "Crew cab configuration with 5-passenger seating",
+      "8.6 to 8.9 inches minimum ground clearance"
+    ],
+    "Premium": [
+      "Vehicle Dynamic Control (VDC)",
+      "Engine immobilizer",
+      "6,300 lbs maximum towing capacity"
+    ],
+    "Base": [
+      "Dual-stage advanced front air bags",
+      "Side curtain air bags with front and rear coverage",
+      "Front-seat-mounted side-impact air bags",
+      "Active front headrests",
+      "Variable intermittent wipers",
+      "Tire Pressure Monitoring System",
+      "Side-door guard beam",
+      "Energy-absorbing steering column",
+      "Front and rear crumple zones",
+      "3-point seat belts at all positions"
+    ],
+    "Sport Short Bed": [
+      "Vehicle Dynamic Control (VDC)",
+      "Engine immobilizer",
+      "3,500 lbs maximum towing capacity",
+      "Extended cab with 4-passenger seating"
+    ]
+  }
+}

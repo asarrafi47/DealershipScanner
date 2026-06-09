@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2024|toyota|tundra",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2024__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Capstone",
+    "TRD Pro",
+    "1794 Edition",
+    "Platinum",
+    "Limited",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "Capstone": [
+      "i-FORCE MAX 3.4L-T V6 Hybrid 4x4 powertrain",
+      "CrewMax body style with 6.5-ft. standard bed"
+    ],
+    "TRD Pro": [
+      "i-FORCE MAX 3.4L-T V6 Hybrid 4x4 powertrain",
+      "CrewMax body style with 6.5-ft. standard bed",
+      "26.2-degree approach angle and 24.2-degree departure angle",
+      "69.4-inch front and rear track width",
+      "81.6-inch overall height"
+    ],
+    "1794 Edition": [
+      "Available with i-FORCE MAX Hybrid 4x2 and 4x4 powertrains",
+      "Available in Double Cab and CrewMax configurations",
+      "8.1-ft. long bed option on Double Cab"
+    ],
+    "Platinum": [
+      "Available with i-FORCE MAX Hybrid 4x2 and 4x4 powertrains",
+      "Available in Double Cab and CrewMax configurations",
+      "8.1-ft. long bed option on Double Cab"
+    ],
+    "Limited": [
+      "i-FORCE MAX Hybrid 4x2 and 4x4 powertrain option",
+      "Available in Double Cab and CrewMax configurations",
+      "8.1-ft. long bed option on Double Cab",
+      "5.5-ft. short bed option on CrewMax"
+    ],
+    "SR5": [
+      "Available in Double Cab and CrewMax configurations",
+      "8.1-ft. long bed option on Double Cab",
+      "5.5-ft. short bed option on CrewMax"
+    ],
+    "SR": [
+      "i-FORCE 3.4L-T V6 engine with 4x2 and 4x4 drivetrains",
+      "Double Cab body style standard",
+      "6.5-ft. standard bed and 8.1-ft. long bed options"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2024|infiniti|qx55",
+  "year": 2024,
+  "make": "Infiniti",
+  "model": "QX55",
+  "ladder_id": "brochure_llm_2024__infiniti__qx55",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX55 SENSORY",
+    "QX55 ESSENTIAL",
+    "QX55 LUXE"
+  ],
+  "adds_by_trim": {
+    "QX55 SENSORY": [
+      "Semi-aniline leather-appointed seating",
+      "Chrome inner headlight accents",
+      "Black Natural Maple Wood interior trim accents",
+      "4-way passenger power lumbar support",
+      "Motion Activated Liftgate",
+      "Climate-controlled front seats",
+      "Heated rear seats",
+      "Heated and memory steering wheel",
+      "Bose 16-speaker Performance Series Audio",
+      "Head-Up Display with 3D building graphics navigation"
+    ],
+    "QX55 ESSENTIAL": [
+      "ProPILOT Assist with Steering Assist and Intelligent Cruise Control",
+      "Unique cube design LED headlights with auto levelizer",
+      "Adaptive Front Lighting System",
+      "Rear Door Alert",
+      "Outside mirrors with reverse tilt-down feature",
+      "Dual-occupant memory for driver's seat and outside mirrors",
+      "Power tilting and telescoping steering column",
+      "INFINITI InTouch dual 8-inch and 7-inch LCD displays",
+      "Wireless Apple CarPlay and Android Auto integration",
+      "SiriusXM with 3-month trial access"
+    ],
+    "QX55 LUXE": [
+      "2.0L VC-Turbo 4-cylinder engine with 268 hp and 280 lb-ft torque",
+      "Continuously Variable Transmission with manual shift and paddle shifters",
+      "INFINITI Intelligent All-Wheel Drive",
+      "Hill start assist with electronic parking brake and auto brake hold",
+      "20-inch dark-painted and machine-finished aluminum-alloy wheels",
+      "LED automatic-on/off headlights with signature Daytime Running Lights",
+      "LED front fog lights",
+      "Power folding and heated outside mirrors",
+      "Power moonroof with acoustic front-row side window glass",
+      "Leather-appointed seating with 8-way power adjustable front seats"
+    ]
+  }
+}

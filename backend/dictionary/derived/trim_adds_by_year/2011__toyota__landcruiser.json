@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|toyota|landcruiser",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "ladder_id": "generic_toyota_landcruiser",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "trademarks and trade names are those of their respective owners. The Bluetooth® wireless technology phones listed on toyota.com",
+      "information provided. Services not available in every city or roadway.",
+      "avigation System Owner’s Manual or contact XM for details. 10. The backup camera does not provide a comprehensive view of the rear area of the vehicle. You should",
+      "ressure is critically low. For optimal tire wear and performance, tire p",
+      "al subscription terms available; charges vary by subscription term selected. 16. The cooler box replaces the center-console",
+      "n vehicle control under adverse conditions. It is not a substitute for safe driving practices. Factors including",
+      ". Do not use a rearward-facing child seat in any front passenger seat. The force of an inflating AB may cause serious injury or death. See your Owner’s Manual"
+    ],
+    "Land Cruiser": [
+      "12.3-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "12.3-inch driver information display",
+      "Power heated and ventilated front seats",
+      "Sound system with 10 or 14 speakers",
+      "Head-up display via Premium package",
+      "Digital rearview mirror via Premium package"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 7.0,
+    "per_trim_add_counts": {
+      "Limited": 7
+    }
+  }
+}

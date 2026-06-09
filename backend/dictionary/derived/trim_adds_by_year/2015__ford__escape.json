@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2015|ford|escape",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2015__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "1.6L EcoBoost I-4 engine with Active Grille Shutters",
+      "10-way power driver's seat with power lumbar support",
+      "8-speaker audio system",
+      "Dual-zone electronic automatic temperature control",
+      "110-volt power outlet",
+      "Black roof-rack side rails",
+      "Reverse Sensing System and perimeter alarm",
+      "Unique cloth seats",
+      "Driver's seat back map pocket"
+    ],
+    "S": [
+      "2.5L Duratec I-4 engine with Active Grille Shutters",
+      "6-way manual driver's seat and 4-way manual front-passenger seat",
+      "6-speaker AM/FM stereo with single-CD player and MP3 capability",
+      "6 cupholders",
+      "SYNC with MyFord voice-activated connectivity and 4.2-inch LCD displays",
+      "Day/night rearview mirror with illuminated visor vanity mirrors",
+      "17-inch steel wheels with Sparkle Silver-painted covers and P235/55R17 tires",
+      "Quad-beam halogen headlamps",
+      "Remote Keyless Entry System with 2 remotes",
+      "Privacy glass on rear doors and liftgate window"
+    ]
+  }
+}

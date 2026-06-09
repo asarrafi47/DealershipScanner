@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Mercedes-Benz,ML-Class,ML350 4matic,3.5L V6 (SIDI),3.5L V6 Turbo,Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,6,3.5,17,22,19,,,,,
+2012,Mercedes-Benz,ML-Class,ML550 4matic,4.7L V8,4.7L V8 Turbo,Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,4.7,15,20,17,,,,,
+2012,Mercedes-Benz,ML-Class,ML63 AMG,5.5L V8,5.5L V8 Turbo,Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,5.5,14,18,15,,,,,
+2012,Mercedes-Benz,ML-Class,ML350 4matic,FFV 3.5L V6 (SIDI; FFV),3.5L V6 Turbo,Turbocharged,Automatic 7-spd,Four-Wheel Drive,Premium Gasoline / E85,Sport Utility Vehicle - 4WD,6,3.5,18,23,20,,,,,

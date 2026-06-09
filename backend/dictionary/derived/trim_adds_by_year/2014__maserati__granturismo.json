@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|maserati|granturismo",
+  "year": 2014,
+  "make": "maserati",
+  "model": "granturismo",
+  "ladder_id": "brochure_2014__maserati__granturismo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds oval grille with Trident symbol",
+      "Adds standard oval exhaust tailpipes with Shadowline styling",
+      "Adds front bumper with air intakes for brake cooling",
+      "Adds Brembo brake calipers",
+      "Adds alloy wheels"
+    ],
+    "Sport": [
+      "Upgraded to LED Daytime Running Lights with new steel finish",
+      "Upgraded to tail lights with fumé finish and 96 LEDs",
+      "Adds central splitter in black as standard",
+      "Upgraded to 20-inch Astro Design alloy wheels",
+      "Adds optional carbon fiber central splitter upgrade",
+      "Adds optional Chromeline exhaust finish option",
+      "Adds innovative metallic Blu Sofisticato finish option",
+      "Adds Blu Opaco Anodizzato wheel finish option"
+    ],
+    "Limited": []
+  }
+}

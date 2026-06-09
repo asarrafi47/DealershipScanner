@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2016|scion|ia",
+  "year": 2016,
+  "make": "Scion",
+  "model": "iA",
+  "ladder_id": "brochure_web_2016__scion__ia",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "iA 4dr Sdn Auto (Natl)",
+    "iA 4dr Sdn Man (Natl)"
+  ],
+  "adds_by_trim": {
+    "iA 4dr Sdn Auto (Natl)": [
+      "Six-speed automatic transmission instead of manual",
+      "Improved fuel economy rating of 33/42 mpg city/highway"
+    ],
+    "iA 4dr Sdn Man (Natl)": [
+      "Seven-inch touchscreen infotainment system with smartphone app capability",
+      "Rearview camera for backup visibility",
+      "Two USB ports for device connectivity",
+      "Low-speed pre-collision safety system",
+      "60/40 split-folding rear seats for cargo expansion",
+      "Bluetooth streaming for internet radio (Pandora, Aha, Stitcher)",
+      "1.5-liter I-4 engine rated at 106 hp and 104 lb-ft of torque",
+      "Six-speed manual transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/ia/"
+}

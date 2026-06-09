@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_toyota_corolla_cross_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Corolla Cross",
+    "Corolla Cross"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: It is only offered with a 1.8-litre 2ZR-FE petrol engine in Standard or High tri (was Petrol hybrid:; All-wheel drive option is available for hybrid models. The Corolla Cross)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Petrol hybrid:; All-wheel drive option is available for hybrid models. The Corolla Cross"
+      }
+    ]
+  }
+}

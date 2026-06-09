@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2018|ram|commercial",
+  "year": 2018,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_llm_2018__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Laramie": [
+      "Light Frost Beige leather-trimmed interior",
+      "Seating for six passengers with enhanced space"
+    ],
+    "Limited": [
+      "Extensive leather trim throughout interior",
+      "Premium comfort and luxury refinements"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2022|landrover|rangeroversport",
+  "year": 2022,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_2022__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds advanced technology suite for improved driving experience",
+      "Adds dynamic SUV performance and capability focus",
+      "Adds sportier design cues and muscular stance",
+      "Adds driver assistance technologies",
+      "Adds versatility and personalization options"
+    ],
+    "Sport": [
+      "Adds All Wheel Drive (AWD) as standard driveline",
+      "Adds Automatic transmission",
+      "Adds 24.1-gallon fuel tank capacity",
+      "Adds core safety and driver assistance technologies",
+      "Adds dynamic SUV performance capability"
+    ],
+    "Limited": [
+      "Upgraded to expanded fuel tank capacity of 27.6 gallons",
+      "Adds engine option flexibility with multiple powertrain choices"
+    ],
+    "Standard": [
+      "Adds enhanced capability features"
+    ],
+    "HSE": [
+      "Adds stylish design touches for distinctive interpretation"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|chevrolet|suburban",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2011__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Autoride Suspension Package with adaptive damping",
+      "Perforated leather-appointed heated and cooled front bucket seats with 12-way power",
+      "Driver memory seat and power recline with lumbar support",
+      "AM/FM stereo with CD/MP3 player and touch-screen navigation radio",
+      "Bose Centerpoint Surround Sound 10-speaker system",
+      "20-inch polished-aluminum wheels",
+      "Side Blind Zone Alert safety feature",
+      "Tri-zone automatic climate controls"
+    ],
+    "LT": [
+      "Tri-zone automatic climate controls with individual settings",
+      "Custom Leather-appointed heated front bucket seats with 10-way power",
+      "Bose nine-speaker sound system",
+      "Power-remote liftgate",
+      "Remote vehicle starter system included",
+      "Rear Parking Assist with Ultrasonic sensors",
+      "Rearview camera system",
+      "Inside auto-dimming rearview mirror"
+    ],
+    "LS": [
+      "Premium Cloth front bucket seats with six-way power driver seat",
+      "Floor console",
+      "Eight-speaker sound system",
+      "AM/FM stereo with CD/MP3 player",
+      "USB port",
+      "XM Radio with three trial months",
+      "Bluetooth wireless technology for select phones",
+      "Black assist steps"
+    ]
+  }
+}

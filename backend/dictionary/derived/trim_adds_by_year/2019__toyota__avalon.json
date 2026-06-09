@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2019|toyota|avalon",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2019__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "XSE",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adaptive Variable Suspension (AVS) system",
+      "LED headlights with smoked chrome bezels and laser-ablation design with dynamic auxiliary turn signals",
+      "LED taillights with laser-ablation design and dynamic auxiliary turn signals",
+      "Piano-black rear spoiler",
+      "Sport sound-tuned exhaust with quad chrome tips",
+      "Entune 3.04 Premium Audio with JBL, 14 speakers, subwoofer, 1200W amplifier",
+      "Active Noise Control (ANC) and Engine Sound Enhancement (ESE)",
+      "8-way adjustable driver and passenger seats with 4-way power lumbar support",
+      "Heated and ventilated front seats, heated rear seats",
+      "10-inch color Head-Up Display (HUD) with customizable settings"
+    ],
+    "XSE": [
+      "Sport-tuned suspension",
+      "Power tilt/slide moonroof",
+      "LED reflector headlights with smoked chrome bezels and on/off feature with auto on/off DRL",
+      "Front piano-black grille with sport mesh insert",
+      "Piano-black heated power outside mirrors with memory features",
+      "Tilt/telescopic premium leather-wrapped steering wheel with paddle shifters",
+      "8-way adjustable driver seat with 4-way power lumbar support",
+      "Heated and ventilated front seats"
+    ],
+    "XLE": [
+      "3.5-Liter V6 with 301 hp @ 6600 rpm",
+      "8-Speed Electronically Controlled Automatic Transmission (Direct Shift-8AT)",
+      "LED reflector headlights and LED Daytime Running Lights (DRL)",
+      "Front chrome grille surround with dark gray insert",
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators",
+      "17-inch silver-painted alloy wheels with P215/55R17 tires",
+      "Entune 3.04 Audio Plus with App Suite, Apple CarPlay, Scout GPS Link compatible",
+      "SofTex-trimmed heated front seats with perforation and Ultrasuede",
+      "Smart Key System on front doors and trunk with Push Button Start",
+      "Toyota Safety Sense P (TSS-P) with Pre-Collision System, Lane Departure Alert, Automatic High Beams, Dynamic Radar Cruise Control"
+    ]
+  }
+}

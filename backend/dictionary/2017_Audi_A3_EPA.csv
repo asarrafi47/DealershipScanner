@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2017,Audi,A3,quattro,2.0L I4 (SIDI),Automatic (AM-S6),All-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,24,31,27,,,,,,2.0L I4 Turbo,Turbocharged
-2017,Audi,A3,Cabriolet quattro,2.0L I4 (SIDI),Automatic (AM-S6),All-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,22,30,25,,,,,,2.0L I4 Turbo,Turbocharged
-2017,Audi,A3,e-tron,Plug-in Hybrid 1.4L I4 (SIDI; PHEV),Automatic (AM-S6),Front-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,1.4,33,36,34,,,,,,1.4L I4,
-2017,Audi,A3,A3,2.0L I4 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,26,35,29,,,,,,2.0L I4 Turbo,Turbocharged
-2017,Audi,A3,Cabriolet,2.0L I4 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,25,34,28,,,,,,2.0L I4 Turbo,Turbocharged

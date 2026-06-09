@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2014,Nissan,Pathfinder,2WD,3.5L V6,3.5L V6,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.5,20,26,22,,,,,
+2014,Nissan,Pathfinder,4WD,3.5L V6,3.5L V6,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.5,19,25,21,,,,,
+2014,Nissan,Pathfinder,Hybrid 2WD,Hybrid 2.5L I4,2.5L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.5,25,28,26,,,,,
+2014,Nissan,Pathfinder,Hybrid 4WD,Hybrid 2.5L I4,2.5L I4,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.5,25,27,26,,,,,

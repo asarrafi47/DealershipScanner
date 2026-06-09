@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|porsche|macan",
+  "year": 2016,
+  "make": "Porsche",
+  "model": "Macan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo",
+    "Carrera",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2023_audi_rs_5_complete_options",
+  "make": "Audi",
+  "models": [
+    "RS 5",
+    "RS 5"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.9L V6 Twin Turbo; Automatic (S8)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "touchscreen running the Audi MMI Connect infotainment system as standard equipme; touchscreen running the Audi MMI Connect infotainment system as standard equipment."
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: 2.9L V6 Twin Turbo; Automatic (S8); 2.9L V6 Twin Turbo"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: touchscreen running the Audi MMI Connect infotainment system as standard equipme; touchscreen running the Audi MMI Connect infotainment system as standard equipment."
+      }
+    ]
+  }
+}

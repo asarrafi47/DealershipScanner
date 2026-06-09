@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2011|volvo|v50",
+  "year": 2011,
+  "make": "Volvo",
+  "model": "V50",
+  "ladder_id": "brochure_2011__volvo__v50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds front-wheel drive with transverse engine layout",
+      "Adds Geartronic transmission with manual shift capability and winter setting",
+      "Adds power-assisted electro-hydraulic rack and pinion steering with tilt and telescopic column",
+      "Adds McPherson front suspension with anti-dive and anti-lift function",
+      "Adds multilink independent rear suspension with stabilizer bars front and rear",
+      "Adds power-assisted anti-lock disc brakes with ventilated front discs",
+      "Adds Dynamic Stability and Traction Control (DSTC) system",
+      "Adds Emergency Brake Assistance (EBA) and Electronic Brake Distribution (EBD)"
+    ],
+    "Limited": []
+  }
+}

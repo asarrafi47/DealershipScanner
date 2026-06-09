@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2023|mitsubishi|outlandersport",
+  "year": 2023,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2023__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SE",
+    "LE",
+    "ES",
+    "S"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "2.4L MIVEC DOHC 4-cylinder engine (vs. 2.0L)",
+      "Genuine leather seating",
+      "Auto-dimming rearview mirror with Homelink",
+      "4-way power driver seat",
+      "Black roof rails",
+      "Black headliner and pillars"
+    ],
+    "SE": [
+      "FAST-Key Entry System with push-button start",
+      "Synthetic leather/suede seats",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Gloss black and satin silver grille accents"
+    ],
+    "LE": [
+      "8-inch Smartphone Link Display Audio with Apple CarPlay and Android Auto",
+      "SiriusXM with 3-month all access trial",
+      "Black side mirrors",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "Black fabric seating with red stitch"
+    ],
+    "ES": [
+      "18-inch two-tone alloy wheels",
+      "LED fog lights",
+      "Automatic Climate Control",
+      "Heated power side mirrors",
+      "Automatic High Beam"
+    ],
+    "S": [
+      "5-passenger seating",
+      "7-inch display audio with Bluetooth and HD Radio",
+      "Electric power steering",
+      "Automatic headlights",
+      "Forward Collision Mitigation with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Active Stability Control",
+      "Rear-view camera"
+    ]
+  }
+}

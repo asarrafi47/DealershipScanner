@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2010|nissan|pathfinder",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2010__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "18\" x 7.5\" 12-spoke machine-finished aluminum-alloy wheels",
+      "P265/60R18 BFGoodrich Long Trail T/A tires",
+      "Optional 5.6-liter VK56DE V8 engine with 310 hp and 388 lb-ft torque",
+      "5-speed automatic transmission with manual mode",
+      "Optional All-Mode 4WD with 2-speed transfer case"
+    ],
+    "SE": [
+      "17\" x 7.5\" 6-spoke aluminum-alloy wheels",
+      "P265/65R17 BFGoodrich Long Trail T/A radial OWL tires",
+      "Optional 17\" x 7.5\" 6-spoke machine-finished aluminum-alloy wheels",
+      "5-speed automatic transmission with manual mode",
+      "Optional Shift-on-the-fly 4x4 switch-operated 2-speed transfer case"
+    ],
+    "S": [
+      "4.0-liter VQ40DE DOHC V6 engine with 266 hp and 288 lb-ft torque",
+      "5-speed automatic transmission",
+      "16\" x 7\" 5-spoke aluminum-alloy wheels",
+      "P245/75R16 tires",
+      "2-wheel Active Brake Limited Slip differential with 4x2 drivetrain",
+      "Independent double-wishbone front and rear suspension",
+      "4-wheel vented disc brakes with ABS and EBD",
+      "Engine-speed-sensitive power steering",
+      "Front and rear stabilizer bars"
+    ]
+  }
+}

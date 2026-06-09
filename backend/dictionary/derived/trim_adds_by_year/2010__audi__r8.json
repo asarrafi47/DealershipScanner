@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2010|audi|r8",
+  "year": 2010,
+  "make": "Audi",
+  "model": "R8",
+  "ladder_id": "brochure_llm_2010__audi__r8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R8 5.2",
+    "R8 4.2",
+    "R8 Spyder"
+  ],
+  "adds_by_trim": {
+    "R8 5.2": [
+      "5.2-liter V10 FSI engine",
+      "Optional Carbon Fiber Sigma sideblades",
+      "Optional Oxygen Silver sideblade option"
+    ],
+    "R8 4.2": [
+      "4.2-liter V8 FSI engine",
+      "Optional Carbon Fiber Sigma sideblades"
+    ],
+    "R8 Spyder": [
+      "Convertible body with acoustic retractable top",
+      "Black or brown acoustic top color options"
+    ]
+  }
+}

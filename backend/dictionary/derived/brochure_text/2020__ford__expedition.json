@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2020|ford|expedition",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Expedition",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2020_Ford_Expedition_Brochure.pdf",
+  "page_count": 33,
+  "all_pages": false,
+  "trim_hint_pages": [
+    3,
+    26
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 3,
+      "trim_hint": true,
+      "text": "4x2\n2\nOR\nAVAILABLE\n4x4\n10 ECOBOOST\u00ae ENGINES\nPowered by a 3.5L EcoBoost V6,\nSPEED Expedition supplies powerful pull\nAutomatic and responsive acceleration. An\nTransmission enhanced version on Platinum\ndelivers 400 horsepower3\nand 480 lb.-ft. of torque.3\nNEW KING RANCH\u00ae\nExemplifying the open spaces and unbridled\nfreedom of the American Southwest. Expedition\nKing Ranch for 2020 expands the model lineup\nto 4 distinct trim levels.\nMAX Limited. Star White Metallic Tri-coat. Available equipment. 1Cargo and load capacity limited by weight and weight distribution. 2Driver-assist features are supplemental and do not\nreplace the driver\u2019s attention, judgment and need to control the vehicle. 3Horsepower and torque ratings based on premium fuel per SAE J1349\u00ae standard. Your results may vary.",
+      "table_lines": []
+    },
+    {
+      "page": 26,
+      "trim_hint": true,
+      "text": "KING RANCH\nRide like a king with the striking King Ranch\u00ae trim level that brings Southwestern luxury to the\n2020 Ford Expedition. Featuring rich Del Rio leather trim covering the seats, door-trim inserts, armrests,\ncenter console side rails and steering wheel, Expedition King Ranch showcases a commitment to quality\nPOWER-DEPLOYABLE RUNNING\nthat\u2019s a hallmark of the legendary King Ranch in Kingsville, Texas. Their famous \u201cRunning W\u201d logo even\nBOARDS\nbrands the seatbacks in all 3 rows, carpeted floor mats and massive 22\" machined-face aluminum\n360-DEGREE CAMERA WITH SPLIT-VIEW wheels. For an Expedition that embodies the wide-open spaces and freedom-loving spirit of the\nAmerican West, step up to King Ranch.\nDEL RIO LEATHER-TRIMMED SEATS\nCOLORS: O xford White, Star White Metallic Tri-coat,1 Iconic Silver,2 Desert Gold,2 Magnetic,2 Rapid Red Metallic Tinted Clearcoat,1\nBurgundy Velvet Metallic Tinted Clearcoat,1 Blue,2 Agate Black2",
+      "table_lines": [
+        "KING RANCH",
+        "POWER-DEPLOYABLE RUNNING\nBOARDS\n360-DEGREE CAMERA WITH SPLIT-VIEW\nDEL RIO LEATHER-TRIMMED SEATS"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 3 ---\n4x2\n2\nOR\nAVAILABLE\n4x4\n10 ECOBOOST\u00ae ENGINES\nPowered by a 3.5L EcoBoost V6,\nSPEED Expedition supplies powerful pull\nAutomatic and responsive acceleration. An\nTransmission enhanced version on Platinum\ndelivers 400 horsepower3\nand 480 lb.-ft. of torque.3\nNEW KING RANCH\u00ae\nExemplifying the open spaces and unbridled\nfreedom of the American Southwest. Expedition\nKing Ranch for 2020 expands the model lineup\nto 4 distinct trim levels.\nMAX Limited. Star White Metallic Tri-coat. Available equipment. 1Cargo and load capacity limited by weight and weight distribution. 2Driver-assist features are supplemental and do not\nreplace the driver\u2019s attention, judgment and need to control the vehicle. 3Horsepower and torque ratings based on premium fuel per SAE J1349\u00ae standard. Your results may vary.\n\n--- page 26 ---\nKING RANCH\nRide like a king with the striking King Ranch\u00ae trim level that brings Southwestern luxury to the\n2020 Ford Expedition. Featuring rich Del Rio leather trim covering the seats, door-trim inserts, armrests,\ncenter console side rails and steering wheel, Expedition King Ranch showcases a commitment to quality\nPOWER-DEPLOYABLE RUNNING\nthat\u2019s a hallmark of the legendary King Ranch in Kingsville, Texas. Their famous \u201cRunning W\u201d logo even\nBOARDS\nbrands the seatbacks in all 3 rows, carpeted floor mats and massive 22\" machined-face aluminum\n360-DEGREE CAMERA WITH SPLIT-VIEW wheels. For an Expedition that embodies the wide-open spaces and freedom-loving spirit of the\nAmerican West, step up to King Ranch.\nDEL RIO LEATHER-TRIMMED SEATS\nCOLORS: O xford White, Star White Metallic Tri-coat,1 Iconic Silver,2 Desert Gold,2 Magnetic,2 Rapid Red Metallic Tinted Clearcoat,1\nBurgundy Velvet Metallic Tinted Clearcoat,1 Blue,2 Agate Black2\n\nKING RANCH\nPOWER-DEPLOYABLE RUNNING\nBOARDS\n360-DEGREE CAMERA WITH SPLIT-VIEW\nDEL RIO LEATHER-TRIMMED SEATS"
+}

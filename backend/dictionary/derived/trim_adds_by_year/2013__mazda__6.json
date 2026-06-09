@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2013|mazda|6",
+  "year": 2013,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2013__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring Plus",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "10-speaker Bose Centerpoint Surround Sound System with 360-degree sonic experience",
+      "Voice-command navigation system with multi-command memory and touch-screen LCD display",
+      "Leather-trimmed interior",
+      "Rain-sensing windshield wipers",
+      "Blind spot monitoring system"
+    ],
+    "Touring Plus": [
+      "Dual-zone automatic climate control",
+      "Touch-screen LCD display"
+    ],
+    "Touring": [
+      "Bluetooth hands-free phone and audio connectivity",
+      "Advanced Keyless Entry system with push-button start",
+      "8-way power-adjustable driver's seat with memory",
+      "Welcome Lighting System with illuminated interior sequence",
+      "Center console with dual storage compartments and sliding armrest",
+      "Two 12V outlets for phone, laptop, or MP3 player charging",
+      "60/40 split rear seats with remote releases",
+      "16.6 cubic feet of trunk space"
+    ]
+  }
+}

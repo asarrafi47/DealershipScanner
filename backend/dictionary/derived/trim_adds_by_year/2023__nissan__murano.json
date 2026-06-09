@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2023|nissan|murano",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2023__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLT",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLT": [
+      "Semi-aniline leather-appointed seats with diamond-quilted inserts",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "Heated steering wheel",
+      "Climate-controlled front seats (heated and cooled)",
+      "Heated rear outboard seats",
+      "Premium Bose audio system with 11 speakers and dual subwoofers"
+    ],
+    "SL": [
+      "Leather-appointed seats",
+      "8-inch color display with multi-touch control",
+      "NissanConnect Services powered by SiriusXM",
+      "Motion Activated Liftgate with trial access",
+      "Rear Door Alert"
+    ],
+    "SV": [
+      "4-way power front-passenger seat",
+      "Heated front seats",
+      "Dual Zone Automatic Temperature Control with in-cabin microfilter"
+    ],
+    "S": [
+      "3.5-liter DOHC 24-valve V6 engine with 260 hp",
+      "Xtronic CVT Continuously Variable Transmission",
+      "Front-Wheel Drive with Intelligent All-Wheel Drive available",
+      "4-wheel vented disc brakes with Anti-lock Braking System",
+      "Independent strut front and multi-link rear suspension",
+      "10-way power driver's seat with 2-way power lumbar support",
+      "4-way manual front-passenger seat",
+      "LED headlights with LED signature daytime running lights",
+      "LED fog lights and LED taillights",
+      "Dual Panel Panoramic Moonroof available"
+    ]
+  }
+}

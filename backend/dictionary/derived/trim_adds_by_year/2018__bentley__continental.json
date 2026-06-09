@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2018|bentley|continental",
+  "year": 2018,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_web_2018__bentley__continental",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Speed",
+    "GT",
+    "GTC"
+  ],
+  "adds_by_trim": {
+    "Speed": [
+      "6.0L twin-turbocharged W12 engine producing 625 horsepower",
+      "8-speed automatic transmission with paddle shifters",
+      "All-wheel drive with dynamic stability control",
+      "Leather upholstery with heated and cooled front seats",
+      "Power adjustable pedals and steering column",
+      "Dual-zone automatic climate control",
+      "16-speaker audio system with Bluetooth connectivity",
+      "Xenon headlights with automatic leveling",
+      "20-inch multi-spoke alloy wheels with summer tires",
+      "Rear parking camera with parking distance control"
+    ],
+    "GT": [
+      "Extended leather with contrast stitching and piping",
+      "Rear seat entertainment system with dual screens",
+      "Upgraded 18-speaker audio system with premium surround sound",
+      "LED xenon headlights with adaptive dynamic light beam",
+      "Bentley premium lighting package",
+      "Comfort specifying package with additional features",
+      "21-inch forged alloy wheels in exclusive design",
+      "Rear side windows with power sunshade capability",
+      "Premium grade leather upgrade throughout cabin"
+    ],
+    "GTC": [
+      "All-wheel drive convertible body style with power soft top",
+      "Heated leather seats with ventilation for convertible comfort",
+      "Wind deflector system for open-air driving",
+      "Convertible-specific suspension tuning and reinforcement",
+      "Enhanced water drainage and weatherproofing systems",
+      "Exclusive GTC exterior trim and badging",
+      "Soft-top can operate at speeds up to 30 mph",
+      "Tonneau cover for soft-top when retracted"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/bentley/continental/"
+}

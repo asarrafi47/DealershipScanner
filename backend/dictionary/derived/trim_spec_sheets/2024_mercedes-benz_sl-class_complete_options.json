@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2024_mercedes-benz_sl-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SL-Class",
+    "SL-Class"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG SL63": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG SL55": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG SL43": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

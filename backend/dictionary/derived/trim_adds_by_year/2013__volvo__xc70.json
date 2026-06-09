@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2013|volvo|xc70",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "XC70",
+  "ladder_id": "brochure_llm_2013__volvo__xc70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premier Plus",
+    "Premier",
+    "T6"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Navigation system with integrated in-dash display",
+      "Park Assist camera for rear visibility when reversing",
+      "Front blind view camera with 180-degree field of view",
+      "Personal Car Communicator (PCC) for keyless drive and two-way communication"
+    ],
+    "Premier Plus": [
+      "Personal Car Communicator (PCC) for keyless drive and remote status checking",
+      "HomeLink® integrated in sun visor for remote home appliance control",
+      "Power retractable door mirrors with automatic fold and ground lighting"
+    ],
+    "Premier": [
+      "Personal Car Communicator (PCC) standard",
+      "HomeLink® integrated in sun visor",
+      "Power retractable door mirrors with ground lighting"
+    ],
+    "T6": [
+      "All-Wheel Drive (AWD) with Instant Traction™ for enhanced stability",
+      "Personal Car Communicator (PCC) standard for keyless entry and engine start",
+      "Power glass moonroof with integrated sun screen and central locking",
+      "Power front seats with three-position memory settings for driver",
+      "Heated front seats with three adjustable settings",
+      "Electronic Climate Control (ECC) with independent driver and passenger zones",
+      "Interior Air Quality System (IAQS) with active carbon filter",
+      "Dynamic Stability and Traction Control (DSTC) anti-skid system",
+      "Volvo Sensus driver-control interface with steering wheel thumb scroll",
+      "7-inch in-dash hi-resolution color screen for infotainment and controls"
+    ]
+  }
+}

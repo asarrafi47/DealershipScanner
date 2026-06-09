@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2013_mercedes-benz_s-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "S-Class",
+    "S-Class"
+  ],
+  "year_min": 2011,
+  "year_max": 2015,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "S400": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "S550": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "S600": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V12 Turbo; Automatic 5-spd"
+      }
+    ]
+  }
+}

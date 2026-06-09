@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2019|acura|rlx",
+  "year": 2019,
+  "make": "acura",
+  "model": "rlx",
+  "ladder_id": "brochure_2019__acura__rlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Technology",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "3.5-liter V-6 engine with three electric motors producing 377 combined horsepower",
+      "Super Handling All-Wheel Drive (SH-AWD) with independent rear electric motor torque vectoring",
+      "30 mpg combined EPA fuel economy rating (28 city/32 highway)",
+      "Electric-only acceleration capability at low speeds using three electric motors",
+      "Regenerative braking technology to capture kinetic energy and charge lithium-ion battery",
+      "All-wheel drive capability with real-time power distribution based on traction conditions"
+    ],
+    "Technology": [
+      "Adds AcuraLink Owners Mobile App connectivity with smartphone integration",
+      "Adds priority emergency button for urgent roadside situations",
+      "Adds comprehensive AcuraLink Roadside Assistance services access"
+    ]
+  }
+}

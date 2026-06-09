@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2017|chevrolet|bolt",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "ladder_id": "brochure_llm_2017__chevrolet__bolt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Luggage rack with side rails and roof-mounted",
+      "Door handles with body-color and chrome strip",
+      "Mirrors with heated, power-adjustable, black, manual-folding with integrated turn signal indicators",
+      "IntelliBeam automatic high beam assist"
+    ],
+    "LT": [
+      "Roof-mounted shark fin antenna",
+      "Daytime Running Lamps with LED signature",
+      "High-intensity discharge headlamps with low and high beam projector and automatic on/off",
+      "LED center high-mounted stop lamp and taillamps",
+      "200 hp electric drive unit with 266 lb.-ft. torque",
+      "60 kWh lithium-ion Rechargeable Energy Storage System battery",
+      "4-wheel antilock 4-wheel disc brakes",
+      "Driver-initiated regenerative braking with steering wheel-mounted paddle",
+      "Electronic parking brake",
+      "7.2 kW onboard charger and 120-volt portable charge cord"
+    ]
+  }
+}

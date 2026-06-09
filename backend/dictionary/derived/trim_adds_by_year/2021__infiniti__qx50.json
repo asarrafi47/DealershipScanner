@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2021|infiniti|qx50",
+  "year": 2021,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_llm_2021__infiniti__qx50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX50 AUTOGRAPH",
+    "QX50 SENSORY",
+    "QX50 ESSENTIAL",
+    "QX50 LUXE",
+    "QX50 PURE"
+  ],
+  "adds_by_trim": {
+    "QX50 AUTOGRAPH": [
+      "Natural Maple Wood interior trim accents",
+      "Semi-aniline leather-appointed, perforated seating",
+      "Black Ultrasuede® upper door and instrument panel accents",
+      "2-way passenger's power lumbar",
+      "Tri-zone automatic climate control",
+      "Rear passenger window sunshades",
+      "Direct Adaptive Steering®",
+      "Motion Activated Liftgate",
+      "Enhanced LED interior ambient lighting",
+      "3,000-lb. maximum towing capacity and tow hitch (AWD)"
+    ],
+    "QX50 SENSORY": [
+      "Heated outside mirrors",
+      "20-inch dark-painted aluminum-alloy wheels with 255/45R20 run-flat tires",
+      "Navigation with 3D building graphics, 5-year trial access to Premium Traffic and MapCare",
+      "SiriusXM® Traffic with 3-month trial access to real-time traffic information",
+      "SiriusXM® Travel Link® with 3-month trial access to weather and fuel prices",
+      "Bose® 16-speaker Performance Series Audio",
+      "Heated steering wheel",
+      "Ultrasuede® headliner and pillars",
+      "Power tilting and telescoping steering column",
+      "Dual-occupant memory system for driver's seat and steering wheel"
+    ],
+    "QX50 ESSENTIAL": [
+      "Panoramic moonroof with power sunshade",
+      "Roof rails",
+      "LED front fog lights",
+      "Heated front seats",
+      "Textured aluminum interior trim accents",
+      "ProPILOT Assist with Lane Keep Assist and Intelligent Cruise Control",
+      "Front parking sensors",
+      "Distance Control Assist",
+      "Remote Engine Start",
+      "Traffic Sign Recognition"
+    ],
+    "QX50 LUXE": [
+      "20-inch silver-painted, machine-finished aluminum-alloy wheels with 255/45R20 run-flat tires",
+      "Unique cube design LED headlights with auto levelizer",
+      "Metallic cargo area scuff plates",
+      "Leather-appointed, perforated seating",
+      "Climate-controlled front seats",
+      "Bose® Performance Series metallic speaker grilles",
+      "Auto-dimming rearview mirror with HomeLink® Universal Transceiver",
+      "Around View® Monitor with Moving Object Detection",
+      "Blind Spot Intervention®",
+      "Lane Departure Prevention"
+    ],
+    "QX50 PURE": [
+      "2.0L VC-Turbo 4-cylinder engine with 268 hp and 280 lb-ft torque",
+      "Continuously Variable Transmission with manual shift mode",
+      "Front-Wheel Drive or INFINITI Intelligent All-Wheel Drive",
+      "LED automatic-on/off headlights",
+      "LED signature daytime running lights",
+      "19-inch silver-painted aluminum-alloy wheels with 235/55R19 run-flat tires",
+      "Body-color manual folding and power adjustable outside mirrors",
+      "Body-color door handles with chrome accent",
+      "Rear privacy glass",
+      "Leatherette seating with dual zone automatic climate control"
+    ]
+  }
+}

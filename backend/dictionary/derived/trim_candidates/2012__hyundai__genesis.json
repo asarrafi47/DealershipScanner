@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2012|hyundai|genesis",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Platinum",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

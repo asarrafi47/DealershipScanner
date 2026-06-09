@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2016|volkswagen|jetta",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "inventory_volkswagen_jetta",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "WeatherTech are covered by a",
+      "roads, streets, toll"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

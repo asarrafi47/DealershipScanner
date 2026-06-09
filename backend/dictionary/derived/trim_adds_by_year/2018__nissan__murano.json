@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2018|nissan|murano",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2018__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch machine-finished aluminum-alloy wheels",
+      "Power-tilt and power-telescoping steering column with memory",
+      "Leather-wrapped steering wheel and shift knob",
+      "Auto-dimming rearview mirror",
+      "HomeLink Universal Transceiver",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert"
+    ],
+    "SL": [
+      "Nissan Navigation System",
+      "Silver roof rails",
+      "Heated steering wheel",
+      "Apple CarPlay",
+      "Android Auto",
+      "8.0-inch multi-touch control monitor",
+      "Voice recognition for audio and navigation",
+      "Premium Bose Audio System with 11 speakers and dual subwoofers",
+      "Intelligent Around View Monitor",
+      "Intelligent Driver Alertness"
+    ],
+    "SV": [
+      "Fog lights",
+      "Black roof rails",
+      "Remote Engine Start System with Intelligent Climate Control",
+      "10-way power driver's seat with 2-way power lumbar support",
+      "4-way power front-passenger's seat",
+      "Leather-wrapped steering wheel and shift knob",
+      "Auto-dimming rearview mirror",
+      "HomeLink Universal Transceiver",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert"
+    ],
+    "S": [
+      "260-hp 3.5-liter V6 engine with Xtronic CVT transmission",
+      "Intelligent All-Wheel Drive or Front-Wheel Drive",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking",
+      "18-inch machine-finished wheels with LED daytime running lights",
+      "7.0-inch color Advanced Drive-Assist Display",
+      "Dual Zone Automatic Temperature Control",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "6-way manual driver's seat with 60/40 split fold-down rear seatbacks",
+      "AM/FM/CD audio system with Bluetooth and SiriusXM Satellite Radio",
+      "RearView Monitor and Tire Pressure Monitoring System"
+    ]
+  }
+}

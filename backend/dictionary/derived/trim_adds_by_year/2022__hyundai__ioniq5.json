@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2022|hyundai|ioniq5",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Ioniq 5",
+  "ladder_id": "brochure_llm_2022__hyundai__ioniq5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IONIQ 5 Limited",
+    "IONIQ 5 SEL",
+    "IONIQ 5 SE"
+  ],
+  "adds_by_trim": {
+    "IONIQ 5 Limited": [
+      "Ventilated front seats",
+      "8-way power front passenger seat",
+      "Rear side-window sunshades",
+      "Premium door sill plates and sliding center console",
+      "2nd-row Vehicle-to-Load (V2L) charger",
+      "Premium Heads-up Display with Augmented Reality",
+      "Vision Roof",
+      "Premium Gloss Black exterior accents",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Bose 8-speaker premium audio system"
+    ],
+    "IONIQ 5 SEL": [
+      "Heated steering wheel and ambient LED interior lighting",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Hands-free smart liftgate with auto open",
+      "Power-folding side mirrors",
+      "2nd-row air conditioning vents",
+      "Wireless device charging",
+      "Parking Distance Warning – Forward & Reverse",
+      "Rear View Monitor with Parking Guidance"
+    ],
+    "IONIQ 5 SE": [
+      "8-way power driver seat with Relaxation Function and Integrated Memory System",
+      "8-way power front passenger seat",
+      "Heated front seats",
+      "60/40 split-folding 2nd-row seats with recline, slide and center armrest",
+      "12.3-inch digital instrument cluster display",
+      "12.3-inch touchscreen navigation display with Apple CarPlay and Android Auto",
+      "Parametric pixel LED headlights and taillights",
+      "Flush door handles with automatic extend/retract",
+      "Blind-Spot Collision-Avoidance Assist and Rear Cross-Traffic Collision-Avoidance Assist",
+      "Bluelink Connected Car System with 3 years complimentary service"
+    ]
+  }
+}

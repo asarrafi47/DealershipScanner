@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2010|acura|tsx",
+  "year": 2010,
+  "make": "acura",
+  "model": "tsx",
+  "ladder_id": "brochure_llm_2010__acura__tsx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TSX V-6 with Technology Package",
+    "TSX V-6",
+    "TSX with Technology Package",
+    "TSX"
+  ],
+  "adds_by_trim": {
+    "TSX V-6 with Technology Package": [
+      "3.5-liter V-6 engine with 280 horsepower and 254 lb-ft torque",
+      "Acura Navigation System with Voice Recognition and rearview camera",
+      "Acura/ELS Surround 415-watt Premium Audio System with 10 speakers and 6-disc CD changer",
+      "GPS-linked solar-sensing dual-zone automatic climate control system",
+      "AcuraLink Real-Time Traffic and Weather information",
+      "XM Radio with Note function music reminder"
+    ],
+    "TSX V-6": [
+      "3.5-liter V-6 engine with 280 horsepower and 254 lb-ft torque",
+      "24-valve SOHC VTEC engine valvetrain",
+      "18 x 8.0 inch aluminum-alloy wheels with P235/45 R18 tires",
+      "38.1-foot turning diameter"
+    ],
+    "TSX with Technology Package": [
+      "Acura Navigation System with Voice Recognition and rearview camera",
+      "Acura/ELS Surround 415-watt Premium Audio System with 10 speakers and 6-disc CD changer",
+      "GPS-linked solar-sensing dual-zone automatic climate control system",
+      "AcuraLink Real-Time Traffic and Weather information",
+      "XM Radio with Note function music reminder"
+    ],
+    "TSX": [
+      "2.4-liter in-line 4-cylinder engine with 201 horsepower and 170 lb-ft torque",
+      "16-valve DOHC i-VTEC engine valvetrain",
+      "5-speed automatic or 6-speed manual transmission options",
+      "17 x 7.5 inch aluminum-alloy wheels with P225/50 R17 tires",
+      "36.7-foot turning diameter",
+      "Dual-zone automatic climate control with air filtration",
+      "Sport seats with perforated leather-trimmed interior",
+      "8-way power driver's seat with adjustable lumbar support",
+      "Power moonroof with tilt feature and auto-open/close",
+      "Acura 360-watt Premium Sound System with AM/FM tuner and 7 speakers"
+    ]
+  }
+}

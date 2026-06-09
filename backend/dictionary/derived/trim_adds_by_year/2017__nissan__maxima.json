@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2017|nissan|maxima",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Maxima",
+  "ladder_id": "brochure_llm_2017__nissan__maxima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SR MIDNIGHT EDITION",
+    "SL",
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "300 hp 3.5-liter V6 engine",
+      "Xtronic CVT (Continuously Variable Transmission)",
+      "18-inch machine-finished aluminum-alloy wheels with P245/45R18 tires",
+      "Drive Mode Selector with Sport or Normal modes",
+      "LED Daytime Running Lights with integrated LED signature taillights",
+      "Advanced Drive-Assist Display with 7.0-inch display",
+      "NissanConnect with Navigation and Apple CarPlay with 8.0-inch touchscreen",
+      "Voice Recognition for audio and navigation",
+      "Bluetooth Hands-Free Phone System with Dual Zone Automatic Temperature Control",
+      "Tire Pressure Monitoring System and Vehicle Dynamic Control with Traction Control"
+    ],
+    "SV": [
+      "Leather-appointed seats",
+      "Heated front seats",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Driver Attention Alert",
+      "Driver's seat manual thigh support extension"
+    ],
+    "SR": [
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System with Intelligent Climate Control",
+      "8-way power driver's seat and 4-way power front-passenger's seat",
+      "60/40 split fold-down rear seatbacks with valet locking function",
+      "Cloth seat trim with leather-wrapped steering wheel and shift knob",
+      "Razor Steel faceted interior trim",
+      "AM/FM/CD audio system with SiriusXM Satellite Radio",
+      "MP3/WMA CD playback and two illuminated USB connection ports"
+    ],
+    "SL": [
+      "Dual Panel Power Panoramic Moonroof with one-touch open/close",
+      "Intelligent Cruise Control",
+      "Adjustable ambient LED interior lighting",
+      "Heated steering wheel",
+      "Bose Premium Audio System with 11 speakers and Centerpoint Surround Technology",
+      "LED low-beam headlights",
+      "Outside mirrors with reverse tilt-down feature",
+      "Power tilt/telescoping steering column",
+      "Rain-sensing variable intermittent windshield wipers"
+    ],
+    "SR MIDNIGHT EDITION": [
+      "19-inch gloss black aluminum-alloy wheels",
+      "Black sport spoiler",
+      "Black rear diffuser"
+    ],
+    "PLATINUM": [
+      "19-inch machine-finished aluminum-alloy wheels with P245/40R19 tires",
+      "Climate-controlled front seats (heated and cooled)",
+      "Premium Ascot Leather-appointed seats with diamond-quilted inserts",
+      "Premium Ascot Leather-wrapped steering wheel with Alcantara insert",
+      "Liquid Chrome faceted interior trim",
+      "Aluminum sport pedals",
+      "Sport-tuned suspension",
+      "Integrated Dynamics-control Module with Active Ride Control and Active Trace Control",
+      "Rear-window power sunshade",
+      "Memory System for driver's seat, steering wheel, and outside mirrors"
+    ]
+  }
+}

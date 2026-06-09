@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2016|mitsubishi|outlandersport",
+  "year": 2016,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "generic_mitsubishi_outlandersport",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "5-year/60,000-mile coverage for Limited Powertrain Warranty."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1
+    }
+  }
+}

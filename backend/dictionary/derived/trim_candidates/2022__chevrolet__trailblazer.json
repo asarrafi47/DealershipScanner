@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2022|chevrolet|trailblazer",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Trailblazer",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "RS",
+    "LT",
+    "LS",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

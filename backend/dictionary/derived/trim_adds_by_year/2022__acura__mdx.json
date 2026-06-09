@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2022|acura|mdx",
+  "year": 2022,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2022__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance",
+    "A-Spec",
+    "Technology",
+    "MDX"
+  ],
+  "adds_by_trim": {
+    "Advance": [
+      "Sport A-Spec Seats with Perforated Milano Premium Leather and Ultrasuede-Trimmed Interior",
+      "Front 16-Way Power Seats with Power Lumbar Support, Power Thigh Extension, and Power Side Bolsters",
+      "Heated Rear Seats at outboard positions",
+      "Power Lift Tailgate with Hands-Free Access and Walk-Away Close",
+      "Roof Rails",
+      "LED Outer-Door-Handle Lights",
+      "Heated Steering Wheel"
+    ],
+    "A-Spec": [
+      "Sport Seats with Perforated Milano Premium Leather-Trimmed Interior",
+      "A-Spec Exterior Sport Appearance Package",
+      "A-Spec Interior Sport Appearance Package",
+      "Contrast Stitching and Piping on seats",
+      "Ventilated Front Seats",
+      "Leather-Wrapped Flat-Bottom Sport Steering Wheel",
+      "Stainless Steel Sport Pedals",
+      "Ebony Headliner",
+      "Iconic Drive Ambient LED Cabin Lighting with 27 color themes"
+    ],
+    "Technology": [
+      "GPS-Linked Climate Control",
+      "Front 12-Way Power Seats with Power Lumbar Support",
+      "Three-Position Front Passenger Seat Memory",
+      "Second-Row Side Sunshades manual",
+      "Power-Folding Side Mirrors",
+      "LED Fog Lights"
+    ],
+    "MDX": [
+      "Tri-Zone Automatic Climate Control with Humidity Control and Air Filtration",
+      "Keyless Access System with Acura Personalized Settings",
+      "Pushbutton Ignition",
+      "Electronic Gear Selector",
+      "Panoramic Moonroof with Tilt and Slide Function",
+      "Jewel Eye LED Headlights",
+      "Third-Row Access with One-Touch Smart Slide Walk-In",
+      "Power Tilt and Telescopic Steering Column",
+      "Steering Wheel-Mounted Controls",
+      "Active Sound Control"
+    ]
+  }
+}

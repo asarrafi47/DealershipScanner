@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2010|lotus|evora",
+  "year": 2010,
+  "make": "Lotus",
+  "model": "Evora",
+  "ladder_id": "brochure_2010__lotus__evora",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 4-litre DOHC V6 VVT-i engine with 400PS @ 7000 rpm",
+      "Adds sequential 6-speed paddle shift gearbox with flat shift and autoblip",
+      "Adds modular lightweight bonded aluminium chassis",
+      "Adds forged aluminium double wishbone suspension with Bilstein adjustable dampers",
+      "Adds six piston front callipers with two piece aluminium belled discs",
+      "Adds motorsport ECU engine management",
+      "Adds FIA approved quick fill fuel system",
+      "Adds carbon fibre front splitter, diffuser and rear wing",
+      "Adds FIA approved competition seat with HANS approval",
+      "Adds FIA approved 6 point competition harness"
+    ],
+    "Limited": []
+  }
+}

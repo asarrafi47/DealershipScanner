@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2013|ford|escape",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2013__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "2.0L EcoBoost I-4 engine with 240 hp and 270 lb-ft torque",
+      "10-way power driver's seat with memory feature",
+      "Heated front bucket seats with premium cloth and leather trim",
+      "SYNC with MyFord Touch 8-inch LCD touchscreen and 2 USB ports",
+      "19-inch Luster Nickel-painted aluminum wheels with P235/45R19 tires",
+      "High-intensity discharge HID headlamps",
+      "Hands-free liftgate",
+      "Reverse Sensing System",
+      "Silver roof-rack side rails with black crossbars",
+      "110-volt power outlet"
+    ],
+    "SEL": [
+      "1.6L EcoBoost I-4 engine with 178 hp and 184 lb-ft torque",
+      "10-way power driver's seat with memory and seat back map pocket",
+      "Heated front bucket seats with leather trim",
+      "SYNC with MyFord Touch 4.2-inch color LCD display",
+      "Sony audio system with 10 speakers and HD Radio Technology",
+      "18-inch Sparkle Nickel-painted aluminum wheels with P235/50R18 tires",
+      "Auto-dimming rearview mirror",
+      "Cargo security shade",
+      "Body-color heated sideview mirrors with turn signal indicators and memory",
+      "Dual-zone electronic automatic temperature control"
+    ],
+    "SE": [
+      "1.6L EcoBoost I-4 engine standard",
+      "Ford SYNC with MyFord voice-activated system and 4.2-inch color LCD display",
+      "9-speaker AM/FM stereo with single-CD player and MP3 capability",
+      "8 cupholders",
+      "17-inch Sparkle Silver-painted aluminum wheels",
+      "Automatic headlamps",
+      "Fog lamps",
+      "Chrome door handles and beltline moldings",
+      "Privacy glass on rear doors and windows",
+      "SecuriCode invisible keypad"
+    ],
+    "S": [
+      "2.5L Duratec I-4 engine with 168 hp and 170 lb-ft torque",
+      "6-speed SelectShift Automatic transmission with Sport Mode",
+      "Front bucket seats with 60/40 split-fold rear bench seat",
+      "6-way manual driver's seat with cloth upholstery",
+      "AM/FM stereo with single-CD player, MP3 and 6 speakers",
+      "Body-color front and rear fascias with rear spoiler",
+      "17-inch steel wheels with Sparkle Silver-painted covers and P235/55R17 tires",
+      "Quad-beam halogen headlamps",
+      "Remote Keyless Entry System with 2 integrated keyhead remotes",
+      "Air conditioning and power windows with one-touch-down driver side"
+    ]
+  }
+}

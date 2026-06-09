@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2019|mitsubishi|outlandersport",
+  "year": 2019,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2019__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT S-AWC",
+    "SEL 2WD/S-AWC",
+    "SE 2WD/S-AWC",
+    "ES 2WD/AWC"
+  ],
+  "adds_by_trim": {
+    "GT S-AWC": [
+      "3.0L MIVEC SOHC 24-valve V6 engine with 224 hp",
+      "6-speed electronic automatic transmission",
+      "LED high and low beam headlights standard",
+      "LED fog lights standard",
+      "Chrome beltline molding",
+      "Power folding side-view mirrors",
+      "Power remote tailgate",
+      "Heated steering wheel",
+      "Automatic High Beam headlights",
+      "Adaptive Cruise Control and Forward Collision Mitigation"
+    ],
+    "SEL 2WD/S-AWC": [
+      "2.4L MIVEC SOHC 16-valve inline engine with 166 hp",
+      "Auto-on/off headlights",
+      "Lane Departure Warning and Automatic High Beam available",
+      "Power folding side-view mirrors available",
+      "Second Row USB port",
+      "SiriusXM Satellite Radio with 3-month subscription",
+      "LED rear combination tail lights",
+      "Forward Collision Mitigation available"
+    ],
+    "SE 2WD/S-AWC": [
+      "2.4L MIVEC SOHC 16-valve inline engine with 166 hp",
+      "Auto-off headlights standard",
+      "7.0-inch touch panel display audio system",
+      "Second Row USB port",
+      "SiriusXM Satellite Radio with 3-month subscription",
+      "Digital HD Radio standard",
+      "Bluetooth wireless technology with steering wheel controls"
+    ],
+    "ES 2WD/AWC": [
+      "2.4L MIVEC SOHC 16-valve inline engine with 166 hp",
+      "Continuously Variable Transmission",
+      "Auto-off headlights",
+      "710-watt Rockford Fosgate premium audio system with 9 speakers",
+      "Front USB port",
+      "Heated power side-view mirrors",
+      "Dual-zone automatic climate control",
+      "ECO drive mode switch",
+      "Tire Pressure Monitoring System",
+      "Multiple airbags and safety features"
+    ]
+  }
+}

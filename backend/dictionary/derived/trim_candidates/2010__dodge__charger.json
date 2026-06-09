@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2010|dodge|charger",
+  "year": 2010,
+  "make": "Dodge",
+  "model": "Charger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "R/T",
+    "Limited",
+    "Premium",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

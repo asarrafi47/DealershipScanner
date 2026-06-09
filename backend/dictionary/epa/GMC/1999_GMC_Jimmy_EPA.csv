@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,GMC,Jimmy,2WD,4.3L V6,4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.3,14,19,16,,,,,
+1999,GMC,Jimmy,2WD,4.3L V6,4.3L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.3,15,21,17,,,,,
+1999,GMC,Jimmy,4WD,4.3L V6,4.3L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.3,14,19,16,,,,,
+1999,GMC,Jimmy,4WD,4.3L V6,4.3L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.3,13,16,14,,,,,

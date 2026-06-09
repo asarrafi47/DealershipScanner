@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1994,BMW,5 Series,525i,2.5L V6 ((FFS)),2.5L I6 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.5,16,23,19,,,,,
+1994,BMW,5 Series,525i,2.5L V6 ((FFS)),2.5L I6 Turbo,Turbocharged,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.5,17,26,20,,,,,
+1994,BMW,5 Series,530i,3.0L V8 ((FFS) (MPFI)),3.0L V8 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,3.0,15,24,18,,,,,
+1994,BMW,5 Series,530i,3.0L V8 ((GUZZLER) (FFS) (MPFI)),3.0L V8 Twin Turbo,Twin Turbocharged,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,3.0,15,22,17,,,,,
+1994,BMW,5 Series,530i,3.1L V8 ((FFS) (MPFI)),3.1L V8 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,3.1,15,23,17,,,,,
+1994,BMW,5 Series,530i,3.1L V8 ((GUZZLER) (FFS) (MPFI)),3.1L V8 Twin Turbo,Twin Turbocharged,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,3.1,15,21,17,,,,,
+1994,BMW,5 Series,540i,4.0L V8 ((GUZZLER) (FFS)),4.0L V8 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,4.0,15,21,17,,,,,
+1994,BMW,5 Series,525i Touring,2.5L V6 ((FFS)),2.5L I6 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.5,16,23,19,,,,,
+1994,BMW,5 Series,530i Touring,3.0L V8 ((FFS) (MPFI)),3.0L V8 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,8,3.0,15,24,18,,,,,
+1994,BMW,5 Series,530i Touring,3.1L V8 ((FFS) (MPFI)),3.1L V8 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,8,3.1,15,23,17,,,,,

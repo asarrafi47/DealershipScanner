@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_kia_soul_complete_options",
+  "make": "Kia",
+  "models": [
+    "Soul",
+    "Soul"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "The Soul Hybrid/Eco-Soul is a concept vehicle with a Gamma 1.6L gasoline engine, an electric motor rated 15 kW (20 PS; 20 hp) and 105 N⋅m (77 lb⋅ft), continuously variable transmission, ISG (Idle Stop&Go), regenerative braking.; The U.S. model went on sale as 2014 model year vehicle, and early models included a choice of 1.6-liter Gamma GDi or 2.0-liter Nu GDi engines, mated to 6-speed manual or 6-speed automatic transmissions. Trim levels included base, + (Plus), and ! (Exclaim) models."
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "It includes dual chrome exhaust, polished aluminum exhaust tips featuring carbon-fiber interior sleeves, and 19-inch 5-spoke aluminum alloy wheels.; The Soul Hybrid/Eco-Soul is a concept vehicle with a Gamma 1.6L gasoline engine, an electric motor rated 15 kW (20 PS; 20 hp) and 105 N⋅m (77 lb⋅ft), continuously variable transmission, ISG (Idle Stop&Go), regenerative braking."
+      }
+    ]
+  }
+}

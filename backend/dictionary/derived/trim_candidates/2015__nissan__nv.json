@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2015|nissan|nv",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "NV",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SV",
+    "S",
+    "Limited",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

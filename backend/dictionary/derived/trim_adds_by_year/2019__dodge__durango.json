@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2019|dodge|durango",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2019__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT",
+    "R/T",
+    "GT Plus",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT": [
+      "6.4L HEMI V8 engine with 8-speed automatic transmission and Fuel Saver Technology",
+      "Performance-tuned Brembo antilock 4-wheel disc brakes",
+      "Performance-tuned electric power steering",
+      "High-performance suspension with adaptive damping",
+      "Performance-tuned AWD system",
+      "Body-color performance design hood with center air intake and dual heat extractors",
+      "Performance design grille with bright and black accents"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 engine with 8-speed automatic transmission and Fuel Saver Technology",
+      "Heavy-duty antilock 4-wheel disc brakes",
+      "Sport suspension with lowered ride height for enhanced handling",
+      "2-speed active on-demand AWD system (packaged with 5.7L V8, AWD models only)",
+      "Performance design grille"
+    ],
+    "GT Plus": [
+      "Power liftgate with key fob and overhead console controls",
+      "Remote start system with 300-ft range integrated into key fob",
+      "Bright Chrome grille trim with premium accent",
+      "Bright side roof rails with integrated storable crossrails"
+    ],
+    "GT": [
+      "5.7L HEMI V8 engine option available",
+      "Heavy-duty antilock 4-wheel disc brakes",
+      "Rear load-leveling suspension (packaged with RWD or Trailer Tow Group IV)",
+      "Body-color performance design hood with air intake and heat extractors (optional)",
+      "Power liftgate with key fob and overhead console controls (packaged)"
+    ],
+    "SXT": [
+      "3.6L Pentastar V6 engine with 8-speed automatic transmission",
+      "Antilock 4-wheel disc brakes",
+      "Electric power steering",
+      "Eco suspension III",
+      "Single-speed full-time AWD with MP310 transfer case",
+      "24.6-gallon fuel tank",
+      "Bright Chrome grille with black accent",
+      "Body-color hood",
+      "Dual rear exhaust with bright tips (with Blacktop Package)"
+    ]
+  }
+}

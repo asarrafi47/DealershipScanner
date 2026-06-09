@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|lincoln|mkt",
+  "year": 2014,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_web_2014__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EcoBoost",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "EcoBoost": [
+      "3.5L EcoBoost twin-turbocharged V6 engine with 365 hp and 350 lb.-ft. torque",
+      "Available intelligent all-wheel drive (AWD) system",
+      "Lincoln Drive Control with 3 drive modes: Sport, Normal, Comfort",
+      "EPA-estimated 16 city/23 hwy/18 combined mpg (AWD)"
+    ],
+    "Standard": [
+      "3.7L Ti-VCT 24-valve V6 engine with 303 hp and 278 lb.-ft. torque",
+      "6-speed SelectShift automatic transmission with paddle activation",
+      "EPA-estimated 17 city/25 hwy/20 combined mpg (FWD)",
+      "19-inch premium painted aluminum wheels with all-season tires",
+      "Adaptive HID headlamps with auto high beam and autolamp feature",
+      "Fixed glass panoramic Vista Roof with power sunshades",
+      "7-passenger seating with leather-trimmed bucket and bench seats",
+      "12-way power heated and cooled 1st-row bucket seats with lumbar",
+      "SYNC with MyLincoln Touch voice-activated system, 8-inch touchscreen",
+      "Dual-stage front airbags, side airbags, and 3-row side-curtain airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lincoln/mkt/"
+}

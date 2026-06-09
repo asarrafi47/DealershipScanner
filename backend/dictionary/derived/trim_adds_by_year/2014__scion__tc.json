@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|scion|tc",
+  "year": 2014,
+  "make": "Scion",
+  "model": "tC",
+  "ladder_id": "brochure_2014__scion__tc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [],
+    "LT": [],
+    "Premium": [
+      "Adds Bespoke Premium Audio featuring iFi",
+      "Adds Auto-dimming Rearview Mirror",
+      "Adds Illuminated Door Sills"
+    ],
+    "Limited": [
+      "Adds Scion Remote Engine Starter",
+      "Adds Scion Security System",
+      "Adds Alloy Wheel Locks",
+      "Adds Fog Lights"
+    ]
+  }
+}

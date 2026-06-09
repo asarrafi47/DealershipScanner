@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2021|hyundai|ioniq",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "ladder_id": "brochure_2021__hyundai__ioniq",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE",
+    "Blue",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 139 net hp 1.6L GDI Atkinson Cycle 4-cylinder hybrid engine with 32 kW motor",
+      "Adds 6-speed EcoShift Dual Clutch Transmission with Sport Mode",
+      "Adds Drive Mode Select with regenerative brake level control paddles",
+      "Adds active grille shutters",
+      "Adds automatic on/off headlights",
+      "Adds integrated rear spoiler with center LED brake light",
+      "Adds door handle approach lights",
+      "Adds proximity key entry with push button start",
+      "Adds tilt-and-telescopic steering wheel with cruise controls",
+      "Adds rearview camera with dynamic guidelines"
+    ],
+    "Premium": [
+      "Adds 4.2-inch color LCD multi-information display with Hybrid Technology Display",
+      "Adds LED Daytime Running Lights",
+      "Adds chrome side window-line trim",
+      "Adds heated outside mirrors",
+      "Adds side mirrors with LED turn signal indicators",
+      "Adds leather-wrapped steering wheel",
+      "Adds heated front seats",
+      "Adds dual front USB charge ports",
+      "Adds rear center armrest with dual cupholders",
+      "Adds SiriusXM Satellite Radio"
+    ],
+    "Blue": [
+      "Adds 7-inch dual-mode color LCD instrument cluster display",
+      "Adds LED headlights",
+      "Adds LED taillights",
+      "Adds wireless device charging",
+      "Adds Smart Cruise Control with Stop & Go",
+      "Adds Forward Collision-Avoidance Assist with Pedestrian and Cyclist Detection",
+      "Adds Lane Following Assist",
+      "Adds Blind-Spot Collision Warning",
+      "Adds Rear Cross-Traffic Collision Warning",
+      "Adds Blue Link Connected Care & Remote packages"
+    ],
+    "SE": [
+      "Adds chrome exterior door handles",
+      "Adds power-folding side mirrors with puddle lights",
+      "Adds 10.25-inch color touchscreen navigation system",
+      "Adds Harman Kardon premium audio system with 8 speakers and Clari-Fi Music Restoration Technology",
+      "Adds Highway Driving Assist",
+      "Adds front and rear parking sensors",
+      "Adds driver seat Integrated Memory System",
+      "Adds leather seating surfaces",
+      "Adds floor console-mounted rear vents",
+      "Adds ambient interior lighting and premium door sill plates"
+    ],
+    "SEL": [
+      "Adds 139 net hp 1.6L GDI Atkinson Cycle 4-cylinder hybrid engine with 45 kW permanent magnet high-power density motor"
+    ],
+    "Limited": [
+      "Adds power tilt-and-slide sunroof",
+      "Adds auto-down/up front passenger window",
+      "Adds auto-dimming rearview mirror with HomeLink",
+      "Adds Blue Link Guidance package"
+    ]
+  }
+}

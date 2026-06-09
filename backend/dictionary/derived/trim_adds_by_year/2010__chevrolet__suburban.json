@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|chevrolet|suburban",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "2010_chevrolet_suburban",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LS",
+    "LT",
+    "LTZ"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "Custom Leather-appointed front bucket seats with power adjustments",
+      "Enhanced towing and Z71 Off-Road packages available",
+      "USB audio and upgraded interior vs LS"
+    ],
+    "LTZ": [
+      "10-way power heated front seats with memory",
+      "Autoride suspension on LTZ",
+      "Bose or navigation audio packages",
+      "LTZ convenience with premium chrome and luxury content"
+    ],
+    "LS": [
+      "Premium Cloth front bucket seats with six-way power driver seat",
+      "Floor console",
+      "Eight-speaker sound system",
+      "AM/FM stereo with CD/MP3 player",
+      "USB port",
+      "XM Radio with three trial months",
+      "Bluetooth wireless technology for select phones",
+      "Black assist steps"
+    ]
+  }
+}

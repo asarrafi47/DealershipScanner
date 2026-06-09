@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2021_mercedes_a-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "A-Class",
+    "A-Class"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel-drive (was It combined an enlarged M166 engine with extensive equipment—including leather/A; L M166 I4 (turbo))"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: It combined an enlarged M166 engine with extensive equipment—including leather/A; L M166 I4 (turbo) (was Front-engine, front-wheel-drive)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, front-wheel-drive"
+      }
+    ]
+  }
+}

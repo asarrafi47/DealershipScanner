@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2019|toyota|4runner",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_2019__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds SofTex®-trimmed heated front seats",
+      "Adds Backup camera with projected path",
+      "Adds Leather-trimmed tilt/telescopic steering wheel with audio and Bluetooth® hands-free phone and voice command",
+      "Adds SofTex®-trimmed 50/50 split fold-flat third-row seat and sliding second row with passenger-side one-touch access"
+    ],
+    "Base": [],
+    "SR5": [
+      "Adds HomeLink® universal transceiver",
+      "Adds Auto-dimming rearview mirror"
+    ],
+    "TRD": [
+      "Replaces part-time 4WD system with Rear-Wheel Drive (RWD) or full-time 4WD system with Active Traction Control (A-TRAC) and Torsen® limited-slip center differential with locking feature",
+      "Adds X-REAS Sport Enhancement Suspension",
+      "Adds Hill Start Assist Control (HAC), Multi-terrain Select and Crawl Control (CRAWL)"
+    ],
+    "TRD Off-Road": [
+      "Replaces to Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "Adds Locking rear differential",
+      "Adds Overhead console with Multi-terrain Select and Crawl Control (CRAWL) switches",
+      "Adds TRD shift knob",
+      "Adds TRD Off-Road floor mats"
+    ],
+    "TRD Pro": [
+      "Adds TRD FOX® high-performance shocks with rear remote reservoirs",
+      "Adds TRD-tuned front springs",
+      "Adds High-performance LED fog lights",
+      "Adds TRD-stamped aluminum front skid plate",
+      "Adds Black roof rack",
+      "Adds TRD PRO floor mats",
+      "Adds Unique TOYOTA front grille with Black TRD PRO external hard badges"
+    ],
+    "Limited": [
+      "Adds Heated power outside mirrors with turn signal indicators",
+      "Adds SofTex®-trimmed heated front seats; 8-way power-adjustable driver's seat with power lumbar support",
+      "Adds SofTex®-trimmed 40/20/40 split reclining and fold-flat second-row seat",
+      "Adds Front and rear parking assist sonar",
+      "Adds Color-keyed front and rear bumpers and side rocker panels with chrome inserts, chrome door handles and chrome-accented front grille insert",
+      "Adds Auto on/off headlight feature",
+      "Adds Dual zone automatic climate control with air filter and second-row vents"
+    ]
+  }
+}

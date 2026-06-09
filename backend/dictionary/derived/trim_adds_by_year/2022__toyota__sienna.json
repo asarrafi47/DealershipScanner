@@ -1,0 +1,90 @@
+{
+  "catalog_key": "2022|toyota|sienna",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2022__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "Woodland Edition",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Bi-LED projector headlights with LED-strip DRL and auto on/off",
+      "Bird's Eye View Camera",
+      "20-inch metallic wheels",
+      "Rain-sensing variable windshield wipers",
+      "Leather-trimmed seats with heated and ventilated front seats",
+      "Heated second-row captain's chairs with super-long-slide and ottoman",
+      "SofTex-trimmed 60/40 One-Motion-Stow Split & Stow 3rd Row seat",
+      "Leather-trimmed power tilt/telescopic steering wheel",
+      "10-inch color Head-Up Display (HUD)",
+      "9-inch touchscreen with 12 JBL speakers, subwoofer, and amplifier"
+    ],
+    "Limited": [
+      "LED headlights and LED-strip DRL with auto on/off",
+      "Dark gray metallic front grille",
+      "18-inch bright wheels",
+      "Chrome roof rails",
+      "Rear lower bumper with chrome accent",
+      "Chrome-accented Sienna liftgate logo",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "Wireless charging surface",
+      "Leather-trimmed seats with heated front seats",
+      "Second-row captain's chairs with super-long-slide and ottoman"
+    ],
+    "XSE": [
+      "Sport-tuned suspension",
+      "Metallic black sport mesh front grille",
+      "Black heated power outside mirrors",
+      "20-inch dark wheels",
+      "Black Sienna liftgate logo",
+      "Black roof-mounted shark-fin antenna",
+      "SofTex sport-trimmed seats with heated front seats",
+      "Second-row captain's chairs with super-long-slide feature",
+      "60/40 One-Motion-Stow Split & Stow 3rd Row seat",
+      "9-inch touchscreen with 8 speakers and Dynamic Navigation with 3-year trial"
+    ],
+    "XLE": [
+      "Integrated wide-angle LED fog lights",
+      "Hands-free dual power sliding side doors",
+      "Power liftgate with jam protection and hands-free feature",
+      "Chrome-accented color-keyed outside door handles",
+      "Power tilt/slide moonroof with sunshade",
+      "Front and Rear Parking Assist with Automatic Braking",
+      "Four-zone automatic climate control",
+      "SofTex-trimmed seats with heated front seats",
+      "Available second-row bench with stowable center seat",
+      "Leather-trimmed tilt/telescopic steering wheel"
+    ],
+    "Woodland Edition": [
+      "Increased ground clearance",
+      "Available in Cement or Midnight Black Metallic",
+      "Black lower grille garnish",
+      "Dark chrome upper grille garnish",
+      "Towing hitch receiver",
+      "Black roof rails with cross bars",
+      "Black Sienna liftgate logo and Toyota emblem",
+      "All-weather floor mats",
+      "SofTex sport-trimmed seats with heated front seats",
+      "9-inch touchscreen with 12 JBL speakers and Dynamic Navigation"
+    ],
+    "LE": [
+      "2.5L 4-cylinder hybrid engine with 245 net hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Normal, Eco, EV and Sport drive modes",
+      "LED headlights and LED DRL with auto on/off",
+      "LED taillights and stop lights",
+      "Color-keyed heated power outside mirrors",
+      "Dual power sliding side doors",
+      "17-inch alloy wheels",
+      "Three-zone automatic climate control",
+      "9-inch touchscreen with 6 speakers and Android Auto/Apple CarPlay compatibility"
+    ]
+  }
+}

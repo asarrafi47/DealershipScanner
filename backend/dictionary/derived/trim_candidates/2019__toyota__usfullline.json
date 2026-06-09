@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2019|toyota|usfullline",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "XLE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2020_mercedes_cla-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "CLA-Class",
+    "CLA-Class"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel-drive; All CLA models are powered by four-cylinder engines, including a choice of 1.6 L and 2.0 L petrol, and three diesels, a 1.5L, a 1.8 L and a 2.2 L. Most of the engines come in a range of different states of tuning, and…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: The MBUX Superscreen is also available with an additional 14-inch screen for the; 14-inch screen"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, all-wheel-drive (4Matic); L M133 turbo I4"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|cadillac|srx",
+  "year": 2010,
+  "make": "Cadillac",
+  "model": "SRX",
+  "ladder_id": "brochure_llm_2010__cadillac__srx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Collection",
+    "Performance Collection",
+    "Luxury Collection"
+  ],
+  "adds_by_trim": {
+    "Premium Collection": [
+      "Heated and ventilated driver and front passenger seats plus heated rear outboard seats",
+      "Keyless passive entry on both front and rear doors and liftgate",
+      "Independent rear-seat audio with two headphone jacks",
+      "Tri-zone automatic climate control",
+      "Rear-seat dual DVD players with wireless headphones and remote control"
+    ],
+    "Performance Collection": [
+      "20-inch cast-aluminum wheels with premium painted finish",
+      "Bose 5.1 cabin surround sound system with navigation",
+      "Eight-inch diagonal pop-up touch-screen with voice guidance and rearview camera"
+    ],
+    "Luxury Collection": [
+      "18-inch 7-spoke bright machined-finished aluminum wheels",
+      "Ultraview sunroof",
+      "Body-color heated power-adjustable power-folding mirrors with driver auto-dimming",
+      "Power liftgate with memory height",
+      "Ultrasonic front and rear parking assist",
+      "Leather heated driver and front passenger seats with eight-way power",
+      "Memory package for driver seat, mirrors, personalization and pedals",
+      "Sapele wood trim on center stack, door trim, steering wheel and shift knob",
+      "U-rail cargo management system with retractable shade and D-ring hooks",
+      "Adaptive remote start and Bluetooth wireless technology"
+    ]
+  }
+}

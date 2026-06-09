@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_mercedes_eqe-class_suv_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "EQE-Class SUV",
+    "EQE-Class SUV"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity"
+      }
+    ],
+    "AMG Line": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity"
+      }
+    ]
+  }
+}

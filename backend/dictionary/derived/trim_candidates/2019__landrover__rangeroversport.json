@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2019|landrover|rangeroversport",
+  "year": 2019,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Autobiography",
+    "HSE",
+    "HST",
+    "SE",
+    "Standard",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

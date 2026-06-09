@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2016|lotus|elise",
+  "year": 2016,
+  "make": "Lotus",
+  "model": "Elise",
+  "ladder_id": "brochure_llm_2016__lotus__elise",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT 220",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "SPORT 220": [
+      "1.8 litre DOHC 4-cylinder engine with dual VVT-i, Valvematic, and chargecooled supercharger producing 220 PS",
+      "217 hp at 6800 rpm and 250 Nm torque at 4600 rpm",
+      "0-60 mph in 4.2 seconds and 0-100 km/h in 4.6 seconds",
+      "145 mph maximum speed",
+      "Bilstein high-performance gas dampers front and rear",
+      "Eibach springs with anti-roll bar",
+      "Part leather interior with technical fabric sports seats",
+      "Clarion CD/MP3/WMA receiver with integrated iPod connectivity and Bluetooth",
+      "Engine start push button"
+    ],
+    "SPORT": [
+      "1.6 litre DOHC 4-cylinder engine with dual VVT-i and Valvematic, 16-valve producing 134 PS",
+      "100 kW power and 160 Nm torque at 4400 rpm",
+      "0-60 mph in 6.0 seconds and 0-100 km/h in 6.5 seconds",
+      "127 mph maximum speed",
+      "Fully independent double wishbone sports suspension",
+      "Servo-assisted cross-drilled and ventilated brake discs with AP Racing calipers",
+      "Lotus Electronic Throttle Control and Lotus Dynamic Performance Management",
+      "6-speed manual gearbox with sports ratios",
+      "Black leather steering wheel with knob and leather handbrake sleeve",
+      "Air conditioning and driver/passenger airbags"
+    ]
+  }
+}

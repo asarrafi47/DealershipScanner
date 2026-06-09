@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2012_mercedes-benz_c-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "C-Class",
+    "C-Class"
+  ],
+  "year_min": 2010,
+  "year_max": 2014,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "6.3L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "C300": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Manual 6-spd"
+      }
+    ],
+    "C350": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

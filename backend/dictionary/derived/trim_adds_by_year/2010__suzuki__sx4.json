@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2010|suzuki|sx4",
+  "year": 2010,
+  "make": "Suzuki",
+  "model": "SX4",
+  "ladder_id": "brochure_llm_2010__suzuki__sx4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORTBACK",
+    "SPORT SEDAN",
+    "CROSSOVER",
+    "SEDAN"
+  ],
+  "adds_by_trim": {
+    "SPORTBACK": [
+      "17-inch alloy wheels",
+      "Touchscreen TRIP GPS navigation system",
+      "Automatic climate control with pollen filter",
+      "Sport-tuned suspension with KYB performance shocks",
+      "Aero Body Package",
+      "Leather-wrapped steering wheel with illuminated audio controls",
+      "SmartPass keyless start and entry",
+      "9-speaker AM/FM/6-disc CD with subwoofer and MP3",
+      "Steering wheel-mounted paddle shifters on CVT",
+      "Rear wiper with intermittent function"
+    ],
+    "SPORT SEDAN": [
+      "17-inch alloy wheels",
+      "Touchscreen TRIP GPS navigation system",
+      "4-speaker AM/FM/CD with MP3 playback and iPod interface",
+      "Aero Body Package",
+      "Available Electronic Stability Program",
+      "Available foglamps",
+      "Available SmartPass keyless start and entry",
+      "Steering wheel-mounted paddle shifters on CVT"
+    ],
+    "CROSSOVER": [
+      "Intelligent All-Wheel Drive (i-AWD)",
+      "Roof rack rails",
+      "Maximum cargo of 51.8 cubic feet",
+      "Heated power side mirrors on AWD",
+      "Optional 17-inch alloy wheels",
+      "Optional Touchscreen TRIP GPS navigation",
+      "Optional Bluetooth hands-free communication"
+    ],
+    "SEDAN": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with 150-hp",
+      "Front-Wheel Drive",
+      "6-speed manual or CVT automatic transmission",
+      "4-wheel disc brakes with Bosch ABS",
+      "Electronic Brake-Force Distribution",
+      "Halogen headlamps",
+      "Power steering and power windows",
+      "Manual air conditioning with pollen filter",
+      "4-speaker AM/FM/CD with MP3 playback and XM capability",
+      "Information display showing MPG, range, temperature, average speed"
+    ]
+  }
+}

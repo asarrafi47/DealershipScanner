@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2010|mitsubishi|endeavor",
+  "year": 2010,
+  "make": "Mitsubishi",
+  "model": "Endeavor",
+  "ladder_id": "brochure_llm_2010__mitsubishi__endeavor",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Automatic climate control",
+      "Steering wheel-mounted audio controls and cruise control",
+      "Leather seating surfaces",
+      "Heated front seats",
+      "650-watt Rockford Acoustic Design premium audio system with SIRIUS Satellite Radio",
+      "Touch-screen navigation system with rear-view backup camera",
+      "18-inch alloy wheels with P255/55R18 tires",
+      "All-wheel Control (AWC) available as option",
+      "Sunroof and Navigation package optional"
+    ],
+    "LS": [
+      "3.8-liter V6 engine with 225 hp and 255 lb-ft torque",
+      "4-speed Sportronic transmission with INVECS-II adaptive shift control",
+      "MacPherson strut front suspension with independent multi-link rear suspension",
+      "Ventilated disc brakes front and rear with ABS and EBD",
+      "Advanced dual-stage front airbags with side and curtain airbags",
+      "Active Stability Control (ASC) system",
+      "Parabolic fog lights",
+      "Power side-view mirrors, windows and door locks",
+      "Sport-wrapped steering wheel and shift knob",
+      "Bluetooth Handsfree phone system"
+    ]
+  }
+}

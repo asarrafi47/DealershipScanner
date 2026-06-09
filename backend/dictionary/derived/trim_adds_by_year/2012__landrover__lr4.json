@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2012|landrover|lr4",
+  "year": 2012,
+  "make": "landrover",
+  "model": "LR4",
+  "ladder_id": "brochure_2012__landrover__lr4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes full-color Infotainment Touch-screen at center console",
+      "Adds 5-inch TFT display technology in instrument panel",
+      "Adds Includes audio and navigation controls with intuitive interface",
+      "Adds analog clock accent in premium interior ambience",
+      "Adds Includes steering wheel thumb controls for menu navigation",
+      "Adds cruise control and remote audio/phone switches on steering wheel"
+    ],
+    "Standard": [
+      "Adds HD Radio capability",
+      "Adds Sirius Satellite Radio subscription option",
+      "Adds High Beam Assist optional feature on TFT display"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2019|chevrolet|cruze",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2019__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "DIESEL",
+    "LT",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "17-inch aluminum wheels",
+      "Automatic single-zone climate control",
+      "8-way power driver seat adjuster",
+      "Heated leather-wrapped steering wheel",
+      "Leatherette seating surfaces",
+      "4-way manual front passenger seat adjuster",
+      "Driver Confidence II Package with IntelliBeam and Forward Collision Alert",
+      "SiriusXM Radio All Access Package with 3-month trial",
+      "4G LTE Wi-Fi for up to seven devices"
+    ],
+    "DIESEL": [
+      "18-inch machined-face aluminum wheels",
+      "Automatic single-zone climate control",
+      "8-way power driver seat adjuster",
+      "Heated front seats",
+      "Rear 60/40 split-folding seat with center armrest and cup holders",
+      "Driver Confidence Package with Rear Park Assist and Lane Change Alert",
+      "SiriusXM Radio All Access Package with 3-month trial"
+    ],
+    "LT": [
+      "17-inch aluminum wheels",
+      "Automatic single-zone climate control",
+      "Rear 60/40 split-folding seat with center armrest and cup holders",
+      "Heated front seats",
+      "8-way power driver seat adjuster",
+      "Electronic cruise control with steering wheel controls",
+      "Heated steering wheel with mounted audio and phone controls",
+      "Remote vehicle starter system",
+      "SiriusXM Radio All Access Package with 3-month trial",
+      "2 charge-only USB ports in rear"
+    ],
+    "SL": [
+      "16-inch aluminum wheels",
+      "Electronic cruise control with steering wheel-mounted controls",
+      "Remote vehicle starter system",
+      "Heated steering wheel with mounted audio and phone controls",
+      "Monochromatic Driver Information Center display",
+      "Carpeted front floor mats"
+    ],
+    "L": [
+      "15-inch steel wheels with painted wheel cover",
+      "Manual single-zone climate control",
+      "Floor-mounted console with armrest",
+      "Tilt and telescopic steering column",
+      "Remote Keyless Entry",
+      "Rear vision camera",
+      "Teen Driver technology",
+      "10 airbags with Passenger Sensing System"
+    ]
+  }
+}

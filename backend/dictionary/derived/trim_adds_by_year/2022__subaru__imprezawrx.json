@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2022|subaru|imprezawrx",
+  "year": 2022,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2022__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX GT",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX": [
+      "271-hp twin-scroll turbocharged 2.4-liter boxer engine",
+      "Symmetrical all-wheel drive",
+      "6-speed manual or 8-speed automatic transmission with paddle shifters",
+      "EyeSight driver assist with automatic emergency steering",
+      "Sport-tuned suspension",
+      "17-inch aluminum-alloy wheels with gray finish",
+      "Auto-on/off LED headlights with high beam assist",
+      "7.0-inch dual multimedia touchscreen with Apple CarPlay and Android Auto",
+      "Automatic climate control",
+      "Rear-vision camera"
+    ],
+    "WRX Premium": [
+      "18-inch aluminum-alloy wheels with dark gray finish",
+      "Low-profile trunk spoiler",
+      "LED fog lights",
+      "Keyless access with push-button start",
+      "All-weather package with heated mirrors and seats",
+      "11.6-inch multimedia plus touchscreen with navigation",
+      "STARLINK safety and security enabled",
+      "Dual-zone automatic climate control",
+      "Auto-up/down front and rear windows"
+    ],
+    "WRX Limited": [
+      "Steering-responsive auto-on/off LED headlights",
+      "Body-colored exterior mirrors with integrated turn signals",
+      "Black Ultrasuede upholstery",
+      "10-way power-adjustable driver seat",
+      "Power moonroof",
+      "Harman Kardon 504-watt premium audio with 11 speakers",
+      "11.6-inch navigation with 3 years free map updates",
+      "Blind-spot detection with lane change assist and rear cross-traffic alert"
+    ],
+    "WRX GT": [
+      "Subaru performance transmission with paddle shifters and 8-speed manual mode",
+      "Electronically controlled dampers",
+      "Drive mode select",
+      "Reverse automatic braking",
+      "Recaro front seats",
+      "18-inch aluminum-alloy wheels with matte gray finish"
+    ]
+  }
+}

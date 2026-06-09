@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2017|ford|superduty",
+  "year": 2017,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_llm_2017__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARIAT",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "LARIAT": [
+      "18-inch bright-machined cast-aluminum wheels with bright center caps (F-350 SRW)",
+      "17-inch polished forged-aluminum wheels with bright center caps (F-350 DRW)",
+      "19.5-inch polished forged-aluminum wheels with bright center caps (F-450/F-550)"
+    ],
+    "XLT": [
+      "18-inch cast-aluminum wheels with bright center caps (F-350 SRW)",
+      "17-inch argent-painted steel wheels with bright center caps (F-350 DRW)",
+      "19.5-inch argent-painted steel wheels with bright center caps (F-450/F-550)"
+    ],
+    "XL": [
+      "17-inch argent-painted steel wheels with painted center caps (F-350 SRW base)",
+      "17-inch argent-painted steel wheels with stainless steel covers (F-350 DRW/F-450/F-550 base)",
+      "19.5-inch argent-painted steel wheels with stainless steel covers (F-450/F-550 base)"
+    ]
+  }
+}

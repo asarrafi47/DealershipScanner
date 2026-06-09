@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2013|honda|crz",
+  "year": 2013,
+  "make": "Honda",
+  "model": "CR-Z",
+  "ladder_id": "generic_honda_crz",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "States, except Alaska.) Please see your Honda dealer for details. 4Compatible with select phones with Bluetooth.\u00ae Your wireless carrier\u2019s",
+      "operation on your phone or audio device only when the vehicle is safely parked. 5Pandora, the Pandora",
+      "Pandora Media, Inc. Used with permission. Compatible with select smartphones. See: www.pandora.com/everywhere/mobile. Not all"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "EX": 3
+    }
+  }
+}

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Volkswagen,Golf/GTI,GTI,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,24,34,28,,,,,
+2022,Volkswagen,Golf/GTI,GTI,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (AM7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,25,34,28,,,,,
+2022,Volkswagen,Golf/GTI,Golf-R,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (AM7),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,23,30,26,,,,,
+2022,Volkswagen,Golf/GTI,Golf-R,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,20,28,23,,,,,

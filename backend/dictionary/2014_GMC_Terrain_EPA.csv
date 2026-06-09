@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2014,GMC,Terrain,FWD,3.6L V6 (SIDI),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.6,17,24,19,,,,,,3.6L V6,
-2014,GMC,Terrain,FWD,2.4L I4 (SIDI),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.4,22,31,26,,,,,,2.4L I4 Turbo,Turbocharged
-2014,GMC,Terrain,FWD,FFV 3.6L V6 (SIDI; FFV),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline / E85,Small Sport Utility Vehicle 2WD,6,3.6,17,24,20,,,,,,3.6L V6,
-2014,GMC,Terrain,AWD,3.6L V6 (SIDI),Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,16,23,19,,,,,,3.6L V6,
-2014,GMC,Terrain,AWD,2.4L I4 (SIDI),Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,20,28,23,,,,,,2.4L I4 Turbo,Turbocharged
-2014,GMC,Terrain,AWD,FFV 2.4L I4 (SIDI; FFV),Automatic 6-spd,All-Wheel Drive,Regular Gasoline / E85,Small Sport Utility Vehicle 4WD,4,2.4,20,28,23,,,,,,2.4L I4 Turbo,Turbocharged
-2014,GMC,Terrain,AWD,FFV 3.6L V6 (SIDI; FFV),Automatic 6-spd,All-Wheel Drive,Regular Gasoline / E85,Small Sport Utility Vehicle 4WD,6,3.6,16,23,19,,,,,,3.6L V6,
-2014,GMC,Terrain,FWD,FFV 2.4L I4 (SIDI; FFV),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline / E85,Small Sport Utility Vehicle 2WD,4,2.4,22,31,26,,,,,,2.4L I4 Turbo,Turbocharged

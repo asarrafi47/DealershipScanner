@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2015|ford|fusion",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Fusion",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Titanium",
+    "Sport",
+    "SE",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

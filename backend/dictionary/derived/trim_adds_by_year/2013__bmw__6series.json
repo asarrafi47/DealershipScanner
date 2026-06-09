@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2013|bmw|6series",
+  "year": 2013,
+  "make": "BMW",
+  "model": "6 Series",
+  "ladder_id": "brochure_2013__bmw__6series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds BMW Ultimate Service suite with comprehensive programs and services",
+      "Adds New Vehicle/SAV Limited Warranty coverage for four years or unlimited miles",
+      "Adds unlimited-mileage warranty protection against corrosion and rust perforation",
+      "Adds BMW Maintenance Program covering factory-recommended maintenance",
+      "Adds BMW Assist Safety Plan with four-year coverage",
+      "Adds BMW Roadside Assistance free of charge for first four years with no mileage limit",
+      "Adds iDrive Display with BMW Online access to fuel prices and weather forecasts",
+      "Adds BMW Navigation system with Google Maps integration",
+      "Adds Bluetooth technology for Mobile Office feature"
+    ],
+    "Limited": [
+      "Upgraded to optional BMW Assist Convenience Plan for unlimited personalized Directions access",
+      "Adds MyInfo feature enabling business location and street address sending to vehicle",
+      "Adds BMW Virtual Center access with 24-hour customer service support",
+      "Adds TeleService feature with continuous monitoring of wear-and-tear components"
+    ],
+    "Premium": [
+      "Adds enhanced BMW Assist Safety Plan with Automatic Collision Notification",
+      "Adds Emergency Request feature with operator-assisted calling capability",
+      "Adds Enhanced Roadside Assistance beyond standard tier coverage",
+      "Adds Door Unlock and Stolen Vehicle Recovery services",
+      "Adds Customer Relations support program",
+      "Adds Critical Calling for up to four operator-assisted calls per year"
+    ]
+  }
+}

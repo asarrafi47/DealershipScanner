@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2011|chevrolet|camaro",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "brochure_llm_2011__chevrolet__camaro",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2SS",
+    "1SS",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2SS": [
+      "6.2L V8 engine with Direct Injection and Variable Valve Timing",
+      "Brembo four-piston calipers and vented discs on all four corners",
+      "SS-specific front and rear fascias with unique grille and diffuser",
+      "Auxiliary gauge cluster with oil pressure, battery, oil temperature, transmission fluid temperature"
+    ],
+    "1SS": [
+      "6.2L V8 engine with Direct Injection and Variable Valve Timing",
+      "Brembo four-piston calipers and vented discs on all four corners",
+      "SS-specific front and rear fascias with unique grille and diffuser",
+      "Front fog lamps integral in front fascia",
+      "Auxiliary gauge cluster with oil pressure, battery, oil temperature gauges"
+    ],
+    "2LT": [
+      "Heated leather-appointed driver and front passenger seats",
+      "Outside heated power-adjustable mirrors with auto-dimming driver side",
+      "Inside rearview auto-dimming mirror",
+      "Head-Up Display",
+      "Boston Acoustics premium speaker system with subwoofer",
+      "Universal Home Remote three-channel programmable garage door opener"
+    ],
+    "1LT": [
+      "Front fog lamps integral in front fascia",
+      "Boston Acoustics premium speaker system standard"
+    ],
+    "LS": [
+      "3.6L V6 engine with Direct Injection and Variable Valve Timing",
+      "Single-zone manual air conditioning",
+      "Six-speed manual transmission standard",
+      "Front sport bucket seats with power recline and adjustable headrests",
+      "Electronic StabiliTrak stability control with traction control",
+      "Power steering with variable-ratio",
+      "XM Radio with three trial months"
+    ]
+  }
+}

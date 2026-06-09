@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2019|lincoln|mkc",
+  "year": 2019,
+  "make": "Lincoln",
+  "model": "MKC",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Select",
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1993,Chevrolet,Lumina,Lumina,2.2L I4 ((FFS)),2.2L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.2,18,26,21,,,,,
+1993,Chevrolet,Lumina,Lumina,3.1L V6 ((FFS)),3.1L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,17,25,20,,,,,
+1993,Chevrolet,Lumina,Lumina,3.1L V6 ((FFS)),3.1L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,17,27,20,,,,,
+1993,Chevrolet,Lumina,Lumina,3.4L V6 ((FFS)),3.4L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.4,15,24,18,,,,,
+1993,Chevrolet,Lumina,Lumina,3.4L V6 ((FFS)),3.4L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.4,15,24,18,,,,,

@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2023|jeep|compass",
+  "year": 2023,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_llm_2023__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Altitude",
+    "Limited",
+    "Altitude",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "High Altitude": [
+      "Elite Interior Group with premium perforated leather-trimmed seats and ventilated driver/passenger seating",
+      "19-inch aluminum painted Granite Crystal wheels with 235/45R19 BSW all-season tires",
+      "LED projector headlamps with premium LED fog lamps with cornering",
+      "Premium LED taillamps",
+      "Dual-Pane Panoramic Power Sunroof",
+      "Uconnect 5 NAV with 10.1-inch touchscreen, GPS navigation, and premium Alpine sound system with 9 speakers and subwoofer",
+      "Driver Assist Group I with wireless charging, universal garage door opener, highway assist, traffic sign recognition",
+      "360° Surround-View Camera System and parallel/perpendicular park and unpark assist"
+    ],
+    "Limited": [
+      "18-inch aluminum Diamond-Cut painted black wheels",
+      "Bright Chrome and Gloss Black exterior accents with power-adjust heated manual-folding mirrors",
+      "Steel Grey or Sepia Nappa leather instrument panel with Liquid Chrome hydrographic accents",
+      "Dual-Zone Automatic Temperature Control with humidity sensor",
+      "Windshield wiper de-icer and rain-sensitive intermittent wipers",
+      "Adaptive Cruise Control with Stop and Go functionality",
+      "ParkSense Rear Park Assist System"
+    ],
+    "Altitude": [
+      "18-inch aluminum painted Gloss Black wheels with 225/55R18 BSW all-season tires",
+      "Gloss Black grille surround with Gloss Black rings and badges",
+      "Black daylight opening molding",
+      "McKinley vinyl and Kimberlite cloth seats with Light Tungsten accent stitching",
+      "Power-adjust 8-way driver seat with power 2-way lumbar adjust",
+      "Heated front seats and heated steering wheel",
+      "Dual-Zone Automatic Temperature Control with humidity sensor",
+      "Foot-activated Open 'n Go power liftgate and remote start system"
+    ],
+    "Latitude": [
+      "17-inch aluminum painted Satin Carbon wheels",
+      "Fog lamps with cornering and auto high-beam headlamp control",
+      "Black roof rails",
+      "Premium vinyl and cloth seats with Bright Blue accent stitching",
+      "Overhead cupola interior LED lamps and door-handle interior LED lamps",
+      "Sun visor with illuminated mirrors and premium-wrapped steering wheel",
+      "Keyless Enter 'n Go front-door locks",
+      "Convenience Group with power-adjust driver seat, heated front seats, 2nd-row USB, universal garage door opener"
+    ],
+    "Sport": [
+      "17-inch aluminum painted Satin Carbon wheels",
+      "Fog lamps with cornering capabilities",
+      "Auto High-Beam Headlamp Control",
+      "Black roof rails",
+      "Premium vinyl and cloth seats",
+      "Overhead cupola interior LED lamps and door-handle interior LED lamps",
+      "Premium-wrapped steering wheel with leather-wrapped shift knob",
+      "Keyless Enter 'n Go front-door locks and sun visor with illuminated mirrors"
+    ]
+  }
+}

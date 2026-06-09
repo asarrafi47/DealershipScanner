@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2020|toyota|corollahatchback",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "brochure_llm_2020__toyota__corollahatchback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE Nightshade Edition",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Integrated LED fog lights",
+      "18-inch machined finish alloy wheels",
+      "Front chrome grille surround",
+      "Color-keyed heated power outside mirrors with blind spot warning indicators",
+      "Audio Plus with 8-inch touch-screen and 6 speakers",
+      "7-inch TFT Multi-Information Display instead of 4.2-inch",
+      "Dual zone automatic climate control",
+      "Leather-trimmed heated sport seats with fabric inserts and 8-way power-adjustable driver's seat",
+      "TSS 2.0 with Lane Tracing Assist on automatic transmission",
+      "XSE Preferred Package with JBL premium audio and Qi wireless charging"
+    ],
+    "SE Nightshade Edition": [
+      "18-inch black alloy wheels",
+      "Black front lower grille surround",
+      "Black rear spoiler",
+      "Black heated power outside mirrors with turn signal indicators",
+      "Single exhaust with dual black diffusers",
+      "Black rear diffuser surround and black rear Toyota emblem and badges",
+      "Leather-wrapped steering wheel",
+      "TSS 2.0 with Road Sign Assist standard on all transmissions"
+    ],
+    "SE": [
+      "LED headlights and LED Daytime Running Lights with auto on/off",
+      "16-inch twin-spoke alloy wheels",
+      "Front dark gray grille surround",
+      "Color-keyed rear spoiler",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Single exhaust with dual chrome diffusers",
+      "Audio system with 6 speakers and 8-inch touch-screen",
+      "Android Auto and Apple CarPlay compatibility",
+      "Amazon Alexa compatibility and SiriusXM",
+      "4.2-inch Multi-Information Display"
+    ]
+  }
+}

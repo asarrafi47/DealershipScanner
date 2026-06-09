@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2016|toyota|sienna",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2016__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED PREMIUM",
+    "LIMITED",
+    "XLE PREMIUM",
+    "XLE",
+    "SE PREMIUM",
+    "SE",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "LIMITED PREMIUM": [
+      "Dual moonroof with 39.1/38.0/35.9 inches head room across rows",
+      "Vehicle Dynamics Integrated Management (VDIM) system",
+      "Pre-Collision System (PCS)",
+      "Hill Start Assist Control (HAC)",
+      "Safety Connect with Emergency Assistance and Stolen Vehicle Locator",
+      "Front and rear parking assist sonar"
+    ],
+    "LIMITED": [
+      "Safety Connect with Emergency Assistance and Stolen Vehicle Locator",
+      "Front and rear parking assist sonar",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert standard",
+      "Rear parking assist sonar"
+    ],
+    "XLE PREMIUM": [
+      "Moonroof with 39.1 inches head room",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert standard"
+    ],
+    "XLE": [
+      "All-Wheel Drive with active torque control available",
+      "Anti-theft system with alarm and engine immobilizer",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert optional"
+    ],
+    "SE PREMIUM": [
+      "LED Daytime Running Lights with on/off feature",
+      "Moonroof with 39.1 inches head room",
+      "Sport-calibrated Electric Power Steering",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert standard"
+    ],
+    "SE": [
+      "LED Daytime Running Lights with on/off feature",
+      "Sport-calibrated Electric Power Steering",
+      "Sport-tuned coil springs on suspension",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert optional"
+    ],
+    "LE": [
+      "All-Wheel Drive with active torque control available",
+      "Daytime Running Lights with on/off feature",
+      "Electric Power Steering standard"
+    ],
+    "L": [
+      "3.5-Liter V6 DOHC 24-Valve with Dual VVT-i engine (266 hp)",
+      "6-speed Electronically Controlled automatic transmission",
+      "Front-Wheel Drive with MacPherson strut suspension",
+      "Star Safety System with Enhanced Vehicle Stability Control",
+      "Driver and passenger airbags with side curtain airbags",
+      "Four LATCH child safety seat locations",
+      "Tire Pressure Monitor System",
+      "3500 lb. towing capacity"
+    ]
+  }
+}

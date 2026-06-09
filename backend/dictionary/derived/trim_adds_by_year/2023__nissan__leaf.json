@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2023|nissan|leaf",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2023__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV PLUS",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV PLUS": [
+      "60 kWh lithium-ion battery with 212-mile EPA range",
+      "160 kW AC synchronous electric motor with 214 hp and 250 lb-ft torque",
+      "High-output 100 kW Quick Charge port (CHAdeMO)",
+      "17-inch aluminum-alloy wheels",
+      "LED headlights with LED signature daytime running lights",
+      "Fog lights",
+      "ProPILOT Assist with lane-keeping and adaptive cruise control",
+      "Intelligent Around View Monitor with 360-degree camera system",
+      "8-way power adjustable driver seat with 2-way lumbar support",
+      "Heated leather-wrapped steering wheel, heated front seats, and heated outside mirrors"
+    ],
+    "S": [
+      "40 kWh lithium-ion battery with 149-mile EPA range",
+      "110 kW AC synchronous electric motor with 147 hp and 236 lb-ft torque",
+      "6.6 kW onboard charger with 50 kW Quick Charge port (CHAdeMO)",
+      "Portable 120-V/240-V charge cable",
+      "e-Pedal regenerative braking",
+      "Intelligent Forward Collision Warning with Automatic Emergency Braking",
+      "Intelligent Lane Intervention and Intelligent Blind Spot Intervention",
+      "Rear Cross Traffic Alert and Rear Automatic Braking",
+      "RearView Monitor and High Beam Assist",
+      "NissanConnect 8-inch color touchscreen with Apple CarPlay and Android Auto"
+    ]
+  }
+}

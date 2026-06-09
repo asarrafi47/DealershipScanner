@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_chevrolet_volt_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Volt",
+    "Volt"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (variable gear ratios); Front-Wheel Drive"
+      }
+    ],
+    "L": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Automatic (variable gear ratios); Front-Wheel Drive; Automatic (variable gear ratios)"
+      }
+    ]
+  }
+}

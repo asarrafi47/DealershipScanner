@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2012|volkswagen|beetle",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Beetle",
+  "ladder_id": "brochure_llm_2012__volkswagen__beetle",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Beetle Turbo with Sunroof, Sound, and Navigation",
+    "Beetle Turbo with Sunroof and Sound",
+    "Beetle 2.5L with Sunroof",
+    "Beetle 2.5L",
+    "Beetle Turbo",
+    "Beetle 2.5L"
+  ],
+  "adds_by_trim": {
+    "Beetle Turbo with Sunroof, Sound, and Navigation": [
+      "RNS 315 navigation system with 5-inch color touchscreen and SD memory card reader",
+      "All Beetle Turbo with Sunroof and Sound features included"
+    ],
+    "Beetle Turbo with Sunroof and Sound": [
+      "Power tilting/sliding panoramic sunroof",
+      "Touchscreen Premium VIII sound system with 6-disc CD changer and SiriusXM Satellite Radio",
+      "18-inch alloy wheels",
+      "Sport seats with cloth upholstery",
+      "Carbon fiber appearance dashboard",
+      "Brushed aluminum foot pedal covers"
+    ],
+    "Beetle 2.5L with Sunroof": [
+      "Power tilting/sliding panoramic sunroof",
+      "Touchscreen Premium VIII sound system with 6-disc CD changer and SiriusXM with 3-month trial",
+      "Multi-function steering wheel",
+      "Keyless access with push-button start",
+      "Adjustable front center armrest with integrated storage box"
+    ],
+    "Beetle Turbo": [
+      "2.0L turbocharged TSI engine with 200 hp and 207 lbs/ft torque",
+      "6-speed manual transmission",
+      "18-inch alloy wheels",
+      "4-corner independent suspension",
+      "Cloth sport seats",
+      "Carbon fiber appearance dashboard"
+    ],
+    "Beetle 2.5L": [
+      "2.5L 170-hp 5-cylinder engine with 177 lbs/ft torque",
+      "5-speed manual transmission",
+      "17-inch alloy wheels with all-season tires",
+      "Body color running boards and door trim",
+      "Halogen headlights with 4-position ambient lighting",
+      "Heritage-inspired Käferfach glovebox",
+      "V-Tex leatherette seating with heated front seats",
+      "8-speaker sound system with CD player and AUX-in",
+      "Bluetooth technology and Electronic Stability Control"
+    ]
+  }
+}

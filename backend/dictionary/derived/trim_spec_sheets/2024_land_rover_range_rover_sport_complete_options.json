@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2024_land_rover_range_rover_sport_complete_options",
+  "make": "Land",
+  "models": [
+    "Rover Range Rover Sport",
+    "Rover Range Rover Sport"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, four-wheel-drive; This model was the last to use the Rover V8 and interior leather supplied by Connolly, who went out of business in 2002. It was the first model to feature Satellite Navigation as an option. (was Four, five, and…"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: Standard interior features include: 20-way heated electric front seats with power recline"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Four, five, and seven-seat interiors are available, along with Standard and Long Wheelbase; L BMW M51 turbodiesel I6"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: It was the first model to feature Satellite Navigation as an option."
+      }
+    ]
+  }
+}

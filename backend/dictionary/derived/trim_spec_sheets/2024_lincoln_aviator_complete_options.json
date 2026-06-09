@@ -1,0 +1,47 @@
+{
+  "ladder_id": "2024_lincoln_aviator_complete_options",
+  "make": "Lincoln",
+  "models": [
+    "Aviator",
+    "Aviator"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Select": [
+      {
+        "label": "Engine Options",
+        "value": "Gasoline plug-in hybrid:; Electric motor 75 kW (101 hp; 102 PS) permanent magnet synchronous"
+      }
+    ],
+    "Standard": [
+      {
+        "label": "Engine Options",
+        "value": "Gasoline plug-in hybrid:; Electric motor 75 kW (101 hp; 102 PS) permanent magnet synchronous"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Gasoline plug-in hybrid:; Electric motor 75 kW (101 hp; 102 PS) permanent magnet synchronous"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Gasoline plug-in hybrid:; Electric motor 75 kW (101 hp; 102 PS) permanent magnet synchronous"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Gasoline plug-in hybrid:; Electric motor 75 kW (101 hp; 102 PS) permanent magnet synchronous"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "From heated driver and front passenger seats to front-row acoustic laminated glass, your s; From heated driver and front passenger seats to front-row acoustic laminated glass, your sanctuary awaits."
+      }
+    ]
+  }
+}

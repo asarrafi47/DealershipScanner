@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|landrover|discoverysport",
+  "year": 2020,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "ladder_id": "brochure_llm_2020__landrover__discoverysport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R-DYNAMIC HSE",
+    "R-DYNAMIC SE",
+    "R-DYNAMIC S",
+    "HSE",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "R-DYNAMIC HSE": [
+      "R-Dynamic exterior styling enhancements over HSE"
+    ],
+    "R-DYNAMIC SE": [
+      "R-Dynamic exterior styling enhancements over SE"
+    ],
+    "R-DYNAMIC S": [
+      "R-Dynamic exterior styling enhancements over S"
+    ],
+    "HSE": [
+      "Premium specification pack above SE trim"
+    ],
+    "SE": [
+      "Mid-range specification pack above base S trim"
+    ],
+    "S": [
+      "Base specification with standard in-car features",
+      "5 or 5+2 seating configuration options available",
+      "Choice of six engines: D150, D180, D240, P200, P250, P300e"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2019|hyundai|kona",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Kona",
+  "ladder_id": "brochure_web_2019__hyundai__kona",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "N Line",
+    "N Line S",
+    "Limited",
+    "SEL Convenience",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "N Line": [
+      "Forward collision avoidance with junction turning and direct oncoming assistance",
+      "Power tilt-and-slide sunroof",
+      "Highway Driving Assist adaptive cruise control with stop-and-go",
+      "Navigation adaptive cruise control",
+      "Hyundai Digital Key 2 technology",
+      "12.3-inch touchscreen with navigation",
+      "Bose premium audio with eight speakers"
+    ],
+    "N Line S": [
+      "1.6-liter turbocharged engine with 190 hp and 195 lb-ft torque",
+      "Eight-speed automatic transmission with paddle shifters",
+      "19-inch alloy wheels",
+      "Twin exhaust tips",
+      "Heated front seats",
+      "Wireless charger",
+      "Leather-wrapped N Line steering wheel",
+      "Metal sport pedals and door sill accents"
+    ],
+    "Limited": [
+      "1.6-liter turbocharged engine standard"
+    ],
+    "SEL Convenience": [
+      "Trim renamed from SEL with Convenience package"
+    ],
+    "SEL": [
+      "Ambient lighting with 64 colors on N Line and N Line S trims"
+    ],
+    "SE": [
+      "2.0-liter naturally aspirated four-cylinder engine with 147 hp and 132 lb-ft torque",
+      "CVT transmission",
+      "Front-wheel drive standard, all-wheel drive available",
+      "Automatic emergency braking",
+      "Lane keep assist",
+      "Blind-spot monitoring",
+      "Rear cross-traffic alert",
+      "Rear occupant alert",
+      "Automatic high-beams"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/kona/"
+}

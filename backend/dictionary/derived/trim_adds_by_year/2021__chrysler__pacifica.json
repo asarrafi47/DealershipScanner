@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2021|chrysler|pacifica",
+  "year": 2021,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "ladder_id": "brochure_llm_2021__chrysler__pacifica",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PINNACLE",
+    "LIMITED",
+    "TOURING L",
+    "TOURING"
+  ],
+  "adds_by_trim": {
+    "PINNACLE": [
+      "3.6L Atkinson Cycle V6 Hybrid engine with Electrically Variable Transmission",
+      "Easy-slide 2nd-row captain's chairs standard",
+      "Harman Kardon 20-speaker sound system standard",
+      "Heated steering wheel standard",
+      "Power front and rear windows with 1-touch up/down standard",
+      "115-volt auxiliary power outlet standard",
+      "Heated 2nd-row seats standard",
+      "8-way power front-passenger seat standard"
+    ],
+    "LIMITED": [
+      "Suede deluxe headliner",
+      "Full-length upgraded floor console with storage",
+      "Rear ambient lighting",
+      "Illuminated map pocket and puddle lamp",
+      "Lower instrument-panel drawer",
+      "Ventilated front seats",
+      "Uconnect 5 NAV with 10.1-inch display and integrated navigation standard",
+      "Laminated front-door glass standard on Hybrid"
+    ],
+    "TOURING L": [
+      "Luxury steering wheel",
+      "Heated front seats",
+      "2nd- and 3rd-row retractable shades",
+      "Premium Nappa leather-trimmed quilted bucket seats",
+      "3rd-row power-folding Stow 'n Go 60/40-split bench"
+    ],
+    "TOURING": [
+      "Three-zone automatic temperature control",
+      "Power door locks",
+      "Front and rear LED lamps",
+      "Auto-dimming rearview mirror",
+      "Remote start",
+      "Tilt/telescoping steering column",
+      "Electronic Vehicle Information Center with 7-inch configurable display",
+      "Universal garage door opener",
+      "Adaptive cruise control with stop and go",
+      "Blind spot monitoring with rear cross-path detection"
+    ]
+  }
+}

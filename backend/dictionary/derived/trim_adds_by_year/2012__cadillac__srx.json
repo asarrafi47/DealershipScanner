@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2012|cadillac|srx",
+  "year": 2012,
+  "make": "Cadillac",
+  "model": "SRX",
+  "ladder_id": "brochure_llm_2012__cadillac__srx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM",
+    "PERFORMANCE",
+    "LUXURY",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "PREMIUM": [
+      "20-inch 7-spoke chrome tech wheels",
+      "Sapele wood trim on center stack, door trim, steering wheel and shift knob"
+    ],
+    "PERFORMANCE": [
+      "All-wheel drive with advanced torque vectoring and electronic limited slip differential",
+      "Sport suspension with computer-controlled real-time damping"
+    ],
+    "LUXURY": [
+      "Xenon HID headlamps with adaptive forward lighting and headlamp washers",
+      "10-speaker Bose 5.1 surround sound system with 2 GB virtual CD player",
+      "Dual DVD players with wireless headphones and rear seat entertainment system",
+      "Ultraview power tilt-sliding sunroof with express-open and power sunshade",
+      "Heated and power-folding mirrors with driver-side auto-dimming",
+      "Leather seating surfaces with eight-way power-adjustable front passenger",
+      "Power-adjustable pedals with memory",
+      "Automatic dimming rearview mirror with OnStar controls",
+      "Leather-trimmed heated steering wheel with sapele wood",
+      "20-inch 7-spoke bright machined-finish wheels with premium painted accents"
+    ],
+    "STANDARD": [
+      "3.6L direct-injection V6 VVT engine with 308 hp and 265 lb-ft torque",
+      "6-speed automatic transmission",
+      "Front-wheel drive",
+      "4-wheel independent short/long arm suspension with anti-sway bars",
+      "4-wheel vented disc brakes with anti-lock system",
+      "Power rack-and-pinion steering with variable-effort control",
+      "Five-passenger seating with front bucket seats and leatherette surfaces",
+      "8-speaker Bose sound system",
+      "Keyless access and keyless push-button start",
+      "Rearview backup camera with LCD mirror screen"
+    ]
+  }
+}

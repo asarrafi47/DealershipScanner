@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2021|chevrolet|tahoe",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2021__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "Z71",
+    "RST",
+    "LT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "Enhanced Display and Alert Package with HD Surround Vision and Rear Camera Mirror",
+      "Premium Package with panoramic power sunroof and Adaptive Cruise Control",
+      "Power-retractable assist steps with perimeter lighting",
+      "High Country Deluxe option with Four-Corner Air Ride Adaptive Suspension"
+    ],
+    "Premier": [
+      "Enhanced Display and Alert Package with Head-Up Display and Rear Camera Mirror",
+      "Premium Package with panoramic power sunroof and Adaptive Cruise Control",
+      "Trailer Side Blind Zone Alert with Max Trailering Package"
+    ],
+    "Z71": [
+      "Z71 Off-Road Package with Magnetic Ride Control and Four-Corner Air Ride",
+      "Off-Road Capability Package with enhanced Driver Information Center 8-inch display",
+      "Max Trailering Package standard"
+    ],
+    "RST": [
+      "Max Trailering Package with extra-capacity cooling system and Autotrac transfer case",
+      "Luxury Package available with Driver Alert Package and HD Surround Vision",
+      "Second-row bucket seats with power-release"
+    ],
+    "LT": [
+      "Chevrolet Infotainment 3 Premium system with Navigation and Rear-Seat Media System",
+      "Luxury Package with Driver Alert Package and HD Surround Vision available",
+      "LT Signature Package with panoramic power sunroof and 20-inch wheels"
+    ],
+    "SL": [
+      "Chevrolet Infotainment 3 Plus system with 10.2-inch HD touchscreen and Bluetooth",
+      "4G LTE Wi-Fi Hotspot for up to seven devices",
+      "Chevrolet Connected Access with 10 years of standard connectivity",
+      "Advanced Trailering Package and Driver Alert Package standard"
+    ]
+  }
+}

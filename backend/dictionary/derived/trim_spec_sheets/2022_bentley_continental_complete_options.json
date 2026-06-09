@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_bentley_continental_complete_options",
+  "make": "bentley",
+  "models": [
+    "continental",
+    "continental"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "GT Speed": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM-S8)"
+      }
+    ],
+    "GT Speed Convertible": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM-S8)"
+      }
+    ]
+  }
+}

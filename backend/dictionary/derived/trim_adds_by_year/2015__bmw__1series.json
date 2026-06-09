@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|bmw|1series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "1 Series",
+  "ladder_id": "brochure_web_2015__bmw__1series",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "M135",
+    "M Sport",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "M135": [
+      "300 horsepower engine",
+      "Four-wheel drive system",
+      "Mighty acceleration matching Golf R performance"
+    ],
+    "M Sport": [
+      "Larger alloy wheels",
+      "Meaner body kit with sportier styling",
+      "Heated front seats",
+      "Leather upholstery"
+    ],
+    "Sport": [
+      "Larger alloy wheels compared to SE",
+      "Sportier front and rear bumpers",
+      "Dual-zone climate control",
+      "Front sports seats"
+    ],
+    "SE": [
+      "Alloy wheels",
+      "Climate control",
+      "Cruise control",
+      "Auto lights and wipers",
+      "Apple CarPlay integration"
+    ]
+  },
+  "web_source_url": "https://www.motorpoint.co.uk/guides/bmw-1-series-models-and-trim-levels-explained"
+}

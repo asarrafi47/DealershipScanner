@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2021|acura|tlx",
+  "year": 2021,
+  "make": "acura",
+  "model": "tlx",
+  "ladder_id": "brochure_llm_2021__acura__tlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance Package",
+    "A-Spec® Package",
+    "Technology Package",
+    "TLX"
+  ],
+  "adds_by_trim": {
+    "Advance Package": [
+      "19 x 8.5 Pewter Gray Metallic Machine-Finished Interwoven aluminum-alloy wheels",
+      "255 / 40 R19 High-Performance All-Season tires",
+      "LED Puddle Lights",
+      "Power-Folding Side Mirrors",
+      "Adaptive Damper System",
+      "Surround-View Camera System",
+      "Rear Cross Traffic Monitor",
+      "Blind Spot Information System"
+    ],
+    "A-Spec® Package": [
+      "19 x 8.5 Shark Gray Interwoven aluminum-alloy wheels",
+      "255 / 40 R19 High-Performance All-Season tires",
+      "Decklid Spoiler",
+      "LED Fog Lights"
+    ],
+    "Technology Package": [
+      "19 x 8.5 Sparkle Silver Metallic Interwoven aluminum-alloy wheels",
+      "255 / 40 R19 High-Performance All-Season tires"
+    ],
+    "TLX": [
+      "2.0-liter Turbo Aluminum-Alloy 4-Cylinder engine with 272 horsepower",
+      "10-Speed Automatic Transmission with Sequential SportShift Paddle Shifters",
+      "Front-Wheel Drive",
+      "Jewel Eye® LED Headlights with ChicaneTM Daytime Running Lights",
+      "LED ChicaneTM Taillights and Brake Lights with Directional Signals",
+      "Moonroof with Tilt and Slide Function",
+      "AcuraWatch™ Advanced Safety with Forward Collision Warning and Collision Mitigation Braking",
+      "Lane Keeping Assist System and Road Departure Mitigation",
+      "Adaptive Cruise Control with Low-Speed Follow",
+      "Traffic Sign Recognition"
+    ]
+  }
+}

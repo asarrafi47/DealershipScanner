@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2013|kia|sportage",
+  "year": 2013,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_llm_2013__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "Turbocharged 2.0L GDI I4 engine with 260 hp",
+      "Sport-tuned suspension with high-performance dampers",
+      "Leather seat trim standard",
+      "Push-button start with Smart Key standard",
+      "Power-folding outside mirrors standard",
+      "Supervision meter cluster standard"
+    ],
+    "EX": [
+      "Panoramic sunroof available with Premium Package",
+      "Heated front seats with air-cooled driver's seat available",
+      "Premium audio with external amplifier and subwoofer standard",
+      "Auto-dimming rear-view mirror with HomeLink available"
+    ],
+    "LX": [
+      "2.4L 176-hp 4-cylinder engine with CVVT",
+      "UVO2 powered by Microsoft in-vehicle infotainment system with rear-camera display",
+      "Back-up warning system",
+      "Telescopic steering column",
+      "Roof rails",
+      "Rear spoiler",
+      "Cooling glove box",
+      "Heated power mirrors with turn-signal indicators",
+      "Cargo cover"
+    ]
+  }
+}

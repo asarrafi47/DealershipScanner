@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Jeep,Patriot,FWD,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,22,26,24,,,,,
+2016,Jeep,Patriot,FWD,2.4L I4,2.4L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.4,23,28,25,,,,,
+2016,Jeep,Patriot,4WD,2.4L I4 (SIDI),2.4L I4,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,20,23,21,,,,,
+2016,Jeep,Patriot,4WD,2.4L I4 (SIDI),2.4L I4,,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,20,25,22,,,,,
+2016,Jeep,Patriot,4WD,2.4L I4 (SIDI),2.4L I4,,Manual 5-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,22,27,24,,,,,
+2016,Jeep,Patriot,FWD,2.4L I4,2.4L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.4,21,27,23,,,,,
+2016,Jeep,Patriot,FWD,2.0L I4,2.0L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,23,30,25,,,,,

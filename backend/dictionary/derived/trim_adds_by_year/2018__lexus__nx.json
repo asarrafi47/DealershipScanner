@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2018|lexus|nx",
+  "year": 2018,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "brochure_llm_2018__lexus__nx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NX300 FSPORT",
+    "NX300"
+  ],
+  "adds_by_trim": {
+    "NX300 FSPORT": [
+      "Eight-year/100,000-mile Hybrid System Warranty coverage"
+    ],
+    "NX300": [
+      "2.0-liter turbocharged engine",
+      "Four-year/50,000-mile Lexus Limited Warranty",
+      "Six-year/70,000-mile Powertrain Warranty",
+      "Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Lexus Safety System+ Pre-Collision System",
+      "Pedestrian Detection System",
+      "Lane Departure Alert with Lane Keep Assist",
+      "Dynamic Radar Cruise Control",
+      "Panoramic View Monitor",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert"
+    ]
+  }
+}

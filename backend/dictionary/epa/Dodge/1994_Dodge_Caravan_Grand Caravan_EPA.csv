@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1994,Dodge,Caravan/Grand Caravan,2WD,2.5L I4 ((FFS)),2.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.5,18,22,19,,,,,
+1994,Dodge,Caravan/Grand Caravan,2WD,2.5L I4 ((FFS)),2.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.5,18,24,20,,,,,
+1994,Dodge,Caravan/Grand Caravan,2WD,3.0L V6 ((FFS)),3.0L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,17,22,19,,,,,
+1994,Dodge,Caravan/Grand Caravan,2WD,3.0L V6 ((FFS)),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,16,22,18,,,,,
+1994,Dodge,Caravan/Grand Caravan,2WD,3.8L V6 ((FFS)),3.8L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.8,15,20,17,,,,,
+1994,Dodge,Caravan/Grand Caravan,4WD,3.3L V6 ((FFS)),3.3L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.3,15,20,17,,,,,
+1994,Dodge,Caravan/Grand Caravan,4WD,3.8L V6 ((FFS)),3.8L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.8,14,19,16,,,,,
+1994,Dodge,Caravan/Grand Caravan,2WD,3.3L V6 ((FFS)),3.3L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.3,16,21,18,,,,,
+1994,Dodge,Caravan/Grand Caravan,2WD,CNG 3.3L V6 ((FFS) FI) Natural Gas,3.3L V6,,Automatic 4-spd,Front-Wheel Drive,Natural Gas,Special Purpose Vehicle 2WD,6,3.3,15,21,17,,,,,

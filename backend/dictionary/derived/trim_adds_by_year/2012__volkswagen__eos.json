@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|volkswagen|eos",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Eos",
+  "ladder_id": "brochure_web_2012__volkswagen__eos",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Lux",
+    "Komfort",
+    "Standard"
+  ],
+  "adds_by_trim": {
+    "Lux": [
+      "Premium leather seating with power adjustment and heating",
+      "Automatic bi-level climate control",
+      "Panoramic sunroof with power operation",
+      "Navigation system with 6.5-inch touchscreen display",
+      "Xenon headlights with cornering function",
+      "19-inch alloy wheels",
+      "Rear parking sensors with display",
+      "Bluetooth hands-free telephone connectivity"
+    ],
+    "Komfort": [
+      "Leather-trimmed steering wheel and shift knob",
+      "Manual climate control with separate zones",
+      "Power windows and locks with convenience features",
+      "Cruise control system",
+      "Alloy wheels",
+      "Auxiliary audio input jack",
+      "Power heated exterior mirrors"
+    ],
+    "Standard": [
+      "2.0-liter turbocharged gasoline engine producing 200 horsepower",
+      "Six-speed manual or optional automatic transmission",
+      "Convertible hardtop with power operation",
+      "Air conditioning with manual controls",
+      "Power windows, locks, and mirrors",
+      "Front airbags and stability control",
+      "AM/FM radio with CD player",
+      "Cloth interior seating"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/eos/"
+}

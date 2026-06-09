@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2026_toyota_rav4_complete_options",
+  "make": "Toyota",
+  "models": [
+    "RAV4",
+    "RAV4"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "No diesel engine option is offered for this generation."
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive; Pre-facelift Toyota RAV4 L 5-door Pre-facelift Toyota RAV4 3-door Facelift (20"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Since its adoption, the IIHS has noticed several automakers making non-symmetric"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine (China) - - 2AZ-FE 1AZ-FE - - - - - - - -; The XA40 RAV4 in China came standard with the 2.0-litre 6ZR-FE and 2.5-litre 5AR"
+      }
+    ]
+  }
+}

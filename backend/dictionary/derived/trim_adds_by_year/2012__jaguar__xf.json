@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2012|jaguar|xf",
+  "year": 2012,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_llm_2012__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XFR",
+    "XF"
+  ],
+  "adds_by_trim": {
+    "XFR": [
+      "Unique deeper section front bumper with larger lower air intakes and black mesh grille",
+      "Side sill extensions and aerodynamic trunk lid spoiler",
+      "Gloss black sculpted rear valance with three vanes and quad exhaust tailpipes",
+      "Supercharged embossed hood louvers for additional cooling",
+      "Silver-gray brake calipers with Jaguar script",
+      "R badge on trunk lid and front grille",
+      "Sport themed interior with dark mesh aluminum finish on instrument panel and doors",
+      "Dark oak veneer and warm charcoal upper fascia with contrast stitching",
+      "Sports seats with embossed R logo on front and rear",
+      "R badging on steering wheel and instrument panel with red pointer dials"
+    ],
+    "XF": [
+      "Base luxury sedan with breathtaking sports car power and world-class comfort",
+      "Available wheel options: 18-inch Lyra, Vela; 19-inch Aquila, Caravela, Artura",
+      "Additional wheel options: 20-inch Hydra, Nevis, Draco Dark Gray, Draco Silver",
+      "Sport Pack option with front and rear styling enhancements",
+      "Black Pack option with high gloss black window surrounds and grille (XFR only)",
+      "Multiple interior theme options with varied materials and finishes available",
+      "Extensive customization options for exterior finishes and premium interior trims"
+    ]
+  }
+}

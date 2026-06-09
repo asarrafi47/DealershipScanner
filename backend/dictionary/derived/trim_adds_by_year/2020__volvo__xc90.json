@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2020|volvo|xc90",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "XC90",
+  "ladder_id": "brochure_llm_2020__volvo__xc90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XC90 Inscription",
+    "XC90 R-Design",
+    "XC90 Momentum"
+  ],
+  "adds_by_trim": {
+    "XC90 Inscription": [
+      "Highly sophisticated expression of Swedish luxury",
+      "Premium materials and finishes throughout interior"
+    ],
+    "XC90 R-Design": [
+      "Sporty styling and design cues throughout exterior",
+      "Enhanced responsiveness and control-focused chassis tuning"
+    ],
+    "XC90 Momentum": [
+      "Premium look and ambience as standard",
+      "Core technology and connectivity features",
+      "Refined comfort and safety systems"
+    ]
+  }
+}

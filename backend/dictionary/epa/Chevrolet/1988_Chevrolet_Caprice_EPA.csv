@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Chevrolet,Caprice,Caprice,4.3L V6 ((FFS)),4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,6,4.3,17,25,20,,,,,
+1988,Chevrolet,Caprice,Caprice,5.0L V8 ((305) (FFS)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,8,5.0,15,22,17,,,,,
+1988,Chevrolet,Caprice,Caprice,5.7L V8 ((350 V8) (POLICE) (FFS)),5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,8,5.7,12,19,14,,,,,
+1988,Chevrolet,Caprice,Wagon,5.0L V8 ((307) (FFS)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,15,22,18,,,,,

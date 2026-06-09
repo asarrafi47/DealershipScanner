@@ -1,0 +1,96 @@
+{
+  "catalog_key": "2015|toyota|corolla",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2015__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S Premium",
+    "S Plus",
+    "S Plus (6MT)",
+    "LE Premium",
+    "LE Plus",
+    "LE Eco Plus",
+    "LE Eco",
+    "LE",
+    "L"
+  ],
+  "adds_by_trim": {
+    "S Premium": [
+      "Entune Premium Audio with Navigation and App Suite with 6.1-inch high-resolution split-screen touchscreen",
+      "HD Radio with HD predictive traffic and Doppler weather overlay",
+      "SiriusXM All Access Radio with 3-month complimentary trial",
+      "Gracenote album cover art display"
+    ],
+    "S Plus": [
+      "17-inch alloy wheels",
+      "Rear disc brakes",
+      "SofTex-trimmed heated front seats",
+      "8-way power-adjustable driver's seat",
+      "4-way adjustable front passenger seat with seatback pocket",
+      "Smart Key System with Push Button Start",
+      "Power tilt/slide moonroof with sliding sunshade"
+    ],
+    "S Plus (6MT)": [
+      "6-speed manual transmission option"
+    ],
+    "LE Premium": [
+      "SofTex-trimmed heated front seats",
+      "8-way power-adjustable driver's seat",
+      "4-way adjustable front passenger seat with seatback pocket",
+      "Smart Key System with Push Button Start",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Entune Premium Audio with Navigation and App Suite with 6.1-inch high-resolution split-screen"
+    ],
+    "LE Plus": [
+      "SofTex-trimmed heated front seats",
+      "8-way power-adjustable driver's seat",
+      "4-way adjustable front passenger seat with seatback pocket",
+      "Smart Key System with Push Button Start",
+      "Power tilt/slide moonroof with sliding sunshade"
+    ],
+    "LE Eco Plus": [
+      "16-inch alloy wheels",
+      "Sport Drive Mode",
+      "Sport instrumentation",
+      "Leather-trimmed tilt/telescopic 3-spoke steering wheel with audio and Bluetooth hands-free controls",
+      "Paddle shifters",
+      "Mixed media seats with sport bolsters and sport fabric inserts",
+      "Heated power outside mirrors with turn signal indicators",
+      "Integrated fog lights"
+    ],
+    "LE Eco": [
+      "1.8L 4-Cyl. Engine with Valvematic technology",
+      "Continuously Variable Transmission",
+      "ECO Drive Mode",
+      "Integrated fog lights",
+      "Heated power outside mirrors with turn signal indicators",
+      "Rear spoiler"
+    ],
+    "LE": [
+      "1.8L 4-Cyl. Engine",
+      "Continuously Variable Transmission",
+      "16-inch steel wheels with unique wheel covers",
+      "Heated power outside mirrors",
+      "Entune Audio with 6.1-inch touchscreen, AM/FM CD player, six speakers, USB connectivity, iPod control, and Bluetooth",
+      "Integrated backup camera",
+      "Automatic climate control",
+      "Cruise control",
+      "Remote keyless entry system",
+      "Rear-seat center armrest with cup holders"
+    ],
+    "L": [
+      "1.8L 4-Cyl. Engine",
+      "6-speed manual or 4-speed automatic transmission",
+      "16-inch steel wheels",
+      "LED low-beam headlights with halogen high beams",
+      "LED Daytime Running Lights",
+      "Power outside mirrors",
+      "Tech Audio with AM/FM CD player, four speakers, USB connectivity, iPod interface, and Bluetooth",
+      "Fabric-trimmed seats",
+      "6-way adjustable driver's seat",
+      "Tilt/telescopic steering wheel with audio and Bluetooth controls"
+    ]
+  }
+}

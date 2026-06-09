@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_honda_hr-v_complete_options",
+  "make": "Honda",
+  "models": [
+    "HR-V",
+    "HR-V"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "RV3RV4RV5RV6RS1 (electric); The former was available on the EX and EXL trim levels, while the latter was ava"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Honda e:NS1/e:NP1 (China, electric, 2022–2025)"
+      }
+    ]
+  }
+}

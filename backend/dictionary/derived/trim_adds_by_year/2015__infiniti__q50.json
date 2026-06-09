@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2015|infiniti|q50",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "Q50",
+  "ladder_id": "brochure_llm_2015__infiniti__q50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q50S Hybrid",
+    "Q50S 3.7",
+    "Q50 Hybrid",
+    "Q50 3.7"
+  ],
+  "adds_by_trim": {
+    "Q50S Hybrid": [
+      "3.5-liter V6 with Infiniti Direct Response Hybrid system, lithium-ion battery and 50 kW electric motor",
+      "Hybrid Regenerative Braking System",
+      "EPA estimated 28/35 mpg (AWD) or 29/36 mpg (RWD)",
+      "Energy usage instrument meter with Direct Response Hybrid system display showing energy flow"
+    ],
+    "Q50S 3.7": [
+      "19 x 8.5-inch triple 5-spoke aluminum-alloy sport wheels with 245/40R19 all-season run-flat tires",
+      "8-way power heated sport-type leather-appointed front seats with power lumbar and torso support",
+      "Direct Adaptive Steering"
+    ],
+    "Q50 Hybrid": [
+      "3.5-liter V6 with Infiniti Direct Response Hybrid system, lithium-ion battery and 50 kW electric motor",
+      "Hybrid Regenerative Braking System",
+      "EPA estimated 28/35 mpg (AWD) or 29/36 mpg (RWD)",
+      "Energy usage instrument meter with Direct Response Hybrid system display"
+    ],
+    "Q50 3.7": [
+      "3.7-liter 24-valve V6 engine with 328 hp and 269 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control and Downshift Rev Matching",
+      "Electronically controlled power steering with Active Trace Control",
+      "17 x 7.5-inch split 5-spoke aluminum-alloy wheels with 225/55R17 all-season run-flat tires",
+      "8-way power driver's seat with adjustable lumbar support and 8-way power front-passenger seat",
+      "Leather-appointed seating with Kacchu aluminum interior trim",
+      "Infiniti InTouch dual display system with 8-inch upper and 7-inch lower LCD color screens",
+      "Infiniti Studio on Wheels by Bose 14-speaker Premium Audio System with subwoofers",
+      "Power sliding tinted glass moonroof with one-touch auto-open and sunshade",
+      "Around View Monitor with Moving Object Detection and front/rear sonar system"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_audi_a6_complete_options",
+  "make": "Audi",
+  "models": [
+    "A6",
+    "A6"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "This is achieved in part due to air curtain vents in the front bumper, active gr: This is achieved in part due to air curtain vents in the front bumper, active grille flaps, smooth and flat underfloor, aerodynamically optimized wheel choice"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "The standard model is the only one to come with the smaller 83 kWh battery pack,: The standard model is the only one to come with the smaller 83 kWh battery pack, and outputs 210 kW (282 hp; 286 PS) (240 kW (322 hp; 326 PS) with launch cont"
+      }
+    ]
+  }
+}

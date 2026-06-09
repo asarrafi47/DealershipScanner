@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2015|lexus|nx",
+  "year": 2015,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "2015_lexus_nx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "d vehicles in the area may not be aware of the vehicle starting off or",
+      "vehicle and smartphone connectivity. See usage precautions, service limitations & Owner’s Manual. Data charges may apply. Registration, app download are required. Must have",
+      "FSPORT is a trademark of Toyota Motor Corporation. Products available through participating Lexus dealers. 19. The backup camera does not provide a comprehensive",
+      "of the vehicle. You should also look around outside your vehicle and use your mirrors to confirm rearward clearance. Cold weather may limit effectiveness and view may become cloudy. 20. 2015 EPA-estimated ratings. Actual mileage",
+      "will vary. 23. The SmartAccess system may interfere with some pacemakers or cardiac defibrillators.",
+      "to the vehicle. The engine will only start if the code in the transponder chip inside the key/fob matches the code in the vehicle’s immobilizer. Because the transponder chip is embedded in the key/fob, it can",
+      "registered trademarks of Apple Inc. All rights reserved. 27. Contact with the response center may not be available in all areas. Service Agreements required. A variety of"
+    ],
+    "Premium": [
+      "Higher trim than base NX 350 AWD"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 7.0,
+    "per_trim_add_counts": {
+      "Limited": 7
+    }
+  }
+}

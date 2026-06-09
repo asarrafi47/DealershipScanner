@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2015|nissan|quest",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Quest",
+  "ladder_id": "brochure_llm_2015__nissan__quest",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Dual opening glass moonroof",
+      "Around View Monitor with Moving Object Detection",
+      "Blind Spot Warning system",
+      "Nissan Hard Drive Navigation System with 8-inch touch-screen",
+      "NavTraffic and NavWeather via SiriusXM",
+      "13-speaker Bose audio system",
+      "Advanced Climate Control with in-cabin polyphenol microfilter",
+      "Automatic tilt-in-reverse outside mirrors",
+      "Driver's memory seat system with two presets",
+      "Power-return third-row seat"
+    ],
+    "SL": [
+      "18-inch aluminum-alloy wheels",
+      "Roof rails",
+      "Side sill spoilers with chrome accents",
+      "One-touch power rear liftgate",
+      "Smart Auto Headlights",
+      "DVD Entertainment System with second-row 11-inch DVD monitor",
+      "Leather-appointed seats and door trim",
+      "Leather-wrapped shift knob",
+      "Quick Comfort heated front seats",
+      "8-way power driver's seat with power lumbar support"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "Fog lights",
+      "One-touch power sliding doors",
+      "RearView Monitor",
+      "Premium AM/FM/CD audio with 5-inch color display and six speakers",
+      "SiriusXM Satellite Radio with Voice Recognition",
+      "Bluetooth Hands-free Phone System",
+      "USB connection port for iPod interface",
+      "Leather-wrapped steering wheel with illuminated audio controls",
+      "Tri-zone Automatic Temperature Control"
+    ],
+    "S": [
+      "3.5-liter V6 engine with Xtronic CVT",
+      "Anti-lock Braking System and Vehicle Dynamic Control",
+      "Tire Pressure Monitoring System with Easy-Fill Tire Alert",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "AM/FM/CD audio system with auxiliary input jack",
+      "Cruise control with illuminated steering wheel-mounted switches",
+      "7-passenger seating capacity with permanent rear storage well",
+      "Nissan Advanced Air Bag System with six standard air bags",
+      "Power heated outside mirrors with turn signal indicators",
+      "120-volt AC power outlet"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2020|lexus|ux",
+  "year": 2020,
+  "make": "lexus",
+  "model": "UX",
+  "ladder_id": "brochure_2020__lexus__ux",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited",
+    "LT",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Lexus Safety System+ 2.0 with Pedestrian Detection",
+      "Adds Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds Lexus Enform services"
+    ],
+    "Sport": [
+      "Upgraded to 18-inch wheels"
+    ],
+    "LT": [],
+    "Limited": [
+      "Adds Qi wireless charging for mobile devices"
+    ],
+    "Premium": [
+      "Adds Amazon Alexa integration with Lexus+Alexa app"
+    ],
+    "Luxury": [
+      "Adds Remote Connect telematics with trial subscription",
+      "Adds Predictive Efficient Drive Systems with Navigation integration"
+    ]
+  }
+}

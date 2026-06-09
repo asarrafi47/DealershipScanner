@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2011|mazda|tribute",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "Tribute",
+  "ladder_id": "brochure_llm_2011__mazda__tribute",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "3.0L DOHC 24-valve V6 engine with 240 hp (vs. 2.5L 4-cylinder with 171 hp)",
+      "6-speed automatic transmission",
+      "Power moonroof with power tilt and slide",
+      "Leather-trimmed seats",
+      "Dual heated power remote outside mirrors",
+      "Heated front seats",
+      "SIRIUS Satellite Radio with 6-month subscription",
+      "Dual illuminated vanity mirrors with covers"
+    ],
+    "Touring": [
+      "Back-up camera with auto-dimming mirror display",
+      "Retractable cargo cover (standard)",
+      "Roof rack with cross bars (standard)",
+      "Privacy-tint rear glass",
+      "Front seatback map pockets",
+      "Steering-wheel-mounted audio controls",
+      "190-watt AM/FM in-dash 6-disc CD changer with 7 speakers",
+      "Overhead console with dual storage bins"
+    ],
+    "Sport": [
+      "100-watt AM/FM/CD stereo with 4 speakers",
+      "Power windows with one-touch-down feature",
+      "Power door locks with 2-stage unlocking",
+      "Remote keyless illuminated entry system",
+      "Clear-lens halogen headlights with automatic on",
+      "Body-color door handles",
+      "Reclining front bucket seats",
+      "Adjustable headrests for all seating positions",
+      "3-point seat belts for all seating positions"
+    ]
+  }
+}

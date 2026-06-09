@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1996,Dodge,Caravan/Grand Caravan,2WD,2.4L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.4,18,24,20,,,,,,2.4L I4,
-1996,Dodge,Caravan/Grand Caravan,2WD,2.4L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.4,16,23,19,,,,,,2.4L I4,
-1996,Dodge,Caravan/Grand Caravan,2WD,3.0L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,17,23,19,,,,,,3.0L V6,
-1996,Dodge,Caravan/Grand Caravan,2WD,3.3L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.3,16,22,18,,,,,,3.3L V6,
-1996,Dodge,Caravan/Grand Caravan,2WD,3.8L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.8,15,22,18,,,,,,3.8L V6,
-1996,Dodge,Caravan/Grand Caravan,4WD,3.8L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.8,14,20,16,,,,,,3.8L V6,

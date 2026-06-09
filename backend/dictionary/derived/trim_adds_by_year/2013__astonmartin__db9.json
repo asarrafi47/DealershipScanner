@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2013|astonmartin|db9",
+  "year": 2013,
+  "make": "Aston Martin",
+  "model": "db9",
+  "ladder_id": "brochure_2013__astonmartin__db9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds two-door coupe body style with front number plate plinth",
+      "Adds LED map-reading lights",
+      "Adds carbon-fibre propeller shaft",
+      "Adds 78-litre fuel capacity",
+      "Adds aluminium and magnesium alloy construction",
+      "Adds boot-mounted umbrella",
+      "Adds matching wood door trim",
+      "Adds catalytic converter on petrol engine"
+    ],
+    "Sport": [],
+    "Limited": []
+  }
+}

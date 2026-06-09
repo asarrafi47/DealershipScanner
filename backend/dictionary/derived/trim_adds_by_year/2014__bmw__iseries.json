@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2014|bmw|iseries",
+  "year": 2014,
+  "make": "BMW",
+  "model": "i Series",
+  "ladder_id": "brochure_llm_2014__bmw__iseries",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Tera World",
+    "Giga World",
+    "Mega World",
+    "Pure Impulse World"
+  ],
+  "adds_by_trim": {
+    "Tera World": [
+      "Tera Exclusive Dalbergia Brown Full Natural Leather with Carum Spice Gray Cloth upholstery",
+      "Velour floormats",
+      "BMW i blue safety belts"
+    ],
+    "Giga World": [
+      "Giga Amido Black Full Perforated Leather or Giga Ivory White Full Perforated Leather upholstery"
+    ],
+    "Mega World": [
+      "Mega Carum Spice Gray Leather with Cloth highlight upholstery"
+    ],
+    "Pure Impulse World": [
+      "Carum Spice Gray Full Perforated Leather upholstery",
+      "357 hp total system output with 420 lb-ft maximum torque",
+      "0-60 mph acceleration in 4.2 seconds",
+      "155 mph top speed in hybrid mode, 75 mph in electric-only mode",
+      "330 mile maximum range",
+      "BMW i 360° Electric with home charging, solar energy integration, and public charging",
+      "BMW ConnectedDrive services and BMW i Remote App",
+      "BMW Assist eCall 24/7 response specialists"
+    ]
+  }
+}

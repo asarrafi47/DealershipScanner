@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2019|ford|expedition",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Expedition",
+  "ladder_id": "brochure_llm_2019__ford__expedition",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Luxurious leather trims throughout interior",
+      "Refined seating for up to 8 passengers"
+    ],
+    "Limited": [
+      "Durable fabric and leather trim options",
+      "Enhanced interior appointments versus XLT"
+    ],
+    "XLT": [
+      "3.5L EcoBoost engine with up to 400 horsepower",
+      "SYNC 3 infotainment system with smart-charging USB ports",
+      "FordPass Connect with 4G LTE Wi-Fi hotspot",
+      "Available in 4x2 or 4x4 drivetrain configurations",
+      "Choice of standard Expedition or Expedition MAX body style"
+    ]
+  }
+}

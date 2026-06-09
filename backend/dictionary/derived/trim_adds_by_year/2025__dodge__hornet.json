@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2025|dodge|hornet",
+  "year": 2025,
+  "make": "Dodge",
+  "model": "Hornet",
+  "ladder_id": "2025_dodge_hornet",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "GT",
+    "R/T"
+  ],
+  "adds_by_trim": {
+    "R/T": [
+      "Chrome R/T badge and performance-oriented powertrain calibration",
+      "GT Plus / R/T Plus: Harman Kardon 14-speaker audio and full leather seats",
+      "Power sunroof, wireless charging, and ventilated front seats on Plus packages",
+      "Track Pack and Blacktop Package bundle available on R/T"
+    ],
+    "GT": [
+      "Base features include standard interior seating",
+      "Available heated front seats option",
+      "Available heated steering wheel option",
+      "Standard auto-dimming rearview mirror",
+      "HomeLink universal garage door opener capability"
+    ]
+  }
+}

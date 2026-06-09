@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|lincoln|mks",
+  "year": 2014,
+  "make": "Lincoln",
+  "model": "MKS",
+  "ladder_id": "brochure_2014__lincoln__mks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 3.7L Ti-VCT 24-valve V6 engine with 305 hp and 280 lb.-ft. torque",
+      "Adds 6-speed SelectShift automatic transmission with paddle activation",
+      "Adds Anti-Lock Brake System with electronic brakeforce distribution and power 4-wheel ventilated disc brakes",
+      "Adds Lincoln Drive Control with continuously controlled damping and electric power-assisted steering",
+      "Adds Active Grille Shutters",
+      "Adds cooled driver and front-passenger seats with power lumbar and memory",
+      "Adds Lincoln Premium Sound System with AM/FM, single-CD player, MP3 and 10 speakers",
+      "Adds SiriusXM Satellite Radio with 6-month trial subscription",
+      "Adds SYNC with MyLincoln Touch voice-activated connectivity and dual 4.2-inch LCD screens",
+      "Adds leather-wrapped steering wheel and wood accents on instrument panel"
+    ],
+    "Standard": [
+      "Upgraded to 3.5L EcoBoost twin-turbocharged V6 engine with 365 hp and 350 lb.-ft. torque",
+      "Upgraded to 19-inch premium painted aluminum wheels with all-season tires",
+      "Adds adaptive HID headlamps with auto high beams and autolamp features",
+      "Adds fog lamps with chrome surrounds and LED taillamps",
+      "Adds power, heated, body-color sideview mirrors with integrated blind spot mirrors and auto-dimming driver's side",
+      "Adds Forward and Reverse Sensing Systems with rear view camera",
+      "Adds rain-sensing windshield wipers and solar-tinted laminated glass",
+      "Upgraded to premium leather-trimmed seats with 12-way power on driver and front passenger",
+      "Adds Intelligent all-wheel drive system with active noise control",
+      "Adds Remote Start System and push-button start with Intelligent Access"
+    ]
+  }
+}

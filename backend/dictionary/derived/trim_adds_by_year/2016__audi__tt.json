@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2016|audi|tt",
+  "year": 2016,
+  "make": "Audi",
+  "model": "TT",
+  "ladder_id": "brochure_llm_2016__audi__tt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TTSCoupe",
+    "TTRoadster",
+    "TTCoupe"
+  ],
+  "adds_by_trim": {
+    "TTSCoupe": [
+      "292 horsepower turbocharged four-cylinder engine versus 220 hp",
+      "280 lb-ft torque at 1,900–5,300 rpm versus 258 lb-ft at 1,600–4,400 rpm",
+      "4.6-second 0–60 mph acceleration versus 5.3 seconds",
+      "155 mph top track speed versus 130 mph",
+      "13.3-inch ventilated front disc brakes with four-piston fixed aluminum calipers",
+      "12.2-inch ventilated rear disc brakes versus 11.8-inch solid rear discs",
+      "9.3:1 compression ratio versus 9.6:1"
+    ],
+    "TTRoadster": [
+      "Convertible roadster body style versus fixed coupe roof"
+    ],
+    "TTCoupe": [
+      "Four-cylinder turbocharged TFSI engine with 220 horsepower",
+      "258 lb-ft torque at 1,600–4,400 rpm",
+      "5.3-second 0–60 mph acceleration",
+      "130 mph top track speed",
+      "Six-speed Stronic dual-clutch transmission with quattro all-wheel drive",
+      "Ultra lightweight ASF aluminum hybrid construction",
+      "MacPherson strut front suspension with four-link rear suspension",
+      "12.3-inch ventilated front disc and 11.8-inch solid rear disc brakes",
+      "Electromechanical power steering with 14.6:1 initial steering ratio",
+      "34.78-foot curb-to-curb turning diameter"
+    ]
+  }
+}

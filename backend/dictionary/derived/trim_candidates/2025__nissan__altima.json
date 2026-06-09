@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2025|nissan|altima",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Altima",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "SV",
+    "SR",
+    "S",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

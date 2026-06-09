@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2024_chevrolet_ss_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "SS",
+    "SS"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SS": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S6); Rear-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, rear-wheel-drive; blind spot monitors). The Chevrolet SS had a single, fully equipped specific"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 6.2 L LS3 V8"
+      }
+    ]
+  }
+}

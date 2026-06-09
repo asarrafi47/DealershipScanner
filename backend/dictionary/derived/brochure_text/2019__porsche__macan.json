@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2019|porsche|macan",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "Macan",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2019_Porsche_Macan_Brochure.pdf",
+  "page_count": 17,
+  "all_pages": false,
+  "trim_hint_pages": [
+    2
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 2,
+      "trim_hint": true,
+      "text": "The models featured in this publication are approved for road use in Germany. Some items of equipment are available as extra-cost options only. The availability of\nmodels and options may vary from market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult\nyour Porsche Centre. All information regarding construction, features, design, performance, dimensions, weight, fuel consumption and running costs is correct to\nthe best of our knowledge at the time of going to print (06/18). Porsche reserves the right to alter specifications, equipment and delivery scopes without prior\nnotice. Colours may differ from those illustrated. Errors and omissions excepted. For the disclaimer in every language please refer to www.porsche.com/disclaimer",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\nThe models featured in this publication are approved for road use in Germany. Some items of equipment are available as extra-cost options only. The availability of\nmodels and options may vary from market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult\nyour Porsche Centre. All information regarding construction, features, design, performance, dimensions, weight, fuel consumption and running costs is correct to\nthe best of our knowledge at the time of going to print (06/18). Porsche reserves the right to alter specifications, equipment and delivery scopes without prior\nnotice. Colours may differ from those illustrated. Errors and omissions excepted. For the disclaimer in every language please refer to www.porsche.com/disclaimer"
+}

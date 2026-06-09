@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2026|toyota|landcruiser",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "ladder_id": "2026_toyota_land_cruiser",
+  "source": "manual_brochure_review",
+  "trims_available": ["1958", "Land Cruiser"],
+  "adds_by_trim": {
+    "Land Cruiser": [
+      "i-FORCE MAX 2.4L turbo hybrid with Stabilizer Disconnect Mechanism",
+      "Rigid Industries LED color-selectable fog lights (replaces heritage circular LEDs on 1958)",
+      "Heated and ventilated front seats and SofTex-trimmed seats",
+      "12.3-inch Toyota Audio Multimedia with 10-speaker audio",
+      "Multi-Terrain Monitor with selectable front, side, or rear views",
+      "2400W AC inverter and Premium Package moonroof available"
+    ]
+  }
+}

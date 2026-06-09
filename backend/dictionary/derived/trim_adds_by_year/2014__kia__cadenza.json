@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2014|kia|cadenza",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Cadenza",
+  "ladder_id": "brochure_2014__kia__cadenza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "LED headlights with High-Beam Assist",
+      "Unique vertical design front grille",
+      "Front LED fog lights",
+      "Windshield wiper de-icer and auto rain-sensing wipers",
+      "Smart Power Trunk with power trunk lid",
+      "Wireless charging system",
+      "Supervision meter cluster with 7-inch TFT color LCD",
+      "Steering-wheel-mounted paddle shifters",
+      "Ventilated front seats",
+      "Heated leather-wrapped steering wheel"
+    ],
+    "Limited": [
+      "Upgraded to 19-inch alloy wheels",
+      "Adds panoramic sunroof with power-retractable sunshade",
+      "Adds xenon HID headlights with adaptive front lighting system",
+      "Adds rear LED taillights",
+      "Adds dual heated power-folding outside mirrors with LED turn-signal indicators",
+      "Adds front fog lights",
+      "Adds auto rain-sensing wipers with windshield wiper de-icer",
+      "Adds hydrophobic glass on front side windows"
+    ],
+    "Platinum": [
+      "Adds perimeter approach lighting"
+    ]
+  }
+}

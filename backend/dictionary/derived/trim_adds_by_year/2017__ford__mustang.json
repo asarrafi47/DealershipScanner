@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|ford|mustang",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_2017__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds sport pedals",
+      "Adds wheel center caps",
+      "Adds wheel lock kit"
+    ],
+    "GT": [
+      "Adds Shelby Track Package rear spoiler",
+      "Adds Ford Custom Graphics by 3M Original Wraps",
+      "Adds hood protector",
+      "Adds reverse bumper-mounted warning sensor"
+    ],
+    "Limited": [
+      "Adds all-weather floor mats",
+      "Adds remote start system",
+      "Adds illuminated door sill plates",
+      "Adds interior light kit",
+      "Adds mini spare tire kit"
+    ]
+  }
+}

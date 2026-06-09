@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2010|chevrolet|malibu",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "2010_chevrolet_malibu",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LS",
+    "1LT",
+    "2LT",
+    "LTZ"
+  ],
+  "adds_by_trim": {
+    "1LT": [
+      "Six-speed automatic transmission (replaces four-speed on LS)",
+      "Body-color power mirrors and rocker moldings with bright inserts",
+      "Steering-wheel-mounted cruise control",
+      "OnStar Directions & Connections with Turn-by-Turn Navigation"
+    ],
+    "2LT": [
+      "UltraLux seating with six-way power driver seat",
+      "Six-speed automatic standard; 3.6L V6 with VVT available",
+      "Acoustic laminated front glass",
+      "Bluetooth and Premium Audio Package with USB and eight speakers available",
+      "Chrome exhaust tips and hydraulic power steering assist available"
+    ],
+    "LTZ": [
+      "Leather-appointed heated front seats with eight-way power driver and six-way passenger",
+      "Dual-zone automatic climate control (replaces manual single-zone)",
+      "18-inch ten-spoke bright-finish aluminum wheels and Silver dual-port grille with chrome surround",
+      "Bose eight-speaker premium audio with USB port standard",
+      "Fog lamps, LED taillamps, and chrome door handles",
+      "Heated power-adjustable body-color mirrors; remote vehicle starter system",
+      "110V household outlet and power sunroof available"
+    ],
+    "LS": [
+      "Body-color door handles",
+      "Black grille insert with chrome surround",
+      "Halogen composite headlamps with crystalline-like lenses and Automatic Exterior Lamp Control",
+      "Power-adjustable manual-folding black mirrors",
+      "Bodyside and rocker body-color moldings",
+      "Carpeted front and rear floor mats",
+      "Acoustic-laminated Solar-Ray light-tinted glass",
+      "Interior lighting with front reading lamps",
+      "Analog instrumentation with speedometer, engine temperature, fuel and tachometer",
+      "Driver Information Center with oil-life and tire pressure monitors"
+    ]
+  }
+}

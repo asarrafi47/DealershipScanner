@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2025_volkswagen_tiguan_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Tiguan",
+    "Tiguan"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "R-Line": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S8)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; L TSI I4 eHybrid"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "On the interior, there is a new steering wheel as well as a standard 8-inch digi; On the interior, there is a new steering wheel as well as a standard 8-inch digital gauge cluster."
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive; Hybrid drivetrain Plug-in hybrid (eHybrid)"
+      }
+    ]
+  }
+}

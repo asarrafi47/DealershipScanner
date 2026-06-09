@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2015|audi|allroad",
+  "year": 2015,
+  "make": "Audi",
+  "model": "Allroad",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

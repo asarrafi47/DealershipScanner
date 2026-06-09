@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|ford|superduty",
+  "year": 2012,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "generic_ford_superduty",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XL": [
+      "tailgate assist Solar-tinted glass 17\" argent-painted steel wheels (F-250/F-350)",
+      "SuperCab) Steering wheel \u2013 Black urethane",
+      "eatures shown"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "XL": 3
+    }
+  }
+}

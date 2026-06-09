@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2025|nissan|ariya",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Ariya",
+  "ladder_id": "2025_nissan_ariya",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Engage",
+    "Evolve+",
+    "Platinum+"
+  ],
+  "adds_by_trim": {
+    "Evolve+": [
+      "Upgraded battery/motor configuration vs Engage (brochure EVO trim ladder)",
+      "Light Gray leatherette and expanded driver-assist content",
+      "Available Dual Motor e-4ORCE All-Wheel Drive for balanced traction"
+    ],
+    "Platinum+": [
+      "Blue Gray Nappa leather appointments and highest Ariya trim in 2025 brochure",
+      "ProPILOT Assist 2.0 hands-off freeway assist and ProPILOT Park available",
+      "19-inch wheels on Platinum+ and premium EV luxury positioning"
+    ],
+    "Engage": [
+      "Adds to Venture+: head-up display and 8-way power driver seat"
+    ]
+  }
+}

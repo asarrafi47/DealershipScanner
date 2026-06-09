@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|scion|xd",
+  "year": 2014,
+  "make": "Scion",
+  "model": "xD",
+  "ladder_id": "brochure_2014__scion__xd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds 1.8L DOHC 16-valve 4-cylinder engine with dual VVT-i producing 128 HP",
+      "Adds 5-speed manual or 4-speed automatic transmission",
+      "Adds front-wheel drive with MacPherson strut front suspension and torsion beam rear suspension",
+      "Adds power steering with electric power steering system",
+      "Adds ventilated disc front brakes and drum rear brakes with ABS, EBD, and brake assist",
+      "Adds traction control and vehicle stability control",
+      "Adds dual front airbags, front seat-mounted side airbags, and front/rear side curtain airbags",
+      "Adds air conditioning, power door locks, and rear window defogger",
+      "Adds 6.5-inch Pioneer audio system with Bluetooth and HD Radio technology",
+      "Adds sport front bucket seats with 60/40 split sliding and reclining rear seats"
+    ],
+    "Sport": [],
+    "Limited": []
+  }
+}

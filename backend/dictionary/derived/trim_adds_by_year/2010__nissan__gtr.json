@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|nissan|gtr",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_2010__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds electronic analog instrument cluster with upshift indicator and digital gear indicator",
+      "Adds multi-function drive computer with 11 customizable performance monitor screens",
+      "Adds touch-screen hard disk drive navigation with voice activation",
+      "Adds 9.3 GB Music Box audio system with capacity for up to 2,900 songs",
+      "Adds Nissan Intelligent Key with Push Button Ignition",
+      "Adds Bluetooth Hands-free Phone System",
+      "Adds hand-stitched leather-wrapped steering wheel with integrated audio and cruise controls",
+      "Adds dual clutch 6-speed transmission with paddle shifters and three driver-selectable modes",
+      "Adds 4-wheel independent suspension with Bilstein Damptronic system and three driver-selectable modes",
+      "Adds Nissan/Brembo high-performance braking system with drilled rotors and multi-piston calipers"
+    ],
+    "Limited": [
+      "Adds available 11-speaker Bose audio system with dual subwoofers",
+      "Adds available Interface System for iPod connectivity"
+    ]
+  }
+}

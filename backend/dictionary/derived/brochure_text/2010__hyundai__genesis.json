@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2010|hyundai|genesis",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2010_Hyundai_Genesis_Brochure.pdf",
+  "page_count": 32,
+  "all_pages": false,
+  "trim_hint_pages": [
+    30
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 30,
+      "trim_hint": true,
+      "text": "2010 geNesIs_FEATurES\nexteriOr diMensiOns Genesis 3.8 Genesis 4.6\nWheelbase (in.) 115.6 115.6\nLength (in.) 195.9 195.9\nWidth (in.), excluding mirrors 74.4 74.4\nHeight (in.) 58.1 58.3\nTrack (in.), front / rear 63.8 / 64.4 63.1 / 63.8\nCoefficient of Drag 0.27 0.27\nCurb Weight (lbs.) 3,897 4,120\ninteriOr diMensiOns\nHead Room (in.), front / rear 40.4 / 37.7 38.1 / 37.7\nLeg Room (in.), front / rear 44.3 / 38.6 44.3 / 38.6\nShoulder Room (in.), front / rear 58.3 / 57.9 58.3 / 57.9\nHip Room (in.), front / rear 54.9 / 54.3 54.9 / 54.3\nPassenger Volume (cu. ft.) 109.4 109.4\nCargo Volume (cu. ft.) 15.9 15.9\nTotal Interior Volume (cu. ft.) 125.3 125.3\nEPA Size Classification Large Car Large Car\nePa MiLeaGe estiMates / FueL CaPaCity\nFuel Economy (city / highway / combined) 18 / 27 / 21 17 / 25 / 19\nFuel-tank Capacity (gal.) 19.3 20.3\nHomeLink is a registered trademark of Johnson Controls, Inc. Infinity is a registered trademark of Harman International, Inc. Fuel economy estimated by epA for comparison. while the information contained in this brochure was correct at time of\nprinting, specifications and equipment can change. Feature comparisons based on competitor information available at time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to change product\nspecifications and equipment at any time without incurring obligations. some vehicles are shown with optional equipment. specifications apply to U.s. vehicles only. please contact your Hyundai dealer for current vehicle specifications. As part of\nHyundai\u2019s commitment to a sustainable environment, this brochure is printed using paper certified by the Forest stewardship council. Fsc certification helps ensure that the highest social and environmental standards are met in the making of the\npaper we use, contributing to conservation, responsible management, and community level benefits for people near the forests.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 30 ---\n2010 geNesIs_FEATurES\nexteriOr diMensiOns Genesis 3.8 Genesis 4.6\nWheelbase (in.) 115.6 115.6\nLength (in.) 195.9 195.9\nWidth (in.), excluding mirrors 74.4 74.4\nHeight (in.) 58.1 58.3\nTrack (in.), front / rear 63.8 / 64.4 63.1 / 63.8\nCoefficient of Drag 0.27 0.27\nCurb Weight (lbs.) 3,897 4,120\ninteriOr diMensiOns\nHead Room (in.), front / rear 40.4 / 37.7 38.1 / 37.7\nLeg Room (in.), front / rear 44.3 / 38.6 44.3 / 38.6\nShoulder Room (in.), front / rear 58.3 / 57.9 58.3 / 57.9\nHip Room (in.), front / rear 54.9 / 54.3 54.9 / 54.3\nPassenger Volume (cu. ft.) 109.4 109.4\nCargo Volume (cu. ft.) 15.9 15.9\nTotal Interior Volume (cu. ft.) 125.3 125.3\nEPA Size Classification Large Car Large Car\nePa MiLeaGe estiMates / FueL CaPaCity\nFuel Economy (city / highway / combined) 18 / 27 / 21 17 / 25 / 19\nFuel-tank Capacity (gal.) 19.3 20.3\nHomeLink is a registered trademark of Johnson Controls, Inc. Infinity is a registered trademark of Harman International, Inc. Fuel economy estimated by epA for comparison. while the information contained in this brochure was correct at time of\nprinting, specifications and equipment can change. Feature comparisons based on competitor information available at time of printing. No warranty or guarantee is being extended in this brochure, and Hyundai reserves the right to change product\nspecifications and equipment at any time without incurring obligations. some vehicles are shown with optional equipment. specifications apply to U.s. vehicles only. please contact your Hyundai dealer for current vehicle specifications. As part of\nHyundai\u2019s commitment to a sustainable environment, this brochure is printed using paper certified by the Forest stewardship council. Fsc certification helps ensure that the highest social and environmental standards are met in the making of the\npaper we use, contributing to conservation, responsible management, and community level benefits for people near the forests."
+}

@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|nissan|xterra",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Xterra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Pro-4X",
+    "S",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

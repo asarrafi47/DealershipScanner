@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2011|dodge|caliber",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Caliber",
+  "ladder_id": "brochure_llm_2011__dodge__caliber",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Caliber Rush",
+    "Caliber Uptown",
+    "Caliber Heat",
+    "Caliber Mainstreet",
+    "Caliber Express"
+  ],
+  "adds_by_trim": {
+    "Caliber Express": [
+      "2.0L I-4 DOHC 16V Dual VVT engine",
+      "5-speed manual transaxle",
+      "Antilock brakes",
+      "Remote keyless entry",
+      "Variable intermittent windshield wipers",
+      "Halogen headlamps with Solar-Control glass",
+      "Rear window wiper/washer",
+      "15-inch painted wheel covers",
+      "Power heated mirrors",
+      "Media Center 130 CD/MP3 with SIRIUS Satellite Radio"
+    ],
+    "Caliber Mainstreet": [
+      "Continuously variable automatic transmission (CVT)",
+      "Electronic Stability Control (ESC)",
+      "Tachometer",
+      "Bright body-color grille",
+      "Body-color door handles",
+      "Fog lamps",
+      "Firm-feel power steering",
+      "Touring suspension",
+      "17-inch painted aluminum wheels",
+      "Six-way power driver's seat"
+    ],
+    "Caliber Heat": [
+      "Sport suspension",
+      "Antilock 4-wheel disc brakes",
+      "18-inch ultra-brite machined cast aluminum wheels"
+    ],
+    "Caliber Uptown": [
+      "Antilock 4-wheel disc brakes",
+      "Optional 2.4L I-4 DOHC 16V Dual VVT engine upgrade available"
+    ],
+    "Caliber Rush": [
+      "2.4L I-4 DOHC 16V Dual VVT engine standard",
+      "Unique body-color fascias",
+      "Bright exhaust tips",
+      "Chrome bodyside molding",
+      "SRT-inspired liftgate spoiler",
+      "18-inch chrome-clad aluminum wheels"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2017|chevrolet|traverse",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2017__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL2",
+    "TL1",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "TL2": [
+      "Power-folding, power-adjustable heated body-color mirrors with driver-side auto-dimming and Side Blind Zone Alert",
+      "Power-remote rear liftgate"
+    ],
+    "TL1": [
+      "Manual-folding power-adjustable heated body-color mirrors with turn signal indicators",
+      "Rear Park Assist with audible warning"
+    ],
+    "SL": [
+      "Manual-folding power-adjustable Black mirrors",
+      "Manual rear liftgate"
+    ]
+  }
+}

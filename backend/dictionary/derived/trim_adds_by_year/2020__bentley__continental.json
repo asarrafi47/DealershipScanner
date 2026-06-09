@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2020|bentley|continental",
+  "year": 2020,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_llm_2020__bentley__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Mulliner Driving Specification",
+    "Touring Specification",
+    "City Specification",
+    "Front Seat Comfort Specification",
+    "Mood Lighting Specification",
+    "Diamond Knurling Specification",
+    "Black Line Specification",
+    "Smokers Specification",
+    "Continental GT"
+  ],
+  "adds_by_trim": {
+    "Mulliner Driving Specification": [
+      "22-inch 5 open spoke alloy wheels painted or black with polished edges",
+      "Exclusive wheel and trim combinations not available on base model"
+    ],
+    "Touring Specification": [
+      "Heated windscreen with automatic activation"
+    ],
+    "City Specification": [
+      "Enhanced urban driving features and capabilities"
+    ],
+    "Front Seat Comfort Specification": [
+      "Front seats electric 12-way heated with dual memory functions"
+    ],
+    "Mood Lighting Specification": [
+      "Footwell illumination and ambient lighting throughout cabin"
+    ],
+    "Diamond Knurling Specification": [
+      "Diamond knurled interior trim detailing on select surfaces"
+    ],
+    "Black Line Specification": [
+      "Black painted exterior accents and trim elements",
+      "22-inch polished alloy wheels available exclusively with this specification"
+    ],
+    "Smokers Specification": [
+      "Smoker package with ashtray and lighter integration"
+    ],
+    "Continental GT": [
+      "6.0-litre twin-turbocharged W12 engine producing 626 bhp",
+      "0-60 mph in 3.6 seconds, top speed 207 mph",
+      "8-speed dual-clutch transmission with active all-wheel drive",
+      "Three-chamber air suspension with Continuous Damping Control",
+      "Bentley Dynamic Ride active roll control system",
+      "12.3-inch high-resolution capacitive touchscreen infotainment system",
+      "10-speaker 650-watt Bentley audio system with Bluetooth and Wi-Fi",
+      "Full LED matrix headlamps with high-beam assist",
+      "Nappa leather interior on seats and lower cabin in 15 standard colours",
+      "Four occupant seating with front electric 12-way heated seats"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2015|audi|r8",
+  "year": 2015,
+  "make": "Audi",
+  "model": "R8",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "V10 Plus",
+    "R8"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

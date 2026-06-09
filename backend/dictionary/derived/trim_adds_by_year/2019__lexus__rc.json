@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2019|lexus|rc",
+  "year": 2019,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "brochure_llm_2019__lexus__rc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RC300 F SPORT",
+    "RC300",
+    "RC300 AWD"
+  ],
+  "adds_by_trim": {
+    "RC300 F SPORT": [
+      "Performance-tuned suspension and steering",
+      "18- or 19-inch performance tires with expected greater wear"
+    ],
+    "RC300": [
+      "2.0-liter turbocharged engine producing 260 horsepower",
+      "Four-year/50,000-mile Limited Warranty with zero deductible",
+      "Six-year/70,000-mile Powertrain Warranty with zero deductible",
+      "Six-year/unlimited-mileage Corrosion Perforation Warranty"
+    ],
+    "RC300 AWD": [
+      "TORSEN all-wheel-drive system for enhanced traction and stability"
+    ]
+  }
+}

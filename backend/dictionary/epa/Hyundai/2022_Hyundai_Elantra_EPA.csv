@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Hyundai,Elantra,Elantra,2.0L I4,2.0L I4,,Automatic (AV-S1),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,31,41,35,,,,,
+2022,Hyundai,Elantra,Elantra,2.0L I4 (Stop-Start),2.0L I4,,Automatic (AV-S1),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,33,43,37,,,,,
+2022,Hyundai,Elantra,Elantra,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Automatic (AM-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,28,36,31,,,,,
+2022,Hyundai,Elantra,Elantra,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,25,34,28,,,,,
+2022,Hyundai,Elantra,Hybrid,Hybrid 1.6L I4 (SIDI; Hybrid),1.6L I4 Turbo,Turbocharged,Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,49,52,50,,,,,
+2022,Hyundai,Elantra,Hybrid Blue,Hybrid 1.6L I4 (SIDI; Hybrid),1.6L I4 Turbo,Turbocharged,Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,53,56,54,,,,,
+2022,Hyundai,Elantra,N,2.0L I4 (SIDI),2.0L I4,,Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,20,30,23,,,,,
+2022,Hyundai,Elantra,N,2.0L I4 (SIDI),2.0L I4,,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,22,31,25,,,,,

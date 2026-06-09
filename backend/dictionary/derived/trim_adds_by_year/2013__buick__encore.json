@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2013|buick|encore",
+  "year": 2013,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_2013__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Buick IntelliLink voice-activated interactive radio",
+      "Adds 10 standard air bags",
+      "Adds fold-flat second row seating",
+      "Adds flexible cargo space",
+      "Adds all-wheel drive availability"
+    ],
+    "Limited": [
+      "Adds Bose Premium Sound System",
+      "Adds available navigation system",
+      "Adds available front and rear park assist",
+      "Adds available rearview camera"
+    ]
+  }
+}

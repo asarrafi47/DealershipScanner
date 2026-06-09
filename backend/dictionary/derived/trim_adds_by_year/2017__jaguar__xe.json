@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|jaguar|xe",
+  "year": 2017,
+  "make": "Jaguar",
+  "model": "XE",
+  "ladder_id": "brochure_llm_2017__jaguar__xe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRESTIGE",
+    "PREMIUM",
+    "XE"
+  ],
+  "adds_by_trim": {
+    "PRESTIGE": [
+      "Taurus Leather seats with 4-way power lumbar on front seats",
+      "Heated front seats",
+      "Softgrain heated leather steering wheel",
+      "Dark Satin Brushed Aluminum finisher",
+      "Bright Chrome window surrounds",
+      "19-inch alloy wheels available on 2.0L 4-cylinder gas/diesel",
+      "18-inch alloy wheels available on all engines"
+    ],
+    "PREMIUM": [
+      "18-inch alloy wheels",
+      "Rear camera parking aid",
+      "Meridian 380W sound system",
+      "10-way front seats with 8-way electric adjustment",
+      "Memory function with 2 settings for driver's seat and exterior mirrors",
+      "Heated exterior mirrors with electrochromic, electrically adjustable, body-color powerfolding",
+      "Navigation system",
+      "Keyless Entry",
+      "Power steering column with memory",
+      "HomeLink System"
+    ],
+    "XE": [
+      "17-inch alloy wheels",
+      "Halogen Headlamps with daytime running lamps",
+      "Luxtec seats with 10-way front seats (8-way electric)",
+      "Jaguar 80W Sound System with 6 speakers",
+      "Chrome window surround with black waist finisher",
+      "All Surface Progress Control",
+      "Electric tilt and slide glass moonroof"
+    ]
+  }
+}

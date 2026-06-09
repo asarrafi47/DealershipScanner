@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|cadillac|escalade",
+  "year": 2020,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_llm_2020__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premium Luxury",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Sport Edition available with high-gloss black grille and lower fascia",
+      "Midnight Silver 22-inch wheels",
+      "Black-out window and bodyside moldings",
+      "Black Raven paint option"
+    ],
+    "Premium Luxury": [
+      "Sport Edition available with high-gloss black grille and lower fascia",
+      "Midnight Silver 22-inch wheels",
+      "Black-out window and bodyside moldings",
+      "Black Raven paint option"
+    ],
+    "Luxury": [
+      "Sport Edition available with high-gloss black grille and lower fascia",
+      "Midnight Silver 22-inch wheels",
+      "Black-out window and bodyside moldings",
+      "Black Raven paint option"
+    ]
+  }
+}

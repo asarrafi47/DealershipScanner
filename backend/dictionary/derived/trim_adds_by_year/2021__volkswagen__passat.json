@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|volkswagen|passat",
+  "year": 2021,
+  "make": "Volkswagen",
+  "model": "Passat",
+  "ladder_id": "brochure_llm_2021__volkswagen__passat",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R-Line®",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "R-Line®": [
+      "19-inch 5-spoke two-tone machined alloy wheels with all-season tires",
+      "Adaptive Front Lighting System with dynamic cornering lights",
+      "R-Line® grille, front bumper, fender badges, exterior trim and black trunk lid lip spoiler",
+      "Power tilting and sliding sunroof",
+      "8-way power driver's seat with power lumbar support",
+      "8-way manual front passenger seat with lumbar support",
+      "Heated front seats",
+      "Perforated V-Tex Leatherette seating surfaces",
+      "Steering wheel mounted shift paddles",
+      "Front footwell lights"
+    ],
+    "SE": [
+      "18-inch 5-spoke two-tone machined alloy wheels with all-season tires",
+      "Power tilting and sliding sunroof",
+      "8-way power driver's seat with power lumbar support",
+      "8-way manual front passenger seat with lumbar support",
+      "Heated front seats",
+      "Perforated V-Tex Leatherette seating surfaces",
+      "Dual USB charging-only ports in second row",
+      "Illuminated vanity mirrors and dual rear reading lights",
+      "Adjustable front center armrest with map pockets on front seat backs",
+      "Bumperdillo® Protection Plate in chrome for rear bumper"
+    ],
+    "S": [
+      "2.0L TSI turbocharged 4-cylinder engine with 174 HP and 206 lbs-ft torque",
+      "6-speed automatic transmission with Tiptronic®",
+      "Front-wheel drive",
+      "17-inch 10-spoke alloy wheels with all-season tires",
+      "LED projector headlights with LED daytime running lights and taillights",
+      "8-way manual driver's seat with lumbar support",
+      "6-way manual front passenger seat with height adjustment",
+      "Cloth seating surfaces",
+      "Heated, foldable power adjustable side mirrors with integrated turn signals",
+      "3-spoke multi-function steering wheel with controls"
+    ]
+  }
+}

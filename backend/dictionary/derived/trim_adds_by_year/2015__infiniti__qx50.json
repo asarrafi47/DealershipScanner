@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|infiniti|qx50",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_llm_2015__infiniti__qx50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX50 AWD",
+    "QX50 Journey AWD"
+  ],
+  "adds_by_trim": {
+    "QX50 AWD": [
+      "Infiniti Hard Drive Navigation System with touch-screen display, Lane Guidance, and 3-D building graphics",
+      "Infiniti Voice Recognition for audio, navigation, and vehicle information systems",
+      "NavTraffic with detailed traffic information provided by SiriusXM",
+      "NavWeather with current weather updates and 3-day forecasts provided by SiriusXM",
+      "Around View Monitor with Front and Rear Sonar System",
+      "Bose 11-speaker Premium Sound system with AM/FM/CD/DVD and MP3 playback",
+      "Power sliding tinted glass moonroof with one-touch auto-open/close and tilt feature",
+      "Auto-dimming inside mirror with HomeLink Universal Transceiver",
+      "Dual-occupant memory system for driver's seat, steering wheel, and outside mirrors",
+      "8-way power front-passenger's seat"
+    ],
+    "QX50 Journey AWD": [
+      "3.7-liter V6 engine with 325 hp and 267 lb-ft torque",
+      "7-speed automatic transmission with Adaptive Shift Control and manual shift mode",
+      "6-speaker audio system with AM/FM/CD and MP3 playback",
+      "Automatic on/off headlights with integrated front fog lights",
+      "Leather-appointed seating with 8-way power driver's seat and adjustable lumbar support",
+      "Power tilt and telescopic steering column",
+      "Dual Zone Automatic Temperature Control system",
+      "Rear window defroster with indicator light and timer",
+      "RearView Monitor",
+      "Infiniti Intelligent Key with Illuminated Push Button Ignition"
+    ]
+  }
+}

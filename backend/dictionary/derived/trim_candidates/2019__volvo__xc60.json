@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2019|volvo|xc60",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "XC60",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Plus",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

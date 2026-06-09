@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2024|gmc|canyon",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2024__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "AT4X",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "3-year GMC Connected Vehicle subscription included with Google built-in",
+      "Available Denali Black Edition Package with 20-inch black aluminum wheels and black badging"
+    ],
+    "AT4X": [
+      "Standard Trailering Package with trailer hitch and integrated brake controller",
+      "AEV Edition Package available with AEV skid plates, stamped-steel bumpers, and 17-inch beadlock wheels",
+      "LT315/70R17 all-terrain tires standard"
+    ],
+    "AT4": [
+      "Available AT4 Premium Package with leather seating, heated steering wheel, and ventilated seats",
+      "Available Technology Plus Package with Adaptive Cruise Control and Head-Up Display",
+      "ProGrade Trailering System available with automatic-locking rear differential"
+    ],
+    "Elevation": [
+      "11.3-inch diagonal Premium GMC Infotainment System with Google built-in and wireless Apple CarPlay",
+      "SiriusXM with 360L and 3-month trial subscription",
+      "Available Elevation Premium Package with CoreTec seating and Canyon Safety Plus Package",
+      "Available Convenience Package with heated seats, dual-zone climate control, and power accessories",
+      "Available Technology Package with Rear Pedestrian Alert and Surround Vision"
+    ]
+  }
+}

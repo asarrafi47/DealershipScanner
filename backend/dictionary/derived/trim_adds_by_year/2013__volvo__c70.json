@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2013|volvo|c70",
+  "year": 2013,
+  "make": "Volvo",
+  "model": "C70",
+  "ladder_id": "brochure_llm_2013__volvo__c70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "PREMIER PLUS"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Navigation System with map Care",
+      "Volvo Premium Sound System with 2x8 Subwoofer System and 2x130 Watt Amplifier"
+    ],
+    "PREMIER PLUS": [
+      "Keyless Drive",
+      "LED Daytime Running Lights (DRL)",
+      "Rear Park Assist",
+      "HomeLink Integrated garage door opener",
+      "Digital Compass"
+    ]
+  }
+}

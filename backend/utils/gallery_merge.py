@@ -72,17 +72,25 @@ def merge_inventory_row_galleries(dst: dict[str, Any], src: dict[str, Any]) -> N
         dst["image_url"] = b[0]
 
 
+_GALLERY_CAP_DEFAULT = object()
+
+
 def merge_vdp_gallery_into_vehicle(
     vehicle: dict[str, Any],
     candidate_urls: list[str],
     *,
-    max_gallery: int | None = None,
+    max_gallery: int | None | object = _GALLERY_CAP_DEFAULT,
 ) -> dict[str, Any]:
     """
     Merge VDP-harvested URLs into ``vehicle``. Returns small diagnostics dict:
     ``action`` (replace|extend|skip), ``added``, ``final_len``.
+
+    ``max_gallery=None`` means uncapped. Omit the arg to use ``inventory_gallery_max()``.
     """
-    mx = max_gallery if max_gallery is not None else inventory_gallery_max()
+    if max_gallery is _GALLERY_CAP_DEFAULT:
+        mx: int | None = inventory_gallery_max()
+    else:
+        mx = max_gallery  # None = uncapped; int = explicit cap
     norm: list[str] = []
     seen: set[str] = set()
     for u in candidate_urls:

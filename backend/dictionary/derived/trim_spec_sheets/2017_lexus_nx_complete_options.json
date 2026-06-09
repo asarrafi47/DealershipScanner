@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2017_lexus_nx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "NX",
+    "NX"
+  ],
+  "year_min": 2015,
+  "year_max": 2019,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S6)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S6)"
+      }
+    ]
+  }
+}

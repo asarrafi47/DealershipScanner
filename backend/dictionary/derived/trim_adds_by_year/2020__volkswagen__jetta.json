@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2020|volkswagen|jetta",
+  "year": 2020,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "brochure_llm_2020__volkswagen__jetta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GLI AUTOBAHN",
+    "GLI S"
+  ],
+  "adds_by_trim": {
+    "GLI AUTOBAHN": [
+      "Power tilting/sliding panoramic sunroof",
+      "Leather seating surfaces",
+      "Ventilated front seats",
+      "6-way power seat with memory function",
+      "DCC adaptive chassis control",
+      "Performance Monitor",
+      "8-inch Composition Media touchscreen with 6.5-inch display upgrade",
+      "Volkswagen Digital Cockpit"
+    ],
+    "GLI S": [
+      "LED projector headlights with LED Daytime Running Lights",
+      "Black honeycomb grille with red accents",
+      "Black painted mirror caps, roof, and rear spoiler",
+      "Rear lower sport diffuser with dual chrome exhaust tips",
+      "18-inch twin 5-spoke machined alloy wheels",
+      "Climatronic dual zone automatic climate control",
+      "Cloth seating surfaces",
+      "Leather-wrapped multi-function sport steering wheel",
+      "10-color customizable interior ambient lighting",
+      "228 hp 2.0L TSI turbocharged engine with 258 lb-ft torque"
+    ]
+  }
+}

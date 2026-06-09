@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2019|porsche|911",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_web_2019__porsche__911",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Turbo S",
+    "Turbo",
+    "Carrera S",
+    "Carrera"
+  ],
+  "adds_by_trim": {
+    "Carrera": [
+      "3.0L turbocharged flat-six engine with 370 hp",
+      "8-speed PDK automatic transmission",
+      "19-inch Carrera wheels",
+      "LED headlights with Porsche Dynamic Light System",
+      "7-inch driver information display",
+      "Porsche Communication Management (PCM) infotainment system with 7-inch touchscreen",
+      "Automatic climate control",
+      "Stability control and traction control systems",
+      "Six airbags and stability assist features",
+      "Rear-axle steering capability"
+    ],
+    "Carrera S": [
+      "3.0L turbocharged flat-six engine with 443 hp versus Carrera's 370 hp",
+      "20-inch Carrera S wheels",
+      "Adaptive air suspension with Porsche Active Suspension Management",
+      "Sport Chrono package standard",
+      "Porsche Torque Vectoring with power steering standard"
+    ],
+    "Turbo": [
+      "3.8L twin-turbocharged flat-six engine with 540 hp",
+      "All-wheel drive system standard",
+      "20-inch Turbo wheels",
+      "Adaptive air suspension with dynamic chassis control",
+      "Sport Chrono package standard with launch control",
+      "Porsche Torque Vectoring Plus with all-wheel steering"
+    ],
+    "Turbo S": [
+      "3.8L twin-turbocharged flat-six engine with 580 hp versus Turbo's 540 hp",
+      "Exclusive Turbo S styling and aerodynamic enhancements",
+      "Upgraded suspension tuning with active roll stabilization",
+      "20-inch exclusive Turbo S wheels",
+      "Porsche ceramic composite braking system",
+      "Adaptive rear wing with more aggressive positioning"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/911/"
+}

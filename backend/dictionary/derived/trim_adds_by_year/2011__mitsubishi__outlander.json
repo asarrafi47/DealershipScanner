@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|mitsubishi|outlander",
+  "year": 2011,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2011__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "XLS",
+    "SE",
+    "ES",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "Black leather interior upholstery",
+      "Beige leather interior upholstery"
+    ],
+    "XLS": [
+      "Beige premium sport fabric interior",
+      "Black premium sport fabric interior",
+      "Black leather interior upholstery",
+      "Beige leather interior upholstery"
+    ],
+    "SE": [
+      "Beige premium sport fabric interior",
+      "Black premium sport fabric interior",
+      "Black leather interior upholstery"
+    ],
+    "ES": [
+      "Black premium sport fabric interior",
+      "Black fabric interior upholstery"
+    ]
+  }
+}

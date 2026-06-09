@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|chevrolet|avalanche",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Avalanche",
+  "ladder_id": "brochure_llm_2011__chevrolet__avalanche",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "20-inch polished-aluminum wheels (standard)",
+      "20-inch chrome aluminum wheels (available)",
+      "Perforated Leather Appointments interior",
+      "White Diamond Tricoat exterior color (extra-cost, LTZ only)"
+    ],
+    "LT": [
+      "Leather Appointments interior",
+      "18-inch aluminum wheels (standard)",
+      "20-inch polished-aluminum wheels (available)"
+    ],
+    "LS": [
+      "Premium Cloth upholstery in Light Cashmere or Ebony",
+      "17-inch aluminum wheels with rectangular pockets (standard)",
+      "18-inch aluminum wheels (available)"
+    ]
+  }
+}

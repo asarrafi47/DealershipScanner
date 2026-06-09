@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_chevrolet_orlando_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Orlando",
+    "Orlando"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "LTZ": [
+      {
+        "label": "Engine Options",
+        "value": "The diesel engine for the Korean market was updated in 2015 to meet the government's Euro 6 requirement. All diesel Chevrolet Orlandos sold in Korea were equipped with a 1.6-litre inline-four CDTi engine outsourced from Opel.; Engines"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "The diesel engine for the Korean market was updated in 2015 to meet the government's Euro 6 requirement. All diesel Chevrolet Orlandos sold in Korea were equipped with a 1.6-litre inline-four CDTi engine outsourced from Opel.; Engines"
+      }
+    ]
+  }
+}

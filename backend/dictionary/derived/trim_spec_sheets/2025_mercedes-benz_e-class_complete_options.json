@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2025_mercedes-benz_e-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "E-Class",
+    "E-Class"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG E53": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "E350": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "E450": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

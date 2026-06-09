@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_audi_q8_e-tron_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q8 e-tron",
+    "Q8 e-tron"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L TFSI V6; The SQ8 features 21-inch wheels with 285/45 tires, however 22- and 23-inch optio"
+      }
+    ],
+    "Quattro": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic (S8)"
+      }
+    ]
+  }
+}

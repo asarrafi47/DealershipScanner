@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2014|mazda|3",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Platinum",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

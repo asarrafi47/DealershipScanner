@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2019|rollsroyce|cullinan",
+  "year": 2019,
+  "make": "Rolls Royce",
+  "model": "Cullinan",
+  "ladder_id": "brochure_2019__rollsroyce__cullinan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds sumptuously padded armrests",
+      "Adds automatic four-door closing buttons",
+      "Adds hand-crafted centre console",
+      "Adds massage seats",
+      "Adds glass partition between passenger compartment and boot",
+      "Adds electronically controlled folding seats",
+      "Adds tilting and retractable sunroof",
+      "Adds 6.75L twin-turbo 12-cylinder engine with 563 bhp"
+    ],
+    "Limited": [
+      "Adds Champagne cooler and whisky decanter",
+      "Adds Viewing Suite with sociably angled seating and cocktail table",
+      "Adds Cullinan Recreation Module with 48 litres of automatically deployable storage compartments",
+      "Adds bespoke interior customization options for specialized configurations"
+    ]
+  }
+}

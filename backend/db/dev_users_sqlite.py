@@ -1,8 +1,8 @@
 """
 SQLite for /dev operator accounts only (separate file from public users.db).
 
-Optional encryption: DEV_USERS_DB_ENCRYPTION_KEY + sqlcipher3 (same pattern as users_sqlite).
-If the key is set but sqlcipher3 is missing, falls back to plain SQLite with a warning.
+Production (SEC-088): requires DEV_USERS_DB_ENCRYPTION_KEY (≥32 chars) and sqlcipher3.
+Set ALLOW_UNENCRYPTED_USER_DB=1 only for local dev/test (forbidden in production).
 """
 
 from __future__ import annotations
@@ -12,19 +12,17 @@ import os
 import sqlite3
 from typing import Any
 
+from backend.utils.credential_db_encryption import (
+    dev_users_db_encryption_key,
+    require_encrypted_dev_users_db_in_production,
+    sqlcipher_available,
+)
+
 logger = logging.getLogger(__name__)
 
 DB_PATH = os.environ.get("DEV_USERS_DB_PATH", "dev_users.db")
 
 _PLAIN_SQLITE_FALLBACK_WARNED = False
-
-
-def _sqlcipher_available() -> bool:
-    try:
-        import sqlcipher3  # noqa: F401
-        return True
-    except ImportError:
-        return False
 
 
 def dev_users_db_path() -> str:
@@ -47,18 +45,7 @@ def _connect_sqlcipher(key: str) -> Any:
     return conn
 
 
-def get_dev_users_conn() -> sqlite3.Connection:
-    key = (os.environ.get("DEV_USERS_DB_ENCRYPTION_KEY") or "").strip()
-    if key and _sqlcipher_available():
-        return _connect_sqlcipher(key)
-    if key and not _sqlcipher_available():
-        global _PLAIN_SQLITE_FALLBACK_WARNED
-        if not _PLAIN_SQLITE_FALLBACK_WARNED:
-            _PLAIN_SQLITE_FALLBACK_WARNED = True
-            logger.warning(
-                "DEV_USERS_DB_ENCRYPTION_KEY is set but sqlcipher3 is not installed; using plain SQLite for "
-                "dev_users.db. Install sqlcipher3 for encryption, or unset the key for local dev."
-            )
+def _plain_sqlite_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(dev_users_db_path(), timeout=15.0)
     try:
         conn.execute("PRAGMA journal_mode=WAL")
@@ -67,3 +54,30 @@ def get_dev_users_conn() -> sqlite3.Connection:
     except sqlite3.Error:
         pass
     return conn
+
+
+def get_dev_users_conn() -> sqlite3.Connection:
+    key = dev_users_db_encryption_key()
+    if require_encrypted_dev_users_db_in_production():
+        if not key:
+            raise RuntimeError(
+                "DEV_USERS_DB_ENCRYPTION_KEY is required in production (SEC-088)."
+            )
+        if not sqlcipher_available():
+            raise RuntimeError(
+                "sqlcipher3 is required in production to encrypt dev_users.db (SEC-088)."
+            )
+        return _connect_sqlcipher(key)
+
+    if key and sqlcipher_available():
+        return _connect_sqlcipher(key)
+
+    if key and not sqlcipher_available():
+        global _PLAIN_SQLITE_FALLBACK_WARNED
+        if not _PLAIN_SQLITE_FALLBACK_WARNED:
+            _PLAIN_SQLITE_FALLBACK_WARNED = True
+            logger.warning(
+                "DEV_USERS_DB_ENCRYPTION_KEY is set but sqlcipher3 is not installed; using plain SQLite for "
+                "dev_users.db. Install sqlcipher3 for encryption, or unset the key for local dev."
+            )
+    return _plain_sqlite_conn()

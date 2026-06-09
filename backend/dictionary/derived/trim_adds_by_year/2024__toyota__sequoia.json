@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2024|toyota|sequoia",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_llm_2024__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Capstone",
+    "TRD Pro",
+    "Platinum",
+    "Limited",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "SR5": [
+      "i-FORCE MAX Twin-Turbo V6 Hybrid with 437 hp and 583 lb.-ft. torque",
+      "10-speed Electronically Controlled automatic transmission with intelligence (ECT-i)",
+      "Selectable driving and TOW/HAUL modes",
+      "Towing hitch receiver and wiring harness with 4-pin/7-pin connector",
+      "Integrated Trailer Brake Control (ITBC)",
+      "RWD or 4WDemand part-time 4WD",
+      "18-inch silver-painted alloy wheels",
+      "LED headlights with Daytime Running Lights (DRL)",
+      "LED fog lights",
+      "12.3-inch digital meter with selectable gauge display screens"
+    ],
+    "Limited": [
+      "20-inch dark-gray-painted and machined-finish alloy wheels",
+      "Gray metallic horizontal-bar grille with chrome surround",
+      "Chrome-plated outside mirror caps with dark-black chrome-plated roof rails",
+      "Premium LED headlights with LED Daytime Running Lights (DRL)",
+      "SofTex®-trimmed seats",
+      "Three-zone automatic climate control",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Panoramic View Monitor (PVM)"
+    ],
+    "Platinum": [
+      "20-inch machined-finish black alloy wheels",
+      "Dark-chrome-accented mesh grille with chrome surround",
+      "Color-keyed door handles and dark-black chrome-plated roof rails",
+      "Leather-trimmed seats with premium contrast stitching",
+      "Heated and ventilated front seats",
+      "Heated steering wheel",
+      "Heated and ventilated front and rear seats",
+      "Instrument panel and door ambient lighting",
+      "Qi-compatible wireless smartphone charging",
+      "14-inch Toyota Audio Multimedia touchscreen with SiriusXM 3-month Platinum trial"
+    ],
+    "TRD Pro": [
+      "Electronically controlled locking rear differential",
+      "Multi-Terrain Select (MTS), Crawl Control (CRAWL), and Downhill Assist Control (DAC)",
+      "TRD Pro off-road suspension with 2.5-inch FOX Internal Bypass coil-overs and rear remote-reservoir shocks",
+      "TRD Pro front stabilizer bar",
+      "4WDemand part-time 4WD",
+      "18-inch TRD Pro matte-black forged-aluminum BBS wheels with TRD center caps",
+      "Black TOYOTA heritage grille with integrated LED light bar and amber marker lights",
+      "TRD Pro dual-tip exhaust",
+      "TRD aluminum front skid plate",
+      "TRD Pro LED light bar"
+    ],
+    "Capstone": [
+      "22-inch dark chrome and machined-finish alloy wheels",
+      "Chrome-accented mesh grille with chrome surround",
+      "Automatic power-extending running boards",
+      "Chrome-plated outside mirror caps with satin-chrome-plated roof rails",
+      "Semi-aniline leather seating"
+    ]
+  }
+}

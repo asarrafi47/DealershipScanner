@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2017|acura|rdx",
+  "year": 2017,
+  "make": "acura",
+  "model": "rdx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Technology",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

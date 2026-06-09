@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2017|lincoln|mkt",
+  "year": 2017,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_llm_2017__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MKT with GTDI",
+    "MKT"
+  ],
+  "adds_by_trim": {
+    "MKT with GTDI": [
+      "3.5-liter GTDI twin-turbocharged direct-injection V6 engine with 365 hp and 350 lb.-ft. torque",
+      "AWD capability with 15 city/21 hwy/17 combined mpg fuel economy"
+    ],
+    "MKT": [
+      "3.7-liter Ti-VCT V6 engine with 303 hp and 279 lb.-ft. torque",
+      "FWD with 16 city/24 hwy/19 combined mpg fuel economy",
+      "Intelligent Access with push-button start and 2 key fob transmitters",
+      "SYNC 3 with 8-inch touchscreen, Apple CarPlay, Android Auto, and smart-charging USB ports",
+      "Panoramic fixed-glass Vista Roof with power sunshades",
+      "Adaptive HID headlamps with auto high beams and LED taillamps",
+      "1st-row heated and cooled 12-way power bucket seats with lumbar support",
+      "Bridge of Weir leather-trimmed seats for 1st and 2nd rows",
+      "7-passenger seating with 60/40 split 2nd-row and 50/50 split 3rd-row benches",
+      "SiriusXM Satellite Radio with 6-month trial subscription"
+    ]
+  }
+}

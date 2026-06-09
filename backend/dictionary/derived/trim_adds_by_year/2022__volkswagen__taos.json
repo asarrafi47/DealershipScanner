@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|volkswagen|taos",
+  "year": 2022,
+  "make": "Volkswagen",
+  "model": "Taos",
+  "ladder_id": "brochure_llm_2022__volkswagen__taos",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "Volkswagen Digital Cockpit Pro with 10.25-inch configurable digital instrument display",
+      "MIB3 Discover Media 8-inch touchscreen navigation with AM/FM/HD Radio",
+      "Dynamic Road Sign Display with road sign recognition",
+      "Park Distance Control for rear parking assistance",
+      "Full suite of IQ.DRIVE advanced driver assistance technologies standard",
+      "Active Blind Spot Monitor integrated into IQ.DRIVE system",
+      "Light Assist for automatic high beam control on headlights"
+    ],
+    "SE": [
+      "Volkswagen Digital Cockpit with 8-inch non-configurable digital instrument display",
+      "MIB3 Composition Media 8-inch touchscreen with AM/FM/HD Radio and USB-C",
+      "Rear View Camera System with dynamic guidelines",
+      "Keyless access (KESSY) for front doors and liftgate",
+      "Anti-theft alarm system with engine immobilizer",
+      "Remote engine start feature",
+      "Voice control system",
+      "Front Assist and Rear Traffic Alert standard"
+    ],
+    "S": [
+      "1.5T 4-cylinder turbocharged engine with 8-speed automatic transmission (FWD)",
+      "Composition Color 6.5-inch touchscreen AM/FM radio with USB input",
+      "Rear View Camera System standard",
+      "Push-button engine start",
+      "Power door locks with remote panic button",
+      "Hill Hold Control",
+      "Dual front airbags with front-side airbags and Side Curtain Protection",
+      "Tire Pressure Monitoring System",
+      "4G LTE Wi-Fi capability with limited trial"
+    ]
+  }
+}

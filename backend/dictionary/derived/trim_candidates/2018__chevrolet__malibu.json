@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2018|chevrolet|malibu",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premier",
+    "L",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

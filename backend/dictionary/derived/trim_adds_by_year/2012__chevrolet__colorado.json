@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2012|chevrolet|colorado",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2012__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Z71",
+    "Z85",
+    "Work Truck"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "300-hp 5.3L V8 engine (standard)",
+      "18-inch Midnight Silver aluminum wheels with low-profile tires",
+      "ZQ8 Sport Suspension Package",
+      "Body-color front and rear fascias",
+      "Extended or Crew Cab configuration; 2WD only"
+    ],
+    "Z71": [
+      "242-hp 3.7L I-5 engine (standard); 300-hp 5.3L V8 engine (available)",
+      "17-inch chrome-clad 6-spoke wheels with on/off-road tires",
+      "Z71 Off-Road Suspension Package",
+      "Automatic locking rear differential",
+      "Extended or Crew Cab configuration; 2WD or 4x4"
+    ],
+    "Z85": [
+      "185-hp 2.9L I-4 engine (standard); 242-hp 3.7L I-5 engine (available)",
+      "16-inch aluminum wheels",
+      "Bluetooth wireless technology for select phones",
+      "SiriusXM Radio with three-month trial",
+      "OnStar standard for six months with Directions & Connections",
+      "StabiliTrak Electronic Stability Control System with Traction Control",
+      "Regular, Extended, or Crew Cab configuration; 2WD or 4x4"
+    ],
+    "Work Truck": [
+      "185-hp 2.9L I-4 engine (standard)",
+      "16-inch steel wheels",
+      "Bluetooth wireless technology for select phones",
+      "SiriusXM Radio with three-month trial",
+      "OnStar standard for six months with Directions & Connections",
+      "StabiliTrak Electronic Stability Control System with Traction Control",
+      "Regular, Extended, or Crew Cab configuration; 2WD or 4x4"
+    ]
+  }
+}

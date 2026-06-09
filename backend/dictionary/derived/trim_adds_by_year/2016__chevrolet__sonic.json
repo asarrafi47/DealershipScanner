@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2016|chevrolet|sonic",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "ladder_id": "brochure_llm_2016__chevrolet__sonic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS",
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "RS": [
+      "Sport 3-spoke leather-wrapped steering wheel with contrasting stitching and racing-inspired flat-bottom design",
+      "Sport suspension",
+      "6-speed manual transmission with RS-specific gearset",
+      "6-speed automatic transmission with RS-specific final drive ratio",
+      "4-wheel antilock disc brakes",
+      "Heated, power-adjustable Black Granite Metallic mirrors with manual-folding",
+      "18-inch Midnight Silver-painted aluminum wheels",
+      "Leather-appointed seats with sueded microfiber inserts",
+      "Heated driver and front passenger seats"
+    ],
+    "LTZ": [
+      "ECOTEC 1.4L turbocharged 4-cylinder engine with 138 horsepower and 148 lb.-ft. torque",
+      "Power sunroof with tilt/sliding express-open and wind deflector",
+      "3-spoke leather-wrapped steering wheel",
+      "Perforated leatherette seat trim",
+      "17-inch painted-aluminum wheels",
+      "Heated, power-adjustable body-color mirrors with manual-folding",
+      "Chrome beltline moldings",
+      "Rear vision camera",
+      "Forward Collision Alert and Lane Departure Warning",
+      "Premium 6-speaker sound system"
+    ],
+    "LT": [
+      "Cruise control",
+      "Chevrolet MyLink 7-inch touchscreen with AM/FM, USB, Bluetooth audio streaming, and smartphone integration",
+      "Heated power-adjustable body-color mirrors with manual-folding",
+      "15-inch painted-aluminum wheels",
+      "Deluxe cloth seat trim",
+      "Power windows with driver express-up/down and anti-pinch feature",
+      "Rear integrated decklid spoiler on Sedan",
+      "Remote vehicle starter system",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "OnStar Basic Plan for five years with RemoteLink mobile app"
+    ],
+    "LS": [
+      "ECOTEC 1.8L 4-cylinder engine with 138 horsepower and 125 lb.-ft. torque",
+      "5-speed manual transmission",
+      "Manual-adjustable body-color mirrors with manual-folding",
+      "Sport cloth seat trim",
+      "15-inch steel wheels with bolt-on wheel cover",
+      "Carpeted front floor mats",
+      "Manual windows",
+      "Rear roof-mounted spoiler on Hatchback",
+      "10 airbags including front, side-impact, and head-curtain",
+      "4-wheel antilock front disc and rear drum brakes with Passenger Sensing System"
+    ]
+  }
+}

@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2008,Chevrolet,Malibu,Malibu,2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,22,30,25,,,,,,2.4L I4 Turbo,Turbocharged
-2008,Chevrolet,Malibu,Malibu,3.5L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,18,29,22,,,,,,3.5L V6,
-2008,Chevrolet,Malibu,Malibu,3.6L V6,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,17,26,20,,,,,,3.6L V6,
-2008,Chevrolet,Malibu,Hybrid,Hybrid 2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,24,32,27,,,,,,2.4L I4 Turbo,Turbocharged
-2008,Chevrolet,Malibu,Malibu,2.4L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,22,32,25,,,,,,2.4L I4 Turbo,Turbocharged

@@ -142,15 +142,25 @@ def _load_epa_csv(year: int, make: str, model: str) -> list[dict]:
     if key in _epa_cache:
         return _epa_cache[key]
 
+    rows: list[dict] = []
+    try:
+        from backend.enrichment.dictionary_catalog import find_epa_csv
+
+        catalog_path = find_epa_csv(make, model, year)
+        if catalog_path and catalog_path.is_file():
+            with catalog_path.open(newline="", encoding="utf-8") as f:
+                rows = list(csv.DictReader(f))
+    except ImportError:
+        catalog_path = None
+
     make_safe = re.sub(r"[^\w\-. ]", "_", make.strip())
     model_safe = re.sub(r"[^\w\-. ]", "_", model.strip())
     fname = DICTIONARY / f"{year}_{make_safe}_{model_safe}_EPA.csv"
 
-    rows = []
-    if fname.exists():
+    if not rows and fname.exists():
         with open(fname, newline="", encoding="utf-8") as f:
             rows = list(csv.DictReader(f))
-    else:
+    elif not rows:
         # BMW series mapping: "330i" → "3 Series", "M4" → "M", etc.
         if make.strip().upper() == "BMW":
             series_model = _bmw_epa_model(model)

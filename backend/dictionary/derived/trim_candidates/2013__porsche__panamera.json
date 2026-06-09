@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|porsche|panamera",
+  "year": 2013,
+  "make": "Porsche",
+  "model": "Panamera",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Turbo S",
+    "Turbo",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

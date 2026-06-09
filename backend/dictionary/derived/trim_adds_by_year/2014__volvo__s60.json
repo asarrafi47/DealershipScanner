@@ -1,0 +1,82 @@
+{
+  "catalog_key": "2014|volvo|s60",
+  "year": 2014,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2014__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "PREMIER PLUS",
+    "PREMIER",
+    "R-Design",
+    "T6 AWD",
+    "T5 AWD",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Power Glass Moonroof",
+      "Leather seating surfaces",
+      "Power passenger seat with memory",
+      "Auto dimming rearview mirror and interior/exterior mirrors",
+      "Keyless Drive with Personal Car Communicator (PCC)",
+      "17-inch SADIA alloy wheels",
+      "Brightwork on side windows",
+      "Adaptive Digital TFT display",
+      "Rear park assist camera",
+      "HomeLink integrated garage door opener"
+    ],
+    "PREMIER PLUS": [
+      "Dual integrated exhaust tips",
+      "Quickfold front passenger seat",
+      "Grocery bag holder",
+      "Digital compass",
+      "Auto dimming interior and exterior mirrors",
+      "Power retractable exterior rearview mirrors",
+      "Accent lighting",
+      "Volvo Premium Sound System",
+      "Navigation system with voice control"
+    ],
+    "PREMIER": [
+      "Power Glass Moonroof",
+      "Leather seating surfaces",
+      "Power passenger seat",
+      "Auto dimming rearview mirror",
+      "Keyless Drive with Personal Car Communicator",
+      "17-inch SADIA alloy wheels",
+      "Brightwork on side windows",
+      "Adaptive Digital TFT display"
+    ],
+    "R-Design": [
+      "R-Design steering wheel",
+      "Sport seats",
+      "18-inch Titania alloy wheels",
+      "Brightwork decor on front spoiler",
+      "Dynamic sport chassis",
+      "325 hp turbocharged 6-cylinder engine",
+      "19-inch Ixion alloys with performance summer tires available"
+    ],
+    "T6 AWD": [
+      "300 hp turbocharged 6-cylinder engine",
+      "All-wheel drive system",
+      "Standard climate package with heated front/rear seats and heated windshield"
+    ],
+    "T5 AWD": [
+      "250 hp turbocharged 5-cylinder engine",
+      "All-wheel drive system"
+    ],
+    "T5": [
+      "250 hp turbocharged 5-cylinder engine",
+      "6-speed Geartronic automatic transmission",
+      "Front and side airbags with whiplash protection",
+      "City Safety low-speed collision avoidance",
+      "LED daytime running lights",
+      "Dual-zone electronic climate control",
+      "Bluetooth handsfree and audio streaming",
+      "Volvo Sensus with 7-inch color touchscreen",
+      "Advanced stability control with torque vectoring",
+      "Tire pressure monitoring system"
+    ]
+  }
+}

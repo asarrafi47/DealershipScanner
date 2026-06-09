@@ -28,6 +28,9 @@
             {% if error %}
             <div class="error-box error-box--admin">{{ error }}</div>
             {% endif %}
+            {% if request.args.get('_error') == 'session_expired' %}
+            <div class="error-box error-box--admin">Your session expired — refresh this page and sign in again.</div>
+            {% endif %}
             {% if registered_ok %}
             <div class="error-box error-box--admin" style="border-color: var(--ok-border, #2d6a4f); background: var(--ok-bg, #d8f3dc); color: var(--ok-fg, #1b4332);">Account created. Sign in below.</div>
             {% endif %}
@@ -47,7 +50,7 @@
                     <input id="admin-login-pass" type="password" name="password" required autocomplete="current-password">
                 </div>
 
-                <button type="submit" class="primary-button full-width">Sign in to dev tools</button>
+                <button type="submit" class="primary-button full-width" id="admin-login-submit">Sign in to dev tools</button>
             </form>
             {% if registration_open|default(true) %}
             <p class="auth-footer">Need an account? <a href="{{ url_for('dev.admin_register') }}">Register for dev access</a></p>
@@ -56,6 +59,18 @@
     </section>
 
 </div>
+
+<script nonce="{{ csp_nonce }}">
+(function () {
+    const form = document.querySelector(".auth-form--admin");
+    const btn = document.getElementById("admin-login-submit");
+    if (!form || !btn) return;
+    form.addEventListener("submit", function () {
+        btn.disabled = true;
+        btn.textContent = "Signing in…";
+    });
+})();
+</script>
 
 </body>
 </html>

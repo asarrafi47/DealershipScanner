@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Grumman Olson,Kubvan,Kubvan,Diesel 1.6L I4 Diesel,1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Diesel,Special Purpose Vehicles,4,1.6,26,27,26,,,,,
+1985,Grumman Olson,Kubvan,Kubvan,Diesel 1.6L I4 Diesel,1.6L I4,,Manual 5-spd,Front-Wheel Drive,Diesel,Special Purpose Vehicles,4,1.6,30,32,31,,,,,

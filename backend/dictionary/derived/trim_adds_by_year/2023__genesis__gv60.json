@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2023|genesis|gv60",
+  "year": 2023,
+  "make": "genesis",
+  "model": "GV60",
+  "ladder_id": "brochure_llm_2023__genesis__gv60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Performance AWD",
+    "Advanced AWD"
+  ],
+  "adds_by_trim": {
+    "Performance AWD": [
+      "160 kW front and rear electric motors with 429 HP and 516 lb-ft torque",
+      "Boost Mode increasing output to 483 HP",
+      "21-inch alloy wheels",
+      "Electronic limited slip differential",
+      "Electronically controlled suspension with road preview",
+      "Nappa leather seating surfaces",
+      "Driver's seat with power cushion extension, power bolster and Ergo Motion",
+      "Heated rear seats",
+      "Genesis Digital Key 2",
+      "97/82/90 MPGe EPA rating with 235-mile range"
+    ],
+    "Advanced AWD": [
+      "74 kW front and 160 kW rear electric motors with 314 HP and 446 lb-ft torque",
+      "77.4 kWh battery",
+      "Heat pump and battery heater",
+      "Paddle-shifter controlled brake regeneration system",
+      "Monobloc front brakes with ventilated front and rear disc brakes",
+      "Leather seating surfaces",
+      "Power front seats with 4-way power lumbar",
+      "Driver's seat with power cushion extension",
+      "20-inch alloy wheels",
+      "103/86/95 MPGe EPA rating with 248-mile range"
+    ]
+  }
+}

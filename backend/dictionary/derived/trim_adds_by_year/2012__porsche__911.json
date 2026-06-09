@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2012|porsche|911",
+  "year": 2012,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2012__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "911 Carrera S Cabriolet",
+    "911 Carrera S",
+    "911 Carrera Cabriolet",
+    "911 Carrera"
+  ],
+  "adds_by_trim": {
+    "911 Carrera S Cabriolet": [
+      "Porsche Dynamic Chassis Control (PDCC) active anti-roll system",
+      "Rev counter dial face in black at no extra cost"
+    ],
+    "911 Carrera S": [
+      "Porsche Dynamic Chassis Control (PDCC) active anti-roll system",
+      "Rev counter dial face in black at no extra cost"
+    ],
+    "911 Carrera Cabriolet": [
+      "Electric tilt/slide sunroof deleted (cabriolet-specific)",
+      "Rear wiper not available",
+      "Roof Transport System not available"
+    ],
+    "911 Carrera": [
+      "Porsche Doppelkupplung (PDK) 7-speed dual-clutch automatic transmission",
+      "Porsche Ceramic Composite Brakes (PCCB)",
+      "Porsche Active Suspension Management (PASM)",
+      "Porsche Torque Vectoring (PTV) with mechanically locking rear differential",
+      "Porsche Torque Vectoring Plus (PTV Plus) with electronically locking rear differential",
+      "Sport Chrono Package",
+      "Sport exhaust system",
+      "20-inch Carrera S wheels, SportDesign wheels, or Carrera Classic wheels",
+      "Auto-dimming mirrors with courtesy lighting",
+      "ParkAssist rear parking assistance"
+    ]
+  }
+}

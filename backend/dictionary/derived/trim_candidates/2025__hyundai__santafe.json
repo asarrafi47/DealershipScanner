@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2025|hyundai|santafe",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Calligraphy",
+    "Limited",
+    "SEL",
+    "XRT",
+    "SE",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

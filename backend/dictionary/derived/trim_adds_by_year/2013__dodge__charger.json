@@ -1,0 +1,82 @@
+{
+  "catalog_key": "2013|dodge|charger",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_2013__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T Plus",
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "3.6L Pentastar VVT V6 engine with 292 horsepower",
+      "5-speed AutoStick transmission",
+      "27 mpg highway fuel economy",
+      "17-inch aluminum wheels",
+      "LED rear taillamps",
+      "Dual rear exhaust with bright tips",
+      "Premium cloth seating",
+      "4.3-inch Uconnect Touch touchscreen with CD/MP3 and six speakers",
+      "Electronic Stability Control with Hill Start Assist and Ready Alert Braking",
+      "Seven standard air bags and four-wheel disc antilock brakes"
+    ],
+    "Sport": [
+      "Upgraded to sport Appearance group"
+    ],
+    "SXT": [
+      "Adds Uconnect 8.4 with 8.4-inch touchscreen and CD/DVD/MP3 radio",
+      "Adds fog lamps",
+      "Adds power 12-way driver's seat including 4-way lumbar adjust",
+      "Adds heated front seats",
+      "Adds leather-wrapped steering wheel and shift knob",
+      "Adds SiriusXM satellite radio with 1-year subscription",
+      "Upgraded to 6 premium speakers with 276-watt amplifier",
+      "Adds auto-dimming rearview mirror with microphone",
+      "Adds remote start",
+      "Adds power heated exterior mirrors"
+    ],
+    "Premium": [
+      "Adds universal garage door opener",
+      "Adds front and rear LED-lighted map pockets",
+      "Adds illuminated front cup holders"
+    ],
+    "Limited": [
+      "Upgraded to 18-inch chrome-clad aluminum wheels",
+      "Upgraded to premium nappa leather-trimmed seats",
+      "Adds heated rear seats",
+      "Adds driver and front-passenger lower LED lamps and front overhead LED lighting",
+      "Adds security alarm",
+      "Adds illuminated, heated, and cooled front cup holders"
+    ],
+    "R/T": [
+      "Upgraded to 5.7L HEMI VVT V8 engine with Fuel Saver technology",
+      "Replaces transmission with 5-speed automatic with Autostick",
+      "Upgraded to 18-inch polished aluminum wheels",
+      "Adds performance suspension",
+      "Adds performance exhaust",
+      "Adds High Intensity Discharge (HID) headlamps",
+      "Adds sport cloth front seats",
+      "Adds 4-wheel antilock disc performance brakes",
+      "Adds P235/55R18 BSW all-season tires"
+    ],
+    "R/T Plus": [
+      "Upgraded to 20-inch chrome-clad aluminum wheels",
+      "Adds paddle shifters with sport mode",
+      "Adds power heated exterior mirrors with memory",
+      "Adds auto-dimming driver's side mirror with auto adjust in Reverse",
+      "Adds driver memory system for seat, mirrors, and radio",
+      "Adds matte black grille with retro R/T badging",
+      "Adds body-color rear spoiler",
+      "Adds 3.06 axle ratio",
+      "Upgraded to performance leather-trimmed seats with perforated suede inserts",
+      "Adds heated and ventilated front seats"
+    ]
+  }
+}

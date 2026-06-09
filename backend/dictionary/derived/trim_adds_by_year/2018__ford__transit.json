@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2018|ford|transit",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Transit",
+  "ladder_id": "brochure_llm_2018__ford__transit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "350 HD DRW Long EL",
+    "350 HD DRW Long",
+    "350 HD DRW Regular",
+    "350 SRW Long",
+    "350 SRW Regular",
+    "250 SRW Long",
+    "250 SRW Regular"
+  ],
+  "adds_by_trim": {
+    "350 HD DRW Long EL": [
+      "178-inch wheelbase for maximum cargo space",
+      "10,360 lbs GVWR capacity",
+      "6,020 lbs maximum payload",
+      "Up to 13,500 lbs maximum loaded trailer weight rating with diesel engine"
+    ],
+    "350 HD DRW Long": [
+      "156-inch wheelbase",
+      "10,360 lbs GVWR capacity",
+      "6,020 lbs maximum payload"
+    ],
+    "350 HD DRW Regular": [
+      "138-inch wheelbase",
+      "Dual rear wheels (DRW) for enhanced load capacity"
+    ],
+    "350 SRW Long": [
+      "156-inch wheelbase",
+      "9,950 lbs GVWR capacity",
+      "5,610 lbs maximum payload"
+    ],
+    "350 SRW Regular": [
+      "138-inch wheelbase",
+      "350 Super Duty rating for increased capability"
+    ],
+    "250 SRW Long": [
+      "156-inch wheelbase",
+      "9,500 lbs GVWR capacity",
+      "5,350 lbs maximum payload"
+    ],
+    "250 SRW Regular": [
+      "3.7L Ti-VCT V6 engine standard",
+      "3.2L Power Stroke I-5 Turbo Diesel engine optional",
+      "138-inch wheelbase",
+      "9,000 lbs GVWR capacity",
+      "4,850 lbs maximum payload"
+    ]
+  }
+}

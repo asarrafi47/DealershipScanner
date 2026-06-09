@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2014|bentley|continental",
+  "year": 2014,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_web_2014__bentley__continental",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Speed",
+    "GT",
+    "GTC"
+  ],
+  "adds_by_trim": {
+    "Speed": [
+      "6.0L twin-turbocharged W12 engine producing 567 horsepower",
+      "Eight-speed automatic transmission",
+      "All-wheel drive standard",
+      "19-inch alloy wheels",
+      "Full leather interior with power adjustment",
+      "Dual-zone climate control",
+      "Navigation system with 8-inch display",
+      "Bluetooth connectivity",
+      "Xenon headlights with automatic leveling",
+      "Premium 15-speaker audio system"
+    ],
+    "GT": [
+      "Enhanced exterior styling with distinctive GT badging",
+      "20-inch alloy wheels",
+      "Upgraded leather upholstery with contrast stitching",
+      "Heated and cooled front seats",
+      "Panoramic sunroof",
+      "Rear parking sensors with camera",
+      "Upgraded 14-speaker audio system",
+      "Ventilated front seat cooling function"
+    ],
+    "GTC": [
+      "Convertible body style replacing hardtop",
+      "Power retractable fabric roof with glass rear window",
+      "Reinforced chassis for convertible structure",
+      "Wind deflector system",
+      "Heated rear seats",
+      "Upgraded convertible-specific suspension tuning"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/bentley/continental/"
+}

@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2023|toyota|usfullline",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "US FullLine",
+  "ladder_id": "brochure_web_2023__toyota__usfullline",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Premium leather-trimmed seats with heating and ventilation",
+      "Power moonroof with sliding sunshade",
+      "Mark Levinson Premium Surround Sound audio system",
+      "Panoramic moonroof",
+      "20-inch alloy wheels",
+      "LED headlights with automatic high-beams",
+      "Rear seat power windows and sunshades"
+    ],
+    "Limited": [
+      "Leather-trimmed heated front seats",
+      "8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Dual-zone climate control",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert",
+      "Roof rails",
+      "Alloy wheels",
+      "Power liftgate"
+    ],
+    "XLE": [
+      "Cloth seating with 6-way power driver seat",
+      "7-inch touchscreen display",
+      "Rear window defogger",
+      "Keyless entry and start",
+      "Toyota Safety Sense 2.5 standard",
+      "Alloy wheels"
+    ],
+    "LE": [
+      "Cloth seating with 6-way manual driver seat",
+      "7-inch touchscreen with USB connectivity",
+      "Toyota Safety Sense 2.5 with pre-collision system",
+      "Bluetooth hands-free connectivity",
+      "Power windows and locks",
+      "12.3-inch digital instrument cluster",
+      "3.5L V6 engine producing 295 horsepower standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/us-fullline/"
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2014|audi|r8",
+  "year": 2014,
+  "make": "Audi",
+  "model": "R8",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "V10 Plus",
+    "Premium",
+    "Limited",
+    "Sport",
+    "R8"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

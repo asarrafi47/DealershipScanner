@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2018|landrover|velar",
+  "year": 2018,
+  "make": "landrover",
+  "model": "Velar",
+  "ladder_id": "brochure_llm_2018__landrover__velar",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R-Dynamic HSE",
+    "R-Dynamic SE",
+    "SE",
+    "S",
+    "Velar"
+  ],
+  "adds_by_trim": {
+    "R-Dynamic HSE": [
+      "22-inch 9 split-spoke Style 9007 wheels with diamond-turned satin grey finish standard",
+      "Premium LED headlights with signature DRL as standard feature"
+    ],
+    "R-Dynamic SE": [
+      "20-inch 10-spoke Style 1032 wheels with satin dark grey finish standard",
+      "R-Dynamic exterior styling package"
+    ],
+    "SE": [
+      "20-inch 7 split-spoke Style 7014 wheels with gloss black finish standard",
+      "Enhanced exterior styling compared to base S trim"
+    ],
+    "S": [
+      "18-inch 15-spoke wheels standard",
+      "All-round exterior LED lighting standard",
+      "LED headlights with 158-yard low beam and 360-yard high beam range",
+      "Headlight power wash system"
+    ],
+    "Velar": [
+      "18-inch 10-spoke wheels standard",
+      "All-round exterior LED lighting standard",
+      "LED headlights with extended visibility range",
+      "Single piston sliding caliper ventilated disc brakes front and rear",
+      "Electronic air suspension capable of 28.9-degree approach angle"
+    ]
+  }
+}

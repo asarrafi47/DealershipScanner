@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2016|lamborghini|huracan",
+  "year": 2016,
+  "make": "Lamborghini",
+  "model": "huracan",
+  "ladder_id": "brochure_web_2016__lamborghini__huracan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Huracan STO Coupe",
+    "Huracan EVO Spyder AWD",
+    "Huracan Sterrato Coupe",
+    "Huracan Tecnica Coupe"
+  ],
+  "adds_by_trim": {
+    "Huracan STO Coupe": [
+      "Racecar-for-the-street design philosophy",
+      "630 horsepower and 417 lb-ft torque from 5.2L V-10",
+      "Rear-wheel drive configuration"
+    ],
+    "Huracan EVO Spyder AWD": [
+      "Open-top convertible body style",
+      "630 horsepower and 443 lb-ft torque",
+      "All-wheel drive system"
+    ],
+    "Huracan Sterrato Coupe": [
+      "Gravel-ready off-road capability",
+      "Increased ride height for trail driving",
+      "Rally driving mode",
+      "602 horsepower and 414 lb-ft torque",
+      "All-wheel drive system"
+    ],
+    "Huracan Tecnica Coupe": [
+      "5.2-liter naturally aspirated V-10 engine",
+      "630 horsepower and 417 lb-ft torque",
+      "Seven-speed dual-clutch automatic transmission",
+      "8.4-inch touchscreen with Apple CarPlay",
+      "Voice-activated controls",
+      "Rear-wheel drive configuration"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lamborghini/huracan/"
+}

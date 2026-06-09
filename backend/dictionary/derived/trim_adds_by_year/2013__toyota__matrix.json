@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|toyota|matrix",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Matrix",
+  "ladder_id": "generic_toyota_matrix",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Bluetooth SIG, Inc. and any use of such marks by Toyota is under license. Other trademarks and trade names are those of their respective owners. The"
+    ],
+    "S": [
+      "collisions; Roll-Sensing Curtain ABs at a severe tilt degree, roll or lateral G-force. In all other accidents, the ABs will not inflate. To decrease"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "S": 0
+    }
+  }
+}

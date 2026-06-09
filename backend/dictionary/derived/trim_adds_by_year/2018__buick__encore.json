@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|buick|encore",
+  "year": 2018,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_2018__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Base",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds signature Buick grille with modern luxury expression",
+      "Adds LED daytime running lamps with Buick signature lighting",
+      "Adds LED-accented taillamps with sculptural design",
+      "Adds standard 18-inch 10-spoke wheels",
+      "Adds Keyless Open feature with key fob recognition",
+      "Adds push-button start ignition",
+      "Adds Buick QuietTuning with Bose Active Noise Cancellation",
+      "Adds 1.4L turbocharged engine with 153 hp",
+      "Adds seating capacity for 5 passengers",
+      "Adds front and rear safety features"
+    ],
+    "Limited": [],
+    "Base": [
+      "1.4L Turbo engine with variable valve timing, 138 hp and 148 lb-ft torque",
+      "6-speed automatic transmission with Driver Shift Control",
+      "Front-wheel drive with StabiliTrak stability control and traction control",
+      "5-passenger seating with cloth and leatherette trim",
+      "6-way power driver seat with manual recline and power lumbar support",
+      "Buick IntelliLink 7-inch touchscreen with AM/FM, CD, USB, and Bluetooth",
+      "6-speaker audio system with SiriusXM satellite radio trial",
+      "10 standard air bags including front, knee, thorax, and side-curtain bags",
+      "OnStar with 4G LTE and built-in Wi-Fi hotspot",
+      "Rear vision camera with 18-inch 5-spoke cast aluminum wheels"
+    ]
+  }
+}

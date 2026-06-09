@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|bmw|6series",
+  "year": 2019,
+  "make": "BMW",
+  "model": "6 Series",
+  "ladder_id": "brochure_llm_2019__bmw__6series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "650i xDrive",
+    "650i",
+    "640i xDrive",
+    "640i"
+  ],
+  "adds_by_trim": {
+    "650i xDrive": [
+      "4.4-liter TwinPower Turbo V-8 engine with 443 hp and 479 lb-ft torque",
+      "All-wheel drive system for enhanced traction and handling",
+      "0-60 mph in 4.3 seconds acceleration performance"
+    ],
+    "650i": [
+      "4.4-liter TwinPower Turbo V-8 engine with 443 hp and 479 lb-ft torque",
+      "0-60 mph in 4.5 seconds acceleration performance"
+    ],
+    "640i xDrive": [
+      "All-wheel drive system for enhanced traction and handling",
+      "0-60 mph in 5.2 seconds acceleration performance"
+    ],
+    "640i": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder engine with 315 hp and 332 lb-ft torque",
+      "20/29/23 city/highway/combined mpg fuel economy rating"
+    ]
+  }
+}

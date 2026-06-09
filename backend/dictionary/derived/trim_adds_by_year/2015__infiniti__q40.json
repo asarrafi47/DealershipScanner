@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|infiniti|q40",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "Q40",
+  "ladder_id": "brochure_llm_2015__infiniti__q40",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q40 AWD",
+    "Q40"
+  ],
+  "adds_by_trim": {
+    "Q40 AWD": [
+      "Intelligent All-Wheel Drive (AWD) with Snow Mode for throttle control",
+      "18/25 EPA fuel economy vs 19/27 for RWD",
+      "36.1-foot turning diameter vs 35.4-foot for RWD",
+      "57.8-inch overall height vs 57.2-inch for RWD"
+    ],
+    "Q40": [
+      "3.7-liter 24-valve V6 engine producing 328 hp and 269 lb-ft torque",
+      "Electronically controlled 7-speed automatic with Adaptive Shift Control and Drive Sport mode",
+      "Rear-wheel drive with independent double-wishbone front and multi-link rear suspension",
+      "Infiniti Advanced Air Bag System with dual-stage front and side-impact air bags",
+      "HID bi-functional xenon headlights with automatic on/off and front fog lights",
+      "8-way power driver's seat with lumbar support and heated front seats",
+      "Infiniti Studio on Wheels by Bose 10-speaker Premium Audio System with subwoofers",
+      "Power sliding tinted glass moonroof with one-touch auto-open/close and sunshade",
+      "Infiniti Hard Drive Navigation System with 7-inch touchscreen and Lane Guidance"
+    ]
+  }
+}

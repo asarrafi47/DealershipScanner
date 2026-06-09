@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2016|ram|commercial",
+  "year": 2016,
+  "make": "ram",
+  "model": "commercial",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Tradesman",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

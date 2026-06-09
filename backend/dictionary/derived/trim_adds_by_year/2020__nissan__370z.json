@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2020|nissan|370z",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "370Z",
+  "ladder_id": "brochure_llm_2020__nissan__370z",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO",
+    "50TH ANNIVERSARY",
+    "SPORT TOURING",
+    "SPORT"
+  ],
+  "adds_by_trim": {
+    "NISMO": [
+      "3.7-liter V6 with 350 hp and 276 lb-ft torque versus 332 hp and 270 lb-ft",
+      "NISMO-tuned dual exhaust with H-pipe configuration",
+      "NISMO aerodynamic body design with unique front and rear fascia, side sills, rear spoiler",
+      "19-inch NISMO forged alloy wheels by RAYS",
+      "Dunlop SP Sport MAXX GT600 high-performance tires",
+      "NISMO Recaro leather-appointed seats with Alcantara inserts",
+      "NISMO Alcantara/leather-wrapped steering wheel and smooth leather-wrapped shift knob",
+      "NISMO signature red interior stitching",
+      "NISMO-tuned suspension with increased spring and dampening rates and larger stabilizer bars",
+      "NISMO front and rear performance chassis dampers with high-rigidity brake hoses"
+    ],
+    "50TH ANNIVERSARY": [
+      "50th Anniversary Edition forged alloy wheels by RAYS",
+      "50th Anniversary Edition leather-appointed seats with synthetic suede inserts",
+      "50th Anniversary Edition Alcantara/leather-wrapped steering wheel",
+      "50th Anniversary Edition leather-wrapped shift knob",
+      "50th Anniversary Edition tachometer badge",
+      "50th Anniversary Edition interior badging and unique interior stitching",
+      "50th Anniversary Edition unique exterior graphics and side marker decal",
+      "50th Anniversary Edition exterior badging"
+    ],
+    "SPORT TOURING": [
+      "7-speed automatic transmission with manual shift mode and Downshift Rev Matching",
+      "Magnesium paddle shifters for automatic transmission",
+      "7-inch touch-screen display",
+      "Nissan Hard Drive Navigation System with Voice Recognition",
+      "SiriusXM Radio with 3-month complimentary trial access",
+      "HomeLink Universal Transceiver",
+      "Leather-appointed heated sport seats with synthetic suede inserts",
+      "Driverʼs manual adjustable lumbar support",
+      "Aluminum-trimmed pedals",
+      "Bluetooth streaming audio"
+    ],
+    "SPORT": [
+      "6-speed manual transmission with SynchroRev Match",
+      "Viscous Limited-Slip Differential",
+      "Nissan sport brakes with 4-piston front and 2-piston rear aluminum calipers",
+      "14.0-inch front and 13.8-inch rear vented brake discs",
+      "19-inch Forged alloy wheels by RAYS",
+      "Bridgestone Potenza S007 high-performance tires",
+      "Front chin aero deflector and rear spoiler",
+      "LED illuminated Z side marker emblems",
+      "Bose Premium Audio System with eight speakers and dual subwoofers"
+    ]
+  }
+}

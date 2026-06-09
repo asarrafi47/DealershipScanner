@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|jaguar|ipace",
+  "year": 2019,
+  "make": "Jaguar",
+  "model": "I-Pace",
+  "ladder_id": "brochure_llm_2019__jaguar__ipace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "First Edition",
+    "HSE"
+  ],
+  "adds_by_trim": {
+    "First Edition": [
+      "Photon Red paint exclusive to First Edition for limited time",
+      "20-inch split-spoke Style 5070 alloy wheels in Technical Grey with Polished finish",
+      "Premium LED headlights with Jaguar signature Daytime Running Lights",
+      "Metal treadplates with First Edition branding",
+      "Suedecloth headlining",
+      "Gloss Charcoal Ash First Edition veneer",
+      "Choice of Ebony or Light Oyster color combinations",
+      "Adaptive Dynamics with Configurable Dynamics"
+    ],
+    "HSE": [
+      "Heated windshield",
+      "Heated washer jets",
+      "Gloss Black side window surround",
+      "Heated steering wheel",
+      "Four-zone Climate Control",
+      "Configurable Ambient Interior Lighting",
+      "Head-up Display",
+      "Activity Key",
+      "394 horsepower EV400 powertrain with 90 kWh battery",
+      "AWD drive system"
+    ]
+  }
+}

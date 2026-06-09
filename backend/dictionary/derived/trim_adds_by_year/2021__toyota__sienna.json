@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2021|toyota|sienna",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2021__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XSE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Signature Bi-LED projector headlights with LED-strip DRL",
+      "Bird's Eye View Camera",
+      "20-inch metallic wheels",
+      "Rain-sensing variable windshield wipers",
+      "Heated and ventilated front seats",
+      "Heated second-row captain's chairs with ottoman (FWD only)",
+      "10-inch color Head-Up Display (HUD)",
+      "Digital rearview mirror with HomeLink universal transceiver"
+    ],
+    "Limited": [
+      "18-inch bright wheels",
+      "Chrome roof rails",
+      "Rear lower bumper in black with chrome accent",
+      "Chrome-accented Sienna liftgate logo",
+      "7-inch Multi-Information Display (MID)",
+      "Manual second- and third-row sunshades",
+      "Digital rearview mirror with HomeLink universal transceiver",
+      "1500W inverter with two 120V AC outlets"
+    ],
+    "XSE": [
+      "Sport-tuned suspension",
+      "Integrated wide-angle LED fog lights",
+      "Black side rocker panels",
+      "Metallic black sport mesh front grille",
+      "Black heated power outside mirrors",
+      "Power tilt/slide moonroof with sunshade",
+      "Front and Rear Parking Assist with Automatic Rear Braking",
+      "20-inch dark wheels",
+      "Black sport mesh rear lower bumper",
+      "SofTex sport-trimmed seats"
+    ],
+    "XLE": [
+      "Hands-free dual power sliding side doors",
+      "Power liftgate with jam protection and hands-free feature",
+      "Four-zone automatic climate control",
+      "SofTex trimmed seats",
+      "Driver Easy Speak",
+      "Second-row captain's chairs with super-long-slide feature",
+      "Available second-row bench with stowable center seat",
+      "Leather-trimmed tilt/telescopic steering wheel",
+      "Smart Key System with Push Button Start",
+      "9-inch touchscreen and eight speakers with Android Auto and Apple CarPlay"
+    ],
+    "LE": [
+      "2.5L 4-cylinder hybrid engine with 245 net hp and ECVT transmission",
+      "Normal, ECO, EV and Sport drive modes",
+      "Front-Wheel Drive standard, Available All-Wheel Drive",
+      "Up to 36 city/36 highway/36 combined EPA-estimated mpg",
+      "LED headlights and LED DRL with auto on/off",
+      "LED taillights and stop lights",
+      "Color-keyed heated power outside mirrors",
+      "Dual power sliding side doors",
+      "17-inch alloy wheels",
+      "Seating for eight with three-zone automatic climate control"
+    ]
+  }
+}

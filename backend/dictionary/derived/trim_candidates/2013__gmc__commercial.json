@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2013|gmc|commercial",
+  "year": 2013,
+  "make": "GMC",
+  "model": "Commercial",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "Pro",
+    "Limited",
+    "SE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

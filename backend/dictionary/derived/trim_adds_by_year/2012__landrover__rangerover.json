@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2012|landrover|rangerover",
+  "year": 2012,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_llm_2012__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Autobiography",
+    "HSE with Lux",
+    "HSE"
+  ],
+  "adds_by_trim": {
+    "Autobiography": [
+      "20-inch 10-spoke alloy wheel with decal silver finish",
+      "20-inch 15-spoke alloy wheel with shadow chrome finish optional",
+      "Ultimate expression of personal luxury, style and individuality"
+    ],
+    "HSE with Lux": [
+      "20-inch V-spoke alloy wheel Style 9"
+    ],
+    "HSE": [
+      "19-inch twin 7-spoke alloy wheel Style 8 standard",
+      "Naturally aspirated and supercharged LR-V8 engines",
+      "Adaptive Cruise Control with 12 laser beams available",
+      "Forward Alert and Emergency Brake Assist systems",
+      "Up to 19 speakers and 1,200 watts audio system",
+      "Masterful interior design with finest quality leather and real wood veneers",
+      "Effortless on-road and legendary off-road capability"
+    ]
+  }
+}

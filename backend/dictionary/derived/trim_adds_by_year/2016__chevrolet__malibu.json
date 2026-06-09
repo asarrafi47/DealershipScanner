@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2016|chevrolet|malibu",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2016__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "2LT",
+    "1LT",
+    "LS",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Perforated leather-appointed seats",
+      "Ventilated front seats",
+      "6-way power passenger seat adjuster with lumbar control",
+      "Chevrolet MyLink 8-inch touchscreen with Android Auto and Apple CarPlay"
+    ],
+    "2LT": [
+      "Leather-appointed seats",
+      "8-way power driver seat with lumbar control",
+      "Heated front seats",
+      "High-resolution color Driver Information Center display",
+      "Leather-wrapped shift knob and steering wheel",
+      "Chevrolet MyLink 7-inch touchscreen with Android Auto and Apple CarPlay"
+    ],
+    "1LT": [
+      "Premium cloth seats",
+      "8-way power driver seat with lumbar control",
+      "Chevrolet MyLink 6-inch radio with Bluetooth audio streaming"
+    ],
+    "LS": [
+      "Body-color antenna",
+      "Dual-zone automatic climate control"
+    ],
+    "L": [
+      "Black antenna",
+      "1.5L turbocharged DOHC 4-cylinder engine with 163 hp",
+      "6-speed automatic transmission",
+      "Single-zone manual climate control",
+      "Monochromatic Driver Information Center display",
+      "AM/FM stereo",
+      "Front passenger assist handles"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2023|toyota|corolla",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Hybrid",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on SE",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) Normal, Sport and Eco driving modes Normal, Sport and Eco driving modes",
+      "Front-Wheel Drive (FWD) Dynamic-Shift Continuously Variable Transmission (CVT) Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "Exterior Features 31 city/40 highway/34 combined EPA-est. mpg29 31 city/40 highway/34 combined EPA-est. mpg29",
+      "LED headlights, LED taillights, and Daytime Running Exterior Features Exterior Features",
+      "Lights (DRL) LED headlights, LED taillights and Daytime Running LED headlights, LED taillights, and Daytime Running",
+      "Color-keyed roof-mounted shark-fin antenna Sport mesh gloss black front grille Power tilt/slide moonroof with sliding sunshade",
+      "Interior Features Gray metallic sport side rocker Gray metallic sport side rocker panels and rear spoiler",
+      "Automatic climate control Interior Features",
+      "Fabric-trimmed seats include: SofTex\u00ae-trimmed3 seats",
+      "Single exhaust with dual chrome tips",
+      "60/40 split fold-down rear seat with center armrest - Heated front seats with sport fabric inserts"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on Hybrid LE",
+      "Electronically controlled Continuously",
+      "Variable Transmission (ECVT)",
+      "Front-Wheel Drive (FWD)",
+      "LED headlights and Daytime Running Lights (DRL)",
+      "Color-keyed heated power outside mirrors",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "SofTex\u00ae-trimmed3 seats include:",
+      "Heated front seats",
+      "Leather-wrapped tilt/telescopic steering wheel",
+      "Smart Key System with Push Button Start",
+      "Toyota Audio Multimedia"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

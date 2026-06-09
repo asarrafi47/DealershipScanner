@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_dodge_challenger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Challenger",
+    "Challenger"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "R/T": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Automatic 8-spd; Rear-Wheel Drive; Automatic 8-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2016|gmc|acadia",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "brochure_llm_2016__gmc__acadia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT-2",
+    "SLT-1",
+    "SLE-2",
+    "SLE-1",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "288 horsepower and 270 lb-ft torque (vs 281 hp/266 lb-ft on other trims)",
+      "10-speaker Bose premium sound system with 5.1 surround sound and subwoofer",
+      "Signature Denali grille",
+      "Denali-specific body-color bodyside with chrome insert and rocker molding",
+      "Bright Denali-specific roof rails",
+      "Denali-specific front and rear body-color fascias",
+      "High-Intensity Discharge low-beam headlamps with halogen projector high beams",
+      "Premium Edition Package with 20-inch machined aluminum wheels and Open Road Package"
+    ],
+    "SLT-2": [
+      "Forward Collision Alert and Lane Departure Warning safety systems",
+      "High-Intensity Discharge low-beam headlamps with Technology Package requirement"
+    ],
+    "SLT-1": [
+      "Front halogen fog lamps",
+      "Heated power-adjustable power-folding auto-dimming outside mirrors with memory",
+      "Side Blind Zone Alert and Rear Cross Traffic Alert with power windows and seat memory",
+      "Driver inboard seat-mounted front center side-impact air bag"
+    ],
+    "SLE-2": [
+      "Power rear liftgate",
+      "Heated power-adjustable manual-folding outside mirrors with integrated turn signals and memory"
+    ],
+    "SLE-1": [
+      "SiriusXM satellite radio with three trial months of service",
+      "6-speaker audio system",
+      "Bluetooth connectivity for phone and personal cell-phone audio system connectivity"
+    ],
+    "LS": [
+      "3.6L V-6 VVT DI engine with 281 horsepower and 266 lb-ft torque",
+      "6-speed automatic Hydra-Matic transmission",
+      "4-wheel disc antilock braking system",
+      "Dual halogen projector-beam headlamps",
+      "LED daytime running lamps",
+      "Front and rear intermittent wipers with washers",
+      "Power-adjustable manual-folding black outside mirrors",
+      "Roof rails",
+      "Privacy Solar-Ray glass except windshield and front side glass",
+      "Full suite of airbags with Passenger Sensing System and rollover protection"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2017|acura|mdx",
+  "year": 2017,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2017__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance Package",
+    "Standard Technology Package",
+    "MDX Sport Hybrid SH-AWD"
+  ],
+  "adds_by_trim": {
+    "Advance Package": [
+      "Acura Navigation System with 3D View",
+      "AcuraLink Real-Time Traffic with Street and Freeway Conditions",
+      "Traffic Rerouting",
+      "Color Multi-Information Display with Turn-by-Turn Guidance",
+      "Acura/ELS Studio Premium Audio System with 12 Speakers",
+      "Acura DVD Rear Entertainment System with 16.2-inch Ultrawide Full VGA Screen and HDMI Compatibility"
+    ],
+    "Standard Technology Package": [
+      "Acura/ELS Studio Premium Audio System with 11 Speakers",
+      "Acura DVD Rear Entertainment System with 9-inch Full VGA Screen",
+      "Color Multi-Information Display",
+      "Remote Engine Start with Vehicle Feedback"
+    ],
+    "MDX Sport Hybrid SH-AWD": [
+      "Acura/ELS Studio Premium Audio System with 10 Speakers",
+      "Bluetooth HandsFreeLink Wireless Telephone Interface",
+      "Siri Eyes Free",
+      "SMS, MMS Text Message, and Email Capability",
+      "SiriusXM Satellite Radio",
+      "Pandora Compatibility",
+      "HD Radio",
+      "USB Audio Interface with iPod Integration",
+      "Bluetooth Streaming Audio",
+      "Maintenance Minder System"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2020|dodge|charger",
+  "year": 2020,
+  "make": "Dodge",
+  "model": "Charger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack",
+    "Daytona",
+    "R/T",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

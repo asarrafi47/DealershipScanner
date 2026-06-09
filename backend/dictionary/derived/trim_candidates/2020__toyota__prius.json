@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|toyota|prius",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Prius",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium",
+    "E2"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on LE Adds to or replaces features offered on LE AWD-e2",
+      "Powertrain Powertrain Powertrain",
+      "1.8L 4-Cylinder Engine with Hybrid Synergy Drive\u00ae \u2022 1.8L 4-Cylinder Engine with Hybrid Synergy Drive\u00ae \u2022 1.8L 4-Cylinder Engine with Hybrid Synergy Drive\u00ae",
+      "Electronically controlled Continuously Variable \u2022 Electronically controlled Continuously Variable \u2022 Electronically controlled Continuously Variable",
+      "Transmission (ECVT) Transmission (ECVT) Transmission (ECVT)",
+      "54 city/50 highway estimated mpg51 \u2022 52 city/48 highway estimated mpg52 \u2022 52 city/48 highway estimated mpg52",
+      "Exterior Features \u2022 Electronic On-Demand Compact All-Wheel Drive (AWD-e)2 \u2022 Electronic On-Demand Compact All-Wheel Drive (AWD-e)2",
+      "Adaptive Front-Lighting System (AFS)3 with Exterior Features Exterior Features",
+      "Interior Features \u2022 Intermittent rear window wiper auto on/off feature",
+      "Premium Audio with Integrated Navigation18 and JBL\u00ae19 \u2022 15-in. 5-spoke alloy wheels with two-tone wheel covers \u2022 Rain-sensing variable intermittent windshield wipers",
+      "Amazon Alexa9 compatible Interior Features \u2022 Smart Key System26 on three doors with Push Button Start",
+      "Color Head-Up Display (HUD) with speedometer, navigation \u2022 Fabric-trimmed front seats with extended seatback pockets; and remote illuminated entry"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on L Eco Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "1.8L 4-Cylinder Engine with Hybrid Synergy Drive\u00ae \u2022 1.8L 4-Cylinder Engine with Hybrid Synergy Drive\u00ae \u2022 1.8L 4-Cylinder Engine with Hybrid Synergy Drive\u00ae",
+      "Electronically controlled Continuously Variable \u2022 Electronically controlled Continuously Variable \u2022 Electronically controlled Continuously Variable",
+      "Transmission (ECVT) Transmission (ECVT) Transmission (ECVT)",
+      "58 city/53 highway estimated mpg50 \u2022 54 city/50 highway estimated mpg51 \u2022 54 city/50 highway estimated mpg51",
+      "Exterior Features Exterior Features Exterior Features",
+      "Bi-LED projector low- and high-beam headlights \u2022 Intermittent rear window wiper \u2022 Bi-LED projector low- and high-beam headlights with",
+      "LED Daytime Running Lights (DRL) with on/off feature \u2022 Rain-sensing variable intermittent windshield wipers",
+      "Fabric-trimmed front seats with extended seatback pockets;",
+      "LED taillights and stop lights \u2022 17-in. 5-spoke alloy wheels with titanium-finished wheel",
+      "LED clearance lights front passenger seat inserts and P215/45R17 tires"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

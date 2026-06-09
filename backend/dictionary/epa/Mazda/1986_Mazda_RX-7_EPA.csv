@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Mazda,RX-7,RX-7,1.3L I2 ((FFS)),1.3L I2,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,2,1.3,15,22,18,,,,,
+1986,Mazda,RX-7,RX-7,1.3L,1.3L,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,NA,1.3,15,22,18,,,,,

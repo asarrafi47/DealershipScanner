@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2016|chevrolet|equinox",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2016__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "L"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome manual-folding power-adjustable heated mirrors",
+      "Chrome door handles",
+      "Halogen foglamps",
+      "Auto-dimming rearview mirror",
+      "8-way power passenger seat",
+      "Leather-appointed seats with perforated inserts",
+      "Heated driver and front passenger seats",
+      "Programmable power liftgate with fixed glass",
+      "Driver seat memory settings for seat and mirrors",
+      "Power sunroof with tilt/sliding and express-open"
+    ],
+    "LT": [
+      "Body-color manual-folding power-adjustable heated mirrors",
+      "Side roof rails",
+      "Automatic climate control",
+      "Programmable power liftgate with fixed glass",
+      "Power driver seat with lumbar and height adjustment",
+      "Heated driver and front passenger seats"
+    ],
+    "LS": [
+      "Front and rear carpeted floor mats",
+      "7-inch diagonal color touchscreen radio with Bluetooth and USB"
+    ],
+    "L": [
+      "6-speed automatic transmission with overdrive",
+      "2.4L DOHC 4-cylinder Direct Injection engine with 182 hp",
+      "Power steering with variable-assist electric system",
+      "Independent front struts with multilink rear suspension",
+      "6 air bags with Passenger Sensing System",
+      "StabiliTrak Electronic Stability Control and Traction Control",
+      "LATCH system for child safety seats",
+      "Rear vision camera",
+      "Manual day/night rearview mirror",
+      "Black manual-folding power-adjustable mirrors"
+    ]
+  }
+}

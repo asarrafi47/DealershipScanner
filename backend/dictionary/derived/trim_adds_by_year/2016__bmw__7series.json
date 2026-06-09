@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2016|bmw|7series",
+  "year": 2016,
+  "make": "BMW",
+  "model": "7 Series",
+  "ladder_id": "brochure_web_2016__bmw__7series",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "760i xDrive Sedan",
+    "750e xDrive Plug-In Hybrid",
+    "740i xDrive Sedan",
+    "740i Sedan"
+  ],
+  "adds_by_trim": {
+    "760i xDrive Sedan": [
+      "4.4-liter twin turbo V-8 mild hybrid engine with 536 hp and 553 lb-ft torque",
+      "0–60 mph acceleration in 3.6 seconds",
+      "Standard front massaging and ventilated seats",
+      "Standard 360-degree camera system",
+      "Available Merino leather and cashmere interior"
+    ],
+    "750e xDrive Plug-In Hybrid": [
+      "3.0-liter twin turbo inline-six with electric motor producing 483 hp and 516 lb-ft torque",
+      "All-electric driving range capability",
+      "Standard Merino leather upholstery",
+      "Standard Panoramic Sky Lounge LED roof"
+    ],
+    "740i xDrive Sedan": [
+      "All-wheel drive configuration option"
+    ],
+    "740i Sedan": [
+      "3.0-liter twin turbo inline-six mild hybrid with 375 hp and 398 lb-ft torque",
+      "RWD or AWD powertrain options",
+      "14.9-inch touchscreen with Apple CarPlay and Android Auto",
+      "12.3-inch driver display",
+      "Standard heated seats and steering wheel",
+      "Soft-close automatic doors and power trunklid",
+      "Wireless phone charger",
+      "Vegan leather upholstery",
+      "20-inch wheels standard",
+      "Active Driving Assistant with forward collision mitigation and blind-spot detection"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/bmw/7-series/"
+}

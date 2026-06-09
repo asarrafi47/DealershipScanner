@@ -1,0 +1,123 @@
+{
+  "catalog_key": "2019|hyundai|ioniq",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2019_Hyundai_Ioniq_Brochure.pdf",
+  "page_count": 16,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "pages": [
+    {
+      "page": 2,
+      "trim_hint": false,
+      "text": "2018",
+      "table_lines": []
+    },
+    {
+      "page": 12,
+      "trim_hint": false,
+      "text": "Popular Features\n139 net hp, 1.6L GDI Atkinson Cycle 4-cylinder hybrid engine\n32 kW permanent magnet high-power density motor\nProximity Key entry with push button start 690 58\nMI MPG\n60/40 split-folding rear seats DRIVING RANGE EPA ESTIMATE\n7\u02dd high-resolution touchscreen audio display\nSiriusXM\u00ae Satellite Radio, Android Auto\u2122 and Apple CarPlay\u2122\n15\u02dd Eco-Spoke\nPopular Features\nBlind Spot Detection with Rear Cross-traffic Alert and Lane Change Assist\nAutomatic Emergency Braking with Pedestrian Detection\nSmart Cruise Control 654 55\nMI MPG\nLane Keep Assist\nDRIVING RANGE EPA ESTIMATE\n7\u02dd color LCD instrument cluster\nHeated front seats\n15\u02dd Eco-Spoke\nPower driver seat with adjustable lumbar support\nPopular Features\n17\u02dd alloy wheels with 225/45R17 tires\nPower tilt-and-slide sunroof\nLeather seating surfaces 654 55\nMI MPG\nHID headlights with LED accent lighting\nDRIVING RANGE EPA ESTIMATE\nHigh Beam Assist\nHyundai Blue Link\u00ae Connected Car System (3 years complimentary)\n17\u02dd Alloy\nUltimate Package\nWireless charging pad 8\u02dd high-resolution touchscreen navigation system\nComplimentary 3-year Blue Link\u00ae Guidance package Infinity\u00ae Premium Audio System with 8 speakers\nDriver Integrated Memory System Clari-Fi\u2122 Music Restoration Technology\nDynamic Bending Light Floor console-mounted rear seat vents\nRear parking sensors Retractable cargo-area cover",
+      "table_lines": [
+        "Popular Features",
+        "Popular Features",
+        "Ultimate Package",
+        "Wireless charging pad | 8\u02dd high-resolution touchscreen navigation system",
+        "Complimentary 3-year Blue Link\u00ae Guidance package | Infinity\u00ae Premium Audio System with 8 speakers",
+        "Driver Integrated Memory System | Clari-Fi\u2122 Music Restoration Technology",
+        "Dynamic Bending Light | Floor console-mounted rear seat vents",
+        "Rear parking sensors | Retractable cargo-area cover"
+      ]
+    },
+    {
+      "page": 13,
+      "trim_hint": false,
+      "text": "Popular Features\n8.9 kWh lithium-ion polymer battery system\nHeated front seats\n29 119\n16\u02dd alloy wheels with 205/55R16 tires MI MPGe\nELECTRIC RANGE 52\n7\u02dd high-resolution touchscreen audio display 630 MPG\nMI EPA ESTIMATE\nSiriusXM\u00ae Satellite Radio, Android Auto\u2122 and Apple CarPlay\u2122 TOTAL RANGE\nHyundai Blue Link\u00ae Connected Car System (3 years complimentary)\n16\u02dd Alloy\nPopular Features\nBlind Spot Detection with Rear Cross-traffic Alert and Lane Change Assist Leather seating surfaces\nPower driver seat with adjustable lumbar support 7\u02dd color LCD instrument cluster\nAutomatic Emergency Braking with Pedestrian Detection Lane Keep Assist\nLED headlights Smart Cruise Control\nUltimate Package\nHID headlights with Dynamic Bending Light Rear parking sensors\nDriver Integrated Memory System 8\u02dd high-resolution touchscreen navigation system\nInfinity\u00ae Premium Audio System with 8 speakers and\nPower tilt-and-slide sunroof\nClari-Fi\u2122 Music Restoration Technology\nWireless charging pad LED interior lighting\nPopular Features\n7\u02dd high-resolution touchscreen audio display\nSiriusXM\u00ae Satellite Radio, Android Auto\u2122 and Apple CarPlay\u2122\nHyundai Blue Link\u00ae Connected Car System (3 years complimentary) 124 136\nMI MPGe\nDC Fast Charging capability DRIVING RANGE EPA ESTIMATE\n16\u02dd Alloy\nPopular Features\nAutomatic Emergency Braking with Pedestrian Detection Driver Integrated Memory System\nLane Keep Assist 8\u02dd touchscreen navigation with Infinity\u00ae Premium Audio System\nPower tilt-and-slide sunroof HID headlights with Dynamic Bending Light\nWireless charging pad Leather seating surfaces",
+      "table_lines": [
+        "Popular Features",
+        "Ultimate Package",
+        "HID headlights with Dynamic Bending Light | Rear parking sensors",
+        "Driver Integrated Memory System | 8\u02dd high-resolution touchscreen navigation system",
+        "Power tilt-and-slide sunroof | Infinity\u00ae Premium Audio System with 8 speakers and\nClari-Fi\u2122 Music Restoration Technology",
+        "Wireless charging pad | LED interior lighting",
+        "Popular Features",
+        "Popular Features"
+      ]
+    },
+    {
+      "page": 14,
+      "trim_hint": false,
+      "text": "Hybrid Hybrid Hybrid Plug-in Plug-in Electric Hybrid Hybrid Hybrid Plug-in Plug-in Electric\nIONIQ Electric IONIQ Electric\nBlue SEL Limited Hybrid Limited Limited Blue SEL Limited Hybrid Limited Limited\nPower & Handling Power windows with driver auto-down/up\n139 net hp, 1.6L GDI Atkinson Cycle 4-cylinder Power front passenger window with auto-down/up \u2014 \u2014 \u2014 \u2014\nhybrid engine with 32 kW permanent magnet \u2014 \u2014 \u2014 \u2014 Auto-dimming rearview mirror with compass\n\u2014 \u2014 \u2014 \u2014\nhigh-power density motor and HomeLink\u00ae\n139 net hp, 1.6L GDI Atkinson Cycle 4-cylinder Stainless steel door sill plates \u2014 \u2014 \u2014 \u2014\nhybrid engine with 45 kW permanent magnet \u2014 \u2014 \u2014 \u2014 \u2014 Smart Cruise Control \u2014 \u2014 \u2014\nhigh-power density motor Smartphone/USB auxiliary input jacks\n88 kW (118 hp)/218 lb-ft, permanent magnet Advanced Safety\nelectric motor with 28 kWh lithium-ion polymer \u2014 \u2014 \u2014 \u2014 \u2014\nbattery system Dynamic Bending Light \u2014 \u2014 \u2014 \u2014\n6-speed EcoShift\u00ae Dual Clutch Transmission Automatic Emergency Braking w/ Pedestrian Detection \u2014 \u2014 \u2014\n\u2014 \u2014\nwith Sport Mode Lane Keep Assist \u2014 \u2014 \u2014\nPaddle shifters \u2014 \u2014 \u2014 Driver Attention Warning \u2014 \u2014 \u2014\nRegenerative brake level control paddles \u2014 \u2014 \u2014 \u2014 \u2014 Blind Spot Detection with\n\u2014 \u2014 \u2014\nExterior Features Rear Cross-traffic Alert and Lane Change Assist\nActive grille shutters \u2014 \u2014 High Beam Assist \u2014 \u2014 \u2014 \u2014\nAutomatic headlights Audio & Connected Car Technology\nLED taillights and Daytime Running Lights \u2014 Android Auto\u2122 and Apple CarPlay\u2122\nLED headlights \u2014 \u2014 \u2014 \u2014 \u2014 \u2014 7\u02dd AM/FM/MP3/HD Radio touchscreen display audio \u2014\nHID headlights with LED accent lighting \u2014 \u2014 \u2014 \u2014 Infinity\u00ae Premium Audio System with 8 speakers \u2014 \u2014 \u2014 \u2014\nand Clari-Fi\u2122 Music Restoration Technology\nIntegrated rear spoiler with LED brake light\n8\u02dd touchscreen navigation system \u2014 \u2014 \u2014 \u2014\nChrome side window-line trim \u2014 \u2014\nBlue Link\u00ae Connected Care & Remote | Guidance \u2014 \u2014 | |\u2014 | |\u2014 |\nLower bodyside molding \u2014\nSiriusXM\u00ae Satellite Radio (3 months complimentary)\nChrome exterior door handles \u2014 \u2014 \u2014 \u2014\nBluetooth\u00ae hands-free phone system with\nHeated outside mirrors \u2014 phonebook transfer and wireless audio streaming\nSide mirrors with turn signal indicators \u2014 \u2014 Wireless charging pad \u2014 \u2014 \u2014 \u2014\nDriver blind spot mirror \u2014 \u2014 \u2014 \u2014\nStandard Optional \u2014 Not Available\nPower tilt-and-slide sunroof \u2014 \u2014 \u2014 \u2014 Exterior Dimensions\nDoor handle approach lights HYBRID/PLUG-IN HYBRID ELECTRIC\nRearview camera with dynamic guidelines Wheelbase 106.3 in 106.3 in\nRear parking sensors \u2014 \u2014 \u2014 \u2014 \u2014 Overall Length 176.0 in 176.0 in\nInterior Features Overall Width (excluding mirrors) 71.7 in 71.7 in\nProximity Key entry with push button start Overall Height 56.9 in 57.1 in\nCoefficient of Drag 0.24 Cd 0.24 Cd\n4.2\u02ddcolor LCD multi-info display with\nHybrid Technology Display\nInterior Dimensions\n7\u02dd color LCD instrument cluster \u2014 \u2014\nHYBRID/PLUG-IN HYBRID/ELECTRIC\nTilt-and-telescopic steering wheel with cruise controls\nHead Room, front (w/sunroof)/rear 39.1 (38.2)/37.4 in\nAutomatic temperature control\nLeg Room, front/rear 42.2/35.7 in\nPower driver seat with adjustable lumbar support \u2014 \u2014 \u2014\nShoulder Room, front/rear 56.1/55.0 in\nDriver Integrated Memory System \u2014 \u2014 \u2014 \u2014\nHip Room, front/rear 53.8/52.9 in\nLeather-wrapped steering wheel \u2014\nLeather seating surfaces \u2014 \u2014 \u2014 \u2014\nOur commitment to Hyundai owners doesn\u2019t end with the transfer of keys.\nHeated front seats \u2014\nWherever the road takes you, we\u2019ve got your back with Hyundai Assurance,\n60/40 split-folding rear seats\nan umbrella of services and benefits that includes America\u2019s Best Warranty, 24/7\nFloor console-mounted rear vents \u2014 \u2014 \u2014 \u2014 HYUNDAIASSURANCE.COM Roadside Assistance, innovative safety and car care features...and more.\nLED interior lighting \u2014 \u2014 \u2014 \u2014",
+      "table_lines": [
+        "IONIQ | Hybrid\nBlue | Hybrid\nSEL | Hybrid\nLimited | Plug-in\nHybrid | Plug-in\nLimited | Electric | Electric\nLimited",
+        "Power & Handling",
+        "\u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014",
+        "\u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014 | \u2014",
+        "Exterior Features",
+        "\u2014",
+        "\u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014",
+        "\u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014",
+        "\u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "Interior Features",
+        "\u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "IONIQ | Hybrid\nBlue | Hybrid\nSEL | Hybrid\nLimited | Plug-in\nHybrid | Plug-in\nLimited | Electric | Electric\nLimited",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014",
+        "Advanced Safety",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "Audio & Connected Car Technology",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "\u2014 | \u2014 | | | |\u2014 | | | |\u2014",
+        "\u2014 | \u2014 | \u2014 | \u2014",
+        "HYBRID/PLUG-IN HYBRID | ELECTRIC",
+        "Wheelbase | 106.3 in | 106.3 in",
+        "Overall Length | 176.0 in | 176.0 in",
+        "Overall Width (excluding mirrors) | 71.7 in | 71.7 in",
+        "Overall Height | 56.9 in | 57.1 in",
+        "Coefficient of Drag | 0.24 Cd | 0.24 Cd",
+        "HYBRID/PLUG-IN HYBRID/ELECTRIC",
+        "Head Room, front (w/sunroof)/rear | 39.1 (38.2)/37.4 in",
+        "Leg Room, front/rear | 42.2/35.7 in",
+        "Shoulder Room, front/rear | 56.1/55.0 in",
+        "Hip Room, front/rear | 53.8/52.9 in"
+      ]
+    },
+    {
+      "page": 15,
+      "trim_hint": false,
+      "text": "Exterior Colors\nSymphony\nAir\nSilver\nCeramic\nWhite\nIntense\nBlue\nBlack\nNoir\nPearl\nInterior Colors\nHYBRID/PLUG-IN HYBRID HYBRID/PLUG-IN HYBRID/ELECTRIC\nBeige Charcoal Black\nPremium Cloth Premium Cloth\nHYBRID/PLUG-IN HYBRID HYBRID/PLUG-IN HYBRID/ELECTRIC\nBeige Charcoal Black\nLeather Leather\n[Hybrid/Plug-in\nHybrid\nOnly]\nSummit\nGray\n[Hybrid\nOnly]\nScarlet\nRed\nPearl",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\n2018\n\n--- page 12 ---\nPopular Features\n139 net hp, 1.6L GDI Atkinson Cycle 4-cylinder hybrid engine\n32 kW permanent magnet high-power density motor\nProximity Key entry with push button start 690 58\nMI MPG\n60/40 split-folding rear seats DRIVING RANGE EPA ESTIMATE\n7\u02dd high-resolution touchscreen audio display\nSiriusXM\u00ae Satellite Radio, Android Auto\u2122 and Apple CarPlay\u2122\n15\u02dd Eco-Spoke\nPopular Features\nBlind Spot Detection with Rear Cross-traffic Alert and Lane Change Assist\nAutomatic Emergency Braking with Pedestrian Detection\nSmart Cruise Control 654 55\nMI MPG\nLane Keep Assist\nDRIVING RANGE EPA ESTIMATE\n7\u02dd color LCD instrument cluster\nHeated front seats\n15\u02dd Eco-Spoke\nPower driver seat with adjustable lumbar support\nPopular Features\n17\u02dd alloy wheels with 225/45R17 tires\nPower tilt-and-slide sunroof\nLeather seating surfaces 654 55\nMI MPG\nHID headlights with LED accent lighting\nDRIVING RANGE EPA ESTIMATE\nHigh Beam Assist\nHyundai Blue Link\u00ae Connected Car System (3 years complimentary)\n17\u02dd Alloy\nUltimate Package\nWireless charging pad 8\u02dd high-resolution touchscreen navigation system\nComplimentary 3-year Blue Link\u00ae Guidance package Infinity\u00ae Premium Audio System with 8 speakers\nDriver Integrated Memory System Clari-Fi\u2122 Music Restoration Technology\nDynamic Bending Light Floor console-mounted rear seat vents\nRear parking sensors Retractable cargo-area cover\n\nPopular Features\nPopular Features\nUltimate Package\nWireless charging pad | 8\u02dd high-resolution touchscreen navigation system\nComplimentary 3-year Blue Link\u00ae Guidance package | Infinity\u00ae Premium Audio System with 8 speakers\nDriver Integrated Memory System | Clari-Fi\u2122 Music Restoration Technology\nDynamic Bending Light | Floor console-mounted rear seat vents\nRear parking sensors | Retractable cargo-area cover\n\n--- page 13 ---\nPopular Features\n8.9 kWh lithium-ion polymer battery system\nHeated front seats\n29 119\n16\u02dd alloy wheels with 205/55R16 tires MI MPGe\nELECTRIC RANGE 52\n7\u02dd high-resolution touchscreen audio display 630 MPG\nMI EPA ESTIMATE\nSiriusXM\u00ae Satellite Radio, Android Auto\u2122 and Apple CarPlay\u2122 TOTAL RANGE\nHyundai Blue Link\u00ae Connected Car System (3 years complimentary)\n16\u02dd Alloy\nPopular Features\nBlind Spot Detection with Rear Cross-traffic Alert and Lane Change Assist Leather seating surfaces\nPower driver seat with adjustable lumbar support 7\u02dd color LCD instrument cluster\nAutomatic Emergency Braking with Pedestrian Detection Lane Keep Assist\nLED headlights Smart Cruise Control\nUltimate Package\nHID headlights with Dynamic Bending Light Rear parking sensors\nDriver Integrated Memory System 8\u02dd high-resolution touchscreen navigation system\nInfinity\u00ae Premium Audio System with 8 speakers and\nPower tilt-and-slide sunroof\nClari-Fi\u2122 Music Restoration Technology\nWireless charging pad LED interior lighting\nPopular Features\n7\u02dd high-resolution touchscreen audio display\nSiriusXM\u00ae Satellite Radio, Android Auto\u2122 and Apple CarPlay\u2122\nHyundai Blue Link\u00ae Connected Car System (3 years complimentary) 124 136\nMI MPGe\nDC Fast Charging capability DRIVING RANGE EPA ESTIMATE\n16\u02dd Alloy\nPopular Features\nAutomatic Emergency Braking with Pedestrian Detection Driver Integrated Memory System\nLane Keep Assist 8\u02dd touchscreen navigation with Infinity\u00ae Premium Audio System\nPower tilt-and-slide sunroof HID headlights with Dynamic Bending Light\nWireless charging pad Leather seating surfaces\n\nPopular Features\nUltimate Package\nHID headlights with Dynamic Bending Light | Rear parking sensors\nDriver Integrated Memory System | 8\u02dd high-resolution touchscreen navigation system\nPower tilt-and-slide sunroof | Infinity\u00ae Premium Audio System with 8 speakers and\nClari-Fi\u2122 Music Restoration Technology\nWireless charging pad | LED interior lighting\nPopular Features\nPopular Features\n\n--- page 14 ---\nHybrid Hybrid Hybrid Plug-in Plug-in Electric Hybrid Hybrid Hybrid Plug-in Plug-in Electric\nIONIQ Electric IONIQ Electric\nBlue SEL Limited Hybrid Limited Limited Blue SEL Limited Hybrid Limited Limited\nPower & Handling Power windows with driver auto-down/up\n139 net hp, 1.6L GDI Atkinson Cycle 4-cylinder Power front passenger window with auto-down/up \u2014 \u2014 \u2014 \u2014\nhybrid engine with 32 kW permanent magnet \u2014 \u2014 \u2014 \u2014 Auto-dimming rearview mirror with compass\n\u2014 \u2014 \u2014 \u2014\nhigh-power density motor and HomeLink\u00ae\n139 net hp, 1.6L GDI Atkinson Cycle 4-cylinder Stainless steel door sill plates \u2014 \u2014 \u2014 \u2014\nhybrid engine with 45 kW permanent magnet \u2014 \u2014 \u2014 \u2014 \u2014 Smart Cruise Control \u2014 \u2014 \u2014\nhigh-power density motor Smartphone/USB auxiliary input jacks\n88 kW (118 hp)/218 lb-ft, permanent magnet Advanced Safety\nelectric motor with 28 kWh lithium-ion polymer \u2014 \u2014 \u2014 \u2014 \u2014\nbattery system Dynamic Bending Light \u2014 \u2014 \u2014 \u2014\n6-speed EcoShift\u00ae Dual Clutch Transmission Automatic Emergency Braking w/ Pedestrian Detection \u2014 \u2014 \u2014\n\u2014 \u2014\nwith Sport Mode Lane Keep Assist \u2014 \u2014 \u2014\nPaddle shifters \u2014 \u2014 \u2014 Driver Attention Warning \u2014 \u2014 \u2014\nRegenerative brake level control paddles \u2014 \u2014 \u2014 \u2014 \u2014 Blind Spot Detection with\n\u2014 \u2014 \u2014\nExterior Features Rear Cross-traffic Alert and Lane Change Assist\nActive grille shutters \u2014 \u2014 High Beam Assist \u2014 \u2014 \u2014 \u2014\nAutomatic headlights Audio & Connected Car Technology\nLED taillights and Daytime Running Lights \u2014 Android Auto\u2122 and Apple CarPlay\u2122\nLED headlights \u2014 \u2014 \u2014 \u2014 \u2014 \u2014 7\u02dd AM/FM/MP3/HD Radio touchscreen display audio \u2014\nHID headlights with LED accent lighting \u2014 \u2014 \u2014 \u2014 Infinity\u00ae Premium Audio System with 8 speakers \u2014 \u2014 \u2014 \u2014\nand Clari-Fi\u2122 Music Restoration Technology\nIntegrated rear spoiler with LED brake light\n8\u02dd touchscreen navigation system \u2014 \u2014 \u2014 \u2014\nChrome side window-line trim \u2014 \u2014\nBlue Link\u00ae Connected Care & Remote | Guidance \u2014 \u2014 | |\u2014 | |\u2014 |\nLower bodyside molding \u2014\nSiriusXM\u00ae Satellite Radio (3 months complimentary)\nChrome exterior door handles \u2014 \u2014 \u2014 \u2014\nBluetooth\u00ae hands-free phone system with\nHeated outside mirrors \u2014 phonebook transfer and wireless audio streaming\nSide mirrors with turn signal indicators \u2014 \u2014 Wireless charging pad \u2014 \u2014 \u2014 \u2014\nDriver blind spot mirror \u2014 \u2014 \u2014 \u2014\nStandard Optional \u2014 Not Available\nPower tilt-and-slide sunroof \u2014 \u2014 \u2014 \u2014 Exterior Dimensions\nDoor handle approach lights HYBRID/PLUG-IN HYBRID ELECTRIC\nRearview camera with dynamic guidelines Wheelbase 106.3 in 106.3 in\nRear parking sensors \u2014 \u2014 \u2014 \u2014 \u2014 Overall Length 176.0 in 176.0 in\nInterior Features Overall Width (excluding mirrors) 71.7 in 71.7 in\nProximity Key entry with push button start Overall Height 56.9 in 57.1 in\nCoefficient of Drag 0.24 Cd 0.24 Cd\n4.2\u02ddcolor LCD multi-info display with\nHybrid Technology Display\nInterior Dimensions\n7\u02dd color LCD instrument cluster \u2014 \u2014\nHYBRID/PLUG-IN HYBRID/ELECTRIC\nTilt-and-telescopic steering wheel with cruise controls\nHead Room, front (w/sunroof)/rear 39.1 (38.2)/37.4 in\nAutomatic temperature control\nLeg Room, front/rear 42.2/35.7 in\nPower driver seat with adjustable lumbar support \u2014 \u2014 \u2014\nShoulder Room, front/rear 56.1/55.0 in\nDriver Integrated Memory System \u2014 \u2014 \u2014 \u2014\nHip Room, front/rear 53.8/52.9 in\nLeather-wrapped steering wheel \u2014\nLeather seating surfaces \u2014 \u2014 \u2014 \u2014\nOur commitment to Hyundai owners doesn\u2019t end with the transfer of keys.\nHeated front seats \u2014\nWherever the road takes you, we\u2019ve got your back with Hyundai Assurance,\n60/40 split-folding rear seats\nan umbrella of services and benefits that includes America\u2019s Best Warranty, 24/7\nFloor console-mounted rear vents \u2014 \u2014 \u2014 \u2014 HYUNDAIASSURANCE.COM Roadside Assistance, innovative safety and car care features...and more.\nLED interior lighting \u2014 \u2014 \u2014 \u2014\n\nIONIQ | Hybrid\nBlue | Hybrid\nSEL | Hybrid\nLimited | Plug-in\nHybrid | Plug-in\nLimited | Electric | Electric\nLimited\nPower & Handling\n\u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014 | \u2014\n\u2014\n\u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014 | \u2014\nExterior Features\n\u2014\n\u2014\n\u2014 | \u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014\n\u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014\n\u2014 | \u2014\n\u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\nInterior Features\n\u2014 | \u2014\n\u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\nIONIQ | Hybrid\nBlue | Hybrid\nSEL | Hybrid\nLimited | Plug-in\nHybrid | Plug-in\nLimited | Electric | Electric\nLimited\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014\nAdvanced Safety\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\nAudio & Connected Car Technology\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | \u2014 | \u2014\n\u2014 | \u2014 | | | |\u2014 | | | |\u2014\n\u2014 | \u2014 | \u2014 | \u2014\nHYBRID/PLUG-IN HYBRID | ELECTRIC\nWheelbase | 106.3 in | 106.3 in\nOverall Length | 176.0 in | 176.0 in\nOverall Width (excluding mirrors) | 71.7 in | 71.7 in\nOverall Height | 56.9 in | 57.1 in\nCoefficient of Drag | 0.24 Cd | 0.24 Cd\nHYBRID/PLUG-IN HYBRID/ELECTRIC\nHead Room, front (w/sunroof)/rear | 39.1 (38.2)/37.4 in\nLeg Room, front/rear | 42.2/35.7 in\nShoulder Room, front/rear | 56.1/55.0 in\nHip Room, front/rear | 53.8/52.9 in\n\n--- page 15 ---\nExterior Colors\nSymphony\nAir\nSilver\nCeramic\nWhite\nIntense\nBlue\nBlack\nNoir\nPearl\nInterior Colors\nHYBRID/PLUG-IN HYBRID HYBRID/PLUG-IN HYBRID/ELECTRIC\nBeige Charcoal Black\nPremium Cloth Premium Cloth\nHYBRID/PLUG-IN HYBRID HYBRID/PLUG-IN HYBRID/ELECTRIC\nBeige Charcoal Black\nLeather Leather\n[Hybrid/Plug-in\nHybrid\nOnly]\nSummit\nGray\n[Hybrid\nOnly]\nScarlet\nRed\nPearl"
+}

@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2024_bmw_m5_complete_options",
+  "make": "BMW",
+  "models": [
+    "M5",
+    "M5"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "4.4L V8 Twin Turbo; Automatic (S8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Petrol (turbo PHEV):; Mild hybrid"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Inside, combination cloth/leather upholstery is standard, with leather available; Inside, combination cloth/leather upholstery is standard, with leather available as an option."
+      }
+    ]
+  }
+}

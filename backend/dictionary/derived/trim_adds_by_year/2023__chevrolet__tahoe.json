@@ -1,0 +1,90 @@
+{
+  "catalog_key": "2023|chevrolet|tahoe",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2023__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "Z71",
+    "RST",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "6.2L EcoTec3 V8 engine with dual exhaust and dual twin tips",
+      "22-inch Sterling Silver-painted wheels",
+      "Exclusive grille with Galvano inserts and bright chrome",
+      "Galvano finish front skid plate and liftgate appliqué",
+      "Power-folding third-row seat and power-sliding center console",
+      "Automatic heated steering wheel",
+      "Heated and ventilated front seats with perforated leather",
+      "15-inch diagonal multi-color Head-Up Display",
+      "Bose Centerpoint Surround Sound 10-speaker system",
+      "Rear Camera Mirror and Rear Pedestrian Alert"
+    ],
+    "Premier": [
+      "Luxury-focused positioning with premium appointments",
+      "Power-release second-row bucket seats",
+      "Heated second-row bucket seats",
+      "Full-feature outside mirrors with chrome caps",
+      "Body-color mirror caps",
+      "Bright front and rear sill plates with High Country logo",
+      "Heated second-row bucket seats with perforated leather",
+      "Lane Change Alert with Side Blind Zone Alert and Safety Alert Seat",
+      "HD Surround Vision",
+      "Available Super Cruise hands-free driver assistance technology"
+    ],
+    "Z71": [
+      "Autotrac 2-speed active transfer case",
+      "Magnetic Ride Control suspension",
+      "Hill Descent Control",
+      "20-inch machined-aluminum wheels with Galvano accents and all-terrain tires",
+      "Heavy-duty air filter",
+      "Front skid plate with Galvano finish",
+      "Black grille with Black Ice chrome accents",
+      "High approach angle front fascia",
+      "Red recovery hooks",
+      "Black tubular assist steps and Black beltline moldings"
+    ],
+    "RST": [
+      "RST-specific Black sport grille with Black Ice chrome exterior trim",
+      "RST-specific badging and Black Chevrolet bowtie emblems",
+      "22-inch bright machined high-gloss Black-painted aluminum wheels",
+      "Black front fascia with gloss Black accent trim",
+      "Black roof rack side rails and black assist steps with gloss Black accents",
+      "Gloss Black beltline moldings and Black Ice chrome liftgate appliqué",
+      "RST-specific Jet Black interior with Victory Red stitching",
+      "12-inch diagonal multi-color enhanced Driver Information Center",
+      "9-speaker Bose sound system",
+      "Available RST Performance Edition and power-sliding center console"
+    ],
+    "LT": [
+      "Hands-free programmable power liftgate with Chevrolet emblem projection",
+      "Black grille with Black inserts and chrome accents",
+      "Bright front and rear sill plates",
+      "Leather-appointed front and second-row seats",
+      "Heated front bucket seats with driver memory",
+      "12-inch diagonal multi-color enhanced Driver Information Center",
+      "Inside rearview auto-dimming mirror",
+      "Universal Home Remote",
+      "Chevrolet Infotainment 3 Premium system with 10.2-inch touchscreen and Google built-in",
+      "9-speaker Bose sound system and wireless charging"
+    ],
+    "LS": [
+      "5.3L EcoTec3 V8 engine with Dynamic Fuel Management",
+      "Premium Smooth Ride suspension",
+      "18-inch Bright Silver-painted aluminum wheels",
+      "Body-color mirror caps and door handles",
+      "Black lower fascia with chrome accents",
+      "Black assist steps with chrome strip and bright roof rack side rails",
+      "LED headlamps, taillamps, and daytime running lamps",
+      "Remote vehicle starter system",
+      "10-way power driver-seat adjuster with power lumbar control",
+      "Fold-flat second and third-row seats and tri-zone automatic climate control"
+    ]
+  }
+}

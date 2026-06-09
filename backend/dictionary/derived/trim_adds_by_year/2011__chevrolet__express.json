@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2011|chevrolet|express",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Express",
+  "ladder_id": "brochure_llm_2011__chevrolet__express",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3500 Extended Wheelbase",
+    "3500",
+    "2500 Extended Wheelbase",
+    "2500",
+    "1500 All-Wheel-Drive",
+    "1500"
+  ],
+  "adds_by_trim": {
+    "3500 Extended Wheelbase": [
+      "Maximum 284.4 cubic feet cargo space in Cargo Van models",
+      "Duramax 6.6L Turbo-Diesel V8 engine option with 525 lb-ft torque",
+      "Rear Gross Axle Weight Rating up to 6,084 lbs",
+      "Maximum trailer weight rating of 10,000 lbs"
+    ],
+    "3500": [
+      "Vortec 6.0L FlexFuel V8 standard on Passenger Van",
+      "Duramax 6.6L Turbo-Diesel V8 engine option",
+      "Rear Gross Axle Weight Rating up to 6,084 lbs",
+      "Maximum trailer weight rating of 10,000 lbs"
+    ],
+    "2500 Extended Wheelbase": [
+      "Extended wheelbase configuration",
+      "Hydra-Matic six-speed automatic with Tap-Up/Tap-Down shift control",
+      "Auto grade braking for steep descents",
+      "Maximum trailer weight rating of 10,000 lbs"
+    ],
+    "2500": [
+      "Vortec 4.8L FlexFuel V8 standard on Passenger Van",
+      "Hydra-Matic six-speed automatic with Tap-Up/Tap-Down shift control",
+      "Auto grade braking functionality",
+      "Dual 145-amp alternator available on Cargo Van"
+    ],
+    "1500 All-Wheel-Drive": [
+      "All-Wheel-Drive system for improved traction in inclement weather",
+      "Vortec 5.3L FlexFuel V8 engine standard on Passenger Van",
+      "Hydra-Matic four-speed automatic overdrive with Tow/Haul mode"
+    ],
+    "1500": [
+      "Vortec 5.3L FlexFuel V8 engine standard on Passenger Van",
+      "Tire Pressure Monitoring System excluding spare tire",
+      "Four-wheel antilock brakes with Dynamic Rear Proportioning",
+      "Enhanced Technology Glass standard on 12 and 15-passenger models",
+      "OnStar with Directions & Connections Plan standard for six months",
+      "Up to 15-passenger seating capacity available",
+      "Remote vehicle starter system available",
+      "Hydra-Matic four-speed automatic overdrive with Tow/Haul mode",
+      "600-cca battery standard with 770-cca high-capacity option"
+    ]
+  }
+}

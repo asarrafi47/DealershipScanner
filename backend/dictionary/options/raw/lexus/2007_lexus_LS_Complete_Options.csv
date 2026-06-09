@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2007,lexus,LS,460,4.6L V8,4.6L V8,,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.6,17,25,20,,,,,
+2007,lexus,LS,460 L,4.6L V8,4.6L V8,,Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.6,16,24,19,,,,,

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|gmc|terrain",
+  "year": 2010,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_llm_2010__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLT",
+    "SLE-2",
+    "SLE-1"
+  ],
+  "adds_by_trim": {
+    "SLT": [
+      "Ultrasoft perforated leather-appointed seating",
+      "8-speaker Pioneer premium audio system with CD/DVD player",
+      "Memory settings for driver seat and outside rearview mirrors",
+      "Power tilt-sliding sunroof with express-open and wind deflector"
+    ],
+    "SLE-2": [
+      "Premium cloth seating",
+      "8-way power driver seat adjuster with manual fore/aft and power lumbar",
+      "Leather-wrapped steering wheel with mounted audio and cruise controls",
+      "Single-zone automatic air conditioning with climate control",
+      "Pioneer premium 8-speaker system with subwoofer and amplifier",
+      "Heated driver and front passenger seats with convenience package"
+    ],
+    "SLE-1": [
+      "2.4L Direct Injection 4-cylinder engine with 182 hp and 172 lb-ft torque",
+      "Front-wheel drive",
+      "6-speed automatic transmission",
+      "AM/FM stereo with CD player and MP3/WMA playback capability",
+      "XM Radio with 3 trial months of service",
+      "Rearview camera system integrated into rearview mirror",
+      "Electronic child safety locks and automatic power locks",
+      "StabiliTrak vehicle stability enhancement system"
+    ]
+  }
+}

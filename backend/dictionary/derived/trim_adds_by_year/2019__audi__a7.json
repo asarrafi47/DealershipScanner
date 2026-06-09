@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2019|audi|a7",
+  "year": 2019,
+  "make": "Audi",
+  "model": "A7",
+  "ladder_id": "brochure_2019__audi__a7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "A7"
+  ],
+  "adds_by_trim": {
+    "A7": [
+      "3.0T turbocharged engine",
+      "A7 Standard Seat with Black leather",
+      "Audi Sport 19-inch 5-spoke-V design wheels standard",
+      "A7 Ventilated Seat with multiple leather and color options",
+      "Brilliant Black and Ibis White exterior colors standard",
+      "Achat Gray Fine Grain Birch Wood interior inlay"
+    ],
+    "Sport": [],
+    "Limited": [],
+    "S line": [
+      "Adds S line package designation",
+      "Upgraded to 20-inch 5-double-V-spoke design wheels standard",
+      "Adds availability of 21-inch 5-V-spoke-star design wheels with gray/polished finish"
+    ],
+    "Premium": [],
+    "Prestige": [
+      "Adds Warm Weather package option",
+      "Upgraded to Pearl Beige Perforated Valcona leather with gray contrast stitching and piping",
+      "Adds premium interior inlay options including Fine Grain Ash Natural Wood and Dark Brown Walnut Natural Wood"
+    ]
+  }
+}

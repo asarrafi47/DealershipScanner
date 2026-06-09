@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2005,Mercury,Mountaineer,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,14,19,16,,,,,,4.0L V6,
-2005,Mercury,Mountaineer,2WD,4.6L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,4.6,13,18,15,,,,,,4.6L V8,
-2005,Mercury,Mountaineer,4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,13,17,14,,,,,,4.0L V6,
-2005,Mercury,Mountaineer,4WD,4.6L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,4.6,13,17,14,,,,,,4.6L V8,
-2005,Mercury,Mountaineer,FFV 2WD,FFV 4.0L V6 (FLEX-FUEL),Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,6,4.0,13,19,15,,,,,,4.0L V6,
-2005,Mercury,Mountaineer,FFV 4WD,FFV 4.0L V6 (FLEX-FUEL),Automatic 5-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,6,4.0,13,17,14,,,,,,4.0L V6,
-2005,Mercury,Mountaineer,2WD,4.0L V6 (FFS MPFI),Automatic 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,13,19,15,,,,,,4.0L V6,

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|buick|cascada",
+  "year": 2016,
+  "make": "Buick",
+  "model": "Cascada",
+  "ladder_id": "brochure_2016__buick__cascada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 1.6L 4-cylinder Turbo engine with VVT",
+      "Adds 6-speed automatic transmission with front-wheel drive",
+      "Adds 8-way power driver and front-passenger seat adjusters with 2-way lumbar",
+      "Adds heated sport bucket front seats with perforated leather trim",
+      "Adds rear split-folding seats with Easy Entry System",
+      "Adds premium 7-speaker audio system with AM/FM, 7-inch touchscreen, CD, MP3, GPS navigation, and USB connectivity",
+      "Adds Buick IntelliLink smartphone control with voice activation",
+      "Adds SiriusXM satellite radio with 3 trial months",
+      "Adds dual-zone automatic climate control",
+      "Adds dual-stage frontal and side-impact airbags with Passenger Sensing System"
+    ],
+    "Premium": [
+      "Adds Lane Departure Warning system",
+      "Adds front and rear Park Assist sensors",
+      "Adds Rainsense automatic wipers",
+      "Adds automatic headlamps with tunnel detection"
+    ],
+    "Limited": [
+      "Adds articulating high-intensity discharge headlamps",
+      "Adds automated rollover pop-up rear bumper bars",
+      "Adds power folding convertible top with acoustic and thermal insulation"
+    ]
+  }
+}

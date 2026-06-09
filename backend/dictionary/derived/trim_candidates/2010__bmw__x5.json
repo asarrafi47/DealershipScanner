@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2010|bmw|x5",
+  "year": 2010,
+  "make": "BMW",
+  "model": "X5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Platinum",
+    "Limited",
+    "LT",
+    "Sport",
+    "LE",
+    "X5"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

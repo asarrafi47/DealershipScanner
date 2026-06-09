@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|audi|a8",
+  "year": 2016,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_llm_2016__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A8L W12",
+    "A8L 4.0T Sport",
+    "S8",
+    "A8L 3.0T",
+    "A8L TDI"
+  ],
+  "adds_by_trim": {
+    "A8L W12": [
+      "12-cylinder engine with 500 horsepower and 463 lb-ft torque",
+      "6,299cc displacement with 48-valve DOHC valvetrain",
+      "4.4-second 0-60 mph acceleration",
+      "Sport differential available",
+      "Dynamic steering available"
+    ],
+    "A8L 4.0T Sport": [
+      "Eight-cylinder turbocharged engine with 450 horsepower and 444 lb-ft torque",
+      "3,991cc displacement with 32-valve DOHC valvetrain",
+      "4.4-second 0-60 mph acceleration",
+      "Sport differential available",
+      "Dynamic steering available"
+    ],
+    "S8": [
+      "Eight-cylinder turbocharged engine with 520 horsepower and 481 lb-ft torque",
+      "155 mph top track speed versus 130 mph on other models",
+      "3.9-second 0-60 mph acceleration",
+      "Audi adaptive air suspension with S model-specific tuning",
+      "40.4-foot turning diameter"
+    ],
+    "A8L 3.0T": [
+      "Six-cylinder supercharged engine with 333 horsepower and 325 lb-ft torque",
+      "2,995cc displacement with 24-valve DOHC valvetrain",
+      "Cylinder on demand engine efficiency technology",
+      "Start-stop efficiency system",
+      "5.5-second 0-60 mph acceleration"
+    ],
+    "A8L TDI": [
+      "Six-cylinder turbocharged diesel engine with 240 horsepower and 428 lb-ft torque",
+      "2,967cc displacement with 24-valve DOHC valvetrain",
+      "6.3-second 0-60 mph acceleration",
+      "16.3:1 compression ratio for diesel efficiency"
+    ]
+  }
+}

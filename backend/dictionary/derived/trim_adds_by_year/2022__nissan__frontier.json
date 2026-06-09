@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2022|nissan|frontier",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2022__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRO-4X® CREW CAB",
+    "PRO-X™ CREW CAB",
+    "SV CREW CAB",
+    "S CREW CAB"
+  ],
+  "adds_by_trim": {
+    "PRO-4X® CREW CAB": [
+      "Electronic locking rear differential",
+      "Aluminum front skid plate",
+      "Steel underbody skid plates (oil pan, fuel tank, 4x4 transfer case)",
+      "PRO-4X bed side decal",
+      "PRO-4X embroidered cloth seats",
+      "PRO-4X carpeted floor mats"
+    ],
+    "PRO-X™ CREW CAB": [
+      "17-inch dark-finished aluminum-alloy wheels",
+      "Bilstein off-road performance shock absorbers",
+      "LED headlights, fog lights, and daytime running lights",
+      "Lava Red painted tow hooks and upper body-color/lower black front bumper",
+      "Black overfenders with PRO-X bed side decals",
+      "9-inch color touchscreen with Wi-Fi hotspot and door-to-door navigation",
+      "Nissan Intelligent Key with push button ignition",
+      "Dual zone automatic temperature control",
+      "PRO-X embroidered cloth seats with leather-wrapped steering wheel and shift knob",
+      "Overhead console with sunglasses storage and illuminated sun visors"
+    ],
+    "SV CREW CAB": [
+      "17-inch 6-split spoke aluminum-alloy wheels",
+      "Upper body-color/lower silver front bumper with body-color door handles and rear bumper",
+      "Sliding rear window",
+      "Dual power outside mirrors with 6-way power driver's seat and manual lumbar support",
+      "Chrome interior door handles",
+      "Tow-haul mode switch and vehicle security system"
+    ],
+    "S CREW CAB": [
+      "3.8-liter V6 direct injection engine with 310 hp and 281 lb-ft torque",
+      "9-speed automatic transmission",
+      "16-inch styled steel wheels",
+      "Intelligent forward collision warning and automatic emergency braking with pedestrian detection",
+      "Rearview monitor and intelligent driver alertness",
+      "Vehicle dynamic control and active brake limited slip",
+      "Full-length fully boxed ladder frame",
+      "7-inch advanced drive-assist display",
+      "8-inch NissanConnect color touchscreen with Apple CarPlay and Android Auto",
+      "Four full-size doors with seating for five and 60/40 split flip-up rear bench seat"
+    ]
+  }
+}

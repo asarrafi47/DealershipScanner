@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2016|subaru|xvcrosstrek",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2016__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Touring",
+    "2.0i Limited",
+    "Hybrid",
+    "2.0i Premium",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "Hybrid Touring": [
+      "Power tilt/sliding-glass moonroof",
+      "Leather-trimmed upholstery with orange stitching",
+      "SUBARU STARLINK™ 7.0\" Multimedia Navigation System with voice-activated GPS",
+      "SiriusXM® Satellite Radio with Traffic® and Travel Link®",
+      "STARLINK™ Safety Plus with Automatic Collision Notification and SOS Emergency Assistance"
+    ],
+    "2.0i Limited": [
+      "Lineartronic® CVT with manual-mode paddle shifters (standard)",
+      "Body-color side mirrors with integrated turn signals",
+      "Leather-trimmed upholstery with orange stitching",
+      "Leather shifter handle with orange stitching and gloss black trim",
+      "Automatic climate control system",
+      "Auto-on/off headlights with welcome lighting",
+      "SUBARU STARLINK™ 7.0\" Multimedia Plus with voice-activated controls and SiriusXM®",
+      "STARLINK™ Safety Plus: Automatic Collision Notification, SOS Emergency Assistance",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert"
+    ],
+    "Hybrid": [
+      "Subaru Hybrid System with EV mode and regenerative braking",
+      "160 hp total system power with 163 lb-ft torque",
+      "Nickel-metal hydride hybrid battery with cooling system",
+      "Lineartronic® CVT with manual-mode paddle shifters",
+      "Body-color side mirrors with integrated turn signals",
+      "Body-color door handles with chrome accents",
+      "Enhanced color multifunction display",
+      "Leather-wrapped steering wheel with orange stitching",
+      "Automatic climate control system",
+      "All-Weather Package, rear-vision camera, keyless access with push-button start, LED taillights"
+    ],
+    "2.0i Premium": [
+      "Optional Lineartronic® CVT with manual-mode paddle shifters",
+      "Body-color side mirrors with integrated turn signals",
+      "Cloth upholstery with orange stitching",
+      "Leather-wrapped 3-spoke steering wheel",
+      "Automatic climate control system",
+      "Auto-on/off headlights with welcome lighting",
+      "SUBARU STARLINK™ 6.2\" Multimedia system with 6 speakers",
+      "All-Weather Package: heated mirrors, dual-mode heated front seats, windshield de-icer",
+      "Sliding center console lid with orange stitching",
+      "Cargo-area cover and tray"
+    ],
+    "2.0i": [
+      "148-hp 2.0-liter 4-cylinder SUBARU BOXER® engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission standard",
+      "Fog lights",
+      "17-inch aluminum-alloy wheels with black roof rails",
+      "Cloth upholstery with orange stitching",
+      "SUBARU STARLINK™ 6.2\" Multimedia with Pandora®, iHeart® Radio, Stitcher™, Aha™",
+      "4 speakers, AM/FM/CD, HD Radio®, USB port, iPod® control, Bluetooth® audio streaming",
+      "6-way manually adjustable driver's seat, 4-way passenger seat",
+      "Manually adjustable air conditioning with air filtration, electronic cruise control, rear-vision camera"
+    ]
+  }
+}

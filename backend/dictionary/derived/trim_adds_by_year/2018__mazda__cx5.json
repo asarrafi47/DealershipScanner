@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2018|mazda|cx5",
+  "year": 2018,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_2018__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes MAZDA CONNECT infotainment system with Bluetooth connectivity",
+      "Adds Includes Rear Cross Traffic Alert system",
+      "Adds Includes Adaptive Front-Lighting System",
+      "Adds Includes High Beam Control auto-adjustment",
+      "Adds Includes Traffic Sign Recognition System"
+    ],
+    "Sport": [
+      "Adds Lane-Keep Assist with minor steering corrections",
+      "Adds Smart Brake Support for higher-speed collision detection and automatic braking"
+    ]
+  }
+}

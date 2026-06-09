@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2012|nissan|versa",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2012__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1.8 SL",
+    "1.8 S Special Edition",
+    "1.8 S Plus",
+    "1.8 S"
+  ],
+  "adds_by_trim": {
+    "1.8 SL": [
+      "Xtronic CVT (Continuously Variable Transmission)",
+      "P195/55HR16 All-season tires"
+    ],
+    "1.8 S Special Edition": [
+      "15-inch machined-finish aluminum-alloy wheels",
+      "Special Edition badge",
+      "Bluetooth Hands-free Phone System",
+      "Premium AM/FM/CD audio system with MP3/WMA playback",
+      "Steering-wheel-mounted audio controls",
+      "Leather-wrapped steering wheel",
+      "Cargo area cover"
+    ],
+    "1.8 S Plus": [
+      "Cruise control with steering-wheel-mounted controls",
+      "Remote keyless entry"
+    ],
+    "1.8 S": [
+      "1.8-liter DOHC 16-valve 4-cylinder engine (122 hp, 127 lb-ft torque)",
+      "Front engine/Front-Wheel Drive",
+      "6-speed manual transmission",
+      "Optional 4-speed automatic transmission",
+      "Independent strut front suspension, torsion beam rear",
+      "4-wheel Anti-lock Braking System (ABS) with Electronic Brake force Distribution",
+      "Vented front disc/rear drum brakes with Brake Assist",
+      "15-inch steel wheels with wheel covers",
+      "P185/65HR15 All-season tires"
+    ]
+  }
+}

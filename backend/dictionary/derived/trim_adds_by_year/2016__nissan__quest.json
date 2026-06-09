@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2016|nissan|quest",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Quest",
+  "ladder_id": "brochure_llm_2016__nissan__quest",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "High Intensity Discharge (HID) xenon headlights",
+      "Around View® Monitor (AVM) with Moving Object Detection (MOD)",
+      "Blind Spot Warning (BSW)",
+      "Nissan Hard Drive Navigation System with 8.0\" touch-screen and Voice Recognition",
+      "NavTraffic® and NavWeather® provided by SiriusXM",
+      "DVD Entertainment System with second-row 11.0\" DVD monitor",
+      "Bose® audio system with 13 speakers",
+      "Advanced Climate Control System with in-cabin polyphenol microfilter",
+      "Automatic tilt-in-reverse outside mirrors",
+      "Driver's memory seat system with 4-way power front-passenger's seat and power-return third-row seat"
+    ],
+    "SL": [
+      "18\" Aluminum-alloy wheels",
+      "Side sill spoilers with chrome accents",
+      "One-touch power liftgate",
+      "Smart Auto Headlights",
+      "Leather-appointed seats and door trim",
+      "Leather-wrapped shift knob",
+      "Quick Comfort® heated front seats",
+      "8-way power driver's seat with power lumbar support",
+      "Auto-dimming interior rearview mirror with digital compass",
+      "Power heated outside mirrors with turn signal indicators and HomeLink® Universal Transceiver"
+    ],
+    "SV": [
+      "16\" Aluminum-alloy wheels",
+      "Fog lights",
+      "Roof rails",
+      "One-touch power sliding doors",
+      "RearView Monitor",
+      "Premium AM/FM/CD audio system with 5.0\" color display and six speakers",
+      "SiriusXM® Satellite Radio with Streaming audio via Bluetooth®",
+      "Bluetooth® Hands-free Phone System with USB connection port for iPod® interface",
+      "Leather-wrapped steering wheel with illuminated audio controls",
+      "Tri-zone Automatic Temperature Control (ATC) and rear privacy glass"
+    ],
+    "S": [
+      "3.5-liter V6 engine with Xtronic CVT®",
+      "Anti-lock Braking System (ABS) with Vehicle Dynamic Control (VDC) and Traction Control System (TCS)",
+      "Tire Pressure Monitoring System (TPMS) with Easy-Fill Tire Alert",
+      "Nissan Intelligent Key® with Push Button Ignition",
+      "AM/FM/CD audio system with auxiliary audio input jack and four speakers",
+      "Cruise control with illuminated steering wheel-mounted switches",
+      "Sun visors with illuminated vanity mirrors and extensions",
+      "Front map lights, rear reading lights, rear cargo light, and two 12-volt DC power outlets",
+      "7-passenger seating with fold-flat second-row captain's chairs and third-row bench seat",
+      "Nissan Advanced Air Bag System with six standard air bags"
+    ]
+  }
+}

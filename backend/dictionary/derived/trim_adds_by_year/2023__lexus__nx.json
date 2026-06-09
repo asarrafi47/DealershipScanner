@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2023|lexus|nx",
+  "year": 2023,
+  "make": "Lexus",
+  "model": "NX",
+  "ladder_id": "2023_lexus_nx",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "NX 250",
+    "NX 350",
+    "NX 350h",
+    "NX 350 F SPORT Handling",
+    "NX 450h+",
+    "NX 450h+ F SPORT Handling"
+  ],
+  "adds_by_trim": {
+    "NX 350": [
+      "275-hp turbo 2.4-liter with Active Noise Control and Active Sound Control",
+      "20-inch split-five-spoke wheels and leather-trimmed steering wheel",
+      "Adds turbo performance over NX 250 AWD content"
+    ],
+    "NX 350h": [
+      "240-total-system-hp hybrid with EV drive mode",
+      "Hybrid efficiency with NX 250 convenience and safety feature set"
+    ],
+    "NX 350 F SPORT Handling": [
+      "Adaptive Variable Suspension and front/rear performance dampers",
+      "F SPORT mesh grille, 20-inch gloss black wheels, and bolstered heated front seats",
+      "10-inch Head-Up Display and color-matched wheel fenders"
+    ],
+    "NX 450h+": [
+      "304-total-system-hp plug-in hybrid with 3.3-kW onboard charger",
+      "Includes NX 350h AWD and Luxury Package features plus 6.6-kW charger option",
+      "Limited availability PHEV flagship"
+    ],
+    "NX 450h+ F SPORT Handling": [
+      "F SPORT Handling content on NX 450h+ plug-in hybrid platform",
+      "Heated perforated leather F SPORT steering wheel and handling luxury package",
+      "Highest NX trim in 2024 brochure"
+    ],
+    "NX 250": [
+      "Available all-wheel drive"
+    ]
+  }
+}

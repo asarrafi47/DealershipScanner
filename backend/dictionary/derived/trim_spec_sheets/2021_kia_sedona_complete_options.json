@@ -1,0 +1,45 @@
+{
+  "ladder_id": "2021_kia_sedona_complete_options",
+  "make": "Kia",
+  "models": [
+    "Sedona",
+    "Sedona"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L Lambda II V6; L Lambda V6 (was L Mu LPi V6; The SE level adds 17-inch alloys, dual power-sliding rear doors, heated mirrors,)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L Mu LPi V6; The SE level adds 17-inch alloys, dual power-sliding rear doors, heated mirrors, (was Automatic (S8); Front-Wheel Drive)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Adds Audio System Layout: 13-speaker surround-sound audio system"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Automatic (S8); Front-Wheel Drive (was Layout Front-engine, front-wheel-drive; L Sigma V6); Automatic (S8)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Speaker Count & Breakdown: rear doors, heated mirrors, automatic climate control, a leather-wrapped steering wheel with audio controls wood or…; rear doors, heated mirrors, The SE level adds 17-inch alloys, dual power-sliding rear doors, heated mirrors, automatic…"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, front-wheel-drive; L Sigma V6"
+      }
+    ]
+  }
+}

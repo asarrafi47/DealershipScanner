@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2020|mitsubishi|outlander",
+  "year": 2020,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2020__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT 3.0",
+    "SEL 2.4",
+    "LE 2.4",
+    "SE 2.4",
+    "ES 2.4"
+  ],
+  "adds_by_trim": {
+    "GT 3.0": [
+      "3.0-liter V6 engine (versus 2.4-liter on lower trims)"
+    ],
+    "SEL 2.4": [
+      "Additional features not specified in provided brochure text"
+    ],
+    "LE 2.4": [
+      "Additional features not specified in provided brochure text"
+    ],
+    "SE 2.4": [
+      "Additional features not specified in provided brochure text"
+    ],
+    "ES 2.4": [
+      "Touchscreen with Bluetooth connectivity",
+      "Push to Start button",
+      "USB charging ports",
+      "Mitsubishi Power Sound System",
+      "Standard third-row seating for seven passengers",
+      "Foldable second- and third-row seats"
+    ]
+  }
+}

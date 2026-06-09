@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,Honda,Civic,Civic,1.6L I4,1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,32,27,,,,,
+1999,Honda,Civic,Civic,1.6L I4 (SOHC-VTEC),1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,31,27,,,,,
+1999,Honda,Civic,Civic,1.6L I4,1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,27,34,30,,,,,
+1999,Honda,Civic,Civic,1.6L I4 (SOHC-VTEC),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,25,32,28,,,,,
+1999,Honda,Civic,Civic,1.6L I4 (DOHC-VTEC),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.6,22,29,25,,,,,
+1999,Honda,Civic,HX,1.6L I4 (VTEC-E),1.6L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,29,35,31,,,,,
+1999,Honda,Civic,HX,1.6L I4 (VTEC-E),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,30,38,33,,,,,
+1999,Honda,Civic,Civic,1.6L I4 (CNG FFS) Natural Gas,1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Natural Gas,Subcompact Cars,4,1.6,24,31,27,,,,,

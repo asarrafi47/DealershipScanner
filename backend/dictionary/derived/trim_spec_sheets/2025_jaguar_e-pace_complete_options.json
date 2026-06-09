@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2025_jaguar_e-pace_complete_options",
+  "make": "Jaguar",
+  "models": [
+    "E-PACE",
+    "E-PACE"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Electric motor; V mild-hybrid (Synchronous Reluctance Motor) (was Hybrid:; Electric motor)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Hybrid:; Electric motor"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: 11.4 inch touchscreen"
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|chevrolet|malibu",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2020__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "TL",
+    "SR",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "2.0L turbocharged engine with 250 hp and 260 lb.-ft. torque with 9-speed automatic",
+      "SiriusXM Radio All Access Package with 3-month trial subscription",
+      "Power tilt-sliding sunroof with fixed rear skylight and sunshade",
+      "Enhanced Driver Confidence Package with adaptive cruise control and automatic parking assist"
+    ],
+    "TL": [
+      "Power tilt-sliding sunroof with fixed rear skylight and sunshade",
+      "Driver Confidence Package II with IntelliBeam and lane keep assist",
+      "Available Leather Package with heated leather steering wheel"
+    ],
+    "SR": [
+      "Remote vehicle starter system",
+      "Driver Confidence Package available with rear park assist and lane change alert"
+    ],
+    "SL": [
+      "Remote vehicle starter system"
+    ],
+    "L": [
+      "1.5L turbocharged engine with 163 hp and 184 lb.-ft. torque",
+      "Continuously Variable Transmission",
+      "Standard airbag system with passenger sensing",
+      "Chevrolet Connected Access with 10 years of standard connectivity",
+      "OnStar Safety and Security Plan with 1 month coverage"
+    ]
+  }
+}

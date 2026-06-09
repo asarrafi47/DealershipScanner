@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2024|nissan|titan",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "2024_nissan_titan",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SV",
+    "PRO-4X",
+    "Platinum Reserve",
+    "Titan XD SV",
+    "Titan XD Platinum Reserve"
+  ],
+  "adds_by_trim": {
+    "PRO-4X": [
+      "2-speed transfer case and electronic locking rear differential with Bilstein off-road shocks",
+      "18-inch dark-finished alloy wheels with all-terrain tires and hill descent control",
+      "LED signature headlights, LED fog lights, and Lava Red front tow hooks",
+      "Factory spray-on bedliner and Class IV tow hitch with 4-pin/7-pin harness",
+      "PRO-4X leather-appointed seats with contrast stitching and heated front/rear seats"
+    ],
+    "Platinum Reserve": [
+      "Includes SV plus Intelligent Around View Monitor and front/rear sonar",
+      "20-inch two-tone wheels, brushed satin grille, and chrome mirror caps",
+      "Captain’s chairs with heated/cooled front seats and memory system",
+      "Premium leather with Platinum Reserve logos and Fender 12-speaker audio",
+      "9-inch NissanConnect with navigation, Wi-Fi hotspot, and wireless CarPlay"
+    ],
+    "Titan XD SV": [
+      "Heavy-duty XD frame with switch-operated 2-speed transfer case and 14-inch brakes",
+      "17-inch styled steel wheels with LT245/75R17 tires and extendable tow mirrors",
+      "Trailer brake controller, trailer light check, and Class IV hitch with 7-pin harness"
+    ],
+    "Titan XD Platinum Reserve": [
+      "Includes XD SV plus 20-inch dark machine-finished wheels",
+      "Integrated gooseneck hitch with 7-pin in-bed wiring harness",
+      "Platinum Reserve luxury content on Titan XD heavy-duty platform"
+    ],
+    "SV": [
+      "Intelligent Cruise Control",
+      "18-inch dark-painted machine-finished aluminum-alloy wheels",
+      "Oil pan, fuel tank, and transmission skid plates on 4x4",
+      "Two-tone exterior paint with satin-finished grille and tailgate finisher",
+      "Power-folding and auto-dimming driver's outside mirror",
+      "Trailer brake controller and trailer light check",
+      "Power heated black outside mirrors with reverse tilt-down feature",
+      "Running boards with chrome accents and chrome mirror caps"
+    ]
+  }
+}

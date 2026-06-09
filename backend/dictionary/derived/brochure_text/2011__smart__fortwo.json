@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|smart|fortwo",
+  "year": 2011,
+  "make": "Smart",
+  "model": "Fortwo",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Smart_Fortwo_Brochure.pdf",
+  "page_count": 52,
+  "all_pages": false,
+  "trim_hint_pages": [
+    3,
+    42,
+    51
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 3,
+      "trim_hint": true,
+      "text": "01 02 03 04\nIntroduction Comfort Environment Safety\nUrban Rush hour Green Feel safe,\nmicrocosm relaxation city driving drive safe\n2 smart fortwo DNA 4 Simple parking 12 smart intelligent drive 16 smart safety concept\n5 Generous luggage 14 Ecological concept 18 Passive safety\ncompartment\n20 Active safety\n6 Innovative space concept\n8 Clever everyday solutions\n10 Change gear by tapping\n05 06 07\nModels Options Service & accessories\nIndividuality Always well Get mobile,\nin city traffic equipped stay mobile\n22 Models and equipment lines 36 Standard and optional 46 smart center/smart services\nwheels and tires\n24 Purist \u2013 the pure 48 Engines and technical data\n38 Standard - exterior/interior/\n28 Stylish \u2013 the passion\nfunctional & electrical\nequipment\n39 Options - exterior/interior/\nfunctional & electrical\nequipment\n40 Options - color\n42 Options - interior\n44 Options - audio & sound",
+      "table_lines": []
+    },
+    {
+      "page": 42,
+      "trim_hint": true,
+      "text": "06\nOptions / Color\n40\n> >Mix and match to suit your taste.\nColor overview.\nChoose from a virtually limitless number of color combinations for bodypanels, thanks to the smart Expressions program. Additional color options are also\navailable for the tridion safety cell.\ntridion safety cell in black:\npure: l\npassion: l\ncrystal white rally red deep black\ntridion safety cell in silver:\npure: P\npassion: P\ncrystal white rally red deep black\nsmart Expressions. Create your mobile masterpiece\nfrom unlimited paint colors and a variety of wrap\ndesigns.\nblue racer 9 geek chic daddy\u2018s girl\nl Standard equipment P Available as an option",
+      "table_lines": []
+    },
+    {
+      "page": 51,
+      "trim_hint": true,
+      "text": "All illustrations and specifications contained in this brochure are based on the latest product information available at the time of publication. smart reserves the right to make changes at any time,\nwithout notice, in colors, materials, equipment, specifications and models. Any variations in colors shown are due to reproduction varitions of the printing process. Illustrations may include test\nsituations. Some vehicles may be shown with non-US equipment. Some vehicles are shown with optional equipment.",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 3 ---\n01 02 03 04\nIntroduction Comfort Environment Safety\nUrban Rush hour Green Feel safe,\nmicrocosm relaxation city driving drive safe\n2 smart fortwo DNA 4 Simple parking 12 smart intelligent drive 16 smart safety concept\n5 Generous luggage 14 Ecological concept 18 Passive safety\ncompartment\n20 Active safety\n6 Innovative space concept\n8 Clever everyday solutions\n10 Change gear by tapping\n05 06 07\nModels Options Service & accessories\nIndividuality Always well Get mobile,\nin city traffic equipped stay mobile\n22 Models and equipment lines 36 Standard and optional 46 smart center/smart services\nwheels and tires\n24 Purist \u2013 the pure 48 Engines and technical data\n38 Standard - exterior/interior/\n28 Stylish \u2013 the passion\nfunctional & electrical\nequipment\n39 Options - exterior/interior/\nfunctional & electrical\nequipment\n40 Options - color\n42 Options - interior\n44 Options - audio & sound\n\n--- page 42 ---\n06\nOptions / Color\n40\n> >Mix and match to suit your taste.\nColor overview.\nChoose from a virtually limitless number of color combinations for bodypanels, thanks to the smart Expressions program. Additional color options are also\navailable for the tridion safety cell.\ntridion safety cell in black:\npure: l\npassion: l\ncrystal white rally red deep black\ntridion safety cell in silver:\npure: P\npassion: P\ncrystal white rally red deep black\nsmart Expressions. Create your mobile masterpiece\nfrom unlimited paint colors and a variety of wrap\ndesigns.\nblue racer 9 geek chic daddy\u2018s girl\nl Standard equipment P Available as an option\n\n--- page 51 ---\nAll illustrations and specifications contained in this brochure are based on the latest product information available at the time of publication. smart reserves the right to make changes at any time,\nwithout notice, in colors, materials, equipment, specifications and models. Any variations in colors shown are due to reproduction varitions of the printing process. Illustrations may include test\nsituations. Some vehicles may be shown with non-US equipment. Some vehicles are shown with optional equipment."
+}

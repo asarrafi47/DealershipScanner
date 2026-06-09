@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1984,Chevrolet,K20 Pickup,4WD,5.7L V8 ((350 V8)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.7,11,15,12,,,,,,5.7L V8,
-1984,Chevrolet,K20 Pickup,4WD,5.7L V8 ((350 V8)),Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.7,11,13,12,,,,,,5.7L V8,
-1984,Chevrolet,K20 Pickup,4WD,Diesel 6.2L V8 ((DIESEL)) Diesel,Automatic 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,16,20,18,,,,,,6.2L V8,
-1984,Chevrolet,K20 Pickup,4WD,Diesel 6.2L V8 ((DIESEL)) Diesel,Manual 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,17,20,18,,,,,,6.2L V8,
-1984,Chevrolet,K20 Pickup,4WD,Diesel 6.2L V8 ((DIESEL)) Diesel,Manual 4-spd,All-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,8,6.2,16,18,17,,,,,,6.2L V8,

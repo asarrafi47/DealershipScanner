@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2012|maserati|granturismo",
+  "year": 2012,
+  "make": "maserati",
+  "model": "granturismo",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

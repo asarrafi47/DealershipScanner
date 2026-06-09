@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2010|ford|fusion",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "2010_ford_fusion",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "S",
+    "SE",
+    "SEL",
+    "Sport",
+    "Hybrid"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "17-inch machined-aluminum wheels (replaces 16-inch on S)",
+      "6-way power driver seat with manual lumbar",
+      "AM/FM/6-disc in-dash CD with MP3 and Sirius",
+      "SYNC voice-activated communications available"
+    ],
+    "SEL": [
+      "Leather-trimmed seats and heated front seats",
+      "8-way power driver seat; ambient lighting",
+      "Auto-dimming mirror with compass; 18-inch machined wheels on Sport appearance",
+      "Audiophile or navigation packages available"
+    ],
+    "Sport": [
+      "3.5L V6 with 6-speed SelectShift automatic (replaces 2.5L I-4 on SE)",
+      "18-inch 5-spoke painted wheels and sport-tuned suspension",
+      "Unique Sport cloth or leather with red/blue accent options",
+      "Dual chrome exhaust tips and sport steering wheel"
+    ],
+    "Hybrid": [
+      "2.5L Atkinson-cycle I-4 with electric motor and eCVT (replaces conventional 6-speed on SEL I-4)",
+      "SmartGauge with EcoGuide; 110V power point",
+      "17-inch 15-spoke aero wheels and eco-friendly cloth seating"
+    ],
+    "S": [
+      "2.5L Duratec I-4 Engine with 175 hp and 172 lb-ft torque",
+      "Front-wheel drive",
+      "4-wheel disc ABS",
+      "Power rack-and-pinion steering",
+      "Easy Fuel capless fuel filler",
+      "6-speed automatic or manual transmission",
+      "5-passenger seating with 60/40 split-fold rear seat",
+      "Personal Safety System with dual-stage front airbags",
+      "Front-seat side airbags and 2-row side-curtain airbags",
+      "AdvanceTrac electronic stability control with traction control"
+    ]
+  }
+}

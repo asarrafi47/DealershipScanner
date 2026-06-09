@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2010_porsche_boxster_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Boxster",
+    "Boxster"
+  ],
+  "year_min": 2008,
+  "year_max": 2012,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "2.7L V6 Turbo; Automatic 5-spd"
+      }
+    ]
+  }
+}

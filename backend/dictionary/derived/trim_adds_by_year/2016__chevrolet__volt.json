@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|chevrolet|volt",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "brochure_llm_2016__chevrolet__volt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Auto-dimming rearview mirror",
+      "Heated power-adjustable body-color mirrors",
+      "8-speaker Bose premium sound system with subwoofer",
+      "Chevrolet MyLink with Navigation including GPS and SiriusXM NavTraffic",
+      "Automatic Parking Assist",
+      "Forward Collision Alert and Lane Keep Assist",
+      "IntelliBeam automatic high beam assist",
+      "Wireless charging for compatible mobile devices",
+      "Leather-appointed seats",
+      "Heated seats for driver and front passenger with auto-heated feature"
+    ],
+    "LT": [
+      "18.4-kWh lithium-ion propulsion battery with thermal management",
+      "Voltec electric drive with 149 hp and 294 lb-ft torque",
+      "1.5L range extender engine using regular unleaded fuel",
+      "Electric Power Steering with variable assist",
+      "10 air bags including dual-stage frontal and head-curtain protection",
+      "StabiliTrak Electronic Stability Control with Traction Control and Brake Assist",
+      "8-inch digital reconfigurable LCD instrument cluster with Driver Information Center",
+      "8-inch center touchscreen display with Chevrolet MyLink Radio and voice recognition",
+      "OnStar Basic Plan for five years with remote start and door lock features",
+      "Automatic climate control single-zone"
+    ]
+  }
+}

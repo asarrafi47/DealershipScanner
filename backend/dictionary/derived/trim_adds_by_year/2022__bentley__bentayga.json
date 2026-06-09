@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2022|bentley|bentayga",
+  "year": 2022,
+  "make": "bentley",
+  "model": "bentayga",
+  "ladder_id": "brochure_llm_2022__bentley__bentayga",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Bentayga S",
+    "Bentayga V8"
+  ],
+  "adds_by_trim": {
+    "Bentayga S": [
+      "22-inch S Directional wheels with summer tires",
+      "Bentley Dynamic Ride suspension system",
+      "Enhanced Sport drive mode for Bentayga S",
+      "Unique S fluted interior color combination with Alcantara inserts",
+      "Blackline Specification with black-painted exterior trim details",
+      "S illuminated treadplates and exterior S badges",
+      "Dark tinted front and rear lamps",
+      "Black door mirrors and black side sills",
+      "Bentayga S enhanced sports Kombi audio system",
+      "Embroidered Bentayga S emblems and fascia badge"
+    ],
+    "Bentayga V8": [
+      "21-inch Five Twin-Spoke painted wheels with summer tires",
+      "Air Suspension with Continuous Damping Control",
+      "Standard specification foundation: powered tailgate, hands-free tailgate, TPMS",
+      "16-way electric front heated memory seats",
+      "4-zone HVAC climate control with air ionizers",
+      "10.9-inch touchscreen infotainment with DAB radio and Bluetooth",
+      "Full LED matrix headlamps with High Beam Assist",
+      "City Specification: Park Assist, Top View Camera, Pedestrian Warning",
+      "Bentley Signature audio system with voice control",
+      "My Bentley Connected Car services with remote activation features"
+    ]
+  }
+}

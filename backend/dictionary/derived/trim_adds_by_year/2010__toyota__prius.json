@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|toyota|prius",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "2010_toyota_prius",
+  "source": "manual_brochure_review",
+  "trims_available": ["II", "III", "IV", "V"],
+  "adds_by_trim": {
+    "III": [
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires (replaces 15-inch on II)",
+      "Integrated fog lamps and LED taillamps",
+      "Smart Key push-button start on driver door",
+      "JBL AM/FM/MP3 6-disc CD with Bluetooth and satellite capability"
+    ],
+    "IV": [
+      "Leather-trimmed seats and steering wheel with heated front seats",
+      "Driver power lumbar support",
+      "Plasmacluster ionizer",
+      "Power moonroof with Solar Powered Ventilation and Remote Air Conditioning available"
+    ],
+    "V": [
+      "Voice-activated DVD navigation with JBL, XM NavTraffic, and backup camera",
+      "Dynamic Radar Cruise Control and Lane Keep Assist controls on steering wheel",
+      "Bluetooth hands-free phone controls",
+      "Safety Connect and Pre-Collision System available",
+      "Highest Prius trim before Advanced Technology Package options"
+    ]
+  }
+}

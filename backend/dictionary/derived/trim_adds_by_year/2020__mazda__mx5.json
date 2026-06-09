@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|mazda|mx5",
+  "year": 2020,
+  "make": "Mazda",
+  "model": "MX-5",
+  "ladder_id": "brochure_llm_2020__mazda__mx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA MX-5 MIATA GRAND TOURING",
+    "MAZDA MX-5 MIATA CLUB",
+    "MAZDA MX-5 MIATA SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA MX-5 MIATA GRAND TOURING": [
+      "Leather-trimmed seats with available Red Nappa and Sport Tan options",
+      "Automatic climate control instead of manual air conditioning",
+      "Mazda Navigation System with 7-inch touchscreen",
+      "SiriusXM Traffic and Travel Link Services",
+      "Auto-dimming rearview mirror with HomeLink and High Beam Control",
+      "Body-colored heated power side mirrors",
+      "Auto-dimming driver's side mirror",
+      "Adaptive Front-lighting System",
+      "Rain-sensing windshield wipers",
+      "Doorsill trim plates with bright metallic interior accents"
+    ],
+    "MAZDA MX-5 MIATA CLUB": [
+      "Black cloth seats with Light Gray accent stitching",
+      "Heated seats with three temperature settings",
+      "Bose audio system with AudioPilot and subwoofer, 9 speakers",
+      "Apple CarPlay and Android Auto integration",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "17-inch aluminum alloy wheels with Metallic Black finish",
+      "205/45 R17 high-performance tires",
+      "Front shock tower brace on manual transmission models",
+      "Sport-tuned suspension with Bilstein shock absorbers on MT models",
+      "Limited-slip differential on manual transmission models"
+    ],
+    "MAZDA MX-5 MIATA SPORT": [
+      "Air conditioning",
+      "Black cloth sport seats",
+      "7-inch full-color touchscreen with Mazda Connect Infotainment System",
+      "HD Radio, Aha, Pandora, and Stitcher internet radio integration",
+      "Leather-wrapped steering wheel with mounted audio and cruise controls",
+      "6 speakers with driver's headrest speakers",
+      "Bluetooth hands-free phone and audio streaming",
+      "Dual USB audio input ports",
+      "Rearview camera",
+      "16-inch aluminum alloy wheels with 195/50 R16 high-performance tires"
+    ]
+  }
+}

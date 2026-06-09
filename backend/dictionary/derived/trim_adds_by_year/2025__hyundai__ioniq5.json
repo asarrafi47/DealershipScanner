@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2025|hyundai|ioniq5",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Ioniq 5",
+  "ladder_id": "brochure_llm_2025__hyundai__ioniq5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IONIQ 5 N",
+    "Limited",
+    "XRT",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "IONIQ 5 N": [
+      "601 hp AWD dual-motor powertrain with 545 lb-ft torque",
+      "84 kWh battery with N Battery Preconditioning and N Grin Boost",
+      "Electronically Controlled Suspension with drive mode select and N Custom modes",
+      "Rear electronic slip differential with regenerative brake level control paddles",
+      "N-specific body styling with Luminous Orange accents and unique rear spoiler",
+      "N Light Sport bucket seats with Eco Alcantara and H-Tex trimmed surfaces",
+      "12.3-inch digital instrument cluster with N performance content",
+      "Exclusive N aluminum sport pedals and door sill plates"
+    ],
+    "Limited": [
+      "Ventilated front seats with ambient LED interior lighting",
+      "Premium door sill plates and exclusive XRT-tuned suspension",
+      "Vision Roof fixed panoramic sunroof with sunshade",
+      "Full projector-type LED headlights and parametric pixel daytime running lights",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Bose premium audio system",
+      "Remote Smart Parking Assist 2"
+    ],
+    "XRT": [
+      "18-inch alloy wheels with all-terrain tires",
+      "XRT exclusive front and rear fascias with black roof spoiler and side sills",
+      "XRT-unique H-Tex seating surface patterning",
+      "2nd-row Vehicle-to-Load power outlet",
+      "Remote Smart Parking Assist 2",
+      "Terrain Mode Select for Mud, Snow, and Sand"
+    ],
+    "SEL": [
+      "84 kWh lithium-ion battery option",
+      "Heated 2nd-row seats and heated steering wheel",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Full projector-type LED headlights",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Highway Driving Assist 2"
+    ],
+    "SE": [
+      "63 kWh or 84 kWh lithium-ion battery with ultra-fast 800V charging",
+      "RWD 168 hp or optional 320 hp AWD dual-motor powertrains",
+      "12.3-inch digital instrument cluster and navigation system",
+      "LED headlights/taillights with parametric pixel daytime running lights",
+      "Bose premium audio with 8 speakers",
+      "Blind-Spot View Monitor and Surround View Monitor",
+      "Smart Cruise Control with Machine Learning and Stop & Go",
+      "Forward Collision-Avoidance Assist with pedestrian and cyclist detection"
+    ]
+  }
+}

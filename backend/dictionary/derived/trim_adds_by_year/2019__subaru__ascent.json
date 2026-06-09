@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|subaru|ascent",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "Ascent",
+  "ladder_id": "brochure_llm_2019__subaru__ascent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Ascent"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Trim level availability varies; see retailer for specific feature details"
+    ],
+    "Premium": [
+      "Trim level availability varies; see retailer for specific feature details"
+    ],
+    "Ascent": [
+      "2.4-liter DOHC Direct-Injection Turbocharged BOXER engine with 260 hp and 277 lb-ft torque",
+      "Standard Subaru Symmetrical All-Wheel Drive",
+      "Up to 27 highway MPG EPA-estimated fuel economy",
+      "Towing capacity up to 5,000 lbs with trailer brakes",
+      "8.7 inches ground clearance with standard X-MODE and Hill Descent Control",
+      "Standard EyeSight Driver Assist Technology",
+      "Standard 4G LTE Wi-Fi capability with up to eight USB ports",
+      "SUBARU STARLINK Multimedia with Apple CarPlay and Android Auto via 6.5 or 8-inch touchscreen",
+      "Available Smart Rear-View Mirror and 180-Degree Front Camera",
+      "Available Blind-Spot Detection and Rear Cross-Traffic Alert"
+    ]
+  }
+}

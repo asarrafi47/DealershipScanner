@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|nissan|titan",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "generic_nissan_titan",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Pu",
+    "Mu"
+  ],
+  "adds_by_trim": {
+    "Mu": [
+      "speaker (King cab only) PU PU \u25a0",
+      "speaker (crew cab only) PU PU \u25a0",
+      "KiNG Cab aNd Crew Cab PrO-4X",
+      "controls PE \u25a0 \u25a0 \u25a0",
+      "stanDarD/long BED optional: 20\" x 8.0\" chrome-alloy wheels (part of HM)",
+      "up to 76.9/76.3 p275/70r18 BfGoodrich\u00ae rugged trail t/A\u00ae tires with raised oWl (pro-4x)",
+      "stanDarD/long BED",
+      "registered trademark of dana corporation.\u00ae rancho is a",
+      "registered trademark of uniroyal Goodrich"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 9.0,
+    "per_trim_add_counts": {
+      "Mu": 9
+    }
+  }
+}

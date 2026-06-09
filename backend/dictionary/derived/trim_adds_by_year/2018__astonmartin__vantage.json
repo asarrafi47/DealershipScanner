@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2018|astonmartin|vantage",
+  "year": 2018,
+  "make": "Aston Martin",
+  "model": "vantage",
+  "ladder_id": "brochure_llm_2018__astonmartin__vantage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ADRENALINE",
+    "MOLTEN"
+  ],
+  "adds_by_trim": {
+    "ADRENALINE": [
+      "Lime Essence exterior paint with Gloss Black Body Pack",
+      "2x2 Twill Gloss Carbon Fibre body accents",
+      "Pure Black Metallic leather interior with Contrast Lime stitching",
+      "Lime Essence painted trim inlay",
+      "Dark Obsidian Black carpet",
+      "20-inch forged Textured Dark Anodised wheels",
+      "Yellow painted brake calipers",
+      "Sports Plus Pack",
+      "Dark Chrome interior jewellery"
+    ],
+    "MOLTEN": [
+      "Hyper Red exterior paint with Gloss Black Body Pack",
+      "2x2 Twill Satin Carbon Fibre trim inlay",
+      "Copper Tan Metallic leather interior with Contrast Spicy Red stitching",
+      "20-inch forged Gloss Black Diamond Turned wheels",
+      "Sahara Tan carpet",
+      "Dark Chrome interior jewellery",
+      "Sports Plus Pack"
+    ]
+  }
+}

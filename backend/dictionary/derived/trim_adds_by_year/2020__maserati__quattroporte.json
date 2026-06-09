@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2020|maserati|quattroporte",
+  "year": 2020,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_2020__maserati__quattroporte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds ZF eight-speed automatic transmission with auto-adaptive software",
+      "Adds five operating modes: Auto Normal, Auto Sport, Manual Normal, Manual Sport, and I.C.E. mode",
+      "Adds standard mechanical Limited-Slip Differential for rear-wheel traction",
+      "Adds column-mounted paddle shifters for manual gear control",
+      "Adds center console gear lever with dedicated Park button",
+      "Adds Integrated Vehicle Control system for dynamic driver control",
+      "Adds overboost function to access peak torque at lower engine speeds"
+    ],
+    "Premium": [
+      "Upgraded to Harman Kardon Premium Audio System",
+      "Adds enhanced comfort features for long, high-speed journeys"
+    ],
+    "Limited": [
+      "Upgraded to Bowers & Wilkins Premium Audio System"
+    ]
+  }
+}

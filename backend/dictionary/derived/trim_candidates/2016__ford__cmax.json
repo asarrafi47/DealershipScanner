@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2016|ford|cmax",
+  "year": 2016,
+  "make": "Ford",
+  "model": "C-Max",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Active"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

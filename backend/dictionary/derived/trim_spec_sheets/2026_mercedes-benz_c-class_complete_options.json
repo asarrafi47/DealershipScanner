@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2026_mercedes-benz_c-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "C-Class",
+    "C-Class"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG C43": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "C300": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

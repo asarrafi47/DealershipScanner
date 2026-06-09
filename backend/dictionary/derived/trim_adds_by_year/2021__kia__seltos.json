@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2021|kia|seltos",
+  "year": 2021,
+  "make": "Kia",
+  "model": "Seltos",
+  "ladder_id": "brochure_llm_2021__kia__seltos",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "1.6L Turbo Gasoline Direct Injection 4-cylinder engine with 175 hp",
+      "7-speed Dual-Clutch Transmission",
+      "DynamaxTM fully active AWD with Lock Mode",
+      "SOFINO seat trim",
+      "10-way power-adjustable driver's seat",
+      "Navigation with 10.25-inch touchscreen",
+      "Power sunroof",
+      "Wireless smartphone charger",
+      "Remote start on key fob",
+      "Electronic Parking Brake"
+    ],
+    "EX": [
+      "18-inch alloy wheels",
+      "LED headlights",
+      "LED fog lights",
+      "Rear-row reclining seatbacks",
+      "Rear center armrest",
+      "Rear View Monitor with Parking Guidance",
+      "Lane Following Assist",
+      "Safe Exit Assist"
+    ],
+    "S": [
+      "1.6L Turbo Gasoline Direct Injection 4-cylinder engine option with 175 hp",
+      "18-inch alloy wheels option with 1.6L Turbo",
+      "LED Daytime Running Lights",
+      "Automatic air conditioning",
+      "Cloth and SOFINO seat trim option",
+      "Bluetooth wireless technology",
+      "Rear Cross-Traffic Collision-Avoidance Assist",
+      "Smart Cruise Control with Stop and Go"
+    ],
+    "LX": [
+      "2.0L Gasoline Direct Injection 4-cylinder engine with 146 hp",
+      "Intelligent Variable Transmission",
+      "DynamaxTM fully active AWD with Lock Mode option",
+      "17-inch alloy wheels",
+      "Cloth seat trim",
+      "60/40 split-folding rear seats",
+      "Dual-level cargo floor",
+      "AM/FM audio system with 8-inch touchscreen",
+      "Rear View Monitor with Parking Guidance",
+      "Comprehensive safety suite including dual front advanced airbags"
+    ]
+  }
+}

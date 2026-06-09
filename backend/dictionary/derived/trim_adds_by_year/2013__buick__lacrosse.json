@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2013|buick|lacrosse",
+  "year": 2013,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2013__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "Premium II",
+    "Premium I",
+    "Leather",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "18-inch machine-faced alloy wheels",
+      "3.6L V-6 VVT DI engine with E85 capability (303 hp, 264 lb-ft torque)"
+    ],
+    "Premium II": [
+      "3.6L V-6 VVT DI engine with E85 capability (303 hp, 264 lb-ft torque)",
+      "18-inch machine-faced alloy wheels"
+    ],
+    "Premium I": [
+      "3.6L V-6 VVT DI engine with E85 capability (303 hp, 264 lb-ft torque)",
+      "Heated front seats",
+      "Fog lamps with halogen projector technology",
+      "Heated power mirrors with LED ground illumination indicators",
+      "Rearview camera system",
+      "Ultrasonic rear park assist",
+      "Auto-dimming rearview mirror",
+      "Memory driver's seat with outside mirror memory"
+    ],
+    "Leather": [
+      "Leather-appointed seating with perforated and ventilated front seats",
+      "Heated front seats",
+      "8-way power front passenger seat adjuster",
+      "Fog lamps with halogen projector technology",
+      "Heated power mirrors with LED ground illumination indicators",
+      "Rearview camera system",
+      "Ultrasonic rear park assist",
+      "Auto-dimming rearview mirror",
+      "Memory driver's seat with outside mirror memory",
+      "17-inch machined alloy painted wheels"
+    ],
+    "Base": [
+      "2.4L eCoTec DI engine with eAssist technology (182 hp, 172 lb-ft torque)",
+      "6-speed automatic transmission with driver shift control",
+      "Front-wheel drive",
+      "Dual-zone automatic climate control",
+      "8-inch high-resolution color touchscreen with Buick IntelliLink",
+      "AM/FM stereo with CD, MP3, auxiliary ports",
+      "Dual-stage frontal and side-impact air bags",
+      "3-point safety belts at all seating positions",
+      "OnStar 6 months Directions & Connections plan",
+      "Power windows, locks, and mirrors"
+    ]
+  }
+}

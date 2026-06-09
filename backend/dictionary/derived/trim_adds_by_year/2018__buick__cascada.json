@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|buick|cascada",
+  "year": 2018,
+  "make": "Buick",
+  "model": "Cascada",
+  "ladder_id": "brochure_llm_2018__buick__cascada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING",
+    "PREMIUM",
+    "CASCADA (1SV)"
+  ],
+  "adds_by_trim": {
+    "TOURING": [
+      "20-inch dynamic twin-spoke wheels with blacked-out pockets and gloss-black finish",
+      "Dark Effects Package with red stitching, piano-black trim, and gloss-black mirror caps",
+      "Driver Confidence Package including forward collision alert and lane departure warning"
+    ],
+    "PREMIUM": [
+      "20-inch dynamic twin-spoke bi-color finish wheels",
+      "Front park assist and rainsense wipers",
+      "Forward collision alert and lane departure warning via Driver Confidence Package"
+    ],
+    "CASCADA (1SV)": [
+      "1.6L turbocharged four-cylinder engine with 200 horsepower and 207 lb-ft torque",
+      "Six-speed automatic transmission",
+      "Automatic convertible soft-top with acoustic and thermal insulation",
+      "Heat-reflective leather-appointed sport bucket seats with 10-way power-adjustable heated fronts",
+      "HID articulating headlamps and heated steering wheel",
+      "Buick Infotainment System with navigation and 7-inch touchscreen display",
+      "OnStar Wi-Fi hotspot and OnStar Basic Plan for five years",
+      "Six standard air bags and automated rollover pop-up bars",
+      "Rear vision camera and rear park assist",
+      "20-inch diamond graphic twin-spoke bi-color finish wheels"
+    ]
+  }
+}

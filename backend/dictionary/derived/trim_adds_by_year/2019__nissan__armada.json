@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2019|nissan|armada",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2019__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM RESERVE",
+    "PLATINUM",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "PLATINUM RESERVE": [
+      "20-inch dark chrome-clad aluminum-alloy wheels",
+      "Dark chrome exterior trim",
+      "Second-row fold-down captain's chairs with easy entry",
+      "Second-row padded center console",
+      "Premium two-tone leather-appointed seats with contrast stitching",
+      "Unique open-pore wood-tone interior trim",
+      "Platinum Reserve badging"
+    ],
+    "PLATINUM": [
+      "20-inch machine-finished tinted aluminum-alloy wheels",
+      "Body-color overfenders",
+      "Power sliding moonroof with one touch open/close and tilt",
+      "Climate-controlled front seats (heated and cooled)",
+      "Heated leather-wrapped steering wheel",
+      "Heated rear outboard seats",
+      "Tri-Zone Entertainment System with dual 8-inch monitors and DVD player",
+      "Intelligent Lane Intervention, Blind Spot Intervention, and Back-up Intervention",
+      "Intelligent Distance Control and Intelligent Rear View Mirror",
+      "One additional USB port (five total)"
+    ],
+    "SL": [
+      "20-inch machine-finished aluminum-alloy wheels",
+      "P275/60R20 all-season tires",
+      "Fog lights",
+      "Power folding chrome outside mirrors with turn signal indicators",
+      "Auto-dimming outside mirrors with heated puddle lights",
+      "Power liftgate",
+      "Remote Engine Start System",
+      "Intelligent Around View Monitor",
+      "Auto-dimming inside rearview mirror and HomeLink Universal Transceiver",
+      "Rain-sensing wipers, leather-appointed seats, and power third-row bench"
+    ],
+    "SV": [
+      "390-hp Endurance 5.6-liter V8 engine",
+      "7-speed automatic transmission with Tow/Haul Mode",
+      "Standard 2WD or available 4WD with 2-speed transfer case",
+      "18-inch aluminum-alloy wheels with P265/70R18 all-season tires",
+      "Intelligent Cruise Control and Rear Door Alert",
+      "LED low-beam headlights with integrated signature",
+      "NissanConnect 8-inch touch-screen and Nissan Navigation System",
+      "Bose Audio System with 13 speakers and four USB ports",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking",
+      "10-way power driver seat and 8-way power passenger seat"
+    ]
+  }
+}

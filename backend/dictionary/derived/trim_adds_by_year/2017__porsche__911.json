@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2017|porsche|911",
+  "year": 2017,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2017__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "911 Turbo",
+    "911 Carrera S4",
+    "911 Carrera 4",
+    "911 Carrera S",
+    "911 Carrera"
+  ],
+  "adds_by_trim": {
+    "911 Turbo": [
+      "20-inch 911 Turbo wheels as standard",
+      "Enhanced performance engine and turbocharged powertrain"
+    ],
+    "911 Carrera S4": [
+      "All-wheel drive system compared to rear-wheel drive base model",
+      "20-inch Carrera S wheels available"
+    ],
+    "911 Carrera 4": [
+      "All-wheel drive system compared to rear-wheel drive Carrera",
+      "20-inch wheel options including Carrera Classic and RS Spyder Design"
+    ],
+    "911 Carrera S": [
+      "Enhanced engine output and performance",
+      "20-inch Carrera S wheels available as option",
+      "Upgraded suspension and braking systems"
+    ],
+    "911 Carrera": [
+      "Two-zone automatic climate control with solar sensor",
+      "Porsche Communication Management with online navigation standard",
+      "19-inch Carrera wheels standard",
+      "Slide/tilt glass sunroof available",
+      "BOSE Surround Sound System option available"
+    ]
+  }
+}

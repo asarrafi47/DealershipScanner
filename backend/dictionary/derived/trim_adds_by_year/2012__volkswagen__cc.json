@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|volkswagen|cc",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "CC",
+  "ladder_id": "brochure_web_2012__volkswagen__cc",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "CC R-Line 2.0T Executive w/Carbon DSG",
+    "CC R-Line 2.0T Executive DSG",
+    "CC 2.0T Sport DSG"
+  ],
+  "adds_by_trim": {
+    "CC R-Line 2.0T Executive w/Carbon DSG": [
+      "Carbon trim package"
+    ],
+    "CC R-Line 2.0T Executive DSG": [
+      "Lane departure warning",
+      "Forward collision warning",
+      "Autonomous emergency braking",
+      "Adaptive cruise control",
+      "6.3-inch Discover Media touchscreen with navigation",
+      "Apple CarPlay and Android Auto compatibility",
+      "R-Line exterior styling"
+    ],
+    "CC 2.0T Sport DSG": [
+      "2.0-liter turbocharged four-cylinder engine with 200 hp and 207 lb-ft torque",
+      "Six-speed twin-clutch automatic transmission",
+      "Six-speed manual transmission available",
+      "13.2 cubic feet trunk space with 60/40 split-folding rear seats",
+      "Coupe-like sedan design with low roofline",
+      "Front-wheel drive"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/cc/"
+}

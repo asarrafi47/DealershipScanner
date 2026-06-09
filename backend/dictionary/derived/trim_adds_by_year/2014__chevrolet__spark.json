@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2014|chevrolet|spark",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2014__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Hill Start Assist"
+    ],
+    "LS": [
+      "Roof-mounted antenna",
+      "100,000-mile/5-year transferable Powertrain Limited Warranty",
+      "100,000 miles/5 years of 24/7 Roadside Assistance Program",
+      "Courtesy Transportation Program",
+      "36,000 miles/3 years New Vehicle Limited Warranty coverage",
+      "100,000 miles/6 years rust-through corrosion coverage",
+      "2 years/24,000 miles of scheduled maintenance program",
+      "Tire sealant and compressor kit"
+    ],
+    "1LT": [
+      "Content-theft alarm",
+      "Steering wheel-mounted phone, audio, and cruise controls"
+    ]
+  }
+}

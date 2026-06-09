@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2021|toyota|venza",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Venza",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on XLE",
+      "Hybrid engine: 2.5L 4-cylinder with 219 net hp Hybrid engine: 2.5L 4-cylinder with 219 net hp Hybrid engine: 2.5L 4-cylinder with 219 net hp",
+      "Electronically controlled Continuously Variable 40 city/37 highway/39 combined EPA-est. mpg4 40 city/37 highway/39 combined EPA-est. mpg4",
+      "Transmission (ECVT) with sequential Shift Mode",
+      "Exterior Features Exterior Features",
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "LED projector headlights with dual LED DRL C olor-keyed heated power outside mirrors with Venza",
+      "Normal, ECO, EV27 and Sport drive modes",
+      "Low-profile silver roof rails Interior Features",
+      "Exterior Features 19-in. multi-spoke Super Chrome alloy wheels",
+      "Perforated SofTex\u00ae-trimmed2 seats",
+      "Multi-reflector LED headlights with LED DRL and Color-keyed with gloss-black-accent rear spoiler with - Heated and ventilated front seats"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

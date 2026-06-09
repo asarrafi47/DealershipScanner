@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2024|lexus|rx",
+  "year": 2024,
+  "make": "Lexus",
+  "model": "RX",
+  "ladder_id": "2024_lexus_rx",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "RX",
+    "Premium",
+    "Premium+",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Power tilt-and-slide moonroof and heated ventilated front seats",
+      "21-inch 20-spoke alloy wheels and aluminum roof rails",
+      "Lexus Interface 14-inch display with Drive Connect trial"
+    ],
+    "Premium+": [
+      "Leather-trimmed interior and Lexus Memory System",
+      "Thematic Ambient Illumination and paddle shifters",
+      "Windshield wiper de-icer"
+    ],
+    "Luxury": [
+      "Semi-aniline leather and Ultrasuede door trim with luxury seat design",
+      "Heated ventilated power rear seats and Mark Levinson PurePlay Surround Sound",
+      "21-inch Dark Premium Metallic wheels and Triple-Beam LED headlamps",
+      "Head-Up Display and Advanced Park with Remote Park"
+    ]
+  }
+}

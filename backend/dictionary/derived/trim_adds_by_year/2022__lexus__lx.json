@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2022|lexus|lx",
+  "year": 2022,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2022__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ultra Luxury",
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Platinum",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Includes six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Features Lexus Safety System+ 2.5",
+      "Adds Includes Trailer Sway Control electronic system"
+    ],
+    "Limited": [
+      "compatible with all mobile phones, MP3/WMA players and like",
+      ". Service may vary by vehicle and region. See usage precautions and service limitations in Owner’s Manual, and",
+      "lexus.com/privacyvts/. The Safety Connect trial period is at no extra cost and",
+      "on the last time data was collected from the vehicle and is not",
+      "Connect renewal will be included when Safety",
+      "Destination Assist depends on an operative telematics device, a cellular connection,",
+      "tion required after trial. Services subject to change at any time without notice. Terms of Use apply. Data charges may apply. See Owner’s Manual and lexus.com/enform for",
+      "certain types of severe collisions. To decrease the risk of injury from an inflating airbag, always wear seatbelts and sit upright in the middle of the seat as far back as possible. Do not put objects in",
+      "services applicable for new Lexus vehicle registered owners and",
+      "vehicle’s condition and how/where you drive. See",
+      "e coverage is 12 months for the parts and labor, regardless of mileage,",
+      "purchase for coverage and conditions. 51. Warranty honored at all Lexus dealerships nationwide"
+    ],
+    "Platinum": [],
+    "Premium": [
+      "Ventilated front seats",
+      "Head-up display",
+      "Interior ambient lighting",
+      "Adaptive suspension",
+      "Third-row seat option"
+    ],
+    "F Sport": [],
+    "Luxury": [
+      "22-inch forged alloy wheels and semi-aniline leather seating",
+      "Driver and front passenger multifunction massager seats",
+      "Mark Levinson 25-speaker Reference Surround Sound",
+      "Heated and ventilated second-row outboard seats"
+    ],
+    "Ultra Luxury": [
+      "22-inch forged alloy wheels and semi-aniline leather seating",
+      "Driver and front passenger multifunction massager seats",
+      "Mark Levinson 25-speaker Reference Surround Sound",
+      "Heated and ventilated second-row outboard seats"
+    ]
+  }
+}

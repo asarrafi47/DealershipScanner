@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2010|chevrolet|cobalt",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Cobalt",
+  "ladder_id": "brochure_2010__chevrolet__cobalt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RS",
+    "LS",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 100,000 mile/5-year transferable powertrain limited warranty",
+      "Adds Includes lockout service and flat tire changes"
+    ],
+    "Limited": [],
+    "LS": [],
+    "RS": []
+  }
+}

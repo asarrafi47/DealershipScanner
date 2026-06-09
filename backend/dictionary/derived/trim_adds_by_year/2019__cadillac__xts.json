@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2019|cadillac|xts",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "XTS",
+  "ladder_id": "brochure_web_2019__cadillac__xts",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XTS 3.6L V6 Turbo Vsport AWD Platinum",
+    "XTS 3.6L V6 AWD Platinum",
+    "XTS 3.6L V6 FWD Platinum",
+    "XTS 3.6L V6 AWD Premium Luxury",
+    "XTS 3.6L V6 FWD Premium Luxury",
+    "XTS 3.6L V6 AWD Luxury",
+    "XTS 3.6L V6 FWD Luxury",
+    "XTS 3.6L V6 FWD"
+  ],
+  "adds_by_trim": {
+    "XTS 3.6L V6 Turbo Vsport AWD Platinum": [
+      "3.6-liter twin-turbocharged V-6 engine producing 410 hp",
+      "All-wheel-drive system",
+      "0-60 mph acceleration in 5.2 seconds"
+    ],
+    "XTS 3.6L V6 AWD Platinum": [
+      "Rear seat radio controls in center console",
+      "All-wheel-drive system"
+    ],
+    "XTS 3.6L V6 FWD Platinum": [
+      "Rear seat radio controls in center console"
+    ],
+    "XTS 3.6L V6 AWD Premium Luxury": [
+      "Magnetic Ride Control with electric current adjusting shock absorber stiffness",
+      "All-wheel-drive system"
+    ],
+    "XTS 3.6L V6 FWD Premium Luxury": [
+      "Magnetic Ride Control with electric current adjusting shock absorber stiffness"
+    ],
+    "XTS 3.6L V6 AWD Luxury": [
+      "All-wheel-drive system"
+    ],
+    "XTS 3.6L V6 FWD Luxury": [
+      "Upgrade from base model with additional luxury features"
+    ],
+    "XTS 3.6L V6 FWD": [
+      "3.6-liter naturally aspirated V-6 engine producing 304 hp",
+      "Brembo front brakes",
+      "LED lighting front and rear",
+      "Apple CarPlay and Android Auto compatibility",
+      "Active noise cancellation with three microphones in headliner",
+      "Six-speed automatic transmission",
+      "EPA fuel economy 19/28 mpg city/highway"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/xts/"
+}

@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2022|ram|commercial",
+  "year": 2022,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_2022__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRX",
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Rebel",
+    "Big Horn",
+    "Lone Star",
+    "Tradesman",
+    "Platinum",
+    "Premium",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds Standard roof configuration",
+      "Adds Standard payload capacity up to 4,010 lbs"
+    ],
+    "LE": [],
+    "Premium": [],
+    "Platinum": [],
+    "Tradesman": [
+      "Adds Pentastar V6 engine with standard eTorque mild-hybrid technology",
+      "Adds 48-volt battery and motor generator system",
+      "Adds Stop/Start technology for idle efficiency",
+      "Adds Regenerative Braking energy recovery system",
+      "Adds conventional tailgate operation"
+    ],
+    "Lone Star": [],
+    "Big Horn": [
+      "Adds Big Horn badging and trim distinction",
+      "Adds enhanced driver convenience systems over base model"
+    ],
+    "Rebel": [],
+    "Laramie": [
+      "Light Frost Beige leather-trimmed interior",
+      "Seating for six passengers with enhanced space"
+    ],
+    "Laramie Longhorn": [
+      "Light Frost Beige leather-trimmed interior",
+      "Seating for six passengers with enhanced space"
+    ],
+    "Limited": [
+      "Adds available HEMI V8 engine option with eTorque compatibility",
+      "Adds available Multifunction Tailgate with 60/40-split swing-away doors and 2,000-lb load rating",
+      "Adds available class-exclusive Active-Level Four-Corner Air Suspension system",
+      "Adds five-mode suspension operation: two Off-Road Heights, Aero Mode, Normal Ride Height, and Entry/Exit Mode",
+      "Adds Electric Power Boost for optimized efficiency and supplemental torque"
+    ],
+    "TRX": []
+  }
+}

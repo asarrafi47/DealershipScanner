@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2012|volvo|c30",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "C30",
+  "ladder_id": "brochure_llm_2012__volvo__c30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "platinum",
+    "premier PLUS",
+    "premier"
+  ],
+  "adds_by_trim": {
+    "platinum": [
+      "Navigation System with Map Care and Real Time Traffic (RTT)",
+      "Volvo Premium Sound System with Dolby Pro Logic II Surround and Class D amplification",
+      "SiriusXM Satellite Radio with 6-month subscription",
+      "Power glass moonroof"
+    ],
+    "premier PLUS": [
+      "Power glass moonroof",
+      "Power driver seat with memory including rearview mirrors",
+      "Power passenger seat",
+      "LED daytime running lights (DRL)",
+      "Aluminum inlays (standard R-DESIGN) and soft loadcover (R-DESIGN only)"
+    ],
+    "premier": [
+      "Power driver seat with memory including rearview mirrors",
+      "Power passenger seat",
+      "LED daytime running lights (DRL)",
+      "Aluminum inlays (standard R-DESIGN) and soft loadcover (R-DESIGN only)"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2020|dodge|charger",
+  "year": 2020,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2020__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HELLCAT®",
+    "SRT",
+    "R/T",
+    "GT",
+    "SXT",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "HELLCAT®": [
+      "Advanced SRT multistage front air bags",
+      "200-mph primary speedometer with red-faced gauges",
+      "SRT Configurable Drive Modes",
+      "SRT Performance Pages",
+      "Premium leather-wrapped SRT flat-bottom steering wheel",
+      "Alcantara wrapped SRT flat-bottom steering wheel with Alcantara Package",
+      "Dark Engine Turn aluminum interior accents",
+      "SRT Hellcat premium floor mats"
+    ],
+    "SRT": [
+      "Performance steering wheel with mounted paddle shifters",
+      "180-mph primary speedometer",
+      "SRT Performance Pages",
+      "SRT Configurable Drive Modes",
+      "Leather flat-bottom performance steering wheel with Performance Handling Group"
+    ],
+    "R/T": [
+      "Leather flat-bottom performance steering wheel with Performance Handling Group",
+      "160-mph primary speedometer",
+      "Paddle shifters on steering wheel",
+      "Dodge Performance Pages"
+    ],
+    "GT": [
+      "160-mph primary speedometer",
+      "Dodge Performance Pages",
+      "Mounted paddle shifters on steering wheel",
+      "Dynamica suede headliner with Carbon & Suede Group",
+      "Real Carbon Fiber interior accents with Carbon & Suede Group"
+    ],
+    "SXT": [
+      "140-mph primary speedometer",
+      "Dodge Performance Pages",
+      "Leather-wrapped steering wheel",
+      "Mounted paddle shifters on steering wheel",
+      "UConnect 4C NAV with 8.4-inch display"
+    ],
+    "SE": [
+      "Heated front seats",
+      "Heated steering wheel with Plus Group, Daytona Edition, or Cold Weather Group",
+      "6 speakers audio system",
+      "UConnect 4 with 7-inch touchscreen display",
+      "Remote Keyless Enter 'N Go keyless entry",
+      "ParkView rear back-up camera",
+      "ParkSense rear park assist",
+      "Advanced multistage front air bags"
+    ]
+  }
+}

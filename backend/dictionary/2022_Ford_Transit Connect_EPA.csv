@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2022,Ford,Transit Connect,Van FWD,2.5L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,4,2.5,20,26,22,,,,,,2.5L I4,
-2022,Ford,Transit Connect,Wagon LWB FWD,2.5L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,4,2.5,20,26,22,,,,,,2.5L I4,
-2022,Ford,Transit Connect,USPS,2.5L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,4,2.5,20,27,22,,,,,,2.5L I4,
-2022,Ford,Transit Connect,Van FWD,2.0L I4 (SIDI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,4,2.0,24,27,25,,,,,,2.0L I4 Turbo,Turbocharged
-2022,Ford,Transit Connect,Van FFV,FFV 2.0L I4 (SIDI; FFV),Automatic (S8),Front-Wheel Drive,Regular Gasoline / E85,Special Purpose Vehicle 2WD,4,2.0,24,27,25,,,,,,2.0L I4 Turbo,Turbocharged
-2022,Ford,Transit Connect,Wagon LWB FWD,2.0L I4 (SIDI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,4,2.0,24,28,26,,,,,,2.0L I4 Turbo,Turbocharged
-2022,Ford,Transit Connect,Wagon LWB FFV,FFV 2.0L I4 (SIDI; FFV),Automatic (S8),Front-Wheel Drive,Regular Gasoline / E85,Special Purpose Vehicle 2WD,4,2.0,24,28,26,,,,,,2.0L I4 Turbo,Turbocharged

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2019|mitsubishi|eclipsecross",
+  "year": 2019,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "ladder_id": "brochure_llm_2019__mitsubishi__eclipsecross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL S-AWC",
+    "SE S-AWC",
+    "LE S-AWC",
+    "ES S-AWC",
+    "ES 2WD"
+  ],
+  "adds_by_trim": {
+    "SEL S-AWC": [
+      "8-way power adjustable driver's seat",
+      "Black leather seating surfaces with orange stitching",
+      "Heated front seats",
+      "Paddle shifters",
+      "Driver's seat back pocket",
+      "Rear seat center armrest with cupholders"
+    ],
+    "SE S-AWC": [
+      "High-grade fabric seating with contrast stitching",
+      "Heated front seats",
+      "Rear seat center armrest with cupholders"
+    ],
+    "LE S-AWC": [
+      "Super All-Wheel Control (S-AWC)"
+    ],
+    "ES S-AWC": [
+      "Super All-Wheel Control (S-AWC)"
+    ],
+    "ES 2WD": [
+      "1.5L Direct-Injection Turbo Engine",
+      "Continuously Variable Transmission (CVT) with 8-step",
+      "Front-Wheel Drive (FWD)",
+      "6-way adjustable driver's seat",
+      "4-way adjustable front passenger seat",
+      "Fabric seating surfaces",
+      "60/40 split fold-down rear seatback",
+      "Rear seat slide and recline functions",
+      "Electric power steering",
+      "5 passenger seating"
+    ]
+  }
+}

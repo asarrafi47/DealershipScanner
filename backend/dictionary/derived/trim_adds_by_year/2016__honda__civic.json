@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2016|honda|civic",
+  "year": 2016,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "brochure_llm_2016__honda__civic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING",
+    "EX-L",
+    "EX-T",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "TOURING": [
+      "Standard Honda Sensing suite of safety and driver-assistive features",
+      "LED turn indicators on headlights and side mirrors",
+      "Chrome door handles",
+      "Rain-sensing windshield wipers",
+      "LED headlights with low and high beam auto-on/off",
+      "Heated outboard rear seats",
+      "Standard Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "450-watt premium audio system with 10 speakers and subwoofer"
+    ],
+    "EX-L": [
+      "Automatic-dimming rearview mirror",
+      "Leather-wrapped steering wheel and shift knob",
+      "Driver's seat with 8-way power adjustment",
+      "Leather-trimmed seats",
+      "Available Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "Front passenger's seat with 4-way power adjustment"
+    ],
+    "EX-T": [
+      "174-hp 1.5-liter turbocharged and intercooled DOHC 4-cylinder engine with direct injection",
+      "17-inch alloy wheels",
+      "Honda LaneWatch camera",
+      "Fog lights",
+      "Body-colored decklid spoiler",
+      "Dual-zone automatic climate control system",
+      "Heated front seats",
+      "SiriusXM Radio and HD Radio"
+    ],
+    "EX": [
+      "Remote engine start",
+      "Standard continuously variable transmission (CVT)",
+      "16-inch alloy wheels",
+      "Electric parking brake with automatic brake hold",
+      "Hill start assist",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry and push button start",
+      "60/40 split fold-down rear seatback",
+      "180-watt audio system with 8 speakers and Pandora compatibility"
+    ],
+    "LX": [
+      "158-hp 2.0-liter DOHC i-VTEC 4-cylinder engine",
+      "6-speed manual or available CVT",
+      "16-inch wheels with full covers",
+      "Multi-angle rearview camera with guidelines",
+      "LED Daytime Running Lights",
+      "One-touch turn indicators and auto-on/off headlights",
+      "Taillights with integrated LED light bars",
+      "Capless fuel filler",
+      "Automatic climate control system",
+      "Power windows with auto-up/down driver and passenger windows"
+    ]
+  }
+}

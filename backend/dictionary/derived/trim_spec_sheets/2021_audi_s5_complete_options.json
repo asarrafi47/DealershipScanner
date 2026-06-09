@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2021_audi_s5_complete_options",
+  "make": "Audi",
+  "models": [
+    "S5",
+    "S5"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic (S8)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The new Audi S5 also has new electrically adjustable front heated seats with cro"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: 3.0L V6 Turbo; Automatic (S8); 3.0L V6 Turbo"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: The new Audi S5 also has new electrically adjustable front heated seats with cro"
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|ford|escape",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_2018__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "SE",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds SYNC 3 infotainment system with 8-inch touchscreen",
+      "Adds voice control functionality",
+      "Adds smart-charging USB ports",
+      "Adds basic smartphone integration capability"
+    ],
+    "SE": [
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SYNC AppLink for voice-controlled mobile apps"
+    ],
+    "Sport": [
+      "Adds voice-activated navigation with turn-by-turn directions",
+      "Adds 3-D maps with pinch-to-zoom capability"
+    ],
+    "Limited": [
+      "Adds SYNC Connect with 4G LTE Wi-Fi hotspot for up to 10 devices",
+      "Adds remote vehicle start, stop, lock and unlock functionality",
+      "Adds fuel level and mileage monitoring via smartphone app",
+      "Adds SiriusXM Traffic and Travel Link with real-time traffic updates"
+    ]
+  }
+}

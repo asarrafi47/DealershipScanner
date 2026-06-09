@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2021|hyundai|veloster",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_2021__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Apple CarPlay and Android Auto standard",
+      "Adds large touchscreen display for smartphone integration",
+      "Adds Hyundai Blue Link Connected Care complimentary for first 3 years",
+      "Adds 24/7 roadside assistance",
+      "Adds complimentary maintenance for 3 years or 36,000 miles"
+    ],
+    "Blue": [
+      "Adds Blue Link Remote package for remote door unlock and engine start",
+      "Adds remote climate control capability",
+      "Adds Amazon Echo and Google Home voice command integration"
+    ],
+    "Limited": [
+      "Adds Blue Link Guidance with voice-activated navigation and address search",
+      "Adds wireless charging pad"
+    ]
+  }
+}

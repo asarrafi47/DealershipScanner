@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Mercedes-Benz,GLB-Class,AMG GLB35 4matic,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,4,2.0,21,26,23,,,,,
+2024,Mercedes-Benz,GLB-Class,GLB250,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),Front-Wheel Drive,Premium Gasoline,Special Purpose Vehicle 2WD,4,2.0,25,33,28,,,,,
+2024,Mercedes-Benz,GLB-Class,GLB250 4matic,Hybrid 2.0L I4 (SIDI; Mild Hybrid),2.0L I4 Turbo,Turbocharged,Automatic (AM8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,24,32,27,,,,,

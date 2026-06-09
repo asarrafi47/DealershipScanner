@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_bmw_ix_complete_options",
+  "make": "BMW",
+  "models": [
+    "iX",
+    "iX"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "M60": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "xDrive50": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

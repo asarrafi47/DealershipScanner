@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|buick|enclave",
+  "year": 2019,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2019__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Avenir",
+    "Premium",
+    "Essence",
+    "Preferred"
+  ],
+  "adds_by_trim": {
+    "Avenir": [
+      "Exclusive interior color: Ebony Perforated Leather-Appointed Seating",
+      "20-inch Polished Cast Aluminum wheels standard",
+      "Satin Steel Metallic exterior color at no additional cost",
+      "Dark Slate Metallic exterior color at no additional cost",
+      "Pepperdust Metallic exterior color at no additional cost"
+    ],
+    "Premium": [
+      "Perforated Leather-Appointed Seating in Shale, Chestnut, or Brandy",
+      "20-inch Cast Aluminum wheels with Premium Pearl or Satin Graphite finish available",
+      "Dealer-installed accessory wheel package available"
+    ],
+    "Essence": [
+      "Perforated Leather-Appointed Seating available in multiple colors",
+      "18-inch Bright Silver Cast Aluminum wheels standard",
+      "20-inch Polished Cast Aluminum wheels available"
+    ],
+    "Preferred": [
+      "Dark Galvanized Cloth interior seating standard",
+      "18-inch Bright Silver Cast Aluminum wheels standard",
+      "20-inch Bright Machine-Faced Nickel Aluminum wheels available"
+    ]
+  }
+}

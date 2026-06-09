@@ -1,0 +1,45 @@
+{
+  "ladder_id": "2024_hyundai_tucson_complete_options",
+  "make": "Hyundai",
+  "models": [
+    "Tucson",
+    "Tucson"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front engine, all-wheel-drive; Both engines are available in front and all-wheel drive versions. Available"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The GLS also got improved cloth seats with the option of a heating element."
+      }
+    ],
+    "Blue": [
+      {
+        "label": "Engine Options",
+        "value": "1.6L I4 Turbo; Automatic (AM-S6)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front engine, front-wheel-drive; The 2.0-litre diesel engine, available outside of North America, meets the Euro-"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front engine, front-wheel-drive; Front engine, all-wheel-drive"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The GLS also got improved cloth seats with the option of a heating element."
+      }
+    ]
+  }
+}

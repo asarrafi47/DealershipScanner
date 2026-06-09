@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|cadillac|ats",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "ATS",
+  "ladder_id": "brochure_llm_2014__cadillac__ats",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM",
+    "PERFORMANCE",
+    "LUXURY",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "PREMIUM": [
+      "3.6L V6 engine with 321 HP and 275 lb.-ft. torque",
+      "All-wheel drive capability",
+      "Leather seating with driver 12-way and passenger 10-way power adjustments",
+      "Mechanical rear limited-slip differential",
+      "Track Performance Package with high-capacity engine cooling and oil cooler"
+    ],
+    "PERFORMANCE": [
+      "2.0L Turbo engine with 272 HP and 260 lb.-ft. torque",
+      "6-speed manual transmission option with electric parking brake",
+      "Performance suspension with Gen 3 Magnetic Ride Control",
+      "Brembo high-performance front brakes",
+      "Magnesium paddle-shift controls on sport steering wheel"
+    ],
+    "LUXURY": [
+      "Leather seating surfaces with driver 8-way and passenger 10-way adjustments",
+      "Heated driver and front passenger seats",
+      "Driver Assist Package with adaptive cruise control and automatic collision preparation",
+      "Full-color Head-Up Display",
+      "Rear Cross-Traffic Alert and Side Blind Zone Alert"
+    ],
+    "STANDARD": [
+      "2.5L DI VVT 4-cylinder engine with 202 HP and 191 lb.-ft. torque",
+      "6-speed automatic transmission with Performance Algorithm Shifting",
+      "Rear-wheel drive",
+      "8-inch CUE touchscreen with voice and text navigation",
+      "Dual-zone automatic electronic climate control",
+      "Power-programmable door locks with keyless entry",
+      "5.7-inch configurable driver information center",
+      "Bose 7-speaker premium audio system",
+      "Automatic moisture detection climate control",
+      "Forward Collision Alert safety system"
+    ]
+  }
+}

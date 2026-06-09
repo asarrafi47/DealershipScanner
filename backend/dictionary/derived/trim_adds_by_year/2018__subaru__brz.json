@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|subaru|brz",
+  "year": 2018,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2018__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ tS",
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ tS": [
+      "18 x 7.5-inch STI lightweight aluminum-alloy wheels with black finish",
+      "215/40 R18 Michelin Pilot Sport summer performance tires",
+      "Brembo performance braking system with 12.8-inch front and 12.4-inch rear discs",
+      "High-performance STI sport-tuned suspension with SACHS performance dampers",
+      "STI carbon fiber rear spoiler",
+      "Red-accented rear bumper and black rear badging",
+      "Alcantara and leather-trimmed front seats with red bolsters and stitching",
+      "Leather-wrapped steering wheel with red accents and stitching",
+      "Red front seat belts",
+      "STI front, side and rear under spoilers"
+    ],
+    "BRZ Limited": [
+      "LED fog lights",
+      "Alcantara and leather-trimmed upholstery",
+      "Center console and lower door knee pads with red stitching",
+      "Instrument cluster meter visor with red stitching",
+      "Sport-design gauges with 4.2-inch color multifunction display",
+      "Heated front seats",
+      "Dual-zone automatic digital climate control",
+      "Keyless Access with Push-Button Start",
+      "Antitheft security system",
+      "SUBARU STARLINK 7.0-inch Multimedia Navigation with Apple CarPlay and Android Auto"
+    ],
+    "BRZ Premium": [
+      "205-hp direct-injection 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Close-ratio 6-speed manual transmission",
+      "Sport-tuned suspension",
+      "Multi-spoke 17-inch aluminum-alloy wheels",
+      "LED headlights",
+      "Trunk spoiler",
+      "Heated side mirrors",
+      "Cloth upholstery",
+      "Leather-wrapped steering wheel with audio and Bluetooth controls",
+      "SUBARU STARLINK 6.2-inch Multimedia System with Pandora and iHeartRadio"
+    ]
+  }
+}

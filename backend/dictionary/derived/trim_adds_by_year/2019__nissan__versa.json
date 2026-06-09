@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2019|nissan|versa",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2019__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "16-inch machine-finished split 5-spoke aluminum-alloy wheels",
+      "P195/55HR16 all-season low rolling resistance tires",
+      "Fog lights",
+      "Sport side sills and stitching",
+      "Dual power outside mirrors with LED turn signals",
+      "Rear roof spoiler",
+      "Leather-wrapped sport steering wheel",
+      "Rear-seat fold-down center armrest with cup holders",
+      "Apple CarPlay and Android Auto",
+      "SiriusXM Radio and NissanConnect 7-inch touch-screen display"
+    ],
+    "SV": [
+      "Upgraded Fine Vision electroluminescent gauges with trip computer and outside temperature",
+      "Integrated Key with remote keyless entry",
+      "Power windows and door locks with auto-locking feature",
+      "Cruise control",
+      "Divide-N-Hide Adjustable Floor",
+      "6-way manual driver's seat with armrest",
+      "Upgraded cloth seat and door trim",
+      "Leather-wrapped steering wheel",
+      "Silver accents on dash, vent rings, shifter, and chrome inside door handles"
+    ],
+    "S": [
+      "1.6-liter DOHC 16-valve 4-cylinder engine with 109 hp",
+      "Xtronic CVT (Continuously Variable Transmission)",
+      "Active grille shutter",
+      "15-inch steel wheels with wheel covers and all-season tires",
+      "RearView Monitor",
+      "Dual power outside mirrors and air conditioning",
+      "Fine Vision electroluminescent gauges",
+      "7-inch touch-screen AM/FM audio system with four speakers",
+      "Bluetooth hands-free phone system and steering wheel audio controls",
+      "4-wheel ABS, Vehicle Dynamic Control with Traction Control, Advanced Air Bag System"
+    ]
+  }
+}

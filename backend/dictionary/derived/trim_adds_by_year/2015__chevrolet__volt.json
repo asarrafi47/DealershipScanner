@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|chevrolet|volt",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "brochure_llm_2015__chevrolet__volt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Trim Package",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium Trim Package": [
+      "Leather-appointed seat trim for front and rear seating",
+      "Heated driver and front passenger seats with auto-heated activation",
+      "Removable rear-seat armrest with storage"
+    ],
+    "Base": [
+      "Bifunctional halogen projector headlamps with automatic exterior lamp control",
+      "Heated, power-adjustable, body-color mirrors with integrated turn signals",
+      "Electronic cruise control with Set and Resume Speed",
+      "Single-zone automatic climate control",
+      "17.1-kWh lithium-ion rechargeable battery with thermal management",
+      "Voltec electric drive with 149 hp motoring power and 273 lb.-ft. torque",
+      "1.4L range-extender engine with 83 hp",
+      "Electric Power Steering with variable assist",
+      "Chevrolet MyLink 7-inch touchscreen radio with Bluetooth and SiriusXM compatibility",
+      "OnStar Directions & Connections Plan for three years"
+    ]
+  }
+}

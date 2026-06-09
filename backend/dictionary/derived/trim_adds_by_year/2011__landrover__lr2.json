@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|landrover|lr2",
+  "year": 2011,
+  "make": "landrover",
+  "model": "LR2",
+  "ladder_id": "brochure_web_2011__landrover__lr2",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "HSE": [
+      "Leather-trimmed seats with heating for front passengers",
+      "Dual-zone automatic climate control",
+      "Power-adjustable front seats with lumbar support",
+      "Roof rails and side steps",
+      "18-inch alloy wheels",
+      "Rear parking sensors",
+      "Premium audio system upgrade",
+      "Xenon headlights with auto-leveling"
+    ],
+    "SE": [
+      "3.2-liter inline-six engine with 230 horsepower",
+      "Six-speed automatic transmission",
+      "All-wheel drive with Terrain Response system",
+      "Air conditioning with single-zone manual control",
+      "Power windows, locks, and mirrors",
+      "17-inch alloy wheels",
+      "Stability control and traction control",
+      "AM/FM/CD audio with auxiliary input",
+      "Cruise control",
+      "Roof side rails"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/landrover/lr2"
+}

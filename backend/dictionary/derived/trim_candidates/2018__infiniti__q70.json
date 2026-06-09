@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2018|infiniti|q70",
+  "year": 2018,
+  "make": "Infiniti",
+  "model": "Q70",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sensory",
+    "Luxe",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

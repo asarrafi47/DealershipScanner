@@ -1,0 +1,80 @@
+{
+  "catalog_key": "2019|toyota|highlander",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_2019__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds Entune™ Audio Plus with Connected Navigation App",
+      "Adds 8-in. high-resolution touch-screen display with Intelligent Touch controls",
+      "Adds Scout® GPS Link App",
+      "Adds integrated fog lights",
+      "Adds flip-up rear hatch window",
+      "Adds SofTex®/cloth seats with contrast stitching",
+      "Adds 8-way power-adjustable driver's seat",
+      "Adds three-zone automatic climate control with separate second-row control panel",
+      "Adds Stop and Start Engine System",
+      "Adds Toyota Safety Sense™ P (TSS-P)"
+    ],
+    "Base": [
+      "Adds 3.5-liter V6 engine with 295 hp",
+      "Adds Direct Shift-8AT 8-Speed transmission",
+      "Adds Dynamic Torque-Control AWD system availability",
+      "Adds Integrated fog lights",
+      "Adds Height-adjustable power liftgate with jam protection",
+      "Adds Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ],
+    "LE": [
+      "Adds Entune Premium Audio with Integrated Navigation and 8-in. touch-screen display",
+      "Adds Leather-trimmed seats with heated front seats",
+      "Adds Second-row retractable window sunshades",
+      "Adds Auto-dimming rearview mirror",
+      "Adds HomeLink universal transceiver",
+      "Adds Second-row 120V auxiliary AC power outlet",
+      "Adds Three-zone automatic climate control with separate second-row control panel"
+    ],
+    "SE": [
+      "Adds 19-in. 5-spoke Chromtec alloy wheels",
+      "Adds Rear parking assist sonar"
+    ],
+    "XLE": [
+      "Adds Power tilt/slide moonroof with sunshade and jam protection",
+      "Adds Chromtec roof rails",
+      "Replaces standard fog lights with Integrated chrome LED fog lights",
+      "Adds Color-keyed rocker panels",
+      "Adds 4-way power-adjustable front passenger seat",
+      "Adds Entune Premium JBL Audio with Integrated Navigation and 8-in. touch-screen display",
+      "Adds Perforated heated and ventilated leather-trimmed front seats"
+    ],
+    "Limited": [
+      "Adds Rear cargo area tonneau cover",
+      "Adds EV/ECO Modes",
+      "Adds Energy monitor display",
+      "Adds Hybrid system power meter",
+      "Adds Rear-seat Blu-ray Disc entertainment system option"
+    ],
+    "Platinum": [
+      "Adds Panoramic moonroof option",
+      "Adds Heated steering wheel option",
+      "Adds Heated second-row captain's chairs option",
+      "Adds Rain-sensing windshield wipers option",
+      "Adds 19-in. 5-spoke Dark Chromtec alloy wheels option",
+      "Adds Bird's Eye View Camera with Perimeter Scan option",
+      "Adds Front and rear parking assist sonar option",
+      "Adds Puddle lights with Highlander projection option"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,GMC,Sierra,C15 XFE 2WD,FFV 5.3L V8 (FFV),5.3L V8,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,5.3,15,22,18,,,,,
+2012,GMC,Sierra,C15 2WD,FFV 5.3L V8 (FFV),5.3L V8,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,5.3,15,21,17,,,,,
+2012,GMC,Sierra,C15 2WD,FFV 6.2L V8 (FFV),6.2L V8,,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,6.2,13,18,14,,,,,
+2012,GMC,Sierra,C15 2WD,4.3L V6,4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.3,15,20,17,,,,,
+2012,GMC,Sierra,C15 2WD,FFV 4.8L V8 (FFV),4.8L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,4.8,14,19,16,,,,,
+2012,GMC,Sierra,K15 4WD,FFV 5.3L V8 (FFV),5.3L V8,,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.3,15,21,17,,,,,
+2012,GMC,Sierra,K15 4WD,FFV 6.2L V8 (FFV),6.2L V8,,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,6.2,12,18,14,,,,,
+2012,GMC,Sierra,K15 4WD,4.3L V6,4.3L V6,,Automatic 4-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.3,14,18,16,,,,,
+2012,GMC,Sierra,K15 4WD,FFV 4.8L V8 (FFV),4.8L V8,,Automatic 4-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,4.8,13,18,15,,,,,
+2012,GMC,Sierra,K15 AWD,FFV 6.2L V8 (FFV),6.2L V8,,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,6.2,12,18,14,,,,,
+2012,GMC,Sierra,15 Hybrid 2WD,Hybrid 6.0L V8,6.0L V8,,Automatic (variable gear ratios),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,6.0,20,23,21,,,,,
+2012,GMC,Sierra,15 Hybrid 4WD,Hybrid 6.0L V8,6.0L V8,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,6.0,20,23,21,,,,,

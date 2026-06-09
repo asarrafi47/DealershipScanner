@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2014|rollsroyce|ghost",
+  "year": 2014,
+  "make": "Rolls Royce",
+  "model": "Ghost",
+  "ladder_id": "brochure_llm_2014__rollsroyce__ghost",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ghost Series II Extended Wheelbase",
+    "Ghost Series II"
+  ],
+  "adds_by_trim": {
+    "Ghost Series II Extended Wheelbase": [
+      "Extended wheelbase (3465 mm / 136.4 in) vs. standard (3295 mm / 129.7 in)",
+      "Increased vehicle length (5569 mm / 219.3 in) for additional rear passenger legroom",
+      "Curb weight 2570 kg / 5665 lb vs. standard 2490 kg / 5490 lb"
+    ],
+    "Ghost Series II": [
+      "6.0L twin-turbocharged V12 engine with 563 bhp and 780 Nm torque",
+      "Direct fuel injection system",
+      "0-60 mph acceleration in 4.7 seconds (4.8 sec with options)",
+      "Top speed 155 mph / 250 km/h governed",
+      "Combined fuel consumption 14 ltr/100 km / 20.2 mpg (Imp.)",
+      "CO2 emissions 327 g/km combined"
+    ]
+  }
+}

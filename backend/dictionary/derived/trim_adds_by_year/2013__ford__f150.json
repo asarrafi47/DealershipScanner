@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2013|ford|f150",
+  "year": 2013,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2013__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SVT RAPTOR",
+    "LIMITED",
+    "PLATINUM",
+    "KING RANCH",
+    "LARIAT",
+    "FX2/FX4",
+    "XLT",
+    "STX",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "SVT RAPTOR": [
+      "86.3-inch width excluding mirrors for enhanced stance",
+      "30.3-30.2 degree approach angles for extreme off-road capability",
+      "21.1-19.5 degree ramp breakover angles for terrain navigation",
+      "9.5-9.3 inch ground clearance for off-road performance",
+      "36.4-36.2 inch load floor height for cargo accessibility"
+    ],
+    "LIMITED": [
+      "Available on SuperCrew configuration with 5.5-foot box only"
+    ],
+    "PLATINUM": [
+      "Available on SuperCrew configuration with 5.5-foot box only"
+    ],
+    "KING RANCH": [
+      "Available on SuperCab and SuperCrew configurations"
+    ],
+    "LARIAT": [
+      "Available on SuperCab and SuperCrew configurations"
+    ],
+    "FX2/FX4": [
+      "Available on SuperCab and SuperCrew configurations"
+    ],
+    "XLT": [
+      "Available across all cab styles and box sizes"
+    ],
+    "STX": [
+      "Available on Regular Cab and SuperCab configurations"
+    ],
+    "XL": [
+      "97,500-mile tune-up interval with 6.2L engine or 100,000-mile with other engines",
+      "Power 4-wheel vented-disc brakes with ABS and electronic brakeforce distribution",
+      "AdvanceTrac with Roll Stability Control and trailer sway control",
+      "Front-seat side airbags and Safety Canopy System with side-curtain airbags",
+      "Personal Safety System with dual-stage front airbags and safety belt pretensioners",
+      "SecuriLock Passive Anti-Theft System and SOS Post-Crash Alert System",
+      "Manual tilt steering column and power rack-and-pinion steering",
+      "Tire Pressure Monitoring System excluding spare tire",
+      "Intermittent windshield wipers and dual-note horn"
+    ]
+  }
+}

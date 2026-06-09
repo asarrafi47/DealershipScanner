@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1997,Chevrolet,Pickup 2500,2WD,5.0L V8 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.0,14,18,15,,,,,,5.0L V8,
-1997,Chevrolet,Pickup 2500,2WD,5.0L V8 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.0,14,19,15,,,,,,5.0L V8,
-1997,Chevrolet,Pickup 2500,2WD,5.7L V8 ((350 V8) (FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.7,14,17,15,,,,,,5.7L V8,
-1997,Chevrolet,Pickup 2500,2WD,5.7L V8 ((350 V8) (FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.7,13,18,15,,,,,,5.7L V8,
-1997,Chevrolet,Pickup 2500,2WD,"Diesel 6.5L V8 ((DSL,TRBO) (MPFI)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks,8,6.5,13,16,14,,,,,,6.5L V8,

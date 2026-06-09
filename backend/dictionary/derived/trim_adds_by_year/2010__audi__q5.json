@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2010|audi|q5",
+  "year": 2010,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "2010_audi_q5",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Premium",
+    "Premium Plus",
+    "Prestige"
+  ],
+  "adds_by_trim": {
+    "Premium Plus": [
+      "Panorama sunroof",
+      "Bluetooth and HomeLink",
+      "Power tailgate with adjustable opening height",
+      "Heated twelve-way power front seats with driver memory",
+      "Audi music interface for iPod through MMI",
+      "Auto-dimming compass interior mirror"
+    ],
+    "Prestige": [
+      "Audi MMI navigation plus with 40-GB hard drive and real-time traffic",
+      "Audi advanced key",
+      "19-inch five-arm wheels with 235/55 all-season tires",
+      "Bang & Olufsen 505-watt 14-speaker sound system",
+      "Audi side assist blind-spot monitoring",
+      "Audi parking system advanced with front/rear sensors and rearview camera",
+      "Thermo heated/cooled cup holder"
+    ],
+    "Premium": [
+      "Five-link front suspension with upper and lower control arms and stabilizer bar",
+      "Independent trapezoidal-link rear suspension with rigid subframe and stabilizer bar",
+      "Servotronic speed-sensitive power steering varying assistance based on vehicle speed",
+      "quattro permanent all-wheel drive system with torque-sensing center differential",
+      "Trailer hitch preparation with 4400 lbs maximum towing capacity",
+      "Fully galvanized steel unibody with multistep anti-corrosion protection and aluminum hood/tailgate",
+      "Advanced dual-stage airbags and seat-mounted side thorax airbags",
+      "Sideguard head curtain airbags with rollover sensor for both rows",
+      "Electronic Stabilization Program with rollover mitigation and crossbar detection",
+      "Anti-lock Brake System with Electronic Brake-pressure Distribution"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2017|maserati|ghibli",
+  "year": 2017,
+  "make": "maserati",
+  "model": "ghibli",
+  "ladder_id": "brochure_llm_2017__maserati__ghibli",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Zegna Edition Luxury Package",
+    "Luxury Package Plus",
+    "Luxury Package",
+    "Sport Carbon Package",
+    "Sport Package",
+    "Ghibli S",
+    "Ghibli"
+  ],
+  "adds_by_trim": {
+    "Zegna Edition Luxury Package": [
+      "Interior styling and appointments by Ermenegildo Zegna fashion house",
+      "Exquisite Italian silk headlining and interior finishes",
+      "8-way power seats with rear armrest and illuminated compartment",
+      "USB charger and 12V power socket",
+      "19\", 20\" or 21\" alloy wheels",
+      "Coloured brake callipers"
+    ],
+    "Luxury Package Plus": [
+      "Ventilated front seats added to Luxury Package features"
+    ],
+    "Luxury Package": [
+      "Full premium leather upholstery throughout cabin",
+      "Alcantara® headlining",
+      "8-way power seats with adjustment and lumbar support",
+      "Rear armrest with illuminated compartment",
+      "USB charger and 12V power socket",
+      "Upgraded wheel size and coloured brake callipers"
+    ],
+    "Sport Carbon Package": [
+      "Carbon fibre sports steering wheel and gearshift paddles",
+      "Carbon fibre door sills and interior trim"
+    ],
+    "Sport Package": [
+      "19\", 20\" or 21\" alloy wheels",
+      "Coloured brake callipers",
+      "Skyhook suspension system",
+      "Sports seats with enhanced bolstering",
+      "Sports steering wheel with gearshift paddles",
+      "Inox sports pedals"
+    ],
+    "Ghibli S": [
+      "410 HP 3.0 Twin Turbo V6 petrol engine",
+      "550 Nm of torque",
+      "0-100 km/h acceleration in 5.0 seconds",
+      "Top speed of 285 km/h"
+    ],
+    "Ghibli": [
+      "350 HP 3.0 Twin Turbo V6 petrol engine or 275 HP 3.0 V6 Turbo diesel",
+      "Twin-turbocharger technology with one turbo per cylinder bank",
+      "Hand-assembled by Ferrari at Maranello plant",
+      "0-100 km/h in 5.5 seconds (petrol) or 6.3 seconds (diesel)",
+      "Top speed of 267 km/h (petrol) or 250 km/h (diesel)"
+    ]
+  }
+}

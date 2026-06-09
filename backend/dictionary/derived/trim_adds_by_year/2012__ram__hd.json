@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2012|ram|hd",
+  "year": 2012,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2012__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie Longhorn",
+    "Laramie",
+    "Big Horn",
+    "Power Wagon",
+    "Outdoorsman",
+    "SLT",
+    "ST"
+  ],
+  "adds_by_trim": {
+    "Laramie Longhorn": [
+      "Laramie Longhorn badging",
+      "Power multifunction trailer tow heated manual folding chrome mirrors with position memory"
+    ],
+    "Laramie": [
+      "Laramie badging",
+      "Power heated folding chrome mirrors with position memory and exterior courtesy lamps",
+      "Chrome surround grille with chrome insert",
+      "Power multifunction heated folding chrome mirrors available"
+    ],
+    "Big Horn": [
+      "Big Horn badging",
+      "Power heated folding Black mirrors with exterior courtesy lamps and supplemental turn signal"
+    ],
+    "Power Wagon": [
+      "Power Wagon badging",
+      "WARN front electric winch with 12,000-lb capacity",
+      "LT285/70R17D BSW All-Terrain tires",
+      "Electronic disconnect front stabilizer bar",
+      "Tru-lok front and rear electronic locking differentials"
+    ],
+    "Outdoorsman": [
+      "Outdoorsman badging",
+      "4.10 ratio axle included on 4x4 models"
+    ],
+    "SLT": [
+      "SLT badging",
+      "Quad halogen headlamps",
+      "Fog lamps included with Popular Equipment Group"
+    ],
+    "ST": [
+      "ST badging",
+      "Ram's Head badging",
+      "Automatic headlamps",
+      "Black front and rear bumpers",
+      "Spray-in bedliner available",
+      "Heavy-duty front and rear shock absorbers",
+      "Class IV trailer hitch receiver with 4- and 7-pin wiring harness"
+    ]
+  }
+}

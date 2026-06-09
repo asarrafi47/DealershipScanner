@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2010|gmc|acadia",
+  "year": 2010,
+  "make": "GMC",
+  "model": "Acadia",
+  "ladder_id": "inventory_gmc_acadia",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "SLT": [
+      "(cid:129) Best-in-class towing capacity of up to",
+      "(cid:129) 4-wheel disc brakes with ABS and"
+    ],
+    "Premium": [
+      "Acadia SLT-1 plus the following",
+      "(cid:129) Heated, body-colour, power folding",
+      "(cid:129) Power 8-way driver’s seat adjuster"
+    ],
+    "Limited": [
+      "Acadia SLE-2 plus the following of",
+      "(cid:129) Chrome beltline moulding",
+      "(cid:129) Tri-zone automatic climate control"
+    ],
+    "SLE": [
+      "8-way power driver seat with power recline and lumbar control",
+      "2-way power front passenger seat",
+      "Heated front seats",
+      "Tri-zone air conditioning with individual climate settings and second/third-row controls",
+      "Color Touch Radio with IntelliLink and 6.5-inch touchscreen",
+      "Remote vehicle start",
+      "Auto-dimming inside rearview mirror"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "SLE": 0,
+      "Limited": 3,
+      "Premium": 3
+    }
+  }
+}

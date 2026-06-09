@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2018|toyota|highlander",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_2018__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds Entune™ Audio Plus with Connected Navigation App",
+      "Adds 8-in. high-resolution touch-screen display with Intelligent Touch controls",
+      "Adds Scout® GPS Link App",
+      "Adds integrated fog lights",
+      "Adds flip-up rear hatch window",
+      "Adds SofTex®/cloth seats with contrast stitching",
+      "Adds 8-way power-adjustable driver's seat",
+      "Adds three-zone automatic climate control with separate second-row control panel",
+      "Adds Stop and Start Engine System",
+      "Adds Toyota Safety Sense™ P (TSS-P)"
+    ],
+    "LE": [
+      "Replaces Entune™ Audio with Entune™ Audio Plus with Connected Navigation",
+      "Adds integrated backup camera with projected path",
+      "Adds 4-way adjustable front passenger seat",
+      "Adds Star Safety System™",
+      "Adds eight airbags"
+    ],
+    "SE": [
+      "Replaces headlights to projector-beam halogen dark-black-accent with LED DRL",
+      "Adds dark-painted roof rails",
+      "Adds sport-tuned suspension",
+      "Replaces seating to up to seven",
+      "Adds soft-touch upper door trim with technical pattern accent",
+      "Adds black leather-trimmed seats with unique ribbon inserts and silver stitching",
+      "Adds blue LED ambient lighting in interior of front and rear doors"
+    ],
+    "XLE": [
+      "Adds power tilt/slide moonroof with sunshade and jam protection",
+      "Adds Chromtec® roof rails",
+      "Adds Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Adds leather-trimmed seats with heated front seats",
+      "Adds second-row retractable window sunshades",
+      "Adds auto-dimming rearview mirror",
+      "Adds HomeLink® universal transceiver",
+      "Adds second-row 120V auxiliary AC power outlet"
+    ],
+    "Limited": [
+      "Adds rear parking assist sonar",
+      "Adds 4-way power-adjustable front passenger seat",
+      "Adds available Saddle Tan interior color",
+      "Adds rear cargo area tonneau cover"
+    ],
+    "Platinum": [
+      "Adds panoramic moonroof",
+      "Adds heated steering wheel",
+      "Adds heated second-row captain's chairs",
+      "Adds rain-sensing windshield wipers",
+      "Adds Bird's Eye View Camera with Perimeter Scan feature",
+      "Adds front and rear parking assist sonar",
+      "Adds puddle lights with Highlander projection",
+      "Adds rear-seat Blu-ray Disc™ entertainment system"
+    ]
+  }
+}

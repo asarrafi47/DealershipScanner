@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2010|nissan|titan",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "generic_nissan_titan",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Pe",
+    "P1",
+    "Mu"
+  ],
+  "adds_by_trim": {
+    "P1": [
+      "KiNG Cab aND CREw Cab PRO-4X"
+    ],
+    "Mu": [
+      "KiNG Cab aND CREw Cab lE CREw Cab"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "P1": 1,
+      "Mu": 1
+    }
+  }
+}

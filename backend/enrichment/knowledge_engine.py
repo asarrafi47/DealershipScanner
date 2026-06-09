@@ -8,6 +8,7 @@ import csv
 import os
 import re
 import sqlite3
+from functools import lru_cache
 from typing import Any
 
 from backend.db.inventory_db import DB_PATH
@@ -452,6 +453,37 @@ def _ensure_epa_columns(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+def _epa_trim_lookup_key(
+    year: int | None,
+    make: str | None,
+    model: str | None,
+    trim: str | None,
+) -> tuple[int, str, str, str] | None:
+    if not year or not make or not model or not trim:
+        return None
+    try:
+        y = int(year)
+    except (TypeError, ValueError):
+        return None
+    mk = (make or "").strip()
+    md = (model or "").strip()
+    tr = (trim or "").strip()
+    if not y or not mk or not md or not tr:
+        return None
+    return y, mk, md, tr
+
+
+@lru_cache(maxsize=16384)
+def _lookup_epa_by_trim_cached(key: tuple[int, str, str, str]) -> frozenset[tuple[str, Any]]:
+    year, make, model, trim_clean = key
+    result = _lookup_epa_by_trim_uncached(year, make, model, trim_clean)
+    return frozenset(result.items())
+
+
+def clear_epa_trim_lookup_cache() -> None:
+    _lookup_epa_by_trim_cached.cache_clear()
+
+
 def lookup_epa_by_trim(
     year: int | None,
     make: str | None,
@@ -464,9 +496,18 @@ def lookup_epa_by_trim(
     Returns the best-matching trim row, or an empty dict when no match found.
     Falls back to partial trim substring match when no exact match exists.
     """
-    if not year or not make or not model or not trim:
+    key = _epa_trim_lookup_key(year, make, model, trim)
+    if key is None:
         return {}
-    trim_clean = trim.strip()
+    return dict(_lookup_epa_by_trim_cached(key))
+
+
+def _lookup_epa_by_trim_uncached(
+    year: int,
+    make: str,
+    model: str,
+    trim_clean: str,
+) -> dict[str, Any]:
     try:
         conn = _conn()
         _ensure_epa_columns(conn)

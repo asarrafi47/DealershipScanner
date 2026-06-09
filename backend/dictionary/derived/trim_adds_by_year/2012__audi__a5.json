@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|audi|a5",
+  "year": 2012,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_llm_2012__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A5 Prestige",
+    "A5 Premium Plus",
+    "A5 Premium",
+    "S5 Prestige",
+    "S5 Premium Plus"
+  ],
+  "adds_by_trim": {
+    "A5 Prestige": [
+      "19-inch 5-parallel-spoke-star design wheels",
+      "255/35 summer performance tires",
+      "S line® Plus Package available"
+    ],
+    "A5 Premium Plus": [
+      "18-inch 15-spoke-star design wheels",
+      "245/40 all-season tires",
+      "Sport Package available"
+    ],
+    "A5 Premium": [
+      "18-inch 10-spoke-V design wheels",
+      "245/40 all-season tires"
+    ],
+    "S5 Prestige": [
+      "19-inch titanium 5-arm-rotor design wheels",
+      "255/35 summer performance tires",
+      "4.2 FSI engine with 354 horsepower and 325 lb-ft torque",
+      "Six-speed manual or six-speed Tiptronic® automatic transmission",
+      "Audi quattro® all-wheel drive standard"
+    ],
+    "S5 Premium Plus": [
+      "19-inch 5-segment-spoke design wheels",
+      "255/35 summer performance tires",
+      "3.0T supercharged V6 with 333 horsepower and 325 lb-ft torque",
+      "Seven-speed S tronic® dual-clutch transmission",
+      "Audi quattro® all-wheel drive standard"
+    ]
+  }
+}

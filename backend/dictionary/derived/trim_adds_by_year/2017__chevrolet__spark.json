@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|chevrolet|spark",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2017__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Chrome door handles and liftgate trim",
+      "Chrome grille surround",
+      "Leatherette seating",
+      "Heated front seats",
+      "Leather-wrapped steering wheel with silver accents",
+      "Keyless Open and Start",
+      "Enhanced monochromatic Driver Information Center display",
+      "Chrome beltline moldings",
+      "Forward Collision Alert and Lane Departure Warning with Driver Confidence Package",
+      "SiriusXM Satellite Radio All Access Package with 3-month trial"
+    ],
+    "1LT": [
+      "Front fog lamps with chrome rings",
+      "Chrome grille surround",
+      "Heated power-adjustable mirrors with manual folding",
+      "Power windows with driver express-up/-down",
+      "Power door locks with automatic feature",
+      "Remote Keyless Entry",
+      "Electronic cruise control with steering wheel controls",
+      "6-speaker sound system",
+      "15-inch silver-painted alloy wheels",
+      "OnStar Guidance Plan and OnStar 4G LTE with Wi-Fi hotspot"
+    ],
+    "LS": [
+      "ECOTEC 1.4L DOHC 4-cylinder engine with 5-speed manual transmission",
+      "Power electric steering with tilt column",
+      "Single-zone manual air conditioning with cabin air filter",
+      "Cloth front high-back bucket seats with adjustable head restraints",
+      "Rear 60/40 split flip-and-fold seat",
+      "4-speaker sound system with auxiliary input jack",
+      "Chevrolet MyLink 7-inch touchscreen with Bluetooth and Apple CarPlay/Android Auto",
+      "Dual-stage front and side-impact air bags with roof rail head-curtain",
+      "4-wheel antilock brakes with Hill Start Assist",
+      "15-inch steel wheels with bolt-on wheel cover and all-season tires"
+    ]
+  }
+}

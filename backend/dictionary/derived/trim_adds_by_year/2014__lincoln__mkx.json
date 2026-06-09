@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2014|lincoln|mkx",
+  "year": 2014,
+  "make": "Lincoln",
+  "model": "MKX",
+  "ladder_id": "brochure_2014__lincoln__mkx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Select",
+    "Standard",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 3.7L Ti-VCT 24-valve aluminum V6 engine with 305 hp and 280 lb.-ft. torque",
+      "Adds Features 18-inch premium painted aluminum wheels with P245/60R18 all-season tires",
+      "Adds Includes leather-trimmed heated and cooled front seats with 10-way power and memory",
+      "Adds Features 8-inch color LCD touch screen in center stack with dual 4.2-inch gauge cluster screens",
+      "Adds Includes AM/FM audio system with single-CD player and 10 speakers",
+      "Adds Features power 4-wheel disc brakes with Anti-Lock Brake System",
+      "Adds Includes remote keyless entry, push-button start, and SecuriLock anti-theft system"
+    ],
+    "Standard": [],
+    "Select": [
+      "Hands-free liftgate",
+      "Auto-folding sideview mirrors with turn signal indicators and auto-dimming driver's side",
+      "BLIS (Blind Spot Information System) with cross-traffic alert"
+    ]
+  }
+}

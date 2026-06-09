@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2018|toyota|sequoia",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Sport",
+    "TRD",
+    "LE",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Sport": [
+      "Adds to or replaces features on SR5. Adds to or replaces features on SR5. Adds to or replaces features on Limited.",
+      "Exterior Exterior Exterior Exterior",
+      "LED high- and low-beam headlights with \u2022 Satin black TRD Sport front door logos \u2022 Chrome auto-dimming heated power outside \u2022 Chrome auto-dimming heated power outside",
+      "Integrated LED fog lights \u2022 20-in. TRD Sport black alloy wheels signal indicators and memory features, turn signal indicators",
+      "Color-keyed heated power outside mirrors \u2022 TRD Sport performance-tuned Bilstein\u00ae shocks \u2022 Power liftgate with jam protection and puddle lights",
+      "18-in. alloy wheels \u2022 TRD Sport performance-tuned anti-sway bars \u2022 20-in. alloy wheels \u2022 20-in. diamond-cut-finish alloy wheels",
+      "Power tilt/slide moonroof with sliding sunshade Interior Interior",
+      "Interior \u2022 Entune\u2122 Premium Audio with Integrated \u2022 Entune\u2122 Premium JBL Synthesis\u00ae audio with",
+      "7-passenger seating with easy-clean fabric- Navigation21 and App Suite14 Integrated Navigation21 and App Suite14",
+      "Automatic three-zone front and rear climate trimmed front seats and second-row captain\u2019s",
+      "Easy-clean fabric-trimmed 40/20/40 split, sliding, front passenger seat, power reclining and and Bluetooth\u00ae11 hands-free phone controls, \u2022 7-passenger seating with perforated leather-",
+      "Multi-function center console with two front and two with Integrated Navigation21 and App Suite,14 Alert (LDA)27 controls \u2022 Perforated leather-trimmed second-row heated"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

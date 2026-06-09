@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2018|dodge|charger",
+  "year": 2018,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2018__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT",
+    "SRT",
+    "R/T SHAKER",
+    "R/T",
+    "SXT PLUS",
+    "SXT",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT": [
+      "Advanced SRT multistage driver and front-passenger air bags",
+      "Satin Black high downforce rear spoiler with back-up camera",
+      "18 Harman Kardon high-performance speakers with 900-watt digital amplifier"
+    ],
+    "SRT": [
+      "Advanced SRT multistage driver and front-passenger air bags",
+      "Satin Black rear spoiler with back-up camera"
+    ],
+    "R/T SHAKER": [
+      "Blacktop Package with fog lamps, black grille, blacktop stripe, black fuel filler door, 20-inch gloss black wheels with performance tires"
+    ],
+    "R/T": [
+      "Available Blacktop Package and Cold Weather Group options"
+    ],
+    "SXT PLUS": [
+      "Multifunction heated foldaway power mirrors",
+      "Forward Collision Warning system included"
+    ],
+    "SXT": [
+      "Power body-color manual folding heated mirrors",
+      "ParkSense rear park assist system available",
+      "UConnect 4C with 8.4-inch touchscreen and SiriusXM satellite radio"
+    ],
+    "SE": [
+      "Active head restraints",
+      "Advanced multistage driver and front-passenger air bags",
+      "Supplemental front and rear side-curtain air bags",
+      "Driver and front-passenger seat-mounted side air bags",
+      "Electronic Stability Control with Brake Assist",
+      "Hill Start Assist",
+      "ParkView rear back-up camera",
+      "Remote Keyless Enter 'N Go",
+      "Security alarm",
+      "Sentry Key antitheft engine immobilizer"
+    ]
+  }
+}

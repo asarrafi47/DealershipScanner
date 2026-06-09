@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Smart,Fortwo,coupe,1.0L I3,1.0L I3,,Automatic (AM5),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,1.0,34,38,36,,,,,
+2012,Smart,Fortwo,cabriolet,1.0L I3,1.0L I3,,Automatic (AM5),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,1.0,34,38,36,,,,,

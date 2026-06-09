@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2019|dodge|challenger",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2019__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T HELLCAT",
+    "R/T",
+    "T/R KCAP",
+    "GT",
+    "SXT",
+    "T/R",
+    "TG",
+    "TXS"
+  ],
+  "adds_by_trim": {
+    "R/T HELLCAT": [
+      "SRT multistage advanced airbags for driver and front passenger",
+      "SRT performance leather-wrapped flat-bottom heated steering wheel",
+      "18 Harman Kardon speakers with 900-watt digital amplifier and Surround Sound"
+    ],
+    "R/T": [
+      "Advanced multistage airbags for driver and front passenger",
+      "Performance Four-Bump leather-wrapped steering wheel with vehicle controls",
+      "9 premium Alpine speakers with subwoofer and 506-watt digital amplifier",
+      "Alcantara Appearance Package available with Alcantara ventilated seats and steering wheel"
+    ],
+    "T/R KCAP": [
+      "Power tilt/telescoping steering column",
+      "Heated front seats",
+      "Heated steering wheel",
+      "8.4-inch Uconnect 4C touchscreen with SiriusXM and 4G LTE Wi-Fi Hotspot"
+    ],
+    "GT": [
+      "Performance Four-Bump leather-wrapped steering wheel with vehicle controls",
+      "Steering-wheel-mounted paddle shifters with automatic transmission",
+      "6 premium Alpine speakers with 276-watt digital amplifier",
+      "Power tilt/telescoping steering column"
+    ],
+    "SXT": [
+      "7-inch Uconnect 4 touchscreen with Apple CarPlay and Android Auto",
+      "Leather-wrapped steering wheel with vehicle controls",
+      "Universal garage door opener"
+    ],
+    "T/R": [
+      "Performance Four-Bump leather-wrapped steering wheel with vehicle controls",
+      "6 premium Alpine speakers with 276-watt digital amplifier",
+      "Power tilt/telescoping steering column"
+    ],
+    "TG": [
+      "Steering-wheel-mounted paddle shifters with automatic transmission",
+      "Universal garage door opener"
+    ],
+    "TXS": [
+      "Leather-wrapped steering wheel with vehicle controls",
+      "6 speakers standard audio system",
+      "7-inch Uconnect 4 touchscreen with Apple CarPlay and Android Auto",
+      "Power tilt/telescoping steering column available",
+      "Heated front seats available"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2015|kia|sorento",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Sorento",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Limited",
+    "Touring",
+    "LT",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

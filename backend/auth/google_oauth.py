@@ -236,7 +236,7 @@ def callback():
 
     state = (request.args.get("state") or "").strip()
     expected = (session.pop("google_oauth_state", None) or "").strip()
-    if not state or not expected or state != expected:
+    if not state or not expected or not secrets.compare_digest(state, expected):
         return _oauth_login_error("Google sign-in session expired. Try again.")
 
     code = (request.args.get("code") or "").strip()

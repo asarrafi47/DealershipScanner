@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Lexus,RZ,300e (18 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,137,112,125,,,,,
+2024,Lexus,RZ,300e (20 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,114,96,105,,,,,
+2024,Lexus,RZ,450e AWD (18 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,115,98,107,,,,,
+2024,Lexus,RZ,450e AWD (20 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,102,87,95,,,,,

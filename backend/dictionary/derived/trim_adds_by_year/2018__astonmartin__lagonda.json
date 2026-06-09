@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|astonmartin|lagonda",
+  "year": 2018,
+  "make": "Aston Martin",
+  "model": "lagonda",
+  "ladder_id": "brochure_2018__astonmartin__lagonda",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Standard interior seating and trim"
+    ],
+    "EX": [],
+    "Sport": [],
+    "Limited": [
+      "Adds Ultramarine Black exterior paint",
+      "Adds bespoke solid Sterling Silver Lagonda Wings badge with red transparent enamel",
+      "Adds bespoke Volcano Red side strake housing",
+      "Adds black bonnet and side strake meshes",
+      "Adds bespoke two-tone interior trim with Aurora Blue upper and Q White Essence Semi-aniline lower environments",
+      "Adds Aurora Blue colour-keyed steering wheel",
+      "Adds bespoke red trans-enamel rotaries",
+      "Adds bespoke quilt pattern upholstery",
+      "Adds Caspian Blue carpet with Dark Blue Lambswool overmats",
+      "Adds Final Edition sill plaques and 3-piece Aurora Blue leather Lagonda luggage"
+    ]
+  }
+}

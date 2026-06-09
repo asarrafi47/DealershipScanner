@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2013|audi|q7",
+  "year": 2013,
+  "make": "Audi",
+  "model": "Q7",
+  "ladder_id": "brochure_llm_2013__audi__q7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q7 3.0T S line® Prestige",
+    "Q7 TDI®",
+    "Q7 3.0T"
+  ],
+  "adds_by_trim": {
+    "Q7 3.0T S line® Prestige": [
+      "333 horsepower supercharged TFSI engine with 325 lb-ft torque",
+      "6.9 second 0-60 mph acceleration",
+      "Audi adaptive air suspension with optional drag coefficient of 0.35",
+      "Ground clearance of 9.4 inches"
+    ],
+    "Q7 TDI®": [
+      "2.967cc turbocharged TDI diesel engine with 240 horsepower",
+      "406 lb-ft torque at 1,750 rpm",
+      "19 city / 28 highway / 22 combined EPA fuel economy",
+      "6.0 gallon AdBlue® fluid capacity",
+      "Ultra-low sulfur diesel fuel requirement"
+    ],
+    "Q7 3.0T": [
+      "Lower bumper and door trim in contrast paint (not available on TDI)",
+      "S line exterior package available as option"
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2020|chevrolet|colorado",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2020__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZR2",
+    "Z71",
+    "LT",
+    "WT",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "ZR2": [
+      "Driver-selectable full locking front and rear differential",
+      "Electric 2-speed Autotrac transfer case",
+      "Duramax 2.8L Turbo-Diesel engine with 186 hp and 369 lb-ft torque",
+      "HD Rear Vision Camera",
+      "Heated power-adjustable mirrors with body-color caps",
+      "Black spray-on bedliner with ZR2 logo"
+    ],
+    "Z71": [
+      "Duramax 2.8L Turbo-Diesel engine option with integrated diesel exhaust brake",
+      "Electric 2-speed Autotrac transfer case",
+      "Z82 Trailering Package with heavy-duty trailer hitch",
+      "HD Rear Vision Camera",
+      "8-speed automatic transmission"
+    ],
+    "LT": [
+      "3.6L DOHC V6 engine with 308 hp and 275 lb-ft torque",
+      "8-speed automatic transmission standard on Crew Cab Long Box",
+      "Heated power-adjustable mirrors with body-color caps",
+      "Fog lamps with LT Convenience Package",
+      "HD Rear Vision Camera",
+      "Tow/Haul mode with trailering assist guideline",
+      "Theft-deterrent system with unauthorized entry alarm",
+      "1 month OnStar Safety & Security Plan coverage"
+    ],
+    "WT": [
+      "3.6L DOHC V6 engine standard on Crew Cab 4x4 and Crew Cab Long Box",
+      "Power-adjustable mirrors with body-color caps",
+      "Chrome beltline moldings with WT Appearance Package",
+      "EZ Lift tailgate with power lock",
+      "Rear Park Assist with WT Convenience Package",
+      "Theft-deterrent system with unauthorized entry alarm",
+      "1 month OnStar Safety & Security Plan coverage"
+    ],
+    "ES": [
+      "2.5L DOHC 4-cylinder engine with 200 hp and 191 lb-ft torque",
+      "Manual-adjustable manual-folding mirrors with black caps",
+      "Chrome rear bumper with CornerStep",
+      "Locking tailgate",
+      "Power steering rack-and-pinion",
+      "6-speed automatic transmission",
+      "Dual-stage frontal airbags and head-curtain airbags",
+      "Rear Vision Camera",
+      "Teen Driver technology"
+    ]
+  }
+}

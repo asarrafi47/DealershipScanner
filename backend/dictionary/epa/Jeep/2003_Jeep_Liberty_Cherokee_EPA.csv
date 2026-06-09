@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,Jeep,Liberty/Cherokee,2WD,2.4L I4,2.4L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,17,22,19,,,,,
+2003,Jeep,Liberty/Cherokee,2WD,3.7L V6,3.7L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,15,20,17,,,,,
+2003,Jeep,Liberty/Cherokee,2WD,3.7L V6,3.7L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,15,20,17,,,,,
+2003,Jeep,Liberty/Cherokee,4WD,2.4L I4,2.4L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.4,17,22,19,,,,,
+2003,Jeep,Liberty/Cherokee,4WD,3.7L V6,3.7L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.7,15,20,17,,,,,
+2003,Jeep,Liberty/Cherokee,4WD,3.7L V6,3.7L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.7,14,20,17,,,,,

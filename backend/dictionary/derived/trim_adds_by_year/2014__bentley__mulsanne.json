@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2014|bentley|mulsanne",
+  "year": 2014,
+  "make": "bentley",
+  "model": "mulsanne",
+  "ladder_id": "brochure_web_2014__bentley__mulsanne",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Mulsanne Speed",
+    "Mulsanne"
+  ],
+  "adds_by_trim": {
+    "Mulsanne Speed": [
+      "Twin-turbocharged 6.8-liter V-8 engine uprated to 530 hp and 811 lb-ft of torque"
+    ],
+    "Mulsanne": [
+      "Twin-turbocharged 6.8-liter V-8 engine rated at 505 hp and 752 lb-ft of torque",
+      "Full LED headlights",
+      "20-inch alloy wheels",
+      "Polished steel exterior accents",
+      "Leather upholstery and leather headlining",
+      "Wood veneer interior",
+      "8.0-inch touchscreen",
+      "14-speaker audio system",
+      "Eight-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/bentley/mulsanne/"
+}

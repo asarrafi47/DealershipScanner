@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2016|bmw|7series",
+  "year": 2016,
+  "make": "BMW",
+  "model": "7 Series",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

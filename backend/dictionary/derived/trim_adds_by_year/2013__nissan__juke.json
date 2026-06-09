@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2013|nissan|juke",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Juke",
+  "ladder_id": "brochure_llm_2013__nissan__juke",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Nissan Navigation System with 5-inch color touch-screen monitor and NavTraffic",
+      "RearView Monitor for parking assistance",
+      "Six upgraded speakers",
+      "Rockford Fosgate ecoPUNCHTM audio system with 8-inch subwoofer and amplifier",
+      "USB connection port for iPod interface and compatible devices",
+      "Leather-appointed seats",
+      "Heated front seats",
+      "Leather-wrapped shift knob",
+      "Automatic on/off headlights",
+      "Fog lights"
+    ],
+    "SV": [
+      "Xtronic CVT with Sport mode or optional 6-speed manual transmission",
+      "Power sliding glass moonroof with one-touch open/close and tilt feature",
+      "Rear privacy glass",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Integrated Control (I-CON) system with Automatic Temperature Control",
+      "SiriusXM Satellite Radio",
+      "Premium cloth seat trim",
+      "Leather-wrapped steering wheel",
+      "Passenger seatback pocket"
+    ],
+    "S": [
+      "1.6-liter Direct Injection Gasoline turbocharged 4-cylinder engine with 188 horsepower",
+      "Torque vectoring All-Wheel Drive (AWD) or Front-Wheel Drive (FWD) option",
+      "Xtronic CVT with Sport mode",
+      "17-inch aluminum-alloy wheels",
+      "AM/FM/CD audio system with MP3/WMA playback and iPod interface",
+      "Bluetooth Hands-free Phone System",
+      "Power windows, power door locks, and remote keyless entry",
+      "60/40 split fold-down rear seatbacks",
+      "Six standard air bags with Vehicle Dynamic Control and Traction Control"
+    ]
+  }
+}

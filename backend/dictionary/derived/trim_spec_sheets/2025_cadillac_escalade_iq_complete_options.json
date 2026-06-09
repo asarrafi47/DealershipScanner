@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2025_cadillac_escalade_iq_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Escalade IQ",
+    "Escalade IQ"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "hp (560 kW; 760 PS) \"Velocity Max\" mode; Millions of Listings · Local Dealers · Latest Car Reviews & News Amenities: Hom"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "hp (560 kW; 760 PS) \"Velocity Max\" mode; Millions of Listings · Local Dealers · Latest Car Reviews & News Amenities: Hom"
+      }
+    ]
+  }
+}

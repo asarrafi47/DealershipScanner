@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|buick|lacrosse",
+  "year": 2014,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2014__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM II",
+    "PREMIUM I",
+    "LEATHER",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "PREMIUM II": [
+      "3.6L V-6 VVT engine with E85 capability (304 hp, 264 lb-ft torque)",
+      "Perforated and ventilated front seats",
+      "Leather-wrapped heated steering wheel",
+      "Power rear sunshade",
+      "20-inch machine-faced silver painted alloy wheels (Q7N)"
+    ],
+    "PREMIUM I": [
+      "3.6L V-6 VVT engine with E85 capability (304 hp, 264 lb-ft torque)",
+      "Leather-appointed seating with heated front seats",
+      "8-way power front passenger seat adjuster",
+      "Power heated mirrors with LED indicators and auto-dimming",
+      "Rearview camera system with rear park assist"
+    ],
+    "LEATHER": [
+      "Leather-appointed seating with heated front seats",
+      "8-way power front passenger seat adjuster",
+      "Power heated mirrors with LED indicators and auto-dimming driver's side",
+      "Rearview camera system",
+      "Navigation with Intellilink 2 8-inch color touchscreen and GPS"
+    ],
+    "BASE": [
+      "2.4L DOHC DI engine with eAssist technology (182 hp, 172 lb-ft torque)",
+      "6-speed automatic transmission with driver shift control",
+      "Cloth seating with leatherette trim",
+      "Buick Intellilink 2 8-inch touchscreen with CD/MP3 player",
+      "Dual-zone automatic climate control with rear defogger",
+      "Premium 7-speaker audio system",
+      "Dual-stage frontal and side-impact air bags",
+      "OnStar with 6 months directions and connections service",
+      "17-inch machine-faced silver painted alloy wheels"
+    ]
+  }
+}

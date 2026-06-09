@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2013|ford|taurus",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_llm_2013__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SHO",
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SHO": [
+      "3.5L EcoBoost V6 engine with 365 hp and 350 lb-ft torque",
+      "All-wheel drive (AWD)",
+      "6-speed SelectShift Automatic with paddle shifters",
+      "Electric power-actuated steering with drift control",
+      "Sport-tuned suspension",
+      "Leather-trimmed seats with SHO graphics embroidered on front seat backs",
+      "Leather-wrapped steering wheel with wood accent",
+      "19-inch premium Luster Nickel-painted aluminum wheels with P255/45R19 tires",
+      "High-intensity discharge (HID) headlamps",
+      "Rear spoiler and SHO branded side fender vents"
+    ],
+    "Limited": [
+      "10-way power driver and front-passenger seats with driver memory",
+      "Leather-trimmed seats with perforated leather inserts",
+      "Auto-dimming rearview mirror",
+      "Dual-zone electronic automatic temperature control",
+      "Ford SYNC with SYNC Services for Traffic and Directions",
+      "Remote Start System",
+      "MyFord Touch with dual 4.2-inch color LCD displays and 8-inch touch screen",
+      "18-inch Sparkle Silver-painted aluminum wheels with P235/55R18 tires",
+      "Body-color power heated sideview mirrors with security approach lamps",
+      "Rear view camera and Reverse Sensing System"
+    ],
+    "SEL": [
+      "Unique cloth seats",
+      "Leather-wrapped shift knob with chrome trim",
+      "Leather-wrapped steering wheel",
+      "Covered front-row cupholders and storage",
+      "Message center with compass and outside temperature display",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "18-inch Sparkle Silver-painted aluminum wheels with P235/55R18 tires",
+      "Anti-theft perimeter alarm",
+      "Universal garage door opener",
+      "LED supplemental park lamps"
+    ],
+    "SE": [
+      "4-wheel disc Anti-Lock Brake System (ABS)",
+      "3.5L Ti-VCT V6 engine with 288 hp, or 2.0L EcoBoost I-4 with 240 hp",
+      "6-speed SelectShift Automatic transmission",
+      "Front bucket seats with 60/40 split-fold rear seat",
+      "4-way adjustable front head restraints",
+      "6-way power driver and front-passenger seats",
+      "AM/FM stereo with single-CD player and 6 speakers",
+      "Cruise control and steering wheel-mounted audio controls",
+      "MyFord with 4.2-inch LCD display in instrument cluster",
+      "17-inch Sparkle Silver-painted aluminum wheels with P235/60R17 tires"
+    ]
+  }
+}

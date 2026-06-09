@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2017|audi|r8",
+  "year": 2017,
+  "make": "Audi",
+  "model": "R8",
+  "ladder_id": "brochure_llm_2017__audi__r8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V10 plus",
+    "V10"
+  ],
+  "adds_by_trim": {
+    "V10 plus": [
+      "20-inch 10-spoke-Y design forged aluminum-alloy wheels in Silver or Titanium finish standard",
+      "Carbon Sigma or Ice Silver sideblade options standard",
+      "Expanded exterior color palette including exclusive finishes"
+    ],
+    "V10": [
+      "19-inch 5-double-spoke design forged aluminum-alloy wheels standard",
+      "19-inch 5-V-spoke design cast aluminum wheels in Silver or Titanium finish standard",
+      "20-inch 10-spoke-Y design forged aluminum-alloy wheels available as optional upgrade",
+      "Carbon Sigma sideblade option available"
+    ]
+  }
+}

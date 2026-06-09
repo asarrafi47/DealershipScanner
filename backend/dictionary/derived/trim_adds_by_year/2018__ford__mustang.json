@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2018|ford|mustang",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_2018__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Sport",
+    "SE",
+    "Active",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds SYNC 3 infotainment system with touchscreen",
+      "Adds voice control functionality",
+      "Adds 2 smart-charging USB ports",
+      "Adds Siri Eyes Free compatibility for iPhone integration"
+    ],
+    "Premium": [
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SYNC AppLink for compatible mobile apps"
+    ],
+    "Active": [
+      "Adds voice-activated navigation with turn-by-turn directions",
+      "Adds vivid 3-D maps with pinch-to-zoom touchscreen capability"
+    ],
+    "SE": [
+      "Adds SYNC Connect 4G LTE Wi-Fi hotspot supporting up to 10 devices",
+      "Adds SiriusXM Traffic and Travel Link with real-time traffic updates"
+    ],
+    "Sport": [
+      "Adds FordPass smartphone app integration for vehicle location and remote start",
+      "Adds ability to remotely stop, lock, or unlock vehicle",
+      "Adds fuel level and mileage monitoring via smartphone"
+    ],
+    "GT": [
+      "Adds complimentary 5-year SiriusXM Connect service",
+      "Adds 24/7 Ford Guides trained support team assistance"
+    ],
+    "Limited": [
+      "Adds comprehensive 3-year/36,000-mile bumper-to-bumper coverage",
+      "Adds 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds 5-year/unlimited-mile corrosion protection coverage",
+      "Adds 5-year/60,000-mile Roadside Assistance with towing and lockout service"
+    ]
+  }
+}

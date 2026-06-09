@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2019|dodge|performance",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Performance",
+  "ladder_id": "brochure_llm_2019__dodge__performance",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CHALLENGER R/T HELLCAT",
+    "CHALLENGER R/T",
+    "CHALLENGER T/R KCAP",
+    "CHALLENGER T/R",
+    "CHALLENGER GT",
+    "CHALLENGER TXS"
+  ],
+  "adds_by_trim": {
+    "CHALLENGER R/T HELLCAT": [
+      "SRT multistage driver and front-passenger airbags",
+      "SRT performance leather-wrapped flat-bottom heated steering wheel",
+      "Red seat belts (requires Black interior)",
+      "Heated and ventilated front seats with Alcantara leather"
+    ],
+    "CHALLENGER R/T": [
+      "Advanced multistage driver and front-passenger airbags",
+      "Performance Four-Bump leather-wrapped steering wheel with vehicle controls",
+      "Heated front seats and heated steering wheel standard",
+      "6 premium Alpine speakers with 276-watt digital amplifier standard"
+    ],
+    "CHALLENGER T/R KCAP": [
+      "Power tilt/telescoping steering column",
+      "UConnect 4C with 8.4-inch display and SiriusXM Guardian",
+      "Heated front seats and heated steering wheel",
+      "ParkSense Rear Park Assist System"
+    ],
+    "CHALLENGER T/R": [
+      "Bright pedals (includes with Plus Group)",
+      "Power tilt/telescoping steering column",
+      "Steering-wheel-mounted paddle shifters with automatic transmission",
+      "UConnect 4C with 8.4-inch display and SiriusXM"
+    ],
+    "CHALLENGER GT": [
+      "Leather-wrapped steering wheel with vehicle controls",
+      "6-way power driver's seat with 4-way power lumbar adjuster",
+      "UConnect 4 with 7-inch touchscreen display standard",
+      "ParkSense Rear Park Assist System standard"
+    ],
+    "CHALLENGER TXS": [
+      "6 speakers standard",
+      "UConnect 4 with 7-inch touchscreen display",
+      "Leather-wrapped steering wheel with vehicle controls",
+      "Active head restraints and ESC with Brake Assist"
+    ]
+  }
+}

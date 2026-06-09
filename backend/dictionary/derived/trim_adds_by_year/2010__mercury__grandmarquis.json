@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|mercury|grandmarquis",
+  "year": 2010,
+  "make": "Mercury",
+  "model": "GrandMarquis",
+  "ladder_id": "brochure_web_2010__mercury__grandmarquis",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "GS",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "GS": [
+      "4.6L V8 engine with 224 horsepower",
+      "Power windows, locks, and mirrors",
+      "Air conditioning",
+      "AM/FM stereo with CD player",
+      "Cloth front bench or bucket seats",
+      "Power steering and brakes",
+      "Cruise control",
+      "Full-size spare tire"
+    ],
+    "LS": [
+      "Leather-trimmed seating surfaces",
+      "Automatic headlamps",
+      "Dual power front seats with lumbar support",
+      "Premium AM/FM stereo with six-disc CD changer",
+      "Rear window defroster",
+      "Woodgrain steering wheel and trim accents",
+      "Driver and passenger vanity mirrors with illumination",
+      "Enhanced interior lighting package"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/mercury/grandmarquis"
+}

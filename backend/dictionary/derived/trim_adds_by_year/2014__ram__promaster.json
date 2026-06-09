@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2014|ram|promaster",
+  "year": 2014,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2014__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2500/3500",
+    "1500 LWB",
+    "1500 SWB"
+  ],
+  "adds_by_trim": {
+    "2500/3500": [
+      "Heavy duty suspension",
+      "220-amp alternator",
+      "100-amp battery",
+      "Extended wiring for taillamps",
+      "Roof clearance lamps front and rear",
+      "Rear cargo lamps",
+      "Rear door storage net",
+      "Lower-side wall panels"
+    ],
+    "1500 LWB": [
+      "Medium duty suspension",
+      "260-degree-opening rear doors",
+      "Full-side wall panels",
+      "Rear heater and air conditioning prep",
+      "Wood floor in rear"
+    ],
+    "1500 SWB": [
+      "Light duty suspension",
+      "3.6L PentaStar V6 with 6-speed automatic transmission",
+      "3.0L EcoDiesel i4 with 6-speed manual/automated transmission",
+      "180-amp alternator",
+      "95-amp battery",
+      "24-gallon fuel tank",
+      "Power steering with electronic stability control",
+      "Halogen headlamps with power heated mirrors",
+      "Manually controlled air conditioning with heat",
+      "Cloth seats with power door locks and windows"
+    ]
+  }
+}

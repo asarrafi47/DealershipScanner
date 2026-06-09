@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2019|hyundai|elantra",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_web_2019__hyundai__elantra",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Elantra N",
+    "Elantra N-Line",
+    "Elantra Limited",
+    "Elantra SEL Convenience",
+    "Elantra SEL Sport",
+    "Elantra SE"
+  ],
+  "adds_by_trim": {
+    "Elantra N": [
+      "2.0-liter turbocharged engine with 276 hp and 289 lb-ft torque (286 hp with N Grin Boost)",
+      "Eight-speed dual-clutch automatic or six-speed manual transmission",
+      "Electronically controlled differential for FWD performance",
+      "Hardcore chassis and software enhancements for driving experience",
+      "0–60 mph in 5.5 seconds (manual) or 4.7 seconds (automatic)"
+    ],
+    "Elantra N-Line": [
+      "1.6-liter turbocharged engine with 201 hp and 195 lb-ft torque",
+      "Seven-speed dual-clutch automatic transmission",
+      "Larger front brakes and independent rear suspension",
+      "0–60 mph in approximately 7.0 seconds"
+    ],
+    "Elantra Limited": [
+      "10.3-inch all-digital gauge cluster display",
+      "10.3-inch infotainment touchscreen with Wi-Fi hotspot",
+      "Eight-speaker Bose premium audio system",
+      "Adaptive cruise control standard"
+    ],
+    "Elantra SEL Convenience": [
+      "10.3-inch infotainment touchscreen with Wi-Fi hotspot functionality",
+      "Adaptive cruise control",
+      "Heated front seats",
+      "Electronic parking brake"
+    ],
+    "Elantra SEL Sport": [
+      "Black trunklid lip spoiler and black side mirror caps",
+      "17-inch two-tone alloy wheels",
+      "Metal pedal covers",
+      "8.0-inch infotainment touchscreen",
+      "Leather-wrapped steering wheel and shift knob",
+      "Keyless entry with push-button start"
+    ],
+    "Elantra SE": [
+      "2.0-liter inline four-cylinder engine with 147 hp and 132 lb-ft torque",
+      "CVT automatic transmission",
+      "Front and rear automatic emergency braking",
+      "Lane keep assist and blind-spot monitoring",
+      "Side cross-traffic alert and automatic high-beams",
+      "8.0-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "4.2-inch analog gauge display",
+      "Two front USB ports",
+      "Six-speaker standard audio system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/elantra/"
+}

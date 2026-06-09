@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2023|toyota|bz4x",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "bZ4X",
+  "ladder_id": "brochure_llm_2023__toyota__bz4x",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited AWD",
+    "Limited FWD",
+    "XLE AWD",
+    "XLE FWD"
+  ],
+  "adds_by_trim": {
+    "Limited AWD": [
+      "All-wheel drive system"
+    ],
+    "Limited FWD": [
+      "Upgraded interior appointments and features compared to XLE"
+    ],
+    "XLE AWD": [
+      "All-wheel drive system"
+    ],
+    "XLE FWD": [
+      "EPA-estimated 252-mile driving range",
+      "SofTex upholstery",
+      "JBL premium audio system",
+      "Qi wireless smartphone charging",
+      "Apple CarPlay and Android Auto compatibility",
+      "SiriusXM satellite radio trial",
+      "Toyota Safety Connect trial subscription",
+      "Safe Exit Assist system"
+    ]
+  }
+}

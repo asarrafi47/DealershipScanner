@@ -1,0 +1,79 @@
+{
+  "catalog_key": "2022|landrover|evoque",
+  "year": 2022,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_llm_2022__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "P300e PHEV",
+    "P250 MHEV",
+    "P200 MHEV",
+    "P250 Petrol",
+    "P200 Petrol",
+    "P160 MHEV",
+    "D200 MHEV",
+    "D200 Diesel",
+    "D165 MHEV",
+    "D165 Diesel"
+  ],
+  "adds_by_trim": {
+    "P300e PHEV": [
+      "109 PS electric motor with 260 Nm torque",
+      "62 km / 39 miles EV range on full charge",
+      "Plug-in hybrid powertrain with dual energy sources",
+      "Advanced battery management system for efficiency"
+    ],
+    "P250 MHEV": [
+      "300 PS petrol engine with mild hybrid technology",
+      "All-wheel drive standard configuration",
+      "Twin piston sliding caliper front brakes with vented disc (18-21 inch wheels)",
+      "Maximum towing capacity up to 1,800 kg"
+    ],
+    "P200 MHEV": [
+      "200 PS petrol engine with mild hybrid system",
+      "Automatic transmission with all-wheel drive",
+      "Up to 1,800 kg maximum towing capacity"
+    ],
+    "P250 Petrol": [
+      "250 PS petrol engine with 7.6 second 0-100 acceleration",
+      "Twin piston sliding caliper front brakes with vented disc on larger wheels",
+      "Vented disc rear brakes",
+      "230 km/h maximum speed on 21-inch wheels"
+    ],
+    "P200 Petrol": [
+      "200 PS petrol engine with 8.6 second 0-100 acceleration",
+      "216 km/h maximum speed capability",
+      "Single piston rear brake calipers with solid disc"
+    ],
+    "P160 MHEV": [
+      "160 PS petrol engine with mild hybrid technology",
+      "199 km/h maximum speed",
+      "No towing capability"
+    ],
+    "D200 MHEV": [
+      "200 PS diesel engine with mild hybrid system",
+      "8.5 second 0-100 km/h acceleration time",
+      "213 km/h maximum speed",
+      "Twin piston sliding caliper front brakes on 18-20 inch wheels",
+      "Up to 2,000 kg maximum towing capacity"
+    ],
+    "D200 Diesel": [
+      "200 PS diesel engine with 8.5 second acceleration",
+      "213 km/h maximum speed",
+      "Twin piston sliding caliper front brakes with vented disc",
+      "Up to 2,000 kg maximum towing capacity"
+    ],
+    "D165 MHEV": [
+      "165 PS diesel engine with mild hybrid technology",
+      "9.8 second 0-100 km/h acceleration",
+      "199 km/h maximum speed"
+    ],
+    "D165 Diesel": [
+      "165 PS diesel engine",
+      "10.1 second 0-100 km/h acceleration",
+      "206 km/h maximum speed",
+      "Single piston sliding caliper front brakes on 17-inch wheels"
+    ]
+  }
+}

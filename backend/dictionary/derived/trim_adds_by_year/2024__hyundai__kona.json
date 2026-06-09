@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2024|hyundai|kona",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Kona",
+  "ladder_id": "2024_hyundai_kona",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "N Line",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "18-inch alloy wheels and H-Tex seating surfaces",
+      "Heated front seats and proximity key with push-button start"
+    ],
+    "N Line": [
+      "N Line sport styling with 19-inch wheels and black roof option",
+      "Sport-tuned appearance and N Line badging"
+    ],
+    "Limited": [
+      "19-inch alloy wheels and Limited exclusive interior accents",
+      "Highest Kona gas trim with premium convenience content"
+    ],
+    "SE": [
+      "6-way adjustable driver seat with height adjustment",
+      "2.0L Atkinson Cycle engine with 147 hp and 6-speed SHIFTRONIC transmission",
+      "7-inch touchscreen AM/FM/MP3 display audio system",
+      "Rear View Monitor with Parking Guidance",
+      "Forward Collision-Avoidance Assist",
+      "Lane Keeping Assist",
+      "Driver Attention Warning",
+      "Apple CarPlay and Android Auto",
+      "16-inch alloy wheels",
+      "60/40 split fold-flat rear seats"
+    ]
+  }
+}

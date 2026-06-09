@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2015|porsche|panamera",
+  "year": 2015,
+  "make": "Porsche",
+  "model": "Panamera",
+  "ladder_id": "brochure_web_2015__porsche__panamera",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Panamera Turbo S E-Hybrid",
+    "Panamera Turbo E-Hybrid",
+    "Panamera GTS",
+    "Panamera 4S E-Hybrid",
+    "Panamera 4 E-Hybrid",
+    "Panamera 4",
+    "Panamera"
+  ],
+  "adds_by_trim": {
+    "Panamera": [
+      "Automatic emergency braking, parking sensors, driver attention monitor",
+      "LED matrix headlights with auto-dimming",
+      "Auto-dimming interior and exterior mirrors",
+      "10-speaker audio system",
+      "12.6-inch gauge cluster, 12.3-inch infotainment touchscreen",
+      "Apple CarPlay and Android Auto",
+      "Wireless phone charger",
+      "Heated front seats and steering wheel",
+      "Hands-free power tailgate, soft-close doors",
+      "2.9-liter twin-turbo V-6, 348 hp/368 lb-ft, RWD, 4.8 sec 0–60"
+    ],
+    "Panamera 4": [
+      "AWD replaces RWD"
+    ],
+    "Panamera 4 E-Hybrid": [
+      "Plug-in hybrid powertrain: 2.9L twin-turbo V-6 + electric, 463 hp/479 lb-ft",
+      "56 miles all-electric range, 87 mph electric-only capability",
+      "3.9 second 0–60 acceleration"
+    ],
+    "Panamera 4S E-Hybrid": [
+      "Enhanced plug-in hybrid: 2.9L twin-turbo V-6, 536 hp/553 lb-ft",
+      "3.5 second 0–60 acceleration"
+    ],
+    "Panamera GTS": [
+      "4.0-liter twin-turbo V-8 engine, 493 hp/486 lb-ft",
+      "3.6 second 0–60 acceleration",
+      "14-speaker Bose audio system"
+    ],
+    "Panamera Turbo E-Hybrid": [
+      "4.0-liter twin-turbo V-8 plug-in hybrid, 670 hp/685 lb-ft",
+      "3.0 second 0–60 acceleration"
+    ],
+    "Panamera Turbo S E-Hybrid": [
+      "4.0-liter twin-turbo V-8 plug-in hybrid, 771 hp/737 lb-ft",
+      "2.8 second 0–60 acceleration"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/panamera/"
+}

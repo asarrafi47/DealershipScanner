@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|subaru|brz",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "BRZ",
+  "ladder_id": "brochure_llm_2016__subaru__brz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BRZ Series.HyperBlue",
+    "BRZ Limited",
+    "BRZ Premium"
+  ],
+  "adds_by_trim": {
+    "BRZ Series.HyperBlue": [
+      "Limited availability (500 units)",
+      "Exclusive Hyper Blue paint",
+      "Black painted side mirrors",
+      "Black exterior BRZ and SUBARU badging",
+      "Black painted fender trim",
+      "17x7.0-inch multi-spoke aluminum wheels with gloss black finish",
+      "Leather-wrapped steering wheel with Hyper Blue stitching",
+      "Door trim with Hyper Blue stitching",
+      "Center console and lower door knee pads with Hyper Blue stitching",
+      "Shift boot and parking brake with Hyper Blue stitching"
+    ],
+    "BRZ Limited": [
+      "Fog lights",
+      "Trunk spoiler",
+      "Alcantara and leather-trimmed upholstery",
+      "Center console and lower door knee pads with red stitching",
+      "Heated front seats and side mirrors",
+      "Dual-zone automatic digital climate control",
+      "Keyless access with push-button start",
+      "Antitheft security system",
+      "Frameless rearview mirror",
+      "Aerodynamic underbody covers"
+    ],
+    "BRZ Premium": [
+      "200-hp direct-injected 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Close-ratio 6-speed manual transmission",
+      "Sport-tuned suspension",
+      "Multi-spoke 17-inch aluminum-alloy wheels",
+      "HID headlights",
+      "SUBARU STARLINK 6.2-inch multimedia system with Pandora, iHeartRadio, STITCHER and Aha smartphone integration",
+      "8 speakers, AM/FM/CD player with HD Radio and iTunes tagging",
+      "USB port and 3.5mm auxiliary jack",
+      "Bluetooth audio streaming and hands-free phone connectivity",
+      "SiriusXM satellite radio available"
+    ]
+  }
+}

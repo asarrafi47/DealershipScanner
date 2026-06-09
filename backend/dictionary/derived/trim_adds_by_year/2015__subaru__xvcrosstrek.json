@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2015|subaru|xvcrosstrek",
+  "year": 2015,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2015__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Touring",
+    "2.0i Limited",
+    "Hybrid",
+    "2.0i Premium",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "Hybrid Touring": [
+      "SUBARU STARLINK 7.0\" Multimedia Plus Navigation System with voice-activated controls and SiriusXM Satellite Radio",
+      "Power tilt/sliding-glass moonroof",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped 3-spoke steering wheel with silver stitching",
+      "Automatic climate control system",
+      "Auto-on/off headlights",
+      "Welcome lighting"
+    ],
+    "2.0i Limited": [
+      "Lineartronic CVT with manual-mode paddle shifters",
+      "Leather-trimmed upholstery",
+      "SUBARU STARLINK 7.0\" Multimedia Navigation System with voice-activated 7-inch GPS",
+      "Body-color side mirrors with integrated turn signals",
+      "Leather-wrapped 3-spoke steering wheel with silver stitching",
+      "Automatic climate control system",
+      "Auto-on/off headlights",
+      "Welcome lighting"
+    ],
+    "Hybrid": [
+      "Subaru Hybrid System with EV mode, regenerative braking, and auto-start/stop technology",
+      "160 hp total system power and 163 lb-ft torque",
+      "Lineartronic CVT with manual-mode paddle shifters",
+      "All-Weather Package with heated mirrors and dual-mode heated front seats",
+      "6-way manually adjustable driver's seat and 4-way front-passenger seat",
+      "SUBARU STARLINK 6.2\" Multimedia system with 6 speakers",
+      "Sliding center console lid",
+      "Cargo-area cover and tray",
+      "Electronic cruise control",
+      "Rear-Vision Camera and Keyless Access with Push-button Start"
+    ],
+    "2.0i Premium": [
+      "Optional Lineartronic CVT with manual-mode paddle shifters",
+      "Fog lights",
+      "Body-color side mirrors with integrated turn signals",
+      "Body-color door handles with chrome accents",
+      "17-inch aluminum-alloy wheels",
+      "Cloth upholstery",
+      "SUBARU STARLINK 6.2\" Multimedia system with 6 speakers and HD Radio",
+      "6-way manually adjustable driver's seat and 4-way front-passenger seat",
+      "All-Weather Package, Rear-Vision Camera, and Keyless Access with Push-button Start"
+    ],
+    "2.0i": [
+      "148-hp 2.0-liter SUBARU BOXER 4-cylinder engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission",
+      "Fog lights",
+      "Body-color side mirrors",
+      "17-inch aluminum-alloy wheels with roof rails",
+      "Cloth upholstery",
+      "SUBARU STARLINK 6.2\" Multimedia system with 4 speakers and HD Radio",
+      "6-way manually adjustable driver's seat and 4-way front-passenger seat",
+      "Auto-on/off headlights, electronic cruise control, and Rear-Vision Camera"
+    ]
+  }
+}

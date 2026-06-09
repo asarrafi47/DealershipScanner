@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2012|infiniti|g",
+  "year": 2012,
+  "make": "Infiniti",
+  "model": "G",
+  "ladder_id": "brochure_llm_2012__infiniti__g",
+  "source": "brochure_llm",
+  "trims_available": [
+    "G37 Convertible Sport 6MT",
+    "G37 Convertible Sport"
+  ],
+  "adds_by_trim": {
+    "G37 Convertible Sport": [
+      "7-speed automatic transmission with Adaptive Shift Control and Drive Sport mode",
+      "4-piston opposed front brake calipers with 14.0-inch ventilated discs",
+      "19-inch split V-spoke aluminum wheels with W-rated summer performance tires"
+    ],
+    "G37 Convertible Sport 6MT": [
+      "3.7-liter 24-valve V6 engine with 325 hp and 267 lb-ft torque",
+      "6-speed manual transmission with short-throw shifter and Downshift Rev Matching",
+      "Rear-wheel drive with speed-sensitive variable-assist power steering",
+      "Independent double-wishbone front and multi-link rear suspension",
+      "4-wheel ABS with ventilated disc brakes front and rear",
+      "18-inch aluminum wheels with all-season performance tires"
+    ]
+  }
+}

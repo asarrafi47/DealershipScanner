@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2016|jeep|cherokee",
+  "year": 2016,
+  "make": "Jeep",
+  "model": "Cherokee",
+  "ladder_id": "brochure_llm_2016__jeep__cherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Latitude": [
+      "Alpine Premium Audio System with 9 speakers, subwoofer and 506-watt amplifier",
+      "SiriusXM Satellite radio with 1-year trial subscription",
+      "Leather-wrapped steering wheel with speed control",
+      "Keyless entry with panic button",
+      "Fog lamps with automatic bifunctional halogen projector headlamps",
+      "Parkview rear back-up camera with dynamic grid lines",
+      "UConnect 5.0 color touchscreen radio with integrated voice command and Bluetooth",
+      "Power 8-way driver seat with power 4-way lumbar adjuster",
+      "Power windows with driver one-touch down",
+      "Bright roof rails and body-color power foldaway mirrors"
+    ],
+    "Sport": [
+      "18-inch Gloss Black 5-spoke aluminum wheels",
+      "Gloss Black roof rails, fascia appliqué, badging and grille surrounds",
+      "Sport Appearance Group with black daylight openings",
+      "Trailer Sway Control (TSC)",
+      "LED daytime running headlamps with black headlamp bezels",
+      "Black headlamp-off time delay feature",
+      "17-inch painted aluminum wheel upgrade option"
+    ]
+  }
+}

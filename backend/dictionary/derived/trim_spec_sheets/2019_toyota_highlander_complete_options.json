@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2019_toyota_highlander_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Highlander",
+    "Highlander"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Front-Wheel Drive"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Front-Wheel Drive"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Front-Wheel Drive"
+      }
+    ]
+  }
+}

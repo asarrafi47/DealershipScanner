@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2026|nissan|leaf",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Leaf",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SV",
+    "S",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

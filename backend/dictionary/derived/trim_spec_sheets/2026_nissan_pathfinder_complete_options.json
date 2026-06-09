@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_nissan_pathfinder_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Pathfinder",
+    "Pathfinder"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S9); Four-Wheel Drive"
+      }
+    ],
+    "Rock Creek": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S9); Four-Wheel Drive"
+      }
+    ]
+  }
+}

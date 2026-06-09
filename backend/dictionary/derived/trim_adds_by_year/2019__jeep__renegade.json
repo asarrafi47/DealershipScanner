@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2019|jeep|renegade",
+  "year": 2019,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_2019__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Uconnect Phone with Bluetooth Hands-Free Profile",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM satellite radio with trial subscription",
+      "Adds basic safety alert systems"
+    ],
+    "Sport": [
+      "Adds enhanced connectivity features"
+    ],
+    "Latitude": [
+      "Adds SiriusXM Traffic and Travel Link services"
+    ],
+    "Trailhawk": [
+      "Adds Selec-Terrain system",
+      "Adds Trail Rated capability",
+      "Adds Jeep Active Drive Low"
+    ],
+    "Limited": [
+      "Adds Uconnect 8.4 NAV or Uconnect 4C NAV infotainment system",
+      "Adds SiriusXM Guardian with 12-month trial subscription",
+      "Adds Vehicle Finder feature",
+      "Adds Send & Go remote capability",
+      "Adds Wi-Fi Hotspot with trial subscription"
+    ]
+  }
+}

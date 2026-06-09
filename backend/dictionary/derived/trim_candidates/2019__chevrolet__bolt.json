@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2019|chevrolet|bolt",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|buick|enclave",
+  "year": 2015,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2015__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM GROUP",
+    "LEATHER GROUP",
+    "BASE"
+  ],
+  "adds_by_trim": {
+    "PREMIUM GROUP": [
+      "Heated steering wheel",
+      "Leather-appointed seating",
+      "8-way power heated front seats with driver memory",
+      "Side blind zone alert",
+      "Rear cross traffic alert",
+      "19-inch aluminum wheels",
+      "Audio system with rear-seat entertainment and navigation",
+      "Bose sound system with 5.1 surround sound and rear overhead 8-inch color screen",
+      "Power-folding heated outside mirrors with memory",
+      "Forward collision alert and lane departure warning available"
+    ],
+    "LEATHER GROUP": [
+      "Heated steering wheel",
+      "Leather-appointed seating",
+      "8-way power heated front seats with driver memory",
+      "Side blind zone alert",
+      "Rear cross traffic alert",
+      "19-inch chrome-clad aluminum wheels",
+      "Audio system with navigation",
+      "Bose sound system",
+      "Power-tilt and telescoping steering wheel",
+      "Articulating headlamps"
+    ],
+    "BASE": [
+      "3.6L V-6 VVT with direct injection, 288 horsepower",
+      "6-speed automatic transmission with front-wheel drive",
+      "7-passenger seating with captain's chairs and flat-folding third row",
+      "Buick IntelliLink infotainment with 6.5-inch touchscreen and CD/MP3/USB",
+      "High-intensity discharge xenon projector-beam headlamps with auto on/off",
+      "Frontal, side-impact, and head curtain airbags for all rows",
+      "Tri-zone automatic climate control",
+      "8-way power driver seat with recline and lumbar",
+      "Heated power-adjustable body-color outside mirrors",
+      "18-inch painted aluminum wheels with all-season tires"
+    ]
+  }
+}

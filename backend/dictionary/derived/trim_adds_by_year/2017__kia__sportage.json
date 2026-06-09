@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|kia|sportage",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_llm_2017__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Turbo",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Turbo": [
+      "240-horsepower turbocharged 2.0L GDI engine (FWD/AWD)",
+      "6-speed Sportmatic transmission with steering wheel paddle shifters",
+      "Larger front brakes and sport-tuned suspension",
+      "D-shaped leather-wrapped steering wheel",
+      "Drive Mode Select system (Normal, Eco, Sport modes)",
+      "4.2-inch high-definition color LCD Supervision meter cluster"
+    ],
+    "EX": [
+      "Available voice-command navigation with 8-inch color touch screen and SiriusXM Traffic",
+      "Available SiriusXM satellite radio with 150 channels and 3-month All Access trial",
+      "Available Harman Kardon premium audio system with subwoofer and Clari-Fi technology",
+      "Available heated steering wheel",
+      "Available Bluetooth wireless technology steering-wheel-mounted controls"
+    ],
+    "LX": [
+      "181-horsepower 2.4L Gasoline Direct Injection engine",
+      "Continuously Variable Valve Timing (CVVT) technology",
+      "Available DynamaxTM fully active all-wheel drive system",
+      "Driver-centric interior with high-mounted displays and tilted console",
+      "Black cloth fabric seating with Essentials treatment"
+    ]
+  }
+}

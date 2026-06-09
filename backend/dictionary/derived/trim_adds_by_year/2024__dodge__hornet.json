@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2024|dodge|hornet",
+  "year": 2024,
+  "make": "Dodge",
+  "model": "Hornet",
+  "ladder_id": "brochure_llm_2024__dodge__hornet",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T PLUS",
+    "R/T",
+    "GT PLUS",
+    "GT"
+  ],
+  "adds_by_trim": {
+    "R/T PLUS": [
+      "Leather-trimmed seats with perforated Alcantara sport upgrade option",
+      "12-way power front passenger seat in addition to driver seat",
+      "Ventilated driver and front-passenger seats",
+      "Power sunroof",
+      "Harman Kardon premium sound system with 14 speakers and subwoofer",
+      "Hands-free power liftgate",
+      "Wireless charging pad"
+    ],
+    "R/T": [
+      "1.3L turbocharged I4 engine with 288 HP and 383 lb-ft torque on eAWD",
+      "Class-exclusive PowerShot",
+      "18-inch Graphite Gray wheels",
+      "Brembo front fixed brake calipers",
+      "Column-mounted aluminum paddle shifters",
+      "12-way power driver seat with memory",
+      "Heated driver and front-passenger seats",
+      "Heated steering wheel",
+      "Auto-dimming rearview mirror",
+      "HomeLink universal garage door opener"
+    ],
+    "GT PLUS": [
+      "Leather-trimmed seats with embroidered Dodge logo",
+      "12-way power driver and front-passenger seats",
+      "Heated and ventilated driver and front-passenger seats",
+      "Driver seat with memory",
+      "Heated steering wheel",
+      "Power sunroof",
+      "Harman Kardon premium sound system with 14 speakers and subwoofer",
+      "Hands-free power liftgate",
+      "Wireless charging pad",
+      "Auto-dimming rearview mirror"
+    ],
+    "GT": [
+      "Base features include standard interior seating",
+      "Available heated front seats option",
+      "Available heated steering wheel option",
+      "Standard auto-dimming rearview mirror",
+      "HomeLink universal garage door opener capability"
+    ]
+  }
+}

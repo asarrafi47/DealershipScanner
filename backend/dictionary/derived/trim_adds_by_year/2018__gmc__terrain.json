@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2018|gmc|terrain",
+  "year": 2018,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_llm_2018__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "2.0L turbocharged engine with 252 hp and 260 lb-ft torque standard",
+      "LED headlamps with LED signature lighting",
+      "Signature Denali grille with chrome surround and accents",
+      "Denali-specific bright roof rails",
+      "Denali-specific body-color lower trim with chrome insert",
+      "8-inch infotainment system with navigation and SiriusXM included",
+      "Heated power-adjustable mirrors with driver auto-dimming and LED turn signals",
+      "Memory package with 2 settings for driver seat and mirrors",
+      "Ventilated driver and front-passenger seats with heated rear outboard seating",
+      "Wireless charging for devices"
+    ],
+    "SLT": [
+      "8-inch GMC infotainment system with navigation, SiriusXM and Bose 7-speaker premium audio",
+      "High-Intensity Discharge headlamps with LED signature lighting",
+      "Chrome surround grille",
+      "Front halogen projector fog lamps",
+      "Heated power-adjustable mirrors with LED turn-signal indicators and driver auto-dimming",
+      "Power programmable liftgate with hands-free capability",
+      "Memory package with 2 settings for driver seat and mirrors",
+      "Driver Alert Package I: Lane Change Alert, Rear Cross Traffic Alert, Rear Park Assist"
+    ],
+    "SLE": [
+      "8-inch infotainment system with navigation and SiriusXM (3 months standard)",
+      "Driver Convenience Package: remote start, dual-zone climate, heated front-passenger seats",
+      "8-way power driver seat with power lumbar support",
+      "Roof rails (black painted)",
+      "Power programmable liftgate",
+      "High-Intensity Discharge headlamps with LED signature lighting"
+    ],
+    "LS": [
+      "1.5L turbocharged VVT I-4 engine with Stop/Start technology and 170 hp",
+      "7-inch GMC infotainment system with Bluetooth and Apple CarPlay/Android Auto",
+      "AM/FM stereo with SiriusXM 3-month trial",
+      "4G Wi-Fi hotspot capability with 3GB trial",
+      "OnStar 5-year Basic Plan",
+      "Deep-tinted glass (except windshield and side windows)",
+      "Acoustic laminated windshield",
+      "Chrome surround grille",
+      "Heated power-adjustable manual-folding mirrors",
+      "Front and rear intermittent wipers with washers"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2010|volkswagen|golf",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "brochure_web_2010__volkswagen__golf",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Golf 1.4T TSI Auto",
+    "Golf 1.4T TSI Manual"
+  ],
+  "adds_by_trim": {
+    "Golf 1.4T TSI Manual": [
+      "1.4-liter turbocharged four-cylinder engine with 147 hp and 184 lb-ft torque",
+      "Six-speed manual transmission",
+      "28 city / 36 highway mpg EPA rating",
+      "6.5-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Forward collision warning with automatic emergency braking",
+      "Rear cross-traffic alert and blind-spot monitoring",
+      "Rain-sensing windshield wipers",
+      "Six-speaker audio system with one USB Type-C port",
+      "Wi-Fi hotspot capability",
+      "Volkswagen Car-Net app for smartphone vehicle control"
+    ],
+    "Golf 1.4T TSI Auto": [
+      "Eight-speed automatic transmission instead of six-speed manual",
+      "29/35 mpg city/highway EPA rating versus 28/36 with manual"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/golf/"
+}

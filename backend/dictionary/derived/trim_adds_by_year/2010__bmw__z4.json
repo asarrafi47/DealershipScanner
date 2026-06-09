@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2010|bmw|z4",
+  "year": 2010,
+  "make": "BMW",
+  "model": "Z4",
+  "ladder_id": "2008_bmw_z4_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Na": 1
+    }
+  }
+}

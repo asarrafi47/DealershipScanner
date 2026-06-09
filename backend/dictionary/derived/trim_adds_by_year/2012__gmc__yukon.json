@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2012|gmc|yukon",
+  "year": 2012,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "2010_gmc_yukon_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "VoRteC 6.0l V-8"
+    ],
+    "Limited": [
+      "VoRteC 6.2l V-8 VVt"
+    ],
+    "SLE": [
+      "VoRteC 6.0l V-8 VVt"
+    ],
+    "SLT": [
+      "VoRteC 5.3l V-8 VVt"
+    ],
+    "Denali": [
+      "6.2L V8 VVT engine with Active Fuel Management and E85 capable",
+      "Heated and cooled perforated leather-appointed seats on first and second rows",
+      "12-way power front seat adjusters with power lumbar control",
+      "20-inch polished aluminum wheels available",
+      "SLT Chrome Package with chrome door handles, mirror caps, and grille"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 5,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "SLT": 1,
+      "SLE": 1,
+      "Limited": 1,
+      "Premium": 1
+    }
+  }
+}

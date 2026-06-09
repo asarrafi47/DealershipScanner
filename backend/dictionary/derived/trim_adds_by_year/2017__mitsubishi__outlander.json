@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2017|mitsubishi|outlander",
+  "year": 2017,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2017__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT S-AWC",
+    "SEL 2WD/S-AWC",
+    "SE 2WD/S-AWC",
+    "ES 2WD/AWC"
+  ],
+  "adds_by_trim": {
+    "GT S-AWC": [
+      "Blind Spot Warning with Lane Change Assist and Rear Cross Traffic Alert standard",
+      "Multi-View Camera system with front, side, and rear views",
+      "Adaptive Cruise Control system",
+      "Forward Collision Mitigation with pedestrian detection",
+      "Lane Departure Warning system",
+      "Automatic high beam headlights",
+      "LED headlights",
+      "Heated steering wheel",
+      "710-watt Rockford Fosgate premium sound system with 9 speakers and subwoofer",
+      "Power remote liftgate"
+    ],
+    "SEL 2WD/S-AWC": [
+      "Adaptive Cruise Control available",
+      "Forward Collision Mitigation available",
+      "Lane Departure Warning available",
+      "Blind Spot Warning with Lane Change Assist and Rear Cross Traffic Alert available",
+      "Electronic parking brake standard on SE S-AWC",
+      "Available SEL Premium Package with Rockford Fosgate sound and sunroof",
+      "Available SEL Touring Package with Multi-View Camera and Adaptive Cruise Control"
+    ],
+    "SE 2WD/S-AWC": [
+      "Available Sunroof Package with power glass sunroof and tilt-and-slide functionality",
+      "Available LED Fog Lights",
+      "Available Accessory packages including cargo mat and tailgate illumination"
+    ],
+    "ES 2WD/AWC": [
+      "ECO Mode switch",
+      "Cruise control",
+      "Power door locks and side-view mirrors",
+      "Power windows with driver's side auto up-down",
+      "Three 12-volt accessory outlets",
+      "Hill Start Assist",
+      "Anti-lock Braking System with Electronic Brakeforce Distribution and brake assist",
+      "Active Stability Control and Traction Control Logic",
+      "Tire Pressure Monitoring System",
+      "Advanced dual-stage SRS front airbags and multiple safety features"
+    ]
+  }
+}

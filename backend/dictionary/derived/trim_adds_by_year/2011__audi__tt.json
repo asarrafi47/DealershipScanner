@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|audi|tt",
+  "year": 2011,
+  "make": "Audi",
+  "model": "TT",
+  "ladder_id": "brochure_llm_2011__audi__tt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TTS",
+    "TT"
+  ],
+  "adds_by_trim": {
+    "TTS": [
+      "Performance exhaust system with quad exhaust pipes (two left and two right)",
+      "Silk Nappa leather sport seats replacing Leather/Alcantara sport seats",
+      "TTS doorsill inserts, gear knob and steering wheel",
+      "Driver information system with onboard computer including digital lap timer",
+      "Singleframe grille with double-blade cross braces and chrome detailing",
+      "S front bumper with spoiler and S rear bumper with Platinum Gray diffuser",
+      "S rocker panel and silver blade diffuser accents",
+      "Aluminum Optic mirrors with LED turn signal indicators"
+    ],
+    "TT": [
+      "Auto-dimming interior mirror with compass",
+      "Ten-way power driver and front passenger seats with four-way lumbar adjustment",
+      "Leather/Alcantara sport seats",
+      "Dual exhaust pipes (one left and one right)",
+      "Leather-wrapped three-spoke magnesium flat-bottom multifunction sport steering wheel with shift paddles",
+      "Audi xenon plus headlights with LED daytime running lights",
+      "Driver information system with onboard computer",
+      "Automatic air-conditioning and rear window defrost",
+      "Heated windshield washer nozzles and power adjustable heated side mirrors",
+      "LED third brake light and fog lights"
+    ]
+  }
+}

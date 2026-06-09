@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Kia,Soul,Soul,2.0L I4,2.0L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,28,33,30,,,,,
+2021,Kia,Soul,Eco dynamics,2.0L I4,2.0L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,29,35,31,,,,,
+2021,Kia,Soul,Soul,2.0L I4,2.0L I4,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,25,31,27,,,,,
+2021,Kia,Soul,Soul,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Automatic (AM-S7),Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,27,32,29,,,,,

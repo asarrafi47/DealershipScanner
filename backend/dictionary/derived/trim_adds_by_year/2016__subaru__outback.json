@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2016|subaru|outback",
+  "year": 2016,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2016__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "2.5i": [
+      "175-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "X-MODE with Hill Descent Control",
+      "SUBARU STARLINK 6.2-inch Multimedia system with Pandora, iHeartRadio, STITCHER",
+      "Cloth upholstery",
+      "6-way manual driver seat, 4-way manual passenger seat",
+      "Lineartronic CVT with 6-speed manual-mode paddle shifters",
+      "17-inch steel wheels with covers",
+      "Windshield wiper-linked headlights"
+    ],
+    "2.5i Premium": [
+      "SUBARU STARLINK 7.0-inch Multimedia Plus system with voice-activated controls",
+      "SiriusXM Satellite Radio and SiriusXM Travel Link",
+      "17-inch aluminum-alloy wheels",
+      "Steering Responsive Fog Lights with optional EyeSight",
+      "10-way power adjustable driver seat",
+      "All-Weather Package with heated mirrors and 3-mode heated front seats",
+      "Dual-zone automatic climate control",
+      "Leather-wrapped steering wheel and shifter",
+      "Power windows with auto-up/down",
+      "STARLINK Safety Plus with Automatic Collision Notification and SOS Emergency Assistance"
+    ],
+    "2.5i Limited": [
+      "Premium audio system with 12 Harman Kardon speakers and 576-watt amplifier",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "18-inch machine finish 2-tone aluminum-alloy wheels",
+      "Power rear gate with height memory",
+      "All-Weather Package with dual mode heated rear seats",
+      "Leather-trimmed upholstery",
+      "10-way power driver seat with 2-position memory and 4-way power passenger seat",
+      "Woodgrain-patterned matte finish accent trim",
+      "Side mirrors with integrated turn signals"
+    ],
+    "3.6R Limited": [
+      "256-hp 3.6-liter 6-cylinder SUBARU BOXER engine with Dual Active Valve Control",
+      "Lineartronic HCVT (High-Torque CVT) with 6-speed manual-mode paddle shifters",
+      "HID low-beam headlights",
+      "Dual exhaust outlets"
+    ]
+  }
+}

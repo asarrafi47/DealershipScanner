@@ -1,3 +1,1 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,exteriorColors,Packages,packageDetails,Options,optionDetails
-2023,Hyundai,Santa Cruz,"Wheelbase 3,005 mm (118.3 in)","Layout Front-engine, front-wheel-drive",Transmission 8-speed A8F27 automatic,,Santa Cruz Preferred (facelift),A turbocharged 2.5-liter engine that produces 281 hp (285 PS; 210 kW) and 311 lb,A turbocharged 2.5-liter engine that produces 281 hp (285 PS; 210 kW) and 311 lb⋅ft (422 N⋅m; 43.0 kg⋅m) of torque is available as an option (standard in Canada).,,
-,,,Headlights (varies by trim/option) Good Poor,"Front-engine, all-wheel-drive (HTRAC)",speed D8LF1 dual-clutch automatic,,,,,,
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails

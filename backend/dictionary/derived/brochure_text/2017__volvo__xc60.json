@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2017|volvo|xc60",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "XC60",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2017_Volvo_XC60_Brochure.pdf",
+  "page_count": 8,
+  "all_pages": false,
+  "trim_hint_pages": [
+    5,
+    8
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 5,
+      "trim_hint": true,
+      "text": "FEATURES & OPTIONS | 5\nXC60 individual OPTIONS XC60 OPTIONAL PACKAGES\nINDIVIDUAL OPTIONS T5 T6 R T \u00ad 6 D A e W sig D n CLIMATE PACKAGE\nHeated front seats \ue070/P \ue070/P \ue070/P\n\u2022 Heated front seats \u2022 Heated windshield\nDual outboard two\u00adstage child booster seats with \ue070 \ue070 \ue070 \u2022 Heated rear seats \u2022 Heated windshield washer nozzles\nadaptive seat belts and power child locks (rear doors) (Not available with child booster seats) \u2022 Interior Air Quality System (IAQS)\nDual Screen Rear Seat Entertainment (RSE) \ue070 \ue070 \ue070 \u2022 Heated steering wheel\nMetallic paint \ue070 \ue070 \ue070\n20\" Avior alloy wheels (Inscription) \ue070 \ue070 N/A\n20\" Altais alloy wheels (Dynamic) \ue070 \ue070 N/A\nADVANCED PACKAGE\nElectronically Controlled AWD \ue070 P P (Inscription and Dynamic Only, Standard on R\u00adDesign)\nP = Standard \ue070 = Option T = Trim Level P = Package N/A = Not available \u2022 Adaptive Cruise Control with Queue \u2022 Distance Alert\nAssist \u2022 Driver Alert Control\n\u2022 Collision Warning with Full Auto \u2022 Lane Departure Warning\nBrake\n\u2022 Road Sign Information\n\u2022 Pedestrian and Cyclist Detection\nwith Full Auto Brake \u2022 Harman Kardon\u00ae Premium Sound\nThe Bluetooth word mark and logos are owned by the Bluetooth SIG, Inc. and any use of such\nmarks by Volvo Car Corporation is under license. Other trademarks and trade names are those of\ntheir respective owners.\nBLIS PACKAGE\n(R\u00adDesign only, Standard on Inscription and Dynamic)\n\u2022 Blind Spot Information System (BLIS) \u2022 Lane change merge aid\n\u2022 Front and rear park assist\nPREFERRED OPTION PACKAGE\n(Inscription and Dynamic only, Standard on R\u00adDesign)\n\u2022 Adaptive TFT Digital Display (T5) \u2022 Power Retractable Exterior Mirrors\n\u2022 Power Operated Tailgate (T5) (Dynamic only)\n\u2022 Keyless Drive (T5) \u2022 Power Folding Rear Headrests\n\u2022 Front Park Assist \u2022 Homelink\n\u2022 Active Dual Xenon Headlights (T6) \u2022 12V Rear Cargo Outlet",
+      "table_lines": [
+        "\ue070/P\n\ue070\n\ue070\n\ue070\n\ue070\n\ue070\n\ue070 | \ue070/P\n\ue070\n\ue070\n\ue070\n\ue070\n\ue070\nP"
+      ]
+    },
+    {
+      "page": 8,
+      "trim_hint": true,
+      "text": "MODEL YEAR 2017 | VOLVOCARS.US\nSpecifications, features, and equipment shown in this catalog are based upon the latest information available at the time of publication. Volvo Car USA, LLC reserves the right to make changes at\nany time, without notice, to colors, specifications, accessories, materials, and models. For additional information, please contact your authorized Volvo Cars retailer. \u00a9 2016 Volvo Car USA, LLC.\nPrinted in USA. MY17",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 5 ---\nFEATURES & OPTIONS | 5\nXC60 individual OPTIONS XC60 OPTIONAL PACKAGES\nINDIVIDUAL OPTIONS T5 T6 R T \u00ad 6 D A e W sig D n CLIMATE PACKAGE\nHeated front seats \ue070/P \ue070/P \ue070/P\n\u2022 Heated front seats \u2022 Heated windshield\nDual outboard two\u00adstage child booster seats with \ue070 \ue070 \ue070 \u2022 Heated rear seats \u2022 Heated windshield washer nozzles\nadaptive seat belts and power child locks (rear doors) (Not available with child booster seats) \u2022 Interior Air Quality System (IAQS)\nDual Screen Rear Seat Entertainment (RSE) \ue070 \ue070 \ue070 \u2022 Heated steering wheel\nMetallic paint \ue070 \ue070 \ue070\n20\" Avior alloy wheels (Inscription) \ue070 \ue070 N/A\n20\" Altais alloy wheels (Dynamic) \ue070 \ue070 N/A\nADVANCED PACKAGE\nElectronically Controlled AWD \ue070 P P (Inscription and Dynamic Only, Standard on R\u00adDesign)\nP = Standard \ue070 = Option T = Trim Level P = Package N/A = Not available \u2022 Adaptive Cruise Control with Queue \u2022 Distance Alert\nAssist \u2022 Driver Alert Control\n\u2022 Collision Warning with Full Auto \u2022 Lane Departure Warning\nBrake\n\u2022 Road Sign Information\n\u2022 Pedestrian and Cyclist Detection\nwith Full Auto Brake \u2022 Harman Kardon\u00ae Premium Sound\nThe Bluetooth word mark and logos are owned by the Bluetooth SIG, Inc. and any use of such\nmarks by Volvo Car Corporation is under license. Other trademarks and trade names are those of\ntheir respective owners.\nBLIS PACKAGE\n(R\u00adDesign only, Standard on Inscription and Dynamic)\n\u2022 Blind Spot Information System (BLIS) \u2022 Lane change merge aid\n\u2022 Front and rear park assist\nPREFERRED OPTION PACKAGE\n(Inscription and Dynamic only, Standard on R\u00adDesign)\n\u2022 Adaptive TFT Digital Display (T5) \u2022 Power Retractable Exterior Mirrors\n\u2022 Power Operated Tailgate (T5) (Dynamic only)\n\u2022 Keyless Drive (T5) \u2022 Power Folding Rear Headrests\n\u2022 Front Park Assist \u2022 Homelink\n\u2022 Active Dual Xenon Headlights (T6) \u2022 12V Rear Cargo Outlet\n\n\ue070/P\n\ue070\n\ue070\n\ue070\n\ue070\n\ue070\n\ue070 | \ue070/P\n\ue070\n\ue070\n\ue070\n\ue070\n\ue070\nP\n\n--- page 8 ---\nMODEL YEAR 2017 | VOLVOCARS.US\nSpecifications, features, and equipment shown in this catalog are based upon the latest information available at the time of publication. Volvo Car USA, LLC reserves the right to make changes at\nany time, without notice, to colors, specifications, accessories, materials, and models. For additional information, please contact your authorized Volvo Cars retailer. \u00a9 2016 Volvo Car USA, LLC.\nPrinted in USA. MY17"
+}

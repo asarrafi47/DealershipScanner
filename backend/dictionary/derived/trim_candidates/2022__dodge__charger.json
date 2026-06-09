@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2022|dodge|charger",
+  "year": 2022,
+  "make": "Dodge",
+  "model": "Charger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat Redeye Widebody",
+    "SRT Hellcat Redeye",
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack Widebody",
+    "Scat Pack",
+    "Daytona",
+    "R/T",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

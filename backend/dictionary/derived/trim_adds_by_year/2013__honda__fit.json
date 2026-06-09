@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2013|honda|fit",
+  "year": 2013,
+  "make": "Honda",
+  "model": "Fit",
+  "ladder_id": "brochure_llm_2013__honda__fit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FIT SPORT",
+    "FIT"
+  ],
+  "adds_by_trim": {
+    "FIT SPORT": [
+      "16-inch alloy wheels with 185/55 R16 all-season tires",
+      "Body-colored side underbody spoilers and rear roofline spoiler",
+      "Chrome exhaust finisher",
+      "Fog lights",
+      "6-speaker audio system",
+      "5-speed automatic transmission with dual-mode paddle shifters available",
+      "EPA rating 27/33/30 mpg with automatic transmission"
+    ],
+    "FIT": [
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Anti-lock braking system with electronic brake distribution and brake assist",
+      "Dual-stage, multiple-threshold front airbags with side curtain airbags",
+      "Driver and front passenger active head restraints",
+      "Security system with remote entry",
+      "Power windows with auto-up/down driver window",
+      "Power door locks and cruise control",
+      "Tilt and telescopic steering column",
+      "Maintenance minder system",
+      "15-inch steel wheels with 175/65 R15 all-season tires and 5-speed manual transmission"
+    ]
+  }
+}

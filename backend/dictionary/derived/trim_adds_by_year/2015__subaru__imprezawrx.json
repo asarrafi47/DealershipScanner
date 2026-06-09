@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2015|subaru|imprezawrx",
+  "year": 2015,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "brochure_llm_2015__subaru__imprezawrx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "WRX STI Limited",
+    "WRX STI Launch Edition",
+    "WRX STI",
+    "WRX Limited",
+    "WRX Premium",
+    "WRX"
+  ],
+  "adds_by_trim": {
+    "WRX STI Limited": [
+      "High-luster finish 18-inch BBS aluminum-alloy wheels",
+      "Auto-on/off headlights",
+      "9-speaker Harman Kardon premium audio system with subwoofer and 440-watt amplifier",
+      "Power-tilt/sliding moonroof",
+      "Welcome lighting"
+    ],
+    "WRX STI Launch Edition": [
+      "Signature WR Blue Pearl paint",
+      "Gold-finish 18-inch BBS aluminum-alloy wheels",
+      "STI short-throw shifter and shifter bushing",
+      "Alcantara/leather-trimmed upholstery with blue bolster accents",
+      "Blue leather door inserts with black stitching and black Alcantara console lid"
+    ],
+    "WRX STI": [
+      "305-hp turbocharged 2.5-liter 4-cylinder BOXER engine",
+      "Driver Controlled Center Differential all-wheel drive with front/rear limited-slip differentials",
+      "6-speed close-ratio manual transmission",
+      "Brembo performance brake system",
+      "High-performance STI sport-tuned suspension",
+      "18-inch aluminum-alloy wheels with STI trunk spoiler",
+      "Alcantara/leather-trimmed upholstery with red bolster accents",
+      "Dual-zone automatic climate control"
+    ],
+    "WRX Limited": [
+      "LED low-beam headlights",
+      "Auto-on/off headlights",
+      "Leather-trimmed upholstery",
+      "8-way power adjustable driver's seat",
+      "Power-tilt/sliding moonroof",
+      "All-Weather Package",
+      "Trunk spoiler",
+      "Fog lights"
+    ],
+    "WRX Premium": [
+      "Optional Sport Lineartronic transmission with paddle shifters and SI-DRIVE",
+      "Trunk spoiler",
+      "Fog lights",
+      "Leather-wrapped flat-bottom steering wheel"
+    ],
+    "WRX": [
+      "268-hp twin-scroll turbocharged 2.0-liter 4-cylinder BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission",
+      "Sport-tuned suspension",
+      "17-inch aluminum-alloy wheels",
+      "Cloth upholstery",
+      "6-speaker single-CD audio system with HD Radio, SiriusXM, USB/iPod control, Bluetooth",
+      "Sport-design electroluminescent gauges with 3.5-inch color LCD display",
+      "4.3-inch color multifunction display",
+      "Automatic climate control and Rear-Vision Camera with 7 airbags"
+    ]
+  }
+}

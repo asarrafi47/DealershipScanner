@@ -6,36 +6,68 @@
     "use strict";
 
     function escapeHtml(s) {
-        const d = document.createElement("div");
-        d.textContent = s == null ? "" : String(s);
-        return d.innerHTML;
+        return String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    function stepHasContent(step) {
+        const specs = Array.isArray(step.specs) ? step.specs : [];
+        const adds = Array.isArray(step.adds) ? step.adds : [];
+        return specs.length > 0 || adds.length > 0;
+    }
+
+    function renderPanelHtml(step, index) {
+        const specs = Array.isArray(step.specs) ? step.specs : [];
+        const adds = Array.isArray(step.adds) ? step.adds : [];
+        const bullets = [];
+        if (adds.length) {
+            bullets.push.apply(bullets, adds);
+        } else if (specs.length) {
+            specs.forEach(function (row) {
+                String(row.value || "")
+                    .split(";")
+                    .map(function (part) {
+                        return part.trim();
+                    })
+                    .filter(Boolean)
+                    .forEach(function (part) {
+                        bullets.push(part);
+                    });
+            });
+        }
+        const body = bullets.length
+            ? '<ul class="car-trim-ladder__adds">' +
+              bullets
+                  .map(function (item) {
+                      return "<li>" + escapeHtml(item) + "</li>";
+                  })
+                  .join("") +
+              "</ul>"
+            : "";
+
+        return (
+            '<div class="car-trim-ladder__panel" id="car-trim-ladder-panel-' +
+            index +
+            '">' +
+            (bullets.length ? '<p class="car-trim-ladder__panel-label">What this trim adds</p>' : "") +
+            body +
+            "</div>"
+        );
     }
 
     function renderTrimLadderHtml(ladder) {
         const steps = Array.isArray(ladder.steps) ? ladder.steps : [];
         let stepsHtml = "";
         steps.forEach(function (step, i) {
-            const cls = ["car-trim-ladder__step", "car-trim-ladder__step--" + (step.side || (i % 2 === 0 ? "left" : "right"))];
+            const cls = ["car-trim-ladder__step"];
             if (step.is_current) cls.push("car-trim-ladder__step--current");
             if (step.is_passed) cls.push("car-trim-ladder__step--passed");
 
-            let addsHtml = "";
-            const adds = Array.isArray(step.adds) ? step.adds : [];
-            if (adds.length) {
-                addsHtml =
-                    '<div class="car-trim-ladder__panel" id="car-trim-ladder-panel-' +
-                    i +
-                    '">' +
-                    '<p class="car-trim-ladder__panel-label">What this trim adds</p>' +
-                    '<ul class="car-trim-ladder__adds">' +
-                    adds
-                        .map(function (item) {
-                            return "<li>" + escapeHtml(item) + "</li>";
-                        })
-                        .join("") +
-                    "</ul></div>";
-            }
-
+            const panelHtml = renderPanelHtml(step, i);
             stepsHtml +=
                 '<li class="' +
                 cls.join(" ") +
@@ -49,7 +81,7 @@
                 ' trim">' +
                 '<span class="car-trim-ladder__dot" aria-hidden="true"></span>' +
                 "</button>" +
-                '<div class="car-trim-ladder__card" role="button" tabindex="0" aria-expanded="false" aria-controls="car-trim-ladder-panel-' +
+                '<div class="car-trim-ladder__card car-trim-ladder__card--expandable" role="button" tabindex="0" aria-expanded="false" aria-controls="car-trim-ladder-panel-' +
                 i +
                 '">' +
                 '<div class="car-trim-ladder__card-head">' +
@@ -59,33 +91,15 @@
                 (step.is_current
                     ? '<span class="car-trim-ladder__badge car-trim-ladder__badge--vehicle">This vehicle</span>'
                     : "") +
+                '<span class="car-trim-ladder__chevron" aria-hidden="true"></span>' +
                 "</div>" +
-                addsHtml +
+                panelHtml +
                 "</div></li>";
         });
-
-        const lead = ladder.matched
-            ? "This listing matches <strong>" +
-              escapeHtml(ladder.listing_trim || "") +
-              "</strong> on the " +
-              escapeHtml(ladder.make || "") +
-              " " +
-              escapeHtml(ladder.model || "") +
-              " trim ladder."
-            : "Trim ladder for " +
-              escapeHtml(ladder.make || "") +
-              " " +
-              escapeHtml(ladder.model || "") +
-              '. We could not confidently match &ldquo;' +
-              escapeHtml(ladder.listing_trim || "") +
-              "&rdquo; to a rung.";
 
         let confidenceHtml = "";
         if (ladder.quality === "high") {
             confidenceHtml = '<p class="car-trim-ladder__confidence">Curated OEM trim order</p>';
-        } else if (!ladder.matched) {
-            confidenceHtml =
-                '<p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Trim match uncertain — ladder shown for reference.</p>';
         }
 
         return (
@@ -99,9 +113,6 @@
             escapeHtml(ladder.listing_trim || "") +
             '">' +
             '<h3 class="car-trim-ladder__title">Trim lineup</h3>' +
-            '<p class="car-trim-ladder__lead" id="car-trim-ladder-lead">' +
-            lead +
-            "</p>" +
             confidenceHtml +
             '<ol class="car-trim-ladder__timeline" role="list">' +
             stepsHtml +
@@ -132,31 +143,30 @@
 
         setSplitLayout(true);
 
-        const leadEl = root.querySelector(".car-trim-ladder__lead");
-        const make = root.getAttribute("data-make") || "";
-        const model = root.getAttribute("data-model") || "";
-        const listingTrim = root.getAttribute("data-listing-trim") || "";
+        function stepHasPanel(stepEl) {
+            const panel = stepEl.querySelector(".car-trim-ladder__panel");
+            return !!(panel && (panel.querySelector(".car-trim-ladder__specs") || panel.querySelector(".car-trim-ladder__adds")));
+        }
 
-        function leadHtml(trimName) {
-            const name = trimName || listingTrim || "this trim";
-            const strong = "<strong>" + escapeHtml(name) + "</strong>";
-            if (make && model) {
-                return "Viewing " + strong + " on the " + escapeHtml(make) + " " + escapeHtml(model) + " trim ladder.";
-            }
-            return "Viewing " + strong + " on the trim ladder.";
+        function collapseStep(step) {
+            step.classList.remove("car-trim-ladder__step--active");
+            const card = step.querySelector(".car-trim-ladder__card");
+            if (card) card.setAttribute("aria-expanded", "false");
+            const nodeBtn = step.querySelector(".car-trim-ladder__node");
+            if (nodeBtn) nodeBtn.setAttribute("aria-pressed", "false");
         }
 
         function setActive(index, options) {
             const opts = options || {};
             const scrollIntoView = opts.scrollIntoView !== false;
+            const forceOpen = opts.forceOpen !== false;
 
             steps.forEach(function (step, i) {
-                const active = i === index;
+                const active = forceOpen && i === index;
                 step.classList.toggle("car-trim-ladder__step--active", active);
                 const card = step.querySelector(".car-trim-ladder__card");
-                const panel = step.querySelector(".car-trim-ladder__panel");
                 if (card) {
-                    const hasPanel = !!(panel && panel.querySelector(".car-trim-ladder__adds"));
+                    const hasPanel = stepHasPanel(step);
                     card.setAttribute("aria-expanded", active && hasPanel ? "true" : "false");
                 }
                 const nodeBtn = step.querySelector(".car-trim-ladder__node");
@@ -165,13 +175,10 @@
                 }
             });
 
+            if (!forceOpen || index < 0) return;
+
             const activeStep = steps[index];
             if (!activeStep) return;
-
-            const trimName = activeStep.getAttribute("data-trim-name") || "";
-            if (leadEl) {
-                leadEl.innerHTML = leadHtml(trimName);
-            }
 
             if (scrollIntoView) {
                 try {
@@ -182,33 +189,24 @@
             }
         }
 
-        let initial = steps.findIndex(function (s) {
-            return s.classList.contains("car-trim-ladder__step--current");
-        });
-        if (initial >= 0) {
-            setActive(initial, { scrollIntoView: false });
-        } else {
-            steps.forEach(function (step) {
-                step.classList.remove("car-trim-ladder__step--active");
-                const card = step.querySelector(".car-trim-ladder__card");
-                const panel = step.querySelector(".car-trim-ladder__panel");
-                if (card) {
-                    const hasPanel = !!(panel && panel.querySelector(".car-trim-ladder__adds"));
-                    card.setAttribute("aria-expanded", "false");
-                }
-                const nodeBtn = step.querySelector(".car-trim-ladder__node");
-                if (nodeBtn) {
-                    nodeBtn.setAttribute("aria-pressed", "false");
-                }
-            });
+        function toggleStep(index) {
+            const step = steps[index];
+            if (!step) return;
+            const isActive = step.classList.contains("car-trim-ladder__step--active");
+            steps.forEach(collapseStep);
+            if (!isActive) {
+                setActive(index, { scrollIntoView: true, forceOpen: true });
+            }
         }
+
+        steps.forEach(collapseStep);
 
         steps.forEach(function (step, index) {
             const nodeBtn = step.querySelector(".car-trim-ladder__node");
             const card = step.querySelector(".car-trim-ladder__card");
 
             function activateFromUi() {
-                setActive(index);
+                toggleStep(index);
             }
 
             if (nodeBtn) {

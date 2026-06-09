@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2024|toyota|corolla",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2024__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE HYBRID",
+    "LE HYBRID",
+    "SE HYBRID",
+    "NIGHTSHADE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XSE HYBRID": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "Normal, Sport and Eco driving modes",
+      "LED headlights, LED taillights, and DRL accent lighting",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Gray metallic sport side rocker panels and rear spoiler",
+      "SofTex-trimmed seats with heated front seats and sport fabric inserts",
+      "Steering-wheel-mounted paddle shifters",
+      "7-in. Fully Digital Gauge Cluster",
+      "Qi-compatible wireless smartphone charging"
+    ],
+    "LE HYBRID": [
+      "1.8L 4-cylinder engine with 138 hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Up to 53 city/46 highway/50 combined estimated mpg",
+      "Available Electronic On-Demand All-Wheel Drive (AWD)",
+      "16-in. steel wheels with covers",
+      "Automatic climate control",
+      "4.2-in. Multi-Information Display (MID)",
+      "Fabric-trimmed seats with 60/40 split fold-down rear seat"
+    ],
+    "SE HYBRID": [
+      "Normal, Sport and Eco driving modes",
+      "18-in. graphite-colored alloy wheels",
+      "Single exhaust with dual chrome tips",
+      "Sport seats with sport fabric inserts",
+      "Blind Spot Monitor (BSM) with Rear Cross-Traffic Alert (RCTA)"
+    ],
+    "NIGHTSHADE": [
+      "Black heated power outside mirrors",
+      "Black-painted sport side rocker panels and rear spoiler",
+      "18-in. bronze-finished alloy wheels",
+      "Blackout badging",
+      "Black roof-mounted shark-fin antenna"
+    ],
+    "SE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Normal, Sport and Eco driving modes",
+      "LED headlights and LED taillights with DRL accent lighting",
+      "Sport mesh gloss black front grille",
+      "Gray metallic sport side rocker panels and color-keyed spoiler",
+      "18-in. graphite-colored alloy wheels",
+      "Single exhaust with dual chrome tips",
+      "Sport seats with sport fabric inserts",
+      "Blind Spot Monitor (BSM) with Rear Cross-Traffic Alert (RCTA)"
+    ],
+    "LE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "32 city/41 highway/35 combined estimated mpg",
+      "LED headlights, LED taillights, and Daytime Running Lights (DRL)",
+      "16-in. steel wheels with covers",
+      "Automatic climate control",
+      "4.2-in. Multi-Information Display (MID)",
+      "Fabric-trimmed seats with 60/40 split fold-down rear seat",
+      "Toyota Safety Sense 3.01 and Star Safety System",
+      "Ten airbags"
+    ]
+  }
+}

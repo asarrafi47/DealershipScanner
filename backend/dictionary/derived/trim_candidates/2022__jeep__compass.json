@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2022|jeep|compass",
+  "year": 2022,
+  "make": "Jeep",
+  "model": "Compass",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "High Altitude",
+    "Latitude",
+    "Altitude",
+    "Willys",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

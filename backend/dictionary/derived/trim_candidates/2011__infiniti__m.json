@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|infiniti|m",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "M",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

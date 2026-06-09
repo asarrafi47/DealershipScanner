@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2024|nissan|gtr",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2024__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO®",
+    "T-spec®",
+    "PREMIUM"
+  ],
+  "adds_by_trim": {
+    "NISMO®": [
+      "NISMO-tuned 3.8-liter twin-turbocharged V6 engine with 481 lb-ft torque",
+      "Nissan/Brembo® Carbon Ceramic Braking System",
+      "NISMO-tuned suspension with enhanced handling",
+      "20\" NISMO black RAYS® forged-alloy wheels",
+      "Carbon-fiber hood, front fenders, trunk lid, and clear-coated roof",
+      "NISMO aerodynamic body design with carbon-fiber front/rear fascias and side sills",
+      "NISMO Recaro® leather-appointed front seats with red synthetic-suede inserts",
+      "NISMO Black/Red interior treatment with Alcantara®-wrapped steering wheel",
+      "NISMO tachometer and front fender air outlets"
+    ],
+    "T-spec®": [
+      "Nissan/Brembo® Carbon Ceramic Braking System",
+      "20\" T-spec gold-painted RAYS® forged-alloy wheels",
+      "Semi-aniline leather-appointed front seats with synthetic-suede inserts",
+      "T-spec Mori Green with gold stitching interior treatment",
+      "Quilted Alcantara® headliner",
+      "T-spec unique kick plates and badges",
+      "Exclusive Midnight Purple and Millennium Jade colors",
+      "T-spec exclusive engine cover"
+    ],
+    "PREMIUM": [
+      "3.8-liter twin-turbocharged V6 engine with 565 horsepower",
+      "Dual-clutch 6-speed transmission",
+      "ATTESA E-TS® All-Wheel Drive system",
+      "20\" RAYS® forged-alloy wheels with Dunlop® SP Sport MAXX® GT 600 DSST run-flat tires",
+      "Nissan/Brembo® braking system",
+      "Bilstein® DampTronic® suspension system",
+      "Vehicle Dynamic Control with three driver-selectable modes",
+      "Nissan Navigation System with NissanConnect® 8\" touch-screen display",
+      "Bose Premium Audio System with 11 speakers and dual woofers",
+      "Leather-appointed front seats with synthetic-suede inserts"
+    ]
+  }
+}

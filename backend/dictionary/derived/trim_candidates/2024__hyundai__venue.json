@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2024|hyundai|venue",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Venue",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

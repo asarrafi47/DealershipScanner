@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|jaguar|xj",
+  "year": 2019,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "brochure_llm_2019__jaguar__xj",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XJR575",
+    "XJ50",
+    "R-Sport",
+    "Portfolio"
+  ],
+  "adds_by_trim": {
+    "XJR575": [
+      "5.0-liter V8 supercharged engine producing 575 horsepower",
+      "Most powerful and agile XJ with enhanced sporting dynamics",
+      "Sporting exterior styling and design elements"
+    ],
+    "XJ50": [
+      "Special edition commemorative model",
+      "Exclusive interior color combinations with soft grain leather",
+      "Gloss Shadow Walnut veneer with contrast stitching options"
+    ],
+    "R-Sport": [
+      "Enhanced exterior styling details",
+      "Sport-tuned driving dynamics"
+    ],
+    "Portfolio": [
+      "3.0-liter V6 supercharged engine with 340 horsepower",
+      "Available in Standard Wheelbase and Long Wheelbase configurations",
+      "8-speed automatic transmission",
+      "Choice of RWD or AWD drivetrain",
+      "Comprehensive comfort and luxury features"
+    ]
+  }
+}

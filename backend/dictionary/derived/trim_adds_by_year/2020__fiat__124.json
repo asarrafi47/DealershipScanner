@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|fiat|124",
+  "year": 2020,
+  "make": "Fiat",
+  "model": "124",
+  "ladder_id": "brochure_llm_2020__fiat__124",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ABARTH",
+    "LUSSO",
+    "CLASSICA"
+  ],
+  "adds_by_trim": {
+    "ABARTH": [
+      "1.4L MultiAir Turbo with 164-hp engine power rating",
+      "Brembo performance four-wheel antilock disc brakes",
+      "Record Monza exhaust with quad bright-tip and Abarth fender badges",
+      "Performance-tuned suspension",
+      "Front strut tower brace",
+      "Sport mode selector",
+      "Abarth leather-trimmed sport seats with microfiber insert",
+      "Sport leather-wrapped shift knob with 6-speed manual transmission",
+      "Sport instrument cluster with red stitching",
+      "17-inch gun metallic-painted aluminum wheels"
+    ],
+    "LUSSO": [
+      "1.4L MultiAir Turbo with 160-hp engine and six-speed automatic transmission option",
+      "Leather-trimmed seats with heated option",
+      "17-inch premium silver aluminum wheels",
+      "Automatic temperature control air conditioning",
+      "Rain-sensitive windshield wipers",
+      "LED automatic leveling adaptive front headlamps",
+      "Headlamp washers"
+    ],
+    "CLASSICA": [
+      "1.4L MultiAir Turbo with 160-hp engine and six-speed manual or automatic transmission",
+      "Four-wheel antilock disc brakes",
+      "Bifunctional projector headlamps with daytime running lamps",
+      "LED taillamps",
+      "Convertible roof with acoustic headliner",
+      "Premium cloth seats with manual driver and passenger adjustment",
+      "16-inch silver aluminum wheels standard",
+      "Electronic stability control and dual-stage front airbags",
+      "AM/FM/HD Bluetooth radio with seven-inch display",
+      "Tire pressure monitoring warning lamp"
+    ]
+  }
+}

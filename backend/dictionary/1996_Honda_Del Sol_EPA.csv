@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1996,Honda,Del Sol,Del Sol,1.6L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Two Seaters,4,1.6,25,33,28,,,,,,1.6L I4,
-1996,Honda,Del Sol,Del Sol,1.6L I4 (VTEC (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Two Seaters,4,1.6,24,32,27,,,,,,1.6L I4,
-1996,Honda,Del Sol,Del Sol,1.6L I4 (DOHC/VTEC (FFS)),Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,23,27,25,,,,,,1.6L I4,
-1996,Honda,Del Sol,Del Sol,1.6L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Two Seaters,4,1.6,29,35,32,,,,,,1.6L I4,
-1996,Honda,Del Sol,Del Sol,1.6L I4 (VTEC (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Two Seaters,4,1.6,26,33,28,,,,,,1.6L I4,

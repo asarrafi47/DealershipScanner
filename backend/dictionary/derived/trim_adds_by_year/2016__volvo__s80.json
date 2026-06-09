@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|volvo|s80",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "S80",
+  "ladder_id": "brochure_llm_2016__volvo__s80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Inscription",
+    "Value"
+  ],
+  "adds_by_trim": {
+    "Inscription": [
+      "Sovereign Hide Leather Upholstery",
+      "Leather covered dashboard",
+      "Ventilated front seats",
+      "Inscription floor mats",
+      "Inscription sill plates",
+      "Inscription Dark Walnut wood decor inlays"
+    ],
+    "Value": [
+      "2.0L 240 hp 4-cylinder Turbocharged Drive-E engine",
+      "8-speed Geartronic automatic transmission",
+      "Leather seating surfaces",
+      "City safety system",
+      "Inflatable Curtains and SIPS airbags",
+      "Park assist front and rear",
+      "Power glass moonroof",
+      "Navigation with RTI",
+      "Dual-zone electronic climate control",
+      "High Performance Audio System with AUX, USB, iPod"
+    ]
+  }
+}

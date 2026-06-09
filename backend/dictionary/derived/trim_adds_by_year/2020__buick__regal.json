@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2020|buick|regal",
+  "year": 2020,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2020__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS",
+    "AVENIR",
+    "ESSENCE",
+    "PREFERRED",
+    "REGAL (1SV)"
+  ],
+  "adds_by_trim": {
+    "GS": [
+      "3.6L V6 DI DOHC engine with 310 hp and 282 lb-ft torque",
+      "Heated, ventilated front bucket seats with massage and power-adjustable bolsters",
+      "19-inch aluminum wheels with Technical Gray accents",
+      "Brembo front brakes",
+      "Rear decklid spoiler, front hood scoops, ground effects, pass-through exhaust",
+      "Front and Rear Park Assist",
+      "8-inch diagonal driver information center",
+      "GS Driver Confidence Package available with Adaptive Cruise Control-Advanced and Head-Up Display"
+    ],
+    "AVENIR": [
+      "Ebony or Whisper Beige quilt-stitched leather-appointed seating",
+      "Distinctive Black Ice mesh grille",
+      "Avenir-embossed front sill plates",
+      "19-inch aluminum wheels with Pearl Nickel finish",
+      "Intelligent all-wheel drive with active twin clutch",
+      "Heated leather-wrapped steering wheel",
+      "Moon White interior ambient lighting",
+      "8-way power front-passenger seat with 4-way power lumbar",
+      "Driver Confidence Package II available with advanced safety features"
+    ],
+    "ESSENCE": [
+      "40/20/40 split-folding rear seat",
+      "8-way power driver seat with 4-way power lumbar",
+      "Leather-appointed seats",
+      "Heated front seats",
+      "LED headlamps with auto leveling and cornering lamps",
+      "Rear Park Assist and Rear Cross Traffic Alert",
+      "Wireless smartphone charging",
+      "Memory package for driver and front-passenger seats",
+      "Essence Driver Confidence Package available"
+    ],
+    "PREFERRED": [
+      "Leather-wrapped steering wheel",
+      "8-way power driver seat with 2-way power lumbar",
+      "Fog lamps",
+      "Moon White interior ambient lighting",
+      "Heated front seats",
+      "Heated leather-wrapped steering wheel",
+      "8-way power front-passenger seat with 2-way power lumbar",
+      "Preferred Driver Confidence Package available with LED headlamps and 18-inch wheels"
+    ],
+    "REGAL (1SV)": [
+      "2.0L turbo 4-cylinder engine with 250 hp and 260 lb-ft torque",
+      "Front-wheel drive",
+      "Keyless open and start",
+      "60/40 split-folding rear seat",
+      "Halogen headlamps with LED signature lighting daytime running lamps",
+      "Rear vision camera",
+      "StabiliTrak and traction control",
+      "Bluetooth technology"
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2021|dodge|durango",
+  "year": 2021,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2021__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT",
+    "SRT 392",
+    "R/T",
+    "CITADEL",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT": [
+      "6.2L Supercharged SRT Hellcat V8 engine",
+      "Performance-tuned All-Wheel Drive (AWD)",
+      "Brembo 6-piston front, 4-piston rear brakes",
+      "Bilstein adaptive damping high-performance suspension",
+      "20 by 10-inch Mid-Gloss Black pockets machined face wheels",
+      "Auto-leveling headlamps",
+      "6-passenger seating with 2nd-row Captain's Chairs",
+      "Nappa leather with perforated suede inserts",
+      "SRT paddle shifters and SRT Performance Pages Plus",
+      "High-performance exhaust with 4-inch tips"
+    ],
+    "SRT 392": [
+      "6.4L 392 HEMI V8 engine",
+      "Performance-tuned All-Wheel Drive (AWD)",
+      "Brembo 6-piston brakes",
+      "Bilstein adaptive damping suspension",
+      "20 by 10-inch Hyper Black wheels",
+      "Auto-leveling headlamps",
+      "6-passenger seating with 2nd-row Captain's Chairs",
+      "Nappa leather with perforated suede inserts",
+      "SRT paddle shifters and SRT Performance Pages Plus"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 engine",
+      "Performance steering and sport suspension",
+      "Rear load-leveling suspension",
+      "Performance hood",
+      "SmartBeam HID headlamps",
+      "Capri leather-trimmed seating with suede inserts",
+      "Heated 1st- and 2nd-row seating",
+      "Alpine Premium Audio System with 9 speakers and subwoofer",
+      "Uconnect 5 NAV with 10.1-inch display",
+      "Power liftgate"
+    ],
+    "CITADEL": [
+      "20 by 8-inch Satin Carbon wheels",
+      "Platinum chrome door handles, grille and mirrors",
+      "SmartBeam HID headlamps",
+      "6-passenger seating with 2nd-row Captain's Chairs",
+      "Capri leather with embossed logo",
+      "Power sunroof",
+      "Forward Collision Warning with Active Braking",
+      "Adaptive Cruise Control with Stop",
+      "LaneSense Lane Departure Warning with Lane Keep Assist",
+      "Class IV hitch receiver with integrated trailer brake controller"
+    ],
+    "GT": [
+      "20 by 8-inch Fine Silver wheels",
+      "Dual exhaust with bright tips",
+      "7-passenger seating",
+      "Leather flat-bottom steering wheel",
+      "12-way power driver's seat",
+      "ParkSense Rear Park Assist"
+    ],
+    "SXT": [
+      "3.6L Pentastar V6 with TorqueFlite 8-speed automatic",
+      "Antilock four-wheel disc brakes",
+      "Electric power steering",
+      "Rear-Wheel-Drive (RWD) or All-Wheel-Drive (AWD)",
+      "24.6-gallon fuel tank",
+      "Push-push fuel door"
+    ]
+  }
+}

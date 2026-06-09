@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2014|ford|fusion",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_llm_2014__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium Hybrid",
+    "SE Hybrid",
+    "S Hybrid",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium Hybrid": [
+      "Leather-trimmed Sport seats with heated front seats and driver-side memory with 3 settings",
+      "Aluminum brake and accelerator pedal covers",
+      "Aluminum front-door sill plates",
+      "Ambient lighting",
+      "Audio System from Sony with 12 speakers and HD Radio Technology",
+      "Auto-dimming rearview mirror",
+      "Intelligent Access with push-button start and Remote Start System"
+    ],
+    "SE Hybrid": [
+      "10-way power driver's seat with power lumbar",
+      "Compass and Outside temperature display",
+      "SmartGauge with EcoGuide instrument cluster",
+      "110-volt power outlet",
+      "SYNC with MyFord Touch, 2 configurable 4.2-inch LCD displays and 8-inch touchscreen",
+      "18-inch polished face wheels with Flash Gray-painted pockets and 235/45R18 tires"
+    ],
+    "S Hybrid": [
+      "2.0L iVCT Atkinson-cycle I-4 HEV engine with permanent-magnet AC-synchronous electric motor",
+      "Electronically controlled continuously variable transmission (eCVT)",
+      "Lithium-Ion Battery Pack and Regenerative Braking System",
+      "17-inch 15-spoke Sparkle Silver-painted aluminum wheels with P225/50R17 tires",
+      "Tire mobility kit in lieu of spare tire",
+      "Unique EcoCloth seats with REPREVE fabric",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SE": [
+      "Equipment Group 200A: 2.5L iVCT I-4 engine with 6-speed SelectShift automatic with Auto Start-Stop",
+      "10-way power driver's seat with power lumbar support",
+      "Rear-seat fold-down center armrest with 2 cupholders",
+      "17-inch Sparkle Silver-painted aluminum wheels with 235/50R17 tires",
+      "Body-color power heated sideview mirrors with integrated blind spot mirrors",
+      "SYNC with MyFord Touch, 2 configurable 4.2-inch LCD displays and 8-inch touchscreen"
+    ],
+    "S": [
+      "1.5L EcoBoost I-4 engine with 6-speed SelectShift automatic transmission",
+      "6-way manual driver's seat and 4-way manual front-passenger seat",
+      "4-way adjustable front head restraints",
+      "60/40 split fold-flat spring-assisted rear seat",
+      "Cloth seating with Charcoal Black interior",
+      "16-inch steel wheels with Sparkle Silver-painted covers and 215/60R16 tires",
+      "SYNC with MyFord voice-activated system, 4.2-inch color LCD display and media hub with USB",
+      "Body-color power sideview mirrors with integrated blind spot mirrors"
+    ]
+  }
+}

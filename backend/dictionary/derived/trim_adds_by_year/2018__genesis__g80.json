@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2018|genesis|g80",
+  "year": 2018,
+  "make": "genesis",
+  "model": "G80",
+  "ladder_id": "brochure_llm_2018__genesis__g80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ultimate Package",
+    "Performance Package",
+    "Premium Package",
+    "G80 3.8"
+  ],
+  "adds_by_trim": {
+    "Ultimate Package": [
+      "420-hp 5.0L GDI V8 engine with Dual CVVT",
+      "Quad exhaust tips",
+      "Exclusive 19-inch alloy wheel design",
+      "Carbon fiber interior trim",
+      "Sport seats and Sport steering wheel with contrast stitching",
+      "Microfiber suede headliner",
+      "Illuminated door sill plates"
+    ],
+    "Performance Package": [
+      "365-hp 3.3L GDI twin-turbo V6 engine with Dual CVVT",
+      "Front and rear independent 5-link suspension with Sport Continuous Damping Control",
+      "New 19-inch Sport split-spoke alloy wheels",
+      "Sport lower front bumper cover and sport dark chrome grille",
+      "Sport lower body side molding and rear bumper air diffuser",
+      "Dark tinted taillight covers",
+      "Interior and exterior copper accents"
+    ],
+    "Premium Package": [
+      "Power tilt-and-slide panoramic sunroof",
+      "Lexicon 14-speaker Quantum Logic Surround Sound with Clari-Fi Music Restoration",
+      "Full LED headlights with Dynamic Bending Light",
+      "Genuine matte-finish wood trim and aluminum trim",
+      "Electroluminescent Gauge Cluster with 7-inch color LCD multi-information display",
+      "16-way power driver seat with power side bolsters and cushion extender",
+      "Ventilated front seats and heated rear seats",
+      "Full color Heads-up Display",
+      "9.2-inch touchscreen navigation with 720p HD display",
+      "Wireless charging pad (Qi standard)"
+    ],
+    "G80 3.8": [
+      "311-hp 3.8L GDI V6 engine with Dual CVVT",
+      "8-speed automatic transmission with SHIFTRONIC and paddle shifters",
+      "Front and rear independent 5-link suspension",
+      "Intelligent Drive Mode",
+      "18-inch alloy wheels",
+      "7-inch color LCD multi-information display",
+      "12-way power heated front seats with lumbar adjustment",
+      "Leather seating surfaces",
+      "Proximity Key entry with push button start",
+      "Multi-view Camera with front and rear parking sensors"
+    ]
+  }
+}

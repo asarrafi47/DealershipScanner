@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2022|subaru|forester",
+  "year": 2022,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2022__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.5i-L EyeSight",
+    "2.0i-L EyeSight",
+    "2.0i-S EyeSight",
+    "2.5i-S EyeSight",
+    "2.0i-Sport EyeSight",
+    "2.5i-Sport EyeSight",
+    "2.0i",
+    "2.0i-L"
+  ],
+  "adds_by_trim": {
+    "2.5i-L EyeSight": [
+      "Roof rails with rear side sill steps and rope holes for secure baggage tie-down",
+      "Brown leather seat option with leather seat backing",
+      "Dual air-conditioning system with four modes and 6.3-inch Multifunction Display control"
+    ],
+    "2.0i-L EyeSight": [
+      "Roof rails with rear side sill steps and rope holes for secure baggage tie-down",
+      "Brown leather seat option with leather seat backing",
+      "Dual air-conditioning system with four modes and 6.3-inch Multifunction Display control"
+    ],
+    "2.0i-S EyeSight": [
+      "Black leather seat option with grey sport fabric seat backing",
+      "Silver leather seat option with grey sport fabric seat backing",
+      "Brown leather seat option with grey sport fabric seat backing",
+      "Divided seatback pockets for magazine and smartphone organization",
+      "Seat position memory switch linked to door mirror position"
+    ],
+    "2.5i-S EyeSight": [
+      "Black leather seat option",
+      "Brown leather seat option",
+      "Divided seatback pockets for magazine and smartphone organization",
+      "Seat position memory switch linked to door mirror position"
+    ],
+    "2.0i-Sport EyeSight": [
+      "Silver fabric seat trim with grey sport fabric seat backing",
+      "Dual air-conditioning system with passenger-synced temperature control"
+    ],
+    "2.5i-Sport EyeSight": [
+      "Silver fabric seat trim with grey sport fabric seat backing",
+      "Dual air-conditioning system with passenger-synced temperature control"
+    ],
+    "2.0i": [
+      "Silver fabric seat trim option",
+      "LED headlamps with auto-levelling, bifunctional, and steering responsive design",
+      "LED fog lamps with high placement for large light coverage area",
+      "USB power outlets for front and rear passengers"
+    ],
+    "2.0i-L": [
+      "Roof rails with rear side sill steps and rope holes for secure baggage tie-down",
+      "Rear ventilation system with vent grilles behind centre console box",
+      "Brown leather seat option with grey sport fabric seat backing"
+    ]
+  }
+}

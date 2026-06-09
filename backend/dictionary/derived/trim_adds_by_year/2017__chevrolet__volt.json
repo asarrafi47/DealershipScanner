@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2017|chevrolet|volt",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Volt",
+  "ladder_id": "brochure_llm_2017__chevrolet__volt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Heated power-adjustable body-color mirrors with manual folding",
+      "Leather-appointed seats",
+      "Heated driver and front passenger seats with auto-heated function",
+      "Heated rear outboard seats",
+      "Heated leather-wrapped steering wheel",
+      "Auto-dimming rearview mirror",
+      "8-speaker Bose premium sound system with subwoofer",
+      "Chevrolet MyLink radio with GPS navigation and SiriusXM NavTraffic",
+      "Wireless charging for compatible devices",
+      "Driver Confidence Package with Side Blind Zone Alert and Rear Cross Traffic Alert"
+    ],
+    "LT": [
+      "LED low-beam headlamps with halogen reflector high-beam and automatic exterior lamp control",
+      "Power-adjustable body-color manual-folding mirrors",
+      "Integrated rear spoiler with LED center high-mounted stop lamp",
+      "18.4-kWh lithium-ion Rechargeable Energy Storage System with thermal management",
+      "149 hp Voltec electric drive with 294 lb-ft motoring torque",
+      "1.5L range-extender engine using regular unleaded fuel",
+      "Electric Power Steering with variable assist",
+      "6-speaker sound system",
+      "8-inch diagonal digital reconfigurable LCD screen with Driver Information Center",
+      "Chevrolet MyLink radio with 8-inch touchscreen, AM/FM/SiriusXM, Bluetooth, Pandora, Apple CarPlay, Android Auto"
+    ]
+  }
+}

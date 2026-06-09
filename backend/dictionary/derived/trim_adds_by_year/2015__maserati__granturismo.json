@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|maserati|granturismo",
+  "year": 2015,
+  "make": "maserati",
+  "model": "granturismo",
+  "ladder_id": "generic_maserati_granturismo",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Master High Performance course includes advanced high-speed driving and technically more complex exercises that build upon the fundamental skills acquired in the earlier",
+      "aserati Dealers will be glad to provide further details and updates in this regard. www.m"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

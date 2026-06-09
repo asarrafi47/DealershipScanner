@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2023|nissan|titan",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_llm_2023__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum Reserve",
+    "PRO-4X",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum Reserve": [
+      "20-inch dark-painted machine-finished aluminum-alloy wheels",
+      "Removable front aero spoiler",
+      "Integrated gooseneck hitch with 7-pin in-bed wiring harness",
+      "Premium leather-appointed seats with Platinum Reserve logos",
+      "Climate-controlled front seats with heated and cooled function",
+      "Heated leather-wrapped steering wheel",
+      "Memory system for driver seat, steering wheel, and mirrors"
+    ],
+    "PRO-4X": [
+      "2-speed transfer case with electronic locking rear differential",
+      "Bilstein off-road performance shocks and rear vented disc brakes",
+      "Hill descent control",
+      "18-inch dark-finished aluminum-alloy wheels with all-terrain tires",
+      "Transfer case skid plates and lava red front tow hooks",
+      "Charcoal-painted rear bumper and black overfenders",
+      "Factory-applied spray-on bedliner and 18-inch silver-metallic styled bedliner",
+      "Rear door alert system and Fender premium audio with 12 speakers"
+    ],
+    "SV": [
+      "Intelligent Cruise Control",
+      "18-inch dark-painted machine-finished aluminum-alloy wheels",
+      "Oil pan, fuel tank, and transmission skid plates on 4x4",
+      "Two-tone exterior paint with satin-finished grille and tailgate finisher",
+      "Power-folding and auto-dimming driver's outside mirror",
+      "Trailer brake controller and trailer light check",
+      "Power heated black outside mirrors with reverse tilt-down feature",
+      "Running boards with chrome accents and chrome mirror caps"
+    ],
+    "S": [
+      "5.6-liter 32-valve V8 engine with 9-speed automatic transmission",
+      "6.5-foot truck bed with 13-inch front and rear vented disc brakes",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning, Blind Spot Warning, and Rear Cross Traffic Alert",
+      "RearView Monitor with rear sonar system and high beam assist",
+      "18-inch silver-metallic styled steel wheels with P265/70R18 all-season tires",
+      "7-inch advanced drive-assist display and 8-inch NissanConnect color touchscreen",
+      "Apple CarPlay integration, Android Auto compatibility, and SiriusXM radio"
+    ]
+  }
+}

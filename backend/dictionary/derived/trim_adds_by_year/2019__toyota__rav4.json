@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2019|toyota|rav4",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "RAV4",
+  "ladder_id": "brochure_llm_2019__toyota__rav4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited Hybrid",
+    "Limited",
+    "XSE Hybrid",
+    "XLE",
+    "LE Hybrid",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited Hybrid": [
+      "Hybrid 2.5-liter Dynamic Force engine with 219 net hp",
+      "Electronically Controlled Continuously Variable Transmission (ECVT) with sequential shift mode",
+      "18-inch 5-spoke super chrome-finished sport alloy wheels with 225/60R18 tires",
+      "LED projector-beam headlights with chrome bezels and auto on/off feature",
+      "7-inch digital Multi-Information Display with hybrid energy monitor and hybrid power meter",
+      "SofTex-trimmed heated front bucket seats with 8-way power driver's seat and memory"
+    ],
+    "Limited": [
+      "Available Dynamic Torque Vectoring All-Wheel Drive (TV-AWD) with Multi-terrain Select and Rear Driveline Disconnect",
+      "Dark gray metallic-colored hexagon-patterned front grille",
+      "Chrome-accented color-keyed outside door handles with front-row touch-sensor lock/unlock",
+      "Puddle lights",
+      "7-inch digital Multi-Information Display with customizable settings",
+      "SofTex-trimmed heated front bucket seats with 8-way power driver's seat and lumbar support"
+    ],
+    "XSE Hybrid": [
+      "18-inch 5-spoke black-painted sport alloy wheels with 225/60R18 tires",
+      "Sport-tuned independent MacPherson strut front suspension with stabilizer bar",
+      "Dark gray metallic-colored hexagon-patterned front grille",
+      "Color-keyed upper and black-painted lower front bumper with metallic gray insert",
+      "Two-tone exterior color option",
+      "7-inch digital Multi-Information Display with hybrid energy monitor"
+    ],
+    "XLE": [
+      "Available All-Wheel Drive (AWD) with Multi-terrain Select",
+      "17-inch 5-spoke silver alloy wheels with 225/65R17 tires",
+      "Integrated fog lights",
+      "Color-keyed heated power outside mirrors with turn signal and blind spot warning indicators",
+      "Power tilt/slide moonroof with one-touch open/close",
+      "Dual zone automatic climate control with rear-seat vents",
+      "Smart Key System on front doors and liftgate with Push Button Start",
+      "Five USB ports"
+    ],
+    "LE Hybrid": [
+      "Hybrid 2.5-liter Dynamic Force engine with 219 net hp",
+      "Hybrid system with Electronically Controlled Continuously Variable Transmission (ECVT)",
+      "Drive mode dial with Sport, ECO, Normal, Trail and EV Modes",
+      "Electronic On-Demand All-Wheel Drive (AWD)",
+      "Active grille shutters",
+      "Analog speedometer with hybrid power meter and 4.2-inch digital Multi-Information Display"
+    ],
+    "LE": [
+      "2.5-liter Dynamic Force 4-cylinder engine with 203 hp and 184 lb.-ft. torque",
+      "Direct Shift 8-speed automatic transmission",
+      "Available All-Wheel Drive (AWD) with Multi-terrain Select",
+      "17-inch steel wheels with silver 6-spoke wheel covers and 225/65R17 tires",
+      "LED Daytime Running Lights and Multi-LED headlights with Automatic High Beams",
+      "LED taillights and stop lights with power outside mirrors and folding feature",
+      "Dual zone automatic climate control with rear-seat vents",
+      "Fabric-trimmed front bucket seats with 6-way adjustable driver's seat",
+      "4.2-inch digital Multi-Information Display with customizable settings",
+      "Toyota Safety Sense 2.0 with Pre-Collision System, Lane Departure Alert, and Dynamic Radar Cruise Control"
+    ]
+  }
+}

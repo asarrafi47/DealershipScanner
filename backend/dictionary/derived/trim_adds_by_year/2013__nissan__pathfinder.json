@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2013|nissan|pathfinder",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2013__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch aluminum-alloy wheels",
+      "DVD video playback capability",
+      "Streaming audio via Bluetooth wireless technology",
+      "Nissan Hard Drive Navigation System with 8-inch VGA touch-screen and voice recognition",
+      "NavTraffic and NavWeather provided by SiriusXM",
+      "Zagat Survey restaurant reviews",
+      "Around View Monitor",
+      "Bose audio system with 13 speakers and Acoustic Waveguide technology",
+      "Climate-controlled front seats with heating and cooling",
+      "Heated steering wheel"
+    ],
+    "SL": [
+      "Leather-appointed seats and door trim",
+      "Digital compass",
+      "Fog lights",
+      "Welcome lighting",
+      "Chrome body side moldings",
+      "Heated front and rear seats",
+      "Power liftgate",
+      "Heated outside mirrors with reverse tilt-down feature",
+      "Driver's seat power lumbar support",
+      "4-way power adjustable passenger's seat"
+    ],
+    "SV": [
+      "8-way power adjustable driver's seat",
+      "Smart Auto Headlights",
+      "Roof rails",
+      "Information Center with 7-inch QVGA color monitor",
+      "RearView Monitor",
+      "Rear Sonar System",
+      "Individual tire pressure display",
+      "Bluetooth Hands-free Phone System",
+      "Nissan Intelligent Key",
+      "Power windows with front one-touch auto-up/down"
+    ],
+    "S": [
+      "3.5-liter V6 engine with 260 hp and 240 lb-ft torque",
+      "Xtronic CVT transmission",
+      "Available All-Mode 4x4-i intuitive 4WD system",
+      "Hill start assist",
+      "18-inch aluminum-alloy wheels",
+      "7-passenger seating with EZ Flex system and LATCH AND GLIDE technology",
+      "Tri-Zone Automatic Temperature Control",
+      "Remote keyless entry",
+      "Push Button Ignition",
+      "Power windows"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|mitsubishi|outlandersport",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2012__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Outlander Sport SE (AWC)",
+    "Outlander Sport SE (2WD)",
+    "Outlander Sport ES"
+  ],
+  "adds_by_trim": {
+    "Outlander Sport SE (AWC)": [
+      "All-Wheel Control (AWC) system"
+    ],
+    "Outlander Sport SE (2WD)": [
+      "Super-wide range High Intensity Discharge (S-HID) headlamps",
+      "Heated front seats",
+      "One-touch Start/Stop (OSS) engine switch",
+      "18-inch aluminum-alloy wheels with P225/55R18 all-season radial tires"
+    ],
+    "Outlander Sport ES": [
+      "5-speed manual or Continuously Variable Transmission (CVT)",
+      "140-watt AM/FM/CD/MP3-compatible audio system with 4 speakers",
+      "FAST-key passive entry system with panic feature",
+      "Remote Keyless Entry",
+      "Electric Power Steering (EPS)"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|lotus|exige",
+  "year": 2017,
+  "make": "Lotus",
+  "model": "Exige",
+  "ladder_id": "brochure_web_2017__lotus__exige",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Exige 350 Sport",
+    "Exige 350"
+  ],
+  "adds_by_trim": {
+    "Exige 350 Sport": [
+      "Forged lightweight alloy wheels with Michelin Pilot Sport tires",
+      "Dynamic Handling Package with adjustable suspension and performance tuning",
+      "Brembbo carbon-ceramic brake system",
+      "Alcantara steering wheel and shift knob",
+      "Sport exhaust system with enhanced performance characteristics",
+      "Unique interior trim and exclusive Sport badging"
+    ],
+    "Exige 350": [
+      "3.5L supercharged V6 engine producing 345 horsepower",
+      "Six-speed manual transmission",
+      "Independent double-wishbone suspension front and rear",
+      "Brembo ventilated disc brakes with ABS",
+      "Vehicle Stability Control and traction control",
+      "Air conditioning and power steering",
+      "Manual convertible top",
+      "Basic interior with cloth upholstery"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/exige/"
+}

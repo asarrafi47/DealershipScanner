@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|ford|fusion",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "generic_ford_fusion",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Hybrid class is Midsize Plug-In to watch your Points grow and keep track"
+    ],
+    "SE": [
+      "Hybrid Sedans; Fusion Plug-In"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "SE": 1,
+      "Active": 1
+    }
+  }
+}

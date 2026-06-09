@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|mazda|cx9",
+  "year": 2018,
+  "make": "Mazda",
+  "model": "CX-9",
+  "ladder_id": "brochure_2018__mazda__cx9",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature",
+    "Premium",
+    "Select",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes SKYACTIV-Drive 6-speed automatic transmission with manual shift and Sport mode",
+      "Adds Features MAZDA CONNECT infotainment system with Bluetooth connectivity",
+      "Adds Includes HD Radio and basic audio system"
+    ],
+    "Select": [],
+    "Premium": [
+      "Adds Bose Premium Sound System with Centerpoint 2 Surround Sound",
+      "Adds available i-ACTIVSENSE safety suite with Advanced Blind Spot Monitoring",
+      "Adds Includes Rear Cross Traffic Alert system",
+      "Adds Lane Departure Warning System",
+      "Adds Adaptive Front-Lighting System with automatic headlight pivoting",
+      "Adds Includes Smart City Brake Support for low-speed collision avoidance",
+      "Adds Traffic Sign Recognition System"
+    ],
+    "Signature": [
+      "Adds Lane-Keep Assist with steering correction capability",
+      "Adds High Beam Control auto-adjustment system",
+      "Adds Smart Brake Support for higher-speed collision detection",
+      "Adds Mazda Radar Cruise Control with Stop & Go functionality"
+    ]
+  }
+}

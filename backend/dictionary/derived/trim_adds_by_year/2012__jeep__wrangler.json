@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|jeep|wrangler",
+  "year": 2012,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2012__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon",
+    "Sahara",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Rubicon": [
+      "BFGoodrich mud terrain tires on 17-inch Moab wheels",
+      "Skid-plate protection for Rock-Trac transfer case with Trail Rated status",
+      "Six Infinity speakers and 8-inch subwoofer with 368-watt amplifier",
+      "Body-color Freedom Top hardtop matching exterior paint",
+      "Body-color fender flares matched to exterior paint"
+    ],
+    "Sahara": [
+      "Available body-color hardtop and body-color fender flares",
+      "Black front and rear fascias with silver accents",
+      "Larger center console storage bin",
+      "Storage nets in all doors",
+      "Optional premium leather-trimmed interior with bright interior accents",
+      "Media Center radio with SiriusXM satellite ready",
+      "Available heated front seats"
+    ],
+    "Sport": [
+      "Washable interior with drain plugs throughout",
+      "Four-door Unlimited option with seating for five adults plus gear",
+      "70 cubic feet cargo space on Unlimited models",
+      "Fold-down rear and tumble seats for gear and passengers",
+      "Reversible cargo mat protecting carpet",
+      "Redesigned storage bin beneath rear floor for valuables"
+    ]
+  }
+}

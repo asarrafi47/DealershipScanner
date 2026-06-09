@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2010|lincoln|towncar",
+  "year": 2010,
+  "make": "Lincoln",
+  "model": "Town Car",
+  "ladder_id": "brochure_llm_2010__lincoln__towncar",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Signature L",
+    "Signature Limited",
+    "Signature"
+  ],
+  "adds_by_trim": {
+    "Signature L": [
+      "Heavy-duty front stabilizer bar",
+      "6-inch extended wheelbase with rear door"
+    ],
+    "Signature Limited": [
+      "18-spoke chromed-aluminum wheels standard",
+      "Continental Edition Package available with chrome B-pillar appliqués and Continental stitching"
+    ],
+    "Signature": [
+      "4.6L SOHC V8 FFV engine",
+      "4-speed electronic transmission with rear-wheel drive",
+      "Premium leather seating with 40/20/40 8-way power seats and dual power recliners",
+      "Dual-zone electronic automatic temperature control",
+      "Lincoln Premium Sound System with 6-disc CD changer",
+      "Power-adjustable pedals with memory",
+      "Electrochromic auto-dimming rearview and driver-side mirrors",
+      "SecuriLock electrically encoded ignition key",
+      "Anti-lock brakes with traction control",
+      "17-inch 10-spoke machined-aluminum wheels"
+    ]
+  }
+}

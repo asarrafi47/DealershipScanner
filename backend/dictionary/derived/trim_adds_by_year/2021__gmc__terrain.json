@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2021|gmc|terrain",
+  "year": 2021,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_llm_2021__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DENALI",
+    "ELEVATION EDITION",
+    "GMC PRO"
+  ],
+  "adds_by_trim": {
+    "DENALI": [
+      "Denali luxury trim with premium interior and advanced tech",
+      "Highest Terrain trim in 2024 brochure"
+    ],
+    "ELEVATION EDITION": [
+      "Monochromatic exterior and upgraded wheels vs SLE",
+      "Premium convenience package content"
+    ]
+  }
+}

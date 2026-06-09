@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2018|cadillac|cts",
+  "year": 2018,
+  "make": "Cadillac",
+  "model": "CTS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium Luxury",
+    "Luxury",
+    "Sport",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

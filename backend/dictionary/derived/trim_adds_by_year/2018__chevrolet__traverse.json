@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2018|chevrolet|traverse",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2018__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "RS",
+    "Leather",
+    "Cloth",
+    "L",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "Forward Automatic Braking standard safety feature",
+      "Power-folding third-row 60/40 split-bench seat",
+      "Heated and ventilated driver and front passenger seats",
+      "Heated second-row captain's chairs",
+      "Heated steering wheel",
+      "Auto-dimming heated mirrors with turn signal indicators",
+      "20-inch Gloss Black machined-face aluminum wheels",
+      "Premium perforated leather inserts on first and second rows"
+    ],
+    "Premier": [
+      "SkyScape power tilt-sliding front sunroof with fixed rear skylight",
+      "Forward Collision Alert and Following Distance Indicator",
+      "Lane Keep Assist with Lane Departure Warning",
+      "Heated driver and front passenger seats",
+      "20-inch Argent Metallic machined-face aluminum wheels"
+    ],
+    "RS": [
+      "Hands-free power liftgate with Chevrolet emblem projection",
+      "LED D-Optic bi-function projector-beam headlamps",
+      "Auto-dimming heated mirrors with turn signal indicators",
+      "20-inch Dark Android-painted aluminum wheels",
+      "Heavy-duty cooling system and trailer hitch"
+    ],
+    "Leather": [
+      "20-inch machined-face aluminum wheels with Technical Gray pockets",
+      "Leather-appointed first and second rows with perforated inserts",
+      "Front passenger 6-way power seat with power lumbar control",
+      "Surround Vision with bird's-eye view camera system",
+      "Rear Camera Mirror with inside rearview auto-dimming",
+      "Chevrolet MyLink Navigation with 8-inch color touchscreen",
+      "Bose premium 10-speaker sound system with Richbass woofer"
+    ],
+    "Cloth": [
+      "Power liftgate with programmable height adjustment",
+      "Heated power-adjustable mirrors body-color with turn signal indicators",
+      "Roof rails standard",
+      "Driver 8-way power seat with power lumbar control",
+      "4.2-inch enhanced multi-color Driver Information Center display",
+      "SiriusXM Satellite Radio All Access Package with 3-month trial",
+      "Remote vehicle starter system available"
+    ],
+    "L": [
+      "All-wheel-drive system available with automatic locking rear differential",
+      "Chevrolet MyLink 8-inch motorized touchscreen with hidden storage",
+      "Convenience and Driver Confidence Package available"
+    ],
+    "SL": [
+      "8-passenger seating with second and third-row flat-folding 60/40 split-bench seats",
+      "Manual rear liftgate",
+      "Heated power-adjustable Black manual-folding mirrors",
+      "Rear vision camera standard",
+      "3.5-inch monochromatic Driver Information Center display",
+      "Urethane comfort grip steering wheel with controls",
+      "Chevrolet MyLink 7-inch color touchscreen with Android Auto and Apple CarPlay",
+      "3.6L DOHC V6 with Direct Injection engine standard",
+      "Stop/start engine control system",
+      "Teen Driver technology and OnStar 4G LTE with Wi-Fi hotspot"
+    ]
+  }
+}

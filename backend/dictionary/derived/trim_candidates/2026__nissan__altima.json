@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2026|nissan|altima",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Altima",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SV",
+    "SR",
+    "Midnight Edition",
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

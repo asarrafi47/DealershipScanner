@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2012|infiniti|ex",
+  "year": 2012,
+  "make": "Infiniti",
+  "model": "EX",
+  "ladder_id": "brochure_web_2012__infiniti__ex",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "EX37 Journey",
+    "EX37 AWD",
+    "EX37 EX",
+    "EX37 EX AWD",
+    "EX37 GT",
+    "EX37 GT AWD"
+  ],
+  "adds_by_trim": {
+    "EX37 Journey": [
+      "3.7L V6 engine with 325 horsepower",
+      "5-speed automatic transmission",
+      "Rear-wheel drive",
+      "17-inch steel wheels",
+      "Power windows, locks, and mirrors",
+      "Air conditioning and cruise control",
+      "AM/FM radio with aux input",
+      "Bluetooth hands-free connectivity"
+    ],
+    "EX37 AWD": [
+      "All-wheel drive system"
+    ],
+    "EX37 EX": [
+      "18-inch alloy wheels",
+      "Keyless entry and push-button ignition",
+      "Heated front seats",
+      "Power drivers seat with lumbar",
+      "5.0-inch color display with backup camera",
+      "XM/Sirius satellite radio capability"
+    ],
+    "EX37 EX AWD": [
+      "All-wheel drive system"
+    ],
+    "EX37 GT": [
+      "19-inch alloy wheels with performance tires",
+      "Bose premium audio system with 7 speakers",
+      "Leather appointed seating surfaces",
+      "Dual-zone climate control",
+      "Power panoramic sunroof",
+      "Premium interior trim materials",
+      "Infiniti Around View Monitor with parking sensors"
+    ],
+    "EX37 GT AWD": [
+      "All-wheel drive system"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/infiniti/ex"
+}

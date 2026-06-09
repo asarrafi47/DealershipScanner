@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|volvo|xc70",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "XC70",
+  "ladder_id": "brochure_llm_2012__volvo__xc70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "platinum",
+    "premier plus",
+    "premier"
+  ],
+  "adds_by_trim": {
+    "platinum": [
+      "Navigation System with Voice Control and Map Care",
+      "Volvo Premium Sound System",
+      "Rear Park Assist Camera",
+      "Park Assist, Front & Rear"
+    ],
+    "premier plus": [
+      "Power Operated Tailgate with Programmable Memory Setting",
+      "Keyless Drive with Personal Car Communicator (PCC)",
+      "HomeLink® Integrated Garage Door Opener",
+      "Digital Compass"
+    ],
+    "premier": [
+      "Leather Seating Surfaces",
+      "Power Glass Moonroof",
+      "Power Passenger Seat",
+      "Classic Walnut Wood Inlays",
+      "Tinted Rear Seat and Cargo Area Windows",
+      "Cargo Cover",
+      "Grocery Bag Holder",
+      "12V Power Outlet in Cargo Area",
+      "Electric Folding Rear Headrests",
+      "Private Locking"
+    ]
+  }
+}

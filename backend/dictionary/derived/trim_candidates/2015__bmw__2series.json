@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|bmw|2series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "2 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Sport Line",
+    "Premium",
+    "Base",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

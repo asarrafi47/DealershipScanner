@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2012|acura|tl",
+  "year": 2012,
+  "make": "acura",
+  "model": "tl",
+  "ladder_id": "generic_acura_tl",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Advance": [
+      "mileage estimates determined by Acura. Final EPA"
+    ],
+    "Sport": [
+      "mileage will vary depending on how"
+    ],
+    "Technology": [
+      "Acura Navigation System with Voice Recognition",
+      "440-watt ELS Surround premium audio with 10 speakers and HDD",
+      "Rearview camera",
+      "Keyless Access System with smart entry and pushbutton ignition",
+      "GPS-linked, solar-sensing dual-zone climate control",
+      "Perforated Milano Premium Leather-trimmed interior",
+      "6-speed manual transmission option"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Technology": 0,
+      "Sport": 1
+    }
+  }
+}

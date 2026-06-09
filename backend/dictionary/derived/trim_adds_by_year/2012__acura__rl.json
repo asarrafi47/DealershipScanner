@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2012|acura|rl",
+  "year": 2012,
+  "make": "acura",
+  "model": "rl",
+  "ladder_id": "brochure_llm_2012__acura__rl",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance Package",
+    "Technology Package",
+    "RL"
+  ],
+  "adds_by_trim": {
+    "Advance Package": [
+      "Collision Mitigation Braking System (CMBS)",
+      "Adaptive Cruise Control (ACC)",
+      "Genuine wood trim",
+      "Power-folding side mirrors"
+    ],
+    "Technology Package": [
+      "Acura Navigation System with Voice Recognition and rearview camera",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "GPS-linked, solar-sensing dual-zone climate control",
+      "Active Front Lighting System (AFS)",
+      "Body-colored rear parking sensors",
+      "Ventilated front seats",
+      "Simulated wood-grained steering wheel and gearshift knob trim"
+    ],
+    "RL": [
+      "300-hp 3.7-liter SOHC VTEC V-6 engine with 6-speed automatic transmission",
+      "Super Handling All-Wheel Drive (SH-AWD)",
+      "4-wheel independent double wishbone and multi-link suspension",
+      "18-inch aluminum-alloy wheels with P245/45 R18 all-season tires",
+      "Dual-zone dual-mode automatic climate control",
+      "Keyless Access System with personalized settings",
+      "Bluetooth HandsFreeLink wireless telephone interface",
+      "Acura/Bose 10-speaker Surround Sound with XM Radio and 6-disc CD/DVD changer",
+      "USB Audio Interface with iPod integration",
+      "Power moonroof with tilt feature"
+    ]
+  }
+}

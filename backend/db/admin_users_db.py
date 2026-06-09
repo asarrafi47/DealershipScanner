@@ -9,7 +9,7 @@ from pathlib import Path
 
 from backend.db.dev_users_sqlite import DB_PATH as DEV_USERS_DB_PATH
 from backend.db.dev_users_sqlite import get_dev_users_conn
-from backend.db.password_hash import hash_password, verify_or_legacy
+from backend.db.password_hash import hash_password, password_needs_rehash, verify_or_legacy
 from backend.db import users_sqlite as legacy_users_sqlite
 from backend.utils.runtime_env import is_production_env
 
@@ -161,10 +161,10 @@ def authenticate_admin(login_input: str, password: str) -> tuple[int, str] | Non
         return None
     uid, uname, stored = row
     ok = verify_or_legacy(password, stored)
-    if ok and not stored.startswith("$2"):
+    if ok and password_needs_rehash(stored):
         cursor.execute(
-            "UPDATE admin_users SET password = ? WHERE id = ?",
-            (hash_password(password), uid),
+            "UPDATE admin_users SET password = ? WHERE id = ? AND password = ?",
+            (hash_password(password), uid, stored),
         )
         conn.commit()
     conn.close()

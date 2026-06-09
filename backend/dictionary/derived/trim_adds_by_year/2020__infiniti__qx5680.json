@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2020|infiniti|qx5680",
+  "year": 2020,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2020__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 LIMITED 4WD",
+    "QX80 LUXE 4WD",
+    "QX80 LUXE"
+  ],
+  "adds_by_trim": {
+    "QX80 LIMITED 4WD": [
+      "INFINITI All-Mode 4WD with computer-controlled transfer case and Auto/4WD High/4WD Low settings",
+      "Unique dark, machine-finished 22-inch forged aluminum wheels",
+      "Stainless steel running board caps with rubber grips",
+      "INFINITI Welcome Lighting",
+      "Satin chrome exterior trim including roof rails and crossbars",
+      "Unique front and rear bumper lower finish",
+      "Two-tone semi-aniline leather/Alcantara seats with quilting, contrast piping and stitching",
+      "Leather-wrapped steering wheel, shift knob and pillar grab handles",
+      "Matte Silver, Open Pore Ash Wood trim accents",
+      "Graphite Ultrasuede headliner and pillars"
+    ],
+    "QX80 LUXE 4WD": [
+      "INFINITI All-Mode 4WD with computer-controlled transfer case and Auto/4WD High/4WD Low settings"
+    ],
+    "QX80 LUXE": [
+      "5.6-liter V8 engine producing 400 hp at 5,800 rpm and 413 lb-ft torque",
+      "7-speed automatic transmission",
+      "Rear automatic self-leveling suspension",
+      "Trailer Sway Control with integrated Class IV tow hitch and 7-pin wiring harness",
+      "Automatic-on/off LED headlights with High Beam Assist",
+      "20-inch aluminum-alloy wheels with 275/60R20 all-season tires",
+      "Power folding, auto-dimming, heated outside mirrors",
+      "Leather-appointed seating with 10-way power driver seat and 2-way lumbar support",
+      "Bose 13-speaker Premium Sound system",
+      "INFINITI InTouch dual display system with 8-inch upper and 7-inch lower WXGA touchscreens"
+    ]
+  }
+}

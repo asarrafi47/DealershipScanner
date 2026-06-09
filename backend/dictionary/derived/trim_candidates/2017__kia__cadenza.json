@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2017|kia|cadenza",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Cadenza",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

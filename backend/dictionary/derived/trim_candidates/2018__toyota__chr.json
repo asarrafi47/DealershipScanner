@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2018|toyota|chr",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "CH-R",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "LE",
+    "Base",
+    "Premium",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "Adds to or replaces features offered on XLE",
+      "Powertrain Powertrain",
+      "2.0-Liter 4-Cylinder Engine \u2022 2.0-Liter 4-Cylinder Engine",
+      "Black Sand Pearl Blue Eclipse Metallic",
+      "Continuously Variable Transmission with intelligence and \u2022 Continuously Variable Transmission with intelligence and",
+      "Shift Mode (CVTi-S) Shift Mode (CVTi-S)",
+      "144 hp @ 6100 rpm \u2022 144 hp @ 6100 rpm",
+      "139 lb.-ft. @ 3900 rpm \u2022 139 lb.-ft. @ 3900 rpm",
+      "Exterior Features Exterior Features",
+      "Vortex-styled 18-in. Sport alloy wheels with P225/50R18 tires2 \u2022 Integrated fog lights",
+      "Color-keyed rear spoiler with unique cantilevered design \u2022 Color-keyed outside front and passenger door handles with Ruby Flare Pearl31 Magnetic Gray Metallic",
+      "Unique cluster LED Daytime Running Lights (DRL) with on/off feature touch-sensor lock/unlock feature"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

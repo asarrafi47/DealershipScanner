@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2017|buick|enclave",
+  "year": 2017,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "brochure_llm_2017__buick__enclave",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Group",
+    "Leather Group",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium Group": [
+      "8-Way power heated front seats with driver memory",
+      "Leather-appointed seating throughout",
+      "Heated steering wheel",
+      "Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "Power-folding heated outside mirrors",
+      "Forward Collision Alert and Lane Departure Warning",
+      "Articulating headlamps",
+      "All-Wheel-Drive System available",
+      "Power-tilt and telescopic steering wheel"
+    ],
+    "Leather Group": [
+      "Heated steering wheel",
+      "Leather-appointed seating",
+      "8-Way power heated front seats with driver memory",
+      "Side Blind Zone Alert",
+      "Rear Cross Traffic Alert",
+      "Audio System with Navigation available",
+      "PJH 19-inch chrome-clad cast aluminum wheels available",
+      "Forward Collision Alert and Lane Departure Warning available"
+    ],
+    "Base": [
+      "3.6L V-6 VVT engine with direct injection producing 288 hp",
+      "6-speed automatic transmission with front-wheel drive",
+      "7-passenger seating with captain's chairs and flat-folding",
+      "Buick IntelliLink infotainment with 6.5-inch touchscreen, CD, MP3, USB",
+      "6-speaker audio system",
+      "Tri-zone automatic climate control with individual settings",
+      "8-way power driver seat with lumbar control",
+      "HID xenon projector headlamps with automatic on/off",
+      "Dual-outlet stainless steel exhaust with bright tips",
+      "OnStar 4G with built-in Wi-Fi hotspot for up to 7 devices"
+    ]
+  }
+}

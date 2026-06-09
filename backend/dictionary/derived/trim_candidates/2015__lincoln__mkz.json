@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2015|lincoln|mkz",
+  "year": 2015,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Select",
+    "Standard",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2020|volvo|crosscountry",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "Cross Country",
+  "ladder_id": "brochure_llm_2020__volvo__crosscountry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Polestar",
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "Polestar": [
+      "2.0L Inline 4-cylinder Supercharged & Turbocharged engine with electric motor, 415 hp",
+      "Polestar Engineered Optimization powertrain software for enhanced performance",
+      "494 lb-ft max torque at 4,500 rpm",
+      "0-60 mph acceleration in 4.3 seconds",
+      "155 mph top speed"
+    ],
+    "Inscription": [
+      "Charcoal Perforated Fine Nappa Leather with Driftwood Inlays",
+      "Premium interior customization options"
+    ],
+    "R-Design": [
+      "Distinct exterior styling differentiating from Momentum trim"
+    ],
+    "Momentum": [
+      "2.0L Inline 4-cylinder Turbocharged engine, 250 hp",
+      "258 lb-ft max torque at 1,500-4,800 rpm",
+      "8-Speed Automatic Geartronic transmission",
+      "14.5 gallon fuel tank capacity",
+      "50.9 cubic feet maximum cargo space"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2011|buick|lacrosse",
+  "year": 2011,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2011__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SXC",
+    "LXC",
+    "XC"
+  ],
+  "adds_by_trim": {
+    "SXC": [
+      "18-inch chrome-plated alloy wheels",
+      "3.6L V-6 VVT engine with 280 hp and 259 lb-ft torque",
+      "17 city / 27 highway EPA-estimated MPG",
+      "12.8 cubic feet cargo capacity"
+    ],
+    "LXC": [
+      "18-inch machine-faced alloy painted wheels",
+      "3.6L V-6 VVT engine option with 280 hp and 259 lb-ft torque",
+      "19 gallon fuel tank capacity",
+      "16 city / 26 highway EPA-estimated MPG with V-6"
+    ],
+    "XC": [
+      "17-inch high-vent steel wheels with flush cover standard",
+      "2.4L 4-cylinder VVT engine with 182 hp and 172 lb-ft torque",
+      "19 city / 30 highway EPA-estimated MPG",
+      "13.3 cubic feet cargo capacity"
+    ]
+  }
+}

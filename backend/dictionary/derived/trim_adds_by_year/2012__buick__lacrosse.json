@@ -1,0 +1,65 @@
+{
+  "catalog_key": "2012|buick|lacrosse",
+  "year": 2012,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "ladder_id": "brochure_llm_2012__buick__lacrosse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring",
+    "Premium III",
+    "Premium II",
+    "Premium I",
+    "Leather",
+    "Convenience"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Rear-seat entertainment system with CD/DVD stereo player and dual displays",
+      "2 wireless headphones for rear-seat entertainment",
+      "Audio system with navigation"
+    ],
+    "Premium III": [
+      "3.6L VVT DI V-6 engine",
+      "All-wheel-drive system with V-6 only",
+      "18-inch chrome wheels (Q52)",
+      "HiPer Strut front suspension",
+      "Premium audio package with Harman Kardon 384-watt 11-speaker system"
+    ],
+    "Premium II": [
+      "Keyless access system with push-button start",
+      "Power rear sunshade",
+      "Heated steering wheel",
+      "Perforated and ventilated front seats"
+    ],
+    "Premium I": [
+      "18-inch alloy wheels (PW2)",
+      "Perforated and ventilated front seats",
+      "Premium audio package with Harman Kardon 384-watt 11-speaker system"
+    ],
+    "Leather": [
+      "Remote vehicle starter system",
+      "4-way power driver lumbar support",
+      "Universal home remote",
+      "Auto-dimming rearview mirror",
+      "Leather-appointed seating with heated front seats",
+      "8-way power front passenger seat",
+      "Halogen fog lamps with projector technology",
+      "Heated power-adjustable outside mirrors with LED indicators",
+      "Ultrasonic rear park assist",
+      "Rearview camera system"
+    ],
+    "Convenience": [
+      "2.4L EcoTec engine with eAssist technology and regenerative braking",
+      "6-speed automatic transmission with driver shift control",
+      "Front bucket seats with cloth trim",
+      "8-way power driver seat adjuster",
+      "Steering-wheel-mounted audio and cruise controls",
+      "Dual-zone automatic climate control",
+      "SiriusXM satellite radio with 3 trial months",
+      "OnStar 6 months of Directions & Connections plan",
+      "Bluetooth personal cell-phone connectivity",
+      "USB port and iPod support"
+    ]
+  }
+}

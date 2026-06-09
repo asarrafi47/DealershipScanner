@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|nissan|versa",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2021__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "17-inch split 5-spoke aluminum-alloy wheels",
+      "LED headlights with LED signature",
+      "Fog lights",
+      "Black-painted heated outside mirrors with LED turn signal indicators",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "Prima-Tex-appointed dash trim",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Remote Engine Start System",
+      "Dark chrome V-Motion grille"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist Display",
+      "NissanConnect 7-inch color touch-screen with Apple CarPlay and Android Auto",
+      "SiriusXM Radio with 3-month subscription",
+      "Body-color heated outside mirrors with integrated turn signal indicators",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "Body-color exterior door handles",
+      "Voice Recognition",
+      "Rear Door Alert"
+    ],
+    "S": [
+      "122-hp 1.6-liter DOHC 4-cylinder engine",
+      "5-speed manual transmission with available Xtronic CVT",
+      "Intelligent Forward Collision Warning",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking",
+      "Lane Departure Warning",
+      "High Beam Assist",
+      "RearView Monitor",
+      "7-inch touch-screen display",
+      "Bluetooth Hands-free Phone System with Streaming Audio and Siri Eyes Free"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2015|toyota|tacoma",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "inventory_toyota_tacoma",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "TRD"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "8100 (11,100) | – | –/",
+      "severe collisions: frontal and knee ABs typically inflate in frontal collisions; side and side curtain ABs in side collisions; Roll-Sensing Curtain ABs at a",
+      "passenger seat. The force of an inflating AB may cause serious injury or death. See your Owner’s Manual for further information/warnings. 17. Do not use rearward-facing child seats in any front",
+      "driver maintain vehicle control under adverse conditions. It is not a substitute for safe driving practices. Factors including speed, road conditions and",
+      "vehicle and may not be financed together with the new",
+      "Toyota Car, Truck and SUV is built to exceptional standards. And that’s not idle boasting. For Genuine",
+      "details. For complete",
+      "Accessories: For Genuine Toyota",
+      "the Toyota Rewards Visa® adds even more value to doing the things you love. conditions and restrictions apply and are fully described in",
+      "Toyota dealers and 1 point for every $1 spent everywhere else Visa is accepted.* dealerships in the continental U.S. and Alaska. Points cannot be redeemed for cash. Please contact your participating",
+      "Toyota Financial Services (TFS)† is a leading provider of automotive financial services, offering an extensive line of"
+    ],
+    "TRD": [
+      "72.2 | 74.6 | 74.0 | 74.6 | 74.6 | 74.6",
+      "190.4 | 208.1 | 208.1 | 208.1 | 208.1 | 208.1 | 221.3",
+      "109.6 | 127.4 | 127.4 | 127.4 | 127.4 | 127.4 | 140.6",
+      "73.5 | 73.5 | 73.5 | 60.3 | 60.3 | 73.5",
+      "58.1 | 57.7/55.7 | 57.7/55.7 | 57.7/55.7 | 57.7/58.7 | 57.7/58.7 | 57.7/58.7",
+      "4.10 | – | – | –/– | –/",
+      "4.10 | – | 3.58 | 3.58/– | 3.58/",
+      "| – | 3.73/3.73 | 3.73/3.73",
+      "56.1 | 55.6/33.1 | 55.6/33.1 | 55.6/33.1 | 55.8/43.1 | 55.8/43.1 | 55.8/43.1",
+      "3500 | 3500 | 3300 | 3400",
+      "Toyota. 6. Availability and accuracy",
+      "information provided. Services"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "TRD": 0
+    }
+  }
+}

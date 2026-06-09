@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|ford|taurus",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_2017__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "SEL": [
+      "Adds moonroof deflector",
+      "Adds side window deflectors",
+      "Adds molded splash guards",
+      "Adds chrome mirror caps",
+      "Adds chrome-plated wheel lock kit"
+    ],
+    "Limited": [
+      "Adds hood protector",
+      "Adds rear decklid spoiler",
+      "Adds rear pedestal spoiler",
+      "Adds locking fuel plug",
+      "Adds bumper-mounted warning sensor systems",
+      "Adds remote access capability",
+      "Adds remote start system",
+      "Adds vehicle security system"
+    ]
+  }
+}

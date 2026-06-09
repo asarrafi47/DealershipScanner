@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|lexus|lc",
+  "year": 2019,
+  "make": "lexus",
+  "model": "LC",
+  "ladder_id": "generic_lexus_lc",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "conditions, weather and driver steering input can all affect whether VDIM will be",
+      "the seatback. Do not use a rearward-facing child seat in any front passenger seat. See",
+      "Bluetooth SIG, Inc. and any use of such marks by Lexus is under license. A compatible",
+      "system. When you insert your key into the ignition switch or bring a Smart Key fob into the vehicle, the",
+      "r vehicle. To avoid potential interference with pedal operation, each liner/mat must be secured with its fasteners. Do",
+      "floor liner/mat. 42. 2018 Kelley Blue Book Brand Image Awards are based on the Brand Watch\u2122 study from Kelley Blue Book Strategic"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 6.0,
+    "per_trim_add_counts": {
+      "Limited": 6
+    }
+  }
+}

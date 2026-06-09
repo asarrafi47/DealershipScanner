@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2022|toyota|tundra",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_2022__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1794",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "SR",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "SR": [
+      "5.7-liter 381 hp DOHC V8 engine standard",
+      "6-speed electronically controlled automatic transmission with sequential shift",
+      "Independent double-wishbone front suspension with nitrogen shock absorbers",
+      "Live axle multi-leaf rear suspension with nitrogen shock absorbers",
+      "Power-assisted rack-and-pinion steering",
+      "13.9-inch ventilated front and 13.6-inch rear disc brakes",
+      "Electronic Direct Ignition system with heavy-duty battery",
+      "Rear-Wheel Drive standard with optional 4WDemand 4WD",
+      "All-season tires with full-size spare"
+    ],
+    "SR5": [
+      "38.0-gallon fuel tank available",
+      "Double Cab or CrewMax body styles"
+    ],
+    "TRD": [],
+    "TRD Sport": [],
+    "TRD Off-Road": [
+      "Adds Crawl Control for low-speed terrain navigation",
+      "Adds Downhill Assist Control for steep descent management"
+    ],
+    "TRD Pro": [
+      "Adds standard backup camera functionality",
+      "Adds standard Qi wireless charging capability"
+    ],
+    "Limited": [
+      "Adds standard HomeLink remote system",
+      "Adds standard Front and Rear Parking Assist with Automatic Braking"
+    ],
+    "Platinum": [
+      "38.0-gallon fuel tank standard",
+      "CrewMax body style with full rear seat legroom and hiproom"
+    ],
+    "1794": [
+      "Available in Double Cab 6.5-ft. bed or 8.1-ft. bed configurations",
+      "Available in CrewMax 6.5-ft. bed configuration",
+      "i-FORCE MAX Hybrid powertrain option in 4x2 and 4x4",
+      "Premium 1794 Edition trim unique styling and interior appointments"
+    ]
+  }
+}

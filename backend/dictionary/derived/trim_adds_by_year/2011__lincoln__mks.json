@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2011|lincoln|mks",
+  "year": 2011,
+  "make": "Lincoln",
+  "model": "MKS",
+  "ladder_id": "brochure_2011__lincoln__mks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 18-in. 10-spoke bright machined/painted cast-aluminum wheels as standard",
+      "Adds Standard seating surfaces"
+    ],
+    "Limited": [
+      "Adds availability of 19-in. 10-spoke premium painted cast-aluminum wheels with EcoBoost"
+    ],
+    "Standard": [
+      "Adds availability of 20-in. 10-spoke polished wheels with EcoBoost Appearance Package"
+    ]
+  }
+}

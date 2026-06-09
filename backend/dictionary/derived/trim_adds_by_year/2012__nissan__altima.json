@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|nissan|altima",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2012__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5 SR",
+    "2.5 S",
+    "2.5"
+  ],
+  "adds_by_trim": {
+    "3.5 SR": [
+      "3.5-liter DOHC 24-valve V6 engine with 270 horsepower and 258 lb-ft torque",
+      "High Intensity Discharge (HID) xenon headlights",
+      "Leather-appointed seats with heated front seats",
+      "Driver's power adjustable lumbar support",
+      "Leather-wrapped shift knob"
+    ],
+    "2.5 S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine with 175 horsepower and 180 lb-ft torque",
+      "8-way power adjustable driver's seat with manual lumbar support",
+      "Leather-wrapped steering wheel with steering-wheel-mounted audio controls",
+      "Automatic on/off headlights",
+      "Dual illuminated visor vanity mirrors with sun visor extenders"
+    ],
+    "2.5": [
+      "6-way manual adjustable driver's seat",
+      "4 speakers AM/FM/CD audio system",
+      "16-inch steel wheels with bolt-on wheel covers",
+      "P215/60R16 all-season tires",
+      "Basic automatic on/off headlights and wipers"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2018|dodge|challenger",
+  "year": 2018,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2018__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT HELLCAT",
+    "SRT 392",
+    "R/T SHAKER",
+    "R/T PACK 392",
+    "R/T SHAKERS",
+    "R/T PLUS",
+    "R/T",
+    "SXT PLUS (AWD)",
+    "SXT PLUS",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT HELLCAT": [
+      "Advanced SRT multistage driver and front-passenger air bags",
+      "Satin Black high downforce rear spoiler with back-up camera",
+      "18 Harman Kardon high-performance speakers with 900-watt digital amplifier",
+      "Demon Vehicle Storage Package with Demon car cover and Mopar battery manager"
+    ],
+    "SRT 392": [
+      "Advanced SRT multistage driver and front-passenger air bags",
+      "18 Harman Kardon high-performance speakers with 900-watt digital amplifier",
+      "Satin Black rear spoiler with back-up camera"
+    ],
+    "R/T SHAKER": [
+      "T/A spoiler decal"
+    ],
+    "R/T PACK 392": [
+      "6 premium Alpine speakers with 276-watt digital amplifier",
+      "Optional Blacktop Package with fog lamps and Satin Black rear spoiler"
+    ],
+    "R/T SHAKERS": [
+      "Optional 9 premium Alpine speakers with subwoofer and 506-watt digital amplifier"
+    ],
+    "R/T PLUS": [
+      "Power multifunction heated foldaway mirrors",
+      "Optional 6 premium Alpine speakers with 276-watt digital amplifier"
+    ],
+    "R/T": [
+      "Advanced multistage driver and front-passenger air bags",
+      "Remote Keyless Enter 'n Go",
+      "Security Alarm and Sentry Key antitheft immobilizer",
+      "ParkView rear back-up camera",
+      "Supplemental front and rear side-curtain air bags"
+    ],
+    "SXT PLUS (AWD)": [
+      "All-wheel drive system"
+    ],
+    "SXT PLUS": [
+      "Power body-color manual folding heated mirrors",
+      "Body-color rear spoiler with back-up camera",
+      "Optional Blacktop Package and Cold Weather Group"
+    ],
+    "SXT": [
+      "160-mph primary speedometer",
+      "Power windows and locks",
+      "Air conditioning",
+      "AM/FM radio with Bluetooth and voice command",
+      "ParkView rear back-up camera"
+    ]
+  }
+}

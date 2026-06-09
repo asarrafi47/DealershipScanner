@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2008_porsche_911_complete_options",
+  "make": "Porsche",
+  "models": [
+    "911",
+    "911"
+  ],
+  "year_min": 2006,
+  "year_max": 2010,
+  "source": "generated",
+  "trims": {
+    "GT3 RS": [
+      {
+        "label": "Engine Options",
+        "value": "Manual 6-spd; Rear-Wheel Drive"
+      }
+    ],
+    "GT3": [
+      {
+        "label": "Engine Options",
+        "value": "Manual 6-spd; Rear-Wheel Drive"
+      }
+    ],
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ]
+  }
+}

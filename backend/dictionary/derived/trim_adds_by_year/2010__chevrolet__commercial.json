@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|chevrolet|commercial",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "brochure_llm_2010__chevrolet__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Tahoe",
+    "Suburban"
+  ],
+  "adds_by_trim": {
+    "Tahoe": [
+      "Available with police, special service and fleet packages",
+      "Vortec 5.3L FlexFuel V8 engine standard with 320 hp and 335 lb-ft torque",
+      "Hydra-Matic six-speed automatic transmission with Tow/Haul mode standard",
+      "Trailering capacity up to 8,400 lbs with standard configuration",
+      "Available Tahoe Hybrid model, most fuel-efficient SUV in its class"
+    ],
+    "Suburban": [
+      "Vortec 6.0L V8 engine option with 352 hp and 382 lb-ft torque for three-quarter-ton models",
+      "Hydra-Matic heavy-duty six-speed automatic transmission standard on three-quarter-ton models",
+      "Available seating for nine with up to 137.4 cubic feet of cargo space",
+      "Trailering capacity up to 9,600 lbs on three-quarter-ton models",
+      "Four-wheel antilock disc brakes with hydroboost available on three-quarter-ton models",
+      "OnStar standard for first year with 100,000 mile/5-year transferable Powertrain Limited Warranty"
+    ]
+  }
+}

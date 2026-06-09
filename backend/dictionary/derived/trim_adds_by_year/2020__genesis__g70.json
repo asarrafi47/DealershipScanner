@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|genesis|g70",
+  "year": 2020,
+  "make": "genesis",
+  "model": "G70",
+  "ladder_id": "brochure_2020__genesis__g70",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Adds Lane Keeping Assist",
+      "Adds Blind-Spot Collision Warning",
+      "Adds Rear Cross-Traffic Collision Warning",
+      "Adds Driver Attention Warning",
+      "Adds Smart Cruise Control",
+      "Adds Smart Trunk with Proximity Key",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds Genesis Connected Services for 3 years complimentary"
+    ],
+    "Premium": [],
+    "Limited": [
+      "vehicle and will not prevent accidents. There are limitations to the function, range, Conditions. Three-year term starts from the new"
+    ],
+    "Advanced": [
+      "19-inch Alloy Wheels",
+      "Parking Distance Warning – Forward & Reverse",
+      "Power Tilt-and-Slide Wide Sunroof",
+      "Aluminum Trim with Sport Pattern",
+      "Lexicon 15-Speaker Premium Audio System with QuantumLogic Surround",
+      "Wireless Device Charging",
+      "Power Driver Seat Side Bolsters and Cushion Extension",
+      "Genesis Digital Key"
+    ],
+    "Prestige": [
+      "3.3L Twin-Turbo V6 engine with 365 HP and 376 lb-ft torque",
+      "Heads-up Display",
+      "Surround View Monitor",
+      "Nappa leather seating surfaces with luxury quilting",
+      "Heated rear seats",
+      "Microfiber suede headliner"
+    ]
+  }
+}

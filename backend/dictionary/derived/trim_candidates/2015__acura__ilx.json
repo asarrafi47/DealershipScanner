@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2015|acura|ilx",
+  "year": 2015,
+  "make": "acura",
+  "model": "ilx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Technology",
+    "Base",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

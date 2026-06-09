@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2018|lincoln|mkx",
+  "year": 2018,
+  "make": "Lincoln",
+  "model": "MKX",
+  "ladder_id": "brochure_2018__lincoln__mkx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Electric parking brake",
+      "Adds Electric Power-Assisted Steering (EPAS)",
+      "Adds Front-wheel drive (FWD)",
+      "Adds Power disc brakes with Anti-Lock Brake System (ABS)",
+      "Adds Torque Vectoring Control",
+      "Adds Autolamp automatic on/off headlamps",
+      "Adds Hill start assist",
+      "Adds Reverse Sensing System",
+      "Adds SYNC 3 Enhanced Voice Recognition with 8-inch color LCD touchscreen, Apple CarPlay, and Android Auto",
+      "Adds Personal Safety System with dual-stage front airbags and safety belt pretensioners"
+    ],
+    "Limited": [
+      "eatures and/or production variability."
+    ],
+    "Standard": []
+  }
+}

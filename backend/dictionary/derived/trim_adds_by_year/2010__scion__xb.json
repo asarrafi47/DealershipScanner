@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|scion|xb",
+  "year": 2010,
+  "make": "Scion",
+  "model": "xB",
+  "ladder_id": "brochure_web_2010__scion__xb",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "xB 5dr Wgn Auto 686 Parklan Edition",
+    "xB 5dr Wgn Auto",
+    "xB 5dr Wgn Man"
+  ],
+  "adds_by_trim": {
+    "xB 5dr Wgn Auto 686 Parklan Edition": [
+      "686 Parklan special edition branding and styling"
+    ],
+    "xB 5dr Wgn Auto": [
+      "Four-speed automatic transmission versus five-speed manual"
+    ],
+    "xB 5dr Wgn Man": [
+      "2.4-liter I-4 engine with 158 hp and 162 lb-ft torque",
+      "Five-speed manual transmission",
+      "Standard rearview camera",
+      "Up to 69.9 cubic feet cargo volume with rear seats folded",
+      "Five-passenger seating capacity"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/xb/"
+}

@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2020|hyundai|palisade",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Palisade",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SEL Premium",
+    "SEL",
+    "SE",
+    "Blue",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

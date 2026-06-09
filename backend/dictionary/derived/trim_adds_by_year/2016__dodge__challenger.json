@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2016|dodge|challenger",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2016__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat",
+    "392",
+    "Scat Pack",
+    "Blacktop",
+    "R/T",
+    "Super Sport",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT Hellcat": [
+      "392-cu-in 6.4L HEMI V8 with TorqueFlite 8-speed automatic transmission",
+      "SRT performance leather-wrapped flat-bottom heated steering wheel",
+      "200-mph primary speedometer with red-faced gauges",
+      "Active stainless steel performance dual exhaust with low-restriction bottle resonators"
+    ],
+    "392": [
+      "392-cu-in 6.4L HEMI V8 engine with TREMEC 6-speed manual transmission",
+      "180-mph primary speedometer",
+      "Performance leather-wrapped steering wheel with vehicle controls",
+      "Heated steering wheel"
+    ],
+    "Scat Pack": [
+      "Premium Scat Pack floor mats with Scat Pack Appearance Group",
+      "Hectic mesh aluminum interior accents",
+      "Performance leather-wrapped steering wheel",
+      "5.7L HEMI V8 with TorqueFlite 8-speed automatic transmission"
+    ],
+    "Blacktop": [
+      "Gloss Black interior accents",
+      "Projector fog lamps",
+      "Performance leather-wrapped steering wheel with vehicle controls",
+      "P245/45ZR20 performance tires or P245/45ZR20 all-season performance tires",
+      "Black rear spoiler with back-up camera"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 with TREMEC 6-speed manual or TorqueFlite 8-speed automatic transmission",
+      "Bifunctional HID headlamps with integrated Air Catcher",
+      "Split LED-illuminated taillamps with Gloss Black surround",
+      "Steering wheel-mounted paddle shifters with automatic transmission"
+    ],
+    "Super Sport": [
+      "P245/45R20 all-season performance tires",
+      "Body-color rear spoiler with back-up camera",
+      "Steering wheel-mounted paddle shifters with automatic transmission"
+    ],
+    "SXT": [
+      "3.6L Pentastar V6 with TorqueFlite 8-speed automatic transmission",
+      "Bifunctional halogen projector headlamps with quad halo LED surround",
+      "LED-illuminated daytime running lamps with park and turn indicators",
+      "Dual-zone automatic temperature control with front/rear passenger climate control",
+      "Power windows, locks, and mirrors with manual folding"
+    ]
+  }
+}

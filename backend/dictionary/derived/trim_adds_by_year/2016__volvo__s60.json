@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2016|volvo|s60",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2016__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T6 AWD R-Design",
+    "T6 AWD Inscription",
+    "T6 R-Design",
+    "T6 Inscription",
+    "T5 R-Design",
+    "T5 Inscription",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "T6 AWD R-Design": [
+      "3.0L 326 hp supercharged and turbocharged Drive-E engine",
+      "All-wheel drive system with Torque Vectoring",
+      "Sport leather perforated seating surfaces",
+      "19-inch Sport alloy wheels"
+    ],
+    "T6 AWD Inscription": [
+      "Leather seating surfaces standard",
+      "Heated rear seats",
+      "Power rear window sunblind"
+    ],
+    "T6 R-Design": [
+      "3.0L 326 hp supercharged and turbocharged Drive-E engine",
+      "Sport leather perforated seating surfaces",
+      "19-inch Sport alloy wheels",
+      "Dynamic Chassis Control with Torque Vectoring"
+    ],
+    "T6 Inscription": [
+      "3.0L 326 hp supercharged and turbocharged Drive-E engine",
+      "Leather seating surfaces standard",
+      "Heated rear seats",
+      "Power rear window sunblind"
+    ],
+    "T5 R-Design": [
+      "18-inch Titania alloy wheels",
+      "Unique R-Design exterior and interior styling"
+    ],
+    "T5 Inscription": [
+      "Leather seating surfaces",
+      "Heated front and rear seats",
+      "Heated steering wheel"
+    ],
+    "T5": [
+      "2.0L 240 hp turbocharged Drive-E engine",
+      "City Safety low speed collision avoidance system",
+      "Dual-zone electronic climate control with pollen filter",
+      "Sensus Navigation with Mapcare",
+      "SiriusXM Satellite Radio with 6-month subscription",
+      "Bluetooth connectivity with USB and iPod inputs",
+      "LED daytime running lights"
+    ]
+  }
+}

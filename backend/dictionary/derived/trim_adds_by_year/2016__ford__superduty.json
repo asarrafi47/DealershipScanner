@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2016|ford|superduty",
+  "year": 2016,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_llm_2016__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARIAT Ultimate Package",
+    "LARIAT"
+  ],
+  "adds_by_trim": {
+    "LARIAT Ultimate Package": [
+      "Power moonroof",
+      "Tailgate step",
+      "Crew Cab body style only"
+    ],
+    "LARIAT": [
+      "40/20/40 split leather-trimmed front seats with 12-volt powerpoint",
+      "Power heated/cooled driver and front-passenger seats with memory",
+      "Center under-seat lockable storage with armrest and cupholders",
+      "Power trailer tow mirrors with memory",
+      "Memory power-adjustable pedals",
+      "Remote Start System",
+      "Heated rear outboard seats available (Crew Cab only)",
+      "Navigation System with Premium Sound System including HD Radio and 8 speakers with subwoofer",
+      "SYNC with MyFord Touch 8-inch color LCD touchscreen",
+      "Auto-dimming rearview mirror with Ice Blue lighting"
+    ]
+  }
+}

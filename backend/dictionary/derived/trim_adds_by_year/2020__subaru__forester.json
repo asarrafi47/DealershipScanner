@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2020|subaru|forester",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2020__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Forester Touring",
+    "Forester Limited",
+    "Forester Sport",
+    "Forester Premium",
+    "Forester"
+  ],
+  "adds_by_trim": {
+    "Forester Touring": [
+      "18 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/55 R18 all-season tires",
+      "12.4-inch front brake discs",
+      "Dual-mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "Sport Sharp (S#) SI-DRIVE mode"
+    ],
+    "Forester Limited": [
+      "18 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "225/55 R18 all-season tires",
+      "12.4-inch front brake discs",
+      "Dual-mode X-MODE with Snow/Dirt and Deep Snow/Mud modes"
+    ],
+    "Forester Sport": [
+      "18 x 7.0-inch aluminum-alloy wheels with black finish",
+      "225/55 R18 all-season tires",
+      "12.4-inch front brake discs",
+      "Dual-mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "Sport Sharp (S#) SI-DRIVE mode"
+    ],
+    "Forester Premium": [
+      "17 x 7.0-inch aluminum-alloy wheels with black machine finish",
+      "Single-mode X-MODE system",
+      "Hill Descent Control",
+      "Electronic Parking Brake"
+    ],
+    "Forester": [
+      "17 x 7.0-inch steel wheels with covers",
+      "225/60 R17 all-season tires",
+      "11.6-inch front brake discs",
+      "Electronic power-assisted rack-and-pinion steering",
+      "Lineartronic CVT with 7-speed manual mode"
+    ]
+  }
+}

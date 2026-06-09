@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|tesla|models",
+  "year": 2014,
+  "make": "tesla",
+  "model": "Model S",
+  "ladder_id": "brochure_llm_2014__tesla__models",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Model S Performance Plus",
+    "Model S Performance",
+    "Model S"
+  ],
+  "adds_by_trim": {
+    "Model S Performance Plus": [
+      "85 kWh battery with 416 hp and 443 lb-ft torque",
+      "4.2 second 0-60 mph acceleration",
+      "130 mph top speed",
+      "Upgraded dampers, bushings, and stabilizer bars",
+      "Michelin Pilot Sport PS2 tires with 20 mm wider staggered rear tires",
+      "Improved acceleration on low grip surfaces",
+      "Enhanced ride quality and range versus Performance"
+    ],
+    "Model S Performance": [
+      "85 kWh battery with 362 hp and 325 lb-ft torque",
+      "5.4 second 0-60 mph acceleration",
+      "125 mph top speed",
+      "Supercharging included standard"
+    ],
+    "Model S": [
+      "Available 60 kWh battery option with 302 hp and 317 lb-ft torque",
+      "5.9 second 0-60 mph with 60 kWh battery",
+      "120 mph top speed with 60 kWh battery",
+      "208 mile EPA certified range with 60 kWh battery",
+      "All Glass Panoramic Roof blocks 98 percent visible light and 81 percent heat",
+      "Hidden charge port integrated into streamlined body panels",
+      "Retractable door handles that slide out when approaching vehicle",
+      "17-inch touchscreen with mobile connectivity",
+      "Electronic Power Steering with adaptive response to driving conditions",
+      "Smart Air Suspension with automatic and on-demand features"
+    ]
+  }
+}

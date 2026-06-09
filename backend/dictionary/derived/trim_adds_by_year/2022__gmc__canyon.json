@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2022|gmc|canyon",
+  "year": 2022,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_llm_2022__gmc__canyon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "Elevation",
+    "SLE"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "20-inch low-gloss black aluminum wheels",
+      "Black 5-inch rectangular assist steps",
+      "GMC black chrome exhaust tip",
+      "All-weather floor liners",
+      "Driver Alert Package standard (Forward Collision Alert, Lane Departure Warning, Rear Park Assist)",
+      "Trailering Package standard on all Crew Cab long bed models"
+    ],
+    "AT4": [
+      "AT4 Off-Road Performance Edition Package available (17-inch gloss-black wheels, spray-on bedliner, leveling kit, skid plates)",
+      "Off-road-focused suspension and protection features",
+      "Driver Alert Package available (Forward Collision Alert, Lane Departure Warning, Rear Park Assist)"
+    ],
+    "Elevation": [
+      "Elevation Premium Package available (Jet Black leather-appointed front seating, heated front seats, heated steering wheel)",
+      "Power driver lumbar-control seat adjuster",
+      "Convenience Package available (remote keyless entry, electronic cruise control, rear-window defogger)",
+      "EZ-Lift and Lower Tailgate available on Elevation Standard"
+    ],
+    "SLE": [
+      "Rear-window electric defogger and EZ-Lift and Lower Tailgate",
+      "Single-zone automatic climate control with rear sliding window",
+      "8-inch color touchscreen with GMC Infotainment System",
+      "Front fog lamps",
+      "Spray-on bedliner with GMC or Denali logo",
+      "Eaton heavy-duty automatic locking rear differential"
+    ]
+  }
+}

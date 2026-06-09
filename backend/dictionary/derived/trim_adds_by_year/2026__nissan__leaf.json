@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2026|nissan|leaf",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2026__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM+",
+    "SV+",
+    "S+"
+  ],
+  "adds_by_trim": {
+    "PLATINUM+": [
+      "12-way power driver's seat with 4-way lumbar and position memory",
+      "Heated rear outboard seats",
+      "Heated steering wheel",
+      "Head-Up Display",
+      "Bose Personal Plus Audio System with 10 speakers and UltraNearfield technology",
+      "14.3-inch digital dashboard with fully digital gauges",
+      "Dimming panoramic roof",
+      "Dark satin katana blade roof finisher",
+      "Motion Activated Liftgate",
+      "Roof rails"
+    ],
+    "SV+": [
+      "EPA-estimated range up to 288 miles",
+      "Regenerative braking paddles",
+      "Front and rear sonar system",
+      "Power outside mirrors with turn signals",
+      "18-inch aluminum-alloy wheels",
+      "8-way power driver's seat",
+      "Hybrid heater system",
+      "Rear passenger air conditioning vents",
+      "14.3-inch digital dashboard with Google built-in",
+      "Wireless charger and four USB-C ports"
+    ],
+    "S+": [
+      "EPA-estimated range up to 303 miles",
+      "160 kW AC synchronous electric motor with 355 Nm torque",
+      "75 kWh lithium-ion battery with 150 kW DC quick charge (NACS)",
+      "Drive Mode Selector with regenerative braking e-Step Mode",
+      "ProPILOT Assist with Safety Shield 360 autonomous emergency braking",
+      "HD Enhanced Intelligent Around View Monitor",
+      "18-inch steel wheels with aero covers",
+      "LED headlights with signature daytime running lights",
+      "12.3-inch digital dashboard with fully digital gauges",
+      "NissanConnect 12.3-inch infotainment with wireless Apple CarPlay and Android Auto"
+    ]
+  }
+}

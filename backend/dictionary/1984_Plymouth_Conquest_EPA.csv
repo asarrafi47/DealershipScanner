@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1984,Plymouth,Conquest,Conquest,2.6L I4 ((CALIF)),Automatic 4-spd,,Regular Gasoline,Subcompact Cars,4,2.6,17,23,19,,,,,,2.6L I4,
-1984,Plymouth,Conquest,Conquest,"2.6L I4 ((FFS,TRBO))",Automatic 4-spd,,Regular Gasoline,Subcompact Cars,4,2.6,17,23,19,,,,,,2.6L I4,
-1984,Plymouth,Conquest,Conquest,2.6L I4 ((CALIF)),Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,2.6,17,22,19,,,,,,2.6L I4,
-1984,Plymouth,Conquest,Conquest,"2.6L I4 ((FFS,TRBO))",Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,2.6,17,22,19,,,,,,2.6L I4,
-1984,Plymouth,Conquest,Conquest,"2.6L I4 ((FFS,TRBO) CA model)",Automatic 4-spd,,Regular Gasoline,Subcompact Cars,4,2.6,17,23,19,,,,,,2.6L I4,
-1984,Plymouth,Conquest,Conquest,"2.6L I4 ((FFS,TRBO) CA model)",Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,2.6,17,22,19,,,,,,2.6L I4,

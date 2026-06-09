@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2020|porsche|taycan",
+  "year": 2020,
+  "make": "Porsche",
+  "model": "Taycan",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2020_Porsche_Taycan_Brochure.pdf",
+  "page_count": 28,
+  "all_pages": false,
+  "trim_hint_pages": [
+    2,
+    28
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 2,
+      "trim_hint": true,
+      "text": "European models shown. Some options may not be available in the U.S. Some items of equipment are available as extra-cost options only. The availability of models and options may\nvary from market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult your authorized Porsche dealer. All information\nregarding construction, features, design, performance, dimensions, weight, fuel consumption and running costs is correct to the best of our knowledge at the time of going to print\n(10/2019). Porsche reserves the right to alter specifications, equipment and delivery scopes without prior notice. Colors may differ from those illustrated. Errors and omissions excepted.\nMore information in various languages is available at www.porsche.com/BEV",
+      "table_lines": []
+    },
+    {
+      "page": 28,
+      "trim_hint": true,
+      "text": "\u00a9 Dr. Ing. h.c. F. Porsche AG is the owner of Porsche Cars North America, Inc. believes the\nnumerous trademarks, both registered and specifications to be correct at the time of printing.\nunregistered, including without limitation the However, specifications, standard equipment and\nPorsche Crest\u00ae, Porsche\u00ae, Boxster\u00ae, Carrera\u00ae, options are subject to change without notice.\nCayenne\u00ae, Cayman\u00ae, Macan\u00ae, Panamera\u00ae, Some options may be unavailable when a car is built.\nSpyder\u00ae, Taycan\u2122, Tiptronic\u00ae, VarioCam\u00ae, PCM\u00ae, Some vehicles may be shown with non-U.S.\nPDK\u00ae, 911\u00ae, 718\u00ae, RS\u00ae, 4S\u00ae, 918 Spyder\u00ae, equipment. Please ask your authorized Porsche\nFOUR UNCOMPROMISED\u00ae, and the model dealer for advice concerning the current availability\nnumbers and distinctive shapes of the Porsche of options and verify the optional equipment that\nautomobiles such as, the federally registered you ordered.\n911 and Boxster automobile.\nPorsche recommends seat belt usage and\nThe third party trademarks contained herein are observance of traffic laws at all times.\nthe properties of their respective owners.\nAll text, images, and other content in this \u00a9 2019 Porsche Cars North America, Inc.\npublication are protected by copyright. One Porsche Drive\nAtlanta, GA 30354\nNo part of this publication may be reproduced in www.porscheusa.com\nany form or by any means without prior written\npermission of Porsche Cars North America, Inc. Effective from: 09/2019\nPrinted in Germany\nWSLT1901000123 EN/US",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\nEuropean models shown. Some options may not be available in the U.S. Some items of equipment are available as extra-cost options only. The availability of models and options may\nvary from market to market due to local restrictions and regulations. For information on standard and optional equipment, please consult your authorized Porsche dealer. All information\nregarding construction, features, design, performance, dimensions, weight, fuel consumption and running costs is correct to the best of our knowledge at the time of going to print\n(10/2019). Porsche reserves the right to alter specifications, equipment and delivery scopes without prior notice. Colors may differ from those illustrated. Errors and omissions excepted.\nMore information in various languages is available at www.porsche.com/BEV\n\n--- page 28 ---\n\u00a9 Dr. Ing. h.c. F. Porsche AG is the owner of Porsche Cars North America, Inc. believes the\nnumerous trademarks, both registered and specifications to be correct at the time of printing.\nunregistered, including without limitation the However, specifications, standard equipment and\nPorsche Crest\u00ae, Porsche\u00ae, Boxster\u00ae, Carrera\u00ae, options are subject to change without notice.\nCayenne\u00ae, Cayman\u00ae, Macan\u00ae, Panamera\u00ae, Some options may be unavailable when a car is built.\nSpyder\u00ae, Taycan\u2122, Tiptronic\u00ae, VarioCam\u00ae, PCM\u00ae, Some vehicles may be shown with non-U.S.\nPDK\u00ae, 911\u00ae, 718\u00ae, RS\u00ae, 4S\u00ae, 918 Spyder\u00ae, equipment. Please ask your authorized Porsche\nFOUR UNCOMPROMISED\u00ae, and the model dealer for advice concerning the current availability\nnumbers and distinctive shapes of the Porsche of options and verify the optional equipment that\nautomobiles such as, the federally registered you ordered.\n911 and Boxster automobile.\nPorsche recommends seat belt usage and\nThe third party trademarks contained herein are observance of traffic laws at all times.\nthe properties of their respective owners.\nAll text, images, and other content in this \u00a9 2019 Porsche Cars North America, Inc.\npublication are protected by copyright. One Porsche Drive\nAtlanta, GA 30354\nNo part of this publication may be reproduced in www.porscheusa.com\nany form or by any means without prior written\npermission of Porsche Cars North America, Inc. Effective from: 09/2019\nPrinted in Germany\nWSLT1901000123 EN/US"
+}

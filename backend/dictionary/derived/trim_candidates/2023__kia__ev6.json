@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2023|kia|ev6",
+  "year": 2023,
+  "make": "Kia",
+  "model": "EV6",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GT",
+    "GT-Line",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

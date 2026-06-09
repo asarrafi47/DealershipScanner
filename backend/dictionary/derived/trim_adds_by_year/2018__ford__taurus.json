@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|ford|taurus",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_2018__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "Sport",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds SYNC 3 infotainment system with touchscreen",
+      "Adds voice control compatibility",
+      "Adds 2 smart-charging USB ports",
+      "Adds standard safety restraint coverage",
+      "Adds New Vehicle Limited Warranty with bumper-to-bumper coverage"
+    ],
+    "Sport": [
+      "Adds sport pedals",
+      "Adds splash guards",
+      "Adds molded splash guards protection"
+    ],
+    "SEL": [
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM Traffic & Travel Link with 5-year complimentary service",
+      "Adds voice-activated navigation with 3D maps",
+      "Adds FordPass smartphone app access",
+      "Adds remote start systems",
+      "Adds vehicle security system"
+    ],
+    "Limited": [
+      "Adds moonroof with deflector",
+      "Adds rear seat entertainment system",
+      "Adds chrome mirror caps",
+      "Adds chrome-plated wheel lock kit",
+      "Adds full vehicle cover",
+      "Adds hood protector",
+      "Adds interior light kit",
+      "Adds remote access capability"
+    ]
+  }
+}

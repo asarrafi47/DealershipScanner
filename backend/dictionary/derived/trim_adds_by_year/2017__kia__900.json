@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2017|kia|900",
+  "year": 2017,
+  "make": "Kia",
+  "model": "900",
+  "ladder_id": "brochure_llm_2017__kia__900",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V8 VIP PLUS PACKAGE",
+    "LUXURY V8",
+    "V6 VIP PACKAGE",
+    "LUXURY V6",
+    "PREMIUM V6"
+  ],
+  "adds_by_trim": {
+    "V8 VIP PLUS PACKAGE": [
+      "5.0L Gasoline Direct Injection V8 engine",
+      "Shift-by-wire gear selector",
+      "LED headlights with Dynamic Bending Light",
+      "Steering-wheel-mounted paddle shifters",
+      "Surround-View Monitor",
+      "Head-Up Display",
+      "Lane Departure Warning System",
+      "Advanced Smart Cruise Control",
+      "Autonomous Emergency Braking",
+      "Power door latches with soft close"
+    ],
+    "LUXURY V8": [
+      "5.0L Gasoline Direct Injection V8 engine",
+      "19-inch chrome-finish alloy wheels",
+      "LED headlights with Dynamic Bending Light",
+      "Shift-by-wire gear selector"
+    ],
+    "V6 VIP PACKAGE": [
+      "Steering-wheel-mounted paddle shifters",
+      "Surround-View Monitor",
+      "Head-Up Display",
+      "Lane Departure Warning System",
+      "Advanced Smart Cruise Control",
+      "Autonomous Emergency Braking",
+      "Power door latches with soft close",
+      "Tuscan Brown quilted Nappa leather interior option"
+    ],
+    "LUXURY V6": [
+      "Black Nappa leather upholstery",
+      "Walnut wood interior trim",
+      "Shift-by-wire gear selector"
+    ],
+    "PREMIUM V6": [
+      "3.8L Gasoline Direct Injection V6 engine",
+      "8-speed Sportmatic transmission",
+      "18-inch alloy wheels",
+      "HID headlights with Dynamic Bending Light",
+      "LED front fog lights",
+      "9.2-inch HD display with voice commands",
+      "Tri-zone automatic temperature control with ionizer",
+      "Blind-Spot Detection with Lane-Change Assist",
+      "Rear Cross-Traffic Alert",
+      "Front and Rear Camera Display and Park Assist"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ladder_id": "2026_toyota_tacoma_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Tacoma",
+    "Tacoma"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Four-Wheel Drive"
+      }
+    ],
+    "SR5": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Rear-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Rear-Wheel Drive"
+      },
+      {
+        "label": "Maximum Towing Capacity",
+        "value": "The second level also added a towing package (oil and transmission coolers, fan"
+      }
+    ]
+  }
+}

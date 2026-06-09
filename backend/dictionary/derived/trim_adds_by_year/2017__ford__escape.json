@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2017|ford|escape",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_2017__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds keyless entry keypad",
+      "Adds remote start system",
+      "Adds vehicle security system",
+      "Adds warning sensor systems",
+      "Adds first aid and roadside assistance kits",
+      "Adds roadside assistance coverage for 5 years or 60,000 miles"
+    ],
+    "Sport": [
+      "Adds Sport Appearance Package with Canyon Ridge exterior accents",
+      "Adds roof crossbars",
+      "Adds rear spoiler winglets",
+      "Adds hood protector",
+      "Adds smoked side window deflectors",
+      "Adds molded splash guards",
+      "Adds roof-mounted bike carrier by THULE",
+      "Adds roof rails",
+      "Adds side window deflectors",
+      "Adds interior light kit"
+    ],
+    "Limited": [
+      "Adds full vehicle cover",
+      "Adds all-weather floor mats",
+      "Adds ash cup and coin holders",
+      "Adds cargo organizers and protectors",
+      "Adds carpeted floor mats",
+      "Adds door sill plates",
+      "Adds interior cargo cover and cargo area protector",
+      "Adds protective seat covers",
+      "Adds trailer towing accessories",
+      "Adds wheel lock kit"
+    ]
+  }
+}

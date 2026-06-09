@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|bmw|x3",
+  "year": 2012,
+  "make": "BMW",
+  "model": "X3",
+  "ladder_id": "bmw_x3",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "X\uea03 xDrive\uea03 \uea05 i",
+      "cylinder | Inline \uea06 / \uea04 | TwinPower Turbo Inline \uea06 / \uea04",
+      "results may vary, depending on specification of vehicle; road and environmental"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "Na": 3
+    }
+  }
+}

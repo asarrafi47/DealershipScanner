@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Pontiac,Grand Am,Grand Am,"2.0L I4 ((FFS,TRBO))",2.0L I4,,Automatic 3-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,25,20,,,,,
+1988,Pontiac,Grand Am,Grand Am,"2.0L I4 ((FFS,TRBO))",2.0L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,27,21,,,,,
+1988,Pontiac,Grand Am,Grand Am,2.3L I4 ((FFS)),2.3L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,21,31,25,,,,,
+1988,Pontiac,Grand Am,Grand Am,2.3L I4 ((FFS)),2.3L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,22,33,26,,,,,
+1988,Pontiac,Grand Am,Grand Am,2.5L I4 ((FFS)),2.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,29,24,,,,,
+1988,Pontiac,Grand Am,Grand Am,2.5L I4 ((FFS)),2.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,30,24,,,,,

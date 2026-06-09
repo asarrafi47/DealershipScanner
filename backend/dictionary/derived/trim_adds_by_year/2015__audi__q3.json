@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2015|audi|q3",
+  "year": 2015,
+  "make": "Audi",
+  "model": "Q3",
+  "ladder_id": "brochure_web_2015__audi__q3",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Q3 S line Premium Plus 45 TFSI quattro",
+    "Q3 Premium Plus 40 TFSI quattro",
+    "Q3 S line Premium 45 TFSI quattro",
+    "Q3 Premium 40 TFSI quattro"
+  ],
+  "adds_by_trim": {
+    "Q3 S line Premium Plus 45 TFSI quattro": [
+      "228 hp turbocharged 2.0L engine with 258 lb-ft torque",
+      "Auto-dimming frameless rearview mirror",
+      "Upgraded interior ambient lighting",
+      "360-degree camera system",
+      "Driver's seat memory function",
+      "Wireless charging pad",
+      "Hands-free power tailgate release"
+    ],
+    "Q3 Premium Plus 40 TFSI quattro": [
+      "Auto-dimming frameless rearview mirror",
+      "Upgraded interior ambient lighting",
+      "360-degree camera system",
+      "Driver's seat memory function",
+      "Wireless charging pad",
+      "Hands-free power tailgate release"
+    ],
+    "Q3 S line Premium 45 TFSI quattro": [
+      "228 hp turbocharged 2.0L engine with 258 lb-ft torque"
+    ],
+    "Q3 Premium 40 TFSI quattro": [
+      "184 hp turbocharged 2.0L engine with 221 lb-ft torque",
+      "18-inch wheels",
+      "LED headlights and taillights with animated turn signals",
+      "Power-operated tailgate",
+      "Panoramic sunroof",
+      "Three-zone automatic climate control",
+      "Heated front seats",
+      "8.8-inch infotainment touchscreen",
+      "10.3-inch digital gauge cluster",
+      "Apple CarPlay and Android Auto"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/audi/q3/"
+}

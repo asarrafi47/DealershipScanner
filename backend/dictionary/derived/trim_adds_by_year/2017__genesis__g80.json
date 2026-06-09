@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2017|genesis|g80",
+  "year": 2017,
+  "make": "genesis",
+  "model": "G80",
+  "ladder_id": "brochure_llm_2017__genesis__g80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5.0",
+    "3.8 Ultimate"
+  ],
+  "adds_by_trim": {
+    "5.0": [
+      "5.0L V8 engine (standard on 5.0, available on 3.8)",
+      "Electronic Stability Control standard",
+      "Automatic emergency braking system",
+      "SiriusXM Traffic & Travel Link subscription (3 years complimentary)"
+    ],
+    "3.8 Ultimate": [
+      "3.8L engine",
+      "8-inch navigation system with Apple CarPlay and Android Auto",
+      "Panoramic sunroof available on 3.8 Ultimate package"
+    ]
+  }
+}

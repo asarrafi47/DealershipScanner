@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2016|buick|encore",
+  "year": 2016,
+  "make": "Buick",
+  "model": "Encore",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport Touring",
+    "Select",
+    "Base",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

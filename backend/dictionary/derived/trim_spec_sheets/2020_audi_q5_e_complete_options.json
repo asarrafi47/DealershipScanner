@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2020_audi_q5_e_complete_options",
+  "make": "AUDI",
+  "models": [
+    "Q5 e",
+    "Q5 e"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: 11.9-inch digital instrument cluster; 10.9-inch passenger display (was 7-inch infotainment screen)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L V6 FSI; L TDI diesel V6"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: 7-inch infotainment screen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Equipment Interior Harman/Becker Automotive Systems produced Audi's new u; For the 2019 model year, heated front seats, rear electric child locks, 7-inch i"
+      }
+    ]
+  }
+}

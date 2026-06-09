@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2012|bmw|5series",
+  "year": 2012,
+  "make": "BMW",
+  "model": "5 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2017|landrover|discovery",
+  "year": 2017,
+  "make": "landrover",
+  "model": "Discovery",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "HSE",
+    "SE",
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

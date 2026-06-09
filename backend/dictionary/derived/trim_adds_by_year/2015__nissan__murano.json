@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2015|nissan|murano",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2015__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch machine-finished aluminum-alloy wheels",
+      "LED headlights",
+      "Climate-controlled front seats with heating and cooling",
+      "Heated rear seats",
+      "Power-return rear seatbacks",
+      "Heated steering wheel",
+      "Power-tilt and power-telescoping steering column with memory"
+    ],
+    "SL": [
+      "8-way power driver's seat with lumbar support",
+      "4-way power front-passenger's seat",
+      "Leather-wrapped steering wheel and shift knob",
+      "Rear passenger USB connection port",
+      "Remote engine start system with intelligent climate control",
+      "HD Radio for iPod interface and compatible devices",
+      "SiriusXM Traffic and Travel Link"
+    ],
+    "SV": [
+      "Fog lights",
+      "Black roof rails",
+      "Nissan Navigation System with 8.0-inch multi-touch color monitor",
+      "Voice recognition for audio and navigation",
+      "Silver roof rails",
+      "Leather-appointed seats",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Heated front seats",
+      "Power liftgate",
+      "Around View Monitor with HomeLink universal transceiver"
+    ],
+    "S": [
+      "260 hp 3.5-liter V6 engine",
+      "Xtronic CVT transmission",
+      "All-Wheel Drive or Front-Wheel Drive",
+      "Vehicle Dynamic Control with Traction Control System",
+      "18-inch machine-finished wheels",
+      "Automatic on/off headlights with LED daytime running lights",
+      "LED taillights",
+      "Dual Zone Automatic Temperature Control with in-cabin microfilter",
+      "Nissan Intelligent Key with push button ignition",
+      "NissanConnect with mobile apps and hands-free text messaging"
+    ]
+  }
+}

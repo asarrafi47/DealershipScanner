@@ -1,0 +1,59 @@
+{
+  "ladder_id": "2022_kia_sorento_complete_options",
+  "make": "Kia",
+  "models": [
+    "Sorento",
+    "Sorento"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "SX Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "Three powertrain options are available: 2.2-litre CRDi turbocharged diesel, 1.6-"
+      }
+    ],
+    "SX": [
+      {
+        "label": "Engine Options",
+        "value": "Three powertrain options are available: 2.2-litre CRDi turbocharged diesel, 1.6-"
+      }
+    ],
+    "GT": [
+      {
+        "label": "Engine Options",
+        "value": "The 1.6-litre Plug-in Hybrid petrol was added to the lineup in October 2021, for the GT Line grade."
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2009–present)"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive (2009–present); A plug-in hybrid variation and additional petrol engine options are also being p"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive; The Base and LX both come standard with the 2.4-litre straight-4 175 hp (130 kW)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, rear-wheel-drive (2002–2009); Front-engine, front-wheel-drive (2009–present)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "12.3-inch curved display"
+      }
+    ]
+  }
+}

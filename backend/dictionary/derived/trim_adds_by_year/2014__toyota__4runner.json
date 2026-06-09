@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2014|toyota|4runner",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_web_2014__toyota__4runner",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "TRD Pro",
+    "Trailhunter",
+    "Platinum",
+    "Limited",
+    "TRD Off-Road Premium",
+    "TRD Sport Premium",
+    "TRD Off-Road",
+    "TRD Sport",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "SR5": [
+      "LED headlights and foglights",
+      "Power rear liftgate window",
+      "7.0-inch driver display",
+      "8.0-inch multimedia screen"
+    ],
+    "TRD Sport": [
+      "Sport-tuned suspension",
+      "Automatic climate control",
+      "12.3-inch driver display"
+    ],
+    "TRD Off-Road": [
+      "High strength underbody protection",
+      "33-inch all-terrain tires",
+      "Bilstein shocks",
+      "Multi Terrain Select with Crawl control",
+      "Electronically locking rear differential"
+    ],
+    "TRD Sport Premium": [
+      "JBL premium audio system",
+      "14.0-inch multimedia screen",
+      "Hands-free power liftgate",
+      "Faux leather seats"
+    ],
+    "TRD Off-Road Premium": [
+      "Off-road camera",
+      "Faux leather seats",
+      "14.0-inch multimedia screen",
+      "JBL premium audio",
+      "Hands-free power liftgate"
+    ],
+    "Limited": [
+      "Power moonroof",
+      "Heated and ventilated seats",
+      "Center-locking differential available"
+    ],
+    "Platinum": [
+      "Standard center-locking differential",
+      "Premium interior appointments"
+    ],
+    "Trailhunter": [
+      "ARB Old Man Emu 2.5-inch forged shocks with external reservoirs",
+      "33-inch Toyo Open Country all-terrain tires",
+      "Rock rails and high-strength steel skid plates",
+      "20-inch LED light bar with Rigid LED foglights",
+      "2,400-watt AC inverter",
+      "ARB roof rack co-design",
+      "2.0-inch front and 1.5-inch rear ground clearance increase"
+    ],
+    "TRD Pro": [
+      "TRD Pro-specific suspension and off-road enhancements"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/4runner/"
+}

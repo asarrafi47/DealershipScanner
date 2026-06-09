@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|volkswagen|jetta",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "brochure_llm_2012__volkswagen__jetta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Jetta SEL",
+    "Jetta SE",
+    "Jetta S"
+  ],
+  "adds_by_trim": {
+    "Jetta SEL": [
+      "17-inch alloy wheels with all-season tires",
+      "Power tilting and sliding sunroof",
+      "Fender Premium Audio System",
+      "RNS 315 navigation system with 5-inch color touchscreen",
+      "Driver seat lumbar support",
+      "Halogen reflector lens foglights",
+      "Chrome grille and window trim",
+      "Sunglasses holder",
+      "Rear disc brakes"
+    ],
+    "Jetta SE": [
+      "2.5L 170-hp 5-cylinder engine",
+      "16-inch steel wheels with all-season tires",
+      "Cruise control",
+      "Body color side mirrors with integrated turn signals",
+      "Floor mats",
+      "Front center console with storage box",
+      "60/40-split folding rear seats with center armrest and pass-through"
+    ],
+    "Jetta S": [
+      "1.5-liter turbocharged inline four-cylinder engine with 158 hp and 184 lb-ft torque",
+      "Eight-speed automatic transmission with front-wheel drive",
+      "Floating 8.0-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "IQ.Drive suite with lane keep assist, adaptive cruise control, blind-spot monitoring, and automatic emergency braking",
+      "LED headlights with standard light bar connecting taillights",
+      "41.1 inches front legroom and 37.4 inches rear legroom"
+    ]
+  }
+}

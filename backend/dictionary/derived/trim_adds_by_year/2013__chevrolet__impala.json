@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2013|chevrolet|impala",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "brochure_llm_2013__chevrolet__impala",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome door handles",
+      "Fog lamps integral in front fascia",
+      "Rear spoiler",
+      "Deluxe 4-gauge cluster with chrome trim, outside temperature and compass displays",
+      "Leather-appointed seating with heated front bucket seats (8-way driver, 6-way passenger power adjusters)",
+      "Bose 8-speaker sound system",
+      "SiriusXM Satellite Radio with 9-month trial",
+      "Universal Home Remote transmitter",
+      "Heated, power-adjustable outside mirrors",
+      "Inside auto-dimming rearview mirror"
+    ],
+    "LT": [
+      "Body-color power-adjustable heated outside mirrors",
+      "Deluxe 4-gauge cluster with chrome trim, outside temperature and compass displays",
+      "Inside auto-dimming rearview mirror"
+    ],
+    "LS": [
+      "3.6L SIDI DOHC V6 engine with Variable Valve Timing (300 hp, 262 lb.-ft. torque)",
+      "E85 FlexFuel-capable",
+      "Engine block heater",
+      "Body-color door handles",
+      "Body-color power-adjustable outside mirrors",
+      "Body-color bodyside and rocker moldings",
+      "Analog 4-gauge cluster with speedometer, tachometer, coolant temperature, fuel gauge, trip odometer, Driver Information Center",
+      "Inside manual day/night rearview mirror",
+      "Center-mounted dome and rear reading lamps"
+    ]
+  }
+}

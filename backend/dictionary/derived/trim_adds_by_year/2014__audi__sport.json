@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|audi|sport",
+  "year": 2014,
+  "make": "Audi",
+  "model": "sport",
+  "ladder_id": "brochure_llm_2014__audi__sport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S6",
+    "S5"
+  ],
+  "adds_by_trim": {
+    "S6": [
+      "4.0-liter turbocharged TFSI V8 engine with 420 hp and 406 lb-ft torque",
+      "0-60 mph in 4.5 seconds versus S5's 4.9-5.3 seconds",
+      "Audi cylinder on demand engine efficiency technology",
+      "Seven-speed Audi S tronic dual-clutch transmission",
+      "S6 tuned Audi adaptive air suspension",
+      "Sport differential on Coupe",
+      "Bang & Olufsen Advanced Sound System with 15 speakers and 1,300 watts",
+      "15.7-inch ventilated front and 14.0-inch ventilated rear disc brakes",
+      "Full LED headlight technology standard",
+      "Heated and ventilated 22-way power front sport comfort seats with massage"
+    ],
+    "S5": [
+      "3.0-liter supercharged TFSI V6 engine with 333 hp and 325 lb-ft torque",
+      "0-60 mph in 4.9-5.3 seconds",
+      "Six-speed manual transmission available on Coupe",
+      "Seven-speed Audi S tronic dual-clutch transmission available",
+      "S5 sport suspension calibration with dynamic steering and adaptive damping",
+      "Sport differential available",
+      "Bang & Olufsen Sound System with 14 speakers and 505 watts",
+      "13.6-inch ventilated front and 13.0-inch ventilated rear disc brakes",
+      "Adaptive xenon plus headlights with LED daytime running lights",
+      "Ventilated front comfort seats and heated twelve-way power front sport seats available"
+    ]
+  }
+}

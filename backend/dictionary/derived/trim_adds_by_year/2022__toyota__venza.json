@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2022|toyota|venza",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Venza",
+  "ladder_id": "brochure_web_2022__toyota__venza",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited",
+    "Nightshade",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "12.3-inch digital gauge cluster",
+      "Head-up display",
+      "Heated steering wheel with powered tilting and telescoping column",
+      "Nine-speaker JBL premium audio system",
+      "Power front passenger seat",
+      "Rain-sensing wipers"
+    ],
+    "Nightshade": [
+      "Nightshade Edition styling and trim package"
+    ],
+    "XLE": [
+      "12.3-inch touchscreen with center stack capacitive controls",
+      "LED foglights",
+      "Auto-dimming rearview mirror",
+      "Ambient lighting enhancements"
+    ],
+    "LE": [
+      "2.5-liter hybrid powertrain with 219 horsepower",
+      "All-wheel drive with CVT automatic transmission",
+      "8.0-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "7.0-inch driver information display",
+      "Hands-free power liftgate",
+      "Six speakers and four USB-C ports",
+      "Standard Toyota Safety Sense 2.5 with automatic emergency braking",
+      "Blind-spot monitoring and rear cross-traffic alert"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/venza/"
+}

@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1985,Cadillac,Seville,Seville,4.1L V8 ((FFS) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,8,4.1,15,21,17,,,,,,4.1L V8,
-1985,Cadillac,Seville,Seville,4.1L V8 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,8,4.1,15,20,17,,,,,,4.1L V8,
-1985,Cadillac,Seville,Seville,Diesel 5.7L V8 ((350 V8)) Diesel,Automatic 4-spd,Front-Wheel Drive,Diesel,Midsize Cars,8,5.7,17,26,20,,,,,,5.7L V8,

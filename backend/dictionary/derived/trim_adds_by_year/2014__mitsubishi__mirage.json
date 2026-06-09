@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2014|mitsubishi|mirage",
+  "year": 2014,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2014__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ES",
+    "base"
+  ],
+  "adds_by_trim": {
+    "ES": [
+      "MMES Navigation System with rear view camera"
+    ],
+    "base": [
+      "Seven-airbag safety system",
+      "Automatic climate control",
+      "Power windows with driver's side auto up/down",
+      "Power side view mirrors",
+      "60/40 split folding rear seat",
+      "Keyless entry",
+      "Sporty rear spoiler",
+      "Four-speaker 140-watt CD/MP3 audio system with USB/iPod input"
+    ]
+  }
+}

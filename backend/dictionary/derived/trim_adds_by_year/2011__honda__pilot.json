@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2011|honda|pilot",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "inventory_honda_pilot",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "Leather-Wrapped Steering Wheel",
+      "Automatic Dimming Rearview Mirror",
+      "Conversation Mirror with Sunglasses Holder"
+    ],
+    "LX": [
+      "Acoustic Windshield EX-L",
+      "Body-Colored Parking Sensors (front/rear)",
+      "Chrome Exhaust Finishers"
+    ],
+    "EX": [
+      "MacPherson strut front suspension with multi-link rear arms",
+      "18-inch alloy wheels",
+      "Power window, door and tailgate locks",
+      "Cruise control",
+      "Security system",
+      "Six airbags",
+      "Advanced Compatibility Engineering (ACE) body structure",
+      "Vehicle Stability Assist with traction control"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix",
+    "dot_feature_matrix",
+    "inline_trim_bullet_rows"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.5,
+    "per_trim_add_counts": {
+      "EX": 0,
+      "LX": 3
+    }
+  }
+}

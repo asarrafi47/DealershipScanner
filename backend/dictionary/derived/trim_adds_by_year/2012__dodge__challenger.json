@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2012|dodge|challenger",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2012__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T PLUS",
+    "R/T",
+    "SXT PLUS",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "R/T PLUS": [
+      "Nappa leather-trimmed seats",
+      "Heated front seats",
+      "Six Boston Acoustics speakers with 276-watt amplifier",
+      "Electronic Convenience Group"
+    ],
+    "R/T": [
+      "5.7-liter HEMI VVT V8 engine with 375 horsepower",
+      "Tremec 6-speed manual transmission",
+      "Performance steering and suspension",
+      "Rear body-color spoiler",
+      "Fog lamps and automatic headlamps",
+      "Antispin rear differential (6-speed manual)",
+      "Bright pedals (6-speed manual)"
+    ],
+    "SXT PLUS": [
+      "Nappa leather-trimmed seats",
+      "Heated front seats",
+      "uconnect Voice Command",
+      "Rearview auto-dimming mirror with microphone",
+      "Six Boston Acoustics speakers with 276-watt amplifier",
+      "SiriusXM Satellite Radio with one-year subscription",
+      "Sun visor with illuminated vanity mirrors",
+      "Fog lamps and automatic headlamps"
+    ],
+    "SXT": [
+      "3.6-liter DOHC Pentastar VVT V6 engine with 305 horsepower",
+      "5-speed AutoStick transmission",
+      "18-inch aluminum wheels",
+      "Premium cloth seating",
+      "Electronic Stability Control, Hill Start Assist, Ready Alert Braking",
+      "Automatic temperature control",
+      "Keyless Enter 'n Go with proximity sensor",
+      "Dual rear exhaust with bright tips and bright fuel filler door",
+      "Power six-way driver's seat with power four-way lumbar",
+      "Media Center 130 with six speakers and audio jack"
+    ]
+  }
+}

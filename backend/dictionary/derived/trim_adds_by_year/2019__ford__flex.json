@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|ford|flex",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Flex",
+  "ladder_id": "brochure_2019__ford__flex",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds 8-inch SYNC 3 touchscreen with voice-activated technology",
+      "Adds 2 smart-charging USB ports",
+      "Adds SYNC 3 AppLink with mobile app integration",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds voice-guided navigation with turn-by-turn directions and 3D maps",
+      "Adds FordPass smartphone app integration",
+      "Adds Traffic & Travel Link for real-time traffic avoidance"
+    ],
+    "SEL": [
+      "Adds leather-trimmed interior seating",
+      "Adds interior light kit",
+      "Adds protective seat covers"
+    ],
+    "Limited": [
+      "Adds NextBase Duo Cinema HD Rear Seat Entertainment system",
+      "Adds Vehicle Security System with warning sensors",
+      "Adds remote start system capability",
+      "Adds door-sill plates for enhanced interior styling"
+    ]
+  }
+}

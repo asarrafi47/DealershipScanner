@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2016|cadillac|srx",
+  "year": 2016,
+  "make": "Cadillac",
+  "model": "SRX",
+  "ladder_id": "brochure_llm_2016__cadillac__srx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRX Performance Premium Collections",
+    "SRX Luxury Collection",
+    "SRX"
+  ],
+  "adds_by_trim": {
+    "SRX Performance Premium Collections": [
+      "20-inch aluminum wheels with bright machined finish and premium painted accents",
+      "P235/55R20 H-rated all-season tires",
+      "Available 20-inch aluminum wheels with polished finish",
+      "Available 20-inch aluminum wheels with midnight silver painted finish",
+      "Available 20-inch aluminum wheels with Manoogian silver painted finish"
+    ],
+    "SRX Luxury Collection": [
+      "18-inch aluminum wheels with bright machined finish",
+      "P235/65R18 H-rated all-season tires"
+    ],
+    "SRX": [
+      "18-inch aluminum wheels with painted finish",
+      "P235/65R18 H-rated all-season tires",
+      "Powertrain limited warranty with no deductible",
+      "Roadside Assistance Program",
+      "Courtesy Transportation Program"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2023|nissan|aryia",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Aryia",
+  "ladder_id": "brochure_llm_2023__nissan__aryia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM+ e-4ORCE",
+    "EMPOWER+",
+    "EVOLVE+ e-4ORCE",
+    "EVOLVE+",
+    "ENGAGE+ e-4ORCE",
+    "ENGAGE e-4ORCE",
+    "ENGAGE",
+    "VENTURE+"
+  ],
+  "adds_by_trim": {
+    "PLATINUM+ e-4ORCE": [
+      "ProPILOT Assist 2.0 with hands-off freeway driving capability",
+      "ProPILOT Park automated parking system",
+      "Motion Activated Liftgate",
+      "Climate-controlled front seats",
+      "Bose Premium Audio System",
+      "Multi-color contextual line illumination"
+    ],
+    "EMPOWER+": [
+      "Power liftgate",
+      "Wireless charger",
+      "Power center storage with tray table"
+    ],
+    "EVOLVE+ e-4ORCE": [
+      "e-4ORCE All-Wheel Drive system",
+      "290 kW motor with 389 hp and 442 lb-ft torque"
+    ],
+    "EVOLVE+": [
+      "Intelligent Around View Monitor",
+      "Intelligent Rear View Mirror",
+      "LED fog lights",
+      "Panoramic Moonroof",
+      "87 kWh battery with up to 289 miles range"
+    ],
+    "ENGAGE+ e-4ORCE": [
+      "e-4ORCE All-Wheel Drive system",
+      "290 kW motor with 389 hp and 442 lb-ft torque",
+      "87 kWh battery with up to 270 miles range"
+    ],
+    "ENGAGE e-4ORCE": [
+      "e-4ORCE All-Wheel Drive system",
+      "250 kW motor with 335 hp and 413 lb-ft torque",
+      "5.1 second 0-60 time"
+    ],
+    "ENGAGE": [
+      "Head-Up Display",
+      "8-way power driver's seat with memory function",
+      "Power-sliding center console",
+      "Leatherette-appointed seats",
+      "Heated front and rear outboard seats",
+      "Heated steering wheel",
+      "63 kWh battery with up to 216 miles range"
+    ],
+    "VENTURE+": [
+      "ProPILOT Assist with Navi-link navigation integration",
+      "Standard Safety Shield 360 advanced safety suite",
+      "ANDON interior lighting",
+      "Wireless Apple CarPlay integration",
+      "Android Auto compatibility",
+      "Dual 12.3-inch displays",
+      "87 kWh battery with up to 304 miles range",
+      "178 kW front-wheel drive motor",
+      "7.2 second 0-60 time"
+    ]
+  }
+}

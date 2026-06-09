@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2018|infiniti|qx60",
+  "year": 2018,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_2018__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Upgraded to Bose 13-speaker Premium Audio system with AM/FM/CD/DVD",
+      "Adds dual-occupant memory system for driver's seat, steering wheel, and mirrors",
+      "Adds entry/exit assist for driver's seat and steering wheel",
+      "Upgraded to 20-inch Aluminum-alloy wheels with H-rated all-season tires",
+      "Adds INFINITI InTouch Navigation with Lane Guidance and 3D building graphics",
+      "Adds Around View Monitor with Moving Object Detection",
+      "Adds Front and Rear Sonar System",
+      "Adds rain-sensing front windshield wipers",
+      "Adds heated steering wheel and Remote Engine Start"
+    ]
+  }
+}

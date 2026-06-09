@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|jeep|wrangler",
+  "year": 2017,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_2017__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Rubicon",
+    "Sahara",
+    "Willys",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Advanced Front Air Bags",
+      "Adds Bluetooth Hands-Free Profile connectivity",
+      "Adds Electronic Stability Control",
+      "Adds SiriusXM satellite radio capability",
+      "Adds Uconnect infotainment system"
+    ],
+    "Willys": [
+      "Willys trim-specific features and styling"
+    ],
+    "Sahara": [
+      "Fold and Tumble removable rear bench seat",
+      "18-inch chrome/polished wheels with all-season tires",
+      "Silver grille inserts",
+      "High-clearance front fender flares",
+      "Leather-trimmed seats with Sahara logo and tungsten stitching",
+      "17-inch aluminum painted/polished wheels exclusive to Sport S"
+    ],
+    "Rubicon": [
+      "Adds Rock-Trac transfer case with low range ratio",
+      "Adds Tru-Lok differentials",
+      "Adds Trail Rated badge certification"
+    ],
+    "Limited": [
+      "Adds Wi-Fi Hotspot mobile connectivity",
+      "Adds Uconnect Web feature",
+      "Adds Uconnect Access service platform"
+    ]
+  }
+}

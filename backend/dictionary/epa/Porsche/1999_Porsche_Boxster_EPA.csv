@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,Porsche,Boxster,Boxster,2.5L V6,2.5L V6 Turbo,Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.5,15,22,17,,,,,
+1999,Porsche,Boxster,Boxster,2.5L V6,2.5L V6 Turbo,Turbocharged,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.5,17,24,20,,,,,

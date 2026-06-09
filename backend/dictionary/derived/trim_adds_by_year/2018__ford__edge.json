@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|ford|edge",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "brochure_llm_2018__ford__edge",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Edge Sport",
+    "Titanium",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Edge Sport": [
+      "Performance-oriented design with sport-specific styling and appearance",
+      "Always dressed and ready to play aesthetic"
+    ],
+    "Titanium": [
+      "Premium refinement and luxury features",
+      "Leather-trimmed interior seating"
+    ],
+    "SEL": [
+      "Bold new SEL Sport Appearance Package",
+      "Enhanced exterior styling compared to SE"
+    ],
+    "SE": [
+      "SYNC 3 with touchscreen and voice control",
+      "Apple CarPlay and Android Auto compatibility",
+      "2 smart-charging USB ports",
+      "SiriusXM Traffic & Travel Link (5 years complimentary)",
+      "FordPass smartphone app integration"
+    ]
+  }
+}

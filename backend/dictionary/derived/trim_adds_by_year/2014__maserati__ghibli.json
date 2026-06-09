@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2014|maserati|ghibli",
+  "year": 2014,
+  "make": "maserati",
+  "model": "ghibli",
+  "ladder_id": "brochure_2014__maserati__ghibli",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [],
+    "Limited": [
+      "Adds transferable four-year/50,000-mile new car limited warranty",
+      "Adds 24/7 roadside assistance"
+    ]
+  }
+}

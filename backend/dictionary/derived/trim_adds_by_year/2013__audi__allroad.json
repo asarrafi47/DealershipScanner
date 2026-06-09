@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2013|audi|allroad",
+  "year": 2013,
+  "make": "Audi",
+  "model": "Allroad",
+  "ladder_id": "brochure_2013__audi__allroad",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Plus",
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds turbocharged TFSI four-cylinder engine with 211 horsepower",
+      "Adds eight-speed Tiptronic automatic transmission",
+      "Adds Audi quattro all-wheel drive system",
+      "Adds raised aluminum roof rails",
+      "Adds stainless steel underbody protection",
+      "Adds specialized all-terrain tires with increased sidewall height",
+      "Adds electromechanical power steering system",
+      "Adds five-link front and trapezoidal-link rear suspension",
+      "Adds ventilated front and solid rear disc brakes",
+      "Adds fully galvanized steel unibody with multistep anti-corrosion protection"
+    ],
+    "SE": [],
+    "Sport": [],
+    "Limited": [],
+    "Premium": [
+      "2.0L TFSI turbocharged engine with 211 horsepower",
+      "Audi drive select dynamic handling system",
+      "18-inch wheels",
+      "Power liftgate",
+      "Dual-zone automatic climate control",
+      "Cruise control",
+      "Xenon headlights",
+      "Audi MMI infotainment system with 6.5-inch display"
+    ],
+    "Premium Plus": [
+      "Adds available full-paint finish for cladding"
+    ]
+  }
+}

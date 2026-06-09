@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2018|chevrolet|commercial",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "ZR2",
+    "Z71",
+    "LT",
+    "Custom",
+    "LS",
+    "WT",
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

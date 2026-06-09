@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2022|alfaromeo|giulia",
+  "year": 2022,
+  "make": "alfa romeo",
+  "model": "giulia",
+  "ladder_id": "brochure_web_2022__alfaromeo__giulia",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Giulia Intensa AWD",
+    "Giulia Intensa RWD",
+    "Giulia Special Edition AWD",
+    "Giulia Special Edition RWD",
+    "Giulia Tributo Italiano RWD",
+    "Giulia AWD",
+    "Giulia RWD"
+  ],
+  "adds_by_trim": {
+    "Giulia Intensa AWD": [
+      "All-wheel drive system"
+    ],
+    "Giulia Intensa RWD": [
+      "Adaptive suspension system"
+    ],
+    "Giulia Special Edition AWD": [
+      "All-wheel drive system",
+      "Two-tone special edition styling"
+    ],
+    "Giulia Special Edition RWD": [
+      "Two-tone special edition exterior treatment"
+    ],
+    "Giulia Tributo Italiano RWD": [
+      "Adaptive suspension",
+      "Harman Kardon premium audio system",
+      "Power sunroof",
+      "19-inch model-specific wheels",
+      "Italian Tricolore badges on mirror caps",
+      "Leather seats with red stitching and embroidered Italian flag"
+    ],
+    "Giulia AWD": [
+      "All-wheel drive system"
+    ],
+    "Giulia RWD": [
+      "2.0-liter turbocharged four-cylinder engine producing 280 hp",
+      "Eight-speed automatic transmission",
+      "12.3-inch digital driver display",
+      "8.8-inch touchscreen infotainment",
+      "Apple CarPlay and Android Auto integration",
+      "Heated front and rear seats",
+      "Wireless phone charger",
+      "Eight-speaker audio system",
+      "17-inch wheels with cloth-upholstered seats"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/alfa-romeo/giulia/"
+}

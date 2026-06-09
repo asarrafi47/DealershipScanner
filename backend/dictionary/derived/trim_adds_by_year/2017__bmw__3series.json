@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2017|bmw|3series",
+  "year": 2017,
+  "make": "BMW",
+  "model": "3 Series",
+  "ladder_id": "brochure_llm_2017__bmw__3series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "340i xDrive",
+    "340i",
+    "330i xDrive",
+    "330i",
+    "328d xDrive",
+    "328d",
+    "320i xDrive",
+    "320i"
+  ],
+  "adds_by_trim": {
+    "340i xDrive": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder with 330 hp and 330 lb-ft torque",
+      "0-60 mph in 4.6-4.7 seconds",
+      "21/31/25 mpg combined fuel economy"
+    ],
+    "340i": [
+      "3.0-liter TwinPower Turbo inline 6-cylinder with 320 hp and 330 lb-ft torque",
+      "0-60 mph in 4.8-4.9 seconds",
+      "21/32/25 mpg combined fuel economy"
+    ],
+    "330i xDrive": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder with 248 hp and 258 lb-ft torque",
+      "0-60 mph in 5.5 seconds",
+      "23/33/26 mpg combined fuel economy"
+    ],
+    "330i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder with 248 hp and 258 lb-ft torque",
+      "0-60 mph in 5.5-5.6 seconds",
+      "23/34/27 mpg combined fuel economy"
+    ],
+    "328d xDrive": [
+      "2.0-liter TwinPower Turbo Diesel inline 4-cylinder with 180 hp and 280 lb-ft torque",
+      "0-60 mph in 7.3 seconds",
+      "All-wheel drive capability"
+    ],
+    "328d": [
+      "2.0-liter TwinPower Turbo Diesel inline 4-cylinder with 180 hp and 280 lb-ft torque",
+      "0-60 mph in 7.4 seconds"
+    ],
+    "320i xDrive": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder with 180 hp and 200 lb-ft torque",
+      "All-wheel drive capability",
+      "23/35/27 mpg combined fuel economy"
+    ],
+    "320i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder with 180 hp and 200 lb-ft torque",
+      "0-60 mph in 7.1 seconds",
+      "23/35/27 mpg combined fuel economy"
+    ]
+  }
+}

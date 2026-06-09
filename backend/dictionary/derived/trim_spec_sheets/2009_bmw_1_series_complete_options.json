@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2009_bmw_1_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "1 Series",
+    "1 Series"
+  ],
+  "year_min": 2007,
+  "year_max": 2011,
+  "source": "generated",
+  "trims": {
+    "135i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "128i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

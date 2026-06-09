@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2013|lamborghini|aventador",
+  "year": 2013,
+  "make": "Lamborghini",
+  "model": "aventador",
+  "ladder_id": "brochure_web_2013__lamborghini__aventador",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Aventador LP 780-4 Ultimae Roadster",
+    "Aventador LP 780-4 Ultimae Coupe"
+  ],
+  "adds_by_trim": {
+    "Aventador LP 780-4 Ultimae Roadster": [
+      "Open-top roadster configuration with removable roof panel",
+      "Enhanced wind deflection and aerodynamic tuning for open-air driving"
+    ],
+    "Aventador LP 780-4 Ultimae Coupe": [
+      "6.5-liter naturally aspirated V-12 engine with 770 horsepower and 531 lb-ft torque",
+      "Seven-speed paddle-shifted automatic transmission with four-wheel drive system",
+      "Standard four-wheel steering for improved turn-in and cornering response",
+      "Active aerodynamics system adjusting front and rear downforce dynamically",
+      "All-wheel drive system calibrated for sportier oversteer behavior",
+      "Active vehicle dynamics computer processing real-time performance data",
+      "Scissor doors and carbon-fiber monocoque chassis construction",
+      "Mid-engine V-12 layout behind driver cabin"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lamborghini/aventador/"
+}

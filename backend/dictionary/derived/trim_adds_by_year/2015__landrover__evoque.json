@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2015|landrover|evoque",
+  "year": 2015,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_llm_2015__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DYNAMIC",
+    "PRESTIGE",
+    "PURE PREMIUM",
+    "PURE PLUS",
+    "PURE"
+  ],
+  "adds_by_trim": {
+    "DYNAMIC": [
+      "Dynamic front bumper and side sills",
+      "Dynamic rear bumper and grille in Santorini Black",
+      "Dynamic exhausts with skid plate",
+      "20-inch five split-spoke Style 504 wheels",
+      "Dynamic Grained leather with perforated mid-section",
+      "Textured Aluminium interior trim finisher",
+      "Cirrus Morzine headlining",
+      "Illuminated treadplates with Range Rover lettering",
+      "Adaptive Dynamics stability system"
+    ],
+    "PRESTIGE": [
+      "Atlas grille, side fender blade, and lower door cladding",
+      "19-inch ten-spoke Style 103 wheels",
+      "Prestige Oxford leather with perforated mid-section",
+      "Climate front and heated rear seats",
+      "Heated windshield and heated washer jets",
+      "Adaptive Xenon headlamps with LED signature and cornering lights",
+      "Body colored door handles with bright upper and lower finish",
+      "Premium carpet mats with edging"
+    ],
+    "PURE PREMIUM": [
+      "Blind Spot Monitor with Closing Vehicle Sensing and Reverse Traffic Detection",
+      "Adaptive Xenon headlamps with LED signature and cornering lights",
+      "19-inch six-spoke Style 603 wheels",
+      "Pure Grained leather seating",
+      "Front fog lamps",
+      "Headlamp powerwash",
+      "Fixed panoramic roof with power blind"
+    ],
+    "PURE PLUS": [
+      "Hood louvres and side fender vent/grille in Dark Atlas (Coupe)",
+      "Tailgate finisher in Dark Atlas (Coupe) or Brunel (five-door)",
+      "19-inch six-spoke Style 603 wheels",
+      "Pure Grained leather seating",
+      "Center armrest with two cupholders",
+      "HomeLink remote",
+      "Fixed panoramic roof with power blind",
+      "Headlamp powerwash"
+    ],
+    "PURE": [
+      "Nine-speed automatic transmission with Drive Select and Paddle Shift",
+      "Four-wheel drive with Active Driveline and Torque Vectoring",
+      "Terrain Response system",
+      "Hill Descent Control and Hill Start Assist",
+      "18-inch five split-spoke Style 506 wheels",
+      "Pure Partial leather seating",
+      "Automatic climate control with air filtration",
+      "Heated rear windshield and rain-sensing wipers",
+      "Powered adjustable heated exterior mirrors with memory",
+      "Halogen headlamps and automatic headlamps"
+    ]
+  }
+}

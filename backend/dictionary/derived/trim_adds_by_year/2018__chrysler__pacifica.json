@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2018|chrysler|pacifica",
+  "year": 2018,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "ladder_id": "brochure_llm_2018__chrysler__pacifica",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PACIFICA LIMITED",
+    "PACIFICA TOURING L PLUS",
+    "PACIFICA TOURING L",
+    "PACIFICA HYBRID LIMITED",
+    "PACIFICA HYBRID TOURING L",
+    "PACIFICA HYBRID TOURING PLUS"
+  ],
+  "adds_by_trim": {
+    "PACIFICA LIMITED": [
+      "2nd-row USB Charge Ports",
+      "Auto-dimming Exterior Driver-side Mirror",
+      "High Intensity Discharge (HID) Headlamps",
+      "LED Fog Lamps",
+      "Power Folding 3rd-row Seat",
+      "Premium Leather-trimmed Seats",
+      "Stow 'n Vac",
+      "Tri-Pane Panoramic Sunroof",
+      "Ventilated Front Seats with Memory"
+    ],
+    "PACIFICA TOURING L PLUS": [
+      "Alpine® Speakers with 13 total",
+      "Acoustic Windshield",
+      "Uconnect® 4C NAV with 8.4-inch Display",
+      "Uconnect Theater with Wireless Streaming"
+    ],
+    "PACIFICA TOURING L": [
+      "3.6L Pentastar V6 with Variable Valve Timing",
+      "7-inch Driver Information Display (DID)",
+      "2nd- and 3rd-Row Window Shades",
+      "Bright Bodyside Moldings",
+      "Grocery Bag Hooks on 3rd-row Seatbacks",
+      "Leather-trimmed Perforated Seating",
+      "Heated 2nd-row Seats",
+      "Tilt/Telescoping Steering Wheel",
+      "Heated front row seats",
+      "6 Speakers"
+    ],
+    "PACIFICA HYBRID LIMITED": [
+      "2nd-row USB Charge Ports",
+      "Auto-dimming Rearview Mirror",
+      "Chrome Exterior Mirrors",
+      "Hands-free Sliding Doors and Liftgate",
+      "Premium Leather-trimmed Seats",
+      "Uconnect 4C NAV with 8.4-inch Display",
+      "Ventilated Front Seats",
+      "20-Speaker Harman Kardon® Sound Group",
+      "Advanced SafetyTec Group",
+      "Universal Garage Door Opener"
+    ],
+    "PACIFICA HYBRID TOURING L": [
+      "Blind Spot Monitoring",
+      "Rear Cross-Path Detection",
+      "2nd- and 3rd-row Window Shades",
+      "Bright Bodyside Moldings",
+      "Grocery Bag Hooks on 3rd-row Seatbacks",
+      "Leather-trimmed Perforated Seating",
+      "Heated Front Seats",
+      "Power Liftgate",
+      "Uconnect Theater with Wireless Streaming",
+      "Stow 'n Place® Bright Side Roof Rails with Integrated Crossbars"
+    ],
+    "PACIFICA HYBRID TOURING PLUS": [
+      "3.6L Atkinson Cycle V6 Hybrid Engine with Electrically Variable Transmission",
+      "16kWh Battery with Hybrid Plug-in Charging Port with 120-volt Cord",
+      "Keyless Enter 'n Go™",
+      "ParkView® Rear Back-Up Camera",
+      "Power Locks",
+      "Power Sliding Doors",
+      "Remote Keyless Entry",
+      "Sunscreen Glass",
+      "Three-zone Automatic Climate Control",
+      "60/40 3rd row with Stow 'n Go®"
+    ]
+  }
+}

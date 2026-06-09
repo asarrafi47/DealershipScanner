@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2011|audi|a3",
+  "year": 2011,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_llm_2011__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A3 Premium Plus",
+    "A3 Premium"
+  ],
+  "adds_by_trim": {
+    "A3 Premium Plus": [
+      "Popular options combined and available on Premium Plus model"
+    ],
+    "A3 Premium": [
+      "MacPherson front suspension with direct anti-roll bar mountings and five-piece aluminum subframe",
+      "Four-link rear suspension with individual springs/shock absorbers and tubular anti-roll bar",
+      "Servotronic speed-sensitive power steering with variable assistance based on vehicle speed",
+      "Six-speed manual transmission standard",
+      "Driver and front passenger advanced dual-stage airbag supplemental restraints",
+      "Sideguard head curtain airbags for both rows of seats",
+      "Electronic Stabilization Program (ESP) with Anti-lock Brake System (ABS)",
+      "Audi hill hold assist with brake assist system",
+      "Anti-theft vehicle alarm system with blinking theft-deterrent light",
+      "Fully galvanized steel unibody with multistep anti-corrosion protection"
+    ]
+  }
+}

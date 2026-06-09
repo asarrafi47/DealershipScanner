@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2015|chrysler|towncountry",
+  "year": 2015,
+  "make": "Chrysler",
+  "model": "Town & Country",
+  "ladder_id": "brochure_llm_2015__chrysler__towncountry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T&C LIMITED PLATINUM",
+    "T&C LIMITED",
+    "T&C TOURING-L",
+    "T&C S",
+    "T&C TOURING",
+    "T&C LX"
+  ],
+  "adds_by_trim": {
+    "T&C LIMITED PLATINUM": [
+      "9 speakers with 506-watt amplifier",
+      "Nappa premium leather-trimmed seats",
+      "Memory for seats, mirrors, and power adjustable pedals",
+      "Heated wood/leather-wrapped steering wheel",
+      "High intensity discharge (HID) headlamps",
+      "Dual Blu-ray/DVD entertainment system",
+      "Chrome roof rack"
+    ],
+    "T&C LIMITED": [
+      "Alcantara suede and leather-trimmed seats",
+      "Super console with power outlets and storage",
+      "17-inch polished aluminum wheels",
+      "Heated 1st- and 2nd-row seats",
+      "Heated steering wheel",
+      "Power 3rd-row folding seat",
+      "Power folding mirrors",
+      "Navigation system"
+    ],
+    "T&C TOURING-L": [
+      "Perforated leather-trimmed seats",
+      "2nd- and 3rd-row window shades",
+      "Power passenger seat",
+      "17-inch painted aluminum wheels",
+      "Chrome mirrors with signals",
+      "SafetyTec package",
+      "Blind spot monitoring",
+      "Rear cross-path detection",
+      "Rain-sensing wipers",
+      "Premium tire pressure system and rear park assist with auto high-beam headlamp control"
+    ],
+    "T&C S": [
+      "Leather-trimmed seats with fabric inserts and silver stitching",
+      "17-inch hyper black aluminum wheels",
+      "Blacked-out headlamps and black chrome grille",
+      "Piano black interior accents",
+      "Super console with dual Blu-ray/DVD system",
+      "Performance suspension for enhanced handling dynamics"
+    ],
+    "T&C TOURING": [
+      "Single DVD entertainment system",
+      "Automatic three-zone HVAC climate control",
+      "Fog lamps and auto headlamps",
+      "Power 8-way driver's seat with chrome bodyside molding",
+      "Remote USB charging port"
+    ],
+    "T&C LX": [
+      "3.6L V6 Pentastar engine producing 283 hp and 260 lb-ft torque",
+      "Leather-trimmed seating throughout",
+      "Media center 430 radio with back-up camera",
+      "Uconnect voice command system",
+      "Manual three-zone HVAC climate control",
+      "Stow N Place roof rack and Stow 'n Go seating system",
+      "Power sliding doors and liftgate",
+      "Front-seat side airbags and steering wheel audio controls",
+      "Sunscreen glass, power locks, and 17-inch aluminum wheels"
+    ]
+  }
+}

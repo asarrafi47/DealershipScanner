@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Toyota,Mirai,LE,FCV (PEFC) Hydrogen,FCV (PEFC) Hydrogen,,Automatic (variable gear ratios),Rear-Wheel Drive,Hydrogen,Compact Cars,,,76,71,74,,,,,
+2023,Toyota,Mirai,Limited,FCV (PEFC) Hydrogen,FCV (PEFC) Hydrogen,,Automatic (variable gear ratios),Rear-Wheel Drive,Hydrogen,Compact Cars,,,67,64,65,,,,,
+2023,Toyota,Mirai,XLE,FCV (PEFC) Hydrogen,FCV (PEFC) Hydrogen,,Automatic (variable gear ratios),Rear-Wheel Drive,Hydrogen,Compact Cars,,,76,71,74,,,,,

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Chevrolet,Astro Passenger,Astro 2WD (passenger),2.5L I4 ((FFS)),2.5L I4 Turbo,Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,18,24,20,,,,,
+1986,Chevrolet,Astro Passenger,Astro 2WD (passenger),2.5L I4 ((FFS)),2.5L I4 Turbo,Turbocharged,Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,18,24,20,,,,,
+1986,Chevrolet,Astro Passenger,Astro 2WD (passenger),2.5L I4 ((FFS)),2.5L I4 Turbo,Turbocharged,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,20,26,22,,,,,
+1986,Chevrolet,Astro Passenger,Astro 2WD (passenger),4.3L V6 ((FFS)),4.3L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,
+1986,Chevrolet,Astro Passenger,Astro 2WD (passenger),4.3L V6 ((FFS)),4.3L V6,,Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,19,17,,,,,
+1986,Chevrolet,Astro Passenger,Astro 2WD (passenger),4.3L V6 ((FFS)),4.3L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,21,17,,,,,

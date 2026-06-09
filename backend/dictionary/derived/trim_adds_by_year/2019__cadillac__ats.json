@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2019|cadillac|ats",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "ATS",
+  "ladder_id": "brochure_llm_2019__cadillac__ats",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ATS-V",
+    "ATS"
+  ],
+  "adds_by_trim": {
+    "ATS-V": [
+      "High-performance V6 engine (specific displacement and horsepower not detailed in dimensions section)",
+      "Upgraded suspension tuning for enhanced handling and performance",
+      "Performance-calibrated braking system"
+    ],
+    "ATS": [
+      "Comprehensive owner benefits package including 24/7 roadside assistance",
+      "4-year/50,000-mile bumper-to-bumper limited warranty with no deductible",
+      "6-year/70,000-mile transferable powertrain limited warranty"
+    ]
+  }
+}

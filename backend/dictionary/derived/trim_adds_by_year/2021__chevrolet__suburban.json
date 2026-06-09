@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2021|chevrolet|suburban",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2021__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "RST",
+    "Z71",
+    "LT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "Enhanced Display and Alert Package with Head-Up Display and Rear Camera Mirror",
+      "Premium Package with panoramic power sunroof and Adaptive Cruise Control",
+      "Power-retractable assist steps with perimeter lighting",
+      "High Country Deluxe package with Four-Corner Air Ride Adaptive Suspension",
+      "Requires Jet Black interior color for second-row 60/40 split-folding bench seat"
+    ],
+    "Premier": [
+      "Enhanced Display and Alert Package with HD Surround Vision and Head-Up Display",
+      "Premium Package including Max Trailering Package and panoramic power sunroof",
+      "Trailer Side Blind Zone Alert with Hitch Guidance and Hitch View"
+    ],
+    "RST": [
+      "Luxury Package with Driver Alert Package and HD Surround Vision",
+      "Second-row bucket seats with power-release and heated outboard seats",
+      "Third-row power-folding 60/40 split-bench seat",
+      "Chevrolet Infotainment 3 Premium system with Navigation"
+    ],
+    "Z71": [
+      "Z71 Off-Road Package with Magnetic Ride Control and Four-Corner Air Ride",
+      "Off-Road Capability Package with enhanced Driver Information Center 8-inch display",
+      "Second-row bucket seats power-release and third-row power-folding seat"
+    ],
+    "LT": [
+      "LT Signature Package with Luxury Package and panoramic power sunroof",
+      "20-inch painted-aluminum wheels with machined face and Argent Metallic pockets",
+      "Second-row bucket seats with manual-release option",
+      "Rear Media and Nav Package available with dual 12.6-inch LCD screens"
+    ],
+    "SL": [
+      "Advanced Trailering Package with integrated trailer brake controller",
+      "Max Trailering Package with extra-capacity cooling system",
+      "Driver Alert Package with Lane Keep Assist and Rear Cross Traffic Alert",
+      "Chevrolet Infotainment 3 Plus system with 10.2-inch HD touchscreen and wireless Apple CarPlay",
+      "Available 4G LTE Wi-Fi Hotspot for up to seven devices",
+      "Chevrolet Connected Access with 10 years of standard connectivity"
+    ]
+  }
+}

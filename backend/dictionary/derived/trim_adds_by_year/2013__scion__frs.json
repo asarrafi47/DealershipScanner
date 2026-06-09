@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2013|scion|frs",
+  "year": 2013,
+  "make": "Scion",
+  "model": "FR-S",
+  "ladder_id": "brochure_2013__scion__frs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds 2.0-liter 4-cylinder boxer engine with 200 HP",
+      "Adds 6-speed manual or 6-speed automatic transmission with paddle shifters",
+      "Adds rear-wheel drive with double wishbone rear suspension",
+      "Adds 17-inch alloy wheels with Michelin Primacy HP summer tires",
+      "Adds power windows with one-touch auto up/down",
+      "Adds power door locks and remote keyless entry",
+      "Adds leather-trimmed steering wheel with tilt/telescopic adjustment",
+      "Adds Pioneer audio system with Bluetooth and HD Radio",
+      "Adds driver and front passenger advanced airbag system with side curtain airbags",
+      "Adds anti-lock brake system with traction control and vehicle stability control"
+    ],
+    "Sport": [],
+    "Premium": [],
+    "Limited": []
+  }
+}

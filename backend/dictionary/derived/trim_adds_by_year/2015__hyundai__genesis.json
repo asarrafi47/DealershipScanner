@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2015|hyundai|genesis",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "ladder_id": "brochure_2015__hyundai__genesis",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue"
+  ],
+  "adds_by_trim": {
+    "Blue": [
+      "Adds Hands-Free Smart Trunk with smart key fob activation",
+      "Adds Smart Cruise Control with automatic stopping and restart capability",
+      "Adds Front and Rear Parking Assistance with sensors",
+      "Adds Rearview Camera Display",
+      "Adds Lane Departure Warning with visual and haptic steering wheel alerts",
+      "Adds High Beam Assist with automatic switching"
+    ],
+    "Limited": [
+      "Blue Link agents will contact existing emergency service responders. Only use"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2016_jaguar_f-type_complete_options",
+  "make": "Jaguar",
+  "models": [
+    "F-TYPE",
+    "F-TYPE"
+  ],
+  "year_min": 2014,
+  "year_max": 2018,
+  "source": "generated",
+  "trims": {
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Supercharged; Automatic (S8)"
+      }
+    ],
+    "R Convertible": [
+      {
+        "label": "Engine Options",
+        "value": "5.0L V8 Supercharged; Automatic (S8)"
+      }
+    ]
+  }
+}

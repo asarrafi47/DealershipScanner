@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2012|toyota|prius",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_web_2012__toyota__prius",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "12.3-inch infotainment display",
+      "Eight-speaker JBL audio system",
+      "Fixed glass roof",
+      "Heated front seats and steering wheel",
+      "Ventilated front seats",
+      "Driver memory function"
+    ],
+    "XLE": [
+      "19-inch alloy wheels",
+      "Digital rearview mirror",
+      "Two additional cupholders for rear passengers",
+      "Eight-way power driver's seat",
+      "Synthetic leather seating",
+      "Rain-sensing wipers",
+      "Keyless entry",
+      "Wireless phone charger",
+      "Parking sensors with automatic braking"
+    ],
+    "LE": [
+      "17-inch alloy wheels with wheel covers",
+      "8.0-inch touchscreen infotainment",
+      "Six USB-C ports",
+      "Electronic parking brake",
+      "Blind-spot monitoring with rear cross-traffic alert",
+      "Adaptive cruise control",
+      "Lane keeping assistance",
+      "Automatic emergency braking",
+      "Traffic sign monitoring"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/prius/"
+}

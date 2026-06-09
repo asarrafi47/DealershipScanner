@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2010|lexus|rx",
+  "year": 2010,
+  "make": "lexus",
+  "model": "RX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

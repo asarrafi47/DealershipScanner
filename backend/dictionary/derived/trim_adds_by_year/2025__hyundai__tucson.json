@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2025|hyundai|tucson",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "2025_hyundai_tucson",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "XRT",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "18-inch alloy wheels and H-Tex seating with heated front seats",
+      "Dual-zone climate and 12.3-inch digital instrument cluster",
+      "Smart Cruise Control with Stop & Go"
+    ],
+    "XRT": [
+      "XRT rugged styling and HTRAC AWD availability",
+      "Raised utility content vs SEL"
+    ],
+    "Limited": [
+      "Leather-trimmed ventilated front seats and heated 2nd-row",
+      "Integrated Memory System and navigation-based Smart Cruise",
+      "Highest Tucson gas trim"
+    ],
+    "SE": [
+      "187 hp Smartstream 2.5L GDI/MPI 4-cylinder engine with 178 lb-ft torque",
+      "8-speed automatic transmission with SHIFTRONIC",
+      "Idle Stop & Go technology",
+      "Electronic Parking Brake with Automatic Vehicle Hold",
+      "Drive Mode Select and Downhill Brake Control",
+      "2,000-lb towing capacity with trailer pre-wiring",
+      "Automatic headlights with High Beam Assist",
+      "LED Daytime Running Lights",
+      "Proximity Key entry with push button start",
+      "Reclining 60/40 split-folding second-row seats with center armrest"
+    ]
+  }
+}

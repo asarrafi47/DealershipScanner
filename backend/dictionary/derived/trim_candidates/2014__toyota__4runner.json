@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2014|toyota|4runner",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SR5",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

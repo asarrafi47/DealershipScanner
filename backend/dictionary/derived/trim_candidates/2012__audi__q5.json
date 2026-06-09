@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2012|audi|q5",
+  "year": 2012,
+  "make": "Audi",
+  "model": "Q5",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "LT",
+    "EX",
+    "SE",
+    "LE",
+    "Q5",
+    "N/A"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

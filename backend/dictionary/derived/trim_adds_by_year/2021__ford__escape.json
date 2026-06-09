@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2021|ford|escape",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Escape",
+  "ladder_id": "brochure_llm_2021__ford__escape",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium Elite",
+    "Titanium",
+    "SEL Stealth AWD",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Titanium Elite": [
+      "19-inch Luster Nickel-Painted Aluminum wheels with Dark Tarnish-Painted Pockets",
+      "Ebony Leather seating with Sandstone Mini-Perforated Inserts",
+      "2.0L EcoBoost engine and Hybrid compatibility"
+    ],
+    "Titanium": [
+      "19-inch Machined-Face Aluminum wheels with Dark Stainless-Painted Pockets",
+      "Ebony ActiveX Seating Material with Miko Sueded Cloth Perforated Inserts",
+      "2.0L EcoBoost engine and Hybrid compatibility"
+    ],
+    "SEL Stealth AWD": [
+      "19-inch Machined-Face Ebony-Painted Aluminum wheels with Dark Tarnish-Painted Pockets",
+      "All-Wheel Drive capability",
+      "Stealth appearance package"
+    ],
+    "SEL": [
+      "18-inch Machined-Face Aluminum Ebony-Painted Aluminum wheels",
+      "Ebony ActiveX Seating Material with Mini-Perforated Inserts",
+      "Available on SE with EcoBoost engines and Hybrid models"
+    ],
+    "SE": [
+      "18-inch Shadow Silver-Painted Sparkle Silver-Painted Covers wheels",
+      "Standard on SE with EcoBoost engines",
+      "Ebony ActiveX Seating Material with Mini-Perforated Inserts available"
+    ],
+    "S": [
+      "17-inch Steel wheels with 17-inch Shadow Silver-Painted Covers",
+      "Dark Earth Gray Cloth Seating Surfaces",
+      "FordPass Connect with 4G LTE Wi-Fi hotspot capability",
+      "Ford Co-Pilot360 Technology suite with Pre-Collision Assist and BLIS",
+      "Personal Safety System with dual-stage front airbags and side-curtain airbags"
+    ]
+  }
+}

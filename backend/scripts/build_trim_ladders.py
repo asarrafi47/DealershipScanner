@@ -18,8 +18,9 @@ _REPO = Path(__file__).resolve().parents[2]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
+from backend.enrichment.dictionary_catalog import iter_dictionary_csv_paths
+from backend.enrichment.dictionary_paths import trim_ladders_generated_path
 from backend.enrichment.trim_ladder import (  # noqa: E402
-    _DICTIONARY_DIR,
     _complete_options_ladder_is_junk,
     _extract_trim_from_cell,
     _is_valid_trim_name,
@@ -27,6 +28,7 @@ from backend.enrichment.trim_ladder import (  # noqa: E402
     _ladder_from_dt_csv,
     _norm_make,
     _steps_from_csv_rows,
+    options_trim_cell_is_plausible,
 )
 from backend.enrichment.trim_ladder_knowledge import (  # noqa: E402
     extract_trims_from_text,
@@ -34,7 +36,7 @@ from backend.enrichment.trim_ladder_knowledge import (  # noqa: E402
     normalize_ladder_steps,
 )
 
-_OUTPUT = _DICTIONARY_DIR / "trim_ladders_generated.json"
+_OUTPUT = trim_ladders_generated_path()
 _MIN_STEPS = 2
 
 
@@ -60,7 +62,7 @@ def _column_trims(path: Path, make: str, model: str) -> list[str]:
     names: list[str] = []
     for row in rows:
         raw = (row.get("Trim") or "").strip()
-        if not raw:
+        if not raw or not options_trim_cell_is_plausible(raw, make, model):
             continue
         name = _extract_trim_from_cell(raw, make, model)
         if name and _is_valid_trim_name(name):
@@ -148,7 +150,7 @@ def _ladder_from_path(path: Path) -> dict | None:
 
 
 def main() -> int:
-    paths = sorted(_DICTIONARY_DIR.glob("*_Complete_Options.csv"))
+    paths = sorted(iter_dictionary_csv_paths("options"))
     ladders: list[dict] = []
     seen_ids: set[str] = set()
     skipped = 0
@@ -170,6 +172,7 @@ def main() -> int:
         "ladder_count": len(ladders),
         "ladders": ladders,
     }
+    _OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     _OUTPUT.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"Wrote {len(ladders)} ladders to {_OUTPUT} ({skipped} files skipped)")
     return 0

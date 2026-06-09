@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2026_mercedes-benz_glc-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLC-Class",
+    "GLC-Class"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG GLC43": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "GLC300": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Three 2.0-litre turbocharged four-cylinder options are available, with 184 PS (1"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L M274 I4 turbo (petrol PHEV)"
+      }
+    ]
+  }
+}

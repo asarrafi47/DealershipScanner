@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2021|chevrolet|silverado",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "2019_chevrolet_silverado_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "LTZ",
+    "RST"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      ", power-folding with memory and driver-side",
+      "Package; Custom requires available",
+      ", power-folding and manual-extending with",
+      "lighting and memory; High Country includes",
+      "Chevrolet ownership experience.",
+      "your vehicle programs. Visit chevrolet.com to build and price, find a vehicle, request trademarks of Sirius XM Radio Inc.",
+      "child security features to help give you peace of mind. of the Goodyear Tire & Rubber"
+    ],
+    "RST": [
+      "2.7L Turbo (L3B) standard engine",
+      "Available 5.3L EcoTec3 V8 and 6.2L EcoTec3 V8 engines",
+      "Available Duramax 3.0L Turbo-Diesel engine"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "RST": 0
+    }
+  }
+}

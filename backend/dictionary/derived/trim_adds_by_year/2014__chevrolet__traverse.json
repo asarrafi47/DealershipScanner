@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2014|chevrolet|traverse",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2014__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRAVERSE LTZ",
+    "TRAVERSE 1LT",
+    "TRAVERSE LS"
+  ],
+  "adds_by_trim": {
+    "TRAVERSE LTZ": [
+      "20-inch aluminum wheels",
+      "Dual-outlet exhaust with polished tips",
+      "First and second-row perforated leather seating",
+      "Heated and cooled driver and front passenger seats",
+      "8-way power-adjustable driver seat with power lumbar control"
+    ],
+    "TRAVERSE 1LT": [
+      "18-inch aluminum wheels",
+      "Foldaway power-adjustable heated body-color mirrors with turn signal indicators",
+      "Premium cloth seating",
+      "USB port in upper instrument panel and two charge-only USB ports in rear center console"
+    ],
+    "TRAVERSE LS": [
+      "17-inch steel wheels with painted wheel covers",
+      "Foldaway power-adjustable black mirrors with integrated blind spot mirrors",
+      "Standard seating configuration",
+      "Front center air bag"
+    ]
+  }
+}

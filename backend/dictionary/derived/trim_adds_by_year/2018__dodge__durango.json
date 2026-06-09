@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2018|dodge|durango",
+  "year": 2018,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2018__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRS",
+    "R/T",
+    "GT",
+    "Limited",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "TRS": [
+      "6.4L HEMI V8 engine with 8-speed automatic transmission",
+      "Performance exhaust with dual rear bright 4-inch tips",
+      "High-Performance and Adaptive-Damping suspension",
+      "Performance-tuned AWD system",
+      "Body-color performance front fascia",
+      "Sport suspension with lowered ride height for enhanced handling"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 with Multi-Displacement System and 8-speed automatic",
+      "Antilock 4-wheel disc HD brakes",
+      "Dual rear exhaust with bright tips",
+      "2-speed active on-demand AWD available with 5.7L V8"
+    ],
+    "GT": [
+      "3.6L Pentastar V6 Variable Valve Timing with 8-speed automatic",
+      "Power liftgate with key fob and rear cargo controls",
+      "8-way power driver and passenger seats with driver memory",
+      "Heated first-row seats with heated steering wheel"
+    ],
+    "Limited": [
+      "Power 8-way driver's seat with memory and 6-way power passenger seat",
+      "Power 4-way driver and passenger lumbar adjustment",
+      "Ventilated first-row seats",
+      "Heated second-row seats",
+      "60/40 split-folding second-row seats with Lightweight Performance Package"
+    ],
+    "SXT": [
+      "Manual first-row seat adjustment",
+      "Front speed-sensitive variable intermittent wipers with 1-gallon fluid capacity",
+      "7-inch thin film transistor reconfigurable digital gauge cluster"
+    ]
+  }
+}

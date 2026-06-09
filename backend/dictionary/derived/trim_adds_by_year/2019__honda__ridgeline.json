@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2019|honda|ridgeline",
+  "year": 2019,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "ladder_id": "brochure_llm_2019__honda__ridgeline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "BLACK EDITION",
+    "RTL-E",
+    "RTL-T",
+    "RTL",
+    "SPORT",
+    "RT"
+  ],
+  "adds_by_trim": {
+    "BLACK EDITION": [
+      "Perforated black leather-trimmed seats with red under-fabric and red stitching",
+      "Exclusive 18-inch black-painted alloy wheels",
+      "Gloss black door handles",
+      "Black Edition badging",
+      "Red ambient LED lighting",
+      "Heated steering wheel",
+      "Driver's seat with two-position memory",
+      "Truck-Bed Audio System"
+    ],
+    "RTL-E": [
+      "Auto high-beam headlights",
+      "LED low-beam headlights with auto-on/off",
+      "Body-colored parking sensors front and rear",
+      "150-watt/400-watt truck-bed power outlet",
+      "Blue ambient LED lighting"
+    ],
+    "RTL-T": [
+      "Honda LaneWatch display system",
+      "8-inch Display Audio with high-resolution touch-screen"
+    ],
+    "RTL": [
+      "LED Daytime Running Lights",
+      "18-inch machine-finished alloy wheels",
+      "Acoustic windshield",
+      "Honda Sensing suite of safety and driver-assistive features",
+      "Leather-wrapped steering wheel",
+      "Driver's seat with 10-way power adjustment including lumbar support",
+      "Front passenger's seat with 4-way power adjustment",
+      "Tri-zone automatic climate control with humidity control and air filtration",
+      "Leather-trimmed interior",
+      "Heated front seats"
+    ],
+    "SPORT": [
+      "18-inch dark gray-painted alloy wheels",
+      "Sport badging",
+      "Remote engine start",
+      "Fog lights"
+    ],
+    "RT": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "6-speed automatic transmission",
+      "Intelligent Variable Torque Management i-VTM4 AWD system",
+      "Intelligent Traction Management",
+      "18-inch alloy wheels",
+      "Security system",
+      "Multi-angle rearview camera with guidelines",
+      "Dual-action tailgate",
+      "In-Bed Trunk",
+      "Integrated trailer hitch"
+    ]
+  }
+}

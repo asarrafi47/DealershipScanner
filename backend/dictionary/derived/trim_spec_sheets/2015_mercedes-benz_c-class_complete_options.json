@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2015_mercedes-benz_c-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "C-Class",
+    "C-Class"
+  ],
+  "year_min": 2013,
+  "year_max": 2017,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "6.2L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG C63": [
+      {
+        "label": "Engine Options",
+        "value": "6.2L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "C250": [
+      {
+        "label": "Engine Options",
+        "value": "1.8L I4 Turbo; Automatic 7-spd"
+      }
+    ],
+    "C300": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ],
+    "C350": [
+      {
+        "label": "Engine Options",
+        "value": "3.5L V6 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

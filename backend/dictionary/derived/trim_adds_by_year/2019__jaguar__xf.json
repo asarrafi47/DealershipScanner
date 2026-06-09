@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|jaguar|xf",
+  "year": 2019,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_llm_2019__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S",
+    "Portfolio",
+    "Prestige",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adaptive Surface Response system (AWD models only)",
+      "Enhanced performance tuning"
+    ],
+    "Portfolio": [
+      "3.0 liter V6 380HP Supercharged engine option"
+    ],
+    "Prestige": [
+      "Advanced technology package"
+    ],
+    "Premium": [
+      "Base trim with 2.0 liter turbocharged diesel or gasoline engine options",
+      "8-speed automatic transmission",
+      "Panoramic glass roof (Sportbrake)",
+      "Self-leveling rear air suspension (Sportbrake)",
+      "240:20:40 split fold rear seats (Sportbrake)",
+      "Adaptive LED headlights (optional)",
+      "Traffic Sign Recognition and Adaptive Speed Limiter (optional)",
+      "Lane Keep Assist and Driver Condition Monitor (optional)",
+      "Emergency Braking and Adaptive Cruise Control with Queue Assist (optional)",
+      "Park Assist and Blind Assist (optional)"
+    ]
+  }
+}

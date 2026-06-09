@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2025|lexus|gx",
+  "year": 2025,
+  "make": "Lexus",
+  "model": "GX",
+  "ladder_id": "2025_lexus_gx",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Premium",
+    "Premium+",
+    "Luxury",
+    "Luxury+",
+    "Overtrail",
+    "Overtrail+"
+  ],
+  "adds_by_trim": {
+    "Premium+": [
+      "LED fog lamps and outside mirrors with puddle lamps",
+      "10-way heated and ventilated power driver seat",
+      "Heated second-row outboard seats and wireless phone charger"
+    ],
+    "Luxury": [
+      "22-inch alloy wheels and Adaptive Variable Suspension",
+      "Dynamic Sky panorama glass roof and Mark Levinson 21-speaker audio",
+      "Front massaging seats and semi-aniline leather interior"
+    ],
+    "Luxury+": [
+      "Includes Luxury plus digital rearview mirror and cool box",
+      "Four-way adjustable front headrests"
+    ],
+    "Overtrail": [
+      "1-inch front and rear suspension lift and E-KDSS",
+      "33-inch all-terrain tires and black utility roof rails",
+      "Overtrail-specific exterior and interior content"
+    ],
+    "Overtrail+": [
+      "Includes Overtrail plus Overtrail+ enhanced off-road equipment",
+      "Highest GX Overtrail trim in 2025 brochure"
+    ],
+    "Premium": [
+      "LED fog lamps and outside mirrors with puddle lamps",
+      "10-way heated and ventilated power driver seat",
+      "Heated second-row outboard seats and wireless phone charger"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2023|subaru|impreza",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Impreza",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base",
+    "Platinum"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

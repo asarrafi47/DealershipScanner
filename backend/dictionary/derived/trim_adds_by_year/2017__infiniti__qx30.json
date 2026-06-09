@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2017|infiniti|qx30",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "QX30",
+  "ladder_id": "brochure_llm_2017__infiniti__qx30",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX30 Premium AWD",
+    "QX30 Sport AWD",
+    "QX30 Luxury AWD",
+    "QX30 Premium",
+    "QX30 Sport",
+    "QX30 Luxury"
+  ],
+  "adds_by_trim": {
+    "QX30 Premium AWD": [
+      "Intelligent All-Wheel Drive system with raised AWD-tuned suspension",
+      "21/30 mpg EPA fuel economy (vs. 24/33 FWD)",
+      "Machine-finished 18-inch aluminum wheels with all-season run-flat tires",
+      "Overall height 60.2 inches with roof rails (vs. 59.5 inches FWD)"
+    ],
+    "QX30 Sport AWD": [
+      "19-inch Gun Metallic sport aluminum-alloy wheels with 235/45R19 summer run-flat tires",
+      "Sport-tuned lowered suspension with cross-drilled front disc brakes",
+      "Sport front and rear lower fascias with integrated rear spoiler",
+      "Overall height 58.0 inches without roof rails"
+    ],
+    "QX30 Luxury AWD": [
+      "Intelligent All-Wheel Drive system with raised AWD-tuned suspension",
+      "21/30 mpg EPA fuel economy (vs. 24/33 FWD)",
+      "Machine-finished 18-inch aluminum wheels with all-season run-flat tires"
+    ],
+    "QX30 Premium": [
+      "Automatic-on/off LED headlights with Adaptive Front Lighting System",
+      "Auto-high/low beam headlights and LED front fog lights",
+      "18-inch split 5-spoke aluminum-alloy standard wheels",
+      "Nappa leather-appointed and stitched dash inserts"
+    ],
+    "QX30 Sport": [
+      "Sport-tuned lowered suspension with cross-drilled front disc brakes and INFINITI-branded calipers",
+      "Sport front and rear lower fascias with QX30 AWD fascias",
+      "Integrated rear spoiler and sport styling elements",
+      "19-inch Gun Metallic sport aluminum wheels with 235/45R19 summer run-flat tires"
+    ],
+    "QX30 Luxury": [
+      "2.0-liter turbocharged I4 engine with 208 hp and 258 lb-ft torque",
+      "7-speed double clutch automatic transmission with Idle Stop/Start",
+      "Halogen headlights with automatic on/off functionality",
+      "Electronically assisted power steering with 37.3-foot turning diameter",
+      "MacPherson strut front suspension with multi-link rear suspension",
+      "12.6-inch front ventilated disc brakes and 11.6-inch rear solid disc brakes",
+      "INFINITI Intelligent Key with dual-zone automatic temperature control",
+      "Power windows with one-touch auto-up/down and auto-reverse feature",
+      "Front and rear carpeted floor mats with cargo net tie-down anchors",
+      "Panoramic moonroof with electric sunshade and roof rails available"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2022|toyota|corollacross",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Corolla Cross",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "XLE",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features: Adds to or replaces features offered on L Adds to or replaces features offered on LE",
+      "C ontinuously Variable Transmission (CVT) Continuously Variable Transmission (CVT) C ontinuously Variable Transmission (CVT)",
+      "F ront-Wheel Drive (FWD) or available Front-Wheel Drive (FWD) or available F ront-Wheel Drive (FWD) or available",
+      "All-Wheel Drive (AWD) All-Wheel Drive (AWD) All-Wheel Drive (AWD)",
+      "Exterior Features Exterior Features Exterior Features",
+      "Color-keyed rear spoiler Color-keyed heated power outside mirrors with L ED low- and high-beam headlights, LED",
+      "Color-keyed outside door handles turn signal and blind spot warning indicators33 front turn signals, and LED taillights",
+      "LED projector low and high-beam headlights 17-in. silver alloy wheels L ED fog lights",
+      "Heated power outside mirrors Rear privacy glass B lack grille with metallic paint surround",
+      "Interior Features Interior Features Interior Features",
+      "F abric-trimmed seating Single-zone air conditioning with S ofTex\u00ae-trimmed1 seating",
+      "O verhead console with maplights and Qi-compatible wireless smartphone charging8 -10-way power-adjustable driver\u2019s seat"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|nissan|cube",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Cube",
+  "ladder_id": "brochure_llm_2010__nissan__cube",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1.8 SL Krōm",
+    "1.8 SL",
+    "1.8 S",
+    "1.8"
+  ],
+  "adds_by_trim": {
+    "1.8 SL Krōm": [
+      "16\" x 6.0\" Krōm aluminum-alloy wheels",
+      "P195/55VR16 all-season tires",
+      "Limited edition Krōm styling and branding"
+    ],
+    "1.8 SL": [
+      "8-spoke aluminum-alloy wheels, 15\" x 6.0\"",
+      "P195/55VR16 all-season tires",
+      "Xtronic CVT transmission standard"
+    ],
+    "1.8 S": [
+      "Fog lights",
+      "Rear Sonar System",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Bluetooth Hands-free Phone System",
+      "XM Satellite Radio with six upgraded speakers",
+      "Rockford Fosgate 8\" subwoofer and amplifier",
+      "Leather-wrapped steering wheel with audio controls"
+    ],
+    "1.8": [
+      "1.8-liter DOHC 16-valve 4-cylinder engine, 122 hp",
+      "6-speed manual transmission",
+      "Front-Wheel Drive with Active Brake Limited Slip",
+      "Independent strut front suspension with stabilizer bar",
+      "Torsion beam rear suspension with stabilizer bar",
+      "Power-assisted vented front disc, rear drum brakes",
+      "4-wheel Anti-lock Braking System with Brake Assist",
+      "15\" x 6.0\" steel wheels with bolt-on covers",
+      "P195/60HR15 all-season tires"
+    ]
+  }
+}

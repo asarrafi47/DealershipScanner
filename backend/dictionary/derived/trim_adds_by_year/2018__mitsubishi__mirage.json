@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2018|mitsubishi|mirage",
+  "year": 2018,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2018__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "Voice recognition system",
+      "Steering wheel mounted cruise control",
+      "FAST-Key passive entry with push button start and panic feature",
+      "Automatic climate control",
+      "Fog lights standard"
+    ],
+    "SE": [
+      "7.0 inch touch-panel display audio with 4 speakers and voice recognition",
+      "Remote keyless entry with panic feature",
+      "Steering wheel mounted cruise control",
+      "FAST-Key passive entry with push button start",
+      "Automatic climate control"
+    ],
+    "ES": [
+      "1.2L MIVEC DOHC 12-valve inline 3-cylinder engine with 78 hp",
+      "5-speed manual transmission standard",
+      "Hill Start Assist, ABS with EBD and Brake Assist",
+      "Active Stability Control and Tire Pressure Monitoring System",
+      "Advanced dual-stage SRS front airbags and side curtain airbags",
+      "Air conditioning, power windows and power door locks",
+      "Rearview camera and Bluetooth wireless technology"
+    ]
+  }
+}

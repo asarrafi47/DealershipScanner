@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2021|gmc|terrain",
+  "year": 2021,
+  "make": "GMC",
+  "model": "Terrain",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "Elevation",
+    "Pro",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

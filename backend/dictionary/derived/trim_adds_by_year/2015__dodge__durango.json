@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2015|dodge|durango",
+  "year": 2015,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2015__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "DURANGO CITADEL PACKAGE",
+    "DURANGO R/T",
+    "DURANGO LIMITED",
+    "DURANGO RALLYE",
+    "DURANGO SXT"
+  ],
+  "adds_by_trim": {
+    "DURANGO CITADEL PACKAGE": [
+      "5.7L HEMI V8 with Fuel Saver Technology, 360 horsepower and 390 lb-ft of torque",
+      "20-inch polished aluminum wheels",
+      "Uconnect 8.4-inch touchscreen with premium navigation and SiriusXM",
+      "Rear dual-screen Blu-ray/DVD entertainment center",
+      "Premium Nappa leather-trimmed seats with ventilation and 8-way power"
+    ],
+    "DURANGO R/T": [
+      "5.7L HEMI V8 with Fuel Saver Technology, 360 horsepower and 390 lb-ft of torque",
+      "20-inch Hyper Black aluminum wheels",
+      "High Intensity Discharge headlamps",
+      "Capri leather-trimmed seats with perforated inserts and R/T embroidery",
+      "Performance steering and suspension with 20mm lowering"
+    ],
+    "DURANGO LIMITED": [
+      "3.6L Pentastar V6 upgraded to 295 horsepower",
+      "18-inch polished aluminum wheels with Mineral Gray finish",
+      "Premium leather-trimmed bucket seats with perforated suede inserts",
+      "Auto-dimming rearview mirror with microphone",
+      "20-inch Hyper Black aluminum wheels as select standard",
+      "LED daytime running lights",
+      "Body-color shark fin antenna and exterior accents"
+    ],
+    "DURANGO RALLYE": [
+      "Projector headlamps and fog lamps",
+      "18-inch Tech Silver aluminum wheels",
+      "Uconnect 5-inch touchscreen",
+      "Bright chrome exterior accents",
+      "LED racetrack taillamps",
+      "Keyless Enter 'n Go with push-button start"
+    ],
+    "DURANGO SXT": [
+      "3.6L Pentastar V6 with 290 horsepower and 260 lb-ft of torque",
+      "8-speed automatic transmission with Rotary Shifter",
+      "7-passenger premium cloth seating with fold-flat front-passenger seat",
+      "2nd-row 60/40 fold-and-tumble reclining seats",
+      "3rd-row 50/50 split-folding seats",
+      "3-zone automatic temperature control",
+      "7 standard airbags including front multistage and side-curtain",
+      "Electronic Stability Control with Hill Start Assist and Traction Control",
+      "4-wheel antilock disc brakes",
+      "7-inch reconfigurable digital gauge cluster"
+    ]
+  }
+}

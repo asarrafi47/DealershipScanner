@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2012|dodge|charger",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2012__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SXT PLUS",
+    "SXT",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SXT PLUS": [
+      "18-inch chrome-clad wheels",
+      "19-inch aluminum wheels on AWD models",
+      "Nappa leather-trimmed seats",
+      "12-way power driver and front-passenger seats",
+      "Heated second-row seats with illuminated cup holders",
+      "Driver and front-passenger lower LED lamps",
+      "Front overhead LED lighting",
+      "Security alarm",
+      "Illuminated, heated, and cooled front cup holders"
+    ],
+    "SXT": [
+      "8-speed transmission with E-shifter and 31 mpg highway",
+      "Fog lamps",
+      "8.4-inch Uconnect Touch touchscreen",
+      "Manual folding, heated, power adjustable exterior mirrors",
+      "Heated front seats",
+      "Uconnect hands-free communication with Voice Command",
+      "Auto-dimming rearview mirror with microphone",
+      "SiriusXM Satellite Radio with one-year subscription",
+      "Six premium speakers with 276-watt amplifier",
+      "12-way power driver seat, leather-wrapped steering wheel and shift knob, remote start, universal garage door opener, 19-inch aluminum wheels on AWD models"
+    ],
+    "SE": [
+      "3.6L Pentastar VVT V6 engine with 292 horsepower",
+      "5-speed AutoStick transmission",
+      "27 mpg highway fuel economy",
+      "17-inch aluminum wheels",
+      "LED rear taillamps",
+      "Dual rear exhaust with bright tips",
+      "Premium cloth seating",
+      "4.3-inch Uconnect Touch touchscreen with CD/MP3 and six speakers",
+      "Electronic Stability Control with Hill Start Assist and Ready Alert Braking",
+      "Seven standard air bags and four-wheel disc antilock brakes"
+    ]
+  }
+}

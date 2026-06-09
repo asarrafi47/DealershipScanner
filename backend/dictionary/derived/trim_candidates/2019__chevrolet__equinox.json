@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2019|chevrolet|equinox",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LT",
+    "LS",
+    "L",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

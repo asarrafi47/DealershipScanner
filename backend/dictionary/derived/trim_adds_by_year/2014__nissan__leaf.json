@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|nissan|leaf",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2014__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "17-inch aluminum-alloy wheels with P215/50R17 all-season tires",
+      "Leather-appointed seats",
+      "Aerodynamic LED headlights",
+      "Automatic on/off headlights",
+      "Fog lights",
+      "HomeLink Universal Transceiver",
+      "Photovoltaic solar-panel rear spoiler",
+      "Cargo cover"
+    ],
+    "SV": [
+      "6.6 kW onboard charger for faster charging",
+      "16-inch aluminum-alloy wheels",
+      "B-mode regenerative braking drive mode",
+      "Hybrid heater system",
+      "Steering wheel-mounted cruise control",
+      "Auto-dimming rearview mirror",
+      "Partially recycled light gray cloth seats",
+      "Passenger seatback map pocket",
+      "Six speakers in audio system"
+    ],
+    "S": [
+      "80 kW AC synchronous electric motor",
+      "24 kWh lithium-ion battery pack",
+      "Zero Emissions Vehicle certification",
+      "Front and rear disc brakes with regenerative braking",
+      "Vehicle Dynamic Control with Traction Control System",
+      "16-inch steel wheels with wheel covers",
+      "Heated front and rear seats",
+      "Heated leather-wrapped steering wheel",
+      "Automatic Temperature Control",
+      "RearView Monitor parking aid"
+    ]
+  }
+}

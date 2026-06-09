@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2010|hyundai|genesiscoupe",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Essential",
+    "Premium",
+    "Touring",
+    "Sport",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,29 @@
+{
+  "ladder_id": "toyota_tacoma",
+  "make": "Toyota",
+  "models": [
+    "Tacoma",
+    "Tacoma i-FORCE MAX"
+  ],
+  "year_min": 2016,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Interior Materials",
+        "value": "Leather-trimmed seating"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Premium audio"
+      }
+    ],
+    "SR5": [
+      {
+        "label": "Engine Options",
+        "value": "Mid-level convenience features"
+      }
+    ]
+  }
+}

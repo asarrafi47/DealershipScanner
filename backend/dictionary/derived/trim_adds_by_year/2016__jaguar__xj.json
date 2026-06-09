@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2016|jaguar|xj",
+  "year": 2016,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "brochure_llm_2016__jaguar__xj",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XJR",
+    "XJR LWB",
+    "XJ Supercharged",
+    "XJL Supercharged",
+    "XJ R-Sport",
+    "XJL Portfolio"
+  ],
+  "adds_by_trim": {
+    "XJR": [
+      "5.0L V8 550 supercharged engine producing 550 hp and 502 lb-ft torque",
+      "0-60 mph in 4.4 seconds with 174 mph top speed",
+      "Performance and luxury focused design with sporting style elements"
+    ],
+    "XJR LWB": [
+      "Long wheelbase configuration extending rear passenger space",
+      "All XJR performance and luxury features in extended wheelbase"
+    ],
+    "XJ Supercharged": [
+      "5.0L V8 470 supercharged engine producing 470 hp and 424 lb-ft torque",
+      "0-60 mph in 4.9 seconds with 155 mph top speed",
+      "Available in standard wheelbase and long wheelbase (XJL Supercharged)"
+    ],
+    "XJL Supercharged": [
+      "Long wheelbase configuration with extended rear legroom",
+      "5.0L V8 470 supercharged engine with enhanced comfort features"
+    ],
+    "XJ R-Sport": [
+      "3.0L V6 340 supercharged engine with 340 hp and 332 lb-ft torque",
+      "Sport-oriented exterior styling with R-Sport badging",
+      "Available with rear-wheel drive or all-wheel drive"
+    ],
+    "XJL Portfolio": [
+      "Long wheelbase configuration for luxury and spaciousness",
+      "3.0L V6 340 supercharged engine standard",
+      "Portfolio trim level designation indicating luxury orientation",
+      "Available in standard or long wheelbase format"
+    ]
+  }
+}

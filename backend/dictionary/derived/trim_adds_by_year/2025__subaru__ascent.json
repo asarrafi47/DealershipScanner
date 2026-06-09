@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2025|subaru|ascent",
+  "year": 2025,
+  "make": "Subaru",
+  "model": "Ascent",
+  "ladder_id": "brochure_llm_2025__subaru__ascent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ascent Onyx Edition Touring",
+    "Ascent Bronze Edition",
+    "Ascent Touring",
+    "Ascent Onyx Edition",
+    "Ascent Limited",
+    "Ascent Premium"
+  ],
+  "adds_by_trim": {
+    "Ascent Onyx Edition Touring": [
+      "20-inch aluminum-alloy wheels in black finish",
+      "Heated steering wheel with green stitching",
+      "Black interior accent trim with green stitching",
+      "Panoramic power moonroof system"
+    ],
+    "Ascent Bronze Edition": [
+      "20-inch aluminum-alloy wheels in bronze metallic finish",
+      "Heated steering wheel with bronze stitching and accents",
+      "Black window trim surround",
+      "Crystal Black Silica front grille and rear gate trim",
+      "Bronze finish accents on front bumper air ducts and lower door cladding",
+      "Black StarTex water-repellent upholstery with bronze stitching"
+    ],
+    "Ascent Touring": [
+      "Woodgrain-patterned matte-finish accent trim",
+      "Rear-Vision Camera",
+      "Rain-sensing wipers",
+      "Reverse Automatic Braking",
+      "Interior ambient lighting and footwell lighting",
+      "120-volt AC power outlet",
+      "Smart Rear-View Mirror"
+    ],
+    "Ascent Onyx Edition": [
+      "Dual-Mode X-MODE with Snow/Dirt and Deep Snow/Mud modes",
+      "20-inch aluminum-alloy wheels in black finish",
+      "LED fog lights",
+      "Black window trim surround and black accents",
+      "Crystal Black Silica front grille, bumper air ducts, exterior mirrors, roof spoiler, rear gate trim",
+      "Black badging"
+    ],
+    "Ascent Limited": [
+      "20-inch aluminum-alloy wheels with dark gray machine finish",
+      "Heated gray steering wheel with silver stitching",
+      "SUBARU STARLINK 11.6-inch Multimedia Navigation System with SiriusXM 360L",
+      "LED fog lights",
+      "Auto-dimming rearview compass mirror with HomeLink",
+      "Panoramic power moonroof with second-row retractable sunshades",
+      "360-degree Surround View Monitor with Cabin Connect",
+      "Harman Kardon 792-watt-equivalent premium audio with 14 speakers",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert"
+    ],
+    "Ascent Premium": [
+      "260-hp 2.4-liter turbocharged Direct Injection BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT with 8-speed manual-mode paddle shifters",
+      "X-MODE with Hill Descent Control and Snow/Dirt modes",
+      "EyeSight Driver Assist Technology with Pre-Collision System and Lane Keep Assist",
+      "18-inch aluminum-alloy wheels with gray machine finish",
+      "Leather-trimmed upholstery with 12-way power-adjustable driver seat",
+      "Two-position memory driver seat and exterior mirrors",
+      "Dual-mode heated second-row outboard seats",
+      "SUBARU STARLINK 11.6-inch Multimedia System with SiriusXM and Apple CarPlay"
+    ]
+  }
+}

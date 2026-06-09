@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|acura|ilx",
+  "year": 2015,
+  "make": "acura",
+  "model": "ilx",
+  "ladder_id": "brochure_llm_2015__acura__ilx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ILX 6MT",
+    "ILX Hybrid",
+    "ILX"
+  ],
+  "adds_by_trim": {
+    "ILX 6MT": [
+      "201-hp 2.4-liter DOHC i-VTEC 4-cylinder engine with 6-speed manual transmission",
+      "Red instrument illumination",
+      "Contrast stitching for interior trim",
+      "Stainless sport pedals",
+      "Premium Package included: SiriusXM Satellite Radio, Xenon HID headlights, fog lights, auto-dimming rearview mirror"
+    ],
+    "ILX Hybrid": [
+      "Hybrid powertrain with 38 city/38 highway/38 combined EPA fuel economy",
+      "10.0 cu ft cargo volume instead of 12.3 cu ft",
+      "Leather-trimmed seats available with Technology Package"
+    ],
+    "ILX": [
+      "150-hp 2.0-liter SOHC i-VTEC 4-cylinder engine with 5-speed automatic transmission",
+      "Sequential SportShift paddle shifters",
+      "Dual-zone automatic climate control with humidity control and air filtration",
+      "Sport seats with leatherette-trimmed interior",
+      "Keyless Access System with smart entry, pushbutton ignition, and Acura personalized settings",
+      "Bluetooth HandsFreeLink wireless telephone interface with SMS text message function",
+      "Multi-view rear camera",
+      "Cruise control and tilt/telescopic steering column",
+      "Driver's 8-way power seat and heated front seats",
+      "Acura Premium Sound System with 7 speakers, Pandora compatibility, USB audio interface with iPod integration, Bluetooth streaming audio, MP3/auxiliary input jack"
+    ]
+  }
+}

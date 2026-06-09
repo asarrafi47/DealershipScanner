@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|maserati|levante",
+  "year": 2017,
+  "make": "maserati",
+  "model": "levante",
+  "ladder_id": "brochure_llm_2017__maserati__levante",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Levante S",
+    "Levante",
+    "Levante Diesel"
+  ],
+  "adds_by_trim": {
+    "Levante S": [
+      "Bowers & Wilkins Surround Sound System with 17 speakers and 1,280 watts with Clari-FI music restoration",
+      "Four-Zone Climate Control instead of Dual-Zone"
+    ],
+    "Levante": [
+      "8.4-inch touchscreen display with Navigation System",
+      "Harman Kardon Premium Sound System with 14 speakers and 900 watts",
+      "DAB Digital Audio Broadcast radio",
+      "Air Quality Sensor",
+      "Extended Key-Less entry system"
+    ],
+    "Levante Diesel": [
+      "8.4-inch touchscreen display with Maserati Touch Control Plus unit",
+      "Dual-Zone Climate Control",
+      "Standard audio system",
+      "Easy Entry System with Front Doors Key-Less access",
+      "Power Rear Side Sunblind"
+    ]
+  }
+}

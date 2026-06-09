@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|toyota|corolla",
+  "year": 2013,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2013__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S",
+    "Le",
+    "L"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "1.8L 4-cylinder DOHC 16-valve engine with VVT-i, 132 hp, 128 lb-ft torque",
+      "5-speed manual transmission standard",
+      "4-speed automatic transmission available",
+      "Front-wheel drive with independent MacPherson strut suspension",
+      "Electric power steering with 35.4-ft turning circle",
+      "Power-assisted ventilated disc front brakes with Star Safety System",
+      "Six standard airbags with Advanced Airbag System",
+      "Active front headrests and 3-point seatbelts with pretensioners",
+      "LATCH system for child safety",
+      "Power windows, power door locks, power outside mirrors standard"
+    ],
+    "Le": [
+      "4-speed automatic transmission standard",
+      "Remote keyless entry system with trunk pop and alarm activation",
+      "Interior welcome lighting"
+    ],
+    "L": [
+      "Available moonroof with remote control",
+      "Available Display Audio multimedia system with navigation and Entune",
+      "Available rich leather trim with chrome accents",
+      "Sporty shift knob with textured design"
+    ]
+  }
+}

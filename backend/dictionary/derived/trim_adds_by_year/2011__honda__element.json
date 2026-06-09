@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|honda|element",
+  "year": 2011,
+  "make": "Honda",
+  "model": "Element",
+  "ladder_id": "generic_honda_element",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "registered trademark of Milliken & Company. 6 Windows Media® is a trademark or"
+    ],
+    "LX": [
+      "2.4-Liter 16-Valve DOHC i-VTEC Engine",
+      "120-Watt AM/FM/CD audio system with 4 speakers and clock",
+      "Removable flip-up rear seats",
+      "Water-resistant FXC fabric front seat upholstery",
+      "Air conditioning with air-filtration system",
+      "Front, front side and side curtain airbags with rollover sensor",
+      "Vehicle Stability Assist with traction control, ABS, electronic brake distribution and brake assist",
+      "Available Real Time 4-Wheel Drive"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "LX": 0
+    }
+  }
+}

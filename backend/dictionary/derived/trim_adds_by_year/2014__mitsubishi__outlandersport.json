@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2014|mitsubishi|outlandersport",
+  "year": 2014,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_web_2014__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Additional features and upgrades compared to ES trim"
+    ],
+    "ES": [
+      "Base trim with core standard equipment"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/mitsubishi/outlandersport/"
+}

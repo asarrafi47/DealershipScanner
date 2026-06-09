@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1985,Peugeot,505,505,2.0L I4,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,18,19,18,,,,,,2.0L I4,
-1985,Peugeot,505,505,2.0L I4,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,17,22,19,,,,,,2.0L I4,
-1985,Peugeot,505,505,2.1L I4 ((TURBO)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.1,16,22,18,,,,,,2.1L I4 Turbo,Turbocharged
-1985,Peugeot,505,505,"Diesel 2.5L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,Rear-Wheel Drive,Diesel,Compact Cars,4,2.5,22,23,22,,,,,,2.5L I4,
-1985,Peugeot,505,505,"Diesel 2.5L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,Rear-Wheel Drive,Diesel,Compact Cars,4,2.5,24,30,26,,,,,,2.5L I4,
-1985,Peugeot,505,Wagon,2.0L I4,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.0,18,19,18,,,,,,2.0L I4,
-1985,Peugeot,505,Wagon,2.0L I4,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.0,17,22,19,,,,,,2.0L I4,
-1985,Peugeot,505,Wagon,"Diesel 2.3L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,4,2.3,22,23,22,,,,,,2.3L I4,

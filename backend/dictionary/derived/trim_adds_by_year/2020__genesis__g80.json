@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2020|genesis|g80",
+  "year": 2020,
+  "make": "genesis",
+  "model": "G80",
+  "ladder_id": "brochure_2020__genesis__g80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes LED headlights",
+      "Adds Includes Blind-Spot Collision-Avoidance Assist",
+      "Adds Includes Rear Cross-Traffic Collision Warning",
+      "Adds Includes Lane Keeping Assist",
+      "Adds Includes Apple CarPlay and Android Auto compatibility",
+      "Adds Qi wireless charging capability"
+    ],
+    "Premium": [
+      "Adds Genesis Connected Services (3 years complimentary)",
+      "Adds Includes SiriusXM Traffic and Travel Link (3 months complimentary)",
+      "Adds SiriusXM audio trial (90 days)",
+      "Adds Includes Genesis Complimentary Maintenance (3 years/36,000 miles)"
+    ],
+    "Limited": [
+      "Adds Genesis Service Valet for maintenance and warranty repairs (3 years/36,000 miles)",
+      "Adds Includes Multimedia and Navigation Map Care updates (annually for 3 years)"
+    ],
+    "Advanced": [
+      "Adds Roadside Assistance (3 years/unlimited miles)",
+      "Adds Includes Genesis Connected Services Guidance package"
+    ]
+  }
+}

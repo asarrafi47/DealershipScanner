@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2017|jaguar|fpace",
+  "year": 2017,
+  "make": "Jaguar",
+  "model": "F-Pace",
+  "ladder_id": "brochure_llm_2017__jaguar__fpace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S",
+    "R-SPORT",
+    "PRESTIGE",
+    "PREMIUM",
+    "F-PACE 2"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "3.0L V6 380 supercharged gas engine with 380 hp"
+    ],
+    "R-SPORT": [
+      "R-SPORT exterior styling and design elements"
+    ],
+    "PRESTIGE": [
+      "Prestige-level interior appointments and trim"
+    ],
+    "PREMIUM": [
+      "Premium interior features and materials"
+    ],
+    "F-PACE 2": [
+      "2.0L turbocharged diesel engine with 180 hp and 318 lb-ft torque",
+      "8-speed automatic transmission",
+      "15.9 gallon fuel tank capacity"
+    ]
+  }
+}

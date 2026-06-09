@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2018|rollsroyce|ghost",
+  "year": 2018,
+  "make": "Rolls Royce",
+  "model": "Ghost",
+  "ladder_id": "brochure_llm_2018__rollsroyce__ghost",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GHOST BLACK BADGE",
+    "GHOST"
+  ],
+  "adds_by_trim": {
+    "GHOST BLACK BADGE": [
+      "603 bhp / 612 PS power output, 50 bhp increase over standard Ghost",
+      "840 Nm torque at 1650-5000 rpm, 20 Nm increase with wider power band",
+      "0-60 mph acceleration in 4.6 seconds, 0.1 second faster than Ghost",
+      "Direct injection fuel management with premium unleaded requirement"
+    ],
+    "GHOST": [
+      "V12 engine with 48 valves and 563 bhp / 570 PS power output",
+      "820 Nm torque at 1500 rpm peak delivery",
+      "0-60 mph acceleration in 4.7 seconds (USA specification)",
+      "Direct injection fuel management system",
+      "5457 mm overall length with 3295 mm wheelbase",
+      "155 mph top speed governed capability"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2016|audi|q5",
+  "year": 2016,
+  "make": "Audi",
+  "model": "Q5",
+  "ladder_id": "brochure_llm_2016__audi__q5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SQ5",
+    "Q5hybrid",
+    "Q5TDI®",
+    "Q53.0T",
+    "Q52.0T"
+  ],
+  "adds_by_trim": {
+    "SQ5": [
+      "3.0L supercharged six-cylinder engine producing 354 horsepower",
+      "346 lb-ft torque with supercharged induction system",
+      "0-60 mph acceleration in 5.1 seconds",
+      "Top track speed of 155 mph",
+      "SQ5 sport suspension",
+      "15.0-inch ventilated front and 13.0-inch ventilated rear disc brakes",
+      "64.2/64.0-inch front/rear track with 75.2-inch overall width",
+      "24-valve DOHC valve train configuration"
+    ],
+    "Q5hybrid": [
+      "1.984L turbocharged four-cylinder with 54-hp water-cooled hybrid electric motor",
+      "245 combined hp and 354 lb-ft combined torque",
+      "266-volt 72-cell lithium-ion hybrid battery system",
+      "6.8-second 0-60 acceleration",
+      "19.0-gallon fuel tank capacity",
+      "Eight-speed Tiptronic automatic transmission with quattro all-wheel drive"
+    ],
+    "Q5TDI®": [
+      "2.967L turbocharged six-cylinder TDI diesel engine producing 240 horsepower",
+      "428 lb-ft peak torque from 1,750–2,250 rpm",
+      "16.8:1 compression ratio",
+      "6.5-second 0-60 acceleration",
+      "6.0-gallon AdBlue capacity for emissions control",
+      "Ultra-low sulfur diesel fuel requirement",
+      "Cast-iron engine block with aluminum-alloy cylinder head"
+    ],
+    "Q53.0T": [
+      "2.995L supercharged six-cylinder engine producing 272 horsepower",
+      "295 lb-ft torque with supercharged induction",
+      "6.0-second 0-60 acceleration",
+      "24-valve DOHC configuration",
+      "13.6-inch ventilated front and 13.0-inch ventilated rear disc brakes",
+      "Aluminum-alloy engine block and cylinder head",
+      "10.3:1 compression ratio"
+    ],
+    "Q52.0T": [
+      "1.984L turbocharged four-cylinder TFSI engine producing 220 horsepower",
+      "258 lb-ft torque with turbocharged direct injection",
+      "7.0-second 0-60 acceleration",
+      "16-valve DOHC with valve lift system",
+      "12.6-inch ventilated front and 11.8-inch solid rear disc brakes",
+      "9.6:1 compression ratio",
+      "Start-stop efficiency system",
+      "Eight-speed Tiptronic automatic with quattro all-wheel drive"
+    ]
+  }
+}

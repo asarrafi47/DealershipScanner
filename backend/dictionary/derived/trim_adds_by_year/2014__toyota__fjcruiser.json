@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2014|toyota|fjcruiser",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "FJ Cruiser",
+  "ladder_id": "generic_toyota_fjcruiser",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Retractors (ALR/ELR)",
+      "trademarks and trade names are those of their respective owners. The Bluetooth\u00ae wireless technology phones listed on toyota.",
+      "tire pressure should be checked regularly with a gauge; do not rely solely on the monitor system. See your Owner\u2019s Manual for details. 25. The",
+      "the key, it can be costly to replace. If you lose a key, your Toyota dealer can help, or you can find a qualified independent",
+      "portions of the front bumper and is only available at your local Toyota dealership"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 5.0,
+    "per_trim_add_counts": {
+      "LE": 5
+    }
+  }
+}

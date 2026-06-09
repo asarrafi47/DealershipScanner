@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2011|volvo|s60",
+  "year": 2011,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_2011__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds City Safety collision avoidance and mitigation technology with automatic braking up to 19 mph",
+      "Adds Rear Park Assist Camera for enhanced reversing visibility"
+    ],
+    "Limited": [
+      "Adds Collision Warning with Full Auto Brake and Queue Assist",
+      "Adds Pedestrian Detection with Full Auto Brake using radar and camera technology",
+      "Adds Adaptive Cruise Control with Queue Assist for highway and stop-and-go traffic",
+      "Adds Blind Spot Information System for detecting vehicles in blind spots"
+    ]
+  }
+}

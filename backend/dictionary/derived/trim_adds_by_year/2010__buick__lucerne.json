@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|buick|lucerne",
+  "year": 2010,
+  "make": "Buick",
+  "model": "Lucerne",
+  "ladder_id": "2010_buick_lucerne",
+  "source": "manual_brochure_review",
+  "trims_available": ["CX", "CXL", "Super"],
+  "adds_by_trim": {
+    "CXL": [
+      "3.9L VVT V-6 SFI (non-FlexFuel) with leather-appointed seating",
+      "Dual-zone automatic climate control with rear-seat outlets",
+      "Power tilt-sliding sunroof",
+      "8-way power heated front seats with 4-way lumbar",
+      "AM/FM/XM 6-disc in-dash CD changer (US9)",
+      "Ultrasonic rear park assist and remote vehicle starter available"
+    ],
+    "Super": [
+      "Northstar 4.6L DOHC V-8 — 292 hp (replaces 3.9L V-6 on CXL)",
+      "Magnetic Ride Control and Super-tuned four-wheel independent suspension",
+      "Power magnetic variable-assist steering",
+      "Perforated leather with suede insets (standard on Super)",
+      "Heated and cooled front seats",
+      "Heated wood-and-walnut steering wheel with audio and cruise controls",
+      "Power tilt/telescopic steering column and auto-dimming compass mirror",
+      "Dual stainless exhaust with chrome tips"
+    ]
+  }
+}

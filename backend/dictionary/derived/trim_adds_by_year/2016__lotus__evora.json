@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2016|lotus|evora",
+  "year": 2016,
+  "make": "Lotus",
+  "model": "Evora",
+  "ladder_id": "brochure_llm_2016__lotus__evora",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ALCANTARA® TRIM OPTION",
+    "LEATHER TRIM OPTION",
+    "BLACK PACK",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "ALCANTARA® TRIM OPTION": [
+      "ALCANTARA® interior trim throughout cabin"
+    ],
+    "LEATHER TRIM OPTION": [
+      "Full leather interior trim"
+    ],
+    "BLACK PACK": [
+      "Black roof",
+      "Black sills",
+      "Black mirror caps"
+    ],
+    "Base": [
+      "400 hp 3.5L V6 supercharged engine",
+      "6-speed manual or 6-speed automatic transmission",
+      "2+2 seating configuration",
+      "0-60 mph in 4.1 seconds",
+      "Bi-xenon headlights with LED daytime running lights",
+      "Fully independent forged aluminum double wishbone suspension with Bilstein dampers",
+      "AP Racing four piston brakes with cross-drilled discs",
+      "19-inch front and 20-inch rear silver forged alloy wheels",
+      "Michelin Pilot Sport tires",
+      "Air conditioning, cruise control, and heated seats"
+    ]
+  }
+}

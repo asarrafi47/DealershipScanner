@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2017|nissan|versa",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Versa",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "SR",
+    "S",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

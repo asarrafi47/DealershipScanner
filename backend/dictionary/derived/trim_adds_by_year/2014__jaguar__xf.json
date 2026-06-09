@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|jaguar|xf",
+  "year": 2014,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_llm_2014__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XFR-S",
+    "XFR",
+    "XF Supercharged",
+    "XF"
+  ],
+  "adds_by_trim": {
+    "XFR-S": [
+      "Xirallic Metallic Paint available in additional colors",
+      "Interior finished with piping on seats",
+      "XFR-S exclusive exterior styling"
+    ],
+    "XFR": [
+      "Standard Adaptive Front Lighting system",
+      "Xirallic Metallic Paint options including Ultimate Black and Stratus Grey",
+      "Enhanced performance tuning versus XF Supercharged"
+    ],
+    "XF Supercharged": [
+      "Standard Adaptive Front Lighting",
+      "Standard dual-zone climate control with heated and cooled front seats",
+      "Enhanced engine power and performance"
+    ],
+    "XF": [
+      "7-inch color touchscreen with audio, climate, and navigation controls",
+      "Voice control for audio, navigation, and telephone connectivity",
+      "Dual-zone climate control with air particle filtration and humidity control",
+      "Dynamic Stability Control and Electronic Brake Force Distribution",
+      "Eight airbags with boron-reinforced steel safety structure",
+      "Available Adaptive Cruise Control with radar monitoring",
+      "Optional Emergency Brake Assist and Blind Spot Monitor",
+      "Optional Adaptive Front Lighting",
+      "Choice of leather seat grains and Carbon Fiber or Piano Black veneers"
+    ]
+  }
+}

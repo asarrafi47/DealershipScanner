@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2024|toyota|supra",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Supra",
+  "ladder_id": "brochure_llm_2024__toyota__supra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.0 Premium",
+    "3.0",
+    "2.0"
+  ],
+  "adds_by_trim": {
+    "3.0 Premium": [
+      "14-way heated power-adjustable sport seats with driver's-seat memory",
+      "12-speaker JBL HiFi Surround Sound system (500W)",
+      "8.8-inch touchscreen with navigation and touchpad control",
+      "Supra Connect with 4-year trial, remote services, and emergency calling",
+      "Driver Assist Package with Full-Speed DRCC, BSM, RCTA, parking sensors"
+    ],
+    "3.0": [
+      "3.0L twin-scroll single-turbo inline 6-cylinder engine (382 hp, 368 lb.-ft. torque)",
+      "Active rear sport differential",
+      "19-inch frozen gunmetal gray forged-aluminum wheels",
+      "10-speaker HiFi sound system (205W)",
+      "14-way power-adjustable sport seats with driver's-seat memory"
+    ],
+    "2.0": [
+      "2.0L twin-scroll single-turbo 4-cylinder engine (255 hp, 295 lb.-ft. torque)",
+      "8-way manual sport seats with 4-way lumbar and 2-way bolster adjustment",
+      "18-inch cast-aluminum 10-spoke dual-tone wheels",
+      "4-speaker sound system with 8.8-inch display",
+      "Smart Key System, Electric Parking Brake, Pre-Collision System, Lane Departure Warning"
+    ]
+  }
+}

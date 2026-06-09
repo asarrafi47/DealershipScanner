@@ -1,0 +1,63 @@
+{
+  "ladder_id": "2021_lexus_rx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "RX",
+    "RX"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "F Sport Performance": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel drive; The 2020 Lexus RX R X 45 0 h Ofering the best of all worlds, the 2020 RX Hybrid pairs a po"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Optional accessory features include XM Satellite Radio, a 15-speaker 330-watt Ma"
+      }
+    ],
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel drive; The 2020 Lexus RX R X 45 0 h Ofering the best of all worlds, the 2020 RX Hybrid pairs a po"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Optional accessory features include XM Satellite Radio, a 15-speaker 330-watt Ma"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Screen Size",
+        "value": "Adds Screen Size: 12.3-inch display"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Adds Speaker Count & Breakdown: instrument panel is added on models equipped with the Premium package A two-tone instrument panel is added on models…"
+      },
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "instrument panel is added on models equipped with the Premium package A two-tone instrument panel is added on models…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel drive; The 2020 Lexus RX R X 45 0 h Ofering the best of all worlds, the 2020 RX Hybrid pairs a po (was Front-engine, four-wheel drive; LUXURY Embedded Navigation, LED Fog Lamps, Auto Leveling Headlamp System, Auto-dimming Rea)"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Adds Audio System Layout: Optional accessory features include XM Satellite Radio, a 15-speaker 330-watt Ma"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, four-wheel drive; LUXURY Embedded Navigation, LED Fog Lamps, Auto Leveling Headlamp System, Auto-dimming Rea"
+      }
+    ]
+  }
+}

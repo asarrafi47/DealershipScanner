@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2022|hyundai|elantra",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "N Line",
+    "SE",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

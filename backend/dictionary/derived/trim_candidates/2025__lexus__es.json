@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2025|lexus|es",
+  "year": 2025,
+  "make": "lexus",
+  "model": "ES",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

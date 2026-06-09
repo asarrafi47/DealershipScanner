@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|scion|tc",
+  "year": 2012,
+  "make": "Scion",
+  "model": "tC",
+  "ladder_id": "brochure_web_2012__scion__tc",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "tC Release Series 10.0",
+    "tC"
+  ],
+  "adds_by_trim": {
+    "tC Release Series 10.0": [
+      "Special Release Series 10.0 designation marking final generation model"
+    ],
+    "tC": [
+      "2.5-liter 4-cylinder engine with 179 hp and 172 lb-ft torque",
+      "Six-speed manual or automatic transmission",
+      "Pioneer audio system with seven-inch touchscreen",
+      "Keyless entry and start",
+      "Bluetooth connectivity",
+      "18-inch alloy wheels",
+      "USB port",
+      "60/40 split-folding rear seats",
+      "Panoramic sunroof",
+      "Dual front, front-side, and side curtain airbags"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/tc/"
+}

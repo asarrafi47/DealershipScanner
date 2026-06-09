@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2017|genesis|g90",
+  "year": 2017,
+  "make": "genesis",
+  "model": "G90",
+  "ladder_id": "generic_genesis_g90",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "airbags, front and rear seat-mounted side"
+    ],
+    "Premium": [
+      "3.3T turbocharged engine",
+      "7.7 quarts engine oil capacity",
+      "5.5 quarts engine coolant capacity"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Limited": 1,
+      "Premium": 0
+    }
+  }
+}

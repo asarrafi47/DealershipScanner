@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2023|infiniti|qx5680",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "QX56-80",
+  "ladder_id": "brochure_llm_2023__infiniti__qx5680",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX80 SENSORY",
+    "QX80 PREMIUM SELECT",
+    "QX80 LUXE"
+  ],
+  "adds_by_trim": {
+    "QX80 SENSORY": [
+      "Hydraulic Body Motion Control and vehicle speed-sensitive power steering",
+      "Adaptive Front Lighting System with auto-leveling headlights",
+      "Climate-controlled front seats and heated second-row seats",
+      "Quilted semi-aniline leather-appointed seating with Charcoal Burl gradient interior trim",
+      "Exclusive Saddle Brown semi-aniline leather color option",
+      "Bose Performance Series 17-speaker Premium Audio System",
+      "Rear Seat Entertainment System with dual 8-inch color monitors",
+      "Two wireless headphones and rear headphone jack with volume control",
+      "Wireless remote control for rear seat entertainment"
+    ],
+    "QX80 PREMIUM SELECT": [
+      "22-inch dark-finished aluminum-alloy wheels with 275/50R22 H-rated all-season tires",
+      "Dark chrome exterior accents on grille, surround, fender, and side accent",
+      "Black grille mesh and black exterior mirror caps",
+      "Matte Mocha Burl interior trim accents",
+      "Additional unique leather-appointed seating colors: Sahara Stone and Truffle Brown"
+    ],
+    "QX80 LUXE": [
+      "5.6-liter V8 engine with 400 hp and 413 lb-ft torque",
+      "7-speed automatic transmission with Rear-Wheel Drive or All-Mode 4WD",
+      "Rear automatic self-leveling suspension",
+      "Integrated Class IV tow hitch with 7-pin wiring harness",
+      "Automatic on/off LED headlights with power folding auto-dimming heated mirrors",
+      "20-inch aluminum-alloy wheels with 275/60R20 H-rated all-season tires",
+      "10-way power driver's seat with 2-way lumbar support",
+      "Second-row captain's chairs with power 60:40-split fold-flat third-row seats",
+      "12.3-inch INFINITI InTouch touchscreen with wireless Apple CarPlay and Android Auto",
+      "Bose 13-speaker Premium Audio System with Navigation and Lane Guidance"
+    ]
+  }
+}

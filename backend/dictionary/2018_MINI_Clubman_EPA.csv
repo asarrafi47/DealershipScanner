@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2018,MINI,Clubman,Cooper Clubman,1.5L I3 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,24,32,27,,,,,,1.5L I3 Turbo,Turbocharged
-2018,MINI,Clubman,Cooper Clubman,1.5L I3 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,24,34,28,,,,,,1.5L I3 Turbo,Turbocharged
-2018,MINI,Clubman,Cooper Clubman All4,1.5L I3 (SIDI),Manual 6-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,22,32,26,,,,,,1.5L I3 Turbo,Turbocharged
-2018,MINI,Clubman,Cooper S Clubman,2.0L I4 (SIDI),Automatic (S8),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,23,32,27,,,,,,2.0L I4 Turbo,Turbocharged
-2018,MINI,Clubman,Cooper S Clubman,2.0L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,22,31,25,,,,,,2.0L I4 Turbo,Turbocharged
-2018,MINI,Clubman,Cooper S Clubman All4,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,22,31,26,,,,,,2.0L I4 Turbo,Turbocharged
-2018,MINI,Clubman,Cooper S Clubman All4,2.0L I4 (SIDI),Manual 6-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,21,30,24,,,,,,2.0L I4 Turbo,Turbocharged
-2018,MINI,Clubman,Cooper Clubman All4,1.5L I3 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,23,31,26,,,,,,1.5L I3 Turbo,Turbocharged

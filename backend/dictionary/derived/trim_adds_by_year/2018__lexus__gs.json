@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2018|lexus|gs",
+  "year": 2018,
+  "make": "lexus",
+  "model": "GS",
+  "ladder_id": "brochure_llm_2018__lexus__gs",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS350 F SPORT",
+    "GS350",
+    "GS300 F SPORT",
+    "GS300"
+  ],
+  "adds_by_trim": {
+    "GS350 F SPORT": [
+      "3.5-liter V6 engine with increased horsepower",
+      "F SPORT exclusive styling and performance enhancements"
+    ],
+    "GS350": [
+      "3.5-liter V6 engine replacing turbocharged 2.0-liter"
+    ],
+    "GS300 F SPORT": [
+      "F SPORT exclusive styling and performance enhancements"
+    ],
+    "GS300": [
+      "2.0-liter turbocharged engine with 4-cylinder configuration",
+      "Lexus Limited Warranty: 4-year/50,000-mile coverage",
+      "Powertrain Warranty: 6-year/70,000-mile coverage",
+      "Intelligent high beams operating above 25 mph",
+      "Lexus Safety System+ with Pre-Collision System",
+      "Pedestrian Detection System",
+      "Dynamic Radar Cruise Control",
+      "Lane Departure Alert with Lane Keep Assist",
+      "Backup camera with visual assistance",
+      "SmartAccess keyless entry system"
+    ]
+  }
+}

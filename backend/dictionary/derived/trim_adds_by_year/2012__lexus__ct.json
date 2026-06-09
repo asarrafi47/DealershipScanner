@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|lexus|ct",
+  "year": 2012,
+  "make": "lexus",
+  "model": "CT",
+  "ladder_id": "brochure_2012__lexus__ct",
+  "source": "brochure_llm",
+  "trims_available": [
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Hybrid System Warranty (8-year/100,000-mile coverage)",
+      "Adds Powertrain Warranty (6-year/70,000-mile coverage)",
+      "Adds Corrosion Perforation Warranty (6-year/unlimited-mileage coverage)",
+      "Adds zero-deductible warranty coverage across all warranty types",
+      "Adds EV mode capability (battery-only operation up to 1 mile at speeds below 28 mph)"
+    ],
+    "Limited": [
+      "Adds Electrochromic (auto-dimming) inside mirror with compass",
+      "Adds HomeLink universal transceiver for garage and home system integration",
+      "Adds rain-sensing variable intermittent windshield wipers",
+      "Adds Electrochromic (auto-dimming) outside mirrors with auto-tiltdown in reverse"
+    ],
+    "Premium": [
+      "Adds Premium Audio Package with 10-speaker Lexus Premium Sound System and Automatic Sound Levelizer",
+      "Adds in-dash single-feed six-disc CD auto-changer",
+      "Adds Navigation Package option with HDD Navigation System including Remote Touch device",
+      "Adds voice command functionality",
+      "Adds retractable color LCD display with integrated backup camera",
+      "Adds enhanced Bluetooth technology",
+      "Adds Leather Package option with perforated leather-trimmed interior",
+      "Adds Lexus Memory System to control power driver's seat and outside mirrors",
+      "Adds NavTraffic, NavWeather, and Sports and Stocks subscription services",
+      "Adds Lexus Enform with Destination Assist and eDestination (1-year trial subscription included)"
+    ],
+    "F Sport": [
+      "Adds F Sport Accessories warranty (12 months from installation or remaining new-car warranty)",
+      "Adds F Sport exclusive accessory availability through authorized Lexus dealers"
+    ]
+  }
+}

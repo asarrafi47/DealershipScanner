@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2016|toyota|avalon",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Avalon",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XLE",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "Adds to or replaces features offered on XLE Premium Adds to or replaces features offered on Touring",
+      "Powertrain \u2022 3.5-liter V6 engine",
+      "3.5-liter V6 engine \u2022 6-speed automatic transmission",
+      "6-speed automatic transmission \u2022 268 hp @ 6200 rpm",
+      "268 hp @ 6200 rpm \u2022 21 city/31 hwy/24 combined est. mpg41",
+      "21 city/31 hwy/24 combined est. mpg41 Exterior Features",
+      "Exterior Features \u2022 18-in. Super Chrome alloy wheels2",
+      "18-in. dark gray painted alloy wheels2 \u2022 High Intensity Discharge (HID) Quadrabeam headlights with",
+      "Touring-specific suspension",
+      "LED (light-emitting diode) headlights with auto on/off feature and",
+      "Color-keyed heated, auto-dimming power outside mirrors with turn",
+      "LED Daytime Running Lights (DRL) with on/off feature"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Plus",
+      "Powertrain Powertrain Powertrain",
+      "3.5-liter V6 engine \u2022 3.5-liter V6 engine \u2022 3.5-liter V6 engine",
+      "6-speed automatic transmission \u2022 6-speed automatic transmission \u2022 6-speed automatic transmission",
+      "268 hp @ 6200 rpm \u2022 268 hp @ 6200 rpm \u2022 268 hp @ 6200 rpm",
+      "21 city/31 hwy/24 combined est. mpg41 \u2022 21 city/31 hwy/24 combined est. mpg41 \u2022 21 city/31 hwy/24 combined est. mpg41",
+      "Exterior Features Exterior Features Interior Features",
+      "Smoked LED taillights \u2022 Power tilt/slide moonroof with sliding sunshade \u2022 Entune\u2122 Premium Audio with Integrated Navigation14 and App",
+      "17-in. dark gray painted alloy wheels with machined finish \u2022 Smart Key System18 on front doors and trunk with Push Button Start Suite3 \u2014 includes the Entune\u2122 Multimedia Bundle4 (7-in. high-",
+      "Quadrabeam halogen headlights with auto on/off feature and Interior Features player with MP3/WMA playback capability, nine speakers, auxiliary",
+      "Daytime Running Lights (DRL) with on/off feature audio jack, USB 2.0 port5 with iPod\u00ae6 connectivity and control,",
+      "Auto-dimming rearview mirror with compass, maplights and"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2017|hyundai|azera",
+  "year": 2017,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_2017__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue"
+  ],
+  "adds_by_trim": {
+    "Blue": [
+      "Adds Blind Spot Detection with Lane Change Assist as standard",
+      "Adds Rear Cross-traffic Alert as standard",
+      "Adds Vehicle Stability Management system with Electronic Stability Control",
+      "Adds Traction Control System as standard",
+      "Adds Anti-lock Braking System with Electronic Brake-force Distribution and Brake Assist",
+      "Adds Blue Link Connected Care system for first year of ownership"
+    ],
+    "Limited": [
+      "Adds available Forward Collision Warning with forward-sensing camera"
+    ]
+  }
+}

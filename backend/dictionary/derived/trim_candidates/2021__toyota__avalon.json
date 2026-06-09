@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2021|toyota|avalon",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Avalon",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XSE",
+    "XLE",
+    "TRD",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features Adds to or replaces features offered on XLE Hybrid Adds to or replaces features offered on XLE Hybrid",
+      "Hybrid engine: 2.5L 4-cylinder with 215 net hp Hybrid engine with 215 net hp Hybrid engine with 215 net hp",
+      "Electronically controlled Continuously Variable Sport-tuned suspension 43 city/43 highway/43 combined EPA-est. mpg27",
+      "Transmission (ECVT) with sequential shift mode 43 city/43 highway/43 combined EPA-est. mpg27 Exterior Features",
+      "Normal, ECO, EV5 and Sport drive modes",
+      "Exterior Features LED headlights with smoked chrome bezels, on/off",
+      "Front-Wheel Drive (FWD)",
+      "LED reflector headlights with smoked feature and Adaptive Cornering Lights",
+      "Exterior Features Front piano-black grille with sport mesh insert Color-keyed heated power outside mirrors with",
+      "LED reflector headlights and LED DRL Gloss-black rear spoiler memory feature and driver\u2019s-side auto-dimming",
+      "LED taillights Power tilt/slide moonroof with sliding sunshade Interior Features",
+      "Front chrome grille surround with dark gray 18-in. dark-gray-painted alloy wheels Premium leather-trimmed seats"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE",
+      "Available 2.5L 4-cylinder with 203 hp (AWD) Front-Wheel Drive (FWD) Front-Wheel Drive (FWD)",
+      "Transmission with intelligence (ECT-i) with 22 city/31 highway/25 combined EPA-est. mpg27 Ventilated 12.9-in. front disc brakes with dual-piston",
+      "Normal, ECO and Sport drive modes front and rear calipers",
+      "Front-Wheel Drive (FWD) LED reflector headlights with smoked chrome bezels 21 city/30 highway/25 combined EPA-est. mpg27",
+      "Available All-Wheel Drive (AWD) Exterior Features",
+      "Front piano-black grille with sport mesh insert",
+      "Gloss-black rear spoiler LED reflector headlights with smoked chrome bezels",
+      "Available 25 city/34 highway/28 combined EPA-est. and on/off feature",
+      "Front piano-black grille with sport mesh insert",
+      "Exterior Features TRD gloss-black front splitters, side aero skirts and",
+      "LED reflector headlights and LED DRL with auto Power tilt/slide moonroof with sliding sunshade rear diffuser with red pinstriping"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

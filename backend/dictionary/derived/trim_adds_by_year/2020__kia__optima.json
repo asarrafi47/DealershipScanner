@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2020|kia|optima",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2020__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX TURBO",
+    "EX PREMIUM TURBO",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX TURBO": [
+      "2.0L Turbo Gasoline Direct Injection 4-cylinder engine with 245 hp and 260 lb.-ft. torque",
+      "Sport-tuned suspension",
+      "Paddle shifters"
+    ],
+    "EX PREMIUM TURBO": [
+      "1.6L Turbo Gasoline Direct Injection 4-cylinder engine with 178 hp and 195 lb.-ft. torque",
+      "7-speed dual-clutch transmission"
+    ],
+    "EX": [
+      "1.6L Turbo Gasoline Direct Injection 4-cylinder engine with 178 hp and 195 lb.-ft. torque",
+      "7-speed dual-clutch transmission"
+    ],
+    "S": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine with 185 hp and 178 lb.-ft. torque",
+      "6-speed Sportmatic transmission"
+    ],
+    "LX": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine with 185 hp and 178 lb.-ft. torque",
+      "6-speed Sportmatic transmission",
+      "Responsive handling and smooth, quiet ride"
+    ]
+  }
+}

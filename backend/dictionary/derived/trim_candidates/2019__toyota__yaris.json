@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|toyota|yaris",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Yaris",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds to or replaces features offered on L AAddddss ttoo oorr rreeppllaacceess ffeeaattuurreess ooffffeerreedd oonn LLEE",
+      "Exterior Features Exterior Features Exterior Features",
+      "Sporty front fascia with gloss-black mesh-pattern grille \u2022 Fog lights \u2022 LED auto on/off headlights",
+      "Halogen headlights \u2022 Color-keyed heated power outside mirrors with LED turn \u2022 LED Daytime Running Lights (DRL) integrated into headlights",
+      "Daytime Running Lights (DRL) integrated into headlights signal indicators \u2022 Rain-sensing variable intermittent windshield wipers",
+      "Color-keyed power outside mirrors \u2022 Rear spoiler Interior Features",
+      "15-in. styled steel wheels with P185/65R15 tires \u2022 16-in. dark gray split-spoke alloy wheels with P185/60R16 tires",
+      "Automatic climate control",
+      "Chrome-tipped exhaust Interior Features",
+      "Leatherette sport front bucket seats",
+      "Color-keyed roof-mounted shark-fin antenna \u2022 Smart Key System12 with Push Button Start \u2022 Leather-trimmed tilt/telescopic 3-spoke steering wheel",
+      "Interior Features Safety with audio, cruise and phone controls"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

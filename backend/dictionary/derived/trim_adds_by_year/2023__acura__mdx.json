@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2023|acura|mdx",
+  "year": 2023,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2023__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Type S Advance",
+    "Type S",
+    "A-Spec",
+    "Advance Package",
+    "Technology Package"
+  ],
+  "adds_by_trim": {
+    "Type S Advance": [
+      "21-inch Berlina Black Machine-Finished Wheels",
+      "Front 16-Way Power Seats with Power Lumbar, Thigh Extension, Side Bolsters",
+      "9-Way Massage Function Front Seats",
+      "Heated Rear Seats at Outboard Positions",
+      "Heated Steering Wheel",
+      "ELS STUDIO 3D 32 Signature Edition Premium Audio System with 25 Speakers",
+      "Iconic Drive Ambient LED Cabin Lighting with 27 Color Themes",
+      "10.5-inch Head-Up Display with Head-Up Warning Display",
+      "Surround-View Camera System",
+      "Authentic Open-Pore Wood Trim"
+    ],
+    "Type S": [
+      "355-hp 3.0L Turbo V6 Engine",
+      "Adaptive Air Suspension with Auto Leveling",
+      "21-inch Shark Gray Wheels",
+      "Brembo Front 4-Piston Braking System",
+      "Electro-Servo Brake System",
+      "Type S Quad Exhaust Outlets",
+      "Type S Emblem on Front Fenders and Rear Tailgate",
+      "Exclusive Tiger Eye Pearl paint option",
+      "Integrated Dynamic System with Sport+ and Lift Modes",
+      "Exclusive Orchid Interior Color Option"
+    ],
+    "A-Spec": [
+      "SH-AWD Super Handling All-Wheel Drive",
+      "20-inch Shark Gray Split Five-Spoke Wheels",
+      "A-Spec Exterior Sport Appearance Package with Dark Internal Headlights and Tail Lights",
+      "A-Spec Badge on Front Fenders and Rear Hatch",
+      "Exclusive Apex Blue Pearl paint option",
+      "Sport Seats with Perforated Milano Premium Leather and Ultrasuede-Trimmed Interior",
+      "A-Spec Interior Sport Appearance Package with Leather-Wrapped Flat-Bottom Sport Steering Wheel",
+      "Ebony Headliner",
+      "Geometric Patterned Brushed Aluminum and Metal Footrest and Pedals"
+    ],
+    "Advance Package": [
+      "SH-AWD Super Handling All-Wheel Drive",
+      "20-inch Premium Silver Split Ten-Spoke Wheels",
+      "Key Fob Activated Remote Engine Start with Vehicle Feedback",
+      "Power Lift Tailgate with Hands-Free Access and Walk Away Close",
+      "Roof Rails",
+      "LED Fog Lights and LED Outer Door Handle Lights",
+      "Front 16-Way Power Seats with Power Lumbar Support, Thigh Extension, and Side Bolsters",
+      "Heated and Ventilated Front Seats with Heated Steering Wheel",
+      "Heated Rear Seats at Outboard Positions",
+      "ELS STUDIO 3D 32 Premium Audio System with 16 Speakers and 10.5-inch Head-Up Display"
+    ],
+    "Technology Package": [
+      "Standard three-row seating configuration",
+      "8-inch touchscreen with infotainment system",
+      "AcuraLink connected vehicle services",
+      "Android Auto and Apple CarPlay compatibility",
+      "Bluetooth audio streaming and hands-free calling",
+      "Multi-angle rearview camera",
+      "Parking sensors with visual feedback",
+      "LED headlights with auto high-beam assist",
+      "Dual-zone automatic climate control",
+      "Power windows, locks, and mirrors with auto-down"
+    ]
+  }
+}

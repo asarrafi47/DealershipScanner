@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_audi_a6_complete_options",
+  "make": "Audi",
+  "models": [
+    "A6",
+    "A6"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "L 20V turbo I5; L 12V V6"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L 20V turbo I5; L 12V V6"
+      }
+    ]
+  }
+}

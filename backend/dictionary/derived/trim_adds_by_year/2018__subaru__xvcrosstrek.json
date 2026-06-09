@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|subaru|xvcrosstrek",
+  "year": 2018,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2018__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0i Limited",
+    "2.0i Premium",
+    "2.0i"
+  ],
+  "adds_by_trim": {
+    "2.0i": [
+      "152-hp 2.0-liter 4-cylinder BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission or optional Lineartronic CVT with X-MODE and Hill Descent Control",
+      "Active Torque Vectoring",
+      "17-inch alloy wheels",
+      "Cloth upholstery with black carbon-fiber-patterned interior accent trim",
+      "6-way manually adjustable driver's seat and 4-way manually adjustable front-passenger's seat",
+      "SUBARU STARLINK 6.5-inch Multimedia with Apple CarPlay, Android Auto, Pandora and Aha integration",
+      "Auto-up/down driver's and front-passenger's power windows",
+      "Rear-Vision Camera"
+    ],
+    "2.0i Premium": [
+      "Fog lights",
+      "Body-color side mirrors",
+      "Cloth upholstery with orange stitching",
+      "Leather-wrapped steering wheel with orange stitching",
+      "Leather-wrapped shifter handle",
+      "STARLINK Safety Plus enabled with Automatic Collision Notification and SOS Emergency Assistance",
+      "All-Weather Package with heated exterior mirrors, dual-mode heated front seats, windshield wiper de-icer",
+      "Auto-on/off headlights and welcome lighting",
+      "Cargo area tray and cover",
+      "Electronic cruise control"
+    ],
+    "2.0i Limited": [
+      "X-MODE with Hill Descent Control",
+      "Lineartronic CVT with manual-mode paddle shifters standard",
+      "18-inch alloy wheels",
+      "LED Steering Responsive Headlights",
+      "Body-color side mirrors with integrated turn signals",
+      "6-way power adjustable driver's seat",
+      "Leather-trimmed upholstery with orange stitching",
+      "Shifter handle with leather boot and gloss black trim",
+      "Silver and gloss carbon-fiber-patterned interior accent trim",
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with SiriusXM All Access Radio, Yelp, iHeartRadio, Magellan navigation"
+    ]
+  }
+}

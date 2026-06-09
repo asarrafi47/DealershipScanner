@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2019|toyota|rav4",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XSE",
+    "XLE",
+    "Adventure",
+    "SE",
+    "LE",
+    "Base",
+    "Premium",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE Premium": [
+      "Adds to or replaces features offered on LE Hybrid Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Premium",
+      "Exterior Features Powertrain Powertrain",
+      "LED Daytime Running Lights (DRL) accent lighting with \u2022 Available All-Wheel Drive (AWD) with Multi-terrain Select \u2022 Dynamic Torque Vectoring All-Wheel Drive (TV-AWD) with",
+      "LED projector-beam headlights with chrome bezels, \u2022 3500-lb. towing capacity69",
+      "Automatic High Beams (AHB)2 and auto on/off feature \u2022 1 2 9 3 - 5 i / n 5 . 5 m R u 19 lt i t - i s re p s oke super chrome-finished alloy wheels with Exterior Features",
+      "Integrated fog lights",
+      "Power liftgate with jam protection \u2022 19-in. split 5-spoke alloy wheels with matte-black accents",
+      "Power tilt/slide moonroof with one-touch open/close",
+      "Color-keyed outside door handles with front-row touch-sensor Interior Features and 235/55R19 tires",
+      "Unique split-bar front upper grille",
+      "Active grille shutters",
+      "Interior Features vent flow controls and rear-seat vents"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "Powertrain Powertrain Powertrain",
+      "2.5-Liter Dynamic Force 4-cylinder engine \u2022 Hybrid 2.5-Liter Dynamic Force 4-cylinder engine \u2022 Available All-Wheel Drive (AWD) with Multi-terrain Select",
+      "Direct Shift 8-speed automatic Transmission \u2022 Hybrid system net power: 219 net hp Exterior Features",
+      "203 hp @ 6600 rpm, 184 lb.-ft. @ 5000 rpm \u2022 Electronically Controlled Continuously Variable",
+      "17-in. 5-spoke silver alloy wheels with 225/65R17 tires",
+      "Available All-Wheel Drive (AWD) with Multi-terrain Select Transmission (ECVT) with sequential shift mode",
+      "Integrated fog lights",
+      "Exterior Features \u2022 Electronic On-Demand All-Wheel Drive (AWD) \u2022 Color-keyed heated power outside mirrors with turn signal",
+      "Drive mode dial with Sport, ECO and Normal Modes",
+      "17-in. steel wheels with silver 6-spoke wheel covers and and blind spot warning indicators,5 and folding feature",
+      "Trail and EV Mode66 select buttons"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

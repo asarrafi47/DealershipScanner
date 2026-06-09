@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2017|cadillac|xts",
+  "year": 2017,
+  "make": "Cadillac",
+  "model": "XTS",
+  "ladder_id": "brochure_llm_2017__cadillac__xts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Luxury",
+    "Platinum",
+    "V-Sport Platinum",
+    "V-Sport Premium Luxury",
+    "Luxury",
+    "XTS"
+  ],
+  "adds_by_trim": {
+    "Premium Luxury": [
+      "19-inch cast aluminum wheels with premium multi-coat painted sterling silver finish and chrome inserts"
+    ],
+    "Platinum": [
+      "20-inch cast aluminum wheels with polished finish and chrome inserts"
+    ],
+    "V-Sport Platinum": [
+      "V-Sport designation and performance enhancements"
+    ],
+    "V-Sport Premium Luxury": [
+      "V-Sport designation with premium luxury appointments"
+    ],
+    "Luxury": [
+      "19-inch cast aluminum wheels with premium polished painted finish and P245/45R19 all-season tires"
+    ],
+    "XTS": [
+      "19-inch cast aluminum wheels with premium multi-coat painted finish and P245/45R19 all-season tires",
+      "OnStar connectivity with theft prevention and vehicle management capabilities",
+      "Powertrain limited warranty coverage for 6 years/70,000 miles",
+      "Bumper-to-bumper coverage for 4 years/50,000 miles",
+      "Rust-through corrosion coverage for 6 years/unlimited mileage"
+    ]
+  }
+}

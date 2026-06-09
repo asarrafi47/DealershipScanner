@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|chrysler|300",
+  "year": 2016,
+  "make": "Chrysler",
+  "model": "300",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "Platinum",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

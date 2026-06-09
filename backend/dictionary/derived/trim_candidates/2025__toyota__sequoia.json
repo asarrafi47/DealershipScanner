@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2025|toyota|sequoia",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Capstone",
+    "1794",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Capstone": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on Limited",
+      "Selectable driving and TOW/HAUL modes Selectable driving and TOW/HAUL modes Selectable driving and TOW/HAUL modes",
+      "Towing hitch receiver and wiring harness with 4-pin/7-pin Towing hitch receiver and wiring harness with 4-pin/7-pin Towing hitch receiver and wiring harness with 4-pin/7-pin",
+      "Integrated Trailer Brake Controller (ITBC)5 Integrated Trailer Brake Controller (ITBC)5 Integrated Trailer Brake Controller (ITBC)5",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD 4WDemand part-time 4WD",
+      "Exterior Features Exterior Features",
+      "LED headlights with Daytime Running Lights (DRL) Gray metallic horizontal-bar grille with chrome surround Color-keyed door handles and dark-black",
+      "LED fog lights Chrome-plated outside mirror caps with dark-black chrome-plated roof rails",
+      "Three-zone automatic climate control Heated and ventilated front seats Leather-trimmed massaging seats with premium",
+      "Power tilt/slide moonroof with sliding sunshade Heated steering wheel",
+      "Heated and ventilated front and rear seats",
+      "Panoramic View Monitor (PVM)20"
+    ],
+    "Platinum": [
+      "Adds to or replaces features offered on Limited Adds to or replaces features offered on Limited Adds to or replaces features offered on Platinum",
+      "Selectable driving and TOW/HAUL modes Electronically controlled locking rear differential Selectable driving and TOW/HAUL modes",
+      "Towing hitch receiver and wiring harness with 4-pin/7-pin Multi-Terrain Select (MTS), Crawl Control (CRAWL)12 Towing hitch receiver and wiring harness",
+      "Integrated Trailer Brake Controller (ITBC)5 TRD Pro off-road suspension with 2.5-in. FOX\u00ae39 Integrated Trailer Brake Controller (ITBC)5",
+      "Internal Bypass coil-overs and rear remote-reservoir",
+      "Exterior Features 19 city/22 highway/20 combined est. mpg1 Exterior Features",
+      "Chrome-accented mesh grille with chrome surround wheels with TRD center caps Automatic power-extending running boards",
+      "Chrome mirror caps Black \"TOYOTA\" heritage grille with integrated LED light Chrome-plated outside mirror caps with satin-chrome-",
+      "Chrome door handles bar and amber marker lights plated roof rails",
+      "Premium LED headlights with LED Daytime Running TRD Pro dual-tip exhaust Interior Features",
+      "Lights (DRL) TRD aluminum front skid plate",
+      "Semi-aniline leather-trimmed massaging seats with"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

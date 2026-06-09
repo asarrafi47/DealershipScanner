@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2019|porsche|935",
+  "year": 2019,
+  "make": "Porsche",
+  "model": "935",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GT3",
+    "Turbo",
+    "Limited",
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

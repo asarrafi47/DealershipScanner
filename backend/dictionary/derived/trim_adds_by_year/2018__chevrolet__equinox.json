@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2018|chevrolet|equinox",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2018__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "TL",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "LED headlamps and LED taillamps",
+      "Body-color antenna and mirror caps",
+      "Chrome mirror caps",
+      "Hands-free power liftgate with auto-dimming mirrors",
+      "8-inch MyLink touchscreen with navigation and HD Radio",
+      "Bose premium 7-speaker audio system",
+      "19-inch ultra bright machined-face aluminum wheels",
+      "Driver Confidence and Convenience II Package with low-speed forward automatic braking and surround vision",
+      "Sun, Sound and Navigation Package with panoramic sunroof"
+    ],
+    "TL": [
+      "HID high-intensity discharge headlamps",
+      "Deep-tinted rear windows",
+      "Body-color mirror caps",
+      "Power liftgate",
+      "Roof-mounted luggage rack with side rails",
+      "Rear Park Assist and Rear Cross Traffic Alert",
+      "8-inch MyLink touchscreen with Android Auto and Apple CarPlay",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "19-inch black and red-accented aluminum wheels",
+      "Driver Confidence and Convenience Package"
+    ],
+    "SL": [
+      "Solar-absorbing rear windows",
+      "LED daytime running lamps",
+      "Heated power-adjustable mirrors with turn signal indicators",
+      "7-inch MyLink touchscreen with Android Auto and Apple CarPlay",
+      "2 USB ports and auxiliary input jack in front storage"
+    ],
+    "L": [
+      "Roof-mounted black antenna",
+      "Acoustic-laminated windshield",
+      "Automatic headlamp delay control",
+      "Manual rear liftgate",
+      "Heated power-adjustable manual-folding mirrors",
+      "Halogen composite headlamps",
+      "7-inch MyLink touchscreen with Bluetooth audio streaming",
+      "6-speaker audio system with Bluetooth wireless technology",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for 7 devices",
+      "17-inch painted-aluminum wheels"
+    ]
+  }
+}

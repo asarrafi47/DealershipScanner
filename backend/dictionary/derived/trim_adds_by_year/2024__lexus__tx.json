@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2024|lexus|tx",
+  "year": 2024,
+  "make": "Lexus",
+  "model": "TX",
+  "ladder_id": "2024_lexus_tx",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "TX 350",
+    "TX 350 Premium",
+    "TX 350 Luxury",
+    "TX 550h+ Luxury Plug-In Hybrid"
+  ],
+  "adds_by_trim": {
+    "TX 350 Premium": [
+      "Power-folding third-row seats and ventilated front seats",
+      "Heated leather steering wheel and Lexus Memory System",
+      "Auto-leveling headlamps and 22-inch multispoke Silver wheels"
+    ],
+    "TX 350 Luxury": [
+      "Semi-aniline leather with four-way lumbar and cushion extender",
+      "Heated ventilated second-row captain chairs and Mark Levinson 21-speaker audio",
+      "Panorama glass roof and Thematic Ambient Illumination"
+    ],
+    "TX 550h+ Luxury Plug-In Hybrid": [
+      "Plug-in hybrid powertrain with 6.6-kW onboard charger",
+      "Luxury PHEV three-row content \u2014 highest TX trim in 2025 brochure"
+    ]
+  }
+}

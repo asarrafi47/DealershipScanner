@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2019|mazda|cx3",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "CX-3",
+  "ladder_id": "brochure_2019__mazda__cx3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "Touring",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Adds SKYACTIV-G 2.0L DOHC 16-valve 4-cylinder engine with 148 horsepower",
+      "Adds SKYACTIV-Drive 6-speed automatic transmission with manual shift and Sport modes",
+      "Adds front-wheel drive powertrain",
+      "Adds Hill Launch Assist",
+      "Adds Blind Spot Monitoring",
+      "Adds Rear Cross Traffic Alert",
+      "Adds SKYACTIV-VEHICLE DYNAMICS with G-Vectoring Control"
+    ],
+    "Touring": [
+      "Adds Lane Departure Warning System",
+      "Adds Adaptive Front-Lighting System",
+      "Adds High Beam Control",
+      "Adds Smart City Brake Support",
+      "Adds Mazda Radar Cruise Control with Stop & Go"
+    ],
+    "Sport": [
+      "Adds Advanced Smart City Brake Support with Pedestrian Detection",
+      "Adds Smart Brake Support with Collision Warning",
+      "Adds Traffic Sign Recognition System"
+    ]
+  }
+}

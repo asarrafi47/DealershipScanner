@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2019|audi|allroad",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Allroad",
+  "ladder_id": "brochure_2019__audi__allroad",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport",
+    "Base",
+    "A4",
+    "S4"
+  ],
+  "adds_by_trim": {
+    "S4": [],
+    "A4": [
+      "Adds 17-inch 5-arm design wheels as alternative",
+      "Adds High-gloss Burl Walnut Wood interior inlay option",
+      "Adds Natural Gray Oak Wood interior inlay option",
+      "Adds ventilated front seat capability with perforated leather"
+    ],
+    "Base": [],
+    "Sport": [
+      "Adds Aluminum Ellipse interior inlay option",
+      "Adds Sport package with enhanced exterior styling options"
+    ],
+    "Limited": [
+      "Adds titanium gray leather seating option",
+      "Adds velvet beige leather seating option"
+    ],
+    "S line": [
+      "Adds dark brown walnut wood decorative inlay option",
+      "Adds natural brown wood decorative inlay option",
+      "Adds 18-inch 10-arm design wheels option"
+    ],
+    "Premium": [
+      "Adds 18-inch 10-spoke-V design wheels standard",
+      "Adds 18-inch 5-V-spoke design wheels with contrasting Gray/partially polished finish option"
+    ],
+    "Premium Plus": [
+      "Adds 19-inch 5-V-spoke-star design wheels in Titanium finish",
+      "Upgraded to 19-inch 10-V-spoke design wheels with contrasting Gray/partially polished finish",
+      "Adds Black optic package option with enhanced exterior styling"
+    ],
+    "Prestige": [
+      "Adds Audi Sport 19-inch 5-spoke-V rotor design wheels with contrasting Gray/partially polished finish",
+      "Adds Black optic package as premium option"
+    ]
+  }
+}

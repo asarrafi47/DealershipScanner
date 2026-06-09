@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2016|honda|pilot",
+  "year": 2016,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "brochure_llm_2016__honda__pilot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE",
+    "TOURING",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "ELITE": [
+      "Intelligent Variable Torque Management (i-VTM4) AWD system",
+      "Blind spot information system (BSI) with cross traffic monitor",
+      "Rain-sensing windshield wipers",
+      "Panoramic roof",
+      "LED headlights with auto-on/off and auto high-beam",
+      "Perforated heated and ventilated front seats",
+      "Perforated heated 2nd-row captain's chairs",
+      "HD Radio"
+    ],
+    "TOURING": [
+      "9-speed automatic transmission with Shift-By-Wire (SBW) and paddle shifters",
+      "20-inch alloy wheels",
+      "Roof rails",
+      "Body-colored parking sensors",
+      "Blu-ray Rear Entertainment System with 115-volt power outlet and HDMI Interface",
+      "Blue ambient LED lighting",
+      "Two additional 2nd-row USB ports (5 total)",
+      "Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic",
+      "540-watt premium audio system with 10 speakers including subwoofer"
+    ],
+    "EX-L": [
+      "Intelligent Traction Management",
+      "LED Daytime Running Lights (DRL)",
+      "Smart Entry",
+      "Fog lights",
+      "Tri-zone automatic climate control system with humidity control and air filtration",
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "SMS text message function",
+      "Two additional USB ports (3 total)",
+      "8-inch Display Audio with electrostatic touch-screen"
+    ],
+    "EX": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "6-speed automatic transmission",
+      "Variable Cylinder Management (VCM)",
+      "Hill start assist",
+      "Intelligent Variable Torque Management (i-VTM4) AWD system (available)",
+      "18-inch alloy wheels",
+      "Multi-angle rearview camera with guidelines",
+      "Tire Pressure Monitoring System (TPMS) with Tire Fill Assist",
+      "One-touch turn indicators"
+    ],
+    "LX": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "Intelligent Variable Torque Management (i-VTM4) AWD system (available)",
+      "Multi-angle rearview camera with guidelines",
+      "Rear privacy glass",
+      "Push button start",
+      "6-speed automatic transmission",
+      "5-inch color LCD screen",
+      "Bluetooth streaming audio and HandsFreeLink",
+      "Illuminated steering wheel-mounted controls"
+    ]
+  }
+}

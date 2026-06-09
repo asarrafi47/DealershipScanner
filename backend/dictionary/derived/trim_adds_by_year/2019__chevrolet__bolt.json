@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|chevrolet|bolt",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Bolt",
+  "ladder_id": "brochure_llm_2019__chevrolet__bolt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Perforated leather-appointed seating",
+      "Heated driver and front passenger seats",
+      "17-inch Ultra Bright machined-aluminum wheels with painted pockets",
+      "Bose premium 7-speaker audio system with Richbass woofer",
+      "Wireless charging for compatible devices",
+      "2 charge-only USB ports for rear passengers"
+    ],
+    "LT": [
+      "Front bucket seats with 6-way manual adjusters and adjustable head restraints",
+      "Rear 60/40 split-folding seat with articulating head restraints",
+      "Deluxe Cloth seating",
+      "10.2-inch Chevrolet Infotainment System with Apple CarPlay and Android Auto",
+      "6-speaker audio system",
+      "2 USB ports and auxiliary input in front center console",
+      "SiriusXM Radio All Access with 3-month trial",
+      "Chevrolet Connected Access with 10 years connectivity",
+      "4G LTE Wi-Fi for up to seven devices",
+      "17-inch painted-aluminum wheels"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2016|dodge|charger",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Charger",
+  "ladder_id": "brochure_llm_2016__dodge__charger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT",
+    "Hellcat",
+    "R/T Scat Pack",
+    "R/T Road & Track",
+    "R/T",
+    "SXT",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SRT": [
+      "SRT performance leather-wrapped flat-bottom steering wheel",
+      "18 Harman Kardon high-performance speakers with 900-watt digital amplifier",
+      "Advanced safety features and performance enhancements"
+    ],
+    "Hellcat": [
+      "Extreme performance powertrain and capability beyond SRT"
+    ],
+    "R/T Scat Pack": [
+      "Performance leather-wrapped steering wheel with paddle shifters",
+      "Heated leather-trimmed seats",
+      "R/T Scat Pack specific exterior and interior styling"
+    ],
+    "R/T Road & Track": [
+      "Super Track Pak performance package",
+      "P275/45ZR20 Summer High-Performance tires",
+      "Enhanced road and track performance features"
+    ],
+    "R/T": [
+      "8-way power driver's and front-passenger seats with 4-way lumbar",
+      "Heated front seats",
+      "Performance audio system with 552-watt amplifier and subwoofer"
+    ],
+    "SXT": [
+      "6-way power driver's seat",
+      "Dual-Zone Automatic Temperature Control with humidity sensor",
+      "Full-length floor console with rear climate control outlets",
+      "Electronic speed control steering wheel-mounted"
+    ],
+    "ES": [
+      "Tilt/telescoping steering column",
+      "Front and rear reading lamps with map and courtesy lamps",
+      "Glove box lighting",
+      "Trunk lamp",
+      "Reconfigurable digital gauge cluster",
+      "Integrated Uconnect Voice Command",
+      "Advanced multistage front airbags",
+      "Supplemental side-curtain airbags for front and rear outboard occupants"
+    ]
+  }
+}

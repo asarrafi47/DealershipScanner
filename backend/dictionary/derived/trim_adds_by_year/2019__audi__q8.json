@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2019|audi|q8",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Q8",
+  "ladder_id": "brochure_llm_2019__audi__q8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q8 Prestige",
+    "Q8 Premium Plus",
+    "Q8 Premium"
+  ],
+  "adds_by_trim": {
+    "Q8 Prestige": [
+      "Audi adaptive air suspension with dynamic height adjustment",
+      "All-wheel steering for improved maneuverability and stability"
+    ],
+    "Q8 Premium Plus": [
+      "22-inch Audi Sport five-V-spoke-star design wheels with anthracite finish"
+    ],
+    "Q8 Premium": [
+      "3.0-liter turbocharged TFSI six-cylinder engine with 335 horsepower",
+      "48-volt mild hybrid electric vehicle technology with recuperation",
+      "Eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Adaptive damping suspension system",
+      "Electromechanical progressive steering system",
+      "Multi-material body construction with steel and aluminum",
+      "20-inch five-arm design wheels with silver finish"
+    ]
+  }
+}

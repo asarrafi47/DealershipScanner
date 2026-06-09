@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2012|volvo|xc70",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "XC70",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Plus",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_mercedes_a-class_complete_options",
+  "make": "Mercedes",
+  "models": [
+    "A-Class",
+    "A-Class"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, front-wheel-drive"
+      }
+    ]
+  }
+}

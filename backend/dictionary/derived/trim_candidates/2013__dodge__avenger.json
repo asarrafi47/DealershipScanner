@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2013|dodge|avenger",
+  "year": 2013,
+  "make": "Dodge",
+  "model": "Avenger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport",
+    "SE",
+    "Express",
+    "Touring",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2012|chevrolet|impala",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "Limited",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

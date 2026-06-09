@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2025_toyota_sienna_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Sienna",
+    "Sienna"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; Following the discontinuation of General Motors's all-wheel drive minivans in 20"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "The XLE models offered leather seats and a wood trim package."
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Power output 194–210 hp (145–157 kW; 197–213 PS); Front-engine, all-wheel-drive"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front-engine, front-wheel-drive; Following the discontinuation of General Motors's all-wheel drive minivans in 20"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "The optional rear seat audio system was discontinued."
+      }
+    ]
+  }
+}

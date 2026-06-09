@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2018|ram|1500tx",
+  "year": 2018,
+  "make": "ram",
+  "model": "1500TX",
+  "ladder_id": "brochure_llm_2018__ram__1500tx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARAMIE®",
+    "REBEL®",
+    "LONE STAR/BIG HORN® HARVEST",
+    "EXPRESS",
+    "TRADESMAN®"
+  ],
+  "adds_by_trim": {
+    "LARAMIE®": [
+      "Leather-trimmed 40/20/40 bench seat",
+      "Power 10-way memory driver and 6-way power passenger seats",
+      "Heated and ventilated driver and front-passenger seats",
+      "Heated steering wheel with subwoofer",
+      "Premium II 10-speaker audio system",
+      "Instrument-panel woodgrain bezel",
+      "Dual-Zone Automatic Temperature Control"
+    ],
+    "REBEL®": [
+      "Unique Rebel premium cloth bucket seats with embossed tread pattern",
+      "Unique Rebel interior accents",
+      "Heated leather-wrapped steering wheel with Red accent stitching",
+      "Rear 60/40 split-folding seat"
+    ],
+    "LONE STAR/BIG HORN® HARVEST": [
+      "Premium cloth high-back bucket seats with full-length floor center console",
+      "Power 10-way driver's seat with power lumbar adjuster",
+      "Uconnect 4C NAV radio with Bluetooth Voice Command",
+      "Chrome 6 x 9-inch power heated/folding mirrors with supplemental lighting",
+      "Chrome grille with chrome mesh inserts",
+      "Spray-in bedliner",
+      "Cab-length Black tubular side steps"
+    ],
+    "EXPRESS": [
+      "Fog lamps",
+      "Body-color rear bumper",
+      "Body-color full front fascia",
+      "Body-color grille",
+      "17-inch aluminum wheels",
+      "Front and rear floor mats",
+      "Carpet floor covering"
+    ],
+    "TRADESMAN®": [
+      "Heavy-duty vinyl 40/20/40 split bench seat",
+      "Front armrest with three cup holders",
+      "Manual air conditioning",
+      "3.0 AM/FM radio with six-speaker audio system",
+      "Media Hub with audio jack and remote USB port",
+      "Black grille and door handles",
+      "Locking tailgate",
+      "Electronic shift-on-the-fly part-time transfer case (4x4 only)"
+    ]
+  }
+}

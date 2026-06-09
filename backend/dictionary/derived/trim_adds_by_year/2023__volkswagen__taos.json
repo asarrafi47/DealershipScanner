@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2023|volkswagen|taos",
+  "year": 2023,
+  "make": "Volkswagen",
+  "model": "Taos",
+  "ladder_id": "brochure_llm_2023__volkswagen__taos",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "7-speed DSG® Automatic transmission with Tiptronic®",
+      "4MOTION® all-wheel drive standard",
+      "Panoramic sunroof with power tilt and slide (standard)"
+    ],
+    "SE": [
+      "8-speed Automatic transmission with Tiptronic® (FWD) or 7-speed DSG® (4MOTION®)",
+      "Panoramic sunroof available (requires P01 package)",
+      "P01 package option for sunroof and certain exterior colors"
+    ],
+    "S": [
+      "1.5L TSI® 4-cylinder turbocharged engine with 158 HP",
+      "Choice of FWD with 8-speed automatic or 4MOTION® with 7-speed DSG®",
+      "IQ.DRIVE® advanced driver assistance package available",
+      "Heated leatherette-wrapped steering wheel available"
+    ]
+  }
+}

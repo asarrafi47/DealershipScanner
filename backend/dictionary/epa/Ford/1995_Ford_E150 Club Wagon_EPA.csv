@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1995,Ford,E150 Club Wagon,E150 Club Wagon,4.9L V6 ((FFS)),4.9L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.9,11,16,13,,,,,
+1995,Ford,E150 Club Wagon,E150 Club Wagon,5.0L V8 ((FFS)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.0,12,17,14,,,,,
+1995,Ford,E150 Club Wagon,E150 Club Wagon,5.8L V8 ((FFS)),5.8L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.8,11,15,12,,,,,

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|kia|sportage",
+  "year": 2012,
+  "make": "Kia",
+  "model": "Sportage",
+  "ladder_id": "brochure_llm_2012__kia__sportage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "Turbocharged 2.0L GDI I4 engine with 260 hp",
+      "Mesh front grille with unique exterior styling",
+      "Side sill moldings",
+      "Sporty alloy wheels",
+      "Dual exhaust system complementing turbo engine"
+    ],
+    "EX": [
+      "6-speed Sportmatic automatic transmission with manual shifting option",
+      "Available panoramic sunroof",
+      "Available voice-activated navigation system",
+      "Available back-up warning system detecting rear objects"
+    ],
+    "LX": [
+      "2.4L 176-hp 4-cylinder engine",
+      "Electronic Stability Control (ESC)",
+      "Traction Control System (TCS)",
+      "Easily configurable seating",
+      "Contemporary exterior styling",
+      "Industry-leading 10-year/100,000-mile warranty"
+    ]
+  }
+}

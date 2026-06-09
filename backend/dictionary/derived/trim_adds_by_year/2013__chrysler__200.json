@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2013|chrysler|200",
+  "year": 2013,
+  "make": "Chrysler",
+  "model": "200",
+  "ladder_id": "brochure_llm_2013__chrysler__200",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "18-inch polished aluminum wheel optional",
+      "18-inch polished aluminum wheel with black satin painted pockets optional with S Appearance Package"
+    ],
+    "Touring": [
+      "17-inch machined cast aluminum wheel standard",
+      "18-inch cast aluminum wheel with painted silver finish optional",
+      "18-inch polished aluminum wheel with black satin painted pockets optional with S Appearance Package"
+    ],
+    "LX": [
+      "17-inch wheel cover standard"
+    ]
+  }
+}

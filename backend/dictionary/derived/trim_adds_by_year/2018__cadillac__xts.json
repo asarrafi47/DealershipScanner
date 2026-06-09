@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2018|cadillac|xts",
+  "year": 2018,
+  "make": "Cadillac",
+  "model": "XTS",
+  "ladder_id": "brochure_llm_2018__cadillac__xts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V-Sport Platinum",
+    "Premium Luxury",
+    "Platinum",
+    "Luxury",
+    "XTS"
+  ],
+  "adds_by_trim": {
+    "V-Sport Platinum": [
+      "20\" cast aluminum ultrabright machined with premium painted finish wheels",
+      "P245/40R20 all-season tires"
+    ],
+    "Premium Luxury": [
+      "20\" cast aluminum with premium multi-coat painted finish wheels",
+      "P245/40R20 all-season tires"
+    ],
+    "Platinum": [
+      "20\" cast aluminum sterling silver premium painted finish wheels",
+      "P245/40R20 all-season tires"
+    ],
+    "Luxury": [
+      "19\" cast aluminum with nickel premium painted finish and chrome inserts wheels",
+      "P245/45R19 all-season tires"
+    ],
+    "XTS": [
+      "19\" cast aluminum pearl wheels",
+      "P245/45R19 all-season tires",
+      "Comprehensive owner benefits package",
+      "Premium Care Maintenance program coverage for 3 years/36,000 miles",
+      "OnStar availability",
+      "6 year/70,000 mile powertrain limited warranty with roadside assistance"
+    ]
+  }
+}

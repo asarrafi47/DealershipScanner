@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2011|toyota|venza",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "Venza",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

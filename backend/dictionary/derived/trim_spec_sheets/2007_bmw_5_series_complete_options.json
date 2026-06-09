@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2007_bmw_5_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "5 Series",
+    "5 Series"
+  ],
+  "year_min": 2005,
+  "year_max": 2009,
+  "source": "generated",
+  "trims": {
+    "530i": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "525i": [
+      {
+        "label": "Engine Options",
+        "value": "2.5L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

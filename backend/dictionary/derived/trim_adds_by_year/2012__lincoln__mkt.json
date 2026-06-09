@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2012|lincoln|mkt",
+  "year": 2012,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_2012__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 3.5L 24-valve EcoBoost V6 twin-turbocharged direct-injection engine",
+      "Adds 355 hp @ 5,700 rpm with 350 lb.-ft. torque @ 1,500–5,250 rpm",
+      "Adds dual exhaust with chrome tips",
+      "Adds electric power-assisted steering",
+      "Adds intelligent all-wheel drive (AWD)",
+      "Adds EcoBoost badge",
+      "Adds EPA-estimated fuel economy rating of 16 city/23 hwy/18 combined mpg"
+    ],
+    "Limited": [
+      "Upgraded to 3.7L Duratec V6 engine",
+      "Adds 20-inch polished aluminum wheels as optional upgrade"
+    ],
+    "Standard": [
+      "Upgraded to 3.7L Duratec V6 engine as standard",
+      "Replaces wheels with 19-inch premium painted aluminum"
+    ]
+  }
+}

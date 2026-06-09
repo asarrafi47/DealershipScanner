@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|ford|mustang",
+  "year": 2015,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_llm_2015__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5.0L Ti-VCT V8",
+    "2.3L EcoBoost I-4",
+    "3.7L Ti-VCT V6"
+  ],
+  "adds_by_trim": {
+    "5.0L Ti-VCT V8": [
+      "435 hp V8 engine with 400 lb.-ft. torque at 4,250 rpm",
+      "6-speed manual transmission (15 city/25 hwy/19 combined mpg)",
+      "6-speed SelectShift automatic transmission (16 city/25 hwy/19 combined mpg)"
+    ],
+    "2.3L EcoBoost I-4": [
+      "310 hp EcoBoost I-4 engine with 320 lb.-ft. torque at 3,000 rpm",
+      "6-speed manual transmission (22 city/31 hwy/26 combined mpg)",
+      "6-speed SelectShift automatic transmission (21 city/32 hwy/25 combined mpg)",
+      "15.5-gallon fuel tank"
+    ],
+    "3.7L Ti-VCT V6": [
+      "300 hp V6 engine with 280 lb.-ft. torque at 4,000 rpm",
+      "6-speed SelectShift automatic transmission (19 city/28 hwy/22 combined mpg)",
+      "Selectable-effort electric power-assisted steering in Standard, Sport, and Comfort modes",
+      "4-wheel vented disc Anti-Lock Brake System with AdvanceTrac electronic stability control",
+      "16.0-gallon fuel tank",
+      "4-way adjustable front head restraints and 50/50 split-fold rear seat (fastback only)",
+      "HID headlamps with signature lighting and LED taillamps with sequential turn signals",
+      "Auto-dimming rearview mirror and Intelligent Access with push-button start"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2014|volvo|s80",
+  "year": 2014,
+  "make": "Volvo",
+  "model": "S80",
+  "ladder_id": "brochure_llm_2014__volvo__s80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "PREMIER PLUS",
+    "3.2 T6 AWD"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Rear park assist camera",
+      "Grocery bag holder",
+      "Quick fold front passenger seat",
+      "Digital Compass",
+      "HomeLink Integrated Garage Door Opener"
+    ],
+    "PREMIER PLUS": [
+      "Bluetooth hands-free system with streaming audio",
+      "Cruise control",
+      "Park Assist, Front & Rear",
+      "Dual-zone Electronic Climate Control",
+      "Electronic Parking Brake"
+    ],
+    "3.2 T6 AWD": [
+      "240 HP 6-cylinder engine (230 HP PZEV option)",
+      "6-speed Geartronic Automatic transmission with AWD",
+      "8-way power driver's seat with 3-position memory",
+      "Adaptive Digital TFT Display",
+      "Audio control buttons in steering wheel",
+      "Auto Dimming inside rearview mirror",
+      "Anti-lock Brake System (ABS)",
+      "City Safety Low-speed Collision Avoidance System",
+      "Side Impact Airbags (SIPS bags)",
+      "Volvo Sensus with 7-inch high resolution screen"
+    ]
+  }
+}

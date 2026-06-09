@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2019|bentley|continental",
+  "year": 2019,
+  "make": "bentley",
+  "model": "continental",
+  "ladder_id": "brochure_llm_2019__bentley__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Continental GT",
+    "Continental GT Convertible"
+  ],
+  "adds_by_trim": {
+    "Continental GT": [
+      "6.0 litre W12 twin-turbocharged engine with 626 bhp and 900 Nm torque",
+      "8-speed dual clutch transmission",
+      "Active all-wheel drive standard",
+      "Bentley Dynamic Ride active roll control system",
+      "Three-chamber air-spring suspension",
+      "0-60 mph in 3.6 seconds, top speed 207 mph",
+      "358 litres boot volume",
+      "2,244 kg unladen weight"
+    ],
+    "Continental GT Convertible": [
+      "Convertible soft-top configuration",
+      "0-60 mph in 3.7 seconds, top speed 207 mph",
+      "235 litres boot volume",
+      "2,414 kg unladen weight",
+      "Overall height 1,399 mm"
+    ]
+  }
+}

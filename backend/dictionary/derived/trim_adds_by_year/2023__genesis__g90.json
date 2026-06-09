@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2023|genesis|g90",
+  "year": 2023,
+  "make": "genesis",
+  "model": "G90",
+  "ladder_id": "brochure_llm_2023__genesis__g90",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5T E-SC",
+    "3.5T"
+  ],
+  "adds_by_trim": {
+    "3.5T E-SC": [
+      "3.5L V6 Twin-Turbo with 48V e-Supercharger producing 409 HP and 405 lb-ft torque",
+      "Multi-Chamber Air Suspension system",
+      "Rear Wheel Steering",
+      "Copper Brake Calipers",
+      "Forged Carbon or Ash Wood Trim with Metal G-Matrix Pattern Inlay",
+      "Power Rear Seats with Massage Function",
+      "Ventilated Rear Seats",
+      "Rear Seat Vanity Mirrors",
+      "Wireless Device Charger for rear passengers",
+      "Bang & Olufsen 3D Premium Audio system"
+    ],
+    "3.5T": [
+      "3.5L V6 Twin-Turbo GDI engine producing 375 HP and 391 lb-ft torque",
+      "Electronically Controlled Suspension with Road Preview",
+      "20-inch Alloy Wheels",
+      "Nappa Leather Seating Surfaces",
+      "Matte-Finish Wood Trim",
+      "Power Front Seats with Massage Function",
+      "Heated and Ventilated Front Seats",
+      "Bang & Olufsen Premium Audio system",
+      "Wireless Device Charger for front passengers",
+      "Power Door Closure"
+    ]
+  }
+}

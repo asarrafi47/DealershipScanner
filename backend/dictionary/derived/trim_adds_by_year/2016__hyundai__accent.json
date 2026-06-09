@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2016|hyundai|accent",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2016__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE Sedan",
+    "Accent"
+  ],
+  "adds_by_trim": {
+    "SE Sedan": [
+      "Leather-wrapped steering wheel and shift knob",
+      "Premium cloth seats",
+      "Projector headlights with LED accents",
+      "Headlight welcome/escort function"
+    ],
+    "Accent": [
+      "1.6L GDI engine with 137 HP",
+      "38 MPG highway EPA-estimated",
+      "90.1 cubic feet of interior volume",
+      "21.2 cubic feet cargo space with rear seats up",
+      "47.5 cubic feet cargo space with rear seats down",
+      "60/40 split rear seating",
+      "Dual front cupholders",
+      "Overhead sunglass storage",
+      "One-touch triple turn signal",
+      "Steering wheel audio and cruise control available"
+    ]
+  }
+}

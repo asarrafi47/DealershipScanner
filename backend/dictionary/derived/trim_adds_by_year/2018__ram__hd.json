@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2018|ram|hd",
+  "year": 2018,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2018__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARAMIE LONGHORN®",
+    "LARAMIE®",
+    "BIG HORN®",
+    "POWER WAGON®",
+    "SLT",
+    "TRADESMAN®"
+  ],
+  "adds_by_trim": {
+    "LARAMIE LONGHORN®": [
+      "Premium leather bucket seats",
+      "Heated second-row seats",
+      "Luxury front and rear floor mats",
+      "Uconnect 4C NAV radio with Bluetooth and Integrated Voice Command"
+    ],
+    "LARAMIE®": [
+      "Leather trim 40/20/40 bench seat",
+      "Ventilated driver and front-passenger seats",
+      "Heated driver and front-passenger seats",
+      "Heated steering wheel",
+      "LED interior lighting",
+      "Premium II 10-speaker audio system with subwoofer",
+      "6.4L HEMI V8 MDS standard (replaces 5.7L option)"
+    ],
+    "BIG HORN®": [
+      "Premium cloth 40/20/40 bench seat with 10-way power adjustment",
+      "Power lumbar control on driver's side",
+      "Leather-wrapped steering column with remote audio controls",
+      "Fold-flat load floor",
+      "Rear power-sliding window",
+      "60/40 split-folding rear seat",
+      "SiriusXM Satellite Radio with 1-year trial",
+      "Chrome grille surround with billets",
+      "18-inch polished aluminum wheels",
+      "Fog lamps"
+    ],
+    "POWER WAGON®": [
+      "6.4L HEMI V8 MDS engine standard",
+      "Premium 7-inch Driver Information Display with Power Wagon graphics",
+      "Premium cloth seats with embossed tread pattern",
+      "SiriusXM Satellite Radio with 1-year trial",
+      "Premium LED taillamps with Black finish",
+      "Bifunctional projector headlamps with Black",
+      "17-inch aluminum wheels with Matte Black pockets",
+      "LT285/70R17D OWL All-Terrain tires",
+      "Hill Descent Control",
+      "Bilstein performance front and rear shocks"
+    ],
+    "SLT": [
+      "Cloth 40/20/40 bench seat",
+      "Premium vinyl door trim with map pocket",
+      "Carpet floor covering",
+      "Front and rear floor mats",
+      "Overhead console with map lights",
+      "Chrome accent shift knob",
+      "Uconnect 3 radio with 5-inch display and Bluetooth",
+      "Chrome front and rear bumpers",
+      "Chrome grille",
+      "Chrome door handles"
+    ],
+    "TRADESMAN®": [
+      "Air conditioning",
+      "Speed control",
+      "Heavy-duty vinyl 40/20/40 split-bench seat",
+      "Black vinyl floor covering",
+      "Mini floor console",
+      "6-speaker audio system",
+      "Manual 6x9-inch Black mirrors",
+      "Automatic headlamps",
+      "Painted steel wheels",
+      "Black front and rear bumpers"
+    ]
+  }
+}

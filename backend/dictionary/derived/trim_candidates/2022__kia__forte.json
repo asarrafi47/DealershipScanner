@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2022|kia|forte",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Forte",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "GT",
+    "GT-Line",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2014|honda|crosstour",
+  "year": 2014,
+  "make": "Honda",
+  "model": "Crosstour",
+  "ladder_id": "generic_honda_crosstour",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "trademarks of HARMAN International Industries, Inc. Your wireless carrier’s rates may apply. 3 Pandora, the Pandora logo and the Pandora trade dress are"
+    ],
+    "EX": [
+      "Bluetooth HandsFreeLink with USB Audio Interface",
+      "Rearview Camera",
+      "Side Curtain Airbags with Rollover Sensor",
+      "Center console with armrest and storage compartment",
+      "Heated front seats with driver's two-position memory seat",
+      "Driver's 10-way power seat adjustment with power lumbar support",
+      "360-watt AM/FM/CD premium audio system with 7 speakers and subwoofer",
+      "Easy fold-down 60/40 split rear seatback with center armrest",
+      "17-inch alloy wheels",
+      "Vehicle Stability Assist (VSA)"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Sport": 0,
+      "EX": 0
+    }
+  }
+}

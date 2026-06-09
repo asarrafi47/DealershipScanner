@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2017|chevrolet|spark",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LS",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

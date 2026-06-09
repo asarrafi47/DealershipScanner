@@ -1,0 +1,90 @@
+{
+  "catalog_key": "2017|toyota|highlander",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2017__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited",
+    "Hybrid XLE",
+    "Hybrid LE",
+    "Limited",
+    "SE",
+    "XLE",
+    "LE Plus",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited": [
+      "19-inch 5-spoke Chromtec alloy wheels",
+      "LED Daytime Running Lights",
+      "Entune Premium JBL Audio with Integrated Navigation and App Suite",
+      "Perforated heated and ventilated leather-trimmed front seats with memory function",
+      "4-way power-adjustable front passenger seat",
+      "Rear cargo area tonneau cover"
+    ],
+    "Hybrid XLE": [
+      "Power tilt/slide moonroof with sunshade and jam protection",
+      "Chromtec roof rails",
+      "18-inch turbine-look alloy wheels",
+      "Leather-trimmed seats with heated front seats",
+      "Second-row retractable window sunshades",
+      "Auto-dimming rearview mirror",
+      "4-way power-adjustable front passenger seat"
+    ],
+    "Hybrid LE": [
+      "Entune Audio with 6.1-inch high-resolution touchscreen display",
+      "Integrated backup camera with projected path",
+      "Smart Key System with Push Button Start",
+      "EV and ECO Modes",
+      "Energy monitor display",
+      "Hybrid system power meter",
+      "Six-way adjustable driver's seat"
+    ],
+    "Limited": [
+      "19-inch 5-spoke Chromtec alloy wheels",
+      "Rear parking assist sonar",
+      "LED Daytime Running Lights",
+      "Entune Premium JBL Audio with Integrated Navigation and App Suite",
+      "Perforated heated and ventilated leather-trimmed front seats with memory function",
+      "Rear cargo area tonneau cover"
+    ],
+    "SE": [
+      "19-inch multi-spoke machined alloy wheels with black finish",
+      "Dark-painted roof rails",
+      "Sport-tuned suspension",
+      "Seating for seven",
+      "Black leather-trimmed seats with ribbon inserts and silver stitching",
+      "Blue LED ambient lighting in doors and in-dash shelf"
+    ],
+    "XLE": [
+      "Power tilt/slide moonroof with sunshade and jam protection",
+      "Chromtec roof rails",
+      "18-inch turbine-look alloy wheels",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert",
+      "Leather-trimmed seats with heated front seats",
+      "Second-row retractable window sunshades",
+      "Auto-dimming rearview mirror"
+    ],
+    "LE Plus": [
+      "Integrated fog lights",
+      "Flip-up rear hatch window",
+      "Height-adjustable power liftgate with jam protection",
+      "Entune Audio Plus with Connected Navigation App and Scout GPS Link",
+      "SofTex and cloth seats with contrast stitching",
+      "8-way power-adjustable driver's seat",
+      "Three-zone automatic climate control with separate second-row panel"
+    ],
+    "LE": [
+      "Projector-beam halogen smoked-chrome-accent headlights",
+      "LED taillights and stop lights",
+      "18-inch split 5-spoke machined alloy wheels",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Entune Audio with 6.1-inch high-resolution touchscreen display",
+      "Integrated backup camera with projected path",
+      "Smart Key System with Push Button Start",
+      "Toyota Safety Sense P"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2018|landrover|discoverysport",
+  "year": 2018,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "ladder_id": "brochure_2018__landrover__discoverysport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "SE",
+    "Standard",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes 2.0 Liter Turbocharged I-4 engine with 240 hp",
+      "Adds 5 + 2 seating configuration",
+      "Adds Includes All Terrain Progress Control",
+      "Adds Hill Descent Control (HDC)",
+      "Adds Includes Adaptive Dynamics",
+      "Adds Torque Vectoring",
+      "Adds Includes Active Driveline"
+    ],
+    "Premium": [
+      "Upgraded to Meridian Sound Systems",
+      "Adds enhanced comfort features and interior options"
+    ],
+    "Limited": [
+      "Adds premium interior color and finish selections"
+    ],
+    "Standard": [
+      "Adds Complete Dynamic Design Package",
+      "Adds Includes expanded wheel style options",
+      "Adds comprehensive accessory customization options"
+    ],
+    "SE": [
+      "2.0L Turbocharged Ingenium engine with 237 hp",
+      "9-speed automatic transmission",
+      "All-Wheel Drive standard",
+      "10.2-inch touchscreen with InControl Touch Pro",
+      "Meridian sound system with 10 speakers",
+      "Leather steering wheel",
+      "Power panoramic sunroof",
+      "Dual-zone climate control",
+      "Blind Spot Monitor with closing vehicle sensing",
+      "Halogen headlights"
+    ],
+    "HSE": [
+      "Adds Black Design Package"
+    ]
+  }
+}

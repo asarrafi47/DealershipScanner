@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2017|acura|rdx",
+  "year": 2017,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_web_2017__acura__rdx",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "RDX SH-AWD w/A-Spec Advance Package",
+    "RDX SH-AWD w/Advance Package",
+    "RDX SH-AWD w/A-Spec Package",
+    "RDX SH-AWD w/Technology Package",
+    "RDX SH-AWD"
+  ],
+  "adds_by_trim": {
+    "RDX SH-AWD": [
+      "2.0-liter turbocharged inline four-cylinder engine with 272 hp and 280 lb-ft torque",
+      "10-speed automatic transmission",
+      "Super Handling All-Wheel Drive (SH-AWD) system",
+      "Automatic emergency braking with pedestrian detection",
+      "Lane keep assist and blind-spot monitoring",
+      "Rear cross-traffic monitoring and auto high-beams",
+      "Adaptive cruise control with low-speed follow",
+      "10.2-inch display with Apple CarPlay and Android Auto widescreen mode",
+      "Theater-style seating with 42.0-inch front and 38.0-inch rear legroom"
+    ],
+    "RDX SH-AWD w/Technology Package": [
+      "LED foglights",
+      "360-degree camera system",
+      "Rain-sensing windshield wipers",
+      "Windshield wiper de-icer"
+    ],
+    "RDX SH-AWD w/A-Spec Package": [
+      "20-inch 10-spoke wheel design with Shark Gray finish",
+      "A-Spec exterior and interior styling",
+      "A-Spec badging"
+    ],
+    "RDX SH-AWD w/Advance Package": [
+      "Full-leather upholstery",
+      "Additional ambient lighting including illuminated speaker cones",
+      "Body-color lower exterior trim",
+      "Multi-spoke 19-inch wheel design",
+      "Reworked center console with enhanced storage and wireless charger access"
+    ],
+    "RDX SH-AWD w/A-Spec Advance Package": [
+      "Full-leather upholstery with A-Spec styling",
+      "Additional ambient lighting including illuminated speaker cones",
+      "20-inch A-Spec wheels with Shark Gray finish",
+      "A-Spec badging combined with Advance package features"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/acura/rdx/"
+}

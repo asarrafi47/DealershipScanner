@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_nissan_leaf_complete_options",
+  "make": "Nissan",
+  "models": [
+    "Leaf",
+    "Leaf"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "SL": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "SV": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

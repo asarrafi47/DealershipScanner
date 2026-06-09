@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2012|saab|95",
+  "year": 2012,
+  "make": "Saab",
+  "model": "9-5",
+  "ladder_id": "brochure_2012__saab__95",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "LE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [],
+    "LE": [
+      "Upgraded to tri-zone climate control system",
+      "Adds power folding exterior mirrors with memory",
+      "Adds auto-dimming outside mirrors",
+      "Adds Bi-Xenon cornering headlights with signature front lighting",
+      "Adds rear seat audio system",
+      "Adds universal remote garage door opener",
+      "Adds keyless passive entry"
+    ],
+    "SE": [
+      "Upgraded to 11-speaker harman/kardon audio system with 5.1 surround sound",
+      "Adds Pilot Head-Up Display",
+      "Adds lane departure warning system",
+      "Adds advanced park assist with front and rear sensors",
+      "Adds remote start functionality",
+      "Adds rain-sensing windshield wipers",
+      "Adds rear seat entertainment system with dual 8-inch DVD screens and wireless headphones"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2017|lexus|ls",
+  "year": 2017,
+  "make": "lexus",
+  "model": "LS",
+  "ladder_id": "brochure_llm_2017__lexus__ls",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LS F SPORT",
+    "LS",
+    "LS LWB"
+  ],
+  "adds_by_trim": {
+    "LS F SPORT": [
+      "F SPORT exterior styling with front bumper, upper and lower grille inserts, rear diffuser",
+      "19-inch split-10-spoke forged alloy wheels by BBS",
+      "Brembo six-piston front brake calipers with 14.9-inch ventilated discs",
+      "TORSEN limited-slip rear differential (RWD)",
+      "F SPORT-tuned, lowered Adaptive Variable Air Suspension",
+      "Variable Gear-Ratio Steering (VGRS)",
+      "Paddle shifters",
+      "F SPORT bolstered front seats with embossed headrests",
+      "Aluminum pedals and interior trim",
+      "Black headliner"
+    ],
+    "LS": [
+      "Power-adjustable rear seats with memory and two-way power lumbar support",
+      "Front-seat Climate Concierge with climate-comfort front seats",
+      "Right-rear power recliner with ottoman and multifunction shiatsu massage",
+      "Power rear sunshade",
+      "Rear-Seat Entertainment System with Blu-ray/DVD player and 9.0-inch screen",
+      "Rear-seat cool box",
+      "18-inch split-five-spoke alloy wheels",
+      "Standard Adaptive Variable Air Suspension"
+    ],
+    "LS LWB": [
+      "Comfort Package standard with power-adjustable rear seats and climate control",
+      "Extended wheelbase for additional rear legroom",
+      "Power trunk open/close"
+    ]
+  }
+}

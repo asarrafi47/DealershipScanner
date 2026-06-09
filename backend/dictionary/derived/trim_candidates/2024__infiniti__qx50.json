@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2024|infiniti|qx50",
+  "year": 2024,
+  "make": "Infiniti",
+  "model": "QX50",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Autograph",
+    "Sensory",
+    "Luxe",
+    "Pure",
+    "Limited",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

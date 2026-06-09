@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2010|mitsubishi|eclipse",
+  "year": 2010,
+  "make": "Mitsubishi",
+  "model": "Eclipse",
+  "ladder_id": "brochure_llm_2010__mitsubishi__eclipse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT ll Performance",
+    "GT ll",
+    "Sport ll",
+    "GS"
+  ],
+  "adds_by_trim": {
+    "GT ll Performance": [
+      "3.8-liter V6 engine with 265 horsepower and 262 lb-ft torque",
+      "6-speed manual or 5-speed Sportronic automatic transmission",
+      "11.2-inch ventilated rear disc brakes",
+      "Strut tower bar on front MacPherson strut suspension",
+      "Alloy fuel door",
+      "Premium unleaded fuel requirement",
+      "650-watt Rockford Acoustic Design premium audio with SIRIUS Satellite Radio",
+      "Automatic climate control"
+    ],
+    "GT ll": [
+      "18-inch machine-finish alloy wheels with P235/45R18 all-season tires",
+      "High-Intensity Discharge projector-type headlamps",
+      "Parabolic fog lights",
+      "Large rear spoiler",
+      "Strut tower bar on front MacPherson strut suspension",
+      "Steering wheel-mounted audio controls",
+      "Rear-view backup camera",
+      "650-watt Rockford Acoustic Design premium audio with SIRIUS Satellite Radio",
+      "Bluetooth Handsfree phone system"
+    ],
+    "Sport ll": [
+      "4-speed Sportronic automatic transmission",
+      "Strut tower bar added to front MacPherson strut suspension",
+      "18-inch alloy wheels with P235/45R18 all-season tires",
+      "Steering wheel-mounted audio controls",
+      "Rear-view backup camera",
+      "650-watt Rockford Acoustic Design premium audio with SIRIUS Satellite Radio",
+      "Bluetooth Handsfree phone system"
+    ],
+    "GS": [
+      "2.4-liter 4-cylinder engine with 162 horsepower and 162 lb-ft torque",
+      "5-speed manual or 4-speed Sportronic automatic transmission",
+      "17-inch alloy wheels with P235/50R17 all-season tires",
+      "Sport-tuned front MacPherson strut and rear multilink suspension",
+      "Manual air conditioning",
+      "140-watt Mitsubishi AM/FM/CD/MP3 audio system",
+      "Cruise control and tilt steering column with sport-wrapped wheel"
+    ]
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2023|chevrolet|traverse",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Traverse",
+  "ladder_id": "brochure_llm_2023__chevrolet__traverse",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "Premier",
+    "RS",
+    "LT Leather",
+    "LT Cloth",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "Trailering equipment with heavy-duty cooling system, trailer hitch, and Hitch Guidance with Hitch View",
+      "20-inch polished-aluminum wheels",
+      "SkyScape dual-panel sunroof and fixed rear skylight with power rear sunscreen",
+      "Heated and ventilated front seats",
+      "Jet Black interior with Clove accents and High Country door badging",
+      "Bright front sill plates"
+    ],
+    "Premier": [
+      "20-inch metallic machined-face aluminum wheels",
+      "Hands-free programmable power liftgate",
+      "Chrome door handles and roof rails",
+      "Body-color moldings with chrome inserts",
+      "Three interior color options including Jet Black with Maple Sugar accents",
+      "Safety Alert Seat and Enhanced Automatic Emergency Braking",
+      "Chevrolet Infotainment 3 Plus with Navigation and 8-inch HD touchscreen"
+    ],
+    "RS": [
+      "Black Chevrolet bowtie emblems, Traverse badges, grille, fog lamp bezels, and window trim",
+      "20-inch dark aluminum wheels",
+      "Heated power-adjustable power-folding mirrors",
+      "Jet Black interior with Spice Red accents",
+      "Perforated leather-appointed front and second-row seating surfaces",
+      "Adaptive Cruise Control and Enhanced Automatic Emergency Braking",
+      "HD Surround Vision and Rear Camera Mirror with washer",
+      "Rear Pedestrian Alert and Bose premium 10-speaker sound system",
+      "Chevrolet Infotainment 3 Plus with Navigation and 8-inch HD touchscreen"
+    ],
+    "LT Leather": [
+      "Leather-appointed front and second-row seating surfaces",
+      "6-way power front passenger seat with power lumbar control",
+      "Programmable power liftgate and remote vehicle starter system",
+      "Chevrolet Infotainment 3 Plus with 8-inch diagonal color touchscreen",
+      "Lane Change Alert with Side Blind Zone Alert and Rear Cross Traffic Alert"
+    ],
+    "LT Cloth": [
+      "Chrome-accented grille with chrome inserts",
+      "Black roof rails and body-color mirrors with turn signal indicators",
+      "18-inch Bright Silver-painted aluminum wheels",
+      "8-way power driver seat with power lumbar control",
+      "Tri-zone automatic climate controls and Keyless Open and Start",
+      "Chevrolet Infotainment 3 with 7-inch diagonal color touchscreen",
+      "Six USB ports and Universal Home Remote programmable transmitter"
+    ],
+    "LS": [
+      "3.6L V6 engine with 9-speed automatic transmission and Automatic Stop/Start with override",
+      "Driver Mode Selector with dual-outlet exhaust and circular bright tips",
+      "18-inch Bright Silver-painted aluminum wheels and heated power-adjustable mirrors",
+      "8-passenger seating with premium cloth surfaces",
+      "Tilt and telescopic steering column and Driver Information Center with 4.2-inch display",
+      "Standard Chevy Safety Assist including Automatic Emergency Braking and Lane Keep Assist"
+    ]
+  }
+}

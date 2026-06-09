@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2012|maserati|quattroporte",
+  "year": 2012,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_llm_2012__maserati__quattroporte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QUATTROPORTE S",
+    "QUATTROPORTE"
+  ],
+  "adds_by_trim": {
+    "QUATTROPORTE S": [
+      "4.7-liter engine producing 425 hp and 361 lb-ft torque",
+      "Skyhook active suspension standard with automatic damping control",
+      "174 mph maximum speed capability",
+      "0-60 mph acceleration in 5.3 seconds",
+      "18-inch spare wheel option (versus 17-inch on base)"
+    ],
+    "QUATTROPORTE": [
+      "4.2-liter engine producing 400 hp and 339 lb-ft torque",
+      "Poltrona Frau® leather interior with elegant wood trim",
+      "Refrigerated compartment inside front armrest",
+      "Two retracting cupholders in central rear armrest",
+      "Electric sunblind for rear window",
+      "15.9 cu-ft trunk with tire repair kit and compressor",
+      "Anti-dive and anti-squat suspension with front and rear wishbones",
+      "Four-year/50,000-mile transferable new car limited warranty"
+    ]
+  }
+}

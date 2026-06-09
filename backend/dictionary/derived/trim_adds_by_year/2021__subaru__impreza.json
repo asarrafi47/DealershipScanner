@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2021|subaru|impreza",
+  "year": 2021,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2021__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Impreza Limited",
+    "Impreza Sport",
+    "Impreza Premium",
+    "Impreza"
+  ],
+  "adds_by_trim": {
+    "Impreza Limited": [
+      "Blind-Spot Detection and Rear Cross-Traffic Alert",
+      "Reverse Automatic Braking",
+      "17-inch alloy wheels",
+      "LED Steering Responsive Headlights",
+      "LED fog lights",
+      "Body-color side mirrors with integrated turn signals",
+      "6-way power-adjustable driver seat",
+      "Leather-trimmed upholstery",
+      "Leather-wrapped steering wheel and shifter handle with silver stitching"
+    ],
+    "Impreza Sport": [
+      "5-speed manual transmission with short throw shifter or optional Lineartronic CVT",
+      "Active Torque Vectoring",
+      "Sport-tuned suspension",
+      "18-inch alloy wheels",
+      "Body-color door mirrors with integrated turn signals",
+      "Trunk spoiler on sedan",
+      "Body-color side rocker spoilers",
+      "LED Daytime Running Lights",
+      "Active grille shutter",
+      "Sport cloth interior with red stitching"
+    ],
+    "Impreza Premium": [
+      "Auto-on/off headlights",
+      "Welcome lighting",
+      "Cargo-area cover on 5-door",
+      "Lineartronic CVT with 7-speed manual-mode and paddle shifters",
+      "SI-DRIVE engine performance management system",
+      "16-inch alloy wheels",
+      "Halogen fog lights",
+      "Roof rails in silver finish on 5-door",
+      "Body-color side mirrors",
+      "All-Weather Package with heated exterior mirrors and heated front seats"
+    ],
+    "Impreza": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "5-speed manual transmission or optional Lineartronic CVT",
+      "16-inch steel wheels with covers",
+      "Cloth upholstery",
+      "SUBARU STARLINK 6.5-inch Multimedia with Apple CarPlay and Android Auto",
+      "Manually adjustable CFC-free air conditioning",
+      "Electronic cruise control",
+      "Rear-Vision Camera",
+      "STARLINK Safety and Security enabled with Advanced Automatic Collision Notification"
+    ]
+  }
+}

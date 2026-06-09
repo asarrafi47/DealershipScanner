@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2017|ford|cmax",
+  "year": 2017,
+  "make": "Ford",
+  "model": "C-Max",
+  "ladder_id": "brochure_llm_2017__ford__cmax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TITANIUM",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "TITANIUM": [
+      "2.0L iVCT Atkinson-cycle I-4 with 195 hp in charge depletion mode (HEV: 188 hp combined)",
+      "41 city/38 hwy/39 combined mpg gasoline mode; 104 city/87 hwy/95 combined MPGe (PHEV only)",
+      "Plug-In Hybrid Electric Vehicle (PHEV) option with 195 horsepower charge depletion capability"
+    ],
+    "SE": [
+      "2.0L iVCT Atkinson-Cycle I-4 engine with 188 combined horsepower",
+      "42 city/38 hwy/40 combined mpg EPA-estimated ratings",
+      "Regenerative Braking System with 4-wheel disc Anti-Lock Brake System",
+      "Electronically controlled continuously variable transmission (eCVT)",
+      "Remote Keyless Entry System with 2 integrated keyhead remotes",
+      "SiriusXM Radio with 6-month trial subscription",
+      "SmartGauge with EcoGuide display",
+      "Power windows, locks, and remote liftgate release",
+      "Dual 12-volt and single 110-volt power outlets",
+      "P225/50R17 tires on 17-inch Bright Silver-Painted Aluminum wheels"
+    ]
+  }
+}

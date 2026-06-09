@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2020|volkswagen|arteon",
+  "year": 2020,
+  "make": "Volkswagen",
+  "model": "Arteon",
+  "ladder_id": "generic_volkswagen_arteon",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "system is designed to provide you with suggested routes to location addresses, destinations, and other points of interest. Changes in street names, construction zones, traffic flow, points of interest, and other road",
+      "mapping of lanes, roads, streets, toll roads, highways, etc., is not possible, therefore you may encounter discrepancies between the"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

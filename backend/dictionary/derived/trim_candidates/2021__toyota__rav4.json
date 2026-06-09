@@ -1,0 +1,68 @@
+{
+  "catalog_key": "2021|toyota|rav4",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE Premium",
+    "XSE",
+    "XLE",
+    "TRD Off-Road",
+    "TRD",
+    "Adventure",
+    "SE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on LE",
+      "Direct Shift 8-speed Automatic Transmission Electronically controlled Continuously Variable Multi-Terrain Select (MTS)",
+      "Normal, ECO and Sport drive modes Transmission with sequential shift mode Up to 28 city/35 highway/30 combined EPA-est. mpg2",
+      "Front-Wheel Drive (FWD) Electronic On-Demand All-Wheel Drive (AWD) Exterior Features",
+      "Available All-Wheel Drive (AWD) Drive mode dial with Normal, ECO and Sport Drive modes Integrated fog lights",
+      "Color-keyed heated power outside mirrors with turn",
+      "Up to 27 city/35 highway/30 combined EPA-est. mpg2 41 city/38 highway/40 combined EPA-est. mpg2 signal and blind spot warning31 indicators, and",
+      "Exterior Features Exterior Features folding feature",
+      "Multi-LED headlights with black bezels Active grille shutters",
+      "LED Daytime Running Lights (DRL) 17-in. 5-spoke silver alloy wheels Interior Features",
+      "LED taillights and stoplights Interior Features Dual zone automatic climate control with rear-seat vents",
+      "Black hexagon-patterned bar front grille Fabric-trimmed seats with embossed polygon-design"
+    ],
+    "XLE Premium": [
+      "Adds to or replaces features offered on XLE Premium Adds to or replaces features offered on XLE Premium Hybrid",
+      "Available Dynamic Torque-Vectoring All-Wheel 41 city/38 highway/40 combined EPA-est. mpg2",
+      "Drive (TV-AWD) with Rear Driveline Disconnect",
+      "Available Multi-Terrain Select (MTS) (MUD & SAND,",
+      "ROCK & DIRT, and SNOW modes) Dark gray metallic-colored hexagon patterned",
+      "Up to 27 city/35 highway/30 combined EPA-est. mpg2",
+      "Chrome-accented color keyed outside door handles",
+      "Exterior Features with front-row touch sensors",
+      "Dark gray metallic-colored hexagon patterned front grille Puddle lights",
+      "Chrome-accented color keyed outside door handles Interior Features",
+      "SofTex\u00ae-trimmed3 seats",
+      "Heated front seats"
+    ],
+    "XLE": [
+      "Adds to or replaces features offered on LE Hybrid Adds to or replaces features offered on XLE Adds to or replaces features offered on XLE Hybrid",
+      "Multi-Terrain Select (MTS)",
+      "Exterior Features Exterior Features",
+      "Up to 28 city/35 highway/30 combined EPA-est. mpg2",
+      "LED projector headlights with chrome bezels Power tilt/slide moonroof with one-touch open/close",
+      "LED Daytime Running Lights (DRL) accent lighting Power tilt/slide moonroof with one-touch open/close 18-in. 5-spoke Super Chrome-finished alloy wheels",
+      "Integrated fog lights Power liftgate with jam protection",
+      "Color-keyed outside door handles with 19-in. multi-spoke Super Chrome-finished alloy wheels",
+      "Interior Features center-vent flow controls, and rear-seat vents",
+      "Color-keyed heated power outside mirrors with turn signal",
+      "8-way power-adjustable driver\u2019s seat - 8-way power-adjustable driver\u2019s seat",
+      "Interior Features with lumbar support with lumbar support"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

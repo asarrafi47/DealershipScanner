@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2013|infiniti|fx",
+  "year": 2013,
+  "make": "Infiniti",
+  "model": "FX",
+  "ladder_id": "brochure_llm_2013__infiniti__fx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FX50 AWD",
+    "FX37 AWD",
+    "FX37"
+  ],
+  "adds_by_trim": {
+    "FX50 AWD": [
+      "5.0-liter 32-valve V8 engine with 390 hp and 369 lb-ft torque",
+      "Aluminum 4-piston opposed front calipers with 14.0-inch ventilated discs",
+      "3,500 lbs maximum towing capacity",
+      "0.36 coefficient of drag",
+      "4,562 lbs curb weight"
+    ],
+    "FX37 AWD": [
+      "Intelligent All-Wheel Drive system",
+      "267 lb-ft torque at 5,200 rpm",
+      "2,000 lbs maximum towing capacity",
+      "4,321 lbs curb weight",
+      "16/22 mpg EPA estimated fuel economy"
+    ],
+    "FX37": [
+      "3.7-liter 24-valve V6 engine with 325 hp",
+      "Rear-wheel drive",
+      "7-speed automatic transmission with manual shift mode and Downshift Rev Matching",
+      "Vehicle-speed-sensitive power steering",
+      "12.6 x 1.3-inch ventilated front disc brakes",
+      "18-inch split 5-spoke aluminum-alloy wheels with 265/60R18 tires",
+      "Snow mode throttle response control",
+      "4,209 lbs curb weight",
+      "17/24 mpg EPA estimated fuel economy"
+    ]
+  }
+}

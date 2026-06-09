@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2015|audi|r8",
+  "year": 2015,
+  "make": "Audi",
+  "model": "R8",
+  "ladder_id": "brochure_llm_2015__audi__r8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R8 V10 plus",
+    "R8 V10",
+    "R8 V8"
+  ],
+  "adds_by_trim": {
+    "R8 V10 plus": [
+      "5.2L naturally aspirated V10 engine with increased horsepower and torque",
+      "Enhanced performance tuning and upgraded suspension geometry"
+    ],
+    "R8 V10": [
+      "5.2L naturally aspirated V10 engine",
+      "Improved power delivery compared to V8 base model"
+    ],
+    "R8 V8": [
+      "4.2L naturally aspirated V8 engine",
+      "All-wheel drive with quattro system",
+      "Carbon fiber and aluminum construction",
+      "LED headlights and daytime running lights",
+      "Premium leather interior"
+    ]
+  }
+}

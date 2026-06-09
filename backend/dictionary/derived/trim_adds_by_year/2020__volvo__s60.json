@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2020|volvo|s60",
+  "year": 2020,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_web_2020__volvo__s60",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Ultra",
+    "Plus",
+    "Core"
+  ],
+  "adds_by_trim": {
+    "Ultra": [
+      "19-inch alloy wheels",
+      "14-speaker Harman Kardon audio system",
+      "Head-up display",
+      "Four-way power and memory front seats with cushion extenders",
+      "Four-zone automatic climate control",
+      "Heated front seats",
+      "Powered front passenger seat",
+      "12V charger in trunk",
+      "Tailored dashboard",
+      "Upgraded ambient lighting"
+    ],
+    "Plus": [
+      "Leather upholstery",
+      "360-degree camera",
+      "Front, rear, and side parking sensors",
+      "Adaptive cruise control with Pilot Assist",
+      "HomeLink garage door transmitter",
+      "Power child locks",
+      "Air purifier"
+    ],
+    "Core": [
+      "9.0-inch touchscreen with Apple CarPlay and Android Auto",
+      "12.0-inch fully digital driver cluster",
+      "10-speaker audio system",
+      "Powered front seats",
+      "Ambient lighting",
+      "Lane keeping and evasive steering",
+      "Rear parking sensors",
+      "Blind spot, rear cross traffic, and road sign monitoring",
+      "Standard on all B5 and T8 AWD powertrains"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volvo/s60/"
+}

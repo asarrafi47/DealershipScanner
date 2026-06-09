@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2013|audi|a8",
+  "year": 2013,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_2013__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE",
+    "A8",
+    "W12"
+  ],
+  "adds_by_trim": {
+    "W12": [
+      "Adds 6.3L W12 FSI engine with 500 horsepower",
+      "Adds 48-valve DOHC valvetrain",
+      "Adds eight-speed Tiptronic automatic transmission",
+      "Adds Audi quattro all-wheel drive",
+      "Adds Audi ultra lightweight ASF aluminum space frame",
+      "Adds five-link front suspension",
+      "Adds trapezoidal-link rear suspension",
+      "Adds Audi adaptive air suspension",
+      "Adds Audi servotronic power steering system"
+    ],
+    "A8": [
+      "Upgraded to 3.0L supercharged TFSI engine with 333 horsepower",
+      "Adds 24-valve DOHC valvetrain"
+    ],
+    "SE": [],
+    "Sport": [
+      "Adds Audi adaptive air suspension sport setup",
+      "Adds Dynamic steering",
+      "Adds sports differential"
+    ],
+    "Limited": [],
+    "Premium": [
+      "Upgraded to 4.0L turbocharged TFSI engine with 420 horsepower",
+      "Adds 32-valve DOHC valvetrain",
+      "Adds Cylinder-on-Demand engine efficiency technology"
+    ]
+  }
+}

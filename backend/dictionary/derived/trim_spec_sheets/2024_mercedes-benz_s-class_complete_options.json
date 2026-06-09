@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2024_mercedes-benz_s-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "S-Class",
+    "S-Class"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Maybach": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic 9-spd"
+      }
+    ],
+    "S500": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "S580": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic 9-spd"
+      }
+    ],
+    "S680": [
+      {
+        "label": "Engine Options",
+        "value": "6.0L V12 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2021|mini|mini",
+  "year": 2021,
+  "make": "Mini",
+  "model": "Mini",
+  "ladder_id": "brochure_llm_2021__mini__mini",
+  "source": "brochure_llm",
+  "trims_available": [
+    "John Cooper Works",
+    "Cooper S",
+    "Cooper"
+  ],
+  "adds_by_trim": {
+    "John Cooper Works": [
+      "228 hp and 235 lb-ft of torque with TwinPower Turbo engine",
+      "Electronic Differential Lock Control for enhanced cornering",
+      "Available on Hardtop 2 Door, Hardtop 4 Door, Clubman, and Countryman models"
+    ],
+    "Cooper S": [
+      "189 hp and 206 lb-ft of torque with TwinPower Turbo engine",
+      "Dual Clutch Transmission standard"
+    ],
+    "Cooper": [
+      "134 hp and 162 lb-ft of torque with TwinPower Turbo engine",
+      "Dual Clutch Transmission standard",
+      "Forward Collision Warning and Automatic Emergency Braking standard",
+      "LED headlamps with auto-leveling system",
+      "Rear View Camera",
+      "Dynamic Traction Control"
+    ]
+  }
+}

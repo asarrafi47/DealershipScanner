@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2016|gmc|yukon",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "2014_gmc_yukon_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Els",
+    "Tls"
+  ],
+  "adds_by_trim": {
+    "Tls": [
+      "registered trademark of Twitter, Inc. YouTube is a"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Tls": 1
+    }
+  }
+}

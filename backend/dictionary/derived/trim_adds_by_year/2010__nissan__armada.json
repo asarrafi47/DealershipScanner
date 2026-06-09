@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|nissan|armada",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2010__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Titanium",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch chrome-clad aluminum-alloy wheels",
+      "Lower final gear ratio (3.357:1) for enhanced towing",
+      "Maximum towing capacity of 9,100 lbs (2WD) or 9,000 lbs (4WD)",
+      "Auto-leveling rear suspension",
+      "Power-folding outside mirrors with puddle lamps and turn signals",
+      "Power flip-out rear windows",
+      "Single CD in-dash 6-CD changer audio system"
+    ],
+    "Titanium": [
+      "20-inch 6-spoke aluminum-alloy wheels",
+      "Lower final gear ratio (3.357:1) for enhanced towing",
+      "Maximum towing capacity of 9,100 lbs (2WD) or 9,000 lbs (4WD)",
+      "Auto-leveling rear suspension",
+      "9.3 GB Music Box hard drive with CompactFlash card reader",
+      "Nissan Hard Drive Navigation System with touch-screen and voice recognition",
+      "XM NavTraffic with satellite radio"
+    ],
+    "SE": [
+      "317 hp 5.6-liter DOHC V8 engine with 385 lb-ft torque",
+      "5-speed automatic transmission with Tow/Haul Mode",
+      "18-inch 6-spoke aluminum-alloy wheels with P265/70R18 tires",
+      "Maximum towing capacity of 6,500 lbs",
+      "Independent double-wishbone front and rear suspension",
+      "4-wheel Anti-lock Braking System with Electronic Brake force Distribution",
+      "Dual Zone Automatic Temperature Control with rear air conditioning",
+      "Seating for eight with power third-row 60/40-split fold-down bench seat"
+    ]
+  }
+}

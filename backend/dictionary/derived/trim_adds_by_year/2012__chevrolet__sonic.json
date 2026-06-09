@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|chevrolet|sonic",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Sonic",
+  "ladder_id": "generic_chevrolet_sonic",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "LT",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "different or",
+      "your vehicle is assembled, we suggest you verify that",
+      "services require vehicle electrical system (including battery), wireless"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Limited": 0
+    }
+  }
+}

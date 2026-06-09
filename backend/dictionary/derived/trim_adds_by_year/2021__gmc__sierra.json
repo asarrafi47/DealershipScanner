@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2021|gmc|sierra",
+  "year": 2021,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2021__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "SLT",
+    "Elevation",
+    "SLE"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "Denali Ultimate Package with Technology Package and Driver Alert Package II",
+      "GMC MultiPro Power Steps",
+      "22-inch multidimensional polished aluminum wheels",
+      "High Definition Surround Vision with Rear Camera Mirror and Bed View Camera",
+      "15-inch diagonal multicolor Head-Up Display"
+    ],
+    "AT4": [
+      "AT4 unique grille surround with black chrome finish",
+      "AT4 CarbonPro hard badge",
+      "CarbonPro carbon-fiber composite bed",
+      "LT275/65R18C MT blackwall Goodyear Wrangler DuraTrac tires",
+      "18-inch machined aluminum wheels with Dark Gray accents",
+      "Available X31 Off-Road Package with off-road suspension and Hill Descent Control"
+    ],
+    "SLT": [
+      "Technology Package available with High Definition Surround Vision",
+      "Rear Camera Mirror and Bed View Camera",
+      "15-inch diagonal multicolor Head-Up Display"
+    ],
+    "Elevation": [
+      "Elevation-specific styling and trim elements"
+    ],
+    "SLE": [
+      "Standard Sierra 1500 features with available engine and cab/bed configurations"
+    ]
+  }
+}

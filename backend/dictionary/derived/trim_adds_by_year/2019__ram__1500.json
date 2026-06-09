@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2019|ram|1500",
+  "year": 2019,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2019__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie",
+    "Rebel",
+    "Big Horn",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Laramie": [
+      "5.7L HEMI V8 with eTorque standard engine",
+      "Leather-trimmed 40/20/40 bench seat with 12-way power driver seat and 4-way lumbar",
+      "Heated and ventilated front seats with memory function",
+      "Leather-wrapped steering wheel",
+      "Dual-Zone Automatic Temperature Control",
+      "Chrome-surround chrome billet grille with chrome front and rear bumpers",
+      "LED headlamps and taillamps with chrome bezel",
+      "Power-folding mirrors with chrome mirror cap",
+      "Laramie badge and unique RAM scripted aluminum tailgate",
+      "Electronic power steering and Class IV hitch receiver"
+    ],
+    "Rebel": [
+      "5.7L HEMI V8 MDS VVT with eTorque engine standard",
+      "Unique Black interior trim with Red accents and tire-tread pattern vinyl/cloth bucket seats",
+      "7-inch Rebel color reconfigurable cluster with Rebel-only theme",
+      "Rebel rubber floor mats and sport performance hood",
+      "Unique Black wheel flares and 18-inch unique aluminum wheels",
+      "LED headlamps and taillamps with Black bezels",
+      "Chrome-insert door handles and power-folding mirrors",
+      "Rear power sliding window",
+      "Electronic shift-on-demand transfer case (4x4 only)",
+      "Transfer case skid plate and Class IV hitch receiver"
+    ],
+    "Big Horn": [
+      "Uconnect 4 with 8.4-inch display replacing 5-inch display",
+      "Cloth 60/40 rear split-bench seat and premium vinyl door trim panel",
+      "7-inch premium color cluster with LED ambient interior lighting",
+      "10-speaker premium audio system with subwoofer",
+      "SiriusXM Radio with 1-year included trial",
+      "18-inch cast-aluminum wheels with P18 BSW All-Season tires",
+      "Chrome-surround Black billet grille and LED headlamps and taillamps",
+      "Chrome front and rear bumpers with body-color wheel flares",
+      "LED fog lamps and black dual exhaust (HEMI V8)",
+      "Electronic shift-on-demand transfer case and rear stabilizer bar"
+    ],
+    "Tradesman": [
+      "3.6L Pentastar V6 VVT with eTorque or 5.7L HEMI V8 MDS VVT engine options",
+      "Vinyl 40/20/40 front bench seat with manual adjust and fold-down center armrest",
+      "Full stadium-folding rear bench seat with integrated armrest",
+      "Manual tilt/telescoping steering column and manual temperature control",
+      "Urethane steering wheel",
+      "3.5-inch monochrome instrument cluster",
+      "USB port and 1 power outlet",
+      "18-inch steel wheels with quad-halogen headlamps",
+      "Black grille, front bumper, rear bumper and door handles",
+      "Vinyl floor covering and Class III hitch receiver"
+    ]
+  }
+}

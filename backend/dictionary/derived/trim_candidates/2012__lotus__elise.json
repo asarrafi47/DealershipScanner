@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2012|lotus|elise",
+  "year": 2012,
+  "make": "Lotus",
+  "model": "Elise",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

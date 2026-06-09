@@ -1,0 +1,104 @@
+{
+  "ladder_id": "jeep_grand_cherokee_wk2",
+  "source": "curated",
+  "make": "Jeep",
+  "models": ["Grand Cherokee", "Grand Cherokee WK2"],
+  "year_min": 2014,
+  "year_max": 2021,
+  "trims": {
+    "Laredo": [
+      {"label": "Engine Options", "value": "3.6L Pentastar V6"},
+      {"label": "Maximum Towing Capacity", "value": "3,500 lbs standard; 6,200 lbs with optional Trailer-Tow Group IV"},
+      {"label": "Screen Size", "value": "7.0-inch Uconnect 4 touchscreen display"},
+      {"label": "Interior Materials", "value": "Premium cloth seating surfaces, urethane dashboard, cloth door trim panels"},
+      {"label": "Audio System Layout", "value": "6-speaker base setup"},
+      {"label": "Speaker Count & Breakdown", "value": "2 instrument panel corner tweeters (1-inch), 2 front door woofers (6x9-inch), 2 rear door full-range speakers (6.5-inch)"},
+      {"label": "Subwoofer", "value": "None"},
+      {"label": "Amplifier Wattage", "value": "No external amplifier (powered directly by 180-watt Uconnect head unit)"}
+    ],
+    "Limited": [
+      {"label": "Engine Options", "value": "3.6L Pentastar V6 (Standard), 5.7L HEMI V8 (Optional)"},
+      {"label": "Maximum Towing Capacity", "value": "3,500 lbs (V6 standard); 6,200 lbs (V6 with Tow Group IV); 7,200 lbs (V8, requires Tow Group IV)"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display"},
+      {"label": "Interior Materials", "value": "Capri leather-trimmed bucket seats, premium door trim panels, soft-touch dashboard"},
+      {"label": "Audio System Layout", "value": "6-speaker base setup standard; 9-speaker Alpine Premium Audio system optional"},
+      {"label": "Speaker Count & Breakdown (Alpine Upgrade)", "value": "3 instrument panel speakers (3.5-inch mid/tweeter pods), 2 front door woofers (6x9-inch), 2 rear door mid-range speakers (3.5-inch), 2 rear door woofers (6.5-inch)"},
+      {"label": "Subwoofer", "value": "1 rear cargo side-wall enclosed subwoofer (8-inch)"},
+      {"label": "Amplifier Wattage", "value": "506-watt 12-channel DSP amplifier"}
+    ],
+    "Limited X": [
+      {"label": "Engine Options", "value": "3.6L Pentastar V6 (Standard), 5.7L HEMI V8 (Optional)"},
+      {"label": "Maximum Towing Capacity", "value": "3,500 lbs (V6 standard); 6,200 lbs (V6 with Tow Group IV); 7,200 lbs (V8, requires Tow Group IV)"},
+      {"label": "Exterior Styling", "value": "SRT-inspired power dome hood with functional heat extractors, SRT-style front and rear fascias, body-color grille surround, gloss-black headlamp bezels, and 20-inch gloss-black aluminum wheels"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display"},
+      {"label": "Interior Materials", "value": "Heritage perforated leather-trimmed seats, leatherette door trim inserts, simulated wood accents"},
+      {"label": "Audio System Layout", "value": "9-speaker Alpine Premium Audio system standard"},
+      {"label": "Speaker Count & Breakdown", "value": "3 instrument panel speakers (3.5-inch mid/tweeter pods), 2 front door woofers (6x9-inch), 2 rear door mid-range speakers (3.5-inch), 2 rear door woofers (6.5-inch)"},
+      {"label": "Subwoofer", "value": "1 rear cargo side-wall enclosed subwoofer (8-inch)"},
+      {"label": "Amplifier Wattage", "value": "506-watt 12-channel DSP amplifier"}
+    ],
+    "Trailhawk": [
+      {"label": "Engine Options", "value": "3.6L Pentastar V6 (Standard), 5.7L HEMI V8 (Optional)"},
+      {"label": "Maximum Towing Capacity", "value": "6,200 lbs (V6); 7,200 lbs (V8) — Trailer-Tow Group IV comes standard"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display"},
+      {"label": "Interior Materials", "value": "Trailhawk-exclusive Nappa leather-trimmed bucket seats with perforated suede inserts and red accent stitching, leatherette door trim"},
+      {"label": "Audio System Layout", "value": "9-speaker Alpine Premium Audio system standard; 19-speaker Harman Kardon system optional"},
+      {"label": "Speaker Count & Breakdown (Harman Kardon Upgrade)", "value": "5 unity mid/tweeter integration pods (3.5-inch), 4 dedicated high-efficiency tweeters (1-inch), 2 front door sub-woofers (6x9-inch), 2 rear door woofers (6.3-inch)"},
+      {"label": "Subwoofer", "value": "1 specialized high-voltage rear enclosure subwoofer (10-inch)"},
+      {"label": "Amplifier Wattage", "value": "506-watt amplifier standard; 825-watt 12-channel Class-D amplifier (with Harman Kardon upgrade)"}
+    ],
+    "Overland": [
+      {"label": "Engine Options", "value": "3.6L Pentastar V6 (Standard), 5.7L HEMI V8 (Optional)"},
+      {"label": "Maximum Towing Capacity", "value": "6,200 lbs (V6); 7,200 lbs (V8) — Trailer-Tow Group IV comes standard"},
+      {"label": "Suspension", "value": "Quadra-Lift four-corner air suspension (standard)"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display"},
+      {"label": "Interior Materials", "value": "Nappa leather-trimmed seating with edge welting, leather-wrapped instrument panel, open-pore wood trim inserts, leather-and-wood-wrapped steering wheel"},
+      {"label": "Audio System Layout", "value": "9-speaker Alpine Premium Audio system standard; 19-speaker Harman Kardon system optional"},
+      {"label": "Speaker Count & Breakdown (Harman Kardon Upgrade)", "value": "5 unity mid/tweeter integration pods (3.5-inch), 4 dedicated high-efficiency tweeters (1-inch), 2 front door sub-woofers (6x9-inch), 2 rear door woofers (6.3-inch)"},
+      {"label": "Subwoofer", "value": "1 specialized high-voltage rear enclosure subwoofer (10-inch)"},
+      {"label": "Amplifier Wattage", "value": "506-watt amplifier standard; 825-watt 12-channel Class-D amplifier (with Harman Kardon upgrade)"}
+    ],
+    "High Altitude": [
+      {"label": "Engine Options", "value": "3.6L Pentastar V6 (Standard), 5.7L HEMI V8 (Optional)"},
+      {"label": "Maximum Towing Capacity", "value": "6,200 lbs (V6); 7,200 lbs (V8) — Trailer-Tow Group IV comes standard"},
+      {"label": "Suspension", "value": "Quadra-Lift four-corner air suspension (standard)"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display"},
+      {"label": "Interior Materials", "value": "Nappa perforated leather-trimmed seats, premium leather-wrapped dashboard, premium black headliner, leather door trim inserts, anodized gunmetal interior accents"},
+      {"label": "Audio System Layout", "value": "9-speaker Alpine Premium Audio system standard; 19-speaker Harman Kardon system optional"},
+      {"label": "Speaker Count & Breakdown (Harman Kardon Upgrade)", "value": "5 unity mid/tweeter integration pods (3.5-inch), 4 dedicated high-efficiency tweeters (1-inch), 2 front door sub-woofers (6x9-inch), 2 rear door woofers (6.3-inch)"},
+      {"label": "Subwoofer", "value": "1 specialized high-voltage rear enclosure subwoofer (10-inch)"},
+      {"label": "Amplifier Wattage", "value": "506-watt amplifier standard; 825-watt 12-channel Class-D amplifier (with Harman Kardon upgrade)"}
+    ],
+    "Summit": [
+      {"label": "Engine Options", "value": "3.6L Pentastar V6 (Standard), 5.7L HEMI V8 (Optional)"},
+      {"label": "Maximum Towing Capacity", "value": "6,200 lbs (V6); 7,200 lbs (V8) — Trailer-Tow Group IV comes standard"},
+      {"label": "Suspension", "value": "Quadra-Lift four-corner air suspension (standard)"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display"},
+      {"label": "Interior Materials", "value": "Premium Natura Plus leather-trimmed bucket seats (optional Laguna quilted leather), leather-wrapped dashboard and door panels, real open-pore wood accents, premium suede-like headliner, Berber floor mats"},
+      {"label": "Audio System Layout", "value": "19-speaker Harman Kardon Premium Audio system standard"},
+      {"label": "Speaker Count & Breakdown", "value": "5 unity mid/tweeter integration pods (3.5-inch), 4 dedicated high-efficiency tweeters (1-inch), 2 front door sub-woofers (6x9-inch), 2 rear door woofers (6.3-inch)"},
+      {"label": "Subwoofer", "value": "1 specialized high-voltage rear enclosure subwoofer (10-inch)"},
+      {"label": "Amplifier Wattage", "value": "825-watt 12-channel Class-D tracking power supply amplifier"}
+    ],
+    "SRT": [
+      {"label": "Engine Options", "value": "6.4L HEMI SRT V8"},
+      {"label": "Maximum Towing Capacity", "value": "7,200 lbs (requires Trailer-Tow Group IV)"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display with Performance Pages"},
+      {"label": "Interior Materials", "value": "Nappa leather-and-suede sport bucket seats with SRT logo (optional Laguna leather performance seats), genuine carbon fiber interior accents, leather-wrapped flat-bottom steering wheel"},
+      {"label": "Audio System Layout", "value": "9-speaker Alpine Premium Audio system standard; 19-speaker Harman Kardon system optional"},
+      {"label": "Speaker Count & Breakdown (Harman Kardon Upgrade)", "value": "5 unity mid/tweeter integration pods (3.5-inch), 4 dedicated high-efficiency tweeters (1-inch), 2 front door sub-woofers (6x9-inch), 2 rear door woofers (6.3-inch)"},
+      {"label": "Subwoofer", "value": "1 specialized high-voltage rear enclosure subwoofer (10-inch)"},
+      {"label": "Amplifier Wattage", "value": "506-watt amplifier standard; 825-watt 12-channel Class-D amplifier (with Harman Kardon upgrade)"}
+    ],
+    "Trackhawk": [
+      {"label": "Engine Options", "value": "6.2L Supercharged Hellcat V8"},
+      {"label": "Maximum Towing Capacity", "value": "7,200 lbs (requires Trailer-Tow Group IV)"},
+      {"label": "Screen Size", "value": "8.4-inch Uconnect 4C NAV touchscreen display with Performance Pages"},
+      {"label": "Interior Materials", "value": "Nappa leather-and-suede performance seats with Trackhawk logo (optional Laguna leather performance seats with wrapped lower dash and doors), real carbon fiber accents, premium coin-knit black headliner"},
+      {"label": "Audio System Layout", "value": "9-speaker Alpine Premium Audio system standard; 19-speaker Harman Kardon system optional"},
+      {"label": "Speaker Count & Breakdown (Harman Kardon Upgrade)", "value": "5 unity mid/tweeter integration pods (3.5-inch), 4 dedicated high-efficiency tweeters (1-inch), 2 front door sub-woofers (6x9-inch), 2 rear door woofers (6.3-inch)"},
+      {"label": "Subwoofer", "value": "1 specialized high-voltage rear enclosure subwoofer (10-inch)"},
+      {"label": "Amplifier Wattage", "value": "506-watt amplifier standard; 825-watt 12-channel Class-D amplifier (with Harman Kardon upgrade)"}
+    ]
+  }
+}

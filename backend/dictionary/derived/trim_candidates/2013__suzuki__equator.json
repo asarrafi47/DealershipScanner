@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2013|suzuki|equator",
+  "year": 2013,
+  "make": "Suzuki",
+  "model": "Equator",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

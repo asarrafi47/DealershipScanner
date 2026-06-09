@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|genesis|g80",
+  "year": 2019,
+  "make": "genesis",
+  "model": "G80",
+  "ladder_id": "brochure_2019__genesis__g80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Includes Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Adds Includes Blind-Spot Collision Warning and Rear Cross-Traffic Collision Warning",
+      "Adds Includes Smart Cruise Control for highway use",
+      "Adds Includes Driver Attention Warning system",
+      "Adds Includes Lane Keeping Assist",
+      "Adds Includes SiriusXM Traffic and Travel Link complimentary for 3 years",
+      "Adds Includes Genesis Connected Services complimentary for 3 years",
+      "Adds Includes Genesis Complimentary Maintenance for 3 years or 36,000 miles",
+      "Adds Includes Roadside Assistance complimentary for 3 years",
+      "Adds Includes 5-year/60,000-mile New Vehicle Limited Warranty"
+    ],
+    "Premium": [
+      "Adds Apple CarPlay and Android Auto compatibility"
+    ],
+    "Limited": [
+      "Adds Smart Trunk with Proximity Key detection",
+      "Adds Genesis Connected Services Remote package features"
+    ],
+    "Advanced": [
+      "Adds Ultimate Package enhancements available on 3.8 variant"
+    ]
+  }
+}

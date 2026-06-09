@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2011|bentley|mulsanne",
+  "year": 2011,
+  "make": "bentley",
+  "model": "mulsanne",
+  "ladder_id": "brochure_2011__bentley__mulsanne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Cruise Control as standard",
+      "Adds Parking Distance Control with six forward and four rearward-facing sensors",
+      "Adds high-resolution multimedia screen for parking distance display",
+      "Adds power-latching soft-close doors and electrically powered bootlid",
+      "Adds front seats with 12 adjustments and outer rear seats with 8 adjustments",
+      "Adds optional integrated ventilation and massage systems for all seats",
+      "Adds hand-crafted leather trim throughout interior",
+      "Adds Xenon headlamps with 70 percent more output than halogen",
+      "Adds available 20-inch wheel designs with multiple finishes"
+    ],
+    "Touring": [
+      "Adds optional Adaptive Cruise Control with twin radar sensors for speed monitoring",
+      "Adds optional rear-view camera with advanced reverse and parallel parking settings",
+      "Adds optional side-view cameras for enhanced visibility in tight spaces"
+    ],
+    "Premium": [
+      "Adds advanced keyless entry and ignition system"
+    ],
+    "Limited": [
+      "Adds ESC Premium safety system linked to Adaptive Cruise Control",
+      "Adds automatic brake-line pressure increase in emergency situations and corners"
+    ]
+  }
+}

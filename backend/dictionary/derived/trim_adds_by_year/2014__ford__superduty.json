@@ -1,0 +1,95 @@
+{
+  "catalog_key": "2014|ford|superduty",
+  "year": 2014,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_2014__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "King Ranch",
+    "Lariat",
+    "FX4",
+    "XLT",
+    "SE",
+    "XL",
+    "Premium",
+    "LT",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 5.4L 3-Valve SEFI V8 engine with manual or automatic transmission",
+      "Adds Features Twin-I-Beam front suspension on 4x2 models",
+      "Adds Includes power steering with standard stabilizer bar"
+    ],
+    "LT": [],
+    "Premium": [],
+    "XL": [
+      "97,500-mile tune-up interval (gas engine)",
+      "Battery saver",
+      "Conventional spare tire/wheel/jack with underframe carrier",
+      "Power steering",
+      "Front and rear stabilizer bar",
+      "Stainless steel exhaust system (major components)",
+      "TorqShift heavy-duty 6-speed SelectShift Automatic transmission",
+      "Trailer hitch receiver with 12.5K to 18.5K capacity options",
+      "Trailer sway control",
+      "40/20/40 split front seat with armrest, cupholders and storage"
+    ],
+    "SE": [],
+    "XLT": [
+      "6.2L SOHC 2-valve Gas V8 Flex Fuel E85-capable engine",
+      "6.7L Power Stroke V8 Turbo Diesel B20-capable engine",
+      "Integrated trailer brake controller (SRW)",
+      "17-inch 6-spoke cast-aluminum wheels (SRW)",
+      "4-way adjustable driver and right-front-passenger head restraints",
+      "40/20/40 split front seat with center under-seat lockable storage and 12-volt powerpoint",
+      "60/40 split flip-up/fold-down rear bench seat with bag hooks and dual integrated cupholders",
+      "AM/FM stereo with digital clock, 2 speakers and 3-button message center controls",
+      "Ford SYNC voice-activated in-vehicle connectivity system with SYNC AppLink",
+      "Power windows with front one-touch-down feature"
+    ],
+    "FX4": [],
+    "Lariat": [
+      "Adds heated and cooled power driver and passenger front seats with memory function",
+      "Adds 40/20/40 split leather-trimmed front seats",
+      "Adds power trailer tow mirrors with memory function",
+      "Adds power-adjustable pedals with memory function",
+      "Adds center under-seat lockable storage with 12-volt powerpoint",
+      "Adds center armrest with cupholders and storage",
+      "Adds Remote Start System",
+      "Adds optional heated rear outboard seats for Crew Cab",
+      "Adds Navigation System with Premium Sound System featuring HD Radio and SiriusXM Traffic and Travel Link capability",
+      "Adds optional power moonroof and tailgate step with Ultimate Package"
+    ],
+    "King Ranch": [
+      "King Ranch leather-trimmed interior with distinctive embroidery and unique cabin styling",
+      "Power adjustable pedals with memory function",
+      "Heated and cooled front bucket seats",
+      "Wood-grain interior trim accents",
+      "Unique King Ranch exterior badging and grille design",
+      "Premium audio system",
+      "Dual-zone automatic temperature control"
+    ],
+    "Platinum": [
+      "Leather-trimmed seats with power adjustments and heated/cooled function",
+      "Premium Sony audio system with satellite radio",
+      "Panoramic power moonroof",
+      "Adaptive HID headlights with automatic leveling",
+      "18-inch polished aluminum wheels",
+      "Power running boards",
+      "Rearview camera with grid display"
+    ],
+    "Limited": [
+      "Leather-trimmed seats with heated function",
+      "Integrated trailer brake controller",
+      "Power moonroof",
+      "Leather-wrapped steering wheel and shift knob",
+      "Remote start",
+      "18-inch painted aluminum wheels",
+      "Rear under-seat storage and power pedals"
+    ]
+  }
+}

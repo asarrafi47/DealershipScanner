@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2015|volvo|s80",
+  "year": 2015,
+  "make": "Volvo",
+  "model": "S80",
+  "ladder_id": "brochure_llm_2015__volvo__s80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S80 T6 AWD PLATINUM",
+    "S80 T6 AWD",
+    "S80 T5 FWD PLATINUM",
+    "S80 T5 FWD"
+  ],
+  "adds_by_trim": {
+    "S80 T6 AWD PLATINUM": [
+      "All T6 AWD features plus additional luxury appointments and premium finishes"
+    ],
+    "S80 T6 AWD": [
+      "3.0L turbocharged I-6 engine with 300 hp and 325 lb-ft torque versus T5's 240 hp",
+      "Electronically controlled AWD with instant traction",
+      "Power glass sunroof",
+      "18-inch MAGNI alloy wheels versus T5's 17-inch REX wheels",
+      "6-speed Geartronic automatic transmission"
+    ],
+    "S80 T5 FWD PLATINUM": [
+      "Premium leather seating and interior appointments over base T5 FWD"
+    ],
+    "S80 T5 FWD": [
+      "240 hp turbocharged 4-cylinder engine with start-stop technology and 8-speed Geartronic transmission",
+      "Leather seating surfaces with power driver and passenger seats including memory",
+      "Active dual xenon headlights with washers and LED daytime running lights",
+      "Harman Kardon premium sound system with high performance audio connectivity",
+      "Volvo Sensus infotainment with 7-inch color display and Bluetooth audio streaming",
+      "Adaptive cruise control with queue assist and collision warning with full auto brake",
+      "Pedestrian and cyclist detection with full auto brake and lane departure warning",
+      "Front and rear park assist with rear camera and quick-fold passenger seat",
+      "City safety, keyless drive with personal car communicator, and homelink garage door opener",
+      "Dark walnut wood inlays and 3-spoke leather steering wheel with deco inlay"
+    ]
+  }
+}

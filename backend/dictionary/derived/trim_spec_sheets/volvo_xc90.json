@@ -1,0 +1,31 @@
+{
+  "ladder_id": "volvo_xc90",
+  "make": "Volvo",
+  "models": [
+    "XC90",
+    "XC90 Recharge"
+  ],
+  "year_min": 2016,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "T8": [
+      {
+        "label": "Engine Options",
+        "value": "Plug-in hybrid powertrain"
+      }
+    ],
+    "B6": [
+      {
+        "label": "Engine Options",
+        "value": "Mild-hybrid inline-six"
+      }
+    ],
+    "B5": [
+      {
+        "label": "Engine Options",
+        "value": "Mild-hybrid turbo-four"
+      }
+    ]
+  }
+}

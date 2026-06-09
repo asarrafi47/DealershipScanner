@@ -1,0 +1,12 @@
+{
+  "catalog_key": "2023|cadillac|lyriq",
+  "year": 2023,
+  "make": "Cadillac",
+  "model": "LYRIQ",
+  "ladder_id": "2023_cadillac_lyriq",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LYRIQ"
+  ],
+  "adds_by_trim": {}
+}

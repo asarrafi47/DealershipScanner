@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2021|toyota|supra",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Supra",
+  "ladder_id": "brochure_llm_2021__toyota__supra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A91 Edition",
+    "3.0 Premium",
+    "3.0",
+    "2.0"
+  ],
+  "adds_by_trim": {
+    "A91 Edition": [
+      "Brembo 4-piston fixed-caliper front disc brakes with red-painted calipers and silver TOYOTA Supra logo",
+      "1-piston cast-iron rear disc brakes with red floating calipers and 345 mm rotors"
+    ],
+    "3.0 Premium": [
+      "Brembo 4-piston fixed-caliper front disc brakes with 348 mm rotors",
+      "1-piston cast-iron rear disc brakes with red floating calipers and 345 mm rotors"
+    ],
+    "3.0": [
+      "3.0L twin-scroll single-turbo DOHC 24-valve inline 6-cylinder engine with 382 hp",
+      "Active rear sport differential",
+      "Adaptive Variable Sport suspension",
+      "Chassis braces in engine bay",
+      "Brembo 4-piston fixed-caliper front disc brakes with 348 mm rotors",
+      "19-inch wheels with 255/35 ZR19 and 275/35 ZR19 Michelin Pilot Super Sport tires"
+    ],
+    "2.0": [
+      "2.0L twin-scroll single-turbo inline 4-cylinder engine with 255 hp",
+      "8-speed automatic transmission with paddle shifters and Manual Mode",
+      "Launch Control",
+      "Active exhaust",
+      "Automatic engine start/stop",
+      "1-piston aluminum floating-caliper front disc brakes",
+      "1-piston aluminum floating-caliper rear disc brakes",
+      "18-inch wheels with 255/40 ZR18 and 275/40 ZR18 Michelin Pilot Super Sport tires"
+    ]
+  }
+}

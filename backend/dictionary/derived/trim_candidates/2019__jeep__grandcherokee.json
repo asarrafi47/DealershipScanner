@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2019|jeep|grandcherokee",
+  "year": 2019,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Trackhawk",
+    "SRT",
+    "Summit",
+    "Overland",
+    "Trailhawk",
+    "Limited",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

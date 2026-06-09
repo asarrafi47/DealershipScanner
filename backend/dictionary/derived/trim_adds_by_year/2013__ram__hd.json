@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2013|ram|hd",
+  "year": 2013,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2013__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Laramie Longhorn",
+    "Power Wagon",
+    "Laramie"
+  ],
+  "adds_by_trim": {
+    "Laramie Longhorn": [
+      "Two-tone paint with White Gold Metallic lower body and running boards",
+      "Unique Laramie Longhorn badging",
+      "Spray-in bedliner",
+      "Black bed rail caps",
+      "Uconnect 8.4AN with navigation and satellite radio",
+      "Premium leather heated 60/40 split-folding rear bench seat",
+      "Full-floor center console with leather cover",
+      "Premium floor mats with removable inserts",
+      "Heated leather-wrapped steering wheel with wood accent"
+    ],
+    "Power Wagon": [
+      "Two-tone paint with Bright Silver Metallic lower body and wheel flares",
+      "12,000-lb WARN winch",
+      "Front and rear electronic locking differentials",
+      "4.56:1 axle ratio",
+      "Electronic disconnecting front stabilizer bar",
+      "Manual part-time transfer case",
+      "Skid plates for fuel tank and transfer case",
+      "31-gallon fuel tank (6'4\" box) or 32-gallon (8' box)",
+      "17-inch forged aluminum wheels with 33-inch LT All-Terrain tires"
+    ],
+    "Laramie": [
+      "5.7L HEMI V8 engine with heavy-duty cooling and 6-speed automatic transmission",
+      "Leather-trimmed heated and ventilated front 40/20/40 bench seat",
+      "Power driver and front-passenger seats",
+      "Leather-trimmed 60/40 split-folding rear bench",
+      "Heated leather-wrapped tilt steering wheel with audio controls",
+      "Uconnect 8.4A touchscreen with satellite radio and Bluetooth",
+      "Premium 10-speaker surround sound with MP3 and USB ports",
+      "Premium 70-mm projector headlamps and LED taillamps",
+      "Chrome front and rear bumpers with grille surround",
+      "Class V trailer hitch receiver"
+    ]
+  }
+}

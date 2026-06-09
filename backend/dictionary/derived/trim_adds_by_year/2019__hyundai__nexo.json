@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2019|hyundai|nexo",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Nexo",
+  "ladder_id": "brochure_2019__hyundai__nexo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 95 kW fuel cell and 40 kW lithium-ion polymer battery powertrain",
+      "Adds 120 kW permanent magnet electric motor",
+      "Adds single-speed automatic transmission with push button drive selector",
+      "Adds 17-inch alloy wheels with 225/60R17 tires",
+      "Adds LED headlights, taillights, and Daytime Running Lights",
+      "Adds Forward Collision-Avoidance Assist",
+      "Adds Blind-Spot Collision Warning",
+      "Adds 12.3-inch high-resolution color touchscreen navigation",
+      "Adds dual front USB charge ports",
+      "Adds Bluetooth phone and cruise controls"
+    ],
+    "Blue": [
+      "Adds power folding heated side mirrors with LED turn signal indicators",
+      "Adds automatic on/off headlights",
+      "Adds rear spoiler with hidden rear window wiper",
+      "Adds power tilt-and-slide wide sunroof",
+      "Adds solar control front windows",
+      "Adds heated steering wheel",
+      "Adds ventilated front seats",
+      "Adds wireless charging pad",
+      "Adds Blue Link Connected Car System with 3 years complimentary service"
+    ],
+    "Limited": [
+      "Adds roof side rails",
+      "Adds Rear View Monitor with Parking Guidance",
+      "Adds Rear Cross-Traffic Collision Warning",
+      "Adds Front and Rear Parking Distance Warning",
+      "Adds Lane Follow Assist",
+      "Adds Surround View Monitor",
+      "Adds Blind View Monitor",
+      "Adds Driver Attention Warning",
+      "Adds High Beam Assist",
+      "Adds Smart Cruise Control with Stop & Go"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2014,Honda,Civic,Hybrid,Hybrid 1.5L I4,1.5L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.5,43,45,44,,,,,
+2014,Honda,Civic,Natural Gas,CNG 1.8L I4 (RNG=192) Natural Gas,1.8L I4,,Automatic 5-spd,Front-Wheel Drive,Natural Gas,Compact Cars,4,1.8,27,38,31,,,,,
+2014,Honda,Civic,Civic,1.8L I4,1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,29,37,33,,,,,
+2014,Honda,Civic,Civic,2.4L I4,2.4L I4,,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,22,31,25,,,,,
+2014,Honda,Civic,HF,1.8L I4,1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,31,40,34,,,,,
+2014,Honda,Civic,Civic,1.8L I4,1.8L I4,,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,29,37,32,,,,,
+2014,Honda,Civic,Civic,1.8L I4,1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,28,35,31,,,,,

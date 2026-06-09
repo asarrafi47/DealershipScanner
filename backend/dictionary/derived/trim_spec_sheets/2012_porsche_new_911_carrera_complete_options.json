@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2012_porsche_new_911_carrera_complete_options",
+  "make": "Porsche",
+  "models": [
+    "New 911 Carrera",
+    "New 911 Carrera"
+  ],
+  "year_min": 2010,
+  "year_max": 2014,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim."
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "3.8L V6 Turbo; Manual 7-spd"
+      }
+    ],
+    "Carrera": [
+      {
+        "label": "Engine Options",
+        "value": "3.4L V6 Turbo; Manual 7-spd"
+      }
+    ]
+  }
+}

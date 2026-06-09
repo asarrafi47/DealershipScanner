@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2013|suzuki|grandvitara",
+  "year": 2013,
+  "make": "Suzuki",
+  "model": "Grand Vitara",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

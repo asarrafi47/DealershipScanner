@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2010|ferrari|california",
+  "year": 2010,
+  "make": "Ferrari",
+  "model": "california",
+  "ladder_id": "brochure_2010__ferrari__california",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "Base",
+    "F1"
+  ],
+  "adds_by_trim": {
+    "F1": [
+      "Adds 4.3L V8 engine with 460 CV at 7750 rpm",
+      "Adds F1 dual-clutch 7-speed gearbox with Reverse",
+      "Adds retractable aluminum hard-top roof",
+      "Adds double wishbone front suspension",
+      "Adds multilink rear suspension",
+      "Adds carbon-ceramic brakes with 14.2 x 1.26 in rear rotors",
+      "Adds CST with F1-TRAC electronic stability and traction control",
+      "Adds TPTMS tire pressure and temperature monitoring system",
+      "Adds 19-inch front and rear performance tires (245/40 ZR19 and 285/40 ZR19)",
+      "Adds 78-liter fuel tank capacity"
+    ],
+    "Base": [],
+    "LE": []
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2017|volvo|s60",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2017__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S60 T6 AWD R-Design",
+    "S60 Inscription",
+    "S60 Dynamic"
+  ],
+  "adds_by_trim": {
+    "S60 T6 AWD R-Design": [
+      "302 hp supercharged and turbocharged 2.0L Drive-E engine",
+      "Electronically controlled AWD with instant traction control",
+      "Lowered sport chassis",
+      "R-Design leather sport seats",
+      "19-inch Ixion diamond cut/black alloy wheels",
+      "R-Design aluminum inlays and silk metal window frames",
+      "Matte silver mirror caps",
+      "R-Design front bumper and rear diffuser"
+    ],
+    "S60 Inscription": [
+      "3 inches extra rear seat legroom",
+      "18-inch Titania diamond cut/black alloy wheels",
+      "Sensus Navigation with MapCare",
+      "Power rear sunshade and rear side window sunshades",
+      "Rear park assist camera and parking sensors",
+      "Premier or platinum trim level interior",
+      "Leather seating surfaces throughout"
+    ],
+    "S60 Dynamic": [
+      "240 hp turbocharged 2.0L Drive-E engine",
+      "Active dual xenon headlights",
+      "R-Design front and rear bumpers",
+      "R-Design exhaust end pipes",
+      "Sport seats with leather upholstery",
+      "Milled aluminum inlay",
+      "Moonroof",
+      "18-inch Tucan alloy wheels",
+      "Side window frames in black rubber"
+    ]
+  }
+}

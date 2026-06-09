@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2010|buick|enclave",
+  "year": 2010,
+  "make": "Buick",
+  "model": "Enclave",
+  "ladder_id": "2010_buick_enclave",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "CX",
+    "CXL",
+    "CXL-2"
+  ],
+  "adds_by_trim": {
+    "CXL": [
+      "Leather seating surfaces with perforated inserts (replaces deluxe cloth on CX)",
+      "8-way power driver and front passenger seats",
+      "19-inch 9-spoke chrome-clad aluminum wheels available",
+      "HID xenon projector headlamps and fog lamps",
+      "Tri-zone automatic climate control with rear outlets",
+      "Bose 10-speaker audio and rear-seat DVD/navigation packages available",
+      "Power tilt-sliding sunroof and ultrasonic rear park assist available"
+    ],
+    "CXL-2": [
+      "Perforated leather-appointed seating standard",
+      "20-inch chrome-clad aluminum wheels",
+      "384-watt Harman Kardon 11-speaker premium audio standard",
+      "Articulating HID headlamps",
+      "Rear-seat dual-display DVD entertainment with navigation integration available",
+      "Head-up display and rearview camera in mirror available"
+    ],
+    "CX": [
+      "3.6L VVT V-6 direct injection engine with 288 hp and 270 lb-ft torque",
+      "EPA-estimated 17 city / 24 highway MPG (FWD) or 16 city / 22 highway (AWD)",
+      "19-inch 15-spoke machined aluminum wheels standard",
+      "Tire sealant and inflator kit",
+      "Seating capacity of 2/2/3 or 2/3/3 configuration",
+      "22-gallon fuel tank",
+      "115 cubic feet cargo volume with all rows folded"
+    ]
+  }
+}

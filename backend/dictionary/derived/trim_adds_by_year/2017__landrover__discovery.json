@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|landrover|discovery",
+  "year": 2017,
+  "make": "landrover",
+  "model": "Discovery",
+  "ladder_id": "brochure_llm_2017__landrover__discovery",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE LUXURY",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "HSE LUXURY": [
+      "Available with 3.0L Td6 Diesel engine option",
+      "Premium luxury positioning in model lineup"
+    ],
+    "HSE": [
+      "Available with 3.0L Td6 Diesel engine option",
+      "Mid-level trim with enhanced features versus SE"
+    ],
+    "SE": [
+      "3.0L Si6 Gasoline engine with 340 hp",
+      "8-speed Automatic Transmission",
+      "5 or 7 full-size seats",
+      "Permanent 4-wheel drive",
+      "Terrain Response system",
+      "All-Terrain Progress Control",
+      "Hill Descent Control",
+      "Remote Intelligent Seat Fold"
+    ]
+  }
+}

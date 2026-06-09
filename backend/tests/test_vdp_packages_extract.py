@@ -32,12 +32,27 @@ def test_structured_items_from_dom_packages():
         "domFeatures": ["Heated front seats", "Navigation system"],
     }
     items = structured_items_from_bundle(bundle)
-    assert len(items) == 2
+    assert len(items) == 3
     premium = next(i for i in items if i["name"] == "Premium Package")
     assert premium["price"] == 1600
     assert "Remote Engine Start" in premium["features"]
+    assert any(i["name"] == "10 Speakers" for i in items)
     assert not any(i["name"] == "Navigation" for i in items)
-    assert not any(i["name"] == "10 Speakers" for i in items)
+
+
+def test_flat_bmw_included_accessory_line_kept():
+    bundle = {
+        "domPackagesStructured": [
+            {
+                "section": "included_packages_&_accessories",
+                "name": "Harman/Kardon Surround Sound System",
+                "features": [],
+            },
+        ],
+    }
+    items = structured_items_from_bundle(bundle)
+    assert len(items) == 1
+    assert items[0]["name"] == "Harman/Kardon Surround Sound System"
 
 
 def test_merge_vdp_packages_into_vehicle():

@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2020|toyota|corollahatchback",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "Limited",
+    "Premium",
+    "Sport",
+    "Hatchback"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds to or replaces features offered on SE Adds to or replaces features offered on SE",
+      "Powertrain Powertrain Powertrain",
+      "2.0L 4-Cylinder Dynamic Force Engine \u2022 2.0L 4-Cylinder Dynamic Force Engine \u2022 2.0L 4-Cylinder Dynamic Force Engine",
+      "Dynamic Shift Continuously Variable Transmission (CVT) \u2022 Dynamic Shift Continuously Variable Transmission (CVT) \u2022 Dynamic Shift Continuously Variable Transmission (CVT)",
+      "Available Intelligent Manual Transmission (iMT) \u2022 32 city/41 highway/35 combined est. mpg55 \u2022 Available Intelligent Manual Transmission (iMT)",
+      "Up to 32 city/41 highway/35 combined est. mpg55 Exterior Features \u2022 Up to 30 city/38 highway/33 combined est. mpg55",
+      "Exterior Features \u2022 18-in. black alloy wheels Exterior Features",
+      "LED headlights and LED Daytime Running Lights (DRL) \u2022 Black front lower grille surround \u2022 Integrated LED fog lights",
+      "16-in. twin-spoke alloy wheels \u2022 Black heated power outside mirrors with turn signal indicators \u2022 Front chrome grille surround",
+      "Front dark gray grille surround \u2022 Single exhaust with dual black diffusers \u2022 Color-keyed heated power outside mirrors with turn signal",
+      "Color-keyed rear spoiler \u2022 Black rear diffuser surround and blind spot warning indicators4 (automatic transmission)",
+      "Color-keyed heated power outside mirrors with \u2022 Black rear Toyota emblem and badges Interior Features"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

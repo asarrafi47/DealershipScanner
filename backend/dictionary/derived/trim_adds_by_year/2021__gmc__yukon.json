@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|gmc|yukon",
+  "year": 2021,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "brochure_llm_2021__gmc__yukon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "SLT",
+    "SLE"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "6.2L V8 engine option with dual exhaust and polished stainless-steel tips",
+      "Magnetic Ride Control suspension",
+      "Air Ride Adaptive Suspension with electronic limited-slip differential",
+      "Active Response 4WD system",
+      "Hill Descent Control on 4WD models",
+      "Bose 14-Speaker Centerpoint Surround Sound audio system",
+      "22-inch bright machined aluminum wheels with premium paint",
+      "Panoramic sunroof with power-retractable assist steps and perimeter lighting",
+      "Multicolor 15-inch Head-Up Display",
+      "Rear Camera Mirror with washer"
+    ],
+    "AT4": [
+      "3.0L Duramax Turbo Diesel engine option",
+      "Magnetic Ride Control suspension",
+      "Air Ride Adaptive Suspension and Active Response 4WD system",
+      "Hill Descent Control on 4WD models",
+      "High-Capacity Air Filter",
+      "AutoTrac 2-Speed Transfer Case for 4WD",
+      "20-inch all-terrain tires",
+      "Heated and ventilated driver and front-passenger seats",
+      "Heated second-row outboard seats",
+      "Panoramic sunroof"
+    ],
+    "SLT": [
+      "Perforated leather seating surfaces on first and second rows",
+      "Heated and ventilated driver and front-passenger seats",
+      "Heated second-row outboard seats",
+      "Second-row 60/40 split power-release bench seat",
+      "Heated leather-wrapped steering wheel",
+      "Power-tilt and -telescoping steering column",
+      "Bose 9-Speaker audio system",
+      "Panoramic sunroof",
+      "High Definition Surround Vision camera system",
+      "Rear Pedestrian Alert safety system"
+    ],
+    "SLE": [
+      "5.3L V8 engine with 10-speed automatic transmission",
+      "StabiliTrak Electronic Stability Control",
+      "3.23 axle ratio and Max Trailering Package",
+      "LED signature headlamps and taillamps",
+      "LED fog lamps",
+      "Rainsense windshield wipers",
+      "8-inch digital driver information center",
+      "Tri-zone automatic climate controls",
+      "Automatic Emergency Braking and Forward Collision Alert",
+      "Lane Keep Assist with Lane Departure Warning"
+    ]
+  }
+}

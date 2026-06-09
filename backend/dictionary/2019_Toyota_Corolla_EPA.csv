@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2019,Toyota,Corolla,Corolla,1.8L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,28,36,32,,,,,,1.8L I4,
-2019,Toyota,Corolla,Corolla,1.8L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,28,35,31,,,,,,1.8L I4,
-2019,Toyota,Corolla,Corolla,1.8L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,27,35,30,,,,,,1.8L I4,
-2019,Toyota,Corolla,LE Eco,1.8L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,30,40,34,,,,,,1.8L I4,
-2019,Toyota,Corolla,LE Eco,1.8L I4 (2-mode (Normal/Eco) Transmission),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,29,38,33,,,,,,1.8L I4,
-2019,Toyota,Corolla,Hatchback,2.0L I4 (SIDI & PFI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,28,37,31,,,,,,2.0L I4,
-2019,Toyota,Corolla,Hatchback,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,32,42,36,,,,,,2.0L I4,
-2019,Toyota,Corolla,Hatchback XSE,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,38,33,,,,,,2.0L I4,

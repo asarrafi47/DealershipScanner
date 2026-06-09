@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2018|buick|regal",
+  "year": 2018,
+  "make": "Buick",
+  "model": "Regal",
+  "ladder_id": "brochure_llm_2018__buick__regal",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GS",
+    "ESSENCE",
+    "PREFERRED II",
+    "PREFERRED",
+    "REGAL (1SV)"
+  ],
+  "adds_by_trim": {
+    "GS": [
+      "3.6L V6 engine with 310 hp and 282 lb-ft torque",
+      "Heated, ventilated front bucket seats with massage and power-adjustable bolsters",
+      "19-inch aluminum wheels with technical gray accents",
+      "Brembo front brakes",
+      "Front and rear park assist",
+      "8-inch color driver information center",
+      "4-way power lumbar seat adjusters for driver and front passenger",
+      "Head-up display included in Driver Confidence Package II"
+    ],
+    "ESSENCE": [
+      "8-way power front-passenger seat with 2-way power lumbar",
+      "Memory package for driver seat",
+      "Exterior heated, power-adjustable driver-side auto-dimming mirrors",
+      "Driver Confidence Package II with adaptive cruise control and forward automatic braking",
+      "Lane keep assist with lane departure warning",
+      "Front pedestrian braking"
+    ],
+    "PREFERRED II": [
+      "Wireless charging for compatible mobile devices",
+      "Driver Confidence Package I with LED headlamps and cornering lamps"
+    ],
+    "PREFERRED": [
+      "2.0L turbocharged engine with 250 hp",
+      "Leather-wrapped steering wheel",
+      "8-way power driver seat with 2-way power lumbar",
+      "Remote start capability",
+      "Color 4.2-inch driver information center",
+      "Bluetooth technology",
+      "Lane change alert with side blind zone alert",
+      "Rear cross traffic alert",
+      "Rear park assist"
+    ],
+    "REGAL (1SV)": [
+      "2.0L turbocharged engine with stop/start technology",
+      "Anti-lock brakes with brake assist",
+      "StabiliTrak and traction control",
+      "Halogen headlamps with LED signature lighting and daytime running lamps",
+      "QuietTuning technology",
+      "Rear vision camera",
+      "Bluetooth technology",
+      "60/40 split-folding rear seat",
+      "Front-wheel drive"
+    ]
+  }
+}

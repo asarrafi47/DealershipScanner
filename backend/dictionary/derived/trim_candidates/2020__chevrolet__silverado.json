@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2020|chevrolet|silverado",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "Trail Boss",
+    "LT Trail Boss",
+    "RST",
+    "Z71",
+    "LT",
+    "Custom Trail Boss",
+    "Custom",
+    "WT",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|kia|optima",
+  "year": 2011,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2011__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Premium Technology",
+    "Hybrid"
+  ],
+  "adds_by_trim": {
+    "Hybrid Premium Technology": [
+      "Navigation system with SIRIUS Traffic",
+      "Infinity audio system with 8 speakers",
+      "Panoramic sunroof with gloss black B pillar",
+      "HID headlights with auto leveling",
+      "17-inch alloy wheels with 215/55R17 tires",
+      "4-way power-adjustable front passenger seat",
+      "Driver's seat memory",
+      "Heated and air-cooled front seats",
+      "Heated rear seats",
+      "Heated steering wheel"
+    ],
+    "Hybrid": [
+      "Full Parallel Hybrid System with 206 hp combined power",
+      "2.4L Atkinson cycle 4-cylinder engine",
+      "Permanent Magnet Synchronous Electric Motor with 40 hp",
+      "1.4 kWh Lithium Polymer battery",
+      "EPA-estimated 35/40 city/highway MPG",
+      "AM/FM/CD/MP3/SIRIUS audio system with 6 speakers",
+      "UVO in-vehicle infotainment system",
+      "Rear-camera display",
+      "Bluetooth wireless technology",
+      "Push-button start with Smart Key"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|ford|fusion",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_llm_2011__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "3.5L Duratec V6 Engine with 263 hp and 249 lb-ft torque",
+      "6-speed SelectShift Automatic transmission",
+      "Available AWD option"
+    ],
+    "SEL": [
+      "3.0L Duratec V6 FFV Engine with 240 hp and 223 lb-ft torque",
+      "6-speed SelectShift Automatic transmission",
+      "Available AWD option"
+    ],
+    "SE": [
+      "6-speed manual transmission option",
+      "3.0L Duratec V6 FFV Engine available"
+    ],
+    "S": [
+      "2.5L Duratec I-4 Engine with 175 hp and 172 lb-ft torque",
+      "Front-wheel drive",
+      "4-wheel disc ABS",
+      "Power rack-and-pinion steering",
+      "Easy Fuel capless fuel filler",
+      "6-speed automatic or manual transmission",
+      "5-passenger seating with 60/40 split-fold rear seat",
+      "Personal Safety System with dual-stage front airbags",
+      "Front-seat side airbags and 2-row side-curtain airbags",
+      "AdvanceTrac electronic stability control with traction control"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2012|volvo|s80",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "S80",
+  "ladder_id": "brochure_llm_2012__volvo__s80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "premier plus"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Premium Sound audio system with twelve loudspeakers and 650W digital Class D amplifier",
+      "Dolby Pro Logic II surround sound with center loudspeaker",
+      "Rear Park Assist Camera",
+      "Integrated Rear Seat Entertainment (RSE) system"
+    ],
+    "premier plus": [
+      "Keyless Drive with Personal Car Communicator (PCC)",
+      "High Performance Sound system with 160W power and eight loudspeakers",
+      "Bluetooth streaming audio and USB/iPod connectivity",
+      "18-inch Fortuna Diamond Cut wheels"
+    ]
+  }
+}

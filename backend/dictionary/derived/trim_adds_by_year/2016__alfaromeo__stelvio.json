@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2016|alfaromeo|stelvio",
+  "year": 2016,
+  "make": "alfa romeo",
+  "model": "stelvio",
+  "ladder_id": "brochure_llm_2016__alfaromeo__stelvio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Stelvio Quadrifoglio",
+    "Stelvio"
+  ],
+  "adds_by_trim": {
+    "Stelvio Quadrifoglio": [
+      "505 hp and 443 lb-ft torque from 2.9L Bi-Turbo V6 engine",
+      "Standard torque vectoring",
+      "Available carbon ceramic brakes",
+      "4-Mode Alfa DNA Pro Drive Selector with Race Mode and overboost function",
+      "Available carbon fiber Sparco racing seats"
+    ],
+    "Stelvio": [
+      "280 hp and 306 lb-ft torque from 2.0L turbocharged direct-injected engine",
+      "Standard 8-speed automatic transmission",
+      "Available performance paddle shifters on steering column",
+      "Standard Alfa DNA Drive Mode system with three driving modes",
+      "Standard Q4 All-Wheel-Drive with electronically controlled active transfer case",
+      "Patented all-aluminum Alfa Link suspension",
+      "Blind Spot Detection, Adaptive Cruise Control with Stop & Go, Lane Departure Warning",
+      "Autonomous Emergency Brake with Forward Collision Warning",
+      "Driver-centric design with Italian craftsmanship and styling"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2012|audi|a7",
+  "year": 2012,
+  "make": "Audi",
+  "model": "A7",
+  "ladder_id": "brochure_llm_2012__audi__a7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "See dealer for complete package details and available options"
+    ],
+    "Premium Plus": [
+      "See dealer for complete package details and available options"
+    ],
+    "Premium": [
+      "3.0-liter supercharged V6 engine with 310 hp and 325 lb-ft torque",
+      "Eight-speed Tiptronic automatic transmission",
+      "quattro permanent all-wheel drive with torque-sensing center differential",
+      "Audi xenon plus headlights with LED daytime running lights",
+      "Audi drive select system with Comfort, Auto, Dynamic, Individual modes",
+      "Keyless Start engine button",
+      "Heated front seats with multilevel adjustment",
+      "Leather-wrapped four-spoke multifunction steering wheel",
+      "Eight-way power adjustable driver seat with four-way lumbar support",
+      "18-inch seven-spoke alloy wheels with all-season tires"
+    ]
+  }
+}

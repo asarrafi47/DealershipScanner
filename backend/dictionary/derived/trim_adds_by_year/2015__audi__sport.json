@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|audi|sport",
+  "year": 2015,
+  "make": "Audi",
+  "model": "sport",
+  "ladder_id": "brochure_llm_2015__audi__sport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S6",
+    "S5"
+  ],
+  "adds_by_trim": {
+    "S6": [
+      "4.0-liter turbocharged TFSI V8 engine with cylinder on demand technology",
+      "Audi advanced key with keyless start, stop and entry"
+    ],
+    "S5": [
+      "3.0-liter supercharged engine"
+    ]
+  }
+}

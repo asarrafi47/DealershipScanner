@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2011|dodge|challenger",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2011__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CHALLENGER R/T PLUS",
+    "CHALLENGER R/T CLASSIC",
+    "CHALLENGER R/T",
+    "CHALLENGER RALLYE",
+    "CHALLENGER SE"
+  ],
+  "adds_by_trim": {
+    "CHALLENGER R/T PLUS": [
+      "Leather-trimmed front bucket seats with heat",
+      "Perforated vinyl door bolsters",
+      "Boston Acoustics 6-speaker sound system with 276-watt amplifier",
+      "Electronics Convenience Group: Remote Start, HomeLink Universal Garage Door Opener, Temperature and compass gauge, Premium Tire Pressure Monitoring Display, Security Alarm"
+    ],
+    "CHALLENGER R/T CLASSIC": [
+      "Leather-trimmed front bucket seats with heat",
+      "Perforated vinyl door bolsters",
+      "Boston Acoustics 6-speaker sound system with 276-watt amplifier",
+      "Electronics Convenience Group: Remote Start, HomeLink Universal Garage Door Opener, Temperature and compass gauge, Premium Tire Pressure Monitoring Display, Security Alarm"
+    ],
+    "CHALLENGER R/T": [
+      "160-mph speedometer",
+      "Automatic headlamps",
+      "Driver and front-passenger visors with illuminated vanity mirrors",
+      "SIRIUS Satellite Radio",
+      "Uconnect Phone with USB port and iPod control",
+      "Dodge mesh finish center stack and shifter bezels",
+      "Bright pedals"
+    ],
+    "CHALLENGER RALLYE": [
+      "Leather-trimmed front bucket seats with heat",
+      "Perforated vinyl door bolsters",
+      "Boston Acoustics 6-speaker sound system with 276-watt amplifier",
+      "Automatic headlamps",
+      "Driver and front-passenger visors with illuminated vanity mirrors",
+      "SIRIUS Satellite Radio",
+      "Uconnect Phone with USB port and iPod control"
+    ],
+    "CHALLENGER SE": [
+      "140-mph speedometer",
+      "Cloth door bolsters",
+      "Driver and front-passenger visors with vanity mirrors",
+      "Cloth-trimmed bucket seats",
+      "Mini carbon center stack and shifter bezels",
+      "Keyless Enter-N-Go and push-button start",
+      "Media Center 130 radio with CD/MP3 and audio jack",
+      "6-way power driver seat with 4-way power lumbar",
+      "60/40 split-folding rear seat with armrest and two cup holders",
+      "Advanced multistage driver and front-passenger air bags with side-curtain air bags"
+    ]
+  }
+}

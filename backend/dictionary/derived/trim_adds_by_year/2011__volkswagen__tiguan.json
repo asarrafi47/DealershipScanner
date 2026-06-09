@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2011|volkswagen|tiguan",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "brochure_llm_2011__volkswagen__tiguan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL with Premium Navigation",
+    "SE with Sunroof and Navigation",
+    "SEL",
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL with Premium Navigation": [
+      "RNS 510 navigation system with 6.5-inch color touchscreen",
+      "30GB hard disk storage",
+      "Rearview camera",
+      "SD memory card reader",
+      "SIRIUS Traffic with 3-month trial subscription",
+      "Dynaudio premium sound system (with 4MOTION)"
+    ],
+    "SE with Sunroof and Navigation": [
+      "18-inch New York alloy wheels with all-season tires",
+      "Power tilting/sliding panoramic sunroof",
+      "RNS 315 navigation system with 5-inch color touchscreen",
+      "SD memory card reader"
+    ],
+    "SEL": [
+      "Sunroof and Navigation features",
+      "Climatronic dual-zone automatic climate control",
+      "Bi-Xenon high-intensity headlights with Adaptive Front-lighting System",
+      "12-way power sport seats with foldable leather and 4-way lumbar support",
+      "3-position memory for driver seat",
+      "Rain-sensing wipers",
+      "Keyless access with push-button start",
+      "Self-dimming rearview mirror",
+      "Adjustable ambient floor-mounted lighting"
+    ],
+    "SE": [
+      "17-inch New Orleans alloy wheels with all-season tires",
+      "Halogen reflector lens foglights",
+      "Silver roof rails",
+      "Chrome window surrounds",
+      "Privacy glass",
+      "V-Tex leatherette seating surfaces",
+      "8-way partial-power driver's seat with lumbar support",
+      "Heated seats and washer nozzles",
+      "Leather-wrapped shift knob and multi-function steering wheel",
+      "Big Roof Storage System"
+    ],
+    "S": [
+      "2.0L TSI engine with 200 horsepower",
+      "16-inch San Francisco alloy wheels with all-season tires",
+      "Metro cloth seating surfaces",
+      "8-way manual adjustable driver's seat with lumbar support",
+      "8-way adjustable passenger's seat with lumbar and fold-flat function",
+      "40/20/40-split folding rear seat with reclining and fore/aft adjustment",
+      "Rear armrest with pass-through storage and 2 cupholders",
+      "Three 12V power outlets",
+      "8-speaker sound system with MP3/WMA CD player and AUX-in",
+      "Bluetooth connectivity"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2014|toyota|yaris",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Yaris",
+  "ladder_id": "brochure_llm_2014__toyota__yaris",
+  "source": "brochure_llm",
+  "trims_available": [
+    "5-DOOR SE",
+    "5-DOOR LE",
+    "5-DOOR L",
+    "3-DOOR LE",
+    "3-DOOR L"
+  ],
+  "adds_by_trim": {
+    "5-DOOR SE": [
+      "Multi-reflector halogen headlights with smoked trim",
+      "Integrated fog lights",
+      "Color-keyed grille surround with sport mesh insert and chrome accent",
+      "Sport front and rear bumpers with aerodynamic rear lower diffuser and rear spoiler",
+      "16-inch alloy wheels with P195/50R16 88V tires",
+      "Sport analog instrumentation with speedometer, tachometer and fuel gauge"
+    ],
+    "5-DOOR LE": [
+      "Color-keyed power outside mirrors with folding feature",
+      "Standard on both 3-DOOR LE and 5-DOOR LE"
+    ],
+    "5-DOOR L": [
+      "5-door body configuration instead of 3-door"
+    ],
+    "3-DOOR LE": [
+      "Color-keyed power outside mirrors with folding feature"
+    ],
+    "3-DOOR L": [
+      "Multi-reflector halogen headlights",
+      "Daytime Running Lights (DRL)",
+      "Color-keyed grille surround",
+      "Color-keyed outside door handles",
+      "15-inch steel wheels with wheel covers and P175/65R15 88H tires",
+      "Air conditioning with air filter",
+      "AM/FM CD player with SiriusXM Radio compatible, HD Radio, auxiliary audio jack, USB port and Bluetooth connectivity",
+      "Analog instrumentation with LCD display, ECO Driving Indicator and warning messages",
+      "Fabric-trimmed front seats with 4-way adjustable driver's seat",
+      "Rear window wiper and defogger"
+    ]
+  }
+}

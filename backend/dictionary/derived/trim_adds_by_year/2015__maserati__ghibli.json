@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2015|maserati|ghibli",
+  "year": 2015,
+  "make": "maserati",
+  "model": "ghibli",
+  "ladder_id": "brochure_llm_2015__maserati__ghibli",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ghibli S Q4",
+    "Ghibli S",
+    "Ghibli"
+  ],
+  "adds_by_trim": {
+    "Ghibli S Q4": [
+      "Q4 all-wheel drive system with 0-62 mph in 4.8 seconds",
+      "Top speed of 176 mph with AWD"
+    ],
+    "Ghibli S": [
+      "Colored Brembo brake calipers in Black, Red, Blue, or Silver",
+      "Enhanced sport performance and handling"
+    ],
+    "Ghibli": [
+      "3.0L twin-turbocharged engine with 430 hp and 400 lb-ft torque",
+      "Eight-speed ZF automatic transmission with five driving modes",
+      "Limited-slip mechanical differential with asymmetric locking function",
+      "Eight high-performance speakers with radio, DVD, satellite navigation, Bluetooth",
+      "USB and Aux-In ports with SD memory card reader",
+      "18-inch 12-spoke alloy wheels standard",
+      "Optional keyless go and keyless entry with illuminated aluminum key",
+      "Electrochromic rear-view mirrors and optional sunshades",
+      "Climate-controlled glovebox with cup-holders and power sockets"
+    ]
+  }
+}

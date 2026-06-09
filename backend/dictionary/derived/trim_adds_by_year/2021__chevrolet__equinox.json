@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2021|chevrolet|equinox",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2021__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premier",
+    "LT",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Premier": [
+      "Chevrolet Infotainment 3 Premium system with 8-inch HD touchscreen, Navigation, HD Radio",
+      "Bose premium 7-speaker audio system",
+      "Confidence and Convenience II Package with Safety Alert Seat and Adaptive Cruise Control",
+      "Heated steering wheel and ventilated front seats",
+      "Redline Edition with 19-inch Black wheels with Red accents",
+      "8-way power front passenger seat with 2-way power lumbar control",
+      "Heated rear outboard seats",
+      "Infotainment II Package included"
+    ],
+    "LT": [
+      "Chevrolet Infotainment 3 Plus system with 8-inch HD touchscreen and Navigation",
+      "Confidence and Convenience Package with fog lamps and remote vehicle starter",
+      "Heated driver and front passenger seats",
+      "Leather-wrapped steering wheel",
+      "Power liftgate and programmable Universal Home Remote",
+      "Leather Package available with perforated leather seating and memory settings",
+      "Midnight Edition or Sport Edition styling packages",
+      "Infotainment Package with HD Rear Vision Camera and SD card reader",
+      "Dual-zone automatic climate control"
+    ],
+    "SL": [
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen, AM/FM stereo",
+      "Bluetooth audio streaming for two active devices",
+      "Apple CarPlay and Android Auto compatibility",
+      "Available 4G LTE Wi-Fi Hotspot for up to seven devices",
+      "6-speaker audio system",
+      "SiriusXM All Access Package with 3-month trial",
+      "Chevrolet Connected Access with up to 10 years connectivity"
+    ],
+    "L": [
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen and AM/FM stereo",
+      "Bluetooth audio streaming for two active devices",
+      "Apple CarPlay and Android Auto compatibility",
+      "6-speaker audio system",
+      "Available 4G LTE Wi-Fi Hotspot for up to seven devices",
+      "USB Type-A and Type-C ports with auxiliary input jack",
+      "Chevrolet Connected Access with vehicle diagnostics",
+      "Two Type-A USB charge-only ports on rear center console"
+    ]
+  }
+}

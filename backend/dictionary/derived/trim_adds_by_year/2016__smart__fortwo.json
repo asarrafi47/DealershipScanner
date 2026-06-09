@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2016|smart|fortwo",
+  "year": 2016,
+  "make": "Smart",
+  "model": "Fortwo",
+  "ladder_id": "brochure_llm_2016__smart__fortwo",
+  "source": "brochure_llm",
+  "trims_available": [
+    "proxy",
+    "prime",
+    "passion"
+  ],
+  "adds_by_trim": {
+    "proxy": [
+      "16-inch twin 5-spoke light-alloy wheels painted black with high-sheen finish",
+      "JBL sound system",
+      "Sport package",
+      "Tridion, grille and mirror caps in white",
+      "Upholstery in blue/white fabric"
+    ],
+    "prime": [
+      "15-inch twin 5-spoke light-alloy wheels painted black with high-sheen finish",
+      "Tridion, grille and mirror caps in silver",
+      "Upholstery in black leather with white topstitching",
+      "Panoramic roof with integrated sunblind"
+    ],
+    "passion": [
+      "15-inch 8-spoke light-alloy wheels painted black with high-sheen finish",
+      "Crosswind Assist and ESP safety systems",
+      "Eight airbags and ABS",
+      "Cruise control with Direct-Steer system",
+      "Hill-Start Assist",
+      "Instrument cluster with 3.5-inch color display and trip computer",
+      "Automatic climate control",
+      "AM/FM radio with CD player",
+      "Heated and power mirrors",
+      "Height-adjustable driver seat"
+    ]
+  }
+}

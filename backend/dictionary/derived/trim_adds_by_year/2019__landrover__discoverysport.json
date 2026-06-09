@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2019|landrover|discoverysport",
+  "year": 2019,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "ladder_id": "brochure_2019__landrover__discoverysport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 5-seat seating configuration",
+      "Adds 18-inch 5 split-spoke wheels (Style 511)",
+      "Adds 2.0L Si4 gas engine with 237 HP",
+      "Adds 9-speed automatic transmission",
+      "Adds single piston sliding caliper brakes",
+      "Adds Terrain Response driving technology",
+      "Adds All Terrain Progress Control",
+      "Adds Hill Descent Control (HDC)",
+      "Adds core infotainment system",
+      "Adds SOS Emergency Call safety feature"
+    ],
+    "Premium": [
+      "Upgraded to quad-core processor with Solid State Drive infotainment system",
+      "Adds customizable homescreens with up to four personalized layouts and 60 shortcuts",
+      "Adds Touch Pro infotainment platform",
+      "Adds Commute Mode for automatic route learning",
+      "Adds Remote app vehicle access and control features"
+    ],
+    "Limited": [
+      "Adds Driver Assist Plus Package integration",
+      "Adds intelligent routing with live and historical traffic movement analysis",
+      "Adds Share ETA automatic notification via text or email",
+      "Adds Route Planner app with door-to-door guidance including public transportation",
+      "Adds Protect2 incident response with automatic emergency service dispatch"
+    ],
+    "Standard": [
+      "Adds Adaptive Dynamics system",
+      "Adds Torque Vectoring technology",
+      "Adds Active Driveline capability",
+      "Adds towing aids and guidance systems",
+      "Adds enhanced audio system options"
+    ],
+    "HSE": [
+      "Upgraded to 3.0L Si6 gas engine with 286 HP",
+      "Adds 5+2 seating configuration with third-row capacity",
+      "Upgraded to larger 13.7-inch front brake diameter rotors",
+      "Adds enhanced performance capabilities with 6.4-second 0-60 acceleration",
+      "Adds 20-inch wheel options up to Style 902 9-spoke design",
+      "Adds Land Rover operator technical assistance through in-car button",
+      "Adds extended subscription-based remote services"
+    ]
+  }
+}

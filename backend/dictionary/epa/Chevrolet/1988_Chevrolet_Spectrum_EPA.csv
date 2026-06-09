@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Chevrolet,Spectrum,Spectrum,1.5L I4 ((FFS)),1.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,26,30,28,,,,,
+1988,Chevrolet,Spectrum,Spectrum,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,31,37,33,,,,,
+1988,Chevrolet,Spectrum,Turbo,"1.5L I4 ((FFS,TRBO))",1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,24,33,27,,,,,

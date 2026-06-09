@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2014|chevrolet|equinox",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "ladder_id": "brochure_llm_2014__chevrolet__equinox",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome door handles and integrated blind spot mirrors",
+      "Halogen uplevel projector-style headlamps",
+      "Programmable power liftgate with fixed glass",
+      "Chrome manual-folding power-adjustable heated mirrors",
+      "Center roof rails",
+      "Automatic climate control",
+      "Auto-dimming rearview mirror",
+      "Memory settings for driver seat and exterior mirrors",
+      "Power sunroof with tilt/sliding and express-open feature",
+      "Forward Collision Alert and Lane Departure Warning"
+    ],
+    "2LT": [
+      "Body-color manual-folding power-adjustable heated mirrors",
+      "Side roof rails",
+      "Rear vision camera",
+      "Chevrolet MyLink radio with 7-inch touchscreen and navigation",
+      "Pioneer premium 8-speaker sound system with subwoofer and amplifier",
+      "Heated driver and front passenger seats",
+      "Front passenger 8-way power-adjustable seat",
+      "Universal Home Remote and programmable power liftgate"
+    ],
+    "1LT": [
+      "Body-color manual-folding power-adjustable heated mirrors",
+      "Halogen foglamps",
+      "Rear vision camera",
+      "Chevrolet MyLink radio with 7-inch touchscreen, Bluetooth audio streaming, and Siri Eyes Free",
+      "8-way power-adjustable driver seat with remote vehicle starter system",
+      "Leather-wrapped steering wheel with mounted controls",
+      "Driver Information Center with compass"
+    ],
+    "LS": [
+      "5 dual-stage frontal air bags with Passenger Sensing System and side-impact protection",
+      "4-wheel antilock disc brakes",
+      "StabiliTrak Electronic Stability Control with Traction Control and rollover mitigation",
+      "Daytime running lamps with automatic exterior lamp control",
+      "Power-programmable door locks with rear-door child safety locks",
+      "AM/FM stereo with CD player and 3-month SiriusXM trial",
+      "Radio Data System technology with auxiliary audio input and USB port",
+      "Hill Start Assist to reduce rollback on inclines"
+    ]
+  }
+}

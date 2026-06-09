@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2020|kia|forte",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_web_2020__kia__forte",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Forte GT Manual",
+    "Forte GT DCT",
+    "Forte GT-Line IVT",
+    "Forte LXS IVT",
+    "Forte LX IVT"
+  ],
+  "adds_by_trim": {
+    "Forte GT Manual": [
+      "1.6-liter turbocharged I-4 engine with 201 hp and 195 lb-ft torque",
+      "Six-speed manual transmission",
+      "18-inch wheels",
+      "Sport-tuned suspension",
+      "Louder exhaust"
+    ],
+    "Forte GT DCT": [
+      "1.6-liter turbocharged I-4 engine with 201 hp and 195 lb-ft torque",
+      "Seven-speed dual-clutch automatic transmission",
+      "18-inch wheels",
+      "Sport-tuned suspension",
+      "Louder exhaust"
+    ],
+    "Forte GT-Line IVT": [
+      "10.3-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Wireless charging pad",
+      "Illuminated vanity mirrors",
+      "Front automatic emergency braking with pedestrian detection",
+      "Adaptive cruise control",
+      "Lane keep assist",
+      "Electronic parking brake"
+    ],
+    "Forte LXS IVT": [
+      "Upgraded interior materials compared to LX"
+    ],
+    "Forte LX IVT": [
+      "2.0-liter I-4 engine with 147 hp and 132 lb-ft torque",
+      "CVT automatic transmission",
+      "8.0-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "4.2-inch gauge cluster display",
+      "Two front USB ports",
+      "Front automatic emergency braking for vehicles and pedestrians",
+      "Lane departure warning and lane keep assist",
+      "Automatic high-beams"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/forte/"
+}

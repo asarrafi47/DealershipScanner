@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2024|toyota|grandhighlander",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Grand Highlander",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

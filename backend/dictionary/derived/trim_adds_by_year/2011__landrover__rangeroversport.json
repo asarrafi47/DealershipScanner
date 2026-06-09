@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2011|landrover|rangeroversport",
+  "year": 2011,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2011__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "V8 Supercharged",
+    "V8"
+  ],
+  "adds_by_trim": {
+    "V8 Supercharged": [
+      "5.0L V8 Supercharged engine with 510 bhp and 461 ft-lbs torque",
+      "Adaptive Dynamics with Dynamic Program",
+      "Dynamic Response system",
+      "14.9-inch front ventilated disc brakes (380mm)",
+      "14.3-inch rear ventilated disc brakes (365mm)"
+    ],
+    "V8": [
+      "5.0L naturally aspirated V8 engine with 375 bhp and 375 ft-lbs torque",
+      "Six-speed adaptive automatic gearbox with CommandShift",
+      "Permanent four-wheel drive with high/low range",
+      "Hill Descent Control with Gradient Release Control",
+      "Four-wheel Electronic Traction Control",
+      "Active rear E-differential",
+      "Four-corner air suspension with Terrain Response",
+      "14.1-inch front ventilated disc brakes (360mm)",
+      "13.7-inch rear ventilated disc brakes (350mm)",
+      "Full-color touchscreen infotainment hub with audio, communication, navigation"
+    ]
+  }
+}

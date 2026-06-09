@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2011|maserati|quattroporte",
+  "year": 2011,
+  "make": "maserati",
+  "model": "quattroporte",
+  "ladder_id": "brochure_llm_2011__maserati__quattroporte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QUATTROPORTE SPORT GT S",
+    "QUATTROPORTE S",
+    "QUATTROPORTE"
+  ],
+  "adds_by_trim": {
+    "QUATTROPORTE SPORT GT S": [
+      "323 kW (440 Hp) engine with 490 Nm torque",
+      "0-100 km/h acceleration in 5.1 seconds",
+      "285 km/h maximum speed",
+      "8.5J x 20\" front rims with 245/35 ZR20\" tyres",
+      "10.5J x 20\" rear rims with 295/30 ZR20\" tyres",
+      "MC STAR performance variant option"
+    ],
+    "QUATTROPORTE S": [
+      "317 kW (430 Hp) engine with 490 Nm torque",
+      "0-100 km/h acceleration in 5.4 seconds",
+      "280 km/h maximum speed",
+      "8.5J x 19\" front rims with 245/40 ZR19\" tyres",
+      "10.5J x 19\" rear rims with 285/35 ZR19\" tyres"
+    ],
+    "QUATTROPORTE": [
+      "295 kW (400 Hp) engine with 460 Nm torque",
+      "0-100 km/h acceleration in 5.6 seconds",
+      "270 km/h maximum speed",
+      "8.5J x 18\" front rims with 245/45 ZR18\" tyres",
+      "10.5J x 18\" rear rims with 285/40 ZR18\" tyres",
+      "Maserati Multimedia System with 7-inch TFT display",
+      "Satellite navigation with TMC Premium real-time traffic",
+      "Bose Surround Sound System standard",
+      "Poltrona Frau leather upholstery",
+      "Refrigerated front armrest compartment"
+    ]
+  }
+}

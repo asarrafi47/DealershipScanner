@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2013|nissan|armada",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2013__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum Reserve",
+    "Platinum",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "Platinum Reserve": [
+      "20-inch Dark chrome-clad aluminum-alloy wheels",
+      "Chocolate-color heated leather-wrapped steering wheel",
+      "Light Aniegre genuine wood trim",
+      "Chocolate-trimmed instrument panel with dark satin chrome interior accents",
+      "2-tone Chocolate/Almond premium leather-appointed seats with almond contrast stitching",
+      "Painted roof rack",
+      "Platinum Reserve badging and embroidered floor mats",
+      "Center console cup holder lid"
+    ],
+    "Platinum": [
+      "20-inch Chrome-clad aluminum-alloy wheels",
+      "Dual Zone Automatic Temperature Control",
+      "8-passenger capacity",
+      "Front Sonar System",
+      "Power sliding glass moonroof",
+      "Power flip-out rear windows",
+      "Power folding outside mirrors with puddle lights and turn signals",
+      "Heated second-row seats",
+      "Heated leather-wrapped steering wheel",
+      "Memory System for driver's seat, outside mirrors, and pedals"
+    ],
+    "SL": [
+      "Up to 9,000 lbs towing capacity with hitch receiver and trailer brake pre-wiring",
+      "Auto-leveling rear suspension",
+      "20-inch Aluminum-alloy wheels",
+      "Fog lights",
+      "Chrome grille, outside mirrors, and side molding inserts",
+      "Chrome roof rack with crossbars",
+      "Power liftgate",
+      "RearView Monitor",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver",
+      "Bose audio system"
+    ],
+    "SV": [
+      "317-hp Endurance 5.6-liter V8 engine",
+      "Vehicle Dynamic Control and Active Brake Limited Slip",
+      "4-wheel independent suspension",
+      "18-inch Aluminum-alloy wheels",
+      "Automatic on/off headlights",
+      "Rear Sonar System",
+      "SiriusXM Satellite Radio",
+      "Bluetooth Hands-free Phone System",
+      "USB connection port for iPod interface",
+      "8-way power adjustable driver's seat with manual lumbar support"
+    ]
+  }
+}

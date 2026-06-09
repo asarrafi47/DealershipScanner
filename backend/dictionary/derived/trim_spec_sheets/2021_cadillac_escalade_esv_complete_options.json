@@ -1,0 +1,53 @@
+{
+  "ladder_id": "2021_cadillac_escalade_esv_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "Escalade ESV",
+    "Escalade ESV"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine 5.7 L L31 V8 (gasoline) (was F4 (Front-engine, four-wheel drive); Engine 5.7 L L31 V8 (gasoline))"
+      }
+    ],
+    "Sport Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: F4 (Front-engine, four-wheel drive); Engine 5.7 L L31 V8 (gasoline) (was Engine 5.7 L L31 V8 (gasoline))"
+      }
+    ],
+    "Premium Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine 5.7 L L31 V8 (gasoline) (was F4 (Front-engine, four-wheel drive); L LM7 V8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: F4 (Front-engine, four-wheel drive); L LM7 V8 (was Engine 5.7 L L31 V8 (gasoline))"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine 5.7 L L31 V8 (gasoline) (was –2013 (Hybrid); FR (Front-engine, rear-wheel drive))"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: –2013 (Hybrid); FR (Front-engine, rear-wheel drive)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: The optional satellite navigation system now added instant traffic updates and r; The optional satellite navigation system now added instant traffic updates and rerouting options."
+      }
+    ]
+  }
+}

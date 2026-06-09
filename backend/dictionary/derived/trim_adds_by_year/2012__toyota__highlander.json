@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2012|toyota|highlander",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2012__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Hybrid Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Three-zone automatic climate control system",
+      "Dual zone climate control in front with separate second-row control panel",
+      "Air filter integrated into climate control",
+      "Vents for second- and third-row seats"
+    ],
+    "Hybrid Limited": [
+      "Hybrid powertrain with HV battery and hybrid control module",
+      "8 years/100,000 miles hybrid-related component coverage"
+    ]
+  }
+}

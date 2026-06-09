@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2018|honda|odyssey",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2018__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELITE",
+    "TOURING",
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "ELITE": [
+      "19-inch machine-finished alloy wheels",
+      "Power tailgate with programmable height adjustment",
+      "Rain-sensing windshield wipers",
+      "Power folding side mirrors",
+      "Ventilated front seats",
+      "Wireless phone charger"
+    ],
+    "TOURING": [
+      "115-volt/150-watt power outlet in front",
+      "HDMI Interface",
+      "Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic",
+      "Tri-zone automatic climate control system",
+      "Fin-type roof-mounted antenna"
+    ],
+    "EX-L": [
+      "Remote engine start",
+      "Advanced Rear Entertainment System with 10.2-inch screen, Blu-ray player and streaming apps",
+      "CabinTalk in-car PA system",
+      "Honda Sensing suite of safety and driver-assistive features",
+      "Blind spot information system with cross traffic monitor",
+      "Heated power side mirrors with integrated turn indicators",
+      "Auto-on/off headlights with WiperLink",
+      "Power sliding doors",
+      "One-touch power moonroof with tilt feature",
+      "Hands-free access power tailgate"
+    ],
+    "EX": [
+      "18-inch silver alloy wheels",
+      "LED Daytime Running Lights",
+      "Multi-angle rearview camera with 10.2-inch screen and dynamic guidelines",
+      "Electric parking brake with automatic brake hold",
+      "Security system with remote entry",
+      "Smart Entry with Walk Away Auto Lock",
+      "Fog lights",
+      "Automatic climate control system",
+      "Tilt and telescopic steering column"
+    ],
+    "LX": [
+      "280-hp 3.5-liter i-VTEC V-6 engine with direct injection",
+      "9-speed automatic transmission with Shift-By-Wire and paddle shifters",
+      "Eco Assist system",
+      "Intelligent Traction Management with SNOW mode",
+      "18-inch light silver alloy wheels",
+      "Daytime Running Lights",
+      "Tire Pressure Monitoring System with Tire Fill Assist",
+      "Active shutter grille",
+      "Rear privacy glass",
+      "Taillights with integrated LED light bars"
+    ]
+  }
+}

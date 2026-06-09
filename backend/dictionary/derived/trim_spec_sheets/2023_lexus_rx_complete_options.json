@@ -1,0 +1,53 @@
+{
+  "ladder_id": "2023_lexus_rx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "RX",
+    "RX"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "F Sport Performance": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel drive; The 2021 Lexus RX RX450h AWD Ofering the best of all worlds, the 2021 RX Hybrid pairs a po"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Optional accessory features include XM Satellite Radio, a 15-speaker 330-watt Ma"
+      }
+    ],
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel drive; The 2021 Lexus RX RX450h AWD Ofering the best of all worlds, the 2021 RX Hybrid pairs a po"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Optional accessory features include XM Satellite Radio, a 15-speaker 330-watt Ma"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Screen Size",
+        "value": "12.3-inch display"
+      },
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "instrument panel is added on models equipped with the Premium package A two-tone instrument panel is added on models…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel drive; The 2021 Lexus RX RX450h AWD Ofering the best of all worlds, the 2021 RX Hybrid pairs a po"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Optional accessory features include XM Satellite Radio, a 15-speaker 330-watt Ma"
+      }
+    ]
+  }
+}

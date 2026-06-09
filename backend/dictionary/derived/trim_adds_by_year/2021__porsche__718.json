@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2021|porsche|718",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "718",
+  "ladder_id": "brochure_web_2021__porsche__718",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Turbo S",
+    "Turbo",
+    "GTS",
+    "T"
+  ],
+  "adds_by_trim": {
+    "T": [
+      "2.0L turbocharged four-cylinder engine with 300 hp",
+      "Six-speed manual transmission standard",
+      "7-inch PCM touchscreen with Porsche Communication Management",
+      "Porsche Entry and Drive keyless system",
+      "Four speakers audio system",
+      "Steel suspension with Porsche Stability Management",
+      "19-inch Carrera Classic wheels with all-season tires",
+      "Halogen headlights with dynamic light assist"
+    ],
+    "GTS": [
+      "2.5L turbocharged flat-four engine with 365 hp",
+      "Six-speed manual or PDK dual-clutch automatic transmission",
+      "Sports suspension lowered 0.39 inches with stiffer dampers",
+      "Porsche Torque Vectoring with power steering axle differential",
+      "Larger front and rear brake discs with red calipers",
+      "20-inch GTS Design wheels with summer performance tires",
+      "Bose surround sound system with nine speakers",
+      "Adaptive Sport Exhaust System with variable sound tuning",
+      "Sports-styled interior trim with Race-Tex upholstery"
+    ],
+    "Turbo": [
+      "2.5L turbocharged flat-four engine with 443 hp",
+      "Seven-speed PDK dual-clutch automatic transmission",
+      "Adaptive suspension with continuous damping control",
+      "All-wheel drive system with Porsche Traction Management",
+      "Porsche Dynamic Chassis Control and Sport Chrono package",
+      "Ceramic composite brake system with yellow calipers",
+      "20-inch Turbo Design wheels with summer performance tires",
+      "BOSE premium sound system with subwoofer",
+      "Heated and ventilated leather power seats"
+    ],
+    "Turbo S": [
+      "2.5L turbocharged flat-four engine with 443 hp",
+      "Enhanced aerodynamic package with larger rear wing",
+      "Porsche Ceramic Composite Brake system with red calipers",
+      "Adaptive air suspension with lowered ride height",
+      "20-inch Turbo S Design exclusive wheels",
+      "Exclusive Turbo S interior styling and leather appointments",
+      "Sports seats with enhanced bolstering and lumbar support",
+      "Porsche Entry and Drive keyless system standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/porsche/718/"
+}

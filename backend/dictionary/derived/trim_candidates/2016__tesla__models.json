@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2016|tesla|models",
+  "year": 2016,
+  "make": "tesla",
+  "model": "Model S",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Performance",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

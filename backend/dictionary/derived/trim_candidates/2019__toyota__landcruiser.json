@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2019|toyota|landcruiser",
+  "year": 2019,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

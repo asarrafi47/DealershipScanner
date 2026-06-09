@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2017|maserati|levante",
+  "year": 2017,
+  "make": "maserati",
+  "model": "levante",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

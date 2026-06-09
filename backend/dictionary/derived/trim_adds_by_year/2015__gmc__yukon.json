@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|gmc|yukon",
+  "year": 2015,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "2013_gmc_yukon_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Els",
+    "Tls"
+  ],
+  "adds_by_trim": {
+    "Tls": [
+      "(cid:79) \u2014 SEATS Front buckets with Premium Cloth. Includes 10-way power driver-seat, 6-way power",
+      "4-wheel disc with Duralife rotors (cid:79) (cid:79) (cid:79) 6-way power passenger-seat adjuster, center fold-down armrest with storage, lockable storage",
+      "Injection and \u2014 \u2014 (cid:79)",
+      "y control and Hill (cid:79) (cid:79) (cid:79) Third-row 60/40 split bench with power folding seatback \u2014 (cid:79) (cid:79)",
+      "ontrol. \u2014 \u2014 (cid:79) engine temperature, oil pressure and tachometer. Driver Information Center including multicolor",
+      "Package (cid:79) (cid:79)",
+      "railering receiver and 7-wire harness with (cid:79) (cid:79) (cid:79) PUSH-BUTTON KEYLESS START \u2014 (cid:79) (cid:79)",
+      "sensors in rear quarter glass and",
+      "ections Plan, including the convenience of available Hands-Free Calling.3 It also includes repairs will be made at no charge. In addition, rust-through corrosion will be covered for 6 years or 100,000",
+      "OnStar services recommended maintenance schedule plan.1 See dealer for details.",
+      "vehicles and their components are assembled or produced by different operating units",
+      "vehicles with different or differently sourced components than originally scheduled. Since"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 12.0,
+    "per_trim_add_counts": {
+      "Tls": 12
+    }
+  }
+}

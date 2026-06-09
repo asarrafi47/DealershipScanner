@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2025|lexus|ux",
+  "year": 2025,
+  "make": "lexus",
+  "model": "UX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "F Sport Handling",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

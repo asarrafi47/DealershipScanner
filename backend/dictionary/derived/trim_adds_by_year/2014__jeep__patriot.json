@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2014|jeep|patriot",
+  "year": 2014,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "brochure_2014__jeep__patriot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Latitude",
+    "Touring"
+  ],
+  "adds_by_trim": {
+    "Touring": [
+      "Adds Includes 3-Year or 36,000-Mile Basic Limited Warranty coverage",
+      "Adds Features electronic stability control system",
+      "Adds Includes Bluetooth connectivity support"
+    ],
+    "Latitude": [
+      "Adds Mopar Vehicle Protection availability with certified factory-trained technician support"
+    ],
+    "Limited": [
+      "Adds access to Mopar Owner Connect secure owners-only Web site with service records and exclusive offers"
+    ]
+  }
+}

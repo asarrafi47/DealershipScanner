@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2010|jaguar|xj",
+  "year": 2010,
+  "make": "Jaguar",
+  "model": "XJ",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2010|acura|mdx",
+  "year": 2010,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2010__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance Package",
+    "Technology Package",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Advance Package": [
+      "Active Damper System sport suspension",
+      "Collision Mitigation Braking System (CMBS)",
+      "Adaptive Cruise Control (ACC)",
+      "Blind spot information system",
+      "Exclusive 19-inch tire and alloy wheel",
+      "Auto-leveling xenon high-intensity discharge (HID) headlights",
+      "Heated and ventilated front seats",
+      "Perforated Milano Premium Leather-trimmed interior"
+    ],
+    "Technology Package": [
+      "Acura Navigation System with Voice Recognition and Zagat Survey ratings",
+      "Acura/ELS Surround 410-watt Premium Audio System with 10 speakers and HDD media storage",
+      "AcuraLink Real-Time Traffic and Weather",
+      "GPS-linked, solar-sensing tri-zone automatic climate control system",
+      "Song By Voice voice recognition",
+      "USB Audio Interface with iPod integration",
+      "Bluetooth Audio connectivity",
+      "Radio Data System (RDS)",
+      "XM Radio with Note function music reminder",
+      "Bluetooth HandsFreeLink with phone-book exchange and Automated Appointments"
+    ],
+    "Base": [
+      "3.7L aluminum-alloy V-6 engine with 300 hp and 270 lb-ft torque",
+      "6-speed automatic transmission with Sequential Sportshift paddle shifters",
+      "Super Handling All-Wheel Drive (SH-AWD) with torque distribution range",
+      "Sport seats with leather-trimmed interior",
+      "Driver's 10-way power seat with 2-way power lumbar support",
+      "Tri-zone front/rear synchronized automatic climate control with air filtration",
+      "Second-row ventilation controls and heated front seats",
+      "Bluetooth HandsFreeLink wireless telephone interface",
+      "Acura 235-watt Premium Sound System with AM/FM, 6-disc CD, and 8 speakers",
+      "Vehicle Stability Assist (VSA) with traction control and ABS with EBD"
+    ]
+  }
+}

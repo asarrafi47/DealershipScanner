@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2011|chevrolet|camaro",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SS",
+    "RS",
+    "LT",
+    "Custom",
+    "LS",
+    "Limited",
+    "Premium",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

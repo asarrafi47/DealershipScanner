@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2012|dodge|durango",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_2012__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Citadel",
+    "R/T",
+    "Limited",
+    "SXT",
+    "Crew",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Uconnect infotainment system",
+      "Adds SiriusXM satellite radio with 130+ channels",
+      "Adds Bluetooth connectivity",
+      "Adds Advanced Front Air Bags",
+      "Adds Electronic Stability Control (ESC)"
+    ],
+    "Crew": [
+      "Leather-wrapped steering wheel and shift knob",
+      "Uconnect 430 with 6.5-inch touch screen and CD/DVD/MP3 radio",
+      "Auto-dimming rearview mirror with microphone",
+      "Bright exterior door handles and roof rack rails with crossbars",
+      "Body-color wheel lip and sill moldings",
+      "Body-color performance front fascia"
+    ],
+    "SXT": [
+      "3.6L Pentastar 24V VVT V6, 290 hp, 260 lb-ft torque",
+      "5-speed automatic transmission",
+      "7-passenger premium cloth seating with 60/40 fold-and-tumble 2nd row",
+      "Fold-flat front-passenger seat",
+      "50/50 split-folding 3rd-row seat",
+      "18-inch aluminum wheels",
+      "Fog lamps and auto headlamps",
+      "Uconnect 130 AM/FM/CD/MP3 radio with 6 speakers",
+      "3-zone automatic temperature control",
+      "Tilt/telescoping steering wheel with cruise and audio controls"
+    ],
+    "Limited": [
+      "20-inch polished aluminum wheels",
+      "Uconnect 8.4-inch Media Center with premium navigation",
+      "9 Alpine speakers with 506-watt amplifier",
+      "Power liftgate and power sunroof",
+      "Rain-sensing wipers",
+      "Power 12-way front-passenger seat"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 with Fuel Saver Technology, 360 hp, 390 lb-ft torque",
+      "6-speed automatic transmission",
+      "Performance steering and suspension, lowered 20 mm",
+      "High intensity discharge (HID) headlamps",
+      "Digital suede seats with Capri bolsters and red accent stitching",
+      "Keyless enter 'n go with push-button start"
+    ],
+    "Citadel": [
+      "5.7L HEMI V8 with Fuel Saver Technology, 360 hp, 390 lb-ft torque",
+      "6-speed automatic transmission",
+      "20-inch chrome-clad aluminum wheels",
+      "Premium Nappa leather-trimmed seating with perforated inserts",
+      "Ventilated front seats, heated front and 2nd-row seats",
+      "Heated, perforated leather-wrapped steering wheel",
+      "Uconnect 730N with 6.5-inch touch screen and premium navigation",
+      "Power tilt/telescoping steering column"
+    ]
+  }
+}

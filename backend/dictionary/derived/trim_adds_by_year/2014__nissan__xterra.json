@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|nissan|xterra",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Xterra",
+  "ladder_id": "brochure_llm_2014__nissan__xterra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PRO-4X",
+    "S",
+    "X"
+  ],
+  "adds_by_trim": {
+    "PRO-4X": [
+      "16-inch aluminum-alloy wheels with P265/75R16 BFGoodrich Rugged Trail T/A OWL tires",
+      "Bilstein off-road performance shocks",
+      "Skid plates for transfer case, oil pan, and fuel tank",
+      "Roof rack-mounted off-road lights",
+      "NissanConnect with Navigation, 5.8-inch color touchscreen, and voice recognition",
+      "Heated front seats",
+      "White-faced gauges",
+      "Rockford Fosgate-powered AM/FM/CD audio system",
+      "RearView Monitor",
+      "SiriusXM Traffic and Travel Link"
+    ],
+    "S": [
+      "16-inch aluminum-alloy wheels",
+      "Front tow hook on 4x4 models",
+      "Black body side moldings",
+      "Gear box on 4x4 models",
+      "Splash guards on 4x4 models",
+      "8-way manual adjustable driver seat",
+      "Sun visors with vanity mirrors",
+      "In-cabin microfilter",
+      "AM/FM/CD audio system with 4.3-inch color display",
+      "USB connection port for iPod interface and compatible devices"
+    ],
+    "X": [
+      "16-inch steel wheels with P265/70R16 BFGoodrich Radial Long Trail T/A OWL tires",
+      "Vehicle Dynamic Control (VDC) and Active Brake Limited Slip (ABLS)",
+      "4-wheel Anti-lock Braking System (ABS)",
+      "Tubular roof rack with air dam",
+      "Power door locks and windows",
+      "Electronic locking rear differential",
+      "Hill descent control and hill start assist",
+      "Remote keyless entry",
+      "Automatic on/off headlights",
+      "Illuminated steering wheel-mounted audio controls"
+    ]
+  }
+}

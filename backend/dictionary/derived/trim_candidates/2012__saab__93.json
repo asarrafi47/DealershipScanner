@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2012|saab|93",
+  "year": 2012,
+  "make": "Saab",
+  "model": "9-3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

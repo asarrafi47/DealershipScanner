@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2025|toyota|corolla",
+  "year": 2025,
+  "make": "Toyota",
+  "model": "Corolla",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Hybrid",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Includes these key features Adds to or replaces features offered on LE Adds to or replaces features offered on SE",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) Normal, Sport and Eco driving modes Normal, Sport and Eco driving modes",
+      "Front-Wheel Drive (FWD) Dynamic-Shift Continuously Variable Transmission (CVT) Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "Exterior Features 31 city/40 highway/34 combined est. mpg33 31 city/40 highway/34 combined est. mpg33",
+      "LED headlights, LED taillights, and Daytime Running Exterior Features Exterior Features",
+      "Lights (DRL) LED headlights, LED taillights and Daytime Running LED headlights, LED taillights, and Daytime",
+      "Color-keyed roof-mounted shark-fin antenna Sport mesh gloss black front grille Lowering springs",
+      "Interior Features Gray metallic sport side rocker Sport mesh gloss-black front grille",
+      "Automatic climate control",
+      "Single exhaust with dual chrome tips 18-in. satin black-finished alloy wheels with",
+      "Fabric-trimmed seats include:",
+      "60/40 split fold-down rear seat with center armrest Interior Features machined accents and black lug nuts"
+    ],
+    "LE": [
+      "Adds to or replaces features offered on Hybrid LE",
+      "Electronically controlled Continuously",
+      "Variable Transmission (ECVT)",
+      "Front-Wheel Drive (FWD)",
+      "LED headlights and Daytime Running Lights (DRL)",
+      "Color-keyed heated power outside mirrors",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "SofTex\u00ae-trimmed3 seats include:",
+      "Heated front seats",
+      "Leather-wrapped tilt/telescopic steering wheel",
+      "Smart Key System with Push Button Start",
+      "Qi-compatible wireless smartphone charging37"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

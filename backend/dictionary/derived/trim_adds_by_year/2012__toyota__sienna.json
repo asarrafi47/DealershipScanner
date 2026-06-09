@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2012|toyota|sienna",
+  "year": 2012,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "brochure_llm_2012__toyota__sienna",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XLE",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Dual moonroof with reduced headroom (39.1/38.0/35.9 inches front/second/third row)",
+      "7-seater configuration with AWD (4,750 lbs curb weight)"
+    ],
+    "XLE": [
+      "Sport-calibrated Electric Power Steering",
+      "Single moonroof option with adjusted headroom (39.1/39.7/38.3 inches)",
+      "8-seater capacity in FWD and 7-seater in AWD"
+    ],
+    "SE": [
+      "3.5-Liter V6 engine standard (266 hp, 245 lb-ft torque)",
+      "Sport-tuned coil springs on rear suspension",
+      "8-seater seating capacity in FWD configuration"
+    ],
+    "LE": [
+      "3.5-Liter V6 DOHC 24-Valve engine available (266 hp, 245 lb-ft torque)",
+      "All-Wheel Drive available with active torque control",
+      "3,500-lb towing capacity standard with engine oil cooler and heavy-duty radiator",
+      "8-seater seating capacity available in FWD; standard 2.7-Liter 4-cylinder engine"
+    ]
+  }
+}

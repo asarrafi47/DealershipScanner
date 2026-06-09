@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2013|nissan|nv",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "NV",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SV",
+    "S",
+    "Limited",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

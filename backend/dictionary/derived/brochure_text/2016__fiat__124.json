@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2016|fiat|124",
+  "year": 2016,
+  "make": "Fiat",
+  "model": "124",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2016_Fiat_124_Brochure.pdf",
+  "page_count": 26,
+  "all_pages": false,
+  "trim_hint_pages": [
+    26
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 26,
+      "trim_hint": true,
+      "text": "The information and images in this brochure are based on the\ncurrent technical data when going to print. This brochure is\ndesigned to provide general product information. As part of a policy\nof continuous specification improvements, Abarth & C. S.P.A.\nreserves the right to modify specifications, technical equipment,\noptions and colours at any time. For the latest details, please\ncontact your authorised Abarth dealership or visit abarth.com\nADDICTED TO PERFORMANCE.\nSINCE 1949.\nwww.abarth.com\nDOWNLOAD CALL MORE PASSION MORE CARE SHARE ON\n24hABARTH.MOBILE\nVisit Abarth\u2019s on-line\nshop at\nTake care of\nT se h r e v i A ce p s p a t n h d a t s u b p ri p n o g r s t you information, Customer Service www.abarthstore.com y o a o b n u e a r r c t A h li . b c m a k o r o t p h n a i r n .e u F P i r a in t t M ed a r i k n e I t t i a n l g y 0 - 4 T . S 8. 2781.08 - S - 02/2016",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 26 ---\nThe information and images in this brochure are based on the\ncurrent technical data when going to print. This brochure is\ndesigned to provide general product information. As part of a policy\nof continuous specification improvements, Abarth & C. S.P.A.\nreserves the right to modify specifications, technical equipment,\noptions and colours at any time. For the latest details, please\ncontact your authorised Abarth dealership or visit abarth.com\nADDICTED TO PERFORMANCE.\nSINCE 1949.\nwww.abarth.com\nDOWNLOAD CALL MORE PASSION MORE CARE SHARE ON\n24hABARTH.MOBILE\nVisit Abarth\u2019s on-line\nshop at\nTake care of\nT se h r e v i A ce p s p a t n h d a t s u b p ri p n o g r s t you information, Customer Service www.abarthstore.com y o a o b n u e a r r c t A h li . b c m a k o r o t p h n a i r n .e u F P i r a in t t M ed a r i k n e I t t i a n l g y 0 - 4 T . S 8. 2781.08 - S - 02/2016"
+}

@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|volkswagen|jetta",
+  "year": 2010,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "2010_volkswagen_jetta",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "S",
+    "SE",
+    "SEL",
+    "TDI"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "16-inch Sedona alloy wheels with all-season tires",
+      "V-Tex leatherette seating surfaces",
+      "Premium VIII radio with 10 speakers, 6-CD changer, and Sirius trial",
+      "Power glass sunroof with tilt/slide",
+      "Leather-wrapped steering wheel, shift knob, and brake handle",
+      "Bluetooth Hands-Free Calling"
+    ],
+    "SEL": [
+      "17-inch Avignon alloy wheels",
+      "Leather-wrapped multi-function steering wheel",
+      "Highline combi-instrument cluster and multi-function trip computer",
+      "115V power outlet and body-color front/rear valances",
+      "Enhanced convenience over SE on 2.5L gas models"
+    ],
+    "TDI": [
+      "2.0L TDI Clean Diesel — 140 hp and 236 lb-ft torque",
+      "38 city/44 highway mpg (automatic, AMCI-certified testing)",
+      "16-inch Bionline alloy wheels",
+      "DSG automatic or 6-speed manual transmission",
+      "All 2.5L SE convenience features with diesel powertrain"
+    ],
+    "S": [
+      "1.5-liter turbocharged inline four-cylinder engine with 158 hp and 184 lb-ft torque",
+      "Eight-speed automatic transmission with front-wheel drive",
+      "Floating 8.0-inch infotainment touchscreen with wireless Apple CarPlay and Android Auto",
+      "IQ.Drive suite with lane keep assist, adaptive cruise control, blind-spot monitoring, and automatic emergency braking",
+      "LED headlights with standard light bar connecting taillights",
+      "41.1 inches front legroom and 37.4 inches rear legroom"
+    ]
+  }
+}

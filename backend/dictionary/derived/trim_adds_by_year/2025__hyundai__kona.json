@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2025|hyundai|kona",
+  "year": 2025,
+  "make": "Hyundai",
+  "model": "Kona",
+  "ladder_id": "brochure_llm_2025__hyundai__kona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "N Line",
+    "SEL Convenience",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Black Alcantara® Sport interior with red accent stitching",
+      "19-inch alloy wheels",
+      "Sage Green H-Tex® upholstery option"
+    ],
+    "N Line": [
+      "Black Alcantara® Sport interior with red accent stitching",
+      "19-inch alloy wheels",
+      "N Line specific exterior styling"
+    ],
+    "SEL Convenience": [
+      "Gray or Black H-Tex® upholstery options"
+    ],
+    "SEL": [
+      "18-inch alloy wheels",
+      "Gray or Black H-Tex® upholstery options"
+    ],
+    "SE": [
+      "17-inch alloy wheels",
+      "Gray Cloth or Black Cloth interior upholstery"
+    ]
+  }
+}

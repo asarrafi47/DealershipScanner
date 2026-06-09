@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2023|toyota|sequoia",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Capstone",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Capstone": [
+      "Includes these key features Adds to or replaces features offered on SR5 Adds to or replaces features offered on Limited",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i)",
+      "Selectable driving and TOW/HAUL modes Selectable driving and TOW/HAUL modes Selectable driving and TOW/HAUL modes",
+      "Towing hitch receiver and wiring harness Towing hitch receiver and wiring harness Towing hitch receiver and wiring harness",
+      "Integrated Trailer Brake Control (ITBC)4 Integrated Trailer Brake Control (ITBC)4 Integrated Trailer Brake Control (ITBC)4",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD",
+      "EPA-est. mpg rating3 (4x2) EPA-est. mpg rating3 (4x2) EPA-est. mpg rating3 (4x2)",
+      "EPA-est. mpg rating3 (4x4) EPA-est. mpg rating3 (4x4) EPA-est. mpg rating3 (4x4)",
+      "Exterior Features Exterior Features Exterior Features",
+      "LED headlights with Daytime Running Lights (DRL) Gray-metallic horizontal-bar grille with chrome surround Dark chrome-accented mesh grille with chrome surround",
+      "LED fog lights Chrome-plated outside mirror caps with Color-keyed door handles and dark-black",
+      "Premium LED headlights with LED"
+    ],
+    "Platinum": [
+      "Adds to or replaces features offered on Limited Adds to or replaces features offered on Platinum",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i)",
+      "Electronically controlled locking rear differential Selectable driving and TOW/HAUL modes",
+      "Multi-Terrain Select (MTS), Crawl Control (CRAWL)6 Towing hitch receiver and wiring harness with",
+      "TRD Pro off-road suspension with 2.5-in. FOX\u00ae34 Integrated Trailer Brake Control (ITBC)4",
+      "Internal Bypass coil-overs and rear remote-reservoir",
+      "Rear-Wheel Drive (RWD) or 4WDemand part-time 4WD",
+      "EPA-est. mpg rating3 EPA-est. mpg rating3 (4x4)",
+      "Exterior Features Exterior Features",
+      "BBS\u00ae33 wheels with TRD center caps Chrome-accented mesh grille with chrome surround",
+      "Black \"TOYOTA\" heritage grille with integrated Automatic power-extending running boards",
+      "LED light bar and amber marker lights"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

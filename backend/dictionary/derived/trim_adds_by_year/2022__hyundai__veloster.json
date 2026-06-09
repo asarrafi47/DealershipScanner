@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2022|hyundai|veloster",
+  "year": 2022,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_2022__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Upgraded to 8-speed Wet Dual Clutch Transmission with paddle shifters",
+      "Adds Electronically Controlled Suspension",
+      "Adds Active Sport Exhaust System with pops and crackles",
+      "Adds N Corner Carving Differential",
+      "Adds N Light Sport Bucket Seats",
+      "Adds N-exclusive sport steering wheel, shift knob and instrument cluster",
+      "Adds large 2-stage rear spoiler with integrated center brake light",
+      "Adds SiriusXM Satellite Radio and HD Radio"
+    ],
+    "Limited": [
+      "Adds N Grin Control System with Drive Mode Select",
+      "Adds 13.6-inch front and 12.4-inch rear ventilated brake rotors",
+      "Adds Bluelink Connected Car System with 3 years complimentary service",
+      "Adds Lane Following Assist",
+      "Adds Driver Attention Warning",
+      "Adds Blind-Spot Collision Warning",
+      "Adds Rear Cross-Traffic Collision Warning",
+      "Adds Clari-Fi Music Restoration Technology",
+      "Adds N-specific body styling and rear underbody air diffuser",
+      "Adds dual power heated side mirrors with turn signal indicators"
+    ]
+  }
+}

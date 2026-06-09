@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2022|chevrolet|colorado",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_llm_2022__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ZR2",
+    "Z71",
+    "LT",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "ZR2": [
+      "Multimatic DSSV Damping System for advanced suspension tuning",
+      "Front and rear full locking differentials for extreme off-road capability",
+      "Increased ground clearance and track width compared to other trims",
+      "Tubular rockers and skid plates for off-road protection",
+      "17-inch Graphite and Oxide Gold aluminum wheels with all-terrain tires",
+      "Off-Road Appearance Package with distinctive hood, fascia, grille, and wheel flares",
+      "Spray-on bedliner with ZR2 logo",
+      "Leather-appointed front seats"
+    ],
+    "Z71": [
+      "3.6L V6 engine with 308 hp and 275 lb.-ft. of torque",
+      "Z71 Off-Road Suspension Package",
+      "Automatic locking rear differential",
+      "Hill Descent Control",
+      "Transfer case shield on 4x4 models",
+      "17-inch bright machined-aluminum wheels with all-terrain tires",
+      "Projector-beam headlamps",
+      "Fog lamps",
+      "Remote vehicle starter system",
+      "Heated steering wheel"
+    ],
+    "LT": [
+      "Body-color rear bumper, mirror caps, and door handles",
+      "Power-adjustable outside mirrors",
+      "17-inch aluminum wheels",
+      "EZ Lift power locking tailgate",
+      "Remote Keyless Entry",
+      "6-way power-adjustable driver seat",
+      "Leather-wrapped steering wheel",
+      "Inside rearview auto-dimming mirror",
+      "Overhead console",
+      "8-inch diagonal color touchscreen with Chevrolet Infotainment 3 system"
+    ],
+    "WT": [
+      "4-wheel antilock disc brakes",
+      "CornerStep rear bumper",
+      "Locking tailgate",
+      "Recovery hooks",
+      "Cargo area lighting",
+      "4-way power-adjustable driver seat",
+      "Dual rear seats on Extended Cab or folding rear bench on Crew Cab",
+      "Front center floor console",
+      "7-inch diagonal color touchscreen with Chevrolet Infotainment 3 system",
+      "Two USB ports"
+    ]
+  }
+}

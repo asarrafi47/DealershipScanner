@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2016|hyundai|equus",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Equus",
+  "ladder_id": "brochure_llm_2016__hyundai__equus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EQUUS ULTIMATE",
+    "EQUUS SIGNATURE"
+  ],
+  "adds_by_trim": {
+    "EQUUS ULTIMATE": [
+      "Full 12.3-inch LCD instrument cluster display screen",
+      "Multi-view camera system with forward-view cornering camera",
+      "Hands-free smart trunk with auto-open function",
+      "Steering wheel haptic dial control",
+      "Rear seat entertainment system with dual 9.2-inch displays",
+      "Cooled rear seats",
+      "Power rear seat head restraints with manual tilt adjustment",
+      "Illuminated rear seat vanity mirrors",
+      "Power rear side-window sunshades",
+      "Power lumbar on rear outboard seats"
+    ],
+    "EQUUS SIGNATURE": [
+      "429 HP 5.0L Gasoline Direct Injection DOHC Tau V8 engine",
+      "8-speed SHIFTRONIC automatic transmission",
+      "Electro-Hydraulic Power Steering",
+      "Electronically controlled air suspension with Continuous Damping Control",
+      "Proximity fob and card key entry with push-button start",
+      "Three-zone automatic temperature control with Air Quality System",
+      "Leather-wrapped dash and real wood interior trim",
+      "12-way power adjustable driver seat with lumbar support",
+      "10-way power adjustable front passenger seat",
+      "Heated and cooled front seats"
+    ]
+  }
+}

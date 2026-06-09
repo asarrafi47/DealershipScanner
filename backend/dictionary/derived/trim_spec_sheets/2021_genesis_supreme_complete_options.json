@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2021_genesis_supreme_complete_options",
+  "make": "Genesis",
+  "models": [
+    "Supreme",
+    "Supreme"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "External links Official website show vte Hyundai Motor Company show vte; External links Official website show vte Hyundai Motor Company show vte Hyundai Motor Group show vte Genesis, a division of Hyundai Motor Group, automobile timeline, 2000s–present show vte Genesis"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "External links Official website show vte Hyundai Motor Company show vte; External links Official website show vte Hyundai Motor Company show vte Hyundai Motor Group show vte Genesis, a division of Hyundai Motor Group, automobile timeline, 2000s–present show vte Genesis"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "After the announcement, the team principal Cyril Abiteboul told journalists that the engine will be based on the one used in the sister brand Hyundai's WRC car.; Genesis Product type Luxury vehicles Owner Hyundai Motor Company Country South; Genesis Product type Luxury vehicles Owner Hyundai Motor Company Country South Korea Introduced 2015; 11 years ago Ambassadors Won-Hee Lee (Genesis president and CEO) Jaehoon (Jay) Chang (Genesis global head and executive vice president) Website genesis.com Genesis (Korean:…"
+      }
+    ]
+  }
+}

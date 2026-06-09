@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|acura|tl",
+  "year": 2011,
+  "make": "acura",
+  "model": "tl",
+  "ladder_id": "brochure_llm_2011__acura__tl",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL SH-AWD",
+    "TL"
+  ],
+  "adds_by_trim": {
+    "TL SH-AWD": [
+      "305-hp 3.7-liter V6 engine with intake/exhaust VTEC vs 280-hp 3.5-liter",
+      "Super Handling All-Wheel Drive (SH-AWD) vs front-wheel drive",
+      "Close-ratio 6-speed manual transmission available option",
+      "Integrated quad-outlet exhaust system",
+      "Integrated front brake cooling ducts",
+      "Exclusive front sport seats with contrast stitching",
+      "18-inch aluminum-alloy wheels with P245/45 R18 tires standard",
+      "19-inch aluminum-alloy wheels with P245/40 ZR19 summer tires available"
+    ],
+    "TL": [
+      "280-hp 3.5-liter 24-valve SOHC VTEC V6 engine",
+      "5-speed automatic transmission with Sequential SportShift paddle shifters",
+      "Front-wheel drive with 4-wheel independent double wishbone/multi-link suspension",
+      "Electric variable power-assisted rack-and-pinion steering (EPS)",
+      "17-inch aluminum-alloy wheels with P245/50 R17 all-season tires",
+      "Dual-zone dual-mode adaptive climate control with remote entry",
+      "Bluetooth HandsFreeLink telephone interface",
+      "Leather-trimmed sport seats with driver and front passenger heated power adjustment",
+      "276-watt Premium Sound System with XM Radio, 6-disc CD changer, 8 speakers",
+      "Power moonroof with tilt feature and auto-on/off xenon HID headlights"
+    ]
+  }
+}

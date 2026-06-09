@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|kia|stinger",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Stinger",
+  "ladder_id": "brochure_llm_2018__kia__stinger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT2",
+    "GT"
+  ],
+  "adds_by_trim": {
+    "GT2": [
+      "8-inch touchscreen infotainment system with Apple CarPlay and Android Auto",
+      "Harman Kardon premium audio surround-sound system with 15 speakers",
+      "Voice-command navigation system",
+      "7-inch LCD color instrument cluster",
+      "LED headlights and rear turn signals",
+      "Machined-finish alloy wheels",
+      "2-way power-adjustable driver's seat with lumbar support and memory function"
+    ],
+    "GT": [
+      "2.0L Twin Scroll Turbo 4-cylinder engine with 255 hp and 260 lb.-ft. torque",
+      "8-speed automatic transmission with paddle shifters",
+      "18-inch tires with alloy wheels",
+      "Projector beam headlights",
+      "7-inch touchscreen infotainment system with Apple CarPlay and Android Auto",
+      "UVO eServices system",
+      "Push-button start with Smart Key",
+      "Rear-camera display and front/rear park assist system",
+      "Leather seat trim with heated front seats",
+      "Dual-zone automatic temperature control"
+    ]
+  }
+}

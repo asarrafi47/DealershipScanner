@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2023|chevrolet|trailblazer",
+  "year": 2023,
+  "make": "Chevrolet",
+  "model": "Trailblazer",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "RS",
+    "LT",
+    "LS",
+    "Platinum",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

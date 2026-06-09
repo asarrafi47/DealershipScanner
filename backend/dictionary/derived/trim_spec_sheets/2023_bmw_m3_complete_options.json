@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2023_bmw_m3_complete_options",
+  "make": "BMW",
+  "models": [
+    "M3",
+    "M3"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "175": [
+      {
+        "label": "Engine Options",
+        "value": "M3 AK01 Euro spec 147 kW (200 PS; 197 hp) 4,181"
+      }
+    ],
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, all-wheel-drive (2021–present); Evolution II 162 kW (220 PS; 217 hp) 501"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "M3 BB01 Euro spec 147 kW (200 PS; 197 hp) 136; The E9x is the first and only standard production M3 powered by a V8 engine as i"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 2.3—2.5 L S14 I4; M3 AK01 Euro spec 147 kW (200 PS; 197 hp) 4,181"
+      }
+    ]
+  }
+}

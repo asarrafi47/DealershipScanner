@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2017_mercedes-benz_s-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "S-Class",
+    "S-Class"
+  ],
+  "year_min": 2015,
+  "year_max": 2019,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG S63": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "AMG S65": [
+      {
+        "label": "Engine Options",
+        "value": "5.5L V8 Twin Turbo; Automatic 7-spd"
+      }
+    ],
+    "S550": [
+      {
+        "label": "Engine Options",
+        "value": "4.7L V8 Turbo; Automatic 7-spd"
+      }
+    ],
+    "S600": [
+      {
+        "label": "Engine Options",
+        "value": "6.0L V12 Turbo; Automatic 7-spd"
+      }
+    ]
+  }
+}

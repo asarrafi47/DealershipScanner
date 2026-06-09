@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Jeep,Liberty Cherokee,2WD,3.7L V6,3.7L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,15,21,17,,,,,
+2006,Jeep,Liberty Cherokee,2WD,3.7L V6,3.7L V6,,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,16,20,17,,,,,
+2006,Jeep,Liberty Cherokee,4WD,Diesel 2.8L I4 Diesel,2.8L I4,,Automatic 5-spd,All-Wheel Drive,Diesel,Sport Utility Vehicle - 4WD,4,2.8,19,23,21,,,,,
+2006,Jeep,Liberty Cherokee,4WD,3.7L V6,3.7L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.7,15,20,17,,,,,
+2006,Jeep,Liberty Cherokee,4WD,3.7L V6,3.7L V6,,Manual 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.7,16,20,17,,,,,

@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2020_mercedes-benz_slc-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "SLC-Class",
+    "SLC-Class"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "AMG SLC43": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L V6 Turbo; Automatic 9-spd"
+      }
+    ],
+    "SLC 300": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic 9-spd"
+      }
+    ]
+  }
+}

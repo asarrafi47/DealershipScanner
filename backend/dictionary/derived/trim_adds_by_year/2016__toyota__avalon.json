@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2016|toyota|avalon",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Avalon",
+  "ladder_id": "brochure_llm_2016__toyota__avalon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Hybrid Limited",
+    "Hybrid XLE Premium",
+    "Hybrid XLE Plus",
+    "XLE Premium",
+    "XLE Plus",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "Hybrid Limited": [
+      "17-inch Super Chrome alloy wheels with P215/55R17 tires",
+      "High Intensity Discharge Quadrabeam headlights with auto on/off and LED DRL",
+      "Color-keyed heated, auto-dimming power mirrors with turn signals, puddle lights, manual folding",
+      "Rain-sensing washer-linked variable intermittent windshield wipers",
+      "Premium perforated leather-trimmed multi-stage heated and ventilated front seats with 10-way driver power adjustment and power lumbar support",
+      "Entune Premium JBL Audio with Integrated Navigation and 11 JBL GreenEdge speakers",
+      "Three-zone automatic climate control with rear-seat vents",
+      "Power rear window sunshade with white ice interior ambient lighting",
+      "Aluminum scuff-plate doorsills",
+      "Safety Connect and Toyota Safety Sense P with Pre-Collision, Lane Departure Alert, Auto High Beams, Dynamic Radar Cruise Control"
+    ],
+    "Hybrid XLE Premium": [
+      "Entune Premium Audio with Integrated Navigation App Suite with 7-inch touch-screen",
+      "Qi-compatible wireless smartphone charging",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert"
+    ],
+    "Hybrid XLE Plus": [
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Smart Key System on front doors and trunk with Push Button Start",
+      "Color-keyed heated power mirrors with turn signal indicators",
+      "Leather-trimmed tilt/telescopic steering wheel",
+      "Leather-trimmed multi-stage heated front seats with 8-way power-adjustable driver seat and power lumbar support",
+      "Entune Audio Plus with Connected Navigation App and eight speakers",
+      "Dual zone automatic climate control with rear-seat vents",
+      "Auto-dimming rearview mirror with compass, maplights, HomeLink universal transceiver"
+    ],
+    "XLE Premium": [
+      "Entune Premium Audio with Integrated Navigation App Suite and nine speakers",
+      "Qi-compatible wireless smartphone charging",
+      "Gracenote album cover art and integrated backup camera with projected path"
+    ],
+    "XLE Plus": [
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Smart Key System on front and rear doors with Push Button Start",
+      "Leather-trimmed tilt/telescopic steering wheel with paddle shifters",
+      "Leather-trimmed multi-stage heated front seats with 8-way power-adjustable driver and power lumbar support",
+      "Auto-dimming rearview mirror with compass, maplights, HomeLink universal transceiver"
+    ],
+    "XLE": [
+      "3.5-liter V6 engine with 268 horsepower and 6-speed automatic transmission",
+      "Smoked LED taillights",
+      "17-inch dark gray painted alloy wheels with machined finish",
+      "Quadrabeam halogen headlights with auto on/off and Daytime Running Lights",
+      "Dual chrome-tipped integrated exhaust with chrome-accented cover",
+      "Smart Key System on driver door with Push Button Start and remote illuminated entry",
+      "Color-keyed heated power mirrors with turn signal indicators",
+      "Leather-trimmed tilt/telescopic steering wheel",
+      "Entune Audio Plus with Connected Navigation App, eight speakers, and Scout GPS Link App",
+      "Star Safety System with ten airbags and Tire Pressure Monitor System"
+    ]
+  }
+}

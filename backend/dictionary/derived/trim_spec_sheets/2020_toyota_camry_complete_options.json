@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_toyota_camry_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Camry",
+    "Camry"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, rear-wheel drive (was Automatic (S8); Front-Wheel Drive)"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Automatic (S8); Front-Wheel Drive; Automatic (S8)"
+      }
+    ]
+  }
+}

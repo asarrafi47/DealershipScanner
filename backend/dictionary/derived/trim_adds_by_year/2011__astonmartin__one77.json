@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2011|astonmartin|one77",
+  "year": 2011,
+  "make": "Aston Martin",
+  "model": "one-77",
+  "ladder_id": "generic_astonmartin_one77",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "of the engineering beauty",
+      "the One-77 truly come to life."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "Base": 2
+    }
+  }
+}

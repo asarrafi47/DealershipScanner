@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2023|nissan|aryia",
+  "year": 2023,
+  "make": "Nissan",
+  "model": "Aryia",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

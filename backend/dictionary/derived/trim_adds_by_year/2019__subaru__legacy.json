@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2019|subaru|legacy",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "Legacy",
+  "ladder_id": "brochure_2019__subaru__legacy",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes 24-hour roadside assistance for 3 years or 36,000 miles",
+      "Adds Includes Powertrain Limited Warranty for 5 years or 60,000 miles",
+      "Adds Includes Wear Item Limited Warranty covering brake pads, wiper blades, clutch linings, and transmitter batteries"
+    ],
+    "Premium": [
+      "Adds Auto-Dimming Exterior Mirror with Approach Light featuring LED illumination on side-view mirrors",
+      "Adds Trunk Cargo Hook for securing shopping bags and cargo upright",
+      "Adds Moonroof Air Deflector to reduce wind noise and sun glare"
+    ],
+    "Sport": [
+      "Adds Door Edge Guards with custom-fit, body-color-matched stainless steel protection",
+      "Adds Splash Guards to protect vehicle paint finish from stones and road grime",
+      "Adds Cargo Tray to protect trunk area and prevent cargo shifting"
+    ],
+    "Limited": [
+      "Upgraded to Auto-Dimming Mirror with HomeLink featuring 8-point digital compass",
+      "Adds programmable HomeLink buttons to operate garage doors, security gates, and home lighting",
+      "Adds two-way communication status for compatible garage door openers",
+      "Adds automatic dimming of side-view mirrors to reduce headlight glare in traffic"
+    ]
+  }
+}

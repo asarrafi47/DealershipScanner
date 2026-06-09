@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2018|alfaromeo|giulia",
+  "year": 2018,
+  "make": "alfa romeo",
+  "model": "giulia",
+  "ladder_id": "brochure_web_2018__alfaromeo__giulia",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Giulia Intensa AWD",
+    "Giulia Intensa RWD",
+    "Giulia Special Edition AWD",
+    "Giulia Special Edition RWD",
+    "Giulia Tributo Italiano",
+    "Giulia AWD with Veloce Package",
+    "Giulia RWD with Veloce Package",
+    "Giulia AWD",
+    "Giulia RWD"
+  ],
+  "adds_by_trim": {
+    "Giulia Intensa AWD": [
+      "All-wheel drive system"
+    ],
+    "Giulia Intensa RWD": [
+      "Adaptive suspension system"
+    ],
+    "Giulia Special Edition AWD": [
+      "All-wheel drive system",
+      "Two-tone exterior special edition styling"
+    ],
+    "Giulia Special Edition RWD": [
+      "Two-tone exterior special edition styling"
+    ],
+    "Giulia Tributo Italiano": [
+      "Adaptive suspension system",
+      "19-inch model-specific wheels",
+      "Italian Tricolore badges on side mirror caps",
+      "Harman Kardon premium audio system",
+      "Power sunroof",
+      "Sport leather seats with red stitching and embroidered Italian Tricolore flag on front headrests"
+    ],
+    "Giulia AWD with Veloce Package": [
+      "All-wheel drive system",
+      "Limited-slip differential",
+      "Red brake calipers",
+      "19-inch wheels",
+      "Gloss black window trim",
+      "Veloce-spec rear bumper",
+      "Power-adjustable front seat bolsters",
+      "Sport leather-trimmed seats"
+    ],
+    "Giulia RWD with Veloce Package": [
+      "Limited-slip differential",
+      "Red brake calipers",
+      "19-inch wheels",
+      "Gloss black window trim",
+      "Veloce-spec rear bumper",
+      "Power-adjustable front seat bolsters",
+      "Sport leather-trimmed seats"
+    ],
+    "Giulia AWD": [
+      "All-wheel drive system"
+    ],
+    "Giulia RWD": [
+      "2.0-liter turbocharged inline-four engine with 280 horsepower and 306 lb-ft torque",
+      "Eight-speed automatic transmission",
+      "Dark V Scudetto grille",
+      "Acoustic glass",
+      "Aluminum paddle shifters",
+      "17-inch wheels",
+      "Cloth-upholstered seats with Techno leather accents",
+      "12.3-inch reconfigurable digital driver display",
+      "8.8-inch touchscreen with Apple CarPlay and Android Auto",
+      "Heated front and rear seats"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/alfa-romeo/giulia/"
+}

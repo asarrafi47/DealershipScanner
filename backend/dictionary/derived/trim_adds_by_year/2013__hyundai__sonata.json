@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2013|hyundai|sonata",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_web_2013__hyundai__sonata",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Limited Hybrid",
+    "SEL Hybrid",
+    "N Line",
+    "SEL Convenience",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited Hybrid": [
+      "Leather seating surfaces",
+      "Blind-spot view monitoring cameras",
+      "Panoramic sunroof",
+      "Remote Smart Parking Assist via key fob"
+    ],
+    "SEL Hybrid": [
+      "2.0-liter inline four-cylinder with 51-kW electric motor",
+      "192 horsepower total output",
+      "50/54 mpg city/highway EPA rating",
+      "Four-way power passenger seat",
+      "Wireless device charging",
+      "Leather-wrapped steering wheel"
+    ],
+    "N Line": [
+      "2.5-liter turbocharged inline four-cylinder engine",
+      "290 horsepower and 311 lb-ft torque",
+      "Eight-speed dual-clutch automatic transmission",
+      "5.3-second 0-60 mph acceleration",
+      "Premium Bose audio system with 12 speakers",
+      "Rear seat vents",
+      "Sportier exterior and interior styling"
+    ],
+    "SEL Convenience": [
+      "Convenience package features"
+    ],
+    "SEL": [
+      "Four-way power passenger seat",
+      "Wireless device charging",
+      "Leather-wrapped steering wheel",
+      "Keyless entry and ignition"
+    ],
+    "SE": [
+      "2.5-liter inline four-cylinder engine with 191 horsepower",
+      "181 lb-ft torque output",
+      "Eight-speed automatic transmission",
+      "Front-wheel drive standard with available all-wheel drive",
+      "4.2-inch instrument cluster and 12.3-inch touchscreen",
+      "Wireless Apple CarPlay and Android Auto",
+      "Adaptive cruise control and lane keep assist",
+      "Front automatic emergency braking and blind-spot monitoring",
+      "Two USB-C ports in second row"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/hyundai/sonata/"
+}

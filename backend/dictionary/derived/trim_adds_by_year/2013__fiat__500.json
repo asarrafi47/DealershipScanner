@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2013|fiat|500",
+  "year": 2013,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2013__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LOUNGE",
+    "SPORT",
+    "POP"
+  ],
+  "adds_by_trim": {
+    "LOUNGE": [
+      "Premium seats with enhanced comfort",
+      "Fixed-glass roof",
+      "Automatic temperature control",
+      "SiriusXM satellite radio",
+      "Alpine premium audio system",
+      "Security alarm system",
+      "Bright exterior accents"
+    ],
+    "SPORT": [
+      "Sport suspension tuned for performance",
+      "Sport seats",
+      "16-inch aluminum alloy wheels",
+      "Unique front and rear fascias",
+      "Rear spoiler",
+      "Rosso red brake calipers",
+      "Fog lamps"
+    ],
+    "POP": [
+      "5-speed manual transmission",
+      "15-inch aluminum alloy wheels",
+      "40 highway/31 city mpg fuel economy",
+      "Fog lamps",
+      "Alpine premium audio system"
+    ]
+  }
+}

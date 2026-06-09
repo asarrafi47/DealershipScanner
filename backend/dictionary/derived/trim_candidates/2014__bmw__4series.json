@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|bmw|4series",
+  "year": 2014,
+  "make": "BMW",
+  "model": "4 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "428i",
+    "M Sport",
+    "Sport Line",
+    "Luxury Line",
+    "Premium",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

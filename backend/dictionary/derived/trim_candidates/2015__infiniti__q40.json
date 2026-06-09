@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2015|infiniti|q40",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "Q40",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "Q40"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

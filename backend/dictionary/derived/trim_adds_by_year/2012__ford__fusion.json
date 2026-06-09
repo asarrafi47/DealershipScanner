@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2012|ford|fusion",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Fusion",
+  "ladder_id": "brochure_llm_2012__ford__fusion",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport",
+    "SEL",
+    "SE",
+    "S",
+    "Hybrid"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "3.5L Duratec V6 engine with 263 hp and 249 lb-ft torque",
+      "6-speed SelectShift Automatic transmission",
+      "Sport-tuned suspension",
+      "18-inch 5-spoke premium painted aluminum wheels with P225/45R18 tires",
+      "Black-chrome grille",
+      "Dual split chrome exhaust tips",
+      "Rear decklid spoiler"
+    ],
+    "SEL": [
+      "10-way power driver's seat and 4-way power front-passenger seat",
+      "Heated front seats",
+      "Leather-trimmed seats",
+      "Ambient lighting",
+      "Auto-dimming rearview mirror with compass",
+      "Dual-zone electronic automatic temperature control",
+      "Ford SYNC voice-activated in-vehicle connectivity system",
+      "Leather-wrapped steering wheel and shift knob",
+      "Universal garage door opener",
+      "17-inch 5-spoke machined aluminum wheels"
+    ],
+    "SE": [
+      "6-speed SelectShift Automatic transmission",
+      "3.0L Duratec V6 FFV engine with 240 hp and 223 lb-ft torque",
+      "8-way power driver's seat with manual lumbar support",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "AM/FM stereo/single-CD player with MP3 capability and 4 speakers",
+      "Sliding sun visors with illuminated vanity mirrors",
+      "Steering wheel-mounted cruise and audio controls",
+      "Power windows with one touch-up/-down driver's side",
+      "Single-zone manual air conditioning",
+      "17-inch painted aluminum wheels with P225/50R17 tires"
+    ],
+    "S": [
+      "2.5L Duratec I-4 engine with 175 hp and 172 lb-ft torque",
+      "6-speed manual transmission or 6-speed automatic",
+      "4-way manual driver's seat",
+      "2-way manual front-passenger seat",
+      "AM/FM stereo/single-CD player with MP3 capability and 6 speakers",
+      "In-dash storage compartment",
+      "Manual day/night rearview mirror",
+      "Tilt/telescoping steering column",
+      "16-inch 5-spoke painted aluminum wheels with P205/60R16 tires"
+    ],
+    "Hybrid": [
+      "2.5L iVCT Atkinson-cycle I-4 engine with permanent-magnet AC-synchronous electric motor",
+      "Electronically controlled continuously variable transmission (eCVT)",
+      "275-volt sealed nickel-metal-hydride (NiMH) battery",
+      "Regenerative Braking System",
+      "Eco-friendly cloth seating",
+      "Fixed rear seat",
+      "110-volt power outlet",
+      "AM/FM stereo/6-disc in-dash CD changer with MP3 capability and 6 speakers",
+      "SmartGauge with EcoGuide instrument cluster with 2 configurable LCD screens",
+      "17-inch 15-spoke painted aluminum wheels with P225/50R17 tires"
+    ]
+  }
+}

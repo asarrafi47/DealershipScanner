@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2025|subaru|forester",
+  "year": 2025,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2025__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Forester Touring",
+    "Forester Limited",
+    "Forester Sport",
+    "Forester Premium",
+    "Forester"
+  ],
+  "adds_by_trim": {
+    "Forester": [
+      "180-hp 2.5-liter SUBARU BOXER engine with direct injection and auto start-stop",
+      "Subaru Symmetrical All-Wheel Drive with Active Torque Vectoring",
+      "Lineartronic CVT transmission",
+      "1,500-lb towing capacity",
+      "17-inch aluminum-alloy wheels with Dark Metallic machine finish",
+      "EyeSight Driver Assist Technology 3 with Pre-Collision systems",
+      "SUBARU STARLINK Dual 7.0-inch Multimedia with Apple CarPlay and SiriusXM",
+      "8 airbags including dual-stage front and side curtain",
+      "Rear-Vision Camera",
+      "Dual-zone automatic climate control"
+    ],
+    "Forester Premium": [
+      "LED fog lights",
+      "Panoramic moonroof",
+      "Dark gray-finish exterior mirrors",
+      "Privacy glass",
+      "Premium cloth upholstery",
+      "Keyless Access with Push-Button Start",
+      "10-way power-adjustable driver seat with 2-way lumbar support",
+      "SUBARU STARLINK 11.6-inch Multimedia Plus with wireless Apple CarPlay",
+      "Leather-wrapped steering wheel",
+      "Auto-on/off LED Steering Responsive Headlights with High Beam Assist"
+    ],
+    "Forester Sport": [
+      "Dual-function X-MODE with Hill Descent Control",
+      "Steering wheel paddle-shift control switches",
+      "19-inch aluminum-alloy wheels with Bronze finish",
+      "Gray Sport StarTex upholstery with brown stitching and bronze trim accents",
+      "Center console rear vents",
+      "6 speakers",
+      "4G LTE Wi-Fi capability",
+      "Qi wireless smartphone charging pad",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "Automatic Emergency Steering with 1-year trial subscription"
+    ],
+    "Forester Limited": [
+      "182-hp 2.5-liter SUBARU BOXER engine with direct injection and auto start-stop",
+      "19-inch aluminum-alloy wheels with Dark Metallic machine finish",
+      "Crystal Black Silica exterior mirrors with integrated turn signals",
+      "Hands-Free Power Rear Gate",
+      "Stainless steel tailpipe tip",
+      "Leather-trimmed upholstery",
+      "Heated steering wheel",
+      "8-way power-adjustable front-passenger seat",
+      "One-touch folding rear seatback",
+      "Harman Kardon 576-watt-equivalent premium audio system with 11 speakers"
+    ],
+    "Forester Touring": [
+      "3,000-lb towing capacity",
+      "Enhanced Lineartronic CVT gearing and reverse tilt rear differential",
+      "SI-DRIVE with Sport Sharp mode",
+      "Engine skid plate",
+      "Hexagonal LED fog lights",
+      "Heated and ventilated front seats",
+      "Heated outboard rear seats",
+      "DriverFocus Distraction Mitigation System",
+      "360-degree Surround-View Monitor Plus",
+      "SUBARU STARLINK 11.6-inch Multimedia Navigation System with 3 years free map updates"
+    ]
+  }
+}

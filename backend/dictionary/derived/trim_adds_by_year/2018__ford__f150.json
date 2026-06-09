@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2018|ford|f150",
+  "year": 2018,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_2018__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "King Ranch",
+    "XLT",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper warranty coverage",
+      "Adds Includes 5-year/60,000-mile powertrain warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion protection on aluminum body panels",
+      "Adds Includes 5-year/60,000-mile roadside assistance coverage"
+    ],
+    "XLT": [
+      "Adds fog lamps",
+      "Adds hood protectors and deflectors",
+      "Adds carpeted floor mats",
+      "Adds door sill plates",
+      "Adds side window deflectors"
+    ],
+    "King Ranch": [
+      "Adds chrome exhaust tip with heavy-duty splash guards and stainless steel inserts",
+      "Adds step bars",
+      "Adds LED warning strobes and work task lights",
+      "Adds trailer tow mirrors"
+    ],
+    "Limited": [
+      "Adds fender flares",
+      "Adds rear wheel-well liners",
+      "Adds spray-in bedliner",
+      "Adds hard-folding tonneau cover",
+      "Adds stowable load ramps"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|volkswagen|golf",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "brochure_web_2011__volkswagen__golf",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Golf 1.4T TSI Auto",
+    "Golf 1.4T TSI Manual"
+  ],
+  "adds_by_trim": {
+    "Golf 1.4T TSI Auto": [
+      "Eight-speed automatic transmission instead of six-speed manual",
+      "29/35 mpg city/highway EPA rating versus 28/36 with manual"
+    ],
+    "Golf 1.4T TSI Manual": [
+      "1.4-liter turbocharged four-cylinder engine with 147 hp and 184 lb-ft torque",
+      "Six-speed manual transmission",
+      "Front-wheel drive",
+      "6.5-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Forward collision warning with automatic emergency braking",
+      "Rear cross-traffic alert and blind-spot monitoring",
+      "Rain sensing windshield wipers",
+      "22.8 cubic feet cargo space, expandable to 53.7 cubic feet with folded seats",
+      "Six-speaker audio system with one USB Type-C port",
+      "Bluetooth connectivity and Wi-Fi hotspot capability"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/golf/"
+}

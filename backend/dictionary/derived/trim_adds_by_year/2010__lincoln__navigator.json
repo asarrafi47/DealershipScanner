@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2010|lincoln|navigator",
+  "year": 2010,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_llm_2010__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Navigator L",
+    "Navigator"
+  ],
+  "adds_by_trim": {
+    "Navigator L": [
+      "22-inch chrome cast-aluminum wheels available as Lincoln Custom Accessory"
+    ],
+    "Navigator": [
+      "18-inch 7-spoke aluminum wheels standard",
+      "20-inch 7-spoke chrome-aluminum wheels available",
+      "4-year/50,000-mile bumper-to-bumper New Vehicle Limited Warranty",
+      "6-year/70,000-mile powertrain limited warranty with no deductible",
+      "Complimentary scheduled maintenance for first year or 15,000 miles"
+    ]
+  }
+}

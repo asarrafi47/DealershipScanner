@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2016|volkswagen|bus",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Bus",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport",
+    "EX",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

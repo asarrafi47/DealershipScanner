@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|ford|maverick",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Maverick",
+  "ladder_id": "brochure_web_2022__ford__maverick",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Lariat",
+    "Tremor",
+    "Lobo",
+    "XLT"
+  ],
+  "adds_by_trim": {
+    "Lariat": [
+      "19-inch wheels",
+      "Smoke Truffle interior theme with bronze accents",
+      "Pro Trailer Hitch Assist and Pro Trailer Backup Assist standard",
+      "Adaptive cruise control with stop-and-go capability and lane centering"
+    ],
+    "Tremor": [
+      "All-terrain focused suspension and styling",
+      "Pro Trailer Hitch Assist and Pro Trailer Backup Assist standard",
+      "1,140 pounds payload capacity",
+      "Adaptive cruise control with stop-and-go capability and lane centering"
+    ],
+    "Lobo": [
+      "Lowered suspension: 0.5 inch front, 1.1 inches rear",
+      "Body-color rear bumper and side skirts with black roof",
+      "19-inch monobloc-style wheels",
+      "Torque-vectoring rear differential with drive mode reducing stability control intervention",
+      "Larger front brake rotors and upgraded steering gear",
+      "Seven-speed automatic transmission with paddle shifters",
+      "Grabber Blue and Electric Lime contrast stitching with Lobo branding"
+    ],
+    "XLT": [
+      "13.2-inch touchscreen with Sync 4, wireless Apple CarPlay and Android Auto",
+      "8.0-inch digital instrument cluster",
+      "Built-in 5G modem with over-the-air updates",
+      "360-degree camera available",
+      "Automatic emergency braking, automatic high-beams, and lane keep assist standard"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ford/maverick/"
+}

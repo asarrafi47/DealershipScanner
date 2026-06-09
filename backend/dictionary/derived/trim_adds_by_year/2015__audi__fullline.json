@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2015|audi|fullline",
+  "year": 2015,
+  "make": "Audi",
+  "model": "Full Line",
+  "ladder_id": "brochure_2015__audi__fullline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds quattro all-wheel drive system with variable torque distribution",
+      "Adds four-wheel traction across multiple surface conditions",
+      "Adds enhanced road-holding and improved steering precision"
+    ],
+    "Limited": [
+      "Adds available rear sport differential for maximized cornering agility",
+      "Adds available torque vectoring system with electrohydraulic multiplate clutch pack",
+      "Adds intelligent torque vectoring that increases outside rear cornering wheel speed by up to 10%",
+      "Adds independent inside corner-wheel braking for neutral handling promotion"
+    ]
+  }
+}

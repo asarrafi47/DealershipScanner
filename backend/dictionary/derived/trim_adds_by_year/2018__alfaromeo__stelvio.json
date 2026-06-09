@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|alfaromeo|stelvio",
+  "year": 2018,
+  "make": "alfa romeo",
+  "model": "stelvio",
+  "ladder_id": "brochure_llm_2018__alfaromeo__stelvio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "STELVIO Ti",
+    "STELVIO"
+  ],
+  "adds_by_trim": {
+    "STELVIO Ti": [
+      "19-inch Bright 10-spoke aluminum wheels with 235/55R19 all-season tires",
+      "Heated front seats",
+      "Heated steering wheel",
+      "Heated windshield washer nozzles",
+      "Black headliner",
+      "Alfa Romeo Bright aluminum door sills",
+      "Front and Rear Park Sensors",
+      "Ti Sport Package with 20-inch Sport wheels and premium sport leather seats",
+      "Ti Lusso Package with wood interior trim and luxury leather seats"
+    ],
+    "STELVIO": [
+      "All-aluminum 2.0L Turbocharged 4-cylinder engine with 280 hp and 306 lb-ft torque",
+      "8-speed automatic transmission with Q4 All-Wheel Drive",
+      "Bi-xenon headlamps with Adaptive Forward Lighting and LED Daytime Running Lights",
+      "18-inch Bright 5-spoke aluminum wheels with 235/60R18 run-flat all-season tires",
+      "Leather seats with 10-way power front seats and 4-way power lumbar support",
+      "Segment-first Integrated Brake System with 4-wheel ventilated disc brakes",
+      "Start/Stop technology and Sport-tuned suspension",
+      "8.8-inch widescreen color display with 3D navigation and Apple CarPlay/Android Auto"
+    ]
+  }
+}

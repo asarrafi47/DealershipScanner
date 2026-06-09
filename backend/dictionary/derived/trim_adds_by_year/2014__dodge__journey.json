@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2014|dodge|journey",
+  "year": 2014,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_llm_2014__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Journey R/T",
+    "Journey Limited",
+    "Journey SXT Plus",
+    "Journey SXT",
+    "Journey SE",
+    "Journey AVP"
+  ],
+  "adds_by_trim": {
+    "Journey R/T": [
+      "19-inch Satin Carbon aluminum wheels",
+      "Body-color grille",
+      "Leather-trimmed seats with perforated inserts and red accent stitching",
+      "Dimpled leather-wrapped steering wheel",
+      "Dimpled leather-wrapped shift knob",
+      "Firm-feel power steering",
+      "High-performance suspension",
+      "6 premium speakers with subwoofer and 368-watt amplifier"
+    ],
+    "Journey Limited": [
+      "Uconnect 4.3 with 4.3-inch touch-screen display",
+      "19-inch aluminum wheels",
+      "Automatic headlamps",
+      "Bright door handles",
+      "Bright side roof rails",
+      "Leather-trimmed seats"
+    ],
+    "Journey SXT Plus": [
+      "20.5-gallon fuel tank",
+      "Tilt/telescoping steering column",
+      "Front and rear LED lamps",
+      "Front-passenger forward fold-flat seat",
+      "Air conditioning with dual-zone automatic temperature control",
+      "Power 10-way driver's seat with 4-way lumbar adjust"
+    ],
+    "Journey SXT": [
+      "17-inch aluminum wheels",
+      "Fog lamps",
+      "Unique performance front and rear fascias",
+      "Body-color exterior mirrors",
+      "Steering wheel-mounted audio controls",
+      "6 speakers"
+    ],
+    "Journey SE": [
+      "Black side roof rails",
+      "Deep-tint sunscreen glass",
+      "LED taillamps",
+      "Interior observation mirror"
+    ],
+    "Journey AVP": [
+      "2.4L 173 horsepower I4 DOHC 16V dual VVT with 4-speed automatic",
+      "17-inch wheel covers",
+      "Bright grille",
+      "Halogen quad headlamps",
+      "Power heated mirrors, fold-away",
+      "Variable-intermittent windshield wipers",
+      "Body-color door handles",
+      "Air conditioning with dual-zone manual temperature control",
+      "2nd-row 60/40 seat with fore and aft adjustment",
+      "Full-length floor console with premium armrest"
+    ]
+  }
+}

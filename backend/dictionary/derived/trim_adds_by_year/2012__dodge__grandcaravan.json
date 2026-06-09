@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|dodge|grandcaravan",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2012__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SXT",
+    "SE",
+    "AVP"
+  ],
+  "adds_by_trim": {
+    "SXT": [
+      "16-inch aluminum wheels",
+      "Power front windows with driver's one-touch up/down",
+      "Power second-row windows and power third-row vents",
+      "Body-color heated mirrors",
+      "Power dual sliding doors",
+      "Power liftgate",
+      "Power adjustable pedals",
+      "Super console",
+      "Stow 'n Place roof rack"
+    ],
+    "SE": [
+      "Air conditioning with three-zone manual temperature control",
+      "Easy-clean floor mats",
+      "Floor console with cup holders",
+      "Body-color door handles and bodyside molding",
+      "Deep-tinted sunscreen glass"
+    ],
+    "AVP": [
+      "3.6L Pentastar V6 Flex Fuel engine with 283 horsepower",
+      "6-speed automatic transmission with Electronic Range Select",
+      "Second-row bucket seats with Super Stow 'n Go fold-in-floor design",
+      "Second-row concealed storage tubs",
+      "Third-row Stow 'n Go with tailgate seats",
+      "Electronic Stability Control with all-speed traction control and Brake Assist",
+      "Advanced multistage front and side-curtain airbags with driver's knee blocker",
+      "Active front head restraints",
+      "Four-wheel disc antilock brakes",
+      "16-inch wheels with wheel covers"
+    ]
+  }
+}

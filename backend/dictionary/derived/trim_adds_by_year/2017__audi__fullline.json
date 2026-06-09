@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2017|audi|fullline",
+  "year": 2017,
+  "make": "Audi",
+  "model": "Full Line",
+  "ladder_id": "brochure_2017__audi__fullline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Audi pre sense® driver assistance technology with camera and sensor monitoring",
+      "Adds pedestrian detection and automatic braking capability",
+      "Adds road-ahead and road-behind monitoring systems"
+    ],
+    "Limited": [
+      "Adds adaptive aerodynamics system",
+      "Adds advanced quattro® all-wheel drive technology"
+    ]
+  }
+}

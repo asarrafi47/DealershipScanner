@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2016|cadillac|escalade",
+  "year": 2016,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_llm_2016__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Escalade Platinum",
+    "Escalade Performance",
+    "Escalade Luxury",
+    "Escalade",
+    "Escalade ESV"
+  ],
+  "adds_by_trim": {
+    "Escalade Platinum": [
+      "22-inch 6-spoke chrome wheels"
+    ],
+    "Escalade Performance": [
+      "22-inch chrome multi-featured design wheels"
+    ],
+    "Escalade Luxury": [
+      "22-inch 7-spoke aluminum wheels with ultrabright finish and premium paint accents"
+    ],
+    "Escalade": [
+      "20-inch dual 7-spoke aluminum wheels standard",
+      "Tire sealant and compressor kit",
+      "New-vehicle limited warranty with powertrain coverage"
+    ],
+    "Escalade ESV": [
+      "20-inch dual 7-spoke aluminum wheels standard",
+      "Tire sealant and compressor kit",
+      "New-vehicle limited warranty with powertrain coverage"
+    ]
+  }
+}

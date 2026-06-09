@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|toyota|yarisia",
+  "year": 2020,
+  "make": "Toyota",
+  "model": "Yaris iA",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds to or replaces features offered on LE",
+      "Exterior Features Exterior Features",
+      "Fog lights \u2022 LED auto on/off headlights",
+      "Color-keyed heated power outside mirrors with turn \u2022 LED Daytime Running Lights (DRL) integrated into headlights",
+      "Rear spoiler Interior Features",
+      "16-in. Dark Gray split-spoke alloy wheels with P185/60R16 tires",
+      "Automatic climate control",
+      "Leatherette-trimmed sport front bucket seats",
+      "Smart Key System16 with Push Button Start \u2022 Leather-trimmed tilt/telescopic 3-spoke steering wheel",
+      "Low-Speed Pre-Collision System17 \u2022 Low-Speed Pre-Collision System17",
+      "Active Safety System \u2014 includes Dynamic Stability Control (DSC),18 \u2022 Active Safety System \u2014 includes Dynamic Stability Control (DSC),18",
+      "Traction Control System (TCS), Brake Assist (BA),19 Electronic Traction Control System (TCS), Brake Assist (BA),19 Electronic"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

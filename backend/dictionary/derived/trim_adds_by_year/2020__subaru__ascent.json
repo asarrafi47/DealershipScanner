@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2020|subaru|ascent",
+  "year": 2020,
+  "make": "Subaru",
+  "model": "Ascent",
+  "ladder_id": "brochure_llm_2020__subaru__ascent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ascent Touring",
+    "Ascent Limited",
+    "Ascent Premium",
+    "Ascent"
+  ],
+  "adds_by_trim": {
+    "Ascent Touring": [
+      "Information not provided in brochure excerpt"
+    ],
+    "Ascent Limited": [
+      "Information not provided in brochure excerpt"
+    ],
+    "Ascent Premium": [
+      "Information not provided in brochure excerpt"
+    ],
+    "Ascent": [
+      "Standard Subaru Symmetrical All-Wheel Drive",
+      "Standard EyeSight Driver Assist Technology",
+      "Standard X-MODE with Hill Descent Control",
+      "2.4-liter turbocharged DOHC Direct-Injection 4-cylinder engine, 260 hp",
+      "Lineartronic CVT transmission with 8-speed manual mode and paddle shifters",
+      "8.7 inches ground clearance",
+      "Up to 27 highway MPG",
+      "2,000 lbs maximum towing capacity on base Ascent model",
+      "Built-in Wi-Fi capability",
+      "Up to eight USB ports"
+    ]
+  }
+}

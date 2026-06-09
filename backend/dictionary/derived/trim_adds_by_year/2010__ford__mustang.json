@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2010|ford|mustang",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "2010_ford_mustang",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "V6",
+    "V6 Premium",
+    "GT",
+    "GT Premium",
+    "GT500"
+  ],
+  "adds_by_trim": {
+    "V6 Premium": [
+      "Ford SYNC voice-activated communications and entertainment",
+      "17-inch machined-aluminum wheels with painted pockets",
+      "6-gauge cluster with MyColor illumination",
+      "6-way power driver seat with power lumbar and Ambient Lighting",
+      "Bright-aluminum instrument panel appliqué, pedal covers, and door sill plates",
+      "Leather-trimmed seats and Shaker 500 audio available"
+    ],
+    "GT": [
+      "4.6L SOHC V8 — 315 hp and 325 lb-ft (replaces 4.0L V6 210 hp on V6 models)",
+      "5-speed manual GT transmission with 3.31:1 limited-slip differential",
+      "18-inch wide-spoke painted-aluminum wheels and rear stabilizer bar",
+      "Dual bright rolled exhaust tips and body-color power mirrors",
+      "Fog lamps and black-chrome pony grille badge"
+    ],
+    "GT Premium": [
+      "Leather-trimmed seats with Premier Trim color-accent options",
+      "Shaker 500 AM/FM 6-disc in-dash audio with 500 watts",
+      "6-gauge MyColor cluster and Ambient Lighting",
+      "19-inch bright machined-aluminum wheels available; HID headlamps available",
+      "Ford SYNC and Security Package available"
+    ],
+    "GT500": [
+      "5.4L supercharged DOHC V8 — 540 hp and 510 lb-ft",
+      "6-speed manual with 3.55:1 limited-slip and 9.0 psi Eaton supercharger",
+      "Brembo 14-inch vented front 4-piston calipers and 11.8-inch rear vented discs",
+      "SVT-tuned suspension with unique shocks, springs, and GT500 stabilizer bars",
+      "19-inch premium painted-aluminum wheels (coupe) with Z-rated Pirelli tires",
+      "Tuned stainless steel X-pipe exhaust and forged-steel crankshaft",
+      "Leather sport buckets with racing stripes and Alcantara trim"
+    ],
+    "V6": [
+      "3.7L Ti-VCT V6 with 305 hp and 280 lb.-ft. torque",
+      "6-speed manual or automatic transmission",
+      "19 city/29 hwy/22 combined mpg (manual) or 19 city/31 hwy/23 combined mpg (automatic)",
+      "4-wheel disc Anti-Lock Brake System with all-speed traction control",
+      "Coil-over-strut front suspension with coil spring 3-link solid-axle rear",
+      "Selectable-effort electric power-assisted steering in Standard, Comfort, and Sport modes",
+      "Front bucket seats with 50/50 split-fold rear seat (coupe only)",
+      "Power windows, power door locks, tilt steering column",
+      "Cruise control with remote keyless entry system",
+      "HID headlamps with rear sequential LED turn signal lamps"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2018|jaguar|epace",
+  "year": 2018,
+  "make": "Jaguar",
+  "model": "E-Pace",
+  "ladder_id": "brochure_llm_2018__jaguar__epace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "E-PACE R-Dynamic HSE",
+    "E-PACE R-Dynamic SE",
+    "E-PACE R-Dynamic S",
+    "E-PACE S",
+    "E-PACE"
+  ],
+  "adds_by_trim": {
+    "E-PACE R-Dynamic HSE": [
+      "20-inch 5 split-spoke Style 5051 wheels with satin grey diamond turned finish",
+      "Auto-dimming power fold heated door mirrors with memory and approach lights",
+      "Bright metal pedals with stainless steel sports pedal covers"
+    ],
+    "E-PACE R-Dynamic SE": [
+      "19-inch 5 spoke Style 5049 wheels standard",
+      "Auto-dimming power fold heated door mirrors with memory and approach lights"
+    ],
+    "E-PACE R-Dynamic S": [
+      "18-inch 5 spoke Style 5048 wheels standard",
+      "Bright metal pedals with stainless steel sports pedal covers"
+    ],
+    "E-PACE S": [
+      "18-inch 9 spoke Style 9008 wheels standard",
+      "Auto-dimming power fold heated door mirrors with memory and approach lights"
+    ],
+    "E-PACE": [
+      "17-inch 10 spoke Style 1005 wheels standard",
+      "LED headlights with signature daytime running lights",
+      "Available auto high beam assist with forward facing camera"
+    ]
+  }
+}

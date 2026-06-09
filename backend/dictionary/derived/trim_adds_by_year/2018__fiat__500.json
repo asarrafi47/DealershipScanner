@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2018|fiat|500",
+  "year": 2018,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2018__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CABRIO LOUNGE",
+    "CABRIO HATCHBACK",
+    "LOUNGE",
+    "POP"
+  ],
+  "adds_by_trim": {
+    "CABRIO LOUNGE": [
+      "Power folding 3-position premium soft top in Black, Bordeaux, or Beige",
+      "Leather-trimmed front bucket seats with 500 logo",
+      "Heated front seats",
+      "Rearview mirror with auto-dimming and microphone",
+      "Chrome shift knob",
+      "Chrome door handles and bright belt moldings"
+    ],
+    "CABRIO HATCHBACK": [
+      "Power folding 3-position premium soft top in Black or Bordeaux",
+      "Leather-trimmed front bucket seats with 500 logo",
+      "Heated front seats",
+      "Rearview mirror with auto-dimming and microphone",
+      "Chrome shift knob"
+    ],
+    "LOUNGE": [
+      "Automatic Temperature Control with micron filter",
+      "Front-passenger assist handle",
+      "Rearview mirror with auto-dimming and microphone",
+      "Leather-trimmed front bucket seats with 500 logo",
+      "Heated front seats",
+      "SiriusXM Satellite Radio with one-year trial",
+      "Fixed-glass roof",
+      "Chrome shift knob",
+      "Chrome door handles and bright belt moldings"
+    ],
+    "POP": [
+      "1.4L 16V MultiAir Turbo engine with 135 hp and 150 lb-ft torque",
+      "5-speed Manual or 6-speed Automatic transmission",
+      "Antilock 4-wheel disc brakes",
+      "Front-wheel drive",
+      "Sport-tuned suspension",
+      "Electric power steering with tilt column",
+      "Bifunctional halogen projector headlamps and daytime running lamps",
+      "Fog lamps",
+      "16-inch aluminum wheels with 195/45R16XL tires",
+      "Manual air conditioning with micron filter"
+    ]
+  }
+}

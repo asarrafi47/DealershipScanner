@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2014|mazda|5",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "5",
+  "ladder_id": "brochure_llm_2014__mazda__5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA5 GRAND TOURING",
+    "MAZDA5 TOURING",
+    "MAZDA5 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA5 GRAND TOURING": [
+      "Leather-trimmed seats instead of cloth",
+      "Heated front seats",
+      "Xenon High-Intensity-Discharge headlights with automatic on/off",
+      "Heated power side mirrors with integrated turn signal lamps",
+      "Rain-sensing front windshield wipers",
+      "Leather-wrapped steering wheel and shift knob",
+      "SiriusXM Satellite Radio with four-month trial subscription"
+    ],
+    "MAZDA5 TOURING": [
+      "Power sliding-glass moonroof with interior sunshade",
+      "Rain-sensing windshield wipers",
+      "Xenon HID headlights with automatic on/off",
+      "Dual body-colored remote side mirrors with integrated turn signals",
+      "5-speed automatic transmission available",
+      "Fog lights",
+      "SiriusXM Satellite Radio with four-month trial subscription"
+    ],
+    "MAZDA5 SPORT": [
+      "2.5L DOHC 16-valve 4-cylinder engine with 157 hp",
+      "6-speaker AM/FM/CD/MP3-compatible audio system",
+      "Bluetooth hands-free phone and audio streaming",
+      "Remote keyless illuminated entry system",
+      "Tilt and telescopic steering column",
+      "Steering-wheel-mounted audio and cruise controls",
+      "Trip computer",
+      "Anti-theft alarm system",
+      "Dual sliding rear doors",
+      "Fully automatic climate control"
+    ]
+  }
+}

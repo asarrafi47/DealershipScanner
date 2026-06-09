@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2011|toyota|fjcruiser",
+  "year": 2011,
+  "make": "Toyota",
+  "model": "FJ Cruiser",
+  "ladder_id": "brochure_web_2011__toyota__fjcruiser",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "FJ Cruiser 4WD 4dr Auto",
+    "FJ Cruiser RWD 4dr Auto"
+  ],
+  "adds_by_trim": {
+    "FJ Cruiser 4WD 4dr Auto": [
+      "Part-time four-wheel drive system with locking rear differential",
+      "Five-speed automatic transmission"
+    ],
+    "FJ Cruiser RWD 4dr Auto": [
+      "4.0-liter V-6 engine with 260 hp and 271 lb-ft torque",
+      "Five-speed automatic transmission",
+      "Rear-wheel drive",
+      "Five-passenger seating with half-sized rear-hinged doors",
+      "Water-resistant cloth seats",
+      "Rubberized floor mats",
+      "Round headlights with white rooftop",
+      "Spare tire mounted on rear with wraparound windows"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/fj-cruiser/"
+}

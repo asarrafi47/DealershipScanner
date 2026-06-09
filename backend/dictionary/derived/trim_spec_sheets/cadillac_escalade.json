@@ -1,0 +1,60 @@
+{
+  "ladder_id": "cadillac_escalade",
+  "make": "Cadillac",
+  "models": [
+    "Escalade",
+    "Escalade ESV",
+    "Escalade-V"
+  ],
+  "year_min": 2021,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "V-Series": [
+      {
+        "label": "Engine Options",
+        "value": "682 hp supercharged 6.2L V8"
+      }
+    ],
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 5.7 L L31 V8 (gasoline)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Semi-Aniline leather and executive seating options"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "AKG Studio Reference 36-speaker audio"
+      }
+    ],
+    "Premium Luxury": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 5.7 L L31 V8 (gasoline)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Advanced driver assistance and navigation"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Enhanced luxury interior and comfort features"
+      }
+    ],
+    "Luxury": [
+      {
+        "label": "Screen Size",
+        "value": "55-inch curved pillar-to-pillar display (2025+ refresh)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "F4 (Front-engine, four-wheel drive); L LM7 V8"
+      }
+    ]
+  }
+}

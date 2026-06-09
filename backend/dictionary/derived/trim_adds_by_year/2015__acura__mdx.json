@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|acura|mdx",
+  "year": 2015,
+  "make": "acura",
+  "model": "mdx",
+  "ladder_id": "brochure_llm_2015__acura__mdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance & Entertainment Packages",
+    "Technology & Entertainment Packages",
+    "Technology Package",
+    "MDX"
+  ],
+  "adds_by_trim": {
+    "Advance & Entertainment Packages": [
+      "19-inch aluminum-alloy wheels with 245/55 R19 high-performance all-season tires",
+      "Acura DVD Rear Entertainment System with 9-inch full VGA screen",
+      "Acura/ELS Studio Premium Audio System with 10 speakers and HD Radio"
+    ],
+    "Technology & Entertainment Packages": [
+      "Acura Navigation System with 3D view and GPS-linked climate control",
+      "AcuraLink Real-Time Traffic with exclusive street and freeway conditions",
+      "Traffic Rerouting and multi-view rear camera with dynamic guidelines",
+      "Blind spot information (BSI) system",
+      "Forward Collision Warning (FCW) system",
+      "Lane Departure Warning (LDW) system"
+    ],
+    "Technology Package": [
+      "Acura Navigation System with 3D view and GPS-linked climate control",
+      "AcuraLink Real-Time Traffic with exclusive street and freeway conditions",
+      "Traffic Rerouting and multi-view rear camera with dynamic guidelines",
+      "19-inch aluminum-alloy wheels with 245/55 R19 high-performance all-season tires",
+      "Rear door smart entry"
+    ],
+    "MDX": [
+      "3.5L V-6 i-VTEC engine with 290 horsepower and 267 lb-ft torque",
+      "6-speed automatic transmission with Sequential SportShift paddle shifters",
+      "Front-wheel drive or Super Handling All-Wheel Drive (SH-AWD) available",
+      "Jewel Eye LED headlights and LED-illuminated taillights",
+      "8-inch color display touchscreen interface",
+      "Bluetooth HandsFreeLink wireless telephone and streaming audio",
+      "Acura Premium Audio System with 8 speakers",
+      "3-row seating for up to 7 passengers",
+      "Tri-zone automatic climate control with humidity control and air filtration",
+      "Advanced Compatibility Engineering (ACE) body structure with side-impact beams"
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2012|ford|fiesta",
+  "year": 2012,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_llm_2012__ford__fiesta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SES Hatchback",
+    "SEL Sedan",
+    "SE Hatchback",
+    "SE Sedan",
+    "S Sedan"
+  ],
+  "adds_by_trim": {
+    "SES Hatchback": [
+      "16-inch premium painted aluminum wheels with P195/50R16 tires",
+      "LED parking lamps with chrome surrounds",
+      "Power heated sideview mirrors with blind spot mirrors and turn signal indicators",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "Leather-wrapped steering wheel",
+      "Premium Sound System with 6 speakers and 80 watts",
+      "Rear carpeted floor mats",
+      "SYNC voice-activated in-vehicle connectivity with USB input",
+      "Steering wheel-mounted audio controls"
+    ],
+    "SEL Sedan": [
+      "16-inch premium painted aluminum wheels with P195/50R16 tires",
+      "LED parking lamps with chrome surrounds",
+      "Power heated sideview mirrors with blind spot mirrors and turn signal indicators",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "Leather-wrapped steering wheel",
+      "Premium Sound System with 6 speakers and 80 watts",
+      "Rear carpeted floor mats",
+      "SYNC voice-activated in-vehicle connectivity with USB input",
+      "Steering wheel-mounted audio controls",
+      "Auto-dimming rearview mirror"
+    ],
+    "SE Hatchback": [
+      "Body-color grille with lower chrome surround",
+      "Rear spoiler",
+      "Rear window wiper",
+      "Remote Keyless Entry System",
+      "AM/FM stereo with single-CD player and MP3 capability",
+      "Message center with trip computer",
+      "Power windows with one-touch-up/-down driver's side",
+      "Integrated armrest on driver's seat"
+    ],
+    "SE Sedan": [
+      "Automatic locking doors driveaway feature",
+      "Driver and front-passenger sun visors with vanity mirrors",
+      "Front-passenger seat back map pockets",
+      "Integrated armrest on driver's seat",
+      "Message center with trip computer",
+      "Power windows with one-touch-up/-down driver's side",
+      "Rear dome light",
+      "Unique cloth seats",
+      "AM/FM stereo with single-CD player and MP3 capability"
+    ],
+    "S Sedan": [
+      "1.6L Ti-VCT Duratec I-4 engine with 120 hp and 112 lb-ft torque",
+      "5-speed manual transmission",
+      "Anti-Lock Brake System",
+      "Electric power-assisted steering",
+      "Front-wheel drive",
+      "Power front disc and rear drum brakes",
+      "3-spoke steering wheel with tilt and telescoping capability",
+      "4-inch multifunctional LCD screen",
+      "Air conditioning",
+      "Dual-stage front airbags and side-curtain airbags"
+    ]
+  }
+}

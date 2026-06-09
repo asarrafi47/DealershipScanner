@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2015|landrover|lr4",
+  "year": 2015,
+  "make": "landrover",
+  "model": "LR4",
+  "ladder_id": "brochure_web_2015__landrover__lr4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE LUX",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "HSE LUX": [
+      "Premium leather trim on center armrest cooler/warmer box",
+      "Soft touch interior lining with magnetic button clasps on seat back stowage"
+    ],
+    "HSE": [
+      "Seat back stowage system for rear of front seats with multiple compartments",
+      "Center armrest cooler/warmer box for long journeys"
+    ],
+    "SE": [
+      "Load retention net with tie-down points and ratchet straps",
+      "Rechargeable 300 lumen flashlight with integral charging dock",
+      "Ski bag carrier for up to two pairs of skis and poles"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/landrover/lr4/"
+}

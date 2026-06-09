@@ -1,0 +1,98 @@
+{
+  "catalog_key": "2018|honda|accord",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Accord",
+  "ladder_id": "brochure_llm_2018__honda__accord",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING 2.0T",
+    "SPORT 2.0T",
+    "HYBRID TOURING",
+    "HYBRID EX-L",
+    "EX-L 2.0T",
+    "TOURING 1.5T",
+    "EX-L 1.5T",
+    "SPORT 1.5T",
+    "HYBRID EX",
+    "EX 1.5T",
+    "LX 1.5T"
+  ],
+  "adds_by_trim": {
+    "SPORT 1.5T": [
+      "6-speed manual transmission option",
+      "Continuously variable transmission with Sport Mode and paddle shifters"
+    ],
+    "EX 1.5T": [
+      "Remote engine start",
+      "Smart Entry with Walk Away Auto Lock",
+      "One-touch power moonroof with tilt feature",
+      "Blind Spot Information System",
+      "Driver's seat with 12-way power adjustment and 4-way lumbar support",
+      "Heated front seats",
+      "180-watt audio system with 8 speakers",
+      "8-inch Display Audio with high-resolution touchscreen",
+      "Apple CarPlay and Android Auto integration"
+    ],
+    "EX-L 1.5T": [
+      "HomeLink remote system",
+      "Automatic-dimming rearview mirror",
+      "19-inch alloy wheels",
+      "Driver seat with two-position memory",
+      "Leather-trimmed seats",
+      "450-watt premium audio system with 10 speakers and subwoofer",
+      "Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic"
+    ],
+    "TOURING 1.5T": [
+      "Adaptive damper system",
+      "One-touch power moonroof with tilt feature",
+      "Front passenger's seat with 4-way power adjustment",
+      "Head-Up Display",
+      "Body-colored parking sensors",
+      "Side mirrors with reverse gear tilt-down",
+      "LED headlights with auto-on/off",
+      "HondaLink subscription services",
+      "Wireless phone charger"
+    ],
+    "HYBRID EX": [
+      "2.0-liter, 3rd generation, two-motor hybrid powertrain",
+      "Honda Sensing suite of safety and driver-assistive features",
+      "Knee airbags",
+      "LED low-beam headlights with auto-on/off"
+    ],
+    "HYBRID EX-L": [
+      "Ventilated front seats",
+      "Leather-trimmed interior",
+      "450-watt premium audio system with 10 speakers and subwoofer",
+      "Honda Satellite-Linked Navigation System with voice recognition and HD Digital Traffic"
+    ],
+    "HYBRID TOURING": [
+      "Heated and ventilated front seats",
+      "Wireless phone charger"
+    ],
+    "EX-L 2.0T": [
+      "252-hp, 2.0-liter turbocharged engine",
+      "10-speed automatic transmission with Shift-By-Wire and paddle shifters",
+      "Dual chrome exhaust finishers"
+    ],
+    "SPORT 2.0T": [
+      "252-hp, 2.0-liter turbocharged engine",
+      "10-speed automatic transmission with Shift-By-Wire and paddle shifters"
+    ],
+    "TOURING 2.0T": [
+      "Head-Up Display"
+    ],
+    "LX 1.5T": [
+      "192-hp, 1.5-liter turbocharged and intercooled DOHC 4-cylinder engine",
+      "Continuously variable transmission with Sport Mode",
+      "Honda Sensing suite of safety features",
+      "Knee airbags",
+      "LED low-beam headlights with auto-on/off",
+      "LED brake lights and integrated LED light bars",
+      "LED Daytime Running Lights and turn indicators",
+      "7-inch Driver Information Interface",
+      "Bluetooth HandsFreeLink with streaming audio",
+      "USB Audio Interface"
+    ]
+  }
+}

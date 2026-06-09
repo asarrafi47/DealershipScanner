@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2024|jeep|wrangler",
+  "year": 2024,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "High Altitude",
+    "Limited",
+    "Rubicon",
+    "Sahara",
+    "Willys",
+    "Altitude",
+    "Sport S",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

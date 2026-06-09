@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_toyota_mirai_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Mirai",
+    "Mirai"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Range 647 km (402 mi) (EPA) 141 liters (3 x hydrogen tanks)"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Range 647 km (402 mi) (EPA) 141 liters (3 x hydrogen tanks)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2016|chevrolet|cityexpress",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "CityExpress",
+  "ladder_id": "brochure_web_2016__chevrolet__cityexpress",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "LS",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LS": [
+      "2.0L four-cylinder engine with 131 horsepower",
+      "Five-speed automatic transmission",
+      "Front-wheel drive",
+      "Power steering and power brakes",
+      "Air conditioning",
+      "AM/FM radio with CD player",
+      "Manual windows and locks",
+      "Cloth seats",
+      "Steel wheels with covers"
+    ],
+    "LT": [
+      "Upgraded cloth upholstery with additional comfort features",
+      "Power windows and power door locks",
+      "Cruise control",
+      "Bluetooth connectivity for phone",
+      "SiriusXM satellite radio capable",
+      "Upgraded interior trim materials",
+      "Additional storage compartments",
+      "Enhanced HVAC controls"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/chevrolet/cityexpress/"
+}

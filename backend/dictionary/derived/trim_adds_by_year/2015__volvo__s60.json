@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2015|volvo|s60",
+  "year": 2015,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2015__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S60 T6 AWD R-Design Platinum",
+    "S60 T6 AWD R-Design",
+    "S60 T6 AWD"
+  ],
+  "adds_by_trim": {
+    "S60 T6 AWD R-Design Platinum": [
+      "19\" IXION II Alloy Wheel with Matte Black Finish and Performance Summer Tire",
+      "Nubuck Textile/Leather combination upholstery"
+    ],
+    "S60 T6 AWD R-Design": [
+      "R-Design Unique Lower Front Spoiler and Air intake with black gloss grille and emblem",
+      "R-Design Leather Sport Seats with R-Design emblem on steering wheel",
+      "R-Design Blue Watch Dial Instrument Cluster with exclusive blue adaptive TFT digital display",
+      "R-Design Aluminum Inlay and R-Design Floor Mats with accent piping",
+      "Sport Chassis and Sport Pedals",
+      "18\" IXION Alloy Wheels",
+      "Silk Metal Accents on Windows and Mirrors",
+      "Rear Park Assist Camera"
+    ],
+    "S60 T6 AWD": [
+      "3.0L Turbocharged I-6 producing 325 hp and 354 lb-ft torque with 6-speed Geartronic transmission",
+      "Electronically Controlled AWD with Instant Traction",
+      "Paddle Shifters and Keyless Drive",
+      "Power Glass Sunroof and Power Retractable Rearview Mirrors",
+      "Active Dual Xenon Headlights with Headlight Washers",
+      "Power Passenger Seat and HomeLink Integrated Garage Door Opener",
+      "Volvo On Call and Connected Navigation with Harman Kardon Premium Sound",
+      "Auto Dimming Exterior Mirrors and Accent Lighting"
+    ]
+  }
+}

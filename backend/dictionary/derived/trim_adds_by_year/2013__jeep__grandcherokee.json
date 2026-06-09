@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2013|jeep|grandcherokee",
+  "year": 2013,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "jeep_grand_cherokee_wk2",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Laredo",
+    "Limited",
+    "Overland",
+    "Summit",
+    "Trailhawk",
+    "SRT"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Quadra-Trac II active full-time 4WD with Selec-Terrain (replaces Quadra-Trac I)",
+      "Uconnect 430N CD/DVD/MP3/HDD (replaces Uconnect 130 on Laredo)",
+      "Uconnect Phone and infrared dual-zone climate control",
+      "18-inch polished cast aluminum wheels",
+      "Heated first- and second-row leather-trimmed seats",
+      "ParkSense rear park assist and ParkView rear backup camera",
+      "CommandView dual-pane panoramic sunroof",
+      "Alpine premium audio system",
+      "Remote start, rain-sensitive wipers, and auto high beam headlamp control"
+    ],
+    "Overland": [
+      "Quadra-Lift air suspension with Selec-Terrain (4x4)",
+      "Uconnect 730N CD/DVD/MP3/HDD/NAV",
+      "Alpine premium audio; ventilated front seats with heated 1st- and 2nd-row leather",
+      "Chrome grille, fog lamp bezels, and tow hooks",
+      "20-inch Satin Carbon wheels with Olive Ash burl real wood steering wheel",
+      "Adaptive Cruise Control on leather-wrapped heated steering wheel",
+      "Power liftgate and rain-sensitive wiper system"
+    ],
+    "Summit": [
+      "Overland Summit: 20-inch bright polished aluminum wheels (replaces Satin Carbon)",
+      "Black Olive Ash burl wood trim and headlamp washers",
+      "Front Park Assist plus ParkSense and ParkView",
+      "Adaptive Cruise Control with CommandView panoramic sunroof"
+    ],
+    "Trailhawk": [
+      "Off-Road Adventure II package: Quadra-Trac II, Selec-Terrain, Quadra-Lift, skid plates",
+      "18-inch Mineral Gray wheels with Goodyear Silent Armor off-road tires",
+      "Unique rock rails, Red tow hooks, and Trailhawk badging with Red Trail Rated badge",
+      "Leather seats with suede inserts and Red accent stitching; embroidered Trailhawk logo",
+      "Mineral Gray grille and rear light bar; black and Red hood decal"
+    ],
+    "SRT": [
+      "6.4L HEMI V8 with Fuel Saver Technology — 470 hp per brochure",
+      "Quadra-Trac active on-demand 4WD with Selec-Track (Track/Sport/Auto/Snow/Tow)",
+      "SRT performance Brembo brakes and performance-tuned hydraulic steering",
+      "Uconnect 730N NAV; SRT heated flat-bottom steering wheel with paddle shifters",
+      "Dual heat extractors on hood; electronic limited-slip rear differential",
+      "Heated and ventilated front seats; heated second-row seats",
+      "Forward Collision Warning, Blind Spot Monitoring, and Rear Cross-Path Detection"
+    ],
+    "Laredo": [
+      "Leather-wrapped steering wheel as standard premium feature",
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Available 5.7L V8 engine with Fuel Saver Technology",
+      "8.5-inch ground clearance with 26.2-degree approach angle",
+      "Multilink rear suspension with coil springs and gas-charged shock absorbers"
+    ]
+  }
+}

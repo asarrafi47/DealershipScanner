@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2013|lexus|ct",
+  "year": 2013,
+  "make": "lexus",
+  "model": "CT",
+  "ladder_id": "brochure_llm_2013__lexus__ct",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CT 200h F SPORT",
+    "CT 200h"
+  ],
+  "adds_by_trim": {
+    "CT 200h F SPORT": [
+      "17-inch trident-five-spoke alloy wheels with 215/45R17 all-season tires",
+      "17-inch 10-spoke alloy wheels with Dark Graphite finish"
+    ],
+    "CT 200h": [
+      "1.8-liter Atkinson-cycle four-cylinder engine with 134 hp total system horsepower",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Front-wheel drive with high-output permanent-magnet electric-drive motor",
+      "EV mode for electric-only driving at low speeds up to one mile",
+      "43/40/42 mpg city/highway/combined EPA fuel economy estimates",
+      "Four-wheel power-assisted disc brakes with ABS and Electronic Brakeforce Distribution",
+      "Electronic Power Steering (EPS) system",
+      "Independent MacPherson strut front suspension with Yamaha dampers",
+      "Independent double-wishbone rear suspension with low-friction shock absorbers",
+      "17-inch 10-spoke alloy wheels with 215/45R17 all-season tires"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2017|toyota|tundra",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Tundra",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "1794",
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "SR",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Adds to or replaces features offered on Limited Adds to or replaces features offered on Platinum",
+      "Drivetrain Drivetrain Drivetrain and Performance",
+      "5.7-Liter Aluminum i-FORCE V8 DOHC 32-Valve \u2022 5.7-Liter Aluminum i-FORCE V8 DOHC 32-Valve \u2022 5.7-Liter Aluminum i-FORCE V8 DOHC 32-Valve",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i) \u2013 Includes Tow Package",
+      "Rear-Wheel Drive or 4WDemand part-time 4WD \u2022 Rear-Wheel Drive or 4WDemand part-time 4WD \u2022 TRD dual exhaust",
+      "Exterior Features Exterior Features \u2022 TRD Pro front and rear Bilstein\u00ae shocks with external",
+      "20-in. alloy wheels (unique design) \u2022 Chrome grille and surround",
+      "Color-keyed grille surround \u2022 Chrome front bumper endcaps",
+      "Color-keyed bumpers \u2022 1794 Edition badging \u2022 18-in. 5-spoke TRD Pro alloy wheels with Michelin",
+      "Chrome heated auto-dimming and power folding mirrors \u2022 38-gallon fuel tank P275/65R18 tires",
+      "LED Daytime Running Lights (DRL) Interior Features \u2022 TRD aluminum front skid plate",
+      "Power tilt/slide moonroof \u2022 \u201cTOYOTA\u201d front grille (unique to TRD Pro) with color-keyed"
+    ],
+    "SR5": [
+      "Adds to or replaces features offered on SR Adds to or replaces features offered on SR5",
+      "Choice of Drivetrain Choice of Drivetrain Drivetrain",
+      "5.7-Liter Aluminum i-FORCE V8 DOHC 32-Valve with Dual \u2022 5.7-Liter Aluminum i-FORCE V8 DOHC 32-Valve with Dual \u2022 5.7-Liter Aluminum i-FORCE V8 DOHC 32-Valve with Dual",
+      "Independent Variable Valve Timing with intelligence (Dual Independent Variable Valve Timing with intelligence (Dual Independent Variable Valve Timing with intelligence (Dual",
+      "Independent VVT-i) (Regular Cab or Double Cab) Independent VVT-i) Independent VVT-i)",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i)",
+      "4.6-Liter Aluminum i-FORCE V8 DOHC 32-Valve with Dual \u2022 4.6-Liter Aluminum i-FORCE V8 DOHC 32-Valve with \u2022 Rear-Wheel Drive or 4WDemand part-time 4WD",
+      "Independent Variable Valve Timing with intelligence (Dual Dual Independent Variable Valve Timing",
+      "Independent VVT-i) (Double Cab only) with intelligence (Dual Independent VVT-i)",
+      "Chrome door handles",
+      "Transmission with intelligence (ECT-i) Transmission with intelligence (ECT-i)",
+      "Chrome heated outside mirrors"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

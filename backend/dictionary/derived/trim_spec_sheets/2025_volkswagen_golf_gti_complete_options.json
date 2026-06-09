@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2025_volkswagen_golf_gti_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Golf GTI",
+    "Golf GTI"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "R": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Manual 6-spd"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Plaid upholstery is standard like on the GTI, but grey highlights are used rathe; Inside, plaid upholstery is standard, with additional red accents on the seats a"
+      }
+    ],
+    "GTI": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM-S7)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Plaid upholstery is standard like on the GTI, but grey highlights are used rathe"
+      }
+    ]
+  }
+}

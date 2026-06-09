@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2016|kia|optima",
+  "year": 2016,
+  "make": "Kia",
+  "model": "Optima",
+  "ladder_id": "brochure_llm_2016__kia__optima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Limited",
+    "SX Launch Edition",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Limited": [
+      "Full-grain Nappa leather seat trim for front and rear seating"
+    ],
+    "SX Launch Edition": [
+      "Sculpted exterior design with bold new styling"
+    ],
+    "EX": [
+      "Available satin chrome accents",
+      "Available black gloss accents",
+      "Available red-tinted front-door mood lamps for ambient lighting"
+    ],
+    "LX": [
+      "Cloth seats treated with YES Essentials repel-and-release technology for stain resistance",
+      "60/40 split-folding rear seats",
+      "Flip-down rear armrest with dual cup holders",
+      "Dual front airbags, front seat-mounted side airbags, full-length side curtain airbags",
+      "Driver's knee airbag",
+      "Airbag and seat-belt sensors with adaptive inflation control",
+      "Front seat-belt pretensioners",
+      "Height-adjustable front seat-belt anchors",
+      "ISO-Structure construction with high-tensile strength steel alloys",
+      "Side-impact door beams with reinforced support pillars"
+    ]
+  }
+}

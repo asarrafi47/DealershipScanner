@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2020|buick|encore",
+  "year": 2020,
+  "make": "Buick",
+  "model": "Encore",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Essence",
+    "Sport Touring",
+    "Preferred",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

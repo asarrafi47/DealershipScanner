@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2011|lotus|exige",
+  "year": 2011,
+  "make": "Lotus",
+  "model": "Exige",
+  "ladder_id": "brochure_web_2011__lotus__exige",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "S",
+    "S240"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.0L supercharged engine producing 192 hp",
+      "6-speed manual transmission",
+      "Independent double wishbone suspension front and rear",
+      "Brembo brakes with ABS",
+      "17-inch alloy wheels",
+      "Air conditioning",
+      "Power steering",
+      "Minimal interior trim with basic seats"
+    ],
+    "S240": [
+      "Upgraded 2.0L supercharged engine producing 240 hp",
+      "Enhanced suspension tuning",
+      "Improved cooling system",
+      "Upgraded interior trim",
+      "Enhanced braking performance"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/lotus/exige"
+}

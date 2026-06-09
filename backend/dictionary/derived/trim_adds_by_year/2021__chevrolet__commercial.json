@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2021|chevrolet|commercial",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Commercial",
+  "ladder_id": "brochure_2021__chevrolet__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "ZR2",
+    "Trail Boss",
+    "RST",
+    "Z71",
+    "LT",
+    "Custom Trail Boss",
+    "Custom",
+    "WT",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Standard 4.3L V6 engine with 276 horsepower and 298 lb.-ft. of torque",
+      "Adds Standard StabiliTrak Electronic Stability Control System",
+      "Adds Standard 4-wheel antilock disc brakes",
+      "Adds Standard Rear Vision Camera",
+      "Adds Standard CornerStep rear bumper on Colorado models"
+    ],
+    "WT": [
+      "4.3L EcoTec3 V6 LV3 standard engine",
+      "Available 2.7L Turbo L3B engine",
+      "Available 5.3L EcoTec3 V8 L82 engine",
+      "Four-wheel antilock disc brakes with Duralife rotors",
+      "Fully boxed ladder-type high-strength steel frame",
+      "StabiliTrak Electronic Stability Control with Proactive Roll Avoidance",
+      "12 fixed cargo tie-downs rated 500 lbs per corner",
+      "6-gauge instrument cluster with speedometer and fuel level"
+    ],
+    "Custom": [
+      "4.3L EcoTec3 V6 LV3 standard engine",
+      "Available 2.7L Turbo L3B engine",
+      "Available 5.3L EcoTec3 V8 L82 engine"
+    ],
+    "Custom Trail Boss": [
+      "4.3L EcoTec3 V6 LV3 standard engine",
+      "Available 5.3L EcoTec3 V8 L82 engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Off-road focused Trail Boss variant"
+    ],
+    "LT": [
+      "2.7L Turbo L3B standard engine",
+      "Available 5.3L EcoTec3 V8 L84 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine"
+    ],
+    "Z71": [
+      "Standard automatic locking rear differential",
+      "Standard underseat storage",
+      "Standard GearOn Accessory System availability"
+    ],
+    "RST": [
+      "2.7L Turbo L3B standard engine",
+      "Available 5.3L EcoTec3 V8 L84 engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine"
+    ],
+    "Trail Boss": [],
+    "ZR2": [],
+    "LTZ": [
+      "5.3L EcoTec3 V8 L84 standard engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine",
+      "Available on Regular Cab and Crew Cab"
+    ],
+    "High Country": [
+      "5.3L EcoTec3 V8 L84 standard engine",
+      "Available 6.2L EcoTec3 V8 L87 engine",
+      "Available Duramax 3.0L Turbo-Diesel engine",
+      "Crew Cab Short Bed configuration"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2014|toyota|tundra",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2014__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "1794 Edition",
+    "Platinum",
+    "Limited",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "1794 Edition": [
+      "Western-themed interior with premium perforated Brown leather-trimmed seats",
+      "Ultrasuede® seat inserts",
+      "Wood-style trim including steering wheel and shift knob",
+      "1794 Edition badging",
+      "Unique silver grille insert"
+    ],
+    "Platinum": [
+      "20-inch alloy wheels with unique design",
+      "Color-keyed grille surround and bumpers",
+      "Chrome heated auto-dimming and power folding mirrors",
+      "LED Daytime Running Lights",
+      "Front and rear parking assist sonar",
+      "Premium perforated Black leather-trimmed seats",
+      "Heated and ventilated front seats",
+      "Power tilt/telescope steering wheel with memory system",
+      "Brushed metal-style trim",
+      "Entune™ Premium JBL® Audio with Navigation and App Suite"
+    ],
+    "Limited": [
+      "20-inch alloy wheels",
+      "Chrome door handles and heated outside mirrors",
+      "Silver billet-style grille insert",
+      "Deck Rail System",
+      "Leather-trimmed front bucket seats with center console",
+      "Power and heated front seats",
+      "Power sliding rear window",
+      "Dual zone automatic climate control",
+      "Auto-dimming rearview mirror with compass and HomeLink®",
+      "Entune™ Premium Audio with Navigation and App Suite"
+    ],
+    "SR5": [
+      "Chrome grille surround",
+      "Chrome front and rear bumper endcaps",
+      "Fog lights",
+      "Variable intermittent windshield wipers",
+      "Entune™ Audio Plus with high-resolution 7-inch touch-screen",
+      "HD Radio and SiriusXM Radio",
+      "3.5-inch Multi-Information Display"
+    ],
+    "SR": [
+      "5.7-Liter Aluminum i-FORCE V8 DOHC 32-Valve engine with VVT-i",
+      "381 hp at 5600 rpm; 401 lb-ft torque at 3600 rpm",
+      "6-speed Electronically Controlled automatic Transmission with ECT-i",
+      "Tow Package included",
+      "Rear-Wheel Drive or 4WDemand part-time 4WD available",
+      "18-inch styled steel wheels",
+      "Daytime Running Lights and front/rear mudguards",
+      "Entune™ Audio with 6.1-inch touch-screen",
+      "Integrated backup camera",
+      "Bluetooth wireless technology and cruise control"
+    ]
+  }
+}

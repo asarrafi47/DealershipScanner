@@ -1,0 +1,32 @@
+{
+  "ladder_id": "audi_q8",
+  "make": "Audi",
+  "models": [
+    "Q8",
+    "SQ8",
+    "RS Q8"
+  ],
+  "year_min": 2019,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Interior Materials",
+        "value": "Premium leather and trim"
+      }
+    ],
+    "Premium Plus": [
+      {
+        "label": "Audio System Layout",
+        "value": "Bang & Olufsen audio available"
+      }
+    ],
+    "S line": [
+      {
+        "label": "Interior Materials",
+        "value": "S line interior package"
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|lincoln|navigator",
+  "year": 2016,
+  "make": "Lincoln",
+  "model": "Navigator",
+  "ladder_id": "brochure_llm_2016__lincoln__navigator",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Reserve",
+    "Select"
+  ],
+  "adds_by_trim": {
+    "Reserve": [
+      "Premium leather-trimmed 1st and 2nd row seats",
+      "Trevino premium leather-trimmed 1st, 2nd and 3rd row seats option",
+      "Dual-zone electronic automatic temperature control with auxiliary climate control",
+      "Power moonroof",
+      "Cargo Management System on Navigator L",
+      "Premium carpeted floor mats with Lincoln logo"
+    ],
+    "Select": [
+      "3.5L EcoBoost V6 twin-turbocharged direct-injection engine with 380 hp",
+      "6-speed SelectShift automatic transmission with Control Trac 4WD",
+      "8-inch SYNC 3 LCD touchscreen with voice recognition and AppLink",
+      "THX II Certified Audio System with AM/FM stereo and 14 speakers",
+      "Voice-activated Navigation System with SiriusXM 6-month prepaid subscription",
+      "Adaptive HID headlamps with LED signature and daytime running lamps",
+      "1st-row heated and cooled 10-way power bucket seats with memory",
+      "3rd-row PowerFold 60/40 split bench seat",
+      "AdvanceTrac with Roll Stability Control and Safety Canopy System with 3-row side-curtain airbags",
+      "Class IV Heavy-Duty Trailer Tow Package with 8,600 lbs towing capacity"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2018|maserati|grancabrio",
+  "year": 2018,
+  "make": "maserati",
+  "model": "grancabrio",
+  "ladder_id": "brochure_llm_2018__maserati__grancabrio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GranCabrio MC",
+    "GranCabrio Sport"
+  ],
+  "adds_by_trim": {
+    "GranCabrio MC": [
+      "Wraparound Sport seats with integrated Maserati logo headrests",
+      "Three-spoke Sport steering wheel with heavily profiled grip and flattened rim",
+      "Longer Trofeo Design gearshift paddles available in carbon fibre",
+      "0-62 mph acceleration in 4.9 seconds",
+      "Top speed of 181 mph (291 km/h)",
+      "Near-seamless upshifts with automatic rev matching on downshift",
+      "Gear-holding capability up to red line"
+    ],
+    "GranCabrio Sport": [
+      "Ferrari-built 4.7-litre naturally aspirated V8 engine with 460 hp and 520 Nm torque",
+      "ZF six-speed MC Auto Shift gearbox with Auto-Normal, Auto-Sport, Manual-Normal, Manual-Sport and ICE modes",
+      "Perforated aluminium accelerator and brake pedals",
+      "0-62 mph acceleration in 5.0 seconds",
+      "Top speed of 179 mph (288 km/h)",
+      "Rev limiter override function and high-performance launch control",
+      "Large digital rpm indicator for shift timing optimization"
+    ]
+  }
+}

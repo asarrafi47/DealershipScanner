@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2024|mitsubishi|outlandersport",
+  "year": 2024,
+  "make": "Mitsubishi",
+  "model": "OutlanderSport",
+  "ladder_id": "brochure_llm_2024__mitsubishi__outlandersport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL",
+    "SE",
+    "LE",
+    "ES",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "2.4L MIVEC DOHC 4-cylinder engine",
+      "Black roof rails",
+      "Black headliner and pillars",
+      "Auto-dimming rearview mirror with Homelink",
+      "Genuine leather seating",
+      "4-way power driver seat"
+    ],
+    "SE": [
+      "FAST-Key Entry System",
+      "Push-button start",
+      "Synthetic leather/suede seats",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "8-inch Smartphone Link Display Audio with Apple CarPlay and Android Auto",
+      "SiriusXM with 3-month all access trial"
+    ],
+    "LE": [
+      "18-inch black alloy wheels",
+      "8-inch Smartphone Link Display Audio with Apple CarPlay and Android Auto",
+      "SiriusXM with 3-month all access trial",
+      "Black side mirrors",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "Black fabric seating with red stitch"
+    ],
+    "ES": [
+      "18-inch two-tone alloy wheels",
+      "LED fog lights",
+      "Automatic Climate Control"
+    ],
+    "S": [
+      "5-passenger seating",
+      "7-inch display audio",
+      "Electric power steering",
+      "Automatic headlights",
+      "Forward Collision Mitigation with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Heated power side mirrors",
+      "Active Stability Control",
+      "Automatic High Beam",
+      "Rear-view Camera"
+    ]
+  }
+}

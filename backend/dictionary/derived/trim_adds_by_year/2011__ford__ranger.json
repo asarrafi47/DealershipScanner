@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2011|ford|ranger",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Ranger",
+  "ladder_id": "brochure_llm_2011__ford__ranger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "SPORT": [
+      "4.0L V6 engine standard",
+      "15-inch split-spoke machined cast-aluminum wheels with all-terrain tires (4x2)",
+      "16-inch Y-spoke cast-aluminum wheels with all-terrain tires (4x4)",
+      "SPORT bucket cloth seats with center floor console and storage",
+      "Body-color H-bar grille and wheel-lip moldings",
+      "Body-color door handles and sideview mirror caps",
+      "Black step bars",
+      "Full-size spare tire",
+      "Heavy-duty shock absorbers (4x2)"
+    ],
+    "XLT": [
+      "4.0L V6 engine option (SuperCab 4-door and 4x4)",
+      "15-inch 5-spoke aluminum wheels with all-terrain tires (4x4)",
+      "Front cloth 60/40 split seat",
+      "AM/FM stereo with single-CD player and MP3 capability",
+      "Black leather-wrapped steering wheel with tilt and cruise control",
+      "Color-coordinated carpet and carpeted front floor mats",
+      "Power windows, door locks, sideview mirrors with Remote Keyless Entry",
+      "SIRIUS Satellite Radio with 6-month introductory subscription",
+      "Heavy-duty shock absorbers (4x4)",
+      "Skid plates fore, mid and aft (4x4)"
+    ],
+    "XL": [
+      "2.3L DOHC I-4 engine with 5-speed manual transmission overdrive",
+      "15-inch 7-spoke silver steel wheels with all-season OWL tires",
+      "Front vinyl 60/40 split seat with cloth on SuperCab",
+      "Rear folding jump seats (SuperCab)",
+      "AM/FM stereo with clock and auxiliary audio input jack",
+      "Black rugged vinyl floor covering",
+      "Manual windows and door locks",
+      "Black H-bar grille, door handles, and sideview mirrors",
+      "Black front and rear bumpers",
+      "Fuel tank skid plate (SuperCab 4x2)"
+    ]
+  }
+}

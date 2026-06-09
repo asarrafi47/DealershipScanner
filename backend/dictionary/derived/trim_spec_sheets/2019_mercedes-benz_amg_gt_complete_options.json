@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2019_mercedes-benz_amg_gt_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "AMG GT",
+    "AMG GT"
+  ],
+  "year_min": 2017,
+  "year_max": 2021,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Turbo; Automatic (AM7)"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "4.0L V8 Twin Turbo; Automatic (AM7)"
+      }
+    ]
+  }
+}

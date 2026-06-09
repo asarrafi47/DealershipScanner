@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2012|bmw|5series",
+  "year": 2012,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "bmw_5_series",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Bmw",
+    "Na"
+  ],
+  "adds_by_trim": {
+    "Na": [
+      "he Bluetooth SIG, Inc. and any use of such marks by BMW is under"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Na": 1
+    }
+  }
+}

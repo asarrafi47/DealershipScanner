@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2023|genesis|g80",
+  "year": 2023,
+  "make": "genesis",
+  "model": "G80",
+  "ladder_id": "brochure_llm_2023__genesis__g80",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.5T AWD Sport Prestige",
+    "2.5T Sport Prestige",
+    "3.5T AWD Sport",
+    "2.5T Advanced",
+    "2.5T"
+  ],
+  "adds_by_trim": {
+    "3.5T AWD Sport Prestige": [
+      "20-inch Medium Sputtering wheels with Pirelli all-season tires",
+      "3.5L turbocharged engine with all-wheel drive",
+      "Matte exterior color options: Verbier White, Makalu Gray, Makalu Gray Valencia Gold"
+    ],
+    "2.5T Sport Prestige": [
+      "20-inch Medium Sputtering wheels with Michelin summer tires",
+      "19-inch Hyper Silver or Dark Metallic Gray wheel options"
+    ],
+    "3.5T AWD Sport": [
+      "3.5L turbocharged engine with all-wheel drive",
+      "19-inch Hyper Silver wheels with Michelin all-season tires",
+      "Matte exterior color options: Verbier White, Makalu Gray"
+    ],
+    "2.5T Advanced": [
+      "19-inch Dark Metallic Gray or Hyper Silver wheels",
+      "Michelin all-season tires front 245/45R19, rear 275/40R19"
+    ],
+    "2.5T": [
+      "2.5L turbocharged engine with rear-wheel drive",
+      "18-inch Medium Metallic Gray machined finish wheels",
+      "Michelin all-season tires front and rear 245/50R18"
+    ]
+  }
+}

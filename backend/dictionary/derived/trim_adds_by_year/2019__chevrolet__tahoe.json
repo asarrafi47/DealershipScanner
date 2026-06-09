@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2019|chevrolet|tahoe",
+  "year": 2019,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "2020_chevrolet_tahoe_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sl",
+    "Tl"
+  ],
+  "adds_by_trim": {
+    "Tl": [
+      "Chevrolet is committed to keeping you and your Sirius, XM, SiriusXM and all related",
+      "vehicle includes every Chevrolet is designed with a comprehensive list of safety and security",
+      "vehicle Owner’s you make with the BuyPower Card from Capital One * helps you earn toward registered trademarks of The",
+      "safety information. an eligible new Chevrolet, Buick, GMC or Cadillac vehicle. There’s no limit Goodyear Tire & Rubber Company."
+    ],
+    "Sl": [
+      "5.3L EcoTec3 V8 engine with 355 hp and 383 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "6-speaker audio system",
+      "Front bucket seats with 10-way power driver and 6-way power passenger",
+      "OnStar Basic Plan for five years",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for seven devices"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 4.0,
+    "per_trim_add_counts": {
+      "Tl": 4
+    }
+  }
+}

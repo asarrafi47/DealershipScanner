@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2022|nissan|altima",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Altima",
+  "ladder_id": "brochure_llm_2022__nissan__altima",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SR VC-TURBO",
+    "SR",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "Standard Intelligent All-Wheel Drive",
+      "Intelligent Around View® Monitor with 360-degree camera",
+      "19-inch Aluminum-alloy wheels",
+      "Auto-dimming inside rearview mirror",
+      "HomeLink® Universal Transceiver",
+      "Interior accent lighting",
+      "4-way power adjustable front-passenger seat with memory"
+    ],
+    "SR VC-TURBO": [
+      "248-hp 2.0-liter Variable Compression Turbo (VC-Turbo®) 4-cylinder engine",
+      "Power sliding glass moonroof",
+      "Heated outside mirrors",
+      "Driverʼs seat power lumbar support",
+      "Heated front seats",
+      "Gloss black sport spoiler"
+    ],
+    "SR": [
+      "Paddle shifters with manual shift mode",
+      "19-inch Aluminum-alloy wheels",
+      "Dark chrome V-Motion grille",
+      "Body-color door handles",
+      "Black outside mirrors",
+      "Charcoal rear diffuser",
+      "Dual chrome exhaust finishers",
+      "Leather-wrapped steering wheel and shift knob"
+    ],
+    "SL": [
+      "Electronic parking brake",
+      "ProPILOT Assist with automatic steering support",
+      "Intelligent Lane Intervention automatic lane centering",
+      "Automatic brake hold",
+      "Traffic Sign Recognition",
+      "17-inch Aluminum-alloy wheels with LED fog lights",
+      "Outside mirrors with LED turn signal indicators",
+      "Heated outside mirrors",
+      "Power sliding glass moonroof",
+      "Dual Zone Automatic Temperature Control"
+    ],
+    "SV": [
+      "Available Intelligent All-Wheel Drive",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Rear Automatic Braking and Rear Sonar System",
+      "Active Ride Control and Intelligent Trace Control",
+      "17-inch Aluminum-alloy wheels",
+      "LED projector headlights with LED Daytime Running Lights",
+      "8-way power adjustable driverʼs seat",
+      "8-inch NissanConnect® touchscreen with Apple CarPlay and Android Auto"
+    ],
+    "S": [
+      "2.5-liter DIG DOHC 16-valve 4-cylinder engine with 188 horsepower",
+      "Xtronic CVT® transmission with front-wheel drive",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning and Intelligent Forward Collision Warning",
+      "RearView Monitor camera system",
+      "Vehicle Dynamic Control with Traction Control and Hill Start Assist",
+      "Halogen projector headlights with Intelligent Auto Headlights",
+      "7-inch touchscreen display with Voice Recognition"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2012|scion|iq",
+  "year": 2012,
+  "make": "Scion",
+  "model": "iQ",
+  "ladder_id": "brochure_web_2012__scion__iq",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "iQ Limited",
+    "iQ",
+    "iQ Base"
+  ],
+  "adds_by_trim": {
+    "iQ Base": [
+      "1.3L DOHC 4-cylinder engine with 94 horsepower",
+      "5-speed manual transmission standard",
+      "Power steering and power windows",
+      "Air conditioning",
+      "AM/FM CD audio system",
+      "Safety Sense pre-collision system",
+      "7 airbags including side curtain airbags",
+      "Electronic stability control"
+    ],
+    "iQ": [
+      "Automatic CVT transmission available",
+      "6.1-inch touchscreen with backup camera",
+      "Bluetooth connectivity",
+      "Upgraded interior trim materials",
+      "Power door locks",
+      "Cruise control",
+      "Folding door mirrors"
+    ],
+    "iQ Limited": [
+      "Premium audio system upgrade",
+      "Leather-trimmed steering wheel",
+      "Heated front seats",
+      "Driver seat height adjustment",
+      "Advanced climate control",
+      "Premium interior appointments"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/scion/iq/"
+}

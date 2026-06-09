@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2011|ford|mustang",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Mustang",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

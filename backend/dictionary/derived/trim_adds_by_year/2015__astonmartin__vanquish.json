@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2015|astonmartin|vanquish",
+  "year": 2015,
+  "make": "Aston Martin",
+  "model": "vanquish",
+  "ladder_id": "brochure_2015__astonmartin__vanquish",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [],
+    "Sport": [
+      "Upgraded to carbon fiber gearshift paddles with full shift control",
+      "Adds Launch Control for enhanced acceleration",
+      "Adds Positive Torque Control (PTC) system",
+      "Adds Hydraulic Brake Assist (HBA)",
+      "Adds tyre pressure monitoring system",
+      "Adds trip computer functionality"
+    ],
+    "Limited": [
+      "Adds exposed carbon fiber roof panel",
+      "Adds exposed carbon fiber door mirror caps",
+      "Adds exposed carbon fiber side strakes",
+      "Adds exposed carbon fiber door handles",
+      "Upgraded to diamond-turned gloss black painted wheels",
+      "Adds shadow bronze jewellery pack",
+      "Adds rear parking assist camera",
+      "Adds Aston Martin Cobra tracking system",
+      "Adds 6-CD auto-changer audio system",
+      "Adds personalised sill plaques"
+    ]
+  }
+}

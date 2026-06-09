@@ -4,6 +4,7 @@ from __future__ import annotations
 
 MAX_USERNAME_LEN = 128
 MAX_EMAIL_LEN = 254
+MAX_PASSWORD_LEN = 128
 
 
 def normalize_registration_email(email: str) -> str:
@@ -34,4 +35,6 @@ def registration_form_error(
         return f"Email must be at most {MAX_EMAIL_LEN} characters."
     if len(p) < min_password_len:
         return f"Password must be at least {min_password_len} characters."
+    if len(p) > MAX_PASSWORD_LEN:
+        return f"Password must be at most {MAX_PASSWORD_LEN} characters."
     return None

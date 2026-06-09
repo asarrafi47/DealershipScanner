@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2018|chevrolet|suburban",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2018__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "LT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "Bose Centerpoint Surround Sound premium 10-speaker audio system",
+      "Chevrolet MyLink 8-inch navigation with GPS and 5 USB ports",
+      "Adaptive Cruise Control with Forward Automatic Braking",
+      "Enhanced Driver Information Center with 8-inch display and Head-Up Display",
+      "Rear-Seat Blu-ray Entertainment System with wireless headphones",
+      "Power-retractable assist steps with chrome accents and perimeter lighting",
+      "All-Season Package with 20-inch wheels and Max Trailering Package",
+      "Luxury Package with keyless entry, heated seats, and power liftgate"
+    ],
+    "LT": [
+      "Bose premium 9-speaker audio system",
+      "Chevrolet MyLink 8-inch navigation with GPS and 5 USB ports",
+      "Second-row power-release bucket seats",
+      "LT Signature Package with 20-inch chrome wheels and chrome trim"
+    ],
+    "SL": [
+      "5.3L EcoTec3 V8 engine with 355 hp and 383 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "6-speaker audio system",
+      "Front bucket seats with 10-way power driver and 6-way power passenger",
+      "Second-row manual-release bucket seats",
+      "OnStar Basic Plan for five years with remote start and navigation",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for seven devices"
+    ]
+  }
+}

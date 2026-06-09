@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|toyota|86",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "86",
+  "ladder_id": "brochure_web_2022__toyota__86",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "86 Hakone Edition",
+    "86 GT",
+    "86"
+  ],
+  "adds_by_trim": {
+    "86 Hakone Edition": [
+      "Exclusive dark green paint",
+      "17-inch bronze-colored alloy wheels",
+      "Black and tan leather and Alcantara seats",
+      "Tan contrast stitching"
+    ],
+    "86 GT": [
+      "18-inch alloy wheels with Michelin Pilot Sport 4 tires",
+      "Matte black rear wing",
+      "LED fog lights",
+      "Heated side mirrors",
+      "Aerodynamic underbody panel",
+      "Dual-zone automatic climate control",
+      "4.2-inch instrument cluster display",
+      "Leather parking brake handle and shift boot",
+      "Heated front seats with leather bolsters and suede-like inserts",
+      "Proximity key with push-button start"
+    ],
+    "86": [
+      "2.0-liter flat-four boxer engine with six-speed manual",
+      "Rear-wheel drive",
+      "17-inch alloy wheels",
+      "LED headlights and daytime running lights",
+      "LED taillights",
+      "Leather-wrapped steering wheel",
+      "Suede-like interior trim with embroidered 86 logo",
+      "7.0-inch touchscreen infotainment with Apple CarPlay and Android Auto",
+      "Eight-speaker audio system"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/toyota/86/"
+}

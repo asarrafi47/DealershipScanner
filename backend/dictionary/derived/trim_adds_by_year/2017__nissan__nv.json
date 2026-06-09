@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|nissan|nv",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "NV",
+  "ladder_id": "brochure_llm_2017__nissan__nv",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SV": [
+      "Body-color bumpers and outside mirrors",
+      "Chrome grille",
+      "Dual roof-mounted upright storage racks",
+      "Sliding passenger side door window with privacy glass and wire mesh",
+      "Rear door windows with privacy glass and wire mesh",
+      "Rear window defroster",
+      "MP3/WMA CD playback capability",
+      "SiriusXM Satellite Radio with 3-month trial subscription"
+    ],
+    "S": [
+      "2.0-liter DOHC 16-valve 4-cylinder engine with 131 hp and 139 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "11.1-inch front vented disc brakes with 4-wheel ABS",
+      "Vehicle Dynamic Control with Traction Control System",
+      "Dual-stage supplemental front airbags with seat belt sensors",
+      "Driver and passenger seat-mounted side-impact airbags",
+      "Roof-mounted curtain side-impact airbags with rollover sensor",
+      "Tire Pressure Monitoring System",
+      "Nissan Vehicle Immobilizer System",
+      "Remote keyless entry"
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2020|mazda|cx5",
+  "year": 2020,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2020__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CX-5 SIGNATURE",
+    "CX-5 GRAND TOURING RESERVE",
+    "CX-5 GRAND TOURING",
+    "CX-5 TOURING",
+    "CX-5 SPORT"
+  ],
+  "adds_by_trim": {
+    "CX-5 SPORT": [
+      "SKYACTIV-G 2.5L DOHC 16-valve 4-cylinder engine with cylinder deactivation",
+      "SKYACTIV-Drive 6-speed automatic transmission with manual shift and Sport modes",
+      "17-inch alloy wheels with P225/65 R17 all-season tires",
+      "LED headlights with auto on/off and daytime running lights",
+      "7-inch MAZDA CONNECT touchscreen with Apple CarPlay and Android Auto",
+      "Bluetooth hands-free phone and audio streaming",
+      "Advanced front air bags, front side-impact air bags, side-impact air curtains",
+      "Mazda Radar Cruise Control with Stop & Go",
+      "Lane Departure Warning System and Lane-keep Assist",
+      "Rearview camera with Blind Spot Monitoring and Rear Cross Traffic Alert"
+    ],
+    "CX-5 TOURING": [
+      "Mazda Advanced Keyless Entry System",
+      "Leatherette seats with Lux Suede inserts and heated front seats",
+      "6-way power-adjustable driver's seat with manual lumbar support",
+      "Dual-zone automatic climate control with pollen filter",
+      "Rear fold-down center armrest and dual rear USB charging ports",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Bose 10-speaker surround sound system with Centerpoint 2 and AudioPilot 2"
+    ],
+    "CX-5 GRAND TOURING": [
+      "19-inch alloy wheels with Brilliant Silver finish and P225/55 R19 tires",
+      "8-way power-adjustable driver's seat with power lumbar support and 2-position memory",
+      "6-way power-adjustable front passenger seat",
+      "Leather-trimmed seats",
+      "Paddle shifters",
+      "7-inch LCD Meter Display",
+      "Power sliding-glass moonroof with tilt feature",
+      "Rear Power Liftgate",
+      "Dual heated side mirrors",
+      "LED fog lights and LED combination taillights"
+    ],
+    "CX-5 GRAND TOURING RESERVE": [
+      "8-inch full-color touchscreen display",
+      "Windshield-projected Active Driving Display",
+      "Ventilated front seats and heated rear seats",
+      "Heated steering wheel and windshield wiper deicer",
+      "Automatic power-folding side mirrors",
+      "SiriusXM Satellite Radio with 3-month trial subscription",
+      "Interior LED ambient lighting in footwells, vanity mirror, glove box, cargo area"
+    ],
+    "CX-5 SIGNATURE": [
+      "SKYACTIV-G 2.5T Dynamic Pressure Turbo DOHC 16-valve 4-cylinder engine",
+      "i-Activ AWD with Off-road Traction Assist",
+      "Engine Harmonics Enhancer",
+      "360-degree View Monitor with front and rear parking sensors",
+      "Traffic Sign Recognition System",
+      "Mazda Navigation System with SiriusXM Traffic and Travel Link Services",
+      "Caturra Brown Nappa leather-trimmed seats with genuine layered wood trim",
+      "19-inch alloy wheels with Dark Silver finish",
+      "Frameless auto-dimming rearview mirror with Homelink",
+      "Black headliner with Interior trim in Bright Silver finish"
+    ]
+  }
+}

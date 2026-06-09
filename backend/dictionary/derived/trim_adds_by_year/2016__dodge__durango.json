@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2016|dodge|durango",
+  "year": 2016,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2016__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "Limited",
+    "Citadel",
+    "SXT",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "R/T": [
+      "5.7-liter HEMI V8 engine with Fuel Saver Technology and 8-speed automatic",
+      "Dual exhaust with bright tips",
+      "HID Bi-xenon headlamps with automatic leveling and halogen high beams",
+      "Auto-dimming high-beam headlamp control system",
+      "Power multifunction mirrors with memory, auto-dimming driver side, and chrome finish"
+    ],
+    "Limited": [
+      "8.4-inch Uconnect touchscreen with navigation, AM/FM radio, Bluetooth",
+      "Premium Nappa leather steering wheel with audio controls and heating",
+      "Power tilt/telescoping steering column",
+      "Projector headlamps with LED daytime running lights",
+      "Gloss Black grille surround with split crosshairs"
+    ],
+    "Citadel": [
+      "Power multifunction mirrors with memory, auto-dimming, chrome mirrors, and Blind Spot Monitoring",
+      "Heated 2nd-row seats",
+      "Front passenger fold-flat seat",
+      "Power liftgate with navigation and power liftgate group",
+      "8.4-inch Uconnect Access with roadside assistance and 9-1-1 Call"
+    ],
+    "SXT": [
+      "3.6-liter Pentastar V6 engine with 8-speed automatic transmission",
+      "Tri-zone automatic temperature control with infrared sensors",
+      "Heated front seats",
+      "8-way power driver seat with lumbar adjustment",
+      "Full-length front floor console with Media Hub and USB ports"
+    ],
+    "SE": [
+      "5.0-inch Uconnect touchscreen with AM/FM radio and Bluetooth",
+      "6 speakers with standard audio system",
+      "Automatic headlamps",
+      "Projector fog lamps integral with front fascia",
+      "Deep-tint sunscreen glass throughout"
+    ]
+  }
+}

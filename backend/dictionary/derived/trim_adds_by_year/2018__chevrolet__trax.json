@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2018|chevrolet|trax",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Trax",
+  "ladder_id": "brochure_llm_2018__chevrolet__trax",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TL",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "TL": [
+      "Halogen projector-style headlamps",
+      "Heated, power-adjustable, manual-folding mirrors with body-color",
+      "Front and rear silver-painted skid plates",
+      "Remote vehicle starter system",
+      "3-spoke leather-wrapped steering wheel with cruise and audio controls",
+      "SiriusXM Satellite Radio All Access Package with 3-month trial",
+      "7-speaker Bose premium audio system with Richbass woofer",
+      "Power tilt/sliding sunroof",
+      "Auto dimming rearview mirror",
+      "Rear Park Assist, Side Blind Zone Alert, and Rear Cross Traffic Alert"
+    ],
+    "SL": [
+      "1.4L turbocharged 4-cylinder engine with 138 hp and 148 lb.-ft. torque",
+      "6-speed automatic transmission",
+      "10 air bags with Passenger Sensing System",
+      "LATCH child safety seat anchors",
+      "OnStar Guidance Plan 3 with Automatic Crash Response and navigation",
+      "Rear vision camera",
+      "Chevrolet MyLink 7-inch touchscreen with Android Auto and Apple CarPlay",
+      "Bluetooth audio streaming for select phones",
+      "Two USB ports and auxiliary input jack",
+      "6-speaker sound system"
+    ]
+  }
+}

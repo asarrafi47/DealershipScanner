@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2014|landrover|rangerover",
+  "year": 2014,
+  "make": "landrover",
+  "model": "Range Rover",
+  "ladder_id": "brochure_llm_2014__landrover__rangerover",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AUTOBIOGRAPHY",
+    "SUPERCHARGED",
+    "HSE",
+    "RANGE ROVER"
+  ],
+  "adds_by_trim": {
+    "AUTOBIOGRAPHY": [
+      "Meridian signature reference audio system with 1700W output",
+      "Active rear locking differential",
+      "Four-zone Climate Comfort Pack with rear seat power lumbar and solar attenuating glass"
+    ],
+    "SUPERCHARGED": [
+      "Front Climate Comfort Pack with front climate seats and massage seats",
+      "Vision Assist Pack with surround camera system and adaptive xenon headlamps"
+    ],
+    "HSE": [
+      "Adaptive cruise control with queue assist and intelligent emergency braking",
+      "Soft door close",
+      "Meridian surround sound audio system with 825W output",
+      "Rear seat entertainment system with 8-inch screens and wireless headphones",
+      "Parking Pack with 360° Park Distance Control"
+    ],
+    "RANGE ROVER": [
+      "Base trim with standard configuration before options and personalization"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2013|honda|pilot",
+  "year": 2013,
+  "make": "Honda",
+  "model": "Pilot",
+  "ladder_id": "inventory_honda_pilot",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Sig",
+    "Usb"
+  ],
+  "adds_by_trim": {
+    "Usb": [
+      "Sirius, XM and all related marks and logos are trademarks of",
+      "Sirius XM Radio Inc. and its subsidiaries. 14 3\u2011Year/36,000\u2011Mile Limited Warranty. 5\u2011Year/60,000\u2011Mile Limited Powertrain Warranty. Ordinary maintenance or adjustments, parts subject to normal wear and replacement, and certain items are excluded."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 2.0,
+    "per_trim_add_counts": {
+      "Usb": 2
+    }
+  }
+}

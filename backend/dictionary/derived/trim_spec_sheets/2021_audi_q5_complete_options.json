@@ -1,0 +1,43 @@
+{
+  "ladder_id": "2021_audi_q5_complete_options",
+  "make": "Audi",
+  "models": [
+    "Q5",
+    "Q5"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: 11.9-inch digital instrument cluster; 10.9-inch passenger display (was 7-inch infotainment screen)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L V6 FSI; L TDI diesel V6 (was L TDI diesel V6; Petrol engines)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Upgrades Interior Materials: Equipment Interior Harman/Becker Automotive Systems produced Audi's new u; For the 2019 model year, heated front seats, rear electric child locks, 7-inch i (was For the 2019 model year, heated front seats, rear electric child locks, 7-inch i)"
+      }
+    ],
+    "L Sportback": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L TDI diesel V6; Petrol engines"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: 7-inch infotainment screen"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: For the 2019 model year, heated front seats, rear electric child locks, 7-inch i"
+      }
+    ]
+  }
+}

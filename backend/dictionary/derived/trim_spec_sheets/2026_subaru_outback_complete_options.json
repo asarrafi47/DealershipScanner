@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2026_subaru_outback_complete_options",
+  "make": "Subaru",
+  "models": [
+    "Outback",
+    "Outback"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "Wilderness": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S8); All-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Audio System Layout",
+        "value": "Harman Kardon audio; [Brochure] Harman Kardon audio"
+      }
+    ]
+  }
+}

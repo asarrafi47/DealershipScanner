@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2015|volvo|polestar",
+  "year": 2015,
+  "make": "Volvo",
+  "model": "Polestar",
+  "ladder_id": "brochure_2015__volvo__polestar",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Sport leather Polestar seats",
+      "Adds power seat driver and passenger with lumbar support",
+      "Adds heated front and rear seats",
+      "Adds Polestar-calibrated 6-speed automatic AWD transmission",
+      "Adds Polestar turbo charger and intercooler engine calibration",
+      "Adds 20-inch Polestar wheels",
+      "Adds Adaptive Digital TFT display instrumentation",
+      "Adds City Safety collision warning system",
+      "Adds Adaptive Cruise Control with queue assist",
+      "Adds Keyless Drive with home safe lighting"
+    ],
+    "Premium": [
+      "Adds Polestar/Öhlins adaptive shock absorbers",
+      "Adds Polestar chassis tuning",
+      "Adds Lane Departure Warning system",
+      "Adds Blind Spot Information System with cross traffic alert",
+      "Adds Rear Park Assist Camera",
+      "Adds Michelin Pilot Super Sport performance summer tires",
+      "Adds Polestar rear diffusor and splitter",
+      "Adds Active Dual Xenon headlights with active high beam"
+    ],
+    "Platinum": [
+      "Adds double pipe Polestar active exhaust system",
+      "Adds 6-piston Polestar/Brembo brake calipers with ventilated floating discs",
+      "Adds electronic parking brake with drive away release",
+      "Adds Polestar rear spoiler",
+      "Adds Polestar Stripe exterior badging",
+      "Adds Glossy Black decorative side window trim",
+      "Adds heated and electrically adjustable outer mirrors with puddle lights",
+      "Adds electrically heated rear window",
+      "Adds sun roof with rain sensor",
+      "Adds Air Quality System with Clean Zone interior software"
+    ]
+  }
+}

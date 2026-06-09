@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2012|volkswagen|golf",
+  "year": 2012,
+  "make": "Volkswagen",
+  "model": "Golf",
+  "ladder_id": "brochure_llm_2012__volkswagen__golf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Golf 2.5L with Convenience and Sunroof",
+    "Golf 2.5L with Convenience",
+    "Golf 2.5L Design",
+    "Golf 2.0L TDI Clean Diesel with Technology Package"
+  ],
+  "adds_by_trim": {
+    "Golf 2.5L with Convenience and Sunroof": [
+      "Power tilting/sliding tinted sunroof",
+      "Dynaudio premium sound system with 8 speakers",
+      "Keyless access with push-button start"
+    ],
+    "Golf 2.5L with Convenience": [
+      "Heated front seats and washer nozzles",
+      "Bluetooth technology",
+      "Adjustable front center armrest"
+    ],
+    "Golf 2.5L Design": [
+      "170-hp 2.5L in-line 5-cylinder engine",
+      "5-speed manual transmission",
+      "15-inch steel wheels with wheel covers",
+      "8-speaker sound system with in-dash CD player",
+      "Power windows, locks, and door mirrors"
+    ],
+    "Golf 2.0L TDI Clean Diesel with Technology Package": [
+      "2.0L 140-hp TDI Clean Diesel engine",
+      "6-speed manual transmission",
+      "17-inch Salamanca alloy wheels",
+      "Premium VIII sound system with 6-disc CD changer",
+      "RNS 315 navigation system with 5-inch color touchscreen"
+    ]
+  }
+}

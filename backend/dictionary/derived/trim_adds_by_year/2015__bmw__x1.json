@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2015|bmw|x1",
+  "year": 2015,
+  "make": "BMW",
+  "model": "X1",
+  "ladder_id": "brochure_2015__bmw__x1",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Sport Line",
+    "xLine",
+    "Premium",
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [],
+    "Sport": [],
+    "Limited": [],
+    "Premium": [
+      "Panoramic moonroof",
+      "Full LED headlights"
+    ],
+    "xLine": [],
+    "Sport Line": [],
+    "M Sport": [
+      "Adds front sport seats with increased top-speed limiter",
+      "Adds leather-wrapped multi-function M sport steering wheel with optional shift paddles",
+      "Adds aluminum door-sill finishers with M logo",
+      "Adds choice of Dark Crosshatch Aluminum, Light Fineline Wood with Pearl Gloss Chrome, or Aluminum with high-gloss Black trim",
+      "Adds M footrest",
+      "Adds Anthracite headliner",
+      "Adds Nevada Leather seating in Black, Sand Beige, or Coral Red with contrast piping",
+      "Adds Double Spoke light alloy wheels Style M in multiple sizes",
+      "Adds aerodynamic kit with front and rear bumpers and side skirts",
+      "Adds Shadowline trim and high-gloss black roof rails"
+    ]
+  }
+}

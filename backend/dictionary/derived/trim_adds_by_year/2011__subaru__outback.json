@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2011|subaru|outback",
+  "year": 2011,
+  "make": "Subaru",
+  "model": "Outback",
+  "ladder_id": "brochure_llm_2011__subaru__outback",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.6R Limited",
+    "3.6R Premium",
+    "2.5i Limited",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "3.6R Limited": [
+      "3.6-liter SUBARU BOXER engine (vs. 2.5-liter)",
+      "Front underguard",
+      "Woodgrain-patterned accent trim on doors and console",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver's seat with power lumbar support and 4-way power front passenger seat"
+    ],
+    "3.6R Premium": [
+      "Heated front seats and windshield wiper de-icer with heated side mirrors (All-Weather Package)"
+    ],
+    "2.5i Limited": [
+      "Body-color folding side mirrors",
+      "Silver metallic trim on doors and console",
+      "Leather-trimmed upholstery",
+      "10-way power adjustable driver's seat with power lumbar support and 4-way power front passenger seat",
+      "Retractable/removable cargo-area cover"
+    ],
+    "2.5i Premium": [
+      "Body-color folding side mirrors",
+      "Silver metallic trim on doors and console",
+      "10-way power adjustable driver's seat with power lumbar support",
+      "Fog lights",
+      "Driver's auto up/down power window",
+      "Leather-wrapped steering wheel with audio and cruise control buttons",
+      "6-disc in-dash CD changer",
+      "Retractable/removable cargo-area cover"
+    ],
+    "2.5i": [
+      "Subaru Symmetrical All-Wheel Drive (AWD)",
+      "SUBARU BOXER 2.5-liter engine",
+      "4-wheel antilock brakes (ABS) with Electronic Brake-force Distribution",
+      "Vehicle Dynamics Control (VDC) and Traction Control System",
+      "Dual-stage frontal and side-curtain airbags with seat-mounted front side-impact airbags",
+      "Roof rails with integrated retractable cross bars (150 lbs capacity)",
+      "6-way manually adjustable driver's seat and 4-way manually adjustable front passenger seat",
+      "Reclining rear seats with 60/40-split flat-folding seatback",
+      "Cloth upholstery",
+      "3-spoke steering wheel with audio and cruise control buttons"
+    ]
+  }
+}

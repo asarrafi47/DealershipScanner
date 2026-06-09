@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2011|volkswagen|routan",
+  "year": 2011,
+  "make": "Volkswagen",
+  "model": "Routan",
+  "ladder_id": "brochure_web_2011__volkswagen__routan",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Routan SEL",
+    "Routan SE",
+    "Routan S"
+  ],
+  "adds_by_trim": {
+    "Routan SEL": [
+      "Navigation package with keyless entry and push-button start",
+      "Rain sensing windshield wipers",
+      "Premium package with Blind Spot Monitoring",
+      "Rear Cross Path Detection backup radar sensors"
+    ],
+    "Routan SE": [
+      "Enhanced interior appointments compared to base S model"
+    ],
+    "Routan S": [
+      "3.6-liter Pentastar V-6 engine with 283 hp and 260 lb-ft torque",
+      "Six-speed automatic transmission",
+      "Seven airbags including front, side, and curtain airbags",
+      "ABS, traction control, and electronic stability control",
+      "Intelligent Crash Response System",
+      "Under-floor storage between first and second rows",
+      "Fold-flat second row captain's chairs",
+      "Rear-seat entertainment options",
+      "Seven-passenger seating with 144.4 cubic feet cargo space"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/volkswagen/routan/"
+}

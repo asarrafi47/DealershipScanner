@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2013|ford|eseries",
+  "year": 2013,
+  "make": "Ford",
+  "model": "E-Series",
+  "ladder_id": "brochure_llm_2013__ford__eseries",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "Cloth front bucket seats instead of vinyl",
+      "Power door locks instead of manual",
+      "Power windows instead of manual",
+      "Chrome bumpers instead of black",
+      "Chrome grille instead of black"
+    ],
+    "XL": [
+      "Vinyl front bucket seats",
+      "Manual door locks",
+      "Manual windows",
+      "Black bumpers",
+      "Black grille",
+      "AM/FM stereo with 6 speakers and audio input jack",
+      "Full-length cloth headliner",
+      "Aero-style sideview mirrors with manually adjustable glass",
+      "Daytime running lamps",
+      "Front and rear dome lights"
+    ]
+  }
+}

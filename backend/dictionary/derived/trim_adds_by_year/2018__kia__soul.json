@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2018|kia|soul",
+  "year": 2018,
+  "make": "Kia",
+  "model": "Soul",
+  "ladder_id": "brochure_llm_2018__kia__soul",
+  "source": "brochure_llm",
+  "trims_available": [
+    "!",
+    "+",
+    "S"
+  ],
+  "adds_by_trim": {
+    "!": [
+      "1.6L Turbo Gasoline Direct Injection 4-cylinder engine with 201 horsepower",
+      "7-speed Sportmatic Dual-Clutch Transmission",
+      "18-inch tires with alloy wheels",
+      "Outside mirrors with turn-signal indicators",
+      "Front fog lights",
+      "Supervision meter cluster with 4.3-inch TFT color LCD",
+      "7-inch touchscreen infotainment with Apple CarPlay and Android Auto",
+      "Automatic temperature control with cluster ionizer",
+      "Rear-Camera Display",
+      "Black-leather seat trim with cloth accents"
+    ],
+    "+": [
+      "2.0L Gasoline Direct Injection 4-cylinder engine with 161 horsepower",
+      "6-speed Sportmatic transmission",
+      "17-inch tires with alloy wheels",
+      "Body-color heated power outside mirrors",
+      "Bluetooth wireless technology",
+      "Steering-wheel-mounted audio controls",
+      "Power door locks with two-turn entry system",
+      "Power windows with driver's one-touch auto down"
+    ],
+    "S": [
+      "1.6L Gasoline Direct Injection 4-cylinder engine with 130 horsepower",
+      "6-speed manual transmission or available 6-speed Sportmatic",
+      "16-inch tires with alloy wheels",
+      "Body-color power outside mirrors",
+      "Multi-Focus Reflector headlights",
+      "AM/FM/MP3/SiriusXM radio with USB and auxiliary inputs",
+      "6-way adjustable driver's seat",
+      "60/40 split-folding rear seats with cargo-area light",
+      "Dual front advanced airbags with full-length side curtain airbags",
+      "Electronic Stability Control and Traction Control System"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "ladder_id": "2025_gmc_yukon_complete_options",
+  "make": "GMC",
+  "models": [
+    "Yukon",
+    "Yukon"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Denali": [
+      {
+        "label": "Speaker Count & Breakdown",
+        "value": "rear door configuration (split tailgate or Suburban-style barn doors) and a center-console cellular telephone (dealer…"
+      }
+    ],
+    "SLT": [
+      {
+        "label": "Engine Options",
+        "value": "L 285 hp (213 kW) Vortec 5300 V8"
+      }
+    ],
+    "Elevation": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Elevation trim."
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "L Detroit Diesel L56 turbo V8; Largely appearance packages, the two vehicles have several notable chassis upgra"
+      }
+    ],
+    "LT": [
+      {
+        "label": "Engine Options",
+        "value": "L 285 hp (213 kW) Vortec 5300 V8"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine 4.8 L 275 hp (205 kW) Vortec 4800 V8"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Chevrolet Tahoe (base trim), with sealed-beam headlights."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Along with heated front seats, rear-seat air conditioning was introduced as an o; Along with heated front seats, rear-seat air conditioning was introduced as an option."
+      }
+    ]
+  }
+}

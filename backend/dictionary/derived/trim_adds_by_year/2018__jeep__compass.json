@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2018|jeep|compass",
+  "year": 2018,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_2018__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds 2.4L engine with 6-speed manual transmission",
+      "Adds Advanced Front Air Bags",
+      "Adds Electronic Stability Control (ESC)",
+      "Adds seat belt safety system with lap and shoulder belts",
+      "Adds standard infotainment connectivity"
+    ],
+    "Latitude": [
+      "Adds Uconnect phone integration with Bluetooth Hands-Free Profile",
+      "Adds Remote Vehicle Start capability",
+      "Adds ParkView rear camera system",
+      "Adds ParkSense parking assistance"
+    ],
+    "Trailhawk": [
+      "Adds low-range power transfer unit (PTU) with 20:1 crawl ratio",
+      "Adds low-range 4x4 capability",
+      "Adds Selec-Terrain system",
+      "Adds Trail Rated capability"
+    ],
+    "Limited": [
+      "Adds SiriusXM Guardian with 12-month complimentary trial",
+      "Adds SOS emergency assistance button",
+      "Adds Send & Go mobile app integration",
+      "Adds Vehicle Finder feature",
+      "Adds Siri Eyes Free smartphone integration",
+      "Adds LaneSense lane departure warning"
+    ]
+  }
+}

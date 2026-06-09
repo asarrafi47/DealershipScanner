@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2021|hyundai|kona",
+  "year": 2021,
+  "make": "Hyundai",
+  "model": "Kona",
+  "ladder_id": "brochure_llm_2021__hyundai__kona",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ultimate",
+    "Limited",
+    "Night Edition",
+    "SEL Plus",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Ultimate": [
+      "Full-color Heads-up Display with vital driving and navigation information",
+      "Smart Cruise Control with Stop & Go functionality",
+      "Ventilated front seats and heated steering wheel",
+      "Leather seating surfaces",
+      "10.25-inch high-resolution color touchscreen navigation system",
+      "Infinity Premium Audio with 8 speakers",
+      "Automatic temperature control with Driver Only Mode",
+      "Electronic Parking Brake with Automatic Vehicle Hold"
+    ],
+    "Limited": [
+      "Full-color Heads-up Display",
+      "Smart Cruise Control with automatic speed adjustment",
+      "8-way power driver seat with power lumbar support",
+      "Leather seating surfaces and wrapped shift knob",
+      "8-inch touchscreen audio and navigation system",
+      "LED headlights and taillights",
+      "Infinity Premium Audio with 8 speakers",
+      "Heated front seats"
+    ],
+    "Night Edition": [
+      "1.6L Turbocharged engine with 175 hp and 7-speed Dual Clutch Transmission",
+      "Gloss black side mirrors and door sills",
+      "Aluminum pedals with gloss black accents and black headliner",
+      "Premium gray body cladding",
+      "LED headlights",
+      "Heated front seats"
+    ],
+    "SEL Plus": [
+      "8-way power driver seat with power lumbar support",
+      "Heated front seats",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Front fog lights",
+      "Leather-wrapped steering wheel and shift knob",
+      "Power tilt-and-slide sunroof"
+    ],
+    "SEL": [
+      "Leather-wrapped steering wheel",
+      "Heated front seats",
+      "Power windows with front auto-down and auto-up",
+      "Dual illuminated vanity mirrors with sunvisor extensions",
+      "Blind-Spot Collision Warning",
+      "Rear Cross-Traffic Collision Warning",
+      "Remote keyless entry system with alarm",
+      "Heated side mirrors with turn signal indicators"
+    ],
+    "SE": [
+      "6-way adjustable driver seat with height adjustment",
+      "2.0L Atkinson Cycle engine with 147 hp and 6-speed SHIFTRONIC transmission",
+      "7-inch touchscreen AM/FM/MP3 display audio system",
+      "Rear View Monitor with Parking Guidance",
+      "Forward Collision-Avoidance Assist",
+      "Lane Keeping Assist",
+      "Driver Attention Warning",
+      "Apple CarPlay and Android Auto",
+      "16-inch alloy wheels",
+      "60/40 split fold-flat rear seats"
+    ]
+  }
+}

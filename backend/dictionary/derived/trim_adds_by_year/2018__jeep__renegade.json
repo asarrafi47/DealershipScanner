@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2018|jeep|renegade",
+  "year": 2018,
+  "make": "Jeep",
+  "model": "Renegade",
+  "ladder_id": "brochure_2018__jeep__renegade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Trailhawk",
+    "Latitude"
+  ],
+  "adds_by_trim": {
+    "Latitude": [
+      "Adds Advanced Front Air Bags",
+      "Adds Electronic Stability Control",
+      "Adds Bluetooth Hands-Free Profile connectivity",
+      "Adds Uconnect infotainment system",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM radio capability",
+      "Adds ParkSense parking assistance",
+      "Adds Selec-Terrain driving modes"
+    ],
+    "Trailhawk": [
+      "Upgraded to Jeep Active Drive 4x4 system with low-range power transfer unit and 20:1 crawl ratio",
+      "Adds Trail Rated off-road capability",
+      "Adds LaneSense lane-keeping assistance",
+      "Adds Forward Collision Warning system"
+    ],
+    "Limited": [
+      "Upgraded to Uconnect 8.4 Navigation system",
+      "Adds Send & Go remote navigation feature",
+      "Adds SiriusXM Guardian connected services with Vehicle Finder",
+      "Adds Wi-Fi Hotspot capability",
+      "Adds Voice Text Reply feature",
+      "Adds Remote Vehicle Start functionality",
+      "Adds SOS emergency assistance button",
+      "Adds Roadside Assistance Call service",
+      "Adds Stolen Vehicle Recovery notification",
+      "Adds Theft Alarm Notification"
+    ]
+  }
+}

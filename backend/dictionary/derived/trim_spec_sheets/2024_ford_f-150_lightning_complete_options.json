@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_ford_f-150_lightning_complete_options",
+  "make": "Ford",
+  "models": [
+    "F-150 Lightning",
+    "F-150 Lightning"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "Platinum": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ],
+    "PRO Extended Range": [
+      {
+        "label": "Engine Options",
+        "value": "EV Electricity; Automatic (A1)"
+      }
+    ]
+  }
+}

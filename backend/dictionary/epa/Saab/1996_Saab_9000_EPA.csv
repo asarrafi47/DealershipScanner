@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1996,Saab,9000,9000,3.0L V6 (B308I4 (FFS) (VARIABLE)),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.0,16,24,19,,,,,
+1996,Saab,9000,9000,"2.3L I4 (B234E4 (FFS,TRBO) High Power)",2.3L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,15,24,18,,,,,
+1996,Saab,9000,9000,"2.3L I4 (B234E4 (FFS,TRBO))",2.3L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,18,26,21,,,,,
+1996,Saab,9000,9000,"2.3L I4 (B234L/R4 (FFS,TRBO))",2.3L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,18,25,20,,,,,

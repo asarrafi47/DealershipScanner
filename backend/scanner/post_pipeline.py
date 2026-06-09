@@ -63,6 +63,79 @@ def post_window_sticker_env_enabled() -> bool:
     return raw not in ("0", "false", "no", "off")
 
 
+def post_gas_prices_env_enabled() -> bool:
+    """
+    Refresh EIA regional fuel and residential electricity averages for TCO
+    (``live_gas_prices.json``).
+
+    On by default. Disable with ``SCANNER_POST_GAS_PRICES=0`` or ``--no-post-gas-prices``.
+    """
+    raw = (os.environ.get("SCANNER_POST_GAS_PRICES") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def post_dealer_google_ratings_env_enabled() -> bool:
+    """
+    Backfill missing dealer Google ratings every N scanner batches (default N=10).
+
+    On by default. Disable with ``SCANNER_POST_DEALER_RATINGS=0`` or
+    ``--no-post-dealer-ratings``. Never runs on car page views.
+    """
+    raw = (os.environ.get("SCANNER_POST_DEALER_RATINGS") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def run_sync_gas_prices() -> dict[str, Any]:
+    """Scrape AAA gas prices and update the derived cache file."""
+    from backend.cron.sync_gas_prices import sync_gas_prices_cache
+
+    summary = sync_gas_prices_cache(use_fallback_on_error=True)
+    logger.info(
+        "AAA gas price sync: path=%s source=%s states=%s national_regular=%s used_fallback=%s",
+        summary.get("path"),
+        summary.get("source"),
+        summary.get("states"),
+        summary.get("national_regular"),
+        summary.get("used_fallback"),
+    )
+    return summary
+
+
+def run_dealer_google_rating_backfill_if_due(*, enabled: bool = True) -> dict[str, Any]:
+    """
+    Increment scanner batch counter once per completed scan run.
+
+    When *enabled* and the batch count hits every N runs (default 10), backfill
+    dealership rows that have never had a Google rating lookup.
+    """
+    from backend.cron.scan_run_counter import mark_dealer_ratings_synced, record_scanner_batch_finished
+    from backend.cron.sync_dealer_google_ratings import backfill_dealer_google_ratings
+
+    counter = record_scanner_batch_finished()
+    summary: dict[str, Any] = {"counter": counter, "backfill": None}
+    if not enabled:
+        return summary
+    if not counter.get("run_dealer_ratings"):
+        logger.info(
+            "Dealer Google rating backfill skipped (batch %s; every %s scans)",
+            counter.get("batch_count"),
+            counter.get("interval"),
+        )
+        return summary
+
+    backfill = backfill_dealer_google_ratings()
+    summary["backfill"] = backfill
+    mark_dealer_ratings_synced()
+    logger.info(
+        "Dealer Google rating backfill (batch %s): examined=%s resolved=%s missed=%s",
+        counter.get("batch_count"),
+        backfill.get("examined"),
+        backfill.get("resolved"),
+        backfill.get("missed"),
+    )
+    return summary
+
+
 def _window_sticker_max_per_run() -> int:
     try:
         return max(0, int((os.environ.get("SCANNER_POST_WINDOW_STICKER_MAX") or "0").strip()))

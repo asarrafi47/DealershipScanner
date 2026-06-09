@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2025_audi_sq7_complete_options",
+  "make": "Audi",
+  "models": [
+    "SQ7",
+    "SQ7"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "Prestige": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L TDI V8; The production design was frozen in late 2003, for a late 2005 start of production. Prototypes went into testing in 2004, with development concluding in the first half of 2005. It introduced the world's only series production passenger car V12…"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L TDI V6; L TDI V8 (was L TDI V8; The production design was frozen in late 2003, for a late 2005 start of production. Prototypes went into testing in 2004, with development concluding in the first half of 2005. It introduced the world's only series…"
+      }
+    ],
+    "Technik": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L TDI V8; The production design was frozen in late 2003, for a late 2005 start of production. Prototypes went into testing in 2004, with development concluding in the first half of 2005. It introduced the world's only series production passenger car V12 TDI…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: (dual) touchscreen running the Audi MMI Connect infotainment system as standard; (dual) touchscreen running the Audi MMI Connect infotainment system as standard equipment."
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: The dashboard and centre console were also updated to accommodate the new system; The dashboard and centre console were also updated to accommodate the new system. LED headlights are included as standard, Matrix LEDs or HD Matrix LEDs and Audi Laser Light…"
+      }
+    ]
+  }
+}

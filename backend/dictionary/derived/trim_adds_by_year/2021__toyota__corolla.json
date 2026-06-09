@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2021|toyota|corolla",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_2021__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "XLE",
+    "LE",
+    "Hybrid",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [],
+    "Limited": [],
+    "Hybrid": [
+      "Upgraded to 1.8L Hybrid engine with 121 hp",
+      "Upgraded to Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Adds Normal, Power and ECO driving modes",
+      "Upgraded to 53 city/52 highway/52 combined est. mpge",
+      "Adds high-grade LED headlights and accent lighting"
+    ],
+    "LE": [
+      "Color-keyed heated power outside mirrors",
+      "16-inch wide-vent steel wheels",
+      "Automatic climate control with dust and pollen filter",
+      "Premium fabric-trimmed 6-way adjustable driver's seat and 4-way adjustable front passenger seat",
+      "8-inch touch-screen audio system with Apple CarPlay and advanced voice recognition",
+      "Multi-function in-key remote keyless entry with lock, unlock, panic and trunk-release",
+      "LE Premium Package with Smart Key System, alloy wheels, Blind Spot Monitor and moonroof"
+    ],
+    "XLE": [
+      "Upgraded to Sport driving mode capability",
+      "Adds color-keyed heated power outside mirrors",
+      "Upgraded to 29 city/37 highway/32 combined est. mpg"
+    ],
+    "SE": [
+      "Adds sport mesh gray metallic front grille",
+      "Adds power tilt/slide moonroof with sliding sunshade",
+      "Adds gray metallic sport side rocker panels and color-keyed spoiler",
+      "Adds 18-in. machined alloy wheels with dark gray accents",
+      "Adds steering-wheel-mounted paddle shifters (CVT)",
+      "Adds multi-function 4.2-in. Multi-Information Display (MID)",
+      "Adds premium sport seats with sport fabric inserts",
+      "Adds Smart Key System with Push Button Start option"
+    ],
+    "XSE": [
+      "Adds sport mesh black front grille with bronze/black front spoiler and C-shaped accents",
+      "Adds SofTex-trimmed seats with heated front seats and sport fabric inserts",
+      "Adds 7-in. Multi-Information Display (MID)",
+      "Adds Blind Spot Monitor (BSM) with Rear Cross-Traffic Alert (RCTA)",
+      "Adds optional Qi-compatible wireless smartphone charging",
+      "Adds optional Adaptive Front-Lighting System (AFS) and ambient lighting package"
+    ]
+  }
+}

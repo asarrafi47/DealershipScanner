@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2017|chevrolet|corvette",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_llm_2017__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3LZ",
+    "3LT",
+    "2LT",
+    "1LT"
+  ],
+  "adds_by_trim": {
+    "3LZ": [
+      "Napa leather seating surfaces",
+      "Hand-stretched leather-wrapped instrument panel with meticulous fit and finish",
+      "Lightweight aluminum accents on doors, pedals, shifter and instrumentation"
+    ],
+    "3LT": [
+      "Napa leather seating surfaces",
+      "Hand-stretched leather-wrapped instrument panel with meticulous fit and finish",
+      "Lightweight aluminum accents on doors, pedals, shifter and instrumentation"
+    ],
+    "2LT": [
+      "Heated and ventilated seat availability",
+      "Passenger air vent with interior temperature control and indicator"
+    ],
+    "1LT": [
+      "Leather seating surfaces standard",
+      "Flat-bottom steering wheel with leather wrapping and power tilt/telescopic adjustment",
+      "Steering wheel controls for Bluetooth wireless technology, cruise control, audio system",
+      "Run-flat Michelin ZP summer-only tires"
+    ]
+  }
+}

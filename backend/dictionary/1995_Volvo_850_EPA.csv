@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1995,Volvo,850,850,"2.3L V5 ((FFS,TRBO))",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.3,17,24,19,,,,,,2.3L V5 Turbo,Turbocharged
-1995,Volvo,850,850,2.4L V5 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.4,18,26,21,,,,,,2.4L V5 Turbo,Turbocharged
-1995,Volvo,850,850,2.4L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.4,18,26,21,,,,,,2.4L V5 Turbo,Turbocharged
-1995,Volvo,850,Wagon,"2.3L V5 ((FFS,TRBO))",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,5,2.3,17,24,19,,,,,,2.3L V5 Turbo,Turbocharged
-1995,Volvo,850,Wagon,2.4L V5 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,5,2.4,18,26,21,,,,,,2.4L V5 Turbo,Turbocharged
-1995,Volvo,850,Wagon,2.4L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,5,2.4,18,26,21,,,,,,2.4L V5 Turbo,Turbocharged
-1995,Volvo,850,Wagon,2.4L V5 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,5,2.4,18,26,21,,,,,,2.4L V5 Turbo,Turbocharged
-1995,Volvo,850,Wagon,2.4L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,5,2.4,18,26,21,,,,,,2.4L V5 Turbo,Turbocharged

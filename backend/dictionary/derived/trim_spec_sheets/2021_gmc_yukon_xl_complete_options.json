@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_gmc_yukon_xl_complete_options",
+  "make": "GMC",
+  "models": [
+    "Yukon XL",
+    "Yukon XL"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Denali Ultimate": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front engine, rear-wheel drive / four-wheel drive; While the Suburban was not offered with a 4.3L V6 or 5.0L V8, the 5.7L engine wa"
+      }
+    ],
+    "Denali": [
+      {
+        "label": "Engine Options",
+        "value": "Layout Front engine, rear-wheel drive / four-wheel drive; While the Suburban was not offered with a 4.3L V6 or 5.0L V8, the 5.7L engine wa"
+      }
+    ]
+  }
+}

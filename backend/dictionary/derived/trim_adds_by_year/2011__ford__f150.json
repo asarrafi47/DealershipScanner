@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2011|ford|f150",
+  "year": 2011,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2011__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FX4",
+    "FX2",
+    "XLT",
+    "STX",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "FX4": [
+      "Electronic-locking differential rear axle",
+      "Skid plates for front differential, transfer case, and fuel tank",
+      "P275/65R18 OWL all-terrain tires",
+      "18-inch machined aluminum wheels",
+      "Black rubber off-road floor mats",
+      "Sterling Gray wheel-lip moldings"
+    ],
+    "FX2": [
+      "SelectShift Automatic transmission",
+      "Trailer Tow Package",
+      "18-inch machined aluminum wheels",
+      "P265/60R18 OWL all-season tires",
+      "6-inch gray angular running boards",
+      "Body-color wheel-lip moldings"
+    ],
+    "XLT": [
+      "5.0L Ti-VCT 4-valve V8 FFV engine option",
+      "Chrome front bumper with body-color upper fascia",
+      "Chrome grille surround with chrome bar-style insert",
+      "Chrome rear step bumper",
+      "Fog lamps",
+      "Ford SYNC voice-activated in-vehicle connectivity system",
+      "Auto-dimming rearview mirror",
+      "Sirius Satellite Radio with 6-month subscription",
+      "Steering wheel-mounted SYNC and audio controls",
+      "Message center with 4.2-inch LCD screen and trip computer"
+    ],
+    "STX": [
+      "17-inch machined aluminum wheels with painted accents",
+      "P235/75R17 or P265/70R17 OWL all-terrain tires",
+      "Color-coordinated urethane steering wheel",
+      "Sport cloth front bucket seats with flow-through console",
+      "Driver and passenger-side visors with covered vanity mirrors",
+      "Fade-to-off interior lighting",
+      "Fixed rear window with privacy tint",
+      "110-volt power inverter"
+    ],
+    "XL": [
+      "3.7L Ti-VCT 4-valve V6 FFV engine",
+      "17-inch machined aluminum wheels",
+      "P255/65R17 OWL all-season tires or P265/70R17 all-terrain tires",
+      "40/20/40 split cloth front seat with manual driver lumbar",
+      "AM/FM stereo with single-CD player and clock",
+      "Cruise control",
+      "Power door locks and windows with front one-touch-up/-down",
+      "Body-color front and rear bumpers with body-color grille",
+      "Power sideview mirrors",
+      "Remote Keyless Entry System with 2 integrated keyhead transmitters"
+    ]
+  }
+}

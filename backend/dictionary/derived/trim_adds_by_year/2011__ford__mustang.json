@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2011|ford|mustang",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_2011__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 4-wheel disc Anti-Lock Brake System (ABS)",
+      "Adds Includes all-speed traction control",
+      "Adds Includes 4-way manually height-adjustable driver's seat",
+      "Adds Includes Premium AM/FM stereo with single-CD audio system",
+      "Adds Includes dual-stage front airbags and front-seat side airbags",
+      "Adds Includes AdvanceTrac electronic stability control",
+      "Adds Includes Remote Keyless Entry System with integrated transmitter remotes",
+      "Adds Includes 3.7L Ti-VCT V6 engine with manual transmission"
+    ],
+    "Active": [
+      "Adds 6-way power front-passenger seat via Comfort Package",
+      "Adds heated front seats via Comfort Package",
+      "Adds dual-zone electronic automatic temperature control via Electronics Package",
+      "Adds HD Radio via Electronics Package",
+      "Adds hard drive-based voice-activated Navigation System via Electronics Package"
+    ],
+    "GT": [
+      "Upgraded to 5.0L Ti-VCT V8 engine",
+      "Adds 18-in. polished-aluminum wheels",
+      "Adds fog lamps",
+      "Adds automatic headlamps",
+      "Adds satin-chrome grille"
+    ],
+    "Limited": [
+      "Adds HID headlamps",
+      "Adds rear-view camera",
+      "Adds painted dark stainless billet-style grille",
+      "Adds lower fascia-mounted fog lamps",
+      "Adds 18-in. Sterling Gray Metallic painted-aluminum wheels with P235/50R18 W-rated tires"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|hyundai|sonata",
+  "year": 2018,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2018_Hyundai_Sonata_Brochure.pdf",
+  "page_count": 16,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ],
+  "pages": [
+    {
+      "page": 2,
+      "trim_hint": false,
+      "text": "Sonata Limited\nSonata Limited 2.0T",
+      "table_lines": []
+    },
+    {
+      "page": 15,
+      "trim_hint": false,
+      "text": "Exterior Dimensions\nSonata\n\u2022 Wheelbase 110.4 in\n\u2022 Overall Length 191.1 in\n\u2022 Overall Width (excluding mirrors) 73.4 in\n\u2022 Overall Height 58.1 in\n\u2022 Coefficient of Drag 0.27 Cd\nPerformance and EPA Mileage Estimates\nInterior Dimensions Model Horsepower/Torque Mileage Estimates Fuel Tank\nSonata\n\u2022 SE 185 HP / 178 lb-ft 25/36/29 MPG 18.5 gal\n\u2022 Head Room, front/rear 40.4/38.0 in\n\u2022 SEL/Sport/Limited 185 HP / 178 lb-ft 25/35/28 MPG 18.5 gal\n\u2022 Leg Room, front/rear 45.5/35.6 in\n\u2022 Shoulder Room, front/rear 57.9/56.5 in \u2022 Sport 2.0T/Limited 2.0T 245 HP / 260 lb-ft 23/32/26 MPG 18.5 gal\n\u2022 Hip Room, front/rear 55.3/56.1 in \u2022 Eco 178 HP / 195 lb-ft 28/37/31 MPG 18.5 gal",
+      "table_lines": [
+        "110.4 in",
+        "191.1 in\nluding mirrors) 73.4 in",
+        "58.1 in",
+        "g 0.27 Cd"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 2 ---\nSonata Limited\nSonata Limited 2.0T\n\n--- page 15 ---\nExterior Dimensions\nSonata\n\u2022 Wheelbase 110.4 in\n\u2022 Overall Length 191.1 in\n\u2022 Overall Width (excluding mirrors) 73.4 in\n\u2022 Overall Height 58.1 in\n\u2022 Coefficient of Drag 0.27 Cd\nPerformance and EPA Mileage Estimates\nInterior Dimensions Model Horsepower/Torque Mileage Estimates Fuel Tank\nSonata\n\u2022 SE 185 HP / 178 lb-ft 25/36/29 MPG 18.5 gal\n\u2022 Head Room, front/rear 40.4/38.0 in\n\u2022 SEL/Sport/Limited 185 HP / 178 lb-ft 25/35/28 MPG 18.5 gal\n\u2022 Leg Room, front/rear 45.5/35.6 in\n\u2022 Shoulder Room, front/rear 57.9/56.5 in \u2022 Sport 2.0T/Limited 2.0T 245 HP / 260 lb-ft 23/32/26 MPG 18.5 gal\n\u2022 Hip Room, front/rear 55.3/56.1 in \u2022 Eco 178 HP / 195 lb-ft 28/37/31 MPG 18.5 gal\n\n110.4 in\n191.1 in\nluding mirrors) 73.4 in\n58.1 in\ng 0.27 Cd"
+}

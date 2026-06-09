@@ -1,0 +1,72 @@
+{
+  "catalog_key": "2017|chevrolet|silverado",
+  "year": 2017,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2017__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "High Country",
+    "LTZ",
+    "Z71",
+    "LT",
+    "Custom",
+    "LS",
+    "WT",
+    "SL"
+  ],
+  "adds_by_trim": {
+    "High Country": [
+      "LED headlamps with LED signature daytime running lamps",
+      "Front and rear park assist with obstacle detection and audible warning",
+      "Power sunroof with tilt/sliding glass, sunshade, express-open, wind deflector",
+      "Carpeted floor mats front and rear",
+      "Wireless charging pad for compatible mobile devices",
+      "Active Noise Cancellation"
+    ],
+    "LTZ": [
+      "8-speed automatic transmission on Crew Cab models",
+      "Wireless charging pad for compatible mobile devices",
+      "Active Noise Cancellation"
+    ],
+    "Z71": [
+      "6.2L EcoTec3 V8 engine with 420 hp and 460 lb-ft torque",
+      "Max Trailering Package with 9.76-inch rear axle and integrated trailer brake controller",
+      "Active Noise Cancellation"
+    ],
+    "LT": [
+      "LED foglamps",
+      "Rear vision camera",
+      "Manual tilt and telescoping steering column",
+      "Remote vehicle starter system",
+      "Theft-deterrent system for unauthorized entry",
+      "Forward Collision Alert, IntelliBeam, Lane Keep Assist, Low Speed Forward Automatic Braking",
+      "Safety Alert Driver Seat"
+    ],
+    "Custom": [
+      "5.3L EcoTec3 V8 engine standard with 355 hp and 383 lb-ft torque",
+      "Automatic locking rear differential",
+      "Remote locking tailgate",
+      "Rear vision camera"
+    ],
+    "LS": [
+      "4.3L EcoTec3 V6 engine with 285 hp and 305 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "Remote locking tailgate",
+      "OnStar Guidance Plan with Automatic Crash Response and Turn-by-Turn Navigation",
+      "Teen Driver technology"
+    ],
+    "WT": [
+      "4.3L EcoTec3 V6 engine with 285 hp and 305 lb-ft torque",
+      "6-speed automatic transmission",
+      "Rubberized vinyl front and rear floor mats",
+      "Teen Driver technology"
+    ],
+    "SL": [
+      "4 movable upper cargo box tie-downs",
+      "Manual tilt-wheel steering column with theft-deterrent locking",
+      "Rubberized vinyl front and rear floor mats",
+      "Teen Driver technology"
+    ]
+  }
+}

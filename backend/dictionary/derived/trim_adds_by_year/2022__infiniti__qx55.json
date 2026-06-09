@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|infiniti|qx55",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "QX55",
+  "ladder_id": "brochure_llm_2022__infiniti__qx55",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX55 SENSORY",
+    "QX55 ESSENTIAL",
+    "QX55 LUXE"
+  ],
+  "adds_by_trim": {
+    "QX55 SENSORY": [
+      "Semi-aniline leather-appointed seating",
+      "Natural Maple Wood interior trim accents",
+      "2-way passenger power lumbar support",
+      "Motion Activated Liftgate",
+      "Unique cube design LED headlights with auto levelizer",
+      "Adaptive Front Lighting System",
+      "Metallic cargo area scuff plates",
+      "ProPILOT Assist with steering and full-speed range stop & hold",
+      "Enhanced LED interior ambient lighting",
+      "Advanced Climate Control System"
+    ],
+    "QX55 ESSENTIAL": [
+      "Heated outside mirrors",
+      "Leather-appointed perforated seating",
+      "Climate-controlled front seats",
+      "Power tilting and telescoping steering column",
+      "Dual-occupant memory system for driver seat, steering wheel, outside mirrors",
+      "Heated steering wheel",
+      "Bose 16-speaker Performance Series Audio with metallic speaker grilles",
+      "Navigation with 3D building graphics and 5-year Premium Traffic access",
+      "Around View Monitor with Moving Object Detection",
+      "Front parking sensors"
+    ],
+    "QX55 LUXE": [
+      "2.0L VC-Turbo 4-cylinder engine with Continuously Variable Transmission",
+      "Paddle shifters",
+      "INFINITI Intelligent All-Wheel Drive",
+      "20-inch dark-painted and machine-finished aluminum-alloy wheels with run-flat tires",
+      "LED automatic-on/off headlights with signature daytime running lights and fog lights",
+      "Body-color door handles with chrome accent and LED welcome light",
+      "Black roof rails with acoustic front-row side window glass",
+      "Dual zone automatic climate control with rear seat vents",
+      "Electronic parking brake with Remote Engine Start",
+      "Power moonroof with power rear liftgate and Intelligent Key push button ignition"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2017|cadillac|xt5",
+  "year": 2017,
+  "make": "Cadillac",
+  "model": "XT5",
+  "ladder_id": "brochure_llm_2017__cadillac__xt5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XT5 Platinum",
+    "XT5 Premium Luxury",
+    "XT5 Luxury",
+    "XT5"
+  ],
+  "adds_by_trim": {
+    "XT5 Platinum": [
+      "20-inch aluminum fully polished wheels with midnight finish"
+    ],
+    "XT5 Premium Luxury": [
+      "20-inch aluminum with ultrabright machined finish and silver accents",
+      "20-inch aluminum fully polished wheels available"
+    ],
+    "XT5 Luxury": [
+      "18-inch aluminum wheels with bright silver painted finish"
+    ],
+    "XT5": [
+      "18-inch aluminum wheels with blade design",
+      "Powertrain limited warranty with no deductible for 6 years/70,000 miles",
+      "Roadside Assistance Program standard",
+      "Courtesy Transportation Program standard",
+      "Bumper-to-bumper coverage for 4 years/50,000 miles",
+      "Rust-through corrosion coverage for 6 years/unlimited mileage"
+    ]
+  }
+}

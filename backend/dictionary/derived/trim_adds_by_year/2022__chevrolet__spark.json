@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2022|chevrolet|spark",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2022__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "ACTIV",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Rear Park Assist",
+      "Chrome exterior and interior door handles",
+      "Chrome liftgate trim",
+      "Chrome beltline moldings",
+      "Keyless Open and Start",
+      "Driver Information Center with enhanced monochromatic display",
+      "Leather-wrapped 3-spoke steering wheel with Silver accents",
+      "Jet Black leatherette seat trim and heated front seats"
+    ],
+    "ACTIV": [
+      "Unique front and rear fascia with Black bumpers",
+      "Rocker panel trim, roof rails and door fender flares",
+      "15-inch Gunmetal Silver-painted aluminum wheels",
+      "Front fog lamps with chrome rings",
+      "Door sill plate covers",
+      "Jet Black leatherette seat trim and heated front seats"
+    ],
+    "1LT": [
+      "Power windows and door locks",
+      "Remote Keyless Entry with panic alarm",
+      "Theft-deterrent system",
+      "15-inch alloy wheels",
+      "Heated outside mirrors",
+      "LED daytime running lamps",
+      "Cruise control",
+      "Steering wheel-mounted controls for audio, cruise and phone",
+      "6-speaker audio system",
+      "SiriusXM 3-month trial subscription"
+    ],
+    "LS": [
+      "ECOTEC 1.4L DOHC 4-cylinder engine with MFI",
+      "StabiliTrak Electronic Stability Control with Traction Control",
+      "5-speed manual transmission",
+      "Rear aero spoiler",
+      "Halogen projector headlamps",
+      "Up to 3 months of OnStar Safety & Security coverage",
+      "Rear Vision Camera",
+      "Air conditioning with cabin filter",
+      "Bluetooth audio streaming",
+      "Chevrolet Infotainment 3 system with 7-inch touchscreen"
+    ]
+  }
+}

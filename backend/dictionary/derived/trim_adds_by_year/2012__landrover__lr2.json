@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|landrover|lr2",
+  "year": 2012,
+  "make": "landrover",
+  "model": "LR2",
+  "ladder_id": "brochure_2012__landrover__lr2",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds standard Alpine® branded audio system with single slot CD player",
+      "Adds 320-Watt amplifier with auxiliary input and nine speakers",
+      "Adds electrochromatic rear view mirror for automatically minimizing headlamp dazzle",
+      "Adds rain sensing wipers",
+      "Adds seven airbags as standard safety equipment",
+      "Adds high-strength steel monocoque body with inner safety cell",
+      "Adds front and rear energy absorbent crumple zones",
+      "Adds 60:40 split rear seats with folding capability"
+    ],
+    "Premium": [
+      "Adds standard panoramic sunroof with fixed rear section and electric tilting/sliding front section",
+      "Adds infrared-filtering glass to reduce heat transmission"
+    ],
+    "Standard": [
+      "Adds optional DVD satellite navigation system with high definition touch-screen",
+      "Adds navigation point-of-interest database functionality"
+    ],
+    "HSE": [
+      "Upgraded to premium Alpine® Dolby® Pro Logic® II 7.1 surround sound system",
+      "Adds 480-Watt amplifier with 13 speakers and subwoofer",
+      "Adds Sirius Satellite Radio availability"
+    ]
+  }
+}

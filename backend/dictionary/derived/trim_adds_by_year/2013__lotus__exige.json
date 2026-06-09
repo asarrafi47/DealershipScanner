@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2013|lotus|exige",
+  "year": 2013,
+  "make": "Lotus",
+  "model": "Exige",
+  "ladder_id": "brochure_web_2013__lotus__exige",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "S",
+    "R"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "2.0L supercharged four-cylinder engine producing 256 hp",
+      "Six-speed manual transmission",
+      "Independently double-wishbone suspension with coil springs",
+      "Brembo brake system",
+      "17-inch forged aluminum wheels with Michelin Pilot Sport tires",
+      "Cloth interior with bucket seats",
+      "Power steering",
+      "Air conditioning"
+    ],
+    "R": [
+      "Upgraded to 3.5L supercharged V6 engine producing 345 hp",
+      "Six-speed manual transmission with shorter gear ratios",
+      "Enhanced suspension with adjustable dampers and stiffer springs",
+      "Upgraded Brembo brake system with larger rotors",
+      "18-inch forged aluminum wheels with Michelin Pilot Sport tires",
+      "Premium leather and suede interior with upgraded bucket seats",
+      "Sport exhaust system",
+      "Enhanced aerodynamic bodywork and carbon fiber trim elements"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/exige/"
+}

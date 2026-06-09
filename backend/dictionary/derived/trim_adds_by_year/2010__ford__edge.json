@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2010|ford|edge",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Edge",
+  "ladder_id": "2010_ford_edge",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "SEL": [
+      "18-inch painted-aluminum wheels (replaces 17-inch on SE)",
+      "Automatic headlamps with wiper activation",
+      "Body-color mirrors and chrome beltline moldings",
+      "6-way power driver seat and unique cloth fold-flat passenger seat",
+      "Fog lamps and SEL badge",
+      "AM/FM 6-disc in-dash CD with steering audio controls"
+    ],
+    "Limited": [
+      "18-inch premium chrome-clad aluminum wheels",
+      "Leather-trimmed heated 6-way power front buckets with driver memory",
+      "Dual-zone Electronic Automatic Temperature Control",
+      "SecuriCode keypad, auto-dimming mirror, and Reverse Sensing System",
+      "Ambient Lighting and Premium Sound System available"
+    ],
+    "Sport": [
+      "20-inch premium chrome-clad wheels with SPORT center caps",
+      "Unique body-color fascias, door cladding, and blackout lamp treatment",
+      "Leather with Alcantara Grey inserts and contrast-stitch steering wheel",
+      "Larger dual exhaust tips and SPORT badging",
+      "Based on SEL equipment with sport appearance package"
+    ],
+    "SE": [
+      "2.0L EcoBoost I-4 engine with 240 hp and 6-speed automatic transmission",
+      "17-inch painted aluminum wheels",
+      "Front bucket seats with cloth upholstery",
+      "Rear 60/40 split fold-flat seat with reclining backs",
+      "MyFord with 4.2-inch color LCD display and media hub",
+      "AM/FM stereo with single-CD player and MP3 capability",
+      "Personal Safety System with dual-stage front airbags",
+      "AdvanceTrac with Roll Stability Control",
+      "Power door locks and windows with remote keyless entry"
+    ]
+  }
+}

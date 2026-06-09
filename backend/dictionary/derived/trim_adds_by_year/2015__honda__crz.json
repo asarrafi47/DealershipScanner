@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2015|honda|crz",
+  "year": 2015,
+  "make": "Honda",
+  "model": "CR-Z",
+  "ladder_id": "brochure_llm_2015__honda__crz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CR-Z EX WITH NAVIGATION",
+    "CR-Z EX",
+    "CR-Z"
+  ],
+  "adds_by_trim": {
+    "CR-Z EX WITH NAVIGATION": [
+      "Honda Satellite-Linked Navigation System with voice recognition and FM Traffic",
+      "SMS text message function via Bluetooth",
+      "Pandora compatibility",
+      "Bluetooth streaming audio"
+    ],
+    "CR-Z EX": [
+      "LED Daytime Running Lights",
+      "High-intensity discharge (HID) headlights with auto-on/off",
+      "Multi-angle rearview camera with guidelines display",
+      "Fog lights",
+      "Leather-wrapped steering wheel",
+      "Aluminum shift knob with leather (6MT)",
+      "Textured-aluminum pedals",
+      "Illuminated driver's and front passenger's vanity mirrors",
+      "360-watt AM/FM/CD premium audio system with 7 speakers and subwoofer",
+      "16-inch alloy wheels"
+    ],
+    "CR-Z": [
+      "1.5-liter i-VTEC 4-cylinder engine with Integrated Motor Assist (IMA)",
+      "130 horsepower combined engine and electric motor",
+      "6-speed manual transmission or Continuously Variable Transmission (CVT) with paddle shifters",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "3-mode drive system (Sport/Normal/ECON)",
+      "Bluetooth HandsFreeLink",
+      "Cruise control",
+      "Tilt and telescopic steering column",
+      "160-watt AM/FM/CD audio system with 6 speakers",
+      "Hill start assist"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2013|hyundai|veloster",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "ladder_id": "brochure_llm_2013__hyundai__veloster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "VELOSTER TURBO",
+    "VELOSTER"
+  ],
+  "adds_by_trim": {
+    "VELOSTER TURBO": [
+      "201 HP, 1.6L twin-scroll Turbo DOHC 4-cylinder engine",
+      "Sport-tuned steering",
+      "Unique 18\" alloy wheels with chrome accents",
+      "Leather seating surfaces with power-adjustable lumbar support",
+      "Heated front seats",
+      "450-Watt Dimension® premium audio system with external amp & subwoofer",
+      "Black high-gloss interior accents",
+      "Stylish body kit",
+      "Turn signal indicators on side mirrors",
+      "Front projector headlights with LED accents and rear LED taillights"
+    ],
+    "VELOSTER": [
+      "138 HP, 1.6L Gasoline Direct Injection DOHC 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed manual or available 6-speed EcoShift™ Dual Clutch Transmission with SHIFTRONIC® paddle shifters",
+      "17\" alloy wheels",
+      "Air conditioning",
+      "Power door locks and power windows",
+      "Remote keyless entry with alarm system",
+      "Tilt-and-telescopic steering wheel with cruise, audio and phone controls",
+      "Manual 6-way adjustable driver bucket seat with armrest storage box",
+      "60/40 split fold-down rear seatback",
+      "7\" LCD multimedia touchscreen with AM/FM/SiriusXM®/CD/MP3 audio and iPod®/USB auxiliary input"
+    ]
+  }
+}

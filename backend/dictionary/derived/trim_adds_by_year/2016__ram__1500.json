@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2016|ram|1500",
+  "year": 2016,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2016__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LARAMIE LONGHORN",
+    "LARAMIE",
+    "REBEL",
+    "OUTDOORSMAN",
+    "BIG HORN",
+    "EXPRESS",
+    "TRADESMAN",
+    "TRADESMAN GAS HFE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "All-black leather treatment with limited leather bucket seats",
+      "Full-color 7-inch TFT programmable driver information display",
+      "Leather-wrapped grab handles and luxury door trim panels",
+      "Rear-window defroster",
+      "Body-color full front fascia and rear bumper",
+      "Chrome bodyside moldings and chrome wheel-to-wheel side steps",
+      "Unique limited grille and tailgate"
+    ],
+    "LARAMIE LONGHORN": [
+      "Premium wood/leather-wrapped steering wheel with LONGHORN badging",
+      "Mossy oak exterior decal and tailgate caps with camouflage pattern on bed rail caps",
+      "20-inch painted aluminum wheels with chrome inserts",
+      "Includes spray-in bedliner if equipped with RamBox system"
+    ],
+    "LARAMIE": [
+      "Select Laramie Longhorn features without Mossy Oak package"
+    ],
+    "REBEL": [
+      "Heavy-duty capability features and exterior styling"
+    ],
+    "OUTDOORSMAN": [
+      "Outdoorsman-specific equipment and styling"
+    ],
+    "BIG HORN": [
+      "Chrome front and rear bumpers with body-color wheel flares",
+      "Chrome grille surround with 17-inch painted aluminum wheels"
+    ],
+    "EXPRESS": [
+      "Popular equipment group and power/remote entry group standard"
+    ],
+    "TRADESMAN": [
+      "3.6L Pentastar V6 24V VVT engine with 8-speed automatic",
+      "Heavy-duty vinyl 40/20/40 split bench seat",
+      "Front armrest with three cup holders",
+      "Power windows and locks on Quad Cab and Crew Cab",
+      "Rearview day/night mirror and manual air conditioning",
+      "3.5-inch driver information display instrument cluster",
+      "3.0 AM/FM radio with six-speaker audio system"
+    ],
+    "TRADESMAN GAS HFE": [
+      "HFE badge designating high fuel efficiency",
+      "Tri-folding tonneau cover standard",
+      "Spray-in bedliner delete to reduce weight",
+      "Active grille shutters and stop/start system for fuel savings"
+    ]
+  }
+}

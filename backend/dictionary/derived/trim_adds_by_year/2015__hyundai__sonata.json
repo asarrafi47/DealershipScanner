@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2015|hyundai|sonata",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Sonata",
+  "ladder_id": "brochure_2015__hyundai__sonata",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Blue",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "245 hp, 2.0L twin-scroll turbocharger engine",
+      "Sport-tuned suspension and steering",
+      "Larger front brakes",
+      "18-inch alloy wheels",
+      "Rear diffuser and quad exhaust tips",
+      "High Intensity Discharge Xenon headlights",
+      "LED taillights",
+      "Blind Spot Detection with Rear Cross-traffic Alert"
+    ],
+    "Premium": [
+      "Adds power driver seat with lumbar support",
+      "Adds 5-inch color touchscreen audio display",
+      "Adds rearview camera",
+      "Adds Blue Link telematics system",
+      "Adds leatherette door panel inserts",
+      "Adds chrome interior door handles",
+      "Adds side mirrors with turn signal indicators",
+      "Adds automatic headlights"
+    ],
+    "Blue": [
+      "Upgraded to 1.6L Gasoline Direct Injection DOHC 4-cylinder engine with twin-scroll turbocharger",
+      "Upgraded to 7-speed EcoShift Dual Clutch Transmission with SHIFTRONIC",
+      "Adds heated front seats",
+      "Adds carbon fiber appearance interior accents",
+      "Adds instrument cluster hood stitching"
+    ],
+    "SE": [
+      "Adds sport rocker panels with chrome molding",
+      "Adds dual exhaust system",
+      "Adds temporary spare tire",
+      "Adds 17-inch aluminum alloy wheels",
+      "Adds sport front grille",
+      "Adds sport front bumper fascia"
+    ],
+    "Limited": [
+      "Adds proximity key entry with push-button start",
+      "Adds dual-zone automatic temperature control",
+      "Adds sport seats with leather bolsters and cloth inserts",
+      "Adds leather-wrapped steering wheel and shift knob",
+      "Upgraded to leather seating surfaces",
+      "Adds Blind Spot Detection with Rear Cross-traffic Alert",
+      "Adds chrome exterior door handles with welcome light",
+      "Adds hands-free smart trunk",
+      "Adds 8-inch touchscreen navigation system",
+      "Adds Dimension premium speakers with subwoofer and amplifier"
+    ]
+  }
+}

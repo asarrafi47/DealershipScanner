@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|chevrolet|silverado",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "ladder_id": "brochure_llm_2011__chevrolet__silverado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "Work Truck"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Vortec 5.3L V8 standard engine with 315 hp",
+      "Hydra-Matic 6-speed automatic overdrive transmission",
+      "Vortec 6.2L V8 optional engine upgrade"
+    ],
+    "LT": [
+      "Vortec 4.8L V8 standard engine with 302 hp",
+      "Vortec 5.3L V8 and 6.2L V8 optional engine choices",
+      "Hydra-Matic 4-speed automatic overdrive transmission"
+    ],
+    "Work Truck": [
+      "Vortec 4.3L V6 standard engine with 195 hp and 260 lb-ft torque",
+      "Hydra-Matic 4-speed automatic overdrive transmission",
+      "Vortec 4.8L V8 and 5.3L V8 optional engine upgrades",
+      "Basic vinyl bench seating with recliners and fold-down armrest"
+    ]
+  }
+}

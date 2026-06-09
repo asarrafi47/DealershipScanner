@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2016|gmc|commercial",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Commercial",
+  "ladder_id": "brochure_2016__gmc__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "EX",
+    "SE",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Includes Vortec 6.0L V-8 HD engine",
+      "Adds Standard 4.10:1 axle ratio with 6.0L V-8 engines"
+    ],
+    "S": [],
+    "SE": [],
+    "EX": [],
+    "Limited": [],
+    "Pro": [],
+    "SLE": [
+      "Base engine and transmission",
+      "Manual windows and locks",
+      "Basic air conditioning",
+      "Power steering",
+      "Two airbags and basic safety features"
+    ],
+    "SLT": [
+      "6.2L EcoTec3 V-8 engine option with Hydra-Matic 8-speed automatic transmission",
+      "Quiet full-size pickup cabin",
+      "Lasting comfort seats",
+      "Generous storage options",
+      "Technology to keep you connected, informed and entertained",
+      "Available Forward Collision Alert and Lane Departure Warning",
+      "Available EZ-Lift and Lower Tailgate",
+      "Available Safety Alert Driver Seat",
+      "Available under-rail box lights",
+      "CornerStep rear bumper"
+    ],
+    "Denali": [
+      "6.2L EcoTec3 V-8 engine with Hydra-Matic 8-speed automatic transmission"
+    ]
+  }
+}

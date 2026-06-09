@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|subaru|xvcrosstrek",
+  "year": 2021,
+  "make": "Subaru",
+  "model": "XV Crosstrek",
+  "ladder_id": "brochure_llm_2021__subaru__xvcrosstrek",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Crosstrek Limited",
+    "Crosstrek Sport",
+    "Crosstrek Premium",
+    "Crosstrek"
+  ],
+  "adds_by_trim": {
+    "Crosstrek": [
+      "152-hp 2.0-liter 4-cylinder SUBARU BOXER engine with direct-injection",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission or optional Lineartronic CVT with X-MODE and Hill Descent Control",
+      "SUBARU STARLINK 6.5-inch multimedia with Apple CarPlay and Android Auto",
+      "6-way manually adjustable driver seat and 4-way manually adjustable front-passenger seat",
+      "Cloth upholstery with black carbon-fiber-patterned interior accents",
+      "Automatic climate control with air filtration",
+      "17-inch alloy wheels",
+      "Rear-Vision Camera",
+      "Electronic cruise control"
+    ],
+    "Crosstrek Premium": [
+      "Auto-on/off headlights",
+      "Fog lights",
+      "Body-color exterior mirrors",
+      "Cloth upholstery with orange stitching",
+      "Leather-wrapped steering wheel and shifter handle with orange stitching",
+      "All-Weather Package: heated exterior mirrors, dual-mode heated front seats, windshield wiper de-icer",
+      "SUBARU STARLINK 6.5-inch Multimedia Plus with SiriusXM and travel link",
+      "STARLINK Safety and Security enabled with collision notification and concierge",
+      "Cargo-area tray and cover",
+      "Welcome lighting"
+    ],
+    "Crosstrek Sport": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct-injection",
+      "Lineartronic CVT with manual-mode paddle shifters and SI-DRIVE",
+      "Dual-function X-MODE with Hill Descent Control",
+      "EyeSight Driver Assist Technology standard",
+      "Gunmetal exterior mirrors with integrated turn signals and gunmetal accents",
+      "Sport front and rear wheel arch cladding",
+      "Gray StarTex water-repellent upholstery with yellow contrast stitching",
+      "Keyless Access with Push-Button Start",
+      "Sport instrument cluster with color LCD display",
+      "17-inch alloy wheels in dark gray finish"
+    ],
+    "Crosstrek Limited": [
+      "182-hp 2.5-liter 4-cylinder SUBARU BOXER engine with direct-injection",
+      "Lineartronic CVT with manual-mode paddle shifters and SI-DRIVE",
+      "X-MODE with Hill Descent Control",
+      "EyeSight Driver Assist Technology standard",
+      "18-inch alloy wheels",
+      "LED Steering Responsive Headlights and LED fog lights",
+      "Body-color exterior mirrors with integrated turn signals",
+      "6-way power-adjustable driver seat",
+      "Leather-trimmed upholstery with orange stitching",
+      "SUBARU STARLINK 8.0-inch Multimedia Plus with SiriusXM and travel link"
+    ]
+  }
+}

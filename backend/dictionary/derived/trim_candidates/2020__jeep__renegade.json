@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2020|jeep|renegade",
+  "year": 2020,
+  "make": "Jeep",
+  "model": "Renegade",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Trailhawk",
+    "Latitude",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

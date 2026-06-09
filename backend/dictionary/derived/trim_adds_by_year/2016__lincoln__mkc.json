@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2016|lincoln|mkc",
+  "year": 2016,
+  "make": "Lincoln",
+  "model": "MKC",
+  "ladder_id": "brochure_llm_2016__lincoln__mkc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Reserve",
+    "Select",
+    "Premiere"
+  ],
+  "adds_by_trim": {
+    "Reserve": [
+      "Wollsdorf leather on steering wheel",
+      "Wollsdorf leather-trimmed seats",
+      "10-way power front-passenger seat",
+      "Genuine wood accents on instrument panel and door panels",
+      "Power-tilt/-telescoping steering column with memory",
+      "Interior cargo cover",
+      "Select Plus Package with Navigation and BLIS with cross-traffic alert"
+    ],
+    "Select": [
+      "Wollsdorf leather on steering wheel",
+      "Wollsdorf leather-trimmed seats",
+      "10-way power front-passenger seat",
+      "Genuine wood accents on instrument panel and door panels",
+      "Power-tilt/-telescoping steering column with memory",
+      "Interior cargo cover",
+      "Climate Package option with heated rear seats and heated steering wheel"
+    ],
+    "Premiere": [
+      "12-volt powerpoints (4)",
+      "Active noise control",
+      "Leather-wrapped steering wheel",
+      "Power windows with one-touch-up/-down for all 4 windows",
+      "10-way power driver's seat with 2-way power lumbar and memory",
+      "60/40 split-fold-flat rear seat with recline",
+      "Personal Safety System with dual-stage front airbags",
+      "Driver's knee airbag",
+      "Front-seat side airbags",
+      "Side-curtain airbags with roll-fold technology"
+    ]
+  }
+}

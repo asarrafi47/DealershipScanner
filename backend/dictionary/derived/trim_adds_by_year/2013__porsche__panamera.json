@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2013|porsche|panamera",
+  "year": 2013,
+  "make": "Porsche",
+  "model": "Panamera",
+  "ladder_id": "2011_porsche_panamera_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Turbo S",
+    "Turbo",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Panamera S Hybrid night light design"
+    ],
+    "Turbo S": [
+      "lights on is illuminated more uniformly. running"
+    ],
+    "Turbo": [
+      "Porsche Dynamic Light System (PDLS) standard instead of optional",
+      "No heated seats front and rear option availability"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Turbo": 0,
+      "Sport": 1
+    }
+  }
+}

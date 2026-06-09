@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2010|lincoln|mks",
+  "year": 2010,
+  "make": "Lincoln",
+  "model": "MKS",
+  "ladder_id": "brochure_2010__lincoln__mks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 18\" 10-spoke bright machined/painted cast-aluminum wheels as standard",
+      "Adds Features 6-year/70,000-mile powertrain limited warranty with no deductible",
+      "Adds Includes complimentary scheduled maintenance for first year or 15,000 miles"
+    ],
+    "Limited": [
+      "Adds availability of 19\" 10-spoke premium painted cast-aluminum wheels"
+    ],
+    "Standard": [
+      "Adds availability of 20\" 10-spoke cast-aluminum chrome wheels as Lincoln custom accessory",
+      "Adds Includes EcoBoost engine option with 19\" 10-spoke premium painted cast-aluminum wheels as standard"
+    ]
+  }
+}

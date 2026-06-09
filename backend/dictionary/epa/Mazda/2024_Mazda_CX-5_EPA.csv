@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Mazda,CX-5,4WD,2.5L I4 (SIDI),2.5L I4,,Automatic (S6),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,26,31,28,,,,,
+2024,Mazda,CX-5,4WD,2.5L I4 (SIDI),2.5L I4,,Automatic (S6),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,22,27,24,,,,,
+2024,Mazda,CX-5,4WD,2.5L I4 (SIDI),2.5L I4,,Automatic (S6),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,23,29,25,,,,,

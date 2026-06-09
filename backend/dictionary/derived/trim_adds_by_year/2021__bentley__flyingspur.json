@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2021|bentley|flyingspur",
+  "year": 2021,
+  "make": "bentley",
+  "model": "flying spur",
+  "ladder_id": "brochure_llm_2021__bentley__flyingspur",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Flying Spur W12",
+    "Flying Spur V8"
+  ],
+  "adds_by_trim": {
+    "Flying Spur W12": [
+      "W12 engine with 8-speed dual clutch transmission and active all-wheel drive",
+      "W12 fender badge distinguishing engine variant",
+      "2x large oval exhaust finishers versus quad oval on V8",
+      "Bentley Dynamic Ride system for enhanced suspension control",
+      "Electronic all-wheel steering for improved agility",
+      "City Specification: traffic sign recognition, rear crossing traffic warning, top view camera, pedestrian warning, hands-free boot opening"
+    ],
+    "Flying Spur V8": [
+      "V8 engine with 8-speed dual clutch transmission and active all-wheel drive",
+      "V8 fender badge distinguishing engine variant",
+      "Quad oval exhaust finishers for distinctive styling"
+    ]
+  }
+}

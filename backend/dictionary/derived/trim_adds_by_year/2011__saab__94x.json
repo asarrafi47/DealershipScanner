@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|saab|94x",
+  "year": 2011,
+  "make": "Saab",
+  "model": "9-4X",
+  "ladder_id": "brochure_web_2011__saab__94x",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Aero",
+    "TurboX",
+    "9-4X XWD"
+  ],
+  "adds_by_trim": {
+    "9-4X XWD": [
+      "2.0L turbocharged engine with 260 hp",
+      "All-wheel drive system standard",
+      "17-inch alloy wheels",
+      "Cloth upholstery",
+      "Power windows, locks, mirrors",
+      "Air conditioning",
+      "6-speaker audio system"
+    ],
+    "TurboX": [
+      "Leather upholstery",
+      "Heated front seats",
+      "Dual-zone automatic climate control",
+      "8-inch touchscreen navigation system",
+      "Premium audio upgrade",
+      "18-inch alloy wheels",
+      "Xenon HID headlights"
+    ],
+    "Aero": [
+      "Panoramic sunroof",
+      "Premium leather seating surfaces",
+      "Power adjustable front seats with lumbar support",
+      "Harman Kardon premium sound system",
+      "Integrated Bluetooth connectivity",
+      "19-inch alloy wheels",
+      "Front and rear parking sensors"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/saab/9-4x/"
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2015|nissan|versa",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Versa",
+  "ladder_id": "brochure_llm_2015__nissan__versa",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "S Plus",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "16-inch aluminum-alloy wheels with P195/55HR16 all-season tires",
+      "NissanConnect with Mobile Apps",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "RearView Monitor",
+      "AM/FM/CD audio system with 5.0-inch color display",
+      "SiriusXM Satellite Radio",
+      "Streaming audio via Bluetooth wireless technology",
+      "Hands-free text messaging assistant"
+    ],
+    "SR": [
+      "60/40 split fold-down rear seats",
+      "16-inch 5-split spoke aluminum-alloy wheels with P195/55HR16 tires",
+      "Sport grille and dark headlight treatment",
+      "Sport front and rear fascias with side sills",
+      "Fog lights with dual power outside mirrors with LED turn signals",
+      "Rear roof spoiler",
+      "Premium sport synthetic suede seat trim with orange stitching",
+      "Leather-wrapped sport steering wheel"
+    ],
+    "SV": [
+      "Heated front seats",
+      "Upgraded Fine Vision electroluminescent gauges with trip computer and outside temperature display",
+      "6-way manual driver seat with armrest and upgraded cloth seat and door trim",
+      "Leather-wrapped steering wheel",
+      "Piano black trim and silver accents on shift knob and surround",
+      "Chrome inside door handles and chrome-accented parking brake and vents",
+      "Tricot fabric headliner and glove compartment damper",
+      "Divide-N-Hide adjustable floor cargo organizer"
+    ],
+    "S Plus": [
+      "Xtronic CVT continuously variable transmission",
+      "Active grille shutter",
+      "Up to 40 MPG highway EPA fuel economy estimate"
+    ],
+    "S": [
+      "1.6-liter 4-cylinder engine with 5-speed manual transmission",
+      "15-inch steel wheels with wheel covers and P185/65HR15 all-season tires",
+      "Dual power outside mirrors",
+      "Bluetooth hands-free phone system",
+      "Air conditioning",
+      "Fine Vision electroluminescent gauges",
+      "4-wheel ABS and Vehicle Dynamic Control with Traction Control System",
+      "Nissan Advanced Air Bag System",
+      "Cup holders in center console"
+    ]
+  }
+}

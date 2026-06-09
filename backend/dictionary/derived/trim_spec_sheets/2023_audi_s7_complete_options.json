@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_audi_s7_complete_options",
+  "make": "Audi",
+  "models": [
+    "S7",
+    "S7"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Front-engine, all-wheel-drive (quattro)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "L V6 TDI"
+      }
+    ]
+  }
+}

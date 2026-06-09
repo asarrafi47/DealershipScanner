@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2026|nissan|armada",
+  "year": 2026,
+  "make": "Nissan",
+  "model": "Armada",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum Reserve",
+    "Platinum",
+    "SL",
+    "Nismo",
+    "Pro-4X",
+    "SV",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

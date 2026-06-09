@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2021|ford|mustang",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Mustang",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

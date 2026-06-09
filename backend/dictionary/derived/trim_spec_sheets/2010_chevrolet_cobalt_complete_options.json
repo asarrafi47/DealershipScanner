@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2010_chevrolet_cobalt_complete_options",
+  "make": "Chevrolet",
+  "models": [
+    "Cobalt",
+    "Cobalt"
+  ],
+  "year_min": 2008,
+  "year_max": 2012,
+  "source": "generated",
+  "trims": {
+    "XFE Coupe": [
+      {
+        "label": "Engine Options",
+        "value": "Manual 5-spd; Front-Wheel Drive"
+      }
+    ],
+    "XFE Sedan": [
+      {
+        "label": "Engine Options",
+        "value": "Manual 5-spd; Front-Wheel Drive"
+      }
+    ]
+  }
+}

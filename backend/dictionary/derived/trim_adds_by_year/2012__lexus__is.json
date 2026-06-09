@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2012|lexus|is",
+  "year": 2012,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2012__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS F",
+    "IS 350 C",
+    "IS 250 C",
+    "IS 350",
+    "IS 250"
+  ],
+  "adds_by_trim": {
+    "IS F": [
+      "5.0-liter V8 engine with 416 hp and 371 lb-ft torque",
+      "Eight-speed Sport Direct-Shift automatic transmission with paddle shifters",
+      "TORSEN torque-sensing limited-slip rear differential",
+      "0–60 mph in 4.6 seconds, top speed 170 mph",
+      "Four-passenger high-performance luxury sport sedan"
+    ],
+    "IS 350 C": [
+      "Retractable hardtop convertible coupe body style",
+      "3.5-liter V6 engine with 306 hp and 277 lb-ft torque",
+      "Four-passenger configuration"
+    ],
+    "IS 250 C": [
+      "Retractable hardtop convertible coupe body style",
+      "2.5-liter V6 engine with 204 hp and 185 lb-ft torque",
+      "Available six-speed manual transmission option"
+    ],
+    "IS 350": [
+      "3.5-liter V6 engine with 306 hp and 277 lb-ft torque",
+      "Six-speed paddle-shift-sequential automatic transmission with ECT-i",
+      "Available all-wheel drive configuration",
+      "0–60 mph in 5.6 seconds (RWD), 5.7 seconds (AWD)",
+      "Top speed 144 mph (RWD), 131 mph (AWD)"
+    ],
+    "IS 250": [
+      "2.5-liter V6 engine with 204 hp and 185 lb-ft torque",
+      "Six-speed paddle-shift-sequential automatic or six-speed manual transmission",
+      "Available all-wheel drive configuration",
+      "0–60 mph in 7.9 seconds",
+      "Five-passenger luxury sport sedan with welded steel unibody"
+    ]
+  }
+}

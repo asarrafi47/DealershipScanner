@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2025,Toyota,Camry,HEV AWD SE/XLE,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,46,46,46,,,,,,2.5L I4,
-2025,Toyota,Camry,HEV AWD XSE,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,44,43,44,,,,,,2.5L I4,
-2025,Toyota,Camry,HEV FF LE,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,53,50,51,,,,,,2.5L I4,
-2025,Toyota,Camry,HEV FF SE/XLE/XSE,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,48,47,47,,,,,,2.5L I4,
-2025,Toyota,Camry,HEV AWD LE,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,51,49,50,,,,,,2.5L I4,

@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2013|lincoln|mkz",
+  "year": 2013,
+  "make": "Lincoln",
+  "model": "MKZ",
+  "ladder_id": "brochure_llm_2013__lincoln__mkz",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Lincoln MKZ Hybrid Premiere",
+    "Lincoln MKZ Premiere"
+  ],
+  "adds_by_trim": {
+    "Lincoln MKZ Hybrid Premiere": [
+      "2.0L iVCT Atkinson-cycle I-4 engine with permanent-magnet AC-synchronous electric motor (188 total system net hp)",
+      "State-of-the-art lithium-ion battery",
+      "EPA-estimated 45 mpg city/45 hwy FWD fuel economy",
+      "Regenerative Braking System",
+      "Electronically controlled continuously variable transmission (eCVT)",
+      "SmartGauge with EcoGuide instrument cluster with 2 configurable LCD screens",
+      "110-volt power outlet",
+      "Battery Management System"
+    ],
+    "Lincoln MKZ Premiere": [
+      "2.0L EcoBoost I-4 turbocharged direct injection engine (240 hp, 270 lb.-ft. torque)",
+      "Available 3.7L Ti-VCT 24-valve aluminum V6 engine (300 hp, 277 lb.-ft. torque)",
+      "6-speed SelectShift Automatic transmission with paddle activation",
+      "18-inch premium painted aluminum wheels with P255/45R18LRR all-season tires",
+      "Adaptive LED headlamps and LED taillamps",
+      "Premium leather-trimmed seats with 10-way power heated driver and front-passenger seats",
+      "Lincoln Premium Sound System with 11 speakers and SiriusXM Satellite Radio",
+      "SYNC with MyLincoln Touch voice-activated system with 10.1-inch and 8-inch LCD screens",
+      "Personal Safety System with dual-stage front airbags, side airbags, and side-curtain airbags",
+      "AdvanceTrac electronic stability control with Curve Control"
+    ]
+  }
+}

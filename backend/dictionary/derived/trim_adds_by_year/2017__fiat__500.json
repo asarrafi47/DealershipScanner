@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2017|fiat|500",
+  "year": 2017,
+  "make": "Fiat",
+  "model": "500",
+  "ladder_id": "brochure_llm_2017__fiat__500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LOUNGE",
+    "TREKKING",
+    "POP"
+  ],
+  "adds_by_trim": {
+    "LOUNGE": [
+      "Automatic Temperature Control (ATC) with Dual-Zone controls as standard",
+      "Rearview auto-dimming mirror as standard",
+      "ParkSense Rear Park Assist System as standard",
+      "ParkView Rear Back-Up Camera as standard",
+      "Uconnect 6.5 with 6.5-inch touchscreen, GPS navigation as standard",
+      "Premium leather-trimmed bucket seats as standard",
+      "4-way power driver and front-passenger lumbar adjusters as standard",
+      "Heated front seats as standard",
+      "BeatsAudio Premium Sound System with 8-inch subwoofer as standard",
+      "SiriusXM Satellite Radio with 1-year trial subscription as standard"
+    ],
+    "TREKKING": [
+      "Rugged design front and rear fascias with Satin Silver accents",
+      "Lower sill and wheel arch accent moldings in Black",
+      "Available 17-inch 7-slotted-spoke machined aluminum or Matte Black wheels",
+      "Available dual-pane glass sunroof with power vent",
+      "Available Uconnect 6.5 with GPS navigation as option",
+      "Available BeatsAudio Premium Sound System as option",
+      "Available SiriusXM Satellite Radio as option"
+    ],
+    "POP": [
+      "1.4L MultiAir Turbo I-4 engine with 6-speed automatic transmission",
+      "Electric power steering with tilt/telescoping column",
+      "Front MacPherson suspension with KONI FSD technology",
+      "Bifunctional halogen projector headlamps with daytime running lamps",
+      "16-inch 13-spoke Gray Gloss painted aluminum wheels with all-season tires",
+      "Uconnect 5.0 with 5-inch touchscreen and Bluetooth connectivity",
+      "6 speakers standard audio system",
+      "Advanced multistage dual front airbags and side-curtain airbags",
+      "Electronic Stability Control and Hill Start Assist",
+      "Sentry Key Engine Immobilizer theft-deterrent system"
+    ]
+  }
+}

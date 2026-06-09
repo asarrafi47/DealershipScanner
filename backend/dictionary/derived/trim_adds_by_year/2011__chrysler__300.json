@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|chrysler|300",
+  "year": 2011,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2011__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300C",
+    "300C AWD",
+    "300 LIMITED"
+  ],
+  "adds_by_trim": {
+    "300C": [
+      "5.7L HEMI VVT V8 engine with Fuel Saver Technology",
+      "9 premium Alpine speakers with 506-watt amplifier and subwoofer",
+      "19-inch polished/Tech Silver painted aluminum wheels",
+      "Chrome power heated manual folding exterior mirrors with memory"
+    ],
+    "300C AWD": [
+      "All-wheel drive with front axle disconnect",
+      "4-wheel independent AWD suspension",
+      "20-inch polished/Tech Silver painted aluminum wheels with performance tires",
+      "Hill Start Assist"
+    ],
+    "300 LIMITED": [
+      "3.6L Pentastar VVT V6 engine",
+      "6 premium Alpine speakers with 276-watt digital amplifier",
+      "17-inch Tech Silver painted aluminum wheels",
+      "Automatic dual-zone temperature control with humidity sensor",
+      "Rain-sensitive wipers",
+      "Keyless Enter-n-Go with push-button ignition",
+      "Smart remote start system",
+      "4-wheel independent comfort suspension"
+    ]
+  }
+}

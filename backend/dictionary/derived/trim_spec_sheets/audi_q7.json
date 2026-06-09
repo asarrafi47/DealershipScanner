@@ -1,0 +1,25 @@
+{
+  "ladder_id": "audi_q7",
+  "make": "Audi",
+  "models": [
+    "Q7",
+    "SQ7"
+  ],
+  "year_min": 2017,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Premium Plus": [
+      {
+        "label": "Audio System Layout",
+        "value": "Bang & Olufsen audio available"
+      }
+    ],
+    "S line": [
+      {
+        "label": "Interior Materials",
+        "value": "S line interior accents"
+      }
+    ]
+  }
+}

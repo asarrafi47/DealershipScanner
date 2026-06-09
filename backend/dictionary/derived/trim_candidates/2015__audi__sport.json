@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2015|audi|sport",
+  "year": 2015,
+  "make": "Audi",
+  "model": "sport",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Prestige",
+    "Premium Plus",
+    "Premium",
+    "S line",
+    "Platinum",
+    "Limited",
+    "Sport",
+    "LE",
+    "S7",
+    "S6"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2013|ford|transitconnect",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_llm_2013__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT PREMIUM WAGON",
+    "XLT TAXI PACKAGE",
+    "XLT WAGON",
+    "XLT VAN",
+    "XL VAN"
+  ],
+  "adds_by_trim": {
+    "XLT PREMIUM WAGON": [
+      "Repositioned 2nd-row seat for more leg room",
+      "Rear wheelhouse covers and beltline trim",
+      "Platinum grille",
+      "Body-color door handles",
+      "Body-color sideview mirrors with power adjustment and heating"
+    ],
+    "XLT TAXI PACKAGE": [
+      "Heavy-duty battery and wiring block connector",
+      "Rear air/heat blower with passenger controls",
+      "Grab handle on B-pillar",
+      "Four manual keys",
+      "Roof access hole pre-wired for taxi light",
+      "Vinyl floor covering",
+      "Privacy glass"
+    ],
+    "XLT WAGON": [
+      "2nd-row manual 60/40 split-fold 3-passenger cloth seat",
+      "12-volt powerpoint behind 2nd-row seat",
+      "AM/FM stereo with single-CD player and 4 speakers",
+      "Carpeted flooring in 2nd row",
+      "Chrome hood appliqué",
+      "Front fog lamps",
+      "Body-color door handles",
+      "Rear-quarter flip-open windows with privacy glass"
+    ],
+    "XLT VAN": [
+      "Seating for five passengers",
+      "12-volt powerpoint in rear cargo area",
+      "AM/FM stereo with single-CD player and 2 speakers",
+      "Cruise control",
+      "Dual front map lights",
+      "Electronic Passive Anti-Theft System",
+      "Power windows, door locks, and sideview mirrors",
+      "Remote Keyless Entry System with 2 key fobs",
+      "Rear-window defroster and heated sideview mirrors",
+      "Body-color-painted front and rear bumpers"
+    ],
+    "XL VAN": [
+      "2.0L DOHC Duratec I-4 engine with 4-speed automatic transmission",
+      "97,500-mile spark plug change interval",
+      "150-amp alternator and 500 CCA battery",
+      "Front-wheel drive",
+      "15.4-gallon fuel tank",
+      "Rack-and-pinion steering with independent MacPherson-strut front suspension",
+      "15-inch steel wheels with P205/65R15 tires",
+      "Driver's seat with manual 6-way adjustment and lumbar support",
+      "Manual air conditioning and climate controls",
+      "Front and passenger airbags with side-impact protection and ABS brakes"
+    ]
+  }
+}

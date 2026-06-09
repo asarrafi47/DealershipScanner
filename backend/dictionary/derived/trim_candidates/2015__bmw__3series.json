@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2015|bmw|3series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "3 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "328i",
+    "335i",
+    "320i",
+    "Competition",
+    "M Sport",
+    "Sport Line",
+    "Luxury Line",
+    "Premium",
+    "Base",
+    "Limited",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

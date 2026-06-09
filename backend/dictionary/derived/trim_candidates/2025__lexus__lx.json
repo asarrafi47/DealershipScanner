@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2025|lexus|lx",
+  "year": 2025,
+  "make": "lexus",
+  "model": "LX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Ultra Luxury",
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

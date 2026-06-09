@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2013|scion|xb",
+  "year": 2013,
+  "make": "Scion",
+  "model": "xB",
+  "ladder_id": "brochure_2013__scion__xb",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds USB port with iPod connectivity",
+      "Adds power outside mirrors with LED turn signal indicators",
+      "Adds 6-spoke wheel cover option",
+      "Adds projector-beam headlamps",
+      "Adds front bumper LED accent lamps"
+    ],
+    "Limited": [
+      "Adds 7-spoke wheel cover option",
+      "Adds rear window defogger",
+      "Adds rear window wiper",
+      "Adds chrome-tipped exhaust",
+      "Adds BeSpoke premium audio system with video jack capability"
+    ]
+  }
+}

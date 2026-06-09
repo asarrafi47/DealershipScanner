@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2015|bmw|4series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "4 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "428i",
+    "Sport Line",
+    "Luxury Line",
+    "Premium",
+    "Limited",
+    "Sport",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2010|hyundai|genesiscoupe",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "ladder_id": "brochure_llm_2010__hyundai__genesiscoupe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "3.8 TRACK",
+    "3.8 GRAND TOURING",
+    "3.8",
+    "2.0T TRACK",
+    "2.0T PREMIUM",
+    "2.0T"
+  ],
+  "adds_by_trim": {
+    "3.8 TRACK": [
+      "3.8-liter V6 engine with 306 hp and 266 lb-ft torque",
+      "Track-tuned suspension with firmer shocks and stabilizer bars",
+      "Torsen limited-slip differential for enhanced acceleration",
+      "19-inch gunmetal aluminum-alloy wheels with 245/40YR19 summer tires",
+      "Brembo braking system with ventilated discs and 4-piston calipers",
+      "Aero wipers and bodycolor rear spoiler"
+    ],
+    "3.8 GRAND TOURING": [
+      "Brown leather seating surfaces",
+      "Heated front seats",
+      "Chrome lower fascia accents",
+      "ZF 6-speed automatic transmission with paddle-shift SHIFTRONIC",
+      "Premium door-sill plates with Genesis embossing",
+      "Dual Heated Power Side Mirrors with Turn Signals"
+    ],
+    "3.8": [
+      "3.8-liter V6 engine with 306 hp and 266 lb-ft torque",
+      "Black leather seating surfaces",
+      "Automatic temperature control",
+      "360-watt Infinity audio system with CD changer and subwoofer",
+      "Electrochromic auto-dimming rearview mirror with compass and HomeLink"
+    ],
+    "2.0T TRACK": [
+      "2.0-liter turbocharged inline 4-cylinder with 210 hp and 223 lb-ft torque",
+      "Track-tuned suspension with firmer shocks and stabilizer bars",
+      "Torsen limited-slip differential for enhanced acceleration",
+      "18-inch silver-painted aluminum-alloy wheels with 225/45VR18 all-season tires",
+      "Brembo braking system with ventilated discs and 4-piston calipers",
+      "High Intensity Discharge Xenon headlights with front fog lights",
+      "Aero wipers and bodycolor rear spoiler",
+      "Power tilt-and-slide sunroof with sliding sunshade"
+    ],
+    "2.0T PREMIUM": [
+      "Power driver seat with manual lumbar support",
+      "Power tilt-and-slide sunroof with sliding sunshade",
+      "360-watt Infinity audio system with CD changer and subwoofer",
+      "Proximity key entry and electronic push-button start",
+      "Electrochromic auto-dimming rearview mirror with compass and HomeLink",
+      "19-inch gunmetal aluminum-alloy wheels with 225/40YR19 summer tires"
+    ],
+    "2.0T": [
+      "2.0-liter turbocharged inline 4-cylinder with 210 hp and 223 lb-ft torque",
+      "Rear-wheel drive with 6-speed manual transmission standard",
+      "Front dual-link MacPherson struts and 5-link independent rear suspension",
+      "Electronic Stability Control and Traction Control System",
+      "Advanced driver and front passenger airbags with occupant classification",
+      "Front side-impact and front side-curtain airbags",
+      "4-wheel disc brakes with ABS and electronic brake-force distribution",
+      "Tire Pressure Monitoring System",
+      "AM/FM/CD/MP3 audio system with 6 speakers",
+      "Leather-wrapped steering wheel and shift knob"
+    ]
+  }
+}

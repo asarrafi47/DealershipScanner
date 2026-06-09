@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2021|porsche|cayenne",
+  "year": 2021,
+  "make": "Porsche",
+  "model": "Cayenne",
+  "ladder_id": "brochure_llm_2021__porsche__cayenne",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cayenne GTS Coupe",
+    "Cayenne GTS"
+  ],
+  "adds_by_trim": {
+    "Cayenne GTS Coupe": [
+      "4.0-liter twin-turbo V8 engine with 453 hp and 457 lb-ft torque",
+      "SportDesign package with High Gloss Black exterior trim",
+      "Lightweight Sport Package including Sport Exhaust with black tailpipes",
+      "Power Seats 14-way electric with 2+1 rear comfort seating configuration",
+      "Panoramic fixed glass roof with motorized sunblind",
+      "0 to 60 mph in 4.2 seconds with Sport Chrono Package",
+      "GTS Sport Seats 8-way electric with GTS logo on headrests",
+      "GTS Interior Package in leather and Race-Tex with Carmine Red or Chalk stitching",
+      "Porsche Advanced Cockpit with Direct Touch Control and Cayenne GTS logo"
+    ],
+    "Cayenne GTS": [
+      "4.0-liter twin-turbo V8 engine with 453 hp and 457 lb-ft torque",
+      "SportDesign package with High Gloss Black exterior trim",
+      "Sport Exhaust System with black tailpipes",
+      "GTS Sport Seats 8-way electric with GTS logo and rear Sport Seats for three",
+      "GTS Interior Package in leather and Race-Tex with Carmine Red or Chalk stitching",
+      "LED headlights with Matrix Design and PDLS+ with Night Vision Assist",
+      "Porsche Communication Management 12.3-inch touchscreen with Apple CarPlay and voice control",
+      "Porsche 4D Chassis Control with adaptive air suspension lowered 10 mm",
+      "Rear-axle Steering and Porsche Dynamic Chassis Control",
+      "BOSE Surround Sound System with ambient lighting and four-zone climate control"
+    ]
+  }
+}

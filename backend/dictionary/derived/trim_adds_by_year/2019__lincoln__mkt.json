@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|lincoln|mkt",
+  "year": 2019,
+  "make": "Lincoln",
+  "model": "MKT",
+  "ladder_id": "brochure_2019__lincoln__mkt",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Select",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Lincoln Pickup & Delivery service with complimentary loaner vehicle",
+      "Adds 24/7 Lincoln Concierge personal connection service",
+      "Adds Lincoln Way app for scheduling service and managing account",
+      "Adds 6-month complimentary CLEAR membership for biometric airport security bypass"
+    ],
+    "Select": [],
+    "Reserve": [
+      "Twin-turbocharged 3.5-liter V6 with 365 hp and 350 lb-ft torque (vs. 3.7L naturally aspirated)",
+      "3rd-row 50/50 split one-touch PowerFold bench seat with tailgate feature",
+      "BLIS blind spot information system with cross-traffic alert",
+      "Heated steering wheel",
+      "THX II certified audio system with 14 speakers, subwoofer, 700 watts, 14-channel amplifier",
+      "Elite Equipment Group: voice-activated touchscreen navigation with pinch-to-zoom, HD Radio, SiriusXM Traffic and Travel Link with 6-year subscription"
+    ],
+    "Black Label": [
+      "Upgraded to 12-month complimentary CLEAR membership"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2018|bmw|2series",
+  "year": 2018,
+  "make": "BMW",
+  "model": "2 Series",
+  "ladder_id": "brochure_llm_2018__bmw__2series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M240i xDrive",
+    "M240i",
+    "230i xDrive",
+    "230i"
+  ],
+  "adds_by_trim": {
+    "M240i xDrive": [
+      "3.0-liter M Performance TwinPower Turbo inline 6-cylinder engine with 335 hp",
+      "369 lb-ft torque, 0-60 mph in 4.2 seconds",
+      "All-wheel drive system for enhanced traction and handling"
+    ],
+    "M240i": [
+      "3.0-liter M Performance TwinPower Turbo inline 6-cylinder engine with 335 hp",
+      "369 lb-ft torque, 0-60 mph in 4.4 seconds (manual) or 4.5 seconds (automatic)"
+    ],
+    "230i xDrive": [
+      "All-wheel drive system for enhanced traction and handling",
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 248 hp and 258 lb-ft torque"
+    ],
+    "230i": [
+      "2.0-liter TwinPower Turbo inline 4-cylinder engine with 248 hp",
+      "258 lb-ft torque, rear-wheel drive configuration"
+    ]
+  }
+}

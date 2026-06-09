@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2016|porsche|911",
+  "year": 2016,
+  "make": "Porsche",
+  "model": "911",
+  "ladder_id": "brochure_llm_2016__porsche__911",
+  "source": "brochure_llm",
+  "trims_available": [
+    "911 Targa S4",
+    "911 Targa 4",
+    "911 Carrera Cabriolet S4",
+    "911 Carrera Cabriolet 4",
+    "911 Carrera Cabriolet S",
+    "911 Carrera Cabriolet",
+    "911 Carrera S4",
+    "911 Carrera 4",
+    "911 Carrera S",
+    "911 Carrera"
+  ],
+  "adds_by_trim": {
+    "911 Targa S4": [
+      "All-wheel drive system with enhanced traction and stability",
+      "Access to exclusive mahogany interior personalization options",
+      "Available carbon fiber door sill guards and floor mats"
+    ],
+    "911 Targa 4": [
+      "All-wheel drive system for improved handling and safety"
+    ],
+    "911 Carrera Cabriolet S4": [
+      "All-wheel drive system with enhanced traction and stability",
+      "Convertible soft-top with power operation"
+    ],
+    "911 Carrera Cabriolet 4": [
+      "All-wheel drive system with improved traction control"
+    ],
+    "911 Carrera Cabriolet S": [
+      "Convertible soft-top with power operation and integral wind deflector"
+    ],
+    "911 Carrera Cabriolet": [
+      "Convertible soft-top soft-top for open-air driving"
+    ],
+    "911 Carrera S4": [
+      "All-wheel drive system with enhanced traction and stability"
+    ],
+    "911 Carrera 4": [
+      "All-wheel drive system for improved handling and stability"
+    ],
+    "911 Carrera S": [
+      "20-inch Carrera S wheels as standard equipment",
+      "Enhanced performance and styling compared to base Carrera"
+    ],
+    "911 Carrera": [
+      "Two-zone automatic climate control with solar sensor and air recirculation",
+      "Porsche Communication Management (PCM) with online navigation and voice control",
+      "19-inch Carrera wheels standard",
+      "Active carbon filter for air quality and humidity control",
+      "Electronic demister and fresh-air ventilation system"
+    ]
+  }
+}

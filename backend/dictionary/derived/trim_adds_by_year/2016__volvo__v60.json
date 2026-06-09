@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2016|volvo|v60",
+  "year": 2016,
+  "make": "Volvo",
+  "model": "V60",
+  "ladder_id": "brochure_llm_2016__volvo__v60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T6 AWD R-Design",
+    "T5 AWD R-Design",
+    "T5 R-Design"
+  ],
+  "adds_by_trim": {
+    "T6 AWD R-Design": [
+      "325 hp 6-cylinder turbocharged engine",
+      "Active dual xenon headlights with headlight washers standard",
+      "8-speed Geartronic automatic transmission",
+      "Electrically assisted power steering",
+      "Sport chassis standard",
+      "R-Design steering wheel",
+      "Integrated silver roof rails standard",
+      "Paddle shifters standard"
+    ],
+    "T5 AWD R-Design": [
+      "250 hp 5-cylinder turbocharged engine",
+      "6-speed Geartronic automatic transmission with sport mode",
+      "Electronically controlled AWD with Instant Traction",
+      "Active dual xenon headlights with headlight washers available",
+      "Sport chassis available"
+    ],
+    "T5 R-Design": [
+      "240 hp 4-cylinder turbocharged engine",
+      "8-speed Geartronic automatic transmission",
+      "Height and length adjustable steering wheel",
+      "8-way power adjustable passenger seat with lumbar support",
+      "Power glass moonroof",
+      "Sensus Navigation with Mapcare",
+      "Bluetooth handsfree and streaming audio",
+      "City Safety low-speed collision avoidance system",
+      "Complimentary factory scheduled maintenance 3 years/36,000 miles"
+    ]
+  }
+}

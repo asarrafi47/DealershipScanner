@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2010|toyota|tacoma",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Tacoma",
+  "ladder_id": "brochure_llm_2010__toyota__tacoma",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4x4 Access Cab V6 5-Speed Auto",
+    "4x4 Access Cab V6 6-Speed Manual",
+    "4x4 Access Cab 5-Speed Manual"
+  ],
+  "adds_by_trim": {
+    "4x4 Access Cab V6 5-Speed Auto": [
+      "4.0-liter DOHC EFI V6 engine with 236 hp and 266 lb.-ft. torque",
+      "5-speed electronically controlled automatic overdrive transmission with ECT-i",
+      "3.73 final axle ratio",
+      "Electronically controlled locking rear differential available",
+      "Hill Start Assist Control (HAC) and Downhill Assist Control (DAC) available",
+      "Active Traction Control (A-TRAC) available"
+    ],
+    "4x4 Access Cab V6 6-Speed Manual": [
+      "4.0-liter DOHC EFI V6 engine with 236 hp and 266 lb.-ft. torque",
+      "6-speed manual transmission",
+      "3.73 final axle ratio",
+      "Electronically controlled locking rear differential available",
+      "Hill Start Assist Control (HAC) and Downhill Assist Control (DAC) available",
+      "Active Traction Control (A-TRAC) available"
+    ],
+    "4x4 Access Cab 5-Speed Manual": [
+      "2.7-liter DOHC EFI 4-cylinder engine with 159 hp and 180 lb.-ft. torque",
+      "5-speed manual transmission with clutch start-cancel switch",
+      "4.1 final axle ratio",
+      "4WDemand part-time 4-wheel-drive system with 2-speed transfer case",
+      "Automatic Limited-Slip Differential (Auto LSD)",
+      "4-wheel Anti-lock Brake System (ABS) with Electronic Brakeforce Distribution (EBD) and Brake Assist",
+      "Variable-assist power rack-and-pinion steering",
+      "Power-assisted ventilated front disc brakes with rear drum brakes",
+      "Coil-spring double wishbone front suspension with leaf-spring rear suspension"
+    ]
+  }
+}

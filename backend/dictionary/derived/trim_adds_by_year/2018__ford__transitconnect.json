@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2018|ford|transitconnect",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_2018__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "Active"
+  ],
+  "adds_by_trim": {
+    "Active": [
+      "Adds SYNC 3 infotainment system with responsive touchscreen",
+      "Adds voice control functionality",
+      "Adds 2 smart-charging USB ports",
+      "Adds Apple CarPlay compatibility",
+      "Adds Android Auto compatibility",
+      "Adds SiriusXM Traffic & Travel Link (complimentary for 5 years)"
+    ],
+    "XLT": [
+      "Adds SYNC AppLink with voice-activated app control",
+      "Adds Siri Eyes Free integration for paired iPhone devices",
+      "Adds voice-activated navigation with turn-by-turn directions and vivid 3-D maps",
+      "Adds pinch-to-zoom touchscreen capability",
+      "Adds FordPass smartphone app with personal journey assistant features"
+    ],
+    "Limited": []
+  }
+}

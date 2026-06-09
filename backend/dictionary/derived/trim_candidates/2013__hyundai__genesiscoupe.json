@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2013|hyundai|genesiscoupe",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Platinum",
+    "Premium",
+    "Touring",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

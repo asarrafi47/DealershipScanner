@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2018|mazda|3",
+  "year": 2018,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2018__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "SKYACTIV-G 2.5L engine with 184 hp and 185 lb-ft torque",
+      "Available Mazda Navigation System with intelligent voice commands",
+      "Traffic Sign Recognition system with Active Driving Display alerts"
+    ],
+    "Touring": [
+      "SKYACTIV-G 2.5L engine with 184 hp and 185 lb-ft torque",
+      "Mazda Radar Cruise Control with distance recognition"
+    ],
+    "Sport": [
+      "SKYACTIV-G 2.0L engine with 155 hp and 150 lb-ft torque",
+      "MAZDA CONNECT infotainment system with Bluetooth and HD Radio",
+      "Smart City Brake Support and Smart Brake Support safety systems",
+      "Advanced Blind Spot Monitoring and Rear Cross Traffic Alert",
+      "Lane Departure Warning and Lane Keep Assist systems",
+      "High Beam Control automatic headlight adjustment"
+    ]
+  }
+}

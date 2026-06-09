@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2014|kia|sorento",
+  "year": 2014,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2014__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Supervision meter cluster with 7-inch TFT LCD display",
+      "Dual-zone automatic temperature control",
+      "Leather seat trim",
+      "Push-button start with Smart Key",
+      "Interior accent illumination",
+      "Illuminated door handle pockets",
+      "Rear spoiler"
+    ],
+    "SX": [
+      "Premium Package features including leather seat trim",
+      "8-way power driver's seat",
+      "Push-button start with Smart Key",
+      "Interior accent illumination",
+      "Supervision meter cluster with 7-inch TFT LCD",
+      "Dual-zone automatic temperature control",
+      "Illuminated door handle pockets",
+      "Rear spoiler"
+    ],
+    "EX": [
+      "Available Premium Package with leather seats and power driver's seat",
+      "Optional Convenience Package with UVO eServices and heated front seats"
+    ],
+    "LX": [
+      "Available Convenience Package with UVO eServices infotainment system",
+      "Heated front seats via Convenience Package",
+      "Integrated second-row sunshades",
+      "Roof rails on 4-cylinder models",
+      "Back-up warning system",
+      "Fog lights",
+      "Leather-wrapped steering wheel and gear shift knob",
+      "Third-row seating available"
+    ]
+  }
+}

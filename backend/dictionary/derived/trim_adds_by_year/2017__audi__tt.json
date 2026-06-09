@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2017|audi|tt",
+  "year": 2017,
+  "make": "Audi",
+  "model": "TT",
+  "ladder_id": "brochure_web_2017__audi__tt",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "TTS Coupe 2.0 TFSI quattro",
+    "TT Roadster 45 TFSI quattro",
+    "TT Coupe 45 TFSI quattro"
+  ],
+  "adds_by_trim": {
+    "TTS Coupe 2.0 TFSI quattro": [
+      "2.0-liter turbocharged four-cylinder with 288 hp and 280 lb-ft torque",
+      "0-60 mph in 4.4 seconds",
+      "23/31 mpg city/highway fuel economy"
+    ],
+    "TT Roadster 45 TFSI quattro": [
+      "Convertible body style with folding soft top",
+      "7.5 cubic feet cargo space with retractable roof"
+    ],
+    "TT Coupe 45 TFSI quattro": [
+      "Auto-dimming interior mirror with compass",
+      "Ten-way power driver and front passenger seats with four-way lumbar adjustment",
+      "Leather/Alcantara sport seats",
+      "Dual exhaust pipes (one left and one right)",
+      "Leather-wrapped three-spoke magnesium flat-bottom multifunction sport steering wheel with shift paddles",
+      "Audi xenon plus headlights with LED daytime running lights",
+      "Driver information system with onboard computer",
+      "Automatic air-conditioning and rear window defrost",
+      "Heated windshield washer nozzles and power adjustable heated side mirrors",
+      "LED third brake light and fog lights"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/audi/tt/"
+}

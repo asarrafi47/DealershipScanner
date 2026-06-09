@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2016|volkswagen|tiguan",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "inventory_volkswagen_tiguan",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "trademarks of Volkswagen Group of America, Inc. MuddyBuddy\u2122 is a",
+      "information. License plate frames by Camisasca Automotive Manufacturing are covered by a Camisasca limited warranty. Please visit www.camincusa.com for additional",
+      ", and other points of interest. Changes in street names, construction zones, traffic flow, points of interest"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

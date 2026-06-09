@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2010|jeep|compass",
+  "year": 2010,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "2010_jeep_compass",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Sport",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "172 hp 2.4L DOHC VVT engine with 18-inch silver painted aluminum wheels",
+      "Premium leather-trimmed heated front seats with six-way power driver seat",
+      "Leather-wrapped steering wheel with audio and speed controls",
+      "Tire Pressure Monitoring Display, EVIC, and remote keyless illuminated entry",
+      "Deep-tint sunscreen glass, 115V outlet, and removable LED cargo lamp",
+      "Silver bodyside moldings and heated power mirrors",
+      "Fog lamps and Tip Start ignition (automatic)"
+    ],
+    "Sport": [
+      "4-wheel antilock disc brakes or ventilated front disc with rear drum",
+      "2.4L or 2.0L DOHC 16V dual VVT 4-cylinder engine options",
+      "Front-wheel drive or four-wheel drive available",
+      "Power rack-and-pinion steering",
+      "Electronic Stability Control with Electronic Roll Mitigation",
+      "Advanced multistage driver and front-passenger air bags",
+      "Media Center 130 AM/FM/CD radio with MP3/WMA support",
+      "Four speakers"
+    ]
+  }
+}

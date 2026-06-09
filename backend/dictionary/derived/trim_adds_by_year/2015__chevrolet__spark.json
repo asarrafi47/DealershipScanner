@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2015|chevrolet|spark",
+  "year": 2015,
+  "make": "Chevrolet",
+  "model": "Spark",
+  "ladder_id": "brochure_llm_2015__chevrolet__spark",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2LT",
+    "1LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "2LT": [
+      "Chrome exhaust outlet",
+      "Sport front and rear fascias with body-color",
+      "Projector-style foglamps",
+      "Chrome liftgate trim",
+      "Leatherette seating",
+      "Heated front seats",
+      "Bluetooth wireless technology for select phones",
+      "AM/FM stereo with seek-scan and digital clock"
+    ],
+    "1LT": [
+      "Power-adjustable body-color manual-folding mirrors",
+      "Heated power-adjustable body-color manual-folding mirrors",
+      "Bluetooth wireless technology for select phones"
+    ],
+    "LS": [
+      "Roof-mounted antenna",
+      "Body-color door handles",
+      "Chrome-surround grille",
+      "Halogen headlamps with automatic exterior lamp control and daytime running lamps",
+      "Assist handles at all seating positions",
+      "Rear cargo security shelf",
+      "Single-zone manual air conditioning with cabin air filter",
+      "3-point safety belts at all positions with front height adjustment",
+      "Safety belt pretensioners for driver and front passenger",
+      "StabiliTrak Electronic Stability Control System with Brake Assist"
+    ]
+  }
+}

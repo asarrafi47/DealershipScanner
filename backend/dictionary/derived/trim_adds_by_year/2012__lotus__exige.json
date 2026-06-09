@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2012|lotus|exige",
+  "year": 2012,
+  "make": "Lotus",
+  "model": "Exige",
+  "ladder_id": "brochure_llm_2012__lotus__exige",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Sport Pack",
+    "Premium Pack",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Premium Sport Pack": [
+      "Sport seats in Ebony Black leather or Ebony Black/Slate Grey Suedetex with carbon effect leather inserts",
+      "Premium Sport steering wheel",
+      "Leather or Suedetex centre console",
+      "Door panels in leather or Suedetex",
+      "Black floor mats",
+      "Contrast stitching on seats"
+    ],
+    "Premium Pack": [
+      "Choice of six leather interior colors: Ebony Black, Ivory White, Venom Red, Cognac Brown, Imperial Blue, Cocoa Brown, Ash Grey",
+      "Leather centre console and fully covered footwell with carpet and leather",
+      "Premium steering wheel in full black leather",
+      "Leather sills and door panels",
+      "Premium seats in full leather",
+      "Full sound insulating material",
+      "Dark trinket tray",
+      "Face-level air vents covered in leather"
+    ],
+    "Base": [
+      "3.5-litre supercharged V6 with 345 hp, 295 lb-ft torque",
+      "6-speed close-ratio manual transmission",
+      "AP-Racing four-piston calipers with ventilated cross-drilled discs",
+      "Fully independent double wishbone suspension with Bilstein dampers",
+      "Satin black 17-inch front and 18-inch rear cast wheels",
+      "Pirelli P-Zero Corsa tyres",
+      "Driver and passenger airbags with pre-tensioning seatbelts",
+      "Black leather steering wheel and gear lever gaiter",
+      "CD/MP3/WMA receiver with four speakers",
+      "Air conditioning and engine start push button"
+    ]
+  }
+}

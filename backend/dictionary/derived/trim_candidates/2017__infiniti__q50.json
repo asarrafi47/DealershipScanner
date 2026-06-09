@@ -1,0 +1,13 @@
+{
+  "catalog_key": "2017|infiniti|q50",
+  "year": 2017,
+  "make": "Infiniti",
+  "model": "Q50",
+  "status": "draft",
+  "quality": "low",
+  "trims_available": [],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

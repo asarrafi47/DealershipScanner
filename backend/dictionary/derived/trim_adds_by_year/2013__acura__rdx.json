@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2013|acura|rdx",
+  "year": 2013,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "inventory_acura_rdx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Technology",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "Pandora trade dress are"
+    ],
+    "Sport": [
+      "Pandora logo, and the"
+    ],
+    "Technology": [
+      "Acura Navigation System with Voice Recognition and Zagat Survey ratings",
+      "8-inch LED backlit VGA display",
+      "Acura/ELS Surround Premium Audio System with hard disk drive and 10 speakers",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "GPS-linked solar-sensing dual-zone automatic climate control",
+      "Song By Voice and Note function music-reminder for SiriusXM Satellite Radio",
+      "Phone-book exchange for Bluetooth HandsFreeLink",
+      "Automated Appointments feature",
+      "Remote-linked power-operated tailgate",
+      "Xenon high-intensity discharge headlights and fog lights"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Sport": 1,
+      "S": 1
+    }
+  }
+}

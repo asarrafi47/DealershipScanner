@@ -1,0 +1,70 @@
+{
+  "catalog_key": "2024|nissan|frontier",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2024__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL CREW CAB",
+    "PRO-4X® CREW CAB",
+    "PRO-X® CREW CAB",
+    "SV CREW CAB",
+    "S CREW CAB"
+  ],
+  "adds_by_trim": {
+    "SL CREW CAB": [
+      "17\" Dark-painted machine-finished aluminum-alloy wheels",
+      "Leather-appointed seats",
+      "Fender® premium audio system with 10 speakers including subwoofers",
+      "Utili-track® Channel System with two adjustable tie-down cleats",
+      "Bed-mounted 120-volt AC power outlet"
+    ],
+    "PRO-4X® CREW CAB": [
+      "Switch-operated 2-speed transfer case with 4x4 capability",
+      "Hill descent control",
+      "Electronic locking rear differential",
+      "Aluminum front skid plate",
+      "Steel underbody skid plates for oil pan, fuel tank, transfer case",
+      "PRO-4X bed side decal",
+      "PRO-4X embroidered cloth seats",
+      "PRO-4X carpeted floor mats"
+    ],
+    "PRO-X® CREW CAB": [
+      "17\" Dark-finished aluminum-alloy wheels",
+      "Bilstein® off-road performance shock absorbers",
+      "LED signature headlights with LED Daytime Running Lights and fog lights",
+      "Lava Red painted tow hooks",
+      "Upper body-color with lower black front bumper and black overfenders",
+      "NissanConnect® 9\" color touchscreen with Nissan Door to Door Navigation",
+      "Wireless Apple CarPlay® integration and Wi-Fi Hotspot",
+      "Dual Zone Automatic Temperature Control",
+      "Leather-wrapped steering wheel and shift knob with Lava Red stitching",
+      "Sliding rear window and Tow-Haul Mode switch"
+    ],
+    "SV CREW CAB": [
+      "16\" Aluminum-alloy wheels",
+      "Upper body-color with lower silver front bumper",
+      "Body-color door handles and rear bumper",
+      "Dual power outside mirrors",
+      "6-way power driver's seat with 2-way manual lumbar support",
+      "AM/FM audio system with six speakers",
+      "Chrome interior door handles",
+      "Vehicle Security System",
+      "Four full-size doors with seating for five",
+      "Rear stabilizer bar and rear charge-only USB ports"
+    ],
+    "S CREW CAB": [
+      "3.8-liter V6 Direct Injection engine with 310 hp and 281 lb-ft torque",
+      "9-speed automatic transmission",
+      "16\" Styled steel wheels",
+      "Intelligent Forward Collision Warning and Automatic Emergency Braking with Pedestrian Detection",
+      "RearView Monitor and Intelligent Driver Alertness",
+      "Vehicle Dynamic Control and Active Brake Limited Slip",
+      "Full-length fully boxed ladder frame",
+      "7\" Advanced Drive-Assist® Display",
+      "NissanConnect® 8\" touchscreen with Apple CarPlay® and Bluetooth®",
+      "Four full-size doors with seating for five and rear stabilizer bar"
+    ]
+  }
+}

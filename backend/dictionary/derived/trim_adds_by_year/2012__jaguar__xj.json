@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2012|jaguar|xj",
+  "year": 2012,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "brochure_llm_2012__jaguar__xj",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XJ Supersport",
+    "XJL Supersport",
+    "XJ Supercharged",
+    "XJL Supercharged",
+    "XJL Portfolio",
+    "XJ"
+  ],
+  "adds_by_trim": {
+    "XJ Supersport": [
+      "510 HP 5.0L V8 Supercharged engine with 461 lb-ft torque",
+      "Soft grain leather headlining",
+      "3-spoke soft grain leather heated steering wheel with Sequential Shift paddles",
+      "Rear Seat Comfort Pack with reclining seats, massage, winged headrests and footrests"
+    ],
+    "XJL Supersport": [
+      "5 inches additional rear seat space in long wheelbase configuration",
+      "All XJ Supersport features"
+    ],
+    "XJ Supercharged": [
+      "470 HP 5.0L V8 Supercharged engine with 424 lb-ft torque",
+      "Four Zone automatic climate control with independent rear passenger temperature control",
+      "Active ventilated rear seats with heated and cooled capability",
+      "Front seat massage"
+    ],
+    "XJL Supercharged": [
+      "5 inches additional rear seat space in long wheelbase configuration",
+      "All XJ Supercharged features"
+    ],
+    "XJL Portfolio": [
+      "5 inches additional rear seat space in long wheelbase configuration",
+      "Rear business trays",
+      "Electric rear window sunblind",
+      "Enhanced specifications and extensive personalization options"
+    ],
+    "XJ": [
+      "385 HP 5.0L V8 engine with 380 lb-ft torque",
+      "6-speed automatic transmission",
+      "Dual Zone automatic climate control with air filtration and humidity sensing",
+      "3-spoke wood and leather heated steering wheel with Sequential Shift paddles",
+      "Front ashtray and cigar lighter",
+      "Jaguar 600W premium sound system with single slot CD/DVD and 14 speakers"
+    ]
+  }
+}

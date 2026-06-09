@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2021|nissan|kicks",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "Kicks",
+  "ladder_id": "brochure_llm_2021__nissan__kicks",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SR",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "LED headlights with LED signature accents and LED daytime running lights",
+      "Follow Me Home Headlights and LED fog lights",
+      "Rear roof spoiler with black roof rails",
+      "Dark chrome grille accent",
+      "Prima-Tex appointed dash with orange contrast stitching",
+      "Leather-wrapped steering wheel and shift knob",
+      "Sport cloth seat trim with orange stitching",
+      "Intelligent Around View Monitor",
+      "Integrated Dynamics-control Module",
+      "Silver-painted exterior door trim and black-painted heated outside mirrors"
+    ],
+    "SV": [
+      "Front and rear disc brakes with electronic parking brake and automatic brake hold",
+      "17-inch aluminum-alloy wheels",
+      "7-inch Advanced Drive-Assist Display with Intelligent Cruise Control",
+      "NissanConnect 8-inch color touchscreen with SiriusXM radio and 3-month subscription",
+      "One USB-C port and three USB ports",
+      "Body-color heated outside mirrors and body-color exterior door handles",
+      "Center armrest with storage and chrome interior door handles",
+      "Rear passenger under-seat heater ducts and silver roof rails",
+      "Intelligent Driver Alertness and Automatic Temperature Control",
+      "Nissan Intelligent Key and Remote Engine Start System with Intelligent Climate Control"
+    ],
+    "S": [
+      "1.6-liter DOHC 16-valve 4-cylinder engine with 122 horsepower",
+      "Xtronic CVT continuously variable transmission",
+      "Forward Collision Warning and Automatic Emergency Braking with Pedestrian Detection",
+      "Rear Automatic Braking, Lane Departure Warning, and High Beam Assist",
+      "Blind Spot Warning, Rear Cross Traffic Alert, and Rear Sonar System",
+      "16-inch steel wheels with wheel covers",
+      "7-inch touchscreen display with Apple CarPlay and Android Auto integration",
+      "Three USB ports and RearView Monitor",
+      "AM/FM audio system with six speakers and auxiliary audio input jack",
+      "Bluetooth hands-free phone system with illuminated steering wheel-mounted controls"
+    ]
+  }
+}

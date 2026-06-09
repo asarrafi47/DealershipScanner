@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|subaru|impreza",
+  "year": 2019,
+  "make": "Subaru",
+  "model": "Impreza",
+  "ladder_id": "brochure_llm_2019__subaru__impreza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Impreza Limited",
+    "Impreza Sport",
+    "Impreza Premium",
+    "Impreza"
+  ],
+  "adds_by_trim": {
+    "Impreza Limited": [
+      "Black Leather or Ivory Leather upholstery",
+      "Climate Control (automatic temperature control)"
+    ],
+    "Impreza Sport": [
+      "Black Sport Cloth upholstery"
+    ],
+    "Impreza Premium": [
+      "Upgraded trim positioning between base and Sport models"
+    ],
+    "Impreza": [
+      "Black Cloth or Ivory Cloth upholstery standard",
+      "12.3 cubic feet cargo volume (sedan)",
+      "20.8 cubic feet cargo volume (5-door)",
+      "99.8 cubic feet passenger volume (sedan with standard headroom)",
+      "100.9 cubic feet passenger volume (5-door with standard headroom)"
+    ]
+  }
+}

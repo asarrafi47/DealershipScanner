@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2020|jaguar|xf",
+  "year": 2020,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_llm_2020__jaguar__xf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S 3.0 LITER V6 380 SUPERCHARGED GAS",
+    "30t 2.0 LITER 4-CYLINDER TURBOCHARGED GAS",
+    "25t 2.0 LITER 4-CYLINDER TURBOCHARGED GAS"
+  ],
+  "adds_by_trim": {
+    "S 3.0 LITER V6 380 SUPERCHARGED GAS": [
+      "3.0-liter V6 supercharged gasoline engine with 380 BHP",
+      "332 lb-ft maximum torque versus 295 lb-ft on 30t",
+      "Larger 350mm front brake rotors versus 325mm on 30t",
+      "0-60 acceleration in 5.1 seconds RWD, 5.0 seconds AWD"
+    ],
+    "30t 2.0 LITER 4-CYLINDER TURBOCHARGED GAS": [
+      "2.0-liter turbocharged engine with 296 BHP versus 247 BHP",
+      "295 lb-ft torque versus 269 lb-ft on 25t",
+      "0-60 acceleration in 5.7 seconds RWD, 5.6 seconds AWD",
+      "Available AWD drivetrain option"
+    ],
+    "25t 2.0 LITER 4-CYLINDER TURBOCHARGED GAS": [
+      "2.0-liter turbocharged 4-cylinder engine with 247 BHP",
+      "269 lb-ft maximum torque",
+      "Single piston sliding caliper vented disc brakes",
+      "Stop/Start technology for clean and efficient combustion"
+    ]
+  }
+}

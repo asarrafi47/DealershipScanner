@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Mitsubishi,Outlander,2WD,2.5L I4 (SIDI),2.5L I4,,Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,24,31,27,,,,,
+2024,Mitsubishi,Outlander,4WD,2.5L I4 (SIDI),2.5L I4,,Automatic (AV-S8),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,24,30,26,,,,,
+2024,Mitsubishi,Outlander,Sport 2WD,2.0L I4,2.0L I4,,Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,24,30,27,,,,,
+2024,Mitsubishi,Outlander,Sport 4WD,2.0L I4,2.0L I4,,Automatic (AV-S6),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,23,29,26,,,,,
+2024,Mitsubishi,Outlander,Sport 4WD,2.4L I4,2.4L I4,,Automatic (AV-S6),Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,23,28,25,,,,,
+2024,Mitsubishi,Outlander,PHEV,Plug-in Hybrid 2.4L I4 (PHEV),2.4L I4,,Automatic (A1),All-Wheel Drive,Regular Gasoline / Electricity,Standard Sport Utility Vehicle 4WD,4,2.4,25,27,26,,,,,

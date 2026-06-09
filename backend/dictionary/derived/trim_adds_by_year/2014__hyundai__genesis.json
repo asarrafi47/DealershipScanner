@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2014|hyundai|genesis",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Genesis",
+  "ladder_id": "2014_hyundai_genesis_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Blue": [
+      "Blue Link and corresponding devices when it is safe to do so. 2 Assurance Connected Care requires an active"
+    ],
+    "Limited": [
+      "Blue Link agents will contact existing emergency service responders. Only use"
+    ],
+    "Premium": [
+      "Hyundai Blue Link telematics system standard",
+      "Ultimate Navigation system with 8-inch display",
+      "Front and rear parking assistance system",
+      "Lexicon 7.1 Discrete audio system with 17 speakers and HD Radio",
+      "6-disc DVD changer",
+      "Cooled driver seat and heated rear seats",
+      "Smart Cruise Control and Lane Departure Warning System",
+      "Driver Information System with multimedia controller",
+      "Color TFT LCD electroluminescent gauge cluster",
+      "HID Xenon adaptive auto-cornering headlights"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.5,
+    "per_trim_add_counts": {
+      "Blue": 1,
+      "Premium": 0
+    }
+  }
+}

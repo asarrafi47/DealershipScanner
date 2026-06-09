@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2019|mazda|3",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2019__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM PACKAGE",
+    "PREFERRED PACKAGE",
+    "MAZDA 3 HATCHBACK"
+  ],
+  "adds_by_trim": {
+    "PREMIUM PACKAGE": [
+      "Perforated leather-trimmed seats",
+      "Windshield-projected full-color Active Driving Display",
+      "18-inch alloy wheels with Black finish",
+      "Power sliding-glass moonroof with one-touch open and tilt",
+      "Steering-wheel-mounted paddle shifters on automatic transmission models",
+      "LED headlights with signature lighting",
+      "LED combination taillights with signature lighting",
+      "Adaptive Front-lighting System"
+    ],
+    "PREFERRED PACKAGE": [
+      "Bose 12-speaker premium audio system with Centerpoint and AudioPilot",
+      "Power side mirrors with memory function",
+      "Shark fin antenna",
+      "SiriusXM Satellite Radio with 3-month All Access subscription",
+      "8-way power-adjustable driver's seat with power lumbar support and memory",
+      "Heated front seats with three-level adjustment",
+      "Mazda Radar Cruise Control on manual transmission models"
+    ],
+    "MAZDA 3 HATCHBACK": [
+      "Dual-zone automatic climate control",
+      "18-inch alloy wheels with P215/45 R18 tires",
+      "Leatherette-trimmed seats",
+      "Body-color dual folding power side mirrors",
+      "Leather-wrapped steering wheel and gear selector",
+      "LED headlights and LED combination taillights",
+      "8.8-inch MAZDA CONNECT infotainment with Apple CarPlay and Android Auto",
+      "8-speaker audio system with Bluetooth hands-free",
+      "SKYACTIV-G 2.5L engine with Cylinder Deactivation",
+      "SKYACTIV-Drive 6-speed automatic transmission with manual-shift and Sport modes"
+    ]
+  }
+}

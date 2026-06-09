@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Dodge,Diplomat,Diplomat,5.2L V8 ((POLICE) (FFS)),5.2L V8,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.2,14,16,15,,,,,
+1986,Dodge,Diplomat,Diplomat,5.2L V8 ((GUZZLER) (FFS)),5.2L V8,,Automatic 3-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.2,15,20,16,,,,,
+1986,Dodge,Diplomat,Diplomat,5.2L V8 ((POLICE) (FFS)),5.2L V8,,Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.2,11,14,12,,,,,

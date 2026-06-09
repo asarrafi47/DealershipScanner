@@ -1,0 +1,84 @@
+{
+  "catalog_key": "2022|dodge|durango",
+  "year": 2022,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2022__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT 392",
+    "CITADEL",
+    "R/T PLUS",
+    "R/T",
+    "GT PLUS",
+    "GT",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT 392": [
+      "6.4L 392 HEMI V8 engine with 475 hp and 470 lb-ft torque",
+      "Performance-tuned All-Wheel-Drive system",
+      "TorqueFlite 8-speed automatic transmission",
+      "Brembo 6-piston brakes with performance pads",
+      "Bilstein adaptive damping suspension",
+      "20 by 10-inch Hyper Black wheels",
+      "Heated SRT flat-bottom steering wheel with paddle shifters",
+      "SRT Performance Pages Plus and drive modes",
+      "Performance rear spoiler and hood"
+    ],
+    "CITADEL": [
+      "Wrapped instrument panel with accent stitching",
+      "Crypto Sweep hydros with laser etch",
+      "20 by 8-inch Satin Carbon wheels",
+      "Platinum chrome door handles, grille and mirrors",
+      "Capri leather trim seating with embossed logo",
+      "Ventilated front seats with power sunroof",
+      "Forward Collision Warning with Active Braking",
+      "Class IV hitch receiver with integrated trailer brake controller",
+      "Dinamica suede headliner"
+    ],
+    "R/T PLUS": [
+      "Nappa leather trim seating",
+      "Power sunroof",
+      "Forward Collision Warning with Active Braking",
+      "Harman Kardon Premium Audio System",
+      "LaneSense Lane Departure Warning with Lane Keep Assist",
+      "Adaptive Cruise Control with Stop"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 engine",
+      "Performance steering and sport suspension",
+      "Rear load-leveling suspension",
+      "SmartBeam High Intensity Discharge headlamps",
+      "12-way power passenger seat and power tilt/telescoping steering wheel",
+      "Uconnect 5 NAV with 10.1-inch touchscreen",
+      "Alpine Premium Audio System with 9 speakers and subwoofer",
+      "Full-size spare tire"
+    ],
+    "GT PLUS": [
+      "Capri leather trim seating with suede inserts",
+      "Heated 1st and 2nd-row seats",
+      "Memory seats, mirrors and radio",
+      "Heated steering wheel",
+      "10-way power passenger seat",
+      "Rain-sensitive windshield wipers",
+      "Remote Start System and security alarm"
+    ],
+    "GT": [
+      "20 by 8-inch Fine Silver wheels",
+      "Dual exhaust with bright tips",
+      "Leather flat-bottom steering wheel",
+      "Heated front seats and heated steering wheel",
+      "Power liftgate",
+      "Remote Start System"
+    ],
+    "SXT": [
+      "3.6L Pentastar V6 engine",
+      "Dual-zone automatic temperature control",
+      "7-passenger seating with roof rails",
+      "Cloth interior trim",
+      "8-inch touchscreen infotainment system",
+      "Backup camera with ParkSense rear park assist"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2023|toyota|tundra",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2023__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Capstone",
+    "TRD Pro",
+    "1794 Edition",
+    "Platinum",
+    "Limited",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "Capstone": [
+      "i-FORCE MAX 3.4L-T V6 Hybrid 4x4 powertrain",
+      "CrewMax body with 6.5-ft. standard bed",
+      "Exclusive Capstone trim designation and appointments"
+    ],
+    "TRD Pro": [
+      "i-FORCE 3.4L-T V6 4x4 powertrain",
+      "Double Cab with 6.5-ft. standard bed",
+      "26.2-degree approach angle and 24.2-degree departure angle",
+      "Increased track width 69.4 inches front and rear",
+      "81.6-inch overall height for enhanced off-road clearance",
+      "TRD-specific exterior styling and suspension tuning"
+    ],
+    "1794 Edition": [
+      "Available in Double Cab 6.5-ft. bed or 8.1-ft. bed configurations",
+      "Available in CrewMax 6.5-ft. bed configuration",
+      "i-FORCE MAX Hybrid powertrain option in 4x2 and 4x4",
+      "Premium 1794 Edition trim unique styling and interior appointments"
+    ],
+    "Platinum": [
+      "Available in Double Cab 6.5-ft. bed or 8.1-ft. bed configurations",
+      "Available in CrewMax 6.5-ft. bed configuration",
+      "i-FORCE MAX Hybrid powertrain option in 4x2 and 4x4",
+      "Premium Platinum grade appointments and features over Limited"
+    ],
+    "Limited": [
+      "Available in Double Cab 6.5-ft. bed, 8.1-ft. bed, and CrewMax 5.5-ft. short bed",
+      "Available in CrewMax 6.5-ft. standard bed configuration",
+      "i-FORCE MAX Hybrid powertrain standard on all body styles",
+      "Premium Limited trim features and appointments"
+    ],
+    "SR5": [
+      "Available in Double Cab 6.5-ft. bed, 8.1-ft. bed, and CrewMax 5.5-ft. short bed",
+      "Available in CrewMax 6.5-ft. standard bed configuration",
+      "Both 4x2 and 4x4 drive configurations available",
+      "Enhanced SR5 trim features compared to base SR"
+    ],
+    "SR": [
+      "i-FORCE 3.4L-T V6 gasoline powertrain",
+      "Double Cab available with 6.5-ft. standard bed or 8.1-ft. long bed",
+      "CrewMax available with 5.5-ft. short bed",
+      "4x2 and 4x4 drivetrain options",
+      "Base model with standard truck features and 5-passenger seating capacity"
+    ]
+  }
+}

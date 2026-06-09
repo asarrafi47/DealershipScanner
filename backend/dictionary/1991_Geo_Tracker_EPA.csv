@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1991,Geo,Tracker,Convertible 2WD,1.6L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,4,1.6,22,24,23,,,,,,1.6L I4,
-1991,Geo,Tracker,Convertible 4WD,1.6L I4 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,20,22,21,,,,,,1.6L I4,
-1991,Geo,Tracker,Convertible 4WD,1.6L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,22,24,23,,,,,,1.6L I4,
-1991,Geo,Tracker,4WD,1.6L I4 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,20,22,21,,,,,,1.6L I4,
-1991,Geo,Tracker,4WD,1.6L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,22,24,23,,,,,,1.6L I4,

@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2015|fiat|usfullline",
+  "year": 2015,
+  "make": "Fiat",
+  "model": "US FullLine",
+  "ladder_id": "brochure_llm_2015__fiat__usfullline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "500e",
+    "500L",
+    "500 Abarth",
+    "500"
+  ],
+  "adds_by_trim": {
+    "500e": [
+      "111 hp permanent magnetic electric traction motor with 147 lb-ft torque",
+      "24-kilowatt-hour lithium-ion battery system with 97 cells at 400-volt",
+      "4-mode thermal management system for battery equalization and climate control",
+      "Level 1 and Level 2 charging capability (110/120v or 220/240v)",
+      "8 years/100,000 miles battery warranty plus 4 years/50,000 miles EV system warranty",
+      "122 MPGe city and 116 MPGe combined EPA fuel economy rating",
+      "Estimated 87-mile combined driving range",
+      "Zero Emissions Vehicle (ZEV) classification",
+      "Electric power steering with 16.3:1 overall ratio",
+      "185/55R15 all-season tires on 15-inch cast aluminum wheels"
+    ],
+    "500L": [
+      "Mopar molded cargo tray for rear cargo area spill and dirt protection",
+      "Headrest coat hanger accessory for unobstructed view and jacket storage",
+      "Cargo band with adjustable positioning and telescoping for bulky item securing"
+    ],
+    "500 Abarth": [
+      "Performance lightweight forged aluminum wheels in Matte Black finish",
+      "Scorpion logo center cap for distinctive styling",
+      "Bodyside graphics available in wide range of standout designs",
+      "Chrome fuel filler door with one-piece design",
+      "Wheel pocket inserts with colorful accent mounting"
+    ],
+    "500": [
+      "Rear cargo organizer with collapsible totes and FIAT branding",
+      "Bodyside graphics in school spirit designs with professional installation",
+      "Premium wheels machined to FIAT 500 specifications for balanced ride"
+    ]
+  }
+}

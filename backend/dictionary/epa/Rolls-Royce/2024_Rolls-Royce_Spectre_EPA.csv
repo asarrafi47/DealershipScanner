@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Rolls-Royce,Spectre,Black Badge (22 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,74,84,78,,,,,
+2024,Rolls-Royce,Spectre,Black Badge (23 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,71,77,73,,,,,
+2024,Rolls-Royce,Spectre,(22 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,77,86,81,,,,,
+2024,Rolls-Royce,Spectre,(23 inch wheels),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,71,79,74,,,,,

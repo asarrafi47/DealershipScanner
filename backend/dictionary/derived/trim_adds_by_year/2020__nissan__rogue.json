@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2020|nissan|rogue",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Rogue",
+  "ladder_id": "brochure_llm_2020__nissan__rogue",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "ProPILOT Assist adaptive cruise control",
+      "Intelligent Around View Monitor with 360-degree camera",
+      "19-inch aluminum-alloy wheels",
+      "Fog lights",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming inside rearview mirror",
+      "Electronic parking brake",
+      "Memory System for driver's seat and outside mirrors",
+      "4-way power front-passenger's seat",
+      "Leather-appointed seats"
+    ],
+    "SV": [
+      "Rear Automatic Braking",
+      "Rear Sonar System",
+      "17-inch aluminum-alloy wheels",
+      "Power heated outside mirrors with LED turn signal indicators",
+      "Roof rails",
+      "Motion Activated Liftgate",
+      "Rear privacy glass",
+      "Chrome interior and exterior door handles",
+      "8-way power driver's seat with 2-way lumbar support",
+      "Quick Comfort heated front seats"
+    ],
+    "S": [
+      "2.5-liter DOHC 16-valve 4-cylinder engine",
+      "Eco Mode",
+      "Xtronic CVT with Sport Mode Shifter",
+      "Available Intelligent All-Wheel Drive",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Lane Departure Warning",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "RearView Monitor",
+      "Active Ride Control"
+    ]
+  }
+}

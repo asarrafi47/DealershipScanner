@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2013|lexus|gx",
+  "year": 2013,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2013__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Four-year/50,000-mile Lexus Limited Warranty",
+      "Adds Six-year/70,000-mile Powertrain Warranty",
+      "Adds Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Vehicle Stability Control (VSC)",
+      "Adds Brake Assist system",
+      "Adds Pre-Collision System",
+      "Adds Lane Departure Alert",
+      "Adds Tire Pressure Monitor System"
+    ],
+    "Premium": [
+      "Adds intelligent high-beam headlamp system",
+      "Adds Adaptive Front Lighting System",
+      "Adds active front headrests for whiplash reduction",
+      "Adds Wide-view Front and Side Monitor camera system",
+      "Adds backup camera with rearward view display"
+    ],
+    "Luxury": [
+      "Adds dual-screen Rear-Seat Entertainment System with DVD player",
+      "Adds Mark Levinson premium audio system",
+      "Adds Navigation System with SiriusXM services",
+      "Adds SmartAccess keyless entry system",
+      "Adds iPod audio integration capability"
+    ]
+  }
+}

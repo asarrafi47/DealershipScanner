@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2010|honda|ridgeline",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "ladder_id": "brochure_llm_2010__honda__ridgeline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RTL",
+    "RTS",
+    "RT"
+  ],
+  "adds_by_trim": {
+    "RTL": [
+      "18-inch alloy wheels with P245/60 R18 all-season tires",
+      "Leather-trimmed interior with heated front seats",
+      "Driver's seat with 10-way power adjustment including lumbar support",
+      "160-watt AM/FM 6-disc in-dash CD audio system with 7 speakers and subwoofer",
+      "XM Radio with MP3/auxiliary input jack",
+      "115-volt power outlet in center console",
+      "Steering wheel-mounted navigation and phone controls",
+      "Bluetooth HandsFreeLink with navigation system"
+    ],
+    "RTS": [
+      "17-inch alloy wheels replacing base steel wheels",
+      "160-watt AM/FM 6-disc in-dash CD audio system with 7 speakers and subwoofer",
+      "XM Radio capability",
+      "Steering wheel-mounted audio controls"
+    ],
+    "RT": [
+      "3.5-liter SOHC VTEC V-6 engine with 250 hp and 247 lb-ft torque",
+      "5-speed automatic transmission with variable torque management",
+      "MacPherson strut front and multi-link rear suspension",
+      "Power-assisted ventilated front disc and solid rear disc brakes",
+      "Styled steel wheels with all-season tires",
+      "Dual-stage front airbags with front side airbags and side curtain airbags",
+      "Anti-lock braking system with electronic brake distribution",
+      "100-watt AM/FM CD audio system with 6 speakers",
+      "Air conditioning with air-filtration system",
+      "Power windows, door locks, and sliding rear cabin window"
+    ]
+  }
+}

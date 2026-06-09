@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2019|ford|mustang",
+  "year": 2019,
+  "make": "Ford",
+  "model": "Mustang",
+  "ladder_id": "brochure_2019__ford__mustang",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "GT",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes 3-year/36,000-mile bumper-to-bumper coverage",
+      "Adds Includes 5-year/60,000-mile Powertrain Warranty coverage",
+      "Adds Includes 5-year/60,000-mile safety restraint coverage",
+      "Adds Includes 5-year/unlimited-mile corrosion protection",
+      "Adds Roadside Assistance for 5 years or 60,000 miles"
+    ],
+    "GT": [
+      "Adds Performance Package rear spoiler",
+      "Adds side and quarter window scoops",
+      "Adds hood vents",
+      "Adds park lamp curtains",
+      "Adds Pony grille insert",
+      "Adds wheel center caps",
+      "Adds wheel lock kit"
+    ],
+    "Limited": [
+      "Adds full vehicle covers"
+    ]
+  }
+}

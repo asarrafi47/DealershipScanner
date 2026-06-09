@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2015|nissan|leaf",
+  "year": 2015,
+  "make": "Nissan",
+  "model": "Leaf",
+  "ladder_id": "brochure_llm_2015__nissan__leaf",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Leather-appointed seats",
+      "Photovoltaic solar-panel rear spoiler",
+      "Cargo cover"
+    ],
+    "SV": [
+      "6.6 kW onboard charger",
+      "Nissan Navigation System with 7-inch touch-screen monitor",
+      "NavTraffic and NavWeather provided by SiriusXM",
+      "Hands-free text messaging assistant",
+      "Voice Destination Entry",
+      "CARWINGS remote vehicle connection",
+      "Six speakers",
+      "Pandora radio capability",
+      "17-inch aluminum-alloy wheels",
+      "Hybrid heater system"
+    ],
+    "S": [
+      "80 kW AC synchronous electric motor",
+      "24 kWh lithium-ion battery",
+      "Zero Emissions Vehicle certification",
+      "16-inch steel wheels with wheel covers",
+      "B-mode regenerative braking drive mode",
+      "Vehicle Dynamic Control with Traction Control System",
+      "Portable opportunity-charge cable",
+      "Charge port light and lock",
+      "RearView Monitor",
+      "Nissan Intelligent Key with Push Button Start"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2009_bmw_5_series_complete_options",
+  "make": "BMW",
+  "models": [
+    "5 Series",
+    "5 Series"
+  ],
+  "year_min": 2007,
+  "year_max": 2011,
+  "source": "generated",
+  "trims": {
+    "550i": [
+      {
+        "label": "Engine Options",
+        "value": "4.8L V8 Twin Turbo; Manual 6-spd"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "3.0L I6 Turbo; Manual 6-spd"
+      }
+    ]
+  }
+}

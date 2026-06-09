@@ -1,0 +1,63 @@
+{
+  "catalog_key": "2022|toyota|prius",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2022__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLE AWD-e",
+    "XLE",
+    "LE AWD-e",
+    "LE",
+    "Eco",
+    "L Eco"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adaptive Front-Lighting System with auto-leveling headlights",
+      "11.6-inch Premium Audio touchscreen with ten JBL speakers and amplifier",
+      "Integrated Navigation system",
+      "Qi-compatible wireless smartphone charging with charge indicator",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ],
+    "XLE AWD-e": [
+      "Electronic On-Demand Compact All-Wheel Drive (AWD-e)",
+      "51 city / 47 highway / 49 combined mpg fuel economy"
+    ],
+    "XLE": [
+      "8-way power-adjustable driver's seat with power lumbar support",
+      "7-inch touchscreen audio with six speakers",
+      "Android Auto and Apple CarPlay compatible",
+      "SiriusXM with 3-month All Access trial subscription",
+      "Safety Connect trial subscription"
+    ],
+    "LE AWD-e": [
+      "Electronic On-Demand Compact All-Wheel Drive (AWD-e)",
+      "51 city / 47 highway / 49 combined mpg fuel economy"
+    ],
+    "LE": [
+      "SofTex-trimmed heated front seats with extended seatback pockets",
+      "4-way adjustable front passenger seat",
+      "SofTex-trimmed heated tilt/telescopic steering wheel with audio and Bluetooth",
+      "Smart Key System on three doors with Push Button Start",
+      "Auto-dimming rearview mirror with HomeLink"
+    ],
+    "Eco": [
+      "1.8-Liter 4-Cylinder Aluminum DOHC 16-Valve with VVT-i; 96 hp, 105 lb-ft torque",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Front-Wheel Drive with EV/Eco/POWER Modes",
+      "Independent MacPherson strut front suspension with stabilizer bars",
+      "Electric Power Steering with power-assisted rack-and-pinion",
+      "58 city / 53 highway / 56 combined mpg fuel economy"
+    ],
+    "L Eco": [
+      "1.8-Liter 4-Cylinder Aluminum DOHC 16-Valve with VVT-i; 96 hp, 105 lb-ft torque",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Front-Wheel Drive with EV/Eco/POWER Modes",
+      "Independent MacPherson strut suspension with multi-link rear and stabilizer bars",
+      "Electric Power Steering; 58 city / 53 highway / 56 combined mpg"
+    ]
+  }
+}

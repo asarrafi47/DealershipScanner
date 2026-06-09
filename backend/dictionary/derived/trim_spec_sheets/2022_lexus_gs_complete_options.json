@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_lexus_gs_complete_options",
+  "make": "Lexus",
+  "models": [
+    "GS",
+    "GS"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Rear-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Rear-Wheel Drive"
+      }
+    ]
+  }
+}

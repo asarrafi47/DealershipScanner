@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|acura|zdx",
+  "year": 2012,
+  "make": "acura",
+  "model": "zdx",
+  "ladder_id": "brochure_llm_2012__acura__zdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance Package",
+    "Technology Package",
+    "ZDX"
+  ],
+  "adds_by_trim": {
+    "Advance Package": [
+      "Integrated Dynamics System (IDS)",
+      "Collision Mitigation Braking System (CMBS)",
+      "Adaptive Cruise Control (ACC)",
+      "Blind spot information system (BSI)",
+      "Exclusive suede-like headliner and trim",
+      "Ventilated front seats",
+      "Ambient inner door-handle lighting",
+      "Premium leather instrument panel, console and door trim"
+    ],
+    "Technology Package": [
+      "Acura Navigation System with Voice Recognition and multi-view rear camera",
+      "Acura/ELS Surround 435-watt Premium Audio System with 10 speakers and HDD media storage",
+      "In-dash CD and DVD-Audio player with Dolby Pro Logic II",
+      "AcuraLink Real-Time Traffic and Weather with Traffic Rerouting",
+      "Keyless Access System with smart entry and pushbutton ignition",
+      "GPS-linked solar-sensing dual-zone adaptive climate control",
+      "Song By Voice feature",
+      "Perforated Milano Premium Leather-trimmed interior"
+    ],
+    "ZDX": [
+      "300-hp 3.7-liter 24-valve SOHC VTEC V-6 engine",
+      "6-speed automatic transmission with Sequential SportShift paddle shifters",
+      "Super Handling All-Wheel Drive (SH-AWD)",
+      "Dual-zone dual-mode adaptive climate control system",
+      "Rear-passenger ventilation",
+      "Cruise control and electronic tilt/telescopic steering column",
+      "Maintenance Minder system and remote entry system",
+      "Bluetooth HandsFreeLink wireless telephone interface",
+      "Active Sound Control and remote-linked power-operated tailgate",
+      "Sport seats with leather-trimmed interior and 266-watt Premium Sound System with XM Radio"
+    ]
+  }
+}

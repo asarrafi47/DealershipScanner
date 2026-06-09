@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|jeep|compass",
+  "year": 2012,
+  "make": "Jeep",
+  "model": "Compass",
+  "ladder_id": "brochure_llm_2012__jeep__compass",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Latitude",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Ultra-brite 18-inch aluminum wheels",
+      "Bright exhaust tip",
+      "Bright accent on rear fascia",
+      "Leather-wrapped steering wheel with audio and speed controls",
+      "Six-way power adjustable driver's seat",
+      "Leather-trimmed heated front bucket seats",
+      "Optional Media Center 430n navigation radio",
+      "Automatic temperature control with air filtration system"
+    ],
+    "Latitude": [
+      "Heated seats for driver and front passenger",
+      "Front passenger seat folds flat",
+      "Rear seats with up to 12 degrees recline",
+      "Available sunroof with express open/close feature and sunshade",
+      "Available premium sound system with 368 watts via nine Boston Acoustics speakers",
+      "Exclusive latitude liftgate badge",
+      "Fog lamps",
+      "Bright 17-inch cast aluminum wheels"
+    ],
+    "Sport": [
+      "Deep-tinted glass",
+      "Premium fog lamps",
+      "Bright roof rack side rails",
+      "17-inch cast aluminum wheels",
+      "LED taillamps",
+      "Body-color rear spoiler",
+      "Body-color exterior door handles and liftgate brow",
+      "Remote keyless entry",
+      "Four-wheel independent touring-tuned suspension",
+      "60/40 split-folding rear seats with 53.6 cubic feet cargo room"
+    ]
+  }
+}

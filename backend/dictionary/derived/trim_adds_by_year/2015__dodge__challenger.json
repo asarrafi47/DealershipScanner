@@ -1,0 +1,91 @@
+{
+  "catalog_key": "2015|dodge|challenger",
+  "year": 2015,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2015__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T SCAT PACK",
+    "R/T SHAKER",
+    "R/T PLUS",
+    "R/T CLASSIC",
+    "R/T",
+    "SXT PLUS",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "R/T SCAT PACK": [
+      "392-cubic-inch 6.4L HEMI V8 with 485 horsepower and 475 lb-ft torque",
+      "20x9-inch polished aluminum wheels with Black pockets and Satin finish",
+      "Performance front splitter",
+      "Scat Pack badging",
+      "Gloss Black Brembo four-piston brakes",
+      "High-performance suspension with Bilstein shocks",
+      "Antispin differential rear axle",
+      "180-mph speedometer",
+      "Active exhaust available",
+      "Severe Duty II engine cooling available"
+    ],
+    "R/T SHAKER": [
+      "Functional Shaker hood with cold air induction",
+      "Mopar Cold Air Intake with conical air filter",
+      "Satin Black fuel-filler door, spoiler and Shaker graphics",
+      "Shaker dash plaque and startup splash screen",
+      "20x9-inch Matte Black lightweight forged aluminum wheels available"
+    ],
+    "R/T PLUS": [
+      "20-inch polished aluminum wheels with Graphite pockets",
+      "Rear body-color spoiler",
+      "Nappa leather-trimmed Performance seats",
+      "Heated and ventilated front seats",
+      "Heated steering wheel",
+      "Hectic Mesh interior accents",
+      "Bright pedals",
+      "Uconnect 8.4-inch touchscreen with 3D navigation and Uconnect Access apps",
+      "ParkView Rear Back-Up Camera"
+    ],
+    "R/T CLASSIC": [
+      "20-inch Classic II polished and forged aluminum wheels",
+      "High Intensity Discharge headlamps",
+      "Dual R/T side stripes",
+      "Fender-mounted Challenger script badge",
+      "High-performance Nappa leather-trimmed seats with suede inserts and R/T logo",
+      "Unique accent door trim panels"
+    ],
+    "R/T": [
+      "5.7L HEMI V8 with 375 horsepower and 410 lb-ft torque",
+      "20-inch polished aluminum wheels with Black pockets",
+      "Projector fog lamps",
+      "Rear decklid spoiler",
+      "Gloss Black grille surround",
+      "Bright pedals",
+      "Performance steering, brakes and suspension",
+      "ParkView Rear Back-Up Camera",
+      "ParkSense Rear Park Assist",
+      "Universal Garage Door Opener"
+    ],
+    "SXT PLUS": [
+      "Dual-Zone Automatic Temperature Control",
+      "1-touch-down power windows",
+      "Speed-sensitive power locks",
+      "Cruise control",
+      "Automatic headlamps",
+      "Daytime running lamps",
+      "SiriusXM Satellite Radio",
+      "6 premium speakers with 276-watt amplifier"
+    ],
+    "SXT": [
+      "3.6L DOHC Pentastar V6 with 305 horsepower and 268 lb-ft torque",
+      "TorqueFlite 8-speed automatic transmission",
+      "18-inch Satin Carbon aluminum wheels",
+      "Bright fuel-filler door",
+      "Split LED taillamps",
+      "Integrated dual bright exhaust tips",
+      "Sport leather-trimmed steering wheel with audio controls",
+      "6-way power driver's seat with power lumbar adjuster",
+      "Dark Brushed II interior accents",
+      "5-inch Uconnect touchscreen with Voice Command and Bluetooth"
+    ]
+  }
+}

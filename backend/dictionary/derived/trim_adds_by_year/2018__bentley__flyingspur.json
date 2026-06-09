@@ -1,0 +1,60 @@
+{
+  "catalog_key": "2018|bentley|flyingspur",
+  "year": 2018,
+  "make": "bentley",
+  "model": "flying spur",
+  "ladder_id": "brochure_2018__bentley__flyingspur",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "LT",
+    "SE",
+    "LE",
+    "S",
+    "W12"
+  ],
+  "adds_by_trim": {
+    "W12": [],
+    "S": [
+      "Adds 20-inch six tri-spoke alloy wheels painted",
+      "Adds heated single-tone three-spoke hide-trimmed steering wheel",
+      "Adds contrast stitching to seats, headrests, door casings, and fascia"
+    ],
+    "LE": [
+      "Adds 20-inch six tri-spoke alloy wheels painted and diamond-turned",
+      "Adds hand cross-stitching to seats, headrests, and door casings",
+      "Adds contrast binding to interior carpet overmats and boot carpets",
+      "Adds embroidered Bentley 'wings' to front and rear headrests"
+    ],
+    "SE": [
+      "Adds sports single-tone three-spoke hide-trimmed steering wheel",
+      "Adds dark stained madrona or dark fiddleback eucalyptus veneer to fascia panels",
+      "Adds bright tint aluminium to fascia and door waistrails",
+      "Adds sports drilled foot pedals"
+    ],
+    "LT": [
+      "Adds 21-inch six twin-spoke alloy wheels polished",
+      "Adds sports duo-tone three-spoke hide-trimmed steering wheel",
+      "Adds rear view camera",
+      "Adds adaptive cruise control",
+      "Adds park distance control with graphic on infotainment screen"
+    ],
+    "Premium": [
+      "Upgraded to Naim for Bentley Premium Audio System with enhanced surround-sound",
+      "Adds 21-inch seven twin-spoke alloy wheels polished",
+      "Adds contemporary cross-banding to fascia, door waistrails, and console",
+      "Adds electronically operated blinds to rear windows",
+      "Adds climate boost for rear seat passengers",
+      "Adds two ashtrays and three cigar lighters"
+    ],
+    "Limited": [
+      "Adds 21-inch seven twin-spoke alloy wheels graphite and diamond-turned",
+      "Adds privacy telephone handset with two cradles and SIM card reader",
+      "Adds rear armrest bottle cooler",
+      "Adds twin front armrests",
+      "Adds privacy glass to rear screen and rear side windows",
+      "Adds GPS tracking system full fitment in addition to standard alarm system"
+    ]
+  }
+}

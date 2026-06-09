@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2015|bmw|z4",
+  "year": 2015,
+  "make": "BMW",
+  "model": "Z4",
+  "ladder_id": "brochure_2015__bmw__z4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Adds BMW Ultimate Service suite with comprehensive programs and services",
+      "Adds New Vehicle Limited Warranty coverage for four years",
+      "Adds unlimited-mileage corrosion and rust protection warranty",
+      "Adds BMW Maintenance Program covering factory-recommended service",
+      "Adds BMW ConnectedDrive services including BMW Assist eCall and BMW TeleService",
+      "Adds BMW Roadside Assistance with emergency services",
+      "Adds Navigation system with turn-by-turn directions"
+    ],
+    "Sport": [
+      "Adds BMW Online with business and stock reports and weather updates",
+      "Adds MyInfo feature for sending business locations and street addresses to Navigation"
+    ],
+    "Limited": [
+      "Adds Remote Services with Remote Door Unlock and Stolen Vehicle Recovery",
+      "Adds My BMW Remote app for mobile device vehicle control"
+    ],
+    "Premium": [
+      "Adds Concierge Services with restaurant and hotel recommendations",
+      "Adds Critical Calling for operator-assisted calls up to four times per year"
+    ],
+    "M Sport": [
+      "Adds BMW Performance Driving School experience with professional instruction",
+      "Adds BMW European Delivery Program with personalized vehicle handover"
+    ]
+  }
+}

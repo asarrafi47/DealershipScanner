@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2022|acura|rdx",
+  "year": 2022,
+  "make": "acura",
+  "model": "rdx",
+  "ladder_id": "brochure_llm_2022__acura__rdx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package",
+    "RDX 2.0L Turbo 10-AT SH-AWD with Advance Package",
+    "RDX 2.0L Turbo 10-AT SH-AWD with A-Spec Package",
+    "RDX 2.0L Turbo 10-AT SH-AWD with Technology Package",
+    "RDX 2.0L Turbo 10-AT SH-AWD",
+    "RDX 2.0L Turbo 10-AT FWD with A-Spec Package",
+    "RDX 2.0L Turbo 10-AT FWD with Technology Package",
+    "RDX 2.0L Turbo 10-AT FWD"
+  ],
+  "adds_by_trim": {
+    "RDX 2.0L Turbo 10-AT SH-AWD with A-Spec Advance Package": [
+      "A-Spec design elements combined with Advance Package features"
+    ],
+    "RDX 2.0L Turbo 10-AT SH-AWD with Advance Package": [
+      "Premium features beyond Technology Package"
+    ],
+    "RDX 2.0L Turbo 10-AT SH-AWD with A-Spec Package": [
+      "A-Spec exterior styling and design accents"
+    ],
+    "RDX 2.0L Turbo 10-AT SH-AWD with Technology Package": [
+      "Technology features and enhancements"
+    ],
+    "RDX 2.0L Turbo 10-AT SH-AWD": [
+      "SH-AWD Super Handling All-Wheel Drive system"
+    ],
+    "RDX 2.0L Turbo 10-AT FWD with A-Spec Package": [
+      "A-Spec exterior styling and design accents"
+    ],
+    "RDX 2.0L Turbo 10-AT FWD with Technology Package": [
+      "Technology features and enhancements"
+    ],
+    "RDX 2.0L Turbo 10-AT FWD": [
+      "2.0L turbocharged engine with 10-speed automatic transmission",
+      "Front-wheel drive configuration"
+    ]
+  }
+}

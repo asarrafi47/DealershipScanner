@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2013|ford|explorer",
+  "year": 2013,
+  "make": "Ford",
+  "model": "Explorer",
+  "ladder_id": "brochure_llm_2013__ford__explorer",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "Explorer"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "10-way power driver's seat with power lumbar, recline, and memory feature",
+      "Heated front bucket seats with 4-way adjustable head restraints",
+      "Leather-trimmed seating surfaces",
+      "MyFord Touch with two 4.2-inch LCD displays and 8-inch touchscreen",
+      "20-inch painted aluminum wheels with P255/50R20 all-season tires",
+      "Body-color power-folding heated sideview mirrors with LED turn signals and driver memory",
+      "Rear view camera",
+      "Reverse Sensing System",
+      "Power-adjustable pedals with memory",
+      "Auto-dimming rearview mirror"
+    ],
+    "XLT": [
+      "6-way power front-passenger seat with manual lumbar",
+      "2nd-row 60/40 split fold-flat seat with armrest and dual cupholders",
+      "18-inch painted aluminum wheels with P245/60R18 all-season tires",
+      "Leather-wrapped steering wheel and shift knob",
+      "Ford SYNC voice-activated connectivity with USB port",
+      "SiriusXM Satellite Radio with 6-month trial subscription",
+      "MyFord with 4.2-inch color LCD displays and media hub",
+      "110-volt power outlet",
+      "Illuminated visor vanity mirrors",
+      "Fog lamps"
+    ],
+    "Explorer": [
+      "3.5L Ti-VCT V6 engine with 290 hp and 255 lb-ft torque",
+      "6-speed SelectShift Automatic transmission",
+      "4-wheel disc ABS with traction control and trailer sway control",
+      "AdvanceTrac with Roll Stability Control and Curve Control",
+      "Personal Safety System with dual-stage front airbags and front-passenger knee airbag",
+      "Safety Canopy System with side-curtain airbags and rollover sensor",
+      "Bi-functional projector-beam halogen headlamps with LED taillamps",
+      "Power sideview mirrors with integrated blind spot mirrors",
+      "Privacy glass on rear doors and windows",
+      "Roof-mounted antenna and rear spoiler"
+    ]
+  }
+}

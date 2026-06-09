@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2016|gmc|commercial",
+  "year": 2016,
+  "make": "GMC",
+  "model": "Commercial",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "Pro",
+    "Limited",
+    "EX",
+    "SE",
+    "S",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2021|lexus|nx",
+  "year": 2021,
+  "make": "lexus",
+  "model": "NX",
+  "ladder_id": "brochure_2021__lexus__nx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Luxury",
+    "F Sport",
+    "Premium",
+    "Base",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds NuLuxe seating surfaces",
+      "Adds Lexus Safety System+ 2.0",
+      "Adds Dynamic Radar Cruise Control",
+      "Adds Lane Departure Alert with Steering Assist",
+      "Adds Pre-Collision System with Pedestrian Detection",
+      "Adds Intelligent High Beams",
+      "Adds Apple CarPlay connectivity",
+      "Adds Android Auto compatibility",
+      "Adds Amazon Alexa integration",
+      "Adds zero-deductible warranty coverage"
+    ],
+    "Limited": [
+      "Upgraded to metallic sport trim finish",
+      "Adds body side moldings",
+      "Adds dark wood shadow trim accents"
+    ],
+    "Base": [
+      "Adds carpet floor mats",
+      "Adds all-weather floor mats"
+    ],
+    "Premium": [
+      "Upgraded to premium unleaded fuel requirement",
+      "Adds all-weather cargo mat",
+      "Adds cargo net"
+    ],
+    "F Sport": [
+      "Adds carpet cargo mat",
+      "Adds door edge film by 3M",
+      "Adds alloy wheel locks"
+    ],
+    "Luxury": [
+      "Upgraded to Luxury leather seating surfaces",
+      "Upgraded to caramel glazed leather option",
+      "Adds red circuit leather upholstery option",
+      "Adds red major leather upholstery option",
+      "Adds orange accent available option",
+      "Upgraded to premium accessory warranty up to 48 months"
+    ]
+  }
+}

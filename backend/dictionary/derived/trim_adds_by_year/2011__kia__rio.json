@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2011|kia|rio",
+  "year": 2011,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_web_2011__kia__rio",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Rio S",
+    "Rio LX"
+  ],
+  "adds_by_trim": {
+    "Rio S": [
+      "4.2-inch instrument display",
+      "Automatic climate control",
+      "Push-button ignition",
+      "Rear disc brakes",
+      "LED headlights",
+      "Rear USB port (sedan)"
+    ],
+    "Rio LX": [
+      "8.0-inch touchscreen with wireless Apple CarPlay and Android Auto",
+      "Six-speaker sound system",
+      "Stability control",
+      "Hill-start assist",
+      "1.6-liter four-cylinder engine with 120 hp"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/rio/"
+}

@@ -1,0 +1,31 @@
+{
+  "ladder_id": "2023_buick_encore_complete_options",
+  "make": "Buick",
+  "models": [
+    "Encore",
+    "Encore"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Preferred": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L B14XFT I4 turbo; L B16DTH I4 turbo (was Engine; All trims except for the mid-level Preferred trim were discontinued, and the Pre)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine; All trims except for the mid-level Preferred trim were discontinued, and the Pre (was L B14XFT I4 turbo; L B16DTH I4 turbo)"
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L B14XFT I4 turbo; L B16DTH I4 turbo"
+      }
+    ]
+  }
+}

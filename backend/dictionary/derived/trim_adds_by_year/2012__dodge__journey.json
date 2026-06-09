@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2012|dodge|journey",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Journey",
+  "ladder_id": "brochure_2012__dodge__journey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "Limited",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SXT": [
+      "Adds Uconnect infotainment system",
+      "Adds SiriusXM Satellite Radio with one-year subscription",
+      "Adds Bluetooth Phone Book Access Profile support",
+      "Adds Advanced Front Air Bags",
+      "Adds Sentry Key immobilizer system"
+    ],
+    "Limited": [
+      "Adds Uconnect Web feature for connected services",
+      "Adds HomeLink universal garage door opener"
+    ],
+    "R/T": [
+      "Adds R/T performance badging and identity",
+      "Adds premium warranty coverage alignment with top-tier positioning"
+    ]
+  }
+}

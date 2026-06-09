@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2012|chevrolet|silverado",
+  "year": 2012,
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "Custom",
+    "LS",
+    "WT",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

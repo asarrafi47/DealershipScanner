@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2011|hyundai|equus",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Equus",
+  "ladder_id": "brochure_llm_2011__hyundai__equus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Equus Ultimate",
+    "Equus Signature"
+  ],
+  "adds_by_trim": {
+    "Equus Ultimate": [
+      "Brochure page 38 does not specify features that Ultimate adds compared to Signature"
+    ],
+    "Equus Signature": [
+      "3.8L V6 engine producing 385 horsepower and 384 lb-ft torque",
+      "Eight-speed automatic transmission with sport mode capability",
+      "Leather-appointed seating surfaces throughout cabin",
+      "Heated and ventilated front seats with massage function",
+      "Dual-zone automatic temperature control climate system",
+      "Navigation system with premium audio system integrated",
+      "Xenon HID headlights with automatic on/off functionality",
+      "Panoramic sunroof with sunshade and power tilt/slide",
+      "Lane departure warning system with lane keeping assist",
+      "Blind spot detection with rear cross traffic alert"
+    ]
+  }
+}

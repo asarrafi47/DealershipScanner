@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2010|jeep|grandcherokee",
+  "year": 2010,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "jeep_grand_cherokee_wk",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Laredo",
+    "Limited",
+    "SRT"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "SmartBeam intelligent headlamp system with rain-sensing wipers",
+      "Auto-dimming interior and exterior mirrors",
+      "ParkSense rear park assist and ParkView rear backup camera",
+      "Boston Acoustics premium audio and Media Center 730N navigation radio",
+      "Jeep Memory System with remote start",
+      "Leather-trimmed heated front and rear seats; woodgrain interior accents",
+      "Infrared dual-zone automatic temperature control and power sunroof",
+      "Uconnect Phone, power adjustable pedals with memory, and 115V auxiliary outlet",
+      "Chrome grille, door handles, roof rails, and license plate brow",
+      "Fog lamps and SIRIUS Traffic with one-year subscription"
+    ],
+    "SRT": [
+      "6.1L SRT HEMI V8 — 420 hp with SRT 5-speed automatic and Electronic Range Select",
+      "SRT active full-time 4WD transfer case with performance-tuned suspension and steering",
+      "SRT8 exterior package: body-color crosshatch grille, aero fascias, and unique side rails",
+      "Royale leather with suede diamond-embossed inserts and SRT embroidered front seats",
+      "Carbon weave on shift knob, steering wheel, console, and door bezels",
+      "Performance instrument cluster with acceleration, braking, and G-force display",
+      "Boston Acoustics premium audio and Media Center 430 touch-screen (6,700-song capacity)",
+      "20-inch Goodyear run-flat tires and complimentary SRT Track Experience driving school"
+    ],
+    "Laredo": [
+      "Leather-wrapped steering wheel as standard premium feature",
+      "3.6L Pentastar V6 engine with 360 horsepower and 260 lb-ft torque",
+      "Available 5.7L V8 engine with Fuel Saver Technology",
+      "8.5-inch ground clearance with 26.2-degree approach angle",
+      "Multilink rear suspension with coil springs and gas-charged shock absorbers"
+    ]
+  }
+}

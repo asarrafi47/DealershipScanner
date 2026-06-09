@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2023|mitsubishi|mirage",
+  "year": 2023,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2023__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "BE",
+    "LE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Base trim designation"
+    ],
+    "ES": [
+      "1.2L MIVEC DOHC 3-cylinder engine",
+      "Continuous Variable Transmission (CVT)",
+      "39 combined MPG for Mirage / 37 combined MPG for Mirage G4",
+      "9.2-gallon fuel capacity",
+      "ECI-MULTI fuel system",
+      "10-Year / 100,000-Mile Powertrain Limited Warranty"
+    ],
+    "BE": [
+      "Specific BE-level features not detailed in provided brochure text"
+    ],
+    "LE": [
+      "Specific LE-level features not detailed in provided brochure text"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2015|infiniti|q60",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "Q60",
+  "ladder_id": "brochure_llm_2015__infiniti__q60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q60S Coupe Limited",
+    "Q60S Coupe",
+    "Q60S",
+    "Q60 Coupe Limited",
+    "Q60 Coupe Journey AWD",
+    "Q60 Coupe"
+  ],
+  "adds_by_trim": {
+    "Q60S Coupe Limited": [
+      "12-way power driver's sport seat with power lumbar, torso, and thigh support",
+      "Sport-tuned performance suspension",
+      "19-inch split V-spoke aluminum wheels with 225/45R19 front and 245/40R19 rear summer tires",
+      "Red-stitched front sport seats"
+    ],
+    "Q60S Coupe": [
+      "Infiniti Hard Drive Navigation System with 7-inch display and 3-D building graphics",
+      "NavTraffic with Real-Time Traffic information",
+      "NavWeather with Real-Time Weather and 3-day forecast",
+      "Sport-tuned suspension",
+      "Rear Sonar System"
+    ],
+    "Q60S": [
+      "Heated front seats",
+      "Power sliding tinted glass moonroof with one-touch auto-open and sunshade",
+      "10-way power driver's seat with 2-way power lumbar support",
+      "8-way power front-passenger seat"
+    ],
+    "Q60 Coupe Limited": [
+      "Heated front seats",
+      "Leather-wrapped 3-spoke steering wheel with red-stitching and shift knob",
+      "Sport front fascia"
+    ],
+    "Q60 Coupe Journey AWD": [
+      "Intelligent All-Wheel Drive system",
+      "Viscous Limited-Slip Differential"
+    ],
+    "Q60 Coupe": [
+      "3.7-liter 330 hp V6 engine with CVTCS and VVEL",
+      "7-speed automatic transmission with Adaptive Shift Control and Drive Sport mode",
+      "HID bi-functional xenon headlights",
+      "Leather-appointed seating",
+      "Infiniti Studio on Wheels by Bose 11-speaker Premium Audio System with subwoofers",
+      "RearView Monitor",
+      "Infiniti Advanced Air Bag System with dual-stage front and seat-mounted side-impact bags",
+      "18-inch 10-spoke aluminum wheels with 225/50R18 all-season tires"
+    ]
+  }
+}

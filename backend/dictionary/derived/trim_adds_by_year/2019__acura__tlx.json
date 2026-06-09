@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2019|acura|tlx",
+  "year": 2019,
+  "make": "acura",
+  "model": "tlx",
+  "ladder_id": "brochure_llm_2019__acura__tlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TLX 3.5 V-6 9-AT SH-AWD with Advance Package",
+    "TLX 3.5 V-6 9-AT P-AWS with Advance Package",
+    "TLX 3.5 V-6 9-AT SH-AWD with A-Spec and Technology Package",
+    "TLX 3.5 V-6 9-AT P-AWS with A-Spec and Technology Package",
+    "TLX 2.4 8-DCT P-AWS with A-Spec and Technology Package",
+    "TLX 3.5 V-6 9-AT SH-AWD with Technology Package",
+    "TLX 3.5 V-6 9-AT P-AWS with Technology Package",
+    "TLX 2.4 8-DCT P-AWS with Technology Package",
+    "TLX 3.5 V-6 9-AT SH-AWD",
+    "TLX 3.5 V-6 9-AT P-AWS",
+    "TLX 2.4 8-DCT P-AWS"
+  ],
+  "adds_by_trim": {
+    "TLX 3.5 V-6 9-AT SH-AWD with Advance Package": [
+      "Advance Package features and benefits over Technology Package variant"
+    ],
+    "TLX 3.5 V-6 9-AT P-AWS with Advance Package": [
+      "Advance Package features and benefits over A-Spec and Technology Package variant"
+    ],
+    "TLX 3.5 V-6 9-AT SH-AWD with A-Spec and Technology Package": [
+      "A-Spec styling and Technology Package features over base SH-AWD"
+    ],
+    "TLX 3.5 V-6 9-AT P-AWS with A-Spec and Technology Package": [
+      "A-Spec styling and Technology Package features over base P-AWS"
+    ],
+    "TLX 2.4 8-DCT P-AWS with A-Spec and Technology Package": [
+      "A-Spec styling and Technology Package features over base 2.4 engine"
+    ],
+    "TLX 3.5 V-6 9-AT SH-AWD with Technology Package": [
+      "Technology Package features over base SH-AWD"
+    ],
+    "TLX 3.5 V-6 9-AT P-AWS with Technology Package": [
+      "Technology Package features over base P-AWS"
+    ],
+    "TLX 2.4 8-DCT P-AWS with Technology Package": [
+      "Technology Package features over base 2.4 engine model"
+    ],
+    "TLX 3.5 V-6 9-AT SH-AWD": [
+      "3.5-liter V-6 engine with 9-speed automatic transmission",
+      "Super Handling All-Wheel Drive (SH-AWD) system"
+    ],
+    "TLX 3.5 V-6 9-AT P-AWS": [
+      "3.5-liter V-6 engine with 9-speed automatic transmission",
+      "Power All-Wheel Drive (P-AWS) system"
+    ],
+    "TLX 2.4 8-DCT P-AWS": [
+      "2.4-liter turbocharged engine with 8-speed dual-clutch transmission",
+      "Power All-Wheel Drive (P-AWS) system"
+    ]
+  }
+}

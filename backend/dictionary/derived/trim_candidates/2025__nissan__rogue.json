@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2025|nissan|rogue",
+  "year": 2025,
+  "make": "Nissan",
+  "model": "Rogue",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Rock Creek",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

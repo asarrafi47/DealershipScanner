@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2012|ram|commercial",
+  "year": 2012,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_2012__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Laramie",
+    "Tradesman",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Standard 3.7-liter V6 engine with 4-speed automatic transmission",
+      "Adds Standard Electronic Stability Control (ESC)",
+      "Adds Standard integrated 4- and 7-pin trailer connectors",
+      "Adds Standard heavy-duty engine and transmission cooling",
+      "Adds Standard Class IV trailer hitch"
+    ],
+    "Tradesman": [
+      "Adds 5.7-liter HEMI V8 with Variable Valve Timing and MDS Fuel Saver Technology",
+      "Adds six-speed automatic transmission",
+      "Adds factory-installed spray-in bedliner",
+      "Adds heavy-duty shocks",
+      "Adds 17-inch steel wheels",
+      "Adds RamBox Cargo Management System availability for all models with 5'7\" and 6'4\" beds"
+    ],
+    "Laramie": [
+      "Adds available integrated trailer brake controller",
+      "Adds Electronic Range Select (ERS) transmission feature",
+      "Adds up to 43 innovative storage areas in Crew Cab configuration",
+      "Adds on-demand transfer case with 4WD Auto mode"
+    ],
+    "Limited": [
+      "Adds class-exclusive five-link coil spring rear suspension",
+      "Adds maximum interior room with Ram Mega Cab availability",
+      "Adds part-time transfer case with 2WD, 4WD High, and 4WD Low modes"
+    ]
+  }
+}

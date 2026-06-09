@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2011|nissan|pathfinder",
+  "year": 2011,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2011__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LE",
+    "Silver edition",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "5.6-liter VK56DE V8 engine with 310 hp and 388 lb-ft torque",
+      "All-Mode 4WD with 2-speed transfer case",
+      "18-inch 12-spoke machine-finished aluminum-alloy wheels",
+      "P265/60R18 BFGoodrich Long Trail T/A tires",
+      "Nissan DVD Entertainment System with 7.0-inch color LCD monitor",
+      "Power sliding glass moonroof",
+      "5-speed automatic transmission with manual mode"
+    ],
+    "Silver edition": [
+      "17-inch 6-spoke machine-finished aluminum-alloy wheels",
+      "P265/65R17 BFGoodrich Long Trail T/A tires",
+      "5-speed automatic transmission with manual mode"
+    ],
+    "SV": [
+      "17-inch 6-spoke aluminum-alloy wheels",
+      "P265/65R17 BFGoodrich Long Trail T/A tires",
+      "5-speed automatic transmission with manual mode"
+    ],
+    "S": [
+      "4.0-liter VQ40DE V6 engine with 266 hp and 288 lb-ft torque",
+      "16-inch 5-spoke aluminum-alloy wheels",
+      "P245/75R16 General Grabber tires",
+      "5-speed automatic transmission",
+      "Independent double-wishbone front and rear suspension",
+      "4-wheel vented disc brakes with ABS and EBD",
+      "Engine-speed-sensitive power steering"
+    ]
+  }
+}

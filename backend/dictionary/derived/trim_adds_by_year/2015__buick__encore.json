@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2015|buick|encore",
+  "year": 2015,
+  "make": "Buick",
+  "model": "Encore",
+  "ladder_id": "brochure_llm_2015__buick__encore",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM GROUP",
+    "LEATHER GROUP",
+    "CONVENIENCE GROUP",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "PREMIUM GROUP": [
+      "Navigation System with 7-inch touchscreen",
+      "Bose Premium 7-speaker audio system with amplifier",
+      "Power tilt-sliding moonroof",
+      "RV8 18-inch chromed aluminum wheels",
+      "All previously listed Convenience and Leather Group features"
+    ],
+    "LEATHER GROUP": [
+      "Leather-appointed seating in Ebony, Titanium, or Saddle",
+      "Heated steering wheel",
+      "6-way power passenger seat with manual recline and power lumbar",
+      "Heated seats for driver and front passenger",
+      "Memory seat for driver position",
+      "Bose Premium 7-speaker audio system with amplifier",
+      "Front and rear park assist",
+      "Forward collision alert and lane departure warning"
+    ],
+    "CONVENIENCE GROUP": [
+      "Rear cross traffic alert",
+      "Side blind zone alert",
+      "Remote vehicle start system",
+      "Front fog lamps",
+      "Dual-zone automatic climate control",
+      "Auto-dimming inside rearview mirror",
+      "Rear center console 120-volt power outlet"
+    ],
+    "Base": [
+      "1.4L turbocharged engine with 138 hp and 148 lb-ft torque",
+      "6-speed automatic transmission with driver shift control",
+      "Front-wheel drive with full-range traction control and StabiliTrak",
+      "10 standard air bags including side-curtain air bags",
+      "Buick IntelliLink2 7-inch infotainment with AM/FM, CD, USB, and Bluetooth",
+      "SiriusXM satellite radio with 3-month trial",
+      "OnStar with 6 months of Directions and Connections service",
+      "Halogen composite projector headlamps with automatic control",
+      "Roof-mounted antenna and luggage rack side rails",
+      "6-speaker audio system with USB and auxiliary inputs"
+    ]
+  }
+}

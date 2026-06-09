@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2025_mercedes-benz_glb-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLB-Class",
+    "GLB-Class"
+  ],
+  "year_min": 2023,
+  "year_max": 2027,
+  "source": "generated",
+  "trims": {
+    "AMG": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM8)"
+      }
+    ],
+    "AMG GLB35": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM8)"
+      }
+    ],
+    "GLB250": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM8)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Electric motor 2x asynchronous electric motors"
+      }
+    ]
+  }
+}

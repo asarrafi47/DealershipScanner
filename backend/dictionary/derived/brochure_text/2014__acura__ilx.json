@@ -1,0 +1,452 @@
+{
+  "catalog_key": "2014|acura|ilx",
+  "year": 2014,
+  "make": "acura",
+  "model": "ilx",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2014_acura_ilx_Brochure.pdf",
+  "page_count": 46,
+  "all_pages": false,
+  "trim_hint_pages": [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    40,
+    41,
+    43,
+    44,
+    45
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 1,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nMove up. Without\nsettling down.\n2014 ACURA ILX",
+      "table_lines": [
+        "Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 3,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.03\nThe 2014\nAcura ILX.",
+      "table_lines": [
+        "Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 5,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.05\nAcura recently\nreceived the\n2013 ALG Residual\nValue Award for\nPremium Brands.\nRATHER THAN LUXURY THAT EXCLUDES, THIS IS LUXURY THAT INVITES.",
+      "table_lines": [
+        "P.05\nly\nual\nor\nds.",
+        "5 | Luxury",
+        "Acura recent\nreceived the\n2013 ALG Resid\nValue Award f\nPremium Bran | ly\nual\nor\nds.",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 7,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.07\n01 The lithium-ion battery 02 i-VTEC engine 01 02\nin the ILX Hybrid generates technology\nhigh output without maximizes both\nadding excessive weight low-end torque and\nto the vehicle. high-end horsepower.\nILX with Technology Package shown.",
+      "table_lines": [
+        "P.07\nshown.",
+        "7 | Luxury",
+        "shown",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        ". | cifications"
+      ]
+    },
+    {
+      "page": 9,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.09\nTransmission\noptions.\nWITHOUT A MEANS\nTO HARNESS IT,\nPOWER IS ONLY\nPOTENTIAL.\nEach ILX model features a transmission perfectly\nsuited to make the most of engine output.\nThe ILX converts horsepower into forward\nmovement with a 5-speed automatic trans-\nmission. Those desiring more involvement\ncan take advantage of the Sequential Sport-\nShift paddle shifters to manage the transmis-\nsion\u2019s shift points.\nThe ILX 6MT features a close-ratio 6-speed\nmanual to let you get the most power out of\nthe vehicle\u2019s high-revving engine.\nThe ILX Hybrid features a Continuously Vari-\nable Transmission (CVT), giving the vehicle a\nsteady climb in acceleration from a standing\nstart up to cruising speed, helping to enhance\nits fuel efficiency.",
+      "table_lines": [
+        "S\nly",
+        "Luxury",
+        "S\nly",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 11,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.11\nHybrid\ntechnology.\nThe ILX Hybrid is designed to produce great fuel\neconomy efficiently. And with a little help from\nyou, it\u2019s even better.\nAdvanced technology is only driving style to help you drive\npart of getting good mpg num- more efficiently. You can also\nbers. The other side of the equa- push the dash-mounted ECON\ntion is the person in the driver\u2019s button and the engine and trans-\nseat. The ILX Hybrid features a mission will both operate more\nFuel Economy Indicator to give efficiently to help you further\nyou real-time feedback on your maximize your fuel economy.1\nILX Hybrid shown.",
+      "table_lines": [
+        "shown.",
+        "Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "show",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "n. | cifications"
+      ]
+    },
+    {
+      "page": 13,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.13\n01 SMS text message function3 02 A curaLink Real-Time Traffic\u21224 01 02\ndisplays and reads aloud quickly communicates\nincoming text messages and driving conditions. Traffic\nlets you respond, hands-free, Rerouting\u21224 can suggest an\nby verbally choosing from a alternative route.*\nlist of six options.*\n*Drive responsibly. Some state laws prohibit the operation of handheld electronic devices while operating a vehicle. For safety reasons, always perform any operation on your phone only when the vehicle is safely parked.",
+      "table_lines": [
+        "P.13\nparked.",
+        "3 | Luxury",
+        "02",
+        "parke",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "d. | cifications"
+      ]
+    },
+    {
+      "page": 15,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.15\nTailored luxury.\nITS CLEAN LINES, CRISP PERFORMANCE AND CUTTING-EDGE TECHNOLOGIES\nHELP THE ILX MEET THE DEMANDS OF YOUR DAY. AND YOUR EVENING.",
+      "table_lines": [
+        "Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 17,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.17\nTextures and finishes\nutilized in the headlight\ndesign add to the vehicle\u2019s\nuniqueness and visual appeal.",
+      "table_lines": [
+        "P.17",
+        "7 | Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 19,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.19\nAdvanced\nclimate control.\nOutside, climates fluctuate with the weather.\nInside, they conform to your desires.\nThe dual-zone climate-control Available Active Sound Control\nsystem features a patented helps keep excess engine noise in\nhumidity control for ideal check. It can detect unwanted\ncomfort. A GPS-linked, solar- engine noise and emit opposing\nsensing climate-control sys- frequencies to literally cancel\ntem is also available. It tracks it out. Along with extensive\nthe sun\u2019s relative position and soundproofing, it contributes\nintensity and automatically to the sanctuary-like feel of\nadjusts to compensate. the ILX cabin.\nILX with Technology Package shown.",
+      "table_lines": [
+        "shown.",
+        "Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "show",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "n. | cifications"
+      ]
+    },
+    {
+      "page": 21,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.21\nPremium materials and\nquality construction give\nthe elements of the cabin\na solid, substantial feel.",
+      "table_lines": [
+        "P.21",
+        "1 | Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 23,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.23\n01 U SB audio interface6 gives 02 Pandora internet radio 01 02\nyou direct control of your interface5 connects with\niPod\u00ae or other compatible your iPhone,\u00ae giving you\nmusic device. Song infor- access to an immense\nmation appears right on the library of musical styles.*\nvehicle\u2019s center console.\n*Drive responsibly. Some state laws prohibit the operation of handheld electronic devices while operating a vehicle. For safety reasons, always launch your audio application or perform any other operation on your phone or audio device only when the vehicle is safely parked.",
+      "table_lines": [
+        "P.23",
+        "Luxury",
+        "02",
+        "parked.",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 25,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.25\nILX 6MT technology\nand design.\nExclusive features and technologies both under\nthe hood and inside the cabin help strengthen\nthe connection between car and driver.\nDesigned to complement its The pedals are drilled alumi-\nlarger engine and 6-speed num. Gauges glow red. It\u2019s\nmanual transmission, the cabin all meant to evoke the more\nof the ILX 6MT has been outfit- spirited nature of this model.\nted to appeal to the driving A quality that the quick accel-\nenthusiast. The seats, steering eration and specially tuned\nwheel and door panels feature exhaust note are also quite\nspecial stitching. adept at keeping top of mind.",
+      "table_lines": [
+        "Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 27,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nILX HYBRID\nILX Hybrid",
+      "table_lines": [
+        "YBRID",
+        "D | Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 29,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.29 ILX 5AT WITH TECHNOLOGY PACKAGE",
+      "table_lines": [
+        "CKAGE",
+        "E | Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 31,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.31\nAttention\nto detail.\n01 PUSHBUTTON IGNITION / 02 INTELLIGENT DISPLAYS / 03 INTUITIVE CONTROLS /\n04 ONE-TOUCH POWER MOONROOF / 05 AVAILABLE TAILORED LEATHER SEATS",
+      "table_lines": [
+        "/\nS",
+        "Luxury",
+        "/\nS",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 33,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.33\n01 AcuraLink Real-Time 02 Zagat Survey\u00ae restaurant 01 02\nWeather\u21224 gives you current reviews provide dining\ninformation, including precipi- recommendations based\ntation amounts, forecasts and on the type of cuisine you\u2019d\nsevere conditions for virtually like or the part of town\nany U.S. city.* you\u2019re driving through.*\n*Available only with Technology Package.",
+      "table_lines": [
+        "P.33\nackage.",
+        "3 | Luxury",
+        "02",
+        "ackag",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "e. | cifications"
+      ]
+    },
+    {
+      "page": 35,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.35\nKeyless access.\nUpon your approach, the Keyless Access System\nwill recognize you and let you unlock the door\nwith the touch of the handle.\nThe system is also linked to The Expanded View Driver\u2019s\nyour personalized settings, Mirror gives you a better look\nmemorizing your door lock at vehicles passing or being\nand lighting preferences. The passed, while the multi-view\nremote control also lets you rear camera helps you know\nopen windows and the vehi- what\u2019s behind when backing up.\ncle\u2019s moonroof at the touch of\na button before you enter.",
+      "table_lines": [
+        "Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 37,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.37\nChassis stiffness",
+      "table_lines": [
+        "P.37",
+        "7 | Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 39,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.39\nAdvanced airbags utilize sensors\nto deploy at the right time with\nthe appropriate force to better\nhelp protect passengers.",
+      "table_lines": [
+        "P.39",
+        "9 | Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 40,
+      "trim_hint": true,
+      "text": "2014 ACURA ILX\nFeatures +\nSpecifications\nPerformance ILX Standard Features\n\u2022 150-hp, 2.0-liter, 16-valve, SOHC i-VTEC\u00ae 4-cylinder engine (ILX) \u2022 Dual-zone automatic climate control system with humidity\n\u2022 201-hp, 2.4-liter, 16-valve, DOHC i-VTEC\u00ae 4-cylinder engine (ILX control and air filtration\n6MT) \u2022 Perforated leather-trimmed seats*\n\u2022 111-hp produced with 1.5-liter, 8-valve, SOHC i-VTEC 4-cylinder \u2022 Keyless Access System with smart entry, pushbutton ignition\nengine and Integrated Motor Assist (ILX Hybrid) and Acura personalized settings\n\u2022 5-speed automatic transmission with Sequential SportShift \u2022 Bluetooth\u00ae HandsFreeLink\u00ae wireless telephone interface2\npaddle shifters (ILX) \u2022 SMS text message function3\n\u2022 Close-ratio 6-speed manual transmission (ILX 6MT) \u2022 5-inch color information display\n\u2022 Continuously Variable Transmission (CVT) with Sequential \u2022 Multi-view rear camera\nSportShift paddle shifters (ILX Hybrid) \u2022 Cruise control\n\u2022 Front-wheel drive \u2022 Tilt and telescopic steering column\n\u2022 4-wheel independent suspension: MacPherson strut front / \u2022 Driver\u2019s 8-way power seat*\nmulti-link rear \u2022 Heated front seats*\n\u2022 Electric Power-Assisted Rack-and-Pinion Steering (EPS) \u2022 Fold-down rear seatback (except ILX Hybrid)\n\u2022 16-inch aluminum-alloy wheels with P205/55 R16 89H all-season \u2022 Rear-seat center armrest with beverage holders\ntires (ILX Hybrid) \u2022 Expanded view driver\u2019s mirror\n\u2022 17-inch aluminum-alloy wheels with P215/45 R17 87V \u2022 Acura Premium Sound System with 7 speakers, including\nhigh-performance all-season tires subwoofer*\n\u2022 Pandora\u00ae compatibility5\nSafety\n\u2022 Active Sound Control (Except ILX Hybrid)\n\u2022 USB audio interface with iPod\u00ae integration6\n\u2022 Advanced Compatibility Engineering\u2122 (ACE\u2122) body structure\n\u2022 Bluetooth streaming audio2\n\u2022 Vehicle Stability Assist\u2122 (VSA\u00ae) with traction control and motion\n\u2022 MP3/auxiliary input jack\nadaptive steering\n\u2022 Power moonroof with tilt feature\n\u2022 4-wheel anti-lock braking system (ABS) with Electronic Brake\n\u2022 Auto-on/off projector-beam halogen headlights\nDistribution (EBD) and Brake Assist\n\u2022 Heated side mirrors\n\u2022 Dual-stage, multiple-threshold front airbags (SRS), front side\n\u2022 17-inch aluminum-alloy wheels\nairbags and side curtain airbags\nILX 6MT Exclusive Features\n\u2022 201-hp, 2.4-liter, 16-valve, DOHC i-VTEC 4-cylinder engine\n\u2022 Close-ratio 6-speed manual transmission\n\u2022 Red instrument illumination\n\u2022 Contrast stitching for interior trim\n\u2022 Aluminum sport pedals\nILX Hybrid Exclusive Features\n\u2022 111-hp produced with 1.5-liter, 8-valve, SOHC i-VTEC 4-cylinder\nengine and Integrated Motor Assist\n\u2022 Continuously Variable Transmission (CVT) with Sequential\nSportShift paddle shifters\n\u2022 EcoAssist\u2122 system\n\u2022 Fuel Economy Indicator\n\u2022 ECON mode button\n\u2022 Sport seats with cloth-trimmed interior\n\u2022 Acura sound system with 6 speakers\n\u2022 Trunk spoiler\n\u2022 Fog lights\n\u2022 Chrome accent for lower front trim\n\u2022 Tire sealant and inflator kit\n\u2022 16-inch aluminum-alloy wheels",
+      "table_lines": []
+    },
+    {
+      "page": 41,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.41\nPremium Package\n(Available for ILX; included with ILX 6MT)\n\u2022 XM\u00ae Radio7\u2020\n\u2022 Auto-on/off xenon high-intensity discharge (HID) headlights\u2020\n\u2022 Fog lights\n\u2022 Auto-dimming rearview mirror\u2020\nTechnology Package\n(Adds to or replaces standard/Premium Package features. Available for ILX or ILX Hybrid)\n\u2022 Acura Navigation System with Voice Recognition\u2122\n\u2022 Zagat Survey\u00ae ratings and reviews\n\u2022 AcuraLink Real-Time Traffic and Weather\u21224\n\u2022 Traffic Rerouting\u21224\n\u2022 8-inch LED backlit VGA display\n\u2022 Acura/ELS Surround\u00ae Premium Audio System with hard disk drive (HDD) media storage\nand 10 speakers\n\u2022 Song By Voice\u00ae\n\u2022 GPS-linked, solar-sensing, dual-zone automatic climate control system\n\u2022 Note function music-reminder for XM Radio7\n\u2022 Phone-book exchange for Bluetooth HandsFreeLink2\n\u2022 Automated Appointments\u2122\n\u2022 HomeLink\u00ae\nSpecifications\nILX ILX 6MT ILX Hybrid\n\u2022 Estimated Fuel Mileage1 (City/Highway/Combined) 24 | 35 | 28 22 | 31 | 25 39 | 38 | 38\n\u2022 Fuel Tank Capacity 13.2 U.S. gallons\n\u2022 Recommended Fuel8 Premium unleaded 91 octane\n\u2022 Curb Weight 2955 lbs NA 2959 lbs\n\u2022 Curb Weight with Premium Package 2959 lbs 2978 lbs NA\n\u2022 Curb Weight with Technology Package 2970 lbs NA 2987 lbs\n\u2022 Headroom (Front/Rear) 38.0 in | 35.9 in\n\u2022 Legroom (Front/Rear) 42.3 in | 34.0 in\n\u2022 Shoulder Room (Front/Rear) 55.6 in | 53.5 in\n\u2022 Hiproom (Front/Rear) 50.2 in | 51.7 in\n\u2022 Passenger Volume 89.3 cu ft\n\u2022 Cargo Volume (ILX, ILX 6MT / ILX Hybrid) 12.3 cu ft | 10.0 cu ft\n\u2022 Wheelbase 105.1 in | Length 179.1 in | Height 55.6 in | Width 70.6 in\n\u2020 Features included with ILX Hybrid with Technology Package\n* Excludes base ILX Hybrid",
+      "table_lines": [
+        "P.41",
+        "1 | Luxury",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 43,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.43\nOwner Benefits\nOwner Benefits\nWhen you purchase a vehicle with the exceptional quality of an Acura, you expect service\nand support to be of the same caliber. After all, a premium automobile is only part of\nthe ownership experience. With Acura, you also get a commitment. To personalized care. Acura has always had a pen-\nTo attentive service. This commitment is apparent the moment you first enter an Acura chant for seeing what\u2019s beyond\ndealership and for years down the road. It comes from a belief that every aspect of the next horizon. Now it\u2019s your\nowning an Acura should be an enjoyable and rewarding experience.\nturn. T he available AcuraLink\u00ae\nSatellite Communication System\nAcura Limited Warranties9\ngives you a look ahead \u2013 whether\nAll Acura vehicles and any Acura genuine accessories installed by the dealer at the time\nof vehicle purchase have a 4-year/50,000-mile limited warranty. Acura vehicles are also it\u2019s up the road, or even days into\ncovered by a 6-year/70,000-mile limited powertrain warranty. In addition, outer body the future. Services like the\nrust-through is covered by a 5-year/unlimited-mile limited warranty. available AcuraLink Real-Time\nTraffic and Weather,\u21224 with its\nAcura Financial Services10\none- and three-day forecasts,\nThis online service lets you weigh the benefits of leasing and financing, estimate your\nhelp you plan your next move,\npayments, see current offers and special financing programs and get pre-approved.\neven while you\u2019re focused on the\nAcura Care\u00ae here and now.\nAdditional peace of mind can be had with the Acura Care program \u2013 comprehensive\nvehicle and travel protection beyond the initial warranty period. See your Acura dealer AcuraLink is also your connec-\nfor all the features and benefits available with this program. tion with Acura, delivering a\nwealth of information like Quick\nTotal Luxury Care\u00ae (TLC\u00ae)11\nTips and updated Feature Guides\nAcura\u2019s commitment to your satisfaction doesn\u2019t end with the delivery of a world-class\nto help you get the most out of\nvehicle. As an Acura owner, you\u2019ll enjoy an array of services, like the Acura Concierge,\u2122 for\nyour new vehicle\u2019s many\n24-hour weather information, insurance claims assistance or to help you plan a trip; Trip-\nsophisticated systems. When the\nInterruption benefits like alternative transportation, lodging and meals, and a 24-hour\nRoadside Assistance program. system is paired with a\nBluetooth\u00ae-compatible phone,2\nAcuraLink Owners Mobile App\nyou can also get information on\nUse your smartphone to connect with an Acura agent at the push of a button. Access a\nrequired services as they\nfull range of Acura Roadside Assistance services using your Android\u00ae device or iPhone,\u00ae\napproach, and can schedule\nincluding comprehensive towing, lockout assistance, battery jump-start, tire change\nmaintenance right from your car\nand fuel delivery with your phone\u2019s GPS technology providing your exact location.\nYou can use the app to view scheduled time of arrival and con- with the Automated Appoint-\ntact information for the dispatched service provider. The app ments\u2122 feature.\nalso offers a priority emergency button for urgent situations.\nVisit the Apple iTunes Store or shop Google Play to download\nthis free app.\n1 -800-to-Acura\nOperators are available 24 hours a day to help answer your Acura questions.\nOwners.Acura.com\nThe online help doesn\u2019t end when you take possession of your vehicle. Your complimentary\nAcura Owners personalized website gives the most current information about your vehicle,\nprovides tips on how to care for your Acura, lets you keep a personalized maintenance\nrecord, sends you service reminders and lets you schedule service appointments online.\nYears ago, our engineers took on\nthe challenge to meet the stringent\nacura.com\nemissions standards of the U.S.\nLearn more about Acura vehicles, including the latest specifications, see photo galleries Clean Air Act and used the phrase\nand technology videos, and find out how our vehicles compare to the competition. You \u201cblue skies for our children\u201d as a\ncan also build and price your Acura, see current offers and even get a quote from an passionate rallying cry to devote\nthemselves to this effort. Blue\nInternet-certified Acura dealer.\nSkies for Our Children represents\nour environmental vision of a\nAccessories\nsociety where future generations\nWhen it comes to personalizing, choose Acura genuine accessories that are crafted to can experience the joy and freedom\nthe same strict levels of quality as the rest of your ILX. See your Acura dealer for a of mobility while living within a\ncomplete list of accessories or go to acura.com. sustainable society.",
+      "table_lines": [
+        "nd\nur\n\u00ae\ntem\nther\ninto\ne\ns\ns,\ne,\nthe\n-\nuick\nides\nof\nthe\ne,2\non\ncar\n-\nnt\ne\ns\ns\nom",
+        "Luxury",
+        "nd\nur\n\u00ae\ntem\nther\ninto\ne\ns\ns,\ne,\nthe\n-\nuick\nides\nof\nthe\ne,2\non\ncar\n-\nnt\ne\ns\ns\nom",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    },
+    {
+      "page": 44,
+      "trim_hint": true,
+      "text": "2014 ACURA ILX\nColor + Trim\n2014 ACURA ILX\nCOLOR + LEATHER SELECTIONS\nILX EBONY CLOTH PARCHMENT LEATHER* EBONY LEATHER\nBELLANOVA WHITE PEARL\n\u2022 \u2022\nSILVER MOON METALLIC\n\u2022\nPOLISHED METAL METALLIC\n\u2022 \u2022\nAMBER BROWNSTONE METALLIC\n\u2022\nCRYSTAL BLACK PEARL\n\u2022 \u2022\nFATHOM BLUE PEARL\n\u2022\nCRIMSON GARNET PEARL\n\u2022\n*Requires Premium or Technology Package.\nILX 6MT\nBELLANOVA WHITE PEARL\n\u2022\nSILVER MOON METALLIC\n\u2022\nPOLISHED METAL METALLIC\n\u2022\nCRYSTAL BLACK PEARL\n\u2022\nFATHOM BLUE PEARL\n\u2022\nCRIMSON GARNET PEARL\n\u2022\nLeather-trimmed interior with contrast stitching standard.\nILX HYBRID\nBELLANOVA WHITE PEARL\n\u2022 \u2022 \u2022\nSILVER MOON METALLIC\n\u2022 \u2022\nPOLISHED METAL METALLIC\n\u2022 \u2022 \u2022\n\u2022\nAMBER BROWNSTONE METALLIC\nCRYSTAL BLACK PEARL\n\u2022 \u2022 \u2022\nFATHOM BLUE PEARL\n\u2022 \u2022\nCloth-trimmed interior standard. Leather-trimmed seats requires Technology Package.\n\u00a92013 Acura. Acura, ILX, the stylized \u201cA\u201d logo, Acura Care, Acura Concierge, AcuraLink, AcuraLink Real-Time Traffic and Weather, Acura Navigation System with Voice Recognition,\nAdvanced Compatibility Engineering (ACE), EcoAssist, HandsFreeLink, Song By Voice, Total Luxury Care (TLC), Traffic Rerouting, Vehicle Stability Assist (VSA) and i-VTEC are trademarks of\nHonda Motor Co., Ltd. Covered by patent rights issued and/or pending. Specifications, features, illustrations and equipment shown in this catalog are based upon the latest available infor-\nmation at the time of publication. Although descriptions are believed to be correct, accuracy cannot be guaranteed. All images contained herein are either owned by American Honda\nMotor Co., Inc., or used under a valid license. It is a violation of federal law to reproduce these images without express written permission from American Honda Motor Co., Inc., or the indi-\nvidual copyright owner of such images. American Honda Motor Co., Inc., reserves the right to make changes at any time, without notice or obligation, in colors, specifications, accessories,\nmaterials and models. The Bluetooth\u00ae word mark and logos are owned by the Bluetooth SIG, Inc., and any use of such marks by Honda Motor Co., Ltd., is under license. Dolby, Pro Logic,\nand the double-D symbol are registered trademarks of Dolby Laboratories. ELS Surround is a registered trademark of Panasonic Corporation of North America. All rights reserved.\nGRAMMY is a registered trademark of The Recording Academy and is used under license. iPod is a registered trademark of Apple Inc. Pandora, the Pandora logo, and the Pandora trade\ndress are trademarks or registered trademarks of Pandora Media, Inc. Used with permission. The XM name, XM NavTraffic, and XM NavWeather are trademarks of SIRIUS XM Radio, Inc.\nand its subsidiaries. Zagat Survey\u00ae is a registered trademark of Zagat Survey, LLC. Make an intelligent decision. Fasten your seat belt. 12013 ILX Hybrid fuel economy figures based on\n2013 EPA mileage ratings. Use for comparison purposes only. Your actual mileage will vary depending on how you drive and maintain your vehicle. 2Visit www.handsfreelink.com\nfor a list of compatible phones and available features. 3Compatible with select phones with Bluetooth.\u00ae Your wireless carrier\u2019s rate plans apply. State or local laws may limit use of\ntexting feature. Only use texting feature when conditions allow you to do so safely. 4AcuraLink Real-Time Traffic and Weather,\u2122 as well as Traffic Rerouting,\u2122 require monthly\npremium XM NavTraffic\u00ae and NavWeather\u2122 subscriptions. Navigation-equipped vehicles include 90 days of XM NavTraffic and NavWeather service. XM NavTraffic is only avail-\nable in select markets. 5Compatible with select Apple\u00ae iPhone\u00ae devices only. Your wireless carrier\u2019s rate plans apply. 6The USB Audio Interface is used for direct connection to and\ncontrol of some current digital audio players and other USB devices that contain MP3, WMA, or AAC music files. Some USB devices with security software and digital rights-pro-\ntected files may not work. Please see your dealer for details on compatibility. 7XM services require a subscription after 90-day trial period. Subscriptions governed by XM Cus-\ntomer Agreement available at xmradio.com. If you decide to continue your XM service at the end of your complimentary trial, the plan you choose will automatically be renewed\nand you will be billed at then-current rates unless you call 1-800-967-2346 to cancel. Fees and programming subject to change. Available only to those at least 18 years of age in\nthe 48 contiguous United States and D.C. \u00a92013 SiriusXM Radio Inc. Sirius, XM and all related marks and logos are trademarks of SiriusXM Radio Inc. and its subsidiaries. 8Using\ngasoline with an octane lower than 87 may cause damage to the engine. Please see your Acura dealer for details. 9Ordinary maintenance items or adjustments, parts subject to\nnormal wear and replacement, and certain other items are excluded. See your Acura dealer for the terms and conditions of limited warranties. 10Acura Financial Services is a DBA\nof American Honda Finance Corporation. 11See your local dealer for details about Total Luxury Care (TLC) Roadside Assistance and Concierge service.",
+      "table_lines": []
+    },
+    {
+      "page": 45,
+      "trim_hint": true,
+      "text": "Luxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.45\nEXTERIOR\nBELLANOVA WHITE PEARL SILVER MOON METALLIC\nEbony Cloth / Parchment Leather / Ebony Leather Ebony Cloth / Ebony Leather\nPOLISHED METAL METALLIC AMBER BROWNSTONE METALLIC\nEbony Cloth / Parchment Leather / Ebony Leather Parchment Leather\nCRYSTAL BLACK PEARL FATHOM BLUE PEARL\nEbony Cloth / Parchment Leather / Ebony Leather Ebony Cloth / Ebony Leather\nCRIMSON GARNET PEARL\nParchment Leather / Ebony Leather\nINTERIOR\nEBONY CLOTH PPAARRCCHHMMENETN LTEA LTEHAETRHER EEBBOONNYY L ELAETAHTERHER",
+      "table_lines": [
+        "P.45",
+        "5 | Luxury",
+        "SILVER MOON METALLIC\nEbony Cloth / Ebony Leather",
+        "D",
+        "rivetrain",
+        "Te",
+        "chnology",
+        "Exterior",
+        "Interior",
+        "Spe",
+        "cifications"
+      ]
+    }
+  ],
+  "combined_trim_pages_text": "--- page 1 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nMove up. Without\nsettling down.\n2014 ACURA ILX\n\nLuxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 3 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.03\nThe 2014\nAcura ILX.\n\nLuxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 5 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.05\nAcura recently\nreceived the\n2013 ALG Residual\nValue Award for\nPremium Brands.\nRATHER THAN LUXURY THAT EXCLUDES, THIS IS LUXURY THAT INVITES.\n\nP.05\nly\nual\nor\nds.\n5 | Luxury\nAcura recent\nreceived the\n2013 ALG Resid\nValue Award f\nPremium Bran | ly\nual\nor\nds.\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 7 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.07\n01 The lithium-ion battery 02 i-VTEC engine 01 02\nin the ILX Hybrid generates technology\nhigh output without maximizes both\nadding excessive weight low-end torque and\nto the vehicle. high-end horsepower.\nILX with Technology Package shown.\n\nP.07\nshown.\n7 | Luxury\nshown\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\n. | cifications\n\n--- page 9 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.09\nTransmission\noptions.\nWITHOUT A MEANS\nTO HARNESS IT,\nPOWER IS ONLY\nPOTENTIAL.\nEach ILX model features a transmission perfectly\nsuited to make the most of engine output.\nThe ILX converts horsepower into forward\nmovement with a 5-speed automatic trans-\nmission. Those desiring more involvement\ncan take advantage of the Sequential Sport-\nShift paddle shifters to manage the transmis-\nsion\u2019s shift points.\nThe ILX 6MT features a close-ratio 6-speed\nmanual to let you get the most power out of\nthe vehicle\u2019s high-revving engine.\nThe ILX Hybrid features a Continuously Vari-\nable Transmission (CVT), giving the vehicle a\nsteady climb in acceleration from a standing\nstart up to cruising speed, helping to enhance\nits fuel efficiency.\n\nS\nly\nLuxury\nS\nly\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 11 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.11\nHybrid\ntechnology.\nThe ILX Hybrid is designed to produce great fuel\neconomy efficiently. And with a little help from\nyou, it\u2019s even better.\nAdvanced technology is only driving style to help you drive\npart of getting good mpg num- more efficiently. You can also\nbers. The other side of the equa- push the dash-mounted ECON\ntion is the person in the driver\u2019s button and the engine and trans-\nseat. The ILX Hybrid features a mission will both operate more\nFuel Economy Indicator to give efficiently to help you further\nyou real-time feedback on your maximize your fuel economy.1\nILX Hybrid shown.\n\nshown.\nLuxury\nD\nrivetrain\nTe\nchnology\nshow\nExterior\nInterior\nSpe\nn. | cifications\n\n--- page 13 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.13\n01 SMS text message function3 02 A curaLink Real-Time Traffic\u21224 01 02\ndisplays and reads aloud quickly communicates\nincoming text messages and driving conditions. Traffic\nlets you respond, hands-free, Rerouting\u21224 can suggest an\nby verbally choosing from a alternative route.*\nlist of six options.*\n*Drive responsibly. Some state laws prohibit the operation of handheld electronic devices while operating a vehicle. For safety reasons, always perform any operation on your phone only when the vehicle is safely parked.\n\nP.13\nparked.\n3 | Luxury\n02\nparke\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\nd. | cifications\n\n--- page 15 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.15\nTailored luxury.\nITS CLEAN LINES, CRISP PERFORMANCE AND CUTTING-EDGE TECHNOLOGIES\nHELP THE ILX MEET THE DEMANDS OF YOUR DAY. AND YOUR EVENING.\n\nLuxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 17 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.17\nTextures and finishes\nutilized in the headlight\ndesign add to the vehicle\u2019s\nuniqueness and visual appeal.\n\nP.17\n7 | Luxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 19 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.19\nAdvanced\nclimate control.\nOutside, climates fluctuate with the weather.\nInside, they conform to your desires.\nThe dual-zone climate-control Available Active Sound Control\nsystem features a patented helps keep excess engine noise in\nhumidity control for ideal check. It can detect unwanted\ncomfort. A GPS-linked, solar- engine noise and emit opposing\nsensing climate-control sys- frequencies to literally cancel\ntem is also available. It tracks it out. Along with extensive\nthe sun\u2019s relative position and soundproofing, it contributes\nintensity and automatically to the sanctuary-like feel of\nadjusts to compensate. the ILX cabin.\nILX with Technology Package shown.\n\nshown.\nLuxury\nD\nrivetrain\nTe\nchnology\nshow\nExterior\nInterior\nSpe\nn. | cifications\n\n--- page 21 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.21\nPremium materials and\nquality construction give\nthe elements of the cabin\na solid, substantial feel.\n\nP.21\n1 | Luxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 23 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.23\n01 U SB audio interface6 gives 02 Pandora internet radio 01 02\nyou direct control of your interface5 connects with\niPod\u00ae or other compatible your iPhone,\u00ae giving you\nmusic device. Song infor- access to an immense\nmation appears right on the library of musical styles.*\nvehicle\u2019s center console.\n*Drive responsibly. Some state laws prohibit the operation of handheld electronic devices while operating a vehicle. For safety reasons, always launch your audio application or perform any other operation on your phone or audio device only when the vehicle is safely parked.\n\nP.23\nLuxury\n02\nparked.\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 25 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.25\nILX 6MT technology\nand design.\nExclusive features and technologies both under\nthe hood and inside the cabin help strengthen\nthe connection between car and driver.\nDesigned to complement its The pedals are drilled alumi-\nlarger engine and 6-speed num. Gauges glow red. It\u2019s\nmanual transmission, the cabin all meant to evoke the more\nof the ILX 6MT has been outfit- spirited nature of this model.\nted to appeal to the driving A quality that the quick accel-\nenthusiast. The seats, steering eration and specially tuned\nwheel and door panels feature exhaust note are also quite\nspecial stitching. adept at keeping top of mind.\n\nLuxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 27 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nILX HYBRID\nILX Hybrid\n\nYBRID\nD | Luxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 29 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.29 ILX 5AT WITH TECHNOLOGY PACKAGE\n\nCKAGE\nE | Luxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 31 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.31\nAttention\nto detail.\n01 PUSHBUTTON IGNITION / 02 INTELLIGENT DISPLAYS / 03 INTUITIVE CONTROLS /\n04 ONE-TOUCH POWER MOONROOF / 05 AVAILABLE TAILORED LEATHER SEATS\n\n/\nS\nLuxury\n/\nS\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 33 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.33\n01 AcuraLink Real-Time 02 Zagat Survey\u00ae restaurant 01 02\nWeather\u21224 gives you current reviews provide dining\ninformation, including precipi- recommendations based\ntation amounts, forecasts and on the type of cuisine you\u2019d\nsevere conditions for virtually like or the part of town\nany U.S. city.* you\u2019re driving through.*\n*Available only with Technology Package.\n\nP.33\nackage.\n3 | Luxury\n02\nackag\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ne. | cifications\n\n--- page 35 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.35\nKeyless access.\nUpon your approach, the Keyless Access System\nwill recognize you and let you unlock the door\nwith the touch of the handle.\nThe system is also linked to The Expanded View Driver\u2019s\nyour personalized settings, Mirror gives you a better look\nmemorizing your door lock at vehicles passing or being\nand lighting preferences. The passed, while the multi-view\nremote control also lets you rear camera helps you know\nopen windows and the vehi- what\u2019s behind when backing up.\ncle\u2019s moonroof at the touch of\na button before you enter.\n\nLuxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 37 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.37\nChassis stiffness\n\nP.37\n7 | Luxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 39 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.39\nAdvanced airbags utilize sensors\nto deploy at the right time with\nthe appropriate force to better\nhelp protect passengers.\n\nP.39\n9 | Luxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 40 ---\n2014 ACURA ILX\nFeatures +\nSpecifications\nPerformance ILX Standard Features\n\u2022 150-hp, 2.0-liter, 16-valve, SOHC i-VTEC\u00ae 4-cylinder engine (ILX) \u2022 Dual-zone automatic climate control system with humidity\n\u2022 201-hp, 2.4-liter, 16-valve, DOHC i-VTEC\u00ae 4-cylinder engine (ILX control and air filtration\n6MT) \u2022 Perforated leather-trimmed seats*\n\u2022 111-hp produced with 1.5-liter, 8-valve, SOHC i-VTEC 4-cylinder \u2022 Keyless Access System with smart entry, pushbutton ignition\nengine and Integrated Motor Assist (ILX Hybrid) and Acura personalized settings\n\u2022 5-speed automatic transmission with Sequential SportShift \u2022 Bluetooth\u00ae HandsFreeLink\u00ae wireless telephone interface2\npaddle shifters (ILX) \u2022 SMS text message function3\n\u2022 Close-ratio 6-speed manual transmission (ILX 6MT) \u2022 5-inch color information display\n\u2022 Continuously Variable Transmission (CVT) with Sequential \u2022 Multi-view rear camera\nSportShift paddle shifters (ILX Hybrid) \u2022 Cruise control\n\u2022 Front-wheel drive \u2022 Tilt and telescopic steering column\n\u2022 4-wheel independent suspension: MacPherson strut front / \u2022 Driver\u2019s 8-way power seat*\nmulti-link rear \u2022 Heated front seats*\n\u2022 Electric Power-Assisted Rack-and-Pinion Steering (EPS) \u2022 Fold-down rear seatback (except ILX Hybrid)\n\u2022 16-inch aluminum-alloy wheels with P205/55 R16 89H all-season \u2022 Rear-seat center armrest with beverage holders\ntires (ILX Hybrid) \u2022 Expanded view driver\u2019s mirror\n\u2022 17-inch aluminum-alloy wheels with P215/45 R17 87V \u2022 Acura Premium Sound System with 7 speakers, including\nhigh-performance all-season tires subwoofer*\n\u2022 Pandora\u00ae compatibility5\nSafety\n\u2022 Active Sound Control (Except ILX Hybrid)\n\u2022 USB audio interface with iPod\u00ae integration6\n\u2022 Advanced Compatibility Engineering\u2122 (ACE\u2122) body structure\n\u2022 Bluetooth streaming audio2\n\u2022 Vehicle Stability Assist\u2122 (VSA\u00ae) with traction control and motion\n\u2022 MP3/auxiliary input jack\nadaptive steering\n\u2022 Power moonroof with tilt feature\n\u2022 4-wheel anti-lock braking system (ABS) with Electronic Brake\n\u2022 Auto-on/off projector-beam halogen headlights\nDistribution (EBD) and Brake Assist\n\u2022 Heated side mirrors\n\u2022 Dual-stage, multiple-threshold front airbags (SRS), front side\n\u2022 17-inch aluminum-alloy wheels\nairbags and side curtain airbags\nILX 6MT Exclusive Features\n\u2022 201-hp, 2.4-liter, 16-valve, DOHC i-VTEC 4-cylinder engine\n\u2022 Close-ratio 6-speed manual transmission\n\u2022 Red instrument illumination\n\u2022 Contrast stitching for interior trim\n\u2022 Aluminum sport pedals\nILX Hybrid Exclusive Features\n\u2022 111-hp produced with 1.5-liter, 8-valve, SOHC i-VTEC 4-cylinder\nengine and Integrated Motor Assist\n\u2022 Continuously Variable Transmission (CVT) with Sequential\nSportShift paddle shifters\n\u2022 EcoAssist\u2122 system\n\u2022 Fuel Economy Indicator\n\u2022 ECON mode button\n\u2022 Sport seats with cloth-trimmed interior\n\u2022 Acura sound system with 6 speakers\n\u2022 Trunk spoiler\n\u2022 Fog lights\n\u2022 Chrome accent for lower front trim\n\u2022 Tire sealant and inflator kit\n\u2022 16-inch aluminum-alloy wheels\n\n--- page 41 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.41\nPremium Package\n(Available for ILX; included with ILX 6MT)\n\u2022 XM\u00ae Radio7\u2020\n\u2022 Auto-on/off xenon high-intensity discharge (HID) headlights\u2020\n\u2022 Fog lights\n\u2022 Auto-dimming rearview mirror\u2020\nTechnology Package\n(Adds to or replaces standard/Premium Package features. Available for ILX or ILX Hybrid)\n\u2022 Acura Navigation System with Voice Recognition\u2122\n\u2022 Zagat Survey\u00ae ratings and reviews\n\u2022 AcuraLink Real-Time Traffic and Weather\u21224\n\u2022 Traffic Rerouting\u21224\n\u2022 8-inch LED backlit VGA display\n\u2022 Acura/ELS Surround\u00ae Premium Audio System with hard disk drive (HDD) media storage\nand 10 speakers\n\u2022 Song By Voice\u00ae\n\u2022 GPS-linked, solar-sensing, dual-zone automatic climate control system\n\u2022 Note function music-reminder for XM Radio7\n\u2022 Phone-book exchange for Bluetooth HandsFreeLink2\n\u2022 Automated Appointments\u2122\n\u2022 HomeLink\u00ae\nSpecifications\nILX ILX 6MT ILX Hybrid\n\u2022 Estimated Fuel Mileage1 (City/Highway/Combined) 24 | 35 | 28 22 | 31 | 25 39 | 38 | 38\n\u2022 Fuel Tank Capacity 13.2 U.S. gallons\n\u2022 Recommended Fuel8 Premium unleaded 91 octane\n\u2022 Curb Weight 2955 lbs NA 2959 lbs\n\u2022 Curb Weight with Premium Package 2959 lbs 2978 lbs NA\n\u2022 Curb Weight with Technology Package 2970 lbs NA 2987 lbs\n\u2022 Headroom (Front/Rear) 38.0 in | 35.9 in\n\u2022 Legroom (Front/Rear) 42.3 in | 34.0 in\n\u2022 Shoulder Room (Front/Rear) 55.6 in | 53.5 in\n\u2022 Hiproom (Front/Rear) 50.2 in | 51.7 in\n\u2022 Passenger Volume 89.3 cu ft\n\u2022 Cargo Volume (ILX, ILX 6MT / ILX Hybrid) 12.3 cu ft | 10.0 cu ft\n\u2022 Wheelbase 105.1 in | Length 179.1 in | Height 55.6 in | Width 70.6 in\n\u2020 Features included with ILX Hybrid with Technology Package\n* Excludes base ILX Hybrid\n\nP.41\n1 | Luxury\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 43 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.43\nOwner Benefits\nOwner Benefits\nWhen you purchase a vehicle with the exceptional quality of an Acura, you expect service\nand support to be of the same caliber. After all, a premium automobile is only part of\nthe ownership experience. With Acura, you also get a commitment. To personalized care. Acura has always had a pen-\nTo attentive service. This commitment is apparent the moment you first enter an Acura chant for seeing what\u2019s beyond\ndealership and for years down the road. It comes from a belief that every aspect of the next horizon. Now it\u2019s your\nowning an Acura should be an enjoyable and rewarding experience.\nturn. T he available AcuraLink\u00ae\nSatellite Communication System\nAcura Limited Warranties9\ngives you a look ahead \u2013 whether\nAll Acura vehicles and any Acura genuine accessories installed by the dealer at the time\nof vehicle purchase have a 4-year/50,000-mile limited warranty. Acura vehicles are also it\u2019s up the road, or even days into\ncovered by a 6-year/70,000-mile limited powertrain warranty. In addition, outer body the future. Services like the\nrust-through is covered by a 5-year/unlimited-mile limited warranty. available AcuraLink Real-Time\nTraffic and Weather,\u21224 with its\nAcura Financial Services10\none- and three-day forecasts,\nThis online service lets you weigh the benefits of leasing and financing, estimate your\nhelp you plan your next move,\npayments, see current offers and special financing programs and get pre-approved.\neven while you\u2019re focused on the\nAcura Care\u00ae here and now.\nAdditional peace of mind can be had with the Acura Care program \u2013 comprehensive\nvehicle and travel protection beyond the initial warranty period. See your Acura dealer AcuraLink is also your connec-\nfor all the features and benefits available with this program. tion with Acura, delivering a\nwealth of information like Quick\nTotal Luxury Care\u00ae (TLC\u00ae)11\nTips and updated Feature Guides\nAcura\u2019s commitment to your satisfaction doesn\u2019t end with the delivery of a world-class\nto help you get the most out of\nvehicle. As an Acura owner, you\u2019ll enjoy an array of services, like the Acura Concierge,\u2122 for\nyour new vehicle\u2019s many\n24-hour weather information, insurance claims assistance or to help you plan a trip; Trip-\nsophisticated systems. When the\nInterruption benefits like alternative transportation, lodging and meals, and a 24-hour\nRoadside Assistance program. system is paired with a\nBluetooth\u00ae-compatible phone,2\nAcuraLink Owners Mobile App\nyou can also get information on\nUse your smartphone to connect with an Acura agent at the push of a button. Access a\nrequired services as they\nfull range of Acura Roadside Assistance services using your Android\u00ae device or iPhone,\u00ae\napproach, and can schedule\nincluding comprehensive towing, lockout assistance, battery jump-start, tire change\nmaintenance right from your car\nand fuel delivery with your phone\u2019s GPS technology providing your exact location.\nYou can use the app to view scheduled time of arrival and con- with the Automated Appoint-\ntact information for the dispatched service provider. The app ments\u2122 feature.\nalso offers a priority emergency button for urgent situations.\nVisit the Apple iTunes Store or shop Google Play to download\nthis free app.\n1 -800-to-Acura\nOperators are available 24 hours a day to help answer your Acura questions.\nOwners.Acura.com\nThe online help doesn\u2019t end when you take possession of your vehicle. Your complimentary\nAcura Owners personalized website gives the most current information about your vehicle,\nprovides tips on how to care for your Acura, lets you keep a personalized maintenance\nrecord, sends you service reminders and lets you schedule service appointments online.\nYears ago, our engineers took on\nthe challenge to meet the stringent\nacura.com\nemissions standards of the U.S.\nLearn more about Acura vehicles, including the latest specifications, see photo galleries Clean Air Act and used the phrase\nand technology videos, and find out how our vehicles compare to the competition. You \u201cblue skies for our children\u201d as a\ncan also build and price your Acura, see current offers and even get a quote from an passionate rallying cry to devote\nthemselves to this effort. Blue\nInternet-certified Acura dealer.\nSkies for Our Children represents\nour environmental vision of a\nAccessories\nsociety where future generations\nWhen it comes to personalizing, choose Acura genuine accessories that are crafted to can experience the joy and freedom\nthe same strict levels of quality as the rest of your ILX. See your Acura dealer for a of mobility while living within a\ncomplete list of accessories or go to acura.com. sustainable society.\n\nnd\nur\n\u00ae\ntem\nther\ninto\ne\ns\ns,\ne,\nthe\n-\nuick\nides\nof\nthe\ne,2\non\ncar\n-\nnt\ne\ns\ns\nom\nLuxury\nnd\nur\n\u00ae\ntem\nther\ninto\ne\ns\ns,\ne,\nthe\n-\nuick\nides\nof\nthe\ne,2\non\ncar\n-\nnt\ne\ns\ns\nom\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications\n\n--- page 44 ---\n2014 ACURA ILX\nColor + Trim\n2014 ACURA ILX\nCOLOR + LEATHER SELECTIONS\nILX EBONY CLOTH PARCHMENT LEATHER* EBONY LEATHER\nBELLANOVA WHITE PEARL\n\u2022 \u2022\nSILVER MOON METALLIC\n\u2022\nPOLISHED METAL METALLIC\n\u2022 \u2022\nAMBER BROWNSTONE METALLIC\n\u2022\nCRYSTAL BLACK PEARL\n\u2022 \u2022\nFATHOM BLUE PEARL\n\u2022\nCRIMSON GARNET PEARL\n\u2022\n*Requires Premium or Technology Package.\nILX 6MT\nBELLANOVA WHITE PEARL\n\u2022\nSILVER MOON METALLIC\n\u2022\nPOLISHED METAL METALLIC\n\u2022\nCRYSTAL BLACK PEARL\n\u2022\nFATHOM BLUE PEARL\n\u2022\nCRIMSON GARNET PEARL\n\u2022\nLeather-trimmed interior with contrast stitching standard.\nILX HYBRID\nBELLANOVA WHITE PEARL\n\u2022 \u2022 \u2022\nSILVER MOON METALLIC\n\u2022 \u2022\nPOLISHED METAL METALLIC\n\u2022 \u2022 \u2022\n\u2022\nAMBER BROWNSTONE METALLIC\nCRYSTAL BLACK PEARL\n\u2022 \u2022 \u2022\nFATHOM BLUE PEARL\n\u2022 \u2022\nCloth-trimmed interior standard. Leather-trimmed seats requires Technology Package.\n\u00a92013 Acura. Acura, ILX, the stylized \u201cA\u201d logo, Acura Care, Acura Concierge, AcuraLink, AcuraLink Real-Time Traffic and Weather, Acura Navigation System with Voice Recognition,\nAdvanced Compatibility Engineering (ACE), EcoAssist, HandsFreeLink, Song By Voice, Total Luxury Care (TLC), Traffic Rerouting, Vehicle Stability Assist (VSA) and i-VTEC are trademarks of\nHonda Motor Co., Ltd. Covered by patent rights issued and/or pending. Specifications, features, illustrations and equipment shown in this catalog are based upon the latest available infor-\nmation at the time of publication. Although descriptions are believed to be correct, accuracy cannot be guaranteed. All images contained herein are either owned by American Honda\nMotor Co., Inc., or used under a valid license. It is a violation of federal law to reproduce these images without express written permission from American Honda Motor Co., Inc., or the indi-\nvidual copyright owner of such images. American Honda Motor Co., Inc., reserves the right to make changes at any time, without notice or obligation, in colors, specifications, accessories,\nmaterials and models. The Bluetooth\u00ae word mark and logos are owned by the Bluetooth SIG, Inc., and any use of such marks by Honda Motor Co., Ltd., is under license. Dolby, Pro Logic,\nand the double-D symbol are registered trademarks of Dolby Laboratories. ELS Surround is a registered trademark of Panasonic Corporation of North America. All rights reserved.\nGRAMMY is a registered trademark of The Recording Academy and is used under license. iPod is a registered trademark of Apple Inc. Pandora, the Pandora logo, and the Pandora trade\ndress are trademarks or registered trademarks of Pandora Media, Inc. Used with permission. The XM name, XM NavTraffic, and XM NavWeather are trademarks of SIRIUS XM Radio, Inc.\nand its subsidiaries. Zagat Survey\u00ae is a registered trademark of Zagat Survey, LLC. Make an intelligent decision. Fasten your seat belt. 12013 ILX Hybrid fuel economy figures based on\n2013 EPA mileage ratings. Use for comparison purposes only. Your actual mileage will vary depending on how you drive and maintain your vehicle. 2Visit www.handsfreelink.com\nfor a list of compatible phones and available features. 3Compatible with select phones with Bluetooth.\u00ae Your wireless carrier\u2019s rate plans apply. State or local laws may limit use of\ntexting feature. Only use texting feature when conditions allow you to do so safely. 4AcuraLink Real-Time Traffic and Weather,\u2122 as well as Traffic Rerouting,\u2122 require monthly\npremium XM NavTraffic\u00ae and NavWeather\u2122 subscriptions. Navigation-equipped vehicles include 90 days of XM NavTraffic and NavWeather service. XM NavTraffic is only avail-\nable in select markets. 5Compatible with select Apple\u00ae iPhone\u00ae devices only. Your wireless carrier\u2019s rate plans apply. 6The USB Audio Interface is used for direct connection to and\ncontrol of some current digital audio players and other USB devices that contain MP3, WMA, or AAC music files. Some USB devices with security software and digital rights-pro-\ntected files may not work. Please see your dealer for details on compatibility. 7XM services require a subscription after 90-day trial period. Subscriptions governed by XM Cus-\ntomer Agreement available at xmradio.com. If you decide to continue your XM service at the end of your complimentary trial, the plan you choose will automatically be renewed\nand you will be billed at then-current rates unless you call 1-800-967-2346 to cancel. Fees and programming subject to change. Available only to those at least 18 years of age in\nthe 48 contiguous United States and D.C. \u00a92013 SiriusXM Radio Inc. Sirius, XM and all related marks and logos are trademarks of SiriusXM Radio Inc. and its subsidiaries. 8Using\ngasoline with an octane lower than 87 may cause damage to the engine. Please see your Acura dealer for details. 9Ordinary maintenance items or adjustments, parts subject to\nnormal wear and replacement, and certain other items are excluded. See your Acura dealer for the terms and conditions of limited warranties. 10Acura Financial Services is a DBA\nof American Honda Finance Corporation. 11See your local dealer for details about Total Luxury Care (TLC) Roadside Assistance and Concierge service.\n\n--- page 45 ---\nLuxury\nDrivetrain\nTechnology\nExterior\nInterior\nSpecifications\nP.45\nEXTERIOR\nBELLANOVA WHITE PEARL SILVER MOON METALLIC\nEbony Cloth / Parchment Leather / Ebony Leather Ebony Cloth / Ebony Leather\nPOLISHED METAL METALLIC AMBER BROWNSTONE METALLIC\nEbony Cloth / Parchment Leather / Ebony Leather Parchment Leather\nCRYSTAL BLACK PEARL FATHOM BLUE PEARL\nEbony Cloth / Parchment Leather / Ebony Leather Ebony Cloth / Ebony Leather\nCRIMSON GARNET PEARL\nParchment Leather / Ebony Leather\nINTERIOR\nEBONY CLOTH PPAARRCCHHMMENETN LTEA LTEHAETRHER EEBBOONNYY L ELAETAHTERHER\n\nP.45\n5 | Luxury\nSILVER MOON METALLIC\nEbony Cloth / Ebony Leather\nD\nrivetrain\nTe\nchnology\nExterior\nInterior\nSpe\ncifications"
+}

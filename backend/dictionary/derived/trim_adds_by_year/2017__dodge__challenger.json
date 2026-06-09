@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2017|dodge|challenger",
+  "year": 2017,
+  "make": "Dodge",
+  "model": "Challenger",
+  "ladder_id": "brochure_llm_2017__dodge__challenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SRT Hellcat",
+    "Scat Pack",
+    "R/T",
+    "SXT Plus",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SRT Hellcat": [
+      "Supercharged 6.2L engine with 707 horsepower",
+      "18-inch Harman Kardon premium speakers with 900-watt amplifier and subwoofer",
+      "Performance Laguna leather with SRT Hellcat logo",
+      "200-mph primary speedometer with red-faced gauges",
+      "P275/40ZR20 summer high-performance tires"
+    ],
+    "Scat Pack": [
+      "6.4L Hemi engine with 485 horsepower",
+      "20-inch wheels with P275/40ZR20 all-season performance tires",
+      "Premium red-edge Scat Pack floor mats",
+      "Scat Pack performance leather interior",
+      "9-speaker premium sound system with 506-watt amplifier"
+    ],
+    "R/T": [
+      "5.7L Hemi engine",
+      "Performance leather and suede seats",
+      "180-mph primary speedometer",
+      "18-inch or 20-inch wheel options",
+      "6-speaker premium sound system with 276-watt amplifier"
+    ],
+    "SXT Plus": [
+      "Power front seats with 6-way power driver adjustment",
+      "4-way power lumbar adjuster",
+      "Heated front seats",
+      "Remote keyless entry with illuminated entry",
+      "Rear window defrost"
+    ],
+    "SXT": [
+      "3.6L Pentastar V6 engine",
+      "Basic power windows and locks",
+      "Air conditioning with automatic temperature control",
+      "5-inch touchscreen display with AM/FM radio and Bluetooth",
+      "Assist handles and basic comfort amenities"
+    ]
+  }
+}

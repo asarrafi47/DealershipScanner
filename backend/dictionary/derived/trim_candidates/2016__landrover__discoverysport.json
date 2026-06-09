@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|landrover|discoverysport",
+  "year": 2016,
+  "make": "landrover",
+  "model": "Discovery Sport",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "HSE",
+    "Standard",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

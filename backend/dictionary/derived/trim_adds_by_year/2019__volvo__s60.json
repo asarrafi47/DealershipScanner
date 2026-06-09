@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2019|volvo|s60",
+  "year": 2019,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2019__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T8 Polestar Engineered",
+    "Inscription",
+    "R-Design",
+    "Momentum"
+  ],
+  "adds_by_trim": {
+    "T8 Polestar Engineered": [
+      "415 hp combined T8 e-AWD Plug-In Hybrid powertrain",
+      "Polestar Engineered Öhlins dampers and front strut bar",
+      "Polestar Engineered Brembo brakes with gold calipers",
+      "19-inch Polestar Engineered 5-Y Spoke Forged Wheels",
+      "Heated steering wheel with Gear Shift paddles",
+      "Crystal gear shifter with integrated double tailpipes",
+      "Sport steering wheel with high gloss black grille",
+      "Polestar Engineered emblem front and rear sill moulding"
+    ],
+    "Inscription": [
+      "Contemporary luxury with beautiful materials and expert craftsmanship",
+      "Charcoal Perforated Fine Nappa Leather with Driftwood Inlays"
+    ],
+    "R-Design": [
+      "Sporty styling and precise control for performance-oriented design",
+      "20-inch 5-Triple Spoke Matte Black Diamond Cut Alloy Wheels"
+    ],
+    "Momentum": [
+      "Dynamic contemporary style with premium appearance",
+      "19-inch 5-Multi Spoke Black Diamond Cut Alloy Wheels"
+    ]
+  }
+}

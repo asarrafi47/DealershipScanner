@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1985,Oldsmobile,Calais,Calais,3.0L V6 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.0,17,24,19,,,,,,3.0L V6,
-1985,Oldsmobile,Calais,Calais,2.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,29,24,,,,,,2.5L I4,
-1985,Oldsmobile,Calais,Calais,2.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,31,25,,,,,,2.5L I4,
-1985,Oldsmobile,Calais,Calais,3.0L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.0,18,24,20,,,,,,3.0L V6,

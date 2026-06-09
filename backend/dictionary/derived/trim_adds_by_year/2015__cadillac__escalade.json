@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2015|cadillac|escalade",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_llm_2015__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum Collection",
+    "Premium Collection",
+    "Luxury Collection",
+    "Escalade"
+  ],
+  "adds_by_trim": {
+    "Platinum Collection": [
+      "22\" premium painted wheels with chrome inserts",
+      "Rear-seat entertainment system with 9\" screen and Blu-ray playback"
+    ],
+    "Premium Collection": [
+      "22\" 7-spoke premium painted wheels with chrome inserts",
+      "Rear-seat entertainment system with 9\" screen and Blu-ray playback"
+    ],
+    "Luxury Collection": [
+      "22\" 7-spoke premium painted wheels with chrome inserts or ultra-bright machined finish option",
+      "Available rear-seat entertainment system with 9\" screen and Blu-ray playback"
+    ],
+    "Escalade": [
+      "20\" dual 7-spoke chrome-plated wheels with P275/55R20 all-season tires",
+      "12.3\" reconfigurable LCD gauge display with four customizable personas",
+      "8\" CUE touchscreen with navigation and NavTraffic trial",
+      "Bose Centerpoint surround sound system with 16 speakers",
+      "Head-up display projecting speed, rpm, and navigation on windshield",
+      "OnStar with 4G LTE and built-in Wi-Fi hotspot for up to seven devices",
+      "Wireless charging station on center console",
+      "6-year or 70,000-mile powertrain warranty",
+      "4-year or 50,000-mile bumper-to-bumper warranty",
+      "Premium Care Maintenance program for 4 years or 50,000 miles"
+    ]
+  }
+}

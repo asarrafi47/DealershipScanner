@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2023|toyota|corollahatchback",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "Platinum",
+    "Premium",
+    "Sport",
+    "Hatchback"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Includes these key features Adds to or replaces features offered on SE",
+      "Dynamic-Shift Continuously Variable Transmission (CVT) Dynamic-Shift Continuously Variable Transmission (CVT)",
+      "Normal, Eco and Sport driving modes Normal, Eco and Sport driving modes",
+      "Front-Wheel Drive (FWD) Front-Wheel Drive (FWD)",
+      "Up to 32 city/41 highway/35 combined EPA-est. mpg35 Up to 30 city/38 highway/33 combined EPA-est. mpg35",
+      "Exterior Features Exterior Features",
+      "LED headlights and LED Daytime Running Lights (DRL) LED headlights and LED Daytime Running Lights (DRL)",
+      "Gloss black front upper grille surround 18-in. alloy wheels2 with graphite-colored finish",
+      "Color-keyed front lower grille surround Gloss black front upper grille surround",
+      "Color-keyed rear spoiler Color-keyed front lower grille surround",
+      "Color-keyed heated power outside mirrors with Color-keyed rear spoiler",
+      "Single exhaust with turn signal indicators"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2014|honda|ridgeline",
+  "year": 2014,
+  "make": "Honda",
+  "model": "Ridgeline",
+  "ladder_id": "brochure_llm_2014__honda__ridgeline",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ridgeline RTL with Navigation",
+    "Ridgeline RTL",
+    "Ridgeline RTS",
+    "Ridgeline Sport",
+    "Ridgeline RT"
+  ],
+  "adds_by_trim": {
+    "Ridgeline RT": [
+      "250-hp 3.5-liter 24-valve SOHC VTEC V-6 engine",
+      "5-speed automatic transmission",
+      "4-wheel independent suspension",
+      "Variable Torque Management 4-wheel drive system with locking rear differential",
+      "5,000-lb towing capacity and 1,546-lb total payload capacity",
+      "Anti-lock braking system with Vehicle Stability Assist and traction control",
+      "Front, side and side curtain airbags with rollover sensor",
+      "Dual-action tailgate with In-Bed Trunk storage",
+      "100-watt AM/FM/CD audio system with 6 speakers"
+    ],
+    "Ridgeline Sport": [
+      "Black mesh grille with Sport emblem",
+      "Headlights and brake lights with black-trimmed bezels",
+      "Fog lights",
+      "18-inch black machine-finished alloy wheels",
+      "Rearview mirror with rearview camera and guidelines"
+    ],
+    "Ridgeline RTS": [
+      "17-inch alloy wheels",
+      "Security system",
+      "Privacy glass",
+      "Body-colored side mirrors",
+      "Dual-zone automatic climate control system",
+      "All-weather heavy-duty floor mats",
+      "Steering wheel-mounted cruise and audio controls",
+      "60/40 lift-up rear seat with underseat storage"
+    ],
+    "Ridgeline RTL": [
+      "18-inch silver machine-finished alloy wheels",
+      "Leather-trimmed interior",
+      "Heated front seats",
+      "Leather-wrapped steering wheel",
+      "Heated side mirrors",
+      "Driver's seat with 10-way power adjustment including power lumbar support",
+      "Power windows, door locks and mirrors",
+      "160-watt AM/FM/6-disc in-dash MP3/auxiliary input audio system with 7 speakers and subwoofer"
+    ],
+    "Ridgeline RTL with Navigation": [
+      "Honda Satellite-Linked Navigation System with voice recognition and rearview camera",
+      "Bluetooth HandsFreeLink",
+      "Steering wheel-mounted phone and navigation controls",
+      "HomeLink remote system",
+      "Ambient console lighting",
+      "115-volt power outlet",
+      "Power moonroof with tilt feature",
+      "XM Radio",
+      "Exterior temperature indicator"
+    ]
+  }
+}

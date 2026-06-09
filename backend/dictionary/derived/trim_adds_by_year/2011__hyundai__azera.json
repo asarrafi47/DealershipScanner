@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|hyundai|azera",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_llm_2011__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "283 HP 3.8L V6 engine with DCVVT and variable intake system",
+      "17-inch hyper silver finish alloy wheels",
+      "Power tilt-and-slide glass sunroof",
+      "Power folding side mirrors with turn signal indicators and puddle lamps",
+      "Dual automatic temperature control",
+      "In-dash 6-disc CD changer with 10 Infinity speakers, iPod/USB, subwoofer and amplifier",
+      "Integrated Memory System (IMS)",
+      "Power rear sunshade",
+      "Leather seating surfaces with heated front seats",
+      "Woodgrain-trimmed leather steering wheel"
+    ],
+    "GLS": [
+      "260 HP 3.3L V6 engine with DCVVT and variable intake system",
+      "6-speed automatic transmission with SHIFTRONIC",
+      "17-inch alloy wheels",
+      "Electronic Stability Control (ESC)",
+      "Anti-lock Braking System (ABS) with Electronic Brake-force Distribution (EBD)",
+      "Traction Control System (TCS)",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Active front head restraints",
+      "Advanced front airbags, front and rear side-impact airbags, side-curtain airbags",
+      "Automatic headlights and front fog lights"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2016|maserati|ghibli",
+  "year": 2016,
+  "make": "maserati",
+  "model": "ghibli",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2016_maserati_ghibli_Brochure.pdf",
+  "page_count": 96,
+  "all_pages": false,
+  "trim_hint_pages": [
+    89
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 89,
+      "trim_hint": true,
+      "text": "MAnUFACtUring\nA GLORIOUS COLLAbORATION\nOF MAN AND MACHINE\nWhile Maserati Headquarters and manufacturing have long been based in Modena, Italy, production\nof the Ghibli is located at a recently opened Maserati plant in Grugliasco, Italy \u2013 outside of Turin.\nThe plant is named after company patriarch Giovanni \u201cGianni\u201d Agnelli, honoring Gianni\u2019s strong\nconnection with the Turin area. One billion euros were invested in renewing this plant, anticipating\ngrowing global sales. While the latest technology is utilized to help with fitting parts, skilled\ntechnicians man each station, keeping the assembly a handcrafted affair. Utilising proven practices\ndeveloped through the company\u2019s World Class Manufacturing\n(WCM) system, the plant has a strong culture dedicated to producing the highest quality cars\npossible. Each car is built to order \u2013 and with literally millions of combinations of mechanical and\ninterior specifications possible, a document goes with each car and is signed at each station to\nensure that the exact car is built to the customers\u2019 personal requirements.\nGrugliasco factory \u2013 Turin, Italy 87",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 89 ---\nMAnUFACtUring\nA GLORIOUS COLLAbORATION\nOF MAN AND MACHINE\nWhile Maserati Headquarters and manufacturing have long been based in Modena, Italy, production\nof the Ghibli is located at a recently opened Maserati plant in Grugliasco, Italy \u2013 outside of Turin.\nThe plant is named after company patriarch Giovanni \u201cGianni\u201d Agnelli, honoring Gianni\u2019s strong\nconnection with the Turin area. One billion euros were invested in renewing this plant, anticipating\ngrowing global sales. While the latest technology is utilized to help with fitting parts, skilled\ntechnicians man each station, keeping the assembly a handcrafted affair. Utilising proven practices\ndeveloped through the company\u2019s World Class Manufacturing\n(WCM) system, the plant has a strong culture dedicated to producing the highest quality cars\npossible. Each car is built to order \u2013 and with literally millions of combinations of mechanical and\ninterior specifications possible, a document goes with each car and is signed at each station to\nensure that the exact car is built to the customers\u2019 personal requirements.\nGrugliasco factory \u2013 Turin, Italy 87"
+}

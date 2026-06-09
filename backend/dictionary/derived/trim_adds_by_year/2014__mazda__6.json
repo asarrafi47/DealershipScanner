@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2014|mazda|6",
+  "year": 2014,
+  "make": "Mazda",
+  "model": "6",
+  "ladder_id": "brochure_llm_2014__mazda__6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Standard SKYACTIV-Drive 6-speed Sport automatic transmission",
+      "Power sliding-glass moonroof",
+      "19-inch alloy wheels with Platinum Silver finish",
+      "Rear lip spoiler",
+      "Rain-sensing windshield wipers",
+      "Bi-Xenon headlights with Adaptive Front-lighting System",
+      "Fog lights",
+      "Heated side mirrors",
+      "LED daytime running lights",
+      "8-way power-adjustable driver's seat with power lumbar and memory settings"
+    ],
+    "Touring": [
+      "Dual-zone automatic climate control",
+      "Center-console sliding armrest",
+      "19-inch alloy wheels",
+      "6-way power driver's seat",
+      "Leatherette-trimmed seats",
+      "Illuminated driver and front-passenger vanity mirrors",
+      "Blind Spot Monitoring System",
+      "Rear Cross Traffic Alert",
+      "5.8-inch full-color touch-screen display with HD Radio and Pandora compatibility"
+    ],
+    "Sport": [
+      "184-hp 2.5L SKYACTIV-G DOHC 16-valve 4-cylinder engine",
+      "Remote keyless entry",
+      "Push Button Start",
+      "Tilt and telescopic steering column",
+      "60/40 split fold-down rear seatback",
+      "Halogen headlights with auto off",
+      "AM/FM/CD/MP3 audio system with 6 speakers",
+      "Halogen daytime running lights",
+      "Auxiliary audio jack and USB input",
+      "Variable-intermittent windshield wipers"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2012|honda|odyssey",
+  "year": 2012,
+  "make": "Honda",
+  "model": "Odyssey",
+  "ladder_id": "brochure_llm_2012__honda__odyssey",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Touring Elite",
+    "Touring",
+    "EX-L",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "Touring Elite": [
+      "650-Watt AM/FM/CD Premium Audio System with 12 speakers and 5.1 Surround Sound Theater Mode"
+    ],
+    "Touring": [
+      "246-Watt AM/FM/CD Audio System with 7 speakers including subwoofer",
+      "Honda Satellite-Linked Navigation System standard"
+    ],
+    "EX-L": [
+      "229-Watt AM/FM/CD Audio System with 7 speakers including subwoofer",
+      "Honda Satellite-Linked Navigation System available"
+    ],
+    "EX": [
+      "229-Watt AM/FM/CD Audio System with 5 speakers including subwoofer",
+      "Dual-Stage Multiple-Threshold Front Airbags (SRS)",
+      "Front Side Airbags with Passenger-Side Occupant Position Detection System",
+      "Three-Row Side Curtain Airbags with Rollover Sensor",
+      "Anti-Lock Braking System (ABS) with Electronic Brake Distribution",
+      "Vehicle Stability Assist (VSA) with Traction Control and Brake Assist",
+      "Tire Pressure Monitoring System (TPMS) and Daytime Running Lights",
+      "LATCH Lower Anchors and Tether Anchors",
+      "Multi-Information Display (MID)",
+      "Maintenance Minder System"
+    ]
+  }
+}

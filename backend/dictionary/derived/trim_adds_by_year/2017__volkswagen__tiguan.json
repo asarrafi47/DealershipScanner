@@ -1,0 +1,29 @@
+{
+  "catalog_key": "2017|volkswagen|tiguan",
+  "year": 2017,
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "ladder_id": "inventory_volkswagen_tiguan",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "trademark of Google Inc. Phone is not included with vehicle. \u201cFSI\u201d is a registered",
+      "will be required in order to maintain the latest navigation information available to us. Updates"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

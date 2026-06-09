@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2020|ford|f150",
+  "year": 2020,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_2020__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "King Ranch",
+    "Lariat",
+    "FX4",
+    "XLT",
+    "SE",
+    "Active",
+    "Base",
+    "Premium",
+    "LT"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "Adds standard rear view camera",
+      "Adds high-strength-steel frame",
+      "Adds SelectShift automatic transmission with progressive range select",
+      "Adds tow/haul mode",
+      "Adds 6 engine options to choose from"
+    ],
+    "Premium": [
+      "Adds available 3.5L EcoBoost engine",
+      "Adds Smart Trailer Tow Connector",
+      "Adds integrated trailer brake controller"
+    ],
+    "Base": [],
+    "Active": [],
+    "SE": [],
+    "XLT": [
+      "Available on 3.3L Ti-VCT V6, 2.7L EcoBoost, and 5.0L V8 engines"
+    ],
+    "FX4": [
+      "Adds FX4 Off-Road Package"
+    ],
+    "Lariat": [
+      "Adds Chrome Package",
+      "Adds SuperCrew cabin configuration"
+    ],
+    "King Ranch": [
+      "Available on 5.0L Ti-VCT V8 and 3.5L EcoBoost engine options"
+    ],
+    "Limited": [
+      "Adds available PowerScope power-telescoping/folding trailer tow mirrors",
+      "Adds available 8-inch productivity screen in instrument cluster",
+      "Adds available Pro Trailer Backup Assist with Dynamic Hitch Assist",
+      "Adds available 360-Degree Camera with Split-View Display",
+      "Adds available 8-inch color screen in center stack",
+      "Adds Max Trailer Tow Package"
+    ]
+  }
+}

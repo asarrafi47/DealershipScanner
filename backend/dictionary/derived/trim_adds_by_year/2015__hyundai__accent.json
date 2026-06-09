@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|hyundai|accent",
+  "year": 2015,
+  "make": "Hyundai",
+  "model": "Accent",
+  "ladder_id": "brochure_llm_2015__hyundai__accent",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SPORT",
+    "GLS",
+    "GS"
+  ],
+  "adds_by_trim": {
+    "SPORT": [
+      "Premium cloth seats",
+      "Sliding armrest storage box",
+      "Chrome inside door handles",
+      "Front fog lights",
+      "Piano Black interior accents",
+      "Available power tilt-and-slide one-touch glass sunroof",
+      "Projector headlights with LED accents",
+      "Headlight welcome and escort feature",
+      "Side mirrors with integrated turn signals",
+      "Rear spoiler"
+    ],
+    "GLS": [
+      "Tilt-and-telescopic steering wheel",
+      "Steering wheel audio and cruise controls",
+      "Bluetooth hands-free phone integration with voice recognition and audio streaming",
+      "Sliding armrest storage box",
+      "Premium cloth seats",
+      "Chrome inside door handles",
+      "Piano Black interior accents",
+      "Driver auto-up window",
+      "Front fog lights",
+      "Projector headlights with LED accents"
+    ],
+    "GS": [
+      "137-HP 1.6L Gasoline Direct Injection 4-cylinder engine with Dual Continuously Variable Valve Timing",
+      "6-speed manual or available 6-speed SHIFTRONIC automatic transmission with Active ECO and Hillstart Assist",
+      "Remote keyless entry with panic alert",
+      "Tilt steering wheel and 6-way adjustable driver seat",
+      "One-touch triple turn signal",
+      "Exterior temperature display",
+      "AM/FM/SiriusXM/CD/MP3 audio with hi-contrast LCD illumination",
+      "iPod/USB auxiliary input jacks",
+      "60/40 split fold-down rear seatback",
+      "Active front head restraints and adjustable head restraints for all seating positions"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2023|subaru|forester",
+  "year": 2023,
+  "make": "Subaru",
+  "model": "Forester",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring",
+    "Wilderness",
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base",
+    "Platinum",
+    "EX",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

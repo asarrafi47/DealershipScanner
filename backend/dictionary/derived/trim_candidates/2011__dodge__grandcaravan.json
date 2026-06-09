@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2011|dodge|grandcaravan",
+  "year": 2011,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "R/T",
+    "Limited",
+    "Premium",
+    "Crew",
+    "Express"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

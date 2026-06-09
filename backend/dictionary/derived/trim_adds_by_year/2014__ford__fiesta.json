@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|ford|fiesta",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Fiesta",
+  "ladder_id": "brochure_llm_2014__ford__fiesta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "MyFord Touch 6.5-inch LCD color touchscreen with media hub and 2 USB ports",
+      "SiriusXM Satellite Radio",
+      "Unique cloth seats with contrast stitching and driver's seat manual lumbar",
+      "Leather-wrapped shift knob",
+      "16-inch Sparkle Silver-painted aluminum wheels",
+      "Fog lamps with chrome bezels",
+      "Rear decklid spoiler on sedan",
+      "Cruise control",
+      "Full center console with armrest",
+      "Leather-wrapped steering wheel"
+    ],
+    "S": [
+      "1.6L Ti-VCT I-4 engine with 5-speed manual transmission",
+      "Compact spare tire",
+      "Power front disc and rear drum brakes",
+      "Torque Vectoring Control",
+      "Chrome door handles",
+      "Adjustable front and rear head restraints",
+      "Cloth seats",
+      "Message center with trip computer",
+      "3-spoke steering wheel",
+      "AM/FM stereo with single-CD player and MP3 capability with 6 speakers"
+    ]
+  }
+}

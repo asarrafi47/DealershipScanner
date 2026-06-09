@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2018|infiniti|q60",
+  "year": 2018,
+  "make": "Infiniti",
+  "model": "Q60",
+  "ladder_id": "brochure_llm_2018__infiniti__q60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q60 RED SPORT 400",
+    "Q60 3.0t SPORT",
+    "Q60 3.0t LUXE",
+    "Q60 2.0t LUXE",
+    "Q60 2.0t PURE"
+  ],
+  "adds_by_trim": {
+    "Q60 2.0t LUXE": [
+      "Power sliding/tinted glass moonroof",
+      "Bose Performance Series Audio System with 13 speakers",
+      "HomeLink Universal Transceiver",
+      "Auto-dimming inside rearview mirror with compass"
+    ],
+    "Q60 3.0t LUXE": [
+      "300-hp 3.0-liter V6 twin-turbo engine",
+      "Rack Electronic Power Steering",
+      "Auto-dimming outside mirrors with reverse link",
+      "Semi-aniline leather-appointed seats",
+      "Steering-wheel-mounted paddle shifters"
+    ],
+    "Q60 3.0t SPORT": [
+      "19-inch aluminum-alloy sport wheels",
+      "Sport brakes with silver finish calipers",
+      "Genuine Carbon Fiber interior trim",
+      "Aluminum sport pedals",
+      "Dual-occupant memory system for driver's seat, steering column and outside mirrors"
+    ],
+    "Q60 RED SPORT 400": [
+      "400-hp 3.0-liter V6 twin-turbo engine",
+      "20-inch aluminum-alloy wheels",
+      "Sport brakes with red finish calipers",
+      "Unique dual exhaust tips with brushed satin finish",
+      "Red S exterior badging"
+    ],
+    "Q60 2.0t PURE": [
+      "300-hp 3.0-liter V6 twin-turbo engine",
+      "7-speed automatic transmission",
+      "LED signature headlights and daytime running lights",
+      "LED signature taillights",
+      "LED front fog lights",
+      "19-inch aluminum-alloy wheels with 255/40R19 all-season run-flat tires",
+      "Zero-lift aerodynamics concept",
+      "RearView Monitor",
+      "8-way power adjustable front seats",
+      "INFINITI InTouch dual screen display with navigation"
+    ]
+  }
+}

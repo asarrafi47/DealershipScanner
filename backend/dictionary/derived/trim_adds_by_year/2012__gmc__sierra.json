@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2012|gmc|sierra",
+  "year": 2012,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2012__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali",
+    "SLT",
+    "SLE",
+    "SL",
+    "WT"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "12-way power seat adjusters with heated and cooled perforated leather-appointed seating",
+      "Power sunroof with express-open and Universal home remote",
+      "Unique chrome upper and lower grille surround",
+      "Heated, leather-wrapped and color-keyed steering wheel"
+    ],
+    "SLT": [
+      "10-way power seat adjusters with heated seat cushions and seatbacks",
+      "2-position driver memory and floor console with storage pockets",
+      "Dual-zone automatic air conditioning with individual settings",
+      "Power sunroof with express-open and Universal home remote"
+    ],
+    "SLE": [
+      "Front buckets with 6-way power seat adjusters and manual lumbar control",
+      "Voltmeter and oil pressure indicators in instrument cluster",
+      "Compass and outside temperature in driver information center",
+      "Rear-vision camera system with inside rearview mirror display"
+    ],
+    "SL": [
+      "Dark titanium cloth seat trim with graphite-colored rubberized vinyl floor covering",
+      "Power steering recirculating ball",
+      "Front independent torsion bar suspension"
+    ],
+    "WT": [
+      "40/20/40 front split-bench seats with driver and front-passenger manual recline",
+      "Center fold-down armrest with storage",
+      "Single-zone manual air conditioning",
+      "Analog cluster with speedometer, fuel level, engine temperature and tachometer"
+    ]
+  }
+}

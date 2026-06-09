@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2020|gmc|canyon",
+  "year": 2020,
+  "make": "GMC",
+  "model": "Canyon",
+  "ladder_id": "brochure_web_2020__gmc__canyon",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "Denali",
+    "AT4",
+    "Elevation"
+  ],
+  "adds_by_trim": {
+    "Denali": [
+      "360-degree camera standard",
+      "11.0-inch digital instrument cluster",
+      "Bose premium audio with seven speakers",
+      "More upscale cabin appointments and materials"
+    ],
+    "AT4": [
+      "Canyon Safety Plus package standard",
+      "ProGrade Trailering System standard",
+      "Off-road suspension setup with 3.0-inch lift",
+      "Driver-selectable full-locking front and rear differentials",
+      "Mud-terrain tires",
+      "Rocker protectors and hill descent control",
+      "Underbody cameras for trail visibility",
+      "Heated front seats",
+      "11.0-inch digital instrument cluster"
+    ],
+    "Elevation": [
+      "2.7-liter turbocharged four-cylinder engine with 310 hp and 430 lb-ft torque",
+      "11.3-inch touchscreen infotainment with wireless Apple CarPlay and Android Auto",
+      "8.0-inch digital instrument cluster",
+      "Six-speaker audio system",
+      "Rear seat belt indicator standard",
+      "Rear sliding window and defogger standard",
+      "Outside heated power mirrors standard",
+      "Rear parking sensors and automatic emergency braking",
+      "Eight-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/canyon/"
+}

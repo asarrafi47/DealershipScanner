@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2026|toyota|prius",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "2026_toyota_prius",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LE",
+    "LE AWD",
+    "XLE",
+    "Nightshade Edition"
+  ],
+  "adds_by_trim": {
+    "LE AWD": [
+      "Electronic On-Demand AWD — 196 hp net (replaces 194 hp FWD LE)",
+      "Same 17-inch aero wheels and hybrid 2.0L powertrain with rear motor assist"
+    ],
+    "XLE": [
+      "19-inch alloy wheels with 195/50R19 tires (replaces 17-inch on LE)",
+      "Rain-sensing wipers and heated front seats",
+      "SofTex front seats with seatback pockets (replaces fabric on LE)"
+    ],
+    "Nightshade Edition": [
+      "19-inch black-finish alloy wheels and black Nightshade badging",
+      "All-black interior with gray stitching",
+      "FWD or AWD Nightshade variants with XLE-level heated seats and SofTex"
+    ],
+    "LE": [
+      "2.0-Liter 4-Cylinder DOHC 16-valve engine with VVT-i, 150 hp",
+      "Hybrid system net power: 194 hp",
+      "Front-Wheel Drive (FWD)",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "57 city/56 highway/57 combined est. mpg",
+      "Bi-LED projector low- and high-beam headlights with Automatic High Beams",
+      "LED Daytime Running Lights with on/off feature",
+      "LED taillights and stop lights",
+      "Power liftback",
+      "Top-mount Multi-Information Display with 7-inch LCD"
+    ]
+  }
+}

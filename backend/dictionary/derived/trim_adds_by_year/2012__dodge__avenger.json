@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|dodge|avenger",
+  "year": 2012,
+  "make": "Dodge",
+  "model": "Avenger",
+  "ladder_id": "brochure_2012__dodge__avenger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "Limited",
+    "Premium",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "SXT": [
+      "Adds Includes premium cloth seat fabric",
+      "Adds Features 60/40 split-folding rear seat with pass-through"
+    ],
+    "Premium": [
+      "Adds power 8-way driver seat adjustment",
+      "Adds heated driver and front-passenger seats",
+      "Adds available automatic temperature control",
+      "Adds interior LED lighting with cool blue-green instrument panel glow",
+      "Adds laminated windshield and front side glass"
+    ],
+    "Limited": [
+      "Adds GPS navigation with SiriusXM Traffic",
+      "Adds uConnect Phone integration",
+      "Adds remote start system",
+      "Adds Boston Acoustics six speaker sound system",
+      "Adds automatic headlamps",
+      "Adds 18-inch chrome-clad wheels available with 3.5L V6 engine"
+    ],
+    "R/T": [
+      "3.6L 283-horsepower Pentastar V6 engine standard",
+      "6-speed automatic transmission",
+      "Unique performance seats with high-leather bolsters and red accent stitching",
+      "Unique instrument panel with satin carbon pockets and center tachometer",
+      "Sport-tuned suspension with performance power steering",
+      "Body-color rear spoiler",
+      "Dual rear exhaust with bright tips",
+      "Red LED ambient lighting",
+      "18-inch polished aluminum wheels",
+      "uconnect 430 with 6.5-inch touch screen and CD/DVD/MP3 radio"
+    ]
+  }
+}

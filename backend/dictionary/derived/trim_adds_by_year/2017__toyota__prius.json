@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2017|toyota|prius",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2017__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "FOUR Touring",
+    "FOUR",
+    "THREE Touring",
+    "THREE",
+    "TWO Eco",
+    "TWO"
+  ],
+  "adds_by_trim": {
+    "FOUR Touring": [
+      "Integrated fog lights and LED accent lights",
+      "LED clearance lights",
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires"
+    ],
+    "FOUR": [
+      "17-inch 5-spoke alloy wheels with P215/45R17 tires",
+      "Rain-sensing variable intermittent windshield wipers"
+    ],
+    "THREE Touring": [
+      "Integrated fog lights and LED accent lights",
+      "LED clearance lights"
+    ],
+    "THREE": [
+      "15-inch 5-spoke alloy wheels with two-tone wheel covers and P195/65R15 tires",
+      "Intermittent rear window wiper",
+      "Entune Premium Audio with Integrated Navigation and App Suite",
+      "White accent on steering wheel and shifter",
+      "Qi-compatible wireless smartphone charging with charge indicator light",
+      "SofTex-trimmed tilt/telescopic steering wheel with audio and climate controls",
+      "Temporary spare tire",
+      "Cargo area lightweight tonneau cover",
+      "Toyota Safety Sense P with Pre-Collision System and Pedestrian Detection"
+    ],
+    "TWO Eco": [
+      "58 city/53 highway estimated mpg",
+      "Bi-LED projector headlights with auto on/off feature"
+    ],
+    "TWO": [
+      "1.8L 4-Cylinder Engine with Hybrid Synergy Drive",
+      "Electronically controlled Continuously Variable Transmission",
+      "54 city/50 highway estimated mpg",
+      "Bi-LED projector low- and high-beam headlights with auto-off feature",
+      "LED Daytime Running Lights with on/off feature",
+      "LED taillights and stop lights",
+      "15-inch 5-spoke alloy wheels with full wheel covers and P195/65R15 tires",
+      "Smart Key System on driver's door with Push Button Start",
+      "Entune Audio with 4.2-inch color dual Multi-Information Display",
+      "Eight airbags and Star Safety System with Enhanced Vehicle Stability Control"
+    ]
+  }
+}

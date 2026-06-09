@@ -1,0 +1,28 @@
+{
+  "ladder_id": "jeep_compass",
+  "make": "Jeep",
+  "models": [
+    "Compass"
+  ],
+  "year_min": 2017,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Interior Materials",
+        "value": "Leather-trimmed seats"
+      }
+    ],
+    "Latitude": [
+      {
+        "label": "Engine Options",
+        "value": "Mid-level convenience features"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Uconnect infotainment"
+      }
+    ]
+  }
+}

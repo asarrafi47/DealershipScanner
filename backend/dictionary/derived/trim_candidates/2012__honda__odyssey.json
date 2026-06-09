@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2012|honda|odyssey",
+  "year": 2012,
+  "make": "Honda",
+  "model": "Odyssey",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Elite",
+    "Touring",
+    "EX-L",
+    "EX",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

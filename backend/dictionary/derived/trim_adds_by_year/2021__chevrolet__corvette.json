@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2021|chevrolet|corvette",
+  "year": 2021,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_2021__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Stingray",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds 6.2L LT2 V8 engine with Direct Injection and Variable Valve Timing",
+      "Adds 490 horsepower and 465 lb.-ft. torque",
+      "Adds run-flat Michelin Pilot tires eliminating spare tire requirement",
+      "Adds Chevrolet Complete Care coverage standard",
+      "Adds 3-year/36,000-mile Bumper-to-Bumper Limited Warranty",
+      "Adds 6-year/100,000-mile Rust-Through Protection",
+      "Adds 5-year/60,000-mile Powertrain Limited Warranty",
+      "Adds 5-year/60,000-mile Roadside Assistance and Courtesy Transportation",
+      "Adds OnStar Connected Services with 24-hour Roadside Assistance"
+    ],
+    "Limited": [],
+    "Stingray": [
+      "Upgraded to 495 horsepower with performance exhaust option",
+      "Upgraded to 470 lb.-ft. torque with Z51 Performance Package",
+      "Adds Z51 Performance Package suspension option with FE4 upgrade"
+    ]
+  }
+}

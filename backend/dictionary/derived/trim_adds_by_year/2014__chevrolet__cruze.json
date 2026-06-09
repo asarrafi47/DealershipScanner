@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2014|chevrolet|cruze",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Cruze",
+  "ladder_id": "brochure_llm_2014__chevrolet__cruze",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cruze LTZ",
+    "Cruze Eco",
+    "Cruze LS"
+  ],
+  "adds_by_trim": {
+    "Cruze LTZ": [
+      "Premium features and upgrades over Cruze Eco"
+    ],
+    "Cruze Eco": [
+      "6-speed manual transmission with enhanced fuel economy",
+      "Eco-focused engine and efficiency features"
+    ],
+    "Cruze LS": [
+      "ECOTEC 1.8L engine",
+      "Standard powertrain and base equipment"
+    ]
+  }
+}

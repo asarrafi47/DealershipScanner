@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2024|gmc|canyon",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Canyon",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "AT4X",
+    "Denali",
+    "AT4",
+    "Elevation",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

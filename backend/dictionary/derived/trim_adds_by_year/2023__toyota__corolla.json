@@ -1,0 +1,74 @@
+{
+  "catalog_key": "2023|toyota|corolla",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Corolla",
+  "ladder_id": "brochure_llm_2023__toyota__corolla",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE",
+    "SE",
+    "LE",
+    "HYBRID SE INFRARED EDITION",
+    "HYBRID SE",
+    "HYBRID LE"
+  ],
+  "adds_by_trim": {
+    "XSE": [
+      "Power tilt/slide moonroof with sliding sunshade",
+      "7-in. fully digital gauge cluster",
+      "Steering-wheel-mounted paddle shifters",
+      "Heated front seats with sport fabric inserts",
+      "SofTex-trimmed seats",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ],
+    "SE": [
+      "Normal, Sport and Eco driving modes",
+      "18-in. graphite-colored alloy wheels",
+      "Sport mesh gloss black front grille",
+      "Gray metallic sport side rocker panels and rear spoiler",
+      "Sport seats with sport fabric inserts",
+      "Single exhaust with dual chrome tips",
+      "Smart Key System with Push Button Start"
+    ],
+    "LE": [
+      "2.0L 4-cylinder Dynamic Force Engine with 169 hp",
+      "Dynamic-Shift Continuously Variable Transmission",
+      "Front-Wheel Drive",
+      "32 city/41 highway/35 combined EPA-estimated mpg",
+      "LED headlights, LED taillights and Daytime Running Lights",
+      "16-in. steel wheels with covers",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "Automatic climate control",
+      "60/40 split fold-down rear seat with center armrest",
+      "8-in. touchscreen with six speakers, Apple CarPlay, Android Auto and SiriusXM"
+    ],
+    "HYBRID SE INFRARED EDITION": [
+      "Red exterior graphics",
+      "Red-stitched shift knob",
+      "Red-accented floor mats",
+      "Red switch panel graphics"
+    ],
+    "HYBRID SE": [
+      "Normal, Sport and Eco driving modes",
+      "18-in. graphite-colored alloy wheels",
+      "Sport mesh gloss black front grille",
+      "Gray metallic sport side rocker panels and color-keyed spoiler",
+      "Sport seats with sport fabric inserts",
+      "Single exhaust with dual chrome tips",
+      "Smart Key System with Push Button Start"
+    ],
+    "HYBRID LE": [
+      "1.8L 4-cylinder engine with 138 hp",
+      "Electronically controlled Continuously Variable Transmission",
+      "Front-Wheel Drive with available Electronic On-Demand All-Wheel Drive",
+      "Up to 53 city/46 highway/50 combined EPA-estimated mpg",
+      "16-in. steel wheels with covers",
+      "LED headlights, LED taillights and Daytime Running Lights",
+      "Color-keyed roof-mounted shark-fin antenna",
+      "Automatic climate control",
+      "60/40 split fold-down rear seat with center armrest",
+      "4.2-in. color TFT Multi-Information Display and 8-in. touchscreen"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2020|dodge|durango",
+  "year": 2020,
+  "make": "Dodge",
+  "model": "Durango",
+  "ladder_id": "brochure_llm_2020__dodge__durango",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "GT",
+    "GT Plus",
+    "SXT Plus",
+    "SXT"
+  ],
+  "adds_by_trim": {
+    "R/T": [
+      "Perforated leather-wrapped steering wheel with audio and cruise controls",
+      "Uconnect 4C NAV with 8.4-inch display and 1-year trial subscription",
+      "SiriusXM Traffic Plus with 5-year trial subscription",
+      "SiriusXM Travel Link with 5-year trial subscription",
+      "Alpine Premium Audio System with 9 speakers and 506-watt amplifier",
+      "Three-Zone Automatic Temperature Control with infrared sensors",
+      "Power 8-way driver and passenger seats with driver memory",
+      "1st-row heated seats with heated steering wheel",
+      "2nd-row heated seats",
+      "Rear ParkSense Park Assist System with obstacle detection"
+    ],
+    "GT": [
+      "Security alarm system",
+      "Bright scuff plates in cargo area",
+      "Memory system for radio presets and driver settings",
+      "Heated steering wheel",
+      "8-way power driver seat with memory and 6-way power passenger seat",
+      "Power 4-way driver lumbar adjustment"
+    ],
+    "GT Plus": [
+      "Power tilt/telescoping steering column with controls",
+      "Auto-dimming rearview mirror",
+      "Cargo compartment cover",
+      "Power 4-way driver and passenger lumbar adjustment",
+      "1st-row ventilated seats with Nappa leather trim"
+    ],
+    "SXT Plus": [
+      "Fold-and-Tumble Captain's Chairs for 2nd row with mini floor console",
+      "SiriusXM Radio with 1-year trial subscription",
+      "Rear ParkSense Park Assist System with obstacle detection"
+    ],
+    "SXT": [
+      "Perforated leather-wrapped steering wheel with audio and cruise controls",
+      "Keyless Enter 'N Go push-button ignition with proximity entry",
+      "ParkView rear back-up camera with display",
+      "Front and rear ParkSense Park Assist Systems",
+      "Electronic Stability Control with traction and roll mitigation",
+      "Six air bags including side-curtain supplemental air bags",
+      "Three-row seating with 3rd-row 50/50 split-folding seats",
+      "Rear air conditioning with headliner vents and seat controls"
+    ]
+  }
+}

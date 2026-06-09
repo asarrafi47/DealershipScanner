@@ -1,0 +1,24 @@
+{
+  "catalog_key": "2019|astonmartin|dbx",
+  "year": 2019,
+  "make": "Aston Martin",
+  "model": "dbx",
+  "ladder_id": "brochure_2019__astonmartin__dbx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [],
+    "Premium": [
+      "Adds 12-way electric front seat adjustment with memory function",
+      "Adds heated front and rear seats",
+      "Adds interior carbon fiber pack with dark satin chrome jewelry"
+    ],
+    "Limited": [
+      "Adds 16-way electric front seat adjustment with ventilated seats"
+    ]
+  }
+}

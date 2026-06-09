@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2015|bmw|7series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "7 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

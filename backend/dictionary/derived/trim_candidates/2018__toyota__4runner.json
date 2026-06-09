@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2018|toyota|4runner",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "4Runner",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "TRD Pro",
+    "TRD Off-Road",
+    "TRD",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "TRD Off-Road": [
+      "Adds to or replaces features offered on TRD Off-Road Adds to or replaces features offered on SR5 Premium",
+      "Exterior Features Drivetrain Drivetrain",
+      "Heated power outside mirrors with turn signal indicators \u2022 Rear-Wheel Drive or full-time 4WD system with Active Traction \u2022 4.0-Liter DOHC 24-Valve V6 with Dual Independent Variable",
+      "Control (A-TRAC) and Torsen\u00ae33 limited-slip center differential Valve Timing with intelligence (VVT-i); 270 hp @ 5600 rpm;",
+      "SofTex\u00ae-trimmed heated front seats; 8-way power-adjustable \u2022 X-REAS Sport Enhancement Suspension \u2022 Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "SofTex\u00ae-trimmed 40/20/40 split reclining and fold-flat \u2022 20-in. split 6-spoke alloy wheels with P245/60R20 tires \u2022 TRD Bilstein\u00ae high-performance shocks with rear remote reservoirs",
+      "Entune\u2122 Premium Audio with Integrated Navigation15 and App Suite,16 \u2022 Front and rear parking assist sonar28 \u2022 Locking rear differential",
+      "Color-keyed front and rear bumpers and side rocker panels with",
+      "HomeLink\u00ae20 universal transceiver chrome inserts, chrome door handles and chrome-accented Exterior Features",
+      "Auto-dimming rearview mirror front grille insert \u2022 Black \u201cTRD PRO\u201d external hard badges",
+      "\u201cTRD\u201d red lettering on driver and front passenger headrests Interior Features \u2022 Unique \u201cTOYOTA\u201d front grille",
+      "Options \u2022 Auto on/off headlight feature"
+    ],
+    "SR5": [
+      "Adds to or replaces features offered on SR5 Adds to or replaces features offered on SR5",
+      "Drivetrain Exterior Features Drivetrain",
+      "4.0-Liter DOHC 24-Valve V6 with Dual Independent Variable Valve \u2022 Heated power outside mirrors with turn signal indicators \u2022 Part-time 4WD system with Active Traction Control (A-TRAC)",
+      "Timing with intelligence (VVT-i); 270 hp @ 5600 rpm; 278 lb.-ft. Interior Features \u2022 Hill Start Assist Control (HAC),34 Multi-terrain Select and Crawl",
+      "Rear-Wheel Drive or part-time 4WD system with Active Traction \u2022 SofTex\u00ae-trimmed heated front seats; 8-way power-adjustable \u2022 Locking rear differential",
+      "Control (A-TRAC) driver\u2019s seat with power lumbar support; 4-way power-adjustable",
+      "Automatic Limited-Slip Differential (Auto LSD32 on 4x2 models only) front passenger seat Exterior Features",
+      "Downhill Assist Control (DAC)35 (4x4 models only) and Hill Start \u2022 SofTex\u00ae-trimmed 40/20/40 split reclining and fold-flat \u2022 17-in. 7-spoke alloy wheels with P265/70R17 tires and",
+      "Assist Control (HAC)34 second-row seat black-painted accents",
+      "Exterior Features \u2022 Entune\u2122 Premium Audio with Integrated Navigation15 and App Suite,16 \u2022 Color-keyed front and rear bumpers with silver accents and",
+      "Integrated fog lights \u2022 HomeLink\u00ae20 universal transceiver \u2022 \u201cTRD Off-Road\u201d external hard badges",
+      "Projector-beam headlights with smoked trim \u2022 Auto-dimming rearview mirror"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

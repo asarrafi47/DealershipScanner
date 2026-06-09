@@ -1,0 +1,41 @@
+{
+  "ladder_id": "2020_volkswagen_tiguan_complete_options",
+  "make": "Volkswagen",
+  "models": [
+    "Tiguan",
+    "Tiguan"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "R-Line": [
+      {
+        "label": "Engine Options",
+        "value": "Hybrid drivetrain Plug-in hybrid (eHybrid)"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "In Canada, trim levels were Trendline, Comfortline, and Highline with an optiona; In Canada, trim levels were Trendline, Comfortline, and Highline with an optional sport package."
+      }
+    ],
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (S6)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "VW USA Tiguan SE interior in Titan Black, featuring: 10-way power driver's seat w/ power l; On the interior, there is a new steering wheel as well as a standard 8-inch digi"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "In Canada, trim levels were Trendline, Comfortline, and Highline with an optiona; In Canada, trim levels were Trendline, Comfortline, and Highline with an optional sport package."
+      }
+    ]
+  }
+}

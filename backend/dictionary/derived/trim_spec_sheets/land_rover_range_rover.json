@@ -1,0 +1,36 @@
+{
+  "ladder_id": "land_rover_range_rover",
+  "make": "Land Rover",
+  "models": [
+    "Range Rover",
+    "Range Rover Sport",
+    "Range Rover Velar"
+  ],
+  "year_min": 2013,
+  "year_max": 2030,
+  "source": "generated",
+  "trims": {
+    "Autobiography": [
+      {
+        "label": "Interior Materials",
+        "value": "Premium interior materials"
+      }
+    ],
+    "SV": [
+      {
+        "label": "Interior Materials",
+        "value": "Exclusive SV interior"
+      }
+    ],
+    "HSE": [
+      {
+        "label": "Engine Options",
+        "value": "High specification equipment level"
+      },
+      {
+        "label": "Audio System Layout",
+        "value": "Premium audio and comfort"
+      }
+    ]
+  }
+}

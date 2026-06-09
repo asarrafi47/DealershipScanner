@@ -1,0 +1,49 @@
+{
+  "ladder_id": "2020_land_rover_range_rover_sport_complete_options",
+  "make": "Land",
+  "models": [
+    "Rover Range Rover Sport",
+    "Rover Range Rover Sport"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, four-wheel-drive; This model was the last to use the Rover V8 and interior leather supplied by Connolly, who went out of business in 2002. It was the first model to feature Satellite Navigation as an option. (was L BMW M51…"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L BMW M51 turbodiesel I6; This model was the last to use the Rover V8 and interior leather supplied by Connolly, who went out of business in 2002. It was the first model to feature Satellite Navigation as an option. (was Layout Front-engine,…"
+      },
+      {
+        "label": "Screen Size",
+        "value": "It was the first model to feature Satellite Navigation as an option."
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Layout Front-engine, four-wheel-drive; L BMW M51 turbodiesel I6 (was L BMW M51 turbodiesel I6)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "It was the first model to feature Satellite Navigation as an option."
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L BMW M51 turbodiesel I6"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: It was the first model to feature Satellite Navigation as an option."
+      }
+    ]
+  }
+}

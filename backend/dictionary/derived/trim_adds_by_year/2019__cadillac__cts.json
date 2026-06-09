@@ -1,0 +1,23 @@
+{
+  "catalog_key": "2019|cadillac|cts",
+  "year": 2019,
+  "make": "Cadillac",
+  "model": "CTS",
+  "ladder_id": "brochure_llm_2019__cadillac__cts",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CTS-V",
+    "CTS"
+  ],
+  "adds_by_trim": {
+    "CTS-V": [
+      "Upgraded exterior dimensions with 197.6-inch overall length versus 195.5 inches",
+      "Enhanced front track width of 62.1 inches for improved handling"
+    ],
+    "CTS": [
+      "4-year/50,000-mile bumper-to-bumper limited warranty with no deductible",
+      "6-year/70,000-mile transferable powertrain limited warranty",
+      "24/7 roadside assistance and courtesy transportation included"
+    ]
+  }
+}

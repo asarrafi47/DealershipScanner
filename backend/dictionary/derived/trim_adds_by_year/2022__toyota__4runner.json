@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2022|toyota|4runner",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "4Runner",
+  "ladder_id": "brochure_llm_2022__toyota__4runner",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD Off-Road Premium",
+    "TRD Off-Road",
+    "TRD Sport",
+    "SR5 Premium",
+    "Trail Special Edition",
+    "SR5"
+  ],
+  "adds_by_trim": {
+    "TRD Off-Road Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "Auto-dimming rearview mirror"
+    ],
+    "TRD Off-Road": [
+      "Part-time 4WD system with Multi-Terrain Select and Crawl Control",
+      "Locking rear differential",
+      "17-inch 7-spoke alloy wheels with black-painted accents",
+      "Color-keyed front and rear bumpers with silver accents and hood scoop",
+      "TRD Off-Road external hard badges",
+      "Overhead console with MTS and Crawl Control switches",
+      "TRD shift knob",
+      "TRD Off-Road floor mats"
+    ],
+    "TRD Sport": [
+      "Available part-time 4WD system with Active Traction Control",
+      "X-REAS Sport Enhancement Suspension",
+      "Color-keyed TRD hood scoop",
+      "TRD Sport badge on C-pillars",
+      "SofTex-trimmed seats with heated front seats",
+      "8-way power-adjustable driver seat with lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "TRD shift knob",
+      "TRD Sport carpet floor mats",
+      "Technology Package with Blind Spot Monitor and Rear Cross-Traffic Alert"
+    ],
+    "SR5 Premium": [
+      "Heated power outside mirrors with turn signal indicators",
+      "SofTex-trimmed seats with heated front seats",
+      "8-way power-adjustable driver seat with lumbar support",
+      "4-way power-adjustable front passenger seat",
+      "Auto-dimming rearview mirror",
+      "8.0-inch touchscreen with Dynamic Navigation and Destination Assist",
+      "Panoramic View Monitor",
+      "SR5 Premium Plus Package with power tilt/slide moonroof"
+    ],
+    "Trail Special Edition": [
+      "Yakima LoadWarrior cargo basket",
+      "17-inch dark gray alloy wheels",
+      "LED headlights, fog lights, and taillights",
+      "Skid plates on engine, suspension, fuel tank, and transfer case",
+      "Sliding rear cargo deck with under-floor storage",
+      "Heated power outside mirrors",
+      "Black fabric seating with unique tan accent stitch",
+      "40-qt. premium accessory cooler with tie-down straps",
+      "All-weather floor liners"
+    ],
+    "SR5": [
+      "4.0-Liter V6 with 270 hp and 5-speed automatic transmission",
+      "Rear-Wheel Drive with Automatic Limited-Slip Differential",
+      "Available part-time 4WD with Active Traction Control and HAC/DAC",
+      "Up to 16 city/19 highway/17 combined mpg",
+      "17-inch 6-spoke alloy wheels with P265/70R17 tires",
+      "LED headlights, fog lights, and taillights",
+      "Skid plates on engine, suspension, and fuel tank",
+      "Fabric-trimmed seats with 8-way driver and 4-way passenger power adjustment",
+      "8.0-inch touchscreen with Android Auto and Apple CarPlay",
+      "Toyota Safety Sense P with Eight airbags and Star Safety System"
+    ]
+  }
+}

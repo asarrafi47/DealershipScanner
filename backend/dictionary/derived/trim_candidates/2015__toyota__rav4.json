@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2015|toyota|rav4",
+  "year": 2015,
+  "make": "Toyota",
+  "model": "RAV4",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Limited",
+    "XLE",
+    "LE",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "XLE MODEL HIGHLIGHTS Adds to or replaces features offered on LE LIMITED MODEL HIGHLIGHTS Adds to or replaces features offered on XLE",
+      "Exterior features 6-way adjustable driver\u2019s seat with sport bolsters Exterior features Tilt/telescopic leather-trimmed steering wheel",
+      "Power tilt/slide moonroof with sunshade sport bolsters Height-adjustable power liftgate with jam protection and advanced voice recognition13 controls",
+      "Color-keyed heated power outside mirrors with French-stitching accents Projector-beam headlights with auto on/off feature Options",
+      "Integrated fog lights Options EntuneTM Premium Audio with Navigation18 and App Suite8 with Entune\u2122 Multimedia Bundle,10",
+      "HD Radio,\u2122 17 traffic, weather and SiriusXM All",
+      "Roof rails Height-adjustable power liftgate with App Suite8 with Entune\u2122 Multimedia Bundle,10",
+      "Access Radio16 with 3-month complimentary trial",
+      "Interior features jam protection HD Radio,\u2122 17 traffic, weather and SiriusXM All",
+      "HD Radio\u2122, 17 traffic, weather and SiriusXM All Bundle,10 HD Radio,\u2122 17 traffic, weather and 8-way power-adjustable driver\u2019s seat with memory Beam (AHB)26",
+      "Access Radio16 with 3-month complimentary trial SiriusXM All Access Radio16 with 3-month function and power lumbar support",
+      "Dual zone automatic climate control with cabin Driver and front passenger heated seats 18-inch machined-finish alloy wheels"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

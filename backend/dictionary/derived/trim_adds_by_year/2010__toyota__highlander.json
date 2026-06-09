@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2010|toyota|highlander",
+  "year": 2010,
+  "make": "Toyota",
+  "model": "Highlander",
+  "ladder_id": "brochure_llm_2010__toyota__highlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "4x4 Hybrid Limited ECVT",
+    "4x4 Hybrid ECVT",
+    "4x4 V6 Limited 5-Speed Auto",
+    "4x4 V6 Sport 5-Speed Auto",
+    "4x4 V6 5-Speed Auto",
+    "4x2 V6 5-Speed Auto",
+    "4x2 4-Cyl 6-Speed Auto"
+  ],
+  "adds_by_trim": {
+    "4x4 Hybrid Limited ECVT": [
+      "Upgraded trim designation for hybrid model"
+    ],
+    "4x4 Hybrid ECVT": [
+      "3.3-liter hybrid V6 engine with 208 hp and 212 lb.-ft. torque",
+      "Permanently magnet front electric motor with 167 hp and 247 lb.-ft. torque",
+      "Rear electric motor with 68 hp and 96 lb.-ft. torque",
+      "Sealed Nickel Metal Hydride traction battery at 288V",
+      "Combined hybrid system net power output of 270 hp",
+      "Regenerative braking system for both front and rear wheels",
+      "Zero evaporation emissions certification"
+    ],
+    "4x4 V6 Limited 5-Speed Auto": [
+      "Limited trim designation on 4x4 V6 platform"
+    ],
+    "4x4 V6 Sport 5-Speed Auto": [
+      "Sport trim designation on 4x4 V6 platform"
+    ],
+    "4x4 V6 5-Speed Auto": [
+      "4x4 all-wheel drive capability",
+      "3.5-liter V6 engine with 270 hp and 248 lb.-ft. torque"
+    ],
+    "4x2 V6 5-Speed Auto": [
+      "3.5-liter V6 engine with 270 hp and 248 lb.-ft. torque"
+    ],
+    "4x2 4-Cyl 6-Speed Auto": [
+      "2.7-liter four-cylinder DOHC engine with 187 hp and 186 lb.-ft. torque",
+      "Dual variable valve timing with intelligence (VVT-i)",
+      "ULEV-II emission rating"
+    ]
+  }
+}

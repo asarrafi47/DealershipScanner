@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2013|cadillac|ats",
+  "year": 2013,
+  "make": "Cadillac",
+  "model": "ATS",
+  "ladder_id": "brochure_web_2013__cadillac__ats",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "ATS Coupe 3.6L V6 RWD Premium Performance",
+    "ATS Coupe 3.6L V6 AWD Premium Luxury",
+    "ATS Coupe 3.6L V6 RWD Premium Luxury",
+    "ATS Coupe 2.0L I4 AWD Luxury",
+    "ATS Coupe 2.0L I4 RWD Luxury",
+    "ATS Coupe 2.0L I4 AWD",
+    "ATS Coupe 2.0L I4 RWD"
+  ],
+  "adds_by_trim": {
+    "ATS Coupe 3.6L V6 RWD Premium Performance": [
+      "3.6-liter naturally-aspirated V-6 engine producing 335 horsepower",
+      "Rear-wheel drive only configuration"
+    ],
+    "ATS Coupe 3.6L V6 AWD Premium Luxury": [
+      "3.6-liter naturally-aspirated V-6 engine producing 335 horsepower",
+      "All-wheel drive capability"
+    ],
+    "ATS Coupe 3.6L V6 RWD Premium Luxury": [
+      "3.6-liter naturally-aspirated V-6 engine producing 335 horsepower"
+    ],
+    "ATS Coupe 2.0L I4 AWD Luxury": [
+      "All-wheel drive capability"
+    ],
+    "ATS Coupe 2.0L I4 RWD Luxury": [
+      "Luxury trim designation"
+    ],
+    "ATS Coupe 2.0L I4 AWD": [
+      "All-wheel drive capability"
+    ],
+    "ATS Coupe 2.0L I4 RWD": [
+      "Brembo front brakes, Bose 12-speaker audio system, leather-wrapped steering wheel with magnesium paddle shifters",
+      "8.0-inch touchscreen infotainment with Apple CarPlay and Android Auto",
+      "Keyless entry with remote start, synthetic leather seating, wireless charging pad",
+      "272-horsepower turbocharged four-cylinder engine",
+      "Eight-speed automatic transmission"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/cadillac/ats/"
+}

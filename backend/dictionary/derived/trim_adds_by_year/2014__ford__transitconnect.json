@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2014|ford|transitconnect",
+  "year": 2014,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_llm_2014__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Titanium",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "Titanium": [
+      "Premium trim level with enhanced styling and features"
+    ],
+    "XLT": [
+      "Mid-level trim with upgraded comfort and convenience features"
+    ],
+    "XL": [
+      "2.5L DOHC I-4 engine with 6-speed SelectShift automatic transmission",
+      "Power door locks with central locking",
+      "Premium front center closable console with 2 cup holders",
+      "Fold-forward or fold-flat seats",
+      "Vertical cargo net",
+      "Mid-vehicle overhead storage bin",
+      "In-floor storage",
+      "3 power outlets",
+      "Observation mirror for rows 2 and 3",
+      "MyKey programmable ignition key with speed and volume restrictions"
+    ]
+  }
+}

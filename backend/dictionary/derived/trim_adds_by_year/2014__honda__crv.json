@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|honda|crv",
+  "year": 2014,
+  "make": "Honda",
+  "model": "CR-V",
+  "ladder_id": "inventory_honda_crv",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "vehicles. Ratings should only be compared to similar ratings on MY 2011 and later",
+      "Sirius XM Radio Inc."
+    ],
+    "EX": [
+      "Pandora logo, and the",
+      "vehicles (if rated under the new program). At time of printing, 2014",
+      "Sirius, XM and all related marks and logos are trademarks of"
+    ],
+    "LX": [
+      "185-hp 2.4-liter i-VTEC 4-cylinder engine with direct injection",
+      "Continuously variable transmission (CVT)",
+      "Available Real Time AWD with Intelligent Control System",
+      "Hill start assist",
+      "Vehicle Stability Assist (VSA) with traction control",
+      "Multi-angle rearview camera with guidelines",
+      "Tire Pressure Monitoring System (TPMS)",
+      "Easy fold-down 60/40 split rear seat",
+      "160-watt audio system with 4 speakers and Pandora compatibility",
+      "Bluetooth HandsFreeLink, SMS text message function, and USB Audio Interface"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.5,
+    "per_trim_add_counts": {
+      "EX": 3,
+      "LX": 0
+    }
+  }
+}

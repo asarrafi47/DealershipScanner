@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2024|nissan|pathfinder",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Rock Creek",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

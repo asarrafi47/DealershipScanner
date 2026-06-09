@@ -1,0 +1,61 @@
+{
+  "ladder_id": "2021_honda_pilot_complete_options",
+  "make": "Honda",
+  "models": [
+    "Pilot",
+    "Pilot"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "Elite": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: 3.5-liter V6 engine has direct-injection and a start-stop (was Engine 3.5 L J35Z4 V6)"
+      }
+    ],
+    "Touring": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine 3.5 L J35Z4 V6 (was Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD))"
+      }
+    ],
+    "EX-L": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD) (was The revised 3.5-liter V6 engine has direct-injection and a start-stop system (on)"
+      }
+    ],
+    "TrailSport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The revised 3.5-liter V6 engine has direct-injection and a start-stop system (on (was Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD))"
+      }
+    ],
+    "EX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel-drive (2006–present); L J35Z1 V6 (2006+ FWD) (was Front-engine, front-wheel-drive (2006–present))"
+      }
+    ],
+    "LX": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Front-engine, front-wheel-drive (2006–present) (was Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present))"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, four-wheel-drive (2003–present); Front-engine, front-wheel-drive (2006–present)"
+      }
+    ]
+  }
+}

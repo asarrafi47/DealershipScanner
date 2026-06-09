@@ -1,0 +1,55 @@
+{
+  "ladder_id": "2020_toyota_4runner_complete_options",
+  "make": "Toyota",
+  "models": [
+    "4Runner",
+    "4Runner"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: In the United States, the 4Runner carried over the same engine options from the; The optional 4WD systems were full-time on V8 models while \"Multi-Mode\" or part- (was Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru)"
+      }
+    ],
+    "TRD Pro": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru (was Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru; The Hilux Surf was offered in two trim lines (SR and SSR), with either a 2.0 L 3Y…"
+      }
+    ],
+    "TRD Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru; The Hilux Surf was offered in two trim lines (SR and SSR), with either a 2.0 L 3Y gasoline or 2.4 L 2L diesel engine. (was Most turbocharged 4Runners were equipped with…"
+      }
+    ],
+    "TRD": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru (was The optional 4WD systems were full-time on V8 models while \"Multi-Mode\" or part-)"
+      }
+    ],
+    "SR5": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The optional 4WD systems were full-time on V8 models while \"Multi-Mode\" or part- (was Power output 96–100 hp (97–101 PS; 72–75 kW); In the United States, the 4Runner carried over the same engine options from the)"
+      }
+    ],
+    "SR": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Power output 96–100 hp (97–101 PS; 72–75 kW); In the United States, the 4Runner carried over the same engine options from the (was Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru; The Hilux Surf was offered in two trim…"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Most turbocharged 4Runners were equipped with the SR5 package, and all turbo tru; The Hilux Surf was offered in two trim lines (SR and SSR), with either a 2.0 L 3Y gasoline or 2.4 L 2L diesel engine."
+      }
+    ]
+  }
+}

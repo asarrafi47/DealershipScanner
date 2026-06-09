@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2023|lexus|lx",
+  "year": 2023,
+  "make": "Lexus",
+  "model": "LX",
+  "ladder_id": "2023_lexus_lx",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "Premium",
+    "Luxury",
+    "F SPORT Handling"
+  ],
+  "adds_by_trim": {
+    "Luxury": [
+      "22-inch forged alloy wheels and semi-aniline leather seating",
+      "Driver and front passenger multifunction massager seats",
+      "Mark Levinson 25-speaker Reference Surround Sound",
+      "Heated and ventilated second-row outboard seats"
+    ],
+    "F SPORT Handling": [
+      "22-inch forged FSPORT wheels and FSPORT-tuned suspension",
+      "Torsen limited-slip differential and FSPORT semi-aniline leather",
+      "FSPORT mesh grille, rear valance, and illuminated door sills",
+      "Rear stabilizer bar and performance dampers"
+    ],
+    "Premium": [
+      "Ventilated front seats",
+      "Head-up display",
+      "Interior ambient lighting",
+      "Adaptive suspension",
+      "Third-row seating"
+    ]
+  }
+}

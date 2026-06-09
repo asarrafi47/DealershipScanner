@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2024|gmc|yukon",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Yukon",
+  "ladder_id": "brochure_llm_2024__gmc__yukon",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Denali Ultimate",
+    "Denali",
+    "AT4",
+    "SLT",
+    "SLE"
+  ],
+  "adds_by_trim": {
+    "Denali Ultimate": [
+      "Advanced Technology Package with Super Cruise driver-assistance technology",
+      "Enhanced Automatic Parking Assist and Reverse Automatic Braking",
+      "Rear Camera Mirror with integrated washer system",
+      "Advanced Security Package with interior movement and glass-break sensors",
+      "Power-retractable assist steps with perimeter lighting",
+      "22-inch bright machined aluminum wheels with premium paint"
+    ],
+    "Denali": [
+      "Advanced Technology Package with Super Cruise (3-year subscription)",
+      "Enhanced Automatic Parking Assist and Reverse Automatic Braking",
+      "Rear Camera Mirror with washer system",
+      "Advanced Security Package with self-powered horn and sensors",
+      "Max Trailering Package with ProGrade Trailering System",
+      "Power-retractable assist steps with perimeter lighting",
+      "Panoramic power sunroof"
+    ],
+    "AT4": [
+      "Premium Capability Package with Active Response 4WD and Air Ride Adaptive Suspension",
+      "Technology Package with Head-Up Display and High Definition Surround Vision",
+      "Available Premium Plus Package with Max Trailering Package",
+      "Power-retractable assist steps with perimeter lighting",
+      "Panoramic power sunroof available"
+    ],
+    "SLT": [
+      "Adaptive Cruise Control with Enhanced Automatic Emergency Braking",
+      "High Definition Surround Vision and Rear Pedestrian Alert",
+      "Heated second-row outboard seats with split power-folding third-row bench",
+      "Power-tilt and telescoping steering column with heated steering wheel",
+      "Heated power-adjustable mirrors with driver auto-dimming and integrated turn signals",
+      "Memory settings for driver seat, mirrors and steering column",
+      "SLT Luxury Package standard"
+    ],
+    "SLE": [
+      "5.3L V8 engine with 10-speed automatic transmission standard",
+      "Available Max Trailering Package with ProGrade Trailering System",
+      "Available AutoTrac 2-speed transfer case on 4WD models",
+      "Up to 8,400 lbs maximum trailering capacity (2WD with Max Trailering)",
+      "Available 6.2L V8 engine or 3.0L Duramax Turbo Diesel options"
+    ]
+  }
+}

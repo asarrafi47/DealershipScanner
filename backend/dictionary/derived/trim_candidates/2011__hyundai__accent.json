@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2011|hyundai|accent",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Accent",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SE",
+    "Blue",
+    "Platinum",
+    "Premium",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

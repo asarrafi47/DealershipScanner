@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2020_mitsubishi_outlander_complete_options",
+  "make": "Mitsubishi",
+  "models": [
+    "Outlander",
+    "Outlander"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Manual 5-spd; Front-Wheel Drive (was Front-engine, front-wheel-drive; Front-engine, all-wheel-drive (S-AWC)); Manual 5-spd"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Front-engine, front-wheel-drive; Front-engine, all-wheel-drive (S-AWC)"
+      }
+    ]
+  }
+}

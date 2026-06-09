@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2020|ford|transit",
+  "year": 2020,
+  "make": "Ford",
+  "model": "Transit",
+  "ladder_id": "brochure_llm_2020__ford__transit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "CHASSIS CAB",
+    "CUTAWAY"
+  ],
+  "adds_by_trim": {
+    "CHASSIS CAB": [
+      "Rearview mirror standard on Chassis Cab configuration",
+      "Fixed rear glass windows on Chassis Cab model"
+    ],
+    "CUTAWAY": [
+      "Rearview mirror standard on Cutaway configuration",
+      "6 or 8-speaker audio system options (4 front and 2-4 rear speakers)",
+      "Available 10-way power heated Ebony leather-trimmed front seats with inboard armrests",
+      "Available Ebony cloth front and rear passenger seating with manual lumbar support",
+      "Available body-color front bumper with integrated fog lamps on Cutaway",
+      "Passenger-side door delete option available on Cutaway",
+      "Front and rear split-view cameras with dunnage kit requiring upfitter installation"
+    ]
+  }
+}

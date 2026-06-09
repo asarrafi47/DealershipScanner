@@ -1,0 +1,84 @@
+{
+  "catalog_key": "2019|chrysler|pacifica",
+  "year": 2019,
+  "make": "Chrysler",
+  "model": "Pacifica",
+  "ladder_id": "brochure_llm_2019__chrysler__pacifica",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Pacifica Limited Hybrid",
+    "Pacifica Touring L Hybrid",
+    "Pacifica Touring Plus Hybrid",
+    "Pacifica Limited",
+    "Pacifica Touring Plus",
+    "Pacifica Touring L",
+    "Pacifica XL",
+    "Pacifica L"
+  ],
+  "adds_by_trim": {
+    "Pacifica Limited Hybrid": [
+      "8-way power driver's seat with memory",
+      "Premium leather-trimmed seats",
+      "Ventilated front seats",
+      "Uconnect 4C NAV with 8.4-inch display and navigation",
+      "Surround-View Camera with Advanced SafetyTec Group",
+      "Full-Speed Forward Collision Warning Plus",
+      "LaneSense Lane Departure Warning Plus",
+      "Parallel and Perpendicular Park Assist"
+    ],
+    "Pacifica Touring L Hybrid": [
+      "8-way power front-passenger seat with Auto Advance 'n Return",
+      "Perforated leather-trimmed seats with S logo",
+      "Uconnect 4 with 8.4-inch display and HD radio",
+      "ParkSense Front/Rear Park Assist with Advanced SafetyTec Group"
+    ],
+    "Pacifica Touring Plus Hybrid": [
+      "Easy-entry sliding 2nd-row seats",
+      "Leather-wrapped steering wheel with S Appearance Package",
+      "2nd-row retractable shades",
+      "Heated steering wheel with Cold Weather Group"
+    ],
+    "Pacifica Limited": [
+      "8-way power driver's seat with memory",
+      "Premium leather-trimmed seats",
+      "Ventilated front seats",
+      "Uconnect 4C NAV with 8.4-inch display and navigation",
+      "Surround-View Camera with Advanced SafetyTec Group",
+      "Full-Speed Forward Collision Warning Plus",
+      "LaneSense Lane Departure Warning Plus",
+      "Parallel and Perpendicular Park Assist",
+      "20-inch wheels with 8-passenger seating"
+    ],
+    "Pacifica Touring Plus": [
+      "8-way power front-passenger seat with Auto Advance 'n Return",
+      "Perforated leather-trimmed seats",
+      "Uconnect 4 with 8.4-inch display and HD radio",
+      "ParkSense Front/Rear Park Assist with Advanced SafetyTec Group",
+      "Easy-entry sliding 2nd-row seats",
+      "Leather-wrapped steering wheel with S Appearance Package"
+    ],
+    "Pacifica Touring L": [
+      "Remote Proximity keyless entry for all doors",
+      "Alpine 13-speaker sound system with Premium Audio Group",
+      "Heated front seats with Cold Weather Group",
+      "Luxury steering wheel",
+      "Full-length upgraded floor console"
+    ],
+    "Pacifica XL": [
+      "Harman Kardon 20-speaker sound system",
+      "Uconnect 4 with 7-inch display standard",
+      "Cloth premium interior",
+      "2nd-row Stow 'n Go bucket seats",
+      "Heated front seats with Cold Weather Group"
+    ],
+    "Pacifica L": [
+      "Uconnect 4 with 7-inch display and Bluetooth",
+      "6-speaker sound system",
+      "12-volt auxiliary power outlets in instrument panel",
+      "Floor console with tray storage",
+      "ParkView Rear Back-Up Camera standard",
+      "All airbags and electronic stability control",
+      "Remote keyless entry and security alarm"
+    ]
+  }
+}

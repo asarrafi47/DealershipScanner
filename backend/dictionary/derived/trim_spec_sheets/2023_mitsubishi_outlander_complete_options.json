@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2023_mitsubishi_outlander_complete_options",
+  "make": "Mitsubishi",
+  "models": [
+    "Outlander",
+    "Outlander"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (AV-S6); Front-Wheel Drive"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Front-engine, front-wheel-drive; Front-engine, all-wheel-drive (S-AWC)"
+      }
+    ]
+  }
+}

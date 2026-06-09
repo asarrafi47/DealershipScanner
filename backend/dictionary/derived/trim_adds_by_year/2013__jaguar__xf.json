@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2013|jaguar|xf",
+  "year": 2013,
+  "make": "Jaguar",
+  "model": "XF",
+  "ladder_id": "brochure_web_2013__jaguar__xf",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "XF R-Dynamic SE Sedan AWD",
+    "XF R-Dynamic SE Sedan RWD"
+  ],
+  "adds_by_trim": {
+    "XF R-Dynamic SE Sedan AWD": [
+      "All-wheel drive",
+      "2.0L turbocharged four-cylinder with 296 hp and 295 lb-ft torque (P300)",
+      "0-60 mph in 6.5 seconds"
+    ],
+    "XF R-Dynamic SE Sedan RWD": [
+      "12.3-inch digital instrument cluster",
+      "11.4-inch touchscreen with Android Auto and Apple CarPlay",
+      "12-speaker Meridian audio system",
+      "Emergency automatic braking and blind-spot assistance",
+      "Adaptive cruise control and lane keeping assist",
+      "Front and rear parking sensors with rear traffic monitoring",
+      "Traffic sign recognition",
+      "Motorized adjustable steering column",
+      "Heated steering wheel",
+      "Dual rear USB ports"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/jaguar/xf/"
+}

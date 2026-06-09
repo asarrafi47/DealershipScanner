@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2010|hyundai|azera",
+  "year": 2010,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_llm_2010__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "GLS"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "3.8L V6 engine instead of 3.3L V6",
+      "17-inch hyper silver alloy wheels",
+      "In-dash 6-disc CD changer with 10 Infinity speakers, iPod/USB and auxiliary input jacks with subwoofer and amplifier",
+      "Integrated Memory System (IMS)",
+      "Power rear sunshade",
+      "Woodgrain-trimmed leather steering wheel",
+      "Power adjustable tilt and telescopic steering wheel",
+      "Brushed stainless steel door scuff plates",
+      "Optional Navigation Package with LG system, touch-screen display and DVD player",
+      "Optional 12-speaker Infinity Logic 7 surround sound audio system"
+    ],
+    "GLS": [
+      "3.3L V6 engine with 5-speed automatic transmission and SHIFTRONIC",
+      "18/26 MPG City/Highway fuel economy",
+      "17-inch alloy wheels",
+      "Power folding side mirrors with turn signal indicators",
+      "Electronic Stability Control (ESC) and Anti-lock Braking System (ABS) with EBD",
+      "Traction Control System (TCS) and tire pressure monitoring system",
+      "Advanced front airbags with side-impact and side-curtain airbags",
+      "Power driver seat with lumbar support and body color heated dual power mirrors",
+      "AM/FM/XM/CD/MP3 audio with iPod/USB auxiliary input jacks",
+      "Leather-wrapped steering wheel and shift knob with steering wheel audio controls"
+    ]
+  }
+}

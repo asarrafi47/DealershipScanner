@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2014|lotus|exige",
+  "year": 2014,
+  "make": "Lotus",
+  "model": "Exige",
+  "ladder_id": "brochure_web_2014__lotus__exige",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "S",
+    "S240"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "3.5L supercharged V6 engine producing 345 horsepower",
+      "6-speed manual transmission",
+      "Steel sport suspension with adjustable dampers",
+      "16-inch forged aluminum wheels with Yokohama tires",
+      "Power steering",
+      "Air conditioning",
+      "Leather-trimmed steering wheel",
+      "Basic audio system",
+      "Lightweight composite body construction"
+    ],
+    "S240": [
+      "Upgraded to 3.5L supercharged V6 with 345 horsepower peak output",
+      "Enhanced engine tuning and performance calibration",
+      "Improved cooling system for track use",
+      "Michelin Pilot Sport PS2 high-performance tires",
+      "Upgraded brake system with improved pads and rotors",
+      "Performance-tuned suspension setup",
+      "Limited-slip differential",
+      "Enhanced aerodynamic package"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/exige/"
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2022_mercedes-benz_gla-class_complete_options",
+  "make": "Mercedes-Benz",
+  "models": [
+    "GLA-Class",
+    "GLA-Class"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "GLA250": [
+      {
+        "label": "Engine Options",
+        "value": "2.0L I4 Turbo; Automatic (AM7)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "L OM607 turbo I4"
+      }
+    ]
+  }
+}

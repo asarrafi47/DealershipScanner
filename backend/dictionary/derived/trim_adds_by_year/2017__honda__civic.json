@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2017|honda|civic",
+  "year": 2017,
+  "make": "Honda",
+  "model": "Civic",
+  "ladder_id": "brochure_llm_2017__honda__civic",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TOURING",
+    "EX-L",
+    "EX-T",
+    "EX",
+    "LX-P",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "TOURING": [
+      "Standard Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic",
+      "Standard Honda Sensing suite of safety and driver-assistive features"
+    ],
+    "EX-L": [
+      "Automatic-dimming rearview mirror",
+      "Leather-wrapped steering wheel and shift knob",
+      "Driver's seat with 8-way power adjustment",
+      "Leather-trimmed seats",
+      "Available Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic"
+    ],
+    "EX-T": [
+      "174-hp 1.5-liter turbocharged and intercooled DOHC 4-cylinder engine with direct injection",
+      "17-inch alloy wheels",
+      "Fog lights",
+      "Body-colored decklid spoiler",
+      "450-watt premium audio system with 10 speakers including subwoofer",
+      "7-inch Display Audio with electrostatic touch-screen",
+      "Apple CarPlay and Android Auto",
+      "SiriusXM Radio and HD Radio",
+      "Dual-zone automatic climate control system",
+      "Heated front seats"
+    ],
+    "EX": [
+      "LED turn indicators on headlights and side mirrors",
+      "Remote engine start",
+      "Standard continuously variable transmission (CVT)",
+      "16-inch alloy wheels",
+      "Honda LaneWatch driver assistance",
+      "Heated side mirrors",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry with push button start",
+      "180-watt audio system with 8 speakers",
+      "7-inch Display Audio with electrostatic touch-screen"
+    ],
+    "LX-P": [
+      "Remote engine start",
+      "Chrome door handles",
+      "Rain-sensing windshield wipers",
+      "LED headlights with low and high beam auto-on/off",
+      "Heated outboard rear seats",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry with push button start",
+      "60/40 split fold-down rear seatback"
+    ],
+    "LX": [
+      "158-hp 2.0-liter DOHC i-VTEC 4-cylinder engine",
+      "6-speed manual or available continuously variable transmission (CVT)",
+      "Electric parking brake with automatic brake hold",
+      "Hill start assist",
+      "16-inch wheels with full covers",
+      "Multi-angle rearview camera with guidelines",
+      "LED Daytime Running Lights (DRL)",
+      "One-touch turn indicators",
+      "Taillights with integrated LED light bars",
+      "160-watt audio system with 4 speakers"
+    ]
+  }
+}

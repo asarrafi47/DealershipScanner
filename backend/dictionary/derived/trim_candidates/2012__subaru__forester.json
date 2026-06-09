@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2012|subaru|forester",
+  "year": 2012,
+  "make": "Subaru",
+  "model": "Forester",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Touring",
+    "Limited",
+    "Premium",
+    "Base",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2013|chevrolet|tahoe",
+  "year": 2013,
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "ladder_id": "brochure_llm_2013__chevrolet__tahoe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS",
+    "HY1"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Chrome door handles"
+    ],
+    "LT": [
+      "Power-retractable assist steps with chrome accent strip"
+    ],
+    "LS": [
+      "Black assist steps",
+      "Body-color door handles",
+      "Premium cloth front bucket seats with 6-way power driver and right-front passenger seats",
+      "Floor console"
+    ],
+    "HY1": [
+      "Hybrid powertrain",
+      "Tire sealant and compressor kit instead of spare tire"
+    ]
+  }
+}

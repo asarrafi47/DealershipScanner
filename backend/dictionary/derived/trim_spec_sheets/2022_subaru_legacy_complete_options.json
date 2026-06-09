@@ -1,0 +1,39 @@
+{
+  "ladder_id": "2022_subaru_legacy_complete_options",
+  "make": "Subaru",
+  "models": [
+    "Legacy",
+    "Legacy"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "Limited": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L 260 hp (194 kW; 264 PS) FA24F H4-T (was L 182 hp (136 kW; 185 PS) FB25 H4)"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Upgrades Screen Size: Legacy models equipped with the 11.6-inch Multimedia Plus touchscreen became sta; 11.6-inch Multimedia Plus touchscreen (was 11.6-inch Multimedia Plus touchscreen)"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: L 182 hp (136 kW; 185 PS) FB25 H4 (was Layout Front-engine, all-wheel-drive)"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Layout Front-engine, all-wheel-drive"
+      },
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: 11.6-inch Multimedia Plus touchscreen"
+      }
+    ]
+  }
+}

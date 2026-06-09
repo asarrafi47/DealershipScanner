@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2016|volkswagen|bus",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Bus",
+  "ladder_id": "brochure_llm_2016__volkswagen__bus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "California Ocean",
+    "California Beach",
+    "California Coast"
+  ],
+  "adds_by_trim": {
+    "California Ocean": [
+      "Aluminium elevating roof with canvas sides, electro-hydraulic operation",
+      "Colour-coded exterior mirror housing and attachment parts",
+      "Fog lights with static cornering light",
+      "Double glazed windows in passenger compartment",
+      "Valley upholstery",
+      "De luxe dash panel with Plus multifunction display",
+      "Decorative trim Dark Silver Brushed and Anthracite Metallic inserts",
+      "Leather steering wheel and leather gear lever knob",
+      "Window shade and blinds in driver's compartment",
+      "Air Care Climatronic 3-zone air conditioning with Composition Colour radio, 8 loudspeakers"
+    ],
+    "California Beach": [
+      "Aluminium elevating roof with canvas sides in Alpine Grey, manual operation",
+      "Swivelling seats in 1st row with lumbar support and arm rests",
+      "4 seats and 4 beds with lower and upper beds",
+      "2-seater bench/sleeping surface in 3rd row, roof bed with comfort slatted frame",
+      "ISOFIX child seat mountings, storage compartment, shades in driver and passenger compartments",
+      "Roller shutter on elevating roof",
+      "Reading light and mini reading lights with step illumination",
+      "Lower bed extension with mattress, carpet flooring in driver's compartment",
+      "Awning rail black, heat-insulating glazing, folding table with 2 chairs",
+      "Lashing eyes, electrically adjustable heated exterior mirrors, electric windows"
+    ],
+    "California Coast": [
+      "16 or 17-inch chassis with corresponding brake system",
+      "16 or 17-inch steel wheels with centre caps",
+      "Colour-coded bumper, sliding door right side, sliding window left side",
+      "H7 halogen headlights with high-gloss black radiator grille and chrome trim",
+      "Coast logo, single glazed windows in passenger compartment",
+      "230V external socket for charging batteries",
+      "Pilion upholstery, dash panel, fabric window blinds for driver's compartment",
+      "Climatic air conditioning system, Composition Audio radio with 4 loudspeakers",
+      "Power steering, height and reach adjustable steering wheel",
+      "Driver and front-passenger airbags, electronic immobiliser, daytime running lights"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2019|ram|commercial",
+  "year": 2019,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_2019__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Big Horn",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Tradesman": [
+      "Adds Includes standard powertrain with Pentastar engine",
+      "Adds Features basic seating surfaces and cloth upholstery",
+      "Adds Includes standard wheels and suspension setup"
+    ],
+    "Big Horn": [
+      "Adds Big Horn badging and trim distinction",
+      "Adds enhanced driver convenience systems over base model"
+    ],
+    "Limited": [
+      "Adds premium tier designation with enhanced feature availability",
+      "Adds SiriusXM Guardian connected services capability",
+      "Adds Includes WiFi Hotspot connectivity upgrade",
+      "Adds Apple CarPlay and Android Auto smartphone integration"
+    ]
+  }
+}

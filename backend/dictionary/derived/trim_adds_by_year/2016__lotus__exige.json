@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2016|lotus|exige",
+  "year": 2016,
+  "make": "Lotus",
+  "model": "Exige",
+  "ladder_id": "brochure_web_2016__lotus__exige",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "S",
+    "S240"
+  ],
+  "adds_by_trim": {
+    "S": [
+      "3.5L supercharged V6 engine producing 345 horsepower",
+      "6-speed manual transmission",
+      "17-inch alloy wheels with Michelin Pilot Sport tires",
+      "Fixed roof configuration",
+      "Basic interior with minimal sound deadening",
+      "Air conditioning",
+      "Power steering",
+      "Minimal creature comforts, track-focused design"
+    ],
+    "S240": [
+      "Upgraded to 3.5L supercharged V6 with 345 hp (same as S, enhanced tuning)",
+      "Performance package with improved suspension geometry",
+      "Lightweight forged wheels, lighter than S model",
+      "Enhanced braking system with better cooling",
+      "Track-focused aero package",
+      "Motorsport-inspired interior upgrades"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/lotus/exige/"
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2015|mazda|5",
+  "year": 2015,
+  "make": "Mazda",
+  "model": "5",
+  "ladder_id": "brochure_llm_2015__mazda__5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Grand Touring",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Grand Touring": [
+      "Black leather seats instead of cloth",
+      "Sand leather interior color option",
+      "Power sliding-glass moonroof with interior sunshade",
+      "Rear liftgate spoiler and side sill extensions",
+      "Fog lights",
+      "Xenon HID headlights with automatic on/off",
+      "Rain-sensing windshield wipers",
+      "Dual heated body-colored power side mirrors",
+      "Rear backup sensors"
+    ],
+    "Touring": [
+      "Heated leather-trimmed front seats",
+      "Remote keyless illuminated entry system",
+      "6-speaker AM/FM/CD/MP3-compatible audio system",
+      "Auxiliary-audio input jack and USB audio input port",
+      "Bluetooth hands-free phone and audio streaming",
+      "SiriusXM Satellite Radio with four-month trial subscription",
+      "Leather-wrapped steering wheel and shift knob",
+      "Steering-wheel-mounted audio and cruise controls",
+      "Trip computer"
+    ],
+    "Sport": [
+      "2.5L DOHC 16-valve 4-cylinder engine with 157 hp",
+      "5-speed automatic transmission with manual-shift mode",
+      "Dual sliding rear doors",
+      "Dual body-colored remote side mirrors with integrated turn signals",
+      "Automatic on/off headlights",
+      "Variable-intermittent windshield wipers",
+      "Intermittent rear wiper/washer",
+      "Dual front air bags with advanced sensors",
+      "Full complement of safety systems including side-impact air curtains"
+    ]
+  }
+}

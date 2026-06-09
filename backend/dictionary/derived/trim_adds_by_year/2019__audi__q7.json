@@ -1,0 +1,27 @@
+{
+  "catalog_key": "2019|audi|q7",
+  "year": 2019,
+  "make": "Audi",
+  "model": "Q7",
+  "ladder_id": "brochure_llm_2019__audi__q7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Q7 55 TFSI (3.0T) quattro",
+    "Q7 45 TFSI (2.0T) quattro"
+  ],
+  "adds_by_trim": {
+    "Q7 55 TFSI (3.0T) quattro": [
+      "3.0T engine (versus 2.0T in Q7 45 TFSI)",
+      "Audi design selection option with Murillo Brown or Pistachio Beige Perforated Valcona leather",
+      "High-gloss Black/Gray Oak wood or Cedar Brown interior inlay options",
+      "Nougat Brown leather or Perforated Valcona leather seat color options"
+    ],
+    "Q7 45 TFSI (2.0T) quattro": [
+      "2.0T turbocharged engine",
+      "Standard seat, Ventilated comfort seat, or Individual contour seat options",
+      "Black Perforated or Perforated Valcona leather seat colors",
+      "Diamond Silver/Gray Oak wood or Walnut wood interior inlays",
+      "Rock Gray leather or Nougat Brown leather seat options"
+    ]
+  }
+}

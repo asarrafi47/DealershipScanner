@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2010|nissan|sentra",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2010__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE-R Spec V",
+    "SE-R",
+    "2.0 SL",
+    "2.0 SR",
+    "2.0 S",
+    "2.0"
+  ],
+  "adds_by_trim": {
+    "SE-R Spec V": [
+      "200 hp 2.5L engine with 180 lb-ft torque",
+      "6-speed close-ratio manual transmission with dual-mass flywheel",
+      "12.6-inch vented front disc brakes with Electronic Brake force Distribution",
+      "Sport-tuned suspension with lowered height and sport-tuned shocks/struts",
+      "Helical limited-slip differential",
+      "Trunk-mounted V-brace chassis reinforcement",
+      "Reinforced upper cowl",
+      "25.0 mm front stabilizer bar",
+      "P225/45WR17 summer performance tires",
+      "17-inch aluminum-alloy wheels"
+    ],
+    "SE-R": [
+      "177 hp 2.5L engine with 172 lb-ft torque",
+      "Xtronic CVT with steering-wheel-mounted paddle shifters",
+      "11.7-inch vented front disc brakes",
+      "Sport-tuned springs and struts",
+      "23.0 mm front stabilizer bar",
+      "P225/45VR17 all-season tires",
+      "17-inch aluminum-alloy wheels",
+      "Twin pod meters with oil pressure gauge and G-meter"
+    ],
+    "2.0 SL": [
+      "Available Nissan Navigation System with 5-inch color touchscreen",
+      "XM NavTraffic capability",
+      "8-spoke aluminum-alloy 16-inch wheels",
+      "ABS and Electronic Brake force Distribution standard",
+      "Leather-appointed seats",
+      "Heated front seats",
+      "Dual illuminated visor vanity mirrors",
+      "Cargo net and hooks"
+    ],
+    "2.0 SR": [
+      "7-spoke aluminum-alloy 16-inch wheels",
+      "Xtronic CVT standard",
+      "Optional Vehicle Dynamic Control and Traction Control System",
+      "P205/55HR16 tires"
+    ],
+    "2.0 S": [
+      "Xtronic CVT standard",
+      "16-inch steel wheels with wheel covers",
+      "Optional 4-wheel ABS and Electronic Brake force Distribution",
+      "Optional Vehicle Dynamic Control and Traction Control System"
+    ],
+    "2.0": [
+      "140 hp 2.0L DOHC 16-valve 4-cylinder engine",
+      "147 lb-ft torque",
+      "6-speed manual transmission",
+      "Front independent strut suspension",
+      "Torsion beam axle suspension with integrated rear stabilizer bar",
+      "Vehicle-speed-sensitive electric power steering",
+      "11.02-inch vented front disc/rear drum brakes",
+      "15-inch steel wheels with wheel covers",
+      "P205/60HR15 tires"
+    ]
+  }
+}

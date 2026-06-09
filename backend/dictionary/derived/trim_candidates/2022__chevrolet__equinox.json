@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2022|chevrolet|equinox",
+  "year": 2022,
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premier",
+    "RS",
+    "LT",
+    "LS",
+    "Limited",
+    "Premium",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

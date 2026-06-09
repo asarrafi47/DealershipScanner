@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2012|nissan|armada",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Armada",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV",
+    "Limited"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

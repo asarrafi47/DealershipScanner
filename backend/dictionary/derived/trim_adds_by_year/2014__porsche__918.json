@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2014|porsche|918",
+  "year": 2014,
+  "make": "Porsche",
+  "model": "918",
+  "ladder_id": "brochure_llm_2014__porsche__918",
+  "source": "brochure_llm",
+  "trims_available": [
+    "918 Spyder with Weissach Package",
+    "918 Spyder"
+  ],
+  "adds_by_trim": {
+    "918 Spyder with Weissach Package": [
+      "Weight-optimized braking system with titanium elements",
+      "Ceramic wheel bearings",
+      "Carbon fiber reinforced plastic (CFRP) stabilizer on rear axle",
+      "CFRP rod instead of gas pressure strut on front hood",
+      "Omitted audio system for weight savings",
+      "Omitted interior climate control for weight savings",
+      "Visible carbon fiber on instrument panel, center console frame, door handles, and shift paddles",
+      "Alcantara® steering wheel rim, center console armrest, and optional center seat panels",
+      "Flame-resistant seat covers in black",
+      "Black door handles and attachable 6-point driver and passenger seat belts"
+    ],
+    "918 Spyder": [
+      "Standard leather interior in three color designs: Onyx Black with Acid Green piping, Onyx Black with Silver piping, or Garnet Red with Silver piping",
+      "Optional authentic leather interior package in four colors with non-glossy finish",
+      "Optional interior leather package and color combinations available"
+    ]
+  }
+}

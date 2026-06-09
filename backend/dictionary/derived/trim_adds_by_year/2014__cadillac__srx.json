@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2014|cadillac|srx",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "SRX",
+  "ladder_id": "brochure_llm_2014__cadillac__srx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM",
+    "PERFORMANCE",
+    "LUXURY",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "PREMIUM": [
+      "20-inch 6-spoke aluminum wheels with bright chrome finish",
+      "20-inch 7-spoke aluminum wheels with polished finish",
+      "Leather seating surfaces with manual driver-side thigh support",
+      "Driver and front passenger power lumbar control",
+      "Ventilated driver and front passenger seats",
+      "Heated outboard rear seating",
+      "Sapele wood trim on center stack, door trim, and steering wheel"
+    ],
+    "PERFORMANCE": [
+      "Sport suspension with computer-controlled real-time damping",
+      "20-inch 7-spoke aluminum wheels with bright machined-finish and premium painted accents",
+      "Requires All-Wheel Drive"
+    ],
+    "LUXURY": [
+      "Tri-zone automatic climate control with individual settings for rear seating",
+      "18-inch 7-spoke aluminum wheels with bright machined finish",
+      "Heated, power-adjustable, power-folding mirrors with driver-side auto-dimming",
+      "Bose 10-speaker surround sound system",
+      "Navigation with voice and text guidance",
+      "Park Assist front and rear",
+      "Rear Seat Entertainment System with dual DVD players"
+    ],
+    "STANDARD": [
+      "3.6L Direct Injection V6 VVT engine with 308 HP",
+      "Front-wheel drive with 6-speed automatic transmission",
+      "4-wheel independent suspension with short/long arm front design",
+      "4-wheel disc anti-lock brakes with StabiliTrak electronic stability control",
+      "Dual-zone automatic electronic climate control",
+      "Bluetooth hands-free calling with natural voice recognition",
+      "18-inch 7-spoke aluminum wheels with painted finish",
+      "Projector beam tungsten halogen headlamps with daytime running lamps",
+      "Power windows, locks, and liftgate with memory height",
+      "OnStar standard one-year Directions & Connections Plan"
+    ]
+  }
+}

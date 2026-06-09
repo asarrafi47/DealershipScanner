@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2015|dodge|grandcaravan",
+  "year": 2015,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2015__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R/T",
+    "SXT PLUS",
+    "SXT",
+    "SE PLUS",
+    "SE",
+    "AVP"
+  ],
+  "adds_by_trim": {
+    "R/T": [
+      "17-inch polished aluminum wheels with Gloss Black pockets",
+      "Black leather-trimmed steering wheel and shift knob with Gloss Black bezels",
+      "Uconnect Hands-free Group with SiriusXM Satellite Radio and Bluetooth Streaming Audio",
+      "Automatic headlamps",
+      "Black headlamp bezels and body-color grille",
+      "Performance suspension",
+      "Leather-trimmed seats with Red accent stitching",
+      "Power driver and front passenger seats",
+      "3-Zone Automatic Temperature Control",
+      "Electronic Vehicle Information Center (EVIC)"
+    ],
+    "SXT PLUS": [
+      "17-inch polished aluminum wheels with Satin Carbon pockets",
+      "Fog lamps and automatic headlamps",
+      "Bright chrome window trim belt molding and bright chrome roof rails",
+      "Power driver's seat with 8-way adjustment",
+      "Black leather-trimmed steering wheel and shift knob with Gloss Black pockets",
+      "Mopar Uconnect Web",
+      "Single-DVD Entertainment Group with Uconnect 430 touchscreen"
+    ],
+    "SXT": [
+      "17-inch Tech Silver aluminum wheels",
+      "Dual power sliding doors with obstacle detection system",
+      "Power liftgate and black side roof rails with integrated crossbars",
+      "Super Console",
+      "Power 1-touch up and down driver and front-passenger windows"
+    ],
+    "SE PLUS": [
+      "Body-color door handles, bodyside molding and lower sill appliqué",
+      "Deep-tinted sunscreen glass",
+      "17-inch Satin Carbon aluminum wheels",
+      "2nd-row bucket seats with Super Stow 'n Go",
+      "Body-color heated exterior mirrors",
+      "Premium Black cloth seats with Silver accent stitching"
+    ],
+    "SE": [
+      "Uconnect 130 AM/FM/CD/MP3 radio with 6 speakers",
+      "Remote keyless entry",
+      "Air conditioning with 3-Zone Manual Temperature Control",
+      "Fuel economizer button",
+      "Mini floor console with cup holders",
+      "Black leather-trimmed steering wheel and shift knob with Piano Black bezels",
+      "Power 2nd- and 3rd-row windows"
+    ],
+    "AVP": [
+      "3.6L 283-horsepower Pentastar VVT V6 with 6-speed automatic transmission",
+      "Uconnect 130 AM/FM/CD/MP3 radio with 4 speakers",
+      "Remote keyless entry and air conditioning with dual-zone temperature control",
+      "7 advanced multistage air bags with side-curtain and seat-mounted protection",
+      "Electronic Stability Control with All-Speed Traction Control and Brake Assist",
+      "4-wheel antilock disc brakes",
+      "Tilt/telescoping steering wheel with integrated steering wheel controls",
+      "2nd-row folding, reclining, removable bench seat",
+      "3rd-row Stow 'n Go with tailgate seats",
+      "Power front windows, locks and heated mirrors"
+    ]
+  }
+}

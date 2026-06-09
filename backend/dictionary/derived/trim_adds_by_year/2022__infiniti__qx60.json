@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2022|infiniti|qx60",
+  "year": 2022,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2022__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX60 AUTOGRAPH",
+    "QX60 SENSORY",
+    "QX60 LUXE",
+    "QX60 PURE"
+  ],
+  "adds_by_trim": {
+    "QX60 AUTOGRAPH": [
+      "Black Obsidian Contrast Roof with black roof rails",
+      "Chrome front and rear bumper accents",
+      "Chrome body side moldings",
+      "Semi-aniline leather-appointed seats with quilting, perforation, and contrast stitch",
+      "Second-row captain's chairs with inboard pivoting armrests",
+      "10.8-inch Head-Up Display",
+      "Smart Rearview Mirror",
+      "Front Central Seat-Mounted Airbag",
+      "Adaptive Front Lighting System with auto leveling",
+      "Massaging front seats with dual occupant memory for passenger seat"
+    ],
+    "QX60 SENSORY": [
+      "20-inch Charcoal Metallic machine-finished aluminum-alloy wheels with 255/50R20 tires",
+      "Silver roof rails",
+      "Dark gray front and rear bumper accents",
+      "Silver Metallic Weave interior trim accents",
+      "Black Open Pore Ash Wood interior trim accents",
+      "ProPILOT Assist with Navi-link",
+      "INFINITI 12.3-inch Dynamic Meter Display",
+      "HomeLink Universal Transceiver",
+      "Power tilting and telescoping steering column with dual occupant memory",
+      "Remote Engine Start"
+    ],
+    "QX60 LUXE": [
+      "Intelligent Key with push button ignition, seat memory, and last used audio/climate settings",
+      "Tri-Zone Automatic Temperature Control system with microfilter",
+      "Rear air vents in headliner and second and third-row outboard positions",
+      "Rear heater ducts under first-row seats and on third-row",
+      "Climate-controlled front seats",
+      "4-way passenger power lumbar",
+      "Rear-passenger manual sunshades",
+      "Auto-dimming outside mirrors",
+      "Illuminated Kick Plates",
+      "Wi-Fi Hotspot with 30-day or 1GB trial access"
+    ],
+    "QX60 PURE": [
+      "3.5-liter V6 engine with 295 hp and 270 lb-ft torque",
+      "9-speed automatic transmission with manual-mode paddle shifters",
+      "Front-Wheel Drive or INFINITI Intelligent All-Wheel Drive",
+      "18-inch Charcoal Metallic machine-finished aluminum-alloy wheels with 255/60R18 tires",
+      "Gloss black front and rear bumper accents",
+      "LED automatic-on/off headlights with integrated turn signals",
+      "Panoramic moonroof with power open/close/tilt and sunshade",
+      "Leather-appointed seating with dual occupant memory system for driver",
+      "8-way power adjustable and heated front seats",
+      "INFINITI InTouch 12.3-inch Interactive Display with Apple CarPlay and Android Auto"
+    ]
+  }
+}

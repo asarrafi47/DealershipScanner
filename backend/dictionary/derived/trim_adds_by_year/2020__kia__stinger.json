@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2020|kia|stinger",
+  "year": 2020,
+  "make": "Kia",
+  "model": "Stinger",
+  "ladder_id": "brochure_2020__kia__stinger",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 3.3L V6 engine with 365 horsepower",
+      "Adds rear-wheel drive or AWD powertrain option",
+      "Adds five drive mode selections (Smart, ECO, Comfort, Sport, Custom)",
+      "Adds ISO-STRUCTURE with 55% advanced High Tensile Steel construction",
+      "Adds Brake Assist System (BAS) and Electronic Brake-Force Distribution (EBD)",
+      "Adds Brake Fade Compensation technology",
+      "Adds Smart Key with Smart Welcome feature",
+      "Adds 60/40 split-folding rear seats",
+      "Adds hidden under-floor storage compartments"
+    ],
+    "Premium": [
+      "Adds NAPPA leather-trimmed seats",
+      "Adds heated front seats with optional heated rear outboard seats",
+      "Adds optional ventilated front seats",
+      "Adds 16-way power-adjustable driver's seat with width-adjusting power side bolsters and 4-way lumbar support",
+      "Adds Integrated Memory System for two drivers"
+    ],
+    "Limited": [
+      "Adds electronically controlled suspension system",
+      "Adds Sport Variable Gear Ratio Steering",
+      "Adds optional Smart Power Trunk with automatic opening feature"
+    ],
+    "GT": [
+      "Upgraded to Brembo high-performance brakes with signature red fixed quad-piston front calipers and dual-piston rear calipers",
+      "Adds Launch Control System for maximum off-the-line response",
+      "Adds Mechanical Limited-Slip Differential for rear wheel power distribution",
+      "Adds 19-inch wheels with vented Brembo brake rotors"
+    ]
+  }
+}

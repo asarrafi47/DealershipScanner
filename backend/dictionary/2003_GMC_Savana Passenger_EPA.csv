@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2003,GMC,Savana Passenger,Savana 1500/2500 2WD (Passenger),4.3L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.3,13,18,15,,,,,,4.3L V6,
-2003,GMC,Savana Passenger,Savana 1500/2500 2WD (Passenger),5.3L V8 (LM7),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.3,12,17,14,,,,,,5.3L V8,
-2003,GMC,Savana Passenger,Savana 1500 AWD (Passenger),5.3L V8 (LM7),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.3,12,16,13,,,,,,5.3L V8,

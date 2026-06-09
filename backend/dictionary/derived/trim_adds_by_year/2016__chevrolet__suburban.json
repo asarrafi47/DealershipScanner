@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2016|chevrolet|suburban",
+  "year": 2016,
+  "make": "Chevrolet",
+  "model": "Suburban",
+  "ladder_id": "brochure_llm_2016__chevrolet__suburban",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "LS"
+  ],
+  "adds_by_trim": {
+    "LTZ": [
+      "Bose Centerpoint Surround Sound premium 10-speaker audio system",
+      "Chevrolet MyLink 4 Radio with Navigation 8-inch touchscreen and GPS",
+      "Rear-Seat Blu-ray Entertainment System with overhead displays and wireless headphones",
+      "20-inch polished-aluminum or chrome-aluminum wheels"
+    ],
+    "LT": [
+      "Bose premium 9-speaker audio system with subwoofer in center console",
+      "Second-row power-release bucket seats",
+      "20-inch polished-aluminum wheels available"
+    ],
+    "LS": [
+      "5.3L EcoTec3 V8 with Direct Injection 355 horsepower and 383 lb-ft torque",
+      "6-speed automatic transmission with Tow/Haul mode",
+      "10-way power driver seat with 6-way power cushion and 2-way lumbar",
+      "Driver Information Center with 8-inch diagonal multi-color reconfigurable display",
+      "OnStar Basic Plan for five years with RemoteLink mobile app",
+      "OnStar 4G LTE with built-in Wi-Fi hotspot for up to seven devices",
+      "Active 2-speed electronic Autotrac transfer case with rotary controls",
+      "ABS-integrated trailer brake controller"
+    ]
+  }
+}

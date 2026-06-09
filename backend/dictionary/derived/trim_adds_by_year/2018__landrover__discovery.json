@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2018|landrover|discovery",
+  "year": 2018,
+  "make": "landrover",
+  "model": "Discovery",
+  "ladder_id": "brochure_llm_2018__landrover__discovery",
+  "source": "brochure_llm",
+  "trims_available": [
+    "HSE Luxury",
+    "HSE",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "HSE Luxury": [
+      "Electronic air suspension with high/low range two-speed transfer box",
+      "Electronic center differential standard",
+      "Meridian Surround Sound System with 14 speakers and dual subwoofer",
+      "SiriusXM Satellite Radio and HD Radio standard",
+      "Atlas grille with Narvik Black surround",
+      "Atlas fender vent ingots with Narvik Black surround",
+      "Atlas Discovery script on hood and tailgate",
+      "Body-colored door handles with Atlas surround"
+    ],
+    "HSE": [
+      "Electronic air suspension available",
+      "Active rear locking differential available",
+      "Terrain Response 2 available",
+      "All Terrain Progress Control available",
+      "Meridian Sound System with 10 speakers and dual subwoofer available",
+      "SiriusXM Satellite Radio and HD Radio standard",
+      "Atlas grille with Narvik Black surround",
+      "Atlas fender vent ingots with Narvik Black surround",
+      "White Silver tow eye covers"
+    ],
+    "SE": [
+      "Enhanced Sound System with 10 speakers standard",
+      "Coil suspension standard on 5-seat models",
+      "Manual center differential standard",
+      "Terrain Response 4-mode standard",
+      "Dark Atlas grille with Narvik Black surround",
+      "Dark Atlas fender vent ingots with Narvik Black surround",
+      "Brunel Discovery script on hood and tailgate",
+      "Body-colored door handles standard",
+      "Dark Techno Silver tow eye covers standard"
+    ]
+  }
+}

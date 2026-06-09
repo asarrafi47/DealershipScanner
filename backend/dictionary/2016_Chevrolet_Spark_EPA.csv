@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2016,Chevrolet,Spark,EV,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Subcompact Cars,,,128,109,119,,,,,,EV Electricity,
-2016,Chevrolet,Spark,Spark,1.4L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,31,40,34,,,,,,1.4L I4,
-2016,Chevrolet,Spark,Spark,1.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,30,39,33,,,,,,1.4L I4,

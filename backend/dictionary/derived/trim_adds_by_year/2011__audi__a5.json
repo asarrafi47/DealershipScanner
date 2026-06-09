@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2011|audi|a5",
+  "year": 2011,
+  "make": "Audi",
+  "model": "A5",
+  "ladder_id": "brochure_llm_2011__audi__a5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S5 Premium Plus",
+    "A5 Premium"
+  ],
+  "adds_by_trim": {
+    "S5 Premium Plus": [
+      "Silk Nappa leather upholstery with Alcantara inserts",
+      "Eight-way power S5 sport seats with integrated head restraints and four-way lumbar",
+      "Audi xenon plus headlights with automatic self-leveling and LED daytime running lights",
+      "LED taillights",
+      "Headlight washers with high-pressure, retractable and heated operation",
+      "Shift paddles on steering wheel with Tiptronic automatic transmission",
+      "Audi music interface with iPod and iPhone integration",
+      "Bluetooth preparation for mobile phone",
+      "Six-step heated front seats",
+      "Three-zone automatic climate control"
+    ],
+    "A5 Premium": [
+      "Leather seating surfaces as standard",
+      "Eight-way power driver and passenger seats with four-way power lumbar adjustment",
+      "Halogen headlights with integrated high and low beams",
+      "Dual exhaust pipes on left side",
+      "Split folding 50/50 rear seatback",
+      "Tilting glass panorama sunroof",
+      "Leather-wrapped three-spoke multifunction sport steering wheel",
+      "Audi concert system with single CD player, MP3 playback and AM/FM radio",
+      "Audi Sound System 180 watts with ten speakers and subwoofer",
+      "Electronic cruise control"
+    ]
+  }
+}

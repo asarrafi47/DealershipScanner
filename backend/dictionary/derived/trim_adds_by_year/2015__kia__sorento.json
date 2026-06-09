@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2015|kia|sorento",
+  "year": 2015,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2015__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SX",
+    "EX",
+    "LX",
+    "L"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "235/55R19 tires with alloy wheels",
+      "Rear LED tail lamps",
+      "Panoramic sunroof with power sunshade",
+      "Power liftgate with programmable height",
+      "Front HID headlights with self-leveling",
+      "Chrome dual-outlet exhaust finish",
+      "Supervision meter cluster with 7-inch TFT color LCD"
+    ],
+    "SX": [
+      "235/55R19 tires with alloy wheels",
+      "Rear LED tail lamps",
+      "Panoramic sunroof with power sunshade",
+      "Power liftgate with programmable height",
+      "Front HID headlights with self-leveling"
+    ],
+    "EX": [
+      "235/60R18 tires with alloy wheels",
+      "Roof rails in silver finish",
+      "Integrated 2nd-row sunshades",
+      "Acoustic windshield glass",
+      "Rear-Camera Display",
+      "Back-Up Warning System"
+    ],
+    "LX": [
+      "235/65R17 tires with alloy wheels",
+      "Front fog lights",
+      "Power door locks and windows",
+      "Dual power-fold door mirrors",
+      "Bluetooth wireless technology",
+      "USB/auxiliary input jacks"
+    ],
+    "L": [
+      "2.4L Gasoline Direct Injection 4-cylinder engine",
+      "6-speed automatic transmission with Sportmatic",
+      "Full-time AWD with locking center differential",
+      "Power steering with motor-driven assist",
+      "Trip computer with EcoMinder fuel-efficiency indicator",
+      "Steering-wheel-mounted audio and Bluetooth controls"
+    ]
+  }
+}

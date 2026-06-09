@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,Mercedes-Benz,EQB,250 Plus,EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,114,100,107,,,,,
+2025,Mercedes-Benz,EQB,300 4matic,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,89,85,87,,,,,
+2025,Mercedes-Benz,EQB,350 4matic,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,89,85,87,,,,,

@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2021|volkswagen|jetta",
+  "year": 2021,
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "ladder_id": "brochure_llm_2021__volkswagen__jetta",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0T Autobahn DSG",
+    "2.0T Autobahn manual",
+    "2.0T S DSG",
+    "2.0T S manual"
+  ],
+  "adds_by_trim": {
+    "2.0T Autobahn DSG": [
+      "8-way power driver's seat with power lumbar support and position memory",
+      "Actively ventilated front seats",
+      "Leather seating surfaces throughout",
+      "USB charging port in front center armrest storage box",
+      "Illuminated vanity mirrors with overhead storage compartment",
+      "Active Blind Spot Monitor with rear traffic alert",
+      "Lane Assist lane keeping system",
+      "Light Assist high beam control",
+      "Adaptive Cruise Control Stop & Go",
+      "Remote engine start with remote key fob"
+    ],
+    "2.0T Autobahn manual": [
+      "8-way power driver's seat with power lumbar support and position memory",
+      "Actively ventilated front seats",
+      "Leather seating surfaces throughout",
+      "USB charging port in front center armrest storage box",
+      "Illuminated vanity mirrors with overhead storage compartment",
+      "Active Blind Spot Monitor with rear traffic alert",
+      "Lane Assist lane keeping system",
+      "Light Assist high beam control",
+      "Adaptive Cruise Control for manual transmission"
+    ],
+    "2.0T S DSG": [
+      "Steering wheel mounted shift paddles for DSG automatic transmission",
+      "Volkswagen Digital Cockpit configurable digital instrument display",
+      "8-inch MIB3 touchscreen with AM/FM/HD Radio and WMA/MP3/FLAC player",
+      "Voice control system",
+      "BeatsAudio premium sound system with 8 speakers and subwoofer",
+      "Wireless App-Connect smartphone integration with multi-phone pairing",
+      "Wireless inductive charger for compatible mobile devices",
+      "Performance Monitor Sport HMI display",
+      "Anti-theft alarm system with vehicle immobilizer",
+      "SiriusXM 360L with 3-month All Access trial"
+    ],
+    "2.0T S manual": [
+      "Volkswagen Digital Cockpit configurable digital instrument display",
+      "8-inch MIB3 touchscreen with AM/FM/HD Radio and WMA/MP3/FLAC player",
+      "Voice control system",
+      "BeatsAudio premium sound system with 8 speakers and subwoofer",
+      "Wireless App-Connect smartphone integration with multi-phone pairing",
+      "Wireless inductive charger for compatible mobile devices",
+      "Performance Monitor Sport HMI display",
+      "Anti-theft alarm system with vehicle immobilizer",
+      "SiriusXM 360L with 3-month All Access trial"
+    ]
+  }
+}

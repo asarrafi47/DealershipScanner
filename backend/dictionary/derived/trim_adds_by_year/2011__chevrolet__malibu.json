@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2011|chevrolet|malibu",
+  "year": 2011,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_2011__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "Custom",
+    "LS",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 100,000 mile/5-year transferable Powertrain Limited Warranty",
+      "Adds Includes OnStar services with GPS and wireless connectivity"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "LS": [
+      "Body-color door handles",
+      "Black grille insert with chrome surround",
+      "Halogen composite headlamps with crystalline-like lenses and Automatic Exterior Lamp Control",
+      "Power-adjustable manual-folding black mirrors",
+      "Bodyside and rocker body-color moldings",
+      "Carpeted front and rear floor mats",
+      "Acoustic-laminated Solar-Ray light-tinted glass",
+      "Interior lighting with front reading lamps",
+      "Analog instrumentation with speedometer, engine temperature, fuel and tachometer",
+      "Driver Information Center with oil-life and tire pressure monitors"
+    ],
+    "Custom": [],
+    "LTZ": [
+      "Leather-appointed heated front seats with eight-way power driver and six-way passenger",
+      "Dual-zone automatic climate control (replaces manual single-zone)",
+      "18-inch ten-spoke bright-finish aluminum wheels and Silver dual-port grille with chrome surround",
+      "Bose eight-speaker premium audio with USB port standard",
+      "Fog lamps, LED taillamps, and chrome door handles",
+      "Heated power-adjustable body-color mirrors; remote vehicle starter system",
+      "110V household outlet and power sunroof available"
+    ]
+  }
+}

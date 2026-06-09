@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2023|lexus|rz",
+  "year": 2023,
+  "make": "Lexus",
+  "model": "RZ",
+  "ladder_id": "2023_lexus_rz",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "RZ",
+    "Premium",
+    "Luxury"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Panorama glass roof and Panoramic View Monitor",
+      "Intuitive Parking Assist with Auto Braking and Power Rear Door with Kick Sensor",
+      "Front-door courtesy lights"
+    ],
+    "Luxury": [
+      "Mark Levinson 13-speaker Premium Surround Sound and ventilated front seats",
+      "Ultrasuede-trimmed seats and thematic ambient illumination",
+      "Advanced Park with Remote Park and acoustic front/rear side glass",
+      "Front radiant heater and heated rear outboard seats"
+    ]
+  }
+}

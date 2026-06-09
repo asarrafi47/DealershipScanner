@@ -1,0 +1,40 @@
+{
+  "catalog_key": "2020|chevrolet|corvette",
+  "year": 2020,
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "ladder_id": "brochure_2020__chevrolet__corvette",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Stingray",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds Chevrolet Complete Care comprehensive coverage and warranty program",
+      "Adds 3-year/36,000-mile Bumper-to-Bumper Limited Warranty",
+      "Adds 5-year/60,000-mile Powertrain Limited Warranty",
+      "Adds 6-year/100,000-mile Rust-Through Protection",
+      "Adds 5 years/60,000 miles of Roadside Assistance and Courtesy Transportation",
+      "Adds Chevrolet Connected Access with 10 years of standard connectivity",
+      "Adds 1 month of Chevrolet Connected Services coverage",
+      "Adds 1 month of OnStar Safety & Security Plan coverage",
+      "Adds run-flat Michelin Pilot tires",
+      "Adds 24/7 Roadside Assistance"
+    ],
+    "Premium": [],
+    "Limited": [],
+    "Stingray": [
+      "6.2-liter naturally aspirated V-8 engine with 490 hp and 465 lb-ft torque",
+      "Eight-speed dual-clutch automatic transmission",
+      "Rear-wheel-drive configuration",
+      "8.0-inch touchscreen infotainment display with Apple CarPlay and Android Auto",
+      "12.0-inch digital instrument cluster",
+      "10-speaker Bose audio system",
+      "Mid-engine layout with mid-mounted V-8",
+      "Performance Data Recorder with dash camera for lap logging"
+    ]
+  }
+}

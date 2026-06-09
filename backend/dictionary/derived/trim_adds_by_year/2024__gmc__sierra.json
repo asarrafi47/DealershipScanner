@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2024|gmc|sierra",
+  "year": 2024,
+  "make": "GMC",
+  "model": "Sierra",
+  "ladder_id": "brochure_llm_2024__gmc__sierra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sierra Denali Ultimate",
+    "Sierra Denali",
+    "Sierra AT4X",
+    "Sierra AT4",
+    "Sierra Elevation",
+    "Sierra SLE",
+    "Sierra SLT",
+    "Sierra Pro"
+  ],
+  "adds_by_trim": {
+    "Sierra Denali Ultimate": [
+      "Premium luxury features above Sierra Denali trim level"
+    ],
+    "Sierra Denali": [
+      "Premium interior and exterior styling enhancements"
+    ],
+    "Sierra AT4X": [
+      "Off-road focused capability package with advanced terrain management"
+    ],
+    "Sierra AT4": [
+      "All-terrain focused features and enhanced off-road capability"
+    ],
+    "Sierra Elevation": [
+      "Distinctive styling and enhanced appearance features"
+    ],
+    "Sierra SLE": [
+      "Mid-range comfort and convenience features"
+    ],
+    "Sierra SLT": [
+      "Enhanced comfort and technology compared to Pro trim"
+    ],
+    "Sierra Pro": [
+      "3-month SiriusXM trial, body-color front and rear bumpers, color-keyed carpeting, remote start, theft-deterrent system, 20-inch 6-spoke high-gloss black wheels"
+    ]
+  }
+}

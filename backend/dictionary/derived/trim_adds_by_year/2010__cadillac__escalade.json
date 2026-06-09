@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|cadillac|escalade",
+  "year": 2010,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_llm_2010__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Escalade Platinum RWD/AWD",
+    "Escalade RWD/AWD"
+  ],
+  "adds_by_trim": {
+    "Escalade Platinum RWD/AWD": [
+      "Unique front fascia with upper and lower grilles",
+      "LED headlamps",
+      "22-inch multi-spoke chromed aluminum wheels",
+      "Exclusive Light Linen/Cocoa interior with TEHAMA leather",
+      "Embroidered Cadillac insignias and unique door sills",
+      "Genuine olive ash and burled walnut wood trim",
+      "Rear-Seat Entertainment System with two 7-inch diagonal screens",
+      "Heated and cooled cup holders"
+    ],
+    "Escalade RWD/AWD": [
+      "6.2L Vortec V8 engine with 403 hp and 417 lb.-ft. torque",
+      "E85 FlexFuel capability",
+      "Hydra-Matic 6-speed automatic transmission with Driver Shift Control",
+      "Available All-Wheel Drive system",
+      "Rear locking differential",
+      "Tri-zone automatic electronic climate control",
+      "8-inch DVD-based navigation system",
+      "Bose 5.1 Cabin Surround Sound System with ten speakers",
+      "Bluetooth wireless technology",
+      "OnStar Directions & Connections Plan with Turn-by-Turn Navigation"
+    ]
+  }
+}

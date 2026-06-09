@@ -1,0 +1,55 @@
+{
+  "catalog_key": "2019|mitsubishi|mirage",
+  "year": 2019,
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "ladder_id": "brochure_llm_2019__mitsubishi__mirage",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT",
+    "SE",
+    "LE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "GT": [
+      "15-inch two-tone alloy wheels",
+      "175/55R15 tires",
+      "HID headlights",
+      "Heated front seats",
+      "FAST-Key passive entry with push button start",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "Remote engine start"
+    ],
+    "SE": [
+      "14-inch alloy wheels",
+      "165/65R14 tires",
+      "Semi-high contrast meter cluster with chrome accent",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "FAST-Key passive entry with push button start",
+      "Remote engine start available"
+    ],
+    "LE": [
+      "15-inch black alloy wheels",
+      "175/55R15 tires",
+      "Heated front seats",
+      "Black fabric seats with red accent surfaces",
+      "Leather-wrapped steering wheel with red stitching",
+      "Leather-wrapped shift knob with red stitching",
+      "Driver's seat armrest"
+    ],
+    "ES": [
+      "6.5-inch Smartphone Link Display Audio system with Apple CarPlay and 4 speakers",
+      "Bluetooth wireless technology with steering wheel controls",
+      "Rearview camera",
+      "USB port",
+      "Power side-view mirrors",
+      "Power windows",
+      "Power door locks",
+      "6-way adjustable driver's seat with armrest",
+      "Remote keyless entry with panic feature"
+    ]
+  }
+}

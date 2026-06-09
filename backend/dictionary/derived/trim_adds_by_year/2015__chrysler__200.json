@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2015|chrysler|200",
+  "year": 2015,
+  "make": "Chrysler",
+  "model": "200",
+  "ladder_id": "brochure_llm_2015__chrysler__200",
+  "source": "brochure_llm",
+  "trims_available": [
+    "200C",
+    "200S",
+    "200 Limited",
+    "200 LX"
+  ],
+  "adds_by_trim": {
+    "200C": [
+      "Customizable 7-inch digital information display (DID)",
+      "Dual-zone automatic temperature control with rear-seat HVAC ducts",
+      "Ambient LED interior lighting (footwell, door handle, map pocket, pass-through)",
+      "Universal garage door opener",
+      "Illuminated vanity mirrors",
+      "Auto-dimming rearview mirror",
+      "Back-up camera",
+      "Remote start",
+      "Heated front seats",
+      "Chrome door handles and exterior mirrors with integrated turn signals"
+    ],
+    "200S": [
+      "Fog lamps",
+      "Black mesh lower grille and gloss black accents",
+      "Heated mirrors",
+      "18-inch satin carbon aluminum wheels",
+      "Dual integrated exhaust",
+      "Optional sport suspension",
+      "Power driver seat (8-way)",
+      "Sport seating with leather bolsters",
+      "Leather steering wheel with mounted paddle shifters",
+      "Dark chrome accents and unique blue-painted hydrographic interior trim"
+    ],
+    "200 Limited": [
+      "LED light pipe",
+      "Lower grille with chrome surround",
+      "17-inch aluminum wheels",
+      "Engine cover",
+      "Rear fascia chrome accent",
+      "Compact spare tire",
+      "5-inch touchscreen radio with Uconnect",
+      "6 speakers",
+      "Driver and passenger front window one-touch up/down",
+      "Floor mats, compass, and satin chrome accents"
+    ],
+    "200 LX": [
+      "2.4L I-4 engine with 184 hp and 173 lb-ft torque",
+      "9-speed automatic transmission",
+      "Horizontal lower grille bars with active grille shutters",
+      "Electronic Stability Control and traction control",
+      "Bifunctional halogen projector headlamps",
+      "1-door and trunk passive entry with push-button start",
+      "17-inch steel wheels with covers",
+      "Touring suspension and tire inflator kit",
+      "LED taillamps and hidden exhaust",
+      "8 air bags and tire pressure monitoring display"
+    ]
+  }
+}

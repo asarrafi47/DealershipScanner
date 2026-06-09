@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2019|mazda|cx3",
+  "year": 2019,
+  "make": "Mazda",
+  "model": "CX-3",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Sport",
+    "Touring",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

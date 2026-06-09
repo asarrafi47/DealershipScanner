@@ -1,0 +1,69 @@
+{
+  "catalog_key": "2016|nissan|sentra",
+  "year": 2016,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2016__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "SR",
+    "SV",
+    "FE+",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "Leather-appointed seats",
+      "NissanConnect with Navigation and Mobile Apps",
+      "5.8-inch color touchscreen display",
+      "Hands-free text messaging assistant",
+      "SiriusXM Satellite Radio",
+      "SiriusXM Traffic",
+      "SiriusXM Travel Link",
+      "Blind Spot Warning",
+      "Rear Cross Traffic Alert",
+      "370Z-inspired leather-wrapped steering wheel"
+    ],
+    "SR": [
+      "60/40 split fold-down rear seats",
+      "Rear disc brakes",
+      "Dual power heated outside mirrors with LED turn signal indicators",
+      "LED low-beam projector headlights with LED accents",
+      "Fog lights",
+      "Premium sport cloth seat trim",
+      "Lower body side sill extensions",
+      "Rear spoiler with integrated LED brake light",
+      "Chrome exhaust finisher"
+    ],
+    "SV": [
+      "Standard Xtronic CVT transmission",
+      "Dual power heated outside mirrors with LED turn signal indicators",
+      "Active Understeer Control",
+      "RearView Monitor",
+      "HomeLink Universal Transceiver",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Dual Zone Automatic Temperature Control with in-cabin microfilter",
+      "Sliding front armrest",
+      "Rear-seat center armrest",
+      "Auto-dimming rearview mirror"
+    ],
+    "FE+": [
+      "Standard Xtronic CVT transmission",
+      "Special low rolling resistance tires",
+      "Rear tire and underbody aerodynamic deflectors"
+    ],
+    "S": [
+      "1.8-liter 4-cylinder engine",
+      "6-speed manual transmission or Xtronic CVT transmission",
+      "Eco, Normal and Sport drive modes",
+      "Anti-lock Braking System",
+      "Smart Auto Headlights",
+      "Bluetooth Hands-free Phone System",
+      "Drive computer",
+      "Power windows and door locks",
+      "Air conditioning with in-cabin microfilter",
+      "Illuminated steering wheel-mounted audio and cruise controls"
+    ]
+  }
+}

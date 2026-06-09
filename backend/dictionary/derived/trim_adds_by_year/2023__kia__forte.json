@@ -1,0 +1,67 @@
+{
+  "catalog_key": "2023|kia|forte",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Forte",
+  "ladder_id": "brochure_llm_2023__kia__forte",
+  "source": "brochure_llm",
+  "trims_available": [
+    "GT (Manual)",
+    "GT",
+    "GT-Line",
+    "LXS",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "GT (Manual)": [
+      "6-speed Manual Transmission",
+      "Michelin Pilot Sport summer tires",
+      "Harman Kardon 320-watt premium audio system with 8 speakers",
+      "8-speaker audio",
+      "Push Button Start with Smart Key",
+      "Overhead LED front and rear reading lights",
+      "Heated front seats",
+      "Power sunroof"
+    ],
+    "GT": [
+      "1.6L 4-cylinder GDI Turbo engine with 201 horsepower",
+      "7-speed Dual-Clutch Transmission",
+      "195 lb.-ft. of torque",
+      "Larger front disc brakes",
+      "Sport-tuned multi-link rear suspension",
+      "Sport-tuned dual exhaust",
+      "18-in. machined-finish alloy wheels",
+      "LED multi-reflective headlights",
+      "Leather-wrapped Sport Design steering wheel with paddle shifters and red contrast stitching",
+      "Rear USB charge port and A/C vent with wireless smartphone charger"
+    ],
+    "GT-Line": [
+      "17-in. alloy wheels",
+      "LED Daytime Running Lights and LED tail lights",
+      "Front LED fog lights",
+      "Sport side sills with black high-gloss accent trim",
+      "Black high-gloss rear deck lid spoiler",
+      "Black high-gloss sport grille with red inserts",
+      "60/40 split-folding rear seatback with rear center armrest and cupholder",
+      "AM/FM/HD audio unit with 6 speakers",
+      "10.25-in. touchscreen with Kia Connect, Navigation and modem",
+      "Alloy sport pedals"
+    ],
+    "LXS": [
+      "16-in. machined-finish alloy wheels",
+      "60/40 split-folding rear seatback"
+    ],
+    "LX": [
+      "2.0L 4-cylinder MPI Atkinson engine with 147 horsepower",
+      "132 lb.-ft. of torque",
+      "Intelligent Variable Transmission",
+      "4-wheel disc brakes",
+      "Projector headlights with Front Daytime Running Lights",
+      "High Beam Assist",
+      "4.2-in. Supervision meter cluster display",
+      "6-way-adjustable driver and front-passenger seats",
+      "Wireless Apple CarPlay and Android Auto integration",
+      "Bluetooth wireless technology with 8-in. touchscreen"
+    ]
+  }
+}

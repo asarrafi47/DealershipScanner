@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|hyundai|elantra",
+  "year": 2016,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2016__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "ELANTRA GT",
+    "ELANTRA SPORT"
+  ],
+  "adds_by_trim": {
+    "ELANTRA GT": [
+      "5-door hatchback design with 51.0 cubic feet maximum cargo volume",
+      "Heated front seats standard; available ventilated front seats in Tech Package",
+      "Panoramic sunroof available",
+      "Rear backup camera concealed in rear hatch badge",
+      "Cooled glovebox and underfloor storage",
+      "Driver's knee airbag for added protection",
+      "Best-in-class power-to-weight ratio versus Subaru Impreza, Ford Focus, Volkswagen Golf"
+    ],
+    "ELANTRA SPORT": [
+      "2.0L GDI engine producing 173 horsepower with optimized low and midrange torque",
+      "6-speed manual transmission standard with available 6-speed automatic and SHIFTRONIC",
+      "Vehicle Stability Management with Traction Control standard",
+      "17-inch alloy wheels standard",
+      "LED rear taillights standard",
+      "Available Tech Package with power tilt-and-slide sunroof, 7-inch navigation, Pandora radio",
+      "360-Watt premium audio system with digital external amp available in Tech Package",
+      "Blue Link connected car solution available",
+      "Chrome exhaust outlet and available rear lip spoiler"
+    ]
+  }
+}

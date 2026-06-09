@@ -1,0 +1,15 @@
+{
+  "catalog_key": "2011|infiniti|fx",
+  "year": 2011,
+  "make": "Infiniti",
+  "model": "FX",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2011_Infiniti_FX_Brochure.pdf",
+  "page_count": 4,
+  "all_pages": false,
+  "trim_hint_pages": [],
+  "warnings": [
+    "no_text_extracted"
+  ],
+  "pages": [],
+  "combined_trim_pages_text": ""
+}

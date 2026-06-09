@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2026|toyota|corollahatchback",
+  "year": 2026,
+  "make": "Toyota",
+  "model": "Corolla Hatchback",
+  "ladder_id": "2026_toyota_corolla_hatchback",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "FX",
+    "XSE"
+  ],
+  "adds_by_trim": {
+    "FX": [
+      "18-inch gloss-white-finished alloy wheels with P225/40R18 tires (replaces 16-inch on SE)",
+      "Black vented sport wing and blackout badging",
+      "Sport Touring heated seats with orange stitching",
+      "FX appearance package on SE mechanicals"
+    ],
+    "XSE": [
+      "18-inch graphite alloy wheels with integrated LED fog lights",
+      "Dual-zone automatic climate control",
+      "SofTex heated front sport seats with fabric inserts",
+      "Premium leather steering wheel with paddle shifters and Smart Key"
+    ],
+    "SE": [
+      "2.0L Dynamic Force engine with 169 hp",
+      "Dynamic-Shift CVT with Normal, Eco and Sport driving modes",
+      "LED headlights and LED DRL with auto on/off",
+      "16-inch alloy wheels",
+      "Color-keyed front lower grille and rear spoiler",
+      "Color-keyed heated power outside mirrors with turn signal indicators",
+      "Automatic climate control and Smart Key with Push Button Start",
+      "4.2-inch Multi-Information Display and premium leather-trimmed steering wheel",
+      "Paddle shifters and fabric sport seats with 60/40 split fold-down rear",
+      "Four USB-C charging ports and Electric Parking Brake with Brake Hold"
+    ]
+  }
+}

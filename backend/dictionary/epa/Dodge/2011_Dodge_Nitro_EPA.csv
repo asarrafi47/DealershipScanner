@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2011,Dodge,Nitro,2WD,3.7L V6,3.7L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,16,22,18,,,,,
+2011,Dodge,Nitro,2WD,4.0L V6,4.0L V6,,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,16,21,18,,,,,
+2011,Dodge,Nitro,4WD,3.7L V6,3.7L V6,,Automatic 4-spd,Four-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.7,15,21,17,,,,,
+2011,Dodge,Nitro,4WD,4.0L V6,4.0L V6,,Automatic 5-spd,Four-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,16,21,17,,,,,

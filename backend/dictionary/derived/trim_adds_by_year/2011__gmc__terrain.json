@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2011|gmc|terrain",
+  "year": 2011,
+  "make": "GMC",
+  "model": "Terrain",
+  "ladder_id": "brochure_2011__gmc__terrain",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SLT",
+    "SLE",
+    "Limited",
+    "Premium",
+    "EX",
+    "SE",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds XM Radio standard with 3 trial months of service",
+      "Adds OnStar with 6 months of Directions & Connections plan",
+      "Adds OnStar Hands-Free Calling capability",
+      "Adds OnStar crash response and Stolen Vehicle assistance",
+      "Adds remote Door Unlock and OnStar Vehicle Diagnostics",
+      "Adds 5-year/100,000-mile Powertrain Limited Warranty",
+      "Adds 24-Hour Roadside Assistance and Courtesy Transportation",
+      "Adds Travel Benefits and reimbursement for trip interruption"
+    ],
+    "SE": [],
+    "EX": [],
+    "Premium": [],
+    "Limited": [],
+    "SLE": [
+      "Premium cloth seating",
+      "8-way power driver seat adjuster with manual fore/aft and power lumbar",
+      "Leather-wrapped steering wheel with mounted audio and cruise controls",
+      "Single-zone automatic air conditioning with climate control",
+      "Pioneer premium 8-speaker system with subwoofer and amplifier",
+      "Heated driver and front passenger seats with convenience package"
+    ],
+    "SLT": [
+      "Adds available touch-screen navigation system with XM NavTraffic"
+    ]
+  }
+}

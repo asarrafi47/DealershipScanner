@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2016|acura|rlx",
+  "year": 2016,
+  "make": "acura",
+  "model": "rlx",
+  "ladder_id": "brochure_2016__acura__rlx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Advance",
+    "Technology",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [],
+    "Technology": [
+      "Adds Lane Departure Warning (LDW) system",
+      "Adds Lane Keeping Assist System (LKAS)",
+      "Adds Collision Mitigation Braking System (CMBS)",
+      "Adds AcuraLink Real-Time Traffic and Weather",
+      "Adds Navigation system with mobile interactive features"
+    ],
+    "Advance": [
+      "Adds premium audio system with ELS Surround",
+      "Upgraded to AcuraLink Premium subscription package",
+      "Adds live concierge services"
+    ]
+  }
+}

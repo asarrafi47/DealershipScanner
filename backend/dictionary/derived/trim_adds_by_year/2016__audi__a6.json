@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2016|audi|a6",
+  "year": 2016,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_llm_2016__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S6",
+    "A6"
+  ],
+  "adds_by_trim": {
+    "S6": [
+      "8.0-liter turbocharged TFSI engine with 450 horsepower and 406 lb-ft torque",
+      "32-valve DOHC with variable valve timing",
+      "0–60 mph in 4.4 seconds with Stronic quattro all-wheel drive",
+      "155 mph top track speed",
+      "Sport differential available",
+      "S6 Sport Seat with Black Valcona leather and silver contrast diamond stitching",
+      "Carbon Atlas or Carbon Twill layered aluminum/black wood interior options",
+      "19-inch and 20-inch AudiSport exclusive wheel designs",
+      "Arras Red and Misano Red pearl exclusive exterior colors"
+    ],
+    "A6": [
+      "Engine choices: 2.0T four-cylinder (252 hp), 3.0T six-cylinder (333 hp), or TDI diesel (240 hp)",
+      "Seven-speed Stronic dual-clutch transmission with front-wheel or quattro all-wheel drive option",
+      "Eight-speed Tiptronic automatic transmission with quattro all-wheel drive available",
+      "Standard Seat or Ventilated Comfort Seat options",
+      "Fine Grain Ash, Natural Brown Wood, or Layered Walnut Wood interior finishes",
+      "Multiple exterior color options including Brilliant Black, Ibis White, and Dakota Gray metallic",
+      "18-inch and 19-inch AudiSport wheel designs",
+      "S line Sport package and 19-inch Black Optic package available"
+    ]
+  }
+}

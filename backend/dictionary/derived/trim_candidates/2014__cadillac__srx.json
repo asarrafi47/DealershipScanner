@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2014|cadillac|srx",
+  "year": 2014,
+  "make": "Cadillac",
+  "model": "SRX",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Sport",
+    "Limited",
+    "Premium",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

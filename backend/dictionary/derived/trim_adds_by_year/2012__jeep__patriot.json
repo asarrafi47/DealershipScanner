@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2012|jeep|patriot",
+  "year": 2012,
+  "make": "Jeep",
+  "model": "Patriot",
+  "ladder_id": "brochure_2012__jeep__patriot",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Latitude",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds standard electronic stability control (ESC) with antilock brakes",
+      "Adds standard electronic roll mitigation (ERM)",
+      "Adds standard hill start assist (HSA)",
+      "Adds standard fog lamps",
+      "Adds standard advanced multistage front and side-curtain air bags",
+      "Adds dome light with removeable and rechargeable LED flashlight",
+      "Adds standard illuminated cup holders in center console",
+      "Adds 60/40 split-folding reclining rear seats"
+    ],
+    "Sport": [
+      "Manual temperature control air conditioning",
+      "Manual foldaway mirrors",
+      "Black roof cargo side rails",
+      "P205/70R16 all-season black sidewall tires",
+      "Manual windows",
+      "Four headliner-mounted assist handles",
+      "Carpeted load floor",
+      "Media Center 130 AM/FM/CD radio with MP3/WMA support",
+      "Four-speaker audio system",
+      "Sentry Key antitheft engine immobilizer with two encoded keys"
+    ],
+    "Latitude": [
+      "Silver roof cargo side rail inserts",
+      "Two halogen fog lamps in front bumper",
+      "Power heated manual foldaway mirrors",
+      "Power windows with driver's one-touch down",
+      "Deluxe cloth seat coverings",
+      "Front low-back reclining with passenger forward fold-flat and 60/40 split rear seatback",
+      "Heated front seats",
+      "115-volt outlet with 150-watt capacity",
+      "Supplemental front-seat mounted side airbags",
+      "Media Center 230 with six-CD/DVD changer capability"
+    ],
+    "Limited": [
+      "Adds available supplemental side air bags"
+    ]
+  }
+}

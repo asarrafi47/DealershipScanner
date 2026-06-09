@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2011|hyundai|tucson",
+  "year": 2011,
+  "make": "Hyundai",
+  "model": "Tucson",
+  "ladder_id": "brochure_llm_2011__hyundai__tucson",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "GLS",
+    "GL"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "18-inch alloy wheels with 225/55R18 tires",
+      "Leather seating surfaces",
+      "Heated front seats with high/low version",
+      "Power driver seat with lumbar support",
+      "Dual front automatic temperature control with Cleanair ionizer",
+      "Front solar glass",
+      "Auto-dimming mirror with HomeLink®",
+      "Premium suspension",
+      "Side garnish and Limited badging",
+      "Rear privacy glass and roof side rails"
+    ],
+    "GLS": [
+      "2.4L Theta 2 dOHC 4-cylinder engine with Continuously Variable Valve Timing",
+      "6-speed automatic transmission",
+      "17-inch alloy wheels",
+      "Auto up/down driver power window",
+      "Leatherette bolster/cloth insert seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "Automatic headlights",
+      "EZ lane change assist",
+      "Rear wiper and washer"
+    ],
+    "GL": [
+      "2.0L Theta 2 dOHC 4-cylinder engine with Continuously Variable Valve Timing",
+      "5-speed manual or available 6-speed automatic transmission",
+      "4-wheel independent suspension",
+      "17-inch steel wheels with wheel covers",
+      "Tire Pressure Monitoring System",
+      "Electronic Stability Control with ABS and Traction Control",
+      "Air conditioning with air filter",
+      "AM/FM/XM/CD/MP3 audio system with 6 speakers and iPod/USB input",
+      "Power windows, door locks and mirrors",
+      "Remote keyless entry with alarm"
+    ]
+  }
+}

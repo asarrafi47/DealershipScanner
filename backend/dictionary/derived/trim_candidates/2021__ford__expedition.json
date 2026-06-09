@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2021|ford|expedition",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Expedition",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "King Ranch",
+    "FX4",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

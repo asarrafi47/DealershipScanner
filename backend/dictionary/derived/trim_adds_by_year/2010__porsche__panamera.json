@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2010|porsche|panamera",
+  "year": 2010,
+  "make": "Porsche",
+  "model": "Panamera",
+  "ladder_id": "brochure_llm_2010__porsche__panamera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Panamera Turbo",
+    "Panamera S4",
+    "Panamera S",
+    "Panamera 4"
+  ],
+  "adds_by_trim": {
+    "Panamera Turbo": [
+      "Porsche Dynamic Light System (PDLS) standard instead of optional",
+      "No heated seats front and rear option availability"
+    ],
+    "Panamera S4": [
+      "Porsche Dynamic Light System (PDLS) standard instead of optional",
+      "Bi-Xenon headlights with PDLS standard"
+    ],
+    "Panamera S": [
+      "Bi-Xenon headlights standard",
+      "Porsche Dynamic Light System (PDLS) available"
+    ],
+    "Panamera 4": [
+      "Bi-Xenon headlights available as optional equipment",
+      "Standard safety and comfort features across all trims"
+    ]
+  }
+}

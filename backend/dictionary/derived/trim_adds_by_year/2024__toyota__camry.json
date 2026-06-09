@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2024|toyota|camry",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Camry",
+  "ladder_id": "brochure_llm_2024__toyota__camry",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XSE V6",
+    "TRD",
+    "XSE Hybrid",
+    "XLE Hybrid",
+    "SE Hybrid",
+    "LE Hybrid"
+  ],
+  "adds_by_trim": {
+    "XSE V6": [
+      "3.5L V6 engine with 301 hp",
+      "22 city / 32 highway / 26 combined mpg",
+      "Panoramic glass roof with front power tilt/slide moonroof",
+      "10-inch color Head-Up Display (HUD)",
+      "Audio Plus with JBL with 9-inch touchscreen and nine speakers",
+      "Navigation Upgrade Package available with Dynamic Navigation",
+      "Driver Assist Package with Panoramic View Monitor and Parking Assist"
+    ],
+    "TRD": [
+      "TRD track-tuned suspension",
+      "12.9-inch front disc brakes with red-painted calipers",
+      "Gloss-black front grille with sport mesh insert",
+      "19-inch x 8.5-inch TRD matte-black alloy wheels",
+      "TRD gloss-black pedestal rear spoiler and front splitter with side aero skirts",
+      "TRD cat-back dual exhaust with polished stainless steel tips",
+      "SofTex-trimmed front seats with red seatbelts and TRD headrest logo",
+      "Leather-trimmed steering wheel with red stitching and paddle shifters",
+      "Blind Spot Monitor with Rear Cross-Traffic Alert"
+    ],
+    "XSE Hybrid": [
+      "LED headlights with black trim and LED DRL with auto on/off",
+      "Gloss-black front grille with sport mesh lower insert",
+      "19-inch gloss-black alloy wheels",
+      "Leather-trimmed seats with heated front seats",
+      "Rear adjustable headrests",
+      "Qi-compatible wireless charging",
+      "Ambient interior lighting",
+      "Audio Plus with 9-inch touchscreen and six speakers"
+    ],
+    "XLE Hybrid": [
+      "LED headlights and LED DRL with auto on/off feature",
+      "LED taillights with black trim",
+      "Dark gray front grille with chrome accents",
+      "18-inch dark gray machined-finish alloy wheels",
+      "Leather-trimmed seats with heated front seats",
+      "Rear adjustable headrests",
+      "Leather-trimmed tilt/telescopic steering wheel",
+      "Wood inlay interior trim",
+      "Ambient interior lighting",
+      "Qi-compatible wireless charging"
+    ],
+    "SE Hybrid": [
+      "Sport-tuned suspension",
+      "Bi-LED combination headlights with black trim and auto on/off",
+      "Black front grille with sport mesh lower insert",
+      "Color-keyed sport side rocker panels",
+      "18-inch black machined-finish alloy wheels",
+      "Color-keyed rear spoiler",
+      "Sport SofTex-trimmed front seats",
+      "Leather-trimmed tilt/telescopic steering wheel with paddle shifters",
+      "7-inch Multi-Information Display"
+    ],
+    "LE Hybrid": [
+      "Hybrid engine: 2.5L 4-Cylinder with 208 net hp",
+      "Electronically controlled Continuously Variable Transmission with sequential shift mode",
+      "Normal, Eco, EV40, and Sport drive modes",
+      "51 city / 53 highway / 52 combined est. mpg",
+      "Bi-LED combination headlights with auto on/off and turn-signal indicators",
+      "LED combination taillights with black trim",
+      "Dark gray front grille",
+      "16-inch steel wheels with wheel covers",
+      "Dual zone automatic climate control",
+      "Fabric-trimmed seats with 8-way power-adjustable driver seat"
+    ]
+  }
+}

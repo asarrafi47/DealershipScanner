@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2018|ford|fusion",
+  "year": 2018,
+  "make": "Ford",
+  "model": "Fusion",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Platinum",
+    "Titanium",
+    "Sport",
+    "SE",
+    "Active"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

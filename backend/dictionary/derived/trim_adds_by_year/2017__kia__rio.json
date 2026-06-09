@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2017|kia|rio",
+  "year": 2017,
+  "make": "Kia",
+  "model": "Rio",
+  "ladder_id": "brochure_llm_2017__kia__rio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX",
+    "XE",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "SX": [
+      "17-inch alloy wheels with 205/45R17 tires",
+      "Power sunroof with tilt",
+      "Power-folding outside mirrors with turn-signal indicators",
+      "Projection headlights",
+      "Front LED accent lights",
+      "LED taillights",
+      "Black mesh radiator grille with chrome surround",
+      "Rear spoiler on 5-Door models",
+      "Sport-tuned suspension with ventilated front disc brakes",
+      "11.0-inch ventilated front disc brakes"
+    ],
+    "XE": [
+      "15-inch alloy wheels with 195/65R15 tires",
+      "Projection front fog lights",
+      "A-pillar-mounted tweeter speakers",
+      "Premium cloth seats with leather trim available via EX Designer Package",
+      "Center console with sliding armrest and storage",
+      "Front-door padded armrest",
+      "Dual visor mirror lights",
+      "Dual front map lights",
+      "Soft-touch dash",
+      "Tilt and telescopic steering column"
+    ],
+    "XL": [
+      "1.6L Gasoline Direct Injection four-cylinder engine with 138 horsepower",
+      "6-speed manual transmission on Sedan or 6-speed Sportmatic automatic transmission",
+      "Idle Stop and Go system",
+      "Multi-reflector headlights",
+      "15-inch steel wheels with 195/65R15 tires",
+      "Dual body-color power mirrors with heated function",
+      "Locking fuel-filler door",
+      "AM/FM/CD/MP3/SiriusXM audio system with 4 speakers",
+      "USB/auxiliary input jacks",
+      "Steering-wheel-mounted audio controls"
+    ]
+  }
+}

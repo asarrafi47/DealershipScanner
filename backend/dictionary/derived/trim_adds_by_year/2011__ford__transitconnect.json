@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2011|ford|transitconnect",
+  "year": 2011,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_2011__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "XLT",
+    "XL",
+    "Base",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds integrated blind spot mirrors standard on all Vans",
+      "Adds AdvanceTrac with RSC electronic stability control standard on Wagons",
+      "Adds Anti-Lock Brake System with traction control and yaw control",
+      "Adds 50/50 split rear doors swinging 180 degrees",
+      "Adds sliding doors on both sides for cargo access",
+      "Adds expansive load floor with low liftover heights"
+    ],
+    "Base": [],
+    "XL": [
+      "(cid:2) All-weather floor mats (front)",
+      "(cid:2) Premium carpeted floor mats (front)"
+    ],
+    "XLT": [
+      "Adds articulated rear doors swinging full 255 degrees",
+      "Adds optional Reverse Sensing System detecting objects up to 6 feet behind vehicle",
+      "Adds available rear view camera with full-color display and sight lines on rearview mirror",
+      "Adds optional Ford Work Solutions with full-function computing, telephone, Internet access, and Garmin navigation"
+    ],
+    "Limited": []
+  }
+}

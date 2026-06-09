@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2010|chevrolet|colorado",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Colorado",
+  "ladder_id": "brochure_2010__chevrolet__colorado",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes 100,000 mile/5-year transferable Powertrain Limited Warranty",
+      "Adds Features 24-hour Roadside Assistance Program",
+      "Adds Includes lockout service and flat tire changes"
+    ],
+    "Sport": [
+      "300-hp 5.3L V8 engine (standard)",
+      "18-inch Midnight Silver aluminum wheels with low-profile tires",
+      "ZQ8 Sport Suspension Package",
+      "Body-color front and rear fascias",
+      "Extended or Crew Cab configuration; 2WD only"
+    ],
+    "Limited": [
+      ". OnStar services require vehicle electrical system (including battery), wireless service and GPS satellite signals to be available and operating for features to function properly",
+      "a rear seat in the appropriate infant, child or booster seat. Never place",
+      "safety seat instructions for more"
+    ]
+  }
+}

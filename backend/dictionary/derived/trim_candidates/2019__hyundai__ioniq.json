@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2019|hyundai|ioniq",
+  "year": 2019,
+  "make": "Hyundai",
+  "model": "Ioniq",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "Blue",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

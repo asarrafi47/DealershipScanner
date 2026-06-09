@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2012|chrysler|200",
+  "year": 2012,
+  "make": "Chrysler",
+  "model": "200",
+  "ladder_id": "brochure_web_2012__chrysler__200",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Limited",
+    "Touring",
+    "LX",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "2.0L 4-cylinder engine, 16-valve DOHC, 156 hp",
+      "5-speed manual transmission standard",
+      "Power windows, locks, and mirrors",
+      "Air conditioning",
+      "60/40 split-folding rear seat",
+      "Tilt steering wheel"
+    ],
+    "LX": [
+      "4-speed automatic transmission option",
+      "AM/FM stereo with CD player",
+      "Cruise control",
+      "Keyless entry system"
+    ],
+    "Touring": [
+      "2.4L 4-cylinder engine, 16-valve DOHC, 173 hp",
+      "6-speed automatic transmission",
+      "Leather-wrapped steering wheel",
+      "8-way power driver seat adjustment",
+      "Automatic headlights and windshield wipers",
+      "Dual automatic temperature control",
+      "Uconnect 130 with 3.5-inch display"
+    ],
+    "Limited": [
+      "Leather upholstery seating surfaces",
+      "Heated front seats",
+      "Rear parking sensors",
+      "Premium audio system upgrade",
+      "8-inch Uconnect touch-screen display",
+      "Backup camera",
+      "18-inch alloy wheels",
+      "Fog lamps"
+    ]
+  },
+  "web_source_url": "https://www.caranddriver.com/chrysler/200"
+}

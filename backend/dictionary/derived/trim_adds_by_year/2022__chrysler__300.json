@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2022|chrysler|300",
+  "year": 2022,
+  "make": "Chrysler",
+  "model": "300",
+  "ladder_id": "brochure_llm_2022__chrysler__300",
+  "source": "brochure_llm",
+  "trims_available": [
+    "300S",
+    "300 TOURING L",
+    "300 TOURING"
+  ],
+  "adds_by_trim": {
+    "300S": [
+      "Optional 5.7L HEMI V8 engine with 8-speed automatic transmission",
+      "Performance-tuned suspension with selectable Sport mode",
+      "Steering wheel-mounted paddle shifters",
+      "Nappa leather-trimmed Sport bucket seats",
+      "9 Premium Alpine speakers with 506-watt amplifier and trunk-mounted subwoofer",
+      "Uconnect 4C NAV with 8.4-inch touchscreen and navigation",
+      "Dual-pane panoramic sunroof",
+      "20-inch Black Noise cast aluminum wheels",
+      "Front LED fog lamps",
+      "Chrysler wing badge with Red accents"
+    ],
+    "300 TOURING L": [
+      "20-inch Black Noise cast aluminum wheels",
+      "Premium fog lamps",
+      "Power heated mirrors with courtesy lamps and auto-dimming driver side",
+      "Supplemental turn signals on mirrors",
+      "Blind Spot Monitoring and Rear Cross-Path Detection",
+      "Nappa leather-trimmed bucket seats",
+      "Power passenger seat with 4-way power lumbar adjust",
+      "Heated front seats",
+      "Uconnect 4C NAV with 8.4-inch touchscreen and navigation",
+      "ParkSense Front and Rear Park Assist System"
+    ],
+    "300 TOURING": [
+      "292-hp 3.6L Pentastar V6 with 8-speed automatic transmission and RWD",
+      "Optional All-Wheel Drive",
+      "4-wheel independent Touring suspension",
+      "17-inch Fine Silver cast aluminum wheels",
+      "Automatic halogen projector headlamps with Chrome bezels",
+      "LED daytime running lamps",
+      "Chrome LED taillamps with bright surround",
+      "Dual exhaust with bright tips",
+      "Power heated mirrors",
+      "Cloth seats with power driver and 60/40 split-folding rear bench"
+    ]
+  }
+}

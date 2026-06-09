@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2014|toyota|venza",
+  "year": 2014,
+  "make": "Toyota",
+  "model": "Venza",
+  "ladder_id": "brochure_llm_2014__toyota__venza",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Front and rear parking assist sonar",
+      "Tow Prep Package with engine oil cooler, larger radiator fan, heavy-duty alternator",
+      "Anti-theft system with alarm and engine immobilizer"
+    ],
+    "XLE": [
+      "Anti-theft system with alarm and engine immobilizer",
+      "XLE Premium Package with panoramic glass roof, power tilt/slide moonroof",
+      "Display Audio with Navigation, 6.1-inch touchscreen, integrated backup camera",
+      "JBL Synthesis audio system with 13 speakers including subwoofer",
+      "SiriusXM Radio with 90-day All Access trial, HD Radio with iTunes Tagging"
+    ],
+    "LE": [
+      "Star Safety System with Enhanced VSC, TRAC, ABS, EBD, Brake Assist, Smart Stop Technology",
+      "Seven airbags including driver knee airbag and front/rear side curtain airbags",
+      "Driver and front passenger active headrests",
+      "Energy-absorbing collapsible steering column",
+      "Front and rear energy-absorbing crumple zones with side-impact door beams",
+      "Tire Pressure Monitor System",
+      "Hill Start Assist Control",
+      "Child-protector rear door locks",
+      "3-point seatbelts for all seating positions with pretensioners"
+    ]
+  }
+}

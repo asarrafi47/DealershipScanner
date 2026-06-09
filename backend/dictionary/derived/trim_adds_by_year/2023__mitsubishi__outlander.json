@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2023|mitsubishi|outlander",
+  "year": 2023,
+  "make": "Mitsubishi",
+  "model": "Outlander",
+  "ladder_id": "brochure_llm_2023__mitsubishi__outlander",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL PREMIUM",
+    "SEL TOURING",
+    "SEL",
+    "SE TECH",
+    "BLACK EDITION",
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SEL PREMIUM": [
+      "Semi-aniline leather-appointed seating surfaces with two-tone roof option"
+    ],
+    "SEL TOURING": [
+      "Heated steering wheel",
+      "Synthetic leather door insert with quilting in black and saddle tan",
+      "Semi-aniline leather appointed seating",
+      "10.8-inch Head-Up Display (HUD)",
+      "BOSE premium sound system with 10 speakers",
+      "Power panoramic sunroof",
+      "Rear door pull-up sunshade"
+    ],
+    "SEL": [
+      "Body-colored front and rear bumper lower accents",
+      "Side mirrors with position memory and reverse auto tilt function",
+      "Front door accent with LED interior illumination",
+      "Synthetic leather door insert with quilting",
+      "8-way power adjustable driver seat with memory linked to key fob",
+      "4-way power adjustable passenger seat",
+      "Heated rear seats",
+      "Leather-appointed seating surfaces",
+      "12.3-inch full digital driver display",
+      "Triple-Zone Automatic Climate Control"
+    ],
+    "SE TECH": [
+      "12.3-inch full digital driver display",
+      "BOSE premium sound system with 10 speakers",
+      "Power panoramic sunroof",
+      "Auto-dimming rearview mirror"
+    ],
+    "BLACK EDITION": [
+      "Synthetic leather seating surfaces",
+      "Black front and rear bumper lower accents",
+      "Black 20-inch alloy wheels",
+      "Black side mirrors with LED turn indicators",
+      "Black hood emblem",
+      "Rear USB ports"
+    ],
+    "SE": [
+      "20-inch two-tone alloy wheels",
+      "LED front fog lights",
+      "Heated door mirrors",
+      "Power remote liftgate",
+      "Synthetic leather seating surface",
+      "Heated front seats",
+      "FAST-Key Entry System",
+      "Mitsubishi Connect with Safeguard and Remote Services with 24-month trial",
+      "Multi-View Camera System",
+      "Front parking sensor"
+    ],
+    "ES": [
+      "2.5L MIVEC DOHC 4-cylinder direct-injection engine",
+      "7-passenger seating capacity",
+      "18-inch alloy wheels",
+      "Forward Collision Mitigation",
+      "Blind Spot Warning with Lane Change Assist",
+      "Rear Cross Traffic Alert",
+      "Rear Automatic Emergency Braking",
+      "Push-button start",
+      "Apple CarPlay and Android Auto",
+      "Front USB ports"
+    ]
+  }
+}

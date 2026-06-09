@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2018|honda|fit",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Fit",
+  "ladder_id": "brochure_llm_2018__honda__fit",
+  "source": "brochure_llm",
+  "trims_available": [
+    "EX-L",
+    "EX",
+    "SPORT",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "EX-L": [
+      "Standard continuously variable transmission (CVT) with dual-mode paddle shifters",
+      "Heated side mirrors with integrated turn indicators",
+      "Leather-trimmed seats",
+      "Heated front seats",
+      "Available Honda Satellite-Linked Navigation System with voice recognition and HD Radio"
+    ],
+    "EX": [
+      "Standard Honda Sensing suite of safety and driver-assistive features",
+      "16-inch machine-finished alloy wheels",
+      "Honda LaneWatch",
+      "One-touch power moonroof with tilt feature",
+      "Smart Entry with Walk Away Auto Lock",
+      "Push button start",
+      "180-watt audio system with 6 speakers",
+      "7-inch Display Audio with high-resolution touchscreen",
+      "Apple CarPlay and Android Auto",
+      "LED brake lights"
+    ],
+    "SPORT": [
+      "Front underbody spoiler and rear diffuser with orange pinstriping",
+      "Side underbody spoilers",
+      "Chrome exhaust finisher",
+      "Leather-wrapped steering wheel and shift knob with orange stitching",
+      "16-inch gloss black alloy wheels",
+      "Dual-mode paddle shifters (available)",
+      "Fog lights"
+    ],
+    "LX": [
+      "1.5-liter i-VTEC 4-cylinder engine with direct injection",
+      "6-speed manual or available continuously variable transmission (CVT)",
+      "Hill start assist",
+      "15-inch wheels with full covers",
+      "Six airbags",
+      "Multi-angle rearview camera with guidelines",
+      "Daytime Running Lights (DRL)",
+      "Security system with remote entry",
+      "Body-colored power side mirrors",
+      "160-watt audio system with 4 speakers"
+    ]
+  }
+}

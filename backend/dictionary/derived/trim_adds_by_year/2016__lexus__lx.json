@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2016|lexus|lx",
+  "year": 2016,
+  "make": "lexus",
+  "model": "LX",
+  "ladder_id": "brochure_2016__lexus__lx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes V8 engine",
+      "Adds Navigation System",
+      "Adds Includes Pre-Collision System",
+      "Adds Pedestrian Detection System as part of Lexus Safety System+",
+      "Adds Includes Dynamic Radar Cruise Control",
+      "Adds Intelligent high-beams system",
+      "Adds Includes Lane Departure Alert",
+      "Adds Panoramic View Monitor and Multi-Terrain Monitor",
+      "Adds Includes backup camera",
+      "Adds CRAWL Control for off-road terrain"
+    ],
+    "Premium": [
+      "Adds Mark Levinson premium audio system",
+      "Adds Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert system",
+      "Adds Trailer Sway Control electronic system"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2023|hyundai|elantra",
+  "year": 2023,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "2023_hyundai_elantra",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "SE",
+    "SEL",
+    "Sport",
+    "Limited",
+    "N Line"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "2.0L I-4 Atkinson Cycle engine (147 hp / 132 lb-ft) with Smartstream IVT",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection",
+      "Lane Keeping Assist and Lane Following Assist",
+      "Blind-Spot Collision Warning and Rear Cross-Traffic Collision-Avoidance Assist",
+      "Dual LED projector-type headlights with High Beam Assist",
+      "8.0-inch Display Audio with wireless Android Auto and Apple CarPlay",
+      "Cloth seating surfaces with 6-way adjustable driver seat",
+      "Rearview camera, Drive Mode Select, and 4-wheel disc brakes"
+    ],
+    "SEL": [
+      "Proximity Key with push button start and heated side mirrors",
+      "Dual automatic temperature control and 60/40 split-folding rear seat",
+      "10.25-inch digital instrument cluster and hands-free smart trunk"
+    ],
+    "Sport": [
+      "Black side mirrors, rear lip spoiler, and aluminum sport pedals with black headliner",
+      "Smart Cruise Control with Stop & Go on upper convenience trims"
+    ],
+    "Limited": [
+      "Digital Key 2 Touch, 10.25-inch navigation, and Bose premium audio",
+      "Ventilated front seats and Integrated Memory System for driver seat and mirrors",
+      "Highway Driving Assist"
+    ],
+    "N Line": [
+      "1.6L Turbo GDI \u2014 201 hp with 7-speed DCT and N Line unique fascia",
+      "Leather-trimmed N Line sport bucket seats and N Grin Control System",
+      "19-inch alloy wheels and Bose premium audio"
+    ]
+  }
+}

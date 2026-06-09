@@ -1,0 +1,77 @@
+{
+  "catalog_key": "2023|infiniti|qx50",
+  "year": 2023,
+  "make": "Infiniti",
+  "model": "QX50",
+  "ladder_id": "brochure_llm_2023__infiniti__qx50",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX50 AUTOGRAPH AWD",
+    "QX50 SENSORY",
+    "QX50 SPORT",
+    "QX50 LUXE",
+    "QX50 PURE"
+  ],
+  "adds_by_trim": {
+    "QX50 AUTOGRAPH AWD": [
+      "3,000-lb maximum towing capacity with tow hitch, receiver and wiring harness",
+      "Transmission oil cooler and larger radiator",
+      "Semi-aniline leather-appointed, perforated seating with quilting",
+      "Natural maple wood interior trim accents",
+      "Ultrasuede® headliner and pillars",
+      "Heated rear seats (outboard only)",
+      "Advanced Climate Control System with tri-zone automatic",
+      "Bose® 16-speaker Performance Series Audio with metallic speaker grilles",
+      "Adaptive Front Lighting System",
+      "Head-up Display and dual-occupant memory for steering wheel"
+    ],
+    "QX50 SENSORY": [
+      "20-inch silver-painted and machine-finished aluminum-alloy wheels with 255/45R20 run-flat, all-season tires",
+      "Unique cube design LED headlights with auto levelizer",
+      "Chrome inner taillight and headlight",
+      "LED front fog lights",
+      "Metallic cargo area scuff plates",
+      "Black roof rails and black exterior accents",
+      "Black exhaust tips and body-color rear diffuser",
+      "Body-color exterior door handles",
+      "Enhanced LED interior ambient lighting",
+      "Climate-controlled front seats and heated steering wheel"
+    ],
+    "QX50 SPORT": [
+      "20-inch dark-painted and machine-finished aluminum-alloy wheels with 255/45R20 run-flat, all-season tires",
+      "Sport front fascia with S badge on rear liftgate",
+      "Black roof rails and black exterior accents on grille, fender, window trim",
+      "LED front fog lights",
+      "Body-color exterior door handles and rear diffuser",
+      "Black aluminum interior trim accents",
+      "Enhanced LED interior ambient lighting",
+      "Climate-controlled front seats and heated steering wheel",
+      "Semi-aniline leather-appointed, perforated seating",
+      "Bose® 12-speaker Premium Audio"
+    ],
+    "QX50 LUXE": [
+      "Panoramic moonroof with power sunshade",
+      "Roof rails and power auto folding heated outside mirrors",
+      "Front parking sensors",
+      "Body-color lower side sill moldings",
+      "Leather-appointed, perforated seating with 4-way driver power lumbar",
+      "Heated front seats",
+      "HomeLink® Universal Transceiver",
+      "Outside mirrors with reverse tilt-down feature",
+      "Motion-Activated Liftgate",
+      "Navigation with 3D building graphics and 5-year trial access"
+    ],
+    "QX50 PURE": [
+      "2.0L VC-Turbo® 4-cylinder engine with 268 hp and 280 lb-ft torque",
+      "Continuously Variable Transmission with manual shift mode and FWD or AWD",
+      "LED automatic on/off headlights and LED signature daytime running lights",
+      "19-inch silver-painted aluminum-alloy wheels with 235/55R19 run-flat, all-season tires",
+      "Body-color manual folding and power adjustable outside heated mirrors",
+      "Rear privacy glass and dual exhaust finishers",
+      "Laminated front-row side-window glass",
+      "Leatherette seating with dark aluminum interior trim",
+      "Dual-zone automatic climate control with rear seat vents",
+      "8-way power adjustable front seats and paddle shifters"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2010|bmw|x5",
+  "year": 2010,
+  "make": "BMW",
+  "model": "X5",
+  "ladder_id": "brochure_llm_2010__bmw__x5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "X5 xDrive48i",
+    "X5 xDrive35d",
+    "X5 xDrive30i"
+  ],
+  "adds_by_trim": {
+    "X5 xDrive48i": [
+      "4.8-liter twin-turbocharged V8 engine (vs. 3.5-liter turbodiesel)",
+      "Perforated Nevada Leather upholstery at no cost",
+      "Nevada Leather upholstery as standard"
+    ],
+    "X5 xDrive35d": [
+      "3.5-liter turbodiesel engine with 265 hp",
+      "Enhanced fuel efficiency compared to gasoline engine"
+    ],
+    "X5 xDrive30i": [
+      "3.0-liter turbocharged inline-6 engine with 300 hp",
+      "Panoramic moonroof with 2-piece glass panel and power controls",
+      "Automatic front climate control with dual-zone temperature settings",
+      "BMW Assist with Bluetooth wireless technology for hands-free calling",
+      "Central locking system with Coded Driveaway Protection"
+    ]
+  }
+}

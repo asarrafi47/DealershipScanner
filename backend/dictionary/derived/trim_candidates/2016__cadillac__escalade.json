@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2016|cadillac|escalade",
+  "year": 2016,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Platinum",
+    "Luxury",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

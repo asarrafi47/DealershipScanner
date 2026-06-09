@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2015|ram|laramie",
+  "year": 2015,
+  "make": "ram",
+  "model": "Laramie",
+  "ladder_id": "brochure_2015__ram__laramie",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Laramie",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Standard seating with bucket seats"
+    ],
+    "Laramie": [
+      "Upgraded to all-leather seating surfaces",
+      "Adds embroidered pinstripe details on seats",
+      "Adds embroidered Ram logo on seats",
+      "Adds rear seatback map pockets with polished chrome buckles",
+      "Upgraded to premium tambour-style console door in Liquid Graphite with Argento wood",
+      "Adds cell phone/tablet holder in console",
+      "Adds power outlets in console",
+      "Upgraded to six-ring instrumentation cluster",
+      "Adds newly designed upper pillar trim and headliner",
+      "Adds revised floor mats with interwoven Gray thread"
+    ],
+    "Limited": [
+      "Adds unique six-spoke 20-inch aluminum wheels",
+      "Adds available wheel-to-wheel side steps in brushed chrome",
+      "Adds bold new grille design",
+      "Adds new tailgate treatment with Ram centric design",
+      "Adds exterior door panel presence with interior door trim mimicry",
+      "Adds standard RamBox Cargo Management System on 2500/3500 with SRW and 6'4\" bed"
+    ]
+  }
+}

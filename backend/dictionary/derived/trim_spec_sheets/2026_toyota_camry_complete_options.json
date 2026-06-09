@@ -1,0 +1,37 @@
+{
+  "ladder_id": "2026_toyota_camry_complete_options",
+  "make": "Toyota",
+  "models": [
+    "Camry",
+    "Camry"
+  ],
+  "year_min": 2024,
+  "year_max": 2028,
+  "source": "generated",
+  "trims": {
+    "XSE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Front-Wheel Drive"
+      }
+    ],
+    "XLE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); All-Wheel Drive"
+      }
+    ],
+    "SE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); Front-Wheel Drive"
+      }
+    ],
+    "LE": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic (S8); All-Wheel Drive"
+      }
+    ]
+  }
+}

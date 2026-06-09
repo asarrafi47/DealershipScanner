@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2017|ford|transitconnect",
+  "year": 2017,
+  "make": "Ford",
+  "model": "Transit Connect",
+  "ladder_id": "brochure_llm_2017__ford__transitconnect",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XLT",
+    "XL",
+    "S"
+  ],
+  "adds_by_trim": {
+    "XLT": [
+      "SYNC 3 with 6.5-inch LCD capacitive touchscreen and Navigation System",
+      "SiriusXM Satellite Radio with HD Radio",
+      "Dual-zone electronic automatic temperature control",
+      "Cruise control",
+      "MyKey requiring cruise control",
+      "6-way manual driver seat with manual lumbar and 4-way manual passenger seat",
+      "Black sideview heated mirrors with power-adjustable glass and blind spot mirrors",
+      "Quickclear electric windshield defroster with heated sideview mirrors",
+      "Privacy glass from B-pillars back",
+      "Body-color-painted front and rear bumper end caps"
+    ],
+    "XL": [
+      "AM/FM stereo with single-CD player, SYNC and 4 front speakers",
+      "6-way manual driver seat with manual lumbar and 4-way manual passenger seat",
+      "Black sideview mirrors with manual adjust and fold",
+      "Gray molded-in-color front bumper"
+    ],
+    "S": [
+      "AM/FM stereo with 2 front speakers",
+      "Carpet flooring in front with carpeted floor mats and molded vinyl liner in cargo area",
+      "Front center closeable console with 2 cupholders",
+      "Gray molded-in-color front and rear bumper end caps",
+      "Black sideview mirrors with manual adjust and fold",
+      "Fog lamps"
+    ]
+  }
+}

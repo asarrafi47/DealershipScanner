@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2021|toyota|landcruiser",
+  "year": 2021,
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Land Cruiser",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Land Cruiser": [
+      "Includes these key features Adds to or replaces features offered on Land Cruiser",
+      "Full-time 4WD with Active Traction Control (A-TRAC) Full-time 4WD with Active Traction Control (A-TRAC)",
+      "Torsen\u00ae8 limited-slip differential with locking feature Torsen\u00ae8 limited-slip differential with locking feature",
+      "Multi-Terrain Select (MTS) Multi-Terrain Select (MTS)",
+      "Crawl Control (CRAWL)9 Crawl Control (CRAWL)9",
+      "Off-road Turn Assist (OTA)1 Off-road Turn Assist (OTA)1",
+      "Kinetic Dynamic Suspension System (KDSS) Kinetic Dynamic Suspension System (KDSS)",
+      "Towing capacity22 \u2014 8100 lbs. Towing capacity22 \u2014 8100 lbs.",
+      "Fording depth \u2014 27.55 in. Fording depth \u2014 27.55 in.",
+      "Angle of approach/departure \u2014 32/24 degrees Angle of approach/departure \u2014 32/24 degrees",
+      "Exterior Features Exterior Features",
+      "Projector-beam LED low-/high-beam headlights Projector-beam LED low-/high-beam headlights"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

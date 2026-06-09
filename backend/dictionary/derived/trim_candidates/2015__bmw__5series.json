@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2015|bmw|5series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "5 Series",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "M Sport",
+    "Luxury Line",
+    "Modern Line",
+    "Premium",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

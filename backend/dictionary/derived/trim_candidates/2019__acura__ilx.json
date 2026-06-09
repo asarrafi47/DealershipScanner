@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2019|acura|ilx",
+  "year": 2019,
+  "make": "acura",
+  "model": "ilx",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Technology",
+    "A-Spec",
+    "Limited",
+    "Premium",
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

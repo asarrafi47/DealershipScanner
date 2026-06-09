@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2023|kia|carnival",
+  "year": 2023,
+  "make": "Kia",
+  "model": "Carnival",
+  "ladder_id": "brochure_llm_2023__kia__carnival",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Touring HEV",
+    "SX HEV",
+    "EX Touring HEV",
+    "EX HEV",
+    "LX HEV",
+    "Wave EV",
+    "Wind EV"
+  ],
+  "adds_by_trim": {
+    "SX Touring HEV": [
+      "18-inch wheels with 225/45 R18 tires",
+      "LED projector headlights",
+      "Gloss black exterior mirrors",
+      "10-way power passenger's seat with 2-way power lumbar support"
+    ],
+    "SX HEV": [
+      "18-inch wheels with 225/45 R18 tires",
+      "LED projector headlights",
+      "Gloss black exterior mirrors",
+      "Gloss black wheel arches, door moldings and exterior trim"
+    ],
+    "EX Touring HEV": [
+      "Power sunroof with sunshade",
+      "Smart Power Liftgate",
+      "LED fog lamps",
+      "Satin-chrome window surrounds",
+      "Front chrome-coated skid plate",
+      "Heated, power-folding exterior mirrors with integrated turn signal"
+    ],
+    "EX HEV": [
+      "2nd-row air vents",
+      "10-way power driver's seat with 2-way power lumbar support",
+      "Vegan leather and fabric seats",
+      "Heated front seats",
+      "Ventilated front seats",
+      "Vegan leather-wrapped steering column and transmission shift lever",
+      "Chrome interior door handles",
+      "Heated steering wheel",
+      "Electrochromatic automatic day/night rearview mirror",
+      "10.25-inch touch-screen navigation with satellite and integrated modem"
+    ],
+    "LX HEV": [
+      "1.6L 4-cylinder GDI hybrid engine with 139 hp and 195 lb.-ft. torque",
+      "6-speed Dual-Clutch Transmission",
+      "Electronic Parking Brake with Auto Hold",
+      "Drive Mode Select with Sport and Eco modes",
+      "Idle Stop and Go",
+      "16-inch wheels with 205/60 R16 tires",
+      "LED Daytime Running Lights and rear combination lamps",
+      "Airblade C-pillar design",
+      "Front silver-painted skid plate",
+      "Dual Zone Automatic Climate Control"
+    ],
+    "Wave EV": [
+      "65 kWh lithium-ion polymer battery with 253-mile all-electric range",
+      "Paddle shifters",
+      "Power sunroof with sunshade",
+      "LED projector headlights",
+      "Acoustic-laminated front and side windows",
+      "Satin chrome window trim surround",
+      "Heated, power-folding exterior mirrors with integrated turn signal",
+      "Body-colored door handles with satin chrome accent"
+    ],
+    "Wind EV": [
+      "65 kWh lithium-ion polymer battery with 253-mile all-electric range",
+      "201 hp and 188 lb.-ft. torque electric-drive motor",
+      "Paddle shifters",
+      "17-inch wheels with 215/55 R17 tires",
+      "LED Daytime Running Lights",
+      "Heated, manual-folding exterior mirrors with integrated turn signal",
+      "Gloss black wheel arches and door moldings",
+      "Dual Zone Automatic Climate Control"
+    ]
+  }
+}

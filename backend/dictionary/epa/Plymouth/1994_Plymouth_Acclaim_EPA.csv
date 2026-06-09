@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1994,Plymouth,Acclaim,Acclaim,2.5L I4 ((FFS)),2.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,19,24,21,,,,,
+1994,Plymouth,Acclaim,Acclaim,2.5L I4 ((FFS)),2.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,19,25,22,,,,,
+1994,Plymouth,Acclaim,Acclaim,2.5L I4 ((FFS)),2.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,21,27,23,,,,,
+1994,Plymouth,Acclaim,Acclaim,3.0L V6 ((FFS)),3.0L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,18,24,21,,,,,
+1994,Plymouth,Acclaim,Acclaim,3.0L V6 ((FFS)),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,17,22,19,,,,,

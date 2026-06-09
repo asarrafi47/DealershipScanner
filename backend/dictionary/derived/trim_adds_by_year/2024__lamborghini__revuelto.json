@@ -1,0 +1,10 @@
+{
+  "catalog_key": "2024|lamborghini|revuelto",
+  "year": 2024,
+  "make": "Lamborghini",
+  "model": "Revuelto",
+  "ladder_id": "2024_lamborghini_revuelto",
+  "source": "manual_brochure_review",
+  "trims_available": ["Revuelto"],
+  "adds_by_trim": {}
+}

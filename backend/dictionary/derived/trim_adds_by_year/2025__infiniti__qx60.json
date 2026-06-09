@@ -1,0 +1,62 @@
+{
+  "catalog_key": "2025|infiniti|qx60",
+  "year": 2025,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2025__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "AUTOGRAPH",
+    "SENSORY",
+    "BLACK EDITION",
+    "LUXE",
+    "PURE"
+  ],
+  "adds_by_trim": {
+    "AUTOGRAPH": [
+      "INFINITI Intelligent All-Wheel Drive",
+      "Semi-aniline leather-appointed seats with quilting and contrast stitching",
+      "Second-row captain's chairs with inboard pivoting armrests",
+      "Removable center console for second row",
+      "Black Obsidian contrast roof",
+      "Black roof rails"
+    ],
+    "SENSORY": [
+      "Smooth grain leather-wrapped steering wheel",
+      "Black Open Pore Ash Wood interior trim accents",
+      "Illuminated kick plates",
+      "Enhanced LED interior ambient lighting",
+      "4-way passenger power lumbar support",
+      "Dual occupant memory system for passenger seat",
+      "Third-row seat power return",
+      "Advanced Climate Control System",
+      "Massaging front seats",
+      "Motion-Activated Liftgate"
+    ],
+    "BLACK EDITION": [
+      "Gloss black aluminum-alloy 20-inch wheels",
+      "Gloss black roof rails",
+      "Gloss black grille surround and badges",
+      "INFINITI Radiant Grille Emblem",
+      "INFINITI Radiant Exterior Welcome Lighting with Logo",
+      "Black headliner",
+      "INFINITI Radiant Dark Satin Illuminated Kick Plates"
+    ],
+    "LUXE": [
+      "20-inch dark silver machine-finished aluminum-alloy wheels",
+      "Auto-dimming outside mirror (driver's side only)",
+      "Silver roof rails",
+      "Silver Metallic Weave interior trim accents",
+      "Climate-controlled front seats",
+      "Heated second-row seats (outboard only)",
+      "Rear passenger manual sunshades",
+      "Steering-wheel position memory",
+      "Power tilting and telescoping steering column",
+      "Remote Engine Start and HomeLink Universal Transceiver"
+    ],
+    "PURE": [
+      "Three-row seating configuration",
+      "Standard safety features and driver assistance technology"
+    ]
+  }
+}

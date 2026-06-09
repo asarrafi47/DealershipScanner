@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2012|hyundai|accent",
+  "year": 2012,
+  "make": "Hyundai",
+  "model": "Accent",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SE",
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

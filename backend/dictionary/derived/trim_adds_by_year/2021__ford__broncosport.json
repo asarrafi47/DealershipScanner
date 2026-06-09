@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2021|ford|broncosport",
+  "year": 2021,
+  "make": "Ford",
+  "model": "Bronco Sport",
+  "ladder_id": "brochure_llm_2021__ford__broncosport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Badlands",
+    "Outer Banks",
+    "Big Bend",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Badlands": [
+      "Premium off-road positioning with advanced G.O.A.T. Modes terrain management"
+    ],
+    "Outer Banks": [
+      "Enhanced exterior styling and premium trim positioning over Big Bend"
+    ],
+    "Big Bend": [
+      "Mid-level trim with expanded comfort and convenience features"
+    ],
+    "Base": [
+      "4x4 standard across all trim levels",
+      "Terrain Management System with standard and available G.O.A.T. Modes",
+      "1.5L EcoBoost engine with 25 city/28 highway/26 combined MPG",
+      "2.0L EcoBoost engine option with 21 city/26 highway/23 combined MPG",
+      "3-year/36,000-mile bumper-to-bumper warranty coverage",
+      "5-year/60,000-mile powertrain warranty coverage",
+      "5-year/unlimited-mile corrosion perforation coverage"
+    ]
+  }
+}

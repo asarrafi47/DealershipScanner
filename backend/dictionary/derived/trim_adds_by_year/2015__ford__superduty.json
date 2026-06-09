@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2015|ford|superduty",
+  "year": 2015,
+  "make": "Ford",
+  "model": "SuperDuty",
+  "ladder_id": "brochure_llm_2015__ford__superduty",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LARIAT Ultimate Package",
+    "LARIAT"
+  ],
+  "adds_by_trim": {
+    "LARIAT Ultimate Package": [
+      "Power moonroof (Crew Cab only)",
+      "Navigation System with Premium Sound System and HD Radio",
+      "Tailgate step"
+    ],
+    "LARIAT": [
+      "40/20/40 split leather-trimmed front seats with center under-seat lockable storage",
+      "Power heated/cooled driver and front-passenger seats with memory",
+      "Power trailer tow mirrors with memory",
+      "Memory power-adjustable pedals",
+      "Remote Start System",
+      "Heated rear outboard seats (Crew Cab only, requires Interior Package)",
+      "LARIAT Interior Package with easy entry/exit memory and cupholders"
+    ]
+  }
+}

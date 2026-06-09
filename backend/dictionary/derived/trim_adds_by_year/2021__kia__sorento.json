@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2021|kia|sorento",
+  "year": 2021,
+  "make": "Kia",
+  "model": "Sorento",
+  "ladder_id": "brochure_llm_2021__kia__sorento",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX-Prestige",
+    "SX",
+    "EX",
+    "S",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX-Prestige": [
+      "X-Line AWD Package with unique front/rear bumpers and Hyper Silver grille",
+      "20-inch Dark Hyper Silver wheels",
+      "Matte black exterior trim and bridge-type roof rack",
+      "Simulated matte wood interior inlays",
+      "Optional Rust leather color package"
+    ],
+    "SX": [
+      "255/45R20 tires",
+      "12.8-inch ventilated front and rear disc brakes"
+    ],
+    "EX": [
+      "235/60R18 tires",
+      "Panoramic sunroof package with LED interior lighting and power-retractable sunshade",
+      "12.8-inch ventilated front and 12.0-inch ventilated rear disc brakes"
+    ],
+    "S": [
+      "235/60R18 tires",
+      "Panoramic sunroof package available on S and EX trims"
+    ],
+    "LX": [
+      "2.5L 4-cylinder engine with 191 horsepower and 181 lb.-ft. torque",
+      "8-speed automatic transmission with adaptive all-wheel drive",
+      "235/65R17 tires",
+      "12.8-inch ventilated front and 12.0-inch ventilated rear disc brakes",
+      "Independent MacPherson strut front and multi-link rear suspension"
+    ]
+  }
+}

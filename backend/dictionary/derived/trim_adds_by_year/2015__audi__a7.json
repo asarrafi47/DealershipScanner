@@ -1,0 +1,32 @@
+{
+  "catalog_key": "2015|audi|a7",
+  "year": 2015,
+  "make": "Audi",
+  "model": "A7",
+  "ladder_id": "brochure_llm_2015__audi__a7",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A7 3.0T",
+    "A7 TDI"
+  ],
+  "adds_by_trim": {
+    "A7 3.0T": [
+      "3.0-liter supercharged TFSI six-cylinder engine with 310 horsepower",
+      "325 lb-ft torque at 2,900 rpm",
+      "0–60 mph acceleration in 5.4 seconds",
+      "14.0-inch ventilated front disc brakes",
+      "19.8-gallon fuel tank capacity",
+      "Premium fuel requirement"
+    ],
+    "A7 TDI": [
+      "3.0-liter turbocharged TDI six-cylinder diesel engine with 240 horsepower",
+      "428 lb-ft torque at 1,750 rpm",
+      "0–60 mph acceleration in 5.5 seconds",
+      "13.6-inch ventilated front disc brakes",
+      "19.2-gallon fuel tank capacity",
+      "Ultra-low-sulfur diesel fuel requirement",
+      "EPA estimated 24/38/29 city/highway/combined mpg",
+      "Start-stop efficiency system"
+    ]
+  }
+}

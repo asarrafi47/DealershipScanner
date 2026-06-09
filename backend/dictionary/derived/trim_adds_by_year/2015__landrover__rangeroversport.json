@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|landrover|rangeroversport",
+  "year": 2015,
+  "make": "landrover",
+  "model": "Range Rover Sport",
+  "ladder_id": "brochure_llm_2015__landrover__rangeroversport",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Range Rover Sport HSE",
+    "Range Rover Sport SE"
+  ],
+  "adds_by_trim": {
+    "Range Rover Sport HSE": [
+      "Front fog lamps",
+      "Fog lamp surrounds and tow eye covers in Atlas finish",
+      "20 inch five split-spoke 'Style 520' alloy wheels",
+      "Oxford Perforated leather seats as standard",
+      "Sliding panoramic roof"
+    ],
+    "Range Rover Sport SE": [
+      "3.0L LR-V6 Supercharged engine",
+      "Single speed transfer box",
+      "Grille in Dark Atlas with Gloss Black surround",
+      "Fender vent with Dark Atlas fingers and Atlas mesh",
+      "Body colored upper mirror caps",
+      "Tow eye covers in Dark Atlas",
+      "19 inch five split-spoke 'Style 501' alloy wheels",
+      "Grained leather seats"
+    ]
+  }
+}

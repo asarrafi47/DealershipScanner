@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2024|nissan|armada",
+  "year": 2024,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2024__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Vehicle-speed-sensitive power steering",
+      "Intelligent Back-Up Intervention",
+      "Intelligent Rear View Mirror",
+      "Traffic Sign Recognition",
+      "22-inch 14-spoke aluminum-alloy wheels",
+      "Dark gray roof rails",
+      "Chrome outside mirrors",
+      "Windshield wiper deicer",
+      "Rain-sensing windshield wipers",
+      "Climate-controlled front seats with heating and cooling"
+    ],
+    "SL": [
+      "Intelligent Around View Monitor",
+      "20-inch 18-spoke aluminum-alloy wheels",
+      "Body-color outside mirrors with puddle lights",
+      "Auto-dimming outside mirrors",
+      "Power sliding glass moonroof",
+      "Power liftgate",
+      "120-volt AC power outlet",
+      "Foot well lights",
+      "Memory System for driver seat, steering wheel, and outside mirrors",
+      "Leather-appointed seats"
+    ],
+    "SV": [
+      "Endurance 5.6-liter DOHC 32-valve V8 engine with 400 hp and 413 lb-ft torque",
+      "Available Intelligent 4x4 with 2-speed transfer case",
+      "Independent double-wishbone suspension with auto-leveling rear suspension",
+      "Intelligent Cruise Control",
+      "Automatic Emergency Braking with Pedestrian Detection",
+      "Intelligent Lane Intervention",
+      "Intelligent Blind Spot Intervention",
+      "Rear Cross Traffic Alert",
+      "Front and Rear Sonar System",
+      "Rear Automatic Braking"
+    ]
+  }
+}

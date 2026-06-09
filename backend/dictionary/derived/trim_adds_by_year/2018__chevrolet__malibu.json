@@ -1,0 +1,56 @@
+{
+  "catalog_key": "2018|chevrolet|malibu",
+  "year": 2018,
+  "make": "Chevrolet",
+  "model": "Malibu",
+  "ladder_id": "brochure_llm_2018__chevrolet__malibu",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIER",
+    "HYBRID",
+    "TL",
+    "SL",
+    "L"
+  ],
+  "adds_by_trim": {
+    "PREMIER": [
+      "2.0L turbocharged DOHC 4-cylinder with 250 hp and 260 lb.-ft. torque",
+      "9-speed automatic transmission with overdrive",
+      "8-inch diagonal MyLink touchscreen with voice-activated technology",
+      "Perforated leather-appointed seats",
+      "Ventilated front seats",
+      "Power sunroof with tilt/sliding and express-open feature"
+    ],
+    "HYBRID": [
+      "1.8L DOHC 4-cylinder with Hybrid electric propulsion system",
+      "2-motor Hybrid electric drive unit transmission",
+      "Dual-zone automatic climate control",
+      "High-resolution color Driver Information Center display",
+      "Power sunroof with tilt/sliding and express-open feature"
+    ],
+    "TL": [
+      "High-resolution color Driver Information Center display",
+      "Leather-wrapped shift knob",
+      "Leather-wrapped 3-spoke steering wheel with mounted controls",
+      "Leather-appointed seats",
+      "Driver 8-way power seat adjuster with lumbar control",
+      "Heated front seats",
+      "7-inch MyLink touchscreen with Android Auto and Apple CarPlay compatibility"
+    ],
+    "SL": [
+      "Teen Driver technology",
+      "Dual-zone automatic climate control",
+      "7-inch MyLink touchscreen with Bluetooth audio streaming and Android Auto compatibility"
+    ],
+    "L": [
+      "Teen Driver technology standard",
+      "Single-zone manual climate control",
+      "Monochromatic Driver Information Center display",
+      "Auxiliary power outlet in center stack",
+      "Premium cloth seats",
+      "10 standard air bags with Passenger Sensing System",
+      "4-wheel antilock disc brakes with Duralife rotors",
+      "AM/FM stereo radio"
+    ]
+  }
+}

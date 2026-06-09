@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2014|hyundai|azera",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Azera",
+  "ladder_id": "brochure_llm_2014__hyundai__azera",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "STANDARD"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Blue Link advanced telematics system",
+      "Power tilt-and-telescopic steering wheel",
+      "550-Watt Infinity AM/FM/SiriusXM/HD Radio with 14 speakers and subwoofer",
+      "Panoramic tilt-and-slide sunroof",
+      "Ventilated heated front and rear leather seats with memory system",
+      "19-inch Hyper Silver alloy wheels",
+      "Heated side mirrors with LED turn signal indicators",
+      "Rearview camera with 6-inch color LCD display"
+    ],
+    "STANDARD": [
+      "293 HP 3.3L Gasoline Direct Injection DOHC V6 engine with 6-speed automatic transmission",
+      "18-inch Hyper Silver alloy wheels",
+      "Dual zone automatic temperature control",
+      "Premium leather seating surfaces with heated front seats",
+      "Leather steering wheel and shift knob with audio and cruise controls",
+      "6-inch color LCD audio display with rearview camera",
+      "AM/FM/SiriusXM/CD/MP3 audio system",
+      "Electronic Stability Control with traction control and 4-wheel disc ABS"
+    ]
+  }
+}

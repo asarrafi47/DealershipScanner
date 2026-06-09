@@ -1,0 +1,59 @@
+{
+  "catalog_key": "2014|ram|commercial",
+  "year": 2014,
+  "make": "ram",
+  "model": "commercial",
+  "ladder_id": "brochure_2014__ram__commercial",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Laramie Longhorn",
+    "Laramie",
+    "Big Horn",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "Tradesman": [
+      "Adds Advanced Front Air Bags certified to U.S. federal regulations",
+      "Adds Electronic Stability Control (ESC)",
+      "Adds head restraints",
+      "Adds lap and shoulder belt safety systems",
+      "Adds Sentry Key immobilizer technology"
+    ],
+    "Big Horn": [
+      "Cloth or upgraded upholstery options",
+      "Power windows, locks, and mirrors",
+      "Chrome bumpers and grille",
+      "AM/FM radio with integrated Bluetooth",
+      "Manual driver seat adjustments",
+      "Cruise control"
+    ],
+    "Laramie": [
+      "Laramie badging",
+      "Chrome surround grille with chrome insert",
+      "Halogen bifunctional projector headlamps",
+      "Power multifunction trailer-tow mirrors with heated manual-folding chrome finish",
+      "Center stack woodgrain insert",
+      "Dual-zone temperature control air conditioning",
+      "18 x 8-inch polished aluminum wheels on 3500 SRW",
+      "19.5 x 6-inch polished aluminum wheels on 4500/5500",
+      "Electric shift part-time transfer case on 4x4"
+    ],
+    "Laramie Longhorn": [
+      "Laramie badging",
+      "Chrome surround grille with chrome insert",
+      "Halogen bifunctional projector headlamps",
+      "Power multifunction trailer-tow mirrors with heated manual-folding chrome finish",
+      "Center stack woodgrain insert",
+      "Dual-zone temperature control air conditioning",
+      "18 x 8-inch polished aluminum wheels on 3500 SRW",
+      "19.5 x 6-inch polished aluminum wheels on 4500/5500",
+      "Electric shift part-time transfer case on 4x4"
+    ],
+    "Limited": [
+      "Adds class-exclusive five-link coil spring rear suspension",
+      "Adds maximum interior room with Ram Mega Cab availability",
+      "Adds part-time transfer case with 2WD, 4WD High, and 4WD Low modes"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2012|mitsubishi|imiev",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "i-MiEV",
+  "source_pdf": "/Users/armansarrafi/Developer/Personal/DealershipScanner/backend/data/brochures/2012_Mitsubishi_i-MiEV_Brochure.pdf",
+  "page_count": 12,
+  "all_pages": false,
+  "trim_hint_pages": [
+    5
+  ],
+  "warnings": [],
+  "pages": [
+    {
+      "page": 5,
+      "trim_hint": true,
+      "text": "Trim / SpecificaTioNS / color\nMitsubishi i-MiEV ES Mitsubishi i-MiEV SE\nAs low as $21,6251 As low as $23,6251\nNet value, after tax savings2 Net value, after tax savings2\n\u2022 120V portable charging cable Includes all standard features plus:\n\u2022 Onboard recharging system with (Level 1) 120V \u2022 Upgraded Interior\nor (Level 2) 240V charging capability. \u2022 360-Watt, 8-speaker deluxe audio\n\u2022 Advanced six-airbag3 system \u2022 15\u201d alloy Wheels\n\u2022 3-mode shift selector \u2022 Optimal Premium Package which includes HDD\nNavigation w/Real Time traffic, FUSE Hands\nFree Link System\u2122 w/USB Port, DC Quick\nCharger Port and more.\nEXTERIOR COLORS\nCool Silver Diamond White Pearl Raspberry\nES, SE ES, SE ES, SE\nLabrador Black Diamond White Pearl & Ocean\nES, SE Blue Two-Tone5\nSE\nINTERIOR COLORS\nBasic Black Premium Brown\nES SE\n5 / 2012 Mitsubishi i-MiEV",
+      "table_lines": []
+    }
+  ],
+  "combined_trim_pages_text": "--- page 5 ---\nTrim / SpecificaTioNS / color\nMitsubishi i-MiEV ES Mitsubishi i-MiEV SE\nAs low as $21,6251 As low as $23,6251\nNet value, after tax savings2 Net value, after tax savings2\n\u2022 120V portable charging cable Includes all standard features plus:\n\u2022 Onboard recharging system with (Level 1) 120V \u2022 Upgraded Interior\nor (Level 2) 240V charging capability. \u2022 360-Watt, 8-speaker deluxe audio\n\u2022 Advanced six-airbag3 system \u2022 15\u201d alloy Wheels\n\u2022 3-mode shift selector \u2022 Optimal Premium Package which includes HDD\nNavigation w/Real Time traffic, FUSE Hands\nFree Link System\u2122 w/USB Port, DC Quick\nCharger Port and more.\nEXTERIOR COLORS\nCool Silver Diamond White Pearl Raspberry\nES, SE ES, SE ES, SE\nLabrador Black Diamond White Pearl & Ocean\nES, SE Blue Two-Tone5\nSE\nINTERIOR COLORS\nBasic Black Premium Brown\nES SE\n5 / 2012 Mitsubishi i-MiEV"
+}

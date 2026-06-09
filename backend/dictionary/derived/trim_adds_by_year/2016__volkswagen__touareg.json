@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2016|volkswagen|touareg",
+  "year": 2016,
+  "make": "Volkswagen",
+  "model": "Touareg",
+  "ladder_id": "generic_volkswagen_touareg",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "anufacturer. \u201cVolkswagen,\u201d the Volkswagen logo, \u201cTouareg,\u201d \u201cDSG,\u201d and \u201cTSI\u201d are registered trademarks of Volkswagen AG. \u201cClimatronic\u201d is a registered trademark of Volkswagen Group of America, Inc. License plate frames by Camisasca Automotive M",
+      "interest. Changes in street names, construction zones, traffic flow, points of",
+      "the mapping and your actual location. Please rely on your individual judgment in determining whether or not to follow a suggested navigation route. Periodically,"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Base": 0
+    }
+  }
+}

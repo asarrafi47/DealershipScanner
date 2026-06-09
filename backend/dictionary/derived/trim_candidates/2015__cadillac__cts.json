@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2015|cadillac|cts",
+  "year": 2015,
+  "make": "Cadillac",
+  "model": "CTS",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Luxury",
+    "Sport",
+    "Limited",
+    "Premium",
+    "SE",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

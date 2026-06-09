@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2014|hyundai|genesiscoupe",
+  "year": 2014,
+  "make": "Hyundai",
+  "model": "Genesis Coupe",
+  "ladder_id": "brochure_2014__hyundai__genesiscoupe",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Includes standard USB port for iPod and compatible MP3 player connectivity",
+      "Adds Features voice recognition and audio streaming via Bluetooth"
+    ],
+    "Blue": [
+      "Adds available 7-inch touchscreen navigation system with turn-by-turn navigation",
+      "Adds Includes NavTraffic real-time traffic updates integration",
+      "Adds Blue Link telematics technology with navigation and discovery features"
+    ],
+    "Limited": [
+      "Adds 10 speakers with dual-voice coil subwoofer configuration",
+      "Adds Includes speed-adjusting volume control for freeway driving optimization"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "catalog_key": "2015|infiniti|qx60",
+  "year": 2015,
+  "make": "Infiniti",
+  "model": "QX60",
+  "ladder_id": "brochure_llm_2015__infiniti__qx60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QX60 3.5 AWD",
+    "QX60 3.5 Hybrid",
+    "QX60 Hybrid",
+    "QX60 AWD"
+  ],
+  "adds_by_trim": {
+    "QX60 3.5 AWD": [
+      "3.5-liter 24-valve V6 engine with 265 hp at 6,400 rpm",
+      "248 lb-ft torque at 4,400 rpm",
+      "Intelligent All-Wheel Drive system",
+      "5,000 lbs towing capacity",
+      "Bose 13-speaker Premium Audio system with AM/FM/CD/DVD",
+      "Infiniti Hard Drive Navigation System with 8-inch WVGA touchscreen",
+      "Around View Monitor with Moving Object Detection and Sonar",
+      "20-inch split 5-spoke aluminum-alloy wheels with 235/55R20 tires",
+      "Climate-controlled front seats",
+      "Heated second-row seats and heated steering wheel"
+    ],
+    "QX60 3.5 Hybrid": [
+      "2.5-liter Supercharged I4 with lithium-ion battery and 15 kW electric motor",
+      "250 hp at 5,600 rpm and 243 lb-ft torque at 3,600 rpm",
+      "Hybrid Regenerative Braking System",
+      "EPA fuel economy 26/28 mpg city/highway",
+      "Infiniti Hard Drive Navigation System with 8-inch WVGA touchscreen",
+      "Around View Monitor with Moving Object Detection and Sonar"
+    ],
+    "QX60 Hybrid": [
+      "2.5-liter Supercharged I4 with lithium-ion battery and 15 kW electric motor",
+      "250 hp at 5,600 rpm and 243 lb-ft torque at 3,600 rpm",
+      "Front-wheel drive configuration",
+      "EPA fuel economy 26/28 mpg city/highway",
+      "RearView Monitor"
+    ],
+    "QX60 AWD": [
+      "3.5-liter 24-valve V6 engine with 265 hp and 248 lb-ft torque",
+      "Intelligent All-Wheel Drive system",
+      "3,500 lbs towing capacity",
+      "6-speaker audio system with AM/FM/CD/MP3",
+      "7-inch color vehicle information display",
+      "Tri-Zone Automatic Temperature Control with microfilter",
+      "Power tilt and telescopic steering column",
+      "Infiniti Intelligent Key with Illuminated Push Button Ignition",
+      "18-inch split 5-spoke aluminum-alloy wheels with 235/65R18 tires"
+    ]
+  }
+}

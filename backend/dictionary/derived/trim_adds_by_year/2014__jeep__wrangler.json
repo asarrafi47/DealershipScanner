@@ -1,0 +1,58 @@
+{
+  "catalog_key": "2014|jeep|wrangler",
+  "year": 2014,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_2014__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Rubicon",
+    "Sahara",
+    "Willys",
+    "Sport",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium": [
+      "Adds Standard seating surfaces",
+      "Adds Standard wheel configuration",
+      "Adds Standard powertrain",
+      "Adds Standard infotainment system"
+    ],
+    "Sport": [
+      "Halogen headlamps and fog lamps",
+      "Six-speaker audio system",
+      "Uconnect 130 infotainment system",
+      "Cloth seating",
+      "16-inch slot-spoke steel painted wheels",
+      "Reversible cargo mat with Jeep logo",
+      "Wash-out interior with removable carpet and drain plugs"
+    ],
+    "Willys": [
+      "Willys trim-specific features and styling"
+    ],
+    "Sahara": [
+      "Adds chrome grille",
+      "Adds premium chrome wheels",
+      "Adds front and rear chrome tubular bumpers",
+      "Adds chrome tubular side steps",
+      "Adds chrome mirror covers"
+    ],
+    "Rubicon": [
+      "Adds Rubicon X hood",
+      "Adds satin black rock rails",
+      "Adds satin black grille",
+      "Adds off-road front bumper",
+      "Adds premium rear off-road rectangular bumper",
+      "Adds tire carrier"
+    ],
+    "Limited": [
+      "Adds WARN winch",
+      "Adds 4-LED windshield-mounted off-road lights",
+      "Adds tow hooks",
+      "Adds classic five-hole wheels",
+      "Adds suspension lift kit"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2020|mitsubishi|eclipsecross",
+  "year": 2020,
+  "make": "Mitsubishi",
+  "model": "EclipseCross",
+  "ladder_id": "brochure_llm_2020__mitsubishi__eclipsecross",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SEL 1.5",
+    "SE 1.5",
+    "LE 1.5",
+    "ES 1.5"
+  ],
+  "adds_by_trim": {
+    "SEL 1.5": [
+      "Specific headlights with optional front crash prevention",
+      "Higher trim positioning in lineup"
+    ],
+    "SE 1.5": [
+      "Mid-level trim with enhanced standard features"
+    ],
+    "LE 1.5": [
+      "Mid-entry trim level"
+    ],
+    "ES 1.5": [
+      "1.5L direct-injection turbo engine",
+      "7-inch touchscreen with Bluetooth connectivity",
+      "Base trim standard features"
+    ]
+  }
+}

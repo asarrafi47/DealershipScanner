@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2018|dodge|grandcaravan",
+  "year": 2018,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "ladder_id": "brochure_llm_2018__dodge__grandcaravan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TG",
+    "TXS",
+    "SXT",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "TG": [
+      "3-Zone Automatic Temperature Control with Driver's Convenience Group",
+      "Touring-tuned suspension",
+      "Automatic headlamps with black bezels",
+      "Power liftgate",
+      "Overhead ambient surround lighting",
+      "Rear swiveling overhead reading and courtesy lamps",
+      "Illuminated visor vanity mirrors",
+      "2nd-row retractable shades",
+      "115-volt inverter with 2 USB ports and HDMI port"
+    ],
+    "TXS": [
+      "Fog lamps",
+      "Automatic headlamps",
+      "Body-color grille",
+      "Bright Stow 'n Place roof rack",
+      "P225/65R17 BSW All-Season Touring tires",
+      "Foldaway power heated mirrors with body-color exterior",
+      "Front courtesy lamp and rear dome lamp"
+    ],
+    "SXT": [
+      "Power sliding doors",
+      "Bright belt molding and door handles",
+      "Black and bright grille",
+      "Performance-tuned suspension",
+      "Remote start system",
+      "Tire inflator kit",
+      "Foldaway power heated mirrors with black exterior"
+    ],
+    "ES": [
+      "3.6L Pentastar V6 with 6-speed automatic transmission",
+      "4-wheel antilock disc brakes",
+      "160-amp alternator and 730-amp battery",
+      "20-gallon fuel tank",
+      "Manual sliding doors",
+      "Body-color fascias and door handles",
+      "Sunscreen glass",
+      "Quad halogen headlamps with daytime running lamps",
+      "3-zone manual temperature control",
+      "Power door locks and remote keyless entry with Sentry Key antitheft"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "ladder_id": "2020_bmw_m5_complete_options",
+  "make": "BMW",
+  "models": [
+    "M5",
+    "M5"
+  ],
+  "year_min": 2018,
+  "year_max": 2022,
+  "source": "generated",
+  "trims": {
+    "Competition": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: The Competition Package increases peak engine power to 423 kW (575 PS;; 567 hp) a The Competition Package increases peak engine power to 423 kW (575 PS; (was Engine 5.0 L S85 Uneven firing 90° V10)"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Two new upholstery options were added to the interior those being black leather"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: Engine 5.0 L S85 Uneven firing 90° V10"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Interior Materials: Two new upholstery options were added to the interior those being black leather"
+      }
+    ]
+  }
+}

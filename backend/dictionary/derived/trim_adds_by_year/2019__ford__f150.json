@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2019|ford|f150",
+  "year": 2019,
+  "make": "Ford",
+  "model": "F-150",
+  "ladder_id": "brochure_llm_2019__ford__f150",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RAPTOR",
+    "LIMITED",
+    "PLATINUM",
+    "KING RANCH",
+    "LARIAT",
+    "XLT",
+    "XL"
+  ],
+  "adds_by_trim": {
+    "RAPTOR": [
+      "3.5L H.O. EcoBoost engine with 450 hp and 510 lb.-ft. torque",
+      "High-output performance enhancements including increased boost calibrations",
+      "Lighter turbine wheel made of high-temperature superalloy Mar-M-247",
+      "Cast stainless steel exhaust manifolds with full dual exhaust",
+      "Oil-cooled pistons and aggressive engine control calibrations"
+    ],
+    "LIMITED": [
+      "3.0L Power Stroke V6 Turbo Diesel engine standard",
+      "250 diesel horsepower with best-in-class 440 lb.-ft. diesel torque",
+      "Best-in-class EPA-estimated 30 mpg highway diesel rating"
+    ],
+    "PLATINUM": [
+      "Available on 5.0L Ti-VCT V8 engine trim level"
+    ],
+    "KING RANCH": [
+      "Available on 5.0L Ti-VCT V8 and 3.5L EcoBoost engine options"
+    ],
+    "LARIAT": [
+      "Available on 2.7L EcoBoost, 3.5L EcoBoost, and 3.0L Diesel engines"
+    ],
+    "XLT": [
+      "Available on 3.3L Ti-VCT V6, 2.7L EcoBoost, and 5.0L V8 engines"
+    ],
+    "XL": [
+      "3.3L Ti-VCT V6 standard engine with 290 hp and 265 lb.-ft. torque",
+      "Dual-injection system with direct and port fuel injection",
+      "6-speed automatic transmission with SelectShift capability",
+      "Max payload capacity 1,990 lbs., max towing 7,700 lbs.",
+      "Available with 2.7L EcoBoost and 5.0L V8 engine options"
+    ]
+  }
+}

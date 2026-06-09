@@ -213,11 +213,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const tdUrl = document.createElement("td");
             const link = document.createElement("a");
-            link.href = d.website_url;
+            const safeUrl = /^https?:\/\//i.test(String(d.website_url || "").trim())
+                ? String(d.website_url).trim()
+                : "";
+            link.href = safeUrl || "#";
+            if (!safeUrl) {
+                link.removeAttribute("href");
+            }
             link.target = "_blank";
             link.rel = "noopener";
             link.className = "dev-table-link";
-            link.textContent = d.website_url;
+            link.textContent = d.website_url || "";
             tdUrl.appendChild(link);
 
             const tdLoc = document.createElement("td");
@@ -566,9 +572,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    async function refreshStatusPanel() {
+    async function refreshStatusPanel(forceRefresh = false) {
         if (!statusPanel) return;
-        const res = await devFetch(devApi("status"));
+        const endpoint = forceRefresh ? "status?refresh=1" : "status";
+        const res = await devFetch(devApi(endpoint));
         const data = await res.json();
         if (!data.ok) return;
         const dbCls = data.db_connected ? "dev-ok" : "dev-bad";
@@ -620,8 +627,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (refreshStatus) {
-        refreshStatus.addEventListener("click", refreshStatusPanel);
+        refreshStatus.addEventListener("click", () => refreshStatusPanel(true));
     }
+    window.setTimeout(() => refreshStatusPanel(false), 0);
 
     // ── Incomplete cars section ──
 
@@ -761,6 +769,7 @@ document.addEventListener("DOMContentLoaded", () => {
             parts.push(`<option value="${escHtml(code)}">${escHtml(labelWithCount)}</option>`);
         }
         sel.innerHTML = parts.join("");
+        sel.disabled = false;
         if (prev && [...sel.options].some((o) => o.value === prev)) sel.value = prev;
         else sel.value = "";
         syncIncompleteLogButton();
@@ -946,6 +955,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (refreshIncomplete) {
         refreshIncomplete.addEventListener("click", refreshIncompleteCars);
     }
+    window.setTimeout(refreshIncompleteCars, 100);
 
     const incompleteIssueFilter = document.getElementById("dev-incomplete-issue-filter");
     const incompleteLogTerminal = document.getElementById("dev-incomplete-log-terminal");
@@ -954,23 +964,8 @@ document.addEventListener("DOMContentLoaded", () => {
             setIncompleteActionMsg("");
             applyIncompleteIssueFilter();
         });
-        if (incompleteGrid && incompleteGrid.querySelector(".dev-incomplete-card")) {
-            const carsSnapshot = [...incompleteGrid.querySelectorAll(".dev-incomplete-card")].map((card) => ({
-                incomplete_missing_fields: (card.getAttribute("data-incomplete-codes") || "")
-                    .split(",")
-                    .map((s) => s.trim())
-                    .filter(Boolean),
-            }));
-            const summary = summarizeIncompleteFromCars(carsSnapshot);
-            populateIncompleteIssueFilter(summary, carsSnapshot);
-            applyIncompleteIssueFilter();
-        }
     }
     if (incompleteLogTerminal) {
         incompleteLogTerminal.addEventListener("click", onLogIncompleteIssueToTerminal);
     }
-
-    document.querySelectorAll(".dev-delete-car-btn").forEach(btn =>
-        btn.addEventListener("click", onDeleteCar)
-    );
 });

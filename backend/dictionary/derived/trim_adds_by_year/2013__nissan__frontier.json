@@ -1,0 +1,71 @@
+{
+  "catalog_key": "2013|nissan|frontier",
+  "year": 2013,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "brochure_llm_2013__nissan__frontier",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL",
+    "PRO-4X",
+    "DESERT RUNNER",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "SL": [
+      "5.8-inch NissanConnect with Navigation, voice recognition, and Google POIs",
+      "Rockford Fosgate-powered audio system",
+      "Pandora radio and streaming audio via Bluetooth",
+      "Hands-free text messaging assistant",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Leather-appointed seats",
+      "8-way power adjustable driver's seat",
+      "4-way power adjustable front-passenger seat",
+      "Leather-wrapped steering wheel"
+    ],
+    "PRO-4X": [
+      "Bilstein off-road performance shocks",
+      "Electronic locking rear differential",
+      "Skid plates: oil pan, fuel tank, transfer case",
+      "16-inch Machined-finish aluminum-alloy wheels",
+      "P265/75R16 BFGoodrich Rugged Trail T/A tires",
+      "PRO-4X bed decal and embroidered cloth seat trim",
+      "White contrast interior stitching and white-faced gauges",
+      "Front tow hook on 4x4 models"
+    ],
+    "DESERT RUNNER": [
+      "4.0-liter DOHC 24-valve V6 engine with 261 hp",
+      "5-speed automatic transmission",
+      "18-inch aluminum-alloy wheels",
+      "Automatic on/off headlights and fog lights",
+      "Utili-track Channel System",
+      "Factory-applied spray-on bedliner",
+      "Chrome outside mirrors and door handles",
+      "Step rails",
+      "Satin chrome grille and body-color rear bumper"
+    ],
+    "SV": [
+      "16-inch aluminum-alloy wheels with P265/70R16 all-season tires",
+      "Body-color front bumper",
+      "Bed rail caps",
+      "Rear access doors on King Cab",
+      "Bluetooth Hands-free Phone System",
+      "AM/FM/CD audio with 4.3-inch color display",
+      "SiriusXM Satellite Radio",
+      "Illuminated steering wheel-mounted audio controls",
+      "USB connection for iPod interface"
+    ],
+    "S": [
+      "2.5-liter 4-cylinder engine",
+      "5-speed manual transmission",
+      "Active Brake Limited Slip all-season tires",
+      "4-wheel Anti-lock Braking System",
+      "Full-length fully boxed ladder frame",
+      "Fold-flat front-passenger seat",
+      "Second-row under-seat storage on Crew Cab",
+      "Vehicle Dynamic Control",
+      "Tire Pressure Monitoring System with six air bags"
+    ]
+  }
+}

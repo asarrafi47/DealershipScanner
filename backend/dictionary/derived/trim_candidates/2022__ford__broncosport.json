@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2022|ford|broncosport",
+  "year": 2022,
+  "make": "Ford",
+  "model": "Bronco Sport",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Active",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

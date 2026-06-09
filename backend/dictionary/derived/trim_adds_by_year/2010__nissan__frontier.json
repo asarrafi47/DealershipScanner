@@ -1,0 +1,30 @@
+{
+  "catalog_key": "2010|nissan|frontier",
+  "year": 2010,
+  "make": "Nissan",
+  "model": "Frontier",
+  "ladder_id": "inventory_nissan_frontier",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "SE",
+    "Xe"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "General Tire & Rubber Company.",
+      "Goodrich Corporation.",
+      "Trail T/A are registered trademarks of Uniro"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Xe": 0
+    }
+  }
+}

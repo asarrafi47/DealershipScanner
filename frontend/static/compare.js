@@ -16,24 +16,86 @@
         return false;
     }
 
-    function readIds() {
+    function normalizeEntry(raw) {
+        if (raw == null) return null;
+        if (typeof raw === "number" || typeof raw === "string") {
+            const id = parseInt(raw, 10);
+            return Number.isFinite(id) && id > 0 ? { id: id, title: "", image: "" } : null;
+        }
+        if (typeof raw === "object") {
+            const id = parseInt(raw.id, 10);
+            if (!Number.isFinite(id) || id <= 0) return null;
+            return {
+                id: id,
+                title: String(raw.title || "").trim(),
+                image: String(raw.image || "").trim(),
+            };
+        }
+        return null;
+    }
+
+    function readEntries() {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
             const parsed = raw ? JSON.parse(raw) : [];
             if (!Array.isArray(parsed)) return [];
-            return parsed
-                .map((id) => parseInt(id, 10))
-                .filter((n) => Number.isFinite(n) && n > 0)
-                .slice(0, MAX_COMPARE);
+            const seen = new Set();
+            const out = [];
+            parsed.forEach(function (item) {
+                const entry = normalizeEntry(item);
+                if (!entry || seen.has(entry.id)) return;
+                seen.add(entry.id);
+                out.push(entry);
+            });
+            return out.slice(0, MAX_COMPARE);
         } catch (_) {
             return [];
         }
     }
 
-    function writeIds(ids) {
+    function notifyCompareChanged() {
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(ids.slice(0, MAX_COMPARE)));
+            window.dispatchEvent(
+                new CustomEvent("ds-compare-changed", { detail: { ids: readIds() } })
+            );
         } catch (_) {}
+    }
+
+    function writeEntries(entries) {
+        try {
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(
+                    entries.slice(0, MAX_COMPARE).map(function (entry) {
+                        return {
+                            id: entry.id,
+                            title: entry.title || "",
+                            image: entry.image || "",
+                        };
+                    })
+                )
+            );
+        } catch (_) {}
+        notifyCompareChanged();
+    }
+
+    function readIds() {
+        return readEntries().map(function (entry) {
+            return entry.id;
+        });
+    }
+
+    function cachedMetaById(id) {
+        const n = parseInt(id, 10);
+        if (!Number.isFinite(n)) return null;
+        const hit = readEntries().find(function (entry) {
+            return entry.id === n;
+        });
+        if (!hit) return null;
+        return {
+            title: hit.title || ("Vehicle #" + n),
+            image: hit.image || "",
+        };
     }
 
     function compareUrl(ids) {
@@ -53,6 +115,11 @@
     }
 
     function carMetaById(id) {
+        const cached = cachedMetaById(id);
+        if (cached && cached.title && cached.title.indexOf("Vehicle #") !== 0) {
+            return cached;
+        }
+
         const n = parseInt(id, 10);
         if (!Number.isFinite(n)) return null;
 
@@ -61,7 +128,9 @@
             try {
                 const cars = JSON.parse(jsonEl.textContent);
                 if (Array.isArray(cars)) {
-                    const hit = cars.find((c) => Number(c.id) === n);
+                    const hit = cars.find(function (c) {
+                        return Number(c.id) === n;
+                    });
                     if (hit) {
                         return {
                             title: hit.title || ("Vehicle #" + n),
@@ -73,12 +142,14 @@
         }
 
         if (Array.isArray(window.ALL_CARS)) {
-            const hit = window.ALL_CARS.find((c) => Number(c.id) === n);
+            const hit = window.ALL_CARS.find(function (c) {
+                return Number(c.id) === n;
+            });
             if (hit) {
                 const gallery = Array.isArray(hit.gallery) ? hit.gallery : [];
                 return {
                     title: hit.title || ("Vehicle #" + n),
-                    image: (gallery[0] || hit.image_url || ""),
+                    image: gallery[0] || hit.image_url || "",
                 };
             }
         }
@@ -93,19 +164,20 @@
             };
         }
 
+        if (cached) return cached;
         return { title: "Vehicle #" + n, image: "" };
     }
 
     function syncCompareControls(ids) {
         const idList = Array.isArray(ids) ? ids : readIds();
-        document.querySelectorAll(".result-compare-cb").forEach((cb) => {
+        document.querySelectorAll(".result-compare-cb").forEach(function (cb) {
             const cid = parseInt(cb.dataset.carId, 10);
             cb.checked = idList.includes(cid);
             const label = cb.closest(".result-compare-label");
             if (label) label.classList.toggle("result-compare-label--active", cb.checked);
         });
 
-        document.querySelectorAll("[data-compare-toggle]").forEach((btn) => {
+        document.querySelectorAll("[data-compare-toggle]").forEach(function (btn) {
             const cid = parseInt(btn.getAttribute("data-car-id"), 10);
             const on = idList.includes(cid);
             btn.classList.toggle("compare-toggle-btn--active", on);
@@ -134,23 +206,32 @@
 
         tray.hidden = false;
         document.body.classList.add("compare-tray-open");
-        slots.innerHTML = ids.map((id) => {
-            const meta = carMetaById(id);
-            const img = meta && meta.image
-                ? ` style="background-image:url('${String(meta.image).replace(/'/g, "%27")}')"`
-                : "";
-            const title = meta ? meta.title : ("#" + id);
-            return (
-                `<span class="compare-tray__slot" data-car-id="${id}">`
-                + `<span class="compare-tray__slot-thumb"${img} aria-hidden="true"></span>`
-                + `<span class="compare-tray__slot-title">${escapeHtml(title)}</span>`
-                + `<button type="button" class="compare-tray__slot-remove" data-compare-tray-remove="${id}" aria-label="Remove from compare">×</button>`
-                + `</span>`
-            );
-        }).join("");
+        slots.innerHTML = ids
+            .map(function (id) {
+                const meta = carMetaById(id);
+                const safeImg = meta && meta.image ? safeCssBackgroundUrl(meta.image) : "";
+                const img = safeImg ? ' style="background-image:url(\'' + safeImg + "')" : "";
+                const title = meta ? meta.title : "#" + id;
+                return (
+                    '<span class="compare-tray__slot" data-car-id="' +
+                    id +
+                    '">' +
+                    '<span class="compare-tray__slot-thumb"' +
+                    img +
+                    ' aria-hidden="true"></span>' +
+                    '<span class="compare-tray__slot-title">' +
+                    escapeHtml(title) +
+                    "</span>" +
+                    '<button type="button" class="compare-tray__slot-remove" data-compare-tray-remove="' +
+                    id +
+                    '" aria-label="Remove from compare">×</button>' +
+                    "</span>"
+                );
+            })
+            .join("");
         if (go) {
             go.href = compareUrl(ids);
-            go.textContent = `Compare ${ids.length} vehicle${ids.length !== 1 ? "s" : ""}`;
+            go.textContent = "Compare " + ids.length + " vehicle" + (ids.length !== 1 ? "s" : "");
         }
         if (clearBtn) clearBtn.disabled = false;
     }
@@ -163,32 +244,60 @@
             .replace(/"/g, "&quot;");
     }
 
+    /** http(s) only for CSS background-image (mitigates javascript: / data: in compare tray). */
+    function safeCssBackgroundUrl(url) {
+        const raw = String(url || "").trim();
+        if (!raw) return "";
+        try {
+            const abs = new URL(raw, window.location.origin);
+            if (abs.protocol !== "http:" && abs.protocol !== "https:") return "";
+            return abs.href.replace(/'/g, "%27");
+        } catch (_) {
+            return "";
+        }
+    }
+
     function toggleId(carId, on) {
         if (on && !isLoggedIn()) {
             requireCompareLogin();
             return readIds();
         }
         const id = parseInt(carId, 10);
-        if (!Number.isFinite(id) || id <= 0) return;
-        let ids = readIds();
+        if (!Number.isFinite(id) || id <= 0) return readIds();
+
+        let entries = readEntries();
+        const exists = entries.some(function (entry) {
+            return entry.id === id;
+        });
+
         if (on) {
-            if (!ids.includes(id)) {
-                if (ids.length >= MAX_COMPARE) {
-                    ids = ids.slice(1);
+            if (!exists) {
+                const meta = carMetaById(id);
+                if (entries.length >= MAX_COMPARE) {
+                    entries = entries.slice(1);
                 }
-                ids.push(id);
+                entries.push({
+                    id: id,
+                    title: meta ? meta.title : "Vehicle #" + id,
+                    image: meta ? meta.image : "",
+                });
+                writeEntries(entries);
             }
         } else {
-            ids = ids.filter((x) => x !== id);
+            writeEntries(
+                entries.filter(function (entry) {
+                    return entry.id !== id;
+                })
+            );
         }
-        writeIds(ids);
+
         syncTray();
-        syncUrlWithIds(ids);
+        syncUrlWithIds(readIds());
         const tray = document.getElementById("compare-tray");
         if (on && tray && !tray.hidden) {
             tray.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
-        return ids;
+        return readIds();
     }
 
     window.__DS_compareToggle = toggleId;
@@ -199,8 +308,8 @@
     function wireTray() {
         const clearBtn = document.getElementById("compare-tray-clear");
         if (clearBtn) {
-            clearBtn.addEventListener("click", () => {
-                writeIds([]);
+            clearBtn.addEventListener("click", function () {
+                writeEntries([]);
                 syncTray();
                 syncUrlWithIds([]);
                 if (document.body.classList.contains("compare-page")) {
@@ -208,7 +317,7 @@
                 }
             });
         }
-        document.addEventListener("click", (e) => {
+        document.addEventListener("click", function (e) {
             const rm = e.target.closest("[data-compare-tray-remove]");
             if (!rm) return;
             e.preventDefault();
@@ -220,7 +329,7 @@
     function wireGridCheckboxes() {
         const grid = document.getElementById("results-grid");
         if (!grid) return;
-        grid.addEventListener("click", (e) => {
+        grid.addEventListener("click", function (e) {
             const label = e.target.closest(".result-compare-label");
             if (!label) return;
             e.preventDefault();
@@ -233,8 +342,8 @@
     }
 
     function wireCompareToggleButtons() {
-        document.querySelectorAll("[data-compare-toggle]").forEach((btn) => {
-            btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-compare-toggle]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
                 const id = btn.getAttribute("data-car-id");
                 const ids = readIds();
                 const on = !ids.includes(parseInt(id, 10));
@@ -253,12 +362,22 @@
             return;
         }
         if (qs.get("ids")) {
-            writeIds(parseCompareIdsFromQuery(qs.get("ids")));
+            const ids = parseCompareIdsFromQuery(qs.get("ids"));
+            writeEntries(
+                ids.map(function (id) {
+                    const meta = carMetaById(id);
+                    return {
+                        id: id,
+                        title: meta ? meta.title : "Vehicle #" + id,
+                        image: meta ? meta.image : "",
+                    };
+                })
+            );
             syncTray();
         }
 
-        document.querySelectorAll("[data-compare-remove]").forEach((btn) => {
-            btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-compare-remove]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
                 const ids = toggleId(btn.getAttribute("data-compare-remove"), false);
                 if (!ids.length) {
                     window.location.href = "/compare";
@@ -272,14 +391,22 @@
     function parseCompareIdsFromQuery(raw) {
         return String(raw || "")
             .split(",")
-            .map((p) => parseInt(p.trim(), 10))
-            .filter((n) => Number.isFinite(n) && n > 0)
+            .map(function (p) {
+                return parseInt(p.trim(), 10);
+            })
+            .filter(function (n) {
+                return Number.isFinite(n) && n > 0;
+            })
             .slice(0, MAX_COMPARE);
+    }
+
+    function refreshCompareFromStorage() {
+        syncTray();
     }
 
     function init() {
         if (!isLoggedIn() && !document.body.classList.contains("compare-page")) {
-            writeIds([]);
+            writeEntries([]);
             return;
         }
         wireTray();
@@ -289,11 +416,12 @@
         syncCompareControls(readIds());
     }
 
-    window.addEventListener("pageshow", (e) => {
-        if (e.persisted) syncCompareControls(readIds());
+    window.addEventListener("pageshow", refreshCompareFromStorage);
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") refreshCompareFromStorage();
     });
 
-    window.addEventListener("storage", (e) => {
+    window.addEventListener("storage", function (e) {
         if (e.key === STORAGE_KEY) syncTray();
     });
 

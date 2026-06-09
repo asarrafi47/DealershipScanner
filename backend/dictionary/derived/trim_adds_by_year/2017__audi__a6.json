@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2017|audi|a6",
+  "year": 2017,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_llm_2017__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S6",
+    "A6 3.0T competition",
+    "A6"
+  ],
+  "adds_by_trim": {
+    "S6": [
+      "4.0T engine",
+      "S6 Sport Seat with Valcona leather and contrast stitching",
+      "Carbon Twill or Red interior inlay options",
+      "S6-specific Valcona leather with Korso Red or diamond stitching"
+    ],
+    "A6 3.0T competition": [
+      "3.0T engine",
+      "A6 3.0T competition-specific Valcona leather options",
+      "A6 3.0T competition Seat configuration"
+    ],
+    "A6": [
+      "2.0T engine",
+      "Standard A6 Seat or optional Ventilated Seat",
+      "Black leather or Nougat Brown leather standard",
+      "Dark Brown Walnut or Brushed Aluminum interior inlay options",
+      "Standard S line exterior styling"
+    ]
+  }
+}

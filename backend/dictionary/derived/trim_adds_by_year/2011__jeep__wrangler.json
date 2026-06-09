@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2011|jeep|wrangler",
+  "year": 2011,
+  "make": "Jeep",
+  "model": "Wrangler",
+  "ladder_id": "brochure_llm_2011__jeep__wrangler",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Rubicon Unlimited",
+    "Rubicon",
+    "Sahara Unlimited",
+    "Sahara",
+    "Sport Unlimited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Rubicon Unlimited": [
+      "Rock-Trac NV241 OR manual transfer case with 4:1 low-gear ratio",
+      "Tru-Lok front and rear electronic remote locking differentials",
+      "Next Generation Dana 44 heavy-duty solid front axle",
+      "Heavy-duty protective rock rails with black painted steel body-mounted construction"
+    ],
+    "Rubicon": [
+      "Rock-Trac NV241 OR manual transfer case with 4:1 low-gear ratio",
+      "Tru-Lok front and rear electronic remote locking differentials",
+      "Next Generation Dana 44 heavy-duty solid front axle"
+    ],
+    "Sahara Unlimited": [
+      "Command-Trac NV241 GII manual part-time shift-on-the-fly transfer case"
+    ],
+    "Sahara": [
+      "Command-Trac NV241 GII manual part-time shift-on-the-fly transfer case"
+    ],
+    "Sport Unlimited": [
+      "Wrangler Unlimited extended wheelbase and interior space"
+    ],
+    "Sport": [
+      "3.8L V6 SMPI engine with 6-speed manual transmission standard",
+      "Next Generation Dana 30 solid front axle",
+      "Next Generation Dana 44 heavy-duty solid rear axle",
+      "Protective fuel tank skid plate with 2.5-mm thickness",
+      "Transfer case and transmission skid plates for added protection"
+    ]
+  }
+}

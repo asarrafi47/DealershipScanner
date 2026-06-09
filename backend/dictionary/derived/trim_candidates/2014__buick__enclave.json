@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2014|buick|enclave",
+  "year": 2014,
+  "make": "Buick",
+  "model": "Enclave",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Base",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

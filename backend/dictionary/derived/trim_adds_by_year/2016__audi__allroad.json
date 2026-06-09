@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2016|audi|allroad",
+  "year": 2016,
+  "make": "Audi",
+  "model": "Allroad",
+  "ladder_id": "brochure_2016__audi__allroad",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "S line",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 16-valve DOHC turbocharged four-cylinder engine with 220 horsepower",
+      "Adds eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Adds five-link front suspension with trapezoidal-link rear suspension",
+      "Adds ventilated front disc and solid rear disc brakes",
+      "Adds electromechanical power steering system",
+      "Adds black leather or chestnut brown leather seating options",
+      "Adds 18-inch 5-arm allroad design wheels",
+      "Adds aluminum trigon or fine grain ash decorative inlays",
+      "Adds multiple exterior color options with full-paint finishes",
+      "Adds fully galvanized steel unibody with multistep anti-corrosion protection"
+    ],
+    "Limited": [
+      "Adds titanium gray leather seating option",
+      "Adds velvet beige leather seating option"
+    ],
+    "S line": [
+      "Adds dark brown walnut wood decorative inlay option",
+      "Adds natural brown wood decorative inlay option",
+      "Adds 18-inch 10-arm design wheels option"
+    ],
+    "Premium": [
+      "Adds sport suspension upgrade option",
+      "Adds sport seat configuration option across all interior leather colors"
+    ]
+  }
+}

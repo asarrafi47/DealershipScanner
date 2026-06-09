@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2015|lexus|gx",
+  "year": 2015,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "brochure_2015__lexus__gx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Includes Four-year/50,000-mile Limited Warranty",
+      "Adds Includes Six-year/70,000-mile Powertrain Warranty",
+      "Adds Includes Six-year/unlimited-mileage Corrosion Perforation Warranty",
+      "Adds Lexus Delivery Specialist personalized delivery service",
+      "Adds Lexus Technology Specialist support via camera-enabled iPad apps"
+    ],
+    "Premium": [
+      "Adds Wide-view Front and Side Monitor system",
+      "Adds Wide-view Side Monitor for front passenger-side visibility",
+      "Adds Blind Spot Monitor",
+      "Adds Rear Cross-Traffic Alert system",
+      "Adds Mark Levinson premium audio system",
+      "Adds dual-screen DVD entertainment system",
+      "Adds SmartAccess keyless entry system",
+      "Adds navigation system with HD Radio technology support"
+    ]
+  }
+}

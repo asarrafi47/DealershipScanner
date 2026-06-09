@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2013|hyundai|veloster",
+  "year": 2013,
+  "make": "Hyundai",
+  "model": "Veloster",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Blue",
+    "Premium",
+    "Sport",
+    "LE",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -956,6 +956,195 @@ def apply_bmw_model_trim_display(car: dict[str, Any]) -> tuple[str, str]:
     return format_display_value(model_base), format_display_value(trim_out)
 
 
+_TCO_DEFAULT_STATE = "NC"
+_STATE_ZIP_IN_TEXT_RE = re.compile(r"\b([A-Z]{2})\s+(\d{5})(?:-\d{4})?\b")
+_COMMA_STATE_ZIP_RE = re.compile(r",\s*([A-Za-z]{2})\s+(\d{5})(?:-\d{4})?\b")
+_TRAILING_COMMA_STATE_RE = re.compile(r",\s*([A-Za-z]{2})\s*$")
+
+_TCO_PREMIUM_ENGINE_KEYWORDS = (
+    "turbo",
+    "twin turbo",
+    "twin-turbo",
+    "supercharged",
+    "supercharger",
+    "v8",
+    "v12",
+    "v-8",
+    "v-12",
+)
+
+_TCO_LUXURY_PREMIUM_MAKES = frozenset(
+    {
+        "bmw",
+        "mercedes-benz",
+        "mercedes",
+        "porsche",
+        "audi",
+    }
+)
+
+
+def _valid_us_state_code(raw: Any) -> str:
+    from backend.discovery.normalize import normalize_us_state_to_code
+
+    code = normalize_us_state_to_code(str(raw).strip() if raw is not None else "")
+    return code if len(code) == 2 else ""
+
+
+def _extract_state_from_location_text(text: str | None) -> str:
+    if not text or not str(text).strip():
+        return ""
+    raw = str(text).strip()
+    m = _STATE_ZIP_IN_TEXT_RE.search(raw.upper())
+    if m:
+        return m.group(1)
+    m = _COMMA_STATE_ZIP_RE.search(raw)
+    if m:
+        code = _valid_us_state_code(m.group(1))
+        if code:
+            return code
+    m = _TRAILING_COMMA_STATE_RE.search(raw)
+    if m:
+        code = _valid_us_state_code(m.group(1))
+        if code:
+            return code
+    from backend.discovery.normalize import normalize_us_state_to_code
+
+    for segment in reversed([p.strip() for p in raw.split(",") if p.strip()]):
+        code = normalize_us_state_to_code(segment)
+        if code:
+            return code
+    return ""
+
+
+def _state_from_dealership_registry(registry_id: Any) -> str:
+    try:
+        rid = int(registry_id)
+    except (TypeError, ValueError):
+        return ""
+    if rid <= 0:
+        return ""
+    try:
+        from backend.db.dealerships_db import get_dealership_by_id
+
+        row = get_dealership_by_id(rid)
+        if not row:
+            return ""
+        for key in ("state", "state_code"):
+            code = _valid_us_state_code(row.get(key))
+            if code:
+                return code
+        parts = [
+            row.get("street_address"),
+            row.get("city"),
+            row.get("state"),
+            row.get("zip_code"),
+        ]
+        location = ", ".join(str(p).strip() for p in parts if p and str(p).strip())
+        return _extract_state_from_location_text(location)
+    except Exception:
+        return ""
+
+
+def resolve_car_state_code(car: dict[str, Any]) -> str:
+    """
+    Two-letter US state for TCO fuel lookup.
+
+    Uses row state, dealership registry/location text, listing ZIP, then ``NC``.
+    """
+    if not car:
+        return _TCO_DEFAULT_STATE
+    c = car
+    for key in ("state", "state_code", "dealer_state"):
+        code = _valid_us_state_code(c.get(key))
+        if code:
+            return code
+    for key in (
+        "dealer_location",
+        "dealer_address",
+        "location",
+        "address",
+        "dealer_city_state",
+    ):
+        code = _extract_state_from_location_text(c.get(key))
+        if code:
+            return code
+    code = _state_from_dealership_registry(c.get("dealership_registry_id"))
+    if code:
+        return code
+    zip_raw = c.get("zip_code")
+    if zip_raw and str(zip_raw).strip():
+        try:
+            from backend.db.geo import us_postal_meta_for_zip
+
+            meta = us_postal_meta_for_zip(str(zip_raw).strip())
+            if meta and meta.get("state_code"):
+                code = _valid_us_state_code(meta["state_code"])
+                if code:
+                    return code
+        except Exception:
+            pass
+    return _TCO_DEFAULT_STATE
+
+
+def _normalize_tco_make_key(raw: Any) -> str:
+    return re.sub(r"\s+", " ", str(raw or "").strip().lower())
+
+
+def _engine_spec_text_for_fuel_requirement(
+    car: dict[str, Any],
+    *,
+    engine_display: str | None = None,
+    verified_specs: dict[str, Any] | None = None,
+) -> str:
+    vs = verified_specs or {}
+    chunks = [
+        car.get("engine_description"),
+        car.get("engine"),
+        car.get("title"),
+        car.get("trim"),
+        engine_display,
+        vs.get("master_engine_string"),
+        vs.get("epa_engine_description"),
+        car.get("fuel_type"),
+        vs.get("epa_fuel_type"),
+    ]
+    return " ".join(str(x).strip() for x in chunks if x and str(x).strip()).lower()
+
+
+def resolve_car_fuel_requirement(
+    car: dict[str, Any],
+    *,
+    engine_display: str | None = None,
+    verified_specs: dict[str, Any] | None = None,
+) -> str:
+    """
+    TCO fuel tier: ``premium`` when engine or make signals premium gasoline; else ``regular``.
+    """
+    if not car:
+        return "regular"
+    blob = _engine_spec_text_for_fuel_requirement(
+        car, engine_display=engine_display, verified_specs=verified_specs
+    )
+    if "premium" in blob or "premium gasoline" in blob:
+        return "premium"
+    for kw in _TCO_PREMIUM_ENGINE_KEYWORDS:
+        if kw in blob:
+            return "premium"
+    if re.search(r"\bv\s*[-]?\s*8\b", blob):
+        return "premium"
+    if re.search(r"\bv\s*[-]?\s*12\b", blob):
+        return "premium"
+    make_key = _normalize_tco_make_key(car.get("make"))
+    if make_key in _TCO_LUXURY_PREMIUM_MAKES:
+        return "premium"
+    compact = make_key.replace(" ", "").replace("-", "")
+    for luxury in _TCO_LUXURY_PREMIUM_MAKES:
+        if compact == luxury.replace(" ", "").replace("-", ""):
+            return "premium"
+    return "regular"
+
+
 def serialize_car_for_api(
     car: dict[str, Any],
     *,
@@ -1224,7 +1413,60 @@ def serialize_car_for_api(
             pass
     out["package_names"] = _pkg_names
 
+    out["created_at"] = c.get("first_seen_at") or c.get("scraped_at")
+    out["price_history_json"] = _price_history_json_for_vdp(c)
+    out["state"] = resolve_car_state_code(c)
+    out["fuel_requirement"] = resolve_car_fuel_requirement(
+        c, engine_display=engine_disp, verified_specs=vs if vs else None
+    )
+    from backend.intelligence.tco_fuel_estimates import (
+        resolve_fuel_tank_gallons,
+        resolve_tco_avg_mpg,
+        resolve_tco_ev_efficiency,
+    )
+    from backend.intelligence.ev_range_estimates import resolve_factory_epa_range
+
+    out["tco_avg_mpg"] = resolve_tco_avg_mpg(c)
+    out["tco_ev_efficiency"] = resolve_tco_ev_efficiency(c)
+    out["factory_range"] = resolve_factory_epa_range(c)
+    out["fuel_tank_gallons"] = round(resolve_fuel_tank_gallons(c), 1)
+
     return out
+
+
+def _price_history_json_for_vdp(car: dict[str, Any]) -> str:
+    """
+    JSON array string for VDP negotiation radar: [{date, price}, ...].
+
+    Reads operator ``price_provenance_json`` when it stores sweep history; never
+    exposes the raw provenance blob on the public car payload.
+    """
+    events: list[dict[str, Any]] = []
+    raw = car.get("price_provenance_json")
+    if raw and str(raw).strip():
+        try:
+            parsed = json.loads(raw) if isinstance(raw, str) else raw
+        except (json.JSONDecodeError, TypeError, ValueError):
+            parsed = None
+        if isinstance(parsed, list):
+            source = parsed
+        elif isinstance(parsed, dict):
+            source = parsed.get("history") or parsed.get("sweeps") or parsed.get("price_history") or []
+        else:
+            source = []
+        if isinstance(source, list):
+            for item in source:
+                if not isinstance(item, dict):
+                    continue
+                when = item.get("date") or item.get("recorded_at") or item.get("scraped_at")
+                amt = item.get("price")
+                if when is None or amt is None:
+                    continue
+                try:
+                    events.append({"date": str(when), "price": float(amt)})
+                except (TypeError, ValueError):
+                    continue
+    return json.dumps(events)
 
 
 _LISTINGS_GRID_GALLERY_MAX = max(1, int(os.environ.get("LISTINGS_GRID_GALLERY_MAX", "4")))
@@ -1362,7 +1604,22 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
         "package_names": _package_names_from_raw(c.get("packages")),
         "data_quality_score": num("data_quality_score"),
     }
+    out["condition"] = format_display_value(c.get("condition"))
+    fill_derived_condition_for_display(c, out)
     return out
+
+
+def listings_inventory_is_new(condition: Any) -> bool:
+    """True when derived display condition is new retail inventory."""
+    return str(condition or "").strip().lower() == "new"
+
+
+def listings_inventory_is_pre_owned(condition: Any) -> bool:
+    """True for used / CPO / pre-owned inventory (anything explicitly not new)."""
+    c = str(condition or "").strip().lower()
+    if not c or c in ("—", "-", "n/a"):
+        return False
+    return c != "new"
 
 
 def fill_derived_condition_for_display(c: dict[str, Any], out: dict[str, Any]) -> None:

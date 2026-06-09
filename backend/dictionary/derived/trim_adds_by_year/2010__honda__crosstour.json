@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2010|honda|crosstour",
+  "year": 2010,
+  "make": "Honda",
+  "model": "Crosstour",
+  "ladder_id": "generic_honda_crosstour",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "EX-L",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [
+      "Agreement for details. Fees and programming subject to change. Service not available in Canada, Alaska, or Hawaii. © 2009 SIRIUS XM Radio Inc. SIRIUS, XM and all related marks",
+      "details. 12 Windows Media®",
+      "trademark of Microsoft Corporation in the United States and/or other countries. 13 Kelley Blue Book’s kbb.com awarded Honda six Best Resale value Awards for the 2009 Civic, the 2009 Civic Hybrid, the 2009 CR-v, the 2009 Fit, the 2009 Odyssey and overall Brand."
+    ],
+    "EX-L": [
+      "trademarks of HARMAN International Industries, Inc. Your wireless carrier’s rates may apply. 3 Pandora, the Pandora logo and the Pandora trade dress are"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 3.0,
+    "per_trim_add_counts": {
+      "EX": 3
+    }
+  }
+}

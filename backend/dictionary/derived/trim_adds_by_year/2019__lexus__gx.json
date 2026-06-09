@@ -1,0 +1,33 @@
+{
+  "catalog_key": "2019|lexus|gx",
+  "year": 2019,
+  "make": "lexus",
+  "model": "GX",
+  "ladder_id": "2017_lexus_gx_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Premium",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Blue Book Co., Inc. 43. Destination Assist is dependent upon an operative telematics device, a cellular connection, navigation map data and"
+    ],
+    "Premium": [
+      "LED fog lamps and outside mirrors with puddle lamps",
+      "10-way heated and ventilated power driver seat",
+      "Heated second-row outboard seats and wireless phone charger"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "Limited": 1
+    }
+  }
+}

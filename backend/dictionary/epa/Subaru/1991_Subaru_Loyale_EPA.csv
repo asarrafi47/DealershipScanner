@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1991,Subaru,Loyale,Loyale,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,21,24,22,,,,,
+1991,Subaru,Loyale,Loyale,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,22,29,25,,,,,
+1991,Subaru,Loyale,Wagon,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.8,21,24,22,,,,,
+1991,Subaru,Loyale,Wagon,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.8,22,28,24,,,,,
+1991,Subaru,Loyale,Wagon 4WD,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,19,20,20,,,,,
+1991,Subaru,Loyale,Wagon 4WD,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,21,26,23,,,,,
+1991,Subaru,Loyale,4WD,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,19,22,20,,,,,
+1991,Subaru,Loyale,4WD,1.8L I4 ((FFS) (SPFI)),1.8L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,21,26,23,,,,,

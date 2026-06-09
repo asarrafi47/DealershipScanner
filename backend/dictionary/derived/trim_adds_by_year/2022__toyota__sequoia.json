@@ -1,0 +1,78 @@
+{
+  "catalog_key": "2022|toyota|sequoia",
+  "year": 2022,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "ladder_id": "brochure_2022__toyota__sequoia",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "TRD Pro",
+    "TRD Sport",
+    "TRD",
+    "SR5",
+    "Premium",
+    "Sport",
+    "S"
+  ],
+  "adds_by_trim": {
+    "S": [],
+    "Sport": [],
+    "Premium": [],
+    "SR5": [
+      "Adds heated power outside mirrors",
+      "Adds 7.0-inch touchscreen with eight speakers",
+      "Adds Android Auto and Apple CarPlay compatibility",
+      "Adds SiriusXM with 3-month Platinum Plan trial subscription",
+      "Adds Connected Services trials including Safety Connect, Service Connect, Remote Connect, and Wi-Fi Connect",
+      "Adds leather-trimmed tilt/telescopic steering wheel with audio and Bluetooth hands-free phone controls",
+      "Adds multi-function center console with four 12V auxiliary power outlets",
+      "Adds three USB ports",
+      "Adds cargo area 12V auxiliary power outlet"
+    ],
+    "TRD": [
+      "Swaps to TRD Sport performance-tuned Bilstein shocks",
+      "Swaps to TRD Sport performance-tuned anti-sway bars",
+      "Adds satin-black TRD Sport front door logos",
+      "Swaps to 20-inch machined-finish split-spoke with dark silver accent alloy wheels",
+      "Adds TRD stitched floor mats",
+      "Adds TRD shift knob"
+    ],
+    "TRD Sport": [
+      "Swaps to 20-inch TRD Sport black alloy wheels",
+      "Adds chrome auto-dimming heated power outside mirrors with power-folding feature and turn signal indicators",
+      "Adds power tilt/slide moonroof with sliding sunshade",
+      "Adds one-touch access to third-row seat",
+      "Adds second- and third-row retractable window sunshades",
+      "Adds cargo net"
+    ],
+    "TRD Pro": [
+      "Adds Adaptive Variable Suspension (AVS) system",
+      "Adds TRD front and rear coil springs",
+      "Swaps to TRD FOX shocks with piggyback reservoirs",
+      "Swaps to Rigid Industries LED fog lights",
+      "Adds TRD black roof rack",
+      "Adds TRD front skid plate",
+      "Adds black cast-aluminum running boards",
+      "Swaps wheels to 18-inch black BBS forged-aluminum TRD Pro alloy wheels with P275/65R18 tires"
+    ],
+    "Limited": [
+      "Adds Dynamic Navigation with Destination Assist",
+      "Adds leather-trimmed seats",
+      "Adds heated front seats",
+      "Adds 40/20/40 split reclining and fold-flat second-row seat",
+      "Adds 60/40 split power-reclining and fold-flat third-row seat",
+      "Adds auto-dimming rearview mirror with compass and HomeLink universal transceiver"
+    ],
+    "Platinum": [
+      "Swaps to perforated leather-trimmed seats",
+      "Adds heated and ventilated front seats",
+      "Adds heated second-row captain's chairs",
+      "Adds birds-eye maple-style accent steering wheel, shift knob, and door panels",
+      "Adds multi-function center console with three 12V auxiliary power outlets and one 120V AC power outlet",
+      "Adds two-position power memory driver's seat and memory outside mirrors",
+      "Adds rear-seat Blu-ray Disc player with 9-inch display"
+    ]
+  }
+}

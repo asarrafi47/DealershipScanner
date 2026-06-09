@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2018|toyota|prius",
+  "year": 2018,
+  "make": "Toyota",
+  "model": "Prius",
+  "ladder_id": "brochure_llm_2018__toyota__prius",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Four Touring",
+    "Four",
+    "Three Touring",
+    "Three",
+    "Two Eco",
+    "Two",
+    "One"
+  ],
+  "adds_by_trim": {
+    "Four Touring": [
+      "Color Head-Up Display with speedometer, navigation, and Hybrid System Indicator",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Intelligent Clearance Sonar with Intelligent Parking Assist (standard)",
+      "17-inch 5-spoke alloy wheels with gunmetal inserts and P215/45R17 tires",
+      "EntuneTM Premium Audio with Integrated Navigation and 11.6-inch HD multimedia display"
+    ],
+    "Four": [
+      "EntuneTM Premium Audio with Integrated Navigation and 11.6-inch HD multimedia display",
+      "Safety Connect with Emergency Assistance and Stolen Vehicle Locator",
+      "Intelligent Clearance Sonar with Intelligent Parking Assist (standard)",
+      "Piano-black side-skirt rocker panels and two-tone front/rear bumpers"
+    ],
+    "Three Touring": [
+      "Color Head-Up Display with speedometer, navigation, and Hybrid System Indicator",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "17-inch 5-spoke alloy wheels with gunmetal inserts and P215/45R17 tires"
+    ],
+    "Three": [
+      "EntuneTM Premium Audio with Integrated Navigation and 7-inch high-resolution touch-screen",
+      "Qi-compatible wireless smartphone charging with indicator light",
+      "SofTex-trimmed tilt/telescopic steering wheel with audio and climate controls",
+      "Smart Key System on three doors with Push Button Start",
+      "Blind Spot Monitor and Rear Cross-Traffic Alert (standard)",
+      "Intelligent Clearance Sonar with Intelligent Parking Assist (standard)"
+    ],
+    "Two Eco": [
+      "58 city/53 highway estimated mpg (vs. 54/50 on standard Two)",
+      "Tire repair kit",
+      "LED taillights and stop lights",
+      "Smart Key System with Push Button Start on driver's door (Eco only)"
+    ],
+    "Two": [
+      "54 city/50 highway estimated mpg",
+      "LED Daytime Running Lights with on/off feature",
+      "Bi-LED projector low- and high-beam headlights with auto on/off",
+      "Heated power outside mirrors with folding feature",
+      "Intermittent rear window wiper",
+      "15-inch 5-spoke alloy wheels with two-tone wheel covers",
+      "Cargo area lightweight tonneau cover",
+      "Temporary spare tire",
+      "Integrated backup camera",
+      "EntuneTM Audio with 6.1-inch touch-screen display"
+    ],
+    "One": [
+      "1.8L 4-Cylinder Engine with Hybrid Synergy Drive and ECVT transmission",
+      "54 city/50 highway estimated mpg",
+      "Bi-LED projector low- and high-beam headlights with auto-off feature",
+      "LED Daytime Running Lights with on/off feature",
+      "Active grille shutter",
+      "15-inch 5-spoke alloy wheels with full wheel covers and P195/65R15 tires",
+      "Washer-linked variable intermittent windshield wipers",
+      "Smart Key System on driver's door with Push Button Start",
+      "Fabric-trimmed front seats with 6-way adjustable driver's seat",
+      "4.2-inch color dual Multi-Information Display and integrated backup camera"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|audi|a4",
+  "year": 2016,
+  "make": "Audi",
+  "model": "A4",
+  "ladder_id": "brochure_llm_2016__audi__a4",
+  "source": "brochure_llm",
+  "trims_available": [
+    "S4",
+    "A4"
+  ],
+  "adds_by_trim": {
+    "S4": [
+      "2.995L supercharged six-cylinder engine producing 333 horsepower and 325 lb-ft torque",
+      "0-60 acceleration in 4.9 seconds with manual or Stronic transmission",
+      "Seven-speed Stronic dual-clutch automatic transmission with quattro all-wheel drive",
+      "Six-speed manual transmission with quattro all-wheel drive",
+      "19-inch Audi Sport 5-segment-spoke design wheels in silver finish standard",
+      "Top track speed of 155 mph",
+      "Brushed Aluminum, Carbon Atlas, and Layered Aluminum/Black Wood decorative inlays",
+      "Black leather/Black Alcantara and specialty multi-tone leather interior options"
+    ],
+    "A4": [
+      "2.0L turbocharged four-cylinder engine producing 220 horsepower and 258 lb-ft torque",
+      "0-60 acceleration in 6.2 to 6.6 seconds depending on transmission",
+      "multitronic continuously variable transmission with front-wheel drive standard",
+      "Eight-speed Tiptronic automatic transmission with quattro all-wheel drive available",
+      "17-inch 10-spoke-star design wheels standard with multiple wheel design options",
+      "Top track speed of 130 mph",
+      "Aluminum Trigon and Dark Brown Walnut Wood decorative inlay options",
+      "Fine Grain Ash Natural Brown Wood and Piano Black decorative inlays available"
+    ]
+  }
+}

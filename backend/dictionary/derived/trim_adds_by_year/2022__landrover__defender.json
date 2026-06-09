@@ -1,0 +1,41 @@
+{
+  "catalog_key": "2022|landrover|defender",
+  "year": 2022,
+  "make": "landrover",
+  "model": "Defender",
+  "ladder_id": "brochure_llm_2022__landrover__defender",
+  "source": "brochure_llm",
+  "trims_available": [
+    "P525",
+    "P400e",
+    "D240",
+    "D200"
+  ],
+  "adds_by_trim": {
+    "P525": [
+      "5.0L V8 petrol engine producing 525 PS and 625 Nm torque",
+      "0-100 km/h acceleration in 3.9 seconds",
+      "Maximum speed of 240 km/h",
+      "6 piston opposed monobloc front brake calipers",
+      "No dynamic roof loading capacity"
+    ],
+    "P400e": [
+      "Plug-in hybrid electric powertrain with 404 PS combined output",
+      "Electric motor with 140 km/h maximum speed",
+      "43-53 km EV range on fully charged battery",
+      "0-100 km/h acceleration in 5.4-5.6 seconds",
+      "Loadspace capacity reduced by up to 116 litres versus diesel variants"
+    ],
+    "D240": [
+      "2.0L diesel engine producing 240 PS and 430 Nm torque",
+      "4,000 rpm maximum power delivery",
+      "Automatic transmission with all-wheel drive standard"
+    ],
+    "D200": [
+      "2.0L diesel engine producing 200 PS and 430 Nm torque",
+      "3,750-4,000 rpm maximum power delivery",
+      "Automatic transmission with all-wheel drive standard",
+      "Diesel Particulate Filter standard equipment"
+    ]
+  }
+}

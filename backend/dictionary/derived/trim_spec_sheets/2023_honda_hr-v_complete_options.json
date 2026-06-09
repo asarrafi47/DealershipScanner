@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2023_honda_hr-v_complete_options",
+  "make": "Honda",
+  "models": [
+    "HR-V",
+    "HR-V"
+  ],
+  "year_min": 2021,
+  "year_max": 2025,
+  "source": "generated",
+  "trims": {
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "RV3RV4RV5RV6RS1 (electric); The former was available on the EX and EXL trim levels, while the latter was ava"
+      },
+      {
+        "label": "Screen Size",
+        "value": "HR-V Sport Continuously variable transmission (CVT) with paddle shifters 7-inch Display Au; 7-inch Display"
+      }
+    ],
+    "Base": [
+      {
+        "label": "Engine Options",
+        "value": "Honda e:NS1/e:NP1 (China, electric, 2022–2025)"
+      }
+    ]
+  }
+}

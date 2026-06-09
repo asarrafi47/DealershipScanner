@@ -1,0 +1,50 @@
+{
+  "catalog_key": "2021|alfaromeo|stelvio",
+  "year": 2021,
+  "make": "alfa romeo",
+  "model": "stelvio",
+  "ladder_id": "brochure_llm_2021__alfaromeo__stelvio",
+  "source": "brochure_llm",
+  "trims_available": [
+    "QUADRIFOGLIO",
+    "TI SPORT",
+    "TI",
+    "SPRINT"
+  ],
+  "adds_by_trim": {
+    "QUADRIFOGLIO": [
+      "2.9L Twin-Turbocharged V6 with 505 hp and 443 lb-ft torque",
+      "Sport leather/Alcantara seats with 14-way power adjustment and manual thigh support",
+      "Brembo high-performance brakes with anodized calipers",
+      "Torque vectoring rear differential with independent adaptive damping suspension",
+      "Alfa DNA Pro Drive Mode Selector with Race Mode",
+      "20-inch Bright 5-hole aluminum wheels with 255/45R20 and 285/40R20 high-performance tires",
+      "Dynamic dual-mode quad exhaust with unique front/rear fascias",
+      "Harman Kardon premium audio system",
+      "Forward Collision Warning with Full-Speed Stop and blind spot detection"
+    ],
+    "TI SPORT": [
+      "Dark exhaust system",
+      "20-inch Sport 5-hole aluminum wheels with 225/40R20 run-flat all-season tires",
+      "Colored brake calipers in Red, Black, or Yellow",
+      "Sport-tuned suspension",
+      "Premium Sport leather-trimmed seats",
+      "Gloss Black window surrounds and roof rails"
+    ],
+    "TI": [
+      "2.0L Turbocharged 4-cylinder engine with 280 hp and 306 lb-ft torque",
+      "8.8-inch multi-touch display with navigation",
+      "Sport front and rear fascias",
+      "19-inch Polished Y-spoke aluminum wheels with 225/55R19 run-flat tires",
+      "Body-Color Appearance Kit",
+      "Dual-pane sunroof",
+      "Heated windshield washer nozzles"
+    ],
+    "SPRINT": [
+      "All-aluminum 2.0L Turbocharged 4-cylinder engine with 280 hp and 306 lb-ft torque",
+      "8-speed automatic transmission with Q4 All-Wheel Drive",
+      "Front Park Assist Sensors",
+      "AM/FM/HD audio with auxiliary input and Bluetooth connectivity"
+    ]
+  }
+}

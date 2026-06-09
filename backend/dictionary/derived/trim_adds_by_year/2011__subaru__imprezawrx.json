@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2011|subaru|imprezawrx",
+  "year": 2011,
+  "make": "Subaru",
+  "model": "Impreza WRX",
+  "ladder_id": "generic_subaru_imprezawrx",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "cubic feet (with moonroof: 93.0"
+    ],
+    "Sport": [
+      "inches/58.1 inches | 173.8"
+    ],
+    "Premium": [
+      "Optional Sport Lineartronic transmission with paddle shifters and SI-DRIVE",
+      "Trunk spoiler",
+      "Fog lights",
+      "Leather-wrapped flat-bottom steering wheel"
+    ],
+    "Base": [
+      "inches/58.1 inches | 173.8"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 4,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 0.0,
+    "per_trim_add_counts": {
+      "Sport": 0,
+      "Premium": 0,
+      "Base": 0
+    }
+  }
+}

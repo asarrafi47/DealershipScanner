@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2022|kia|telluride",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Telluride",
+  "ladder_id": "brochure_web_2022__kia__telluride",
+  "source": "brochure_llm_web",
+  "trims_available": [
+    "SX X-Pro",
+    "X-Line",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX X-Pro": [
+      "Off-road capability and bolder exterior styling",
+      "Mild off-road enhancements for increased versatility"
+    ],
+    "X-Line": [
+      "12.3-inch driver display",
+      "Wireless phone charger"
+    ],
+    "EX": [
+      "Balance of features at midrange pricing"
+    ],
+    "LX": [
+      "3.8-liter V-6 engine with 291 horsepower and 262 lb-ft torque",
+      "12.3-inch infotainment touchscreen with Apple CarPlay and Android Auto",
+      "Five USB ports",
+      "Six-speaker sound system",
+      "Blind-spot monitoring and rear cross-traffic alert",
+      "Lane keeping assist and rear parking sensors",
+      "Adaptive cruise control and automatic emergency braking",
+      "Driver focus warning system",
+      "Roomy, well-built interior with smooth, comfortable ride"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/kia/telluride/"
+}

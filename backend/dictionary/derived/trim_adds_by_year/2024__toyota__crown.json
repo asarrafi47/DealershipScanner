@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2024|toyota|crown",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Crown",
+  "ladder_id": "brochure_llm_2024__toyota__crown",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Hybrid engine: 2.5-Liter Dynamic Force 4-Cylinder with EV Mode",
+      "236 combined net horsepower"
+    ],
+    "Limited": [
+      "Adds to or replaces features offered on XLE"
+    ],
+    "Platinum": [
+      "Hybrid MAX engine: 2.4-Liter 4-Cylinder turbocharged Hybrid"
+    ]
+  }
+}

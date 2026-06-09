@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2019|dodge|grandcaravan",
+  "year": 2019,
+  "make": "Dodge",
+  "model": "Grand Caravan",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Touring"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

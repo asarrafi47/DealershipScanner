@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2021|ram|promaster",
+  "year": 2021,
+  "make": "ram",
+  "model": "promaster",
+  "ladder_id": "brochure_llm_2021__ram__promaster",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Cab Chassis",
+    "Cutaway Chassis",
+    "Windowed Van",
+    "Cargo Van"
+  ],
+  "adds_by_trim": {
+    "Cab Chassis": [
+      "Touring suspension option available",
+      "Passenger-sliding door with fixed window and deep-tint sunscreen glass",
+      "Left-side sliding door options with fixed glass or no glass"
+    ],
+    "Cutaway Chassis": [
+      "Premium heavy-duty suspension for 3500 models with 159-inch wheelbase",
+      "220-amp alternator with RV-Ready Prep Package",
+      "Class IV hitch receiver with wiring harness and RV-Ready Prep Package"
+    ],
+    "Windowed Van": [
+      "Rear wall window standard",
+      "Front and rear clearance lamps standard",
+      "Temporary spare tire mount standard"
+    ],
+    "Cargo Van": [
+      "Premium heavy-duty suspension with 159-inch wheelbase requirement",
+      "Rear hinged doors with fixed glass standard",
+      "Right-side fixed glass door with window grate and deep-tint sunscreen glass"
+    ]
+  }
+}

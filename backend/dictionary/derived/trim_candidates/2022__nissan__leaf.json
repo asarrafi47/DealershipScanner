@@ -1,0 +1,20 @@
+{
+  "catalog_key": "2022|nissan|leaf",
+  "year": 2022,
+  "make": "Nissan",
+  "model": "Leaf",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SL",
+    "Nismo",
+    "SV",
+    "Limited",
+    "Premium",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

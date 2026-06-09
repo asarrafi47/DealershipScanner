@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2017|volvo|xc60",
+  "year": 2017,
+  "make": "Volvo",
+  "model": "XC60",
+  "ladder_id": "brochure_llm_2017__volvo__xc60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "R-Design",
+    "Dynamic",
+    "Inscription",
+    "T6",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "R-Design": [
+      "Electronically Controlled AWD standard",
+      "BLIS Package with Blind Spot Information System and lane change merge aid",
+      "Front and rear park assist",
+      "Preferred Option Package including Keyless Drive and Front Park Assist",
+      "Active Dual Xenon Headlights"
+    ],
+    "Dynamic": [
+      "20-inch Altais alloy wheels",
+      "BLIS Package standard with Blind Spot Information System",
+      "Power Retractable Exterior Mirrors",
+      "Power Folding Rear Headrests",
+      "Homelink"
+    ],
+    "Inscription": [
+      "20-inch Avior alloy wheels",
+      "BLIS Package standard",
+      "Preferred Option Package with Keyless Drive and Power Operated Tailgate"
+    ],
+    "T6": [
+      "T6 engine option",
+      "Electronically Controlled AWD available",
+      "Active Dual Xenon Headlights in Preferred Option Package"
+    ],
+    "T5": [
+      "T5 engine",
+      "Heated front seats",
+      "Dual outboard two-stage child booster seats with adaptive seat belts",
+      "Dual Screen Rear Seat Entertainment option",
+      "Metallic paint option"
+    ]
+  }
+}

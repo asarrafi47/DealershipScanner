@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2024|toyota|crown",
+  "year": 2024,
+  "make": "Toyota",
+  "model": "Crown",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "XLE",
+    "LE",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Includes these key features Adds to or replaces features offered on XLE Adds to or replaces features offered on Limited",
+      "Hybrid engine: 2.5-Liter Dynamic Force 4-Cylinder Hybrid engine: 2.5-Liter Dynamic Force 4-Cylinder Hybrid MAX engine: 2.4-Liter 4-Cylinder",
+      "Electronically controlled Continuously Variable Electronically controlled Continuously Variable Direct Shift-6AT 6-speed automatic transmission",
+      "Transmission (ECVT) Transmission (ECVT) All-Wheel Drive (AWD)",
+      "All-Wheel Drive (AWD) All-Wheel Drive (AWD) Eco, Comfort Normal, Sport S, Sport S+ and",
+      "Eco, Normal, Sport drive modes Eco, Normal, Sport drive modes Custom drive modes",
+      "Exterior Features Exterior Features 29 city/32 highway/30 combined EPA-est. mpg3",
+      "Bi-LED projector low- and high-beam headlights Quad-LED projector low- and high-beam headlights wheels with black accents",
+      "LED taillights and stop lights Panoramic fixed-glass roof with power sunshade headlights with auto on/off feature",
+      "Color-keyed outside door handles with touch-sensor Interior Features Panoramic fixed-glass roof with power sunshade",
+      "Leather front seats with seatback pockets; 8-way power- Interior Features",
+      "Heated power outside mirrors with turn signal,"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2012|nissan|armada",
+  "year": 2012,
+  "make": "Nissan",
+  "model": "Armada",
+  "ladder_id": "brochure_llm_2012__nissan__armada",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "SL",
+    "SV"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "20-inch 6-spoke chrome-clad aluminum-alloy wheels",
+      "Auto-leveling rear suspension",
+      "Lower final gear ratio 3.357:1",
+      "Power folding outside mirrors with puddle lights and turn signals",
+      "Auto-dimming driver-side outside mirror",
+      "Flip-out rear windows with power operation",
+      "2-way dual sun visors with extenders and illuminated vanity mirrors",
+      "Single-CD Digital Bose audio system with 11 speakers plus subwoofer"
+    ],
+    "SL": [
+      "20-inch 6-spoke aluminum-alloy wheels",
+      "P275/60R20 tires",
+      "Auto-leveling rear suspension",
+      "Lower final gear ratio 3.357:1",
+      "Digital Bose audio system with 11 speakers plus subwoofer",
+      "Nissan Hard Drive Navigation System with touch-screen and voice recognition",
+      "XM NavTraffic with satellite radio",
+      "Nissan DVD Entertainment System with 8.0-inch color monitor"
+    ],
+    "SV": [
+      "5.6-liter DOHC 32-valve V8 engine with 317 hp and 385 lb-ft torque",
+      "All-Mode 4WD with 2-speed transfer case on 4WD models",
+      "5-speed automatic transmission with Tow/Haul Mode",
+      "Independent double-wishbone front and rear suspension",
+      "13.8-inch front vented disc and 12.6-inch rear disc brakes with ABS",
+      "18-inch 6-spoke aluminum-alloy wheels with P265/70R18 tires",
+      "Dual Zone Automatic Temperature Control with rear air conditioning",
+      "Rear air conditioning with rear controls",
+      "Nissan Intelligent Key keyless entry and ignition system",
+      "AM/FM in-dash 6-CD changer with eight speakers"
+    ]
+  }
+}

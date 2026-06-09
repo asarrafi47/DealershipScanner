@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2023|ram|1500",
+  "year": 2023,
+  "make": "ram",
+  "model": "1500",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "TRX",
+    "Limited",
+    "Laramie",
+    "Rebel",
+    "Night Edition",
+    "Big Horn",
+    "Lone Star",
+    "Tradesman",
+    "Premium",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

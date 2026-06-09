@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2020|nissan|murano",
+  "year": 2020,
+  "make": "Nissan",
+  "model": "Murano",
+  "ladder_id": "brochure_llm_2020__nissan__murano",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLAT",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLAT": [
+      "Leather-appointed seats with diamond-quilted inserts",
+      "Climate-controlled front seats heated and cooled",
+      "Heated rear seats",
+      "Power heated outside mirrors with LED turn signal indicators and reverse tilt-down",
+      "Dual Panel Panoramic Moonroof",
+      "Bose Premium Audio System with 11 speakers including dual subwoofers"
+    ],
+    "SL": [
+      "Leatherette-appointed seats",
+      "Leather-wrapped steering wheel",
+      "Leather-wrapped shift knob",
+      "Heated steering wheel",
+      "Nissan Door to Door Navigation with Premium Traffic",
+      "SiriusXM Traffic and Travel Link with 3-month trial access"
+    ],
+    "SV": [
+      "Power outside mirrors with LED turn signal indicators",
+      "NissanConnect 8-inch touch-screen display",
+      "NissanConnect Services powered by SiriusXM with 3-year select and 6-month trial access",
+      "Apple CarPlay",
+      "Android Auto",
+      "Bluetooth Hands-free Phone System"
+    ],
+    "S": [
+      "3.5-liter DOHC 24-valve V6 engine with 260 hp and 240 lb-ft torque",
+      "Xtronic CVT continuously variable transmission",
+      "Front-Wheel Drive or Intelligent All-Wheel Drive",
+      "LED headlights with LED Signature Daytime Running Lights",
+      "LED taillights",
+      "Chrome door handles",
+      "Silver roof rails",
+      "Cloth seat trim",
+      "Reclining rear seatbacks with center armrest",
+      "AM/FM/CD audio system with six speakers"
+    ]
+  }
+}

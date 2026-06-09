@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2014|chevrolet|express",
+  "year": 2014,
+  "make": "Chevrolet",
+  "model": "Express",
+  "ladder_id": "brochure_2014__chevrolet__express",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LTZ",
+    "LT",
+    "WT",
+    "Limited",
+    "Sport",
+    "Base"
+  ],
+  "adds_by_trim": {
+    "Base": [
+      "Adds Hydra-Matic 4-speed automatic transmission with overdrive and Tow/Haul mode",
+      "Adds power windows and power door locks",
+      "Adds 4-wheel power hydraulic ventilated disc brakes with antilock and Dynamic Rear Proportioning",
+      "Adds StabiliTrak Electronic Stability Control System",
+      "Adds Tire Pressure Monitoring System",
+      "Adds 125-amp alternator and 600-cca battery",
+      "Adds automatic locking rear differential"
+    ],
+    "Sport": [
+      "Adds capability to operate on regular unleaded gasoline, E85, or combination fuel"
+    ],
+    "Limited": [
+      "Adds Enhanced Technology Glass for quiet ride"
+    ],
+    "WT": [
+      "Upgraded to Hydra-Matic 6-speed automatic transmission with Tap-Up/Tap-Down Driver Shift Control and auto grade braking"
+    ],
+    "LT": [
+      "Adds Compressed Natural Gas fuel option with 3-tank or 4-tank system",
+      "Adds 145-amp or dual 145-amp alternator options",
+      "Adds high-capacity 770-cca battery option",
+      "Adds larger rotor sizes and increased braking capacity"
+    ],
+    "LTZ": [
+      "Adds rear vision camera and Rear Park Assist",
+      "Adds 160-amp alternator",
+      "Adds dual 770-cca high-capacity battery standard",
+      "Adds 5-year/100,000-mile transferable Powertrain Limited Warranty for CNG models"
+    ]
+  }
+}

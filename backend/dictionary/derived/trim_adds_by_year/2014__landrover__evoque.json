@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2014|landrover|evoque",
+  "year": 2014,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_web_2014__landrover__evoque",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Dynamic"
+  ],
+  "adds_by_trim": {
+    "Prestige": [
+      "Carefully selected interior colors complemented by finest metals and real wood veneers",
+      "Mood lighting with five color options and variable brightness settings"
+    ],
+    "Dynamic": [
+      "Optional 20-inch wheels available"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/landrover/evoque/"
+}

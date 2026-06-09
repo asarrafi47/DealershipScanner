@@ -1,0 +1,29 @@
+{
+  "ladder_id": "2022_ford_transit_connect_complete_options",
+  "make": "Ford",
+  "models": [
+    "Transit Connect",
+    "Transit Connect"
+  ],
+  "year_min": 2020,
+  "year_max": 2024,
+  "source": "generated",
+  "trims": {
+    "XLT": [
+      {
+        "label": "Engine Options",
+        "value": "Upgrades Engine Options: Engine (was Layout Front-engine, front-wheel-drive; Engine)"
+      }
+    ],
+    "XL": [
+      {
+        "label": "Engine Options",
+        "value": "Adds Engine Options: Layout Front-engine, front-wheel-drive; Engine"
+      },
+      {
+        "label": "Interior Materials",
+        "value": "Adds Interior Materials: First shown in the United States at the 2008 Chicago Auto Show, the 2010 production model was introduced at the following year's show on 11 February 2009. The introduction of the North American variant coincided with a mid-cycle facelift which includes…"
+      }
+    ]
+  }
+}

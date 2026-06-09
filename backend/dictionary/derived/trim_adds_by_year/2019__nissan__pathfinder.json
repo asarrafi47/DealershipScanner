@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2019|nissan|pathfinder",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "ladder_id": "brochure_llm_2019__nissan__pathfinder",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PLATINUM",
+    "SL",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "PLATINUM": [
+      "20-inch aluminum-alloy wheels",
+      "Dual panel panoramic moonroof",
+      "Tow hitch receiver with 7-pin wiring harness",
+      "Chrome body side moldings",
+      "Wood-tone interior trim",
+      "Climate-controlled front seats with heated and cooled function",
+      "Power-tilt/telescoping steering column",
+      "Memory system for driver seat, steering wheel, and outside mirrors",
+      "Bose premium audio system with 13 speakers and acoustic waveguide technology"
+    ],
+    "SL": [
+      "LED low-beam projector headlights",
+      "Motion activated liftgate",
+      "Heated outside mirrors with reverse tiltdown feature",
+      "Nissan navigation system",
+      "NissanConnect services powered by SiriusXM with trial access",
+      "SiriusXM traffic with 3-year complimentary trial access",
+      "Intelligent around view monitor",
+      "10-way power driver's seat with 2-way lumbar support",
+      "Leather-appointed first and second-row seats and door trim",
+      "Heated front and second-row outboard seats, heated steering wheel, metallic interior trim, 120-volt AC outlet, stainless steel front kick plates, welcome lighting"
+    ],
+    "SV": [
+      "Intelligent auto headlights",
+      "Fog lights",
+      "Nissan intelligent key system",
+      "Remote engine start system",
+      "8-way power driver's seat",
+      "Leather-wrapped steering wheel and shift knob",
+      "Power windows with one-touch auto-up/down",
+      "Variable intermittent speed-sensitive windshield wipers",
+      "Auto-dimming rearview mirror, HomeLink universal transceiver, intelligent cruise control, dual illuminated visor vanity mirrors, blind spot warning, rear cross traffic alert, individual tire pressure display"
+    ],
+    "S": [
+      "3.5-liter DIG V6 engine with 284 hp and 259 lb-ft torque",
+      "Xtronic CVT transmission",
+      "Available intelligent 4x4 system",
+      "Hill start assist and hill descent control on 4WD models",
+      "Up to 6,000 lbs maximum towing capacity",
+      "18-inch aluminum-alloy wheels",
+      "LED daytime running lights",
+      "Rear sonar system and EZ FLEX seating with LATCH and GLIDE",
+      "Tri-zone automatic temperature control, NissanConnect 8-inch touchscreen, SiriusXM radio and travel link, rearview monitor, Bluetooth hands-free phone, rear door alert, six USB ports, automatic emergency braking, advanced air bag system, vehicle dynamic control with traction control, tire pressure monitoring system"
+    ]
+  }
+}

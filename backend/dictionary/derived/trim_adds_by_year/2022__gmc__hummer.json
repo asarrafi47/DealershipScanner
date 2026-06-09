@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2022|gmc|hummer",
+  "year": 2022,
+  "make": "GMC",
+  "model": "Hummer",
+  "ladder_id": "brochure_web_2022__gmc__hummer",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "3X",
+    "2X",
+    "1X"
+  ],
+  "adds_by_trim": {
+    "3X": [
+      "Adaptive air suspension with automatic load leveling",
+      "16-inch diagonal digital gauge cluster with customizable displays",
+      "Bose premium audio system with 13 speakers",
+      "Heated and ventilated front leather seats",
+      "Panoramic power sunroof",
+      "Hands-free power liftgate with foot kick sensor",
+      "20-inch bright machined aluminum wheels with all-terrain tires",
+      "GMC Infotainment system with wireless Apple CarPlay and Android Auto"
+    ],
+    "2X": [
+      "Adaptive air suspension with automatic load leveling",
+      "13.4-inch diagonal touchscreen infotainment system",
+      "Heated front leather seats",
+      "Power liftgate",
+      "18-inch bright machined aluminum wheels",
+      "Wireless Apple CarPlay and Android Auto compatibility",
+      "Cruise control with dashboard-mounted controls",
+      "Power windows, locks, and mirrors with memory settings"
+    ],
+    "1X": [
+      "3.0L Duramax turbo-diesel engine with 1,000 lb-ft torque",
+      "Adaptive air suspension with independent front and rear control",
+      "Automatic power-assist steering with electronic locking differentials",
+      "10.2-inch diagonal touchscreen infotainment system",
+      "Manual cloth interior seating",
+      "18-inch machined aluminum wheels with all-terrain tires",
+      "Apple CarPlay and Android Auto compatibility",
+      "Bluetooth connectivity and hands-free calling"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/gmc/hummer/"
+}

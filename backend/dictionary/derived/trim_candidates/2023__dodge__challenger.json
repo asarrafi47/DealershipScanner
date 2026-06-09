@@ -1,0 +1,25 @@
+{
+  "catalog_key": "2023|dodge|challenger",
+  "year": 2023,
+  "make": "Dodge",
+  "model": "Challenger",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SRT Hellcat",
+    "Hellcat",
+    "Scat Pack Widebody",
+    "Scat Pack",
+    "R/T Scat Pack",
+    "R/T",
+    "GT",
+    "Limited",
+    "Premium",
+    "SXT",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2025,Ford,Mustang Mach-E,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,104,96,100,,,,,,EV Electricity,
-2025,Ford,Mustang Mach-E,AWD Extended,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,110,98,104,,,,,,EV Electricity,
-2025,Ford,Mustang Mach-E,GT,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,95,85,90,,,,,,EV Electricity,
-2025,Ford,Mustang Mach-E,Rally,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,90,81,86,,,,,,EV Electricity,
-2025,Ford,Mustang Mach-E,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,111,103,107,,,,,,EV Electricity,
-2025,Ford,Mustang Mach-E,RWD Extended,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,115,104,110,,,,,,EV Electricity,

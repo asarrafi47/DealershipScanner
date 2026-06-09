@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1993,Saturn,SW,SW,1.9L I4 ((TBI) (FFS)),1.9L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,22,32,26,,,,,
+1993,Saturn,SW,SW,1.9L I4 ((MFI) (FFS)),1.9L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,21,30,24,,,,,
+1993,Saturn,SW,SW,1.9L I4 ((TBI) (FFS)),1.9L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,24,33,28,,,,,
+1993,Saturn,SW,SW,1.9L I4 ((MFI) (FFS)),1.9L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,21,32,25,,,,,

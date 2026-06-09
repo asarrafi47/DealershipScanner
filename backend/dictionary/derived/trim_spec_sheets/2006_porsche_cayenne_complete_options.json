@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2006_porsche_cayenne_complete_options",
+  "make": "Porsche",
+  "models": [
+    "Cayenne",
+    "Cayenne"
+  ],
+  "year_min": 2004,
+  "year_max": 2008,
+  "source": "generated",
+  "trims": {
+    "Turbo": [
+      {
+        "label": "Engine Options",
+        "value": "Equipment and features typical of the Turbo trim.; 4.5L V8 Twin Turbo"
+      }
+    ],
+    "S": [
+      {
+        "label": "Engine Options",
+        "value": "4.5L V8 Turbo; Automatic 5-spd"
+      }
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "catalog_key": "2020|hyundai|elantra",
+  "year": 2020,
+  "make": "Hyundai",
+  "model": "Elantra",
+  "ladder_id": "brochure_llm_2020__hyundai__elantra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Sport",
+    "SEL",
+    "Eco",
+    "SE",
+    "Value Edition"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Infinity Premium Audio system with 8 speakers and Clari-Fi Music Restoration Technology",
+      "8-inch high-resolution touchscreen navigation system",
+      "Power driver seat with adjustable lumbar support",
+      "Power tilt-and-slide sunroof",
+      "High/low-beam LED headlights and LED taillights",
+      "Auto-dimming rearview mirror with HomeLink",
+      "Integrated Memory System for driver seat and side mirrors",
+      "Safe Exit Assist",
+      "Door handle welcome lights",
+      "Hands-free smart trunk release"
+    ],
+    "Sport": [
+      "1.6L Turbo GDI 4-cylinder engine with 201 hp and 195 lb-ft torque",
+      "7-speed EcoShift Dual Clutch Transmission with SHIFTRONIC control",
+      "Sport-tuned suspension and steering",
+      "Sport front grille and bumper with rear bumper and underbody air diffuser",
+      "18-inch alloy wheels",
+      "Sport front seats with leather seating surfaces",
+      "Leather-wrapped flat-bottom steering wheel",
+      "Blue Link Connected Car System with 3 years complimentary service"
+    ],
+    "SEL": [
+      "7-inch high-resolution touchscreen display audio with 6 speakers",
+      "Apple CarPlay and Android Auto compatibility",
+      "Heated front seats",
+      "Leather-wrapped steering wheel and shift knob",
+      "LED Daytime Running Lights",
+      "16-inch alloy wheels",
+      "Dual USB charge ports"
+    ],
+    "Eco": [
+      "1.4L Turbo GDI 4-cylinder engine with 128 hp and 156 lb-ft torque",
+      "4.2-inch color LCD multi-information display",
+      "Idle Stop and Go technology",
+      "Smart Cruise Control",
+      "Forward Collision-Avoidance Assist with Pedestrian Detection"
+    ],
+    "SE": [
+      "Proximity Key entry with push button start",
+      "Smartstream Intelligent Variable Transmission",
+      "5-inch color AM/FM/MP3 display audio with 6 speakers",
+      "Lane Keeping Assist",
+      "Driver Attention Warning",
+      "Dual automatic temperature control with auto defogger",
+      "Forward Collision-Avoidance Assist"
+    ],
+    "Value Edition": [
+      "2.0L MPI 4-cylinder engine with 147 hp and 132 lb-ft torque",
+      "Smartstream Intelligent Variable Transmission",
+      "Remote keyless entry system with alarm",
+      "Tilt-and-telescopic steering wheel with audio controls",
+      "Cruise control",
+      "60/40 split-folding rear seats",
+      "Rearview camera with dynamic guidelines",
+      "Multi-link independent rear suspension",
+      "Front disc and rear drum brakes"
+    ]
+  }
+}

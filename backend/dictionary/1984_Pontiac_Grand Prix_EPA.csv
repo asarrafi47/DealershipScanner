@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-1984,Pontiac,Grand Prix,Grand Prix,3.8L V6 ((GM-BUICK)),Automatic 3-spd,,Regular Gasoline,Midsize Cars,6,3.8,17,22,19,,,,,,3.8L V6,
-1984,Pontiac,Grand Prix,Grand Prix,5.0L V8 ((GM-CHEV)),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.0,14,18,15,,,,,,5.0L V8,
-1984,Pontiac,Grand Prix,Grand Prix,5.0L V8 ((GM-CHEV)),Automatic 4-spd,,Regular Gasoline,Midsize Cars,8,5.0,15,21,17,,,,,,5.0L V8,
-1984,Pontiac,Grand Prix,Grand Prix,Diesel 5.7L V8 ((350 V8) (DIESEL)) Diesel,Automatic 3-spd,,Diesel,Midsize Cars,8,5.7,18,25,21,,,,,,5.7L V8,
-1984,Pontiac,Grand Prix,Grand Prix,Diesel 5.7L V8 ((350 V8) (DIESEL)) Diesel,Automatic 4-spd,,Diesel,Midsize Cars,8,5.7,18,27,21,,,,,,5.7L V8,
-1984,Pontiac,Grand Prix,Grand Prix,3.8L V6 ((GM-BUICK) CA model),Automatic 3-spd,,Regular Gasoline,Midsize Cars,6,3.8,16,22,18,,,,,,3.8L V6,
-1984,Pontiac,Grand Prix,Grand Prix,5.0L V8 ((GM-CHEV) CA model),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.0,15,19,16,,,,,,5.0L V8,
-1984,Pontiac,Grand Prix,Grand Prix,5.0L V8 ((GM-CHEV) CA model),Automatic 4-spd,,Regular Gasoline,Midsize Cars,8,5.0,15,21,17,,,,,,5.0L V8,

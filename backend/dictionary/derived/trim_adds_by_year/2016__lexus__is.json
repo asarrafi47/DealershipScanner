@@ -1,0 +1,45 @@
+{
+  "catalog_key": "2016|lexus|is",
+  "year": 2016,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2016__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS350 F SPORT",
+    "IS350",
+    "IS300 F SPORT",
+    "IS300",
+    "IS200t F SPORT",
+    "IS200t"
+  ],
+  "adds_by_trim": {
+    "IS350 F SPORT": [
+      "F SPORT-exclusive exterior styling and design elements",
+      "F SPORT-tuned suspension and handling characteristics",
+      "F SPORT interior appointments and trim details"
+    ],
+    "IS350": [
+      "3.5-liter V6 engine with premium unleaded gasoline (91+ octane)",
+      "Enhanced performance compared to IS300 and IS200t models"
+    ],
+    "IS300 F SPORT": [
+      "F SPORT-exclusive exterior styling and design elements",
+      "F SPORT-tuned suspension and handling characteristics",
+      "F SPORT interior appointments and trim details"
+    ],
+    "IS300": [
+      "Standard Lexus IS feature set with core safety and comfort technologies"
+    ],
+    "IS200t F SPORT": [
+      "F SPORT-exclusive exterior styling and design elements",
+      "F SPORT-tuned suspension and handling characteristics",
+      "F SPORT interior appointments and trim details"
+    ],
+    "IS200t": [
+      "Turbocharged engine option with premium fuel requirement",
+      "Four-year/50,000-mile Lexus Limited Warranty coverage",
+      "Six-year/70,000-mile Powertrain Warranty coverage"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_dodge_challenger_complete_options",
+  "make": "Dodge",
+  "models": [
+    "Challenger",
+    "Challenger"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "R/T": [
+      {
+        "label": "Engine Options",
+        "value": "Automatic 8-spd; Rear-Wheel Drive"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Engine Options",
+        "value": "The All-New Dodge Challenger SXT is powered by the standard 3.6L Pentastar V6 engine that"
+      }
+    ]
+  }
+}

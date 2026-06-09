@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2014|audi|allroad",
+  "year": 2014,
+  "make": "Audi",
+  "model": "Allroad",
+  "ladder_id": "brochure_2014__audi__allroad",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Limited",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Sport": [
+      "Adds 2.0L turbocharged four-cylinder TFSI engine with 220 horsepower",
+      "Adds eight-speed Tiptronic automatic transmission with Audi quattro all-wheel drive",
+      "Adds five-link front suspension with trapezoidal-link rear suspension",
+      "Adds ventilated front disc brakes and solid rear disc brakes",
+      "Adds electromechanical power steering system"
+    ],
+    "Limited": [],
+    "Prestige": [
+      "Adds Dynamic steering system"
+    ]
+  }
+}

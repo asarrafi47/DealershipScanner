@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2021_lexus_lx_complete_options",
+  "make": "Lexus",
+  "models": [
+    "LX",
+    "LX"
+  ],
+  "year_min": 2019,
+  "year_max": 2023,
+  "source": "generated",
+  "trims": {
+    "F Sport": [
+      {
+        "label": "Screen Size",
+        "value": "A DVD-based navigation system was offered starting in 2001 with the brand new st"
+      }
+    ],
+    "Sport": [
+      {
+        "label": "Screen Size",
+        "value": "Screen Size: A DVD-based navigation system was offered starting in 2001 with the brand new st"
+      }
+    ]
+  }
+}

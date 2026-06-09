@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2017|toyota|sequoia",
+  "year": 2017,
+  "make": "Toyota",
+  "model": "Sequoia",
+  "status": "draft",
+  "quality": "high",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "SR5",
+    "Base",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds to or replaces features on SR5. Adds to or replaces features on Limited.",
+      "Exterior Exterior Exterior",
+      "Multi-reflector halogen headlights with auto-off feature and \u2022 Chrome auto-dimming heated power outside mirrors with power \u2022 Blind Spot Monitor (BSM)29 lane change assist",
+      "Integrated fog lights \u2022 Power liftgate with jam protection",
+      "Color-keyed heated power outside mirrors \u2022 20-in. alloy wheels",
+      "18-in. alloy wheels Interior \u2022 Entune\u2122 Premium JBL\u00ae Audio with Integrated Navigation21",
+      "Power tilt/slide moonroof with sliding sunshade",
+      "Entune\u2122 Premium Audio with Integrated Navigation21 and App Suite15 \u2022 Rear-seat Blu-ray Disc\u2122 player with 9-in. display, two",
+      "Interior \u2022 Leather-trimmed and heated front seats; 10-way power-adjustable wireless headphones,22 wireless remote and rear audio",
+      "Automatic three-zone front and rear climate control with air filter driver\u2019s seat; 4-way power-adjustable front passenger seat system with 115V AC power outlet and RCA jacks",
+      "Entune\u2122 Multimedia Bundle8 includes AM/FM CD player with \u2022 Leather-trimmed 40/20/40 split, sliding, reclining, fold-flat \u2022 Perforated leather-trimmed heated and ventilated front seats;",
+      "MP3/WMA playback capability, touch-screen display, aux jack, second-row seat with one-touch access to third-row seat 10-way power-adjustable driver\u2019s seat with power thigh and"
+    ]
+  },
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

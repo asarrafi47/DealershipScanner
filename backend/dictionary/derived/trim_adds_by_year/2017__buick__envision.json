@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2017|buick|envision",
+  "year": 2017,
+  "make": "Buick",
+  "model": "Envision",
+  "ladder_id": "brochure_llm_2017__buick__envision",
+  "source": "brochure_llm",
+  "trims_available": [
+    "PREMIUM II",
+    "PREMIUM",
+    "PREFERRED",
+    "ESSENCE"
+  ],
+  "adds_by_trim": {
+    "PREMIUM II": [
+      "Driver Confidence Package with Adaptive Cruise, Lane Departure Warning, Forward Collision Alert",
+      "Surround Vision and Front Automatic Braking Control",
+      "Panoramic tilt-sliding moonroof",
+      "18-inch 10-spoke painted aluminum wheels"
+    ],
+    "PREMIUM": [
+      "Audio System with Navigation and Bose premium 7-speaker system with amplifier",
+      "Articulating projector-beam HID headlamps with IntelliBeam auto high-beam control",
+      "Automatic Park Assist for parallel and perpendicular parking",
+      "Panoramic tilt-sliding moonroof"
+    ],
+    "PREFERRED": [
+      "Intelligent All-Wheel Drive with Active Twin Clutch differential",
+      "Heated driver and front passenger seats with ventilated cooling",
+      "Audio System with Navigation, 8-inch touchscreen display",
+      "Automatic Leveling System suspension",
+      "OnStar Guidance Plan with 3-month trial service"
+    ],
+    "ESSENCE": [
+      "2.5L DOHC SIDI with VVT and 6-speed automatic transmission",
+      "Front-Wheel Drive with 3.50 final drive ratio",
+      "Front MacPherson strut suspension with 4-wheel power anti-lock disc brakes",
+      "10 airbags including single-stage driver and dual-stage passenger",
+      "Front bucket seats with 60/40 split-folding rear reclining seats",
+      "Power windows, locks, steering with leather-wrapped wheel and shift knob",
+      "Power hands-free liftgate and ultrasonic rear park assist",
+      "Premium 6-speaker audio system with Bluetooth and USB connectivity",
+      "OnStar Basic Plan for 5 years with select services"
+    ]
+  }
+}

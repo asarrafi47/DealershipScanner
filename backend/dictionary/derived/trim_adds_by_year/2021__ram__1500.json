@@ -1,0 +1,64 @@
+{
+  "catalog_key": "2021|ram|1500",
+  "year": 2021,
+  "make": "ram",
+  "model": "1500",
+  "ladder_id": "brochure_llm_2021__ram__1500",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRX",
+    "Longhorn Limited",
+    "Limited",
+    "Laramie",
+    "Rebel",
+    "Big Horn/Lone Star",
+    "Star (39)",
+    "Big Horn/Lone Star",
+    "Tradesman"
+  ],
+  "adds_by_trim": {
+    "TRX": [
+      "Advanced Safety Group with 360° Surround-View Camera System",
+      "Blind Spot Monitoring with Rear Cross-Path and Trailer Detection standard",
+      "ParkSense Front and Rear Park Assist with Rear ParkSense Stop standard",
+      "Remote Start System included",
+      "Dual-pane power-operated sunroof for Crew Cab",
+      "TRX Level 2 Equipment Package capabilities"
+    ],
+    "Longhorn Limited": [
+      "Chrome Appearance Group with window moldings and chrome tow hooks",
+      "Advanced interior appointments and upscale trim details"
+    ],
+    "Limited": [
+      "Hill Descent Control standard",
+      "Blind Spot Monitoring with Rear Cross-Path and Trailer Detection standard",
+      "ParkSense Front and Rear Park Assist with Rear ParkSense Stop standard",
+      "Security alarm standard"
+    ],
+    "Laramie": [
+      "Chrome Appearance Group option available",
+      "Dual-pane power-operated sunroof available"
+    ],
+    "Rebel": [
+      "Off-Road Group with Hill Descent Control included"
+    ],
+    "Big Horn/Lone Star": [
+      "Blind Spot Monitoring with LED taillamps option",
+      "ParkSense Front and Rear Park Assist option",
+      "Rear 115-volt outlet standard",
+      "Rear USB port standard"
+    ],
+    "Star (39)": [
+      "Forward Collision Warning with Advanced Brake Assist standard",
+      "LaneSense Lane Departure Warning Plus standard"
+    ],
+    "Tradesman": [
+      "Belt Alert for driver and passenger standard",
+      "Power-assisted four-wheel antilock disc brakes standard",
+      "Electronic Parking Brake standard",
+      "ParkView Rear Back-Up Camera with dynamic grid lines and center lines standard",
+      "Remote Keyless Entry with illuminated entry system standard",
+      "Chrome Appearance Group option available"
+    ]
+  }
+}

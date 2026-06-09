@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
-2026,Cadillac,LYRIQ,(11 kW Charger),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,100,83,92,,,,,,EV Electricity,
-2026,Cadillac,LYRIQ,(19 kW Charger),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,100,83,91,,,,,,EV Electricity,
-2026,Cadillac,LYRIQ,PAWD V SERIES (11 kW Charger),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,87,72,80,,,,,,EV Electricity,
-2026,Cadillac,LYRIQ,PAWD V SERIES (19 kW Charger),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,87,72,80,,,,,,EV Electricity,
-2026,Cadillac,LYRIQ,PAWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,98,80,89,,,,,,EV Electricity,
-2026,Cadillac,LYRIQ,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,93,77,85,,,,,,EV Electricity,

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2024|hyundai|ioniq5",
+  "year": 2024,
+  "make": "Hyundai",
+  "model": "Ioniq 5",
+  "ladder_id": "brochure_llm_2024__hyundai__ioniq5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "SEL",
+    "SE"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Ventilated front seats with 8-way power passenger seat",
+      "Heated steering wheel and ambient LED interior lighting",
+      "Premium door sill plates and sliding center console",
+      "2nd-row Vehicle-to-Load (V2L) two-way onboard charger",
+      "Premium Head-up Display with Augmented Reality functions",
+      "Digital Rearview Mirror with HomeLink®",
+      "Remote Smart Parking Assist",
+      "Vision Roof fixed panoramic sunroof with sunshade",
+      "Premium gloss black exterior accents and power-folding side mirrors",
+      "20-inch alloy wheels, rain-sensing wipers, Bose premium audio"
+    ],
+    "SEL": [
+      "Auto-dimming rearview mirror with HomeLink®",
+      "Smart Cruise Control with Stop and Go and Machine Learning",
+      "Highway Driving Assist 2",
+      "Hands-free smart power liftgate with auto open",
+      "Forward Collision-Avoidance Assist with Pedestrian, Cyclist, Junction Turning/Crossing Detection",
+      "Blind-Spot Collision-Avoidance Assist",
+      "Digital Key and wireless phone charger"
+    ],
+    "SE": [
+      "8-way power driver seat with heated front seats",
+      "Rack-mounted Motor-Driven Power Steering",
+      "Column-mounted Shift-by-Wire gear selector",
+      "Regenerative brake level control paddles",
+      "Multi-link rear suspension",
+      "Parametric pixel LED headlights and LED taillights",
+      "Automatic headlights with High Beam Assist",
+      "12.3-inch digital instrument cluster and 12.3-inch navigation system",
+      "Dual automatic temperature control with Driver Only mode",
+      "Proximity Key with push button start, leather-wrapped steering wheel, USB ports"
+    ]
+  }
+}

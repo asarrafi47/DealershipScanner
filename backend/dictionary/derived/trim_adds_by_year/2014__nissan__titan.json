@@ -1,0 +1,61 @@
+{
+  "catalog_key": "2014|nissan|titan",
+  "year": 2014,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_llm_2014__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SL CREW CAB",
+    "PRO-4X® CREW CAB",
+    "SV CREW CAB",
+    "S CREW CAB"
+  ],
+  "adds_by_trim": {
+    "SL CREW CAB": [
+      "RearView Monitor with color display",
+      "20-inch aluminum-alloy wheels with P275/60R20 tires",
+      "Rockford Fosgate-powered audio system",
+      "NavTraffic and NavWeather satellite services",
+      "SiriusXM Satellite Radio with Bluetooth hands-free",
+      "Dual Zone Automatic Temperature Control",
+      "Leather-appointed seats with heated front captain's chairs",
+      "Driver's Memory System for seat and mirrors",
+      "HomeLink® Universal Transceiver",
+      "Rear Sonar System and Class IV tow hitch"
+    ],
+    "PRO-4X® CREW CAB": [
+      "Dark-finished 18-inch aluminum-alloy wheels",
+      "BFGoodrich® Rugged Trail T/A® tires",
+      "Satin chrome front grille and body-color bumpers",
+      "PRO-4X® off-road bedside graphics",
+      "Rancho® shock absorbers for suspension",
+      "Lower final gear ratio 3.36:1 for off-road capability",
+      "Transfer case and lower radiator skid plates",
+      "Electronic locking rear differential",
+      "White-faced gauges and unique PRO-4X® interior trim"
+    ],
+    "SV CREW CAB": [
+      "18-inch aluminum-alloy wheels with P265/70R18 tires",
+      "Chrome bumpers and grille",
+      "Body side moldings and step rails",
+      "18-inch chrome-clad alloy wheels",
+      "Chrome outside mirrors and door handles",
+      "Remote keyless entry with power door locks and windows",
+      "Power outside mirrors and cruise control",
+      "Vehicle Security System with Nissan Vehicle Immobilizer"
+    ],
+    "S CREW CAB": [
+      "5.6-liter Endurance V8 engine",
+      "5-speed automatic transmission with Tow/Haul Mode",
+      "4-wheel Anti-lock Braking System",
+      "Six standard air bags",
+      "Vehicle Dynamic Control stability system",
+      "18-inch painted steel wheels with P265/70R18 tires",
+      "AM/FM/CD audio system",
+      "Air conditioning and power windows",
+      "Power door locks with auto-locking feature",
+      "Rear tailgate spoiler"
+    ]
+  }
+}

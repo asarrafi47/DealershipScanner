@@ -1,0 +1,66 @@
+{
+  "catalog_key": "2020|jaguar|epace",
+  "year": 2020,
+  "make": "Jaguar",
+  "model": "E-Pace",
+  "ladder_id": "brochure_llm_2020__jaguar__epace",
+  "source": "brochure_llm",
+  "trims_available": [
+    "E-PACE R-Dynamic HSE",
+    "E-PACE R-Dynamic SE",
+    "E-PACE R-Dynamic S",
+    "E-PACE SE",
+    "E-PACE"
+  ],
+  "adds_by_trim": {
+    "E-PACE R-Dynamic HSE": [
+      "20-inch Style 5051 5-spoke wheels with satin grey finish and diamond-turned silver",
+      "R-Dynamic body kit with unique front bumper and gloss black finish front grille",
+      "Grained leather sport seats with contrast stitching",
+      "R-Dynamic soft grain leather steering wheel with satin black gearshift paddles",
+      "Front fog lights",
+      "Satin chrome side vents",
+      "Bright metal pedals",
+      "Metal treadplates with R-Dynamic script",
+      "Ebony headlining"
+    ],
+    "E-PACE R-Dynamic SE": [
+      "19-inch Style 5049 5-spoke gloss silver finish wheels",
+      "R-Dynamic body kit with unique front bumper and gloss black finish front grille",
+      "Grained leather sport seats with contrast stitching",
+      "R-Dynamic soft grain leather steering wheel with satin black gearshift paddles",
+      "Front fog lights",
+      "Satin chrome side vents",
+      "Bright metal pedals",
+      "Metal treadplates with R-Dynamic script",
+      "Ebony headlining"
+    ],
+    "E-PACE R-Dynamic S": [
+      "19-inch Style 1039 10-spoke gloss silver finish wheels",
+      "R-Dynamic body kit with unique front bumper and gloss black grille with satin chrome surround",
+      "Grained leather sport seats with contrast stitching",
+      "R-Dynamic soft grain leather steering wheel with satin black gearshift paddles",
+      "Front fog lights",
+      "Satin chrome side vents",
+      "Bright metal pedals",
+      "Metal treadplates with R-Dynamic script",
+      "Ebony headlining"
+    ],
+    "E-PACE SE": [
+      "19-inch Style 1039 10-spoke gloss silver finish wheels",
+      "Standard on E-PACE SE trim level"
+    ],
+    "E-PACE": [
+      "18-inch Style 9008 9-spoke gloss silver finish wheels with all-season tires",
+      "10-inch Touch Pro infotainment system with 5-inch instrument cluster display",
+      "180W AM/FM sound system with Bluetooth and voice control",
+      "Apple CarPlay and Android Auto smartphone integration",
+      "Two-zone climate control with second row air vents",
+      "Grained leather seats with 10-way electric front seat adjustment",
+      "LED headlights with signature DRL and LED tail lights",
+      "All Surface Progress Control, Hill Launch Assist, and JaguarDrive Control",
+      "Emergency braking, lane keep assist, and front/rear parking aid with rear view camera",
+      "Dual front, front side, and full-length side window curtain airbags"
+    ]
+  }
+}

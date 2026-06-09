@@ -1,0 +1,17 @@
+{
+  "catalog_key": "2010|lincoln|towncar",
+  "year": 2010,
+  "make": "Lincoln",
+  "model": "Town Car",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Standard",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

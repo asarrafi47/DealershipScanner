@@ -1,0 +1,22 @@
+{
+  "catalog_key": "2019|buick|lacrosse",
+  "year": 2019,
+  "make": "Buick",
+  "model": "LaCrosse",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Avenir",
+    "Essence",
+    "Sport Touring",
+    "Preferred",
+    "Limited",
+    "Premium",
+    "Touring",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

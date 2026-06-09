@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2004,Toyota,Tacoma,2WD,2.4L I4,2.4L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.4,19,23,21,,,,,
+2004,Toyota,Tacoma,2WD,2.4L I4,2.4L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.4,20,25,22,,,,,
+2004,Toyota,Tacoma,2WD,2.7L I4,2.7L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.7,17,20,18,,,,,
+2004,Toyota,Tacoma,2WD,3.4L V6,3.4L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.4,15,19,16,,,,,
+2004,Toyota,Tacoma,2WD,3.4L V6,3.4L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.4,17,22,19,,,,,
+2004,Toyota,Tacoma,4WD,2.7L I4,2.7L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,16,19,18,,,,,
+2004,Toyota,Tacoma,4WD,2.7L I4,2.7L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,16,20,17,,,,,
+2004,Toyota,Tacoma,4WD,3.4L V6,3.4L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.4,14,18,16,,,,,
+2004,Toyota,Tacoma,4WD,3.4L V6,3.4L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.4,15,18,16,,,,,

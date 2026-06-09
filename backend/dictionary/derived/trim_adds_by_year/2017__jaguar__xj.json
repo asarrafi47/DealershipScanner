@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2017|jaguar|xj",
+  "year": 2017,
+  "make": "Jaguar",
+  "model": "XJ",
+  "ladder_id": "brochure_llm_2017__jaguar__xj",
+  "source": "brochure_llm",
+  "trims_available": [
+    "XJR",
+    "XJR LWB",
+    "XJ Supercharged",
+    "XJL Supercharged",
+    "XJ R-Sport",
+    "XJL Portfolio"
+  ],
+  "adds_by_trim": {
+    "XJR": [
+      "5.0L V8 550 hp supercharged engine with 502 lb-ft torque",
+      "0-60 mph in 4.4 seconds with 174 mph top speed",
+      "Performance and luxury focused specification"
+    ],
+    "XJR LWB": [
+      "Long wheelbase configuration with extended rear legroom"
+    ],
+    "XJ Supercharged": [
+      "5.0L V8 470 hp supercharged engine with 424 lb-ft torque",
+      "0-60 mph in 4.9 seconds with 155 mph top speed"
+    ],
+    "XJL Supercharged": [
+      "Long wheelbase with extended rear passenger space",
+      "5.0L V8 470 hp supercharged engine"
+    ],
+    "XJ R-Sport": [
+      "3.0L V6 340 hp supercharged engine with 332 lb-ft torque",
+      "0-60 mph in 5.7 seconds with 121 mph top speed",
+      "Sporting exterior styling elements"
+    ],
+    "XJL Portfolio": [
+      "Long wheelbase with extended rear passenger space",
+      "3.0L V6 340 hp supercharged engine",
+      "Premium interior appointments and materials"
+    ]
+  }
+}

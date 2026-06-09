@@ -1,0 +1,87 @@
+{
+  "catalog_key": "2019|nissan|sentra",
+  "year": 2019,
+  "make": "Nissan",
+  "model": "Sentra",
+  "ladder_id": "brochure_llm_2019__nissan__sentra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO®",
+    "SL",
+    "SR",
+    "SR TURBO",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "NISMO®": [
+      "1.6-liter turbocharged DIG engine with Xtronic CVT and Manual Shift Mode",
+      "18-inch NISMO aluminum-alloy wheels",
+      "NISMO-tuned suspension",
+      "NISMO aerodynamic body kit, front grille, badging, and door trim",
+      "NISMO sport front seats with bolsters and signature red stitching",
+      "NISMO Alcantara and leather-wrapped steering wheel with leather shift knob",
+      "NISMO black mirror caps with LED turn signal indicators",
+      "NISMO chrome exhaust finisher and tachometer",
+      "Rear spoiler with integrated LED brake light",
+      "Bose Premium Audio System with eight speakers including dual woofers"
+    ],
+    "SL": [
+      "17-inch aluminum-alloy wheels",
+      "LED low-beam projector headlights with LED accents",
+      "Fog lights",
+      "6-way power driver's seat with 2-way power lumbar",
+      "Leather-appointed seats",
+      "Heated front seats",
+      "Dual power heated outside mirrors with LED turn signal indicators",
+      "Bose Premium Audio System with eight speakers including dual woofers",
+      "Blind Spot Warning and Rear Cross Traffic Alert",
+      "Auto-dimming rearview mirror with HomeLink Universal Transceiver"
+    ],
+    "SR": [
+      "17-inch aluminum-alloy wheels",
+      "LED low-beam projector headlights with LED accents",
+      "Fog lights and lower body side sill extensions",
+      "Chrome exhaust finisher",
+      "Sport interior trim",
+      "Rear spoiler with integrated LED brake light",
+      "Dual power heated outside mirrors with LED turn signal indicators",
+      "Intelligent Cruise Control",
+      "Premium sport cloth seat trim",
+      "Heated front seats"
+    ],
+    "SR TURBO": [
+      "1.6-liter turbocharged DIG 4-cylinder engine",
+      "Xtronic CVT with Manual Shift Mode",
+      "11.7-inch vented front disc brakes",
+      "11.5-inch solid rear disc brakes",
+      "Tuned suspension and steering",
+      "Power sliding glass moonroof",
+      "Deletes Intelligent Cruise Control"
+    ],
+    "SV": [
+      "Xtronic CVT transmission",
+      "Active Understeer Control",
+      "16-inch aluminum-alloy wheels",
+      "NissanConnect 7-inch touchscreen with Apple CarPlay and Android Auto",
+      "Nissan Intelligent Key with Push Button Ignition",
+      "Dual Zone Automatic Temperature Control",
+      "Sliding front armrest",
+      "AM/FM audio with six speakers and SiriusXM Radio",
+      "Three USB ports",
+      "Leather-wrapped steering wheel and Vehicle Security System"
+    ],
+    "S": [
+      "1.8-liter 4-cylinder engine",
+      "6-speed manual transmission",
+      "Available Xtronic CVT",
+      "Intelligent Auto Headlights",
+      "RearView Monitor",
+      "7-inch touchscreen display",
+      "Advanced Drive-Assist Display",
+      "Hands-free Text Messaging Assistant",
+      "Bluetooth Hands-free Phone System and streaming audio",
+      "370Z-inspired steering wheel with Automatic Emergency Braking"
+    ]
+  }
+}

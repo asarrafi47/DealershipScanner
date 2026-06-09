@@ -1,0 +1,53 @@
+{
+  "catalog_key": "2017|nissan|titan",
+  "year": 2017,
+  "make": "Nissan",
+  "model": "Titan",
+  "ladder_id": "brochure_llm_2017__nissan__titan",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum Reserve",
+    "SL",
+    "PRO-4X",
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {
+    "Platinum Reserve": [
+      "Chrome-clad or dark chrome-clad aluminum-alloy wheels up to 20 inches",
+      "Monotone paint package with titanium or gun metallic bumpers",
+      "Bed utility package with dampened tailgate and electronic lock",
+      "Rear DVD entertainment package",
+      "NissanConnect with Navigation and Mobile Apps 7.0-inch touchscreen"
+    ],
+    "SL": [
+      "20-inch chrome-clad aluminum-alloy wheels",
+      "Texas TITAN Edition package with chrome accents",
+      "Chrome bumpers and exterior trim details",
+      "NissanConnect services powered by SiriusXM"
+    ],
+    "PRO-4X": [
+      "18-inch dark-finished aluminum-alloy wheels",
+      "Off-road performance with Bilstein shocks",
+      "Pro-4x convenience package with towing features",
+      "Pro-4x utility and audio package integration"
+    ],
+    "SV": [
+      "18-inch silver-painted aluminum-alloy wheels",
+      "SV comfort and convenience package with NissanConnect",
+      "SV leather package option",
+      "SV utility package with bed-mounted 120-volt AC outlet",
+      "Body-color bumpers and wheel arch moldings"
+    ],
+    "S": [
+      "5.6-liter DOHC 32-valve V8 engine with 390 horsepower and 394 lb-ft torque",
+      "7-speed automatic transmission with 4WD transfer case",
+      "4-wheel anti-lock braking system with electronic brake force distribution",
+      "Independent double-wishbone front suspension with Bilstein off-road shocks",
+      "17-inch styled steel wheels with all-season tires",
+      "Power steering and hill start assist with hill descent control",
+      "Power windows, locks, and mirrors with puddle lights",
+      "Basic cloth interior with manual controls"
+    ]
+  }
+}

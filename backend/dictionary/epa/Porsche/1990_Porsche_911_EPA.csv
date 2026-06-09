@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1990,Porsche,911,Carrera 4/2,3.6L V6 ((GUZZLER) (FFS)),3.6L V6 Turbo,Turbocharged,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.6,15,22,17,,,,,
+1990,Porsche,911,Carrera 4/2,3.6L V6 ((GUZZLER) (FFS)),3.6L V6 Turbo,Turbocharged,Manual 5-spd,All-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.6,14,20,16,,,,,
+1990,Porsche,911,Carrera 4/2,3.6L V6 ((GUZZLER) (FFS)),3.6L V6 Turbo,Turbocharged,Automatic (S4),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.6,14,21,16,,,,,

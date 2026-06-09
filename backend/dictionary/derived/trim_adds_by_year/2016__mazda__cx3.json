@@ -1,0 +1,49 @@
+{
+  "catalog_key": "2016|mazda|cx3",
+  "year": 2016,
+  "make": "Mazda",
+  "model": "CX-3",
+  "ladder_id": "brochure_llm_2016__mazda__cx3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA CX-3 GRAND TOURING",
+    "MAZDA CX-3 TOURING",
+    "MAZDA CX-3 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA CX-3 GRAND TOURING": [
+      "18-inch aluminum alloy wheels with P215/50 R18 tires",
+      "LED headlights with auto leveling",
+      "LED daytime running lights",
+      "LED fog lights",
+      "LED combination taillights",
+      "Power sliding-glass moonroof with tilt feature",
+      "Leather-trimmed seats with Lux Suede insert",
+      "Steering wheel paddle shifters",
+      "Bose 7-speaker Surround Sound system with HD Radio and SiriusXM",
+      "Automatic climate control with pollen filter"
+    ],
+    "MAZDA CX-3 TOURING": [
+      "Heated body-colored power side mirrors with integrated turn signal lamps",
+      "Leatherette-trimmed seats with cloth insert",
+      "Heated front seats with 3-level adjustment",
+      "Leather-wrapped steering wheel and shift knob",
+      "Overhead console with sunglass holder",
+      "Advanced Blind Spot Monitoring",
+      "Rear Cross Traffic Alert",
+      "MAZDA CONNECT 7.0-inch touchscreen with voice commands and Bluetooth"
+    ],
+    "MAZDA CX-3 SPORT": [
+      "SKYACTIV-G 2.0L 4-cylinder engine with 146 hp and 146 lb-ft torque",
+      "SKYACTIV-DRIVE 6-speed automatic transmission with manual shift and Sport modes",
+      "Front Wheel Drive or available i-ACTIV AWD all-wheel drive",
+      "16-inch aluminum alloy wheels with P215/60 R16 tires",
+      "Halogen headlights with automatic shutoff and daytime running lights",
+      "Body-colored dual power side mirrors",
+      "Mazda Advanced Keyless Entry System with push button start",
+      "Air conditioning with pollen filter",
+      "6-speaker sound system",
+      "Rearview camera and Trip computer"
+    ]
+  }
+}

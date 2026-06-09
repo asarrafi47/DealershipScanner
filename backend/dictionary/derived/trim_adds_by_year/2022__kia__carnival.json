@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2022|kia|carnival",
+  "year": 2022,
+  "make": "Kia",
+  "model": "Carnival",
+  "ladder_id": "brochure_llm_2022__kia__carnival",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SX Prestige Package",
+    "SX",
+    "EX",
+    "LX"
+  ],
+  "adds_by_trim": {
+    "SX Prestige Package": [
+      "Excluded from cargo capacity claims in brochure specifications"
+    ],
+    "SX": [
+      "19-inch wheels with 235/55R19 tires (vs. 17-inch on EX)",
+      "Independent multi-link rear suspension with stabilizer bar"
+    ],
+    "EX": [
+      "19-inch wheels with 235/55R19 tires (vs. 17-inch on LX)"
+    ],
+    "LX": [
+      "3.5L V6 engine with 290 hp and 262 lb-ft torque",
+      "8-speed automatic transmission",
+      "3,500 lb towing capacity",
+      "Steel unibody with Iso-Structure construction",
+      "Independent MacPherson strut front suspension",
+      "12.8-inch ventilated disc front and solid disc rear brakes",
+      "17-inch wheels with 235/65R17 tires",
+      "40.2 to 145.1 cubic feet total cargo volume",
+      "19 city / 26 highway / 22 combined EPA-estimated MPG"
+    ]
+  }
+}

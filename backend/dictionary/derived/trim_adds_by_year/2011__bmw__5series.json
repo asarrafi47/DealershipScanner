@@ -1,0 +1,43 @@
+{
+  "catalog_key": "2011|bmw|5series",
+  "year": 2011,
+  "make": "BMW",
+  "model": "5 Series",
+  "ladder_id": "brochure_llm_2011__bmw__5series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "535i xDrive",
+    "550i xDrive",
+    "535i",
+    "528i xDrive",
+    "528i"
+  ],
+  "adds_by_trim": {
+    "535i xDrive": [
+      "xDrive all-wheel drive system",
+      "Twin-Power Turbo V8 engine with 400 hp"
+    ],
+    "550i xDrive": [
+      "xDrive all-wheel drive system",
+      "Twin-Power Turbo V8 engine with 445 hp",
+      "The Ultimate Driving Machine designation"
+    ],
+    "535i": [
+      "Twin-Power Turbo engine",
+      "Enhanced performance over 528i base model"
+    ],
+    "528i xDrive": [
+      "xDrive all-wheel drive system"
+    ],
+    "528i": [
+      "BMW Twin-Power Turbo V8 engine producing 399 hp",
+      "Double-Spoke Style wheels in light alloy",
+      "Raised seating position for improved visibility and confidence",
+      "Panoramic moonroof with large frameless rear windows",
+      "Split folding rear seats with up to 68 degrees recline",
+      "Dual-zone climate control with four-zone capability",
+      "Rear Seat Entertainment with dual high-resolution screens",
+      "Removable partition wall between cargo and rear cabin"
+    ]
+  }
+}

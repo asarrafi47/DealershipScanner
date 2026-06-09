@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2021|cadillac|escalade",
+  "year": 2021,
+  "make": "Cadillac",
+  "model": "Escalade",
+  "ladder_id": "brochure_llm_2021__cadillac__escalade",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Premium Luxury",
+    "Sport"
+  ],
+  "adds_by_trim": {
+    "Platinum": [
+      "Standard AKG audio system with 36 speakers at varying heights for 360-degree sound immersion",
+      "Front passenger volume control",
+      "Conversation Enhancement"
+    ],
+    "Premium Luxury": [
+      "Optional AKG Studio Reference system with 36 speakers at varying heights",
+      "Optional Super Cruise hands-free driver assistance with lane change on demand"
+    ],
+    "Sport": [
+      "Optional AKG Studio Reference system with 36 speakers at varying heights",
+      "Optional Super Cruise hands-free driver assistance with lane change on demand"
+    ]
+  }
+}

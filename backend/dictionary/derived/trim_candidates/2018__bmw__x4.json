@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2018|bmw|x4",
+  "year": 2018,
+  "make": "BMW",
+  "model": "X4",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

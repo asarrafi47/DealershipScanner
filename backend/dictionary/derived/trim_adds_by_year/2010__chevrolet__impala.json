@@ -1,0 +1,39 @@
+{
+  "catalog_key": "2010|chevrolet|impala",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Impala",
+  "ladder_id": "2010_chevrolet_impala",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LS",
+    "LT",
+    "LTZ"
+  ],
+  "adds_by_trim": {
+    "LT": [
+      "Fog lamps integral in front fascia",
+      "Body-color power mirrors and rocker moldings",
+      "Leather-wrapped steering wheel with audio and cruise controls",
+      "Rear spoiler available; flip-and-fold-flat rear seat available",
+      "3.5L VVT V-6 E85 FlexFuel (same engine family as LS with upgraded trim)"
+    ],
+    "LTZ": [
+      "3.9L VVT V-6 — 233 hp (replaces 3.5L on LS/LT)",
+      "Leather-appointed seating with heated six-way power front buckets",
+      "Bose eight-speaker sound system",
+      "Auto-dimming rearview mirror and Universal Home Remote",
+      "Flip-and-fold-flat rear seat standard"
+    ],
+    "LS": [
+      "3.5L V6 engine with 211 hp and 216 lb-ft torque",
+      "Front cloth bucket seats with six-way power driver seat",
+      "Single-zone manual climate control",
+      "17-inch fascia-spoke painted silver wheels standard",
+      "Four-gauge analog cluster with Driver Information Center",
+      "Six-speaker sound system",
+      "XM Radio with three trial months",
+      "OnStar with Directions & Connections Plan standard for first six months"
+    ]
+  }
+}

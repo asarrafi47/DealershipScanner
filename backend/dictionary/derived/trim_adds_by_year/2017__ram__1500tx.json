@@ -1,0 +1,81 @@
+{
+  "catalog_key": "2017|ram|1500tx",
+  "year": 2017,
+  "make": "ram",
+  "model": "1500TX",
+  "ladder_id": "brochure_web_2017__ram__1500tx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LONGHORN",
+    "LARAMIE",
+    "REBEL",
+    "TRADESMAN ECODIESEL HFE",
+    "TRADESMAN"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "5.7L HEMI V8 or 3.0L EcoDiesel V6 powertrain options",
+      "Limited leather bucket seats with filigree styling",
+      "Limited cluster with 7-inch Driver Information Display",
+      "Premium wood/leather-wrapped steering wheel",
+      "Body-color full front fascia and rear bumper",
+      "Chrome wheel-to-wheel side steps",
+      "20-inch polished aluminum wheels",
+      "Spray-in bedliner"
+    ],
+    "LONGHORN": [
+      "Premium filigree leather bucket seats",
+      "Laramie Longhorn interior accents and instrument cluster",
+      "Heated second-row seats",
+      "Uconnect 8.4 touchscreen radio with premium Navigation",
+      "Premium wood/leather-wrapped steering wheel",
+      "SiriusXM Satellite Radio with 1-year trial",
+      "LED Bed Lighting",
+      "Accent-color front and rear bumpers",
+      "Unique Laramie Longhorn badges on doors and tailgate"
+    ],
+    "LARAMIE": [
+      "Power 10-way memory driver and 6-way power passenger seats",
+      "Heated driver and front-passenger seats",
+      "Ventilated driver and front-passenger seats",
+      "Leather-trimmed 40/20/40 bench seat",
+      "Instrument-panel woodgrain bezel",
+      "Premium II 10-speaker audio system with subwoofer",
+      "Heated steering wheel with power-adjustable pedals with memory",
+      "Dual-Zone Automatic Temperature Control",
+      "20-inch chrome-clad aluminum wheels"
+    ],
+    "REBEL": [
+      "Unique Rebel premium cloth bucket seats with embossed tread",
+      "Heated leather-wrapped steering wheel with Red accent stitching",
+      "Unique Rebel interior accents and door trim panels",
+      "Dual-Zone Automatic Temperature Control",
+      "Power 10-way driver seat with lumbar adjuster",
+      "Heated front seats",
+      "Bifunctional projector chrome headlamps and LED fog lamps",
+      "Front and rear Bilstein monotube performance shocks",
+      "17-inch unique Rebel aluminum wheels with Matte Black pockets"
+    ],
+    "TRADESMAN ECODIESEL HFE": [
+      "3.0L EcoDiesel V6 engine with 8-speed automatic optimized for fuel efficiency",
+      "HFE badge designation",
+      "Active Grille Shutters for improved aerodynamics",
+      "Tri-folding tonneau cover",
+      "Wheel-to-wheel side steps",
+      "20-inch aluminum wheels"
+    ],
+    "TRADESMAN": [
+      "3.6L Pentastar V6 Flex Fuel or 5.7L HEMI V8 powertrain options",
+      "Heavy-duty vinyl 40/20/40 split bench seat with front armrest",
+      "Power windows and locks on Quad Cab and Crew Cab models",
+      "Instrument cluster with 3.5-inch Driver Information Display",
+      "Six-speaker audio system with Media Hub",
+      "Electronic shift-on-the-fly part-time transfer case on 4x4 models",
+      "Class IV hitch receiver",
+      "Trailer Tow Wiring with 4- and 7-pin connector",
+      "Antilock 4-wheel disc brakes and Electronic Stability Control"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/ram/1500tx/"
+}

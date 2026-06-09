@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2023|toyota|sienna",
+  "year": 2023,
+  "make": "Toyota",
+  "model": "Sienna",
+  "ladder_id": "2021_toyota_sienna_complete_options",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "XSE",
+    "XLE",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "XLE": [
+      "Package (requires XLE Plus",
+      "in the vehicle’s immobilizer. The transponder chip is embedded"
+    ],
+    "XSE": [
+      "Package) Entertainment",
+      "in the key/fob and can be costly to replace."
+    ],
+    "LE": [
+      "2.5L 4-cylinder hybrid engine with 245 net hp",
+      "Electronically controlled Continuously Variable Transmission (ECVT)",
+      "Normal, Eco, EV and Sport drive modes",
+      "LED headlights and LED DRL with auto on/off",
+      "LED taillights and stop lights",
+      "Color-keyed heated power outside mirrors",
+      "Dual power sliding side doors",
+      "17-inch alloy wheels",
+      "Three-zone automatic climate control",
+      "9-inch touchscreen with 6 speakers and Android Auto/Apple CarPlay compatibility"
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 3,
+    "upper_trims_with_adds": 0,
+    "avg_adds_upper": 1.0,
+    "per_trim_add_counts": {
+      "XLE": 2,
+      "LE": 0
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalog_key": "2011|mazda|3",
+  "year": 2011,
+  "make": "Mazda",
+  "model": "3",
+  "ladder_id": "brochure_llm_2011__mazda__3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA3s 4-Door Grand Touring",
+    "MAZDA3s 4-Door Sport",
+    "MAZDA3i 4-Door Sport"
+  ],
+  "adds_by_trim": {
+    "MAZDA3s 4-Door Grand Touring": [
+      "2.5-liter turbocharged, intercooled direct-injected engine with 263 hp and 280 lb-ft torque",
+      "MAZDASPEED-tuned suspension with high-performance springs and heavy-duty stabilizer bars",
+      "Racing-inspired high-bolstered front bucket seats with leather wrapping",
+      "Drilled aluminum foot pedals",
+      "Leather-wrapped steering wheel and shift knob",
+      "10-speaker surround sound system with in-dash 6-disc CD/MP3 changer",
+      "Bluetooth hands-free phone and audio capabilities",
+      "MAZDASPEED electroluminescent gauges with boost gauge",
+      "Rear liftgate spoiler and side sill extensions"
+    ],
+    "MAZDA3s 4-Door Sport": [
+      "2.5-liter naturally aspirated engine with 167 hp and 168 lb-ft torque",
+      "18-inch alloy wheels",
+      "Bilevel rear spoiler",
+      "Fully functional hood scoop",
+      "Power sliding-glass moonroof with one-touch-open feature",
+      "Rear window wiper",
+      "Sound system with in-dash 6-disc CD/MP3 changer",
+      "Multi Information Display"
+    ],
+    "MAZDA3i 4-Door Sport": [
+      "2.0-liter MZR naturally aspirated 4-cylinder engine with 148 hp and 135 lb-ft torque",
+      "Power door locks with 2-stage unlocking",
+      "Speed and transmission-sensing auto door locks",
+      "Center console armrest with covered storage and 12V power point",
+      "Bilevel rear spoiler",
+      "Variable-intermittent windshield wipers",
+      "Fully independent suspension with MacPherson struts front/multilink rear",
+      "12.60-inch ventilated front disc brakes",
+      "Front side-impact air bags and side-impact air curtains",
+      "3-point seat belts for all 5 seating positions"
+    ]
+  }
+}

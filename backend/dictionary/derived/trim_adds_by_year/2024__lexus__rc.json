@@ -1,0 +1,75 @@
+{
+  "catalog_key": "2024|lexus|rc",
+  "year": 2024,
+  "make": "lexus",
+  "model": "RC",
+  "ladder_id": "brochure_llm_2024__lexus__rc",
+  "source": "brochure_llm",
+  "trims_available": [
+    "RC F TRACK EDITION",
+    "RC F",
+    "RC 350 F SPORT",
+    "RC 300 F SPORT AWD",
+    "RC 300 F SPORT",
+    "RC 350",
+    "RC 300 AWD",
+    "RC 300"
+  ],
+  "adds_by_trim": {
+    "RC F TRACK EDITION": [
+      "Carbon fiber hood, roof, front spoiler, rocker-panel splitters, rear diffuser, and fixed rear wing",
+      "Titanium mufflers",
+      "Brembo carbon-ceramic brakes with red brake calipers",
+      "Black Alcantara interior trim with Blue highlights and Carbon Fiber Trim",
+      "SmartAccess card key with F logo"
+    ],
+    "RC F": [
+      "472-horsepower V8 with eight-speed paddle-shift transmission",
+      "Launch Control",
+      "Torsen limited-slip rear differential",
+      "F-Adaptive Variable Suspension with Sport S/S+ and Custom modes",
+      "Brembo six-piston front and four-piston rear calipers",
+      "Speed-activated rear wing",
+      "Performance-inspired instrumentation with G-force display and lap timer",
+      "10-speaker Premium Sound System"
+    ],
+    "RC 350 F SPORT": [
+      "311-horsepower V6 with eight-speed paddle-shift transmission",
+      "Cool-air intake"
+    ],
+    "RC 300 F SPORT AWD": [
+      "All-wheel drive",
+      "F SPORT heated and ventilated front seats with enhanced bolsters",
+      "F SPORT interior details with Dark Gray Streamline trim and aluminum pedals",
+      "Perforated leather-trimmed shift knob and steering wheel with F SPORT logo",
+      "F SPORT exterior styling with unique front bumper and grille",
+      "Performance-inspired instrumentation with sliding bezel"
+    ],
+    "RC 300 F SPORT": [
+      "260-horsepower V6 with six-speed paddle-shift transmission",
+      "F SPORT-tuned Adaptive Variable Suspension with Sport S+ and Custom modes",
+      "Two-piece front brake rotors with high-friction brake pads",
+      "F SPORT 19-inch split-five-spoke alloy wheels with Gloss Black Metallic finish and summer tires"
+    ],
+    "RC 350": [
+      "311-horsepower V6 with eight-speed paddle-shift transmission",
+      "Cool-air intake",
+      "Available all-wheel drive"
+    ],
+    "RC 300 AWD": [
+      "All-wheel drive"
+    ],
+    "RC 300": [
+      "241-horsepower turbo with eight-speed paddle-shift transmission",
+      "Rear-wheel drive",
+      "Drive Mode Select",
+      "Lateral performance damper (RWD)",
+      "Steering-wheel-mounted paddle shifters",
+      "Vehicle Dynamics Integrated Management",
+      "8.0-inch touchscreen Lexus Multimedia System",
+      "Lexus Safety System+ 2.5",
+      "Apple CarPlay and Android Auto integration",
+      "Wi-Fi hotspot and Bluetooth connectivity"
+    ]
+  }
+}

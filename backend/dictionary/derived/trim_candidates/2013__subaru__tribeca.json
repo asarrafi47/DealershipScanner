@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2013|subaru|tribeca",
+  "year": 2013,
+  "make": "Subaru",
+  "model": "Tribeca",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Base"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

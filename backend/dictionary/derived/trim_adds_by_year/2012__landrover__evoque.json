@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2012|landrover|evoque",
+  "year": 2012,
+  "make": "landrover",
+  "model": "Evoque",
+  "ladder_id": "brochure_web_2012__landrover__evoque",
+  "source": "brochure_llm_knowledge",
+  "trims_available": [
+    "Dynamic",
+    "Pure",
+    "Prestige"
+  ],
+  "adds_by_trim": {
+    "Pure": [
+      "19-inch alloy wheels",
+      "Panoramic sunroof",
+      "Dual-zone automatic climate control",
+      "Leather steering wheel",
+      "Power windows and locks",
+      "Exterior parking camera with guidelines"
+    ],
+    "Prestige": [
+      "Premium leather interior seats",
+      "Heated front seats",
+      "Meridian premium audio system with 11 speakers",
+      "Xenon HID headlights with auto leveling",
+      "20-inch alloy wheels",
+      "Park distance control front and rear",
+      "Blind spot assist and reverse traffic detection",
+      "Adaptive dynamics with all-terrain response"
+    ],
+    "Dynamic": [
+      "2.0L turbocharged diesel engine",
+      "All-wheel drive standard",
+      "18-inch alloy wheels",
+      "Cloth interior seating",
+      "Bluetooth connectivity",
+      "USB and auxiliary input"
+    ]
+  },
+  "web_source_url": "https://www.motortrend.com/cars/landrover/evoque/"
+}

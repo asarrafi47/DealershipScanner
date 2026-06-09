@@ -1,0 +1,34 @@
+{
+  "catalog_key": "2016|rollsroyce|ghost",
+  "year": 2016,
+  "make": "Rolls Royce",
+  "model": "Ghost",
+  "ladder_id": "brochure_llm_2016__rollsroyce__ghost",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Ghost Black Badge",
+    "Extended Wheelbase",
+    "Standard Wheelbase"
+  ],
+  "adds_by_trim": {
+    "Ghost Black Badge": [
+      "603 bhp / 612 PS power output, increased from 563 bhp / 570 PS",
+      "840 Nm / 620 lb ft torque, increased from 780 Nm / 575 lb ft",
+      "Improved 0-60 mph acceleration of 4.6 seconds versus 4.7 seconds",
+      "Enhanced direct injection fuel management system"
+    ],
+    "Extended Wheelbase": [
+      "3465 mm / 136.4 in wheelbase, 170 mm longer than Standard Wheelbase",
+      "5569 mm / 219.3 in overall length for increased rear passenger legroom",
+      "Increased curb weight of 2570 kg / 5665 lb to accommodate extended chassis"
+    ],
+    "Standard Wheelbase": [
+      "V12 engine with 48 valves producing 563 bhp / 570 PS at 5250 rpm",
+      "780 Nm / 575 lb ft maximum torque at 1500 rpm",
+      "Direct fuel injection system",
+      "Top speed of 155 mph / 250 km/h governed",
+      "0-60 mph acceleration in 4.7 seconds",
+      "Combined fuel consumption of 14 ltr / 100 km / 20.2 mpg"
+    ]
+  }
+}

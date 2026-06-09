@@ -1,0 +1,51 @@
+{
+  "catalog_key": "2015|bmw|3series",
+  "year": 2015,
+  "make": "BMW",
+  "model": "3 Series",
+  "ladder_id": "brochure_llm_2015__bmw__3series",
+  "source": "brochure_llm",
+  "trims_available": [
+    "M Sport",
+    "Sport Line",
+    "Luxury Line"
+  ],
+  "adds_by_trim": {
+    "M Sport": [
+      "Leather-wrapped multi-function M sport steering wheel with smaller diameter",
+      "Power sport seats for driver and front passenger",
+      "Aluminum Hexagon interior trim with Matte Estoril Blue or High Gloss Black highlight",
+      "Dark Burl Walnut Wood interior trim with Pearl Gloss Chrome highlight",
+      "Shortened gear shift lever with M logo for manual transmission",
+      "M Aerodynamic kit with front and rear bumpers, air dam, rear apron, spoiler, side skirts",
+      "Shadowline exterior trim",
+      "BMW kidney grille with eight slats in high-gloss black",
+      "High-gloss chrome exhaust pipe tips",
+      "M Sport suspension on 328i, 328d, and 335i models"
+    ],
+    "Sport Line": [
+      "Door-sill finishers in aluminum with BMW Sport lettering",
+      "Leather-wrapped sport steering wheel with red contrast stitching",
+      "Sport seats in Black SensaTec with contrasting Red highlight piping",
+      "Dakota Leather upholstery with contrast stitching and piping",
+      "High Gloss Black, Fineline Anthracite Wood, or Aluminum interior trim options",
+      "Instrument cluster with red highlight and red contrasting rings",
+      "Interior illumination with variable color effects in Orange-Red or White",
+      "Kidney grille slats, B-pillar, bumpers, air intakes in high-gloss black",
+      "Black exterior mirror caps and chrome black exhaust pipe tips",
+      "M sport suspension on 328i, 328d, and 335i models"
+    ],
+    "Luxury Line": [
+      "Door-sill finishers in aluminum with BMW Luxury lettering",
+      "Dakota Leather upholstery with exclusive stitching",
+      "Lower dashboard in brown color with Saddle Brown Dakota Leather upholstery",
+      "Fineline Anthracite Wood or Burl Walnut Wood interior trim with Pearl Gloss Chrome highlight",
+      "Center console with Luxury Line exclusive chrome surround",
+      "Chrome trim rings for air conditioning and radio controls",
+      "Front and rear bumpers and air intakes with chrome accent underline",
+      "Chrome kidney grille slats",
+      "Chrome exhaust pipe tips",
+      "Chrome window surround"
+    ]
+  }
+}

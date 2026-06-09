@@ -1,0 +1,46 @@
+{
+  "catalog_key": "2010|ford|taurus",
+  "year": 2010,
+  "make": "Ford",
+  "model": "Taurus",
+  "ladder_id": "brochure_2010__ford__taurus",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds 3.5L Duratec V6 engine with 263 horsepower",
+      "Adds 6-speed automatic transmission",
+      "Adds front bucket seats with 60/40 split-folding rear seatbacks",
+      "Adds dual-stage front airbags with safety belt pretensioners",
+      "Adds AdvanceTrac electronic stability control",
+      "Adds power door locks and remote keyless entry",
+      "Adds tilt/telescoping steering wheel",
+      "Adds rear-window defroster",
+      "Adds tire pressure monitoring system",
+      "Adds Personal Safety System with restraint control module"
+    ],
+    "Premium": [
+      "Upgraded to 6-speed SelectShift Automatic transmission",
+      "Adds 2-way manual front-passenger seat adjustment",
+      "Adds 2nd-row reading lights",
+      "Adds auxiliary audio input jack",
+      "Adds driver and front-passenger seatback map pockets",
+      "Adds front center floor console with armrest and storage",
+      "Adds front overhead console with dome light and map light",
+      "Adds steering wheel-mounted cruise and audio controls"
+    ],
+    "Limited": [
+      "Upgraded to 3.5L EcoBoost V6 engine with 365 horsepower and 350 lb.-ft. torque",
+      "Adds MyKey owner controls feature",
+      "Adds SecuriCode invisible keypad",
+      "Adds SecuriLock passive anti-theft ignition system",
+      "Adds wiper-activated halogen headlamps with autolamp",
+      "Adds solar-tinted glass",
+      "Adds SOS Post-Crash Alert System hardware"
+    ]
+  }
+}

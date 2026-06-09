@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2011|cadillac|srx",
+  "year": 2011,
+  "make": "Cadillac",
+  "model": "SRX",
+  "ladder_id": "brochure_2011__cadillac__srx",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Platinum",
+    "Limited",
+    "Premium",
+    "LE"
+  ],
+  "adds_by_trim": {
+    "LE": [
+      "Adds Includes standard powertrain with GM engine options",
+      "Adds Features OnStar services with subscription",
+      "Adds Includes Roadside Assistance Program",
+      "Adds Includes Rust Through Protection for six years unlimited mileage"
+    ],
+    "Premium": [
+      "Heated and ventilated driver and front passenger seats plus heated rear outboard seats",
+      "Keyless passive entry on both front and rear doors and liftgate",
+      "Independent rear-seat audio with two headphone jacks",
+      "Tri-zone automatic climate control",
+      "Rear-seat dual DVD players with wireless headphones and remote control"
+    ],
+    "Limited": [],
+    "Platinum": []
+  }
+}

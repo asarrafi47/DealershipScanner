@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2015|mazda|cx5",
+  "year": 2015,
+  "make": "Mazda",
+  "model": "CX-5",
+  "ladder_id": "brochure_llm_2015__mazda__cx5",
+  "source": "brochure_llm",
+  "trims_available": [
+    "MAZDA CX-5 GRAND TOURING",
+    "MAZDA CX-5 TOURING",
+    "MAZDA CX-5 SPORT"
+  ],
+  "adds_by_trim": {
+    "MAZDA CX-5 GRAND TOURING": [
+      "SKYACTIV-G 2.5L DOHC 4-cylinder engine with 184 hp and 185 lb-ft torque",
+      "19-inch aluminum alloy wheels with P225/55R19 tires",
+      "Black leather exterior color option",
+      "Sand leather exterior color option"
+    ],
+    "MAZDA CX-5 TOURING": [
+      "SKYACTIV-G 2.5L DOHC 4-cylinder engine with 184 hp and 185 lb-ft torque",
+      "Halogen fog lights",
+      "6-way power-adjustable driver's seat with manual lumbar support",
+      "Sand cloth exterior color option"
+    ],
+    "MAZDA CX-5 SPORT": [
+      "SKYACTIV-G 2.0L DOHC 4-cylinder engine with 155 hp and 150 lb-ft torque",
+      "SKYACTIV-MT 6-speed manual transmission standard or SKYACTIV-Drive 6-speed Sport automatic available",
+      "17-inch aluminum alloy wheels with P225/65R17 tires",
+      "Halogen headlights with auto off and daytime running lights",
+      "Rain-sensing windshield wipers",
+      "Heated side mirrors",
+      "Black cloth exterior color option",
+      "5.8-inch color touchscreen display"
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "catalog_key": "2016|ram|hd",
+  "year": 2016,
+  "make": "ram",
+  "model": "HD",
+  "ladder_id": "brochure_llm_2016__ram__hd",
+  "source": "brochure_llm",
+  "trims_available": [
+    "LIMITED",
+    "LONGHORN®",
+    "LARAMIE",
+    "SLT",
+    "POWER WAGON®",
+    "TRADESMAN®"
+  ],
+  "adds_by_trim": {
+    "LIMITED": [
+      "Premium leather bucket seats with heated second-row seats",
+      "Uconnect 8.4 NAV Radio with Bluetooth Voice Command and premium navigation",
+      "Premium wood/leather-wrapped steering wheel",
+      "20-inch painted aluminum wheels with chrome inserts (SRW)",
+      "Limited grille with unique Limited tailgate",
+      "Body-color wheel flares and front/rear bumpers",
+      "Wheel-to-wheel side steps (SRW only)",
+      "Chrome belt moldings"
+    ],
+    "LONGHORN®": [
+      "Laramie Longhorn interior accents",
+      "Laramie Longhorn instrument cluster",
+      "18-inch polished aluminum wheels with Gold inserts (SRW)",
+      "Laramie Longhorn badge",
+      "Chrome Laramie Longhorn grille center cap (DRW)",
+      "Accent-color running boards"
+    ],
+    "LARAMIE": [
+      "Premium leather bucket seats",
+      "Premium door trim panels",
+      "Luxury front and rear floor mats",
+      "Leather-wrapped shift knob",
+      "Full-length premium upgraded floor console",
+      "Uconnect 8.4 NAV with Bluetooth Voice Command and premium navigation",
+      "Cargo Box Lighting",
+      "Accent-color front and rear bumpers",
+      "Mopar door sill guards",
+      "Remote Start System with rain-sensitive windshield wipers"
+    ],
+    "SLT": [
+      "Cloth 40/20/40 bench seat with premium vinyl door trim",
+      "Carpet floor covering with front and rear floor mats",
+      "Overhead console with map lights",
+      "Uconnect 5.0 touchscreen system with Bluetooth Voice Command",
+      "Chrome front and rear bumpers with chrome grille",
+      "Steel chrome-clad wheels",
+      "Rearview mirror with microphone",
+      "Rear power-sliding window",
+      "Electronic shifting part-time 4x4 transfer case"
+    ],
+    "POWER WAGON®": [
+      "6.4L HEMI V8 MDS or 6.7L Cummins Turbo Diesel engine options",
+      "Premium LED taillamps—Black with bifunctional projector headlamps—Black",
+      "Two-tone paint with Black lower body",
+      "17-inch polished aluminum wheels with LT285/70R17D OWL All-Terrain tires",
+      "Power Wagon graphic decals and tailgate decal",
+      "Chrome grille surround with billets",
+      "Hill Descent Control system",
+      "Bilstein performance front and rear shocks",
+      "Front electronic disconnecting stabilizer bar",
+      "Front 12,000-lb WARN winch with tow hooks"
+    ],
+    "TRADESMAN®": [
+      "Air conditioning with automatic headlamps",
+      "Heavy-duty vinyl 40/20/40 split-bench seat",
+      "Black vinyl floor covering",
+      "6-speaker audio system",
+      "Instrument cluster with 3.5-inch Driver Information Display",
+      "Tilt steering column with rearview day/night mirror",
+      "Radio 3.0 AM/FM with Media Hub audio input and USB port",
+      "Tinted windows with rear fixed window",
+      "12-volt auxiliary power outlet",
+      "Hill Descent Control with Tru-Lok front and rear electronic locking axles"
+    ]
+  }
+}

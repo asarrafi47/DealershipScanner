@@ -1,0 +1,36 @@
+{
+  "catalog_key": "2010|audi|a3",
+  "year": 2010,
+  "make": "Audi",
+  "model": "A3",
+  "ladder_id": "brochure_llm_2010__audi__a3",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Premium Plus",
+    "Premium"
+  ],
+  "adds_by_trim": {
+    "Premium Plus": [
+      "18-inch five-tri-spoke wheels with summer performance tires",
+      "Sport front seats with sport suspension calibration",
+      "18-inch seven-double-spoke wheels with summer performance tires option",
+      "Leather/Alcantara upholstery on sport front seats",
+      "Auto-dimming interior mirror with digital compass",
+      "Automatic headlights and rain-sensing windshield wipers",
+      "BOSE premium sound system with ten speakers and six-channel amplifier",
+      "Audi Navigation plus with DVD, 6.5-inch LCD display and iPod integration"
+    ],
+    "Premium": [
+      "MacPherson front suspension with anti-roll bar",
+      "Four-link rear suspension with tubular anti-roll bar",
+      "Servotronic speed-sensitive power steering",
+      "Six-speed manual transmission with S tronic dual-clutch automatic option",
+      "quattro permanent all-wheel drive system",
+      "Driver and front passenger advanced dual-stage airbags",
+      "Electronic Stabilization Program and Anti-lock Brake System",
+      "Audi concert system with single CD player and MP3 playback",
+      "SIRIUS Satellite Radio with three-month trial subscription",
+      "Halogen headlights with Audi xenon plus headlights option"
+    ]
+  }
+}

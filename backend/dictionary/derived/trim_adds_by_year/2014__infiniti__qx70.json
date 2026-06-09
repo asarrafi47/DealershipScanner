@@ -1,0 +1,31 @@
+{
+  "catalog_key": "2014|infiniti|qx70",
+  "year": 2014,
+  "make": "Infiniti",
+  "model": "QX70",
+  "ladder_id": "generic_infiniti_qx70",
+  "source": "promoted_brochure_auto",
+  "trims_available": [
+    "Fcw",
+    "Iba"
+  ],
+  "adds_by_trim": {
+    "Iba": [
+      "driving techniques. Always drive safely. 10 Moving Object",
+      "of these components. 25 May require additional options or option packages. 26 When towing at or near Maximum Trailer",
+      "mark of Apple Inc. Android and Google Play are trademarks of Google Inc. Formula 1 is a trade",
+      "\u2022 Standard Available group company. All rights reserved."
+    ]
+  },
+  "warnings": [
+    "models_column_matrix"
+  ],
+  "promotion_quality": {
+    "trim_count": 2,
+    "upper_trims_with_adds": 1,
+    "avg_adds_upper": 4.0,
+    "per_trim_add_counts": {
+      "Iba": 4
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "catalog_key": "2012|volvo|s60",
+  "year": 2012,
+  "make": "Volvo",
+  "model": "S60",
+  "ladder_id": "brochure_llm_2012__volvo__s60",
+  "source": "brochure_llm",
+  "trims_available": [
+    "T6 R-DESIGN",
+    "T6",
+    "T5"
+  ],
+  "adds_by_trim": {
+    "T6 R-DESIGN": [
+      "Dual Xenon Headlights with Active Bending Lights technology standard",
+      "Beechwood leather sports seats with ergonomic support",
+      "Leather-clad sport steering wheel with Silk Metal inlay",
+      "Leather-clad gear-knob",
+      "Watch-dial gauges for instant vital information",
+      "Shimmer Graphite aluminum center stack with distinctive sportiness"
+    ],
+    "T6": [
+      "Dual Xenon Headlights with Active Bending Lights technology available in optional T6 Premium Package"
+    ],
+    "T5": [
+      "Dual Xenon Headlights with Active Bending Lights technology available as optional feature",
+      "Dynamic Stability and Traction Control (DSTC) for improved handling and safety",
+      "City Safety collision avoidance system with automatic braking up to 19 mph",
+      "Split 60/40 rear seat with fold-flat front passenger backrest",
+      "Premium Sound system with twelve high-end loudspeakers and 5x130 W digital amplifier",
+      "Rear Seat Entertainment with dual DVD players and dual 7-inch screens",
+      "High Performance 4x40 W audio system with Bluetooth and USB/iPod connectivity",
+      "Auxiliary audio input in front center armrest",
+      "USB port for device charging and integration"
+    ]
+  }
+}

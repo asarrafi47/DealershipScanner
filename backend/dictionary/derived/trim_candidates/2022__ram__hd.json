@@ -1,0 +1,26 @@
+{
+  "catalog_key": "2022|ram|hd",
+  "year": 2022,
+  "make": "ram",
+  "model": "HD",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Laramie",
+    "Night Edition",
+    "Big Horn",
+    "Lone Star",
+    "Tradesman",
+    "Premium",
+    "LT",
+    "Sport",
+    "LE",
+    "Base",
+    "L1"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

@@ -1,0 +1,19 @@
+{
+  "catalog_key": "2017|genesis|g90",
+  "year": 2017,
+  "make": "genesis",
+  "model": "G90",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

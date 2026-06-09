@@ -1,0 +1,16 @@
+{
+  "catalog_key": "2018|nissan|nv",
+  "year": 2018,
+  "make": "Nissan",
+  "model": "NV",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "SV",
+    "S"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

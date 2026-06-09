@@ -1,0 +1,73 @@
+{
+  "catalog_key": "2018|subaru|forester",
+  "year": 2018,
+  "make": "Subaru",
+  "model": "Forester",
+  "ladder_id": "brochure_llm_2018__subaru__forester",
+  "source": "brochure_llm",
+  "trims_available": [
+    "2.0XT Premium",
+    "2.5i Touring",
+    "2.5i Premium Black Edition",
+    "2.5i Premium",
+    "2.5i"
+  ],
+  "adds_by_trim": {
+    "2.5i": [
+      "170-hp 2.5-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive",
+      "6-speed manual transmission or optional Lineartronic CVT",
+      "17-inch styled steel wheels",
+      "6-way manually adjustable driver's seat, 4-way manually adjustable front-passenger's seat",
+      "SUBARU STARLINK 6.2-inch Multimedia with smartphone app integration and Bluetooth audio streaming",
+      "Manually adjustable CFC-free air conditioning with air filtration",
+      "Analog gauges with LCD display and color multifunction display",
+      "Rear-Vision Camera"
+    ],
+    "2.5i Premium": [
+      "17-inch aluminum-alloy wheels",
+      "Panoramic moonroof",
+      "Raised roof rails with black finish",
+      "Rear spoiler",
+      "Body-color side mirrors",
+      "10-way power adjustable driver's seat with reclining rear seatbacks",
+      "SUBARU STARLINK 7.0-inch Multimedia with Siri Eyes Free and SiriusXM All Access Radio",
+      "SUBARU STARLINK Safety Plus enabled with dual USB ports",
+      "Automatic climate control system and front-passenger's auto-up/down power window",
+      "All-Weather Package and privacy glass"
+    ],
+    "2.5i Premium Black Edition": [
+      "18-inch gloss black aluminum-alloy wheels",
+      "Gloss black mirror caps and badging",
+      "Blind-Spot Detection with Lane Change Assist and Rear Cross-Traffic Alert",
+      "EyeSight Driver Assist Technology",
+      "LED Steering Responsive Headlights to assist with visibility around corners",
+      "Leather-wrapped steering wheel with paddle shifters",
+      "Silver and gloss black dash trim",
+      "Exclusive Black Cloth seats with Sport Bolsters"
+    ],
+    "2.5i Touring": [
+      "18-inch aluminum-alloy wheels",
+      "LED Steering Responsive Headlights with High Beam Assist",
+      "Body-color side mirrors with integrated turn signals",
+      "Chrome accents on lower door cladding",
+      "Keyless Access with Push-Button Start and PIN-code vehicle access",
+      "SUBARU STARLINK Multimedia Navigation with SiriusXM Traffic",
+      "440-watt-equivalent Harman Kardon audio system with 8 speakers",
+      "Leather-wrapped steering wheel and shifter handle",
+      "EyeSight Driver Assist Technology and Reverse Automatic Braking",
+      "Heated steering wheel with 2-position driver's seat memory"
+    ],
+    "2.0XT Premium": [
+      "250-hp turbocharged 2.0-liter 4-cylinder SUBARU BOXER engine",
+      "Subaru Symmetrical All-Wheel Drive with X-MODE featuring Hill Descent Control",
+      "Lineartronic CVT with manual-mode paddle shifters",
+      "Sport-tuned suspension with SI-DRIVE",
+      "18-inch aluminum-alloy wheels",
+      "Auto-on/off headlights",
+      "Sport cloth upholstery",
+      "Leather-wrapped steering wheel and shifter handle with leather boot and gloss black trim",
+      "Welcome lighting and one-touch folding rear seatback"
+    ]
+  }
+}

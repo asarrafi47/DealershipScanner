@@ -1,0 +1,42 @@
+{
+  "catalog_key": "2015|audi|a6",
+  "year": 2015,
+  "make": "Audi",
+  "model": "A6",
+  "ladder_id": "brochure_2015__audi__a6",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Prestige",
+    "Premium",
+    "Limited",
+    "Sport",
+    "A6"
+  ],
+  "adds_by_trim": {
+    "A6": [
+      "Adds 2.0T four-cylinder turbocharged engine with 220 hp",
+      "Adds multitronic continuously variable transmission with front-wheel drive",
+      "Adds five-link front suspension",
+      "Adds trapezoidal-link rear suspension",
+      "Adds ventilated front disc brakes (13.6 in) and ventilated rear disc brakes (13.0 in)",
+      "Adds electromechanical power steering system",
+      "Adds ultra lightweight aluminum exterior body panels with steel chassis",
+      "Adds seating capacity for 5 passengers"
+    ],
+    "Sport": [
+      "Adds sport suspension calibration"
+    ],
+    "Limited": [
+      "Adds sport suspension calibration"
+    ],
+    "Premium": [
+      "Adds 3.0T six-cylinder supercharged engine with 310 hp",
+      "Upgraded to eight-speed Tiptronic automatic transmission with quattro all-wheel drive",
+      "Upgraded to ventilated front disc brakes (14.0 in)",
+      "Adds sport suspension calibration"
+    ],
+    "Prestige": [
+      "Adds access to exclusive exterior colors including Daytona Gray pearl, Garnet Red pearl, and Phantom Black pearl"
+    ]
+  }
+}

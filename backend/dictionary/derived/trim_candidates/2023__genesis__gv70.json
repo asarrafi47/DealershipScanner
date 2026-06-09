@@ -1,0 +1,18 @@
+{
+  "catalog_key": "2023|genesis|gv70",
+  "year": 2023,
+  "make": "genesis",
+  "model": "GV70",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Advanced",
+    "Limited",
+    "Premium",
+    "Sport"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "ok",
+  "source": "brochure_text_auto",
+  "warnings": []
+}

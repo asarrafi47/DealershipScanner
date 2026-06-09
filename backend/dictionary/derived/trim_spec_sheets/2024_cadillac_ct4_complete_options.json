@@ -1,0 +1,25 @@
+{
+  "ladder_id": "2024_cadillac_ct4_complete_options",
+  "make": "Cadillac",
+  "models": [
+    "CT4",
+    "CT4"
+  ],
+  "year_min": 2022,
+  "year_max": 2026,
+  "source": "generated",
+  "trims": {
+    "V-Series": [
+      {
+        "label": "Engine Options",
+        "value": "2.7L I4 Turbo; Automatic (S10)"
+      }
+    ],
+    "Premium": [
+      {
+        "label": "Engine Options",
+        "value": "Engine Options: L LDF turbo I4 (China only: 25T); \"2021 Cadillac CT4 Adds New Trim Level In China\"."
+      }
+    ]
+  }
+}

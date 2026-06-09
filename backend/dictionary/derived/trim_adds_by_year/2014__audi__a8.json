@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2014|audi|a8",
+  "year": 2014,
+  "make": "Audi",
+  "model": "A8",
+  "ladder_id": "brochure_llm_2014__audi__a8",
+  "source": "brochure_llm",
+  "trims_available": [
+    "A8 L W12",
+    "A8 4.0T",
+    "A8 L TDI",
+    "A8 3.0T"
+  ],
+  "adds_by_trim": {
+    "A8 L W12": [
+      "6.3-liter twelve-cylinder engine with 500 hp and 463 lb-ft torque",
+      "48-valve DOHC valvetrain with FSI direct fuel injection",
+      "15.7-inch front ventilated disc brakes and 14.0-inch rear ventilated discs",
+      "Extended wheelbase (LWB) configuration for rear passenger legroom"
+    ],
+    "A8 4.0T": [
+      "4.0-liter turbocharged eight-cylinder engine with 420 hp and 444 lb-ft torque",
+      "32-valve DOHC valvetrain with TFSI supercharging",
+      "15.0-inch front ventilated disc brakes and 14.0-inch rear ventilated discs",
+      "Available Dynamic steering system for enhanced handling"
+    ],
+    "A8 L TDI": [
+      "3.0-liter turbocharged diesel six-cylinder engine with 240 hp and 406 lb-ft torque",
+      "24-valve DOHC TDI engine with superior fuel economy",
+      "0-60 mph acceleration in 6.4 seconds",
+      "Extended wheelbase (LWB) configuration for rear passenger legroom"
+    ],
+    "A8 3.0T": [
+      "3.0-liter supercharged six-cylinder TFSI engine with 333 hp and 325 lb-ft torque",
+      "24-valve DOHC valvetrain with cylinder on demand efficiency technology",
+      "Start-stop efficiency system for reduced emissions",
+      "Eight-speed Tiptronic automatic transmission with Audi quattro all-wheel drive",
+      "Audi ultra lightweight ASF aluminum construction",
+      "Five-link front suspension with trapezoidal-link rear suspension",
+      "Audi adaptive air suspension with sport mode available",
+      "Audi servotronic power steering system with 15.1:1 steering ratio"
+    ]
+  }
+}

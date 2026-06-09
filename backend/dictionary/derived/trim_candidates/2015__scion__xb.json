@@ -1,0 +1,21 @@
+{
+  "catalog_key": "2015|scion|xb",
+  "year": 2015,
+  "make": "Scion",
+  "model": "xB",
+  "status": "draft",
+  "quality": "medium",
+  "trims_available": [
+    "Limited",
+    "Premium",
+    "LT",
+    "Sport",
+    "LE"
+  ],
+  "adds_by_trim": {},
+  "brochure_status": "weak_hints",
+  "source": "brochure_text_auto",
+  "warnings": [
+    "no_trim_hint_pages_used_all_text_pages"
+  ]
+}

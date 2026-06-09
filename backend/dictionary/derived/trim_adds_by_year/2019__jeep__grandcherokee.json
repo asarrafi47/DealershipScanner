@@ -1,0 +1,44 @@
+{
+  "catalog_key": "2019|jeep|grandcherokee",
+  "year": 2019,
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "ladder_id": "brochure_llm_2019__jeep__grandcherokee",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Trackhawk",
+    "SRT",
+    "Summit",
+    "Trailhawk",
+    "Overland",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Trackhawk": [
+      "707 HP engine (highest performance)",
+      "Premium Metal Package standard with upgraded bezels and accents"
+    ],
+    "SRT": [
+      "Premium Metal Package standard with upgraded bezels and accents",
+      "High-performance powertrain"
+    ],
+    "Summit": [
+      "Premium Metal Package standard with upgraded bezels and accents",
+      "Ultra-premium signature leather package with quilted upscale leather-trimmed seats"
+    ],
+    "Trailhawk": [
+      "Available Premium Metal Package with upgraded bezels and accents",
+      "Selec-Terrain with five settings: Snow, Sand, Rock, Mud, Auto"
+    ],
+    "Overland": [
+      "Available Premium Metal Package with upgraded bezels and accents",
+      "Available Ultra-premium signature leather package"
+    ],
+    "Limited": [
+      "Leather-wrapped steering wheel with real-wood accents standard",
+      "Available UConnect 4C NAV with 8.4-inch flush-mounted touchscreen",
+      "Available Ultra-premium signature leather package",
+      "Available Premium Metal Package"
+    ]
+  }
+}

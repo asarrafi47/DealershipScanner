@@ -1,0 +1,28 @@
+{
+  "catalog_key": "2012|mitsubishi|imiev",
+  "year": 2012,
+  "make": "Mitsubishi",
+  "model": "i-MiEV",
+  "ladder_id": "brochure_llm_2012__mitsubishi__imiev",
+  "source": "brochure_llm",
+  "trims_available": [
+    "SE",
+    "ES"
+  ],
+  "adds_by_trim": {
+    "SE": [
+      "Upgraded interior",
+      "360-watt 8-speaker deluxe audio system",
+      "15-inch alloy wheels",
+      "HDD navigation with real-time traffic",
+      "FUSE hands-free link system with USB port",
+      "DC quick charger port"
+    ],
+    "ES": [
+      "120V portable charging cable",
+      "Onboard recharging system with level 1 120V or level 2 240V capability",
+      "Advanced six-airbag safety system",
+      "3-mode shift selector"
+    ]
+  }
+}

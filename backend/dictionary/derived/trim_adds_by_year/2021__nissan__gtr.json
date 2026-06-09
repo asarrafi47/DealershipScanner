@@ -1,0 +1,38 @@
+{
+  "catalog_key": "2021|nissan|gtr",
+  "year": 2021,
+  "make": "Nissan",
+  "model": "GT-R",
+  "ladder_id": "brochure_llm_2021__nissan__gtr",
+  "source": "brochure_llm",
+  "trims_available": [
+    "NISMO®",
+    "PREMIUM"
+  ],
+  "adds_by_trim": {
+    "NISMO®": [
+      "NISMO-tuned 3.8-liter twin-turbocharged V6 engine with 600 horsepower",
+      "Nissan/Brembo® Carbon Ceramic Braking System",
+      "NISMO-tuned suspension system",
+      "20\" NISMO black RAYS® forged-alloy wheels",
+      "Carbon-fiber hood, fenders, roof, and trunk lid",
+      "NISMO aerodynamic body design with carbon-fiber front/rear fascia and side sills",
+      "NISMO Recaro® leather-appointed front seats with red synthetic-suede inserts",
+      "NISMO Alcantara®-wrapped steering wheel and gauge hood",
+      "NISMO Black/Red interior treatment",
+      "Front fender air outlets and NISMO tachometer"
+    ],
+    "PREMIUM": [
+      "3.8-liter twin-turbocharged V6 engine with 565 horsepower",
+      "Dual-clutch 6-speed transmission",
+      "ATTESA E-TS® All-Wheel Drive",
+      "20\" RAYS® forged-alloy wheels with Dunlop® SP Sport MAXX® GT600 DSST run-flat tires",
+      "Nissan/Brembo® braking system",
+      "Bilstein® DampTronic® suspension system",
+      "NissanConnect® 8\" touchscreen with Nissan Navigation System and Apple CarPlay®",
+      "Leather-appointed front seats with synthetic-suede inserts",
+      "Bose Premium Audio System with 11 speakers and dual woofers",
+      "Multi-LED headlights with signature lighting"
+    ]
+  }
+}

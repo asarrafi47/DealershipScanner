@@ -1,0 +1,35 @@
+{
+  "catalog_key": "2018|honda|clarity",
+  "year": 2018,
+  "make": "Honda",
+  "model": "Clarity",
+  "ladder_id": "brochure_2018__honda__clarity",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Sport Touring",
+    "EX-L",
+    "Sport",
+    "EX"
+  ],
+  "adds_by_trim": {
+    "EX": [],
+    "Sport": [],
+    "EX-L": [
+      "Adds dual-zone automatic climate control",
+      "Adds front passenger's seat with 4-way power adjustment",
+      "Adds heated front seats",
+      "Adds automatic-dimming rearview mirror",
+      "Adds Honda Satellite-Linked Navigation System with voice recognition and Honda HD Digital Traffic"
+    ],
+    "Sport Touring": [
+      "Adds Apple CarPlay integration",
+      "Adds Android Auto integration",
+      "Adds SiriusXM Radio",
+      "Adds HD Radio",
+      "Adds HomeLink remote system",
+      "Adds 60/40 split fold-down rear seatback with center armrest",
+      "Adds Honda LaneWatch",
+      "Adds Smart Entry with Walk Away Auto Lock"
+    ]
+  }
+}

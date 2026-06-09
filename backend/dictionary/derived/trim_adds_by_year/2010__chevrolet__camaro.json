@@ -1,0 +1,52 @@
+{
+  "catalog_key": "2010|chevrolet|camaro",
+  "year": 2010,
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "ladder_id": "2010_chevrolet_camaro",
+  "source": "manual_brochure_review",
+  "trims_available": [
+    "LS",
+    "1LT",
+    "2LT",
+    "1SS",
+    "2SS"
+  ],
+  "adds_by_trim": {
+    "1LT": [
+      "Front fog lamps integrated in fascia (replaces DRL-only lighting on LS when RS not ordered)",
+      "OnStar Directions & Connections with Turn-by-Turn Navigation available (Safe & Sound only on LS)"
+    ],
+    "2LT": [
+      "Heated leather-appointed front seats",
+      "Heated body-color mirrors with driver auto-dimming and inside rearview auto-dimming mirror",
+      "Auxiliary gauge pack: oil pressure, voltage, oil temp, and transmission fluid temp in center console",
+      "Universal Home Remote (garage opener)",
+      "Bluetooth, USB port, steering-wheel audio controls, and PDIM available or standard via Convenience and Connectivity Package",
+      "Boston Acoustics 9-speaker 245-watt audio available"
+    ],
+    "1SS": [
+      "6.2L V8 — 426 hp (manual) / 400 hp (automatic) replaces 3.6L V6 on LS/LT",
+      "Brembo four-piston vented disc brakes at all four corners",
+      "SS-specific front/rear fascias with unique grille, rear diffuser, and front air scoop",
+      "Dual-outlet stainless exhaust with chrome tips",
+      "OnStar Safe & Sound Plan (Directions & Connections on 2SS)"
+    ],
+    "2SS": [
+      "Auxiliary gauge pack on center console (oil pressure, voltage, oil temp, trans fluid temp)",
+      "Heated leather-appointed front seats and Universal Home Remote",
+      "Bluetooth, USB, steering-wheel audio controls standard",
+      "OnStar Directions & Connections with Turn-by-Turn Navigation",
+      "Boston Acoustics premium 9-speaker audio available"
+    ],
+    "LS": [
+      "3.6L V6 engine with Direct Injection and Variable Valve Timing",
+      "Single-zone manual air conditioning",
+      "Six-speed manual transmission standard",
+      "Front sport bucket seats with power recline and adjustable headrests",
+      "Electronic StabiliTrak stability control with traction control",
+      "Power steering with variable-ratio",
+      "XM Radio with three trial months"
+    ]
+  }
+}

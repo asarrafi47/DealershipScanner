@@ -1,0 +1,57 @@
+{
+  "catalog_key": "2019|lincoln|continental",
+  "year": 2019,
+  "make": "Lincoln",
+  "model": "Continental",
+  "ladder_id": "brochure_2019__lincoln__continental",
+  "source": "brochure_llm",
+  "trims_available": [
+    "Black Label",
+    "Reserve",
+    "Select",
+    "Standard",
+    "Limited"
+  ],
+  "adds_by_trim": {
+    "Limited": [
+      "Adds Lincoln Pickup & Delivery service with complimentary loaner vehicle",
+      "Adds 6-month complimentary CLEAR membership for biometric airport security bypass",
+      "Adds Lincoln Way app integration for service scheduling and vehicle management",
+      "Adds Lincoln Connect remote vehicle access and control capabilities",
+      "Adds Lincoln Concierge personal connection service",
+      "Adds remote start functionality via Amazon Alexa skill integration",
+      "Adds secure Lincoln Automotive Financial Services account management",
+      "Adds fuel finder and parking reservation features via mobile app"
+    ],
+    "Standard": [],
+    "Select": [
+      "2.7-liter GTDI V6 engine with 335 hp and 380 lb.-ft. torque",
+      "Intelligent all-wheel drive option",
+      "Heated and cooled front seats",
+      "Perforated leather-trimmed seats",
+      "Dual-panel moonroof with power sunshade",
+      "Rear seat smart-charging USB ports"
+    ],
+    "Reserve": [
+      "19-inch alloy wheels (replaces 18-inch)",
+      "Dual-panel moonroof",
+      "Power-operated trunk lid",
+      "Leather seating upholstery (replaces leatherette)",
+      "Heated and ventilated 24-way power-adjustable front seats",
+      "Heated steering wheel",
+      "Heated rear seats",
+      "Rear USB charge ports",
+      "13-speaker Revel premium audio system",
+      "Semi-autonomous parking assist"
+    ],
+    "Black Label": [
+      "20-inch alloy wheels",
+      "LED headlights (replaces HID)",
+      "Premium leather seating upholstery",
+      "19-speaker Revel premium audio system",
+      "Premium maintenance with pickup and delivery",
+      "Complimentary car washes",
+      "Concierge service access"
+    ]
+  }
+}

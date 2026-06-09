@@ -1,0 +1,47 @@
+{
+  "catalog_key": "2025|lexus|is",
+  "year": 2025,
+  "make": "lexus",
+  "model": "IS",
+  "ladder_id": "brochure_llm_2025__lexus__is",
+  "source": "brochure_llm",
+  "trims_available": [
+    "IS 300/350 F SPORT",
+    "IS 300/350 F SPORT DESIGN",
+    "IS 300"
+  ],
+  "adds_by_trim": {
+    "IS 300/350 F SPORT": [
+      "F SPORT bolstered, heated and ventilated front seats",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Four-way adjustable headrests",
+      "Aluminum sport pedals",
+      "Lexus Memory System for driver's seat, outside mirrors and steering wheel",
+      "Power tilt-and-telescopic steering wheel",
+      "Power-folding outside mirrors with Dark Chrome-finished trim",
+      "Dark Chrome-finished window trim",
+      "F SPORT 19-inch split-five-spoke staggered-width alloy wheels with Dark Metallic finish"
+    ],
+    "IS 300/350 F SPORT DESIGN": [
+      "F SPORT exterior styling including unique front and rear bumpers, grille surround, rear spoiler and exhaust tips",
+      "F SPORT-tuned suspension",
+      "F SPORT heated leather-trimmed steering wheel",
+      "F SPORT Design exterior badging",
+      "Embossed interior door trim",
+      "Black Geometric interior trim",
+      "F SPORT 19-inch split-five-spoke alloy wheels with Dark Metallic finish"
+    ],
+    "IS 300": [
+      "Bi-LED headlamps, taillamps and daytime running lights",
+      "Heated leather-trimmed steering wheel with sliding bezel",
+      "NuLuxe interior trim",
+      "Eight-way power front seats",
+      "Dual-zone climate control",
+      "Heated outside mirrors",
+      "10-way power-adjustable driver's seat with lumbar support",
+      "Lexus Multimedia System with 8.0-inch touchscreen display",
+      "Apple CarPlay and Android Auto compatibility",
+      "Lexus Safety System+ 2.5, Blind Spot Monitor with Rear Cross-Traffic Alert, Backup camera with dynamic gridlines"
+    ]
+  }
+}

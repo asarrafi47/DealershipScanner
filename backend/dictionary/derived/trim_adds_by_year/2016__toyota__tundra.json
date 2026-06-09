@@ -1,0 +1,86 @@
+{
+  "catalog_key": "2016|toyota|tundra",
+  "year": 2016,
+  "make": "Toyota",
+  "model": "Tundra",
+  "ladder_id": "brochure_llm_2016__toyota__tundra",
+  "source": "brochure_llm",
+  "trims_available": [
+    "TRD Pro",
+    "1794 Edition",
+    "Platinum",
+    "Limited",
+    "SR5",
+    "SR"
+  ],
+  "adds_by_trim": {
+    "SR": [
+      "5.7L or 4.6L V8 engine with 381 hp or 310 hp",
+      "6-speed electronically controlled automatic transmission",
+      "Tow Package included",
+      "18-inch styled steel wheels",
+      "Daytime Running Lights",
+      "Black heated power outside mirrors",
+      "Entune Audio with 6.1-inch touch-screen",
+      "Integrated backup camera",
+      "Bluetooth wireless technology",
+      "Cruise control"
+    ],
+    "SR5": [
+      "20-inch alloy wheels",
+      "Chrome grille and surround",
+      "Chrome front and rear bumper endcaps",
+      "Fog lights",
+      "Variable intermittent windshield wipers",
+      "Entune Audio Plus with Connected Navigation and 7-inch touch-screen",
+      "HD Radio and SiriusXM All Access Radio",
+      "Integrated Trailer Brake Controller with 5.7L V8"
+    ],
+    "Limited": [
+      "Chrome door handles",
+      "Chrome heated outside mirrors",
+      "Silver billet-style grille insert",
+      "Deck rail system",
+      "Leather-trimmed front bucket seats with center console",
+      "Heated front seats with power driver's seat",
+      "Power sliding rear window",
+      "Dual zone automatic climate control",
+      "Wood-style trim",
+      "Auto-dimming rearview mirror with compass and HomeLink"
+    ],
+    "Platinum": [
+      "20-inch unique design alloy wheels",
+      "Color-keyed grille surround and bumpers",
+      "Chrome heated auto-dimming and power folding mirrors",
+      "LED Daytime Running Lights",
+      "Power tilt/slide moonroof",
+      "Front and rear parking assist sonar",
+      "Brown premium perforated leather-trimmed seats with Ultrasuede inserts",
+      "Heated and ventilated front seats",
+      "Power tilt/telescopic steering wheel with memory",
+      "Entune Premium JBL Audio with Integrated Navigation"
+    ],
+    "1794 Edition": [
+      "Chrome grille and surround",
+      "Chrome front bumper endcaps",
+      "1794 Edition badging",
+      "Western-themed interior",
+      "Brown premium perforated leather-trimmed seats with Ultrasuede inserts",
+      "Wood-style trim including steering wheel and shift knob",
+      "20-inch chrome-clad alloy wheels",
+      "Running boards"
+    ],
+    "TRD Pro": [
+      "18-inch 5-spoke TRD Pro alloy wheels with Michelin P275/65R18 tires",
+      "TRD aluminum front skid plate",
+      "TOYOTA front grille unique to TRD Pro with color-keyed surround",
+      "Matte black lower front bumper with color-keyed endcaps",
+      "Black external hard badges",
+      "Multi-reflector halogen headlights with black sport bezels",
+      "Unique TRD PRO bed stamp",
+      "TRD dual exhaust",
+      "TRD Pro front and rear Bilstein shocks with external remote reservoirs",
+      "TRD Pro leather-trimmed seats with red contrast stitching and TRD Pro logo"
+    ]
+  }
+}
