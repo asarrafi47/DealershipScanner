@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile — Sarrafi Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
+</head>
+<body class="hub-page lp-body">
+
+<div class="page hub-shell">
+
+    {% from '_icons.html' import icon %}
+    {% set nav_active = "profile" %}
+    {% include "_nav_public.html" %}
+
+    <div class="hub-topbar hub-topbar--compact db-reveal">
+        <div class="hub-topbar__copy">
+            <p class="hub-kicker">Account</p>
+            <h1 class="hub-title">Your profile</h1>
+            <p class="hub-lead">Update how you sign in and manage your password.</p>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="secondary-button hub-topbar__back">{{ icon('arrow-left', 16) }} Dashboard</a>
+    </div>
+
+    <main class="hub-main hub-main--compact account-profile">
+
+        <section class="hub-card db-reveal" aria-labelledby="profile-info-heading">
+            <h2 id="profile-info-heading" class="hub-card__title">Profile information</h2>
+            <p class="hub-card__sub">Username and email are used when you sign in.</p>
+
+            {% if profile_success %}
+            <div class="account-profile__ok">Profile updated.</div>
+            {% endif %}
+            {% if profile_error %}
+            <div class="error-box">{{ profile_error }}</div>
+            {% endif %}
+
+            <dl class="account-profile__meta">
+                <div class="account-profile__meta-row">
+                    <dt>Account type</dt>
+                    <dd>{{ role_label }}</dd>
+                </div>
+                {% if is_premium %}
+                <div class="account-profile__meta-row">
+                    <dt>Plan</dt>
+                    <dd>Premium</dd>
+                </div>
+                {% endif %}
+            </dl>
+
+            <form method="POST" action="{{ url_for('account_profile_page') }}" class="auth-form account-profile__form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="form_action" value="profile">
+                <div class="field-group">
+                    <label for="profile-username">Username</label>
+                    <input id="profile-username" type="text" name="username" value="{{ username }}" required autocomplete="username">
+                </div>
+                <div class="field-group">
+                    <label for="profile-email">Email</label>
+                    <input id="profile-email" type="email" name="email" value="{{ email }}" required autocomplete="email">
+                </div>
+                <button type="submit" class="primary-button">Save profile</button>
+            </form>
+        </section>
+
+        <section class="hub-card db-reveal" id="password" aria-labelledby="profile-password-heading">
+            <h2 id="profile-password-heading" class="hub-card__title">Password</h2>
+            <p class="hub-card__sub">Choose a strong password you have not used elsewhere.</p>
+
+            {% if password_success %}
+            <div class="account-profile__ok">Password updated. Use it the next time you sign in.</div>
+            {% endif %}
+            {% if password_error %}
+            <div class="error-box">{{ password_error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('account_profile_page') }}" class="auth-form account-profile__form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="form_action" value="password">
+                {% from '_password_field.html' import password_field %}
+                {{ password_field('current_password', id='current-password', label='Current password', autocomplete='current-password') }}
+                {{ password_field('new_password', id='new-password', label='New password', autocomplete='new-password', minlength=min_password_len) }}
+                {{ password_field('confirm_password', id='confirm-password', label='Confirm new password', autocomplete='new-password', minlength=min_password_len) }}
+                <button type="submit" class="primary-button">Save new password</button>
+            </form>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+</body>
+</html>

@@ -109,6 +109,7 @@ def test_dealer_locator_google_requires_login_in_production(
     monkeypatch.setenv("DEV_USERS_DB_PATH", str(tmp_path / "dev_dl.db"))
     monkeypatch.setenv("ALLOW_DEFAULT_APP_USER", "0")
     monkeypatch.setenv("GOOGLE_MAPS_API_KEY", "fake-key-for-test")
+    monkeypatch.setenv("DEALER_LOCATOR_REQUIRE_LOGIN", "1")
     from conftest import apply_production_credential_encryption_env
 
     apply_production_credential_encryption_env(monkeypatch)

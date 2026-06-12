@@ -45,10 +45,8 @@
                     <input id="admin-login-user" type="text" name="login" required autocomplete="username">
                 </div>
 
-                <div class="field-group">
-                    <label for="admin-login-pass">Password</label>
-                    <input id="admin-login-pass" type="password" name="password" required autocomplete="current-password">
-                </div>
+                {% from '_password_field.html' import password_field %}
+                {{ password_field('password', id='admin-login-pass', label='Password') }}
 
                 <button type="submit" class="primary-button full-width" id="admin-login-submit">Sign in to dev tools</button>
             </form>
@@ -60,6 +58,7 @@
 
 </div>
 
+<script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
 <script nonce="{{ csp_nonce }}">
 (function () {
     const form = document.querySelector(".auth-form--admin");

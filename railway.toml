@@ -1,0 +1,14 @@
+# DealershipScanner (Sarrafi Cars) — Railway deployment
+# Docs: deploy/railway/README.md
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.web"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+# Secrets: Railway kmac-vault (same project). Wire with deploy/railway/sync-vault-to-railway.sh
+numReplicas = 1

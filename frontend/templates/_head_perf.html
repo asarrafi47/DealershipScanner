@@ -1,3 +1,6 @@
 {# Shared head hints for faster first paint and navigation. #}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="preload" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}" as="style">
 <script src="{{ url_for('static', filename='nav_perf.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

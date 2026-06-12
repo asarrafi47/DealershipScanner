@@ -41,10 +41,8 @@
                         <input type="email" name="email" autocomplete="email" required>
                     </div>
 
-                    <div class="field-group">
-                        <label>Password</label>
-                        <input type="password" name="password" required>
-                    </div>
+                    {% from '_password_field.html' import password_field %}
+                    {{ password_field('password', id='register-pass', label='Password', autocomplete='new-password') }}
 
                     <div class="field-group">
                         <label>Plan</label>
@@ -75,5 +73,6 @@
 
     </div>
 
+    <script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

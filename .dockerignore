@@ -18,6 +18,9 @@ car_images/
 node_modules/
 backend/node_modules/
 
+# Local venv (not used inside image)
+.venv/
+
 # Python cache
 __pycache__/
 *.pyc

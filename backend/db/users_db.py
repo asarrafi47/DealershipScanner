@@ -399,6 +399,98 @@ def get_user_by_login(login_input: str) -> dict | None:
     return _user_dict_from_row(row, want)
 
 
+def update_user_profile(user_id: int, username: str, email: str) -> str | None:
+    """Update username and email for a signed-in user. Returns an error message or None."""
+    from backend.utils.registration_validation import (
+        MAX_EMAIL_LEN,
+        MAX_USERNAME_LEN,
+        normalize_registration_email,
+        normalize_registration_username,
+    )
+
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return "Invalid account."
+    if uid <= 0:
+        return "Invalid account."
+
+    uname = normalize_registration_username(username)
+    em = normalize_registration_email(email)
+    if len(uname) < 2:
+        return "Username must be at least 2 characters."
+    if len(uname) > MAX_USERNAME_LEN:
+        return f"Username must be at most {MAX_USERNAME_LEN} characters."
+    if len(em) < 3 or "@" not in em:
+        return "Enter a valid email address."
+    if len(em) > MAX_EMAIL_LEN:
+        return f"Email must be at most {MAX_EMAIL_LEN} characters."
+
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT id FROM users WHERE lower(username) = lower(?) AND id != ?",
+        (uname, uid),
+    )
+    if cursor.fetchone():
+        conn.close()
+        return "That username is already taken."
+    cursor.execute(
+        "SELECT id FROM users WHERE lower(email) = lower(?) AND id != ?",
+        (em, uid),
+    )
+    if cursor.fetchone():
+        conn.close()
+        return "That email is already registered."
+    cursor.execute(
+        "UPDATE users SET username = ?, email = ? WHERE id = ?",
+        (uname, em, uid),
+    )
+    if cursor.rowcount == 0:
+        conn.close()
+        return "Account not found."
+    conn.commit()
+    conn.close()
+    return None
+
+
+def change_user_password(user_id: int, current_password: str, new_password: str) -> str | None:
+    """Verify current password and set a new hash. Returns an error message or None."""
+    from backend.utils.registration_validation import MAX_PASSWORD_LEN
+
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return "Invalid account."
+    if uid <= 0:
+        return "Invalid account."
+    cur_pw = (current_password or "").strip()
+    new_pw = (new_password or "").strip()
+    if not cur_pw or not new_pw:
+        return "Enter your current password and a new password."
+    if len(new_pw) > MAX_PASSWORD_LEN:
+        return f"Password must be at most {MAX_PASSWORD_LEN} characters."
+
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT password FROM users WHERE id = ?", (uid,))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        return "Account not found."
+    stored = row[0]
+    if not verify_or_legacy(cur_pw, stored):
+        conn.close()
+        return "Current password is incorrect."
+    cursor.execute(
+        "UPDATE users SET password = ? WHERE id = ?",
+        (hash_password(new_pw), uid),
+    )
+    conn.commit()
+    conn.close()
+    return None
+
+
 def authenticate_app_user(login_input: str, password: str) -> dict | None:
     """Verify credentials and return the user row, or None."""
     li = (login_input or "").strip()

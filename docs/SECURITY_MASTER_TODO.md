@@ -61,7 +61,7 @@
 | `GET /api/cars/<id>` | No | Public aggregate JSON (same data as `/car/<id>` template context; market intel when paid) |
 | `/dev/*` (dashboard, APIs) | **Yes** — `dev_users.db` via `/dev/login` in production (**SEC-083**); app `role=admin` pass-through only if `ALLOW_APP_ADMIN_DEV_PASS_THROUGH=1` | CSRF on forms + `X-CSRF-Token` on API; POST `/dev/logout`; scanner jobs (`POST /dev/api/test-scanner`, smart-import) require `http`/`https` public URLs (**SEC-068**); includes `POST /dev/api/cars/<id>/spec-backfill` (optional Google CSE env for search tier) |
 | `/dev/manifest`, `/api/dev/*` | `DEV_CONSOLE=1` + **`DEV_CONSOLE_SECRET` required in production** (**SEC-081**) | CSRF on mutations; safe `next` under `/dev/manifest` |
-| `GET /api/dealer-locator` | Public for registry; **login required** in production when `GOOGLE_MAPS_API_KEY` set and Google tier requested (**SEC-085**) | Per-IP rate limit (default 30/min) |
+| `GET /api/dealer-locator` | Public by default (registry + Google); optional `DEALER_LOCATOR_REQUIRE_LOGIN=1` gates Google tier in production (**SEC-085**) | Per-IP rate limit (default 30/min) |
 
 **Intent:** Inventory and smart search stay **public** for this product; `/dev` and manifest console stay **operator-only**. Tighten with app-level login or API keys if you expose the app to untrusted networks.
 
@@ -586,9 +586,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/main.py` (`api_dealer_locator`) |
-| **Outcome** | When `FLASK_ENV=production`, `GOOGLE_MAPS_API_KEY` is set, and client requests Google results (`include_google` default on), `GET /api/dealer-locator` requires `session['user_id']` (**403** `login_required`). Registry-only lookups remain public; per-IP rate limit unchanged. |
+| **Outcome** | `GET /api/dealer-locator` is public by default (registry + Google when key set). Set `DEALER_LOCATOR_REQUIRE_LOGIN=1` in production to return **403** `login_required` for anonymous Google-tier requests. Per-IP rate limit unchanged (default 30/min). |
 | **Validation** | `python -m pytest backend/tests/test_production_security.py::test_dealer_locator_google_requires_login_in_production -q`. |
-| **Last verified** | 2026-05-26 |
+| **Last verified** | 2026-06-12 |
 
 ### SEC-058 — Ollama LLaVA (listing gallery + interior)
 
@@ -840,6 +840,7 @@
 
 | Date (UTC) | Change |
 |------------|--------|
+| 2026-06-12 | **SEC-085:** Dealer locator Google tier public by default in production; optional `DEALER_LOCATOR_REQUIRE_LOGIN=1` restores login gate. `find_dealers.js` retries with `include_google=0` on 403. Validation: `pytest backend/tests/test_production_security.py::test_dealer_locator_google_requires_login_in_production -q`. |
 | 2026-06-02 | **SEC-089–095 (June 2026 deep audit remediation):** DNS-aware dev scanner SSRF; attribute-safe trim ladder + dealer link sanitization; enrichment vision URL guard; dev console secret required in all envs + constant-time login; 14-day session lifetime + password max 128; LLM generic errors + untrusted listing delimiters; smart-search GET rate limit; CSP OSM tiles + `object-src 'none'`; Playwright sandbox default; OAuth state timing-safe; `totp_secret` omitted from default user queries. Validation: `bash scripts/security_check.sh`. |
 | 2026-05-30 | **SEC-082 / SEC-088:** bcrypt cost 13 default + login rehash for weak/legacy hashes; production requires SQLCipher keys + `sqlcipher3` for `users.db` and `dev_users.db`; `ALLOW_UNENCRYPTED_USER_DB` dev-only. Validation: `bash scripts/security_check.sh`. |
 | 2026-05-30 | **SEC-072 / SEC-073 / SEC-031 / SEC-076 (security audit follow-up):** Window sticker PNG preview uses `_require_premium_feature` (login in prod when billing off); compare tray `safeCssBackgroundUrl`; `pip-audit` ignores orphan `chromadb` CVE-2026-45829; redacted demo password from `docs/FULL_AUDIT_MAY2026.md`. Validation: `bash scripts/security_check.sh`. |

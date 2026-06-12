@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-
 :root {
     --main-radius: 10px;
     --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -981,15 +979,140 @@ button.secondary-button {
 }
 
 .field-group input {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
     background: var(--bg-card);
     border: 1px solid var(--border-medium);
     border-radius: 12px;
     padding: 14px 16px;
     color: var(--text);
     font-size: 15px;
+    line-height: 1.25;
     font-family: inherit;
     outline: none;
     transition: border-color 0.2s ease;
+    min-height: 48px;
+}
+
+.field-group--password .password-input-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.field-group--password .password-input-wrap input {
+    width: 100%;
+    padding-right: 2.75rem;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 8px;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    padding: 0;
+    border: none;
+    border-radius: 0.35rem;
+    background: transparent;
+    color: var(--muted, #6b7280);
+    cursor: pointer;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+    color: var(--navy, #1e3a5f);
+    background: rgba(0, 0, 0, 0.04);
+    outline: none;
+}
+
+.password-toggle__icon {
+    display: block;
+}
+
+.password-toggle--revealed .password-toggle__icon {
+    opacity: 0.55;
+}
+
+.auth-section--inline {
+    max-width: 32rem;
+    margin: 2rem auto 3rem;
+    padding: 0 1rem;
+}
+
+.hub-main.account-profile {
+    grid-template-columns: 1fr;
+    max-width: 32rem;
+}
+
+.account-profile .hub-card + .hub-card {
+    margin-top: 0;
+}
+
+.account-profile__form {
+    margin-top: 1.25rem;
+    width: 100%;
+}
+
+.account-profile__form .primary-button {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.account-profile__meta {
+    display: grid;
+    gap: 0.65rem;
+    margin: 1rem 0 0;
+    padding: 0;
+}
+
+.account-profile__meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: baseline;
+}
+
+.account-profile__meta dt {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    min-width: 7rem;
+}
+
+.account-profile__meta dd {
+    margin: 0;
+    font-size: 15px;
+    color: var(--text);
+}
+
+.account-profile__ok {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--ok-border, #2d6a4f);
+    background: var(--ok-bg, #d8f3dc);
+    color: var(--ok-fg, #1b4332);
+    font-size: 14px;
+}
+
+.nav-app-link--user {
+    max-width: 12rem;
+}
+
+.nav-app-link--user .nav-app-user__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .field-group input:focus {

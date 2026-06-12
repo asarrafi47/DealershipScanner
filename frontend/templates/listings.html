@@ -9,7 +9,6 @@
     {% include "_head_perf.html" %}
     <link rel="preload" href="{{ url_for('api_listings_cars') }}" as="fetch" crossorigin="same-origin">
     <link rel="preload" href="{{ url_for('api_listings_geo_coords') }}" as="fetch" crossorigin="same-origin">
-    <link rel="preload" href="{{ url_for('static', filename='car_page.js') }}" as="script">
     <link rel="preload" href="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" as="script">
     <script nonce="{{ csp_nonce }}">
     (function () {

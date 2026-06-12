@@ -78,7 +78,10 @@
 
         {% endif %}
 
-        <span class="nav-app-user" title="{{ logged_in_user }}">{{ icon('user', 16, 'nav-app-link__icon') }}<span class="nav-app-user__name">{{ logged_in_user }}</span></span>
+        <a href="{{ url_for('account_profile_page') }}" class="nav-app-link nav-app-link--user{% if nav_active == 'profile' %} nav-app-link--active{% endif %}" title="Your profile"{% if nav_active == 'profile' %} aria-current="page"{% endif %}>
+            {{ icon('user', 16, 'nav-app-link__icon') }}
+            <span class="nav-app-user__name">{{ logged_in_user }}</span>
+        </a>
 
         {% include "_app_logout.html" %}
 

@@ -4,6 +4,10 @@ from backend.utils.project_env import load_project_dotenv
 
 load_project_dotenv()
 
+from backend.utils.kmac_vault import load_kmac_vault_secrets
+
+load_kmac_vault_secrets()
+
 import gzip
 import inspect
 import json
@@ -55,6 +59,8 @@ from backend.db.user_history_db import (
 )
 from backend.db.users_db import (
     authenticate_app_user,
+    change_user_password,
+    update_user_profile,
     check_user,
     get_user_by_login,
     get_user_profile,
@@ -333,6 +339,8 @@ def _csrf_mutating_requests():
         "login_page",
         "register_page",
         "logout_page",
+        "account_password_page",
+        "account_profile_page",
         "dev.admin_login",
         "dev.admin_register",
         "dev.admin_logout",
@@ -507,6 +515,7 @@ def _csp_header_value_enforced(nonce: str) -> str:
         "img-src 'self' data: https: http: blob:; "
         "font-src 'self' https://fonts.gstatic.com data:; "
         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
+        "style-src-elem 'self' https://fonts.googleapis.com; "
         f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
         "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
         "worker-src 'self'; "
@@ -523,6 +532,7 @@ _CSP_REPORT_ONLY = (
     "img-src 'self' data: https: http: blob:; "
     "font-src 'self' https://fonts.gstatic.com data:; "
     "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
+    "style-src-elem 'self' https://fonts.googleapis.com; "
     "script-src 'self' https://esm.sh; "
     "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
     "worker-src 'self'; "
@@ -717,6 +727,106 @@ def register_page():
 def logout_page():
     session.clear()
     return redirect(url_for("login_page"))
+
+
+def _account_profile_context(uid: int, **extra):
+    u = get_user_profile(int(uid)) or {}
+    role = normalize_role(u.get("role"))
+    role_labels = {
+        "admin": "Site administrator",
+        "general_user": "Member",
+        "dealership_owner": "Dealership owner",
+        "dealership_admin": "Dealership admin",
+        "dealership_member": "Dealership member",
+    }
+    ctx = {
+        "username": (u.get("username") or "").strip(),
+        "email": (u.get("email") or "").strip(),
+        "role": role,
+        "role_label": role_labels.get(role, role.replace("_", " ").title()),
+        "is_premium": bool(u.get("is_premium")),
+        "min_password_len": _MIN_PASSWORD_LEN,
+    }
+    ctx.update(extra)
+    return ctx
+
+
+@app.route("/account/password", methods=["GET", "POST"])
+def account_password_page():
+    """Backward-compatible alias for the password section on the profile page."""
+    if request.method == "POST":
+        return account_profile_page()
+    return redirect(url_for("account_profile_page", _anchor="password"))
+
+
+@app.route("/account/profile", methods=["GET", "POST"])
+def account_profile_page():
+    """Signed-in users can update profile info and change password."""
+    uid = session.get("user_id")
+    if not uid:
+        return redirect(url_for("login_page"))
+    uid = int(uid)
+
+    if request.method == "POST":
+        action = (request.form.get("form_action") or "profile").strip().lower()
+        if action == "password":
+            current_pw = (request.form.get("current_password") or "").strip()
+            new_pw = (request.form.get("new_password") or "").strip()
+            confirm_pw = (request.form.get("confirm_password") or "").strip()
+            if new_pw != confirm_pw:
+                return render_template(
+                    "account_profile.html",
+                    **_account_profile_context(uid, password_error="New passwords do not match."),
+                )
+            from backend.utils.registration_validation import registration_form_error
+
+            u = get_user_profile(uid) or {}
+            fmt_err = registration_form_error(
+                u.get("username") or "user",
+                u.get("email") or "user@local",
+                new_pw,
+                min_password_len=_MIN_PASSWORD_LEN,
+            )
+            if fmt_err:
+                return render_template(
+                    "account_profile.html",
+                    **_account_profile_context(uid, password_error=fmt_err),
+                )
+            err = change_user_password(uid, current_pw, new_pw)
+            if err:
+                return render_template(
+                    "account_profile.html",
+                    **_account_profile_context(uid, password_error=err),
+                )
+            return render_template(
+                "account_profile.html",
+                **_account_profile_context(uid, password_success=True),
+            )
+
+        username_in = (request.form.get("username") or "").strip()
+        email_in = (request.form.get("email") or "").strip()
+        err = update_user_profile(uid, username_in, email_in)
+        if err:
+            return render_template(
+                "account_profile.html",
+                **_account_profile_context(
+                    uid,
+                    profile_error=err,
+                    username=username_in,
+                    email=email_in,
+                ),
+            )
+        sync_env_admin_user_row(uid)
+        u = get_user_profile(uid) or {}
+        session["username"] = u.get("username")
+        session["user_email"] = (u.get("email") or "").strip()
+        session["user_role"] = normalize_role(u.get("role"))
+        return render_template(
+            "account_profile.html",
+            **_account_profile_context(uid, profile_success=True),
+        )
+
+    return render_template("account_profile.html", **_account_profile_context(uid))
 
 
 def _auth_user_payload(u: dict) -> dict:
@@ -2060,8 +2170,15 @@ def api_dealer_locator():
     )
 
     google_key = (os.environ.get("GOOGLE_MAPS_API_KEY") or "").strip()
+    require_login = (os.environ.get("DEALER_LOCATOR_REQUIRE_LOGIN") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
     if (
-        is_production_env()
+        require_login
+        and is_production_env()
         and include_google
         and google_key
         and not session.get("user_id")

@@ -30,10 +30,8 @@
                         <input type="text" name="login" required>
                     </div>
 
-                    <div class="field-group">
-                        <label>Password</label>
-                        <input type="password" name="password" required>
-                    </div>
+                    {% from '_password_field.html' import password_field %}
+                    {{ password_field('password', id='login-pass', label='Password') }}
 
                     <button type="submit" class="primary-button full-width" id="login-submit">Login</button>
                 </form>
@@ -51,6 +49,7 @@
 
     </div>
 
+    <script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
     <script nonce="{{ csp_nonce }}">
     (function () {
         const form = document.querySelector(".auth-form");

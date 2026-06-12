@@ -6,10 +6,6 @@
     <title>Home — Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
     {% include "_head_perf.html" %}
-    {% if recommendations or saved_cars or recently_viewed or recently_compared %}
-    <link rel="preload" href="{{ url_for('static', filename='car_page.js') }}" as="script">
-    <link rel="preload" href="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" as="script">
-    {% endif %}
 </head>
 <body class="db-page">
 

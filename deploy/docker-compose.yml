@@ -1,31 +1,50 @@
-version: "3.9"
+name: dealership-scanner
 
-# Local development stack — mirrors k8s topology without the cluster overhead.
-# Databases live in ./data/ (gitignored). Run: docker compose up -d
+# Local Docker stack. Secrets: container entrypoint + app startup load from kmac vault
+# (host.docker.internal:9999). No .env file required.
+#
+#   ./deploy/up.sh       # build + start
+#   ./deploy/restart.sh  # recreate with vault (no rebuild)
 
 services:
   web:
+    container_name: dealership-scanner-web
     build:
       context: ..
       dockerfile: Dockerfile.web
     image: dealership-web:dev
     ports:
-      - "8000:8000"
+      - "${WEB_PORT:-8000}:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
-      # Mount local data dir so DBs + images persist across restarts
       - ../data/runtime:/data
-      # Hot-reload source (remove for production-parity testing)
       - ..:/app
+      - ${HOME}/.config/kmac/docker-vault-token:/run/secrets/kmac-vault-token:ro
     environment:
       FLASK_ENV: development
+      ALLOW_UNENCRYPTED_USER_DB: "1"
+      PYTHONPATH: /app
+      KMAC_VAULT_AUTO: "1"
+      VAULT_ADDR: http://host.docker.internal:9999
+      VAULT_TOKEN_FILE: /run/secrets/kmac-vault-token
       INVENTORY_DB_PATH: /data/inventory.db
       DEALER_PORTAL_DB_PATH: /data/dealer_portal.db
       USERS_DB_PATH: /data/users.db
       DEV_USERS_DB_PATH: /data/dev_users.db
+      INCOMPLETE_LISTINGS_DB_PATH: /data/incomplete_listings.db
       SCANNER_VDP_IMAGE_DOWNLOAD_DIR: /data/vdp_images
       LISTINGS_INCLUDE_INCOMPLETE_CARS: "0"
-    env_file:
-      - ../.env
+      APP_ADMIN_USERNAMES: ${APP_ADMIN_USERNAMES:-asarrafi}
+      APP_ADMIN_EMAILS: ${APP_ADMIN_EMAILS:-asarrafi@sarraficars.com}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ALLOW_APP_ADMIN_DEV_PASS_THROUGH: ${ALLOW_APP_ADMIN_DEV_PASS_THROUGH:-1}
+      # Optional overrides (vault fills these when unset at startup)
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      SECRET_KEY: ${SECRET_KEY:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     depends_on: []
     restart: unless-stopped
 
@@ -35,16 +54,24 @@ services:
       dockerfile: Dockerfile.scanner
     image: dealership-scanner:dev
     profiles:
-      # Only start with: docker compose --profile scanner up scanner
       - scanner
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ../data/runtime:/data
+      - ${HOME}/.config/kmac/docker-vault-token:/run/secrets/kmac-vault-token:ro
     environment:
+      ALLOW_UNENCRYPTED_USER_DB: "1"
+      PYTHONPATH: /app
+      KMAC_VAULT_AUTO: "1"
+      VAULT_ADDR: http://host.docker.internal:9999
+      VAULT_TOKEN_FILE: /run/secrets/kmac-vault-token
       INVENTORY_DB_PATH: /data/inventory.db
       DEALER_PORTAL_DB_PATH: /data/dealer_portal.db
-    env_file:
-      - ../.env
-    command: ["python", "scanner.py", "--dealer", "all"]
-    # No restart — run on demand
+      USERS_DB_PATH: /data/users.db
+      DEV_USERS_DB_PATH: /data/dev_users.db
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    command: ["python", "scanner.py", "--help"]
 
 volumes: {}

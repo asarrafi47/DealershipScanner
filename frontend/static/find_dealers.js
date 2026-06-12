@@ -249,10 +249,11 @@
                     include_google: "1",
                 });
             }
-            const resp = await fetch("/api/dealer-locator?" + params.toString(), {
+            let resp = await fetch("/api/dealer-locator?" + params.toString(), {
                 headers: { Accept: "application/json" },
+                credentials: "same-origin",
             });
-            const ct = (resp.headers.get("content-type") || "").toLowerCase();
+            let ct = (resp.headers.get("content-type") || "").toLowerCase();
             let data;
             if (ct.includes("application/json")) {
                 data = await resp.json();
@@ -263,6 +264,21 @@
                         : "Dealer search failed on the server. Try again in a moment."
                 );
             }
+            if (
+                resp.status === 403
+                && data.error === "login_required"
+                && params.get("include_google") === "1"
+            ) {
+                params.set("include_google", "0");
+                resp = await fetch("/api/dealer-locator?" + params.toString(), {
+                    headers: { Accept: "application/json" },
+                    credentials: "same-origin",
+                });
+                ct = (resp.headers.get("content-type") || "").toLowerCase();
+                if (ct.includes("application/json")) {
+                    data = await resp.json();
+                }
+            }
             if (!resp.ok || !data.ok) {
                 const err = data.error || "Search failed.";
                 if (err === "location_not_found") {
@@ -272,7 +288,7 @@
                     throw new Error("Too many searches. Please wait a minute and try again.");
                 }
                 if (err === "login_required") {
-                    throw new Error("Sign in to search with Google Places results, or use ZIP / city search.");
+                    throw new Error("Sign in to include Google Places results in this search.");
                 }
                 throw new Error(err);
             }

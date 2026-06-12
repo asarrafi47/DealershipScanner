@@ -26,7 +26,7 @@ COPY . .
 
 EXPOSE 8000
 
-# 1 worker (SQLite is single-writer) + 4 threads (SocketIO threading mode)
-CMD ["gunicorn", "-w", "1", "--threads", "4", "-b", "0.0.0.0:8000", \
-     "--timeout", "120", "--graceful-timeout", "30", \
-     "backend.main:app"]
+RUN chmod +x /app/scripts/docker-entrypoint-web.sh
+
+# Shell entrypoint expands $PORT (Railway) and preloads kmac vault when reachable.
+ENTRYPOINT ["/app/scripts/docker-entrypoint-web.sh"]
