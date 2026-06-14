@@ -8,18 +8,21 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 MIRROR_SECRETS=0
+ALL_SERVICES=0
 VAULT_ADDR="${VAULT_ADDR:-https://kmac-vault-production.up.railway.app}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mirror-secrets) MIRROR_SECRETS=1; shift ;;
+    --all-services) ALL_SERVICES=1; shift ;;
     --vault-addr)
       VAULT_ADDR="${2:?}"
       shift 2
       ;;
     -h|--help)
-      echo "Usage: $0 [--vault-addr URL] [--mirror-secrets]"
+      echo "Usage: $0 [--vault-addr URL] [--mirror-secrets] [--all-services]"
       echo "  Default: set KMAC_VAULT_AUTO, VAULT_ADDR, VAULT_TOKEN, paths, admin config."
+      echo "  --all-services: also wire scanner-worker and scanner-scheduler."
       echo "  --mirror-secrets: also copy Dealer:* values into Railway Variables."
       exit 0
       ;;
@@ -140,3 +143,28 @@ echo "    1. Central kmac-vault is a separate Railway project (public URL above)
 echo "    2. Attach a /data volume on the web service."
 echo "    3. Set PUBLIC_BASE_URL to your Railway domain."
 echo "    4. Deploy: railway up"
+
+if [[ "${ALL_SERVICES:-0}" -eq 1 ]]; then
+  for svc in scanner-worker scanner-scheduler; do
+    echo "==> Configuring Railway ${svc} (vault + Postgres)"
+    railway variable set KMAC_VAULT_AUTO=1 --service "$svc" --skip-deploys
+    railway variables --set "VAULT_ADDR=${VAULT_ADDR}" --service "$svc" --skip-deploys
+    railway variable set VAULT_LOAD_RETRIES=8 --service "$svc" --skip-deploys
+    railway variable set "INVENTORY_DATABASE_URL=\${{Postgres.DATABASE_URL}}" --service "$svc" --skip-deploys
+    railway variable set INVENTORY_DB_PATH=/data/inventory.db --service "$svc" --skip-deploys
+    railway variable set SCANNER_BROWSER_PROFILE_DIR=/data/browser-profiles --service "$svc" --skip-deploys
+    railway variable set SCANNER_VDP_IMAGE_DOWNLOAD_DIR=/data/vdp_images --service "$svc" --skip-deploys
+    railway variable set PYTHONPATH=/app --service "$svc" --skip-deploys
+    if [[ "$svc" == "scanner-worker" ]]; then
+      railway variable set RAILWAY_DOCKERFILE_PATH=Dockerfile.scanner-worker --service "$svc" --skip-deploys
+      railway variable set SCANNER_WORKER_POLL_SEC=10 --service "$svc" --skip-deploys
+    else
+      railway variable set RAILWAY_DOCKERFILE_PATH=Dockerfile.scanner-scheduler --service "$svc" --skip-deploys
+      railway variable set SCANNER_SCHEDULER_INTERVAL_SEC=60 --service "$svc" --skip-deploys
+    fi
+    if [[ -n "${token:-}" ]]; then
+      railway variables --set "VAULT_TOKEN=${token}" --service "$svc" --skip-deploys
+    fi
+    echo "  ${svc}: vault + INVENTORY_DATABASE_URL set"
+  done
+fi
