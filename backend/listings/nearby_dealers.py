@@ -48,6 +48,267 @@ def _active_listing_counts(registry_ids: list[int]) -> dict[int, int]:
     return out
 
 
+def _active_listing_counts_by_dealer_id(dealer_ids: list[str]) -> dict[str, int]:
+    """Active inventory count per scanner ``dealer_id`` slug."""
+    dids = sorted({(d or "").strip().lower() for d in dealer_ids if (d or "").strip()})
+    if not dids:
+        return {}
+
+    from backend.db.inventory_db import get_conn
+
+    placeholders = ",".join("?" * len(dids))
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT lower(trim(dealer_id)) AS did, COUNT(*) AS n
+        FROM cars
+        WHERE COALESCE(listing_active, 1) = 1
+          AND dealer_id IS NOT NULL
+          AND trim(dealer_id) != ''
+          AND lower(trim(dealer_id)) IN ({placeholders})
+        GROUP BY lower(trim(dealer_id))
+        """,
+        dids,
+    )
+    rows = cur.fetchall()
+    conn.close()
+    out: dict[str, int] = {}
+    for did_raw, count_raw in rows:
+        did = (did_raw or "").strip().lower()
+        if not did:
+            continue
+        try:
+            out[did] = int(count_raw)
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def attach_listing_counts(dealers: list[dict[str, Any]]) -> None:
+    """Set ``listing_count`` from registry id and/or website dealer slug."""
+    from backend.dev.dealers import slug_from_url
+
+    registry_ids = [
+        int(d["registry_id"])
+        for d in dealers
+        if d.get("registry_id") is not None
+    ]
+    dealer_ids: list[str] = []
+    for d in dealers:
+        url = (d.get("website_url") or "").strip()
+        if url:
+            slug = slug_from_url(url)
+            if slug and slug != "dealer":
+                dealer_ids.append(slug)
+
+    by_registry = _active_listing_counts(registry_ids)
+    by_dealer_id = _active_listing_counts_by_dealer_id(dealer_ids)
+
+    for d in dealers:
+        count = 0
+        rid = d.get("registry_id")
+        if rid is not None:
+            try:
+                count = max(count, by_registry.get(int(rid), 0))
+            except (TypeError, ValueError):
+                pass
+        url = (d.get("website_url") or "").strip()
+        if url:
+            did = slug_from_url(url)
+            if did:
+                count = max(count, by_dealer_id.get(did, 0))
+        d["listing_count"] = count
+
+
+def _parse_registry_ids(registry_ids: list[int]) -> list[int]:
+    ids: list[int] = []
+    for raw in registry_ids:
+        try:
+            rid = int(raw)
+        except (TypeError, ValueError):
+            continue
+        if rid > 0:
+            ids.append(rid)
+    return ids
+
+
+def _last_inventory_scraped_at(registry_ids: list[int]) -> dict[int, str]:
+    """Latest ``cars.scraped_at`` per registry id (any listing, active or not)."""
+    ids = _parse_registry_ids(registry_ids)
+    if not ids:
+        return {}
+
+    from backend.db.inventory_db import get_conn
+
+    placeholders = ",".join("?" * len(ids))
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT CAST(dealership_registry_id AS INTEGER) AS rid, MAX(scraped_at) AS last_scraped_at
+        FROM cars
+        WHERE dealership_registry_id IS NOT NULL
+          AND CAST(dealership_registry_id AS INTEGER) IN ({placeholders})
+        GROUP BY CAST(dealership_registry_id AS INTEGER)
+        """,
+        ids,
+    )
+    rows = cur.fetchall()
+    conn.close()
+    out: dict[int, str] = {}
+    for rid_raw, ts in rows:
+        if not ts:
+            continue
+        try:
+            out[int(rid_raw)] = str(ts)
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def _last_inventory_scraped_at_by_dealer_id(dealer_ids: list[str]) -> dict[str, str]:
+    """Latest ``cars.scraped_at`` per scanner ``dealer_id`` slug."""
+    dids = sorted({(d or "").strip().lower() for d in dealer_ids if (d or "").strip()})
+    if not dids:
+        return {}
+
+    from backend.db.inventory_db import get_conn
+
+    placeholders = ",".join("?" * len(dids))
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT lower(trim(dealer_id)) AS did, MAX(scraped_at) AS last_scraped_at
+        FROM cars
+        WHERE dealer_id IS NOT NULL
+          AND trim(dealer_id) != ''
+          AND lower(trim(dealer_id)) IN ({placeholders})
+        GROUP BY lower(trim(dealer_id))
+        """,
+        dids,
+    )
+    rows = cur.fetchall()
+    conn.close()
+    out: dict[str, str] = {}
+    for did_raw, ts in rows:
+        did = (did_raw or "").strip().lower()
+        if not did or not ts:
+            continue
+        out[did] = str(ts)
+    return out
+
+
+def _last_catalog_scan_at(
+    *,
+    registry_ids: list[int],
+    dealer_ids: list[str],
+) -> tuple[dict[int, str], dict[str, str]]:
+    """``dealer_catalog.last_scan_at`` keyed by registry id and dealer slug (Postgres only)."""
+    reg_ids = _parse_registry_ids(registry_ids)
+    dids = sorted({(d or "").strip().lower() for d in dealer_ids if (d or "").strip()})
+    if not reg_ids and not dids:
+        return {}, {}
+
+    from backend.db.inventory_pg import is_inventory_postgres, pg_connect
+
+    if not is_inventory_postgres():
+        return {}, {}
+
+    conn = pg_connect()
+    try:
+        cur = conn.cursor()
+        clauses: list[str] = []
+        params: list[Any] = []
+        if reg_ids:
+            clauses.append("registry_id = ANY(%s)")
+            params.append(reg_ids)
+        if dids:
+            clauses.append("dealer_id = ANY(%s)")
+            params.append(dids)
+        cur.execute(
+            f"""
+            SELECT registry_id, dealer_id, last_scan_at
+            FROM dealer_catalog
+            WHERE last_scan_at IS NOT NULL AND ({' OR '.join(clauses)})
+            """,
+            tuple(params),
+        )
+        by_registry: dict[int, str] = {}
+        by_dealer_id: dict[str, str] = {}
+        for reg_raw, did_raw, ts in cur.fetchall():
+            if not ts:
+                continue
+            ts_s = str(ts)
+            if reg_raw is not None:
+                try:
+                    by_registry[int(reg_raw)] = ts_s
+                except (TypeError, ValueError):
+                    pass
+            did = (did_raw or "").strip().lower()
+            if did:
+                by_dealer_id[did] = ts_s
+        return by_registry, by_dealer_id
+    finally:
+        conn.close()
+
+
+def _max_iso_timestamp(*values: str | None) -> str | None:
+    best: str | None = None
+    for raw in values:
+        ts = (raw or "").strip()
+        if not ts:
+            continue
+        if best is None or ts > best:
+            best = ts
+    return best
+
+
+def attach_last_synced_at(dealers: list[dict[str, Any]]) -> None:
+    """Set ``last_synced_at`` on each dealer row (inventory scrape vs catalog scan, latest wins)."""
+    from backend.dev.dealers import slug_from_url
+
+    registry_ids = [
+        int(d["registry_id"])
+        for d in dealers
+        if d.get("registry_id") is not None
+    ]
+    dealer_ids: list[str] = []
+    for d in dealers:
+        url = (d.get("website_url") or "").strip()
+        if url:
+            slug = slug_from_url(url)
+            if slug and slug != "dealer":
+                dealer_ids.append(slug)
+
+    inv_ts = _last_inventory_scraped_at(registry_ids)
+    inv_by_did = _last_inventory_scraped_at_by_dealer_id(dealer_ids)
+    cat_by_reg, cat_by_did = _last_catalog_scan_at(
+        registry_ids=registry_ids,
+        dealer_ids=dealer_ids,
+    )
+
+    for d in dealers:
+        candidates: list[str | None] = []
+        rid = d.get("registry_id")
+        if rid is not None:
+            try:
+                rid_i = int(rid)
+            except (TypeError, ValueError):
+                rid_i = None
+            if rid_i:
+                candidates.append(inv_ts.get(rid_i))
+                candidates.append(cat_by_reg.get(rid_i))
+        url = (d.get("website_url") or "").strip()
+        if url:
+            did = slug_from_url(url)
+            if did:
+                candidates.append(cat_by_did.get(did))
+                candidates.append(inv_by_did.get(did))
+        d["last_synced_at"] = _max_iso_timestamp(*candidates)
+
+
 def _dealers_with_inventory_near(
     lat: float,
     lon: float,

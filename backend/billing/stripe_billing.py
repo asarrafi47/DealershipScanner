@@ -189,3 +189,24 @@ def construct_premium_webhook_event(payload: bytes, sig_header: str) -> dict[str
     evt = stripe.Webhook.construct_event(payload=payload, sig_header=sig_header, secret=secret)
     return dict(evt)
 
+
+def create_customer_portal_session(*, request: Any, customer_id: str) -> dict[str, Any]:
+    """Stripe Billing Portal session for subscription self-service (C3)."""
+    if not billing_enabled():
+        raise RuntimeError("Billing is disabled.")
+    cid = (customer_id or "").strip()
+    if not cid:
+        raise RuntimeError("Stripe customer id is required.")
+    import stripe  # type: ignore
+
+    stripe.api_key = stripe_secret_key()
+    base = base_url_from_request(request)
+    return_url = f"{base}/account/billing"
+    portal = stripe.billing_portal.Session.create(
+        customer=cid,
+        return_url=return_url,
+    )
+    if not isinstance(portal, dict):
+        portal = dict(portal)
+    return portal
+

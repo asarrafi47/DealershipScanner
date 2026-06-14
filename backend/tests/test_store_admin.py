@@ -74,6 +74,7 @@ def test_scope_dealer_staff_by_id():
 def isolated_inventory_db(monkeypatch, tmp_path):
     import backend.db.inventory_db as inv
 
+    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
     p = str(tmp_path / "inv_sa.db")
     monkeypatch.setattr(inv, "DB_PATH", p)
     inv.init_inventory_db()
@@ -110,6 +111,13 @@ def _car_id_for_vin(vin: str) -> int:
     return int(row[0])
 
 
+def test_list_inventory_rows_count(isolated_inventory_db):
+    rows, total = invq.list_inventory_rows({"role": "admin"}, page=1, per_page=10)
+    assert total == 1
+    assert len(rows) == 1
+    assert rows[0]["vin"] == "1HGBH41JXMN109186"
+
+
 def test_car_visible_admin(isolated_inventory_db):
     cid = _car_id_for_vin("1HGBH41JXMN109186")
     assert invq.car_visible_to_profile({"role": "admin"}, cid)
@@ -123,6 +131,7 @@ def test_car_visible_wrong_dealer(isolated_inventory_db):
 def test_record_scan_outcomes(monkeypatch, tmp_path):
     import backend.db.inventory_db as inv
 
+    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
     monkeypatch.setattr(inv, "DB_PATH", str(tmp_path / "scan.db"))
     inv.init_inventory_db()
     n = inv.record_scan_outcomes(
@@ -150,6 +159,7 @@ def test_record_scan_outcomes(monkeypatch, tmp_path):
 def test_export_inventory_headers(monkeypatch, tmp_path):
     import backend.db.inventory_db as inv
 
+    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
     monkeypatch.setattr(inv, "DB_PATH", str(tmp_path / "ex.db"))
     inv.init_inventory_db()
     conn = inv.get_conn()

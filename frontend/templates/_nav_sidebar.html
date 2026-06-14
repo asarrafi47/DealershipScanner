@@ -1,0 +1,132 @@
+{# Signed-in sidebar — role-aware; navigation first, search only when useful. #}
+{% from '_icons.html' import icon %}
+
+{% set ep = request.endpoint or '' if request else '' %}
+{% set site_admin = is_store_admin if is_store_admin is defined else is_admin %}
+{% set store_staff = show_store_ops_nav is defined and show_store_ops_nav %}
+{% set on_admin = ep.startswith('store_admin.') if ep else false %}
+{% set show_sidebar_search = not site_admin and not on_admin %}
+
+<aside class="app-sidebar" id="app-sidebar" aria-label="Main navigation">
+    <div class="app-sidebar__head">
+        <a href="{{ url_for('app_home') }}" class="app-sidebar__logo">Sarrafi Cars</a>
+        <button type="button" class="app-sidebar__close" id="app-sidebar-close" aria-label="Close menu" hidden>&times;</button>
+    </div>
+
+    <nav class="app-sidebar__nav">
+        {% if site_admin %}
+        <p class="app-sidebar__group-label">Admin</p>
+        <a href="{{ url_for('store_admin.admin_site_hub') }}" class="app-sidebar__link app-sidebar__link--admin{% if ep == 'store_admin.admin_site_hub' %} app-sidebar__link--active{% endif %}"
+            {% if ep == 'store_admin.admin_site_hub' %}aria-current="page"{% endif %}>
+            {{ icon('dashboard', 17, 'app-sidebar__icon') }}<span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('store_admin.admin_dealers_hub') }}" class="app-sidebar__link app-sidebar__link--admin{% if ep == 'store_admin.admin_dealers_hub' %} app-sidebar__link--active{% endif %}"
+            {% if ep == 'store_admin.admin_dealers_hub' %}aria-current="page"{% endif %}>
+            {{ icon('dealers', 17, 'app-sidebar__icon') }}<span>Dealer jobs</span>
+        </a>
+        <a href="{{ url_for('store_admin.admin_users_hub') }}" class="app-sidebar__link app-sidebar__link--admin{% if ep == 'store_admin.admin_users_hub' %} app-sidebar__link--active{% endif %}"
+            {% if ep == 'store_admin.admin_users_hub' %}aria-current="page"{% endif %}>
+            {{ icon('user', 17, 'app-sidebar__icon') }}<span>Users</span>
+        </a>
+        <p class="app-sidebar__group-label">Public site</p>
+        <a href="{{ url_for('listings') }}" class="app-sidebar__link{% if nav_active == 'listings' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
+            {{ icon('inventory', 17, 'app-sidebar__icon') }}<span>Browse listings</span>
+        </a>
+        <a href="{{ url_for('find_dealers_page') }}" class="app-sidebar__link{% if nav_active == 'dealers' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'dealers' %}aria-current="page"{% endif %}>
+            {{ icon('dealers', 17, 'app-sidebar__icon') }}<span>Find dealers</span>
+        </a>
+        {% elif store_staff %}
+        <p class="app-sidebar__group-label">Store</p>
+        <a href="{{ url_for('store_admin.admin_home', store=1) }}" class="app-sidebar__link{% if ep == 'store_admin.admin_home' %} app-sidebar__link--active{% endif %}"
+            {% if ep == 'store_admin.admin_home' %}aria-current="page"{% endif %}>
+            {{ icon('dashboard', 17, 'app-sidebar__icon') }}<span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('store_admin.admin_inventory') }}" class="app-sidebar__link{% if ep in ('store_admin.admin_inventory', 'store_admin.admin_inventory_detail') %} app-sidebar__link--active{% endif %}"
+            {% if ep in ('store_admin.admin_inventory', 'store_admin.admin_inventory_detail') %}aria-current="page"{% endif %}>
+            {{ icon('inventory', 17, 'app-sidebar__icon') }}<span>Inventory</span>
+        </a>
+        <a href="{{ url_for('store_admin.admin_scans') }}" class="app-sidebar__link{% if ep == 'store_admin.admin_scans' %} app-sidebar__link--active{% endif %}"
+            {% if ep == 'store_admin.admin_scans' %}aria-current="page"{% endif %}>
+            {{ icon('tools', 17, 'app-sidebar__icon') }}<span>Scan log</span>
+        </a>
+        <p class="app-sidebar__group-label">Shop</p>
+        <a href="{{ url_for('listings') }}" class="app-sidebar__link{% if nav_active == 'listings' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
+            {{ icon('inventory', 17, 'app-sidebar__icon') }}<span>Browse</span>
+        </a>
+        {% else %}
+        <p class="app-sidebar__group-label">Shop</p>
+        <a href="{{ url_for('app_home') }}" class="app-sidebar__link{% if nav_active == 'home' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'home' %}aria-current="page"{% endif %}>
+            {{ icon('home', 17, 'app-sidebar__icon') }}<span>For you</span>
+        </a>
+        <a href="{{ url_for('listings') }}" class="app-sidebar__link{% if nav_active == 'listings' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
+            {{ icon('inventory', 17, 'app-sidebar__icon') }}<span>Browse</span>
+        </a>
+        <a href="{{ url_for('find_dealers_page') }}" class="app-sidebar__link{% if nav_active == 'dealers' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'dealers' %}aria-current="page"{% endif %}>
+            {{ icon('dealers', 17, 'app-sidebar__icon') }}<span>Dealers</span>
+        </a>
+        {% if show_dealer_inventory_nav is defined and show_dealer_inventory_nav %}
+        <a href="/inventory" class="app-sidebar__link{% if nav_active == 'dealer_tools' %} app-sidebar__link--active{% endif %}">
+            {{ icon('tools', 17, 'app-sidebar__icon') }}<span>Dealer portal</span>
+        </a>
+        {% endif %}
+        {% endif %}
+    </nav>
+
+    {% if show_sidebar_search %}
+    <div class="app-sidebar__search">
+        {% include "_nav_search_sidebar.html" %}
+    </div>
+    {% endif %}
+
+    <div class="app-sidebar__foot">
+        {% if has_paid_access is defined and not has_paid_access %}
+        <a href="{{ url_for('premium_page') }}" class="app-sidebar__link app-sidebar__link--premium{% if nav_active == 'premium' %} app-sidebar__link--active{% endif %}">
+            {{ icon('premium', 16, 'app-sidebar__icon') }}<span>Premium</span>
+        </a>
+        {% endif %}
+        <a href="{{ url_for('account_profile_page') }}" class="app-sidebar__link{% if nav_active == 'profile' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'profile' %}aria-current="page"{% endif %}>
+            {{ icon('user', 16, 'app-sidebar__icon') }}<span>{{ logged_in_user }}</span>
+        </a>
+        {% include "_app_logout.html" %}
+    </div>
+</aside>
+<button type="button" class="app-sidebar-toggle" id="app-sidebar-toggle" aria-controls="app-sidebar" aria-expanded="false" aria-label="Open menu">
+    <span class="app-sidebar-toggle__bar"></span>
+    <span class="app-sidebar-toggle__bar"></span>
+    <span class="app-sidebar-toggle__bar"></span>
+</button>
+<div class="app-sidebar-backdrop" id="app-sidebar-backdrop" hidden></div>
+<script nonce="{{ csp_nonce }}">
+(function () {
+    var sidebar = document.getElementById("app-sidebar");
+    var toggle = document.getElementById("app-sidebar-toggle");
+    var backdrop = document.getElementById("app-sidebar-backdrop");
+    var closeBtn = document.getElementById("app-sidebar-close");
+    if (!sidebar || !toggle) return;
+    function openMenu() {
+        document.body.classList.add("app-sidebar-open");
+        toggle.setAttribute("aria-expanded", "true");
+        if (backdrop) backdrop.hidden = false;
+        if (closeBtn) closeBtn.hidden = false;
+    }
+    function closeMenu() {
+        document.body.classList.remove("app-sidebar-open");
+        toggle.setAttribute("aria-expanded", "false");
+        if (backdrop) backdrop.hidden = true;
+        if (closeBtn) closeBtn.hidden = true;
+    }
+    toggle.addEventListener("click", function () {
+        if (document.body.classList.contains("app-sidebar-open")) closeMenu();
+        else openMenu();
+    });
+    if (backdrop) backdrop.addEventListener("click", closeMenu);
+    if (closeBtn) closeBtn.addEventListener("click", closeMenu);
+})();
+</script>

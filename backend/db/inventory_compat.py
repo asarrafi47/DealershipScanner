@@ -1,10 +1,16 @@
-"""SQLite vs PostgreSQL inventory connections (uniform cursor API)."""
+"""PostgreSQL inventory connections (uniform cursor API; SQLite only for pytest)."""
 
 from __future__ import annotations
 
 from typing import Any, Iterator, Literal
 
-from backend.db.inventory_pg import adapt_sql_for_postgres_execute, is_inventory_postgres
+from backend.db.inventory_pg import (
+    _INVENTORY_POSTGRES_REQUIRED_MSG,
+    adapt_sql_for_postgres_execute,
+    assert_inventory_backend_configured,
+    inventory_sqlite_tests_allowed,
+    is_inventory_postgres,
+)
 
 
 class InventoryCursor:
@@ -101,6 +107,9 @@ def open_inventory_connection() -> InventoryConnection:
         from backend.db.inventory_pg import pg_connect
 
         return InventoryConnection(pg_connect(), backend="postgres")
-    from backend.db import inventory_db as invdb
+    assert_inventory_backend_configured()
+    if inventory_sqlite_tests_allowed():
+        from backend.db import inventory_db as invdb
 
-    return InventoryConnection(invdb._sqlite_connect_raw(), backend="sqlite")
+        return InventoryConnection(invdb._sqlite_connect_raw(), backend="sqlite")
+    raise RuntimeError(_INVENTORY_POSTGRES_REQUIRED_MSG)

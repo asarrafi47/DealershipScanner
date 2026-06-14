@@ -36,12 +36,13 @@
                     <button type="submit" class="primary-button full-width" id="login-submit">Login</button>
                 </form>
 
-                {% if google_signin_enabled %}
-                <div class="auth-oauth"{% if not google_signin_visible %} hidden{% endif %}>
-                    <p class="auth-oauth-divider">or</p>
-                    <a href="{{ url_for('google_oauth.start') }}" class="secondary-button full-width">Sign in with Google</a>
-                </div>
+                {% if password_reset_enabled %}
+                <p class="auth-footer" style="margin-top:0.75rem;">
+                    <a href="{{ url_for('forgot_password_page') }}">Forgot password?</a>
+                </p>
                 {% endif %}
+
+                {% include "_oauth_signin.html" %}
 
                 <p class="auth-footer">Don't have an account? <a href="/register">Create one</a></p>
             </div>

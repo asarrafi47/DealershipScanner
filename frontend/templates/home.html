@@ -17,7 +17,7 @@
     <header class="db-hero db-hero--compact db-reveal">
         <div class="db-hero__inner">
             <div class="db-hero__head">
-                <p class="db-hero-eyebrow">Your home</p>
+                <p class="db-hero-eyebrow">For you</p>
                 <h1 class="db-hero-title">
                     {% if logged_in_user %}
                     Welcome back, {{ logged_in_user }}
@@ -25,14 +25,14 @@
                     Welcome back
                     {% endif %}
                 </h1>
-                <p class="db-hero-sub">Recommendations, saved cars, and compare — scroll for your feed.</p>
+                <p class="db-hero-sub">Saved cars, recommendations, and compare — scroll for your feed.</p>
             </div>
             <div class="db-hero__actions">
                 <a href="{{ url_for('listings') }}" class="primary-button db-hero-cta" data-nav-listings>
                     Browse inventory
                     <svg class="db-hero-cta-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
-                <a href="{{ url_for('dashboard') }}" class="secondary-button db-hero-secondary">Dashboard</a>
+                <a href="{{ url_for('dashboard') }}" class="secondary-button db-hero-secondary">Activity &amp; stats</a>
             </div>
         </div>
     </header>

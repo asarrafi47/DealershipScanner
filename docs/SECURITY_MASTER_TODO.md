@@ -834,12 +834,88 @@
 | **Validation** | `python -m pytest backend/tests/test_smart_search.py backend/tests/test_google_oauth.py backend/tests/test_app_security_basics.py -q`. |
 | **Last verified** | 2026-06-02 |
 
+### SEC-096 — Email verification tokens (B1 scaffold)
+
+| Field | Content |
+|-------|---------|
+| **Status** | In progress |
+| **Scope** | `backend/auth/email_verification.py`, `backend/db/users_db.py` (`email_verified_at`, `email_verify_token_hash`), `backend/main.py` (`/verify-email`, `POST /resend-verification`), `backend/auth/app_registration.py`, Google/Apple OAuth create/link |
+| **Outcome** | When `EMAIL_VERIFICATION_ENABLED=1`, password registration stores **hashed** verify tokens (SHA-256 + pepper); plain token only in email link; Resend/SMTP/log delivery via `send_transactional_email`; OAuth users marked verified on create/link; per-IP rate limit on resend (5/hour). Feature **off** by default until operator enables env. |
+| **Validation** | `python -m pytest backend/tests/test_email_verification.py -q`; manual: register with `EMAIL_VERIFICATION_ENABLED=1` + `MFA_DELIVERY_MODE=log` → link in logs; `/verify-email?token=…` sets `email_verified_at`. |
+| **Last verified** | 2026-06-11 |
+
+### SEC-097 — Password reset tokens (B2 scaffold)
+
+| Field | Content |
+|-------|---------|
+| **Status** | In progress |
+| **Scope** | `backend/auth/password_reset.py`, `backend/db/users_db.py` (`password_reset_token_hash`, `password_reset_expires_at`), `backend/main.py` (`/forgot-password`, `/reset-password`), `frontend/templates/login.html` |
+| **Outcome** | When `PASSWORD_RESET_ENABLED=1`, forgot-password stores **hashed** reset tokens with 1-hour expiry; plain token only in email link; generic success message (no email enumeration); OAuth-only accounts skipped; per-IP rate limit on forgot (10/hour). Feature **off** by default. |
+| **Validation** | `python -m pytest backend/tests/test_password_reset.py -q`; manual: `PASSWORD_RESET_ENABLED=1` + `MFA_DELIVERY_MODE=log` → link in logs; reset updates password. |
+| **Last verified** | 2026-06-11 |
+
+### SEC-098 — Site-admin user CRUD (D1)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/dealer/admin/users_hub.py`, `backend/db/users_db.py` (`admin_create_user`, `admin_update_user`, `admin_reset_user_password`, `delete_user_by_id`, `is_active`), `frontend/templates/admin/users.html`, `frontend/templates/admin/user_form.html`, `frontend/templates/_icons.html` |
+| **Outcome** | Site admin (`role=admin`) can list/search users at `/admin/users`; create at `/admin/users/new`; edit role/scope at `/admin/users/<id>/edit`; reset password; suspend/reactivate/delete via CSRF POST. Env-configured admins cannot be deleted or demoted; admins cannot suspend/delete themselves. Suspended users fail password login. Admin UI uses vector icons only (no emoji action buttons). |
+| **Validation** | `python -m pytest backend/tests/test_admin_users.py -q`; manual: login as site admin, create user, change role, reset password, suspend → login denied. |
+| **Last verified** | 2026-06-11 |
+
+### SEC-101 — Site-admin platform dashboard + search analytics
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/dealer/admin/platform_stats.py`, `backend/db/search_analytics_db.py`, `backend/dealer/admin/routes.py` (`/admin/site`), `backend/listings/routes.py`, `backend/main.py` (`api_search_smart`), `frontend/templates/admin/site_hub.html`, `frontend/templates/_nav_sidebar.html` |
+| **Outcome** | Site admin dashboard shows platform health, inventory/dealership/user scale (all three dealer counts), and aggregated search/usage metrics with audience toggle (all / logged-in / anonymous). Search events stored without blocking requests; dashboard shows aggregates only (top queries, makes, states, sources). Site-admin nav slimmed to Dashboard / Dealer jobs / Users; merchandising demoted to debug card. |
+| **Validation** | `python -m pytest backend/tests/test_platform_dashboard.py -q`; manual: login as site admin → `/admin/site`, run a listings search, refresh dashboard. |
+| **Last verified** | 2026-06-14 |
+
+### SEC-099 — Stripe Customer Portal (C3 scaffold)
+
+| Field | Content |
+|-------|---------|
+| **Status** | In progress |
+| **Scope** | `backend/billing/stripe_billing.py` (`create_customer_portal_session`), `backend/main.py` (`/account/billing`, `/account/billing/portal`), `frontend/templates/account_billing.html` |
+| **Outcome** | Signed-in users view plan/features at `/account/billing`; portal redirect only when `BILLING_STRIPE_ENABLED=1` and their own `premium_stripe_customer_id` is set (no cross-user customer ids). |
+| **Validation** | `python -m pytest backend/tests/test_billing_portal.py -q`; manual: grant test user `premium_stripe_customer_id`, open portal link with Stripe keys configured. |
+| **Last verified** | 2026-06-11 |
+
+### SEC-102 — Postgres-only inventory (no SQLite fallback)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/db/inventory_pg.py`, `backend/db/inventory_compat.py`, `backend/db/inventory_db.py`, `backend/main.py`, `backend/utils/production_security.py`, `deploy/up.sh`, `deploy/docker-compose.yml`, `frontend/templates/admin/site_hub.html` |
+| **Outcome** | Runtime requires `INVENTORY_DATABASE_URL` (postgresql://). SQLite inventory fallback disabled except `INVENTORY_SQLITE_TESTS=1` in pytest. `./deploy/up.sh` always starts Postgres + web + workers; dashboard shows **Postgres required** instead of SQLite when misconfigured. |
+| **Validation** | `python -m pytest backend/tests/test_inventory_postgres_required.py backend/tests/test_store_admin.py backend/tests/test_platform_dashboard.py -q`; app without `INVENTORY_DATABASE_URL` raises at startup. |
+| **Last verified** | 2026-06-14 |
+
+### SEC-103 — Site-admin bootstrap must not overwrite UI password changes
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `scripts/bootstrap_site_admin.py`, `scripts/docker-entrypoint-web.sh`, `backend/db/admin_users_db.py`, `backend/utils/bootstrap_policy.py`, `deploy/up.sh` |
+| **Outcome** | Startup bootstrap promotes env admins but **does not** reset existing passwords from `ADMIN_PASSWORD` in `users.db` (site admin) or `dev_users.db` (`/dev` admin). Password sync runs only for **new** admin rows or when `BOOTSTRAP_FORCE_ADMIN_PASSWORD=1`. Admin UI password resets persist across restarts and `import backend.main` reloads. Host `deploy/up.sh` no longer runs duplicate bootstrap (web entrypoint owns it). |
+| **Validation** | `python -m pytest backend/tests/test_bootstrap_site_admin.py backend/tests/test_init_admin_db.py -q` |
+| **Last verified** | 2026-06-14 |
+
 ---
 
 ## Changelog
 
 | Date (UTC) | Change |
 |------------|--------|
+| 2026-06-14 | **SEC-103:** Startup bootstrap no longer overwrites existing site-admin or `/dev` admin passwords; vault sync only on new admin or `BOOTSTRAP_FORCE_ADMIN_PASSWORD=1`; removed duplicate host bootstrap from `deploy/up.sh`. Validation: `pytest backend/tests/test_bootstrap_site_admin.py backend/tests/test_init_admin_db.py -q`. |
+| 2026-06-14 | **SEC-102:** Postgres-only inventory — fail fast without `INVENTORY_DATABASE_URL`; Docker stack always includes Postgres; pytest uses `INVENTORY_SQLITE_TESTS=1`. Validation: `pytest backend/tests/test_inventory_postgres_required.py -q`. |
+| 2026-06-11 | **SEC-099:** C3 Stripe Customer Portal scaffold — `/account/billing` + portal redirect using session user's `premium_stripe_customer_id` only. Validation: `python -m pytest backend/tests/test_billing_portal.py -q`. |
+| 2026-06-11 | **SEC-098:** D1 `/admin/users` full CRUD — create/edit/role/scope/password-reset/delete + list suspend/activate; env-admin guards; vector icon actions in `users.html` / `user_form.html`. Validation: `python -m pytest backend/tests/test_admin_users.py -q`. |
+| 2026-06-11 | **SEC-097:** B2 password reset scaffold — hashed tokens + expiry in `users.db`, `/forgot-password` + `/reset-password`, anti-enumeration response, OAuth accounts skipped; gated by `PASSWORD_RESET_ENABLED` (default off). Validation: `python -m pytest backend/tests/test_password_reset.py -q`. |
+| 2026-06-11 | **SEC-096:** B1 email verification scaffold — hashed verify tokens in `users.db`, `/verify-email` + `POST /resend-verification`, Resend/log delivery, OAuth users auto-verified; gated by `EMAIL_VERIFICATION_ENABLED` (default off). Validation: `python -m pytest backend/tests/test_email_verification.py -q`. |
 | 2026-06-12 | **SEC-085:** Dealer locator Google tier public by default in production; optional `DEALER_LOCATOR_REQUIRE_LOGIN=1` restores login gate. `find_dealers.js` retries with `include_google=0` on 403. Validation: `pytest backend/tests/test_production_security.py::test_dealer_locator_google_requires_login_in_production -q`. |
 | 2026-06-02 | **SEC-089–095 (June 2026 deep audit remediation):** DNS-aware dev scanner SSRF; attribute-safe trim ladder + dealer link sanitization; enrichment vision URL guard; dev console secret required in all envs + constant-time login; 14-day session lifetime + password max 128; LLM generic errors + untrusted listing delimiters; smart-search GET rate limit; CSP OSM tiles + `object-src 'none'`; Playwright sandbox default; OAuth state timing-safe; `totp_secret` omitted from default user queries. Validation: `bash scripts/security_check.sh`. |
 | 2026-05-30 | **SEC-082 / SEC-088:** bcrypt cost 13 default + login rehash for weak/legacy hashes; production requires SQLCipher keys + `sqlcipher3` for `users.db` and `dev_users.db`; `ALLOW_UNENCRYPTED_USER_DB` dev-only. Validation: `bash scripts/security_check.sh`. |

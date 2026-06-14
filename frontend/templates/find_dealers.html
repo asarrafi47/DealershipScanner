@@ -8,83 +8,126 @@
     {% include "_head_perf.html" %}
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
 </head>
-<body class="find-dealers-page">
+<body class="find-dealers-page app-layout-body">
 
-<div class="page">
+<div class="page page--app-layout">
 
     {% set nav_active = "dealers" %}
     {% include "_nav_public.html" %}
 
-    <section class="find-dealers-section find-dealers-section--compact">
-        <header class="find-dealers-header find-dealers-header--compact">
-            <h1>Find dealers</h1>
-            <p class="find-dealers-lead">Map + list. Green = in our database with live inventory.</p>
+    <section class="find-dealers-section">
+        <header class="find-dealers-hero">
+            <p class="db-eyebrow">Dealer locator</p>
+            <div class="find-dealers-hero__row">
+                <div>
+                    <h1 class="find-dealers-hero__title">Find dealers</h1>
+                    <p class="find-dealers-hero__lead">Search by location, then explore dealers on the map or in the list.</p>
+                </div>
+                <div class="find-dealers-hero__legend" aria-label="Map legend">
+                    <span class="find-dealers-legend-chip find-dealers-legend-chip--db">
+                        <span class="find-dealers-dot" aria-hidden="true"></span> In our database
+                    </span>
+                    <span class="find-dealers-legend-chip find-dealers-legend-chip--google">
+                        <span class="find-dealers-dot" aria-hidden="true"></span> Google only
+                    </span>
+                </div>
+            </div>
+            {% if site_admin_onboard and dealer_onboard_enabled %}
+            <p class="find-dealers-hero__admin">Site admin: use <strong>Request scrape</strong> on Google-only dealers to queue onboarding.</p>
+            {% endif %}
         </header>
 
-        <form id="find-dealers-form" class="find-dealers-form find-dealers-form--compact" autocomplete="off">
-            <fieldset class="find-dealers-location-modes">
+        <form id="find-dealers-form" class="find-dealers-form" autocomplete="off">
+            <fieldset class="find-dealers-location-modes find-dealers-mode-tabs" role="radiogroup" aria-label="Location type">
                 <legend class="sr-only">Location</legend>
-                <label class="find-dealers-mode">
+                <label class="find-dealers-mode find-dealers-mode-tab">
                     <input type="radio" name="loc_mode" value="geo" checked>
-                    <span>Use my location</span>
+                    <span>My location</span>
                 </label>
-                <label class="find-dealers-mode">
+                <label class="find-dealers-mode find-dealers-mode-tab">
                     <input type="radio" name="loc_mode" value="zip">
                     <span>ZIP code</span>
                 </label>
-                <label class="find-dealers-mode">
+                <label class="find-dealers-mode find-dealers-mode-tab">
                     <input type="radio" name="loc_mode" value="city">
                     <span>City &amp; state</span>
                 </label>
             </fieldset>
 
-            <div class="find-dealers-fields">
-                <div id="find-dealers-panel-geo" class="find-dealers-panel">
-                    <p class="find-dealers-hint">We use your browser location only when you search. You can deny permission and switch to ZIP or city.</p>
-                </div>
-                <div id="find-dealers-panel-zip" class="find-dealers-panel" hidden>
-                    <label class="find-dealers-label" for="find-dealers-zip">ZIP code</label>
-                    <input id="find-dealers-zip" name="zip" type="text" inputmode="numeric" maxlength="10" placeholder="e.g. 28217" class="find-dealers-input">
-                </div>
-                <div id="find-dealers-panel-city" class="find-dealers-panel" hidden>
-                    <div class="find-dealers-city-row">
-                        <label class="find-dealers-label" for="find-dealers-city">City</label>
-                        <input id="find-dealers-city" name="city" type="text" placeholder="Charlotte" class="find-dealers-input">
+            <div class="find-dealers-form__body">
+                <div class="find-dealers-fields">
+                    <div id="find-dealers-panel-geo" class="find-dealers-panel find-dealers-panel--geo">
+                        <p class="find-dealers-hint">We only read your browser location when you search. Deny permission and use ZIP or city instead.</p>
                     </div>
-                    <div class="find-dealers-city-row find-dealers-city-row--state">
-                        <label class="find-dealers-label" for="find-dealers-state">State</label>
-                        <input id="find-dealers-state" name="state" type="text" maxlength="2" placeholder="NC" class="find-dealers-input find-dealers-input--state">
+                    <div id="find-dealers-panel-zip" class="find-dealers-panel" hidden>
+                        <label class="find-dealers-label" for="find-dealers-zip">ZIP code</label>
+                        <input id="find-dealers-zip" name="zip" type="text" inputmode="numeric" maxlength="10" placeholder="e.g. 37405" class="find-dealers-input">
+                    </div>
+                    <div id="find-dealers-panel-city" class="find-dealers-panel find-dealers-panel--city" hidden>
+                        <div class="find-dealers-city-row">
+                            <label class="find-dealers-label" for="find-dealers-city">City</label>
+                            <input id="find-dealers-city" name="city" type="text" placeholder="Chattanooga" class="find-dealers-input">
+                        </div>
+                        <div class="find-dealers-city-row find-dealers-city-row--state">
+                            <label class="find-dealers-label" for="find-dealers-state">State</label>
+                            <input id="find-dealers-state" name="state" type="text" maxlength="2" placeholder="TN" class="find-dealers-input find-dealers-input--state">
+                        </div>
                     </div>
                 </div>
-                <div class="find-dealers-radius-row">
-                    <label class="find-dealers-label" for="find-dealers-radius">Radius (miles)</label>
-                    <select id="find-dealers-radius" name="radius" class="find-dealers-select">
-                        <option value="10">10 mi</option>
-                        <option value="25" selected>25 mi</option>
-                        <option value="50">50 mi</option>
-                    </select>
+
+                <div class="find-dealers-form__actions">
+                    <div class="find-dealers-radius-row">
+                        <label class="find-dealers-label" for="find-dealers-radius">Radius</label>
+                        <select id="find-dealers-radius" name="radius" class="find-dealers-select">
+                            <option value="10">10 mi</option>
+                            <option value="25" selected>25 mi</option>
+                            <option value="50">50 mi</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="primary-button find-dealers-submit" id="find-dealers-submit">Search dealers</button>
                 </div>
             </div>
 
-            <button type="submit" class="primary-button find-dealers-submit" id="find-dealers-submit">Search dealers</button>
             <p id="find-dealers-status" class="find-dealers-status" role="status" aria-live="polite"></p>
         </form>
 
-        <div class="find-dealers-legend" id="find-dealers-legend" hidden>
+        <div class="find-dealers-legend find-dealers-legend--results" id="find-dealers-legend" hidden>
             <span class="find-dealers-legend-item find-dealers-legend-item--db"><span class="find-dealers-dot"></span> In our database</span>
             <span class="find-dealers-legend-item find-dealers-legend-item--google"><span class="find-dealers-dot"></span> Google only</span>
+            {% if site_admin_onboard and dealer_onboard_enabled %}
+            <span class="find-dealers-legend-item find-dealers-legend-item--admin">Site admin: use <strong>Request scrape</strong> on Google dealers</span>
+            {% endif %}
         </div>
 
-        <div class="find-dealers-results" id="find-dealers-results" hidden>
-            <div id="find-dealers-map" class="find-dealers-map" role="application" aria-label="Dealer map"></div>
-            <aside class="find-dealers-list-wrap">
-                <h2 class="find-dealers-list-title">Dealers <span id="find-dealers-count"></span></h2>
-                <ul id="find-dealers-list" class="find-dealers-list"></ul>
+        <div class="find-dealers-stage" id="find-dealers-stage">
+            <div class="find-dealers-map-shell">
+                <div id="find-dealers-map-placeholder" class="find-dealers-map-placeholder" aria-hidden="true"></div>
+                <div id="find-dealers-map" class="find-dealers-map" role="application" aria-label="Dealer map"></div>
+            </div>
+            <aside class="find-dealers-sidebar">
+                <div id="find-dealers-sidebar-empty" class="find-dealers-sidebar-empty">
+                    <p class="find-dealers-empty__title">Search to see dealers nearby</p>
+                    <p class="find-dealers-empty__sub">Results appear on the map with a scrollable list. Green markers are already in Sarrafi inventory.</p>
+                </div>
+                <div id="find-dealers-sidebar-results" class="find-dealers-list-wrap" hidden>
+                    <div class="find-dealers-list-head">
+                        <h2 class="find-dealers-list-title">Dealers <span id="find-dealers-count" class="find-dealers-list-count"></span></h2>
+                    </div>
+                    <ul id="find-dealers-list" class="find-dealers-list"></ul>
+                </div>
             </aside>
         </div>
     </section>
 
 </div>
+
+{% if site_admin_onboard %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+<script type="application/json" id="ds-find-dealers-admin" nonce="{{ csp_nonce }}">{{ {
+    "site_admin": true,
+    "onboard_enabled": dealer_onboard_enabled,
+} | tojson }}</script>
+{% endif %}
 
 <script nonce="{{ csp_nonce }}">
     window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";

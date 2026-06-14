@@ -22,6 +22,7 @@ from flask import (
     Blueprint,
     abort,
     flash,
+    g,
     redirect,
     render_template,
     request,
@@ -98,15 +99,48 @@ def _ctx():
         "admin_profile": p,
         "is_store_admin": (p or {}).get("role") == "admin",
         "csrf_token": ensure_csrf_token(),
+        "csp_nonce": getattr(g, "csp_nonce", "") or "",
     }
+
+
+@store_admin_bp.route("/site")
+def admin_site_hub():
+    """Site admin landing — platform health, scale metrics, usage analytics."""
+    p = _session_profile()
+    assert p
+    role = (p.get("role") or "").strip().lower()
+    if role != "admin":
+        flash("Site admin console requires a site admin account.", "error")
+        return redirect(url_for("store_admin.admin_home"))
+
+    audience = (request.args.get("usage_audience") or "all").strip().lower()
+    if audience not in ("all", "authenticated", "anonymous"):
+        audience = "all"
+    try:
+        usage_days = int(request.args.get("usage_days") or 30)
+    except (TypeError, ValueError):
+        usage_days = 30
+    usage_days = max(7, min(90, usage_days))
+
+    from backend.dealer.admin.platform_stats import build_platform_dashboard
+
+    dashboard = build_platform_dashboard(usage_audience=audience, usage_days=usage_days)
+    return render_template(
+        "admin/site_hub.html",
+        dashboard=dashboard,
+        usage_audience=audience,
+        usage_days=usage_days,
+    )
 
 
 @store_admin_bp.route("/")
 def admin_home():
     p = _session_profile()
     assert p
-    dash = invq.dashboard_summary(p)
     role_l = (p.get("role") or "").strip().lower()
+    if role_l == "admin" and request.args.get("store") != "1":
+        return redirect(url_for("store_admin.admin_site_hub"))
+    dash = invq.dashboard_summary(p)
     scans = list_scan_runs(
         dealer_id=(p.get("dealer_id") or "").strip() if role_l != "admin" else None,
         limit=8,

@@ -1,0 +1,667 @@
+{% extends "admin/base_admin.html" %}
+{% from '_icons.html' import icon %}
+{% block title %}Site admin{% endblock %}
+{% block extra_head %}
+<style>
+    .platform-dash {
+        max-width: 1180px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .platform-hero {
+        padding: 4px 0 8px;
+    }
+
+    .platform-hero__title {
+        font-size: clamp(26px, 3vw, 34px);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--text);
+        margin: 0 0 8px;
+    }
+
+    .platform-hero__lead {
+        margin: 0;
+        max-width: 42rem;
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--text-muted);
+    }
+
+    .platform-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        padding: 20px 22px 22px;
+        box-shadow: 0 1px 2px rgba(28, 53, 82, 0.04), 0 8px 24px rgba(28, 53, 82, 0.04);
+    }
+
+    .platform-panel__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px 16px;
+        margin-bottom: 18px;
+    }
+
+    .platform-panel__title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.01em;
+    }
+
+    .platform-panel__title .sc-icon {
+        color: var(--navy);
+        opacity: 0.85;
+    }
+
+    .platform-panel__sub {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .platform-health {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        align-items: center;
+    }
+
+    .platform-health__item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .platform-health__dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
+    }
+
+    .platform-health__dot--ok { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18); }
+    .platform-health__dot--warn { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18); }
+    .platform-health__dot--bad { background: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16); }
+
+    .platform-health__meta {
+        width: 100%;
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .platform-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+        gap: 12px;
+    }
+
+    .platform-metric {
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-light);
+        min-height: 78px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .platform-metric:hover {
+        border-color: var(--border-medium);
+        transform: translateY(-1px);
+    }
+
+    .platform-metric__value {
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        color: var(--text);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .platform-metric__label {
+        font-size: 12px;
+        line-height: 1.35;
+        color: var(--text-muted);
+    }
+
+    .platform-metric--highlight {
+        background: linear-gradient(145deg, rgba(28, 53, 82, 0.06) 0%, rgba(28, 53, 82, 0.02) 100%);
+        border-color: rgba(28, 53, 82, 0.14);
+    }
+
+    .platform-metric--highlight .platform-metric__value {
+        color: var(--navy);
+    }
+
+    .platform-subgroup {
+        margin-top: 18px;
+    }
+
+    .platform-subgroup:first-child {
+        margin-top: 0;
+    }
+
+    .platform-subgroup__label {
+        margin: 0 0 10px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+    }
+
+    .platform-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .platform-toolbar label {
+        display: grid;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+    }
+
+    .platform-toolbar select {
+        min-width: 132px;
+        padding: 9px 32px 9px 11px;
+        border-radius: 10px;
+        border: 1px solid var(--border-medium);
+        background: var(--bg-card) var(--select-chevron) no-repeat right 12px center;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        appearance: none;
+    }
+
+    .platform-toolbar button {
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .platform-insights {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .platform-insight {
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border-light);
+        background: var(--bg-elevated);
+        min-height: 160px;
+    }
+
+    .platform-insight__title {
+        margin: 0 0 12px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+
+    .platform-insight__empty {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-faint);
+        font-style: italic;
+    }
+
+    .platform-rank {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .platform-rank li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        font-size: 13px;
+    }
+
+    .platform-rank__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--text);
+    }
+
+    .platform-rank__bar-wrap {
+        grid-column: 1 / -1;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(28, 53, 82, 0.08);
+        overflow: hidden;
+    }
+
+    .platform-rank__bar {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--navy) 0%, #3d5f82 100%);
+    }
+
+    .platform-rank__count {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--navy);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .platform-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+    }
+
+    .platform-action {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 16px 16px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border-light);
+        background: var(--bg-elevated);
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+    }
+
+    .platform-action:hover {
+        border-color: rgba(28, 53, 82, 0.22);
+        background: var(--bg-card);
+        box-shadow: 0 10px 28px rgba(28, 53, 82, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .platform-action__icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        background: var(--navy-soft);
+        color: var(--navy);
+    }
+
+    .platform-action__body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .platform-action__title {
+        margin: 0 0 4px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .platform-action__sub {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.45;
+        color: var(--text-muted);
+    }
+
+    .platform-action__arrow {
+        flex-shrink: 0;
+        margin-top: 2px;
+        color: var(--text-faint);
+        transition: transform 0.18s ease, color 0.18s ease;
+    }
+
+    .platform-action:hover .platform-action__arrow {
+        color: var(--navy);
+        transform: translateX(2px);
+    }
+
+    @media (max-width: 640px) {
+        .platform-panel {
+            padding: 16px;
+            border-radius: 14px;
+        }
+
+        .platform-metrics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .platform-metric__value {
+            font-size: 22px;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+{% set h = dashboard.health %}
+{% set inv = dashboard.inventory %}
+{% set u = dashboard.users %}
+{% set eng = dashboard.engagement %}
+{% set usage = dashboard.usage %}
+<div class="platform-dash">
+    <header class="platform-hero">
+        <p class="db-eyebrow">Site administration</p>
+        <h1 class="platform-hero__title">Platform dashboard</h1>
+        <p class="platform-hero__lead">
+            Operator view for site health, inventory scale, accounts, and search usage.
+            Merchandising and consumer “For you” stay in member and dealer tools.
+        </p>
+    </header>
+
+    <section class="platform-panel" aria-labelledby="health-heading">
+        <div class="platform-panel__head">
+            <h2 class="platform-panel__title" id="health-heading">{{ icon('shield', 18) }} Site health</h2>
+        </div>
+        <div class="platform-health">
+            <span class="platform-health__item">
+                <span class="platform-health__dot platform-health__dot--ok" aria-hidden="true"></span>
+                Web OK
+            </span>
+            {% if h.postgres == 'ok' %}
+            <span class="platform-health__item">
+                <span class="platform-health__dot platform-health__dot--ok" aria-hidden="true"></span>
+                Postgres OK
+            </span>
+            {% elif h.postgres == 'misconfigured' %}
+            <span class="platform-health__item">
+                <span class="platform-health__dot platform-health__dot--bad" aria-hidden="true"></span>
+                Postgres required
+            </span>
+            {% else %}
+            <span class="platform-health__item">
+                <span class="platform-health__dot platform-health__dot--bad" aria-hidden="true"></span>
+                Postgres {{ h.postgres }}
+            </span>
+            {% endif %}
+            {% if h.active_jobs %}
+            <span class="platform-health__item">
+                <span class="platform-health__dot platform-health__dot--warn" aria-hidden="true"></span>
+                {{ h.active_jobs }} active job{{ 's' if h.active_jobs != 1 else '' }}
+            </span>
+            {% endif %}
+            {% if h.failed_jobs_24h %}
+            <span class="platform-health__item">
+                <span class="platform-health__dot platform-health__dot--bad" aria-hidden="true"></span>
+                {{ h.failed_jobs_24h }} failed (24h)
+            </span>
+            {% endif %}
+            {% if h.last_scrape_at %}
+            <p class="platform-health__meta">Latest dealer scrape: {{ h.last_scrape_at[:19] | replace('T', ' · ') }} UTC</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="platform-panel" aria-labelledby="scale-heading">
+        <div class="platform-panel__head">
+            <h2 class="platform-panel__title" id="scale-heading">{{ icon('inventory', 18) }} Inventory &amp; scale</h2>
+        </div>
+        <div class="platform-subgroup">
+            <p class="platform-subgroup__label">Inventory</p>
+            <div class="platform-metrics">
+                <div class="platform-metric platform-metric--highlight">
+                    <span class="platform-metric__value">{{ inv.active_cars | default(0) }}</span>
+                    <span class="platform-metric__label">Active cars</span>
+                </div>
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ inv.inactive_cars | default(0) }}</span>
+                    <span class="platform-metric__label">Inactive cars</span>
+                </div>
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ inv.dealers_in_inventory | default(0) }}</span>
+                    <span class="platform-metric__label">Dealers in inventory</span>
+                </div>
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ dashboard.registry_dealerships | default(0) }}</span>
+                    <span class="platform-metric__label">Registry dealerships</span>
+                </div>
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ dashboard.catalog_dealerships | default(0) }}</span>
+                    <span class="platform-metric__label">Job catalog</span>
+                </div>
+            </div>
+        </div>
+        <div class="platform-subgroup">
+            <p class="platform-subgroup__label">Accounts</p>
+            <div class="platform-metrics">
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ u.total | default(0) }}</span>
+                    <span class="platform-metric__label">Users</span>
+                </div>
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ u.active | default(0) }}</span>
+                    <span class="platform-metric__label">Active users</span>
+                </div>
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ u.new_7d | default(0) }}</span>
+                    <span class="platform-metric__label">New users (7d)</span>
+                </div>
+                <div class="platform-metric">
+                    <span class="platform-metric__value">{{ u.premium | default(0) }}</span>
+                    <span class="platform-metric__label">Premium</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="platform-panel" aria-labelledby="usage-heading">
+        <div class="platform-panel__head">
+            <div>
+                <h2 class="platform-panel__title" id="usage-heading">{{ icon('chart', 18) }} Search &amp; usage</h2>
+                <p class="platform-panel__sub">Last {{ usage_days }} days{% if usage_audience != 'all' %} · {{ usage_audience }}{% endif %}</p>
+            </div>
+            <form method="get" class="platform-toolbar">
+                <label>
+                    Audience
+                    <select name="usage_audience">
+                        <option value="all" {% if usage_audience == 'all' %}selected{% endif %}>All traffic</option>
+                        <option value="authenticated" {% if usage_audience == 'authenticated' %}selected{% endif %}>Logged in</option>
+                        <option value="anonymous" {% if usage_audience == 'anonymous' %}selected{% endif %}>Anonymous</option>
+                    </select>
+                </label>
+                <label>
+                    Window
+                    <select name="usage_days">
+                        <option value="7" {% if usage_days == 7 %}selected{% endif %}>7 days</option>
+                        <option value="30" {% if usage_days == 30 %}selected{% endif %}>30 days</option>
+                        <option value="90" {% if usage_days == 90 %}selected{% endif %}>90 days</option>
+                    </select>
+                </label>
+                <button type="submit" class="secondary-button">Apply</button>
+            </form>
+        </div>
+        <div class="platform-metrics">
+            <div class="platform-metric">
+                <span class="platform-metric__value">{{ usage.total_searches | default(0) }}</span>
+                <span class="platform-metric__label">Searches</span>
+            </div>
+            <div class="platform-metric">
+                <span class="platform-metric__value">{{ usage.zero_result_searches | default(0) }}</span>
+                <span class="platform-metric__label">Zero results</span>
+            </div>
+            {% if usage_audience == 'all' %}
+            <div class="platform-metric">
+                <span class="platform-metric__value">{{ usage.logged_in_searches | default(0) }}</span>
+                <span class="platform-metric__label">Logged-in searches</span>
+            </div>
+            <div class="platform-metric">
+                <span class="platform-metric__value">{{ usage.anonymous_searches | default(0) }}</span>
+                <span class="platform-metric__label">Anonymous searches</span>
+            </div>
+            {% endif %}
+            <div class="platform-metric platform-metric--highlight">
+                <span class="platform-metric__value">{{ eng.vdp_views | default(0) }}</span>
+                <span class="platform-metric__label">VDP views</span>
+            </div>
+            <div class="platform-metric">
+                <span class="platform-metric__value">{{ eng.compare_events | default(0) }}</span>
+                <span class="platform-metric__label">Compares</span>
+            </div>
+            <div class="platform-metric">
+                <span class="platform-metric__value">{{ eng.saved_cars | default(0) }}</span>
+                <span class="platform-metric__label">Saved cars (total)</span>
+            </div>
+        </div>
+        <div class="platform-insights">
+            <div class="platform-insight">
+                <h3 class="platform-insight__title">Top queries</h3>
+                {% if usage.top_queries %}
+                {% set max_q = usage.top_queries[0].count %}
+                <ul class="platform-rank">
+                    {% for item in usage.top_queries %}
+                    <li>
+                        <span class="platform-rank__label">{{ item.query }}</span>
+                        <span class="platform-rank__count">{{ item.count }}</span>
+                        <span class="platform-rank__bar-wrap" aria-hidden="true">
+                            <span class="platform-rank__bar" style="width: {{ (100 * item.count / max_q) | round | int }}%;"></span>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="platform-insight__empty">No searches recorded yet.</p>
+                {% endif %}
+            </div>
+            <div class="platform-insight">
+                <h3 class="platform-insight__title">Top makes</h3>
+                {% if usage.top_makes %}
+                {% set max_m = usage.top_makes[0].count %}
+                <ul class="platform-rank">
+                    {% for item in usage.top_makes %}
+                    <li>
+                        <span class="platform-rank__label">{{ item.make }}</span>
+                        <span class="platform-rank__count">{{ item.count }}</span>
+                        <span class="platform-rank__bar-wrap" aria-hidden="true">
+                            <span class="platform-rank__bar" style="width: {{ (100 * item.count / max_m) | round | int }}%;"></span>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="platform-insight__empty">No filter data yet.</p>
+                {% endif %}
+            </div>
+            <div class="platform-insight">
+                <h3 class="platform-insight__title">Top states</h3>
+                {% if usage.top_states %}
+                {% set max_s = usage.top_states[0].count %}
+                <ul class="platform-rank">
+                    {% for item in usage.top_states %}
+                    <li>
+                        <span class="platform-rank__label">{{ item.state }}</span>
+                        <span class="platform-rank__count">{{ item.count }}</span>
+                        <span class="platform-rank__bar-wrap" aria-hidden="true">
+                            <span class="platform-rank__bar" style="width: {{ (100 * item.count / max_s) | round | int }}%;"></span>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="platform-insight__empty">No ZIP/state data yet.</p>
+                {% endif %}
+            </div>
+            <div class="platform-insight">
+                <h3 class="platform-insight__title">By source</h3>
+                {% if usage.by_source %}
+                {% set max_src = usage.by_source.values() | max %}
+                <ul class="platform-rank">
+                    {% for src, n in usage.by_source.items() %}
+                    <li>
+                        <span class="platform-rank__label">{{ src }}</span>
+                        <span class="platform-rank__count">{{ n }}</span>
+                        <span class="platform-rank__bar-wrap" aria-hidden="true">
+                            <span class="platform-rank__bar" style="width: {{ (100 * n / max_src) | round | int }}%;"></span>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="platform-insight__empty">No source breakdown yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="platform-panel" aria-labelledby="actions-heading">
+        <div class="platform-panel__head">
+            <h2 class="platform-panel__title" id="actions-heading">{{ icon('tools', 18) }} Operator actions</h2>
+        </div>
+        <div class="platform-actions">
+            <a href="{{ url_for('store_admin.admin_dealers_hub') }}" class="platform-action">
+                <span class="platform-action__icon">{{ icon('dealers', 18) }}</span>
+                <span class="platform-action__body">
+                    <p class="platform-action__title">Dealer jobs</p>
+                    <p class="platform-action__sub">Onboarding queue, scrape status, catalog.</p>
+                </span>
+                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+            </a>
+            <a href="{{ url_for('store_admin.admin_users_hub') }}" class="platform-action">
+                <span class="platform-action__icon">{{ icon('user', 18) }}</span>
+                <span class="platform-action__body">
+                    <p class="platform-action__title">App users</p>
+                    <p class="platform-action__sub">Accounts, roles, passwords, suspend.</p>
+                </span>
+                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+            </a>
+            <a href="{{ url_for('find_dealers_page') }}" class="platform-action">
+                <span class="platform-action__icon">{{ icon('building', 18) }}</span>
+                <span class="platform-action__body">
+                    <p class="platform-action__title">Find dealers</p>
+                    <p class="platform-action__sub">Map search — request scrape from grey markers.</p>
+                </span>
+                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+            </a>
+            <a href="{{ url_for('store_admin.admin_home', store=1) }}" class="platform-action">
+                <span class="platform-action__icon">{{ icon('dashboard', 18) }}</span>
+                <span class="platform-action__body">
+                    <p class="platform-action__title">Store ops</p>
+                    <p class="platform-action__sub">Merchandising KPIs and scan history for all dealers.</p>
+                </span>
+                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+            </a>
+            <a href="{{ url_for('dev.dev_dashboard') }}" class="platform-action">
+                <span class="platform-action__icon">{{ icon('tools', 18) }}</span>
+                <span class="platform-action__body">
+                    <p class="platform-action__title">Dev scanner lab</p>
+                    <p class="platform-action__sub">Smart Import, manifests, test scans.</p>
+                </span>
+                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

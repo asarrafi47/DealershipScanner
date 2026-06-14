@@ -1,0 +1,214 @@
+{% extends "admin/base_admin.html" %}
+{% from '_icons.html' import icon %}
+{% block title %}{% if form_mode == 'create' %}New user{% else %}Edit user{% endif %}{% endblock %}
+{% block extra_head %}
+<style>
+    .user-form { max-width: 640px; }
+    .user-form__back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 16px;
+        color: var(--navy);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .user-form__back:hover { text-decoration: underline; }
+    .user-form__grid {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+    .user-form__field label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--text);
+    }
+    .user-form__field input,
+    .user-form__field select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-medium);
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+    .user-form__hint {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+    .user-form__section {
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-light);
+    }
+    .user-form__section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0 0 14px;
+        color: var(--text);
+    }
+    .user-form__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 20px;
+    }
+    .user-form__danger {
+        margin-top: 32px;
+        padding-top: 20px;
+        border-top: 1px solid #fecaca;
+    }
+    .icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border-medium);
+        background: var(--bg-card);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .icon-button:hover { background: var(--navy-soft); border-color: var(--navy); color: var(--navy); }
+    .icon-button--primary {
+        background: var(--navy);
+        border-color: var(--navy);
+        color: #fff;
+    }
+    .icon-button--primary:hover { background: var(--navy-deep); color: #fff; }
+    .icon-button--danger {
+        border-color: #fecaca;
+        color: #991b1b;
+        background: #fef2f2;
+    }
+    .icon-button--danger:hover { background: #fee2e2; }
+    .icon-button--icon-only {
+        padding: 8px;
+        min-width: 36px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="user-form">
+    <a href="{{ url_for('store_admin.admin_users_hub') }}" class="user-form__back">
+        {{ icon('arrow-left', 16) }} Back to users
+    </a>
+
+    <h1 class="db-section-title">
+        {% if form_mode == 'create' %}Create user{% else %}Edit {{ user.username }}{% endif %}
+    </h1>
+
+    <form method="post" class="user-form__grid" action="{% if form_mode == 'create' %}{{ url_for('store_admin.admin_users_new') }}{% else %}{{ url_for('store_admin.admin_users_edit', user_id=user.id) }}{% endif %}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="action" value="save">
+
+        <div class="user-form__field">
+            <label for="user-username">Username</label>
+            <input type="text" id="user-username" name="username" required maxlength="128"
+                value="{{ (form_data.username if form_data else user.username if user else '') | e }}">
+        </div>
+        <div class="user-form__field">
+            <label for="user-email">Email</label>
+            <input type="email" id="user-email" name="email" required maxlength="254"
+                value="{{ (form_data.email if form_data else user.email if user else '') | e }}">
+        </div>
+        <div class="user-form__field">
+            <label for="user-role">{{ icon('shield', 14) }} Role</label>
+            <select id="user-role" name="role" required>
+                {% set current_role = (form_data.role if form_data else user.role if user else 'general_user') %}
+                {% for r in role_choices %}
+                <option value="{{ r }}" {% if current_role == r %}selected{% endif %}>
+                    {{ role_labels.get(r, r) }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="user-form__field">
+            <label for="user-dealer-id">Dealer ID (optional)</label>
+            <input type="text" id="user-dealer-id" name="dealer_id" maxlength="128"
+                value="{{ (form_data.dealer_id if form_data else user.dealer_id if user and user.dealer_id else '') | e }}">
+            <p class="user-form__hint">Store staff scope — e.g. <code>toyota-cleveland</code></p>
+        </div>
+        <div class="user-form__field">
+            <label for="user-registry-id">Dealership registry ID (optional)</label>
+            <input type="number" id="user-registry-id" name="dealership_registry_id" min="1" step="1"
+                value="{{ (form_data.dealership_registry_id if form_data else user.dealership_registry_id if user and user.dealership_registry_id else '') | e }}">
+        </div>
+
+        {% if form_mode == 'create' %}
+        <div class="user-form__field">
+            <label for="user-password">{{ icon('key', 14) }} Password</label>
+            <input type="password" id="user-password" name="password" required minlength="{{ min_password_len }}" maxlength="128" autocomplete="new-password">
+            <p class="user-form__hint">Minimum {{ min_password_len }} characters.</p>
+        </div>
+        {% endif %}
+
+        <div class="user-form__actions">
+            <button type="submit" class="icon-button icon-button--primary">
+                {{ icon('check', 16) }}
+                {% if form_mode == 'create' %}Create user{% else %}Save changes{% endif %}
+            </button>
+        </div>
+    </form>
+
+    {% if form_mode == 'edit' and user %}
+    <section class="user-form__section" aria-labelledby="reset-password-heading">
+        <h2 class="user-form__section-title" id="reset-password-heading">
+            {{ icon('key', 18) }} Reset password
+        </h2>
+        {% if user.has_oauth %}
+        <p class="user-form__hint">This account also has OAuth linked; setting a password enables email login.</p>
+        {% endif %}
+        <form method="post" class="user-form__grid" action="{{ url_for('store_admin.admin_users_edit', user_id=user.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="action" value="reset_password">
+            <div class="user-form__field">
+                <label for="new-password">New password</label>
+                <input type="password" id="new-password" name="new_password" required minlength="{{ min_password_len }}" maxlength="128" autocomplete="new-password">
+            </div>
+            <div class="user-form__field">
+                <label for="new-password-confirm">Confirm password</label>
+                <input type="password" id="new-password-confirm" name="new_password_confirm" required minlength="{{ min_password_len }}" maxlength="128" autocomplete="new-password">
+            </div>
+            <div class="user-form__actions">
+                <button type="submit" class="icon-button">
+                    {{ icon('key', 16) }} Set password
+                </button>
+            </div>
+        </form>
+    </section>
+
+    {% if user.id != self_user_id %}
+    <section class="user-form__danger" aria-labelledby="delete-user-heading">
+        <h2 class="user-form__section-title" id="delete-user-heading">
+            {{ icon('trash', 18) }} Delete account
+        </h2>
+        <p class="user-form__hint">Permanently removes this user and their saved vehicles. Cannot be undone.</p>
+        <form method="post" action="{{ url_for('store_admin.admin_users_edit', user_id=user.id) }}"
+            onsubmit="return confirm('Delete user #{{ user.id }} ({{ user.username }})? This cannot be undone.');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="action" value="delete">
+            <button type="submit" class="icon-button icon-button--danger">
+                {{ icon('trash', 16) }} Delete user
+            </button>
+        </form>
+    </section>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

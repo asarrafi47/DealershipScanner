@@ -104,6 +104,8 @@ def migrate(*, dry_run: bool = False) -> dict[str, int]:
                 logger.warning("Skip %s (not in Postgres schema)", table)
                 continue
             use_cols = [c for c in sq_cols if c in pg_cols]
+            if table == "cars":
+                use_cols = [c for c in use_cols if c != "id"]
             if not use_cols:
                 logger.warning("Skip %s (no overlapping columns)", table)
                 continue

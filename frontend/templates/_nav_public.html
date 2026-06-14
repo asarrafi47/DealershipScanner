@@ -1,14 +1,11 @@
-{# Router: app nav when signed in, marketing nav for guests. nav_active: home | listings | dashboard | dealers | premium | login | register | compare #}
-
-{% from '_icons.html' import icon %}
+{# Router: navy left sidebar (guest + signed-in). nav_active: home | listings | dealers | premium | profile | login | register #}
 
 {% if logged_in_user %}
 
-{% include '_nav_app.html' %}
+{% include '_nav_sidebar.html' %}
 
 {% else %}
 
-{% include '_nav_marketing.html' %}
+{% include '_nav_sidebar_guest.html' %}
 
 {% endif %}
-

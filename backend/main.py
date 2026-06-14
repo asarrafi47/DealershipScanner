@@ -25,9 +25,23 @@ from flask import Flask, abort, g, jsonify, make_response, redirect, render_temp
 from werkzeug.exceptions import HTTPException
 
 from backend.intelligence.ai.agent import run_car_page_chat, run_compare_chat
+from backend.auth.apple_oauth import apple_oauth_configured, apple_signin_visible
+from backend.auth.apple_oauth import bp as apple_oauth_bp
 from backend.auth.google_oauth import bp as google_oauth_bp
 from backend.auth.google_oauth import google_oauth_configured, google_signin_visible
 from backend.billing.routes import bp as billing_bp
+from backend.billing.catalog import (
+    FEATURE_AI_CAR_CHAT,
+    FEATURE_AI_COMPARE_CHAT,
+    FEATURE_MARKET_INTEL,
+    FEATURE_NEARBY_DEALERS,
+    FEATURE_PACKAGES_ENSURE,
+    FEATURE_VEHICLE_HISTORY,
+    FEATURE_WINDOW_STICKER,
+    get_plan,
+    minimum_plan_for_feature,
+)
+from backend.billing.entitlements import entitlements_from_session, require_feature as billing_require_feature
 from backend.dealer.admin import store_admin_bp
 from backend.dealer.routes import bp as dealer_portal_bp
 from backend.dev.console import register_dev_console
@@ -205,6 +219,10 @@ from backend.utils.production_security import assert_production_security_config
 
 assert_production_security_config()
 
+from backend.db.inventory_pg import assert_inventory_backend_configured
+
+assert_inventory_backend_configured()
+
 init_users_db()
 init_admin_db()
 init_inventory_db()
@@ -251,6 +269,7 @@ app.register_blueprint(store_admin_bp)
 app.register_blueprint(dealer_portal_bp)
 app.register_blueprint(billing_bp)
 app.register_blueprint(google_oauth_bp)
+app.register_blueprint(apple_oauth_bp)
 register_dev_console(app)
 
 
@@ -286,23 +305,48 @@ def inject_csrf_and_flags():
     except OSError:
         pass
     _is_admin = is_admin_role(role)
+    store_ops_nav = False
+    uid = session.get("user_id")
+    if uid and not _is_admin:
+        try:
+            from backend.db.users_db import get_user_profile
+
+            prof = get_user_profile(int(uid))
+            if prof:
+                store_ops_nav = bool(
+                    (prof.get("dealer_id") or "").strip()
+                    or prof.get("dealership_registry_id")
+                )
+        except (TypeError, ValueError):
+            store_ops_nav = False
     return {
         "csrf_token": ensure_csrf_token(),
         "csp_nonce": getattr(g, "csp_nonce", "") or "",
         "is_production": is_production_env(),
         "logged_in_user": session.get("username") or session.get("admin_username"),
         "is_admin": _is_admin,
+        "is_store_admin": _is_admin,
         "has_paid_access": _session_has_paid_access(),
         "billing_stripe_enabled": _billing_enabled(),
         "show_dealer_inventory_nav": bool(session.get("user_id"))
         and is_dealer_portal_role(session.get("user_role")),
+        "show_store_ops_nav": store_ops_nav,
         "static_cache_ver": static_ver,
         "personal_home_url": (
             url_for("app_home") if session.get("user_id") else url_for("home")
         ),
         "google_signin_enabled": google_oauth_configured(),
         "google_signin_visible": google_signin_visible(),
+        "apple_signin_enabled": apple_oauth_configured(),
+        "apple_signin_visible": apple_signin_visible(),
+        "password_reset_enabled": _password_reset_enabled(),
     }
+
+
+def _password_reset_enabled() -> bool:
+    from backend.auth.password_reset import password_reset_enabled
+
+    return password_reset_enabled()
 
 
 def _billing_enabled() -> bool:
@@ -339,6 +383,10 @@ def _csrf_mutating_requests():
         "login_page",
         "register_page",
         "logout_page",
+        "verify_email_page",
+        "resend_verification",
+        "forgot_password_page",
+        "reset_password_page",
         "account_password_page",
         "account_profile_page",
         "dev.admin_login",
@@ -367,6 +415,9 @@ def _csrf_mutating_requests():
         "api_auth_login",
         "api_auth_register",
         "api_auth_logout",
+        "api_admin_dealer_onboard",
+        "api_admin_dealer_job_retry",
+        "api_admin_dealer_job_smart_retry",
     ):
         validate_csrf_header()
     return None
@@ -402,7 +453,7 @@ def _serve_car_window_sticker_preview(car_id: int):
     car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         abort(404)
-    ok, _err = _require_premium_feature()
+    ok, _err = _require_feature(FEATURE_WINDOW_STICKER)
     if not ok:
         abort(403)
     from backend.enrichment.window_sticker_service import (
@@ -451,6 +502,36 @@ def _viewer_sees_premium_features() -> bool:
     return False
 
 
+def _require_feature(feature_id: str) -> tuple[bool, str]:
+    """Per-plan feature gate (C1). Returns (ok, error_code)."""
+    if _dev_operator_grants_premium():
+        return True, ""
+    uid = session.get("user_id")
+    if not uid:
+        if _billing_enabled() or is_production_env():
+            return False, "login_required"
+    if not _billing_enabled():
+        return True, ""
+    ok, err = billing_require_feature(session, feature_id)
+    if not ok and err == "feature_required":
+        return False, "premium_required"
+    return ok, err
+
+
+def _feature_denied_json(feature_id: str, err: str, **extra: Any) -> dict[str, Any]:
+    """403 JSON with upgrade hint when billing blocks a feature (C4)."""
+    body: dict[str, Any] = {"ok": False, "error": err, **extra}
+    if err == "premium_required":
+        plan_id = minimum_plan_for_feature(feature_id)
+        if plan_id:
+            plan = get_plan(plan_id)
+            body["required_feature"] = feature_id
+            body["upgrade_plan_id"] = plan_id
+            body["upgrade_plan_name"] = plan.name if plan else plan_id
+            body["upgrade_url"] = url_for("premium_page") + f"?plan={plan_id}"
+    return body
+
+
 def _require_premium_feature() -> tuple[bool, str]:
     """
     Paid surfaces require login in production; when Stripe billing is enabled, also require
@@ -479,6 +560,8 @@ def _billing_gate_paid_routes():
     if ep in ("login_page", "register_page", "logout_page", "favicon"):
         return None
     if str(ep).startswith("google_oauth."):
+        return None
+    if str(ep).startswith("apple_oauth."):
         return None
     if str(ep).startswith("dev.") or str(ep).startswith("billing."):
         return None
@@ -575,9 +658,18 @@ def page_not_found(_exc):
     return render_template("not_found.html"), 404
 
 
+def _app_version() -> str:
+    version_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "VERSION")
+    try:
+        with open(version_path, encoding="utf-8") as fh:
+            return (fh.read() or "").strip() or "dev"
+    except OSError:
+        return "dev"
+
+
 @app.route("/health")
 def health():
-    return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "ok", "version": _app_version()}), 200
 
 
 @app.route("/favicon.ico")
@@ -717,10 +809,106 @@ def register_page():
             session["post_auth_intent"] = "premium"
         if not _finalize_app_session(int(uid)):
             return render_template("register.html", error="Registration failed. Try again.")
+        from backend.auth.email_verification import user_needs_email_verification
+
+        if user_needs_email_verification(int(uid)):
+            session["email_verify_notice"] = True
         if wants_premium:
             return _post_login_redirect()
         return redirect(url_for("dashboard"))
     return render_template("register.html")
+
+
+@app.route("/verify-email")
+def verify_email_page():
+    from backend.auth.email_verification import verify_email_token
+
+    token = (request.args.get("token") or "").strip()
+    ok, message = verify_email_token(token)
+    return render_template("verify_email.html", ok=ok, message=message)
+
+
+@app.route("/resend-verification", methods=["POST"])
+def resend_verification():
+    uid = session.get("user_id")
+    if not uid:
+        return redirect(url_for("login_page"))
+    ip = _client_ip()
+    if not allow_request(f"resend_verify:{ip}", max_events=5, window_seconds=3600.0):
+        return render_template("verify_email.html", ok=False, message="Too many requests. Try again later."), 429
+    from backend.auth.email_verification import (
+        issue_and_send_verification_email,
+        user_needs_email_verification,
+    )
+    from backend.db.users_db import get_user_profile
+
+    if not user_needs_email_verification(int(uid)):
+        return render_template(
+            "verify_email.html",
+            ok=True,
+            message="Your email is already verified.",
+        )
+    profile = get_user_profile(int(uid)) or {}
+    email = (profile.get("email") or "").strip()
+    if not issue_and_send_verification_email(user_id=int(uid), to_email=email):
+        return render_template(
+            "verify_email.html",
+            ok=False,
+            message="Could not send verification email. Try again later.",
+        ), 503
+    return render_template(
+        "verify_email.html",
+        ok=True,
+        message="Verification email sent. Check your inbox.",
+    )
+
+
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password_page():
+    from backend.auth.password_reset import password_reset_enabled, request_password_reset
+
+    if not password_reset_enabled():
+        return render_template(
+            "forgot_password.html",
+            error="Password reset is not enabled on this site.",
+        ), 503
+    if request.method == "POST":
+        ip = _client_ip()
+        if not allow_request(f"forgot_pw:{ip}", max_events=10, window_seconds=3600.0):
+            return render_template(
+                "forgot_password.html",
+                error="Too many requests. Try again later.",
+            ), 429
+        request_password_reset(login_input=request.form.get("login", ""))
+        return render_template(
+            "forgot_password.html",
+            success=True,
+            message="If an account exists for that username or email, we sent reset instructions.",
+        )
+    return render_template("forgot_password.html")
+
+
+@app.route("/reset-password", methods=["GET", "POST"])
+def reset_password_page():
+    from backend.auth.password_reset import complete_password_reset, password_reset_enabled
+
+    if not password_reset_enabled():
+        return render_template(
+            "reset_password.html",
+            error="Password reset is not enabled on this site.",
+        ), 503
+    token = (request.args.get("token") or request.form.get("token") or "").strip()
+    if request.method == "POST":
+        ok, message = complete_password_reset(
+            token=token,
+            new_password=(request.form.get("new_password") or "").strip(),
+        )
+        if ok:
+            return render_template("reset_password.html", ok=True, message=message)
+        return render_template("reset_password.html", error=message, token=token)
+    if not token:
+        return render_template("reset_password.html", error="Missing reset token.")
+    return render_template("reset_password.html", token=token)
 
 
 @app.route("/logout", methods=["POST"])
@@ -827,6 +1015,65 @@ def account_profile_page():
         )
 
     return render_template("account_profile.html", **_account_profile_context(uid))
+
+
+@app.route("/account/billing")
+def account_billing_page():
+    """Plan summary and Stripe Customer Portal entry (C3 scaffold)."""
+    uid = session.get("user_id")
+    if not uid:
+        return redirect(url_for("login_page", next="/account/billing"))
+    uid = int(uid)
+    from backend.billing.catalog import get_plan
+    from backend.billing.entitlements import FEATURE_LABELS, entitlements_from_session
+    from backend.billing.stripe_billing import billing_enabled
+    from backend.db.users_db import get_user_billing_snapshot
+
+    billing = get_user_billing_snapshot(uid) or {}
+    plan_id = (billing.get("subscription_plan_id") or "").strip().lower()
+    if not plan_id:
+        plan_id = "complete" if billing.get("is_premium") else "free"
+    plan = get_plan(plan_id)
+    feats = sorted(entitlements_from_session(session))
+    feat_labels = [FEATURE_LABELS.get(f, f.replace("_", " ").title()) for f in feats]
+    has_portal = bool(
+        billing_enabled()
+        and (billing.get("premium_stripe_customer_id") or "").strip()
+    )
+    return render_template(
+        "account_billing.html",
+        billing_enabled=billing_enabled(),
+        plan=plan,
+        plan_id=plan_id,
+        is_premium=bool(billing.get("is_premium")),
+        feature_labels=feat_labels,
+        has_portal=has_portal,
+        stripe_configured=billing_enabled(),
+    )
+
+
+@app.route("/account/billing/portal")
+def account_billing_portal():
+    uid = session.get("user_id")
+    if not uid:
+        return redirect(url_for("login_page", next="/account/billing"))
+    from backend.billing.stripe_billing import billing_enabled, create_customer_portal_session
+    from backend.db.users_db import get_user_billing_snapshot
+
+    if not billing_enabled():
+        return redirect(url_for("account_billing_page"))
+    billing = get_user_billing_snapshot(int(uid)) or {}
+    customer_id = (billing.get("premium_stripe_customer_id") or "").strip()
+    if not customer_id:
+        return redirect(url_for("account_billing_page"))
+    try:
+        portal = create_customer_portal_session(request=request, customer_id=customer_id)
+        url = (portal.get("url") or "").strip()
+        if url:
+            return redirect(url)
+    except Exception:
+        _logger.exception("customer portal session failed user_id=%s", uid)
+    return redirect(url_for("account_billing_page"))
 
 
 def _auth_user_payload(u: dict) -> dict:
@@ -977,6 +1224,10 @@ def _finalize_app_session(user_id: int) -> bool:
     u = get_user_profile(uid)
     if not u:
         return False
+    from backend.db.users_db import _user_row_is_active
+
+    if not _user_row_is_active(u):
+        return False
     session["user_id"] = int(u["id"])
     session["username"] = u["username"]
     session["user_email"] = (u.get("email") or "").strip()
@@ -986,6 +1237,8 @@ def _finalize_app_session(user_id: int) -> bool:
     session["user_dealership_registry_id"] = str(int(rid)) if rid is not None else ""
     session["org_id"] = int(u.get("org_id") or 0) if u.get("org_id") else 0
     session["user_is_premium"] = bool(u.get("is_premium"))
+    session["subscription_plan_id"] = (u.get("subscription_plan_id") or "").strip() or None
+    session["entitlements"] = sorted(entitlements_from_session(session))
     for _stale in (
         "mfa_pending_user_id",
         "mfa_pending_login",
@@ -1345,9 +1598,9 @@ def api_listings_cars():
 @app.route("/api/listings/market-stats")
 def api_listings_market_stats():
     """Trim-level average prices for premium listings grid (cached server-side)."""
-    ok, err = _require_premium_feature()
+    ok, err = _require_feature(FEATURE_MARKET_INTEL)
     if not ok:
-        return jsonify({"ok": False, "error": err}), 403
+        return jsonify(_feature_denied_json(FEATURE_MARKET_INTEL, err)), 403
     from backend.listings.geo_session import listings_geo_kwargs_from_session
     from backend.utils.market_price import trim_price_stats_for_client
 
@@ -1850,9 +2103,9 @@ def api_car_detail(car_id):
 @app.route("/api/cars/<int:car_id>/window-sticker")
 def api_car_window_sticker(car_id: int):
     """Serve stored OEM window sticker PDF (premium only)."""
-    ok, err = _require_premium_feature()
+    ok, err = _require_feature(FEATURE_WINDOW_STICKER)
     if not ok:
-        return jsonify({"ok": False, "error": err}), 403
+        return jsonify(_feature_denied_json(FEATURE_WINDOW_STICKER, err)), 403
     car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
@@ -1920,9 +2173,9 @@ def api_car_nhtsa_recalls(car_id: int):
 @app.route("/api/cars/<int:car_id>/vehicle-history-intelligence", methods=["GET"])
 def api_car_vehicle_history_intelligence(car_id: int):
     """NHTSA recalls + vPIC validation + listing title flags (premium; no Carfax)."""
-    ok, err = _require_premium_feature()
+    ok, err = _require_feature(FEATURE_VEHICLE_HISTORY)
     if not ok:
-        return jsonify({"ok": False, "error": err}), 403
+        return jsonify(_feature_denied_json(FEATURE_VEHICLE_HISTORY, err)), 403
     car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         return jsonify({"ok": False, "error": "not_found"}), 404
@@ -1936,9 +2189,9 @@ def api_car_vehicle_history_intelligence(car_id: int):
 @app.route("/api/cars/<int:car_id>/packages/ensure", methods=["POST"])
 def api_car_packages_ensure(car_id: int):
     """Fetch/analyze window sticker and merge packages (premium only)."""
-    ok, err = _require_premium_feature()
+    ok, err = _require_feature(FEATURE_PACKAGES_ENSURE)
     if not ok:
-        return jsonify({"ok": False, "error": err}), 403
+        return jsonify(_feature_denied_json(FEATURE_PACKAGES_ENSURE, err)), 403
     try:
         validate_csrf_header()
     except HTTPException:
@@ -2010,9 +2263,9 @@ def api_car_packages_ensure(car_id: int):
 @app.route("/api/nearby-dealers")
 def api_nearby_dealers():
     """Return dealerships within radius of a ZIP code (max 50 mi). Premium when billing enabled."""
-    ok, err = _require_premium_feature()
+    ok, err = _require_feature(FEATURE_NEARBY_DEALERS)
     if not ok:
-        return jsonify({"ok": False, "error": err, "dealers": []}), 403
+        return jsonify(_feature_denied_json(FEATURE_NEARBY_DEALERS, err, dealers=[])), 403
     from backend.listings.nearby_dealers import resolve_nearby_dealers_for_listings
 
     zip_code = (request.args.get("zip_code") or "").strip()
@@ -2033,7 +2286,14 @@ def api_nearby_dealers():
 
 @app.route("/find-dealers")
 def find_dealers_page():
-    return render_template("find_dealers.html")
+    from backend.db.inventory_pg import is_inventory_postgres
+    from backend.utils.roles import is_admin_role
+
+    return render_template(
+        "find_dealers.html",
+        site_admin_onboard=is_admin_role(session.get("user_role")),
+        dealer_onboard_enabled=is_inventory_postgres(),
+    )
 
 
 def _nhtsa_recalls_lookup_payload(
@@ -2198,6 +2458,179 @@ def api_dealer_locator():
     return jsonify(payload), status
 
 
+@app.route("/api/admin/dealer-onboard", methods=["POST"])
+def api_admin_dealer_onboard():
+    """Site admin: queue Smart Import onboard from Find dealers (locator → scrape bridge)."""
+    if not is_admin_role(session.get("user_role")):
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+
+    ip = _client_ip()
+    if not allow_request(f"dealer-onboard:{ip}", max_events=30, window_seconds=3600.0):
+        return jsonify({"ok": False, "error": "rate_limited"}), 429
+
+    body = request.get_json(silent=True) or {}
+    from backend.dealer.admin.onboard_api import request_dealer_onboard
+
+    ok, err, data = request_dealer_onboard(
+        url=(body.get("url") or "").strip(),
+        dealer_id=(body.get("dealer_id") or "").strip() or None,
+        name=(body.get("name") or "").strip() or None,
+    )
+    if not ok:
+        status = 503 if err == "postgres_required" else 400
+        if err == "forbidden":
+            status = 403
+        return jsonify({"ok": False, "error": err}), status
+    return jsonify({"ok": True, **data})
+
+
+def _serialize_dealer_job_row(row: dict) -> dict:
+    import json as _json
+
+    out = dict(row)
+    for key in ("payload_json", "result_json"):
+        raw = out.pop(key, None)
+        parsed: dict = {}
+        if raw:
+            try:
+                parsed = _json.loads(raw) if isinstance(raw, str) else (raw or {})
+            except (_json.JSONDecodeError, TypeError, ValueError):
+                parsed = {}
+        out["payload" if key == "payload_json" else "result"] = parsed
+    result = out.get("result") or {}
+    if isinstance(result, dict) and isinstance(result.get("ai_diagnosis"), dict):
+        out["ai_diagnosis"] = result["ai_diagnosis"]
+    if isinstance(result, dict) and isinstance(result.get("scrape_confidence"), dict):
+        out["scrape_confidence"] = result["scrape_confidence"]
+    from backend.scanner.scrape_confidence import job_display_status
+
+    out["display_status"] = job_display_status(
+        str(out.get("status") or ""),
+        str(out.get("job_type") or ""),
+        result if isinstance(result, dict) else {},
+    )
+    return out
+
+
+@app.route("/api/admin/dealer-jobs")
+def api_admin_dealer_jobs():
+    """Site admin: poll dealer_jobs for live onboarding progress."""
+    if not is_admin_role(session.get("user_role")):
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+
+    from backend.db.inventory_pg import is_inventory_postgres
+    from backend.scanner.job_queue import list_dealer_catalog, list_recent_jobs
+
+    if not is_inventory_postgres():
+        return jsonify({"ok": False, "error": "postgres_required", "jobs": [], "catalog": []}), 503
+
+    try:
+        limit = min(max(int(request.args.get("limit") or 30), 1), 100)
+    except (TypeError, ValueError):
+        limit = 30
+
+    jobs = [_serialize_dealer_job_row(j) for j in list_recent_jobs(limit=limit)]
+    catalog = list_dealer_catalog(limit=50)
+    active = sum(1 for j in jobs if (j.get("status") or "") in ("queued", "running"))
+    return jsonify(
+        {
+            "ok": True,
+            "jobs": jobs,
+            "catalog": catalog,
+            "active_count": active,
+        }
+    )
+
+
+@app.route("/api/admin/dealer-jobs/<int:job_id>")
+def api_admin_dealer_job_detail(job_id: int):
+    """Site admin: full job detail for sidebar (payload, result log, error)."""
+    if not is_admin_role(session.get("user_role")):
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+
+    from backend.db.inventory_pg import is_inventory_postgres
+    from backend.scanner.job_queue import get_job
+
+    if not is_inventory_postgres():
+        return jsonify({"ok": False, "error": "postgres_required"}), 503
+
+    row = get_job(job_id)
+    if not row:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    return jsonify({"ok": True, "job": _serialize_dealer_job_row(row)})
+
+
+@app.route("/api/admin/dealer-jobs/<int:job_id>/retry", methods=["POST"])
+def api_admin_dealer_job_retry(job_id: int):
+    """Site admin: re-queue a failed dealer job."""
+    if not is_admin_role(session.get("user_role")):
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+
+    ip = _client_ip()
+    if not allow_request(f"dealer-job-retry:{ip}", max_events=60, window_seconds=3600.0):
+        return jsonify({"ok": False, "error": "rate_limited"}), 429
+
+    from backend.scanner.job_queue import retry_failed_job
+
+    ok, err, data = retry_failed_job(job_id)
+    if not ok:
+        status = 503 if err == "postgres_required" else 400
+        if err == "not_found":
+            status = 404
+        return jsonify({"ok": False, "error": err, **data}), status
+    return jsonify({"ok": True, **data})
+
+
+@app.route("/api/admin/dealer-jobs/<int:job_id>/diagnose", methods=["POST"])
+def api_admin_dealer_job_diagnose(job_id: int):
+    """Site admin: AI/rule diagnosis for a failed dealer job."""
+    if not is_admin_role(session.get("user_role")):
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+
+    from backend.db.inventory_pg import is_inventory_postgres
+    from backend.scanner.job_queue import diagnose_job_row, get_job, _merge_result_diagnosis
+
+    if not is_inventory_postgres():
+        return jsonify({"ok": False, "error": "postgres_required"}), 503
+
+    row = get_job(job_id)
+    if not row:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    from backend.scanner.job_queue import _job_retry_eligible
+
+    if not _job_retry_eligible(row)[0]:
+        return jsonify({"ok": False, "error": "not_failed", "status": row.get("status")}), 400
+
+    body = request.get_json(silent=True) or {}
+    use_llm = body.get("use_llm", True) is not False
+    diagnosis = diagnose_job_row(row, use_llm=use_llm)
+    _merge_result_diagnosis(job_id, diagnosis)
+    return jsonify({"ok": True, "job_id": job_id, "diagnosis": diagnosis})
+
+
+@app.route("/api/admin/dealer-jobs/<int:job_id>/smart-retry", methods=["POST"])
+def api_admin_dealer_job_smart_retry(job_id: int):
+    """Site admin: diagnose then re-queue a failed job with guided retry hints."""
+    if not is_admin_role(session.get("user_role")):
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+
+    ip = _client_ip()
+    if not allow_request(f"dealer-job-smart-retry:{ip}", max_events=30, window_seconds=3600.0):
+        return jsonify({"ok": False, "error": "rate_limited"}), 429
+
+    from backend.scanner.job_queue import smart_retry_failed_job
+
+    body = request.get_json(silent=True) or {}
+    use_llm = body.get("use_llm", True) is not False
+    ok, err, data = smart_retry_failed_job(job_id, use_llm=use_llm)
+    if not ok:
+        status = 503 if err == "postgres_required" else 400
+        if err == "not_found":
+            status = 404
+        return jsonify({"ok": False, "error": err, **data}), status
+    return jsonify({"ok": True, **data})
+
+
 @app.route("/api/saved-cars", methods=["GET"])
 def api_saved_cars():
     """Saved inventory for the signed-in user (native clients)."""
@@ -2236,12 +2669,20 @@ def listings():
 
 @app.route("/premium")
 def premium_page():
+    from backend.billing.catalog import plan_display_list
+    from backend.billing.entitlements import FEATURE_LABELS
+    from backend.billing.stripe_billing import billing_enabled as stripe_billing_enabled
+
     welcome_source = session.pop("auth_welcome_source", None)
     embed = request.args.get("embed") in ("1", "true", "yes")
     return render_template(
         "premium.html",
         auth_welcome_source=welcome_source,
         premium_embed=embed,
+        subscription_plans=plan_display_list(),
+        billing_enabled=stripe_billing_enabled(),
+        current_plan_id=(session.get("subscription_plan_id") or "").strip().lower() or None,
+        feature_labels=FEATURE_LABELS,
     )
 
 
@@ -2329,6 +2770,22 @@ def api_search_smart():
         q, filters, vector_top_k=50, listing_geo_kwargs=geo_kw if geo_kw else None
     )
     safe_results = [serialize_car_for_listings_grid(c) for c in results]
+    try:
+        from backend.db.search_analytics_db import analytics_session_key, record_search_event
+
+        uid_raw = session.get("user_id")
+        user_id = int(uid_raw) if uid_raw is not None else None
+        record_search_event(
+            source="smart_search",
+            query_text=q or None,
+            filters={**filters, **geo_kw},
+            result_count=len(safe_results),
+            user_id=user_id,
+            session_key=analytics_session_key(session),
+            geo_zip=geo_kw.get("zip_code") if geo_kw else None,
+        )
+    except Exception:
+        pass
     empty_message = None
     if not safe_results and search_meta.get("mode") == "no_parse_match":
         empty_message = NO_PARSE_MATCH_MESSAGE
@@ -2346,9 +2803,9 @@ def api_search_smart():
 
 @app.route("/api/car/<int:car_id>/chat", methods=["POST"])
 def api_car_chat(car_id: int):
-    ok, err = _require_premium_feature()
+    ok, err = _require_feature(FEATURE_AI_CAR_CHAT)
     if not ok:
-        return jsonify({"ok": False, "error": err}), 403
+        return jsonify(_feature_denied_json(FEATURE_AI_CAR_CHAT, err)), 403
 
     ip = _client_ip()
     rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()
@@ -2429,9 +2886,9 @@ def api_car_chat(car_id: int):
 @app.route("/api/compare/chat", methods=["POST"])
 def api_compare_chat():
     """Premium compare assistant — side-by-side listing Q&A (up to 4 cars)."""
-    ok, err = _require_premium_feature()
+    ok, err = _require_feature(FEATURE_AI_COMPARE_CHAT)
     if not ok:
-        return jsonify({"ok": False, "error": err}), 403
+        return jsonify(_feature_denied_json(FEATURE_AI_COMPARE_CHAT, err)), 403
 
     ip = _client_ip()
     rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()

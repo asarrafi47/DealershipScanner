@@ -84,6 +84,39 @@
         .premium-compare .col-premium { text-align: center; color: var(--accent); font-weight: 600; }
         .check { color: #22c55e; font-size: 18px; }
         .dash { color: var(--text-faint); }
+
+        .premium-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 8px; }
+        .premium-plan-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .premium-plan-card--highlight { border-color: var(--accent); box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
+        .premium-plan-card__badge {
+            align-self: flex-start;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 4px;
+            padding: 3px 8px;
+        }
+        .premium-plan-card h3 { font-size: 20px; font-weight: 700; margin: 0; color: var(--text-primary); }
+        .premium-plan-price { font-size: 32px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+        .premium-plan-price span { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+        .premium-plan-desc { font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.55; }
+        .premium-plan-features { list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--text-secondary); }
+        .premium-plan-features li { padding: 4px 0 4px 20px; position: relative; }
+        .premium-plan-features li::before { content: "✓"; position: absolute; left: 0; color: #22c55e; font-weight: 700; }
+        .premium-plan-cta { margin-top: auto; }
+        .premium-plan-current { font-size: 13px; color: var(--accent); font-weight: 600; }
+        body.premium-embed .premium-plans { grid-template-columns: 1fr; }
     </style>
 </head>
 <body class="lp-body{% if premium_embed %} premium-embed{% endif %}">
@@ -128,8 +161,49 @@
                 <a href="{{ url_for('listings') }}" class="secondary-button">Browse listings</a>
                 {% endif %}
             </div>
-            <p class="premium-price-note">$9.99/month — cancel anytime in Stripe.</p>
+            <p class="premium-price-note">Plans from $4.99/month — cancel anytime in Stripe.</p>
         </div>
+
+        {% if subscription_plans and not premium_embed %}
+        <div class="premium-section-header">
+            <h2>Choose your plan</h2>
+            <p>Research tools, AI assistants, or the full package — pick what fits your search.</p>
+        </div>
+        <div class="premium-plans">
+            {% for plan in subscription_plans %}
+            <div class="premium-plan-card{% if plan.highlight %} premium-plan-card--highlight{% endif %}">
+                {% if plan.highlight %}<span class="premium-plan-card__badge">Most popular</span>{% endif %}
+                <h3>{{ plan.name }}</h3>
+                <div class="premium-plan-price">{{ plan.monthly_display }}<span>/mo</span></div>
+                <p class="premium-plan-desc">{{ plan.description }}</p>
+                {% if plan.trial_days %}
+                <p class="premium-plan-desc" style="margin-top:-6px;">{{ plan.trial_days }}-day free trial</p>
+                {% endif %}
+                <ul class="premium-plan-features">
+                    {% for fid in plan.features %}
+                    <li>{{ feature_labels.get(fid, fid.replace('_', ' ').title()) }}</li>
+                    {% endfor %}
+                </ul>
+                <div class="premium-plan-cta">
+                    {% if current_plan_id == plan.id %}
+                    <span class="premium-plan-current">Your current plan</span>
+                    {% elif has_paid_access and current_plan_id %}
+                    <a href="{{ url_for('billing.plan_checkout', plan=plan.id) }}" class="secondary-button" style="width:100%;text-align:center;">Switch plan</a>
+                    {% elif logged_in_user and billing_enabled and plan.stripe_configured %}
+                    <a href="{{ url_for('billing.plan_checkout', plan=plan.id) }}" class="primary-button" style="width:100%;text-align:center;">Choose {{ plan.name }}</a>
+                    {% elif logged_in_user and billing_enabled %}
+                    <span class="secondary-button" style="width:100%;text-align:center;opacity:0.7;cursor:default;display:block;">Stripe price not configured</span>
+                    {% elif logged_in_user %}
+                    <span class="secondary-button" style="width:100%;text-align:center;opacity:0.7;cursor:default;display:block;">Billing coming soon</span>
+                    {% else %}
+                    <a href="{{ url_for('register_page') }}?plan={{ plan.id }}" class="primary-button" style="width:100%;text-align:center;">Sign up for {{ plan.name }}</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <hr class="premium-divider">
+        {% endif %}
 
         <div class="premium-features">
 
@@ -250,10 +324,10 @@
         {% if not premium_embed %}
         <hr class="premium-divider">
 
-        {% if not has_paid_access %}
+        {% if not has_paid_access and not subscription_plans %}
         <div style="text-align: center;">
             <p class="eyebrow">Pricing</p>
-            <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px; color: var(--text-primary);">$9.99/month</h2>
+            <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px; color: var(--text-primary);">Plans from $4.99/month</h2>
             <p style="font-size: 15px; color: var(--text-secondary); margin: 0 0 28px;">Cancel anytime in Stripe. Browsing inventory stays free.</p>
             {% if logged_in_user %}
             <a href="{{ url_for('billing.premium_checkout') }}" class="primary-button lp-cta-primary">Upgrade to Premium</a>

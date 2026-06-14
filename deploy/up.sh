@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Build and start DealershipScanner locally in Docker.
-# Usage (from repo root):
-#   ./deploy/up.sh              # port 18000
+# Build and start DealershipScanner locally in Docker (Postgres inventory required).
+#
+#   ./deploy/up.sh
 #   WEB_PORT=8000 ./deploy/up.sh
 set -euo pipefail
 
@@ -9,40 +9,47 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/deploy"
 
 export WEB_PORT="${WEB_PORT:-18000}"
+export WORKER_REPLICAS="${WORKER_REPLICAS:-2}"
+export INVENTORY_DATABASE_URL="postgresql://dealership:dealership@postgres:5432/dealership"
+export COMPOSE_PROFILES=full
 
 # shellcheck source=/dev/null
 source "$ROOT/deploy/load-vault-env.sh"
 
 if [[ -n "${GOOGLE_MAPS_API_KEY:-}" ]]; then
-  echo "==> Loaded GOOGLE_MAPS_API_KEY from kmac vault (Dealer:google_maps_api_key)"
+  echo "==> Loaded GOOGLE_MAPS_API_KEY from kmac vault"
 fi
-if [[ -n "${ADMIN_PASSWORD:-}" ]]; then
-  echo "==> Loaded ADMIN_PASSWORD from kmac vault (Dealer:site_admin_password)"
+if [[ -n "${STRIPE_SECRET_KEY:-}" ]]; then
+  echo "==> Loaded STRIPE_SECRET_KEY from kmac vault"
 fi
 
-echo "==> Building dealership-scanner web image"
-docker compose -f docker-compose.yml build web
+cat > "$ROOT/deploy/.env" <<EOF
+INVENTORY_DATABASE_URL=${INVENTORY_DATABASE_URL}
+COMPOSE_PROFILES=full
+WEB_PORT=${WEB_PORT}
+WORKER_REPLICAS=${WORKER_REPLICAS}
+EOF
 
-echo "==> Starting dealership-scanner-web on port ${WEB_PORT}"
-docker compose -f docker-compose.yml up -d web
+echo "==> Stack: postgres + web + ${WORKER_REPLICAS} scanner-workers + scheduler"
+docker compose -f docker-compose.yml build web scanner-worker scanner-scheduler
+docker compose -f docker-compose.yml up -d postgres
+echo "==> Waiting for Postgres"
+for i in $(seq 1 40); do
+  if docker compose -f docker-compose.yml exec -T postgres pg_isready -U dealership -d dealership >/dev/null 2>&1; then
+    break
+  fi
+  sleep 1
+done
+docker compose -f docker-compose.yml up -d web scanner-scheduler
+docker compose -f docker-compose.yml up -d --scale "scanner-worker=${WORKER_REPLICAS}" scanner-worker
 
 echo "==> Waiting for /health"
-for i in $(seq 1 30); do
+for i in $(seq 1 45); do
   if curl -sf --max-time 2 "http://127.0.0.1:${WEB_PORT}/health" >/dev/null 2>&1; then
-    echo "==> Bootstrapping site admin in data/runtime/users.db"
-    (
-      cd "$ROOT"
-      export PYTHONPATH="$ROOT"
-      export USERS_DB_PATH="$ROOT/data/runtime/users.db"
-      export DEV_USERS_DB_PATH="$ROOT/data/runtime/dev_users.db"
-      export ALLOW_UNENCRYPTED_USER_DB=1
-      export APP_ADMIN_USERNAMES APP_ADMIN_EMAILS ADMIN_PASSWORD
-      python3 scripts/bootstrap_site_admin.py
-    )
+    echo "==> Initializing Postgres inventory schema"
+    docker compose -f docker-compose.yml exec -T web python3 -c \
+      "from backend.db.inventory_db import init_inventory_db; from backend.scanner.job_queue import init_job_queue_schema; init_inventory_db(); init_job_queue_schema(); print('ok')"
     echo "==> Ready: http://127.0.0.1:${WEB_PORT}"
-    echo "    Site admin login: /login  (user: ${APP_ADMIN_USERNAMES%%,*})"
-    echo "    Dev tools login:  /dev/login  (user: ${ADMIN_USERNAME})"
-    echo "    Password: kmac vault key Dealer:site_admin_password"
     docker compose -f docker-compose.yml ps
     exit 0
   fi
@@ -50,5 +57,5 @@ for i in $(seq 1 30); do
 done
 
 echo "ERROR: health check failed on port ${WEB_PORT}" >&2
-docker logs dealership-scanner-web 2>&1 | tail -30
+docker logs dealership-scanner-web 2>&1 | tail -40
 exit 1

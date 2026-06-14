@@ -71,6 +71,22 @@ def test_find_nearby_merges_db_and_google(monkeypatch) -> None:
         "backend.listings.nearby_dealers._active_listing_counts",
         lambda ids: {10: 3},
     )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._active_listing_counts_by_dealer_id",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_inventory_scraped_at",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_inventory_scraped_at_by_dealer_id",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_catalog_scan_at",
+        lambda **_k: ({}, {}),
+    )
     monkeypatch.setenv("GOOGLE_MAPS_API_KEY", "test-key")
     monkeypatch.setattr(
         "backend.discovery.google_places.fetch_google_places_dealerships",
@@ -91,7 +107,106 @@ def test_find_nearby_merges_db_and_google(monkeypatch) -> None:
     assert goog["in_database"] is False
 
 
-def test_location_not_found(monkeypatch) -> None:
+def test_find_nearby_attaches_last_synced(monkeypatch) -> None:
+    db_rows = [
+        {
+            "id": 10,
+            "name": "Synced Dealer",
+            "city": "Chattanooga",
+            "state": "TN",
+            "latitude": 35.1,
+            "longitude": -85.3,
+            "distance_miles": 1.0,
+            "street_address": "1 Main St",
+            "zip_code": "37403",
+            "website_url": "https://synced.example",
+            "dealer_website_url": "https://synced.example",
+        }
+    ]
+
+    monkeypatch.setattr("backend.db.geo.zip_to_coords", lambda _z: (35.1, -85.3))
+    monkeypatch.setattr(
+        "backend.db.dealerships_db.search_dealerships_by_radius",
+        lambda *_a, **_k: db_rows,
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._active_listing_counts",
+        lambda ids: {10: 1},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._active_listing_counts_by_dealer_id",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_inventory_scraped_at",
+        lambda ids: {10: "2026-06-10T12:00:00+00:00"},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_inventory_scraped_at_by_dealer_id",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_catalog_scan_at",
+        lambda **_k: ({}, {}),
+    )
+    monkeypatch.delenv("GOOGLE_MAPS_API_KEY", raising=False)
+
+    out = find_nearby_dealers(zip_code="37403", radius_miles=25, include_google=False)
+    assert out["ok"] is True
+    dealer = out["dealers"][0]
+    assert dealer["last_synced_at"] == "2026-06-10T12:00:00+00:00"
+
+
+def test_find_nearby_counts_scraped_google_dealer(monkeypatch) -> None:
+    class FakeCandidate:
+        name = "Ford Store"
+        city = "Chattanooga"
+        state = "TN"
+        street_address = "2 Other St"
+        zip_code = "37403"
+        latitude = 35.2
+        longitude = -85.3
+        dealer_website_url = "https://www.mtnviewford.com"
+        website_url = "https://www.mtnviewford.com"
+
+    monkeypatch.setattr("backend.db.geo.zip_to_coords", lambda _z: (35.15, -85.3))
+    monkeypatch.setattr(
+        "backend.db.dealerships_db.search_dealerships_by_radius",
+        lambda *_a, **_k: [],
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._active_listing_counts",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._active_listing_counts_by_dealer_id",
+        lambda ids: {"mtnviewford-com": 383},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_inventory_scraped_at",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_inventory_scraped_at_by_dealer_id",
+        lambda ids: {},
+    )
+    monkeypatch.setattr(
+        "backend.listings.nearby_dealers._last_catalog_scan_at",
+        lambda **_k: ({}, {"mtnviewford-com": "2026-06-13T12:00:00+00:00"}),
+    )
+    monkeypatch.setenv("GOOGLE_MAPS_API_KEY", "test-key")
+    monkeypatch.setattr(
+        "backend.discovery.google_places.fetch_google_places_dealerships",
+        lambda *_a, **_k: [FakeCandidate()],
+    )
+
+    out = find_nearby_dealers(zip_code="37403", radius_miles=25)
+    assert out["ok"] is True
+    dealer = out["dealers"][0]
+    assert dealer["in_database"] is False
+    assert dealer["listing_count"] == 383
+
+
     monkeypatch.setattr(
         "backend.db.dealerships_db.geocode_city_state",
         lambda *_a, **_k: None,

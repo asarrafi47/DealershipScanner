@@ -1,6 +1,7 @@
 node_modules/
 backend/node_modules/
 .env
+.env.docker-local
 *.log
 
 # Runtime / local app SQLite (paths configurable via USERS_DB_PATH, INVENTORY_DB_*, etc.)
@@ -53,6 +54,9 @@ scripts/inventory.db
 
 # MFA audit (optional local file)
 logs/mfa*.jsonl
+
+# Local scanner debug captures (regenerated)
+backend/scanner/debug/
 
 # Local scratch / editor noise
 Untitled

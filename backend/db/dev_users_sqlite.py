@@ -70,7 +70,13 @@ def get_dev_users_conn() -> sqlite3.Connection:
         return _connect_sqlcipher(key)
 
     if key and sqlcipher_available():
-        return _connect_sqlcipher(key)
+        try:
+            return _connect_sqlcipher(key)
+        except RuntimeError:
+            logger.warning(
+                "DEV_USERS_DB_ENCRYPTION_KEY set but dev_users.db is not SQLCipher (or wrong key); "
+                "using plain SQLite for local dev."
+            )
 
     if key and not sqlcipher_available():
         global _PLAIN_SQLITE_FALLBACK_WARNED

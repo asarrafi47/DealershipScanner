@@ -3,34 +3,26 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Store admin{% endblock %} — Sarrafi Cars</title>
+    <title>{% block title %}Admin{% endblock %} — Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% block extra_head %}{% endblock %}
 </head>
-<body>
-<div class="page">
-    <nav class="topbar">
-        <div class="logo">Sarrafi Cars</div>
-        <div class="nav-links">
-            <a href="{{ url_for('store_admin.admin_home') }}">Store dashboard</a>
-            <a href="{{ url_for('store_admin.admin_inventory') }}">Inventory</a>
-            <a href="{{ url_for('store_admin.admin_scans') }}">Scans</a>
-            <a href="{{ url_for('app_home') }}">App home</a>
-            <a href="{{ url_for('listings') }}">Public listings</a>
-            {% include "_app_logout.html" %}
-        </div>
-    </nav>
+<body class="admin-shell-body app-layout-body">
+<div class="page page--app-layout">
+    {% include "_nav_sidebar.html" %}
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        <div class="admin-flash-wrap" role="status">
+        <div class="admin-flash-wrap app-layout-flash" role="status">
             {% for category, message in messages %}
             <p class="admin-flash admin-flash-{{ category }}">{{ message }}</p>
             {% endfor %}
         </div>
         {% endif %}
     {% endwith %}
-    <main class="admin-main">
+    <main class="admin-main app-layout-main">
         {% block content %}{% endblock %}
     </main>
 </div>
+{% block scripts %}{% endblock %}
 </body>
 </html>

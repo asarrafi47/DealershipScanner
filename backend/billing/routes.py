@@ -5,6 +5,8 @@ from typing import Any
 
 from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
 
+from backend.billing.checkout_service import create_plan_checkout_session, verify_plan_checkout_session
+from backend.billing.catalog import get_plan, plan_display_list
 from backend.billing.stripe_billing import (
     billing_enabled,
     construct_premium_webhook_event,
@@ -235,13 +237,16 @@ def premium_webhook():
         session_id = obj.get("id")
         subscription_id = obj.get("subscription")
         if user_id > 0:
+            md = obj.get("metadata") or {}
+            plan_id = (md.get("plan_id") or "").strip().lower() or None
             grant_user_premium(
                 user_id,
                 customer_id=str(customer) if customer else None,
                 session_id=str(session_id) if session_id else None,
                 subscription_id=str(subscription_id) if subscription_id else None,
+                plan_id=plan_id,
             )
-            _log.info("premium granted to user_id=%d via webhook", user_id)
+            _log.info("premium granted to user_id=%d via webhook plan=%s", user_id, plan_id)
 
     elif etype in ("customer.subscription.updated", "customer.subscription.deleted"):
         user_id = _premium_user_id_from_metadata(obj)
@@ -254,12 +259,79 @@ def premium_webhook():
             revoke_user_premium(user_id)
             _log.info("premium revoked for user_id=%d (status=%s)", user_id, status)
         else:
+            md = obj.get("metadata") or {}
+            plan_id = (md.get("plan_id") or "").strip().lower() or None
             grant_user_premium(
                 user_id,
                 customer_id=str(customer) if customer else None,
                 subscription_id=str(subscription_id) if subscription_id else None,
+                plan_id=plan_id,
             )
-            _log.info("premium renewed for user_id=%d (status=%s)", user_id, status)
+            _log.info("premium renewed for user_id=%d (status=%s plan=%s)", user_id, status, plan_id)
 
     return jsonify({"ok": True})
+
+
+# ── Multi-plan consumer checkout (catalog scaffold) ───────────────────────────
+
+@bp.route("/plans")
+def billing_plans_api():
+    """JSON catalog for pricing UI (no secrets)."""
+    return jsonify({"plans": plan_display_list(), "billing_enabled": billing_enabled()})
+
+
+@bp.route("/plan/checkout")
+def plan_checkout():
+    if not billing_enabled():
+        return redirect(url_for("premium_page"))
+    uid = _require_app_login()
+    if not uid:
+        return redirect(url_for("login_page") + "?next=/premium")
+    plan_id = (request.args.get("plan") or "complete").strip().lower()
+    promo = (request.args.get("promo") or request.args.get("code") or "").strip() or None
+    plan = get_plan(plan_id)
+    if not plan or plan.monthly_cents <= 0:
+        return redirect(url_for("premium_page"))
+    user_email = (session.get("user_email") or "").strip()
+    try:
+        cs = create_plan_checkout_session(
+            request=request,
+            user_id=uid,
+            user_email=user_email,
+            plan_id=plan_id,
+            promo_code=promo,
+        )
+        return redirect(cs["url"])
+    except Exception:
+        _log.exception("plan checkout failed plan_id=%s", plan_id)
+        return redirect(url_for("premium_page", plan=plan_id))
+
+
+@bp.route("/plan/success")
+def plan_checkout_success():
+    uid = _require_app_login()
+    if not uid:
+        return redirect(url_for("login_page") + "?next=/premium")
+    plan_id = (request.args.get("plan") or "complete").strip().lower()
+    activated = False
+    checkout_error = ""
+    if billing_enabled():
+        stripe_sid = (request.args.get("session_id") or "").strip()
+        if not stripe_sid:
+            checkout_error = "missing_session"
+        elif verify_plan_checkout_session(session_id=stripe_sid, user_id=uid, plan_id=plan_id):
+            grant_user_premium(uid, session_id=stripe_sid, plan_id=plan_id)
+            session["user_is_premium"] = True
+            session["subscription_plan_id"] = plan_id
+            activated = True
+        else:
+            checkout_error = "payment_not_verified"
+    else:
+        checkout_error = "billing_disabled"
+    return render_template(
+        "premium_success.html",
+        premium_activated=activated,
+        checkout_error=checkout_error,
+        plan_id=plan_id,
+    )
 

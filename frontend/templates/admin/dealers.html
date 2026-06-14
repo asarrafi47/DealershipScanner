@@ -1,0 +1,761 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dealer onboarding{% endblock %}
+{% block extra_head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+<style>
+    .dealers-hub section { margin-bottom: 32px; }
+    .dealers-hub table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .dealers-hub th, .dealers-hub td { border-bottom: 1px solid var(--border-light); padding: 10px 12px; text-align: left; }
+    .dealers-hub th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    .dealers-form { display: grid; gap: 12px; max-width: 480px; }
+    .dealers-form label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; }
+    .dealers-form input { padding: 8px 10px; border: 1px solid var(--border-light); border-radius: 8px; }
+    .status-pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .status-pill--queued { background: #e0e7ff; color: #3730a3; }
+    .status-pill--running { background: #fef3c7; color: #92400e; }
+    .status-pill--done { background: #d1fae5; color: #065f46; }
+    .status-pill--incomplete { background: #ffedd5; color: #9a3412; }
+    .status-pill--failed { background: #fee2e2; color: #991b1b; }
+    .dealers-hub__live { font-size: 13px; color: var(--text-muted); margin-left: 8px; }
+    .dealers-hub__live--on::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 6px; animation: dealers-pulse 1.5s ease-in-out infinite; }
+    @keyframes dealers-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    .dealers-job-row { cursor: pointer; }
+    .dealers-job-row:hover { background: var(--navy-soft, #f8fafc); }
+    .dealers-job-row--selected { background: #eef2ff; }
+    .dealers-job-actions { white-space: nowrap; }
+    .dealers-job-detail-btn {
+        font-size: 12px;
+        padding: 4px 10px;
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+    }
+    .dealers-job-detail-btn:hover { background: var(--navy-soft, #f1f5f9); }
+    .dealers-job-retry-btn {
+        font-size: 12px;
+        padding: 4px 10px;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        background: #fef2f2;
+        color: #991b1b;
+        cursor: pointer;
+        margin-left: 6px;
+    }
+    .dealers-job-retry-btn:hover { background: #fee2e2; }
+    .dealers-job-retry-btn:disabled { opacity: 0.55; cursor: wait; }
+    .dealers-jobs-flash {
+        margin: 0 0 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        border: 1px solid #bfdbfe;
+    }
+    .dealers-jobs-flash--error {
+        background: #fef2f2;
+        color: #991b1b;
+        border-color: #fecaca;
+    }
+    .dealers-job-diagnosis {
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        background: #f8fafc;
+        border: 1px solid var(--border-light);
+    }
+    .dealers-job-diagnosis h3 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+    .dealers-job-diagnosis p { margin: 0 0 8px; font-size: 13px; line-height: 1.45; }
+    .dealers-job-diagnosis__meta { font-size: 12px; color: var(--text-muted); }
+    .dealers-job-confidence {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        border: 1px solid var(--border-light);
+    }
+    .dealers-job-confidence--high { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+    .dealers-job-confidence--medium { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+    .dealers-job-confidence--low { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .dealers-job-smart-retry-btn {
+        font-size: 12px;
+        padding: 4px 10px;
+        border: 1px solid #93c5fd;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        cursor: pointer;
+        margin-left: 6px;
+    }
+    .dealers-job-smart-retry-btn:hover { background: #dbeafe; }
+    .dealers-job-sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.35);
+        z-index: 1200;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+    .dealers-job-sidebar-backdrop.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .dealers-job-sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(420px, 100vw);
+        height: 100vh;
+        background: #fff;
+        border-left: 1px solid var(--border-light);
+        box-shadow: -8px 0 24px rgba(15, 23, 42, 0.12);
+        z-index: 1201;
+        transform: translateX(100%);
+        transition: transform 0.22s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    .dealers-job-sidebar.is-open { transform: translateX(0); }
+    .dealers-job-sidebar__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--border-light);
+    }
+    .dealers-job-sidebar__title { margin: 0; font-size: 1.05rem; }
+    .dealers-job-sidebar__close {
+        border: none;
+        background: transparent;
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+        color: var(--text-muted);
+    }
+    .dealers-job-sidebar__body {
+        flex: 1;
+        overflow: auto;
+        padding: 16px 18px 24px;
+        font-size: 14px;
+    }
+    .dealers-job-sidebar__meta { display: grid; gap: 10px; margin-bottom: 18px; }
+    .dealers-job-sidebar__row { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+    .dealers-job-sidebar__label { color: var(--text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .dealers-job-sidebar__section { margin-top: 18px; }
+    .dealers-job-sidebar__section h3 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+    .dealers-job-sidebar__log {
+        margin: 0;
+        padding: 12px;
+        background: #0f172a;
+        color: #e2e8f0;
+        border-radius: 8px;
+        font-size: 11px;
+        line-height: 1.45;
+        white-space: pre-wrap;
+        word-break: break-word;
+        max-height: 280px;
+        overflow: auto;
+    }
+    .dealers-job-sidebar__foot {
+        padding: 14px 18px;
+        border-top: 1px solid var(--border-light);
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .dealers-job-sidebar__status { font-size: 13px; color: var(--text-muted); }
+    .dealers-job-sidebar__status--error { color: #b91c1c; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="dealers-hub">
+    <h1 class="db-section-title">Dealer onboarding</h1>
+    <p class="admin-lead">Queue Smart Import scans for new dealers. Use <a href="{{ find_dealers_url }}">Find dealers</a> to discover URLs, then enqueue jobs here or from the map.</p>
+
+    {% if not postgres_ok %}
+    <p class="error-box">Postgres job queue not configured. Run <code>./deploy/up.sh --full</code> with <code>INVENTORY_DATABASE_URL</code>.</p>
+    {% else %}
+
+    <section>
+        <h2>Add &amp; scan</h2>
+        <form method="post" class="dealers-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label>Dealer ID
+                <input type="text" name="dealer_id" placeholder="e.g. irvine-bmw" required>
+            </label>
+            <label>Inventory URL
+                <input type="url" name="url" placeholder="https://www.dealer.com/inventory" required>
+            </label>
+            <button type="submit" class="primary-button">Queue onboard job</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Dealer catalog ({{ catalog|length }})</h2>
+        {% if catalog %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Dealer</th>
+                    <th>Provider</th>
+                    <th>Interval (h)</th>
+                    <th>Next scan</th>
+                    <th>Last scan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in catalog %}
+                <tr>
+                    <td><code>{{ row.dealer_id }}</code></td>
+                    <td>{{ row.provider or '—' }}</td>
+                    <td>{{ row.scan_interval_hours or '—' }}</td>
+                    <td>{{ row.next_scan_at or '—' }}</td>
+                    <td>{{ row.last_scan_at or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No catalog rows yet — enqueue an onboard job to populate after first scan.</p>
+        {% endif %}
+    </section>
+
+    <section>
+        <h2>Recent jobs <span id="dealers-jobs-count">({{ jobs|length }})</span>
+            <span id="dealers-jobs-live" class="dealers-hub__live dealers-hub__live--on" hidden>Live · refreshes every 5s</span>
+        </h2>
+        <p id="dealers-jobs-flash" class="dealers-jobs-flash" hidden role="status"></p>
+        {% if jobs %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Dealer</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Worker</th>
+                    <th>Created</th>
+                    <th>Finished</th>
+                    <th>Cars</th>
+                    <th>Result</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="dealers-jobs-tbody">
+                {% for row in jobs %}
+                <tr class="dealers-job-row" data-job-id="{{ row.id }}">
+                    <td>{{ row.id }}</td>
+                    <td><code>{{ row.dealer_id }}</code></td>
+                    <td>{{ row.job_type }}</td>
+                    <td><span class="status-pill status-pill--{{ row.display_status or row.status }}">{{ row.display_status or row.status }}</span></td>
+                    <td>{{ row.worker_id or '—' }}</td>
+                    <td>{{ row.created_at or '—' }}</td>
+                    <td>{{ row.finished_at or '—' }}</td>
+                    <td>{{ (row.error or '')[:80] }}</td>
+                    <td class="dealers-job-actions">
+                        <button type="button" class="dealers-job-detail-btn" data-job-id="{{ row.id }}">Details</button>
+                        {% if row.status == 'failed' %}
+                        <button type="button" class="dealers-job-smart-retry-btn" data-job-id="{{ row.id }}">Smart restart</button>
+                        <button type="button" class="dealers-job-retry-btn" data-job-id="{{ row.id }}">Restart</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p id="dealers-jobs-empty">No jobs yet.</p>
+        <table hidden>
+            <thead>
+                <tr>
+                    <th>ID</th><th>Dealer</th><th>Type</th><th>Status</th><th>Worker</th>
+                    <th>Created</th><th>Finished</th><th>Cars</th><th>Result</th><th></th>
+                </tr>
+            </thead>
+            <tbody id="dealers-jobs-tbody"></tbody>
+        </table>
+        {% endif %}
+    </section>
+    {% endif %}
+</div>
+
+<div id="dealers-job-sidebar-backdrop" class="dealers-job-sidebar-backdrop" hidden></div>
+<aside id="dealers-job-sidebar" class="dealers-job-sidebar" aria-labelledby="dealers-job-sidebar-title" hidden>
+    <div class="dealers-job-sidebar__head">
+        <h2 id="dealers-job-sidebar-title" class="dealers-job-sidebar__title">Job details</h2>
+        <button type="button" id="dealers-job-sidebar-close" class="dealers-job-sidebar__close" aria-label="Close">&times;</button>
+    </div>
+    <div id="dealers-job-sidebar-body" class="dealers-job-sidebar__body">
+        <p class="dealers-job-sidebar__status">Select a job to view details.</p>
+    </div>
+    <div class="dealers-job-sidebar__foot">
+        <button type="button" id="dealers-job-smart-retry-btn" class="primary-button" hidden>Smart restart</button>
+        <button type="button" id="dealers-job-retry-btn" class="primary-button" hidden>Restart job</button>
+        <span id="dealers-job-sidebar-msg" class="dealers-job-sidebar__status"></span>
+    </div>
+</aside>
+{% endblock %}
+{% block scripts %}
+{% if postgres_ok %}
+<script nonce="{{ csp_nonce }}">
+(function () {
+    const tbody = document.getElementById("dealers-jobs-tbody");
+    const countEl = document.getElementById("dealers-jobs-count");
+    const liveEl = document.getElementById("dealers-jobs-live");
+    const emptyEl = document.getElementById("dealers-jobs-empty");
+    const backdrop = document.getElementById("dealers-job-sidebar-backdrop");
+    const sidebar = document.getElementById("dealers-job-sidebar");
+    const sidebarBody = document.getElementById("dealers-job-sidebar-body");
+    const sidebarTitle = document.getElementById("dealers-job-sidebar-title");
+    const closeBtn = document.getElementById("dealers-job-sidebar-close");
+    const retryBtn = document.getElementById("dealers-job-retry-btn");
+    const smartRetryBtn = document.getElementById("dealers-job-smart-retry-btn");
+    const sidebarMsg = document.getElementById("dealers-job-sidebar-msg");
+    const jobsFlash = document.getElementById("dealers-jobs-flash");
+    const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || "";
+    if (!tbody) return;
+    if (liveEl) liveEl.hidden = false;
+
+    let selectedJobId = null;
+    let pollTimer = null;
+    const jobsById = new Map();
+
+    function esc(s) {
+        const d = document.createElement("div");
+        d.textContent = String(s == null ? "" : s);
+        return d.innerHTML;
+    }
+
+    function fmtTs(v) {
+        if (!v) return "—";
+        const d = new Date(v);
+        return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString();
+    }
+
+    function rememberJobs(jobs) {
+        jobsById.clear();
+        jobs.forEach(function (row) {
+            if (row && row.id != null) jobsById.set(String(row.id), row);
+        });
+    }
+
+    function showJobsFlash(message, isError) {
+        if (!jobsFlash) return;
+        jobsFlash.textContent = message;
+        jobsFlash.hidden = !message;
+        jobsFlash.classList.toggle("dealers-jobs-flash--error", !!isError);
+    }
+
+    function jobDisplayStatus(job) {
+        if (!job) return "";
+        if (job.display_status) return job.display_status;
+        return jobCanRetry(job) && (job.status || "").toLowerCase() === "done" ? "incomplete" : (job.status || "");
+    }
+
+    function statusPillHtml(job) {
+        const st = esc(jobDisplayStatus(job) || job.status || "");
+        return '<span class="status-pill status-pill--' + st + '">' + st + "</span>";
+    }
+
+    function jobCanRetry(job) {
+        if (!job) return false;
+        const st = (job.status || "").toLowerCase();
+        if (st === "failed") return true;
+        if (st !== "done") return false;
+        const result = job.result || {};
+        const conf = job.scrape_confidence || result.scrape_confidence || null;
+        const level = conf && conf.level ? String(conf.level).toLowerCase() : "";
+        const vc = result.vehicle_count != null ? result.vehicle_count : (conf ? conf.vehicle_count : null);
+        return level === "low" || Number(vc) === 0;
+    }
+
+    function jobVehicleCount(job) {
+        if (!job) return null;
+        const result = job.result || {};
+        const conf = job.scrape_confidence || result.scrape_confidence || null;
+        if (result.vehicle_count != null) return Number(result.vehicle_count);
+        if (conf && conf.vehicle_count != null) return Number(conf.vehicle_count);
+        return null;
+    }
+
+    function jobResultSummary(job) {
+        if (!job) return "";
+        const err = String(job.error || "").trim();
+        const result = job.result || {};
+        const conf = job.scrape_confidence || result.scrape_confidence || {};
+        const reason = conf.reason ? String(conf.reason) : "";
+        if (err === "exit_1" || err === "scrape_empty") {
+            return reason ? "0 cars — " + reason : "0 cars — no inventory parsed";
+        }
+        if (err === "exit_3") {
+            return "Site unreachable (navigation failed)";
+        }
+        if (err.indexOf("job_timeout") >= 0) {
+            return "Timed out";
+        }
+        return err;
+    }
+
+    function actionCellHtml(row) {
+        const id = esc(row.id);
+        const retryable = jobCanRetry(row);
+        return (
+            '<td class="dealers-job-actions">' +
+            '<button type="button" class="dealers-job-detail-btn" data-job-id="' + id + '">Details</button>' +
+            (retryable
+                ? '<button type="button" class="dealers-job-smart-retry-btn" data-job-id="' + id + '">Smart restart</button>' +
+                  '<button type="button" class="dealers-job-retry-btn" data-job-id="' + id + '">Restart</button>'
+                : "") +
+            "</td>"
+        );
+    }
+
+    function renderJobs(jobs) {
+        rememberJobs(jobs);
+        if (countEl) countEl.textContent = "(" + jobs.length + ")";
+        if (!jobs.length) {
+            if (emptyEl) emptyEl.hidden = false;
+            tbody.innerHTML = "";
+            return;
+        }
+        if (emptyEl) emptyEl.hidden = true;
+        tbody.innerHTML = jobs.map(function (row) {
+            const err = esc(jobResultSummary(row).slice(0, 100));
+            const vc = jobVehicleCount(row);
+            const cars = vc != null && !Number.isNaN(vc) ? String(vc) : "—";
+            const sel = selectedJobId && String(row.id) === String(selectedJobId) ? " dealers-job-row--selected" : "";
+            return (
+                '<tr class="dealers-job-row' + sel + '" data-job-id="' + esc(row.id) + '">' +
+                "<td>" + esc(row.id) + "</td>" +
+                "<td><code>" + esc(row.dealer_id) + "</code></td>" +
+                "<td>" + esc(row.job_type) + "</td>" +
+                "<td>" + statusPillHtml(row) + "</td>" +
+                "<td>" + esc(row.worker_id || "—") + "</td>" +
+                "<td>" + esc(fmtTs(row.created_at)) + "</td>" +
+                "<td>" + esc(fmtTs(row.finished_at)) + "</td>" +
+                "<td>" + esc(cars) + "</td>" +
+                "<td>" + err + "</td>" +
+                actionCellHtml(row) +
+                "</tr>"
+            );
+        }).join("");
+    }
+
+    function openSidebar() {
+        if (!sidebar || !backdrop) return;
+        sidebar.hidden = false;
+        backdrop.hidden = false;
+        requestAnimationFrame(function () {
+            sidebar.classList.add("is-open");
+            backdrop.classList.add("is-open");
+        });
+    }
+
+    function closeSidebar() {
+        if (!sidebar || !backdrop) return;
+        sidebar.classList.remove("is-open");
+        backdrop.classList.remove("is-open");
+        selectedJobId = null;
+        tbody.querySelectorAll(".dealers-job-row--selected").forEach(function (r) {
+            r.classList.remove("dealers-job-row--selected");
+        });
+        window.setTimeout(function () {
+            sidebar.hidden = true;
+            backdrop.hidden = true;
+        }, 220);
+        if (retryBtn) retryBtn.hidden = true;
+        if (smartRetryBtn) smartRetryBtn.hidden = true;
+        if (sidebarMsg) sidebarMsg.textContent = "";
+    }
+
+    function confidenceHtml(conf) {
+        if (!conf || !conf.level) return "";
+        const level = esc(conf.level);
+        const score = conf.score != null ? Math.round(Number(conf.score) * 100) + "%" : "—";
+        const reason = conf.reason ? "<p>" + esc(conf.reason) + "</p>" : "";
+        const path = conf.path ? "<p class=\"dealers-job-diagnosis__meta\">Path: " + esc(conf.path) +
+            (conf.vehicle_count != null ? " · " + esc(conf.vehicle_count) + " vehicles" : "") +
+            (conf.profile_persisted ? " · persistent profile" : "") + "</p>" : "";
+        return (
+            '<div class="dealers-job-confidence dealers-job-confidence--' + level + '">' +
+            "<h3>Scrape confidence</h3>" +
+            "<p><strong>" + level.toUpperCase() + "</strong> (" + esc(score) + ")</p>" +
+            reason + path +
+            "</div>"
+        );
+    }
+
+    function diagnosisHtml(d) {
+        if (!d || !d.summary) return "";
+        const hint = d.code_fix_hint
+            ? '<p><strong>Fix:</strong> ' + esc(d.code_fix_hint) + "</p>"
+            : "";
+        return (
+            '<div class="dealers-job-diagnosis">' +
+            "<h3>AI diagnosis</h3>" +
+            "<p>" + esc(d.summary) + "</p>" +
+            (d.root_cause ? "<p>" + esc(d.root_cause) + "</p>" : "") +
+            hint +
+            '<p class="dealers-job-diagnosis__meta">' +
+            esc((d.category || "unknown") + " · " + (d.retry_strategy || "n/a") +
+                " · " + Math.round((d.confidence || 0) * 100) + "% confidence") +
+            "</p></div>"
+        );
+    }
+
+    function renderJobDetail(job) {
+        if (!sidebarBody || !sidebarTitle) return;
+        const payload = job.payload || {};
+        const result = job.result || {};
+        const logTail = result.log_tail || "";
+        const url = payload.url || payload.inventory_endpoint || "";
+        const diagnosis = job.ai_diagnosis || result.ai_diagnosis || null;
+        const confidence = job.scrape_confidence || result.scrape_confidence || null;
+        sidebarTitle.textContent = "Job #" + job.id;
+        sidebarBody.innerHTML =
+            '<div class="dealers-job-sidebar__meta">' +
+            metaRow("Status", statusPillHtml(job)) +
+            metaRow("Dealer", "<code>" + esc(job.dealer_id) + "</code>") +
+            metaRow("Type", esc(job.job_type)) +
+            metaRow("Worker", esc(job.worker_id || "—")) +
+            metaRow("Created", esc(fmtTs(job.created_at))) +
+            metaRow("Started", esc(fmtTs(job.started_at))) +
+            metaRow("Finished", esc(fmtTs(job.finished_at))) +
+            (job.error ? metaRow("Error", '<span style="color:#b91c1c">' + esc(job.error) + "</span>") : "") +
+            (url ? metaRow("URL", '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + "</a>") : "") +
+            (payload.name ? metaRow("Name", esc(payload.name)) : "") +
+            "</div>" +
+            confidenceHtml(confidence) +
+            diagnosisHtml(diagnosis) +
+            (logTail
+                ? '<div class="dealers-job-sidebar__section"><h3>Scanner log</h3><pre class="dealers-job-sidebar__log">' +
+                  esc(logTail) + "</pre></div>"
+                : '<p class="dealers-job-sidebar__status">No scanner log captured for this job.</p>');
+        const retryable = jobCanRetry(job);
+        if (retryBtn) {
+            retryBtn.hidden = !retryable;
+            retryBtn.dataset.jobId = String(job.id);
+        }
+        if (smartRetryBtn) {
+            smartRetryBtn.hidden = !retryable;
+            smartRetryBtn.dataset.jobId = String(job.id);
+        }
+    }
+
+    function metaRow(label, html) {
+        return (
+            '<div class="dealers-job-sidebar__row">' +
+            '<span class="dealers-job-sidebar__label">' + esc(label) + "</span>" +
+            "<span>" + html + "</span></div>"
+        );
+    }
+
+    async function loadJobDetail(jobId) {
+        selectedJobId = jobId;
+        tbody.querySelectorAll(".dealers-job-row").forEach(function (r) {
+            r.classList.toggle("dealers-job-row--selected", r.dataset.jobId === String(jobId));
+        });
+        openSidebar();
+        if (sidebarMsg) {
+            sidebarMsg.textContent = "";
+            sidebarMsg.classList.remove("dealers-job-sidebar__status--error");
+        }
+        const cached = jobsById.get(String(jobId));
+        if (cached) renderJobDetail(cached);
+        else if (sidebarBody) {
+            sidebarBody.innerHTML = '<p class="dealers-job-sidebar__status">Loading…</p>';
+        }
+        if (retryBtn) retryBtn.hidden = !cached || !jobCanRetry(cached);
+        if (smartRetryBtn) smartRetryBtn.hidden = !cached || !jobCanRetry(cached);
+        if (cached && jobCanRetry(cached)) fetchDiagnosis(jobId, cached);
+        try {
+            const resp = await fetch("/api/admin/dealer-jobs/" + encodeURIComponent(jobId), {
+                credentials: "same-origin",
+                headers: { Accept: "application/json" },
+            });
+            const data = await resp.json().catch(function () { return {}; });
+            if (resp.ok && data.ok && data.job) {
+                jobsById.set(String(jobId), data.job);
+                renderJobDetail(data.job);
+                if (jobCanRetry(data.job) && !data.job.ai_diagnosis) {
+                    fetchDiagnosis(jobId, data.job);
+                }
+                return;
+            }
+            if (cached) {
+                if (sidebarMsg) {
+                    sidebarMsg.textContent = resp.status === 404
+                        ? "Live detail API unavailable; showing cached job data."
+                        : "Could not refresh job details; showing cached data.";
+                }
+                return;
+            }
+            if (sidebarBody) {
+                sidebarBody.innerHTML = '<p class="dealers-job-sidebar__status dealers-job-sidebar__status--error">Could not load job details.</p>';
+            }
+        } catch (_e) {
+            if (cached) {
+                if (sidebarMsg) sidebarMsg.textContent = "Network error; showing cached job data.";
+                return;
+            }
+            if (sidebarBody) {
+                sidebarBody.innerHTML = '<p class="dealers-job-sidebar__status dealers-job-sidebar__status--error">Network error loading job.</p>';
+            }
+        }
+    }
+
+    async function fetchDiagnosis(jobId, job) {
+        if (!csrf || !job || !jobCanRetry(job)) return;
+        if (job.ai_diagnosis && job.ai_diagnosis.summary) return;
+        try {
+            const resp = await fetch("/api/admin/dealer-jobs/" + encodeURIComponent(jobId) + "/diagnose", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrf,
+                },
+                body: "{}",
+            });
+            const data = await resp.json().catch(function () { return {}; });
+            if (resp.ok && data.ok && data.diagnosis) {
+                const merged = Object.assign({}, job, { ai_diagnosis: data.diagnosis });
+                jobsById.set(String(jobId), merged);
+                if (String(selectedJobId) === String(jobId)) renderJobDetail(merged);
+            }
+        } catch (_e) { /* ignore */ }
+    }
+
+    async function retryJob(jobId, triggerEl, smart) {
+        if (!csrf) return;
+        const fromSidebar = !triggerEl;
+        if (fromSidebar && retryBtn) retryBtn.disabled = true;
+        if (fromSidebar && smartRetryBtn) smartRetryBtn.disabled = true;
+        if (fromSidebar && sidebarMsg) sidebarMsg.textContent = smart ? "Analyzing failure and re-queueing…" : "Re-queueing…";
+        if (triggerEl) triggerEl.disabled = true;
+        showJobsFlash((smart ? "Smart restart" : "Restart") + " for job #" + jobId + "…", false);
+        const endpoint = smart ? "/smart-retry" : "/retry";
+        try {
+            const resp = await fetch("/api/admin/dealer-jobs/" + encodeURIComponent(jobId) + endpoint, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrf,
+                },
+                body: "{}",
+            });
+            const data = await resp.json().catch(function () { return {}; });
+            if (resp.ok && data.ok) {
+                const msg = smart && data.diagnosis && data.diagnosis.summary
+                    ? "Queued job #" + data.job_id + ". " + data.diagnosis.summary
+                    : "Queued job #" + data.job_id + " (retry of #" + data.source_job_id + ").";
+                showJobsFlash(msg, false);
+                if (fromSidebar && sidebarMsg) sidebarMsg.textContent = msg;
+                await poll();
+                if (data.job_id && sidebar && !sidebar.hidden) loadJobDetail(data.job_id);
+            } else {
+                const err = data.error || "retry_failed";
+                let msg;
+                if (err === "needs_code_fix" && data.diagnosis) {
+                    msg = data.diagnosis.summary || "Code fix required before retry.";
+                    if (data.diagnosis.code_fix_hint) msg += " " + data.diagnosis.code_fix_hint;
+                } else if (err === "already_active") {
+                    msg = "A job for this dealer is already queued or running.";
+                } else if (err === "not_failed") {
+                    msg = "Only failed or low-confidence jobs can be restarted.";
+                } else {
+                    msg = "Could not restart job #" + jobId + ": " + err;
+                    if (data.diagnosis && data.diagnosis.summary) msg = data.diagnosis.summary;
+                }
+                showJobsFlash(msg, true);
+                if (fromSidebar && sidebarMsg) {
+                    sidebarMsg.textContent = msg;
+                    sidebarMsg.classList.add("dealers-job-sidebar__status--error");
+                }
+            }
+        } catch (_e) {
+            const msg = "Network error while restarting job #" + jobId + ".";
+            showJobsFlash(msg, true);
+            if (fromSidebar && sidebarMsg) {
+                sidebarMsg.textContent = msg;
+                sidebarMsg.classList.add("dealers-job-sidebar__status--error");
+            }
+        } finally {
+            if (fromSidebar && retryBtn) retryBtn.disabled = false;
+            if (fromSidebar && smartRetryBtn) smartRetryBtn.disabled = false;
+            if (triggerEl) triggerEl.disabled = false;
+        }
+    }
+
+    tbody.addEventListener("click", function (ev) {
+        const smartListBtn = ev.target.closest(".dealers-job-smart-retry-btn");
+        if (smartListBtn) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const jid = smartListBtn.dataset.jobId;
+            if (jid) retryJob(jid, smartListBtn, true);
+            return;
+        }
+        const retryListBtn = ev.target.closest(".dealers-job-retry-btn");
+        if (retryListBtn) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const jid = retryListBtn.dataset.jobId;
+            if (jid) retryJob(jid, retryListBtn, false);
+            return;
+        }
+        const btn = ev.target.closest(".dealers-job-detail-btn");
+        if (btn) {
+            ev.preventDefault();
+            loadJobDetail(btn.dataset.jobId);
+            return;
+        }
+        const row = ev.target.closest(".dealers-job-row");
+        if (row && row.dataset.jobId) {
+            loadJobDetail(row.dataset.jobId);
+        }
+    });
+
+    if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
+    if (backdrop) backdrop.addEventListener("click", closeSidebar);
+    document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape" && sidebar && !sidebar.hidden) closeSidebar();
+    });
+    if (retryBtn) {
+        retryBtn.addEventListener("click", function () {
+            const jid = retryBtn.dataset.jobId;
+            if (jid) retryJob(jid, null, false);
+        });
+    }
+    if (smartRetryBtn) {
+        smartRetryBtn.addEventListener("click", function () {
+            const jid = smartRetryBtn.dataset.jobId;
+            if (jid) retryJob(jid, null, true);
+        });
+    }
+
+    async function poll() {
+        try {
+            const resp = await fetch("/api/admin/dealer-jobs?limit=30", {
+                credentials: "same-origin",
+                headers: { Accept: "application/json" },
+            });
+            const data = await resp.json().catch(function () { return {}; });
+            if (resp.ok && data.ok && Array.isArray(data.jobs)) {
+                renderJobs(data.jobs);
+            }
+        } catch (_e) { /* ignore */ }
+    }
+
+    poll();
+    pollTimer = window.setInterval(poll, 5000);
+})();
+</script>
+{% endif %}
+{% endblock %}

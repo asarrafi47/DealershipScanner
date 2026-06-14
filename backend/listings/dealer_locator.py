@@ -148,7 +148,7 @@ def find_nearby_dealers(
     Google-only dealers are appended when not matched to a registry row.
     """
     from backend.db.dealerships_db import search_dealerships_by_radius
-    from backend.listings.nearby_dealers import _active_listing_counts
+    from backend.listings.nearby_dealers import attach_last_synced_at, attach_listing_counts
 
     radius_miles = max(1.0, min(float(radius_miles), 50.0))
     center = resolve_search_center(
@@ -166,15 +166,13 @@ def find_nearby_dealers(
 
     center_lat, center_lon = center
     registry_rows = search_dealerships_by_radius(center_lat, center_lon, radius_miles)
-    registry_ids = [int(r["id"]) for r in registry_rows if r.get("id")]
-    counts = _active_listing_counts(registry_ids)
 
     dealers: list[dict[str, Any]] = []
     matched_registry: set[int] = set()
 
     for row in registry_rows:
         rid = int(row["id"])
-        dealers.append(_registry_row_to_dealer(row, counts.get(rid, 0)))
+        dealers.append(_registry_row_to_dealer(row, 0))
 
     google_available = bool((os.environ.get("GOOGLE_MAPS_API_KEY") or "").strip())
     if include_google and google_available:
@@ -227,6 +225,8 @@ def find_nearby_dealers(
                 }
             )
 
+    attach_listing_counts(dealers)
+    attach_last_synced_at(dealers)
     dealers.sort(key=lambda d: (not d.get("in_database"), float(d.get("distance_miles") or 9999)))
 
     return {

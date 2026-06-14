@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Billing — Sarrafi Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
+</head>
+<body class="hub-page lp-body">
+<div class="page hub-shell">
+    {% from '_icons.html' import icon %}
+    {% set nav_active = "profile" %}
+    {% include "_nav_public.html" %}
+
+    <div class="hub-topbar hub-topbar--compact db-reveal">
+        <div class="hub-topbar__copy">
+            <p class="hub-kicker">Account</p>
+            <h1 class="hub-title">Billing</h1>
+            <p class="hub-lead">Your plan and subscription management.</p>
+        </div>
+        <a href="{{ url_for('account_profile_page') }}" class="secondary-button hub-topbar__back">{{ icon('arrow-left', 16) }} Profile</a>
+    </div>
+
+    <main class="hub-main hub-main--compact account-profile">
+        <section class="hub-card db-reveal">
+            <h2 class="hub-card__title">Current plan</h2>
+            {% if plan %}
+            <p><strong>{{ plan.name }}</strong>{% if plan.monthly_cents > 0 %} — ${{ '%.2f'|format(plan.monthly_cents / 100) }}/mo{% else %} — Free{% endif %}</p>
+            {% if plan.trial_days %}<p class="hub-card__sub">{{ plan.trial_days }}-day trial available on checkout.</p>{% endif %}
+            {% else %}
+            <p>{{ plan_id|title }}</p>
+            {% endif %}
+
+            {% if not billing_enabled %}
+            <p class="hub-card__sub">Stripe billing is not enabled on this environment.</p>
+            {% elif not is_premium %}
+            <p class="hub-card__sub"><a href="{{ url_for('premium_page') }}">View plans and upgrade</a></p>
+            {% endif %}
+
+            {% if has_portal %}
+            <p style="margin-top:1rem;">
+                <a href="{{ url_for('account_billing_portal') }}" class="primary-button">Manage subscription in Stripe</a>
+            </p>
+            {% elif billing_enabled and is_premium %}
+            <p class="hub-card__sub">Portal link appears after your first Stripe checkout stores a customer id.</p>
+            {% endif %}
+        </section>
+
+        <section class="hub-card db-reveal">
+            <h2 class="hub-card__title">Included features</h2>
+            {% if feature_labels %}
+            <ul>
+                {% for label in feature_labels %}
+                <li>{{ label }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="hub-card__sub">Browse and save cars (free tier).</p>
+            {% endif %}
+        </section>
+    </main>
+</div>
+</body>
+</html>

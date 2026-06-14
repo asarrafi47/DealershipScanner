@@ -11,6 +11,7 @@ from backend.db.dev_users_sqlite import DB_PATH as DEV_USERS_DB_PATH
 from backend.db.dev_users_sqlite import get_dev_users_conn
 from backend.db.password_hash import hash_password, password_needs_rehash, verify_or_legacy
 from backend.db import users_sqlite as legacy_users_sqlite
+from backend.utils.bootstrap_policy import bootstrap_force_admin_password
 from backend.utils.runtime_env import is_production_env
 
 logger = logging.getLogger(__name__)
@@ -112,13 +113,18 @@ def init_admin_db() -> None:
         default_pw_plain = (os.environ.get("ADMIN_PASSWORD") or "changeme").strip() or "changeme"
     default_pw = hash_password(default_pw_plain)
     cursor.execute(
+        "SELECT id FROM admin_users WHERE username = ?",
+        (default_user,),
+    )
+    existing = cursor.fetchone()
+    cursor.execute(
         """
         INSERT OR IGNORE INTO admin_users (username, email, password)
         VALUES (?, ?, ?)
         """,
         (default_user, default_email, default_pw),
     )
-    if os.environ.get("ADMIN_PASSWORD"):
+    if existing and os.environ.get("ADMIN_PASSWORD") and bootstrap_force_admin_password():
         cursor.execute(
             "UPDATE admin_users SET password = ? WHERE username = ?",
             (hash_password(default_pw_plain), default_user),

@@ -58,13 +58,34 @@ def listings_page(*, listings_poll_ms: int = 0):
         or sql_kwargs.get("packages_json_contains_list")
     )
     initial_grid_cars = []
+    search_ran = False
     if q_text or has_package_filter:
         parsed_q = parse_natural_query(q_text) if q_text else {}
         if q_text and not query_is_actionable(q_text, parsed_q, sql_kwargs):
             initial_grid_cars = []
+            search_ran = True
         else:
             results, _ = hybrid_search_with_kwargs(q_text or None, sql_kwargs, vector_top_k=100)
             initial_grid_cars = [serialize_car_for_listings_grid(c) for c in results]
+            search_ran = True
+
+    if search_ran:
+        try:
+            from backend.db.search_analytics_db import analytics_session_key, record_search_event
+
+            uid_raw = session.get("user_id")
+            user_id = int(uid_raw) if uid_raw is not None else None
+            record_search_event(
+                source="listings",
+                query_text=q_text or None,
+                filters={**active, **{k: v for k, v in sql_kwargs.items() if v}},
+                result_count=len(initial_grid_cars),
+                user_id=user_id,
+                session_key=analytics_session_key(session),
+                geo_zip=zip_code or None,
+            )
+        except Exception:
+            pass
 
     options = get_filter_options()
 

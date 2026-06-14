@@ -1,4 +1,4 @@
-"""Parameterized SQL for store admin over ``inventory.db`` (scoped by user role)."""
+"""Parameterized SQL for store admin over inventory (SQLite or Postgres)."""
 
 from __future__ import annotations
 
@@ -6,6 +6,35 @@ import sqlite3
 from typing import Any
 
 from backend.db.inventory_db import get_conn
+
+
+def _fetch_scalar(row: Any) -> Any:
+    """First column from COUNT(*) etc. — works for tuple, sqlite3.Row, and Postgres dict_row."""
+    if row is None:
+        return 0
+    if isinstance(row, dict):
+        return next(iter(row.values()))
+    return row[0]
+
+
+def _stale_price_predicate(days: int) -> tuple[str, list[Any]]:
+    """SQLite vs Postgres: cars with price unchanged longer than ``days``."""
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    d = max(1, int(days))
+    ts = "COALESCE(last_price_change_at, first_seen_at, scraped_at)"
+    if is_inventory_postgres():
+        return (
+            "(price IS NOT NULL AND price > 0 AND "
+            f"{ts} IS NOT NULL AND "
+            f"({ts})::timestamptz <= CURRENT_TIMESTAMP - INTERVAL '{d} days')",
+            [],
+        )
+    return (
+        "(price IS NOT NULL AND price > 0 AND "
+        f"datetime(replace({ts}, 'Z', '')) <= datetime('now', ?))",
+        [f"-{d} days"],
+    )
 
 
 def _scope_sql(profile: dict[str, Any]) -> tuple[str, tuple[Any, ...]]:
@@ -51,10 +80,10 @@ def dashboard_summary(profile: dict[str, Any], *, top_dealers: int = 12) -> dict
         iw.append(f"({scope})")
     active_sql = "SELECT COUNT(*) FROM cars WHERE " + " AND ".join(aw)
     cur.execute(active_sql, bind)
-    active_n = int(cur.fetchone()[0])
+    active_n = int(_fetch_scalar(cur.fetchone()))
     inact_sql = "SELECT COUNT(*) FROM cars WHERE " + " AND ".join(iw)
     cur.execute(inact_sql, bind)
-    inactive_n = int(cur.fetchone()[0])
+    inactive_n = int(_fetch_scalar(cur.fetchone()))
 
     dealers: list[dict[str, Any]] = []
     role = (profile.get("role") or "").strip().lower()
@@ -87,17 +116,14 @@ def dashboard_summary(profile: dict[str, Any], *, top_dealers: int = 12) -> dict
         from backend.dealer.admin.merchandising import stale_price_days
 
         d = int(stale_price_days())
-        sw = [
-            "(price IS NOT NULL AND price > 0)",
-            "datetime(replace(COALESCE(last_price_change_at, first_seen_at, scraped_at), 'Z', '')) "
-            "<= datetime('now', ?)",
-        ]
-        sb = [f"-{d} days"]
+        pred, pred_bind = _stale_price_predicate(d)
+        sw = [pred]
+        sb = list(pred_bind)
         if scope:
             sw.append(f"({scope})")
             sb.extend(bind)
         cur.execute("SELECT COUNT(*) FROM cars WHERE " + " AND ".join(sw), sb)
-        stale_n = int(cur.fetchone()[0])
+        stale_n = int(_fetch_scalar(cur.fetchone()))
     except (sqlite3.Error, TypeError, ValueError):
         stale_n = 0
 
@@ -147,13 +173,9 @@ def list_inventory_rows(
     if stale_only:
         from backend.dealer.admin.merchandising import stale_price_days
 
-        d = int(stale_price_days())
-        where_parts.append(
-            "(price IS NOT NULL AND price > 0 AND "
-            "datetime(replace(COALESCE(last_price_change_at, first_seen_at, scraped_at), 'Z', '')) "
-            "<= datetime('now', ?))"
-        )
-        params.append(f"-{d} days")
+        pred, pred_bind = _stale_price_predicate(int(stale_price_days()))
+        where_parts.append(pred)
+        params.extend(pred_bind)
 
     where_sql = " AND ".join(where_parts) if where_parts else "1"
 
@@ -169,12 +191,13 @@ def list_inventory_rows(
     dire = "DESC" if (direction or "").strip().lower() != "asc" else "ASC"
 
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     count_sql = f"SELECT COUNT(*) FROM cars WHERE {where_sql}"
     cur.execute(count_sql, params)
-    total = int(cur.fetchone()[0])
+    total = int(_fetch_scalar(cur.fetchone()))
 
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
     pp = max(5, min(100, int(per_page)))
     pg = max(1, int(page))
     offset = (pg - 1) * pp

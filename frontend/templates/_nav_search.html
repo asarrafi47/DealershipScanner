@@ -1,6 +1,6 @@
 {# Global inventory search — GET to listings (smart search runs on ?q=). #}
 {% from '_icons.html' import icon %}
-<form class="nav-search" method="get" action="{{ url_for('listings') }}" role="search">
+<form class="nav-search{% if nav_search_compact %} nav-search--compact{% endif %}" method="get" action="{{ url_for('listings') }}" role="search">
     <div class="nav-search__query">
         <label class="nav-search__label" for="nav-search-input">Search inventory</label>
         <span class="nav-search__icon" aria-hidden="true">{{ icon('inventory', 16) }}</span>
@@ -9,7 +9,7 @@
             id="nav-search-input"
             name="q"
             class="nav-search__input"
-            placeholder="Accord with sunroof under $30k · M Sport · VIN…"
+            placeholder="{% if nav_search_compact %}Keywords or VIN…{% else %}Accord with sunroof under $30k · M Sport · VIN…{% endif %}"
             value="{{ request.args.get('q', '') if request else '' }}"
             autocomplete="off"
             spellcheck="false"

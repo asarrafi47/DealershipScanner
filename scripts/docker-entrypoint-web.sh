@@ -14,6 +14,12 @@ python3 scripts/bootstrap_site_admin.py \
   || echo "WARN: site admin bootstrap skipped" >&2
 
 PORT="${PORT:-8000}"
+GUNICORN_RELOAD=""
+if [ "${FLASK_ENV:-}" = "development" ]; then
+  # poll: reliable reload when /app is a Docker bind mount (inotify misses host edits on macOS)
+  GUNICORN_RELOAD="--reload --reload-engine poll"
+fi
 exec gunicorn -w 1 --threads 4 -b "0.0.0.0:${PORT}" \
   --timeout 120 --graceful-timeout 30 \
+  ${GUNICORN_RELOAD} \
   backend.main:app

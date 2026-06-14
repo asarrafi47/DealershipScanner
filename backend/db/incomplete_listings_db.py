@@ -182,7 +182,10 @@ def fast_rebuild_incomplete_listings_index() -> int:
     conn_inc = get_conn()
     _ensure_schema(conn_inc)
     try:
-        conn_inc.execute("BEGIN IMMEDIATE")
+        if is_inventory_postgres():
+            conn_inc.execute("BEGIN")
+        else:
+            conn_inc.execute("BEGIN IMMEDIATE")
         conn_inc.execute("DELETE FROM incomplete_listings")
         if rows_to_upsert:
             conn_inc.executemany(

@@ -11,7 +11,7 @@
 
 <div class="page hub-shell">
 
-    {% set nav_active = "dashboard" %}
+    {% set nav_active = "home" %}
     {% from '_icons.html' import icon %}
     {% include "_nav_public.html" %}
 
@@ -19,9 +19,9 @@
         <div class="hub-topbar__copy">
             <p class="hub-kicker">Stats &amp; actions</p>
             <h1 class="hub-title">Dashboard</h1>
-            <p class="hub-lead">Counts and shortcuts — your car feed is on <a href="{{ personal_home_url }}">Home</a>.</p>
+            <p class="hub-lead">Activity counts and shortcuts — your car feed is on <a href="{{ personal_home_url }}">For you</a>.</p>
         </div>
-        <a href="{{ personal_home_url }}" class="secondary-button hub-topbar__back">{{ icon('arrow-left', 16) }} Home</a>
+        <a href="{{ personal_home_url }}" class="secondary-button hub-topbar__back">{{ icon('arrow-left', 16) }} For you</a>
     </div>
 
     <main class="hub-main hub-main--compact">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             {% if not geo_zip %}
-            <p class="hub-note">Set ZIP + radius on <a href="{{ url_for('listings') }}">Browse inventory</a> to tune Home recommendations.</p>
+            <p class="hub-note">Set ZIP + radius on <a href="{{ url_for('listings') }}">Browse</a> to tune For you recommendations.</p>
             {% endif %}
         </section>
 
@@ -86,7 +86,7 @@
                 </a>
                 <a href="{{ personal_home_url }}#reco-section" class="dash-hub-action">
                     <span class="dash-hub-action__title">Recommendations</span>
-                    <span class="dash-hub-action__sub">On your Home feed</span>
+                    <span class="dash-hub-action__sub">On your For you feed</span>
                 </a>
                 <a href="{{ url_for('listings') }}" class="dash-hub-action" data-nav-listings>
                     <span class="dash-hub-action__title">Search inventory</span>

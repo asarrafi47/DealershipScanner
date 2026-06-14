@@ -6,22 +6,121 @@
 
     const form = document.getElementById("find-dealers-form");
     const statusEl = document.getElementById("find-dealers-status");
-    const resultsWrap = document.getElementById("find-dealers-results");
     const legend = document.getElementById("find-dealers-legend");
     const listEl = document.getElementById("find-dealers-list");
     const countEl = document.getElementById("find-dealers-count");
     const mapEl = document.getElementById("find-dealers-map");
     const submitBtn = document.getElementById("find-dealers-submit");
+    const mapPlaceholderEl = document.getElementById("find-dealers-map-placeholder");
+    const sidebarEmptyEl = document.getElementById("find-dealers-sidebar-empty");
+    const sidebarResultsEl = document.getElementById("find-dealers-sidebar-results");
 
     if (!form || !mapEl || typeof L === "undefined") return;
+
+    const adminCfg = (function () {
+        const el = document.getElementById("ds-find-dealers-admin");
+        if (!el || !el.textContent) return null;
+        try {
+            const cfg = JSON.parse(el.textContent);
+            return cfg && cfg.site_admin ? cfg : null;
+        } catch (_e) {
+            return null;
+        }
+    })();
+
+    function csrfToken() {
+        const m = document.querySelector('meta[name="csrf-token"]');
+        return m && m.content ? m.content : "";
+    }
+
+    function canRequestScrape(d) {
+        return !!(adminCfg && adminCfg.onboard_enabled && d && !d.in_database && d.website_url);
+    }
+
+    function adminScrapeButtonHtml(d) {
+        if (!adminCfg || !adminCfg.onboard_enabled) {
+            if (adminCfg && !adminCfg.onboard_enabled) {
+                return '<p class="find-dealers-admin-hint">Scrape queue needs Postgres (<code>./deploy/up.sh --full</code>).</p>';
+            }
+            return "";
+        }
+        if (d.in_database) {
+            return "";
+        }
+        if (!d.website_url) {
+            return '<p class="find-dealers-admin-hint">No website from Google — add manually at <a href="/admin/dealers">/admin/dealers</a>.</p>';
+        }
+        return (
+            '<button type="button" class="find-dealers-admin-btn primary-button" data-dealer-key="' +
+            escapeAttr(d.key) +
+            '">Request scrape</button>'
+        );
+    }
+
+    async function requestDealerScrape(d, btn) {
+        if (!d || !d.website_url) return;
+        const prev = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Queuing…";
+        try {
+            const headers = { "Content-Type": "application/json", Accept: "application/json" };
+            const t = csrfToken();
+            if (t) headers["X-CSRF-Token"] = t;
+            const resp = await fetch("/api/admin/dealer-onboard", {
+                method: "POST",
+                credentials: "same-origin",
+                headers,
+                body: JSON.stringify({
+                    url: d.website_url,
+                    name: d.name || "",
+                }),
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (!resp.ok || !data.ok) {
+                const err = data.error || "Could not queue scrape.";
+                throw new Error(err === "postgres_required" ? "Postgres job queue not configured." : err);
+            }
+            setStatus(
+                "Queued onboard job #" +
+                    data.job_id +
+                    " for " +
+                    (data.dealer_id || "dealer") +
+                    '. Track progress on <a href="/admin/dealers">Dealer jobs</a> or <a href="/admin/site">Site admin</a>.',
+                false,
+                true
+            );
+            btn.textContent = "Queued ✓";
+            btn.classList.add("find-dealers-admin-btn--done");
+        } catch (e) {
+            setStatus(e.message || "Could not queue scrape.", true);
+            btn.disabled = false;
+            btn.textContent = prev;
+        }
+    }
+
+    function bindAdminScrapeButtons(root) {
+        if (!adminCfg || !root) return;
+        root.querySelectorAll(".find-dealers-admin-btn").forEach((btn) => {
+            btn.addEventListener("click", (ev) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+                const key = btn.getAttribute("data-dealer-key");
+                const d = dealersByKey[key];
+                if (d) requestDealerScrape(d, btn);
+            });
+        });
+    }
+
+    let dealersByKey = {};
 
     let map = null;
     let markerLayer = null;
     let markersByKey = {};
 
-    function setStatus(msg, isError) {
+    function setStatus(msg, isError, asHtml) {
         if (!statusEl) return;
-        statusEl.textContent = msg || "";
+        if (asHtml) statusEl.innerHTML = msg || "";
+        else statusEl.textContent = msg || "";
         statusEl.classList.toggle("find-dealers-status--error", !!isError);
     }
 
@@ -62,6 +161,16 @@
         }
     }
 
+    function refreshMapLayout(bounds) {
+        if (!map) return;
+        window.requestAnimationFrame(() => {
+            map.invalidateSize();
+            if (bounds && bounds.isValid()) {
+                map.fitBounds(bounds.pad(0.12));
+            }
+        });
+    }
+
     function markerColor(dealer) {
         return dealer.in_database ? "#1a5f4a" : "#6b7280";
     }
@@ -81,6 +190,10 @@
         } else {
             lines.push('<span class="find-dealers-badge find-dealers-badge--google">Found via Google</span>');
         }
+        const scraped = scrapeStatusLabel(d);
+        if (scraped) {
+            lines.push('<span class="find-dealers-scraped">' + escapeHtml(scraped) + "</span>");
+        }
         if (d.website_url) {
             const href = safeHttpHref(d.website_url);
             if (href) {
@@ -90,6 +203,8 @@
         if (d.registry_id && d.listing_count > 0) {
             lines.push('<a href="/listings?dealer_registry_id=' + encodeURIComponent(d.registry_id) + '">View inventory</a>');
         }
+        const adminBtn = adminScrapeButtonHtml(d);
+        if (adminBtn) lines.push(adminBtn);
         return lines.join("<br>");
     }
 
@@ -118,14 +233,49 @@
         return parts.join(" · ");
     }
 
+    function formatLastSynced(iso) {
+        const raw = String(iso || "").trim();
+        if (!raw) return "";
+        const d = new Date(raw);
+        if (Number.isNaN(d.getTime())) return "";
+        return d.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        });
+    }
+
+    function scrapeStatusLabel(d) {
+        if (!d) return "";
+        const date = formatLastSynced(d.last_synced_at);
+        const n = Number(d.listing_count) || 0;
+        if (date && n > 0) {
+            return "Last scraped · " + date + " · " + n + " car" + (n === 1 ? "" : "s");
+        }
+        if (date) {
+            return "Last scraped · " + date + " · no inventory captured";
+        }
+        if (n > 0) {
+            return n + " car" + (n === 1 ? "" : "s") + " scraped";
+        }
+        return "";
+    }
+
     function renderResults(data) {
         const dealers = data.dealers || [];
         const center = data.center;
         if (!center) return;
 
-        resultsWrap.hidden = false;
-        legend.hidden = false;
-        countEl.textContent = "(" + dealers.length + ")";
+        dealersByKey = {};
+        dealers.forEach((d) => {
+            if (d && d.key) dealersByKey[d.key] = d;
+        });
+
+        if (mapPlaceholderEl) mapPlaceholderEl.hidden = true;
+        if (sidebarEmptyEl) sidebarEmptyEl.hidden = true;
+        if (sidebarResultsEl) sidebarResultsEl.hidden = false;
+        if (legend) legend.hidden = false;
+        if (countEl) countEl.textContent = "(" + dealers.length + ")";
         ensureMap(center);
 
         if (markerLayer) markerLayer.clearLayers();
@@ -149,15 +299,17 @@
             const marker = L.marker(ll, { icon }).bindPopup(buildPopupHtml(d));
             marker.addTo(markerLayer);
             markersByKey[d.key] = marker;
+            marker.on("popupopen", () => bindAdminScrapeButtons(marker.getPopup().getElement()));
         });
 
-        if (dealers.length) {
-            map.fitBounds(bounds.pad(0.12));
-        }
+        refreshMapLayout(dealers.length ? bounds : null);
 
         listEl.innerHTML = dealers.map((d) => renderListItem(d)).join("");
         listEl.querySelectorAll(".find-dealers-list-item").forEach((li) => {
-            li.addEventListener("click", () => focusDealer(li.dataset.dealerKey));
+            li.addEventListener("click", (ev) => {
+                if (ev.target.closest(".find-dealers-admin-btn")) return;
+                focusDealer(li.dataset.dealerKey);
+            });
             li.addEventListener("keydown", (e) => {
                 if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
@@ -165,6 +317,7 @@
                 }
             });
         });
+        bindAdminScrapeButtons(listEl);
     }
 
     function renderListItem(d) {
@@ -172,11 +325,20 @@
             ? '<span class="find-dealers-list-badge find-dealers-list-badge--db">In database</span>'
             : '<span class="find-dealers-list-badge find-dealers-list-badge--google">Google</span>';
         const dist = d.distance_miles != null ? d.distance_miles.toFixed(1) + " mi" : "";
+        const scrapeStatus = scrapeStatusLabel(d);
         const stock = d.in_database && d.listing_count > 0
-            ? '<a class="find-dealers-list-link" href="/listings?dealer_registry_id=' + encodeURIComponent(d.registry_id) + '">' + d.listing_count + " listings</a>"
+            ? '<a class="find-dealers-list-link" href="/listings?dealer_registry_id=' + encodeURIComponent(d.registry_id) + '">View ' + d.listing_count + " listings</a>"
             : (d.in_database ? '<span class="find-dealers-list-muted">No live listings yet</span>' : "");
+        const scrapeMeta = scrapeStatus
+            ? '<span class="find-dealers-list-scraped">' + escapeHtml(scrapeStatus) + "</span>"
+            : "";
         const web = d.website_url
             ? '<a class="find-dealers-list-link" href="' + escapeAttr(d.website_url) + '" target="_blank" rel="noopener noreferrer">Website</a>'
+            : "";
+        const adminBtn = canRequestScrape(d)
+            ? '<button type="button" class="find-dealers-admin-btn primary-button find-dealers-admin-btn--inline" data-dealer-key="' +
+              escapeAttr(d.key) +
+              '">Request scrape</button>'
             : "";
         return (
             '<li class="find-dealers-list-item" tabindex="0" role="button" data-dealer-key="' + escapeAttr(d.key) + '">' +
@@ -185,7 +347,8 @@
             badge +
             "</div>" +
             '<p class="find-dealers-list-item__addr">' + escapeHtml(formatAddress(d) || "Address unavailable") + "</p>" +
-            '<p class="find-dealers-list-item__meta">' + escapeHtml(dist) + (stock ? " · " + stock : "") + (web ? " · " + web : "") + "</p>" +
+            '<p class="find-dealers-list-item__meta">' + escapeHtml(dist) + (stock ? " · " + stock : "") + (scrapeMeta ? " · " + scrapeMeta : "") + (web ? " · " + web : "") + "</p>" +
+            (adminBtn ? '<p class="find-dealers-list-item__admin">' + adminBtn + "</p>" : "") +
             "</li>"
         );
     }

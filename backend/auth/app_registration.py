@@ -66,4 +66,8 @@ def register_general_app_user(
             False,
         )
 
+    from backend.auth.email_verification import issue_and_send_verification_email
+
+    issue_and_send_verification_email(user_id=int(uid), to_email=email_n)
+
     return int(uid), None, None, plan_l == "premium"

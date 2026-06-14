@@ -55,6 +55,8 @@ def test_nearby_dealers_premium_required_when_billing_enabled(monkeypatch, tmp_p
     data = rv.get_json()
     assert data is not None
     assert data.get("error") == "premium_required"
+    assert data.get("upgrade_plan_id") == "research"
+    assert data.get("upgrade_plan_name") == "Research"
     assert data.get("dealers") == []
 
 

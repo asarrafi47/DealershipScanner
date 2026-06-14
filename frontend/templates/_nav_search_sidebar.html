@@ -1,0 +1,40 @@
+{# Sidebar inventory search — compact; lives below nav, not above it. #}
+{% from '_icons.html' import icon %}
+<form class="sidebar-search sidebar-search--compact" method="get" action="{{ url_for('listings') }}" role="search">
+    <p class="sidebar-search__heading">Find cars</p>
+    <div class="sidebar-search__row">
+        <label class="sidebar-search__field sidebar-search__field--grow">
+            <span class="visually-hidden">Search inventory</span>
+            <span class="sidebar-search__input-wrap">
+                <span class="sidebar-search__icon" aria-hidden="true">{{ icon('inventory', 15) }}</span>
+                <input
+                    type="search"
+                    name="q"
+                    class="sidebar-search__input"
+                    placeholder="Keywords or VIN"
+                    value="{{ request.args.get('q', '') if request else '' }}"
+                    autocomplete="off"
+                    spellcheck="false"
+                    enterkeyhint="search"
+                >
+            </span>
+        </label>
+        <label class="sidebar-search__field sidebar-search__field--zip">
+            <span class="visually-hidden">ZIP code</span>
+            <input
+                type="text"
+                name="zip_code"
+                class="sidebar-search__input sidebar-search__input--zip"
+                placeholder="ZIP"
+                maxlength="5"
+                inputmode="numeric"
+                value="{{ request.args.get('zip_code', '') if request else '' }}"
+                autocomplete="postal-code"
+                aria-label="ZIP code"
+            >
+        </label>
+        <button type="submit" class="sidebar-search__submit" aria-label="Search inventory">
+            {{ icon('chevron-right', 16) }}
+        </button>
+    </div>
+</form>

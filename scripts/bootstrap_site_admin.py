@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
 
 from backend.db.password_hash import hash_password
 from backend.db.users_db import get_conn, init_users_db
+from backend.utils.bootstrap_policy import bootstrap_force_admin_password
 from backend.utils.roles import ROLE_ADMIN, admin_emails, admin_usernames
 from backend.utils.runtime_env import is_production_env
 
@@ -24,7 +25,8 @@ def _primary_admin_identity() -> tuple[str, str]:
     return username, email
 
 
-def _ensure_admin_user(username: str, email: str, pw_plain: str | None) -> None:
+def _ensure_admin_user(username: str, email: str, pw_plain: str | None) -> bool:
+    """Ensure primary site admin exists. Returns True only when a new row was inserted."""
     conn = get_conn()
     cur = conn.cursor()
     cur.execute(
@@ -39,7 +41,7 @@ def _ensure_admin_user(username: str, email: str, pw_plain: str | None) -> None:
         )
         conn.commit()
         conn.close()
-        return
+        return False
 
     cur.execute(
         "SELECT id FROM users WHERE lower(username) = lower(?)",
@@ -58,11 +60,11 @@ def _ensure_admin_user(username: str, email: str, pw_plain: str | None) -> None:
         conn.commit()
         conn.close()
         print(f"bootstrap_site_admin: renamed ksarrafi -> {username}")
-        return
+        return False
 
     if not pw_plain:
         conn.close()
-        return
+        return False
 
     cur.execute(
         """
@@ -74,6 +76,7 @@ def _ensure_admin_user(username: str, email: str, pw_plain: str | None) -> None:
     conn.commit()
     conn.close()
     print(f"bootstrap_site_admin: created admin user {username}")
+    return True
 
 
 def _reset_passwords(pw_plain: str) -> list[str]:
@@ -111,7 +114,7 @@ def main() -> int:
 
     username, email = _primary_admin_identity()
     pw = (os.environ.get("ADMIN_PASSWORD") or "").strip()
-    _ensure_admin_user(username, email, pw or None)
+    created = _ensure_admin_user(username, email, pw or None)
     if username.lower() == "asarrafi":
         conn = get_conn()
         cur = conn.cursor()
@@ -123,6 +126,15 @@ def main() -> int:
 
     if not pw:
         print("bootstrap_site_admin: no ADMIN_PASSWORD — promoted env admins only")
+        return 0
+
+    force_sync = bootstrap_force_admin_password()
+    if created:
+        print(f"bootstrap_site_admin: password set for new admin {username}")
+        return 0
+
+    if not force_sync:
+        print("bootstrap_site_admin: admin user ready; password unchanged")
         return 0
 
     updated = _reset_passwords(pw)

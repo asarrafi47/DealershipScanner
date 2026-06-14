@@ -53,8 +53,10 @@
                 var data = wrapped.data || {};
                 if (!wrapped.ok) {
                     if (data.error === "premium_required") {
+                        var planName = data.upgrade_plan_name || "Premium";
+                        var upgradeUrl = data.upgrade_url || "/premium";
                         appendBubble(
-                            "Premium subscription required. Open /premium to unlock car chat.",
+                            planName + " plan required. Visit " + upgradeUrl + " to upgrade.",
                             "error"
                         );
                     } else if (data.error === "login_required") {

@@ -21,7 +21,7 @@ def _email_plain_body(code: str) -> str:
 
 
 def _send_resend(
-    *, to_email: str, code: str, mfa_log_surface: str, subject: str | None = None
+    *, to_email: str, code: str, mfa_log_surface: str, subject: str | None = None, body: str | None = None
 ) -> None:
     import resend  # type: ignore[import-untyped]
 
@@ -39,7 +39,7 @@ def _send_resend(
             "from": from_addr,
             "to": [to_email],
             "subject": subject or "Your Sarrafi Collection verification code",
-            "text": _email_plain_body(code),
+            "text": body if body is not None else _email_plain_body(code),
         }
     )
     log_mfa_action(
@@ -48,6 +48,133 @@ def _send_resend(
         fields={
             "delivery_mode": "resend",
             "result": "resend_sent",
+            "to_email": to_email,
+        },
+    )
+
+
+def send_transactional_email(
+    *,
+    to_email: str,
+    subject: str,
+    text: str,
+    log_surface: str = "app",
+) -> None:
+    """Send a plain-text transactional email (verification links, etc.)."""
+    mode = _send_mode()
+    if mode in ("log", "test"):
+        _log.info("[email] to=%s subject=%s body=%s", to_email, subject, text)
+        log_mfa_action(
+            event="delivery.email",
+            surface=log_surface,
+            fields={
+                "delivery_mode": mode,
+                "result": "log_or_test",
+                "to_email": to_email,
+                "subject": subject[:120],
+            },
+        )
+        return
+
+    ep = (os.environ.get("MFA_EMAIL_PROVIDER") or "auto").strip().lower()
+    rkey = (os.environ.get("RESEND_API_KEY") or "").strip()
+
+    if ep in ("auto", "resend"):
+        if rkey:
+            try:
+                _send_resend(
+                    to_email=to_email,
+                    code="",
+                    mfa_log_surface=log_surface,
+                    subject=subject,
+                    body=text,
+                )
+            except Exception as e:  # noqa: BLE001
+                log_mfa_action(
+                    event="delivery.email",
+                    surface=log_surface,
+                    fields={
+                        "delivery_mode": "resend",
+                        "result": "error",
+                        "detail": type(e).__name__,
+                        "error": (str(e) or "")[:500],
+                        "to_email": to_email,
+                    },
+                )
+                if isinstance(e, (RuntimeError, OSError)):
+                    raise
+                raise RuntimeError("Resend could not send the message.") from e
+            return
+        if ep == "resend" and is_production_env():
+            raise RuntimeError("MFA_EMAIL_PROVIDER=resend but RESEND_API_KEY is not set.")
+        if ep == "resend" and not is_production_env():
+            _log.info("[email] RESEND_API_KEY missing; dev fallback: log to console")
+            _log.info("[email] to=%s subject=%s body=%s", to_email, subject, text)
+            log_mfa_action(
+                event="delivery.email",
+                surface=log_surface,
+                fields={
+                    "delivery_mode": "resend",
+                    "result": "resend_key_missing_log_fallback",
+                    "to_email": to_email,
+                },
+            )
+            return
+
+    host = (os.environ.get("SMTP_HOST") or "").strip()
+    port = int(os.environ.get("SMTP_PORT") or 587)
+    user = (os.environ.get("SMTP_USERNAME") or "").strip()
+    pw = (os.environ.get("SMTP_PASSWORD") or "").strip()
+    from_addr = (os.environ.get("SMTP_FROM") or user or "").strip()
+    if not host or not from_addr:
+        if is_production_env():
+            raise RuntimeError("Email is not configured. Set RESEND_API_KEY+RESEND_FROM, or SMTP_HOST+SMTP_FROM.")
+        _log.info("[email] not configured; falling back to log mode")
+        _log.info("[email] to=%s subject=%s body=%s", to_email, subject, text)
+        log_mfa_action(
+            event="delivery.email",
+            surface=log_surface,
+            fields={
+                "delivery_mode": "smtp",
+                "result": "smtp_fallback_to_log",
+                "detail": "missing_smtp_host_or_from",
+                "to_email": to_email,
+            },
+        )
+        return
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = from_addr
+    msg["To"] = to_email
+    msg.set_content(text)
+
+    try:
+        with smtplib.SMTP(host, port, timeout=15) as s:
+            s.starttls()
+            if user and pw:
+                s.login(user, pw)
+            s.send_message(msg)
+    except (OSError, smtplib.SMTPException) as e:  # noqa: BLE001
+        log_mfa_action(
+            event="delivery.email",
+            surface=log_surface,
+            fields={
+                "delivery_mode": "smtp",
+                "result": "error",
+                "detail": f"smtp_{type(e).__name__}",
+                "error": str(e)[:500],
+                "to_email": to_email,
+            },
+        )
+        raise
+    log_mfa_action(
+        event="delivery.email",
+        surface=log_surface,
+        fields={
+            "delivery_mode": "smtp",
+            "result": "smtp_sent",
+            "smtp_port": port,
             "to_email": to_email,
         },
     )

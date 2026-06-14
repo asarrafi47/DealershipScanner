@@ -45,7 +45,12 @@
                 {% if is_premium %}
                 <div class="account-profile__meta-row">
                     <dt>Plan</dt>
-                    <dd>Premium</dd>
+                    <dd>Premium · <a href="{{ url_for('account_billing_page') }}">Billing</a></dd>
+                </div>
+                {% else %}
+                <div class="account-profile__meta-row">
+                    <dt>Billing</dt>
+                    <dd><a href="{{ url_for('account_billing_page') }}">Plans &amp; subscription</a></dd>
                 </div>
                 {% endif %}
             </dl>

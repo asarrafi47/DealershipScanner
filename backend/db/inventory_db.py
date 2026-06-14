@@ -8,7 +8,11 @@ from dataclasses import dataclass
 from typing import Any, Iterator
 from urllib.parse import urlparse
 
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db.inventory_pg import (
+    assert_inventory_backend_configured,
+    inventory_sqlite_tests_allowed,
+    is_inventory_postgres,
+)
 from backend.utils.car_serialize import serialize_car_for_listings_grid as _serialize_car_for_listings_grid
 
 # Default SQLite location for the public scanned inventory. Prefer ``backend/inventory.db``
@@ -505,6 +509,12 @@ def init_inventory_db():
         except Exception:
             _log.exception("incomplete_listings index bootstrap failed")
         return
+
+    assert_inventory_backend_configured()
+    if not inventory_sqlite_tests_allowed():
+        raise RuntimeError(
+            "SQLite inventory init is disabled; set INVENTORY_DATABASE_URL to Postgres."
+        )
 
     conn = get_conn()
     cursor = conn.cursor()

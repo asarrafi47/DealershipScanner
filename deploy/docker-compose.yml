@@ -1,12 +1,40 @@
 name: dealership-scanner
 
-# Local Docker stack. Secrets: container entrypoint + app startup load from kmac vault
-# (host.docker.internal:9999). No .env file required.
+# Local Docker stack (Postgres inventory required). Secrets: kmac vault (host.docker.internal:9999).
 #
-#   ./deploy/up.sh       # build + start
-#   ./deploy/restart.sh  # recreate with vault (no rebuild)
+#   ./deploy/up.sh
+
+x-scanner-env: &scanner-env
+  ALLOW_UNENCRYPTED_USER_DB: "1"
+  PYTHONPATH: /app
+  KMAC_VAULT_AUTO: "1"
+  VAULT_ADDR: http://host.docker.internal:9999
+  VAULT_TOKEN_FILE: /run/secrets/kmac-vault-token
+  DEALER_PORTAL_DB_PATH: /data/dealer_portal.db
+  USERS_DB_PATH: /data/users.db
+  DEV_USERS_DB_PATH: /data/dev_users.db
+  INCOMPLETE_LISTINGS_DB_PATH: /data/incomplete_listings.db
+  SCANNER_VDP_IMAGE_DOWNLOAD_DIR: /data/vdp_images
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dealership-scanner-postgres
+    environment:
+      POSTGRES_USER: dealership
+      POSTGRES_PASSWORD: dealership
+      POSTGRES_DB: dealership
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dealership -d dealership"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
   web:
     container_name: dealership-scanner-web
     build:
@@ -22,56 +50,81 @@ services:
       - ..:/app
       - ${HOME}/.config/kmac/docker-vault-token:/run/secrets/kmac-vault-token:ro
     environment:
+      <<: *scanner-env
       FLASK_ENV: development
-      ALLOW_UNENCRYPTED_USER_DB: "1"
-      PYTHONPATH: /app
-      KMAC_VAULT_AUTO: "1"
-      VAULT_ADDR: http://host.docker.internal:9999
-      VAULT_TOKEN_FILE: /run/secrets/kmac-vault-token
-      INVENTORY_DB_PATH: /data/inventory.db
-      DEALER_PORTAL_DB_PATH: /data/dealer_portal.db
-      USERS_DB_PATH: /data/users.db
-      DEV_USERS_DB_PATH: /data/dev_users.db
-      INCOMPLETE_LISTINGS_DB_PATH: /data/incomplete_listings.db
-      SCANNER_VDP_IMAGE_DOWNLOAD_DIR: /data/vdp_images
+      INVENTORY_DATABASE_URL: postgresql://dealership:dealership@postgres:5432/dealership
       LISTINGS_INCLUDE_INCOMPLETE_CARS: "0"
       APP_ADMIN_USERNAMES: ${APP_ADMIN_USERNAMES:-asarrafi}
       APP_ADMIN_EMAILS: ${APP_ADMIN_EMAILS:-asarrafi@sarraficars.com}
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
       ALLOW_APP_ADMIN_DEV_PASS_THROUGH: ${ALLOW_APP_ADMIN_DEV_PASS_THROUGH:-1}
-      # Optional overrides (vault fills these when unset at startup)
+      BILLING_STRIPE_ENABLED: ${BILLING_STRIPE_ENABLED:-0}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       SECRET_KEY: ${SECRET_KEY:-}
+      USERS_DB_ENCRYPTION_KEY: ${USERS_DB_ENCRYPTION_KEY:-}
+      DEV_USERS_DB_ENCRYPTION_KEY: ${DEV_USERS_DB_ENCRYPTION_KEY:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
-    depends_on: []
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
+      APPLE_OAUTH_CLIENT_ID: ${APPLE_OAUTH_CLIENT_ID:-}
+      APPLE_OAUTH_TEAM_ID: ${APPLE_OAUTH_TEAM_ID:-}
+      APPLE_OAUTH_KEY_ID: ${APPLE_OAUTH_KEY_ID:-}
+      APPLE_OAUTH_PRIVATE_KEY: ${APPLE_OAUTH_PRIVATE_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
-  scanner:
+  scanner-worker:
     build:
       context: ..
       dockerfile: Dockerfile.scanner
     image: dealership-scanner:dev
-    profiles:
-      - scanner
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - ../data/runtime:/data
+      - ..:/app
+      - scanner_node_modules:/app/backend/scanner/node_modules
       - ${HOME}/.config/kmac/docker-vault-token:/run/secrets/kmac-vault-token:ro
     environment:
-      ALLOW_UNENCRYPTED_USER_DB: "1"
-      PYTHONPATH: /app
-      KMAC_VAULT_AUTO: "1"
-      VAULT_ADDR: http://host.docker.internal:9999
-      VAULT_TOKEN_FILE: /run/secrets/kmac-vault-token
-      INVENTORY_DB_PATH: /data/inventory.db
-      DEALER_PORTAL_DB_PATH: /data/dealer_portal.db
-      USERS_DB_PATH: /data/users.db
-      DEV_USERS_DB_PATH: /data/dev_users.db
+      <<: *scanner-env
+      INVENTORY_DATABASE_URL: postgresql://dealership:dealership@postgres:5432/dealership
+      SCANNER_PARALLEL_UPSERT: "1"
+      SCANNER_MAX_DEALER_CONCURRENCY: "3"
+      SCANNER_WORKER_POLL_SEC: "10"
+      SCANNER_BROWSER_PROFILE_DIR: /data/browser-profiles
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-    command: ["python", "scanner.py", "--help"]
+    entrypoint: ["/app/scripts/docker-entrypoint-scanner-worker.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
 
-volumes: {}
+  scanner-scheduler:
+    build:
+      context: ..
+      dockerfile: Dockerfile.scanner
+    image: dealership-scanner:dev
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ../data/runtime:/data
+      - ..:/app
+      - ${HOME}/.config/kmac/docker-vault-token:/run/secrets/kmac-vault-token:ro
+    environment:
+      <<: *scanner-env
+      INVENTORY_DATABASE_URL: postgresql://dealership:dealership@postgres:5432/dealership
+      SCANNER_SCHEDULER_INTERVAL_SEC: "60"
+    entrypoint: ["/app/scripts/docker-entrypoint-scanner-scheduler.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  scanner_node_modules:

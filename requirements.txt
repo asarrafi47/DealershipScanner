@@ -25,6 +25,7 @@ redis
 ollama>=0.3
 crawl4ai>=0.8,<0.9
 stripe>=8
+PyJWT[crypto]>=2.8
 pypdf>=4.0
 pymupdf>=1.24
 

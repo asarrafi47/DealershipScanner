@@ -38,6 +38,147 @@ const scrapeSamplesBuffer = [];
  */
 let lastDealerInventoryBodies = null;
 
+/** Last run scrape path + counts for worker confidence reporting. */
+let lastScrapeMeta = {
+  path: null,
+  vehicle_count: 0,
+  intercept_count: 0,
+  blocked: false,
+  profile_persisted: false,
+};
+
+function resetScrapeMeta() {
+  lastScrapeMeta = {
+    path: null,
+    vehicle_count: 0,
+    intercept_count: 0,
+    blocked: false,
+    profile_persisted: false,
+  };
+}
+
+function computeScrapeConfidence(meta) {
+  const count = Number(meta.vehicle_count) || 0;
+  const intercepts = Number(meta.intercept_count) || 0;
+  const path = meta.path || "unknown";
+  if (meta.blocked && count === 0) {
+    return {
+      level: "low",
+      score: 0.12,
+      reason: "Page looked blocked (WAF/captcha) and no inventory JSON was captured.",
+    };
+  }
+  if (count > 0 && path === "turbo" && intercepts > 0) {
+    return {
+      level: "high",
+      score: 0.95,
+      reason: "Dealer.com JSON intercept succeeded in turbo mode.",
+    };
+  }
+  if (count > 0 && path === "slow") {
+    return {
+      level: "medium",
+      score: 0.72,
+      reason: "Inventory recovered via slow path (scroll/pagination fallback).",
+    };
+  }
+  if (count > 0 && path === "crawl4ai") {
+    return {
+      level: "medium",
+      score: 0.68,
+      reason: "Non–Dealer.com inventory recovered via Crawl4AI sniffer.",
+    };
+  }
+  if (count > 0) {
+    return { level: "medium", score: 0.6, reason: "Vehicles parsed but intercept path was unclear." };
+  }
+  return { level: "low", score: 0.08, reason: "No vehicles parsed from inventory sources." };
+}
+
+function emitScrapeConfidence(extra = {}) {
+  const confidence = computeScrapeConfidence({ ...lastScrapeMeta, ...extra });
+  console.log(
+    `SCAN_CONFIDENCE:${JSON.stringify({
+      ...confidence,
+      path: lastScrapeMeta.path,
+      vehicle_count: lastScrapeMeta.vehicle_count,
+      intercept_count: lastScrapeMeta.intercept_count,
+      blocked: lastScrapeMeta.blocked,
+      profile_persisted: lastScrapeMeta.profile_persisted,
+    })}`
+  );
+}
+
+async function applyStealthPreload(page) {
+  await page.evaluateOnNewDocument(() => {
+    try {
+      Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+    } catch {
+      /* ignore */
+    }
+  });
+}
+
+function dealerProfileDir(dealerId) {
+  if (!dealerId || process.env.SCANNER_DISABLE_PERSISTENT_PROFILES === "1") return null;
+  const base =
+    process.env.SCANNER_BROWSER_PROFILE_DIR ||
+    path.join(REPO_ROOT, "data", "runtime", "browser-profiles");
+  const safe = String(dealerId)
+    .replace(/[^a-zA-Z0-9._-]/g, "_")
+    .slice(0, 120);
+  if (!safe) return null;
+  const dir = path.join(base, safe);
+  fs.ensureDirSync(dir);
+  for (const lockName of ["SingletonLock", "SingletonSocket", "SingletonCookie"]) {
+    try {
+      fs.removeSync(path.join(dir, lockName));
+    } catch {
+      /* ignore stale lock cleanup */
+    }
+  }
+  return dir;
+}
+
+/** Accessibility-aware pagination click (aria-label / role before generic DOM text). */
+async function clickPaginationA11y(page) {
+  return page.evaluate(() => {
+    const tryClick = (el) => {
+      try {
+        el.click();
+        return true;
+      } catch {
+        return false;
+      }
+    };
+    const labelOf = (el) =>
+      (
+        el.getAttribute("aria-label") ||
+        el.getAttribute("title") ||
+        el.textContent ||
+        ""
+      )
+        .trim()
+        .replace(/\s+/g, " ");
+    const nodes = [
+      ...document.querySelectorAll(
+        '[role="button"], [role="link"], button, a, [tabindex="0"]'
+      ),
+    ];
+    for (const el of nodes) {
+      if (el.offsetParent === null) continue;
+      const label = labelOf(el);
+      if (/^(next|load more|view more|show more|see more)$/i.test(label)) {
+        if (tryClick(el)) return { ok: true, label };
+      }
+      if (/\bnext page\b|\bload more\b/i.test(label) && label.length < 40) {
+        if (tryClick(el)) return { ok: true, label };
+      }
+    }
+    return { ok: false };
+  });
+}
+
 const FALLBACK_IMAGE_URL = "/static/placeholder.svg";
 const DEFAULT_STR = "N/A";
 const TARGET_PAGE_SIZE = Math.min(500, parseInt(process.env.INVENTORY_PAGE_SIZE || "500", 10) || 500);
@@ -60,9 +201,18 @@ const SCANNER_VDP_PARALLEL = Math.min(
 const EP_RESPONSE_MAX_BYTES = 2 * 1024 * 1024;
 
 const INVENTORY_PATHS = [
+  "", // homepage — many Dealer.com sites fire ws-inv-data here
   "/new-inventory/index.htm",
   "/used-inventory/index.htm",
   "/certified-inventory/index.htm",
+  "/searchnew.aspx",
+  "/searchused.aspx",
+  "/new-inventory/",
+  "/used-inventory/",
+  "/all-inventory/index.htm",
+  "/inventory/new",
+  "/inventory/used",
+  "/vehicles",
 ];
 
 const USER_AGENTS = [
@@ -1566,6 +1716,7 @@ async function runDealerSlow(browser, dealer, opts = {}) {
   const intercepted = [];
   const vinToEp = new Map();
   const page = await browser.newPage();
+  await applyStealthPreload(page);
   await page.setUserAgent(randomUserAgent());
   await page.setViewport({ width: 1920, height: 1080 });
   attachAnalyticsEpResponseListener(page, vinToEp);
@@ -1597,7 +1748,7 @@ async function runDealerSlow(browser, dealer, opts = {}) {
     const invWait = getPageGotoWaitUntil(profile);
     const invNavTimeout = profile === "resilient" ? 120000 : 20000;
     for (const invPath of INVENTORY_PATHS) {
-      const fullUrl = url + invPath;
+      const fullUrl = invPath ? url + invPath : url;
       try {
         await page.goto(fullUrl, { waitUntil: invWait, timeout: invNavTimeout });
         await page
@@ -1611,7 +1762,14 @@ async function runDealerSlow(browser, dealer, opts = {}) {
         }
 
         for (let p = 0; p < MAX_PAGINATION_CLICKS; p++) {
-          const clicked = await page.evaluate(() => {
+          let clicked = false;
+          const a11y = await clickPaginationA11y(page);
+          if (a11y && a11y.ok) {
+            clicked = true;
+            console.info(`[slow] a11y pagination click: ${a11y.label || "next"}`);
+          }
+          if (!clicked) {
+            clicked = await page.evaluate(() => {
             const tryClick = (el) => {
               try {
                 el.click();
@@ -1631,6 +1789,7 @@ async function runDealerSlow(browser, dealer, opts = {}) {
             }
             return false;
           });
+          }
           if (!clicked) break;
           await sleep(randomDelayMs());
           await page.waitForResponse((r) => isInventoryInterceptJsonResponse(r, url), { timeout: 20000 }).catch(() => null);
@@ -1690,6 +1849,7 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
   const scrollLazy = opts.scrollLazyLoad !== false && profile !== "bare";
 
   const page = await browser.newPage();
+  await applyStealthPreload(page);
   await page.setUserAgent(randomUserAgent());
   await page.setViewport({ width: 1920, height: 1080 });
   await setupRequestBlocking(page);
@@ -1719,7 +1879,7 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
     const waitUntil = getPageGotoWaitUntil(profile);
     const navTimeout = profile === "resilient" ? 120000 : 45000;
     for (const invPath of INVENTORY_PATHS) {
-      const fullUrl = url + invPath;
+      const fullUrl = invPath ? url + invPath : url;
       await page.goto(fullUrl, { waitUntil, timeout: navTimeout });
       await warmupSettleAfterGoto(page, url, name);
       if (scrollLazy) {
@@ -1794,11 +1954,17 @@ async function runDealer(browser, dealer, opts = {}) {
 
   scrapeSamplesBuffer.length = 0;
   lastDealerInventoryBodies = null;
+  resetScrapeMeta();
 
   try {
     console.info(`[turbo] Starting: ${name}`);
     const vehicles = await runDealerTurbo(browser, dealer, opts);
     if (vehicles.length) {
+      lastScrapeMeta.path = "turbo";
+      lastScrapeMeta.vehicle_count = vehicles.length;
+      lastScrapeMeta.intercept_count = Array.isArray(lastDealerInventoryBodies)
+        ? lastDealerInventoryBodies.length
+        : 0;
       console.info(`[turbo] ${name}: ${vehicles.length} vehicles`);
       return vehicles;
     }
@@ -1807,10 +1973,17 @@ async function runDealer(browser, dealer, opts = {}) {
     console.warn(`[turbo] ${name} failed (${e.message}), falling back to slow path`);
     try {
       const vehicles = await runDealerSlow(browser, dealer, opts);
+      lastScrapeMeta.path = "slow";
+      lastScrapeMeta.vehicle_count = vehicles.length;
+      lastScrapeMeta.intercept_count = Array.isArray(lastDealerInventoryBodies)
+        ? lastDealerInventoryBodies.length
+        : 0;
       console.info(`[slow] ${name}: ${vehicles.length} vehicles`);
       return vehicles;
     } catch (e2) {
       console.error(`[slow] ${name} failed:`, e2);
+      lastScrapeMeta.path = "failed";
+      lastScrapeMeta.vehicle_count = 0;
       return [];
     }
   }
@@ -2115,12 +2288,24 @@ function emitDiscovery(payload) {
   console.log(`DISCOVERY:${JSON.stringify(payload)}`);
 }
 
-function getLaunchOptions(profile, headed = false) {
+function getLaunchOptions(profile, headed = false, dealerId = null) {
   const p = profile || "default";
   const common = {
     headless: headed ? false : "new",
     args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
   };
+  const profileDir = dealerProfileDir(dealerId);
+  if (profileDir) {
+    common.userDataDir = profileDir;
+    lastScrapeMeta.profile_persisted = true;
+  }
+  const chromePath =
+    process.env.PUPPETEER_EXECUTABLE_PATH ||
+    process.env.CHROME_PATH ||
+    resolvePlaywrightChromiumPath();
+  if (chromePath) {
+    common.executablePath = chromePath;
+  }
   if (p === "resilient") {
     common.args.push(
       "--disable-blink-features=AutomationControlled",
@@ -2132,6 +2317,20 @@ function getLaunchOptions(profile, headed = false) {
     common.args = ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"];
   }
   return common;
+}
+
+/** Native-arch Chromium for Docker ARM (Playwright install in Dockerfile.scanner). */
+function resolvePlaywrightChromiumPath() {
+  const home = process.env.HOME || "/root";
+  const base = path.join(home, ".cache", "ms-playwright");
+  if (!fs.existsSync(base)) return null;
+  let best = null;
+  for (const name of fs.readdirSync(base)) {
+    if (!name.startsWith("chromium-")) continue;
+    const candidate = path.join(base, name, "chrome-linux", "chrome");
+    if (fs.existsSync(candidate)) best = candidate;
+  }
+  return best;
 }
 
 function looksLikeDomainOrSlugName(name, pageUrl) {
@@ -2507,6 +2706,7 @@ function parseCliArgs(argv) {
   let smartImport = false;
   let profile = "default";
   let headed = false;
+  let dealerIdCli = null;
   const args = argv.slice(2);
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--url" && args[i + 1]) {
@@ -2522,16 +2722,19 @@ function parseCliArgs(argv) {
       i++;
     } else if (args[i] === "--headed") {
       headed = true;
+    } else if (args[i] === "--dealer-id" && args[i + 1]) {
+      dealerIdCli = args[i + 1];
+      i++;
     }
   }
   if (process.env.SCANNER_HEADED === "1" || process.env.SCANNER_HEADED === "true") {
     headed = true;
   }
-  return { singleUrl, singleName, smartImport, profile, headed };
+  return { singleUrl, singleName, smartImport, profile, headed, dealerIdCli };
 }
 
 async function main() {
-  const { singleUrl, singleName, smartImport, profile, headed } = parseCliArgs(process.argv);
+  const { singleUrl, singleName, smartImport, profile, headed, dealerIdCli } = parseCliArgs(process.argv);
 
   if (singleUrl) {
     let raw = String(singleUrl).trim();
@@ -2539,9 +2742,10 @@ async function main() {
       raw = `https://${raw}`;
     }
     const url = raw.replace(/\/$/, "");
-    const dealerId = slugFromUrl(raw);
+    const dealerId = (dealerIdCli && String(dealerIdCli).trim()) || slugFromUrl(raw);
 
-    const launchOpts = getLaunchOptions(profile, headed);
+    resetScrapeMeta();
+    const launchOpts = getLaunchOptions(profile, headed, dealerId);
     const browser = await puppeteer.launch(launchOpts);
 
     let name = (singleName && String(singleName).trim()) || "";
@@ -2553,12 +2757,14 @@ async function main() {
       if (smartImport) {
         emitDiscovery({ step: "start", message: "Starting smart import: discovering dealership name and location…" });
         const page = await browser.newPage();
+        await applyStealthPreload(page);
         let meta = await discoverDealerMetadata(page, url, profile);
         await page.close().catch(() => {});
 
         meta = enrichMetadataWithCrawl4ai(url, meta);
 
         if (meta.retryable && meta.error === "navigation") {
+          lastScrapeMeta.blocked = true;
           console.log(
             `SMART_IMPORT_ERROR:${JSON.stringify({
               reason: "navigation",
@@ -2630,6 +2836,8 @@ async function main() {
           });
           const sniffer = runCrawl4aiInventorySubprocess(url);
           if (sniffer && sniffer.ok && Array.isArray(sniffer.vehicles) && sniffer.vehicles.length) {
+            lastScrapeMeta.path = "crawl4ai";
+            lastScrapeMeta.vehicle_count = sniffer.vehicles.length;
             emitDiscovery({
               step: "crawl4ai_inventory",
               message: `Crawl4AI found ${sniffer.vehicles.length} vehicle(s) via strategy: ${sniffer.strategy}.`,
@@ -2648,9 +2856,15 @@ async function main() {
         // ──────────────────────────────────────────────────────────────────
 
         console.log(`SCAN_VEHICLE_COUNT:${vehicles.length}`);
+        lastScrapeMeta.vehicle_count = vehicles.length;
+        if (isBogusDealerName(dealer.name) || isBogusDealerName(name)) {
+          lastScrapeMeta.blocked = true;
+        }
+        emitScrapeConfidence();
         if (!vehicles.length) {
           await fs.mkdir(DEBUG_DIR, { recursive: true });
           console.warn("No vehicles scraped (single-URL mode).");
+          if (smartImport) pendingExit = pendingExit || 1;
         }
         const db = openDb();
         await ensureSchema(db);
@@ -2691,10 +2905,7 @@ async function main() {
   const manifest = await fs.readJson(MANIFEST_PATH);
   const dealers = manifest.filter((d) => (d.provider || "dealer_dot_com") === "dealer_dot_com" && d.url && d.dealer_id);
 
-  const browser = await puppeteer.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
-  });
+  const browser = await puppeteer.launch(getLaunchOptions(profile, headed));
 
   const dealerResults = [];
   const successful = [];

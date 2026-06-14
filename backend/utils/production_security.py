@@ -91,3 +91,7 @@ def assert_production_security_config() -> None:
         _log.warning(
             "TRUST_PROXY_HEADERS=1: rate limits trust X-Forwarded-For — use only behind a trusted reverse proxy."
         )
+
+    from backend.db.inventory_pg import assert_inventory_backend_configured
+
+    assert_inventory_backend_configured()

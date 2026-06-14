@@ -67,30 +67,30 @@
             <aside class="listings-sidebar" id="listings-sidebar-panel" aria-label="Search filters">
             <div class="filter-top-row" id="filter-top-row">
                 <div class="listings-filter-inner">
-                <header class="listings-intro listings-intro--dense" aria-labelledby="listings-intro-heading">
-                    <p class="listings-intro-eyebrow">Inventory search</p>
-                    <h2 class="listings-intro-heading" id="listings-intro-heading">Browse live listings</h2>
+                <header class="listings-intro listings-intro--dense listings-intro--carmax" aria-labelledby="listings-intro-heading">
+                    <h2 class="listings-intro-heading" id="listings-intro-heading">Search cars</h2>
+                    <p class="listings-intro-sub">Filters update results as you go</p>
                 </header>
 
                 <p class="smart-search-hint smart-search-hint--sr" id="smart-search-hint">
                     Example: white BMW X5 under $70k, or paste a VIN
                 </p>
 
-                <div class="listings-search-card listings-search-card--flat">
+                <div class="listings-search-card listings-search-card--flat listings-search-card--carmax">
                 <div class="filter-search-row">
                     <div class="smart-search-wrap">
-                        <label class="smart-search-label" for="smart-search-input">Smart search</label>
-                        <input type="search" id="smart-search-input" class="smart-search-input"
-                            placeholder="Keywords, budget, or VIN"
+                        <input type="search" id="smart-search-input" class="smart-search-input smart-search-input--carmax"
+                            placeholder="Make, model, keyword, or VIN"
                             value="{{ active.get('q', '') if active else '' }}"
                             autocomplete="off" spellcheck="false"
+                            aria-label="Search inventory"
                             aria-describedby="smart-search-hint">
                         <div id="smart-parse-chips" class="smart-parse-chips" aria-live="polite"></div>
                     </div>
                 </div>
 
-                <div class="listings-geo-bar" id="listings-geo-bar">
-                    <p class="listings-geo-bar-label">Near you</p>
+                <div class="listings-geo-bar listings-geo-bar--carmax" id="listings-geo-bar">
+                    <p class="listings-geo-bar-label">Shop near</p>
                     <p class="listings-geo-hint" id="listings-geo-hint" role="status" aria-live="polite" hidden></p>
                     <div class="listings-zip-callout" id="listings-zip-callout" role="status" aria-live="polite" hidden>
                         Enter your ZIP code to search nearby inventory and use the filters below.
@@ -136,7 +136,7 @@
                     </div>
                 </div>
 
-                <div class="filter-basics-row filter-grid" id="filter-basics-row">
+                <div class="filter-basics-row filter-basics-row--carmax" id="filter-basics-row">
                 <div class="pill-group pill-select-group" data-filter-param="max_price">
                     <label class="pill-select-label" for="listings-max-price">Price</label>
                     <select name="max_price" id="listings-max-price" class="pill-select">
@@ -170,24 +170,28 @@
                 </div>
                 </div>
 
-                <div class="filter-controls-row filter-grid" id="filter-controls-row">
-                {% macro pill(label, param) %}
-                <div class="pill-group">
-                    <button type="button" class="pill-trigger" data-param="{{ param }}" id="trigger-{{ param }}">
-                        <span class="pill-label" id="label-{{ param }}">{{ label }}</span>
-                        <span class="pill-count" id="count-{{ param }}" style="display:none"></span>
-                        <svg class="pill-chevron" viewBox="0 0 10 6" width="8">
-                            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                        </svg>
+                <div class="listings-filter-acc" id="filter-controls-row">
+                {% macro acc(label, param) %}
+                <div class="acc-section listings-acc-section" data-param="{{ param }}">
+                    <button type="button" class="acc-trigger listings-acc-trigger" id="acc-trigger-{{ param }}">
+                        <span class="acc-label" id="acc-label-{{ param }}">{{ label }}</span>
+                        <div class="acc-right">
+                            <span class="acc-count" id="acc-count-{{ param }}" style="display:none"></span>
+                            <svg class="acc-chevron" viewBox="0 0 10 6" width="9" aria-hidden="true">
+                                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </div>
                     </button>
-                    <div class="pill-dropdown" id="dropdown-{{ param }}">
+                    <div class="acc-body listings-acc-body" id="acc-body-{{ param }}">
                         {{ caller() }}
                     </div>
                 </div>
                 {% endmacro %}
 
-                {% call pill("Country", "country") %}
-                <div class="pill-options" id="options-country">
+                <p class="listings-filter-group-label">Vehicle</p>
+
+                {% call acc("Country", "country") %}
+                <div class="acc-options" id="options-country">
                     {% for country in options.countries %}
                     <label class="filter-option">
                         <input type="checkbox" name="country" value="{{ country }}"
@@ -198,8 +202,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Make", "make") %}
-                <div class="pill-options" id="options-make">
+                {% call acc("Make", "make") %}
+                <div class="acc-options" id="options-make">
                     {% for make in options.makes %}
                     <label class="filter-option">
                         <input type="checkbox" name="make" value="{{ make }}"
@@ -210,8 +214,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Model", "model") %}
-                <div class="pill-options" id="options-model">
+                {% call acc("Model", "model") %}
+                <div class="acc-options" id="options-model">
                     {% for make, model in options.model_rows %}
                     <label class="filter-option" data-make="{{ make }}">
                         <input type="checkbox" name="model" value="{{ model }}" data-make="{{ make }}"
@@ -222,8 +226,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Trim", "trim") %}
-                <div class="pill-options" id="options-trim">
+                {% call acc("Trim", "trim") %}
+                <div class="acc-options" id="options-trim">
                     {% for make, model, trim in options.trim_rows %}
                     <label class="filter-option" data-make="{{ make }}" data-model="{{ model }}">
                         <input type="checkbox" name="trim" value="{{ trim or '' }}" data-make="{{ make }}" data-model="{{ model }}"
@@ -234,8 +238,10 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Fuel", "fuel_type") %}
-                <div class="pill-options" id="options-fuel_type">
+                <p class="listings-filter-group-label">Specs</p>
+
+                {% call acc("Fuel type", "fuel_type") %}
+                <div class="acc-options" id="options-fuel_type">
                     {% for fuel in options.fuel_types %}
                     <label class="filter-option">
                         <input type="checkbox" name="fuel_type" value="{{ fuel }}"
@@ -246,8 +252,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Cylinders", "cylinders") %}
-                <div class="pill-options" id="options-cylinders">
+                {% call acc("Cylinders", "cylinders") %}
+                <div class="acc-options" id="options-cylinders">
                     {% for item in options.cylinders %}
                     <label class="filter-option">
                         <input type="checkbox" name="cylinders" value="{{ item }}"
@@ -258,8 +264,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Trans.", "transmission") %}
-                <div class="pill-options" id="options-transmission">
+                {% call acc("Transmission", "transmission") %}
+                <div class="acc-options" id="options-transmission">
                     {% for t in options.transmissions %}
                     <label class="filter-option">
                         <input type="checkbox" name="transmission" value="{{ t }}"
@@ -270,8 +276,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Drive", "drivetrain") %}
-                <div class="pill-options" id="options-drivetrain">
+                {% call acc("Drivetrain", "drivetrain") %}
+                <div class="acc-options" id="options-drivetrain">
                     {% for d in options.drivetrains %}
                     <label class="filter-option">
                         <input type="checkbox" name="drivetrain" value="{{ d }}"
@@ -282,8 +288,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Body", "body_style") %}
-                <div class="pill-options" id="options-body_style">
+                {% call acc("Body style", "body_style") %}
+                <div class="acc-options" id="options-body_style">
                     {% for b in options.body_styles %}
                     <label class="filter-option">
                         <input type="checkbox" name="body_style" value="{{ b }}"
@@ -294,8 +300,10 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Ext. Color", "exterior_color") %}
-                <div class="pill-options" id="options-exterior_color">
+                <p class="listings-filter-group-label">Color</p>
+
+                {% call acc("Exterior", "exterior_color") %}
+                <div class="acc-options" id="options-exterior_color">
                     {% for c in options.exterior_colors %}
                     <label class="filter-option">
                         <input type="checkbox" name="exterior_color" value="{{ c }}"
@@ -306,8 +314,8 @@
                 </div>
                 {% endcall %}
 
-                {% call pill("Int. Color", "interior_color") %}
-                <div class="pill-options" id="options-interior_color">
+                {% call acc("Interior", "interior_color") %}
+                <div class="acc-options" id="options-interior_color">
                     {% for c in options.interior_colors %}
                     <label class="filter-option">
                         <input type="checkbox" name="interior_color" value="{{ c }}"
@@ -319,8 +327,9 @@
                 {% endcall %}
 
                 {% if options.all_package_names %}
-                {% call pill("Package", "package") %}
-                <div class="pill-options" id="options-package">
+                <p class="listings-filter-group-label">Options</p>
+                {% call acc("Packages", "package") %}
+                <div class="acc-options" id="options-package">
                     {% for name in options.all_package_names %}
                     <label class="filter-option">
                         <input type="checkbox" name="package" value="{{ name }}">
@@ -331,7 +340,7 @@
                 {% endcall %}
                 {% endif %}
 
-                <div class="pill-actions">
+                <div class="listings-filter-actions">
                     <a href="{{ url_for('listings') }}" class="pill-clear-btn">Clear all</a>
                     <button type="button" class="listings-filters-sheet-done primary-button">Show results</button>
                 </div>

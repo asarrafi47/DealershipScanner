@@ -1,0 +1,11 @@
+{% if google_signin_enabled or apple_signin_enabled %}
+<div class="auth-oauth"{% if not google_signin_visible and not apple_signin_visible %} hidden{% endif %}>
+    <p class="auth-oauth-divider">or</p>
+    {% if google_signin_enabled %}
+    <a href="{{ url_for('google_oauth.start', intent=oauth_intent) if oauth_intent else url_for('google_oauth.start') }}" class="secondary-button full-width auth-oauth-btn"{% if not google_signin_visible %} hidden{% endif %}>Sign in with Google</a>
+    {% endif %}
+    {% if apple_signin_enabled %}
+    <a href="{{ url_for('apple_oauth.start', intent=oauth_intent) if oauth_intent else url_for('apple_oauth.start') }}" class="secondary-button full-width auth-oauth-btn auth-oauth-btn--apple"{% if not apple_signin_visible %} hidden{% endif %}>Sign in with Apple</a>
+    {% endif %}
+</div>
+{% endif %}

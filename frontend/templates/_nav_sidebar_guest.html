@@ -1,0 +1,71 @@
+{# Guest sidebar — search + two shop links, no redundant labels. #}
+{% from '_icons.html' import icon %}
+
+<aside class="app-sidebar" id="app-sidebar" aria-label="Site navigation">
+    <div class="app-sidebar__head">
+        <a href="{{ url_for('home') }}" class="app-sidebar__logo">Sarrafi Cars</a>
+        <button type="button" class="app-sidebar__close" id="app-sidebar-close" aria-label="Close menu" hidden>&times;</button>
+    </div>
+
+    <div class="app-sidebar__search">
+        {% include "_nav_search_sidebar.html" %}
+    </div>
+
+    <nav class="app-sidebar__nav">
+        <p class="app-sidebar__group-label">Shop</p>
+        <a href="{{ url_for('listings') }}" class="app-sidebar__link{% if nav_active == 'listings' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
+            {{ icon('inventory', 17, 'app-sidebar__icon') }}<span>Browse</span>
+        </a>
+        <a href="{{ url_for('find_dealers_page') }}" class="app-sidebar__link{% if nav_active == 'dealers' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'dealers' %}aria-current="page"{% endif %}>
+            {{ icon('dealers', 17, 'app-sidebar__icon') }}<span>Dealers</span>
+        </a>
+    </nav>
+
+    <div class="app-sidebar__foot">
+        {% if nav_active == "login" %}
+        <a href="/login" class="app-sidebar__link app-sidebar__link--active" aria-current="page">Sign in</a>
+        {% else %}
+        <a href="/login" class="app-sidebar__link">Sign in</a>
+        {% endif %}
+        {% if nav_active == "register" %}
+        <a href="/register" class="app-sidebar__link app-sidebar__link--active" aria-current="page">Get started</a>
+        {% else %}
+        <a href="/register" class="app-sidebar__link app-sidebar__link--premium">Get started</a>
+        {% endif %}
+    </div>
+</aside>
+<button type="button" class="app-sidebar-toggle" id="app-sidebar-toggle" aria-controls="app-sidebar" aria-expanded="false" aria-label="Open menu">
+    <span class="app-sidebar-toggle__bar"></span>
+    <span class="app-sidebar-toggle__bar"></span>
+    <span class="app-sidebar-toggle__bar"></span>
+</button>
+<div class="app-sidebar-backdrop" id="app-sidebar-backdrop" hidden></div>
+<script nonce="{{ csp_nonce }}">
+(function () {
+    var sidebar = document.getElementById("app-sidebar");
+    var toggle = document.getElementById("app-sidebar-toggle");
+    var backdrop = document.getElementById("app-sidebar-backdrop");
+    var closeBtn = document.getElementById("app-sidebar-close");
+    if (!sidebar || !toggle) return;
+    function openMenu() {
+        document.body.classList.add("app-sidebar-open");
+        toggle.setAttribute("aria-expanded", "true");
+        if (backdrop) backdrop.hidden = false;
+        if (closeBtn) closeBtn.hidden = false;
+    }
+    function closeMenu() {
+        document.body.classList.remove("app-sidebar-open");
+        toggle.setAttribute("aria-expanded", "false");
+        if (backdrop) backdrop.hidden = true;
+        if (closeBtn) closeBtn.hidden = true;
+    }
+    toggle.addEventListener("click", function () {
+        if (document.body.classList.contains("app-sidebar-open")) closeMenu();
+        else openMenu();
+    });
+    if (backdrop) backdrop.addEventListener("click", closeMenu);
+    if (closeBtn) closeBtn.addEventListener("click", closeMenu);
+})();
+</script>

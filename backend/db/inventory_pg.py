@@ -35,6 +35,30 @@ def is_inventory_postgres() -> bool:
     return inventory_postgres_dsn() is not None
 
 
+def inventory_sqlite_tests_allowed() -> bool:
+    """Pytest-only escape hatch; never set in production or local dev."""
+    return (os.environ.get("INVENTORY_SQLITE_TESTS") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
+
+
+_INVENTORY_POSTGRES_REQUIRED_MSG = (
+    "INVENTORY_DATABASE_URL must be set to a postgresql:// or postgres:// URL. "
+    "SQLite inventory is disabled. For local dev run: WEB_PORT=8000 ./deploy/up.sh "
+    "(Postgres + web + scanner workers)."
+)
+
+
+def assert_inventory_backend_configured() -> None:
+    """Fail fast when inventory would fall back to SQLite (SEC-102)."""
+    if is_inventory_postgres() or inventory_sqlite_tests_allowed():
+        return
+    raise RuntimeError(_INVENTORY_POSTGRES_REQUIRED_MSG)
+
+
 def pg_connect():
     import psycopg
 
@@ -257,6 +281,7 @@ def init_postgres_inventory(conn: Any) -> None:
             ("missing_field_count", "INTEGER"),
             ("recoverability_score", "DOUBLE PRECISION"),
             ("price_provenance_json", "TEXT"),
+            ("window_sticker_url", "TEXT"),
         ],
     )
     cur.execute(

@@ -149,6 +149,9 @@ def _resolve_or_create_user(info: dict) -> tuple[int | None, str | None, bool]:
             return None, "This email is linked to a different Google account.", False
         if not link_user_google_sub(int(by_email["id"]), google_sub):
             return None, "Could not link Google to your account.", False
+        from backend.db.users_db import mark_user_email_verified
+
+        mark_user_email_verified(int(by_email["id"]))
         return int(by_email["id"]), None, False
 
     username = _pick_username(email)
@@ -161,6 +164,9 @@ def _resolve_or_create_user(info: dict) -> tuple[int | None, str | None, bool]:
         if retry:
             return int(retry["id"]), None, False
         return None, "Could not create your account.", False
+    from backend.db.users_db import mark_user_email_verified
+
+    mark_user_email_verified(int(uid))
     return uid, None, True
 
 

@@ -141,9 +141,14 @@ select option {
     pointer-events: none;
 }
 
+/* Marketing topbar replaced by guest app-sidebar */
+.topbar--marketing {
+    display: none;
+}
+
 /* Marketing + legacy public topbar */
 .topbar--public,
-.topbar--marketing {
+.topbar--marketing.topbar--legacy {
     flex-wrap: wrap;
     gap: 12px 20px;
     row-gap: 14px;
@@ -188,8 +193,13 @@ select option {
     border-bottom-color: rgba(255, 252, 248, 0.85);
 }
 
-/* Signed-in app topbar — compact, no marketing links */
+/* Signed-in app layout — left sidebar replaces top bar */
 .topbar--app {
+    display: none;
+}
+
+/* Legacy signed-in app topbar (hidden when sidebar active) */
+.topbar--app.topbar--legacy {
     flex-wrap: wrap;
     gap: 12px 16px;
     padding: 14px clamp(16px, 3vw, 40px);
@@ -1947,7 +1957,7 @@ body.listings-page .smart-search-input--hero {
 
 body.listings-page .listings-layout {
     display: grid;
-    grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
     grid-template-areas: "sidebar main";
     gap: clamp(24px, 3vw, 40px) clamp(28px, 4vw, 56px);
     width: 100%;
@@ -2004,19 +2014,280 @@ body.listings-page .listings-sidebar {
         max-height: calc(100dvh - 96px);
         overflow-y: auto;
         overscroll-behavior: contain;
-        scrollbar-gutter: stable;
-        padding-right: 2px;
+        padding-right: 0;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(28, 53, 82, 0.22) transparent;
+    }
+
+    body.listings-page .listings-sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    body.listings-page .listings-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(28, 53, 82, 0.2);
+        border-radius: 99px;
+    }
+
+    body.listings-page .listings-sidebar::-webkit-scrollbar-thumb:hover {
+        background: rgba(28, 53, 82, 0.35);
     }
 }
 
 body.listings-page .listings-filter-inner {
     max-width: none;
     margin: 0;
-    background: linear-gradient(165deg, #ffffff 0%, var(--bg-elevated) 100%);
+    background: #fff;
     border: 1px solid var(--border-light);
-    border-radius: 16px;
-    padding: 14px 14px 12px;
-    box-shadow: 0 10px 32px rgba(20, 36, 54, 0.06);
+    border-radius: 12px;
+    padding: 16px 0 0;
+    box-shadow: 0 2px 12px rgba(20, 36, 54, 0.05);
+}
+
+body.listings-page .listings-intro--carmax {
+    display: block;
+    padding: 0 16px 12px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+body.listings-page .listings-intro--carmax .listings-intro-heading {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+}
+
+body.listings-page .listings-intro--carmax .listings-intro-sub {
+    font-size: 13px;
+    margin: 0;
+}
+
+body.listings-page .listings-search-card--carmax {
+    padding: 14px 16px 0;
+}
+
+body.listings-page .smart-search-input--carmax {
+    min-height: 48px;
+    padding: 13px 16px;
+    font-size: 15px;
+    line-height: 1.4;
+    border-radius: 10px;
+    border-color: var(--border-medium);
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-geo-bar--carmax {
+    margin-top: 14px;
+    padding-top: 0;
+    border-top: none;
+}
+
+body.listings-page .listings-geo-bar--carmax .listings-geo-bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+body.listings-page .listings-geo-bar--carmax .listings-geo-bar-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-select-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    margin-bottom: 6px;
+    padding-left: 0;
+}
+
+body.listings-page .listings-geo-bar--carmax .listings-dealer-picker {
+    grid-column: 1 / -1;
+}
+
+body.listings-page .filter-basics-row--carmax {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 14px 16px 0;
+    border-top: 1px solid var(--border-light);
+}
+
+body.listings-page .filter-basics-row--carmax .pill-group[data-filter-param="inventory_condition"] {
+    grid-column: 1 / -1;
+}
+
+body.listings-page .filter-basics-row--carmax .pill-select-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+body.listings-page .filter-basics-row--carmax .pill-select {
+    min-height: 44px;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 8px;
+    padding: 11px 36px 11px 14px;
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-zip,
+body.listings-page .listings-geo-bar--carmax .pill-select {
+    min-height: 44px;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-zip {
+    width: 100%;
+    padding: 11px 14px;
+}
+
+body.listings-page .listings-geo-bar--carmax .pill-select {
+    padding: 11px 36px 11px 14px;
+}
+
+body.listings-page .listings-filter-acc {
+    margin-top: 6px;
+    padding: 0 0 8px;
+    border-top: 1px solid var(--border-light);
+}
+
+body.listings-page .listings-filter-group-label {
+    margin: 14px 16px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+body.listings-page .listings-filter-group-label:first-of-type {
+    margin-top: 10px;
+}
+
+body.listings-page .listings-acc-section {
+    border-bottom: 1px solid var(--border-light);
+}
+
+body.listings-page .listings-acc-section:last-of-type {
+    border-bottom: none;
+}
+
+body.listings-page .listings-acc-trigger {
+    padding: 13px 16px;
+}
+
+body.listings-page .listings-acc-trigger .acc-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+body.listings-page .listings-acc-trigger.has-selection .acc-label {
+    color: var(--navy);
+    font-weight: 600;
+}
+
+body.listings-page .listings-acc-trigger .acc-count {
+    font-size: 11px;
+    min-width: 20px;
+    text-align: center;
+    padding: 2px 6px;
+}
+
+body.listings-page .listings-acc-body {
+    padding: 0 8px 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(28, 53, 82, 0.18) transparent;
+}
+
+body.listings-page .listings-acc-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body.listings-page .listings-acc-body::-webkit-scrollbar-thumb {
+    background: rgba(28, 53, 82, 0.18);
+    border-radius: 99px;
+}
+
+body.listings-page .listings-acc-body .filter-option {
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+body.listings-page .listings-acc-body .filter-option:hover {
+    background: var(--navy-soft);
+}
+
+body.listings-page .listings-filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 12px;
+    margin-top: 8px;
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--border-light);
+    background: #fff;
+}
+
+body.listings-page .listings-filter-actions .listings-filters-sheet-done {
+    display: none !important;
+}
+
+body.listings-page .listings-filter-actions .primary-button {
+    flex: 1;
+    min-width: 140px;
+    min-height: 44px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+body.listings-page .listings-filter-actions .pill-clear-btn {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 4px;
+    margin-left: auto;
+}
+
+@media (max-width: 960px) {
+    body.listings-page .listings-filter-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, #fff 100%);
+        box-shadow: 0 -8px 24px rgba(20, 36, 54, 0.06);
+    }
+
+    body.listings-page .listings-filter-actions .listings-filters-sheet-done {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    body.listings-page .listings-filter-actions .pill-clear-btn {
+        margin-left: 0;
+    }
 }
 
 body.listings-page .listings-intro--dense {
@@ -2229,7 +2500,7 @@ body.listings-page .listings-sidebar .pill-dropdown {
     box-sizing: border-box;
 }
 
-body.listings-page .smart-search-input {
+body.listings-page .smart-search-input:not(.smart-search-input--carmax) {
     min-height: 40px;
     padding: 9px 14px;
     font-size: 14px;
@@ -2237,6 +2508,27 @@ body.listings-page .smart-search-input {
     border: 1px solid var(--border-medium);
     background: var(--bg-card);
     box-shadow: inset 0 1px 2px rgba(20, 36, 54, 0.04);
+}
+
+/* Sidebar filter card: keep comfortable vertical rhythm (later rules must not crush padding) */
+body.listings-page .listings-filter-inner .smart-search-input--carmax {
+    min-height: 48px;
+    padding: 13px 16px;
+    font-size: 15px;
+    line-height: 1.4;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+body.listings-page .listings-filter-inner input[type="search"].smart-search-input {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+body.listings-page .listings-filter-inner input[type="search"].smart-search-input::-webkit-search-decoration,
+body.listings-page .listings-filter-inner input[type="search"].smart-search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 body.listings-page .smart-search-input:focus {
@@ -2914,6 +3206,18 @@ body.car-detail-page .car-detail {
 
 .car-vdp-tabs-wrap {
     margin-top: 8px;
+}
+
+@media (min-width: 901px) {
+    body.car-detail-page .car-vdp-tabs-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 12;
+        padding: 10px 0 14px;
+        margin-bottom: 8px;
+        background: var(--bg-page);
+        box-shadow: 0 8px 16px -12px rgba(20, 36, 54, 0.2);
+    }
 }
 
 .car-hero-glance {
@@ -8070,7 +8374,512 @@ details[open] > .listing-package-summary::before {
     border-radius: var(--main-radius);
 }
 
+/* —— Unified left sidebar (app + admin) —— */
+:root {
+    --app-sidebar-width: 260px;
+}
+
+body:has(.app-sidebar) {
+    overflow-x: hidden;
+}
+
+.page:has(.app-sidebar),
+.page.page--app-layout {
+    display: grid;
+    grid-template-columns: var(--app-sidebar-width) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+.page:has(.app-sidebar) > :not(.app-sidebar):not(.app-sidebar-toggle):not(.app-sidebar-backdrop),
+.page.page--app-layout > :not(.app-sidebar):not(.app-sidebar-toggle):not(.app-sidebar-backdrop) {
+    grid-column: 2;
+}
+
+.app-sidebar {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--app-sidebar-width);
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 12px 20px;
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-right: 1px solid rgba(255, 252, 248, 0.1);
+    box-shadow: 4px 0 24px rgba(20, 36, 54, 0.12);
+    z-index: 40;
+}
+
+/* Fixed bottom bars: sit to the right of the pinned sidebar on desktop */
+@media (min-width: 901px) {
+    body:has(.app-sidebar) .compare-tray,
+    body:has(.app-sidebar) .car-mobile-cta {
+        left: var(--app-sidebar-width);
+    }
+}
+
+.app-sidebar__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 8px 8px;
+}
+
+.app-sidebar__logo {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--bg-page);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+
+.app-sidebar__logo:hover {
+    color: #fff;
+}
+
+.app-sidebar__close {
+    display: none;
+    border: none;
+    background: transparent;
+    color: rgba(255, 252, 248, 0.85);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.app-sidebar__search {
+    padding: 10px 8px 12px;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 252, 248, 0.1);
+}
+
+.sidebar-search {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.sidebar-search--compact {
+    gap: 6px;
+}
+
+.sidebar-search__heading {
+    margin: 0;
+    padding: 0 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 248, 0.45);
+}
+
+.sidebar-search__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 58px 36px;
+    gap: 6px;
+    align-items: stretch;
+}
+
+.sidebar-search__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.sidebar-search__field--grow {
+    grid-column: auto;
+}
+
+.sidebar-search__field--zip {
+    grid-column: auto;
+}
+
+.sidebar-search__label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 248, 0.45);
+    padding-left: 2px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sidebar-search__input-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.sidebar-search__icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    pointer-events: none;
+    color: rgba(252, 250, 246, 0.65);
+}
+
+.sidebar-search__input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px 10px 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 252, 248, 0.16);
+    background: rgba(0, 0, 0, 0.22);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.25;
+    outline: none;
+}
+
+.sidebar-search__input--zip {
+    padding: 10px 8px;
+    text-align: center;
+}
+
+.sidebar-search__input::placeholder {
+    color: rgba(252, 250, 246, 0.52);
+}
+
+.sidebar-search__input:hover {
+    border-color: rgba(255, 252, 248, 0.28);
+    background: rgba(0, 0, 0, 0.28);
+}
+
+.sidebar-search__input:focus {
+    border-color: rgba(255, 252, 248, 0.45);
+    background: rgba(0, 0, 0, 0.32);
+    box-shadow: 0 0 0 2px rgba(255, 252, 248, 0.12);
+}
+
+.sidebar-search__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 252, 248, 0.18);
+    background: rgba(255, 252, 248, 0.1);
+    color: rgba(252, 250, 246, 0.95);
+    cursor: pointer;
+}
+
+.sidebar-search__submit .sc-icon {
+    display: block;
+}
+
+.sidebar-search__submit:hover,
+.sidebar-search__submit:focus-visible {
+    background: rgba(255, 252, 248, 0.16);
+    color: #fff;
+    outline: none;
+}
+
+.app-sidebar .nav-search {
+    display: none;
+}
+
+.app-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    padding: 4px 0;
+}
+
+.app-sidebar__group-label {
+    margin: 14px 8px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 248, 0.45);
+}
+
+.app-sidebar__group-label:first-child {
+    margin-top: 4px;
+}
+
+.app-sidebar__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    color: rgba(255, 252, 248, 0.82);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+.app-sidebar__link:hover {
+    background: rgba(255, 252, 248, 0.08);
+    color: #fff;
+}
+
+.app-sidebar__link--active,
+.app-sidebar__link[aria-current="page"] {
+    background: rgba(255, 252, 248, 0.14);
+    color: #fff;
+    font-weight: 600;
+}
+
+.app-sidebar__link--admin {
+    color: rgba(186, 230, 253, 0.95);
+}
+
+.app-sidebar__link--premium {
+    color: #fde68a;
+}
+
+.app-sidebar__icon {
+    flex-shrink: 0;
+    opacity: 0.9;
+}
+
+.app-sidebar__foot {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 252, 248, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.app-sidebar__foot .dev-logout-form {
+    margin: 4px 0 0;
+}
+
+.app-sidebar__foot .dev-logout-button {
+    width: 100%;
+    text-align: left;
+    padding: 9px 10px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid rgba(255, 252, 248, 0.2);
+    color: rgba(255, 252, 248, 0.85);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.app-sidebar__foot .dev-logout-button:hover {
+    background: rgba(255, 252, 248, 0.08);
+}
+
+.app-sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 50;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: var(--navy);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(20, 36, 54, 0.25);
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.app-sidebar-toggle__bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+}
+
+.app-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 35;
+}
+
+.app-layout-flash {
+    padding: 12px 20px 0;
+}
+
+.page:has(.app-sidebar) .admin-flash-wrap,
+.page.page--app-layout .admin-flash-wrap,
+.app-layout-flash {
+    max-width: none;
+    margin: 12px 0 0;
+    padding: 0 clamp(16px, 3vw, 32px);
+    width: 100%;
+    min-width: 0;
+    grid-column: 2;
+}
+
+.page:has(.app-sidebar) .admin-main,
+.page.page--app-layout .admin-main,
+.app-layout-main {
+    max-width: none;
+    margin: 0;
+    padding: 20px clamp(16px, 3vw, 32px) 48px;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+.page:has(.app-sidebar) > .admin-main,
+.page.page--app-layout > .admin-main {
+    grid-column: 2;
+}
+
+@media (max-width: 900px) {
+    .page:has(.app-sidebar),
+    .page.page--app-layout {
+        display: block;
+    }
+
+    .app-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-105%);
+        transition: transform 0.22s ease;
+        z-index: 45;
+    }
+
+    body.app-sidebar-open .app-sidebar {
+        transform: translateX(0);
+    }
+
+    .app-sidebar-toggle {
+        display: inline-flex;
+    }
+
+    body:has(.app-sidebar) .db-shell,
+    body:has(.app-sidebar) .hub-shell,
+    body:has(.app-sidebar) .find-dealers-section,
+    body.admin-shell-body .admin-main {
+        padding-top: 56px;
+    }
+
+    body:has(.app-sidebar) .listings-filter-shell,
+    body.app-layout-body .listings-filter-shell {
+        padding-top: 56px;
+    }
+}
+
+body.listings-page .page:has(.app-sidebar),
+body.listings-page.page--app-layout .page {
+    width: 100%;
+}
+
+body.listings-page:has(.app-sidebar) > .guest-banner,
+body.listings-page .page:has(.app-sidebar) > .guest-banner {
+    grid-column: 2;
+}
+
+body.listings-page:has(.app-sidebar) .listings-filter-shell.filter-bar,
+body.listings-page .page:has(.app-sidebar) .listings-filter-shell.filter-bar {
+    grid-column: 2;
+    width: 100%;
+    min-width: 0;
+}
+
+body.listings-page:has(.app-sidebar) .listings-layout,
+body.listings-page .page:has(.app-sidebar) .listings-layout {
+    padding-left: clamp(12px, 2vw, 24px);
+}
+
 /* —— Store admin (/admin) —— */
+.admin-shell-body {
+    background: var(--bg-page);
+}
+
+/* Legacy horizontal admin topbar — replaced by app-sidebar */
+.topbar--admin {
+    display: none;
+}
+
+.nav-links--admin {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    font-size: 14px;
+}
+
+.admin-nav-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-right: 4px;
+}
+
+.admin-nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.admin-nav-link:hover {
+    color: var(--text-primary);
+    background: var(--surface-raised);
+}
+
+.admin-nav-link--active {
+    color: var(--text-primary);
+    font-weight: 600;
+    background: var(--surface-raised);
+}
+
+.admin-nav-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border-light);
+    margin: 0 4px;
+}
+
+.nav-app-link--admin {
+    color: var(--accent);
+}
+
 .admin-main {
     max-width: 1200px;
     margin: 0 auto;
@@ -8082,6 +8891,13 @@ details[open] > .listing-package-summary::before {
     color: rgba(255, 255, 255, 0.62);
     font-size: 0.95rem;
     line-height: 1.5;
+}
+
+.admin-shell-body .admin-lead,
+.app-layout-body .admin-lead,
+.admin-shell-body .admin-muted,
+.app-layout-body .admin-muted {
+    color: var(--text-secondary);
 }
 
 .admin-muted {
@@ -9383,6 +10199,10 @@ body.listings-page .listings-toolbar .results-count {
     align-items: center;
     gap: 10px 12px;
     margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+    background: #fff;
 }
 
 .listings-active-chips {
@@ -9397,13 +10217,14 @@ body.listings-page .listings-toolbar .results-count {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 10px 6px 12px;
+    padding: 7px 12px 7px 14px;
     border-radius: 999px;
     border: 1px solid var(--border-medium);
-    background: var(--bg-card);
+    background: var(--bg-page);
     color: var(--text);
     font-family: inherit;
     font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
     transition: border-color 0.15s, background 0.15s;
 }
@@ -9475,7 +10296,7 @@ body.listings-page .listings-toolbar .results-count {
 }
 
 .listings-filters-sheet-done {
-    display: none;
+    display: none !important;
     width: 100%;
     margin-top: 12px;
     justify-content: center;
@@ -9633,7 +10454,7 @@ body.listings-page .listings-toolbar .results-count {
     }
 
     .listings-filters-sheet-done {
-        display: inline-flex;
+        display: inline-flex !important;
     }
 
     body.listings-page .listings-layout {
@@ -10332,175 +11153,253 @@ body.find-dealers-page {
 }
 
 .find-dealers-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 20px 48px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: clamp(16px, 2vw, 24px) clamp(16px, 2.5vw, 28px) 48px;
+    box-sizing: border-box;
 }
 
-.find-dealers-section--compact {
-    padding: 12px clamp(16px, 3vw, 32px) 32px;
+.find-dealers-hero {
+    margin-bottom: 20px;
 }
 
-.find-dealers-header h1 {
-    margin: 0 0 8px;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    color: var(--navy);
-}
-
-.find-dealers-header--compact {
+.find-dealers-hero__row {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
-    gap: 8px 16px;
-    margin-bottom: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px 24px;
 }
 
-.find-dealers-header--compact h1 {
+.find-dealers-hero__title {
+    margin: 0 0 6px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+}
+
+.find-dealers-hero__lead {
     margin: 0;
-    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-}
-
-.find-dealers-lead {
-    margin: 0 0 24px;
-    color: var(--text-muted);
+    max-width: 36rem;
+    font-size: 15px;
     line-height: 1.55;
-    max-width: 52rem;
+    color: var(--text-muted);
 }
 
-.find-dealers-header--compact .find-dealers-lead {
-    margin: 0;
+.find-dealers-hero__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.find-dealers-legend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+}
+
+.find-dealers-legend-chip--db .find-dealers-dot {
+    background: #1a5f4a;
+}
+
+.find-dealers-legend-chip--google .find-dealers-dot {
+    background: #6b7280;
+}
+
+.find-dealers-hero__admin {
+    margin: 12px 0 0;
     font-size: 13px;
-    flex: 1 1 220px;
+    color: var(--text-muted);
 }
 
 .find-dealers-form {
     background: var(--bg-card, #fff);
     border: 1px solid var(--border-light);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 18px;
+    padding: 18px;
     margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
-.find-dealers-form--compact {
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    display: grid;
-    gap: 12px;
-}
-
-@media (min-width: 720px) {
-    .find-dealers-form--compact {
-        grid-template-columns: auto 1fr auto;
-        align-items: end;
-    }
-
-    .find-dealers-form--compact .find-dealers-location-modes {
-        margin-bottom: 0;
-        grid-column: 1;
-        grid-row: 1 / 3;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .find-dealers-form--compact .find-dealers-fields {
-        margin-bottom: 0;
-        grid-column: 2;
-    }
-
-    .find-dealers-form--compact .find-dealers-submit {
-        grid-column: 3;
-        grid-row: 1;
-        margin: 0;
-        align-self: end;
-    }
-
-    .find-dealers-form--compact .find-dealers-status {
-        grid-column: 2 / 4;
-        margin: 0;
-    }
+.find-dealers-mode-tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    margin: 0 0 16px;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    background: var(--bg-subtle, #f0f2f5);
 }
 
 .find-dealers-location-modes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 20px;
     border: none;
-    margin: 0 0 16px;
-    padding: 0;
 }
 
-.find-dealers-mode {
+.find-dealers-mode-tab {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    margin: 0;
     cursor: pointer;
+}
+
+.find-dealers-mode-tab input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.find-dealers-mode-tab span {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: 9px;
+    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.find-dealers-mode-tab input:checked + span {
+    color: var(--navy);
+    background: var(--bg-card, #fff);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.find-dealers-mode-tab input:focus-visible + span {
+    outline: 2px solid var(--accent, #1a5f4a);
+    outline-offset: 2px;
+}
+
+.find-dealers-form__body {
+    display: grid;
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .find-dealers-form__body {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 20px;
+    }
 }
 
 .find-dealers-fields {
     display: grid;
     gap: 12px;
-    margin-bottom: 16px;
+    min-width: 0;
 }
 
 .find-dealers-panel[hidden] {
     display: none !important;
 }
 
+.find-dealers-panel--city {
+    display: grid;
+    grid-template-columns: 1fr 88px;
+    gap: 12px;
+    align-items: end;
+}
+
 .find-dealers-hint {
     margin: 0;
+    padding: 12px 14px;
     font-size: 13px;
+    line-height: 1.5;
     color: var(--text-muted);
+    background: var(--bg-subtle, #f0f2f5);
+    border-radius: 12px;
 }
 
 .find-dealers-label {
     display: block;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     margin-bottom: 6px;
-    color: var(--navy);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .find-dealers-input,
 .find-dealers-select {
     width: 100%;
-    max-width: 280px;
-    padding: 10px 12px;
-    border-radius: 10px;
+    max-width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
     border: 1px solid var(--border-light);
     font-size: 15px;
+    background: var(--bg-card, #fff);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.find-dealers-input:focus,
+.find-dealers-select:focus {
+    outline: none;
+    border-color: var(--accent, #1a5f4a);
+    box-shadow: 0 0 0 3px rgba(26, 95, 74, 0.12);
 }
 
 .find-dealers-input--state {
-    max-width: 80px;
     text-transform: uppercase;
 }
 
-.find-dealers-city-row {
-    margin-bottom: 8px;
+.find-dealers-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
 }
 
-.find-dealers-city-row--state {
-    margin-bottom: 0;
+.find-dealers-radius-row {
+    min-width: 120px;
 }
 
 .find-dealers-radius-row .find-dealers-select {
-    max-width: 160px;
+    min-width: 120px;
 }
 
 .find-dealers-submit {
-    margin-top: 4px;
+    min-width: 160px;
+    margin: 0;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .find-dealers-status {
-    margin: 12px 0 0;
+    margin: 14px 0 0;
+    padding: 10px 12px;
     font-size: 14px;
+    line-height: 1.45;
     color: var(--text-muted);
+    border-radius: 10px;
+    background: transparent;
+}
+
+.find-dealers-status:not(:empty) {
+    background: var(--bg-subtle, #f0f2f5);
 }
 
 .find-dealers-status--error {
     color: #b42318;
+    background: #fef3f2;
+}
+
+.find-dealers-legend--results {
+    display: none;
 }
 
 .find-dealers-legend {
@@ -10523,6 +11422,7 @@ body.find-dealers-page {
     height: 10px;
     border-radius: 50%;
     display: inline-block;
+    flex-shrink: 0;
 }
 
 .find-dealers-legend-item--db .find-dealers-dot {
@@ -10533,61 +11433,189 @@ body.find-dealers-page {
     background: #6b7280;
 }
 
+.find-dealers-legend-item--admin {
+    color: var(--text-secondary);
+}
+
+.find-dealers-empty[hidden],
+.find-dealers-results[hidden],
+.find-dealers-map-placeholder[hidden],
+.find-dealers-sidebar-empty[hidden],
+.find-dealers-list-wrap[hidden] {
+    display: none !important;
+}
+
+.find-dealers-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+    gap: 16px;
+    align-items: stretch;
+}
+
+.find-dealers-sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 520px;
+}
+
+.find-dealers-sidebar-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    padding: 28px 24px;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border-light);
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.find-dealers-map-placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: 18px;
+    border: 1px dashed var(--border-light);
+    background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.03) 25%, transparent 25%) -20px 0 / 40px 40px,
+        linear-gradient(225deg, rgba(15, 23, 42, 0.03) 25%, transparent 25%) -20px 0 / 40px 40px,
+        linear-gradient(315deg, rgba(15, 23, 42, 0.03) 25%, transparent 25%) 0 0 / 40px 40px,
+        linear-gradient(45deg, rgba(15, 23, 42, 0.03) 25%, transparent 25%) 0 0 / 40px 40px,
+        var(--bg-subtle, #eef1f4);
+    pointer-events: none;
+}
+
+.find-dealers-empty {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+    gap: 16px;
+    align-items: stretch;
+    margin-bottom: 8px;
+}
+
+@media (min-width: 1200px) {
+    .find-dealers-stage {
+        grid-template-columns: minmax(0, 1fr) 380px;
+    }
+
+    .find-dealers-empty {
+        grid-template-columns: minmax(0, 1fr) 380px;
+    }
+
+    .find-dealers-results {
+        grid-template-columns: minmax(0, 1fr) 380px;
+    }
+
+    .find-dealers-map,
+    .find-dealers-map-shell,
+    .find-dealers-sidebar,
+    .find-dealers-list-wrap {
+        min-height: min(68vh, 640px);
+        max-height: min(68vh, 640px);
+    }
+
+    .find-dealers-map {
+        height: min(68vh, 640px);
+    }
+}
+
+.find-dealers-empty__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.find-dealers-empty__sub {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+
 .find-dealers-results {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
     gap: 16px;
     align-items: start;
 }
 
-.find-dealers-map {
-    height: 480px;
-    border-radius: 16px;
-    border: 1px solid var(--border-light);
+.find-dealers-map-shell {
+    position: relative;
+    min-height: 520px;
+    height: 520px;
+    border-radius: 18px;
     overflow: hidden;
-    z-index: 0;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.find-dealers-map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
 .find-dealers-list-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     background: var(--bg-card, #fff);
     border: 1px solid var(--border-light);
-    border-radius: 16px;
-    padding: 16px;
-    max-height: 480px;
-    overflow-y: auto;
+    border-radius: 18px;
+    max-height: 520px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.find-dealers-list-head {
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-card, #fff);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .find-dealers-list-title {
-    margin: 0 0 12px;
+    margin: 0;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--navy);
+}
+
+.find-dealers-list-count {
+    font-weight: 600;
+    color: var(--text-muted);
 }
 
 .find-dealers-list {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 8px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .find-dealers-list-item {
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border-light);
+    padding: 12px;
+    margin-bottom: 6px;
+    border: 1px solid transparent;
+    border-radius: 12px;
     cursor: pointer;
-    border-radius: 8px;
+    transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .find-dealers-list-item:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .find-dealers-list-item:hover,
 .find-dealers-list-item--active {
     background: var(--bg-subtle, #f0f2f5);
-    padding-left: 8px;
-    padding-right: 8px;
-    margin-left: -8px;
-    margin-right: -8px;
+    border-color: var(--border-light);
 }
 
 .find-dealers-list-item__head {
@@ -10606,7 +11634,7 @@ body.find-dealers-page {
 .find-dealers-list-badge {
     font-size: 11px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 999px;
 }
 
@@ -10630,9 +11658,55 @@ body.find-dealers-page {
 
 .find-dealers-list-link {
     color: var(--accent, #1a5f4a);
+    font-weight: 600;
 }
 
 .find-dealers-list-muted {
+    color: var(--text-muted);
+}
+
+.find-dealers-list-item__sync,
+.find-dealers-sync {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.find-dealers-list-scraped,
+.find-dealers-scraped {
+    font-size: 12px;
+    color: var(--accent, #1a5f4a);
+    font-weight: 600;
+}
+
+.find-dealers-list-item__sync {
+    margin-top: 2px;
+}
+
+.find-dealers-admin-btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+.find-dealers-admin-btn--inline {
+    margin-top: 0;
+}
+
+.find-dealers-admin-btn--done {
+    opacity: 0.85;
+    pointer-events: none;
+}
+
+.find-dealers-list-item__admin {
+    margin: 8px 0 0;
+}
+
+.find-dealers-admin-hint {
+    margin: 8px 0 0;
+    font-size: 12px;
     color: var(--text-muted);
 }
 
@@ -10676,17 +11750,37 @@ body.find-dealers-page {
     border: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
+    .find-dealers-stage,
+    .find-dealers-empty,
     .find-dealers-results {
         grid-template-columns: 1fr;
     }
 
-    .find-dealers-list-wrap {
-        max-height: 360px;
+    .find-dealers-map,
+    .find-dealers-map-shell,
+    .find-dealers-sidebar {
+        min-height: 380px;
     }
 
     .find-dealers-map {
-        height: 360px;
+        height: 380px;
+    }
+
+    .find-dealers-list-wrap {
+        max-height: 400px;
+    }
+
+    .find-dealers-form__actions {
+        width: 100%;
+    }
+
+    .find-dealers-submit {
+        flex: 1;
+    }
+
+    .find-dealers-panel--city {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -11103,4 +12197,63 @@ body.find-dealers-page {
 .scan-lab-vdp-banner-user {
     margin-left: auto;
     opacity: 0.85;
+}
+
+/* Listings sidebar form controls — final vertical alignment (overrides cascade conflicts) */
+body.listings-page .listings-filter-inner input.smart-search-input--carmax {
+    min-height: 48px;
+    height: auto;
+    padding: 14px 16px;
+    line-height: 1.25;
+    font-size: 15px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    box-shadow: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+}
+
+body.listings-page .listings-filter-inner input.smart-search-input--carmax:focus {
+    line-height: 1.25;
+    box-shadow: 0 0 0 3px rgba(28, 53, 82, 0.12);
+}
+
+body.listings-page .listings-filter-inner .pill-zip,
+body.listings-page .listings-filter-inner .pill-select {
+    min-height: 44px;
+    height: 44px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 12px 36px 12px 14px;
+    background-position: right 12px center;
+}
+
+body.listings-page .listings-filter-inner .pill-zip {
+    padding: 12px 14px;
+    line-height: 20px;
+}
+
+body.listings-page .listings-filter-inner .listings-dealer-picker-btn {
+    min-height: 44px;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    box-shadow: none;
+}
+
+body.listings-page .listings-filter-inner .listings-dealer-picker-btn-label {
+    line-height: 1.25;
+}
+
+body.listings-page .listings-filter-inner .listings-acc-trigger {
+    min-height: 44px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    align-items: center;
 }
