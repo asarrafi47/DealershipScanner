@@ -226,6 +226,9 @@ assert_inventory_backend_configured()
 init_users_db()
 init_admin_db()
 init_inventory_db()
+from backend.scanner.job_queue import init_job_queue_schema
+
+init_job_queue_schema()
 init_dealer_portal_db()
 
 
