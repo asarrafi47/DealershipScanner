@@ -417,6 +417,7 @@ def _csrf_mutating_requests():
         "api_auth_logout",
         "api_admin_dealer_onboard",
         "api_admin_dealer_job_retry",
+        "api_admin_dealer_job_diagnose",
         "api_admin_dealer_job_smart_retry",
     ):
         validate_csrf_header()
