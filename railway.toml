@@ -1,0 +1,14 @@
+# Default Railway config (web + scanner services share Dockerfile.web).
+# Web: gunicorn. scanner-worker / scanner-scheduler: routed in docker-entrypoint-web.sh
+# via RAILWAY_SERVICE_NAME. Per-service overrides: deploy/railway/railway.*.toml
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.web"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+numReplicas = 1

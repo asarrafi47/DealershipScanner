@@ -160,6 +160,10 @@ def main() -> int:
         _log.info("Using Playwright Chromium at %s", pw)
     _log.info("Scanner worker %s started (poll=%ss)", wid, POLL_SEC)
 
+    from railway_health_server import start_railway_health_server
+
+    start_railway_health_server()
+
     while True:
         job = claim_next_job()
         if not job:

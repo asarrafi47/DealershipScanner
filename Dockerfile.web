@@ -1,5 +1,11 @@
 FROM python:3.12-slim
 
+# Node.js for Puppeteer scanner.js (scanner-worker / scanner-scheduler on Railway web image)
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
 # System deps for Playwright (Chromium) and build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl wget ca-certificates gnupg git \
@@ -20,6 +26,10 @@ RUN pip install --no-cache-dir gunicorn[gthread] -r requirements.txt
 # Browser binaries: Playwright (Python) + Patchright (Crawl4AI 0.8)
 RUN playwright install chromium && playwright install-deps chromium && \
     patchright install chromium && patchright install-deps chromium
+
+COPY backend/scanner/package.json backend/scanner/package-lock.json ./backend/scanner/
+RUN cd backend/scanner && npm ci --omit=dev && \
+    node -e "require('puppeteer-extra')"
 
 # Copy application code
 COPY . .

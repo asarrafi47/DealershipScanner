@@ -1,9 +1,18 @@
 #!/bin/sh
-# Web container entrypoint: optional vault preload, then gunicorn on Railway/Docker PORT.
+# Container entrypoint: web (gunicorn) or scanner loops when RAILWAY_SERVICE_NAME matches.
 set -eu
 
 export KMAC_VAULT_AUTO="${KMAC_VAULT_AUTO:-1}"
 export PYTHONPATH="${PYTHONPATH:-/app}"
+
+case "${RAILWAY_SERVICE_NAME:-}" in
+  scanner-worker)
+    exec /app/scripts/docker-entrypoint-scanner-worker.sh
+    ;;
+  scanner-scheduler)
+    exec /app/scripts/docker-entrypoint-scanner-scheduler.sh
+    ;;
+esac
 
 if [ "${KMAC_VAULT_AUTO}" != "0" ]; then
   python3 -c "from backend.utils.kmac_vault import load_kmac_vault_secrets; load_kmac_vault_secrets()" \
