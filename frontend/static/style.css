@@ -1957,7 +1957,7 @@ body.listings-page .smart-search-input--hero {
 
 body.listings-page .listings-layout {
     display: grid;
-    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
     grid-template-areas: "sidebar main";
     gap: clamp(24px, 3vw, 40px) clamp(28px, 4vw, 56px);
     width: 100%;
@@ -2039,13 +2039,13 @@ body.listings-page .listings-filter-inner {
     background: #fff;
     border: 1px solid var(--border-light);
     border-radius: 12px;
-    padding: 16px 0 0;
+    padding: 18px 20px 0;
     box-shadow: 0 2px 12px rgba(20, 36, 54, 0.05);
 }
 
 body.listings-page .listings-intro--carmax {
     display: block;
-    padding: 0 16px 12px;
+    padding: 0 0 12px;
     margin-bottom: 0;
     border-bottom: 1px solid var(--border-light);
 }
@@ -2063,7 +2063,7 @@ body.listings-page .listings-intro--carmax .listings-intro-sub {
 }
 
 body.listings-page .listings-search-card--carmax {
-    padding: 14px 16px 0;
+    padding: 0;
 }
 
 body.listings-page .smart-search-input--carmax {
@@ -2116,7 +2116,7 @@ body.listings-page .filter-basics-row--carmax {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-top: 14px;
-    padding: 14px 16px 0;
+    padding: 14px 0 0;
     border-top: 1px solid var(--border-light);
 }
 
@@ -2167,12 +2167,12 @@ body.listings-page .listings-filter-acc {
 }
 
 body.listings-page .listings-filter-group-label {
-    margin: 14px 16px 4px;
+    margin: 14px 0 4px;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--navy-deep);
 }
 
 body.listings-page .listings-filter-group-label:first-of-type {
@@ -2188,7 +2188,7 @@ body.listings-page .listings-acc-section:last-of-type {
 }
 
 body.listings-page .listings-acc-trigger {
-    padding: 13px 16px;
+    padding: 13px 0;
 }
 
 body.listings-page .listings-acc-trigger .acc-label {
@@ -2243,8 +2243,8 @@ body.listings-page .listings-filter-actions {
     align-items: center;
     justify-content: space-between;
     gap: 10px 12px;
-    margin-top: 8px;
-    padding: 12px 16px 16px;
+    margin: 8px -20px 0;
+    padding: 12px 20px 16px;
     border-top: 1px solid var(--border-light);
     background: #fff;
 }
@@ -2325,8 +2325,12 @@ body.listings-page .listings-search-card--flat {
     background: transparent;
     border: none;
     box-shadow: none;
-    padding: 0;
     border-radius: 0;
+}
+
+/* Inside sidebar card: --flat must not zero horizontal padding (was edge-touching until scroll compact) */
+body.listings-page .listings-filter-inner .listings-search-card--flat {
+    padding: 0;
 }
 
 body.listings-page .filter-search-row {
@@ -12253,7 +12257,7 @@ body.listings-page .listings-filter-inner .listings-dealer-picker-btn-label {
 
 body.listings-page .listings-filter-inner .listings-acc-trigger {
     min-height: 44px;
-    padding: 12px 16px;
+    padding: 12px 0;
     box-sizing: border-box;
     align-items: center;
 }
