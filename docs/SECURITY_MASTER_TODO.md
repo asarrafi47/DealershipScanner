@@ -532,9 +532,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/main.py` (`CSP_ENFORCE`, `CSP_REPORT_ONLY`, per-request nonce, `g.csp_nonce`), all app templates with `<script>` (listings, car, dashboard, auth, `dev*`, `dev_manifest`, `_app_logout.html` partial) |
-| **Outcome** | Enforced `Content-Security-Policy` in production by default; per-request `script-src` **nonce** on all script elements (incl. `type="application/json"` blobs). `style-src` includes `unsafe-inline` for existing `style=""` until migrated to classes. `CSP_ENFORCE=0` / `1` overrides env default; if enforcement is off, `CSP_REPORT_ONLY=1` still sends report-only policy. |
-| **Validation** | `CSP_ENFORCE=1` → `GET /login` includes `Content-Security-Policy` with `nonce-`; public pages and `/dev` load. `python -m pytest tests/test_app_security_basics.py`. |
-| **Last verified** | 2026-04-22 |
+| **Outcome** | Enforced `Content-Security-Policy` in production by default; per-request `script-src` **nonce** on all script elements (incl. `type="application/json"` blobs). `style-src` and `style-src-elem` include `unsafe-inline` for existing `style=""` and inline `<style>` blocks (e.g. admin `site_hub.html`) until migrated to external CSS. `CSP_ENFORCE=0` / `1` overrides env default; if enforcement is off, `CSP_REPORT_ONLY=1` still sends report-only policy. |
+| **Validation** | `CSP_ENFORCE=1` → `GET /login` includes `Content-Security-Policy` with `nonce-` and `style-src-elem` with `'unsafe-inline'`; public pages and `/dev` load. `python -m pytest backend/tests/test_app_security_basics.py`. |
+| **Last verified** | 2026-06-14 |
 
 ### SEC-084 — HTTP security response headers
 
@@ -912,6 +912,7 @@
 |------------|--------|
 | 2026-06-14 | **SEC-103:** Startup bootstrap no longer overwrites existing site-admin or `/dev` admin passwords; vault sync only on new admin or `BOOTSTRAP_FORCE_ADMIN_PASSWORD=1`; removed duplicate host bootstrap from `deploy/up.sh`. Validation: `pytest backend/tests/test_bootstrap_site_admin.py backend/tests/test_init_admin_db.py -q`. |
 | 2026-06-14 | **SEC-102:** Postgres-only inventory — fail fast without `INVENTORY_DATABASE_URL`; Docker stack always includes Postgres; pytest uses `INVENTORY_SQLITE_TESTS=1`. Validation: `pytest backend/tests/test_inventory_postgres_required.py -q`. |
+| 2026-06-14 | **SEC-032:** `style-src-elem` includes `'unsafe-inline'` (aligned with `style-src`) so admin inline `<style>` blocks (e.g. `site_hub.html`) are not blocked in production CSP. Validation: `python -m pytest backend/tests/test_app_security_basics.py::test_csp_enforce_header_when_enabled -q`. |
 | 2026-06-11 | **SEC-099:** C3 Stripe Customer Portal scaffold — `/account/billing` + portal redirect using session user's `premium_stripe_customer_id` only. Validation: `python -m pytest backend/tests/test_billing_portal.py -q`. |
 | 2026-06-11 | **SEC-098:** D1 `/admin/users` full CRUD — create/edit/role/scope/password-reset/delete + list suspend/activate; env-admin guards; vector icon actions in `users.html` / `user_form.html`. Validation: `python -m pytest backend/tests/test_admin_users.py -q`. |
 | 2026-06-11 | **SEC-097:** B2 password reset scaffold — hashed tokens + expiry in `users.db`, `/forgot-password` + `/reset-password`, anti-enumeration response, OAuth accounts skipped; gated by `PASSWORD_RESET_ENABLED` (default off). Validation: `python -m pytest backend/tests/test_password_reset.py -q`. |

@@ -591,7 +591,7 @@ def _csp_enforce_wanted() -> bool:
 
 
 def _csp_header_value_enforced(nonce: str) -> str:
-    # style-src: 'unsafe-inline' for existing inline style="" attributes; script nonces for all script elements.
+    # style-src / style-src-elem: 'unsafe-inline' for inline style="" and <style> blocks until migrated to CSS files.
     return (
         "default-src 'self'; "
         "base-uri 'self'; "
@@ -602,7 +602,7 @@ def _csp_header_value_enforced(nonce: str) -> str:
         "img-src 'self' data: https: http: blob:; "
         "font-src 'self' https://fonts.gstatic.com data:; "
         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
-        "style-src-elem 'self' https://fonts.googleapis.com; "
+        "style-src-elem 'self' https://fonts.googleapis.com 'unsafe-inline'; "
         f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
         "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
         "worker-src 'self'; "
@@ -619,7 +619,7 @@ _CSP_REPORT_ONLY = (
     "img-src 'self' data: https: http: blob:; "
     "font-src 'self' https://fonts.gstatic.com data:; "
     "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
-    "style-src-elem 'self' https://fonts.googleapis.com; "
+    "style-src-elem 'self' https://fonts.googleapis.com 'unsafe-inline'; "
     "script-src 'self' https://esm.sh; "
     "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
     "worker-src 'self'; "
