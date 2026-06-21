@@ -72,7 +72,8 @@ def apply_in_transit_flags_from_raw(
     """
     if not isinstance(vehicle, dict):
         return
-    for key in ("in_transit", "availability", "availability_status", "stock_status"):
+    for key in ("in_transit", "availability", "availability_status", "stock_status",
+                "inventoryStatus", "inventory_status", "inventoryType", "stock_type"):
         if key not in vehicle:
             continue
         status = normalize_availability_status(vehicle.get(key))

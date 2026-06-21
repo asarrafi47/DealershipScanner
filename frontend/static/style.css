@@ -9158,6 +9158,12 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     flex-direction: column;
 }
 
+@media (min-width: 901px) {
+    .lp-shell:has(.app-sidebar) {
+        padding-left: var(--app-sidebar-width);
+    }
+}
+
 .lp-container {
     width: 100%;
     max-width: 1440px;

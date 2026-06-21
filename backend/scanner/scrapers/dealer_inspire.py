@@ -162,6 +162,91 @@ def _query_algolia_inventory(
     return all_hits
 
 
+async def _browser_algolia_fetch(page: Any, url: str, app_id: str, api_key: str, payload: dict) -> dict:
+    """POST an Algolia batch query through the browser's fetch (sends correct Origin/Referer)."""
+    result = await page.evaluate(
+        """async (args) => {
+            try {
+                const r = await fetch(args.url, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'X-Algolia-Application-Id': args.appId,
+                        'X-Algolia-API-Key': args.apiKey,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(args.payload)
+                });
+                if (!r.ok) return {_error: r.status};
+                return await r.json();
+            } catch(e) { return {_error: String(e)}; }
+        }""",
+        {"url": url, "appId": app_id, "apiKey": api_key, "payload": payload},
+    )
+    if isinstance(result, dict) and "_error" in result:
+        raise RuntimeError(f"Algolia browser fetch error: {result['_error']}")
+    return result
+
+
+async def _query_algolia_inventory_via_browser(
+    page: Any,
+    app_id: str,
+    api_key: str,
+    index_name: str,
+    *,
+    filters: str = "",
+    page_size: int = _ALGOLIA_BATCH_SIZE,
+    extra_params: str = "",
+) -> list[dict[str, Any]]:
+    """
+    Query Algolia for all vehicles via the browser's fetch (bypasses referrer/IP restrictions).
+    Returns list of raw Algolia hit dicts.
+
+    ``extra_params`` is an optional raw Algolia params string (e.g. ``"type=New"`` or
+    ``"facetFilters=type%3ANew"``) that is appended to every request's ``params`` field.
+    Use this when a site requires additional query-time parameters that are not expressible
+    via the ``filters`` argument (e.g. Land Rover sites that need ``type=New``).
+    """
+    url = _ALGOLIA_SEARCH_URL.format(app_id=app_id)
+    all_hits: list[dict[str, Any]] = []
+    page_num = 0
+    filt_param = encode_algolia_filter_param(filters)
+    extra = ("&" + extra_params.lstrip("&")) if extra_params else ""
+    while True:
+        payload = {
+            "requests": [
+                {
+                    "indexName": index_name,
+                    "params": f"hitsPerPage={page_size}&page={page_num}&filters={filt_param}{extra}",
+                }
+            ]
+        }
+        try:
+            data = await _browser_algolia_fetch(page, url, app_id, api_key, payload)
+        except RuntimeError as e:
+            err_str = str(e)
+            if "401" in err_str or "403" in err_str:
+                logger.warning("DealerInspire Algolia browser fetch: auth error for app=%s: %s", app_id, e)
+            else:
+                logger.debug("DealerInspire Algolia browser fetch failed: %s", e)
+            break
+        except Exception as e:
+            logger.debug("DealerInspire Algolia browser fetch failed: %s", e)
+            break
+        results = data.get("results", [{}]) if isinstance(data, dict) else [{}]
+        hits = results[0].get("hits", []) if results else []
+        if not hits:
+            break
+        all_hits.extend(hits)
+        nb_pages = int(results[0].get("nbPages", 1))
+        if page_num >= nb_pages - 1:
+            break
+        page_num += 1
+        if len(all_hits) >= 10000:
+            break
+    return all_hits
+
+
 def _map_algolia_hit(hit: dict[str, Any], base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict[str, Any] | None:
     """Map a DealerInspire/Algolia hit dict to the scanner vehicle schema."""
     vin = str(hit.get("vin") or hit.get("VIN") or "").strip().upper()
@@ -283,6 +368,89 @@ def _map_algolia_hit(hit: dict[str, Any], base_url: str, dealer_id: str, dealer_
     return row
 
 
+_SRP_PATHS = ["/new-vehicles/", "/used-vehicles/", "/new-inventory/", "/inventory/"]
+
+
+async def _intercept_algolia_config_from_srp(
+    page: Any,
+    base_url: str,
+    dealer_name: str,
+) -> dict[str, str] | None:
+    """
+    Navigate SRP pages and intercept the live Algolia /queries request to capture
+    the real appId, apiKey, and indexName for this specific rooftop.
+
+    This is more reliable than HTML extraction on multi-rooftop group sites where
+    the page HTML may embed a config for a different store.
+    """
+    captured: dict[str, str] = {}
+    done_evt = asyncio.Event()
+
+    async def _on_response(response: Any) -> None:
+        try:
+            rurl = str(getattr(response, "url", "") or "")
+            if "algolia" not in rurl or "queries" not in rurl or captured:
+                return
+            m = re.search(r"//([^-\.]+)-dsn\.algolia", rurl)
+            if not m:
+                return
+            captured["appId"] = m.group(1).upper()
+            req = getattr(response, "request", None)
+            if req:
+                hdrs = await req.all_headers()
+                captured["apiKey"] = hdrs.get("x-algolia-api-key", "")
+            body = await response.json()
+            results = body.get("results", [{}]) if isinstance(body, dict) else [{}]
+            captured["indexName"] = str(results[0].get("index", "") if results else "")
+            if all(captured.values()):
+                done_evt.set()
+        except Exception:
+            pass
+
+    page.on("response", _on_response)
+    config: dict[str, str] | None = None
+    try:
+        for srp_path in _SRP_PATHS:
+            srp_url = base_url.rstrip("/") + srp_path
+            try:
+                await page.goto(srp_url, wait_until="domcontentloaded", timeout=20_000)
+            except Exception:
+                continue
+            try:
+                await asyncio.wait_for(done_evt.wait(), timeout=5.0)
+            except asyncio.TimeoutError:
+                pass
+            if len(captured) == 3 and all(captured.values()):
+                break
+            # Secondary: HTML extraction on this SRP page
+            try:
+                srp_html = await page.content()
+                config = _extract_algolia_config_from_html(srp_html)
+                if config:
+                    break
+            except Exception:
+                pass
+    except Exception as e:
+        logger.debug("DealerInspire: SRP navigation for config failed: %s", e)
+    finally:
+        try:
+            page.remove_listener("response", _on_response)
+        except Exception:
+            pass
+
+    if not config and len(captured) == 3 and all(captured.values()):
+        config = {
+            "appId": captured["appId"],
+            "apiKey": captured["apiKey"],
+            "indexName": captured["indexName"],
+        }
+        logger.debug(
+            "DealerInspire: config via request intercept for %s: app=%s idx=%s",
+            dealer_name, config["appId"], config["indexName"],
+        )
+    return config
+
+
 async def scrape_dealer_inspire_from_page(
     page: Any,
     base_url: str,
@@ -295,6 +463,15 @@ async def scrape_dealer_inspire_from_page(
     """
     Extract Algolia config from already-loaded Playwright page, then query Algolia directly.
     Returns list of mapped vehicle dicts (empty if DealerInspire is not detected).
+
+    Manifest overrides supported (set on the dealer dict):
+      - ``algolia_index``: override the index name extracted from HTML/intercept.
+        Use this when a multi-rooftop group site embeds the wrong store's index in its
+        HTML (e.g. hixsonchevrolet.com embeds the DeRidder index instead of Chattanooga).
+      - ``algolia_filters``: raw Algolia filter string applied to the query.
+      - ``algolia_scope``: shorthand scope key (``full``, ``on_lot``, ``primary_rooftop``).
+      - ``algolia_params``: extra raw Algolia ``params`` string appended to every query
+        (e.g. ``"type=New"`` to filter by condition when the index mixes new and used).
     """
     try:
         html = await page.content()
@@ -305,7 +482,13 @@ async def scrape_dealer_inspire_from_page(
     if "dealerinspire" not in html.lower() and "maven-algolia" not in html.lower():
         return []
 
+    config: dict[str, str] | None = None
+    config_source = "none"
+
     config = _extract_algolia_config_from_html(html)
+    if config:
+        config_source = "html"
+
     if not config:
         # Try extracting via JS evaluation
         try:
@@ -323,72 +506,15 @@ async def scrape_dealer_inspire_from_page(
             )
             if config_js and isinstance(config_js, dict):
                 config = config_js
+                config_source = "js_eval"
         except Exception as e:
             logger.debug("DealerInspire: JS config extraction failed: %s", e)
 
     if not config:
-        # SRP pages often don't embed algoliaConfig — navigate to homepage and intercept
-        # the Algolia /queries request to capture app_id, api_key, and index_name directly.
-        captured: dict[str, str] = {}
-        done_evt = asyncio.Event()
-
-        async def _on_response(response: Any) -> None:
-            try:
-                rurl = str(getattr(response, "url", "") or "")
-                if "algolia" not in rurl or "queries" not in rurl or captured:
-                    return
-                m = re.search(r"//([^-\.]+)-dsn\.algolia", rurl)
-                if not m:
-                    return
-                captured["appId"] = m.group(1).upper()
-                req = getattr(response, "request", None)
-                if req:
-                    hdrs = await req.all_headers()
-                    captured["apiKey"] = hdrs.get("x-algolia-api-key", "")
-                body = await response.json()
-                results = body.get("results", [{}]) if isinstance(body, dict) else [{}]
-                captured["indexName"] = str(results[0].get("index", "") if results else "")
-                if all(captured.values()):
-                    done_evt.set()
-            except Exception:
-                pass
-
-        # Algolia requests fire on SRP pages, not on the homepage.
-        # Try standard DealerInspire SRP paths until we capture credentials.
-        _srp_paths = ["/new-vehicles/", "/used-vehicles/", "/new-inventory/", "/inventory/"]
-        page.on("response", _on_response)
-        try:
-            for srp_path in _srp_paths:
-                srp_url = base_url.rstrip("/") + srp_path
-                try:
-                    await page.goto(srp_url, wait_until="domcontentloaded", timeout=20_000)
-                except Exception:
-                    continue
-                try:
-                    await asyncio.wait_for(done_evt.wait(), timeout=5.0)
-                except asyncio.TimeoutError:
-                    pass
-                if len(captured) == 3 and all(captured.values()):
-                    break
-                # Secondary: HTML extraction on this SRP page
-                try:
-                    srp_html = await page.content()
-                    config = _extract_algolia_config_from_html(srp_html)
-                    if config:
-                        break
-                except Exception:
-                    pass
-        except Exception as e:
-            logger.debug("DealerInspire: SRP navigation for config failed: %s", e)
-        finally:
-            try:
-                page.remove_listener("response", _on_response)
-            except Exception:
-                pass
-
-        if not config and len(captured) == 3 and all(captured.values()):
-            config = {"appId": captured["appId"], "apiKey": captured["apiKey"], "indexName": captured["indexName"]}
-            logger.debug("DealerInspire: config via request intercept for %s: app=%s idx=%s", dealer_name, config["appId"], config["indexName"])
+        srp_config = await _intercept_algolia_config_from_srp(page, base_url, dealer_name)
+        if srp_config:
+            config = srp_config
+            config_source = "intercepted"
 
     if not config:
         logger.debug("DealerInspire: no Algolia config found for %s", dealer_name)
@@ -397,6 +523,21 @@ async def scrape_dealer_inspire_from_page(
     app_id = config.get("appId", "")
     api_key = config.get("apiKey", "")
     index_name = config.get("indexName", "")
+
+    # --- Manifest algolia_index override ---
+    # If the dealer manifest specifies an explicit index name, use it instead of whatever
+    # the page HTML or intercept returned. This is the fix for group sites that embed a
+    # sibling store's index (e.g. hixsonchevrolet.com → DeRidder index vs. Chattanooga).
+    manifest_index = str((dealer or {}).get("algolia_index") or "").strip()
+    if manifest_index:
+        if manifest_index != index_name:
+            logger.info(
+                "DealerInspire: manifest algolia_index override for %s: %r → %r",
+                dealer_name, index_name, manifest_index,
+            )
+        index_name = manifest_index
+        config_source = "manifest_override"
+
     if not (app_id and api_key and index_name):
         logger.debug("DealerInspire: incomplete Algolia config for %s: %s", dealer_name, config)
         return []
@@ -407,12 +548,45 @@ async def scrape_dealer_inspire_from_page(
         "url": dealer_url,
     }
 
+    # Extra raw params string from manifest (e.g. "type=New" or "facetFilters=type%3ANew")
+    extra_params: str = str((dealer or {}).get("algolia_params") or "").strip()
+
     logger.info("DealerInspire: querying Algolia app=%s index=%s for %s", app_id, index_name, dealer_name)
-    probe_hits = _query_algolia_inventory(app_id, api_key, index_name, page_size=250)
+    probe_hits = await _query_algolia_inventory_via_browser(
+        page, app_id, api_key, index_name, page_size=250, extra_params=extra_params
+    )
+
+    # If the HTML/JS-extracted config yields 0 hits, it may belong to a different rooftop
+    # on a multi-store group site. Try intercepting the live Algolia request from the SRP
+    # to get the real index for this specific dealer.
+    # Skip this retry when the index was already overridden via the manifest (trust the override).
+    if not probe_hits and config_source not in ("intercepted", "manifest_override"):
+        logger.debug(
+            "DealerInspire: 0 probe hits on %s-extracted index %s for %s — trying SRP intercept",
+            config_source, index_name, dealer_name,
+        )
+        srp_config = await _intercept_algolia_config_from_srp(page, base_url, dealer_name)
+        if srp_config and srp_config.get("indexName") != index_name:
+            new_index = srp_config["indexName"]
+            logger.info(
+                "DealerInspire: 0 hits on HTML-extracted index %s for %s — retrying with SRP-intercepted index %s",
+                index_name, dealer_name, new_index,
+            )
+            config = srp_config
+            config_source = "intercepted"
+            app_id = config["appId"]
+            api_key = config["apiKey"]
+            index_name = new_index
+            probe_hits = await _query_algolia_inventory_via_browser(
+                page, app_id, api_key, index_name, page_size=250, extra_params=extra_params
+            )
+
     filters = infer_algolia_filters(dealer_ctx, index_name=index_name, sample_hits=probe_hits)
     if filters:
         logger.info("DealerInspire: Algolia filters for %s: %s", dealer_name, filters)
-    hits = _query_algolia_inventory(app_id, api_key, index_name, filters=filters)
+    hits = await _query_algolia_inventory_via_browser(
+        page, app_id, api_key, index_name, filters=filters, extra_params=extra_params
+    )
     hits = post_filter_algolia_hits(hits, dealer_ctx)
     if not hits:
         logger.info("DealerInspire: 0 hits from Algolia for %s", dealer_name)

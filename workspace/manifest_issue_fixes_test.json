@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Land Rover Chattanooga",
+    "url": "https://www.landroverchattanooga.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "landroverchattanooga-com",
+    "city": "Chattanooga",
+    "state": "TN"
+  },
+  {
+    "name": "Infiniti of Chattanooga",
+    "url": "https://www.infinitichattanooga.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "infinitichattanooga-com",
+    "city": "Chattanooga",
+    "state": "TN"
+  },
+  {
+    "name": "BMW of Chattanooga",
+    "url": "https://www.bmwofchattanooga.com",
+    "provider": "dealer_eprocess",
+    "dealer_id": "bmwofchattanooga-com",
+    "city": "Chattanooga",
+    "state": "TN"
+  },
+  {
+    "name": "Capital Toyota",
+    "url": "https://www.capitaltoyota.com",
+    "provider": "dealer_eprocess",
+    "dealer_id": "capitaltoyota-com",
+    "city": "Chattanooga",
+    "state": "TN"
+  },
+  {
+    "name": "Kia of Cleveland",
+    "url": "https://www.kiaofcleveland.com",
+    "provider": "dealer_eprocess",
+    "dealer_id": "kiaofcleveland-com",
+    "city": "Cleveland",
+    "state": "TN"
+  },
+  {
+    "name": "Ford",
+    "url": "https://www.fordofdalton.com",
+    "provider": "dealer_on",
+    "dealer_id": "fordofdalton-com",
+    "city": "Dalton",
+    "state": "GA"
+  },
+  {
+    "name": "Hyundai",
+    "url": "https://www.longhyundai.net",
+    "provider": "dealer_dot_com",
+    "dealer_id": "longhyundai-net",
+    "city": "Chattanooga",
+    "state": "TN"
+  }
+]

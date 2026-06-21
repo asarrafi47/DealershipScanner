@@ -3,9 +3,18 @@ import logging
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_on import parse as parse_dealer_on
 
+
+def _parse_autowall(raw_data, *, base_url="", dealer_id="", dealer_name="", dealer_url=""):
+    """Pass-through parser: autoWALL vehicles are already parsed dicts; return them as-is."""
+    if isinstance(raw_data, dict) and isinstance(raw_data.get("inventory"), list):
+        return [v for v in raw_data["inventory"] if isinstance(v, dict) and v.get("vin")]
+    return []
+
+
 PARSERS = {
     "dealer_dot_com": parse_dealer_dot_com,
     "dealer_on": parse_dealer_on,
+    "autowall": _parse_autowall,
 }
 
 _log = logging.getLogger(__name__)

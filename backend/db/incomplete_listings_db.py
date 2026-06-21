@@ -186,9 +186,10 @@ def fast_rebuild_incomplete_listings_index() -> int:
             conn_inc.execute("BEGIN")
         else:
             conn_inc.execute("BEGIN IMMEDIATE")
-        conn_inc.execute("DELETE FROM incomplete_listings")
+        cur = conn_inc.cursor()
+        cur.execute("DELETE FROM incomplete_listings")
         if rows_to_upsert:
-            conn_inc.executemany(
+            cur.executemany(
                 "INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at) VALUES (?,?,?,?)",
                 rows_to_upsert,
             )

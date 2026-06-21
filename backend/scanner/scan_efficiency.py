@@ -112,6 +112,10 @@ def inventory_paths_for_dealer(dealer: dict[str, Any] | None = None) -> list[str
         provider = str(dealer.get("provider") or "").strip().lower()
     if provider == "dealer_inspire":
         return list(INVENTORY_PATHS_DEALER_INSPIRE)
+    if provider == "autowall":
+        return ["/gs-vehicle/list"]
+    if provider == "shopperexpress":
+        return ["/listings/", "/used-listings/"]
     return list(INVENTORY_PATHS_CORE)
 
 
@@ -261,10 +265,17 @@ def effective_vdp_concurrency() -> int:
     Parallel VDP browser workers per dealer.
 
     Default ``4`` (was ``12``) — gallery carousel harvest is heavy per page; override with
-    ``SCANNER_MAX_VDP_CONCURRENCY``.
+    ``SCANNER_MAX_VDP_CONCURRENCY`` (integer, or ``auto`` to scale to the host CPU count).
+
+    ``auto`` scales to ``min(8, max(4, cpu_count - 2))`` — useful when the carousel harvest
+    is skipped (SCANNER_VDP_GALLERY_SKIP_IF_FEED_GE) so visits become nav+extract-bound and
+    benefit from more parallelism without the per-page gallery memory pressure.
     """
     raw = (os.environ.get("SCANNER_MAX_VDP_CONCURRENCY") or "").strip()
     if raw:
+        if raw.lower() == "auto":
+            cores = os.cpu_count() or 6
+            return min(8, max(4, cores - 2))
         try:
             return max(1, min(64, int(raw)))
         except ValueError:

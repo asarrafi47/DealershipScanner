@@ -23,6 +23,13 @@ NEXT_SELECTORS = [
     ".pagination-next",
     ".load-more",
     'a:has-text("Load More")',
+    '[aria-label="Next page"]',
+    '[aria-label="Go to next page"]',
+    '[data-testid*="next"]',
+    ".page-next",
+    "li.next > a",
+    'a[rel="next"]',
+    'button[data-action="page-next"]',
 ]
 MAX_PAGINATION_CLICKS = 15
 

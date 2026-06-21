@@ -284,6 +284,7 @@ def ensure_scan_runs_table(cursor: sqlite3.Cursor) -> None:
             vdps_visited INTEGER,
             vehicles_vdp_enriched INTEGER,
             error TEXT,
+            provider TEXT,
             summary_json TEXT NOT NULL DEFAULT '{}'
         )
         """
@@ -332,8 +333,8 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 INSERT INTO scan_runs (
                     dealer_id, dealer_name, finished_at, duration_seconds,
                     upserted, inventory_rows, deduped_rows, vdps_visited,
-                    vehicles_vdp_enriched, error, summary_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    vehicles_vdp_enriched, error, provider, summary_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     did,
@@ -346,6 +347,7 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                     int(o.get("vdps_visited") or 0),
                     int(o.get("vehicles_vdp_enriched") or 0),
                     err_s,
+                    (o.get("provider") or "")[:100] or None,
                     json.dumps(summary, ensure_ascii=False, default=str),
                 ),
             )

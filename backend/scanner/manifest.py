@@ -9,6 +9,7 @@ import logging
 import os
 import sqlite3
 import sys
+from pathlib import Path
 from typing import Any
 
 from backend.scanner.constants import MANIFEST_PATH, OEM_MANUFACTURER_DOMAINS
@@ -67,7 +68,12 @@ def load_manifest() -> list[dict]:
         dealers = _load_dealers_from_db()
         logger.info("Loaded %d dealers from DB (DEALERS_FROM_DB=1)", len(dealers))
         return dealers
-    with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
+    # Re-read env at call time so --manifest CLI arg (set via DEALERS_MANIFEST_PATH) takes effect
+    # even after modules have already been imported.
+    env_path = os.environ.get("DEALERS_MANIFEST_PATH", "").strip()
+    path = Path(env_path) if env_path else MANIFEST_PATH
+    logger.info("Loading manifest: %s (resolved %s)", path, path.resolve())
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -180,3 +186,20 @@ def resolve_shard_cli_and_env(args: argparse.Namespace) -> tuple[int, int]:
 
 def filter_oem_manufacturers(dealers: list[dict]) -> list[dict]:
     return [d for d in dealers if not is_oem_manufacturer_url(d.get("url", ""))]
+
+
+def filter_manifest_skip_flag(dealers: list[dict]) -> list[dict]:
+    """Drop entries with ``skip: true`` in the manifest (offline, bot-blocked, DNS broken)."""
+    kept, dropped = [], []
+    for d in dealers:
+        if d.get("skip"):
+            dropped.append(str(d.get("name") or d.get("dealer_id") or "?"))
+        else:
+            kept.append(d)
+    if dropped:
+        logger.info(
+            "Manifest skip flag: removed %d dealer(s): %s",
+            len(dropped),
+            ", ".join(dropped[:8]) + ("…" if len(dropped) > 8 else ""),
+        )
+    return kept

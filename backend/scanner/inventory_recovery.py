@@ -82,15 +82,18 @@ def _recovery_hint_filter_enabled() -> bool:
 
 # Full recovery chain order (platform-specific strategies before HTML fallback).
 RECOVERY_STRATEGY_ORDER: tuple[str, ...] = (
+    "shopperexpress_api",
     "dealer_inspire_algolia",
     "dealer_venom_typesense",
     "pixel_motion_html",
     "dealer_on_cosmos",
     "dealer_eprocess_json",
     "html_next_data",
+    "jsonld_listing_html",
 )
 
 _STRATEGY_PLATFORM_HINTS: dict[str, frozenset[str]] = {
+    "shopperexpress_api": frozenset({"shopperexpress"}),
     "dealer_inspire_algolia": frozenset({"algolia", "dealer_inspire"}),
     "dealer_venom_typesense": frozenset({"typesense", "dealer_venom"}),
     "pixel_motion_html": frozenset({"pixel_motion"}),
@@ -117,6 +120,14 @@ def detect_platform_hints(ctx: RecoveryContext) -> set[str]:
         if "dealereprocess" in low or ("/assets/" in low and "vehicle-facts" in low):
             hints.add("dealer_eprocess")
 
+    # Check manifest provider for platforms that have dedicated API scrapers.
+    manifest_provider = (ctx.dealer or {}).get("provider") or ""
+    if manifest_provider == "shopperexpress":
+        hints.add("shopperexpress")
+    if manifest_provider == "dealer_inspire":
+        hints.add("dealer_inspire")
+        hints.add("algolia")
+
     combined = "\n".join(h for h in ctx.path_htmls if h)
     if not combined:
         return hints
@@ -134,7 +145,22 @@ def detect_platform_hints(ctx: RecoveryContext) -> set[str]:
         hints.add("dealer_on")
     if "dealereprocess" in low:
         hints.add("dealer_eprocess")
+    if "shopperexpress" in low or ("serti" in low and "btn-next" in low):
+        hints.add("shopperexpress")
     return hints
+
+
+# Maps manifest provider → the recovery strategy that must run first for that platform.
+# Used to pin the canonical strategy to the front of the chain when false hints (e.g.
+# algolia intercepts from analytics) would otherwise promote an incompatible strategy.
+_PROVIDER_FIRST_STRATEGY: dict[str, str] = {
+    "dealer_on": "dealer_on_cosmos",
+    "shopperexpress": "shopperexpress_api",
+    "dealer_inspire": "dealer_inspire_algolia",
+    "dealer_eprocess": "dealer_eprocess_json",
+    "dealer_venom": "dealer_venom_typesense",
+    "pixel_motion": "pixel_motion_html",
+}
 
 
 def recovery_strategy_names(
@@ -142,6 +168,7 @@ def recovery_strategy_names(
     *,
     manifest_strategies: list[str] | None = None,
     cached_strategy: str | None = None,
+    provider: str = "",
 ) -> list[str]:
     """
     Return ordered recovery strategy names. When platform hints are known, run matching
@@ -149,7 +176,13 @@ def recovery_strategy_names(
 
     Manifest ``recovery_strategies`` overrides hint-based selection when provided.
     ``cached_strategy`` (from prior successful runs) is moved to the front of the chain.
+    ``provider`` (manifest provider field) pins the canonical strategy to the front when
+    set, overriding false hints from unrelated intercepts (e.g. analytics Algolia calls
+    on a DealerOn site).
     """
+    # Provider pin: treat the canonical strategy as the cached winner so it moves first.
+    if not cached_strategy and provider:
+        cached_strategy = _PROVIDER_FIRST_STRATEGY.get(provider)
     if manifest_strategies:
         chain = list(manifest_strategies)
         if "html_next_data" not in chain:
@@ -231,6 +264,14 @@ def should_run_platform_recovery(ctx: RecoveryContext) -> bool:
     """True when intercept-only data is missing or likely incomplete."""
     if not _recovery_enabled():
         return False
+
+    # DealerOn cosmos API is never captured by the standard JSON intercept path — the
+    # initial scan intercepts analytics/GTM events that look like inventory but aren't.
+    # Always run DealerOn recovery so _scrape_srp_all_pages can navigate and intercept
+    # the actual cosmos/srp/vehicles response.
+    if ctx.provider == "dealer_on":
+        return True
+
     n = unique_vin_count(ctx.vehicles)
     if n == 0:
         return True
@@ -354,6 +395,121 @@ async def _html_and_next_data(ctx: RecoveryContext) -> list[dict[str, Any]]:
     return []
 
 
+def _parse_jsonld_listing_html(ctx: RecoveryContext) -> list[dict[str, Any]]:
+    """Parse Schema.org JSON-LD Car/Vehicle objects from captured listing page HTML.
+    Works for sites like PCNA (Porsche) that embed full vehicle JSON-LD per card."""
+    import re as _re
+    import json as _json
+
+    VIN_RE = _re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", _re.I)
+    SCHEMA_RE = _re.compile(
+        r'<script[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        _re.S | _re.I,
+    )
+
+    vehicles: list[dict[str, Any]] = []
+    seen_vins: set[str] = set()
+
+    for path_html in ctx.path_htmls:
+        if not path_html:
+            continue
+        for m in SCHEMA_RE.finditer(path_html):
+            try:
+                data = _json.loads(m.group(1))
+            except Exception:
+                continue
+            if not isinstance(data, dict):
+                continue
+            types = data.get("@type", "")
+            types_set = {t.lower() for t in types} if isinstance(types, list) else {str(types).lower()}
+            if not (types_set & {"car", "vehicle"}):
+                continue
+            vin = (data.get("vehicleIdentificationNumber") or "").strip().upper()
+            if not VIN_RE.match(vin) or vin in seen_vins:
+                continue
+            seen_vins.add(vin)
+
+            name = data.get("name", "")
+            year, make, model, trim = None, None, None, None
+            nm = _re.match(r"(\d{4})\s+(\S+)\s+([\w\s]+?)(?:\s*\((.+)\))?\s*$", name.strip())
+            if nm:
+                try:
+                    year = int(nm.group(1))
+                except ValueError:
+                    pass
+                make = nm.group(2) or None
+                model = (nm.group(3) or "").strip() or None
+                trim = nm.group(4) or None
+
+            offers = data.get("offers") or {}
+            price = offers.get("price")
+            try:
+                price = int(price) if price is not None else None
+            except (ValueError, TypeError):
+                price = None
+            source_url = offers.get("url") or None
+            cond_raw = (offers.get("itemCondition") or "").lower()
+            if "used" in cond_raw or "preowned" in cond_raw:
+                condition = "Used"
+            elif "new" in cond_raw:
+                condition = "New"
+            elif "refurbished" in cond_raw or "certified" in cond_raw:
+                condition = "Certified Pre-Owned"
+            else:
+                condition = None
+
+            mileage_obj = data.get("mileageFromOdometer") or {}
+            try:
+                mileage = int(mileage_obj.get("value")) if mileage_obj.get("value") is not None else None
+            except (ValueError, TypeError):
+                mileage = None
+
+            image_url = data.get("image") or ""
+            if isinstance(image_url, list):
+                image_url = image_url[0] if image_url else ""
+            image_url = str(image_url).strip() or None
+
+            vehicles.append({
+                "vin": vin,
+                "year": year,
+                "make": make,
+                "model": model,
+                "trim": trim,
+                "price": price,
+                "mileage": mileage,
+                "condition": condition,
+                "exterior_color": data.get("color") or None,
+                "interior_color": data.get("vehicleInteriorColor") or None,
+                "image_url": image_url,
+                "gallery": [image_url] if image_url else [],
+                "source_url": source_url,
+                "_detail_url": source_url,
+                "dealer_name": ctx.dealer_name,
+                "dealer_url": ctx.dealer_url,
+                "dealer_id": ctx.dealer_id,
+            })
+
+    if not vehicles:
+        return vehicles
+
+    # If one brand dominates (≥70% of results), drop other-brand rows that were
+    # likely sourced from a "used / other-brands" path on a mono-brand dealer site.
+    from collections import Counter
+    makes = [v.get("make") or "" for v in vehicles]
+    counts = Counter(makes)
+    total = len(vehicles)
+    top_make, top_n = counts.most_common(1)[0]
+    if top_make and top_n / total >= 0.70 and top_n < total:
+        vehicles = [v for v in vehicles if (v.get("make") or "") == top_make]
+        logger.debug(
+            "jsonld_listing_html: %s — filtered to dominant make '%s' (%d→%d vehicles)",
+            ctx.dealer_name, top_make, total, len(vehicles),
+        )
+
+    logger.info("jsonld_listing_html: %s — %d vehicle(s) from JSON-LD", ctx.dealer_name, len(vehicles))
+    return vehicles
+
+
 async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
     """
     Run the recovery chain when needed. Returns updated vehicles and which strategy won.
@@ -419,16 +575,28 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
             ctx.page, ctx.base_url, ctx.dealer_id, ctx.dealer_name, ctx.dealer_url
         )
 
+    async def _shopperexpress() -> list[dict[str, Any]]:
+        from backend.scanner.scrapers.shopperexpress import fetch_shopperexpress_inventory
+
+        return await fetch_shopperexpress_inventory(
+            ctx.base_url, ctx.dealer_id, ctx.dealer_name
+        )
+
     async def _html() -> list[dict[str, Any]]:
         return await _html_and_next_data(ctx)
 
+    async def _jsonld_listing() -> list[dict[str, Any]]:
+        return _parse_jsonld_listing_html(ctx)
+
     strategy_fns: dict[str, StrategyFn] = {
+        "shopperexpress_api": _shopperexpress,
         "dealer_inspire_algolia": _inspire,
         "dealer_venom_typesense": _venom,
         "pixel_motion_html": _pixel_motion,
         "dealer_on_cosmos": _dealer_on,
         "dealer_eprocess_json": _eprocess,
         "html_next_data": _html,
+        "jsonld_listing_html": _jsonld_listing,
     }
     hints = detect_platform_hints(ctx)
     manifest_chain = manifest_recovery_strategies(ctx.dealer)
@@ -437,6 +605,7 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
         hints,
         manifest_strategies=manifest_chain,
         cached_strategy=cached,
+        provider=ctx.provider,
     )
     if manifest_chain:
         logger.info(

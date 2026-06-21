@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import argparse
 import logging
-import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -25,7 +24,7 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
-from backend.db.inventory_db import DB_PATH
+from backend.db.inventory_db import db_conn
 
 logging.basicConfig(
     level=logging.INFO,
@@ -77,6 +76,33 @@ _DOMAIN_ZIP_FALLBACK: dict[str, tuple[str, str, str]] = {
     "sameslaredochevrolet":   ("Laredo",    "TX", "78045"),
     "escamillaford":          ("Laredo",    "TX", "78043"),
     "southtexasgmc":          ("Houston",   "TX", "77041"),
+    # Chattanooga, TN auto row (Shallowford Rd corridor, 37421)
+    "cityautochattanooga":     ("Chattanooga", "TN", "37407"),
+    "hixsonchevrolet":         ("Chattanooga", "TN", "37343"),
+    "hixsonchrysler":          ("Chattanooga", "TN", "37343"),
+    "integrityofchattanooga":  ("Chattanooga", "TN", "37421"),
+    "integritychevrolet":      ("Chattanooga", "TN", "37421"),
+    "nissanofchattanoogaeast": ("Chattanooga", "TN", "37421"),
+    "kiaofchattanooga":        ("Chattanooga", "TN", "37421"),
+    "acuraofchattanooga":      ("Chattanooga", "TN", "37421"),
+    "villagevw":               ("Chattanooga", "TN", "37421"),
+    "mercedesbenzatlong":      ("Chattanooga", "TN", "37421"),
+    "genesisatlongofchattanooga": ("Chattanooga", "TN", "37421"),
+    "volvocarschattanooga":    ("Chattanooga", "TN", "37416"),
+    "chattanoogavolvotn":      ("Chattanooga", "TN", "37416"),
+    "porscheofchattanooga":    ("Chattanooga", "TN", "37421"),
+    # Irvine/SoCal
+    "hyundaiofanaheim":        ("Anaheim",   "CA", "92806"),
+    "normreeveshondairvine":   ("Irvine",    "CA", "92614"),
+    # Hawaii – Big Island
+    "orchidisleford":          ("Hilo",      "HI", "96720"),
+    "orchidisle":              ("Hilo",      "HI", "96720"),
+    "deluzchevrolet":          ("Hilo",      "HI", "96720"),
+    "fjmercedes":              ("Hilo",      "HI", "96720"),
+    "bigislandhyundai":        ("Hilo",      "HI", "96720"),
+    "bigislandmotors":         ("Hilo",      "HI", "96720"),
+    "konamazda":               ("Kailua-Kona","HI","96740"),
+    "tonyhondakona":           ("Kailua-Kona","HI","96740"),
 }
 
 # Overrides for dealers whose Nominatim results landed in the wrong city
@@ -87,27 +113,9 @@ _KNOWN_BAD_GEOCODES: set[str] = {
     "https://www.newcitynissan.com",
     "https://www.townandcountryford.com",
     "https://www.kingwindwardnissan.com",
+    "https://www.hixsonchevrolet.com",
 }
 
-
-def _ensure_table(conn: sqlite3.Connection) -> None:
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS dealer_geopoints (
-            dealer_url    TEXT PRIMARY KEY,
-            dealer_name   TEXT,
-            lat           REAL,
-            lon           REAL,
-            zip_code      TEXT,
-            city          TEXT,
-            state         TEXT,
-            geocode_source TEXT,
-            geocoded_at   TEXT DEFAULT (datetime('now'))
-        )
-    """)
-    conn.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dgp_dealer_url ON dealer_geopoints(dealer_url)"
-    )
-    conn.commit()
 
 
 def _nominatim_search(query: str) -> dict | None:
@@ -207,6 +215,10 @@ def _location_hint(dealer_url: str) -> str | None:
         "southtexas": "Houston, TX",
         "kingwindward": "Kaneohe, HI",
         "kingcdjr": "Pearl City, HI",
+        "chattanooga": "Chattanooga, TN",
+        "cleveland":   "Cleveland, TN",
+        "dalton":      "Dalton, GA",
+        "murrieta":    "Murrieta, CA",
     }
     import urllib.parse, re
     domain = (urllib.parse.urlparse(dealer_url).hostname or "").replace("www.", "").lower()
@@ -259,86 +271,83 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
 
-    conn = sqlite3.connect(DB_PATH)
-    _ensure_table(conn)
+    with db_conn() as conn:
+        rows = conn.execute("""
+            SELECT dealer_url, MAX(dealer_name) as dealer_name, COUNT(*) as cnt
+            FROM cars
+            WHERE COALESCE(listing_active, 1) = 1 AND dealer_url IS NOT NULL
+            GROUP BY dealer_url
+            ORDER BY cnt DESC
+        """).fetchall()
+        log.info("Found %d unique active dealers", len(rows))
 
-    rows = conn.execute("""
-        SELECT dealer_url, dealer_name, COUNT(*) as cnt
-        FROM cars
-        WHERE COALESCE(listing_active, 1) = 1 AND dealer_url IS NOT NULL
-        GROUP BY dealer_url
-        ORDER BY cnt DESC
-    """).fetchall()
-    log.info("Found %d unique active dealers", len(rows))
+        existing = {
+            r[0]: r[1]
+            for r in conn.execute(
+                "SELECT dealer_url, geocode_source FROM dealer_geopoints"
+            ).fetchall()
+        }
 
-    existing = {
-        r[0]: r[1]
-        for r in conn.execute(
-            "SELECT dealer_url, geocode_source FROM dealer_geopoints"
-        ).fetchall()
-    }
+        inserted = updated = skipped = failed = 0
 
-    inserted = updated = skipped = failed = 0
+        for dealer_url, dealer_name, car_count in rows:
+            is_known_bad = dealer_url in _KNOWN_BAD_GEOCODES
+            already_done = dealer_url in existing and existing[dealer_url] not in ("failed", None)
 
-    for dealer_url, dealer_name, car_count in rows:
-        is_known_bad = dealer_url in _KNOWN_BAD_GEOCODES
-        already_done = dealer_url in existing and existing[dealer_url] not in ("failed", None)
+            if not args.force:
+                if already_done and not (args.fix_bad and is_known_bad):
+                    log.info("SKIP  %s", dealer_name)
+                    skipped += 1
+                    continue
+                if already_done and args.fix_bad and is_known_bad:
+                    log.info("REFIX %s (known bad geocode)", dealer_name)
+                elif existing.get(dealer_url) == "failed":
+                    log.info("RETRY %s (previously failed)", dealer_name)
 
-        if not args.force:
-            if already_done and not (args.fix_bad and is_known_bad):
-                log.info("SKIP  %s", dealer_name)
-                skipped += 1
-                continue
-            if already_done and args.fix_bad and is_known_bad:
-                log.info("REFIX %s (known bad geocode)", dealer_name)
-            elif existing.get(dealer_url) == "failed":
-                log.info("RETRY %s (previously failed)", dealer_name)
+            log.info("Geocoding [%d cars]: %s", car_count, dealer_name)
 
-        log.info("Geocoding [%d cars]: %s", car_count, dealer_name)
-
-        # For known-bad Nominatim results: skip Nominatim, use domain fallback directly
-        if (args.fix_bad or args.force) and is_known_bad:
-            dom_key = _domain_key(dealer_url)
-            fb = _DOMAIN_ZIP_FALLBACK.get(dom_key)
-            if fb:
-                city, state, zip_code = fb
-                log.info("  Domain fallback (forced): %s, %s %s", city, state, zip_code)
-                geo = _pgeocode_fallback(zip_code, city, state)
+            # For known-bad Nominatim results: skip Nominatim, use domain fallback directly
+            if (args.fix_bad or args.force) and is_known_bad:
+                dom_key = _domain_key(dealer_url)
+                fb = _DOMAIN_ZIP_FALLBACK.get(dom_key)
+                if fb:
+                    city, state, zip_code = fb
+                    log.info("  Domain fallback (forced): %s, %s %s", city, state, zip_code)
+                    geo = _pgeocode_fallback(zip_code, city, state)
+                else:
+                    geo = geocode_dealer(dealer_name or "", dealer_url or "")
             else:
                 geo = geocode_dealer(dealer_name or "", dealer_url or "")
-        else:
-            geo = geocode_dealer(dealer_name or "", dealer_url or "")
 
-        if not geo:
-            log.warning("FAIL  %s", dealer_name)
-            failed += 1
+            if not geo:
+                log.warning("FAIL  %s", dealer_name)
+                failed += 1
+                if not args.dry_run:
+                    conn.execute("""
+                        INSERT OR REPLACE INTO dealer_geopoints
+                            (dealer_url, dealer_name, lat, lon, zip_code, city, state, geocode_source)
+                        VALUES (?, ?, NULL, NULL, NULL, NULL, NULL, 'failed')
+                    """, (dealer_url, dealer_name))
+                    conn.commit()
+                continue
+
+            log.info("OK    %s → (%.4f, %.4f) %s %s %s",
+                     dealer_name, geo["lat"], geo["lon"],
+                     geo.get("city",""), geo.get("state",""), geo.get("zip_code",""))
+
             if not args.dry_run:
                 conn.execute("""
                     INSERT OR REPLACE INTO dealer_geopoints
                         (dealer_url, dealer_name, lat, lon, zip_code, city, state, geocode_source)
-                    VALUES (?, ?, NULL, NULL, NULL, NULL, NULL, 'failed')
-                """, (dealer_url, dealer_name))
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (dealer_url, dealer_name, geo["lat"], geo["lon"],
+                      geo.get("zip_code"), geo.get("city"), geo.get("state"), geo["source"]))
                 conn.commit()
-            continue
+            if dealer_url in existing:
+                updated += 1
+            else:
+                inserted += 1
 
-        log.info("OK    %s → (%.4f, %.4f) %s %s %s",
-                 dealer_name, geo["lat"], geo["lon"],
-                 geo.get("city",""), geo.get("state",""), geo.get("zip_code",""))
-
-        if not args.dry_run:
-            conn.execute("""
-                INSERT OR REPLACE INTO dealer_geopoints
-                    (dealer_url, dealer_name, lat, lon, zip_code, city, state, geocode_source)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (dealer_url, dealer_name, geo["lat"], geo["lon"],
-                  geo.get("zip_code"), geo.get("city"), geo.get("state"), geo["source"]))
-            conn.commit()
-        if dealer_url in existing:
-            updated += 1
-        else:
-            inserted += 1
-
-    conn.close()
     prefix = "Would " if args.dry_run else ""
     log.info("")
     log.info("=== Summary ===")

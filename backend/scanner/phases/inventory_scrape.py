@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from backend.scanner.scrapers.dealer_com_bulk_fetch import (
     dealer_com_bulk_fetch_enabled,
@@ -42,7 +42,11 @@ from backend.scanner.scan_efficiency import (
     inventory_json_wait_ms,
 )
 
+if TYPE_CHECKING:
+    from backend.scanner.phases.site_profile import SiteProfile
+
 logger = logging.getLogger("scanner")
+
 
 async def scrape_inventory_path(
     context: Any,
@@ -56,14 +60,40 @@ async def scrape_inventory_path(
     *,
     dealer_city: str = "",
     dealer_state: str = "",
+    site_profile: "SiteProfile | None" = None,
 ) -> tuple[list[tuple[str, Any]], str | None, int, dict[str, str]]:
     """
     Scrape one inventory path on a dedicated page within ``context``.
-    Returns ``(intercept_records, page_html, url_denied_count)``.
+    Returns ``(intercept_records, page_html, url_denied_count, card_locations)``.
     Opens and closes its own page; does not touch the warmup/VDP page.
     Structured JSON interception is primary: qualifying payloads skip saving HTML for this path.
     When no Next/Load-more control is visible, a scroll-to-bottom loop pulls lazy-loaded batches.
+
+    ``site_profile`` (optional) is used to short-circuit provider-specific branches and
+    skip unnecessary wait loops when the profiler already identified the site structure.
     """
+    # ── Profile-derived hints (all fall back to existing behaviour when None) ──
+    _profile_provider = (site_profile.detected_provider if site_profile else "unknown") or "unknown"
+    _profile_pagination = (site_profile.pagination_type if site_profile else "unknown") or "unknown"
+
+    # Skip infinite-scroll loops entirely when we know the site uses API pagination.
+    _skip_lazy_scroll = _profile_pagination == "api"
+
+    # PixelMotion from profile: jump straight to SSR branch, skip JSON-wait loops.
+    _is_pixel_motion_early = _profile_provider == "pixel_motion"
+
+    # autoWALL / ShopperExpress: provider-driven early dispatch before any JSON intercept.
+    _is_autowall_early = provider == "autowall" or _profile_provider == "autowall"
+    _is_shopperexpress_early = provider == "shopperexpress" or _profile_provider == "shopperexpress"
+
+    if site_profile is not None:
+        logger.debug(
+            "Profile hints [%s]%s: provider=%s pagination=%s "
+            "skip_lazy_scroll=%s pixel_motion_early=%s",
+            dealer_name, path,
+            _profile_provider, _profile_pagination,
+            _skip_lazy_scroll, _is_pixel_motion_early,
+        )
     local_records: list[tuple[str, Any]] = []
     found_data = {"value": False}
     url_denied = 0
@@ -143,6 +173,9 @@ async def scrape_inventory_path(
     try:
         logger.info("Navigating: %s — %s", dealer_name, full_url)
         await goto_with_retries(page, full_url, log_label=f"Nav:{dealer_name}", timeout_ms=20000)
+        from backend.scanner.scrapers.pixel_motion import _dismiss_cookie_banner
+        await asyncio.sleep(0.5)
+        await _dismiss_cookie_banner(page)
         pred = playwright_inventory_json_predicate(base_url)
         await await_inventory_hydration(
             page,
@@ -193,7 +226,7 @@ async def scrape_inventory_path(
         await asyncio.sleep(0.5)
         await _capture_card_locations()
 
-        if dealer_com_bulk_fetch_enabled() and not post_template:
+        if dealer_com_bulk_fetch_enabled() and not post_template and not found_data["value"]:
             await nudge_dealer_com_inventory_api(page, dealer_name=dealer_name, path=path)
             for _ in range(24):
                 if post_template:
@@ -242,7 +275,9 @@ async def scrape_inventory_path(
                 await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                 await asyncio.sleep(2)
 
-        if not await any_next_control_visible(page):
+        pre_pag_scroll_ran = False
+        if not _skip_lazy_scroll and not await any_next_control_visible(page):
+            pre_pag_scroll_ran = True
             await infinite_scroll_lazy_batches(
                 page,
                 dealer_name,
@@ -254,7 +289,7 @@ async def scrape_inventory_path(
         from backend.scanner.scrapers.pixel_motion import _is_pixel_motion_html
 
         peek_html = await page.content()
-        if _is_pixel_motion_html(peek_html):
+        if _is_pixel_motion_early or _is_pixel_motion_html(peek_html):
             from backend.scanner.scrapers.pixel_motion import (
                 _dismiss_cookie_banner,
                 parse_pixel_motion_inventory_html,
@@ -304,6 +339,73 @@ async def scrape_inventory_path(
                     path,
                     len(by_vin),
                 )
+            html = await page.content()
+            return local_records, html, url_denied, card_locations
+
+        from backend.scanner.scrapers.autowall import _is_autowall_html
+
+        if _is_autowall_early or _is_autowall_html(peek_html):
+            from backend.scanner.scrapers.autowall import fetch_autowall_inventory_http
+
+            # Use the manifest base_url directly. scrape_autowall_via_playwright creates
+            # a fresh desktop-UA context and resolves the canonical domain itself (handling
+            # www→non-www), so we must NOT override with page.url here — the warmup page
+            # may be on a mobile-redirect domain (e.g. chattanoogavolvotn.com) which has
+            # no autoWALL inventory.
+            inv_base = base_url
+
+            aw_vehicles = await fetch_autowall_inventory_http(inv_base, dealer_id, dealer_name)
+            if not aw_vehicles:
+                # HTTP session lacks JS-set cookies — fall back to Playwright in-page navigation
+                logger.info(
+                    "autoWALL HTTP empty for %s — falling back to Playwright navigation",
+                    dealer_name,
+                )
+                from backend.scanner.scrapers.autowall import scrape_autowall_via_playwright
+                aw_vehicles = await scrape_autowall_via_playwright(page, inv_base, dealer_id, dealer_name)
+            if aw_vehicles:
+                local_records.append(
+                    (f"{inv_base}/autowall_inventory", {"inventory": aw_vehicles})
+                )
+                found_data["value"] = True
+                logger.info("autoWALL: %s — %d vehicle(s)", dealer_name, len(aw_vehicles))
+            html = await page.content()
+            return local_records, html, url_denied, card_locations
+
+        from backend.scanner.scrapers.shopperexpress import _is_shopperexpress_html
+
+        if _is_shopperexpress_early or _is_shopperexpress_html(peek_html):
+            from backend.scanner.scrapers.shopperexpress import (
+                fetch_shopperexpress_inventory,
+                scrape_shopperexpress_from_page,
+            )
+
+            inv_base = base_url
+            try:
+                from urllib.parse import urlparse as _urlparse2
+
+                pu2 = _urlparse2(page.url or "")
+                if pu2.scheme and pu2.netloc:
+                    inv_base = f"{pu2.scheme}://{pu2.netloc}"
+            except Exception:
+                pass
+
+            # API-first: try /wp-json/v1/vehicles + VDP crawl (no Playwright needed)
+            se_vehicles = await fetch_shopperexpress_inventory(inv_base, dealer_id, dealer_name)
+
+            # Playwright fallback if API returned nothing
+            if not se_vehicles:
+                logger.info("ShopperExpress: %s — API empty, falling back to Playwright", dealer_name)
+                se_vehicles = await scrape_shopperexpress_from_page(
+                    page, inv_base, dealer_id, dealer_name, base_url
+                )
+
+            if se_vehicles:
+                local_records.append(
+                    (f"{inv_base}/shopperexpress_inventory", {"inventory": se_vehicles})
+                )
+                found_data["value"] = True
+                logger.info("ShopperExpress: %s — %d vehicle(s)", dealer_name, len(se_vehicles))
             html = await page.content()
             return local_records, html, url_denied, card_locations
 
@@ -418,7 +520,7 @@ async def scrape_inventory_path(
                     )
                 break
 
-        if not await any_next_control_visible(page):
+        if not pre_pag_scroll_ran and not _skip_lazy_scroll and not await any_next_control_visible(page):
             await infinite_scroll_lazy_batches(
                 page,
                 dealer_name,

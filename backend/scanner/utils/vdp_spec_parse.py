@@ -330,3 +330,75 @@ def parse_condition_from_listing_html(html: str) -> str | None:
                 return c
             return _normalize_raw_condition_token(val.split()[0]) if val else None
     return None
+
+
+_COLOR_LABEL_EXT = re.compile(
+    r"(?i)^(exterior\s*(color|colour)?|ext\.?\s*(color|colour)?|color|colour)\s*$"
+)
+_COLOR_LABEL_INT = re.compile(
+    r"(?i)^(interior\s*(color|colour)?|int\.?\s*(color|colour)?)\s*$"
+)
+_COLOR_RE_EXT = re.compile(
+    r"(?i)exterior\s*(?:color|colour)[:\s]+([A-Za-z][\w /\-]{1,40}?)(?:\s*[,;<\n]|$)"
+)
+_COLOR_RE_INT = re.compile(
+    r"(?i)interior\s*(?:color|colour)[:\s]+([A-Za-z][\w /\-]{1,40}?)(?:\s*[,;<\n]|$)"
+)
+
+
+def parse_color_from_listing_html(html: str) -> dict[str, str | None]:
+    """
+    Best-effort exterior/interior color from full listing/VDP HTML.
+
+    Priority: JSON-LD color fields → labeled DOM pairs → regex in text.
+    Returns a dict with keys ``exterior_color`` and ``interior_color`` (values may be None).
+    """
+    out: dict[str, str | None] = {"exterior_color": None, "interior_color": None}
+    if not html:
+        return out
+
+    # JSON-LD: schema.org Car / Vehicle has a "color" field (usually exterior)
+    for m in re.finditer(
+        r'"(?:color|vehicleColor|exteriorColor)"\s*:\s*"([^"]{2,80})"', html[:800000], re.I
+    ):
+        val = m.group(1).strip()
+        if val and out["exterior_color"] is None:
+            out["exterior_color"] = val
+    for m in re.finditer(r'"interiorColor"\s*:\s*"([^"]{2,80})"', html[:800000], re.I):
+        val = m.group(1).strip()
+        if val and out["interior_color"] is None:
+            out["interior_color"] = val
+
+    # Labeled DOM pairs: dl/table (via _dom_specs_from_soup) + autoWALL div.row>div.col pattern
+    if not (out["exterior_color"] and out["interior_color"]):
+        try:
+            soup = BeautifulSoup(html, "html.parser")
+            pairs = _dom_specs_from_soup(soup)
+            # Also collect div.row > div.col pairs (autoWALL, ShopperExpress style)
+            for row in soup.find_all(class_="row"):
+                cols = row.find_all(class_="col", recursive=False)
+                if len(cols) == 2:
+                    lab = cols[0].get_text(strip=True).rstrip(":")
+                    val = cols[1].get_text(strip=True)
+                    if lab and val and len(lab) < 60 and len(val) < 200:
+                        pairs[lab] = val
+            for label, val in pairs.items():
+                label_s = label.strip()
+                if out["exterior_color"] is None and _COLOR_LABEL_EXT.match(label_s):
+                    out["exterior_color"] = val.strip() or None
+                if out["interior_color"] is None and _COLOR_LABEL_INT.match(label_s):
+                    out["interior_color"] = val.strip() or None
+        except Exception:
+            pass
+
+    # Regex text fallback
+    if out["exterior_color"] is None:
+        m = _COLOR_RE_EXT.search(html[:500000])
+        if m:
+            out["exterior_color"] = m.group(1).strip() or None
+    if out["interior_color"] is None:
+        m = _COLOR_RE_INT.search(html[:500000])
+        if m:
+            out["interior_color"] = m.group(1).strip() or None
+
+    return out

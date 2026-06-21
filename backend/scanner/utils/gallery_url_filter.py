@@ -60,6 +60,19 @@ _JUNK_PATH_FRAGMENTS = (
     "agent-0",
 )
 
+_JUNK_HOSTS = frozenset({
+    "bounceexchange.com",
+    "bttrack.com",
+    "doubleclick.net",
+    "googletagmanager.com",
+    "google-analytics.com",
+    "googleanalytics.com",
+    "fbcdn.net",
+    "googlesyndication.com",
+    "ads.twitter.com",
+    "static.ads-twitter.com",
+})
+
 _JUNK_FILENAME_RE = re.compile(
     r"(?i)(?:^|/)(?:certified|badge|logo|banner|icon|placeholder|spinner|loading|m[-_]?logo|bmw[-_]?certified)[^/]*\.(?:jpe?g|png|webp|gif)$"
 )
@@ -101,6 +114,12 @@ def is_junk_vdp_gallery_url(url: str) -> bool:
     u = (url or "").strip()
     if not u.lower().startswith("https://"):
         return True
+    try:
+        _host = urlparse(u).netloc.lower().removeprefix("www.")
+        if any(_host == d or _host.endswith("." + d) for d in _JUNK_HOSTS):
+            return True
+    except Exception:
+        pass
     low = u.lower()
     if _JUNK_FILENAME_RE.search(low):
         return True

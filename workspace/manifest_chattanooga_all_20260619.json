@@ -1,0 +1,316 @@
+[
+  {
+    "name": "Hixson Chrysler Dodge Jeep RAM",
+    "url": "https://www.hixsoncdjr.com",
+    "provider": "unknown",
+    "dealer_id": "hixsoncdjr-com",
+    "skip": true,
+    "skip_reason": "dns_not_resolved"
+  },
+  {
+    "name": "HIXSON CHEVROLET",
+    "url": "https://www.hixsonchevrolet.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "hixsonchevrolet-com"
+  },
+  {
+    "name": "Chattanooga Volvo",
+    "url": "https://volvocarschattanooga.com",
+    "provider": "autowall",
+    "dealer_id": "volvocarschattanooga-com"
+  },
+  {
+    "name": "BMW of Chattanooga",
+    "url": "https://www.bmwofchattanooga.com",
+    "provider": "dealer_eprocess",
+    "dealer_id": "bmwofchattanooga-com"
+  },
+  {
+    "name": "Village Volkswagen of Chattanooga",
+    "url": "https://www.villagevw.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "villagevw-com"
+  },
+  {
+    "name": "Audi Chattanooga",
+    "url": "https://www.audichattanooga.com",
+    "provider": "unknown",
+    "dealer_id": "audichattanooga-com",
+    "skip": true,
+    "skip_reason": "site_offline"
+  },
+  {
+    "name": "Integrity Buick GMC",
+    "url": "https://integrityofchattanooga.com",
+    "provider": "dealer_on",
+    "dealer_id": "integrityofchattanooga-com"
+  },
+  {
+    "name": "Volvo Cars Chattanooga",
+    "url": "https://www.chattanoogavolvotn.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "chattanoogavolvotn-com"
+  },
+  {
+    "name": "Acura of Chattanooga",
+    "url": "https://www.acuraofchattanooga.com",
+    "provider": "shopperexpress",
+    "dealer_id": "acuraofchattanooga-com"
+  },
+  {
+    "name": "Nissan of Chattanooga East",
+    "url": "https://www.nissanofchattanoogaeast.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "nissanofchattanoogaeast-com"
+  },
+  {
+    "name": "Mercedes-Benz at Long of Chattanooga",
+    "url": "https://mercedesbenzatlong.com",
+    "provider": "autowall",
+    "dealer_id": "mercedesbenzatlong-com"
+  },
+  {
+    "name": "Genesis of Chattanooga",
+    "url": "https://genesisatlongofchattanooga.com",
+    "provider": "autowall",
+    "dealer_id": "genesisatlongofchattanooga-com"
+  },
+  {
+    "name": "Crown Chrysler Dodge Jeep Ram FIAT",
+    "url": "https://crowncarsofchattanooga.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "crowncarsofchattanooga-com"
+  },
+  {
+    "name": "Kia of Chattanooga",
+    "url": "https://www.kiaofchattanooga.com",
+    "provider": "shopperexpress",
+    "dealer_id": "kiaofchattanooga-com"
+  },
+  {
+    "name": "Infiniti of Chattanooga Service Department",
+    "url": "https://www.infinitichattanooga.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "infinitichattanooga-com"
+  },
+  {
+    "name": "Land Rover Chattanooga",
+    "url": "https://www.landroverchattanooga.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "landroverchattanooga-com"
+  },
+  {
+    "name": "Porsche of Chattanooga",
+    "url": "https://porscheofchattanooga.com",
+    "provider": "unknown",
+    "dealer_id": "porscheofchattanooga-com",
+    "skip": true,
+    "skip_reason": "bot_protected_vercel"
+  },
+  {
+    "name": "Chattanooga Ford",
+    "url": "https://www.chattanooga-ford.com",
+    "provider": "unknown",
+    "dealer_id": "chattanooga-ford-com",
+    "skip": true,
+    "skip_reason": "dns_not_resolved"
+  },
+  {
+    "name": "Chatt Town Auto Brokers",
+    "url": "https://ctabcars.com",
+    "provider": "unknown",
+    "dealer_id": "ctabcars-com"
+  },
+  {
+    "name": "Integrity Chevrolet",
+    "url": "https://www.integritychevrolet.com",
+    "provider": "unknown",
+    "dealer_id": "integritychevrolet-com"
+  },
+  {
+    "name": "Toyota of Cleveland",
+    "url": "https://www.toyotaofcleveland.com",
+    "provider": "unknown",
+    "dealer_id": "toyotaofcleveland-com"
+  },
+  {
+    "name": "Cleveland Ford",
+    "url": "https://www.clevelandford.com",
+    "provider": "unknown",
+    "dealer_id": "clevelandford-com"
+  },
+  {
+    "name": "Kia of Cleveland",
+    "url": "https://www.kiaofcleveland.com",
+    "provider": "unknown",
+    "dealer_id": "kiaofcleveland-com"
+  },
+  {
+    "name": "Honda of Cleveland",
+    "url": "https://hondaofcleveland.com",
+    "provider": "unknown",
+    "dealer_id": "hondaofcleveland-com"
+  },
+  {
+    "name": "Gray Epperson Hyundai",
+    "url": "https://www.grayeppersonhyundai.com",
+    "provider": "unknown",
+    "dealer_id": "grayeppersonhyundai-com"
+  },
+  {
+    "name": "North Shore Auto Gallery",
+    "url": "https://www.northshoreag.com/chattanooga-inventory.aspx",
+    "provider": "unknown",
+    "dealer_id": "northshoreag-com"
+  },
+  {
+    "name": "Marshall Mize Ford",
+    "url": "https://www.marshalmizeford.com",
+    "provider": "unknown",
+    "dealer_id": "marshalmizeford-com"
+  },
+  {
+    "name": "Kelly Subaru",
+    "url": "https://www.crownsubarutn.com",
+    "provider": "unknown",
+    "dealer_id": "crownsubarutn-com"
+  },
+  {
+    "name": "Moss Motor Chrysler Dodge Jeep Ram",
+    "url": "https://www.mossmotorchryslerdodgejeep.com",
+    "provider": "unknown",
+    "dealer_id": "mossmotorchryslerdodgejeep-com"
+  },
+  {
+    "name": "Chattanooga Cars 4 You",
+    "url": "https://www.chattcars4u.com",
+    "provider": "unknown",
+    "dealer_id": "chattcars4u-com"
+  },
+  {
+    "name": "Walter Jackson Chevrolet",
+    "url": "https://www.walterjackson.com",
+    "provider": "unknown",
+    "dealer_id": "walterjackson-com"
+  },
+  {
+    "name": "Ford",
+    "url": "https://www.fordofdalton.com",
+    "provider": "unknown",
+    "dealer_id": "fordofdalton-com"
+  },
+  {
+    "name": "Hyundai",
+    "url": "https://www.mvhyundai.com",
+    "provider": "unknown",
+    "dealer_id": "mvhyundai-com"
+  },
+  {
+    "name": "CarMax",
+    "url": "https://www.carmax.com/stores/7186",
+    "provider": "unknown",
+    "dealer_id": "carmax-com"
+  },
+  {
+    "name": "Capital Toyota",
+    "url": "https://www.capitaltoyota.com",
+    "provider": "unknown",
+    "dealer_id": "capitaltoyota-com"
+  },
+  {
+    "name": "Prime Trucks",
+    "url": "https://www.mtnviewcdjr.com",
+    "provider": "unknown",
+    "dealer_id": "mtnviewcdjr-com"
+  },
+  {
+    "name": "Hyundai",
+    "url": "https://www.longhyundai.net",
+    "provider": "unknown",
+    "dealer_id": "longhyundai-net"
+  },
+  {
+    "name": "Corbin Auto Sales",
+    "url": "https://corbinautosales.com/inventory",
+    "provider": "unknown",
+    "dealer_id": "corbinautosales-com"
+  },
+  {
+    "name": "Forward Motors",
+    "url": "https://www.mtnviewford.com",
+    "provider": "unknown",
+    "dealer_id": "mtnviewford-com"
+  },
+  {
+    "name": "Crossroads Auto Sales",
+    "url": "https://www.mtnview153.com",
+    "provider": "unknown",
+    "dealer_id": "mtnview153-com"
+  },
+  {
+    "name": "Ringgold Auto Outlet",
+    "url": "https://www.ringgoldautooutlet.com",
+    "provider": "unknown",
+    "dealer_id": "ringgoldautooutlet-com"
+  },
+  {
+    "name": "Budget Sales",
+    "url": "https://budgetresale.com/inventory/search-inventory.html",
+    "provider": "unknown",
+    "dealer_id": "budgetresale-com"
+  },
+  {
+    "name": "John's Auto Sales",
+    "url": "https://johnsautosales.com",
+    "provider": "unknown",
+    "dealer_id": "johnsautosales-com"
+  },
+  {
+    "name": "L & K Auto Sales",
+    "url": "https://www.adventurecars.com",
+    "provider": "unknown",
+    "dealer_id": "adventurecars-com"
+  },
+  {
+    "name": "Motor City Auto Sales, LLC",
+    "url": "https://www.cityautochattanooga.com",
+    "provider": "unknown",
+    "dealer_id": "cityautochattanooga-com"
+  },
+  {
+    "name": "Easy Auto Chattanooga",
+    "url": "https://www.easyautoonline.com/buy-here-pay-here-used-cars-chattanooga-tennessee",
+    "provider": "unknown",
+    "dealer_id": "easyautoonline-com"
+  },
+  {
+    "name": "Economy Auto Superstore",
+    "url": "https://economyautosuperstore.com",
+    "provider": "unknown",
+    "dealer_id": "economyautosuperstore-com"
+  },
+  {
+    "name": "Topline Auto Brokers",
+    "url": "https://toplineautobroker.com",
+    "provider": "unknown",
+    "dealer_id": "toplineautobroker-com"
+  },
+  {
+    "name": "Jimmy Jag Auto Sales",
+    "url": "https://jimmyjagautosalesllc.com",
+    "provider": "unknown",
+    "dealer_id": "jimmyjagautosalesllc-com"
+  },
+  {
+    "name": "Economy Honda Superstore",
+    "url": "https://www.economyhonda.com",
+    "provider": "unknown",
+    "dealer_id": "economyhonda-com"
+  },
+  {
+    "name": "Riverside Chevrolet Buick GMC",
+    "url": "https://www.riversidechevroletgmc.com",
+    "provider": "unknown",
+    "dealer_id": "riversidechevroletgmc-com"
+  }
+]

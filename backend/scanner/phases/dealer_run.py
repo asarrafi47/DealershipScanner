@@ -14,6 +14,7 @@ from backend.scanner.constants import DEBUG_DIR, KNOWN_HAR_PROVIDERS
 from backend.scanner.dealer_site_url import dealer_inventory_base_url
 from backend.scanner.inventory_write import InventoryWriteCoordinator
 from backend.scanner.phases.upsert import upsert_vehicles_for_dealer
+from backend.scanner.post_scan.coverage_report import compute_dealer_coverage, format_coverage_log
 from backend.scanner.phases.inventory_scrape import scrape_inventory_path
 from backend.scanner.phases.nav import (
     capture_scanner_failure_har,
@@ -35,12 +36,18 @@ from backend.scanner.scan_efficiency import (
     effective_vdp_ep_max,
     effective_vdp_price_max,
     gallery_vision_inline_enabled,
-    inventory_paths_for_dealer,
     intercept_feed_is_sufficient,
 )
 from backend.scanner.scrapers.inventory_vin_merge import merge_inventory_rows_same_vin
 from backend.scanner.vdp import enrich_vehicles_vdp
 from backend.utils.gallery_merge import gallery_https_bin_histogram
+from backend.scanner.phases.site_profile import (
+    SiteProfile,
+    choose_inventory_paths,
+    profile_dealer_site,
+)
+from backend.scanner.phases.url_discovery import discover_dealer_url
+from backend.scanner import scan_log
 
 logger = logging.getLogger("scanner")
 
@@ -94,6 +101,7 @@ def emit_dealer_run_summary(result: dict[str, Any]) -> None:
     if len(line) > 2048:
         line = line[:2045] + "..."
     logger.info("dealer_run_summary %s", line)
+    scan_log.log_dealer_summary(result, result.get("provider", ""))
 
 
 async def run_dealer(
@@ -119,6 +127,7 @@ async def run_dealer(
     result: dict[str, Any] = {
         "dealer_id": dealer_id,
         "dealer_name": name,
+        "provider": provider,
         "upserted": 0,
         "inventory_rows": 0,
         "deduped_rows": 0,
@@ -156,23 +165,170 @@ async def run_dealer(
         context = await browser.new_context(**ctx_opts)
         page = await context.new_page()
         warm_pred = playwright_inventory_json_predicate(url)
-        await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
-        w_post, w_scroll = warmup_delays()
-        await warmup_settle_after_base_goto(
-            page,
-            warm_pred,
-            dealer_name=name,
-            max_idle_sec=w_post,
-            scroll_sec=w_scroll,
+        _dead_domain_errors = (
+            "ERR_NAME_NOT_RESOLVED", "ERR_TOO_MANY_REDIRECTS",
+            "net::ERR_NAME_NOT_RESOLVED", "net::ERR_TOO_MANY_REDIRECTS",
+            "ERR_CONNECTION_REFUSED", "net::ERR_CONNECTION_REFUSED",
+            "ERR_CONNECTION_TIMED_OUT", "net::ERR_CONNECTION_TIMED_OUT",
+            "ERR_INTERNET_DISCONNECTED",
         )
-        logger.info("Warmup: %s — done (signal race cap=%.1fs + scroll %.1fs)", name, w_post, w_scroll)
+        _warmup_403_bypass = False
+        try:
+            await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
+        except Exception as _warmup_exc:
+            _exc_str = str(_warmup_exc)
+            if any(e in _exc_str for e in _dead_domain_errors):
+                logger.warning("Warmup: %s — dead domain (%s), attempting URL discovery", name, _exc_str.split("\n")[0])
+                _discovered = await discover_dealer_url(
+                    name, url, browser,
+                    city=str(dealer.get("city") or "").strip(),
+                    state=str(dealer.get("state") or "").strip(),
+                )
+                if _discovered:
+                    logger.info("Warmup: %s — discovered URL: %s (was: %s)", name, _discovered, url)
+                    url = _discovered
+                    warm_pred = playwright_inventory_json_predicate(url)
+                    await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
+                else:
+                    logger.error("Warmup: %s — URL discovery failed, skipping dealer", name)
+                    raise
+            elif "403" in _exc_str and provider == "dealer_inspire":
+                logger.warning(
+                    "Warmup: %s — HTTP 403 (Cloudflare block) but provider=dealer_inspire; "
+                    "bypassing warmup and attempting Algolia recovery directly",
+                    name,
+                )
+                _warmup_403_bypass = True
+                try:
+                    await page.close()
+                except Exception:
+                    pass
+                page = await context.new_page()
+            else:
+                raise
+        if not _warmup_403_bypass:
+            w_post, w_scroll = warmup_delays()
+            await warmup_settle_after_base_goto(
+                page,
+                warm_pred,
+                dealer_name=name,
+                max_idle_sec=w_post,
+                scroll_sec=w_scroll,
+            )
+            from backend.scanner.scrapers.pixel_motion import _dismiss_cookie_banner
+            await asyncio.sleep(1.0)
+            await _dismiss_cookie_banner(page)
+            logger.info("Warmup: %s — done (signal race cap=%.1fs + scroll %.1fs)", name, w_post, w_scroll)
+            # Detect permanent maintenance pages that resolve DNS but serve no inventory
+            # (e.g. S3/Ceph bucket static 503 — goto succeeds but page is a placeholder).
+            # Use specific downtime phrases only — bare "maintenance" fires on every dealer
+            # service-menu nav item ("Oil Change & Maintenance", "Maintenance Schedule", etc.).
+            try:
+                _warmup_html = (await page.content()).lower()
+                _maintenance_markers = (
+                    "under maintenance", "down for maintenance", "performing maintenance",
+                    "site is currently",
+                    "temporarily unavailable", "under construction", "site offline",
+                )
+                _warmup_title_m = __import__('re').search(r'<title[^>]*>(.*?)</title>', _warmup_html, __import__('re').S)
+                _warmup_title = (_warmup_title_m.group(1) if _warmup_title_m else "").strip()
+                logger.debug("Warmup: %s — page title after load: %r", name, _warmup_title)
+                _title_flags = ("coming soon", "maintenance", "offline", "unavailable", "under construction")
+                _title_hit = any(f in _warmup_title for f in _title_flags)
+                _body_hit = next((m for m in _maintenance_markers if m in _warmup_html), None)
+                _is_maintenance = _title_hit or bool(_body_hit)
+                if _body_hit:
+                    logger.debug("Warmup: %s — body marker matched: %r", name, _body_hit)
+                if provider != "autowall" and _is_maintenance:
+                    _match_reason = (f"title={_warmup_title!r}" if _title_hit
+                                     else f"body={_body_hit!r}" if _body_hit else "unknown")
+                    logger.warning(
+                        "Warmup: %s — maintenance page detected after load (matched: %s), attempting URL discovery",
+                        name, _match_reason,
+                    )
+                    _discovered_maint = await discover_dealer_url(
+                        name, url, browser,
+                        city=str(dealer.get("city") or "").strip(),
+                        state=str(dealer.get("state") or "").strip(),
+                    )
+                    if _discovered_maint:
+                        logger.info("Warmup: %s — discovered URL for maintenance site: %s", name, _discovered_maint)
+                        url = _discovered_maint
+                        warm_pred = playwright_inventory_json_predicate(url)
+                        await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
+                    else:
+                        logger.error("Warmup: %s — maintenance page, URL discovery failed; skipping dealer", name)
+                        result["error"] = "maintenance_page_no_discovery"
+                        result["seconds"] = time.perf_counter() - t0
+                        return result
+            except Exception as _maint_exc:
+                logger.debug("Warmup: %s — maintenance check error (ignored): %s", name, _maint_exc)
 
         inv_wait_ms = inventory_wait_ms()
         pag_wait_ms = pagination_response_wait_ms()
 
         # Scrape all three inventory paths in parallel — each on its own page within the
         # same browser context so session cookies from warmup are shared automatically.
-        inv_paths = inventory_paths_for_dealer(dealer)
+        # ── Site profiler phase ───────────────────────────────────────────
+        _site_profile: SiteProfile | None = None
+        _profiler_enabled = (os.environ.get("SCANNER_SITE_PROFILER") or "1").strip().lower() not in (
+            "0", "false", "no", "off"
+        )
+        if _warmup_403_bypass:
+            # Warmup was blocked (HTTP 403) and skipped for this DealerInspire site.
+            # Inject a minimal fallback profile so the recovery chain knows to try Algolia.
+            _site_profile = SiteProfile(dealer_url=url)
+            _site_profile.detected_provider = "dealer_inspire"
+            _site_profile.scrape_risk = "algolia_auth"
+            _site_profile.notes.append("warmup_403_bypass:algolia_fallback")
+            result["provider"] = "dealer_inspire"
+            result["site_profile"] = {
+                "provider": "dealer_inspire",
+                "pagination": "unknown",
+                "confidence": 0.0,
+                "scrape_risk": "algolia_auth",
+                "paths_found": [],
+                "api_eps": 0,
+                "notes": ["warmup_403_bypass:algolia_fallback"],
+            }
+            logger.info(
+                "Site profile [%s]: warmup_403_bypass — injected fallback profile "
+                "(provider=dealer_inspire, scrape_risk=algolia_auth)",
+                name,
+            )
+        elif _profiler_enabled:
+            t_prof0 = time.perf_counter()
+            try:
+                _site_profile = await profile_dealer_site(context, url, [])
+                logger.info(
+                    "Site profile [%s]: provider=%s pagination=%s confidence=%.2f "
+                    "paths=%s api_eps=%d scrape_risk=%s notes=%s",
+                    name,
+                    _site_profile.detected_provider,
+                    _site_profile.pagination_type,
+                    _site_profile.confidence_score,
+                    _site_profile.inventory_paths_found[:3],
+                    len(_site_profile.api_endpoint_candidates),
+                    _site_profile.scrape_risk,
+                    _site_profile.notes[:3],
+                )
+            except Exception as _prof_e:
+                logger.warning("Site profiler failed for %s (continuing without profile): %s", name, _prof_e)
+            result["phase_secs"]["site_profile"] = round(time.perf_counter() - t_prof0, 2)
+            if _site_profile is not None:
+                result["site_profile"] = {
+                    "provider": _site_profile.detected_provider,
+                    "pagination": _site_profile.pagination_type,
+                    "confidence": _site_profile.confidence_score,
+                    "scrape_risk": _site_profile.scrape_risk,
+                    "paths_found": _site_profile.inventory_paths_found[:5],
+                    "api_eps": len(_site_profile.api_endpoint_candidates),
+                    "notes": _site_profile.notes[:5],
+                }
+                if _site_profile.detected_provider and _site_profile.detected_provider != "unknown":
+                    result["provider"] = _site_profile.detected_provider
+
+        inv_paths = choose_inventory_paths(_site_profile, dealer)
         logger.info("Inventory paths: %s — launching %d parallel scrapers", name, len(inv_paths))
         t_inv0 = time.perf_counter()
         dealer_city = str(dealer.get("city") or "").strip()
@@ -196,6 +352,7 @@ async def run_dealer(
                     name,
                     inv_wait_ms,
                     pag_wait_ms,
+                    site_profile=_site_profile,
                     dealer_city=dealer_city,
                     dealer_state=dealer_state,
                 )
@@ -378,13 +535,20 @@ async def run_dealer(
                     _completeness_pass,
                 )
             if not (os.environ.get("SCANNER_VDP_PRICE_MAX") or "").strip():
-                os.environ["SCANNER_VDP_PRICE_MAX"] = str(effective_vdp_price_max(len(all_vehicles)))
+                # When EP VDP is explicitly disabled, also disable price/description VDP by default.
+                if _ep_raw == "0":
+                    os.environ["SCANNER_VDP_PRICE_MAX"] = "0"
+                else:
+                    os.environ["SCANNER_VDP_PRICE_MAX"] = str(effective_vdp_price_max(len(all_vehicles)))
+            if _ep_raw == "0" and not (os.environ.get("SCANNER_VDP_DESCRIPTION_MAX") or "").strip():
+                os.environ["SCANNER_VDP_DESCRIPTION_MAX"] = "0"
 
             vdp_stats: dict[str, Any] = {}
             t_vdp0 = time.perf_counter()
             try:
                 vdp_stats = await enrich_vehicles_vdp(
-                    page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile
+                    page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile,
+                    provider=provider,
                 )
             except Exception as e:
                 logger.warning("VDP enrichment failed for %s (continuing with listing data only): %s", name, e)
@@ -469,6 +633,10 @@ async def run_dealer(
             count = await upsert_vehicles_for_dealer(write_coordinator, all_vehicles)
             result["phase_secs"]["upsert"] = round(time.perf_counter() - t_up0, 2)
             result["upserted"] = count
+            scan_log.log_vehicles(dealer_id, name, result.get("provider", provider), all_vehicles)
+            if all_vehicles:
+                _cov = compute_dealer_coverage(list(all_vehicles), dealer_id=dealer_id)
+                logger.info("%s", format_coverage_log(_cov))
             if reg_id and url:
                 try:
                     from backend.db.inventory_db import link_cars_to_dealership_registry

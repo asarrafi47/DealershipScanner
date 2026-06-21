@@ -535,6 +535,15 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
             out["is_cpo"] = 1
         elif condition == "Used":
             out["is_cpo"] = 0
+    try:
+        from backend.utils.in_transit import apply_in_transit_flags_from_raw
+
+        apply_in_transit_flags_from_raw(obj, source="dealer_dot_com")
+        for _k in ("_in_transit", "_availability_status", "_availability_source"):
+            if _k in obj:
+                out[_k] = obj[_k]
+    except ImportError:
+        pass
     return out
 
 

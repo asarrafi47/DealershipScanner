@@ -1,0 +1,74 @@
+{
+  "hixson": {
+    "label": "HIXSON CHEVROLET",
+    "url": "https://www.hixsonchevrolet.com/new-vehicles/",
+    "html_index_names": [
+      "hixsonchevroletofderidder_production_content",
+      "hixsonchevroletofderidder_production_inventory"
+    ],
+    "html_app_ids": [
+      "EHWUW84XVK"
+    ],
+    "html_production_inventory_refs": [
+      "_production_inventory_year_low_to_high",
+      "_production_inventory_high_to_low",
+      "_production_inventory_mileage_low_to_high",
+      "_production_inventory_mileage_high_to_low",
+      "_production_inventory_chevrolet_buick_gmc_sort",
+      "_production_inventory_defaultSort",
+      "_production_inventory_specials_oem_price",
+      "_production_inventory_year_high_to_low",
+      "_production_inventory_custom_sort",
+      "_production_inventory_cadillac_sort"
+    ],
+    "js_window_configs": {
+      "algoliaConfig": "{\"appId\":\"EHWUW84XVK\",\"apiKeySearch\":\"fb58227032e79f03b9b820cbaea7f8fb\",\"indexName\":\"hixsonchevroletofderidder_production_inventory\"}"
+    },
+    "algolia_requests": [
+      {
+        "url": "https://www.hixsonchevrolet.com/wp-content/plugins/maven-algolia/lib/algoliasearch.min.js?ver=1.118.7",
+        "body": "",
+        "algolia_headers": {}
+      },
+      {
+        "url": "https://www.hixsonchevrolet.com/wp-content/plugins/maven-algolia/front/assets/scripts/algolia-frontend-min.js?ver=1781811803",
+        "body": "",
+        "algolia_headers": {}
+      }
+    ],
+    "algolia_responses_summary": []
+  },
+  "land_rover": {
+    "label": "LAND ROVER CHATTANOOGA",
+    "url": "https://www.landroverchattanooga.com/new-vehicles/",
+    "html_index_names": [
+      "landroverchattanooga-sbm0326_production_content",
+      "landroverchattanooga-sbm0326_production_inventory"
+    ],
+    "html_app_ids": [
+      "10APRXOTJR"
+    ],
+    "html_production_inventory_refs": [
+      "_production_inventory_defaultSort",
+      "_production_inventory",
+      "_production_inventory_land_rover_jaguar_sort",
+      "_production_inventory_specials_oem_price"
+    ],
+    "js_window_configs": {
+      "algoliaConfig": "{\"appId\":\"10APRXOTJR\",\"apiKeySearch\":\"003c8cddb5b15f2cfa774c02b7a3b59e\",\"indexName\":\"landroverchattanooga-sbm0326_production_inventory\"}"
+    },
+    "algolia_requests": [
+      {
+        "url": "https://www.landroverchattanooga.com/wp-content/plugins/maven-algolia/lib/algoliasearch.min.js?ver=1.118.7",
+        "body": "",
+        "algolia_headers": {}
+      },
+      {
+        "url": "https://www.landroverchattanooga.com/wp-content/plugins/maven-algolia/front/assets/scripts/algolia-frontend-min.js?ver=1781811803",
+        "body": "",
+        "algolia_headers": {}
+      }
+    ],
+    "algolia_responses_summary": []
+  }
+}

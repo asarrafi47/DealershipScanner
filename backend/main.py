@@ -228,6 +228,9 @@ init_admin_db()
 init_inventory_db()
 init_dealer_portal_db()
 
+from backend.scanner.job_queue import init_job_queue_schema
+init_job_queue_schema()
+
 
 def _prewarm_listings_inventory_cache() -> None:
     """Background-build listings JSON cache so first /listings visit is not cold."""

@@ -1,0 +1,99 @@
+[
+  {
+    "name": "CarMax",
+    "url": "https://www.carmax.com/stores/7195",
+    "provider": "dealer_dot_com",
+    "dealer_id": "carmax-com"
+  },
+  {
+    "name": "Garden Grove Kia",
+    "url": "https://www.ggkia.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "ggkia-com"
+  },
+  {
+    "name": "Irvine BMW",
+    "url": "https://www.irvinebmw.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "irvinebmw-com"
+  },
+  {
+    "name": "Norm Reeves Honda Superstore Irvine",
+    "url": "https://www.normreeveshondairvine.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "normreeveshondairvine-com"
+  },
+  {
+    "name": "Toyota of Huntington Beach",
+    "url": "https://www.toyotaofhb.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "toyotaofhb-com"
+  },
+  {
+    "name": "Toyota of Orange",
+    "url": "https://www.toyotaoforange.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "toyotaoforange-com"
+  },
+  {
+    "name": "Toyota Place",
+    "url": "https://www.toyotaplace.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "toyotaplace-com"
+  },
+  {
+    "name": "Tustin Lexus",
+    "url": "https://www.tustinlexus.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "tustinlexus-com"
+  },
+  {
+    "name": "Tustin Toyota",
+    "url": "https://www.tustintoyota.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "tustintoyota-com"
+  },
+  {
+    "name": "Coastline Chrysler Dodge Jeep Ram",
+    "url": "https://www.courtesyoc.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "courtesyoc-com"
+  },
+  {
+    "name": "Tuttle-Click Chrysler Jeep Dodge Ram Irvine",
+    "url": "https://www.tuttleclickjeep.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "tuttleclickjeep-com"
+  },
+  {
+    "name": "Orange Coast Chrysler Jeep Dodge Ram",
+    "url": "https://www.ocauto.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "ocauto-com"
+  },
+  {
+    "name": "McPeek's Chrysler Dodge Jeep Ram Anaheim",
+    "url": "https://www.mcpeeks.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "mcpeeksdodgeanaheim-com",
+    "inventory_paths": [
+      "/inventory/new/",
+      "/inventory/used/",
+      "/inventory/certified/"
+    ]
+  },
+  {
+    "name": "Knight Claremont Chrysler Dodge Jeep RAM",
+    "url": "https://www.claremontcdjr.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "claremontcdjr-com",
+    "dealership_registry_id": 213
+  },
+  {
+    "name": "Moss Bros Chrysler Dodge Jeep RAM San Bernardino",
+    "url": "https://www.mossbroscjdrsanbernardino.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "mossbroscjdrsanbernardino-com",
+    "dealership_registry_id": 231
+  }
+]

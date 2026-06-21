@@ -1,0 +1,131 @@
+{
+  "captured_at": "2026-06-15T21:47:12.868444Z",
+  "dealers": {
+    "hixsoncdjr-com": {
+      "name": "Hixson Chrysler Dodge Jeep RAM",
+      "url": "https://www.hixsoncdjr.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "hixsonchevrolet-com": {
+      "name": "HIXSON CHEVROLET",
+      "url": "https://www.hixsonchevrolet.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "volvocarschattanooga-com": {
+      "name": "Chattanooga Volvo",
+      "url": "https://volvocarschattanooga.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "bmwofchattanooga-com": {
+      "name": "BMW of Chattanooga",
+      "url": "https://www.bmwofchattanooga.com/?utm_campaign=about&utm_source=facebook&utm_medium=social",
+      "provider": "dealer_dot_com",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "villagevw-com": {
+      "name": "Village Volkswagen of Chattanooga",
+      "url": "https://www.villagevw.com",
+      "provider": "dealer_dot_com",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "audichattanooga-com": {
+      "name": "Audi Chattanooga",
+      "url": "https://www.audichattanooga.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "integrityofchattanooga-com": {
+      "name": "Integrity Buick GMC",
+      "url": "https://integrityofchattanooga.com",
+      "provider": "dealer_on",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "chattanoogavolvotn-com": {
+      "name": "Volvo Cars Chattanooga",
+      "url": "https://www.chattanoogavolvotn.com/?ddcref=YEXTfacebook",
+      "provider": "dealer_dot_com",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "acuraofchattanooga-com": {
+      "name": "Acura of Chattanooga",
+      "url": "https://www.acuraofchattanooga.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "nissanofchattanoogaeast-com": {
+      "name": "Nissan of Chattanooga East",
+      "url": "https://www.nissanofchattanoogaeast.com/?utm_campaign=about&utm_source=facebook&utm_medium=social",
+      "provider": "dealer_dot_com",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "mercedesbenzatlong-com": {
+      "name": "Mercedes-Benz at Long of Chattanooga",
+      "url": "https://mercedesbenzatlong.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "genesisatlongofchattanooga-com": {
+      "name": "Genesis of Chattanooga",
+      "url": "https://genesisatlongofchattanooga.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "crowncarsofchattanooga-com": {
+      "name": "Crown Chrysler Dodge Jeep Ram FIAT",
+      "url": "https://crowncarsofchattanooga.com",
+      "provider": "dealer_dot_com",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "kiaofchattanooga-com": {
+      "name": "Kia of Chattanooga",
+      "url": "https://www.kiaofchattanooga.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "infinitichattanooga-com": {
+      "name": "Infiniti of Chattanooga Service Department",
+      "url": "https://www.infinitichattanooga.com",
+      "provider": "dealer_inspire",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "landroverchattanooga-com": {
+      "name": "Land Rover Chattanooga",
+      "url": "https://www.landroverchattanooga.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "porscheofchattanooga-com": {
+      "name": "Porsche of Chattanooga",
+      "url": "https://porscheofchattanooga.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    },
+    "chattanooga-ford-com": {
+      "name": "Chattanooga Ford",
+      "url": "https://www.Chattanooga-Ford.com",
+      "provider": "unknown",
+      "pre_scan_count": 0,
+      "last_scan": null
+    }
+  }
+}

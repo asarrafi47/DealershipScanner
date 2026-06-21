@@ -18,6 +18,7 @@ from typing import Any
 
 from backend.scanner.bmw_enhancer import enhance_scraping_for_bmw_dealerships
 from backend.scanner.constants import DEBUG_DIR, MANIFEST_PATH
+from backend.scanner import scan_log
 from backend.scanner.manifest import filter_oem_manufacturers, load_manifest
 from backend.scanner.inventory_write import InventoryWriteCoordinator, default_max_dealer_concurrency
 from backend.scanner.phases.dealer_run import run_dealer
@@ -220,6 +221,14 @@ async def main(
     logger.info("Scanner: VDP concurrency = %d", vdp_conc)
 
     bmw_enhanced_dealers = enhance_scraping_for_bmw_dealerships(dealers)
+
+    from datetime import datetime, timezone
+    from pathlib import Path
+    _ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+    _log_path = Path(MANIFEST_PATH).parent.parent / "workspace" / "scanlogs" / f"scan_{_ts}.jsonl"
+    scan_log.init_scan_log(_log_path)
+    logger.info("Scan log: %s", _log_path)
+
     scan_t0 = time.perf_counter()
     total_upserted = 0
     sem = asyncio.Semaphore(dealer_conc)

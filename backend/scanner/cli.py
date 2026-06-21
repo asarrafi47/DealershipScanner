@@ -41,6 +41,7 @@ from backend.scanner.constants import DEBUG_DIR, MANIFEST_PATH
 from backend.scanner.manifest import (
     filter_manifest_by_dealer_id,
     filter_manifest_by_shard,
+    filter_manifest_skip_flag,
     filter_skip_dealers,
     load_manifest,
     resolve_shard_cli_and_env,
@@ -231,7 +232,7 @@ def run_cli_entry() -> None:
     apply_fast_mode_env_defaults()
     apply_scan_only_env_defaults()
 
-    to_run = filter_skip_dealers(load_manifest())
+    to_run = filter_manifest_skip_flag(filter_skip_dealers(load_manifest()))
     if args.dealer_id:
         to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
         if not to_run:

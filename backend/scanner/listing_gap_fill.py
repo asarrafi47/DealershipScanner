@@ -360,7 +360,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
 
         need_page = "condition" in missing or (
             {"transmission", "drivetrain", "fuel_type", "body_style", "cylinders",
-             "mpg_city", "mpg_highway"} & set(missing)
+             "mpg_city", "mpg_highway", "exterior_color", "interior_color"} & set(missing)
         )
         if url and need_page:
             html = fetch_listing_html(url)
@@ -372,6 +372,13 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 cond = parse_condition_from_listing_html(html)
                 if cond:
                     proposed["condition"] = cond
+            if "exterior_color" in missing or "interior_color" in missing:
+                from backend.scanner.utils.vdp_spec_parse import parse_color_from_listing_html
+                colors = parse_color_from_listing_html(html)
+                if "exterior_color" in missing and colors.get("exterior_color"):
+                    proposed["exterior_color"] = str(colors["exterior_color"])[:120]
+                if "interior_color" in missing and colors.get("interior_color"):
+                    proposed["interior_color"] = str(colors["interior_color"])[:120]
             specs = parse_html_for_vehicle_specs(html)
             if "transmission" in missing and specs.get("transmission"):
                 proposed["transmission"] = str(specs["transmission"])[:200]

@@ -31,6 +31,9 @@ _SRP_PATHS = [
     "/new-inventory/index.htm",
     "/used-inventory/index.htm",
     "/certified-inventory/index.htm",
+    "/searchnew.aspx",
+    "/searchused.aspx",
+    "/searchcertified.aspx",
 ]
 _NAV_TIMEOUT = 20_000
 _API_WAIT_TIMEOUT = 10.0

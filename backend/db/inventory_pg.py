@@ -66,7 +66,12 @@ def pg_connect():
 
 
 def qmarks_to_percent_s(sql: str) -> str:
-    """Convert SQLite ``?`` placeholders to psycopg ``%s`` (quote-aware)."""
+    """Convert SQLite ``?`` placeholders to psycopg ``%s`` (quote-aware).
+
+    Also escapes bare ``%`` inside single-quoted string literals to ``%%``
+    so psycopg3 does not misinterpret LIKE patterns such as ``LIKE 'http%'``
+    as invalid format-string placeholders.
+    """
     out: list[str] = []
     i = 0
     n = len(sql)
@@ -86,12 +91,22 @@ def qmarks_to_percent_s(sql: str) -> str:
             out.append(c)
             i += 1
             continue
+        # Inside single-quoted string literal
         if c == "'":
             if i + 1 < n and sql[i + 1] == "'":
                 out.append("''")
                 i += 2
                 continue
             in_single = False
+            out.append(c)
+            i += 1
+            continue
+        if c == "%":
+            # Escape % inside string literals: psycopg3 would otherwise
+            # interpret e.g. LIKE 'http%' as an invalid placeholder.
+            out.append("%%")
+            i += 1
+            continue
         out.append(c)
         i += 1
     return "".join(out)
@@ -147,6 +162,13 @@ def adapt_insert_or_replace_pg(sql: str) -> str | None:
         return (
             f"INSERT INTO incomplete_listings_meta (k, v) VALUES ({vals}) "
             "ON CONFLICT (k) DO UPDATE SET v = EXCLUDED.v"
+        )
+    if table == "dealer_geopoints" and "dealer_url" in cols:
+        update_cols = [c for c in cols if c != "dealer_url"]
+        set_clause = ", ".join(f"{c} = EXCLUDED.{c}" for c in update_cols)
+        return (
+            f"INSERT INTO dealer_geopoints ({', '.join(cols)}) VALUES ({vals}) "
+            f"ON CONFLICT (dealer_url) DO UPDATE SET {set_clause}"
         )
     return None
 
@@ -369,6 +391,7 @@ def init_postgres_inventory(conn: Any) -> None:
             vdps_visited INTEGER,
             vehicles_vdp_enriched INTEGER,
             error TEXT,
+            provider TEXT,
             summary_json TEXT NOT NULL DEFAULT '{}'
         )
         """
@@ -376,6 +399,7 @@ def init_postgres_inventory(conn: Any) -> None:
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_scan_runs_dealer_time ON scan_runs(dealer_id, finished_at DESC)"
     )
+    pg_add_columns(cur, "scan_runs", [("provider", "TEXT")])
 
     cur.execute(
         """

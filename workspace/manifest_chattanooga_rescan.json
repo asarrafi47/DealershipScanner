@@ -1,0 +1,6 @@
+[
+  {"name": "BMW of Chattanooga", "url": "https://www.bmwofchattanooga.com", "provider": "dealer_eprocess", "dealer_id": "bmwofchattanooga-com"},
+  {"name": "Volvo Cars Chattanooga", "url": "https://www.chattanoogavolvotn.com", "provider": "unknown", "dealer_id": "chattanoogavolvotn-com"},
+  {"name": "HIXSON CHEVROLET", "url": "https://www.hixsonchevrolet.com", "provider": "dealer_inspire", "dealer_id": "hixsonchevrolet-com"},
+  {"name": "Integrity Buick GMC", "url": "https://integrityofchattanooga.com", "provider": "dealer_on", "dealer_id": "integrityofchattanooga-com"}
+]

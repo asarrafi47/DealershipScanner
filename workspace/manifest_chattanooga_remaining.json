@@ -1,0 +1,7 @@
+[
+  {"name": "Village Volkswagen of Chattanooga", "url": "https://www.villagevw.com", "provider": "dealer_dot_com", "dealer_id": "villagevw-com"},
+  {"name": "Nissan of Chattanooga East", "url": "https://www.nissanofchattanoogaeast.com", "provider": "dealer_dot_com", "dealer_id": "nissanofchattanoogaeast-com"},
+  {"name": "Crown Chrysler Dodge Jeep Ram FIAT", "url": "https://crowncarsofchattanooga.com", "provider": "dealer_dot_com", "dealer_id": "crowncarsofchattanooga-com"},
+  {"name": "Infiniti of Chattanooga", "url": "https://www.infinitichattanooga.com", "provider": "dealer_inspire", "dealer_id": "infinitichattanooga-com"},
+  {"name": "Land Rover Chattanooga", "url": "https://www.landroverchattanooga.com", "provider": "dealer_inspire", "dealer_id": "landroverchattanooga-com"}
+]

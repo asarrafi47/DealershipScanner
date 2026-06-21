@@ -33,6 +33,24 @@ _FALLBACK_ALLOW_SUBSTRINGS = frozenset(
     )
 )
 
+# Built-in deny substrings — rejected before same-site / allow-list checks.
+_FALLBACK_DENY_SUBSTRINGS = frozenset(
+    (
+        "calc/payment",
+        "/api/calc/",
+        "payment-calculator",
+        "paymentcalculator",
+        "/checkout/",
+        "finance/calculator",
+        "finance-calculator",
+        "/trade-in",
+        "/tradein",
+        "creditapp",
+        "credit-app",
+        "apply-for-credit",
+    )
+)
+
 _POLICY_MERGED_ALLOWS: frozenset[str] | None = None
 
 
@@ -222,7 +240,7 @@ def intercept_url_allowed(response_url: str, dealer_base_url: str) -> bool:
     if not response_url or not str(response_url).strip().lower().startswith("http"):
         return False
     low = response_url.lower()
-    for sub in _env_csv_substrings("SCANNER_INTERCEPT_URL_DENY"):
+    for sub in _FALLBACK_DENY_SUBSTRINGS | _env_csv_substrings("SCANNER_INTERCEPT_URL_DENY"):
         if sub in low:
             return False
     if same_dealer_site(response_url, dealer_base_url):

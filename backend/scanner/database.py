@@ -189,9 +189,11 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             # Price: ensure number (strip $ and , already done in parser); store as int/float
             try:
                 price = v.get("price")
-                price = int(round(float(price))) if price is not None and str(price).strip() != "" else 0
+                price = int(round(float(price))) if price is not None and str(price).strip() != "" else None
             except (TypeError, ValueError):
-                price = 0
+                price = None
+            if price is not None and price <= 0:
+                price = None
             # Mileage: ensure integer
             try:
                 mileage = v.get("mileage")
@@ -284,8 +286,8 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     year=CASE WHEN IFNULL(excluded.year,0)!=0 THEN excluded.year ELSE COALESCE(cars.year,excluded.year) END,
                     make=COALESCE(NULLIF(TRIM(excluded.make),''), cars.make),
                     model=COALESCE(NULLIF(TRIM(excluded.model),''), cars.model),
-                    trim=COALESCE(excluded.trim, trim),
-                    price=CASE WHEN IFNULL(excluded.price,0) > 0 THEN excluded.price ELSE COALESCE(NULLIF(cars.price,0), 0) END,
+                    trim=COALESCE(excluded.trim, cars.trim),
+                    price=CASE WHEN COALESCE(excluded.price, 0) > 0 THEN excluded.price ELSE cars.price END,
                     mileage=CASE WHEN IFNULL(excluded.mileage,0) > 0 THEN excluded.mileage ELSE COALESCE(NULLIF(cars.mileage,0), 0) END,
                     image_url=CASE
                         WHEN excluded.image_url LIKE 'http%' THEN excluded.image_url
@@ -295,36 +297,36 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
                     dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
                     zip_code=excluded.zip_code,
-                    fuel_type=COALESCE(excluded.fuel_type, fuel_type),
-                    cylinders=COALESCE(excluded.cylinders, cylinders),
-                    transmission=COALESCE(excluded.transmission, transmission),
-                    transmission_type=COALESCE(excluded.transmission_type, transmission_type),
-                    drivetrain=COALESCE(excluded.drivetrain, drivetrain),
-                    exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), exterior_color),
-                    interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), interior_color),
+                    fuel_type=COALESCE(excluded.fuel_type, cars.fuel_type),
+                    cylinders=COALESCE(excluded.cylinders, cars.cylinders),
+                    transmission=COALESCE(excluded.transmission, cars.transmission),
+                    transmission_type=COALESCE(excluded.transmission_type, cars.transmission_type),
+                    drivetrain=COALESCE(excluded.drivetrain, cars.drivetrain),
+                    exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), cars.exterior_color),
+                    interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), cars.interior_color),
                     interior_color_buckets=CASE
                         WHEN NULLIF(TRIM(excluded.interior_color), '') IS NOT NULL THEN excluded.interior_color_buckets
                         ELSE cars.interior_color_buckets
                     END,
-                    stock_number=COALESCE(NULLIF(excluded.stock_number, ''), stock_number),
+                    stock_number=COALESCE(NULLIF(excluded.stock_number, ''), cars.stock_number),
                     gallery=COALESCE(
                         NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
                         cars.gallery
                     ),
                     carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
                     msrp=excluded.msrp,
-                    dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id),
-                    source_url=COALESCE(excluded.source_url, source_url),
-                    body_style=COALESCE(excluded.body_style, body_style),
-                    engine_description=COALESCE(excluded.engine_description, engine_description),
-                    engine_l=COALESCE(NULLIF(TRIM(excluded.engine_l), ''), engine_l),
-                    condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), condition),
-                    description=COALESCE(excluded.description, description),
+                    dealership_registry_id=COALESCE(excluded.dealership_registry_id, cars.dealership_registry_id),
+                    source_url=COALESCE(excluded.source_url, cars.source_url),
+                    body_style=COALESCE(excluded.body_style, cars.body_style),
+                    engine_description=COALESCE(excluded.engine_description, cars.engine_description),
+                    engine_l=COALESCE(NULLIF(TRIM(excluded.engine_l), ''), cars.engine_l),
+                    condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), cars.condition),
+                    description=COALESCE(excluded.description, cars.description),
                     data_quality_score=excluded.data_quality_score,
-                    mpg_city=COALESCE(excluded.mpg_city, mpg_city),
-                    mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
-                    is_cpo=COALESCE(excluded.is_cpo, is_cpo),
-                    model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw),
+                    mpg_city=COALESCE(excluded.mpg_city, cars.mpg_city),
+                    mpg_highway=COALESCE(excluded.mpg_highway, cars.mpg_highway),
+                    is_cpo=COALESCE(excluded.is_cpo, cars.is_cpo),
+                    model_full_raw=COALESCE(excluded.model_full_raw, cars.model_full_raw),
                     packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
                     listing_active=1,
                     listing_removed_at=NULL,
@@ -335,7 +337,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     END,
                     first_seen_at=COALESCE(cars.first_seen_at, excluded.scraped_at),
                     last_price_change_at=CASE
-                        WHEN IFNULL(cars.price, -1e12) != IFNULL(excluded.price, -1e12) THEN excluded.scraped_at
+                        WHEN COALESCE(cars.price, 0) != COALESCE(excluded.price, 0) THEN excluded.scraped_at
                         ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
                     END,
                     internal_notes=cars.internal_notes,

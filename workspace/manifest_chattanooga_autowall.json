@@ -1,0 +1,5 @@
+[
+  {"name": "Volvo Cars Chattanooga", "url": "https://www.volvocarschattanooga.com", "provider": "autowall", "dealer_id": "volvocarschattanooga-com"},
+  {"name": "Mercedes-Benz at Long of Chattanooga", "url": "https://www.mercedesbenzatlong.com", "provider": "autowall", "dealer_id": "mercedesbenzatlong-com"},
+  {"name": "Genesis at Long of Chattanooga", "url": "https://www.genesisatlongofchattanooga.com", "provider": "autowall", "dealer_id": "genesisatlongofchattanooga-com"}
+]
