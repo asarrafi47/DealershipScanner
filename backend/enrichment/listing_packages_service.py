@@ -4,6 +4,7 @@ window sticker download/analysis, optional photo vision merge.
 """
 from __future__ import annotations
 
+import json
 import logging
 import re
 from typing import Any
@@ -11,7 +12,10 @@ from typing import Any
 from backend.db.inventory_db import get_car_by_id, update_car_row_partial
 from backend.utils.field_clean import is_effectively_empty
 from backend.utils.listing_description_extract import normalize_listing_description
-from backend.utils.listing_description_persist import process_listing_description_for_row
+from backend.utils.listing_description_persist import (
+    packages_column_is_sparse,
+    process_listing_description_for_row,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +62,12 @@ def extract_description_from_listing_html(html: str) -> str:
                 m = re.search(r'"description"\s*:\s*"([^"]{40,})"', raw)
                 if m:
                     return _clean_description_text(m.group(1).encode().decode("unicode_escape"))
+        for sec in soup.select(".vehicle-details-section-container"):
+            title = sec.get_text(" ", strip=True)
+            if title.lower().startswith("dealer description"):
+                body = re.sub(r"^dealer description\s*", "", title, flags=re.I).strip()
+                if len(body) >= 20:
+                    return _clean_description_text(body)
     except Exception:
         pass
     for pat in _DESCRIPTION_SELECTORS:
@@ -68,6 +78,111 @@ def extract_description_from_listing_html(html: str) -> str:
             if len(chunk) >= 40:
                 return _clean_description_text(chunk)
     return ""
+
+
+def extract_listing_option_features(html: str) -> list[str]:
+    """
+    Options/equipment lines from dealer.com-style VDP tables
+    (``td.option-description h3`` on gs-vehicle sites).
+    """
+    if not (html or "").strip():
+        return []
+    try:
+        from bs4 import BeautifulSoup
+
+        soup = BeautifulSoup(html, "html.parser")
+        out: list[str] = []
+        seen: set[str] = set()
+        for h3 in soup.select("td.option-description h3, .option-description h3"):
+            name = " ".join(h3.get_text(" ", strip=True).split())[:160]
+            if len(name) < 2:
+                continue
+            key = name.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(name)
+        return out[:80]
+    except Exception:
+        logger.debug("extract_listing_option_features failed", exc_info=True)
+        return []
+
+
+def merge_listing_option_features_into_packages(
+    existing: str | None,
+    features: list[str],
+) -> str | None:
+    """Append listing HTML options into ``packages_normalized`` without wiping sticker data."""
+    if not features:
+        return None
+
+    base: dict[str, Any] = {}
+    if existing and not is_effectively_empty(existing):
+        try:
+            prev = json.loads(existing) if isinstance(existing, str) else existing
+            if isinstance(prev, dict):
+                base = dict(prev)
+        except (json.JSONDecodeError, TypeError):
+            pass
+
+    if (
+        base.get("listing_options_source") == "gs_vehicle_option_description"
+        and isinstance(base.get("packages_normalized"), list)
+        and len(base["packages_normalized"]) >= 10
+    ):
+        return None
+
+    norm: list[dict[str, Any]] = []
+    if isinstance(base.get("packages_normalized"), list):
+        norm = [x for x in base["packages_normalized"] if isinstance(x, dict)]
+    seen = {str(x.get("name") or "").strip().lower() for x in norm}
+
+    added = 0
+    for feat in features:
+        key = feat.strip().lower()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        norm.append(
+            {
+                "name": feat,
+                "name_verbatim": feat,
+                "features": [],
+                "source": "listing_html",
+                "kind": "option",
+                "section": "options_and_features",
+                "confidence": 0.82,
+            }
+        )
+        added += 1
+
+    if added == 0:
+        return None
+
+    max_items = 40
+    while max_items >= 10:
+        base["packages_normalized"] = norm[:max_items]
+        base["listing_options_source"] = "gs_vehicle_option_description"
+        if not base.get("vdp_packages_source"):
+            base["vdp_packages_source"] = "listing_html"
+        payload = json.dumps(base, ensure_ascii=False, separators=(",", ":"))
+        if len(payload) <= 7900:
+            return payload
+        max_items -= 5
+
+    compact = [
+        {
+            "name": x["name"],
+            "name_verbatim": x["name"],
+            "source": "listing_html",
+            "kind": "option",
+            "section": "options_and_features",
+            "confidence": 0.82,
+        }
+        for x in norm[:25]
+    ]
+    base["packages_normalized"] = compact
+    return json.dumps(base, ensure_ascii=False, separators=(",", ":"))
 
 
 def _clean_description_text(raw: str) -> str:
@@ -105,8 +220,10 @@ def ensure_listing_description_for_car(
     desc = str(row.get("description") or "")
     norm = normalize_listing_description(desc)
     description_fetched = False
+    listing_options_applied = False
 
-    if refetch_if_missing and len(norm) < 20:
+    needs_html = len(norm) < 20 or packages_column_is_sparse(row.get("packages"))
+    if refetch_if_missing and needs_html:
         url = _listing_vdp_url(row)
         if url.lower().startswith("http"):
             try:
@@ -118,13 +235,31 @@ def ensure_listing_description_for_car(
                 html = None
             if html:
                 extracted = extract_description_from_listing_html(html)
+                features = extract_listing_option_features(html)
+                partial: dict[str, Any] = {}
                 if len(normalize_listing_description(extracted)) >= 20:
-                    update_car_row_partial(int(car_id), {"description": extracted})
+                    partial["description"] = extracted
+                merged_pkgs = merge_listing_option_features_into_packages(
+                    row.get("packages"), features
+                )
+                if merged_pkgs:
+                    partial["packages"] = merged_pkgs
+                    listing_options_applied = True
+                if partial:
+                    update_car_row_partial(int(car_id), partial)
                     row = get_car_by_id(int(car_id), include_inactive=True) or row
-                    description_fetched = True
+                    description_fetched = "description" in partial
 
-    result = process_listing_description_for_row(row, skip_if_unchanged=True, force=False)
+    if len(normalize_listing_description(str(row.get("description") or ""))) >= 40:
+        result = process_listing_description_for_row(row, skip_if_unchanged=True, force=False)
+    else:
+        result = {
+            "applied": listing_options_applied,
+            "reason": "listing_options_only" if listing_options_applied else "description_too_short",
+            "updates": None,
+        }
     result["description_fetched"] = description_fetched
+    result["listing_options_applied"] = listing_options_applied
     return result
 
 
@@ -166,6 +301,7 @@ def ensure_listing_packages_for_car(
     out["listing_description_parsed"] = bool(desc_result.get("applied"))
     out["listing_description_reason"] = desc_result.get("reason")
     out["listing_description_fetched"] = bool(desc_result.get("description_fetched"))
+    out["listing_options_applied"] = bool(desc_result.get("listing_options_applied"))
     if desc_result.get("applied") and desc_result.get("updates"):
         update_car_row_partial(int(car_id), desc_result["updates"])
         car = get_car_by_id(int(car_id), include_inactive=True) or car

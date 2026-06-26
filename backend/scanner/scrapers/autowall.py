@@ -385,6 +385,73 @@ async def fetch_autowall_inventory_http(
     return list(by_vin.values())
 
 
+def fetch_autowall_vehicle_by_vin(
+    base_url: str,
+    want_vin: str,
+    *,
+    dealer_id: str = "",
+    dealer_name: str = "",
+    max_pages: int = 40,
+) -> tuple[dict[str, Any], list[str]]:
+    """
+    Sync HTTP lookup of one autoWALL inventory row by VIN (recovery / backfill).
+
+    Establishes a session via homepage, paginates ``/gs-vehicle/list``, optionally
+    enriches from the vehicle VDP snapshot.
+    """
+    notes: list[str] = []
+    vin_u = (want_vin or "").strip().upper()
+    if not vin_u:
+        return {}, notes
+    inv_base = (base_url or "").strip().rstrip("/")
+    if not inv_base.startswith("http"):
+        return {}, notes
+
+    session = _requests.Session()
+    session.headers.update(_HTTP_HEADERS)
+    try:
+        session.get(inv_base + "/", timeout=15, verify=False)
+        notes.append("autowall:homepage_ok")
+    except _requests.RequestException as exc:
+        notes.append(f"autowall:homepage_error:{str(exc)[:120]}")
+
+    found: dict[str, Any] | None = None
+    for page_num in range(1, max(1, int(max_pages)) + 1):
+        url = f"{inv_base}/gs-vehicle/list?filter=All&page={page_num}"
+        try:
+            r = session.get(url, timeout=20, verify=False)
+        except _requests.RequestException as exc:
+            notes.append(f"autowall:http_error:page{page_num}:{str(exc)[:120]}")
+            break
+        if r.status_code != 200:
+            notes.append(f"autowall:status:page{page_num}:{r.status_code}")
+            break
+        batch = parse_autowall_inventory_html(r.text, inv_base, dealer_id, dealer_name, inv_base)
+        if not batch:
+            notes.append(f"autowall:empty:page{page_num}")
+            break
+        for v in batch:
+            if (v.get("vin") or "").strip().upper() == vin_u:
+                found = v
+                notes.append(f"autowall:match:page{page_num}")
+                break
+        if found:
+            break
+        if page_num > 1 and len(batch) == 0:
+            break
+
+    if not found:
+        notes.append("autowall:no_vin_match")
+        return {}, notes
+
+    detail = (found.get("_detail_url") or found.get("source_url") or "").strip()
+    if not detail.startswith("http"):
+        detail = f"{inv_base}/gs-vehicle/detail/{vin_u}"
+    found["_detail_url"] = detail
+    _enrich_vehicles_from_vdp([found], session, dealer_name or "Dealer")
+    return found, notes
+
+
 _AUTOWALL_DESKTOP_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"

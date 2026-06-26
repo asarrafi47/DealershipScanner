@@ -12,7 +12,10 @@ from backend.db.inventory_db import ensure_cars_table_columns
 from backend.utils.analytics_ep import apply_ep_from_scanner_dict
 from backend.utils.car_serialize import infer_engine_l_for_db
 from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score, is_effectively_empty
+from backend.utils.history_highlights import coalesce_history_highlights_for_storage, history_highlights_json
 from backend.utils.interior_color_buckets import interior_color_buckets_json
+from backend.utils.json_column_storage import nullable_json_array_text
+from backend.utils.price_provenance import merge_price_provenance_for_upsert
 from backend.utils.in_transit import availability_spec_source_patch
 from backend.utils.spec_provenance import merge_spec_source_json
 
@@ -72,7 +75,6 @@ def _ensure_schema(conn):
         ("msrp", "REAL"),
         ("dealership_registry_id", "INTEGER"),
         ("is_cpo", "INTEGER"),
-        ("model_full_raw", "TEXT"),
         ("mpg_city", "INTEGER"),
         ("mpg_highway", "INTEGER"),
     ]:
@@ -134,6 +136,19 @@ def _ensure_schema(conn):
     conn.commit()
 
 
+def _fetch_existing_price_state(cursor, vin: str) -> tuple[bool, Any, Any, Any]:
+    cursor.execute(
+        "SELECT price, price_provenance_json, first_seen_at FROM cars WHERE vin = ?",
+        (vin,),
+    )
+    row = cursor.fetchone()
+    if not row:
+        return False, None, None, None
+    if isinstance(row, dict):
+        return True, row.get("price"), row.get("price_provenance_json"), row.get("first_seen_at")
+    return True, row[0], row[1], row[2]
+
+
 def upsert_vehicles(vehicles: list[dict]) -> int:
     """
     Insert or replace vehicles by vin. Strict de-duplication: one row per VIN
@@ -178,6 +193,9 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 _eng = infer_engine_l_for_db(v)
                 if _eng is not None:
                     v["engine_l"] = _eng
+            from backend.utils.dealer_zip import enrich_vehicle_zip_from_dealership
+
+            enrich_vehicle_zip_from_dealership(v, cursor)
             vin = (v.get("vin") or "").strip()
             if not vin:
                 continue
@@ -207,20 +225,9 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     msrp = None
             except (TypeError, ValueError):
                 msrp = None
-            # Gallery: stored as JSON string; always use json.dumps(list)
-            gallery = v.get("gallery")
-            if isinstance(gallery, list):
-                gallery_json = json.dumps(gallery)
-            elif gallery is not None and isinstance(gallery, str):
-                try:
-                    json.loads(gallery)
-                    gallery_json = gallery
-                except (TypeError, ValueError):
-                    gallery_json = "[]"
-            else:
-                gallery_json = "[]"
-            highlights = v.get("history_highlights")
-            highlights_json = json.dumps(highlights) if isinstance(highlights, list) else (highlights if isinstance(highlights, str) else "[]")
+            # Gallery: JSON array TEXT; NULL when empty (never literal "[]")
+            gallery_json = nullable_json_array_text(v.get("gallery"))
+            highlights_json = history_highlights_json(coalesce_history_highlights_for_storage(v))
             img = v.get("image_url")
             if not img or not str(img).strip().startswith("http"):
                 img = "/static/placeholder.svg"
@@ -263,6 +270,22 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 packages_json = pkg_raw.strip()
             else:
                 packages_json = None
+            is_cpo_val = v.get("is_cpo")
+            if is_cpo_val is None:
+                from backend.utils.car_serialize import infer_is_cpo_for_storage
+
+                is_cpo_val = infer_is_cpo_for_storage(v)
+            row_exists, existing_price, existing_provenance, existing_first_seen = _fetch_existing_price_state(
+                cursor, vin
+            )
+            price_provenance_json = merge_price_provenance_for_upsert(
+                existing_provenance_json=existing_provenance,
+                existing_price=existing_price,
+                existing_first_seen_at=existing_first_seen,
+                incoming_price=price,
+                recorded_at=now,
+                is_new_row=not row_exists,
+            )
             cursor.execute(
                 """
                 INSERT INTO cars (
@@ -272,10 +295,10 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
                     dealership_registry_id,
                     source_url, body_style, engine_description, engine_l, condition, description, data_quality_score,
-                    mpg_city, mpg_highway, is_cpo, model_full_raw,
+                    mpg_city, mpg_highway, is_cpo,
                     packages,
                     listing_active, listing_removed_at, spec_source_json,
-                    first_seen_at, last_price_change_at
+                    first_seen_at, last_price_change_at, price_provenance_json
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(vin) DO UPDATE SET
                     title=CASE
@@ -296,7 +319,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     END,
                     dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
                     dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
-                    zip_code=excluded.zip_code,
+                    zip_code=COALESCE(NULLIF(TRIM(excluded.zip_code), ''), cars.zip_code),
                     fuel_type=COALESCE(excluded.fuel_type, cars.fuel_type),
                     cylinders=COALESCE(excluded.cylinders, cars.cylinders),
                     transmission=COALESCE(excluded.transmission, cars.transmission),
@@ -313,7 +336,11 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                         NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
                         cars.gallery
                     ),
-                    carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
+                    carfax_url=excluded.carfax_url,
+                    history_highlights=COALESCE(
+                        NULLIF(NULLIF(TRIM(excluded.history_highlights), ''), '[]'),
+                        cars.history_highlights
+                    ),
                     msrp=excluded.msrp,
                     dealership_registry_id=COALESCE(excluded.dealership_registry_id, cars.dealership_registry_id),
                     source_url=COALESCE(excluded.source_url, cars.source_url),
@@ -326,7 +353,6 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     mpg_city=COALESCE(excluded.mpg_city, cars.mpg_city),
                     mpg_highway=COALESCE(excluded.mpg_highway, cars.mpg_highway),
                     is_cpo=COALESCE(excluded.is_cpo, cars.is_cpo),
-                    model_full_raw=COALESCE(excluded.model_full_raw, cars.model_full_raw),
                     packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
                     listing_active=1,
                     listing_removed_at=NULL,
@@ -340,6 +366,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                         WHEN COALESCE(cars.price, 0) != COALESCE(excluded.price, 0) THEN excluded.scraped_at
                         ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
                     END,
+                    price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
                     internal_notes=cars.internal_notes,
                     marked_for_review=cars.marked_for_review
                 """,
@@ -381,14 +408,14 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     dq,
                     v.get("mpg_city"),
                     v.get("mpg_highway"),
-                    v.get("is_cpo"),
-                    v.get("model_full_raw"),
+                    is_cpo_val,
                     packages_json,
                     1,
                     None,
                     spec_src,
                     now,
                     now,
+                    price_provenance_json,
                 ),
             )
             count += 1

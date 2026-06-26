@@ -222,6 +222,8 @@ const USER_AGENTS = [
 ];
 
 const { runBatchVdpExtraction } = require("./vdp_framework");
+const { coalesceHistoryHighlightsForStorage, historyHighlightsJson } = require("./history_highlights");
+const { nullableJsonArrayText } = require("./json_column_storage");
 const { responseLooksLikeInventoryJsonIntercept } = require("./scanner_intercept");
 
 function randomUserAgent() {
@@ -1229,7 +1231,19 @@ function safeStr(v, def = DEFAULT_STR) {
   return s || def;
 }
 
-function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
+function normalizeUsZip(v) {
+  if (v == null) return null;
+  const s = String(v).trim();
+  if (!s || s.toLowerCase() === "nan" || s.toLowerCase() === "null") return null;
+  const m = s.match(/\d{5}/);
+  return m ? m[0] : null;
+}
+
+function coalesceCarZip(carZip, dealerZip) {
+  return normalizeUsZip(carZip) || normalizeUsZip(dealerZip) || null;
+}
+
+function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl, dealerZip) {
   if (!obj || typeof obj !== "object") return null;
 
   let vin = extractVinFromPayload(obj);
@@ -1342,7 +1356,7 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
     dealer_id: dealerId,
     dealer_name: dealerName,
     dealer_url: sqlOptionalStr(dealerUrl),
-    zip_code: sqlOptionalStr(obj.zipCode || obj.zip_code),
+    zip_code: sqlOptionalStr(coalesceCarZip(obj.zipCode || obj.zip_code, dealerZip)),
     fuel_type: fuelType,
     transmission: sqlOptionalStr(obj.transmission || obj.transmissionType),
     drivetrain: sqlOptionalStr(obj.drivetrain || obj.driveType),
@@ -1397,14 +1411,14 @@ async function flushScrapeSamplesFile() {
   );
 }
 
-function parseJsonList(data, baseUrl, dealerId, dealerName, dealerUrl) {
+function parseJsonList(data, baseUrl, dealerId, dealerName, dealerUrl, dealerZip) {
   const items = findVehicleList(data);
   if (!items) return [];
   const out = [];
   for (const obj of items) {
     if (!obj || typeof obj !== "object") continue;
     if (!hasVehicleIdent(obj)) continue;
-    const m = mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl);
+    const m = mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl, dealerZip);
     if (m) {
       recordScrapeSample(obj, m);
       out.push(m);
@@ -1413,7 +1427,7 @@ function parseJsonList(data, baseUrl, dealerId, dealerName, dealerUrl) {
   if (out.length > 0) return out;
   for (const obj of items) {
     if (!obj || typeof obj !== "object") continue;
-    const m = mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl);
+    const m = mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl, dealerZip);
     if (m) {
       recordScrapeSample(obj, m);
       out.push(m);
@@ -1691,10 +1705,10 @@ async function fetchAdditionalInventoryPages(page, firstUrl, firstBody) {
   return bodies;
 }
 
-async function collectVehiclesFromBodies(bodies, baseUrl, dealerId, name, url) {
+async function collectVehiclesFromBodies(bodies, baseUrl, dealerId, name, url, dealerZip) {
   let all = [];
   for (const body of bodies) {
-    const vehicles = parseJsonList(body, baseUrl, dealerId, name, url);
+    const vehicles = parseJsonList(body, baseUrl, dealerId, name, url, dealerZip);
     for (const v of vehicles) {
       v.dealer_name = name;
       v.dealer_url = url;
@@ -1711,6 +1725,7 @@ async function runDealerSlow(browser, dealer, opts = {}) {
   const name = dealer.name || "";
   const url = String(dealer.url || "").replace(/\/$/, "");
   const dealerId = dealer.dealer_id || "";
+  const dealerZip = dealer.zip_code || dealer.zipCode || null;
   const profile = opts.profile || "default";
   const scrollLazy = opts.scrollLazyLoad !== false && profile !== "bare";
   const intercepted = [];
@@ -1801,7 +1816,7 @@ async function runDealerSlow(browser, dealer, opts = {}) {
 
     const byVin = new Map();
     for (const b of intercepted) {
-      for (const v of parseJsonList(b, url, dealerId, name, url)) {
+      for (const v of parseJsonList(b, url, dealerId, name, url, dealerZip)) {
         v.dealer_name = name;
         v.dealer_url = url;
         if (v.vin && !byVin.has(v.vin)) byVin.set(v.vin, v);
@@ -1845,6 +1860,7 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
   const name = dealer.name || "";
   const url = String(dealer.url || "").replace(/\/$/, "");
   const dealerId = dealer.dealer_id || "";
+  const dealerZip = dealer.zip_code || dealer.zipCode || null;
   const profile = opts.profile || "default";
   const scrollLazy = opts.scrollLazyLoad !== false && profile !== "bare";
 
@@ -1906,7 +1922,7 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
 
     const byVin = new Map();
     const pushBody = (b) => {
-      for (const v of parseJsonList(b, url, dealerId, name, url)) {
+      for (const v of parseJsonList(b, url, dealerId, name, url, dealerZip)) {
         v.dealer_name = name;
         v.dealer_url = url;
         if (v.vin && !byVin.has(v.vin)) byVin.set(v.vin, v);
@@ -2059,7 +2075,6 @@ async function ensureSchema(db) {
     ["mpg_city", "INTEGER"],
     ["mpg_highway", "INTEGER"],
     ["is_cpo", "INTEGER"],
-    ["model_full_raw", "TEXT"],
     ["data_quality_score", "REAL"],
     ["spec_source_json", "TEXT"],
   ]) {
@@ -2156,8 +2171,8 @@ async function upsertVehicle(db, v) {
   const price = v.price != null ? Math.round(Number(v.price)) || 0 : 0;
   const mileage = v.mileage != null ? normInt(v.mileage) : 0;
 
-  const galleryJson = JSON.stringify(Array.isArray(v.gallery) ? v.gallery : []);
-  const highlightsJson = JSON.stringify(Array.isArray(v.history_highlights) ? v.history_highlights : []);
+  const galleryJson = nullableJsonArrayText(Array.isArray(v.gallery) ? v.gallery : null);
+  const highlightsJson = historyHighlightsJson(coalesceHistoryHighlightsForStorage(v));
 
   const sql = `
     INSERT INTO cars (
@@ -2167,20 +2182,21 @@ async function upsertVehicle(db, v) {
       exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp,
       dealership_registry_id,
       body_style, engine_description, condition, source_url,
-      mpg_city, mpg_highway, is_cpo, model_full_raw, data_quality_score,
+      mpg_city, mpg_highway, is_cpo, data_quality_score,
       spec_source_json
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(vin) DO UPDATE SET
       title=excluded.title, year=excluded.year, make=excluded.make,
       model=excluded.model, trim=excluded.trim, price=excluded.price,
       mileage=excluded.mileage, image_url=excluded.image_url,
       dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
       dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
-      zip_code=excluded.zip_code, fuel_type=excluded.fuel_type,
+      zip_code=COALESCE(NULLIF(TRIM(excluded.zip_code), ''), zip_code), fuel_type=excluded.fuel_type,
       cylinders=COALESCE(excluded.cylinders, cylinders), transmission=excluded.transmission,
       drivetrain=excluded.drivetrain, exterior_color=excluded.exterior_color,
       interior_color=excluded.interior_color, stock_number=excluded.stock_number,
-      gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
+      gallery=COALESCE(NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'), gallery), carfax_url=excluded.carfax_url,
+      history_highlights=COALESCE(NULLIF(NULLIF(TRIM(excluded.history_highlights), ''), '[]'), history_highlights),
       msrp=excluded.msrp,
       dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id),
       body_style=COALESCE(excluded.body_style, body_style),
@@ -2190,7 +2206,6 @@ async function upsertVehicle(db, v) {
       mpg_city=COALESCE(excluded.mpg_city, mpg_city),
       mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
       is_cpo=COALESCE(excluded.is_cpo, is_cpo),
-      model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw),
       data_quality_score=COALESCE(excluded.data_quality_score, data_quality_score),
       spec_source_json=COALESCE(excluded.spec_source_json, spec_source_json)
   `;
@@ -2234,7 +2249,6 @@ async function upsertVehicle(db, v) {
     mpgCity,
     mpgHwy,
     isCpo,
-    sqlOptionalStr(v.model_full_raw),
     v.data_quality_score != null && Number.isFinite(Number(v.data_quality_score))
       ? Number(v.data_quality_score)
       : null,
@@ -2299,10 +2313,22 @@ function getLaunchOptions(profile, headed = false, dealerId = null) {
     common.userDataDir = profileDir;
     lastScrapeMeta.profile_persisted = true;
   }
-  const chromePath =
+  let chromePath =
     process.env.PUPPETEER_EXECUTABLE_PATH ||
-    process.env.CHROME_PATH ||
-    resolvePlaywrightChromiumPath();
+    process.env.CHROME_PATH;
+
+  // On macOS, prefer system Chrome over Puppeteer's broken cached version
+  if (!chromePath && process.platform === 'darwin') {
+    const systemChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+    if (fs.existsSync(systemChrome)) {
+      chromePath = systemChrome;
+    }
+  }
+
+  if (!chromePath) {
+    chromePath = resolvePlaywrightChromiumPath();
+  }
+
   if (chromePath) {
     common.executablePath = chromePath;
   }

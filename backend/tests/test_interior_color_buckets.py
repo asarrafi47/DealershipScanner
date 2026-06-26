@@ -31,8 +31,9 @@ def test_infer_unknown_non_empty_is_other() -> None:
     assert infer_interior_color_buckets("zzzz-not-a-color-xyz123") == ["other"]
 
 
-def test_interior_color_buckets_json_always_array() -> None:
-    assert interior_color_buckets_json(None, None) == "[]"
+def test_interior_color_buckets_json_null_when_empty() -> None:
+    assert interior_color_buckets_json(None, None) is None
+    assert interior_color_buckets_json("   ", None) is None
     assert interior_color_buckets_json("Black", None) == '["black"]'
 
 

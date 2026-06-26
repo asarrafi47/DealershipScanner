@@ -133,6 +133,41 @@ def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
         conn.close()
 
 
+KBB_CARS_COLUMNS: tuple[str, ...] = (
+    "kbb_fetched_at",
+    "kbb_snapshot_json",
+    "kbb_fair_purchase",
+    "kbb_range_low",
+    "kbb_range_high",
+    "kbb_private_party",
+    "kbb_trade_in",
+)
+
+
+def drop_kbb_columns_from_cars(cursor, *, postgres: bool = False) -> None:
+    """Remove retired KBB valuation columns (idempotent)."""
+    if postgres:
+        for col in KBB_CARS_COLUMNS:
+            cursor.execute(f'ALTER TABLE cars DROP COLUMN IF EXISTS "{col}"')
+        return
+    cursor.execute("PRAGMA table_info(cars)")
+    existing = {row[1] for row in cursor.fetchall()}
+    for col in KBB_CARS_COLUMNS:
+        if col in existing:
+            cursor.execute(f"ALTER TABLE cars DROP COLUMN {col}")
+
+
+def drop_model_full_raw_column(cursor, *, postgres: bool = False) -> None:
+    """Remove unused ``model_full_raw`` audit column (idempotent)."""
+    if postgres:
+        cursor.execute('ALTER TABLE cars DROP COLUMN IF EXISTS "model_full_raw"')
+        return
+    cursor.execute("PRAGMA table_info(cars)")
+    existing = {row[1] for row in cursor.fetchall()}
+    if "model_full_raw" in existing:
+        cursor.execute("ALTER TABLE cars DROP COLUMN model_full_raw")
+
+
 def ensure_cars_table_columns(cursor) -> None:
     """Add optional listing / quality columns (idempotent ALTERs)."""
     if is_inventory_postgres():
@@ -148,7 +183,6 @@ def ensure_cars_table_columns(cursor) -> None:
         ("description", "TEXT"),
         ("data_quality_score", "REAL"),
         ("is_cpo", "INTEGER"),
-        ("model_full_raw", "TEXT"),
         ("mpg_city", "INTEGER"),
         ("mpg_highway", "INTEGER"),
         ("engine_l", "TEXT"),
@@ -163,13 +197,6 @@ def ensure_cars_table_columns(cursor) -> None:
         ("listing_active", "INTEGER"),
         ("listing_removed_at", "TEXT"),
         ("interior_color_buckets", "TEXT"),
-        ("kbb_fetched_at", "TEXT"),
-        ("kbb_snapshot_json", "TEXT"),
-        ("kbb_fair_purchase", "REAL"),
-        ("kbb_range_low", "REAL"),
-        ("kbb_range_high", "REAL"),
-        ("kbb_private_party", "REAL"),
-        ("kbb_trade_in", "REAL"),
         ("first_seen_at", "TEXT"),
         ("last_price_change_at", "TEXT"),
         ("internal_notes", "TEXT"),
@@ -224,12 +251,6 @@ LISTINGS_GRID_CAR_COLUMNS: tuple[str, ...] = (
     "first_seen_at",
     "window_sticker_url",
     "history_highlights",
-    "kbb_fetched_at",
-    "kbb_fair_purchase",
-    "kbb_range_low",
-    "kbb_range_high",
-    "kbb_private_party",
-    "kbb_trade_in",
 )
 
 
@@ -520,6 +541,9 @@ def init_inventory_db():
 
     conn = get_conn()
     cursor = conn.cursor()
+    drop_kbb_columns_from_cars(cursor, postgres=False)
+    drop_model_full_raw_column(cursor, postgres=False)
+    conn.commit()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cars (
             id               INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -962,8 +986,87 @@ def link_cars_to_dealership_registry(
                 (registry_id, did),
             )
             total += cursor.rowcount
+        from backend.utils.dealer_zip import backfill_car_zip_for_registry
+
+        backfill_car_zip_for_registry(cursor, int(registry_id))
         conn.commit()
     return int(total)
+
+
+def backfill_car_zip_from_dealerships(*, dry_run: bool = False) -> dict[str, int]:
+    """
+    Fill empty ``cars.zip_code`` from ``dealerships`` / ``dealer_geopoints``.
+
+    Returns counts: ``by_registry``, ``by_lookup``, ``remaining``.
+    """
+    from backend.utils.dealer_zip import (
+        backfill_car_zip_for_registry,
+        enrich_vehicle_zip_from_dealership,
+        normalize_us_zip,
+    )
+
+    stats = {"by_registry": 0, "by_lookup": 0, "remaining": 0}
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT id FROM dealerships
+            WHERE zip_code IS NOT NULL AND TRIM(zip_code) != ''
+            """
+        )
+        registry_ids = [int(r[0] if not isinstance(r, dict) else r["id"]) for r in cursor.fetchall()]
+        for rid in registry_ids:
+            if dry_run:
+                cursor.execute(
+                    """
+                    SELECT COUNT(*) FROM cars
+                    WHERE dealership_registry_id = ?
+                      AND (zip_code IS NULL OR TRIM(zip_code) = '')
+                    """,
+                    (rid,),
+                )
+                row = cursor.fetchone()
+                stats["by_registry"] += int(row[0] if not isinstance(row, dict) else list(row.values())[0])
+            else:
+                stats["by_registry"] += backfill_car_zip_for_registry(cursor, rid)
+
+        cursor.execute(
+            """
+            SELECT id FROM cars
+            WHERE zip_code IS NULL OR TRIM(zip_code) = ''
+            """
+        )
+        pending = [int(r[0] if not isinstance(r, dict) else r["id"]) for r in cursor.fetchall()]
+        for cid in pending:
+            cursor.execute("SELECT * FROM cars WHERE id = ?", (cid,))
+            row = cursor.fetchone()
+            if not row:
+                continue
+            car = dict(row)
+            before = normalize_us_zip(car.get("zip_code"))
+            enrich_vehicle_zip_from_dealership(car, cursor)
+            after = normalize_us_zip(car.get("zip_code"))
+            if after and not before:
+                stats["by_lookup"] += 1
+                if not dry_run:
+                    cursor.execute(
+                        "UPDATE cars SET zip_code = ? WHERE id = ?",
+                        (after, cid),
+                    )
+                    refresh_car_data_quality_score(cid)
+
+        if not dry_run:
+            conn.commit()
+
+        cursor.execute(
+            """
+            SELECT COUNT(*) FROM cars
+            WHERE zip_code IS NULL OR TRIM(zip_code) = ''
+            """
+        )
+        row = cursor.fetchone()
+        stats["remaining"] = int(row[0] if not isinstance(row, dict) else list(row.values())[0])
+    return stats
 
 
 _registry_backfill_ran = False
@@ -1630,7 +1733,6 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "mpg_city",
         "mpg_highway",
         "is_cpo",
-        "model_full_raw",
         "recovery_status",
         "recovery_attempted_at",
         "recovery_source",
@@ -1642,13 +1744,6 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "listing_active",
         "listing_removed_at",
         "interior_color_buckets",
-        "kbb_fetched_at",
-        "kbb_snapshot_json",
-        "kbb_fair_purchase",
-        "kbb_range_low",
-        "kbb_range_high",
-        "kbb_private_party",
-        "kbb_trade_in",
         "first_seen_at",
         "last_price_change_at",
         "internal_notes",

@@ -39,7 +39,7 @@ def test_redact_sensitive_car_row() -> None:
     out = redact_sensitive_car_row(row)
     assert out == {"id": 1, "vin": "1HGCM82633A004352"}
     assert SENSITIVE_CAR_ROW_KEYS.issuperset(
-        {"internal_notes", "marked_for_review", "price_provenance_json", "kbb_snapshot_json"}
+        {"internal_notes", "marked_for_review", "price_provenance_json"}
     )
 
 

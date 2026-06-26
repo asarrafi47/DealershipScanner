@@ -287,7 +287,7 @@ fuel_type=COALESCE(excluded.fuel_type, cars.fuel_type)
 ```
 
 Complete list of columns fixed (in addition to `trim` fixed earlier):
-`fuel_type`, `cylinders`, `transmission`, `transmission_type`, `drivetrain`, `exterior_color`, `interior_color`, `stock_number`, `dealership_registry_id`, `source_url`, `body_style`, `engine_description`, `engine_l`, `condition`, `description`, `mpg_city`, `mpg_highway`, `is_cpo`, `model_full_raw`
+`fuel_type`, `cylinders`, `transmission`, `transmission_type`, `drivetrain`, `exterior_color`, `interior_color`, `stock_number`, `dealership_registry_id`, `source_url`, `body_style`, `engine_description`, `engine_l`, `condition`, `description`, `mpg_city`, `mpg_highway`, `is_cpo`
 
 ### Impact
 

@@ -544,7 +544,6 @@ def merge_analytics_ep_into_vehicle(
     vm_s = str(vm).strip() if vm is not None else ""
     if vm_s and vm_s.lower() not in ("na", "n/a", "null"):
         eligible.append("vehicle_model")
-        vehicle.setdefault("model_full_raw", vm_s[:200])
         if make_u == "BMW" or (mk and str(mk).strip().upper() == "BMW"):
             m_part, t_part = parse_bmw_model_trim_from_vehicle_model(vm_s)
             if m_part and is_effectively_empty(vehicle.get("model")):

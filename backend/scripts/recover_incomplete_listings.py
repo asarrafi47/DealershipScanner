@@ -3,11 +3,12 @@
 Second-pass repair for incomplete inventory rows: inventory JSON → VDP → Mazda-safe inference.
 
 Usage (from project root):
-  python scripts/recover_incomplete_listings.py --limit 20
-  python scripts/recover_incomplete_listings.py --vin JM3KFBBM8P0281095 --trace
-  python scripts/recover_incomplete_listings.py --dry-run --skip-vdp
+  PYTHONPATH=. python3 backend/scripts/recover_incomplete_listings.py --limit 20
+  PYTHONPATH=. python3 backend/scripts/recover_incomplete_listings.py --vin JM3KFBBM8P0281095 --trace
+  PYTHONPATH=. python3 backend/scripts/recover_incomplete_listings.py --dry-run --skip-vdp
 
-Requires: requests, playwright (chromium). Set INVENTORY_DB_PATH if not using ./inventory.db.
+Requires: requests, playwright (chromium). Loads ``<repo>/.env`` when present.
+Set ``INVENTORY_DATABASE_URL`` (or ``DATABASE_URL``) to your Postgres DSN.
 """
 from __future__ import annotations
 
@@ -21,11 +22,18 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Optional
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 os.chdir(ROOT)
+
+try:
+    from backend.utils.project_env import load_project_dotenv
+
+    load_project_dotenv()
+except ImportError:
+    pass
 
 from backend.db.inventory_db import (  # noqa: E402
     ensure_cars_table_columns,
@@ -278,6 +286,14 @@ def main() -> int:
     print(f"partially_recovered: {stats['partially_recovered']}")
     print(f"unrecoverable: {stats['unrecoverable']}")
     print("top recovery note prefixes:", stats["field_hits"].most_common(20))
+    if args.dry_run:
+        print("Note: --dry-run did not write recovery_status / recovery_notes to the database.")
+    inv_fail = stats["field_hits"].get("inventory_status", 0) + stats["field_hits"].get("autowall", 0)
+    if stats["unrecoverable"] == stats["total"] and inv_fail:
+        print(
+            "Hint: inventory HTTP failed for Dealer.com paths. autoWALL (gs-vehicle) dealers "
+            "need the updated recovery code; omit --skip-vdp for Playwright VDP price/spec fallback."
+        )
     return 0
 
 

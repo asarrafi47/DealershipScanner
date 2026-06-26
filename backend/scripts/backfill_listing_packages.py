@@ -3,20 +3,21 @@
 Backfill every active listing: fetch/parse dealer description + download/analyze window sticker.
 
 Usage:
-  INVENTORY_DB_PATH=inventory.db python backend/scripts/backfill_listing_packages.py
-  INVENTORY_DB_PATH=inventory.db python backend/scripts/backfill_listing_packages.py --limit 50
-  INVENTORY_DB_PATH=inventory.db python backend/scripts/backfill_listing_packages.py --no-vision
+  PYTHONPATH=. python backend/scripts/backfill_listing_packages.py
+  PYTHONPATH=. python backend/scripts/backfill_listing_packages.py --limit 50 --missing-only
+  PYTHONPATH=. python backend/scripts/backfill_listing_packages.py --no-vision
 """
 from __future__ import annotations
 
 import argparse
 import logging
-import os
 import sys
 import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+import os
+
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
@@ -36,30 +37,37 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=0, help="Max cars to process (0 = all active)")
     ap.add_argument("--no-vision", action="store_true", help="Skip photo vision merge")
     ap.add_argument("--sleep", type=float, default=1.0, help="Seconds between cars")
+    ap.add_argument(
+        "--missing-only",
+        action="store_true",
+        help="Only process rows where packages is NULL or empty",
+    )
     args = ap.parse_args()
 
-    from backend.db.inventory_db import get_car_by_id, init_inventory_db
+    from backend.db.inventory_db import get_car_by_id, get_conn, init_inventory_db
     from backend.enrichment.listing_packages_service import ensure_listing_packages_for_car
-    import sqlite3
 
     init_inventory_db()
-    db_path = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
-    conn = sqlite3.connect(db_path)
-    rows = conn.execute(
-        "SELECT id FROM cars WHERE active = 1 ORDER BY id ASC"
-    ).fetchall()
+    conn = get_conn()
+    cur = conn.cursor()
+    sql = "SELECT id FROM cars WHERE COALESCE(listing_active, 1) = 1 "
+    if args.missing_only:
+        sql += "AND (packages IS NULL OR TRIM(packages) IN ('', '{}', '[]', 'null')) "
+    sql += "ORDER BY id ASC"
+    if args.limit > 0:
+        sql += f" LIMIT {max(1, int(args.limit))}"
+    cur.execute(sql)
+    rows = cur.fetchall()
     conn.close()
 
     ids = [int(r[0]) for r in rows]
-    if args.limit > 0:
-        ids = ids[: args.limit]
-
     stats = {
         "total": len(ids),
         "description_parsed": 0,
         "description_fetched": 0,
         "sticker_stored": 0,
         "sticker_analyzed": 0,
+        "listing_options_applied": 0,
         "errors": 0,
     }
 
@@ -81,6 +89,8 @@ def main() -> int:
                 stats["description_fetched"] += 1
             if out.get("stored"):
                 stats["sticker_stored"] += 1
+            if out.get("listing_options_applied"):
+                stats["listing_options_applied"] += 1
             if out.get("analyzed"):
                 stats["sticker_analyzed"] += 1
             if out.get("fetch_error"):

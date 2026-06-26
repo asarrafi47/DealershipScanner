@@ -360,6 +360,7 @@ def run_gallery_recovery_for_vins(vins: list[str]) -> dict[str, Any]:
         thin_gallery_threshold,
     )
     from backend.utils.gallery_merge import merge_vdp_gallery_into_vehicle
+    from backend.utils.json_column_storage import nullable_json_array_text
 
     stats: dict[str, Any] = {
         "vins": len(vins),
@@ -408,7 +409,7 @@ def run_gallery_recovery_for_vins(vins: list[str]) -> dict[str, Any]:
         if rec_urls:
             gmerge = merge_vdp_gallery_into_vehicle(veh, rec_urls)
             if int(gmerge.get("added") or 0) > 0:
-                patch["gallery"] = json.dumps(veh.get("gallery") or [])
+                patch["gallery"] = nullable_json_array_text(veh.get("gallery"))
                 patch["image_url"] = veh.get("image_url")
                 stats["urls_added_total"] += int(gmerge.get("added") or 0)
                 stats["rows_recovered"] += 1
@@ -426,6 +427,7 @@ def run_gallery_vision_for_vins(vins: list[str]) -> dict[str, Any]:
     import json
 
     from backend.db.inventory_db import get_car_by_vin, update_car_row_partial
+    from backend.utils.json_column_storage import nullable_json_array_text
 
     stats: dict[str, Any] = {
         "vins": len(vins),
@@ -481,7 +483,7 @@ def run_gallery_vision_for_vins(vins: list[str]) -> dict[str, Any]:
         update_car_row_partial(
             car_id,
             {
-                "gallery": json.dumps(g_out),
+                "gallery": nullable_json_array_text(g_out),
                 "image_url": hero or None,
             },
         )

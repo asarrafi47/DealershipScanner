@@ -99,6 +99,10 @@ def merge_description_parse_into_packages(
         "exterior_color_hint": parsed.get("exterior_color_hint"),
         "confidence": parsed.get("confidence"),
     }
+    prev_norm: list[dict[str, Any]] = []
+    if isinstance(base.get("packages_normalized"), list):
+        prev_norm = [x for x in base["packages_normalized"] if isinstance(x, dict)]
+
     norm_pkgs: list[dict[str, Any]] = []
     for p in (parsed.get("packages") or [])[:14]:
         if not isinstance(p, dict):
@@ -116,6 +120,14 @@ def merge_description_parse_into_packages(
                 "confidence": p.get("confidence"),
             }
         )
+    seen_names = {str(x.get("name") or "").strip().lower() for x in norm_pkgs if x.get("name")}
+    for item in prev_norm:
+        if str(item.get("source") or "") != "listing_html":
+            continue
+        key = str(item.get("name") or "").strip().lower()
+        if key and key not in seen_names:
+            norm_pkgs.append(item)
+            seen_names.add(key)
     base["packages_normalized"] = norm_pkgs
     base["standalone_features_from_description"] = [
         str(x)[:200] for x in (parsed.get("standalone_features") or [])[:20] if str(x).strip()
@@ -191,7 +203,7 @@ def process_listing_description_for_row(
     """
     desc = row.get("description") or ""
     norm = normalize_listing_description(desc)
-    if len(norm) < 20:
+    if len(norm) < 40:
         return {"applied": False, "reason": "description_too_short", "updates": None}
 
     fp = listing_description_source_fingerprint(norm)

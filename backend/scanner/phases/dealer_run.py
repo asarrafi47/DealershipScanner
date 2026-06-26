@@ -576,7 +576,7 @@ async def run_dealer(
                     vdp_excluded,
                 )
 
-            # Ensure gallery is always a list for DB (stored as json.dumps(gallery) in database.py)
+            # Ensure gallery is a list in memory; database.py stores NULL when empty.
             for v in all_vehicles:
                 g = v.get("gallery")
                 if not isinstance(g, list):
@@ -622,9 +622,17 @@ async def run_dealer(
                     logger.warning("Monroney vision failed for %s: %s", name, e)
                     result["monroney_vision"] = {"error": str(e)[:200]}
             reg_id = dealer.get("dealership_registry_id")
+            dealer_zip = dealer.get("zip_code")
             if reg_id:
                 for v in all_vehicles:
                     v.setdefault("dealership_registry_id", reg_id)
+            if dealer_zip:
+                from backend.utils.dealer_zip import coalesce_car_zip
+
+                for v in all_vehicles:
+                    z = coalesce_car_zip(car_zip=v.get("zip_code"), dealer_zip=dealer_zip)
+                    if z:
+                        v["zip_code"] = z
             from backend.parsers.vdp_urls import apply_vehicle_source_url
 
             for v in all_vehicles:

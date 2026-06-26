@@ -29,7 +29,7 @@ DISPLAY_DASH = "—"
 
 # Omitted from public JSON and redacted in /dev debug endpoints (SEC-087).
 SENSITIVE_CAR_ROW_KEYS = frozenset(
-    {"kbb_snapshot_json", "internal_notes", "marked_for_review", "price_provenance_json"}
+    {"internal_notes", "marked_for_review", "price_provenance_json"}
 )
 
 
@@ -1415,6 +1415,11 @@ def serialize_car_for_api(
 
     out["created_at"] = c.get("first_seen_at") or c.get("scraped_at")
     out["price_history_json"] = _price_history_json_for_vdp(c)
+    from backend.utils.price_provenance import latest_price_drop
+
+    drop = latest_price_drop(c.get("price_provenance_json"))
+    if drop:
+        out["latest_price_drop"] = drop
     out["state"] = resolve_car_state_code(c)
     out["fuel_requirement"] = resolve_car_fuel_requirement(
         c, engine_display=engine_disp, verified_specs=vs if vs else None
@@ -1438,35 +1443,11 @@ def _price_history_json_for_vdp(car: dict[str, Any]) -> str:
     """
     JSON array string for VDP negotiation radar: [{date, price}, ...].
 
-    Reads operator ``price_provenance_json`` when it stores sweep history; never
-    exposes the raw provenance blob on the public car payload.
+    Reads ``price_provenance_json`` sweep history; never exposes the raw provenance blob.
     """
-    events: list[dict[str, Any]] = []
-    raw = car.get("price_provenance_json")
-    if raw and str(raw).strip():
-        try:
-            parsed = json.loads(raw) if isinstance(raw, str) else raw
-        except (json.JSONDecodeError, TypeError, ValueError):
-            parsed = None
-        if isinstance(parsed, list):
-            source = parsed
-        elif isinstance(parsed, dict):
-            source = parsed.get("history") or parsed.get("sweeps") or parsed.get("price_history") or []
-        else:
-            source = []
-        if isinstance(source, list):
-            for item in source:
-                if not isinstance(item, dict):
-                    continue
-                when = item.get("date") or item.get("recorded_at") or item.get("scraped_at")
-                amt = item.get("price")
-                if when is None or amt is None:
-                    continue
-                try:
-                    events.append({"date": str(when), "price": float(amt)})
-                except (TypeError, ValueError):
-                    continue
-    return json.dumps(events)
+    from backend.utils.price_provenance import price_history_events_for_vdp
+
+    return json.dumps(price_history_events_for_vdp(car.get("price_provenance_json")))
 
 
 _LISTINGS_GRID_GALLERY_MAX = max(1, int(os.environ.get("LISTINGS_GRID_GALLERY_MAX", "4")))
@@ -1791,6 +1772,52 @@ def normalize_condition_for_storage(car: dict[str, Any]) -> str | None:
 
     if cond == "Pre-Owned":
         return "Used"
+
+    return None
+
+
+def infer_is_cpo_for_storage(car: dict[str, Any]) -> int | None:
+    """
+    Return ``1`` when the row signals certified pre-owned; ``None`` when unset.
+
+    Matches scanner ``pickIsCpoFromVehicle``: never invent ``0`` on upsert (only explicit
+    payload ``0`` is kept by callers).
+    """
+    raw = car.get("is_cpo")
+    if raw in (1, True, "1"):
+        return 1
+    if raw in (0, False, "0"):
+        return 0
+
+    cond = str(car.get("condition") or "").lower()
+    if "certif" in cond or "cpo" in cond:
+        return 1
+
+    title = str(car.get("title") or "").lower()
+    if (
+        "certified pre-owned" in title
+        or "certified preowned" in title
+        or "bmw certified" in title
+        or "bmw cpo" in title
+        or re.search(r"\bcpo\b", title)
+    ):
+        return 1
+
+    src = str(car.get("source_url") or "").lower()
+    if any(
+        m in src
+        for m in (
+            "certified-inventory",
+            "certified_inventory",
+            "/certified/",
+            "/cpo/",
+            "certifiedused",
+            "bmw-certified",
+            "-cpo-",
+            "cpo-inventory",
+        )
+    ):
+        return 1
 
     return None
 

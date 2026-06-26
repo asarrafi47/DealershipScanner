@@ -122,7 +122,9 @@ def build_updates_from_llava_result(
     out: dict[str, Any] = {
         "spec_source_json": spec_out,
         "packages": packages_out,
-        "interior_color_buckets": json.dumps(merged_buckets, separators=(",", ":")),
+        "interior_color_buckets": (
+            json.dumps(merged_buckets, separators=(",", ":")) if merged_buckets else None
+        ),
     }
     if new_interior is not None:
         out["interior_color"] = new_interior

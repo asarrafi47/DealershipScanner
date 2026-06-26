@@ -329,6 +329,17 @@ def mazda_deterministic_patch(car: dict[str, Any], notes: list[str]) -> dict[str
     return patch
 
 
+def _looks_like_autowall_site(car: dict[str, Any], base: str) -> bool:
+    blob = " ".join(
+        [
+            str(car.get("source_url") or ""),
+            str(car.get("dealer_url") or ""),
+            base,
+        ]
+    ).lower()
+    return "gs-vehicle" in blob
+
+
 def try_fetch_inventory_vehicle(car: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
     """
     Fetch Dealer.com-style inventory index pages and parse embedded JSON / HTML.
@@ -344,6 +355,20 @@ def try_fetch_inventory_vehicle(car: dict[str, Any]) -> tuple[dict[str, Any], li
 
     dealer_id = (car.get("dealer_id") or "").strip() or "recovery"
     dealer_name = (car.get("dealer_name") or "").strip() or "Dealer"
+
+    if _looks_like_autowall_site(car, base):
+        from backend.scanner.scrapers.autowall import fetch_autowall_vehicle_by_vin
+
+        match, aw_notes = fetch_autowall_vehicle_by_vin(
+            base,
+            want_vin,
+            dealer_id=dealer_id,
+            dealer_name=dealer_name,
+        )
+        notes.extend(aw_notes)
+        if match:
+            return match, notes
+
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "

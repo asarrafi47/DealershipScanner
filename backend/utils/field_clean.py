@@ -515,7 +515,6 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
         "transmission_type",
         "condition",
         "description",
-        "model_full_raw",
     )
     for k in string_cols:
         if k not in out:

@@ -475,6 +475,7 @@ def _load_dealers_from_db() -> list[dict]:
             "dealership_registry_id": r["id"],
             "city": r["city"] or "",
             "state": r["state"] or "",
+            "zip_code": r["zip_code"] or "",
         })
     return out
 

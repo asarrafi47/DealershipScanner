@@ -200,17 +200,18 @@ def _extract_gallery(obj: dict, base_url: str) -> list[str]:
 
 
 def _extract_history_highlights(obj: dict) -> list[str]:
-    """Extract history badges from callout, badges, highlightedAttributes (e.g. 'No Accidents Reported', '1-Owner')."""
-    out: list[str] = []
+    """Extract history badges from inventory JSON and dealer description text."""
+    from backend.utils.history_highlights import merge_history_highlights
+
+    feed: list[str] = []
     seen: set[str] = set()
 
     def add(s: str) -> None:
         s = norm_str(s)
         if s and s.lower() not in seen:
             seen.add(s.lower())
-            out.append(s)
+            feed.append(s)
 
-    # callout: often array of badge strings or objects with text/label
     for key in ("callout", "callouts", "badges", "Badges", "historyBadges", "history_badges"):
         val = obj.get(key)
         if isinstance(val, list):
@@ -222,7 +223,6 @@ def _extract_history_highlights(obj: dict) -> list[str]:
         elif isinstance(val, str):
             add(val)
 
-    # highlightedAttributes: sometimes Condition/History summary
     ha = obj.get("highlightedAttributes") or obj.get("highlighted_attributes")
     if isinstance(ha, list):
         for item in ha:
@@ -237,7 +237,9 @@ def _extract_history_highlights(obj: dict) -> list[str]:
                     add(str(name))
             elif isinstance(item, str):
                 add(item)
-    return out
+
+    merged = merge_history_highlights(feed, _extract_inventory_description(obj))
+    return merged or []
 
 
 def _extract_inventory_description(obj: dict) -> str | None:

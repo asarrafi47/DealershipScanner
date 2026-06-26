@@ -23,7 +23,6 @@ _MERGE_TEXT_KEYS: tuple[str, ...] = (
     "zip_code",
     "trim",
     "title",
-    "model_full_raw",
     "description",
 )
 

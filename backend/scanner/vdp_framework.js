@@ -9,6 +9,8 @@
  *
  * Not DevTools — all logic runs inside the scanner process (page.evaluate + response listeners).
  */
+const { coalesceHistoryHighlightsForStorage } = require("./history_highlights");
+
 /** Keys that indicate a JSON payload is vehicle-related (lowercased for matching). */
 const VEHICLE_SIGNAL_KEYS = new Set([
   "vin",
@@ -1009,6 +1011,15 @@ function applyExtractionToVehicle(vehicle, extraction, vinToEp) {
   if (extraction.vdpPrice != null && listingPriceIsEmpty(vehicle)) {
     vehicle.price = Math.round(Number(extraction.vdpPrice));
     vehicle._vdp_price_meta = extraction.vdpPriceMeta || { source: "vdp_listing" };
+  }
+
+  const domBadges = (extraction.layers && extraction.layers.domBadges) || [];
+  if (Array.isArray(domBadges) && domBadges.length) {
+    vehicle._vdp_dom_badges = domBadges.slice(0, 24);
+  }
+  const mergedHighlights = coalesceHistoryHighlightsForStorage(vehicle);
+  if (mergedHighlights) {
+    vehicle.history_highlights = mergedHighlights;
   }
 }
 

@@ -220,9 +220,15 @@ def pg_add_columns(cur, table: str, additive: list[tuple[str, str]]) -> None:
 def init_postgres_inventory(conn: Any) -> None:
     """Create inventory tables and indexes on PostgreSQL (idempotent)."""
     global _PG_INV_SCHEMA_OK
-    if _PG_INV_SCHEMA_OK:
-        return
+    from backend.db.inventory_db import drop_kbb_columns_from_cars, drop_model_full_raw_column
+
     cur = conn.cursor()
+    drop_kbb_columns_from_cars(cur, postgres=True)
+    drop_model_full_raw_column(cur, postgres=True)
+    conn.commit()
+    if _PG_INV_SCHEMA_OK:
+        cur.close()
+        return
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS cars (
@@ -261,7 +267,6 @@ def init_postgres_inventory(conn: Any) -> None:
             description TEXT,
             data_quality_score DOUBLE PRECISION,
             is_cpo INTEGER,
-            model_full_raw TEXT,
             mpg_city INTEGER,
             mpg_highway INTEGER,
             engine_l TEXT,
@@ -276,13 +281,6 @@ def init_postgres_inventory(conn: Any) -> None:
             listing_active INTEGER DEFAULT 1,
             listing_removed_at TEXT,
             interior_color_buckets TEXT,
-            kbb_fetched_at TEXT,
-            kbb_snapshot_json TEXT,
-            kbb_fair_purchase DOUBLE PRECISION,
-            kbb_range_low DOUBLE PRECISION,
-            kbb_range_high DOUBLE PRECISION,
-            kbb_private_party DOUBLE PRECISION,
-            kbb_trade_in DOUBLE PRECISION,
             first_seen_at TEXT,
             last_price_change_at TEXT,
             internal_notes TEXT,

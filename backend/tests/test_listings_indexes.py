@@ -66,7 +66,7 @@ def test_active_price_query_uses_partial_index() -> None:
 
 def test_listings_grid_columns_exclude_heavy_blobs() -> None:
     assert "spec_source_json" not in LISTINGS_GRID_CAR_COLUMNS
-    assert "kbb_snapshot_json" not in LISTINGS_GRID_CAR_COLUMNS
+    assert "kbb_fetched_at" not in LISTINGS_GRID_CAR_COLUMNS
     assert "description" not in LISTINGS_GRID_CAR_COLUMNS
     assert "id" in LISTINGS_GRID_CAR_COLUMNS
     assert "packages" in LISTINGS_GRID_CAR_COLUMNS

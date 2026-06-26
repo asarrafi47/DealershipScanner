@@ -5,8 +5,7 @@ Lexicon: ``data/lexicons/interior_color_buckets.json`` (``version`` field for mi
 The same phrase list applies to **exterior paint** and **interior upholstery** for
 listings filters (individual car pages keep the raw dealer string).
 
-Unknown non-empty strings → ``["other"]``. Empty / placeholder → ``[]`` (stored as JSON ``[]``
-or NULL at call sites).
+Unknown non-empty strings → ``["other"]``. Empty / placeholder → ``NULL`` in the DB (no buckets assigned).
 """
 from __future__ import annotations
 
@@ -134,9 +133,11 @@ def infer_interior_color_buckets(raw: str | None, make: str | None = None) -> li
     return out
 
 
-def interior_color_buckets_json(raw: str | None, make: str | None = None) -> str:
-    """JSON array string for SQLite (``[]`` when interior text is empty / placeholder)."""
+def interior_color_buckets_json(raw: str | None, make: str | None = None) -> str | None:
+    """JSON array string for DB storage, or ``None`` when there is no interior color / no buckets."""
     buckets = infer_interior_color_buckets(raw, make=make)
+    if not buckets:
+        return None
     return json.dumps(buckets, separators=(",", ":"))
 
 

@@ -8,9 +8,10 @@ from __future__ import annotations
 from typing import Any
 
 from backend.enrichment.knowledge_engine import merge_verified_specs
-from backend.utils.car_serialize import DISPLAY_DASH, _dealer_spec_wins, infer_condition_for_storage, normalize_condition_for_storage
+from backend.utils.car_serialize import DISPLAY_DASH, _dealer_spec_wins, infer_condition_for_storage, infer_is_cpo_for_storage, normalize_condition_for_storage
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
 from backend.utils.spec_field_normalize import collect_raw_spec_heuristic_updates
+from backend.utils.history_highlights import coalesce_history_highlights_for_storage, history_highlights_json
 from backend.utils.interior_color_buckets import interior_color_buckets_json
 
 _CLEANABLE_FOR_SQL = frozenset(
@@ -30,7 +31,6 @@ _CLEANABLE_FOR_SQL = frozenset(
         "stock_number",
         "title",
         "description",
-        "model_full_raw",
     }
 )
 
@@ -121,8 +121,32 @@ def collect_row_storage_repairs(raw: dict[str, Any]) -> dict[str, Any]:
     norm = normalize_condition_for_storage(norm_source)
     if norm:
         updates["condition"] = norm
+    if raw.get("is_cpo") is None and "is_cpo" not in updates:
+        cpo = infer_is_cpo_for_storage({**raw, **updates})
+        if cpo is not None:
+            updates["is_cpo"] = cpo
     if "interior_color" in updates:
         updates["interior_color_buckets"] = interior_color_buckets_json(
             updates.get("interior_color"), raw.get("make")
         )
+    merged_row = {**raw, **updates}
+    if not _row_has_history_highlights(merged_row.get("history_highlights")):
+        highlights = coalesce_history_highlights_for_storage(merged_row)
+        payload = history_highlights_json(highlights)
+        if payload != merged_row.get("history_highlights"):
+            updates["history_highlights"] = payload
     return updates
+
+
+def _row_has_history_highlights(raw: Any) -> bool:
+    if raw is None or raw == "" or str(raw).strip() == "[]":
+        return False
+    if isinstance(raw, list):
+        return len(raw) > 0
+    try:
+        import json
+
+        parsed = json.loads(str(raw))
+        return isinstance(parsed, list) and len(parsed) > 0
+    except (json.JSONDecodeError, TypeError):
+        return bool(str(raw).strip())

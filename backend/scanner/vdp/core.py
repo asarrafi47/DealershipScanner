@@ -2930,6 +2930,14 @@ async def _vdp_visit_one(
                 v["description"] = dom_desc[:4000]
                 if "description" not in filled:
                     filled.append("description")
+            try:
+                from backend.scanner.vdp.history import merge_vdp_history_highlights_into_vehicle
+
+                if merge_vdp_history_highlights_into_vehicle(v, last_bundle):
+                    if "history_highlights" not in filled:
+                        filled.append("history_highlights")
+            except Exception as _hist_err:
+                log.debug("VDP history highlights merge failed for %s: %s", vin[:17], _hist_err)
             if last_bundle.get("domInTransit") is True:
                 v["_in_transit"] = True
                 v["_availability_status"] = "in_transit"
