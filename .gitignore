@@ -34,6 +34,7 @@ backend/data/hybrid_run_latest.json
 backend/data/review_queue.jsonl
 
 # Local SQLite DBs (keep user/admin data off GitHub)
+laptopdb/
 users.db
 users.db-*
 dev_users.db

@@ -223,6 +223,9 @@ def init_postgres_inventory(conn: Any) -> None:
     from backend.db.inventory_db import drop_kbb_columns_from_cars, drop_model_full_raw_column
 
     cur = conn.cursor()
+    from backend.db.catalog_schema import ensure_catalog_tables
+
+    ensure_catalog_tables(cur, postgres=True)
     drop_kbb_columns_from_cars(cur, postgres=True)
     drop_model_full_raw_column(cur, postgres=True)
     conn.commit()
