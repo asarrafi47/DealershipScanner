@@ -21,6 +21,12 @@ alwaysApply: true
 - Prefer clear errors over silent `except: pass` for operator-visible behavior.
 - Run validation steps from the master todo when completing a security item.
 
+## Git and versioning
+
+- Before implementing, follow [feature-branch-workflow](../skills/feature-branch-workflow/SKILL.md): **new feature branch per task**, never commit to `main`.
+- Bump repo-root [`VERSION`](../../VERSION) (SemVer) in the same delivery as functional changes.
+- See [docs/DEVELOPMENT_WORKFLOW.md](../../docs/DEVELOPMENT_WORKFLOW.md).
+
 ## Communication
 
 - Use proper code citations (`startLine:endLine:path`) when referencing existing code.

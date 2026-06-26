@@ -29,6 +29,10 @@ At the end of each dealer, the scanner emits a single **`dealer_run_summary`** I
 - **Dual stacks**: `scanner.py` and `scanner.js` can drift (intercept rules, pagination). Prefer **one canonical** pipeline for production; when both exist, align critical behavior manually or share constants/docs until a single implementation owns the rules.
 - **VDP budget / long tail**: With low `SCANNER_VDP_EP_MAX`, rotate which dealers or runs get a higher cap periodically so thin-gallery inventory eventually receives VDP merges across scheduled jobs.
 
+## Agent workflow
+
+- Branching, commits, and SemVer: [DEVELOPMENT_WORKFLOW.md](./DEVELOPMENT_WORKFLOW.md) (skill: `.cursor/skills/feature-branch-workflow/SKILL.md`).
+
 ## Rollout steps
 
 1. **Backup** `inventory.db` (and Postgres if you host vectors there).
