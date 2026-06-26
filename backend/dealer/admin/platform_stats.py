@@ -7,6 +7,7 @@ from typing import Any
 
 from backend.db.search_analytics_db import engagement_counts, usage_summary
 from backend.dealer.admin import inventory_queries as invq
+from backend.dealer.admin.incomplete_listings_api import incomplete_listings_count
 
 _log = logging.getLogger(__name__)
 
@@ -172,6 +173,7 @@ def build_platform_dashboard(*, usage_audience: str = "all", usage_days: int = 3
     return {
         "health": health,
         "inventory": inv,
+        "incomplete_listings": incomplete_listings_count(),
         "registry_dealerships": registry_dealership_count(),
         "catalog_dealerships": health.get("catalog_dealers", 0),
         "users": users,

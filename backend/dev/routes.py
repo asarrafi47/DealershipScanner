@@ -53,7 +53,6 @@ from backend.db.inventory_db import (
     get_car_by_vin,
     get_conn,
     get_dealership_issue_stats,
-    get_incomplete_cars,
     link_cars_to_dealership_registry,
 )
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
@@ -66,7 +65,6 @@ from backend.utils.car_serialize import (
 from backend.utils.client_ip import client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.registration_validation import registration_form_error
-from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
 from backend.utils.outbound_url import validate_dev_scanner_url
 from backend.schemas.dealership import DealerCreate
 
@@ -84,8 +82,6 @@ SCANNER_PROFILES = ("default", "resilient", "bare")
 LAST_SCRAPE_SAMPLES_PATH = PROJECT_ROOT / "debug" / "last_scrape_samples.json"
 
 logger = logging.getLogger(__name__)
-
-_INCOMPLETE_ISSUE_CODES_ALLOWED = frozenset(INCOMPLETE_FIELD_LABELS.keys())
 
 _MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
 _DEV_LOGIN_RPM = int(os.environ.get("RATE_LIMIT_DEV_LOGIN_PER_MIN", "20"))
@@ -763,179 +759,26 @@ def api_dev_dealership_stats():
 
 @dev_bp.route("/api/incomplete-cars")
 def api_incomplete_cars():
-    from backend.utils.car_serialize import serialize_car_for_listings_grid
-    from backend.utils.listing_completeness import summarize_incomplete_missing_fields
+    from backend.dealer.admin.incomplete_listings_api import incomplete_cars_response
 
-    cars = get_incomplete_cars()
-    safe = []
-    for c in cars:
-        row = dict(c)
-        missing = row.pop("incomplete_missing_fields", None) or []
-        payload = serialize_car_for_listings_grid(row)
-        payload["listing_trim_display"] = payload.get("trim")
-        payload["listing_model_display"] = payload.get("model")
-        payload["incomplete_missing_fields"] = missing
-        safe.append(payload)
-    return jsonify(
-        {
-            "ok": True,
-            "cars": safe,
-            "count": len(safe),
-            "issues_summary": summarize_incomplete_missing_fields(safe),
-        }
-    )
-
-
-def _sqlite_car_row_json_safe(row: dict[str, Any]) -> dict[str, Any]:
-    """Make a SQLite ``cars`` row dict safe for ``json.dumps`` (skip raw binary blobs)."""
-    out: dict[str, Any] = {}
-    for k, v in row.items():
-        if isinstance(v, bytes):
-            out[k] = f"<binary len={len(v)}>"
-        elif isinstance(v, memoryview):
-            out[k] = f"<memoryview len={len(v)}>"
-        else:
-            out[k] = v
-    return out
-
-
-def _incomplete_export_text_body(*, issue: str, ordered_rows: list[dict[str, Any]]) -> str:
-    """Human-readable dump of raw ``cars`` columns (one block per row)."""
-    header = [
-        "# Sarrafi Collection — incomplete listing export (SQLite ``cars`` columns)",
-        f"# missing_field_code: {issue}",
-        f"# row_count: {len(ordered_rows)}",
-        f"# exported_at_utc: {datetime.now(timezone.utc).isoformat()}",
-        "",
-    ]
-    chunks: list[str] = list(header)
-    for i, r in enumerate(ordered_rows):
-        safe = _sqlite_car_row_json_safe(r)
-        cid = safe.get("id")
-        vin = safe.get("vin")
-        chunks.append("=" * 80)
-        chunks.append(f"CAR {i + 1} of {len(ordered_rows)}  id={cid!r}  vin={vin!r}")
-        chunks.append("=" * 80)
-        for k in sorted(safe.keys()):
-            chunks.append(f"{k}\t{safe[k]!r}")
-        chunks.append("")
-    return "\n".join(chunks) + "\n"
-
-
-def _reveal_path_in_os_fs(path: Path) -> None:
-    """Open the enclosing folder in the OS file manager (best-effort)."""
-    try:
-        if sys.platform == "darwin":
-            subprocess.run(["open", str(path.parent)], check=False, timeout=20)
-        elif sys.platform == "win32":
-            # Single `/select,<path>` argument (see `explorer /?`).
-            subprocess.run(
-                ["explorer", f"/select,{path.resolve()}"],
-                check=False,
-                timeout=20,
-            )
-        elif sys.platform.startswith("linux"):
-            subprocess.run(["xdg-open", str(path.parent)], check=False, timeout=20)
-    except Exception:
-        logger.debug("Could not open export folder in file manager", exc_info=True)
+    return incomplete_cars_response()
 
 
 @dev_bp.route("/api/incomplete-export", methods=["POST"])
 @dev_bp.route("/api/incomplete-cars/log-issue", methods=["POST"])
 def api_incomplete_cars_log_issue():
-    """
-    Write raw ``cars`` SQLite rows for incomplete listings with a given missing-field code to
-    ``workspace/incomplete_exports/*.txt`` and try to open that folder in the OS file manager.
-    """
+    from backend.dealer.admin.incomplete_listings_api import export_incomplete_issue
+
     payload = request.get_json(silent=True) or {}
     issue = str(payload.get("issue") or "").strip()
-    if not issue:
-        return jsonify({"ok": False, "error": "issue code required"}), 400
-    if issue not in _INCOMPLETE_ISSUE_CODES_ALLOWED:
-        return jsonify({"ok": False, "error": "invalid issue code"}), 400
-
-    cars = get_incomplete_cars()
-    ordered_ids: list[int] = []
-    seen: set[int] = set()
-    for c in cars:
-        fields = c.get("incomplete_missing_fields")
-        if not isinstance(fields, list) or issue not in fields:
-            continue
-        try:
-            cid = int(c["id"])
-        except (TypeError, ValueError, KeyError):
-            continue
-        if cid <= 0 or cid in seen:
-            continue
-        seen.add(cid)
-        ordered_ids.append(cid)
-
-    if not ordered_ids:
-        logger.info("incomplete export: no cars match issue=%r", issue)
-        return jsonify({"ok": True, "matched": 0, "issue": issue})
-
-    conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    ph = ",".join("?" * len(ordered_ids))
-    cur.execute(f"SELECT * FROM cars WHERE id IN ({ph})", ordered_ids)
-    by_id = {int(dict(r)["id"]): dict(r) for r in cur.fetchall()}
-    conn.close()
-
-    ordered_rows = [by_id[i] for i in ordered_ids if i in by_id]
-
-    slug = re.sub(r"[^a-zA-Z0-9_-]+", "_", issue).strip("_")[:80] or "issue"
-    export_dir = PROJECT_ROOT / "workspace" / "incomplete_exports"
-    export_dir.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    fname = f"incomplete_{slug}_{stamp}.txt"
-    out_path = export_dir / fname
-    out_path.write_text(_incomplete_export_text_body(issue=issue, ordered_rows=ordered_rows), encoding="utf-8")
-
-    rel_dir = export_dir.relative_to(PROJECT_ROOT).as_posix()
-    rel_file = out_path.relative_to(PROJECT_ROOT).as_posix()
-
-    logger.info(
-        "Wrote %d incomplete car row(s) to %s for issue=%r",
-        len(ordered_rows),
-        rel_file,
-        issue,
-    )
-    _reveal_path_in_os_fs(out_path)
-
-    return jsonify(
-        {
-            "ok": True,
-            "matched": len(ordered_rows),
-            "issue": issue,
-            "export_file": fname,
-            "export_dir": rel_dir,
-            "export_path": rel_file,
-        }
-    )
+    return export_incomplete_issue(issue)
 
 
 @dev_bp.route("/api/incomplete-cars/<int:car_id>", methods=["DELETE"])
 def api_delete_incomplete_car(car_id: int):
-    conn = get_conn()
-    cursor = conn.cursor()
-    try:
-        cursor.execute("DELETE FROM saved_cars WHERE car_id = ?", (car_id,))
-    except sqlite3.Error:
-        logging.getLogger("dev_routes").debug("saved_cars cleanup skipped for car_id=%s", car_id)
-    cursor.execute("DELETE FROM cars WHERE id = ?", (car_id,))
-    deleted = cursor.rowcount
-    conn.commit()
-    conn.close()
-    if deleted:
-        try:
-            from backend.db import incomplete_listings_db as ild
+    from backend.dealer.admin.incomplete_listings_api import delete_incomplete_car
 
-            ild.delete_incomplete_record(car_id)
-        except Exception:
-            logging.getLogger("dev_routes").exception("incomplete_listings cleanup after car delete failed")
-        return jsonify({"ok": True})
-    return jsonify({"ok": False, "error": "not found"}), 404
+    return delete_incomplete_car(car_id)
 
 
 @dev_bp.route("/api/audit-last-scrape")

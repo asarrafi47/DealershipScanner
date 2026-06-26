@@ -450,6 +450,10 @@
                     <span class="platform-metric__label">Registry dealerships</span>
                 </div>
                 <div class="platform-metric">
+                    <span class="platform-metric__value">{{ dashboard.incomplete_listings | default(0) }}</span>
+                    <span class="platform-metric__label">Incomplete listings</span>
+                </div>
+                <div class="platform-metric">
                     <span class="platform-metric__value">{{ dashboard.catalog_dealerships | default(0) }}</span>
                     <span class="platform-metric__label">Job catalog</span>
                 </div>
@@ -653,11 +657,27 @@
                 </span>
                 <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
             </a>
-            <a href="{{ url_for('dev.dev_dashboard') }}" class="platform-action">
+            <a href="{{ url_for('store_admin.admin_data_quality_hub') }}" class="platform-action">
+                <span class="platform-action__icon">{{ icon('chart', 18) }}</span>
+                <span class="platform-action__body">
+                    <p class="platform-action__title">Data quality</p>
+                    <p class="platform-action__sub">Incomplete listings, gap filters, dealer issue stats.</p>
+                </span>
+                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+            </a>
+            <a href="{{ url_for('store_admin.admin_scanner_ops_hub') }}" class="platform-action">
                 <span class="platform-action__icon">{{ icon('tools', 18) }}</span>
                 <span class="platform-action__body">
-                    <p class="platform-action__title">Dev scanner lab</p>
-                    <p class="platform-action__sub">Smart Import, manifests, test scans.</p>
+                    <p class="platform-action__title">Scanner ops</p>
+                    <p class="platform-action__sub">Smart import, geocode, dedupe, registry table.</p>
+                </span>
+                <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
+            </a>
+            <a href="{{ url_for('dev.scan_lab_home') }}" class="platform-action">
+                <span class="platform-action__icon">{{ icon('tools', 18) }}</span>
+                <span class="platform-action__body">
+                    <p class="platform-action__title">Scan lab</p>
+                    <p class="platform-action__sub">92694 manifest test scans (legacy /dev/scan-lab).</p>
                 </span>
                 <span class="platform-action__arrow">{{ icon('arrow-right', 16) }}</span>
             </a>

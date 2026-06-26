@@ -43,6 +43,11 @@ from backend.billing.catalog import (
 )
 from backend.billing.entitlements import entitlements_from_session, require_feature as billing_require_feature
 from backend.dealer.admin import store_admin_bp
+
+# Site-admin hub pages (must load before first url_for in templates).
+import backend.dealer.admin.data_quality_hub  # noqa: F401
+import backend.dealer.admin.scanner_ops_hub  # noqa: F401
+
 from backend.dealer.routes import bp as dealer_portal_bp
 from backend.dev.console import register_dev_console
 from backend.dev.routes import dev_bp
@@ -269,6 +274,10 @@ def _prewarm_listings_inventory_cache() -> None:
 _prewarm_listings_inventory_cache()
 app.register_blueprint(dev_bp, url_prefix="/dev")
 app.register_blueprint(store_admin_bp)
+
+from backend.dealer.admin.operator_api import register_admin_operator_api
+
+register_admin_operator_api(app)
 app.register_blueprint(dealer_portal_bp)
 app.register_blueprint(billing_bp)
 app.register_blueprint(google_oauth_bp)
@@ -421,7 +430,7 @@ def _csrf_mutating_requests():
         "api_admin_dealer_onboard",
         "api_admin_dealer_job_retry",
         "api_admin_dealer_job_smart_retry",
-    ):
+    ) or (ep and str(ep).startswith("api_admin_operator_")):
         validate_csrf_header()
     return None
 

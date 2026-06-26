@@ -53,9 +53,24 @@ document.addEventListener("DOMContentLoaded", () => {
         return raw.replace(/\/$/, "");
     }
 
-    /** e.g. "dealers" -> "{script_root}/dev/api/dealers" */
+    function operatorApiBase() {
+        const m = document.querySelector('meta[name="operator-api-base"]');
+        const raw = m ? String(m.getAttribute("content") || "").trim() : "";
+        return raw.replace(/\/$/, "");
+    }
+
+    function operatorLoginUrl() {
+        const m = document.querySelector('meta[name="operator-login-url"]');
+        if (!m) return null;
+        const raw = String(m.getAttribute("content") || "").trim();
+        return raw || "/login";
+    }
+
+    /** e.g. "dealers" -> "{script_root}/dev/api/dealers" or site-admin operator API */
     function devApi(endpoint) {
         const e = String(endpoint).replace(/^\//, "");
+        const op = operatorApiBase();
+        if (op) return `${op}/${e}`;
         const p = appPathPrefix();
         const base = p ? `${p}/dev/api` : `/dev/api`;
         return `${base}/${e}`;
@@ -74,10 +89,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const res = await fetch(url, opts);
         if (res.status === 401) {
-            const pre = appPathPrefix();
-            const loginBase = pre ? `${pre}/dev/login` : `/dev/login`;
-            window.location.href =
-                loginBase + "?next=" + encodeURIComponent(window.location.pathname + window.location.search);
+            const opLogin = operatorLoginUrl();
+            if (opLogin) {
+                window.location.href =
+                    opLogin + "?next=" + encodeURIComponent(window.location.pathname + window.location.search);
+            } else {
+                const pre = appPathPrefix();
+                const loginBase = pre ? `${pre}/dev/login` : `/dev/login`;
+                window.location.href =
+                    loginBase + "?next=" + encodeURIComponent(window.location.pathname + window.location.search);
+            }
             throw new Error("unauthorized");
         }
         return res;
@@ -108,14 +129,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const QUEUE_STALE_MSG = "Server restarted — refresh /dev and start the job again.";
+    const QUEUE_STALE_MSG = "Server restarted — refresh this page and start the job again.";
 
     function stopBulkQueueOnStale(reasonLine) {
         stopQueuePoll();
         stopPoll();
         currentQueueId = null;
         currentQueueKind = null;
-        queuePanel.hidden = true;
+        if (queuePanel) queuePanel.hidden = true;
         setImportButtonsDisabled(false);
         const line = reasonLine || QUEUE_STALE_MSG;
         if (scanLog) renderLog(scanLog, `\n${line}\n`);
@@ -171,6 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showMaint(obj) {
+        if (!maintLog) return;
         maintLog.textContent = typeof obj === "string" ? obj : JSON.stringify(obj, null, 2);
     }
 
@@ -469,7 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             currentQueueId = null;
             currentQueueKind = null;
-            queuePanel.hidden = true;
+            if (queuePanel) queuePanel.hidden = true;
             stopQueuePoll();
             activeJobId = data.job_id;
             pollTimer = setInterval(() => pollScannerJob(data.job_id), 400);
@@ -508,7 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 currentQueueId = null;
                 currentQueueKind = null;
-                queuePanel.hidden = true;
+                if (queuePanel) queuePanel.hidden = true;
                 stopQueuePoll();
                 activeJobId = data.job_id;
                 pollTimer = setInterval(() => pollScannerJob(data.job_id), 400);
@@ -533,7 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentQueueKind = "smart";
             currentQueueId = data.queue_id;
             renderQueueTable(data.items || []);
-            queuePanel.hidden = false;
+            if (queuePanel) queuePanel.hidden = false;
             stopPoll();
             queuePollTimer = setInterval(pollImportQueue, 600);
             pollImportQueue();
@@ -898,7 +920,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.ok) {
             refreshIncompleteCars();
         } else {
-            showMaint({ error: data.error || "delete failed" });
+            setIncompleteActionMsg(data.error || "delete failed");
         }
     }
 

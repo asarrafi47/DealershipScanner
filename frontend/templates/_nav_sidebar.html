@@ -28,6 +28,14 @@
             {% if ep == 'store_admin.admin_users_hub' %}aria-current="page"{% endif %}>
             {{ icon('user', 17, 'app-sidebar__icon') }}<span>Users</span>
         </a>
+        <a href="{{ url_for('store_admin.admin_data_quality_hub') }}" class="app-sidebar__link app-sidebar__link--admin{% if ep == 'store_admin.admin_data_quality_hub' %} app-sidebar__link--active{% endif %}"
+            {% if ep == 'store_admin.admin_data_quality_hub' %}aria-current="page"{% endif %}>
+            {{ icon('chart', 17, 'app-sidebar__icon') }}<span>Data quality</span>
+        </a>
+        <a href="{{ url_for('store_admin.admin_scanner_ops_hub') }}" class="app-sidebar__link app-sidebar__link--admin{% if ep == 'store_admin.admin_scanner_ops_hub' %} app-sidebar__link--active{% endif %}"
+            {% if ep == 'store_admin.admin_scanner_ops_hub' %}aria-current="page"{% endif %}>
+            {{ icon('tools', 17, 'app-sidebar__icon') }}<span>Scanner ops</span>
+        </a>
         <p class="app-sidebar__group-label">Public site</p>
         <a href="{{ url_for('listings') }}" class="app-sidebar__link{% if nav_active == 'listings' %} app-sidebar__link--active{% endif %}"
             {% if nav_active == 'listings' %}aria-current="page"{% endif %}>

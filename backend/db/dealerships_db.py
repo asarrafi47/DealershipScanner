@@ -167,19 +167,18 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
         row.get("dealer_website_url")
         or row.get("website_url")
         or ""
-    ).strip()
+    ).strip() or ""
 
     if existing_id is not None:
-        # Merge: fill blanks, OR provenance flags
+        # Merge: fill blanks, OR provenance flags (never NULL out website_url — NOT NULL column).
         rating_fetched_at = datetime.now(timezone.utc).isoformat() if row.get("google_rating") is not None or row.get("google_place_id") else None
         cursor.execute(
             """
             UPDATE dealerships SET
                 street_address     = COALESCE(NULLIF(TRIM(street_address),''),   NULLIF(TRIM(?),'')),
                 zip_code           = COALESCE(NULLIF(TRIM(zip_code),''),         NULLIF(TRIM(?),'')),
-                dealer_website_url = COALESCE(NULLIF(TRIM(dealer_website_url),''),NULLIF(TRIM(?),'')),
-                website_url        = CASE WHEN TRIM(website_url)='' OR website_url IS NULL
-                                         THEN NULLIF(TRIM(?), '') ELSE website_url END,
+                dealer_website_url = COALESCE(NULLIF(TRIM(dealer_website_url),''), NULLIF(TRIM(?), ''), ''),
+                website_url        = COALESCE(NULLIF(TRIM(?), ''), NULLIF(TRIM(website_url), ''), ''),
                 latitude           = COALESCE(latitude,  ?),
                 longitude          = COALESCE(longitude, ?),
                 osm_id             = COALESCE(osm_id,    NULLIF(TRIM(?),'')),
@@ -219,37 +218,58 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
     city = (row.get("city") or "").strip()
     state = (row.get("state") or "").strip().upper()
     rating_fetched_at = datetime.now(timezone.utc).isoformat() if row.get("google_rating") is not None or row.get("google_place_id") else None
-    cursor.execute(
-        """
-        INSERT INTO dealerships
-            (name, website_url, city, state, latitude, longitude, created_at,
-             street_address, zip_code, dealer_website_url,
-             source_dmv, source_osm, source_web, osm_id, is_active,
-             google_place_id, google_rating, google_review_count, google_rating_fetched_at)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
-        """,
-        (
-            name,
-            website_url,
-            city,
-            state,
-            row.get("latitude"),
-            row.get("longitude"),
-            now,
-            row.get("street_address") or "",
-            row.get("zip_code") or "",
-            website_url,
-            int(bool(row.get("source_dmv"))),
-            int(bool(row.get("source_osm"))),
-            int(bool(row.get("source_web"))),
-            osm_id,
-            row.get("google_place_id") or None,
-            row.get("google_rating"),
-            row.get("google_review_count"),
-            rating_fetched_at,
-        ),
+    insert_params = (
+        name,
+        website_url,
+        city,
+        state,
+        row.get("latitude"),
+        row.get("longitude"),
+        now,
+        row.get("street_address") or "",
+        row.get("zip_code") or "",
+        website_url,
+        int(bool(row.get("source_dmv"))),
+        int(bool(row.get("source_osm"))),
+        int(bool(row.get("source_web"))),
+        osm_id,
+        row.get("google_place_id") or None,
+        row.get("google_rating"),
+        row.get("google_review_count"),
+        rating_fetched_at,
     )
-    new_id = int(cursor.lastrowid)
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    if is_inventory_postgres():
+        cursor.execute(
+            """
+            INSERT INTO dealerships
+                (name, website_url, city, state, latitude, longitude, created_at,
+                 street_address, zip_code, dealer_website_url,
+                 source_dmv, source_osm, source_web, osm_id, is_active,
+                 google_place_id, google_rating, google_review_count, google_rating_fetched_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
+            RETURNING id
+            """,
+            insert_params,
+        )
+        inserted = cursor.fetchone()
+        if not inserted:
+            raise RuntimeError("INSERT INTO dealerships did not return id")
+        new_id = int(inserted[0])
+    else:
+        cursor.execute(
+            """
+            INSERT INTO dealerships
+                (name, website_url, city, state, latitude, longitude, created_at,
+                 street_address, zip_code, dealer_website_url,
+                 source_dmv, source_osm, source_web, osm_id, is_active,
+                 google_place_id, google_rating, google_review_count, google_rating_fetched_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
+            """,
+            insert_params,
+        )
+        new_id = int(cursor.lastrowid)
     conn.commit()
     conn.close()
     return new_id

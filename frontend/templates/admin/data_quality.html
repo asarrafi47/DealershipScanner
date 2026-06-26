@@ -1,0 +1,109 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Data quality{% endblock %}
+{% block extra_head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+<meta name="operator-api-base" content="/api/admin/operator">
+<meta name="operator-login-url" content="{{ url_for('login_page') }}">
+{% endblock %}
+{% block content %}
+<div class="dev-page">
+    <header class="dev-hero">
+        <p class="db-eyebrow">Site administration</p>
+        <h1 class="dev-title">Data quality</h1>
+        <p class="dev-sub">
+            Cars indexed as incomplete are hidden from public
+            <a href="{{ url_for('listings') }}">listings</a> until required spec fields are filled.
+            Use this view to find gaps, export rows for debugging, or remove bad inventory.
+        </p>
+    </header>
+
+    <section class="db-section dev-section">
+        <div class="db-section-header dev-tools-header">
+            <div>
+                <p class="db-eyebrow">Inventory gaps</p>
+                <h2 class="db-section-title">
+                    Incomplete listings
+                    <span class="dev-incomplete-count" id="dev-incomplete-count">{{ incomplete_count }}</span>
+                </h2>
+            </div>
+            <div class="dev-tool-actions">
+                <button type="button" class="secondary-button" id="dev-refresh-incomplete">Refresh</button>
+            </div>
+        </div>
+        <p class="dev-hint">Indexed when the car detail spec sheet (year through VIN) has a gap. MPG is not part of this index.</p>
+
+        <div class="dev-incomplete-toolbar-panel">
+            <div class="dev-incomplete-toolbar">
+                <div class="dev-incomplete-filter">
+                    <label for="dev-incomplete-issue-filter">Show only cars missing</label>
+                    <select id="dev-incomplete-issue-filter" autocomplete="off" disabled>
+                        <option value="">All gap types</option>
+                    </select>
+                </div>
+                <button
+                    type="button"
+                    class="secondary-button dev-incomplete-log-btn"
+                    id="dev-incomplete-log-terminal"
+                    disabled
+                    title="Writes raw car rows to workspace/incomplete_exports/*.txt (pick a gap type first)."
+                >Export cars to .txt</button>
+            </div>
+            <p class="dev-incomplete-filter-hint" id="dev-incomplete-filter-hint" hidden>No cars in this list are missing that field.</p>
+            <p class="dev-incomplete-action-msg" id="dev-incomplete-action-msg" aria-live="polite"></p>
+        </div>
+        <div class="dev-incomplete-issues" id="dev-incomplete-issues" aria-label="Most common incomplete listing gaps" hidden></div>
+        <div class="dev-incomplete-grid" id="dev-incomplete-grid">
+            <div class="dev-incomplete-empty" id="dev-incomplete-loading">
+                <p>Loading incomplete listings…</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="db-section dev-section">
+        <div class="db-section-header">
+            <p class="db-eyebrow">By dealer</p>
+            <h2 class="db-section-title">Dealerships with issues</h2>
+        </div>
+        <p class="dev-hint">Ranked by incomplete listing count — useful for spotting scanner sources that need follow-up.</p>
+        {% if dealership_stats %}
+        <div class="dev-table-wrap">
+            <table class="dev-table">
+                <thead>
+                    <tr>
+                        <th>Dealership</th>
+                        <th>Total cars</th>
+                        <th>Incomplete</th>
+                        <th>Avg quality</th>
+                        <th>Missing price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in dealership_stats %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('listings', dealer=stat.dealer_id) }}" target="_blank" class="dev-table-link">
+                                {{ stat.dealer_name or 'Unknown' }}
+                            </a>
+                        </td>
+                        <td class="dev-mono">{{ stat.total_cars }}</td>
+                        <td class="dev-mono" style="color: {% if stat.incomplete_count > 0 %}#d32f2f{% else %}#4caf50{% endif %}">
+                            {{ stat.incomplete_count }}
+                        </td>
+                        <td class="dev-mono">{{ "%.2f"|format(stat.avg_quality_score or 0) }}</td>
+                        <td class="dev-mono">{{ stat.no_price_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="dev-incomplete-empty">
+            <p>No dealership data available yet.</p>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='dev.js') }}" nonce="{{ csp_nonce }}"></script>
+{% endblock %}
