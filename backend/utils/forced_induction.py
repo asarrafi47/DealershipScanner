@@ -8,6 +8,65 @@ from __future__ import annotations
 import re
 from typing import Any
 
+FORCED_INDUCTION_NATURALLY_ASPIRATED = "Naturally Aspirated"
+_FI_NA_LOWER = FORCED_INDUCTION_NATURALLY_ASPIRATED.lower()
+
+
+def forced_induction_filter_label(raw: Any) -> str:
+    """Map empty/null forced induction to ``Naturally Aspirated`` for filters and display."""
+    from backend.utils.field_clean import is_effectively_empty
+
+    if is_effectively_empty(raw):
+        return FORCED_INDUCTION_NATURALLY_ASPIRATED
+    s = str(raw).strip()
+    if s.lower() == _FI_NA_LOWER:
+        return FORCED_INDUCTION_NATURALLY_ASPIRATED
+    return s
+
+
+def is_naturally_aspirated_filter_value(value: Any) -> bool:
+    return str(value or "").strip().lower() == _FI_NA_LOWER
+
+
+def sort_forced_induction_filter_options(values: list[str]) -> list[str]:
+    """Dedupe, normalize labels, and put Naturally Aspirated first."""
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for v in values:
+        label = forced_induction_filter_label(v)
+        if label not in seen:
+            seen.add(label)
+            ordered.append(label)
+    na = FORCED_INDUCTION_NATURALLY_ASPIRATED
+    rest = sorted([v for v in ordered if v != na], key=str.lower)
+    return ([na] if na in seen else []) + rest
+
+
+def forced_induction_sql_filter_clause(selected: list[str]) -> tuple[str, list[Any]]:
+    """Build ``AND (... OR ...)`` SQL for listings forced-induction facet filters."""
+    if not selected:
+        return "", []
+    labels = [forced_induction_filter_label(v) for v in selected if str(v or "").strip()]
+    if not labels:
+        return "", []
+    has_na = any(is_naturally_aspirated_filter_value(v) for v in labels)
+    explicit = [v for v in labels if not is_naturally_aspirated_filter_value(v)]
+    parts: list[str] = []
+    params: list[Any] = []
+    if has_na:
+        parts.append(
+            "(forced_induction IS NULL OR TRIM(IFNULL(forced_induction, '')) = '' "
+            "OR LOWER(TRIM(forced_induction)) = ?)"
+        )
+        params.append(_FI_NA_LOWER)
+    if explicit:
+        ph = ", ".join("?" * len(explicit))
+        parts.append(f"TRIM(forced_induction) IN ({ph})")
+        params.extend(explicit)
+    if not parts:
+        return "", []
+    return " AND (" + " OR ".join(parts) + ")", params
+
 _TWIN_TURBO_RE = re.compile(
     r"twin[- ]?turbo|biturbo|bi[- ]turbo|twin[- ]charged|twin[- ]scroll.*turbo",
     re.I,

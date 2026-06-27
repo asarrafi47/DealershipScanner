@@ -1252,15 +1252,18 @@ def serialize_car_for_api(
     out["trim"] = trim_d
     out["engine_display"] = engine_disp
 
-    # Forced induction: use stored value or compute on the fly.
+    # Forced induction: use stored value or compute on the fly; null → Naturally Aspirated.
     _fi = c.get("forced_induction") or ""
     if not _fi.strip():
         try:
             from backend.utils.forced_induction import classify_forced_induction_from_car_row
+
             _fi = classify_forced_induction_from_car_row(c) or ""
         except Exception:
             _fi = ""
-    out["forced_induction"] = _fi or None
+    from backend.utils.forced_induction import forced_induction_filter_label
+
+    out["forced_induction"] = forced_induction_filter_label(_fi if _fi.strip() else None)
 
     ft_override = _effective_fuel_type_for_display(c, engine_disp)
     if ft_override:
@@ -1529,6 +1532,7 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
         return {}
     c = clean_car_row_dict(dict(car))
     from backend.utils.field_clean import normalize_body_style_for_car
+    from backend.utils.forced_induction import forced_induction_filter_label
     from backend.utils.interior_color_buckets import infer_paint_color_buckets, parse_stored_buckets
 
     model_d, trim_d = apply_bmw_model_trim_display(c)
@@ -1557,6 +1561,7 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
         "cylinders": num("cylinders"),
         "transmission": format_display_value(c.get("transmission")),
         "drivetrain": format_display_value(dt_stored),
+        "forced_induction": forced_induction_filter_label(c.get("forced_induction")),
         "body_style": format_display_value(
             normalize_body_style_for_car(
                 c.get("body_style"),

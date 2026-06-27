@@ -1553,6 +1553,7 @@ def api_listings_filter_options():
             "cylinders": opts.get("cylinders") or [],
             "transmissions": opts.get("transmissions") or [],
             "drivetrains": opts.get("drivetrains") or [],
+            "forced_induction_types": opts.get("forced_induction_types") or [],
             "body_styles": opts.get("body_styles") or [],
             "exterior_colors": opts.get("exterior_colors") or [],
             "interior_colors": opts.get("interior_colors") or [],

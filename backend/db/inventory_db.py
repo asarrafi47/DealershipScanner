@@ -1190,6 +1190,7 @@ def _equipment_needle_params(needle: str) -> list[str]:
 
 def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 cylinders=None, transmissions=None, drivetrains=None,
+                forced_induction_types=None,
                 body_styles=None,
                 exterior_colors=None, interior_colors=None,
                 interior_color_bucket_filters=None,
@@ -1361,6 +1362,13 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     add_multi("cylinders", [int(c) for c in cylinders] if cylinders else None)
     add_multi("transmission", transmissions)
     add_multi("drivetrain", drivetrains)
+    if forced_induction_types:
+        from backend.utils.forced_induction import forced_induction_sql_filter_clause
+
+        fi_clause, fi_params = forced_induction_sql_filter_clause(list(forced_induction_types))
+        if fi_clause:
+            query += fi_clause
+            params.extend(fi_params)
     add_multi_ci("body_style", body_styles)
 
     pkg_single, pkg_or, pkg_and = _normalize_equipment_needles(
@@ -2073,6 +2081,23 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         cylinders       = distinct("cylinders")
         transmissions   = [t for t in distinct("transmission") if _facet_transmission_sane(t)]
         drivetrains     = distinct("drivetrain")
+        from backend.utils.forced_induction import (
+            forced_induction_filter_label,
+            sort_forced_induction_filter_options,
+        )
+
+        cursor.execute(
+            f"""
+            SELECT DISTINCT forced_induction FROM cars
+            WHERE {active}
+            """
+        )
+        forced_induction_types = sort_forced_induction_filter_options(
+            [
+                forced_induction_filter_label(r[0])
+                for r in cursor.fetchall()
+            ]
+        )
         cursor.execute(
             f"""
             SELECT exterior_color, interior_color, interior_color_buckets
@@ -2134,7 +2159,8 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         # The frontend embeds these as data-* on each checkbox so it can filter
         # any dropdown based on any combination of other active filters.
         cursor.execute(f"""
-            SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style
+            SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style,
+                   forced_induction
             FROM cars
             WHERE {active}
               AND make IS NOT NULL AND TRIM(make) != ''
@@ -2143,7 +2169,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         raw_car_rows = cursor.fetchall()
         car_rows: list = []
         for row in raw_car_rows:
-            make, model, trim, fuel_type, cyl, drive, body_st = (
+            make, model, trim, fuel_type, cyl, drive, body_st, fi_raw = (
                 row[0],
                 row[1],
                 row[2],
@@ -2151,6 +2177,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 row[4],
                 row[5],
                 row[6],
+                row[7],
             )
             if is_effectively_empty(make) or is_effectively_empty(model):
                 continue
@@ -2168,7 +2195,8 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 body_st = None
             else:
                 body_st = coerce_body_style_stored(body_st)
-            car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st))
+            forced_induction = forced_induction_filter_label(fi_raw)
+            car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st, forced_induction))
 
     # Derive distinct makes/models/trims with normalized keys (one UI option per logical value).
     make_variants: dict[str, list[str]] = {}
@@ -2233,6 +2261,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         "cylinders":       cylinders,
         "transmissions":   transmissions,
         "drivetrains":     drivetrains,
+        "forced_induction_types": forced_induction_types,
         "body_styles":     body_styles_list,
         "exterior_colors": exterior_colors,
         "interior_colors": interior_colors,
@@ -2250,6 +2279,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 "cyl": r[4],
                 "drive": r[5],
                 "body_style": r[6] if len(r) > 6 else None,
+                "forced_induction": r[7] if len(r) > 7 else None,
             }
             for r in car_rows
         ],

@@ -619,6 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const trims  = skip("trim")       ? [] : checked("trim");
         const fuels  = skip("fuel_type")  ? [] : checked("fuel_type");
         const drives = skip("drivetrain") ? [] : checked("drivetrain");
+        const forced = skip("forced_induction") ? [] : checked("forced_induction");
         const bodies = skip("body_style") ? [] : checked("body_style");
         const cyls   = skip("cylinders")  ? [] : checked("cylinders");
 
@@ -628,6 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (trims.length  && !valueInListCI(trims, r.trim))        return false;
             if (fuels.length  && !fuels.includes(r.fuel))        return false;
             if (drives.length && !drives.includes(r.drive))      return false;
+            if (forced.length && !forced.includes(r.forced_induction)) return false;
             if (bodies.length && !valueInListCI(bodies, r.body_style)) return false;
             if (cyls.length   && !cyls.includes(String(r.cyl))) return false;
             return true;
@@ -652,6 +654,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Exclude model from fuel_type compat so selecting an electric model doesn't hide gas options
         cascadeParam("fuel_type",   r => r.fuel,        ["options-fuel_type",   "acc-options-fuel_type"], ["model"]);
         cascadeParam("drivetrain",  r => r.drive,       ["options-drivetrain",  "acc-options-drivetrain"]);
+        cascadeParam("forced_induction", r => r.forced_induction, ["options-forced_induction", "acc-options-forced_induction"]);
         cascadeParam(
             "body_style",
             r => (r.body_style != null && String(r.body_style).trim() !== "" ? String(r.body_style) : ""),
@@ -731,7 +734,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (param === "model") {
             return [normFilterStr(r.make), normFilterStr(r.model)].join("\0");
         }
-        return normFilterStr(r.make ?? r.model ?? r.trim ?? r.fuel ?? r.drive ?? r.body_style ?? r.cyl ?? "");
+        return normFilterStr(r.make ?? r.model ?? r.trim ?? r.fuel ?? r.drive ?? r.forced_induction ?? r.body_style ?? r.cyl ?? "");
     }
 
     function cascadeOptionKey(param, label, cb) {
@@ -858,7 +861,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateAllCounts() {
         ["country", "make", "model", "trim", "fuel_type", "cylinders",
-         "transmission", "drivetrain", "body_style", "exterior_color", "interior_color", "package"]
+         "transmission", "drivetrain", "forced_induction", "body_style", "exterior_color", "interior_color", "package"]
             .forEach(updateCount);
 
         // Sidebar total badge
@@ -1754,7 +1757,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function syncUrl() {
         const params = new URLSearchParams();
         const multiParams = ["make", "model", "trim", "fuel_type", "cylinders", "transmission",
-                             "drivetrain", "body_style", "exterior_color", "interior_color", "country", "package"];
+                             "drivetrain", "forced_induction", "body_style", "exterior_color", "interior_color", "country", "package"];
         for (const name of multiParams) {
             const seen = new Set();
             document.querySelectorAll(`input[name="${name}"]:checked`).forEach(cb => {
@@ -1827,6 +1830,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const cyls = checked("cylinders");
         const trans = checked("transmission");
         const drives = checked("drivetrain");
+        const forced = checked("forced_induction");
         const bodies = checked("body_style");
         const extColors = checked("exterior_color");
         const intColors = checked("interior_color");
@@ -1854,6 +1858,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cyls,
             trans,
             drives,
+            forced,
             bodies,
             extColors,
             intColors,
@@ -1872,6 +1877,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (state.cyls.length && !state.cyls.includes(String(c.cylinders))) return false;
         if (state.trans.length && !valueInListCI(state.trans, c.transmission)) return false;
         if (state.drives.length && !valueInListCI(state.drives, c.drivetrain)) return false;
+        if (state.forced.length && !valueInListCI(state.forced, c.forced_induction)) return false;
         if (state.bodies.length && !valueInListCI(state.bodies, c.body_style)) return false;
         if (state.extColors.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", state.extColors)) return false;
         if (state.intColors.length && !carMatchesPaintFamilyBuckets(c, "interior_color", state.intColors)) return false;
@@ -2015,6 +2021,7 @@ document.addEventListener("DOMContentLoaded", () => {
             c.model,
             c.fuel_type,
             c.drivetrain,
+            c.forced_induction,
             c.exterior_color,
             c.interior_color,
             c.body_style,
@@ -2078,6 +2085,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const drives = filters.drivetrain;
         const driveList = Array.isArray(drives) ? drives : drives ? [drives] : [];
         if (driveList.length && !valueInListCISmart(driveList, c.drivetrain)) return false;
+
+        const forced = filters.forced_induction;
+        const forcedList = Array.isArray(forced) ? forced : forced ? [forced] : [];
+        if (forcedList.length && !valueInListCISmart(forcedList, c.forced_induction)) return false;
 
         if (filters.fuel_type && !valueInListCISmart([filters.fuel_type], c.fuel_type)) return false;
 
@@ -2199,6 +2210,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (filters.model) checkFilters("model", filters.model);
         }
         if (filters.drivetrain) checkFilter("drivetrain", filters.drivetrain);
+        if (filters.forced_induction) checkFilter("forced_induction", filters.forced_induction);
         if (filters.fuel_type) checkFilter("fuel_type", filters.fuel_type);
         if (filters.cylinders != null) checkFilter("cylinders", String(filters.cylinders));
         if (filters.body_style) {
@@ -2255,7 +2267,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const rows = [];
         for (const c of cars) {
             const key = [c.make, c.model, c.trim, c.fuel_type,
-                         c.cylinders, c.drivetrain, c.body_style].join("\x00");
+                         c.cylinders, c.drivetrain, c.forced_induction, c.body_style].join("\x00");
             if (seen.has(key)) continue;
             seen.add(key);
             rows.push({
@@ -2265,6 +2277,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 fuel:       c.fuel_type   || null,
                 cyl:        c.cylinders != null ? Number(c.cylinders) : null,
                 drive:      c.drivetrain  || null,
+                forced_induction: c.forced_induction || "Naturally Aspirated",
                 body_style: c.body_style  || null,
             });
         }
@@ -2616,7 +2629,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const FILTER_CHIP_LABELS = {
         make: "Make", model: "Model", trim: "Trim", fuel_type: "Fuel",
         cylinders: "Cylinders", transmission: "Trans.", drivetrain: "Drive",
-        body_style: "Body", exterior_color: "Exterior", interior_color: "Interior",
+        forced_induction: "Induction", body_style: "Body", exterior_color: "Exterior", interior_color: "Interior",
         country: "Country", package: "Package",
         max_price: "Price", max_mileage: "Mileage", inventory_condition: "Condition",
         zip_code: "ZIP", radius: "Radius", q: "Search",
@@ -2653,7 +2666,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const chips = [];
         const seen = new Set();
         const multiParams = ["make", "model", "trim", "fuel_type", "cylinders", "transmission",
-            "drivetrain", "body_style", "exterior_color", "interior_color", "country", "package"];
+            "drivetrain", "forced_induction", "body_style", "exterior_color", "interior_color", "country", "package"];
         for (const name of multiParams) {
             document.querySelectorAll(`input[name="${name}"]:checked`).forEach((cb) => {
                 if (!filterOptionVisible(cb)) return;

@@ -35,6 +35,7 @@ def listings_page(*, listings_poll_ms: int = 0):
         "cylinders": g("cylinders"),
         "transmission": g("transmission"),
         "drivetrain": g("drivetrain"),
+        "forced_induction": g("forced_induction"),
         "body_style": g("body_style"),
         "exterior_color": g("exterior_color"),
         "interior_color": g("interior_color"),

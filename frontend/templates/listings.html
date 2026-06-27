@@ -288,6 +288,18 @@
                 </div>
                 {% endcall %}
 
+                {% call acc("Forced induction", "forced_induction") %}
+                <div class="acc-options" id="options-forced_induction">
+                    {% for fi in options.forced_induction_types %}
+                    <label class="filter-option">
+                        <input type="checkbox" name="forced_induction" value="{{ fi }}"
+                            {% if active is defined and fi in active.get('forced_induction', []) %}checked{% endif %}>
+                        <span>{{ fi }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endcall %}
+
                 {% call acc("Body style", "body_style") %}
                 <div class="acc-options" id="options-body_style">
                     {% for b in options.body_styles %}
@@ -543,6 +555,18 @@
                             <input type="checkbox" name="drivetrain" value="{{ d }}"
                                 {% if active is defined and d in active.get('drivetrain', []) %}checked{% endif %}>
                             <span>{{ d }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Forced induction", "forced_induction") %}
+                    <div class="acc-options" id="acc-options-forced_induction">
+                        {% for fi in options.forced_induction_types %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="forced_induction" value="{{ fi }}"
+                                {% if active is defined and fi in active.get('forced_induction', []) %}checked{% endif %}>
+                            <span>{{ fi }}</span>
                         </label>
                         {% endfor %}
                     </div>
