@@ -93,7 +93,7 @@ flowchart TB
 | Layer | Technology | Notes |
 |-------|------------|--------|
 | Web | Python 3.12, Flask, Gunicorn | Consumer UI, admin, REST + mobile APIs |
-| Inventory | PostgreSQL 16 | `cars`, `dealer_catalog`, `dealer_jobs`, pgvector embeddings |
+| Inventory | PostgreSQL 16 | `cars`, `dealer_scan_registry`, `dealer_jobs`, pgvector embeddings |
 | App auth | SQLite (SQLCipher-capable) | `users.db` on persistent `/data` volume |
 | Scraper | Python `scanner.py`, Node `scanner.js`, Playwright, Puppeteer | Per-dealer jobs from `dealer_jobs` queue |
 | Search | SQL + pgvector hybrid | See `docs/LISTINGS_PGVECTOR_SEARCH.md` |
@@ -148,7 +148,7 @@ flask --app backend.main run
 | `web` | HTTP, admin, APIs | `Dockerfile.web` → Gunicorn |
 | `Postgres` | Inventory + job queue | Railway template |
 | `scanner-worker` | Claims `dealer_jobs`, runs scrapes | Same image; `RAILWAY_SERVICE_NAME=scanner-worker` → worker loop |
-| `scanner-scheduler` | Enqueues due refreshes from `dealer_catalog` | Same image; `RAILWAY_SERVICE_NAME=scanner-scheduler` → scheduler loop |
+| `scanner-scheduler` | Enqueues due refreshes from `dealer_scan_registry` | Same image; `RAILWAY_SERVICE_NAME=scanner-scheduler` → scheduler loop |
 
 Root `railway.toml` points all Git-connected services at `Dockerfile.web`. **`docker-entrypoint-web.sh` dispatches** by `RAILWAY_SERVICE_NAME` so scanner services do not run Gunicorn. Worker and scheduler expose `GET /health` via a lightweight sidecar HTTP server for Railway healthchecks.
 
@@ -174,7 +174,7 @@ Deep deploy runbook: [`deploy/railway/README.md`](deploy/railway/README.md).
 |-----------|-------------------|
 | Job queue | `dealer_jobs` in Postgres — `backend/scanner/job_queue.py` |
 | Worker | `scripts/scanner_worker_loop.py` — poll, claim, `scanner.py` or `scanner.js` |
-| Scheduler | `scripts/scanner_scheduler_loop.py` — `dealer_catalog.next_scan_at` |
+| Scheduler | `scripts/scanner_scheduler_loop.py` — `dealer_scan_registry.next_scan_at` |
 | Admin UI | `/admin/dealers` — enqueue onboard/refresh, view cars + human-readable results |
 | CLI | `python scanner.py --scan-only`, `python discovery.py`, `python post_scan.py` |
 

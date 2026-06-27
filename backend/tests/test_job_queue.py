@@ -5,6 +5,60 @@ from __future__ import annotations
 from backend.scanner import job_queue as jq
 
 
+class _MigrationCursor:
+    """Minimal cursor stub for migrate_dealer_catalog_to_scan_registry()."""
+
+    def __init__(self, *, has_old: bool, has_new: bool) -> None:
+        self.has_old = has_old
+        self.has_new = has_new
+        self.executed: list[tuple[str, tuple | None]] = []
+        self._exist_checks = 0
+
+    def execute(self, sql: str, params: tuple | None = None) -> None:
+        self.executed.append((sql.strip(), params))
+
+    def fetchone(self) -> tuple[bool]:
+        if self._exist_checks == 0:
+            self._exist_checks += 1
+            return (self.has_old,)
+        if self._exist_checks == 1:
+            self._exist_checks += 1
+            return (self.has_new,)
+        return (False,)
+
+
+def _migration_sql(cur: _MigrationCursor) -> str:
+    return "\n".join(sql for sql, _params in cur.executed)
+
+
+def test_migrate_dealer_catalog_renames_when_only_legacy_exists() -> None:
+    cur = _MigrationCursor(has_old=True, has_new=False)
+    assert jq.migrate_dealer_catalog_to_scan_registry(cur) is True
+    sql = _migration_sql(cur)
+    assert "ALTER TABLE dealer_catalog RENAME TO dealer_scan_registry" in sql
+    assert "idx_dealer_catalog_next_scan" in sql
+    assert "DROP TABLE dealer_catalog" not in sql
+
+
+def test_migrate_dealer_catalog_merges_when_both_tables_exist() -> None:
+    cur = _MigrationCursor(has_old=True, has_new=True)
+    assert jq.migrate_dealer_catalog_to_scan_registry(cur) is True
+    sql = _migration_sql(cur)
+    assert "INSERT INTO dealer_scan_registry" in sql
+    assert "FROM dealer_catalog" in sql
+    assert "ON CONFLICT (dealer_id) DO UPDATE SET" in sql
+    assert "EXCLUDED.updated_at >= dealer_scan_registry.updated_at" in sql
+    assert "DROP TABLE dealer_catalog" in sql
+    assert "idx_dealer_catalog_next_scan" in sql
+    assert "ALTER TABLE dealer_catalog RENAME TO" not in sql
+
+
+def test_migrate_dealer_catalog_noop_when_legacy_missing() -> None:
+    cur = _MigrationCursor(has_old=False, has_new=True)
+    assert jq.migrate_dealer_catalog_to_scan_registry(cur) is False
+    assert len(cur.executed) == 2
+
+
 def test_default_scan_interval_hours(monkeypatch) -> None:
     monkeypatch.delenv("SCANNER_DEFAULT_INTERVAL_HOURS", raising=False)
     assert jq._default_scan_interval_hours() == 24

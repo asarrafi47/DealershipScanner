@@ -105,7 +105,7 @@ def _option_rows(vehicle_id: int) -> list[dict[str, Any]]:
         SELECT option_name, option_code, option_msrp, category, description
         FROM catalog_options
         WHERE vehicle_id = ?
-        ORDER BY COALESCE(sort_order, 9999), id
+        ORDER BY id
         """,
         (int(vehicle_id),),
     )
@@ -115,7 +115,7 @@ def _color_rows(vehicle_id: int) -> list[str]:
     ext = _fetch_rows(
         """
         SELECT color_name FROM catalog_exterior_colors
-        WHERE vehicle_id = ? ORDER BY COALESCE(sort_order, 9999), id
+        WHERE vehicle_id = ? ORDER BY id
         """,
         (int(vehicle_id),),
     )

@@ -25,11 +25,77 @@ def _worker_id() -> str:
     return (os.environ.get("SCANNER_WORKER_ID") or "").strip() or f"worker-{uuid.uuid4().hex[:8]}"
 
 
+def _rename_legacy_dealer_catalog_index(cur) -> None:
+    cur.execute(
+        "ALTER INDEX IF EXISTS idx_dealer_catalog_next_scan "
+        "RENAME TO idx_dealer_scan_registry_next_scan"
+    )
+
+
+def _merge_dealer_catalog_into_scan_registry(cur) -> None:
+    """Upsert legacy ``dealer_catalog`` rows into ``dealer_scan_registry``, keeping newer ``updated_at``."""
+    old = _LEGACY_DEALER_CATALOG_TABLE
+    new = DEALER_SCAN_REGISTRY_TABLE
+    cur.execute(
+        f"""
+        INSERT INTO {new} (
+            dealer_id, registry_id, provider, inventory_mode, inventory_endpoint,
+            site_config_json, last_vin_fingerprint, scan_interval_hours,
+            next_scan_at, onboarded_at, last_scan_at, updated_at
+        )
+        SELECT
+            dealer_id, registry_id, provider, inventory_mode, inventory_endpoint,
+            site_config_json, last_vin_fingerprint, scan_interval_hours,
+            next_scan_at, onboarded_at, last_scan_at, updated_at
+        FROM {old}
+        ON CONFLICT (dealer_id) DO UPDATE SET
+            registry_id = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.registry_id ELSE {new}.registry_id END,
+            provider = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.provider ELSE {new}.provider END,
+            inventory_mode = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.inventory_mode ELSE {new}.inventory_mode END,
+            inventory_endpoint = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.inventory_endpoint ELSE {new}.inventory_endpoint END,
+            site_config_json = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.site_config_json ELSE {new}.site_config_json END,
+            last_vin_fingerprint = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.last_vin_fingerprint ELSE {new}.last_vin_fingerprint END,
+            scan_interval_hours = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.scan_interval_hours ELSE {new}.scan_interval_hours END,
+            next_scan_at = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.next_scan_at ELSE {new}.next_scan_at END,
+            onboarded_at = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.onboarded_at ELSE {new}.onboarded_at END,
+            last_scan_at = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.last_scan_at ELSE {new}.last_scan_at END,
+            updated_at = CASE
+                WHEN EXCLUDED.updated_at >= {new}.updated_at
+                THEN EXCLUDED.updated_at ELSE {new}.updated_at END
+        """
+    )
+    cur.execute(f"DROP TABLE {old}")
+    _rename_legacy_dealer_catalog_index(cur)
+
+
 def migrate_dealer_catalog_to_scan_registry(cur) -> bool:
     """
-    One-time rename ``dealer_catalog`` → ``dealer_scan_registry``.
+    One-time migration ``dealer_catalog`` → ``dealer_scan_registry``.
 
-    Returns True when the legacy table was renamed.
+    Renames the legacy table when only it exists; merges rows and drops the legacy
+    table when both exist.
+
+    Returns True when the legacy table was renamed or merged away.
     """
     cur.execute(
         """
@@ -55,10 +121,10 @@ def migrate_dealer_catalog_to_scan_registry(cur) -> bool:
         cur.execute(
             f"ALTER TABLE {_LEGACY_DEALER_CATALOG_TABLE} RENAME TO {DEALER_SCAN_REGISTRY_TABLE}"
         )
-        cur.execute(
-            "ALTER INDEX IF EXISTS idx_dealer_catalog_next_scan "
-            "RENAME TO idx_dealer_scan_registry_next_scan"
-        )
+        _rename_legacy_dealer_catalog_index(cur)
+        return True
+    if has_old and has_new:
+        _merge_dealer_catalog_into_scan_registry(cur)
         return True
     return False
 

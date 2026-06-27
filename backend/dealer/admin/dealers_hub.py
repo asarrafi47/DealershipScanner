@@ -4,12 +4,23 @@ from __future__ import annotations
 
 from flask import flash, redirect, render_template, request, url_for
 
+from backend.dealer.admin.onboard_api import request_dealer_onboard
 from backend.dealer.admin.routes import _session_profile, store_admin_bp
 from backend.db.inventory_pg import is_inventory_postgres
-from backend.scanner.job_queue import enqueue_job, list_dealer_scan_registry, list_recent_jobs
+from backend.scanner.job_queue import list_dealer_scan_registry, list_recent_jobs
 from backend.scanner.scrape_confidence import job_display_status
+from backend.utils.client_ip import client_ip
 from backend.utils.csrf import validate_csrf_form
+from backend.utils.ip_rate_limit import allow_request
 from backend.utils.roles import is_admin_role
+
+_ONBOARD_FLASH_MESSAGES = {
+    "invalid_url": "Enter a valid http or https inventory URL.",
+    "invalid_dealer_id": "Dealer ID must be lowercase letters, numbers, and hyphens only.",
+    "postgres_required": "Postgres inventory (INVENTORY_DATABASE_URL) is required for job queue.",
+    "enqueue_failed": "Failed to enqueue onboard job. Try again.",
+    "rate_limited": "Too many onboard requests from your network. Try again in an hour.",
+}
 
 
 def _require_site_admin():
@@ -29,23 +40,31 @@ def admin_dealers_hub():
     postgres_ok = is_inventory_postgres()
     if request.method == "POST":
         validate_csrf_form()
-        if not postgres_ok:
-            flash("Postgres inventory (INVENTORY_DATABASE_URL) is required for job queue.", "error")
+        ip = client_ip(request)
+        if not allow_request(f"dealer-onboard:{ip}", max_events=30, window_seconds=3600.0):
+            flash(_ONBOARD_FLASH_MESSAGES["rate_limited"], "error")
         else:
-            dealer_id = (request.form.get("dealer_id") or "").strip()
             url = (request.form.get("url") or "").strip()
-            if not dealer_id or not url:
-                flash("dealer_id and url are required.", "error")
+            dealer_id = (request.form.get("dealer_id") or "").strip() or None
+            name = (request.form.get("name") or "").strip() or None
+            if not url:
+                flash("URL is required.", "error")
             else:
-                job_id = enqueue_job(
+                ok, err, data = request_dealer_onboard(
+                    url=url,
                     dealer_id=dealer_id,
-                    job_type="onboard",
-                    payload={"url": url},
+                    name=name,
                 )
-                if job_id:
-                    flash(f"Queued onboard job #{job_id} for {dealer_id}.", "success")
+                if ok:
+                    flash(
+                        f"Queued onboard job #{data['job_id']} for {data['dealer_id']}.",
+                        "success",
+                    )
                 else:
-                    flash("Failed to enqueue job.", "error")
+                    flash(
+                        _ONBOARD_FLASH_MESSAGES.get(err, "Failed to queue onboard job."),
+                        "error",
+                    )
         return redirect(url_for("store_admin.admin_dealers_hub"))
 
     scan_registry = list_dealer_scan_registry(limit=50) if postgres_ok else []

@@ -30,9 +30,10 @@ def _subprocess_env(payload: dict[str, Any]) -> dict[str, str]:
         pw = _playwright_chromium_path()
         if pw:
             env["PUPPETEER_EXECUTABLE_PATH"] = pw
-    for key, val in (payload.get("retry_env") or {}).items():
-        if key:
-            env[str(key)] = str(val)
+    from backend.scanner.retry_env import filter_retry_env
+
+    for key, val in filter_retry_env(payload.get("retry_env")).items():
+        env[key] = val
     return env
 
 

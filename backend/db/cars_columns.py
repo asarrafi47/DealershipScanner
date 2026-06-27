@@ -47,14 +47,8 @@ def cars_has_column(name: str) -> bool:
     return name in cars_table_columns()
 
 
-def cars_forced_induction_sql_expr(*, alias: str = "cars") -> str:
-    """
-    SQL expression for forced induction on a listing row.
-
-    Uses ``cars.forced_induction`` when present; otherwise best-match ``epa_master`` row.
-    """
-    if cars_has_column("forced_induction"):
-        return f"{alias}.forced_induction"
+def _epa_forced_induction_subquery_sql(*, alias: str = "cars") -> str:
+    """Best-match ``epa_master.forced_induction`` for a listing row."""
     return f"""(
         SELECT e.forced_induction
         FROM epa_master e
@@ -69,3 +63,17 @@ def cars_forced_induction_sql_expr(*, alias: str = "cars") -> str:
           e.id
         LIMIT 1
     )"""
+
+
+def cars_forced_induction_sql_expr(*, alias: str = "cars") -> str:
+    """
+    SQL expression for forced induction on a listing row.
+
+    Uses ``cars.forced_induction`` when populated; otherwise best-match ``epa_master`` row.
+    """
+    epa = _epa_forced_induction_subquery_sql(alias=alias)
+    if cars_has_column("forced_induction"):
+        return (
+            f"COALESCE(NULLIF(TRIM({alias}.forced_induction), ''), {epa})"
+        )
+    return epa

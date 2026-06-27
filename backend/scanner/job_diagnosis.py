@@ -13,6 +13,8 @@ import os
 import re
 from typing import Any
 
+from backend.scanner.retry_env import filter_retry_env, is_retry_env_key_allowed
+
 _log = logging.getLogger(__name__)
 
 _MODEL = "claude-haiku-4-5-20251001"
@@ -218,9 +220,11 @@ def _normalize_diagnosis(raw: dict[str, Any]) -> dict[str, Any]:
             continue
         t = (a.get("type") or "").strip().lower()
         if t == "set_env" and a.get("key"):
-            clean_actions.append(
-                {"type": "set_env", "key": str(a["key"]), "value": str(a.get("value") or "")}
-            )
+            key = str(a["key"])
+            if is_retry_env_key_allowed(key):
+                clean_actions.append(
+                    {"type": "set_env", "key": key, "value": str(a.get("value") or "")}
+                )
         elif t == "set_profile" and a.get("value"):
             clean_actions.append({"type": "set_profile", "value": str(a["value"])})
         elif t == "use_python_scanner":
@@ -291,19 +295,23 @@ def apply_diagnosis_to_payload(
     """Merge retry hints from diagnosis into a new job payload."""
     out = dict(base_payload or {})
     out.pop("ai_diagnosis", None)
-    retry_env = dict(out.get("retry_env") or {})
+    retry_env = filter_retry_env(out.get("retry_env"))
     for action in diagnosis.get("retry_actions") or []:
         if not isinstance(action, dict):
             continue
         t = action.get("type")
         if t == "set_env" and action.get("key"):
-            retry_env[str(action["key"])] = str(action.get("value") or "")
+            key = str(action["key"])
+            if is_retry_env_key_allowed(key):
+                retry_env[key] = str(action.get("value") or "")
         elif t == "set_profile" and action.get("value"):
             out["profile"] = str(action["value"])
         elif t == "use_python_scanner":
             out["use_python_scanner"] = True
     if retry_env:
         out["retry_env"] = retry_env
+    elif "retry_env" in out:
+        out.pop("retry_env", None)
     out["ai_diagnosis"] = {
         "summary": diagnosis.get("summary"),
         "category": diagnosis.get("category"),

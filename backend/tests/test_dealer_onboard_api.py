@@ -6,7 +6,12 @@ import json
 
 from backend.dealer.admin.onboard_api import request_dealer_onboard
 from backend.db.users_db import init_users_db, save_user
-from backend.main import app
+
+
+def _test_client():
+    from backend.main import app
+
+    return app.test_client()
 
 
 def test_request_dealer_onboard_requires_postgres(monkeypatch) -> None:
@@ -53,7 +58,7 @@ def test_api_admin_dealer_onboard_forbidden_without_admin(monkeypatch) -> None:
         "backend.dealer.admin.onboard_api.is_inventory_postgres",
         lambda: True,
     )
-    client = app.test_client()
+    client = _test_client()
     rv = client.post(
         "/api/admin/dealer-onboard",
         data=json.dumps({"url": "https://www.example.com"}),
@@ -77,7 +82,7 @@ def test_api_admin_dealer_onboard_ok(monkeypatch, tmp_path) -> None:
         lambda **kwargs: 99,
     )
 
-    client = app.test_client()
+    client = _test_client()
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"
@@ -101,7 +106,7 @@ def test_api_admin_dealer_jobs_forbidden_without_admin(monkeypatch) -> None:
         "backend.db.inventory_pg.is_inventory_postgres",
         lambda: True,
     )
-    client = app.test_client()
+    client = _test_client()
     rv = client.get("/api/admin/dealer-jobs")
     assert rv.status_code == 403
 
@@ -123,7 +128,7 @@ def test_api_admin_dealer_jobs_ok(monkeypatch, tmp_path) -> None:
         lambda **kwargs: [],
     )
 
-    client = app.test_client()
+    client = _test_client()
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"
@@ -159,7 +164,7 @@ def test_api_admin_dealer_job_detail_ok(monkeypatch, tmp_path) -> None:
         },
     )
 
-    client = app.test_client()
+    client = _test_client()
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"
@@ -182,7 +187,7 @@ def test_api_admin_dealer_job_retry_ok(monkeypatch, tmp_path) -> None:
         lambda jid: (True, "", {"job_id": 99, "source_job_id": jid, "dealer_id": "test-dealer"}),
     )
 
-    client = app.test_client()
+    client = _test_client()
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"

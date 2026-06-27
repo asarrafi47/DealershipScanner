@@ -23,10 +23,16 @@ fi
 TABLES=(
   dealerships
   cars
-  dealer_catalog
+  dealer_scan_registry
   dealer_jobs
   dealer_scan_profile
   dealer_geopoints
+  catalog_trims
+  catalog_packages
+  catalog_package_features
+  catalog_options
+  catalog_exterior_colors
+  catalog_interior_colors
   epa_master
   model_specs
   scan_runs
@@ -49,4 +55,4 @@ psql "$INVENTORY_DATABASE_URL" -v ON_ERROR_STOP=1 -c "SELECT 1" >/dev/null
 } | psql "$INVENTORY_DATABASE_URL" -v ON_ERROR_STOP=0 2>&1 | tail -30
 
 echo "==> Row counts on Railway"
-psql "$INVENTORY_DATABASE_URL" -t -c "SELECT 'cars', COUNT(*) FROM cars UNION ALL SELECT 'dealerships', COUNT(*) FROM dealerships UNION ALL SELECT 'dealer_catalog', COUNT(*) FROM dealer_catalog UNION ALL SELECT 'dealer_geopoints', COUNT(*) FROM dealer_geopoints;"
+psql "$INVENTORY_DATABASE_URL" -t -c "SELECT 'cars', COUNT(*) FROM cars UNION ALL SELECT 'dealerships', COUNT(*) FROM dealerships UNION ALL SELECT 'dealer_scan_registry', COUNT(*) FROM dealer_scan_registry UNION ALL SELECT 'dealer_geopoints', COUNT(*) FROM dealer_geopoints;"

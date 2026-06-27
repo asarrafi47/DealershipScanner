@@ -904,12 +904,45 @@
 | **Validation** | `python -m pytest backend/tests/test_bootstrap_site_admin.py backend/tests/test_init_admin_db.py -q` |
 | **Last verified** | 2026-06-14 |
 
+### SEC-104 — Smart-retry subprocess env allowlist
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/scanner/retry_env.py`, `backend/scanner/job_diagnosis.py` (`apply_diagnosis_to_payload`, `_normalize_diagnosis`), `scripts/scanner_worker_loop.py` (`_subprocess_env`) |
+| **Outcome** | Smart-retry `set_env` / `retry_env` keys copied into scanner worker subprocesses are allowlisted only: explicit keys such as `PUPPETEER_EXECUTABLE_PATH`, plus `SCANNER_*` prefix (case-sensitive). Dangerous keys (`INVENTORY_DATABASE_URL`, `PYTHONPATH`, `LD_PRELOAD`, secrets) are rejected at diagnosis merge and again in the worker loop. |
+| **Validation** | `python -m pytest backend/tests/test_job_diagnosis.py -q` |
+| **Last verified** | 2026-06-27 |
+
+### SEC-105 — Site-admin dealer onboard URL validation + rate limit
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/dealer/admin/dealers_hub.py`, `backend/dealer/admin/onboard_api.py`, `backend/main.py` (`POST /api/admin/dealer-onboard`) |
+| **Outcome** | Dealer onboard jobs (`POST /admin/dealers` form and `POST /api/admin/dealer-onboard`) validate URLs via `normalize_safe_http_url` (blocks `javascript:`, private hosts, non-http schemes) and normalize dealer IDs before enqueue. Shared per-IP rate limit key `dealer-onboard:{ip}` — 30 events / hour — on both paths. |
+| **Validation** | `python -m pytest backend/tests/test_dealer_onboard_api.py backend/tests/test_dealers_hub.py -q`; manual: site admin POST `/admin/dealers` with `javascript:alert(1)` → error flash, no job queued. |
+| **Last verified** | 2026-06-27 |
+
+### SEC-106 — Smart-search keyword SQL (Postgres DISTINCT + ORDER BY)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/query_parser.py` (`_load_inventory_keywords` trim query) |
+| **Outcome** | Trim keyword load uses a subquery so `ORDER BY LENGTH(trim_val)` works on PostgreSQL (avoids `InvalidColumnReference` on `SELECT DISTINCT`). Prevents `POST /api/search/smart` 500 when inventory is Postgres-backed. |
+| **Validation** | `python -m pytest backend/tests/test_debug_audit.py::test_smart_search_api_returns_trimmed_meta backend/tests/test_smart_search.py -q` |
+| **Last verified** | 2026-06-27 |
+
 ---
 
 ## Changelog
 
 | Date (UTC) | Change |
 |------------|--------|
+| 2026-06-27 | **SEC-106:** Postgres-compatible trim keyword query in `_load_inventory_keywords` (subquery + ORDER BY). Validation: `pytest backend/tests/test_debug_audit.py::test_smart_search_api_returns_trimmed_meta backend/tests/test_smart_search.py -q`. |
+| 2026-06-27 | **SEC-105:** `/admin/dealers` POST uses `request_dealer_onboard` (URL/dealer-id validation) and shared `dealer-onboard:{ip}` rate limit (30/hour) matching `/api/admin/dealer-onboard`. Validation: `pytest backend/tests/test_dealer_onboard_api.py backend/tests/test_dealers_hub.py -q`. |
+| 2026-06-27 | **SEC-104:** Smart-retry `retry_env` / `set_env` allowlist — only `PUPPETEER_EXECUTABLE_PATH` and `SCANNER_*` keys reach scanner worker subprocess env; secrets and loader injection keys stripped. Validation: `pytest backend/tests/test_job_diagnosis.py -q`. |
 | 2026-06-14 | **SEC-103:** Startup bootstrap no longer overwrites existing site-admin or `/dev` admin passwords; vault sync only on new admin or `BOOTSTRAP_FORCE_ADMIN_PASSWORD=1`; removed duplicate host bootstrap from `deploy/up.sh`. Validation: `pytest backend/tests/test_bootstrap_site_admin.py backend/tests/test_init_admin_db.py -q`. |
 | 2026-06-14 | **SEC-102:** Postgres-only inventory — fail fast without `INVENTORY_DATABASE_URL`; Docker stack always includes Postgres; pytest uses `INVENTORY_SQLITE_TESTS=1`. Validation: `pytest backend/tests/test_inventory_postgres_required.py -q`. |
 | 2026-06-14 | **SEC-032:** `style-src-elem` includes `'unsafe-inline'` (aligned with `style-src`) so admin inline `<style>` blocks (e.g. `site_hub.html`) are not blocked in production CSP. Validation: `python -m pytest backend/tests/test_app_security_basics.py::test_csp_enforce_header_when_enabled -q`. |

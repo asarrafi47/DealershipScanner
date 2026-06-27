@@ -1,4 +1,4 @@
-# Scanner scheduler — enqueues refresh jobs when dealer_catalog.next_scan_at is due.
+# Scanner scheduler — enqueues refresh jobs when dealer_scan_registry.next_scan_at is due.
 # Attach this path in Railway → scanner-scheduler → Settings → Config file path.
 
 [build]

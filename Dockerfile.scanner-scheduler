@@ -1,4 +1,4 @@
-# Scanner scheduler — enqueues refresh jobs from dealer_catalog.
+# Scanner scheduler — enqueues refresh jobs from dealer_scan_registry.
 FROM python:3.12-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg && \

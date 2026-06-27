@@ -1105,6 +1105,109 @@ def backfill_car_zip_from_dealerships(*, dry_run: bool = False) -> dict[str, int
     return stats
 
 
+def backfill_car_forced_induction(*, dry_run: bool = False, batch_size: int = 500) -> dict[str, int]:
+    """
+    Populate empty ``cars.forced_induction`` from EPA match and/or listing signals.
+
+    Returns counts: ``by_epa``, ``by_classify``, ``updated``, ``remaining``.
+    """
+    from backend.db.cars_columns import _epa_forced_induction_subquery_sql, cars_has_column
+    from backend.utils.forced_induction import classify_forced_induction_from_car_row
+
+    stats = {"by_epa": 0, "by_classify": 0, "updated": 0, "remaining": 0}
+    if not cars_has_column("forced_induction"):
+        return stats
+
+    epa_expr = _epa_forced_induction_subquery_sql(alias="c")
+    select_cols = (
+        "id, year, make, model, trim, title, description, engine_l, cylinders, "
+        "engine_description, fuel_type, forced_induction"
+    )
+
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            f"""
+            SELECT {select_cols} FROM cars
+            WHERE forced_induction IS NULL OR TRIM(forced_induction) = ''
+            ORDER BY id
+            """
+        )
+        pending = [dict(r) for r in cursor.fetchall()]
+        total = len(pending)
+        batch: list[tuple[str | None, int]] = []
+
+        def _flush_batch() -> None:
+            nonlocal batch
+            if not batch or dry_run:
+                batch = []
+                return
+            cursor.executemany(
+                "UPDATE cars SET forced_induction = ? WHERE id = ?",
+                batch,
+            )
+            conn.commit()
+            batch = []
+
+        for i, car in enumerate(pending, start=1):
+            if i == 1 or i % 1000 == 0 or i == total:
+                _log.info("Forced-induction backfill: %s / %s cars", i, total)
+
+            fi: str | None = None
+            source = ""
+            cursor.execute(
+                f"SELECT {epa_expr} FROM cars c WHERE c.id = ?",
+                (int(car["id"]),),
+            )
+            epa_row = cursor.fetchone()
+            if epa_row is not None:
+                epa_val = epa_row[0] if not isinstance(epa_row, dict) else list(epa_row.values())[0]
+                if epa_val is not None and str(epa_val).strip():
+                    fi = str(epa_val).strip()
+                    source = "epa"
+
+            if not fi:
+                classified = classify_forced_induction_from_car_row(car)
+                if classified and str(classified).strip():
+                    fi = str(classified).strip()
+                    source = "classify"
+
+            if not fi:
+                continue
+
+            if source == "epa":
+                stats["by_epa"] += 1
+            elif source == "classify":
+                stats["by_classify"] += 1
+            stats["updated"] += 1
+
+            if dry_run:
+                continue
+
+            batch.append((fi, int(car["id"])))
+            if len(batch) >= batch_size:
+                _flush_batch()
+
+        _flush_batch()
+
+        cursor.execute(
+            """
+            SELECT COUNT(*) FROM cars
+            WHERE forced_induction IS NULL OR TRIM(forced_induction) = ''
+            """
+        )
+        row = cursor.fetchone()
+        stats["remaining"] = int(row[0] if not isinstance(row, dict) else list(row.values())[0])
+
+    if not dry_run and stats["updated"]:
+        try:
+            clear_inventory_listings_cache()
+        except Exception:
+            pass
+
+    return stats
+
+
 _registry_backfill_ran = False
 
 
