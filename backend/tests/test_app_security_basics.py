@@ -74,6 +74,7 @@ def test_csp_enforce_header_when_enabled(monkeypatch) -> None:
     assert "default-src" in csp
     assert "script-src" in csp
     assert "nonce-" in csp
+    assert "style-src-elem" in csp and "'unsafe-inline'" in csp
 
 
 def test_search_url_redirects_to_listings_with_query() -> None:

@@ -28,6 +28,10 @@ def main() -> int:
     init_job_queue_schema()
     _log.info("Scanner scheduler started (interval=%ss)", INTERVAL_SEC)
 
+    from railway_health_server import start_railway_health_server
+
+    start_railway_health_server()
+
     while True:
         try:
             n = schedule_due_refresh_jobs()

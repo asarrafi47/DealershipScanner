@@ -37,7 +37,7 @@ Revenue comes from **tiered feature packages** with **discounts and trials**, no
 | 9 | Discounts | Stripe promotion codes + env-mapped coupons + plan trials |
 | 10 | OAuth providers | **Google** (live) + **Apple** (scaffold) on login/register |
 | 11 | Free tier | Anonymous browse listings; login for save/compare; paid for AI/stickers |
-| 12 | Production split | Railway = web (+ Postgres); K8s = scanner workers + scheduler |
+| 12 | Production split | Railway = web + Postgres + scanner workers + scheduler |
 
 ---
 
@@ -94,9 +94,9 @@ docker compose -f deploy/docker-compose.yml up -d --scale scanner-worker=10
 | Component | Local Docker | Production |
 |-----------|--------------|------------|
 | Web | `web` container | Railway `web` service |
-| Postgres | `postgres` container | Railway Postgres plugin or managed RDS |
-| Scanner workers | `--scale scanner-worker=N` | K8s Deployment (replicas) |
-| Scheduler | `scanner-scheduler` | K8s CronJob |
+| Postgres | `postgres` container | Railway Postgres |
+| Scanner workers | `--scale scanner-worker=N` | Railway `scanner-worker` (scale replicas) |
+| Scheduler | `scanner-scheduler` | Railway `scanner-scheduler` |
 | Secrets | kmac vault (`host.docker.internal`) | kmac-vault Railway + env mirror |
 
 **Current production (Railway):** Web healthy; inventory still SQLite on `/data` until Railway Postgres + `INVENTORY_DATABASE_URL` deploy. Postgres job queue and scanner workers not in prod. Dealer-locator geocoding may fail (`location_not_found`) without `GOOGLE_MAPS_API_KEY`.

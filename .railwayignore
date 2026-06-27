@@ -18,6 +18,7 @@ car_images
 backend/data/chroma
 data/chroma
 data/vectors
+data/runtime
 workspace
 docs
 debug

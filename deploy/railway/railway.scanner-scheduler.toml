@@ -1,0 +1,13 @@
+# Scanner scheduler — enqueues refresh jobs when dealer_catalog.next_scan_at is due.
+# Attach this path in Railway → scanner-scheduler → Settings → Config file path.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.scanner-scheduler"
+
+[deploy]
+startCommand = "/app/scripts/docker-entrypoint-scanner-scheduler.sh"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+numReplicas = 1
+healthcheckPath = ""

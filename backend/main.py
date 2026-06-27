@@ -226,6 +226,9 @@ assert_inventory_backend_configured()
 init_users_db()
 init_admin_db()
 init_inventory_db()
+from backend.scanner.job_queue import init_job_queue_schema
+
+init_job_queue_schema()
 init_dealer_portal_db()
 
 from backend.scanner.job_queue import init_job_queue_schema
@@ -420,6 +423,7 @@ def _csrf_mutating_requests():
         "api_auth_logout",
         "api_admin_dealer_onboard",
         "api_admin_dealer_job_retry",
+        "api_admin_dealer_job_diagnose",
         "api_admin_dealer_job_smart_retry",
     ):
         validate_csrf_header()
@@ -590,7 +594,7 @@ def _csp_enforce_wanted() -> bool:
 
 
 def _csp_header_value_enforced(nonce: str) -> str:
-    # style-src: 'unsafe-inline' for existing inline style="" attributes; script nonces for all script elements.
+    # style-src / style-src-elem: 'unsafe-inline' for inline style="" and <style> blocks until migrated to CSS files.
     return (
         "default-src 'self'; "
         "base-uri 'self'; "
@@ -601,7 +605,7 @@ def _csp_header_value_enforced(nonce: str) -> str:
         "img-src 'self' data: https: http: blob:; "
         "font-src 'self' https://fonts.gstatic.com data:; "
         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
-        "style-src-elem 'self' https://fonts.googleapis.com; "
+        "style-src-elem 'self' https://fonts.googleapis.com 'unsafe-inline'; "
         f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
         "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
         "worker-src 'self'; "
@@ -618,7 +622,7 @@ _CSP_REPORT_ONLY = (
     "img-src 'self' data: https: http: blob:; "
     "font-src 'self' https://fonts.gstatic.com data:; "
     "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
-    "style-src-elem 'self' https://fonts.googleapis.com; "
+    "style-src-elem 'self' https://fonts.googleapis.com 'unsafe-inline'; "
     "script-src 'self' https://esm.sh; "
     "connect-src 'self' https://esm.sh https://fonts.googleapis.com https://tile.openstreetmap.org; "
     "worker-src 'self'; "

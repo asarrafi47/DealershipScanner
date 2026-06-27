@@ -31,6 +31,7 @@ __pycache__/
 backend/data/chroma/
 data/chroma/
 data/vectors/
+data/runtime/
 
 # Generated CSV outputs
 csv_out/

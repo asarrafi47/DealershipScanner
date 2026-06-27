@@ -1,0 +1,14 @@
+# Scanner worker — claims dealer_jobs and runs Playwright/Puppeteer scrapes.
+# Attach this path in Railway → scanner-worker → Settings → Config file path.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.scanner-worker"
+
+[deploy]
+startCommand = "/app/scripts/docker-entrypoint-scanner-worker.sh"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+numReplicas = 2
+# Worker has no HTTP server — disable Railway healthcheck (default /health would fail).
+healthcheckPath = ""

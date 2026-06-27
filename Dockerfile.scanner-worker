@@ -1,0 +1,33 @@
+# Scanner worker — Playwright/Puppeteer job consumer (dealer_jobs queue).
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget git \
+    libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
+    libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 \
+    libpango-1.0-0 libpangocairo-1.0-0 libgtk-3-0 libx11-xcb1 libxcb-dri3-0 \
+    gcc g++ libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN playwright install chromium && playwright install-deps chromium && \
+    patchright install chromium && patchright install-deps chromium
+
+COPY backend/scanner/package.json backend/scanner/package-lock.json ./backend/scanner/
+RUN cd backend/scanner && npm ci --omit=dev && \
+    node -e "require('puppeteer-extra')"
+
+COPY . .
+
+RUN chmod +x /app/scripts/docker-entrypoint-scanner-worker.sh
+
+ENTRYPOINT ["/app/scripts/docker-entrypoint-scanner-worker.sh"]

@@ -1,0 +1,13 @@
+# Web service — Flask + gunicorn (Dockerfile.web)
+# Set as Config file path on Railway web service: deploy/railway/railway.web.toml
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.web"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+numReplicas = 1

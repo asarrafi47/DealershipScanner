@@ -7,15 +7,46 @@ Production uses the **central kmac-vault Railway project** (`https://kmac-vault-
 ```mermaid
 flowchart LR
   subgraph railway [Railway project]
-    Web[dealership-scanner web]
-    Vault[kmac-vault :9999]
-    Vol[(Volume /data)]
+    Web[web]
+    PG[(Postgres)]
+    W1[scanner-worker]
+    SCH[scanner-scheduler]
+    Vault[kmac-vault]
+    VolW[(web /data)]
+    VolS[(scanner /data)]
   end
-  Web -->|"VAULT_ADDR + VAULT_TOKEN"| Vault
-  Web --> Vol
+  Web --> PG
+  Web --> VolW
+  W1 --> PG
+  W1 --> VolS
+  SCH --> PG
+  Web --> Vault
+  W1 --> Vault
+  SCH --> Vault
 ```
 
-Only **one** sensitive bootstrap variable is required on the web service: `VAULT_TOKEN` (bearer token for kmac-vault). Everything else (`GOOGLE_MAPS_API_KEY`, SQLCipher keys, etc.) is fetched from vault at runtime.
+## Full stack (web + harvesting)
+
+Production runs **everything on Railway**: consumer web, Postgres inventory/job queue, and scraper fleet.
+
+```bash
+railway link -p dealership-scanner -s web
+./deploy/railway/setup-full-stack.sh
+./deploy/railway/sync-vault-to-railway.sh   # web; repeat with RAILWAY_SERVICE=scanner-worker
+```
+
+| Service | Dockerfile | Config file (per service in dashboard) |
+|---------|------------|----------------------------------------|
+| `web` | `Dockerfile.web` | `deploy/railway/railway.web.toml` |
+| `scanner-worker` | `Dockerfile.scanner-worker` | `deploy/railway/railway.scanner-worker.toml` |
+| `scanner-scheduler` | `Dockerfile.scanner-scheduler` | `deploy/railway/railway.scanner-scheduler.toml` |
+| `Postgres` | template | `INVENTORY_DATABASE_URL=${{Postgres.DATABASE_URL}}` on all app services |
+
+Set **`RAILWAY_DOCKERFILE_PATH`** per service (setup script does this). Do **not** use a single root `railway.toml` for a monorepo — it forces every service onto `Dockerfile.web`.
+
+Attach a **Volume at `/data`** on `scanner-worker` (browser profiles + scanner SQLite scratch). Recommend **2 GB+ RAM** per worker replica; scale replicas in Railway or `railway.scanner-worker.toml`.
+
+Only **one** sensitive bootstrap variable is required on each app service: `VAULT_TOKEN` (bearer token for kmac-vault). Everything else (`GOOGLE_MAPS_API_KEY`, SQLCipher keys, etc.) is fetched from vault at runtime.
 
 ## Prerequisites
 
@@ -24,15 +55,15 @@ Only **one** sensitive bootstrap variable is required on the web service: `VAULT
 - **kmac-vault** service already deployed in the same Railway project
 - Project linked: `railway link` (from repo root, on the **web** service)
 
-## 1. Create / deploy the web service
+## 1. Deploy services
 
-Railway reads `railway.toml` at the repo root and builds `Dockerfile.web`.
+Per-service config lives under `deploy/railway/railway.*.toml`. Connect GitHub `main` to each service, or:
 
 ```bash
-railway up
+railway up -s web
+railway up -s scanner-worker
+railway up -s scanner-scheduler
 ```
-
-Or connect the GitHub repo in the Railway dashboard and deploy from `main`.
 
 ## 2. Wire vault connection (recommended)
 
