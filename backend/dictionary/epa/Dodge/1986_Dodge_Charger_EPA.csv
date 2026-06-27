@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1986,Dodge,Charger,Charger,1.6L I4 ((FFS)),1.6L I4,,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,26,35,30,,,,,
-1986,Dodge,Charger,Charger,1.6L I4 ((FFS)),1.6L I4,,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,30,27,,,,,
-1986,Dodge,Charger,Charger,2.2L I4 ((FFS)),2.2L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.2,21,27,24,,,,,
-1986,Dodge,Charger,Charger,2.2L I4 ((FFS)),2.2L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.2,23,33,26,,,,,
-1986,Dodge,Charger,Charger,2.2L I4 ((FFS)),2.2L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.2,19,27,22,,,,,
-1986,Dodge,Charger,Charger,"2.2L I4 ((FFS,TRBO))",2.2L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.2,18,25,20,,,,,

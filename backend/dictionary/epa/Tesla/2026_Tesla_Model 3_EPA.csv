@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Tesla,Model 3,Performance,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,120,107,114,,,,,
-2026,Tesla,Model 3,Premium AWD,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,133,122,128,,,,,
-2026,Tesla,Model 3,Premium RWD,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,145,128,137,,,,,
-2026,Tesla,Model 3,Performance AWD,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,117,106,111,,,,,
-2026,Tesla,Model 3,Standard RWD,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,147,130,139,,,,,

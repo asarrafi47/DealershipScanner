@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2015,Hyundai,Tucson,2WD,2.4L I4 (SIDI),2.4L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.4,21,28,23,,,,,
-2015,Hyundai,Tucson,2WD,2.0L I4 (SIDI),2.0L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,23,28,25,,,,,
-2015,Hyundai,Tucson,AWD,2.4L I4 (SIDI),2.4L I4,,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,20,25,22,,,,,
-2015,Hyundai,Tucson,AWD,2.0L I4 (SIDI),2.0L I4,,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,25,22,,,,,
-2015,Hyundai,Tucson,Fuel Cell,FCV (PEM) Hydrogen,FCV (PEM) Hydrogen,,Automatic (A1),Front-Wheel Drive,Hydrogen,Small Sport Utility Vehicle 2WD,,,49,51,50,,,,,

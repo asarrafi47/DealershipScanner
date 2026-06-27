@@ -168,9 +168,9 @@ def main() -> int:
         _log.info("Claimed job id=%s dealer=%s type=%s", job["id"], job["dealer_id"], job["job_type"])
         ok, err, result = _run_dealer_scan(job["dealer_id"], job["job_type"], job.get("payload") or {})
         if ok:
-            from backend.scanner.job_queue import record_catalog_after_success
+            from backend.scanner.job_queue import record_dealer_scan_registry
 
-            record_catalog_after_success(
+            record_dealer_scan_registry(
                 dealer_id=job["dealer_id"],
                 job_type=job["job_type"],
                 payload=job.get("payload") or {},

@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2007,Chevrolet,Malibu,Malibu,2.2L I4,2.2L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.2,21,31,25,,,,,
-2007,Chevrolet,Malibu,Malibu,3.5L V6,3.5L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,19,30,23,,,,,
-2007,Chevrolet,Malibu,Malibu,3.9L V6,3.9L V6,,Automatic (S4),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.9,16,23,19,,,,,
-2007,Chevrolet,Malibu,Maxx,3.5L V6,3.5L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.5,18,28,21,,,,,
-2007,Chevrolet,Malibu,Maxx,3.9L V6,3.9L V6,,Automatic (S4),Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.9,15,22,18,,,,,

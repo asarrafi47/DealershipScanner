@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2020,Tesla,Model 3,Long Range,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,136,123,130,,,,,
-2020,Tesla,Model 3,Long Range AWD,EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,124,116,121,,,,,
-2020,Tesla,Model 3,Mid Range,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,128,117,123,,,,,
-2020,Tesla,Model 3,Standard Range,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,138,124,131,,,,,
-2020,Tesla,Model 3,Standard Range Plus,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,148,132,141,,,,,
-2020,Tesla,Model 3,Long Range Performance AWD (18in),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,124,116,121,,,,,
-2020,Tesla,Model 3,Long Range Performance AWD (19in),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,119,112,116,,,,,
-2020,Tesla,Model 3,Long Range Performance AWD (20in),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,118,107,113,,,,,

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate epa_master from DICTIONARY CSV files.
+Populate epa_master from DICTIONARY EPA CSV files.
 
 The knowledge engine's lookup_epa_aggregate() queries epa_master, but the
 table ships empty. This script loads all *_EPA.csv files so the engine has
@@ -9,13 +9,13 @@ real data for every make/model/trim year combination.
 Usage:
   python -m backend.scripts.build_epa_master           # insert missing rows only
   python -m backend.scripts.build_epa_master --rebuild  # drop and reload everything
+  python -m backend.scripts.build_epa_master --rebuild --delete-csvs  # load then remove source CSVs
 """
 from __future__ import annotations
 
 import argparse
 import csv
 import logging
-import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -24,11 +24,7 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.inventory_db import DB_PATH
-
-_BACKEND_DIR = _REPO_ROOT / "backend"
-DICT_DIR = _BACKEND_DIR / "dictionary"
-if not any(DICT_DIR.glob("*_EPA.csv")):
-    DICT_DIR = _REPO_ROOT / "DICTIONARY"
+from backend.enrichment.dictionary_paths import iter_search_roots
 
 logging.basicConfig(
     level=logging.INFO,
@@ -37,7 +33,15 @@ logging.basicConfig(
 )
 log = logging.getLogger("build_epa_master")
 
-# Maps fuelType CSV values → atv_type DB column values
+_INSERT_SQL = """
+    INSERT INTO epa_master
+        (year, make, model, trim, trany, drive, fuel_type, body_style,
+         engine_description, engine_display, forced_induction,
+         cylinders, displacement, city08, highway08, atv_type)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+"""
+
+
 def _infer_atv_type(fuel_type: str) -> str | None:
     fl = (fuel_type or "").lower().strip()
     if not fl:
@@ -78,17 +82,32 @@ def _migrate(conn: sqlite3.Connection) -> None:
         ("trim", "TEXT"),
         ("body_style", "TEXT"),
         ("engine_description", "TEXT"),
+        ("engine_display", "TEXT"),
+        ("forced_induction", "TEXT"),
     ]:
         if col not in have:
             try:
                 cur.execute(f"ALTER TABLE epa_master ADD COLUMN {col} {typ}")
             except sqlite3.OperationalError:
                 pass
-    # Index for per-trim lookup added by this script
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_epa_master_trim ON epa_master(year, make, model, trim)"
     )
     conn.commit()
+
+
+def _discover_epa_files() -> list[Path]:
+    seen: set[Path] = set()
+    out: list[Path] = []
+    for root in iter_search_roots(kind="epa"):
+        if not root.is_dir():
+            continue
+        for path in sorted(root.rglob("*_EPA.csv")):
+            resolved = path.resolve()
+            if resolved not in seen:
+                seen.add(resolved)
+                out.append(path)
+    return out
 
 
 def _load_csv(path: Path) -> list[dict]:
@@ -100,13 +119,8 @@ def _load_csv(path: Path) -> list[dict]:
         return []
 
 
-def _insert_rows(
-    cur: sqlite3.Cursor,
-    rows: list[dict],
-    existing: set[tuple],
-    rebuilt: bool,
-) -> int:
-    inserted = 0
+def _rows_from_csv(rows: list[dict], existing: set[tuple], rebuilt: bool) -> list[tuple]:
+    batch: list[tuple] = []
     for row in rows:
         year = _safe_int(row.get("Year"))
         make = (row.get("Make") or "").strip()
@@ -124,34 +138,53 @@ def _insert_rows(
         fuel_type = (row.get("fuelType") or "").strip() or None
         body_style = (row.get("bodyStyle") or "").strip() or None
         engine_desc = (row.get("engineOptions") or "").strip() or None
+        engine_display = (row.get("engineDisplay") or "").strip() or None
+        forced_induction = (row.get("forcedInduction") or "").strip() or None
+        if not engine_display or not forced_induction:
+            try:
+                from backend.dictionary.epa_engine import catalog_engine_fields
+
+                derived = catalog_engine_fields(row)
+                engine_display = engine_display or (derived.get("engineDisplay") or "").strip() or None
+                forced_induction = forced_induction or (derived.get("forcedInduction") or "").strip() or None
+            except Exception:
+                pass
         cylinders = _safe_int(row.get("cylinders"))
         displacement = _safe_float(row.get("displacement"))
         city08 = _safe_float(row.get("mpg_city"))
         highway08 = _safe_float(row.get("mpg_highway"))
         atv_type = _infer_atv_type(fuel_type or "")
 
-        cur.execute(
-            """
-            INSERT INTO epa_master
-                (year, make, model, trim, trany, drive, fuel_type, body_style,
-                 engine_description, cylinders, displacement,
-                 city08, highway08, atv_type)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-            """,
+        batch.append(
             (
-                year, make, model, trim, trany, drive, fuel_type, body_style,
-                engine_desc, cylinders, displacement,
-                city08, highway08, atv_type,
-            ),
+                year,
+                make,
+                model,
+                trim,
+                trany,
+                drive,
+                fuel_type,
+                body_style,
+                engine_desc,
+                engine_display,
+                forced_induction,
+                cylinders,
+                displacement,
+                city08,
+                highway08,
+                atv_type,
+            )
         )
-        inserted += 1
-    return inserted
+        existing.add(key)
+    return batch
 
 
 def _load_existing_keys(conn: sqlite3.Connection) -> set[tuple]:
     cur = conn.cursor()
     try:
-        cur.execute("SELECT year, lower(make), lower(model), lower(coalesce(trim,'')) FROM epa_master")
+        cur.execute(
+            "SELECT year, lower(make), lower(model), lower(coalesce(trim,'')) FROM epa_master"
+        )
         return set(cur.fetchall())
     except sqlite3.OperationalError:
         return set()
@@ -160,11 +193,16 @@ def _load_existing_keys(conn: sqlite3.Connection) -> set[tuple]:
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rebuild", action="store_true", help="Clear table before loading")
+    parser.add_argument(
+        "--delete-csvs",
+        action="store_true",
+        help="Delete source *_EPA.csv files after a successful import",
+    )
     args = parser.parse_args(argv)
 
-    epa_files = sorted(DICT_DIR.glob("*_EPA.csv"))
+    epa_files = _discover_epa_files()
     if not epa_files:
-        log.error("No *_EPA.csv files found in %s", DICT_DIR)
+        log.error("No *_EPA.csv files found under dictionary EPA roots")
         sys.exit(1)
 
     log.info("Found %d EPA CSV files", len(epa_files))
@@ -182,28 +220,45 @@ def main(argv: list[str] | None = None) -> None:
 
     cur = conn.cursor()
     total_inserted = 0
-    batch = 0
-    BATCH_SIZE = 500
+    loaded_paths: list[Path] = []
+    pending: list[tuple] = []
+    BATCH_SIZE = 2000
 
     for path in epa_files:
         rows = _load_csv(path)
         if not rows:
             continue
-        inserted = _insert_rows(cur, rows, existing, args.rebuild)
-        total_inserted += inserted
-        batch += inserted
-        if batch >= BATCH_SIZE:
+        loaded_paths.append(path)
+        new_rows = _rows_from_csv(rows, existing, args.rebuild)
+        pending.extend(new_rows)
+        total_inserted += len(new_rows)
+        if len(pending) >= BATCH_SIZE:
+            cur.executemany(_INSERT_SQL, pending)
             conn.commit()
-            batch = 0
+            pending.clear()
+            log.info("Inserted %d rows so far...", total_inserted)
 
+    if pending:
+        cur.executemany(_INSERT_SQL, pending)
     conn.commit()
-    conn.close()
 
-    log.info("Done — inserted %d rows into epa_master", total_inserted)
-    final = sqlite3.connect(DB_PATH)
-    count = final.execute("SELECT COUNT(*) FROM epa_master").fetchone()[0]
-    final.close()
-    log.info("epa_master now has %d total rows", count)
+    count = conn.execute("SELECT COUNT(*) FROM epa_master").fetchone()[0]
+    conn.close()
+    log.info("Done — inserted %d rows; epa_master now has %d total rows", total_inserted, count)
+
+    if count <= 0:
+        log.error("Import produced no rows; not deleting CSV files")
+        sys.exit(1)
+
+    if args.delete_csvs:
+        deleted = 0
+        for path in loaded_paths:
+            try:
+                path.unlink()
+                deleted += 1
+            except OSError as exc:
+                log.warning("Could not delete %s: %s", path, exc)
+        log.info("Deleted %d EPA CSV file(s)", deleted)
 
 
 if __name__ == "__main__":

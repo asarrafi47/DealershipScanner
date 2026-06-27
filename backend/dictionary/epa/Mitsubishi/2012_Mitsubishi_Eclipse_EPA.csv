@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2012,Mitsubishi,Eclipse,Spyder,2.4L I4,2.4L I4,,Automatic (S4),Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,2.4,20,27,23,,,,,
-2012,Mitsubishi,Eclipse,Spyder,3.8L V6,3.8L V6,,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.8,16,24,19,,,,,
-2012,Mitsubishi,Eclipse,Eclipse,2.4L I4,2.4L I4,,Automatic (S4),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.4,20,28,23,,,,,
-2012,Mitsubishi,Eclipse,Eclipse,2.4L I4,2.4L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.4,20,27,23,,,,,
-2012,Mitsubishi,Eclipse,Eclipse,3.8L V6,3.8L V6,,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.8,17,25,20,,,,,

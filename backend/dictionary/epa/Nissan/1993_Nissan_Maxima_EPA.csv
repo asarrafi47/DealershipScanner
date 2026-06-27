@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1993,Nissan,Maxima,Maxima,3.0L V6 ((FFS) DOHC),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,17,23,19,,,,,
-1993,Nissan,Maxima,Maxima,3.0L V6 ((FFS) SOHC),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,17,24,19,,,,,
-1993,Nissan,Maxima,Maxima,3.0L V6 ((FFS) DOHC),3.0L V6,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,18,24,20,,,,,

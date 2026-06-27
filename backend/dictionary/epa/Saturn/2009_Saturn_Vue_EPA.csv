@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2009,Saturn,Vue,FWD,2.4L I4,2.4L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,19,26,22,,,,,
-2009,Saturn,Vue,FWD,3.6L V6,3.6L V6,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.6,17,24,19,,,,,
-2009,Saturn,Vue,FWD,3.6L V6,3.6L V6,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.6,17,24,19,,,,,
-2009,Saturn,Vue,Hybrid,Hybrid 2.4L I4,2.4L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,25,32,28,,,,,
-2009,Saturn,Vue,AWD,3.5L V6,3.5L V6,,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.5,16,23,18,,,,,
-2009,Saturn,Vue,AWD,3.6L V6,3.6L V6,,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.6,16,23,18,,,,,
-2009,Saturn,Vue,AWD,3.6L V6,3.6L V6,,Automatic (S6),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.6,16,23,18,,,,,
-2009,Saturn,Vue,Hybrid,Hybrid 3.6L V6,3.6L V6,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.6,27,30,28,,,,,

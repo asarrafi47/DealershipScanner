@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sqlite3
+from unittest.mock import patch
 
 from backend.utils.dealer_zip import (
     coalesce_car_zip,
@@ -19,7 +20,33 @@ def test_normalize_us_zip() -> None:
     assert normalize_us_zip("") is None
 
 
-def test_coalesce_car_zip_prefers_vehicle() -> None:
+def test_lookup_epa_from_dictionary_csv_int_year_cells() -> None:
+    """epa_master rows use int Year/cylinders — must not call str.strip on ints."""
+    from backend.enrichment.knowledge_engine import _lookup_epa_from_dictionary_csv
+
+    rows = [
+        {
+            "Year": 2019,
+            "Trim": "LT",
+            "mpg_city": 15,
+            "mpg_highway": 22,
+            "cylinders": 8,
+            "drivetrainOptions": "4-Wheel Drive",
+            "transmissionOptions": "6-Speed Automatic",
+            "fuelType": "Regular Gasoline",
+            "bodyStyle": "SUV",
+            "engineOptions": "5.3L V8",
+        }
+    ]
+    with patch(
+        "backend.enrichment.epa_master_store.fetch_epa_rows",
+        return_value=tuple(rows),
+    ):
+        out = _lookup_epa_from_dictionary_csv(2019, "Chevrolet", "Tahoe", "LT")
+    assert out.get("city08") == 15
+    assert out.get("cylinders") == 8
+
+
     assert coalesce_car_zip(car_zip="90210", dealer_zip="28173") == "90210"
     assert coalesce_car_zip(car_zip=None, dealer_zip="28173-1234") == "28173"
 

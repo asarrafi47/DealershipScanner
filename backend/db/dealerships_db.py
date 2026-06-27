@@ -66,6 +66,7 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
         ("google_rating",         "REAL"),
         ("google_review_count",   "INTEGER"),
         ("google_rating_fetched_at", "TEXT"),
+        ("normalized_host", "TEXT"),
     ]
     for col, coltype in additive:
         if col not in dcols:
@@ -77,7 +78,8 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
         "CREATE INDEX IF NOT EXISTS idx_dealerships_zip ON dealerships(zip_code)"
     )
     cursor.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealerships_google_place ON dealerships(google_place_id)"
+        "CREATE INDEX IF NOT EXISTS idx_dealerships_normalized_host "
+        "ON dealerships(normalized_host)"
     )
 
 
@@ -168,6 +170,9 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
         or row.get("website_url")
         or ""
     ).strip()
+    from backend.db.dealership_url import normalized_dealership_host
+
+    norm_host = normalized_dealership_host(url=website_url)
 
     if existing_id is not None:
         # Merge: fill blanks, OR provenance flags
@@ -187,6 +192,7 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 google_rating      = COALESCE(?, google_rating),
                 google_review_count = COALESCE(?, google_review_count),
                 google_rating_fetched_at = COALESCE(?, google_rating_fetched_at),
+                normalized_host      = COALESCE(NULLIF(TRIM(normalized_host), ''), NULLIF(TRIM(?), '')),
                 source_dmv         = source_dmv | ?,
                 source_osm         = source_osm | ?,
                 source_web         = source_web | ?
@@ -204,6 +210,7 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 row.get("google_rating"),
                 row.get("google_review_count"),
                 rating_fetched_at,
+                norm_host,
                 int(bool(row.get("source_dmv"))),
                 int(bool(row.get("source_osm"))),
                 int(bool(row.get("source_web"))),
@@ -223,10 +230,10 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
         """
         INSERT INTO dealerships
             (name, website_url, city, state, latitude, longitude, created_at,
-             street_address, zip_code, dealer_website_url,
+             street_address, zip_code, dealer_website_url, normalized_host,
              source_dmv, source_osm, source_web, osm_id, is_active,
              google_place_id, google_rating, google_review_count, google_rating_fetched_at)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
         """,
         (
             name,
@@ -239,6 +246,7 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
             row.get("street_address") or "",
             row.get("zip_code") or "",
             website_url,
+            norm_host,
             int(bool(row.get("source_dmv"))),
             int(bool(row.get("source_osm"))),
             int(bool(row.get("source_web"))),
@@ -444,17 +452,27 @@ def bump_dealer_ipacket_fail_count(dealer_id: int) -> int:
 
 
 def insert_dealership(row: dict[str, Any]) -> int:
+    from backend.db.dealership_url import effective_website_url, normalized_dealership_host
+
     conn = get_conn()
     cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
     now = datetime.now(timezone.utc).isoformat()
+    website_url = effective_website_url(row) or str(row.get("website_url") or "").strip()
+    norm_host = normalized_dealership_host(url=website_url)
     cursor.execute(
         """
-        INSERT INTO dealerships (name, website_url, city, state, created_at, is_active)
-        VALUES (?, ?, ?, ?, ?, 1)
+        INSERT INTO dealerships (
+            name, website_url, dealer_website_url, normalized_host,
+            city, state, created_at, is_active
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
         """,
         (
             row["name"],
-            row["website_url"],
+            website_url,
+            website_url,
+            norm_host,
             row["city"],
             row["state"],
             now,

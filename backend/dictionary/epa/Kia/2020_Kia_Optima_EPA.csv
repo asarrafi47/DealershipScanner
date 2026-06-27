@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2020,Kia,Optima,Hybrid,Hybrid 2.0L I4 (SIDI; Hybrid),2.0L I4,,Automatic (AM6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,40,45,42,,,,,
-2020,Kia,Optima,Optima,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Automatic (AM7),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,27,37,31,,,,,
-2020,Kia,Optima,Optima,2.0L I4 (SIDI),2.0L I4,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,21,30,24,,,,,
-2020,Kia,Optima,Optima,2.4L I4 (SIDI),2.4L I4,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.4,24,32,27,,,,,
-2020,Kia,Optima,FE,2.4L I4 (SIDI),2.4L I4,,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.4,25,35,29,,,,,
-2020,Kia,Optima,Plug-in Hybrid,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),2.0L I4,,Automatic (AM6),Front-Wheel Drive,Regular Gasoline / Electricity,Midsize Cars,4,2.0,39,44,41,,,,,

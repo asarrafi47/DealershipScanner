@@ -14,6 +14,7 @@ from backend.listings.dealer_registry_match import (
     collect_registry_ids_from_cars,
     dealer_registry_sql_filter,
     registry_id_by_dealer_host,
+    registry_id_by_dealer_slug,
     resolve_car_dealership_registry_id,
 )
 
@@ -32,6 +33,36 @@ def test_resolve_car_registry_id_from_host() -> None:
         )
         == 2
     )
+
+
+def test_resolve_car_registry_id_from_db_slug() -> None:
+    host_map = {"demo-dealer.example": 42}
+    rid = resolve_car_dealership_registry_id(
+        {"dealer_id": "db-42", "dealer_url": "", "dealership_registry_id": None},
+        host_to_registry=host_map,
+    )
+    assert rid == 42
+
+
+def test_resolve_car_registry_id_from_manifest_slug() -> None:
+    host_map = {"testtoyota.com": 7}
+    slug_map = {"test-toyota-com": 7}
+    rid = resolve_car_dealership_registry_id(
+        {
+            "dealer_id": "test-toyota-com",
+            "dealer_url": "https://legacy.example/inventory",
+            "dealership_registry_id": None,
+        },
+        host_to_registry=host_map,
+        slug_to_registry=slug_map,
+    )
+    assert rid == 7
+
+
+def test_registry_id_by_dealer_slug_uses_host_map() -> None:
+    host_map = {"demo.example": 5}
+    slug_map = registry_id_by_dealer_slug(host_map)
+    assert isinstance(slug_map, dict)
 
 
 def test_collect_registry_ids_includes_host_only_cars() -> None:

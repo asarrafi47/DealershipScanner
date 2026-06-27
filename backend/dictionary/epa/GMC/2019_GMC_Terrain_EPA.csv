@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2019,GMC,Terrain,FWD,2.0L I4 (SIDI),2.0L I4,,Automatic 9-spd,Front-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,22,28,24,,,,,
-2019,GMC,Terrain,FWD,1.5L I4 (SIDI),1.5L I4,,Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,1.5,26,30,28,,,,,
-2019,GMC,Terrain,AWD,1.5L I4 (SIDI),1.5L I4,,Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.5,24,28,26,,,,,
-2019,GMC,Terrain,AWD,2.0L I4 (SIDI),2.0L I4,,Automatic 9-spd,All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,26,23,,,,,
-2019,GMC,Terrain,AWD,Diesel 1.6L I4 Diesel,1.6L I4,,Automatic 6-spd,All-Wheel Drive,Diesel,Small Sport Utility Vehicle 4WD,4,1.6,28,38,32,,,,,
-2019,GMC,Terrain,FWD,Diesel 1.6L I4 Diesel,1.6L I4,,Automatic 6-spd,Front-Wheel Drive,Diesel,Small Sport Utility Vehicle 2WD,4,1.6,28,39,32,,,,,

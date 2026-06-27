@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Enqueue refresh jobs when dealer_catalog.next_scan_at is due."""
+"""Enqueue refresh jobs when dealer_scan_registry.next_scan_at is due."""
 from __future__ import annotations
 
 import logging

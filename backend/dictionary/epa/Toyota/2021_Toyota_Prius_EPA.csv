@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Toyota,Prius,Prius,Hybrid 1.8L I4 (Hybrid),1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,54,50,52,,,,,
-2021,Toyota,Prius,AWD,Hybrid 1.8L I4 (Hybrid),1.8L I4,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,51,47,49,,,,,
-2021,Toyota,Prius,Eco,Hybrid 1.8L I4 (Hybrid),1.8L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,58,53,56,,,,,

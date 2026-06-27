@@ -83,7 +83,7 @@ stop the loop
 
 | Container | Role |
 |-----------|------|
-| `dealership-scanner-postgres` | Inventory + `dealer_jobs` + `dealer_catalog` |
+| `dealership-scanner-postgres` | Inventory + `dealer_jobs` + `dealer_scan_registry` |
 | `dealership-scanner-web` | Flask |
 | `dealership-scanner-scanner-worker-N` | Job claim loop |
 | `dealership-scanner-scanner-scheduler-1` | Refresh enqueue |

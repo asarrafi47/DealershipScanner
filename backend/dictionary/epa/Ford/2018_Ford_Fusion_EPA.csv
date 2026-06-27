@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2018,Ford,Fusion,FWD,1.5L I4 (SIDI),1.5L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,23,34,27,,,,,
-2018,Ford,Fusion,FWD,2.5L I4,2.5L I4,,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,21,32,25,,,,,
-2018,Ford,Fusion,FWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,21,31,25,,,,,
-2018,Ford,Fusion,AWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,20,29,23,,,,,
-2018,Ford,Fusion,Hybrid FWD,Hybrid 2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,43,41,42,,,,,
-2018,Ford,Fusion,AWD,2.7L V6 (SIDI),2.7L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.7,17,26,20,,,,,
-2018,Ford,Fusion,Energi Plug-in Hybrid,Plug-in Hybrid 2.0L I4 (PHEV),2.0L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline / Electricity,Midsize Cars,4,2.0,43,41,42,,,,,

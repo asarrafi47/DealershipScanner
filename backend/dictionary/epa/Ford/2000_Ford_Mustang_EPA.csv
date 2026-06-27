@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2000,Ford,Mustang,Mustang,3.8L V6 (3.8N),3.8L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,18,25,20,,,,,
-2000,Ford,Mustang,Mustang,3.8L V6 (3.8N),3.8L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,26,21,,,,,
-2000,Ford,Mustang,Mustang,4.6L V8 (4.6N),4.6L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,16,22,18,,,,,
-2000,Ford,Mustang,Mustang,4.6L V8 (4.6N),4.6L V8,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,15,23,18,,,,,
-2000,Ford,Mustang,Mustang,4.6L V8 (4V),4.6L V8,,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.6,15,23,18,,,,,
-2000,Ford,Mustang,Mustang,5.4L V8 (GUZZLER),5.4L V8,,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.4,12,17,14,,,,,

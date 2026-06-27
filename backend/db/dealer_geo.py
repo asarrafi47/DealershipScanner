@@ -8,8 +8,14 @@ from urllib.parse import urlparse
 
 def normalize_dealer_host(dealer_url: str) -> str:
     """Lowercase netloc without ``www.`` — stable key for URL variants."""
+    raw = (dealer_url or "").strip()
+    if not raw:
+        return ""
+    # Bare hostnames (``fjmercedes.com``) need a scheme for ``urlparse`` netloc.
+    if "://" not in raw and not raw.startswith("//"):
+        raw = "//" + raw.lstrip("/")
     try:
-        host = (urlparse((dealer_url or "").strip()).netloc or "").lower()
+        host = (urlparse(raw).netloc or "").lower()
     except ValueError:
         return ""
     if host.startswith("www."):

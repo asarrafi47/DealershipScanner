@@ -6,7 +6,7 @@ from flask import flash, redirect, render_template, request, url_for
 
 from backend.dealer.admin.routes import _session_profile, store_admin_bp
 from backend.db.inventory_pg import is_inventory_postgres
-from backend.scanner.job_queue import enqueue_job, list_dealer_catalog, list_recent_jobs
+from backend.scanner.job_queue import enqueue_job, list_dealer_scan_registry, list_recent_jobs
 from backend.scanner.scrape_confidence import job_display_status
 from backend.utils.csrf import validate_csrf_form
 from backend.utils.roles import is_admin_role
@@ -21,7 +21,7 @@ def _require_site_admin():
 
 @store_admin_bp.route("/dealers", methods=["GET", "POST"])
 def admin_dealers_hub():
-    """Discover dealers, view catalog/jobs, enqueue onboard scans (site admin only)."""
+    """Discover dealers, view scan registry/jobs, enqueue onboard scans (site admin only)."""
     if not _require_site_admin():
         flash("Dealer onboarding hub requires a site admin account.", "error")
         return redirect(url_for("store_admin.admin_site_hub"))
@@ -48,7 +48,7 @@ def admin_dealers_hub():
                     flash("Failed to enqueue job.", "error")
         return redirect(url_for("store_admin.admin_dealers_hub"))
 
-    catalog = list_dealer_catalog(limit=50) if postgres_ok else []
+    scan_registry = list_dealer_scan_registry(limit=50) if postgres_ok else []
     jobs = []
     if postgres_ok:
         import json as _json
@@ -74,7 +74,7 @@ def admin_dealers_hub():
     return render_template(
         "admin/dealers.html",
         postgres_ok=postgres_ok,
-        catalog=catalog,
+        scan_registry=scan_registry,
         jobs=jobs,
         find_dealers_url=url_for("find_dealers_page"),
     )

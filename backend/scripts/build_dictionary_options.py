@@ -19,7 +19,7 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
-from backend.db.dictionary_schema import ensure_dictionary_tables
+from backend.db.dictionary_schema import ensure_dictionary_options_table, ensure_epa_master_extended_columns
 from backend.db.inventory_db import get_conn, init_inventory_db
 from backend.db.inventory_pg import is_inventory_postgres
 from backend.enrichment.dictionary_catalog import iter_dictionary_csv_paths, options_status
@@ -101,7 +101,9 @@ def main(argv: list[str] | None = None) -> None:
     init_inventory_db()
     conn = get_conn()
     try:
-        ensure_dictionary_tables(conn.cursor(), postgres=is_inventory_postgres())
+        cur = conn.cursor()
+        ensure_epa_master_extended_columns(cur, postgres=is_inventory_postgres())
+        ensure_dictionary_options_table(cur, postgres=is_inventory_postgres())
         conn.commit()
 
         if args.rebuild:

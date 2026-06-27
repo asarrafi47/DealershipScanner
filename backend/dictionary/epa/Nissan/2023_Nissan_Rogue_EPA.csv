@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2023,Nissan,Rogue,FWD,1.5L I3 (SIDI),1.5L I3,,Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,3,1.5,30,37,33,,,,,
-2023,Nissan,Rogue,FWD SL/Platinum,1.5L I3 (SIDI),1.5L I3,,Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,3,1.5,29,36,32,,,,,
-2023,Nissan,Rogue,AWD,1.5L I3 (SIDI),1.5L I3,,Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.5,28,35,31,,,,,
-2023,Nissan,Rogue,AWD SL/Platinum,1.5L I3 (SIDI),1.5L I3,,Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.5,28,34,31,,,,,
-2023,Nissan,Rogue,FWD,1.5L I3 (SIDI; Stop-Start),1.5L I3,,Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,3,1.5,30,37,33,,,,,
-2023,Nissan,Rogue,FWD SL/Platinum,1.5L I3 (SIDI; Stop-Start),1.5L I3,,Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,3,1.5,29,36,32,,,,,
-2023,Nissan,Rogue,AWD,1.5L I3 (SIDI; Stop-Start),1.5L I3,,Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.5,28,35,31,,,,,
-2023,Nissan,Rogue,AWD SL/Platinum,1.5L I3 (SIDI; Stop-Start),1.5L I3,,Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.5,28,34,31,,,,,

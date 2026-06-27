@@ -205,7 +205,7 @@ def _last_catalog_scan_at(
     registry_ids: list[int],
     dealer_ids: list[str],
 ) -> tuple[dict[int, str], dict[str, str]]:
-    """``dealer_catalog.last_scan_at`` keyed by registry id and dealer slug (Postgres only)."""
+    """``dealer_scan_registry.last_scan_at`` keyed by registry id and dealer slug (Postgres only)."""
     reg_ids = _parse_registry_ids(registry_ids)
     dids = sorted({(d or "").strip().lower() for d in dealer_ids if (d or "").strip()})
     if not reg_ids and not dids:
@@ -230,7 +230,7 @@ def _last_catalog_scan_at(
         cur.execute(
             f"""
             SELECT registry_id, dealer_id, last_scan_at
-            FROM dealer_catalog
+            FROM dealer_scan_registry
             WHERE last_scan_at IS NOT NULL AND ({' OR '.join(clauses)})
             """,
             tuple(params),

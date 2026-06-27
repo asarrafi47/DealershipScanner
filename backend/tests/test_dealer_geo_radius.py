@@ -38,6 +38,8 @@ def _ensure_dealer_geopoints(conn: sqlite3.Connection) -> None:
 
 def test_normalize_dealer_host_strips_www() -> None:
     assert normalize_dealer_host("https://WWW.tonychevrolethilo.com/") == "tonychevrolethilo.com"
+    assert normalize_dealer_host("tonychevrolethilo.com") == "tonychevrolethilo.com"
+    assert normalize_dealer_host("www.tonychevrolethilo.com") == "tonychevrolethilo.com"
 
 
 def test_lookup_dealer_coords_host_fallback() -> None:

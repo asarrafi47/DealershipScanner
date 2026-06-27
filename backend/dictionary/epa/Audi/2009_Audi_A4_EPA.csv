@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2009,Audi,A4,quattro,3.2L V6,3.2L V6 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,17,26,20,,,,,
-2009,Audi,A4,Cabriolet,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (variable gear ratios),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,30,25,,,,,
-2009,Audi,A4,Cabriolet quattro,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,21,27,23,,,,,
-2009,Audi,A4,Cabriolet quattro,3.1L V6,3.1L V6 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.1,17,25,20,,,,,
-2009,Audi,A4,A4,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (variable gear ratios),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,23,30,25,,,,,
-2009,Audi,A4,quattro,2.0L I4,2.0L I4 Turbo,Turbocharged,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,22,30,25,,,,,
-2009,Audi,A4,quattro,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,21,27,23,,,,,
-2009,Audi,A4,Avant quattro,2.0L I4,2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,21,27,23,,,,,

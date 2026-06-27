@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2017,smart,fortwo,cabriolet,0.9L I3 (SIDI),0.9L I3,,Automatic (AM6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,0.9,33,38,35,,,,,
-2017,smart,fortwo,cabriolet,0.9L I3 (SIDI),0.9L I3,,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,0.9,31,38,34,,,,,
-2017,smart,fortwo,coupe,0.9L I3 (SIDI),0.9L I3,,Automatic (AM6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,0.9,33,39,35,,,,,
-2017,smart,fortwo,coupe,0.9L I3 (SIDI),0.9L I3,,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,3,0.9,31,39,34,,,,,
-2017,smart,fortwo,electric drive coupe,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Two Seaters,,,124,94,108,,,,,
-2017,smart,fortwo,electric drive convertible,EV Electricity,EV Electricity,,Automatic (A1),Rear-Wheel Drive,Electricity,Two Seaters,,,112,91,102,,,,,

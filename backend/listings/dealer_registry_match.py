@@ -10,28 +10,72 @@ from typing import Any
 from backend.db.dealer_geo import normalize_dealer_host
 
 
+def _registry_id_from_dealer_id(dealer_id: Any) -> int:
+    """``db-{id}`` scanner slug → registry primary key."""
+    s = str(dealer_id or "").strip()
+    if s.startswith("db-"):
+        try:
+            return int(s[3:])
+        except ValueError:
+            return 0
+    return 0
+
+
+def registry_id_by_dealer_slug(host_to_registry: dict[str, int]) -> dict[str, int]:
+    """Map ``dealers.json`` ``dealer_id`` slug → registry id via shared URL host."""
+    out: dict[str, int] = {}
+    try:
+        import json
+
+        from backend.scanner.constants import MANIFEST_PATH
+
+        if not MANIFEST_PATH.is_file():
+            return out
+        with open(MANIFEST_PATH, encoding="utf-8") as f:
+            dealers = json.load(f)
+        if not isinstance(dealers, list):
+            return out
+        for row in dealers:
+            if not isinstance(row, dict):
+                continue
+            slug = str(row.get("dealer_id") or "").strip()
+            if not slug:
+                continue
+            host = normalize_dealer_host(str(row.get("url") or ""))
+            rid = host_to_registry.get(host)
+            if rid and slug not in out:
+                out[slug] = int(rid)
+    except OSError:
+        pass
+    return out
+
+
 def registry_id_by_dealer_host(conn: Any) -> dict[str, int]:
     """Map normalized dealer host → active registry id (first wins per host)."""
     out: dict[str, int] = {}
     cur = conn.cursor()
     cur.execute(
         """
-        SELECT id, website_url, dealer_website_url
+        SELECT id, normalized_host, website_url, dealer_website_url
         FROM dealerships
         WHERE is_active = 1 AND duplicate_of_id IS NULL
         """
     )
-    for rid_raw, website_url, dealer_website_url in cur.fetchall():
+    for rid_raw, normalized_host, website_url, dealer_website_url in cur.fetchall():
         try:
             rid = int(rid_raw)
         except (TypeError, ValueError):
             continue
         if rid <= 0:
             continue
-        for url in (website_url, dealer_website_url):
-            host = normalize_dealer_host(str(url or ""))
-            if host and host not in out:
-                out[host] = rid
+        host = str(normalized_host or "").strip().lower()
+        if not host:
+            for url in (website_url, dealer_website_url):
+                host = normalize_dealer_host(str(url or ""))
+                if host:
+                    break
+        if host and host not in out:
+            out[host] = rid
     return out
 
 
@@ -56,17 +100,20 @@ def resolve_car_dealership_registry_id(
     car: dict[str, Any],
     *,
     host_to_registry: dict[str, int] | None = None,
+    slug_to_registry: dict[str, int] | None = None,
 ) -> int:
-    """Registry id from column, else from ``dealer_url`` host lookup."""
+    """Registry id from column, ``db-{id}`` slug, ``dealer_url`` host, or manifest ``dealer_id``."""
     try:
         reg = int(car.get("dealership_registry_id") or 0)
     except (TypeError, ValueError):
         reg = 0
     if reg > 0:
         return reg
-    host = normalize_dealer_host(str(car.get("dealer_url") or ""))
-    if not host:
-        return 0
+
+    reg = _registry_id_from_dealer_id(car.get("dealer_id"))
+    if reg > 0:
+        return reg
+
     if host_to_registry is None:
         from backend.db.inventory_db import get_conn
 
@@ -75,7 +122,28 @@ def resolve_car_dealership_registry_id(
             host_to_registry = registry_id_by_dealer_host(conn)
         finally:
             conn.close()
-    return int(host_to_registry.get(host) or 0)
+
+    host = normalize_dealer_host(str(car.get("dealer_url") or ""))
+    if host:
+        hit = int(host_to_registry.get(host) or 0)
+        if hit > 0:
+            return hit
+        # Path/query variants (e.g. CarMax store URLs) when netloc match missed.
+        url_lower = str(car.get("dealer_url") or "").lower()
+        if url_lower:
+            for reg_host, rid in host_to_registry.items():
+                if reg_host and reg_host in url_lower:
+                    return int(rid)
+
+    slug = str(car.get("dealer_id") or "").strip()
+    if slug:
+        if slug_to_registry is None:
+            slug_to_registry = registry_id_by_dealer_slug(host_to_registry)
+        hit = int(slug_to_registry.get(slug) or 0)
+        if hit > 0:
+            return hit
+
+    return 0
 
 
 def collect_registry_ids_from_cars(

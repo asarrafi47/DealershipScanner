@@ -69,7 +69,7 @@ flowchart TB
   SCHED --> JOBS
   WORKERS --> JOBS
   WORKERS --> PG
-  WORKERS --> CAT[dealer_catalog]
+  WORKERS --> CAT[dealer_scan_registry]
 ```
 
 ### Local Docker Compose (target stack)
@@ -79,7 +79,7 @@ flowchart TB
 | `postgres` | `postgres:16-alpine` | Inventory, dealerships, jobs, catalog, entitlements |
 | `web` | `Dockerfile.web` | Flask — consumer UI, admin UI, billing, job enqueue |
 | `scanner-worker` | `Dockerfile.scanner` | Claim one `dealer_jobs` row → scrape → upsert Postgres |
-| `scanner-scheduler` | `Dockerfile.scanner` | Enqueue refresh jobs when `dealer_catalog.next_scan_at` due |
+| `scanner-scheduler` | `Dockerfile.scanner` | Enqueue refresh jobs when `dealer_scan_registry.next_scan_at` due |
 
 **Shared volume `/data`:** `users.db`, `dev_users.db`, VDP images, PDFs. Inventory **only** in Postgres.
 
@@ -180,7 +180,7 @@ sequenceDiagram
   participant Web
   participant Queue as dealer_jobs
   participant Worker
-  participant Cat as dealer_catalog
+  participant Cat as dealer_scan_registry
   participant PG as Postgres
 
   Admin->>Web: Find dealer on map → Add & scan
@@ -193,7 +193,7 @@ sequenceDiagram
   Note over Worker,PG: Refresh jobs repeat using catalog (delta VINs only)
 ```
 
-### 5.3 `dealer_catalog` table
+### 5.3 `dealer_scan_registry` table
 
 | Column | Purpose |
 |--------|---------|
@@ -225,7 +225,7 @@ Workers claim with `SELECT … FOR UPDATE SKIP LOCKED`.
 
 ### 5.5 Scan phases (deterministic, low tokens)
 
-1. **List:** Use `dealer_catalog` path — API/intercept, no LLM
+1. **List:** Use `dealer_scan_registry` path — API/intercept, no LLM
 2. **Delta:** Diff VIN fingerprint → VDP fetch only for new/changed
 3. **Reconcile:** Mark missing VINs `listing_active = 0`
 4. **Enrich (optional):** Vision/gap-fill for changed rows only
@@ -235,8 +235,8 @@ Workers claim with `SELECT … FOR UPDATE SKIP LOCKED`.
 | Phase | Deliverable | Status |
 |-------|-------------|--------|
 | A1 | Postgres container + `up.sh --full` | ✅ Verified 2026-06-13 |
-| A2 | `dealer_jobs` + `dealer_catalog` + worker/scheduler | ✅ Scaffold running |
-| A3 | `scanner-scheduler`; per-dealer `scan_interval_hours` | ✅ Scaffold (`record_catalog_after_success`) |
+| A2 | `dealer_jobs` + `dealer_scan_registry` + worker/scheduler | ✅ Scaffold running |
+| A3 | `scanner-scheduler`; per-dealer `scan_interval_hours` | ✅ Scaffold (`record_dealer_scan_registry`) |
 | A4 | `/admin/dealers` — discover, queue, status, interval config | ✅ Scaffold |
 | C4 | Per-feature upsell on 403 (`upgrade_plan_*`) | ✅ |
 | A5 | K8s worker Deployment + scheduler CronJob | ⏳ |
@@ -462,7 +462,7 @@ Existing: SEC-059 (org billing), SEC-066 (premium checkout verify), SEC-067 (pre
 
 | # | Task | Pillar |
 |---|------|--------|
-| 6 | Create `dealer_jobs` + `dealer_catalog` tables | A2 |
+| 6 | Create `dealer_jobs` + `dealer_scan_registry` tables | A2 |
 | 7 | Worker claim loop (reuse Smart Import) | A2 |
 | 8 | Wire `_require_feature()` on gated APIs | C1 |
 | 9 | Redesign `/premium` with plan cards | C2 |

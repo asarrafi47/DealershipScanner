@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Hyundai,Santa Fe,FWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,25,28,26,,,,,
-2021,Hyundai,Santa Fe,FWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (AM-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,22,28,25,,,,,
-2021,Hyundai,Santa Fe,AWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,22,25,24,,,,,
-2021,Hyundai,Santa Fe,AWD,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (AM-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,21,28,24,,,,,
-2021,Hyundai,Santa Fe,Hybrid,Hybrid 1.6L I4 (SIDI; Hybrid),1.6L I4 Turbo,Turbocharged,Automatic (AM-S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.6,33,30,32,,,,,
-2021,Hyundai,Santa Fe,Hybrid Blue,Hybrid 1.6L I4 (SIDI; Hybrid),1.6L I4 Turbo,Turbocharged,Automatic (AM-S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.6,36,31,34,,,,,

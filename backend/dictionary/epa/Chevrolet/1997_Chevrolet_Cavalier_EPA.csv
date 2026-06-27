@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1997,Chevrolet,Cavalier,Cavalier,2.2L I4 ((FFS) (MPFI)),2.2L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,21,29,24,,,,,
-1997,Chevrolet,Cavalier,Cavalier,2.2L I4 ((FFS) (MPFI)),2.2L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,22,31,25,,,,,
-1997,Chevrolet,Cavalier,Cavalier,2.2L I4 ((FFS) (MPFI)),2.2L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,22,33,26,,,,,
-1997,Chevrolet,Cavalier,Cavalier,2.2L I4 ((FFS) (MPFI)),2.2L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,20,31,24,,,,,
-1997,Chevrolet,Cavalier,Cavalier,2.4L I4 ((FFS) (MPFI)),2.4L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,19,29,23,,,,,
-1997,Chevrolet,Cavalier,Cavalier,2.4L I4 ((FFS) (MPFI)),2.4L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,20,30,23,,,,,

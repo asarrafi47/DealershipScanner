@@ -122,14 +122,14 @@ def platform_health() -> dict[str, Any]:
         "postgres": "offline",
         "active_jobs": 0,
         "failed_jobs_24h": 0,
-        "catalog_dealers": 0,
+        "scan_registry_dealers": 0,
         "last_scrape_at": None,
     }
     if not is_inventory_postgres():
         health["postgres"] = "misconfigured"
         return health
     try:
-        from backend.scanner.job_queue import list_dealer_catalog, list_recent_jobs
+        from backend.scanner.job_queue import list_dealer_scan_registry, list_recent_jobs
 
         health["postgres"] = "ok"
         jobs = list_recent_jobs(limit=50)
@@ -142,8 +142,8 @@ def platform_health() -> dict[str, Any]:
             if (j.get("status") or "") == "failed"
             and (j.get("finished_at") or "") >= _iso_day_ago()
         )
-        catalog = list_dealer_catalog(limit=500)
-        health["catalog_dealers"] = len(catalog)
+        scan_registry = list_dealer_scan_registry(limit=500)
+        health["scan_registry_dealers"] = len(scan_registry)
         dash = invq.dashboard_summary({"role": "admin"})
         if dash.get("top_dealers"):
             times = [
@@ -173,7 +173,7 @@ def build_platform_dashboard(*, usage_audience: str = "all", usage_days: int = 3
         "health": health,
         "inventory": inv,
         "registry_dealerships": registry_dealership_count(),
-        "catalog_dealerships": health.get("catalog_dealers", 0),
+        "scan_registry_dealerships": health.get("scan_registry_dealers", 0),
         "users": users,
         "engagement": engagement_counts(days=usage_days),
         "usage": usage_summary(days=usage_days, audience=usage_audience),

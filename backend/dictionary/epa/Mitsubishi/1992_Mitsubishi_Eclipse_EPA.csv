@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1992,Mitsubishi,Eclipse,Eclipse,1.8L I4 (SOHC (FFS)),1.8L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,28,23,,,,,
-1992,Mitsubishi,Eclipse,Eclipse,1.8L I4 (SOHC (FFS)),1.8L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,29,24,,,,,
-1992,Mitsubishi,Eclipse,Eclipse,"2.0L I4 (DOHC TURBO (FFS,TRBO))",2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,17,22,19,,,,,
-1992,Mitsubishi,Eclipse,Eclipse,"2.0L I4 (DOHC TURBO (FFS,TRBO))",2.0L I4 Turbo,Turbocharged,Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,16,19,18,,,,,
-1992,Mitsubishi,Eclipse,Eclipse,2.0L I4 (DOHC (FFS)),2.0L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,25,21,,,,,
-1992,Mitsubishi,Eclipse,Eclipse,"2.0L I4 (DOHC TURBO (FFS,TRBO))",2.0L I4 Turbo,Turbocharged,Manual 5-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,18,23,20,,,,,
-1992,Mitsubishi,Eclipse,Eclipse,2.0L I4 (DOHC (FFS)),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,26,22,,,,,
-1992,Mitsubishi,Eclipse,Eclipse,"2.0L I4 (DOHC TURBO (FFS,TRBO))",2.0L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,19,26,21,,,,,

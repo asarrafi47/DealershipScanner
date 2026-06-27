@@ -30,6 +30,13 @@ def test_sort_forced_induction_filter_options_na_first() -> None:
 def test_search_cars_forced_induction_na_and_turbo(tmp_path, monkeypatch) -> None:
     db_path = tmp_path / "inv.db"
     monkeypatch.setattr(idb, "DB_PATH", str(db_path))
+    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "1")
+    monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: False)
+    from backend.db.cars_columns import reset_cars_columns_cache
+
+    reset_cars_columns_cache()
     idb.init_inventory_db()
 
     conn = sqlite3.connect(str(db_path))

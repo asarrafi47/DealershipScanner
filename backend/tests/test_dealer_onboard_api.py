@@ -119,7 +119,7 @@ def test_api_admin_dealer_jobs_ok(monkeypatch, tmp_path) -> None:
         ],
     )
     monkeypatch.setattr(
-        "backend.scanner.job_queue.list_dealer_catalog",
+        "backend.scanner.job_queue.list_dealer_scan_registry",
         lambda **kwargs: [],
     )
 

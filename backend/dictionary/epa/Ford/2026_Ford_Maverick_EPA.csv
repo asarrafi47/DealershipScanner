@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Ford,Maverick,FWD,2.0L I4 (SIDI & PFI),2.0L I4 Turbo,Turbocharged,Automatic 8-spd,Front-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.0,23,32,26,,,,,
-2026,Ford,Maverick,HEV FWD,Hybrid 2.5L I4 (Hybrid),2.5L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,42,35,38,,,,,
-2026,Ford,Maverick,AWD,2.0L I4 (SIDI & PFI),2.0L I4 Turbo,Turbocharged,Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.0,22,30,25,,,,,
-2026,Ford,Maverick,HEV AWD,Hybrid 2.5L I4 (Hybrid),2.5L I4,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.5,40,34,37,,,,,
-2026,Ford,Maverick,Lobo AWD,2.0L I4 (SIDI & PFI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.0,21,30,24,,,,,
-2026,Ford,Maverick,Tremor AWD,2.0L I4 (SIDI & PFI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.0,21,27,23,,,,,
-2026,Ford,Maverick,Lariat HEV AWD,Hybrid 2.5L I4 (Hybrid),2.5L I4,,Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.5,39,32,36,,,,,

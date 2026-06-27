@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1991,Toyota,Corolla,Corolla,1.6L I4 ((4A-FE) (FFS)),1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,26,24,,,,,
-1991,Toyota,Corolla,Corolla,1.6L I4 ((4A-FE) (FFS)),1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,22,30,25,,,,,
-1991,Toyota,Corolla,Corolla,1.6L I4 ((4A-GE) (FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.6,22,29,25,,,,,
-1991,Toyota,Corolla,Corolla,1.6L I4 ((4A-FE) (FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,30,26,,,,,
-1991,Toyota,Corolla,All-Trac Wagon,1.6L I4 ((4A-FE) (FFS)),1.6L I4,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,21,26,23,,,,,
-1991,Toyota,Corolla,All-Trac Wagon,1.6L I4 ((4A-FE) (FFS)),1.6L I4,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,19,25,21,,,,,
-1991,Toyota,Corolla,Wagon,1.6L I4 ((4A-FE) (FFS)),1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,23,26,24,,,,,
-1991,Toyota,Corolla,Wagon,1.6L I4 ((4A-FE) (FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,24,30,26,,,,,

@@ -144,6 +144,17 @@ def _load_epa_csv(year: int, make: str, model: str) -> list[dict]:
 
     rows: list[dict] = []
     try:
+        from backend.enrichment.epa_master_store import fetch_epa_rows
+
+        rows = list(fetch_epa_rows(year, make, model))
+    except ImportError:
+        pass
+
+    if rows:
+        _epa_cache[key] = rows
+        return rows
+
+    try:
         from backend.enrichment.dictionary_catalog import find_epa_csv
 
         catalog_path = find_epa_csv(make, model, year)

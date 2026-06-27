@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1990,Buick,Skylark,Skylark,2.3L I4 ((FFS)),2.3L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,20,28,23,,,,,
-1990,Buick,Skylark,Skylark,2.5L I4 ((FFS)),2.5L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,20,29,23,,,,,
-1990,Buick,Skylark,Skylark,3.3L V6 ((FFS)),3.3L V6,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.3,18,25,20,,,,,

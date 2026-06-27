@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1989,Ford,Escort,Escort,1.9L I4 ((FFS)),1.9L I4 Turbo,Turbocharged,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,23,29,25,,,,,
-1989,Ford,Escort,Escort,1.9L I4 ((FFS)),1.9L I4 Turbo,Turbocharged,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,28,38,32,,,,,
-1989,Ford,Escort,Escort,1.9L I4 ((FFS) (SPFI)),1.9L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,23,33,27,,,,,
-1989,Ford,Escort,Escort,1.9L I4 ((FFS) (MPFI)),1.9L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.9,22,29,25,,,,,
-1989,Ford,Escort,Wagon,1.9L I4 ((FFS)),1.9L I4 Turbo,Turbocharged,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,22,28,24,,,,,
-1989,Ford,Escort,Wagon,1.9L I4 ((FFS) (SPFI)),1.9L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.9,23,33,27,,,,,

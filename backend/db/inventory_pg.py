@@ -217,6 +217,59 @@ def pg_add_columns(cur, table: str, additive: list[tuple[str, str]]) -> None:
             cur.execute(f'ALTER TABLE "{table}" ADD COLUMN "{col}" {typ}')
 
 
+def apply_postgres_inventory_migrations(cur) -> None:
+    """Idempotent column/index updates — run on every ``init_postgres_inventory`` call."""
+    from backend.db.dictionary_schema import ensure_epa_master_extended_columns
+
+    pg_add_columns(
+        cur,
+        "cars",
+        [
+            ("transmission_type", "TEXT"),
+            ("recovery_status", "TEXT"),
+            ("recovery_attempted_at", "TEXT"),
+            ("recovery_source", "TEXT"),
+            ("recovery_notes", "TEXT"),
+            ("missing_field_count", "INTEGER"),
+            ("recoverability_score", "DOUBLE PRECISION"),
+            ("price_provenance_json", "TEXT"),
+            ("window_sticker_url", "TEXT"),
+            ("forced_induction", "TEXT"),
+        ],
+    )
+    ensure_epa_master_extended_columns(cur, postgres=True)
+    pg_add_columns(
+        cur,
+        "dealerships",
+        [
+            ("is_active", "INTEGER NOT NULL DEFAULT 1"),
+            ("street_address", "TEXT"),
+            ("zip_code", "TEXT"),
+            ("dealer_website_url", "TEXT"),
+            ("source_dmv", "INTEGER NOT NULL DEFAULT 0"),
+            ("source_osm", "INTEGER NOT NULL DEFAULT 0"),
+            ("source_web", "INTEGER NOT NULL DEFAULT 0"),
+            ("osm_id", "TEXT"),
+            ("sticker_provider", "TEXT NOT NULL DEFAULT 'unknown'"),
+            ("sticker_ipacket_fail_count", "INTEGER NOT NULL DEFAULT 0"),
+            ("sticker_provider_updated_at", "TEXT"),
+            ("google_place_id", "TEXT"),
+            ("google_rating", "DOUBLE PRECISION"),
+            ("google_review_count", "INTEGER"),
+            ("google_rating_fetched_at", "TEXT"),
+            ("normalized_host", "TEXT"),
+        ],
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_dealerships_normalized_host "
+        "ON dealerships(normalized_host) "
+        "WHERE is_active = 1 AND duplicate_of_id IS NULL"
+    )
+    from backend.db.cars_columns import reset_cars_columns_cache
+
+    reset_cars_columns_cache()
+
+
 def init_postgres_inventory(conn: Any) -> None:
     """Create inventory tables and indexes on PostgreSQL (idempotent)."""
     global _PG_INV_SCHEMA_OK
@@ -228,6 +281,7 @@ def init_postgres_inventory(conn: Any) -> None:
     ensure_catalog_tables(cur, postgres=True)
     drop_kbb_columns_from_cars(cur, postgres=True)
     drop_model_full_raw_column(cur, postgres=True)
+    apply_postgres_inventory_migrations(cur)
     conn.commit()
     if _PG_INV_SCHEMA_OK:
         cur.close()
@@ -305,6 +359,7 @@ def init_postgres_inventory(conn: Any) -> None:
             ("recoverability_score", "DOUBLE PRECISION"),
             ("price_provenance_json", "TEXT"),
             ("window_sticker_url", "TEXT"),
+            ("forced_induction", "TEXT"),
         ],
     )
     cur.execute(
@@ -339,6 +394,11 @@ def init_postgres_inventory(conn: Any) -> None:
         cur,
         "epa_master",
         [
+            ("trim", "TEXT"),
+            ("body_style", "TEXT"),
+            ("engine_description", "TEXT"),
+            ("engine_display", "TEXT"),
+            ("forced_induction", "TEXT"),
             ("city08", "DOUBLE PRECISION"),
             ("highway08", "DOUBLE PRECISION"),
             ("city_e", "DOUBLE PRECISION"),
@@ -485,7 +545,13 @@ def init_postgres_inventory(conn: Any) -> None:
             ("google_rating", "DOUBLE PRECISION"),
             ("google_review_count", "INTEGER"),
             ("google_rating_fetched_at", "TEXT"),
+            ("normalized_host", "TEXT"),
         ],
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_dealerships_normalized_host "
+        "ON dealerships(normalized_host) "
+        "WHERE is_active = 1 AND duplicate_of_id IS NULL"
     )
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_dealerships_created ON dealerships(created_at DESC)"

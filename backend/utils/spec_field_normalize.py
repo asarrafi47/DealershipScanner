@@ -110,6 +110,8 @@ def extract_cylinder_count(
     cylinders_raw: Any,
     *,
     fuel_type: Any = None,
+    description: Any = None,
+    title: Any = None,
 ) -> int | None:
     """Parse cylinder count from engine / cylinder text; BEV hints → 0."""
     parts: list[str] = []
@@ -117,6 +119,10 @@ def extract_cylinder_count(
         parts.append(str(engine_description))
     if cylinders_raw is not None and not isinstance(cylinders_raw, bool):
         parts.append(str(cylinders_raw))
+    if description:
+        parts.append(str(description))
+    if title:
+        parts.append(str(title))
     blob = " ".join(parts).strip()
     if not blob:
         return None
@@ -142,7 +148,7 @@ def extract_cylinder_count(
             if 1 <= n <= 16:
                 return n
 
-    m = re.search(r"\b(\d{1,2})\s*(?:CYL|CYLINDER)S?\b", blob, re.I)
+    m = re.search(r"\b(\d{1,2})[\s-]*(?:CYL|CYLINDER)S?\b", blob, re.I)
     if m:
         n = int(m.group(1))
         if 0 <= n <= 16:
@@ -318,6 +324,8 @@ def collect_raw_spec_heuristic_updates(raw: dict[str, Any]) -> dict[str, Any]:
         raw.get("engine_description") or c.get("engine_description"),
         raw.get("cylinders"),
         fuel_type=c.get("fuel_type"),
+        description=raw.get("description") or c.get("description"),
+        title=raw.get("title") or c.get("title"),
     )
     if extracted is not None:
         if cyl_i is None:
@@ -328,6 +336,32 @@ def collect_raw_spec_heuristic_updates(raw: dict[str, Any]) -> dict[str, Any]:
                 pass
             else:
                 out["cylinders"] = extracted
+
+    ft = str(c.get("fuel_type") or "").strip().lower()
+    cyl_after = out.get("cylinders", cyl_i)
+    try:
+        cyl_after_i = (
+            int(cyl_after) if cyl_after is not None and str(cyl_after).strip() != "" else None
+        )
+    except (TypeError, ValueError):
+        cyl_after_i = cyl_i
+    if ft == "electric" and (cyl_after_i is None or cyl_after_i == 0):
+        try:
+            from backend.utils.ev_motor_count import infer_ev_motor_count
+        except ImportError:
+            infer_ev_motor_count = None  # type: ignore[misc, assignment]
+        if infer_ev_motor_count is not None:
+            motor_count = infer_ev_motor_count(
+                make=c.get("make"),
+                model=c.get("model"),
+                trim=c.get("trim"),
+                title=raw.get("title") or c.get("title"),
+                description=raw.get("description") or c.get("description"),
+                drivetrain=c.get("drivetrain"),
+                fuel_type=c.get("fuel_type"),
+            )
+            if motor_count is not None and motor_count > 0:
+                out["cylinders"] = motor_count
 
     eng = c.get("engine_description")
     if eng and str(eng).strip():
@@ -375,5 +409,20 @@ def collect_raw_spec_heuristic_updates(raw: dict[str, Any]) -> dict[str, Any]:
         normalized_title = normalize_title_text(title)
         if normalized_title and normalized_title != title:
             out["title"] = normalized_title
+
+    if c.get("mpg_city") is None or c.get("mpg_highway") is None:
+        try:
+            from backend.enrichment.hd_truck_mpg import is_epa_exempt_hd_truck, resolve_hd_truck_mpg
+
+            if is_epa_exempt_hd_truck(c.get("make"), c.get("model")):
+                resolved = resolve_hd_truck_mpg({**c, **raw})
+                if resolved:
+                    city, hwy, _src = resolved
+                    if c.get("mpg_city") is None:
+                        out["mpg_city"] = city
+                    if c.get("mpg_highway") is None:
+                        out["mpg_highway"] = hwy
+        except ImportError:
+            pass
 
     return out

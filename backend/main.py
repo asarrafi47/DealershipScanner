@@ -2523,10 +2523,10 @@ def api_admin_dealer_jobs():
         return jsonify({"ok": False, "error": "forbidden"}), 403
 
     from backend.db.inventory_pg import is_inventory_postgres
-    from backend.scanner.job_queue import list_dealer_catalog, list_recent_jobs
+    from backend.scanner.job_queue import list_dealer_scan_registry, list_recent_jobs
 
     if not is_inventory_postgres():
-        return jsonify({"ok": False, "error": "postgres_required", "jobs": [], "catalog": []}), 503
+        return jsonify({"ok": False, "error": "postgres_required", "jobs": [], "scan_registry": []}), 503
 
     try:
         limit = min(max(int(request.args.get("limit") or 30), 1), 100)
@@ -2534,13 +2534,13 @@ def api_admin_dealer_jobs():
         limit = 30
 
     jobs = [_serialize_dealer_job_row(j) for j in list_recent_jobs(limit=limit)]
-    catalog = list_dealer_catalog(limit=50)
+    scan_registry = list_dealer_scan_registry(limit=50)
     active = sum(1 for j in jobs if (j.get("status") or "") in ("queued", "running"))
     return jsonify(
         {
             "ok": True,
             "jobs": jobs,
-            "catalog": catalog,
+            "scan_registry": scan_registry,
             "active_count": active,
         }
     )

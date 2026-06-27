@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,Isuzu,Rodeo,2WD,2.6L I4 ((FFS)),2.6L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.6,15,18,16,,,,,
-1994,Isuzu,Rodeo,2WD,3.2L V6 ((FFS)),3.2L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,15,17,16,,,,,
-1994,Isuzu,Rodeo,2WD,3.2L V6 ((FFS)),3.2L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,15,17,16,,,,,
-1994,Isuzu,Rodeo,4WD,3.2L V6 ((FFS)),3.2L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,14,17,15,,,,,
-1994,Isuzu,Rodeo,4WD,3.2L V6 ((FFS)),3.2L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.2,15,17,16,,,,,

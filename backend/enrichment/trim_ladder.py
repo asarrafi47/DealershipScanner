@@ -669,15 +669,38 @@ def _row_trim_adds(row: dict[str, str]) -> list[str]:
     return out[:4]
 
 
-def _dictionary_adds_by_trim(make: str, model: str, year: Any) -> dict[str, list[str]]:
-    """Load trim→feature bullets from the best Complete_Options CSV for this vehicle."""
+def _year_int(year: Any) -> int | None:
+    try:
+        y = int(year)
+        return y if 1900 <= y <= 2100 else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _load_complete_options_rows(make: str, model: str, year: Any) -> list[dict[str, str]]:
+    """Prefer ``catalog_*`` DB rows; fall back to Complete_Options CSV."""
+    try:
+        from backend.enrichment.catalog_store import fetch_catalog_option_rows
+
+        rows = fetch_catalog_option_rows(year, make, model)
+        if rows:
+            return rows
+    except Exception:
+        pass
     csv_path = _find_complete_options_csv(make, model, year)
     if not csv_path:
-        return {}
+        return []
     try:
         with csv_path.open(encoding="utf-8", newline="") as fh:
-            rows = list(csv.DictReader(fh))
+            return list(csv.DictReader(fh))
     except OSError:
+        return []
+
+
+def _dictionary_adds_by_trim(make: str, model: str, year: Any) -> dict[str, list[str]]:
+    """Load trim→feature bullets from catalog DB or Complete_Options CSV."""
+    rows = _load_complete_options_rows(make, model, year)
+    if not rows:
         return {}
     out: dict[str, list[str]] = {}
     for row in rows:
@@ -1338,11 +1361,16 @@ def _find_complete_options_csv(make: str, model: str, year: Any) -> Path | None:
     return _catalog_find_co(make, model, year)
 
 
-def _ladder_from_complete_options_csv(path: Path, make: str, model: str, year: Any) -> dict[str, Any] | None:
-    try:
-        with path.open(encoding="utf-8", newline="") as fh:
-            rows = list(csv.DictReader(fh))
-    except OSError:
+def _ladder_from_options_rows(
+    rows: list[dict[str, str]],
+    make: str,
+    model: str,
+    year: Any,
+    *,
+    source: str,
+    ladder_id: str,
+) -> dict[str, Any] | None:
+    if not rows:
         return None
     csv_make = make
     csv_model = model
@@ -1353,30 +1381,40 @@ def _ladder_from_complete_options_csv(path: Path, make: str, model: str, year: A
             csv_model = str(row["Model"]).strip() or csv_model
         if csv_make and csv_model:
             break
-
     steps = _steps_from_csv_rows(rows, csv_make, csv_model)
     if not _ladder_steps_usable(steps, csv_make):
         return None
-    try:
-        blob = path.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        blob = ""
+    blob = " ".join(str(r.get("Trim") or "") for r in rows)
     if _complete_options_ladder_is_junk(steps, csv_make, csv_model, source_blob=blob):
         return None
-
-    y_match = re.match(r"^(\d{4})_", path.name)
-    yr = int(y_match.group(1)) if y_match else None
+    yr = _year_int(year)
     ladder = {
-        "id": path.stem.lower(),
+        "id": ladder_id,
         "make": csv_make,
         "models": [csv_model, model],
         "year_min": (yr - 2) if yr else 0,
         "year_max": (yr + 2) if yr else 9999,
         "label": f"{csv_make} {csv_model} trim lineup",
-        "source": path.name,
+        "source": source,
         "steps": steps,
     }
     return _finalize_ladder_steps(ladder, csv_make, model)
+
+
+def _ladder_from_complete_options_csv(path: Path, make: str, model: str, year: Any) -> dict[str, Any] | None:
+    try:
+        with path.open(encoding="utf-8", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+    except OSError:
+        return None
+    return _ladder_from_options_rows(
+        rows,
+        make,
+        model,
+        year,
+        source=path.name,
+        ladder_id=path.stem.lower(),
+    )
 
 
 def _inventory_trim_rows(
@@ -1953,6 +1991,28 @@ def _pick_ladder_def(make: str, model: str, year: Any) -> dict[str, Any] | None:
     brochure = _pick_brochure_ladder(make, model, year)
     if brochure and len(brochure.get("steps") or []) >= 3:
         return brochure
+
+    co_rows = _load_complete_options_rows(make, model, year)
+    if co_rows:
+        from backend.enrichment.catalog_store import has_catalog_rows
+
+        y = _year_int(year)
+        src = "catalog_trims" if (y and has_catalog_rows(y, make, model)) else "complete_options"
+        ladder = _ladder_from_options_rows(
+            co_rows,
+            make,
+            model,
+            year,
+            source=src,
+            ladder_id=f"{make}-{model}-{year}".lower().replace(" ", "-"),
+        )
+        if ladder and _ladder_matches_car(ladder, make, model, year):
+            finalized = _finalize_ladder_steps(ladder, make, model)
+            if (
+                _ladder_steps_usable(finalized.get("steps") or [], make, model=model)
+                and _ladder_steps_plausible_for_model(finalized.get("steps") or [], make, model)
+            ):
+                return finalized
 
     csv_path = _find_complete_options_csv(make, model, year)
     if csv_path:

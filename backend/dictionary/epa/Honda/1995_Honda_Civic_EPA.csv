@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1995,Honda,Civic,Civic,1.5L I4 ((FFS)),1.5L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,25,33,28,,,,,
-1995,Honda,Civic,Civic,1.5L I4 (EGR/2-VLV (FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,35,41,38,,,,,
-1995,Honda,Civic,Civic,1.5L I4 ((FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,29,36,32,,,,,
-1995,Honda,Civic,Civic,1.5L I4 (EGR/2-VLV (FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,33,41,36,,,,,
-1995,Honda,Civic,Civic,1.6L I4 ((FFS)),1.6L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,31,26,,,,,
-1995,Honda,Civic,Civic,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,25,32,28,,,,,
-1995,Honda,Civic,HB VX,1.5L I4 (EGR/4-VLV (FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,39,50,43,,,,,
-1995,Honda,Civic,HB VX,1.5L I4 (EGR/4-VLV (FFS)),1.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,37,45,40,,,,,

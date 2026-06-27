@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2023,Hyundai,Sonata,Sonata,1.6L I4 (SIDI),1.6L I4 Turbo,Turbocharged,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,27,37,31,,,,,
-2023,Hyundai,Sonata,Sonata,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.5,27,37,31,,,,,
-2023,Hyundai,Sonata,Sonata,2.5L I4 (SIDI & PFI; Stop-Start),2.5L I4,,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.5,28,38,32,,,,,
-2023,Hyundai,Sonata,Sonata,2.5L I4 (SIDI & PFI),2.5L I4,,Automatic (AM-S8),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.5,23,33,27,,,,,
-2023,Hyundai,Sonata,Hybrid,Hybrid 2.0L I4 (SIDI; Hybrid),2.0L I4,,Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,45,51,47,,,,,
-2023,Hyundai,Sonata,Hybrid Blue,Hybrid 2.0L I4 (SIDI; Hybrid),2.0L I4,,Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,50,54,52,,,,,

@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2001,Chevrolet,Impala,Impala,3.4L V6,3.4L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.4,19,29,22,,,,,
-2001,Chevrolet,Impala,Impala,3.8L V6,3.8L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.8,17,28,21,,,,,
-2001,Chevrolet,Impala,Police,3.8L V6 (POLICE FFS),3.8L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.8,16,27,20,,,,,

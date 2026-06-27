@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2002,Dodge,Caravan/Grand Caravan,2WD,2.4L I4,2.4L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,4,2.4,17,23,19,,,,,
-2002,Dodge,Caravan/Grand Caravan,2WD,2.4L I4,2.4L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,4,2.4,17,24,20,,,,,
-2002,Dodge,Caravan/Grand Caravan,2WD,3.8L V6,3.8L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.8,16,22,18,,,,,
-2002,Dodge,Caravan/Grand Caravan,2WD,3.8L V6,3.8L V6,,Automatic (S4),Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.8,15,22,18,,,,,
-2002,Dodge,Caravan/Grand Caravan,AWD,3.8L V6,3.8L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Minivan - 4WD,6,3.8,15,21,18,,,,,
-2002,Dodge,Caravan/Grand Caravan,AWD,3.8L V6,3.8L V6,,Automatic (S4),All-Wheel Drive,Regular Gasoline,Minivan - 4WD,6,3.8,15,21,17,,,,,
-2002,Dodge,Caravan/Grand Caravan,2WD,FFV 3.3L V6 (FLEX-FUEL),3.3L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Minivan - 2WD,6,3.3,16,22,18,,,,,

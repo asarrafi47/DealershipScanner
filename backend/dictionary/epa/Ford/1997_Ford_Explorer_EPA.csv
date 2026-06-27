@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1997,Ford,Explorer,2WD,4.0L V6 ((SOHC) (FFS)),4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,19,16,,,,,
-1997,Ford,Explorer,2WD,4.0L V6 ((FFS)),4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,18,15,,,,,
-1997,Ford,Explorer,2WD,4.0L V6 ((FFS)),4.0L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,16,22,18,,,,,
-1997,Ford,Explorer,2WD,5.0L V8 ((FFS)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.0,12,17,14,,,,,
-1997,Ford,Explorer,4WD,4.0L V6 ((SOHC) (FFS)),4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,18,15,,,,,
-1997,Ford,Explorer,4WD,4.0L V6 ((FFS)),4.0L V6 Twin Turbo,Twin Turbocharged,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,13,17,15,,,,,
-1997,Ford,Explorer,4WD,4.0L V6 ((FFS)),4.0L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,15,19,16,,,,,
-1997,Ford,Explorer,4WD,5.0L V8 ((FFS)),5.0L V8,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.0,12,17,14,,,,,

@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2017,Ford,Taurus,FWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,20,29,23,,,,,
-2017,Ford,Taurus,AWD FFV,FFV 3.5L V6 (FFV),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),All-Wheel Drive,Regular Gasoline / E85,Large Cars,6,3.5,17,24,19,,,,,
-2017,Ford,Taurus,FWD FFV,FFV 3.5L V6 (FFV),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Large Cars,6,3.5,18,27,21,,,,,
-2017,Ford,Taurus,AWD,3.5L V6,3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),All-Wheel Drive,Regular Gasoline,Large Cars,6,3.5,17,24,19,,,,,
-2017,Ford,Taurus,FWD,3.5L V6,3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.5,18,27,21,,,,,
-2017,Ford,Taurus,AWD,3.5L V6 (SIDI),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),All-Wheel Drive,Regular Gasoline,Large Cars,6,3.5,16,24,19,,,,,

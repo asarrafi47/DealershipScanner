@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,Jeep,Wagoneer,L 2WD,3.0L V6 (SIDI),3.0L V6,,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,17,24,20,,,,,
-2024,Jeep,Wagoneer,2WD,3.0L V6 (SIDI),3.0L V6,,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,17,24,20,,,,,
-2024,Jeep,Wagoneer,4WD,3.0L V6 (SIDI),3.0L V6,,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,16,23,19,,,,,
-2024,Jeep,Wagoneer,L 4WD,3.0L V6 (SIDI),3.0L V6,,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,16,23,19,,,,,
-2024,Jeep,Wagoneer,S AWD (Falken tire),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,104,90,97,,,,,
-2024,Jeep,Wagoneer,S AWD (Pirelli tire),EV Electricity,EV Electricity,,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,93,81,87,,,,,

@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2000,Ford,Focus,Focus,2.0L I4 (2.0L CVH),2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,30,26,,,,,
-2000,Ford,Focus,Focus,2.0L I4 (2.0Z),2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,28,24,,,,,
-2000,Ford,Focus,Focus,2.0L I4 (2.0L CVH),2.0L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,24,32,27,,,,,
-2000,Ford,Focus,Focus,2.0L I4 (2.0Z),2.0L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,31,25,,,,,
-2000,Ford,Focus,Station Wagon,2.0L I4 (2.0L CVH),2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,23,30,26,,,,,
-2000,Ford,Focus,Station Wagon,2.0L I4 (2.0Z),2.0L I4 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,22,29,25,,,,,

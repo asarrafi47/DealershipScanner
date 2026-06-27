@@ -531,6 +531,9 @@ def init_inventory_db():
             ild.ensure_incomplete_index_built()
         except Exception:
             _log.exception("incomplete_listings index bootstrap failed")
+        from backend.db.cars_columns import reset_cars_columns_cache
+
+        reset_cars_columns_cache()
         return
 
     assert_inventory_backend_configured()
@@ -595,6 +598,11 @@ def init_inventory_db():
     cursor.execute("PRAGMA table_info(epa_master)")
     epa_cols = [row[1] for row in cursor.fetchall()]
     for col, ctype in [
+        ("trim", "TEXT"),
+        ("body_style", "TEXT"),
+        ("engine_description", "TEXT"),
+        ("engine_display", "TEXT"),
+        ("forced_induction", "TEXT"),
         ("city08", "REAL"),
         ("highway08", "REAL"),
         ("city_e", "REAL"),
@@ -653,6 +661,9 @@ def init_inventory_db():
         ild.ensure_incomplete_index_built()
     except Exception:
         _log.exception("incomplete_listings index bootstrap failed")
+    from backend.db.cars_columns import reset_cars_columns_cache
+
+    reset_cars_columns_cache()
 
 
 # No bundled demo inventory; rows come from the scanner or tests.
@@ -999,8 +1010,8 @@ def backfill_car_zip_from_dealerships(*, dry_run: bool = False) -> dict[str, int
 
     Returns counts: ``by_registry``, ``by_lookup``, ``remaining``.
     """
+    from backend.db.inventory_pg import is_inventory_postgres
     from backend.utils.dealer_zip import (
-        backfill_car_zip_for_registry,
         enrich_vehicle_zip_from_dealership,
         normalize_us_zip,
     )
@@ -1008,27 +1019,50 @@ def backfill_car_zip_from_dealerships(*, dry_run: bool = False) -> dict[str, int
     stats = {"by_registry": 0, "by_lookup": 0, "remaining": 0}
     with db_conn(row_factory=sqlite3.Row) as conn:
         cursor = conn.cursor()
-        cursor.execute(
-            """
-            SELECT id FROM dealerships
-            WHERE zip_code IS NOT NULL AND TRIM(zip_code) != ''
-            """
-        )
-        registry_ids = [int(r[0] if not isinstance(r, dict) else r["id"]) for r in cursor.fetchall()]
-        for rid in registry_ids:
-            if dry_run:
-                cursor.execute(
-                    """
-                    SELECT COUNT(*) FROM cars
-                    WHERE dealership_registry_id = ?
-                      AND (zip_code IS NULL OR TRIM(zip_code) = '')
-                    """,
-                    (rid,),
+        if dry_run:
+            cursor.execute(
+                """
+                SELECT COUNT(*) FROM cars c
+                INNER JOIN dealerships d ON d.id = c.dealership_registry_id
+                WHERE d.zip_code IS NOT NULL AND TRIM(d.zip_code) != ''
+                  AND (c.zip_code IS NULL OR TRIM(c.zip_code) = '')
+                """
+            )
+            row = cursor.fetchone()
+            stats["by_registry"] = int(row[0] if not isinstance(row, dict) else list(row.values())[0])
+        elif is_inventory_postgres():
+            cursor.execute(
+                """
+                UPDATE cars AS c
+                SET zip_code = d.zip_code
+                FROM dealerships AS d
+                WHERE c.dealership_registry_id = d.id
+                  AND d.zip_code IS NOT NULL AND TRIM(d.zip_code) != ''
+                  AND (c.zip_code IS NULL OR TRIM(c.zip_code) = '')
+                """
+            )
+            stats["by_registry"] = int(getattr(cursor, "rowcount", 0) or 0)
+            conn.commit()
+        else:
+            cursor.execute(
+                """
+                UPDATE cars
+                SET zip_code = (
+                    SELECT d.zip_code FROM dealerships d
+                    WHERE d.id = cars.dealership_registry_id
+                      AND d.zip_code IS NOT NULL AND TRIM(d.zip_code) != ''
                 )
-                row = cursor.fetchone()
-                stats["by_registry"] += int(row[0] if not isinstance(row, dict) else list(row.values())[0])
-            else:
-                stats["by_registry"] += backfill_car_zip_for_registry(cursor, rid)
+                WHERE dealership_registry_id IS NOT NULL
+                  AND (zip_code IS NULL OR TRIM(zip_code) = '')
+                  AND EXISTS (
+                    SELECT 1 FROM dealerships d
+                    WHERE d.id = cars.dealership_registry_id
+                      AND d.zip_code IS NOT NULL AND TRIM(d.zip_code) != ''
+                  )
+                """
+            )
+            stats["by_registry"] = int(getattr(cursor, "rowcount", 0) or 0)
+            conn.commit()
 
         cursor.execute(
             """
@@ -1037,7 +1071,10 @@ def backfill_car_zip_from_dealerships(*, dry_run: bool = False) -> dict[str, int
             """
         )
         pending = [int(r[0] if not isinstance(r, dict) else r["id"]) for r in cursor.fetchall()]
-        for cid in pending:
+        total_pending = len(pending)
+        for i, cid in enumerate(pending, start=1):
+            if i == 1 or i % 1000 == 0 or i == total_pending:
+                _log.info("Zip lookup pass: %s / %s cars", i, total_pending)
             cursor.execute("SELECT * FROM cars WHERE id = ?", (cid,))
             row = cursor.fetchone()
             if not row:
@@ -1053,7 +1090,6 @@ def backfill_car_zip_from_dealerships(*, dry_run: bool = False) -> dict[str, int
                         "UPDATE cars SET zip_code = ? WHERE id = ?",
                         (after, cid),
                     )
-                    refresh_car_data_quality_score(cid)
 
         if not dry_run:
             conn.commit()
@@ -1078,25 +1114,72 @@ def backfill_dealership_registry_ids(*, conn=None) -> int:
 
     Idempotent; safe to run after scans or before listings geo load.
     """
-    from backend.listings.dealer_registry_match import registry_id_by_dealer_host
+    from collections import defaultdict
+
+    from backend.listings.dealer_registry_match import (
+        registry_id_by_dealer_host,
+        registry_id_by_dealer_slug,
+        resolve_car_dealership_registry_id,
+    )
 
     total = 0
+
+    def _run(cursor, host_to_reg: dict[str, int], slug_to_reg: dict[str, int]) -> int:
+        updated = 0
+        cursor.execute(
+            """
+            SELECT id, dealer_url, dealer_id FROM cars
+            WHERE (COALESCE(listing_active, 1) = 1)
+              AND (dealership_registry_id IS NULL
+                   OR CAST(dealership_registry_id AS INTEGER) <= 0)
+              AND (
+                (dealer_url IS NOT NULL AND TRIM(dealer_url) != '')
+                OR (dealer_id IS NOT NULL AND TRIM(dealer_id) != '')
+              )
+            """
+        )
+        by_reg: dict[int, list[int]] = defaultdict(list)
+        for row in cursor.fetchall():
+            if isinstance(row, dict):
+                cid = int(row["id"])
+                url = row.get("dealer_url")
+                did = row.get("dealer_id")
+            else:
+                cid = int(row[0])
+                url = row[1]
+                did = row[2]
+            reg_id = resolve_car_dealership_registry_id(
+                {
+                    "dealer_url": url,
+                    "dealer_id": did,
+                    "dealership_registry_id": None,
+                },
+                host_to_registry=host_to_reg,
+                slug_to_registry=slug_to_reg,
+            )
+            if reg_id > 0:
+                by_reg[int(reg_id)].append(cid)
+        for reg_id, car_ids in by_reg.items():
+            chunk = 500
+            for i in range(0, len(car_ids), chunk):
+                batch = car_ids[i : i + chunk]
+                ph = ",".join("?" * len(batch))
+                cursor.execute(
+                    f"""
+                    UPDATE cars
+                    SET dealership_registry_id = ?
+                    WHERE id IN ({ph})
+                    """,
+                    [reg_id, *batch],
+                )
+                updated += int(cursor.rowcount or 0)
+        return updated
+
     if conn is not None:
         host_to_reg = registry_id_by_dealer_host(conn)
+        slug_to_reg = registry_id_by_dealer_slug(host_to_reg)
         cursor = conn.cursor()
-        for host, reg_id in host_to_reg.items():
-            cursor.execute(
-                """
-                UPDATE cars
-                SET dealership_registry_id = ?
-                WHERE (COALESCE(listing_active, 1) = 1)
-                  AND (dealership_registry_id IS NULL
-                       OR CAST(dealership_registry_id AS INTEGER) <= 0)
-                  AND LOWER(IFNULL(dealer_url, '')) LIKE ?
-                """,
-                (reg_id, f"%{host.lower()}%"),
-            )
-            total += int(cursor.rowcount or 0)
+        total = _run(cursor, host_to_reg, slug_to_reg)
         conn.commit()
         return total
 
@@ -1363,9 +1446,13 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     add_multi("transmission", transmissions)
     add_multi("drivetrain", drivetrains)
     if forced_induction_types:
+        from backend.db.cars_columns import cars_forced_induction_sql_expr
         from backend.utils.forced_induction import forced_induction_sql_filter_clause
 
-        fi_clause, fi_params = forced_induction_sql_filter_clause(list(forced_induction_types))
+        fi_clause, fi_params = forced_induction_sql_filter_clause(
+            list(forced_induction_types),
+            expr=cars_forced_induction_sql_expr(),
+        )
         if fi_clause:
             query += fi_clause
             params.extend(fi_params)
@@ -2081,14 +2168,16 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         cylinders       = distinct("cylinders")
         transmissions   = [t for t in distinct("transmission") if _facet_transmission_sane(t)]
         drivetrains     = distinct("drivetrain")
+        from backend.db.cars_columns import cars_forced_induction_sql_expr
         from backend.utils.forced_induction import (
             forced_induction_filter_label,
             sort_forced_induction_filter_options,
         )
 
+        fi_expr = cars_forced_induction_sql_expr()
         cursor.execute(
             f"""
-            SELECT DISTINCT forced_induction FROM cars
+            SELECT DISTINCT {fi_expr} AS forced_induction FROM cars
             WHERE {active}
             """
         )
@@ -2158,9 +2247,10 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         # Full relationship rows — every unique combo of all filterable dims.
         # The frontend embeds these as data-* on each checkbox so it can filter
         # any dropdown based on any combination of other active filters.
+        fi_expr = cars_forced_induction_sql_expr()
         cursor.execute(f"""
             SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style,
-                   forced_induction
+                   {fi_expr} AS forced_induction
             FROM cars
             WHERE {active}
               AND make IS NOT NULL AND TRIM(make) != ''

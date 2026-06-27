@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2022,Hyundai,Kona,FWD,1.6L I4,1.6L I4 Turbo,Turbocharged,Automatic (AM-S7),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,1.6,29,35,32,,,,,
-2022,Hyundai,Kona,FWD,2.0L I4,2.0L I4,,Automatic (AV-S1),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,30,35,32,,,,,
-2022,Hyundai,Kona,AWD,1.6L I4,1.6L I4 Turbo,Turbocharged,Automatic (AM-S7),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.6,27,32,29,,,,,
-2022,Hyundai,Kona,AWD,2.0L I4,2.0L I4,,Automatic (AV-S1),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,28,33,30,,,,,
-2022,Hyundai,Kona,Electric,EV Electricity,EV Electricity,,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,132,108,120,,,,,
-2022,Hyundai,Kona,N,2.0L I4 (SIDI),2.0L I4,,Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,20,27,23,,,,,

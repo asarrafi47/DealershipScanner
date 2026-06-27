@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2005,Nissan,Altima,Altima,2.5L I4,2.5L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,21,27,23,,,,,
-2005,Nissan,Altima,Altima,2.5L I4,2.5L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,21,29,24,,,,,
-2005,Nissan,Altima,Altima,3.5L V6,3.5L V6,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,19,25,21,,,,,
-2005,Nissan,Altima,Altima,3.5L V6,3.5L V6,,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,18,26,21,,,,,
-2005,Nissan,Altima,Altima,3.5L V6,3.5L V6,,Automatic (S5),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,18,28,21,,,,,

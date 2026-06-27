@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Ford,EXP,EXP,1.6L I4,1.6L I4 Turbo,Turbocharged,Automatic 3-spd,,Regular Gasoline,Two Seaters,4,1.6,21,26,23,,,,,
-1984,Ford,EXP,EXP,1.6L I4,1.6L I4 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Two Seaters,4,1.6,21,29,24,,,,,
-1984,Ford,EXP,EXP,"1.6L I4 ((FFS,TRBO))",1.6L I4 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Two Seaters,4,1.6,21,30,24,,,,,
-1984,Ford,EXP,EXP,1.6L I4 (CA model),1.6L I4 Turbo,Turbocharged,Automatic 3-spd,,Regular Gasoline,Two Seaters,4,1.6,21,26,23,,,,,
-1984,Ford,EXP,EXP,1.6L I4 (CA model),1.6L I4 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Two Seaters,4,1.6,21,31,25,,,,,
-1984,Ford,EXP,EXP,"1.6L I4 ((FFS,TRBO) CA model)",1.6L I4 Turbo,Turbocharged,Manual 5-spd,,Regular Gasoline,Two Seaters,4,1.6,21,30,24,,,,,

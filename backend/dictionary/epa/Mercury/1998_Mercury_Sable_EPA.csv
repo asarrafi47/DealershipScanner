@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1998,Mercury,Sable,Sable,3.0L V6 (4V),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,16,25,19,,,,,
-1998,Mercury,Sable,Sable,3.0L V6 (2V),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,17,26,20,,,,,
-1998,Mercury,Sable,Wagon,3.0L V6,3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,6,3.0,16,24,19,,,,,
-1998,Mercury,Sable,Wagon,3.0L V6 (4V),3.0L V6,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,6,3.0,16,23,18,,,,,

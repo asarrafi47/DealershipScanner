@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1993,Volkswagen,Eurovan,Eurovan,2.5L V5 ((FFS)),2.5L V5 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Vans,5,2.5,15,18,16,,,,,
-1993,Volkswagen,Eurovan,Eurovan,2.5L V5 ((FFS)),2.5L V5 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Vans,5,2.5,15,20,17,,,,,
-1993,Volkswagen,Eurovan,Eurovan,2.5L V5 ((FFS)),2.5L V5 Turbo,Turbocharged,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",5,2.5,14,17,15,,,,,

@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1991,Ford,Thunderbird,Thunderbird,3.8L V6 ((FFS)),3.8L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.8,17,24,20,,,,,
-1991,Ford,Thunderbird,Thunderbird,3.8L V6 ((FFS) (S-CHARGE)),3.8L V6 Twin Turbo,Twin Turbocharged,Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.8,15,21,18,,,,,
-1991,Ford,Thunderbird,Thunderbird,3.8L V6 ((FFS) (S-CHARGE)),3.8L V6 Twin Turbo,Twin Turbocharged,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.8,15,22,18,,,,,
-1991,Ford,Thunderbird,Thunderbird,5.0L V8 ((FFS)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,16,22,18,,,,,

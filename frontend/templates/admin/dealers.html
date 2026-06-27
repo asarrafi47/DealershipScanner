@@ -194,8 +194,8 @@
     </section>
 
     <section>
-        <h2>Dealer catalog ({{ catalog|length }})</h2>
-        {% if catalog %}
+        <h2>Scan registry ({{ scan_registry|length }})</h2>
+        {% if scan_registry %}
         <table>
             <thead>
                 <tr>
@@ -207,7 +207,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for row in catalog %}
+                {% for row in scan_registry %}
                 <tr>
                     <td><code>{{ row.dealer_id }}</code></td>
                     <td>{{ row.provider or '—' }}</td>
@@ -219,7 +219,7 @@
             </tbody>
         </table>
         {% else %}
-        <p>No catalog rows yet — enqueue an onboard job to populate after first scan.</p>
+        <p>No scan registry rows yet — enqueue an onboard job to populate after first scan.</p>
         {% endif %}
     </section>
 

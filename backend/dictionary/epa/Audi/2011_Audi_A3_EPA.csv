@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2011,Audi,A3,A3,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,21,30,24,,,,,
-2011,Audi,A3,A3,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,22,28,24,,,,,
-2011,Audi,A3,quattro,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S6),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,21,28,24,,,,,
-2011,Audi,A3,A3,Diesel 2.0L I4 Diesel,2.0L I4 Turbo,Turbocharged,Automatic (S6),Front-Wheel Drive,Diesel,Small Station Wagons,4,2.0,29,37,32,,,,,

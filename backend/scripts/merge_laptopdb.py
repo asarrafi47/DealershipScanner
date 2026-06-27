@@ -151,12 +151,11 @@ def _import_catalog_table(
     if table == "catalog_trims":
         sql = """
             INSERT INTO catalog_trims (
-                id, year, make, model, trim, body_style, trim_level, engine_l, engine_desc,
-                cylinders, horsepower, torque_lb_ft, fuel_type, forced_induction, transmission,
-                trans_speeds, drivetrain, mpg_city, mpg_highway, mpg_combined, range_miles,
-                base_msrp, source, notes, created_at, updated_at, search_vector, embedding
+                id, year, make, model, trim, trim_level,
+                horsepower, torque_lb_ft, base_msrp,
+                source, notes, created_at, updated_at, search_vector, embedding
             ) VALUES (
-                %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s::tsvector,%s
+                %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s::tsvector,%s
             )
         """
         batch = []
@@ -169,22 +168,9 @@ def _import_catalog_table(
                     (r.get("make") or "").strip(),
                     (r.get("model") or "").strip(),
                     (r.get("trim") or "").strip() or None,
-                    (r.get("body_style") or "").strip() or None,
                     (r.get("trim_level") or "").strip() or None,
-                    (r.get("engine_l") or "").strip() or None,
-                    (r.get("engine_desc") or "").strip() or None,
-                    _parse_int(r.get("cylinders")),
                     _parse_int(r.get("horsepower")),
                     _parse_int(r.get("torque_lb_ft")),
-                    (r.get("fuel_type") or "").strip() or None,
-                    (r.get("forced_induction") or "").strip() or None,
-                    (r.get("transmission") or "").strip() or None,
-                    _parse_int(r.get("trans_speeds")),
-                    (r.get("drivetrain") or "").strip() or None,
-                    _parse_int(r.get("mpg_city")),
-                    _parse_int(r.get("mpg_highway")),
-                    _parse_int(r.get("mpg_combined")),
-                    _parse_int(r.get("range_miles")),
                     _parse_float(r.get("base_msrp")),
                     (r.get("source") or "").strip() or None,
                     (r.get("notes") or "").strip() or None,

@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Volvo,V60,FWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,23,34,27,,,,,
-2021,Volvo,V60,CC AWD,2.0L I4 (SIDI),2.0L I4 Turbo,Turbocharged,Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,22,31,25,,,,,
-2021,Volvo,V60,AWD PHEV,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),2.0L I4,,Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Small Station Wagons,4,2.0,28,33,30,,,,,

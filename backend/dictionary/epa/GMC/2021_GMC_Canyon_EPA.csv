@@ -1,7 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,GMC,Canyon,2WD,2.5L I4 (SIDI),2.5L I4 Turbo,Turbocharged,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,19,25,22,,,,,
-2021,GMC,Canyon,2WD,3.6L V6 (SIDI),3.6L V6,,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,3.6,18,25,21,,,,,
-2021,GMC,Canyon,4WD,2.5L I4 (SIDI),2.5L I4 Turbo,Turbocharged,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.5,19,24,21,,,,,
-2021,GMC,Canyon,4WD,3.6L V6 (SIDI),3.6L V6,,Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,3.6,16,22,18,,,,,
-2021,GMC,Canyon,4WD,Diesel 2.8L I4 Diesel,2.8L I4 Turbo,Turbocharged,Automatic 6-spd,Four-Wheel Drive,Diesel,Small Pickup Trucks 4WD,4,2.8,19,28,22,,,,,
-2021,GMC,Canyon,2WD,Diesel 2.8L I4 Diesel,2.8L I4 Turbo,Turbocharged,Automatic 6-spd,Rear-Wheel Drive,Diesel,Small Pickup Trucks 2WD,4,2.8,20,30,23,,,,,

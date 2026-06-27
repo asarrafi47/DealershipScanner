@@ -14,9 +14,9 @@ def test_default_scan_interval_hours(monkeypatch) -> None:
     assert jq._default_scan_interval_hours() == 1
 
 
-def test_record_catalog_skips_without_postgres(monkeypatch) -> None:
+def test_record_scan_registry_skips_without_postgres(monkeypatch) -> None:
     monkeypatch.setattr(jq, "is_inventory_postgres", lambda: False)
-    jq.record_catalog_after_success(dealer_id="test-dealer", job_type="onboard", payload={"url": "https://x.com"})
+    jq.record_dealer_scan_registry(dealer_id="test-dealer", job_type="onboard", payload={"url": "https://x.com"})
 
 
 def test_retry_failed_job_not_found(monkeypatch) -> None:

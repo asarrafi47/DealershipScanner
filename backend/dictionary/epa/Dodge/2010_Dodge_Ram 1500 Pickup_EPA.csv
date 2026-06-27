@@ -1,6 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2010,Dodge,Ram 1500 Pickup,2WD,5.7L V8,5.7L V8,,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.7,14,20,16,,,,,
-2010,Dodge,Ram 1500 Pickup,4WD,5.7L V8,5.7L V8,,Automatic 5-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.7,13,18,15,,,,,
-2010,Dodge,Ram 1500 Pickup,2WD,3.7L V6,3.7L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.7,14,20,16,,,,,
-2010,Dodge,Ram 1500 Pickup,2WD,FFV 4.7L V8 (FFV),4.7L V8,,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,4.7,14,19,15,,,,,
-2010,Dodge,Ram 1500 Pickup,4WD,FFV 4.7L V8 (FFV),4.7L V8,,Automatic 5-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,4.7,13,18,15,,,,,

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarrafi Collection - How-To Guides</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .guides {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .guide-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .guide-card.technical {
+            border-top: 5px solid #667eea;
+        }
+
+        .guide-card.business {
+            border-top: 5px solid #2ecc71;
+        }
+
+        .guide-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .guide-card h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .guide-card.technical h2 {
+            color: #667eea;
+        }
+
+        .guide-card.business h2 {
+            color: #2ecc71;
+        }
+
+        .guide-card p {
+            font-size: 1em;
+            line-height: 1.7;
+            color: #666;
+            margin-bottom: 10px;
+            flex-grow: 1;
+        }
+
+        .guide-features {
+            list-style: none;
+            margin: 20px 0;
+            padding: 0;
+        }
+
+        .guide-features li {
+            padding: 8px 0;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .guide-features li:before {
+            content: "✓ ";
+            font-weight: bold;
+            color: #4caf50;
+            margin-right: 8px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .technical .cta-button {
+            background: #667eea;
+            color: white;
+        }
+
+        .technical .cta-button:hover {
+            background: #764ba2;
+        }
+
+        .business .cta-button {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .business .cta-button:hover {
+            background: #27ae60;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            margin-top: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .footer p {
+            margin: 10px 0;
+        }
+
+        .quick-tips {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+        }
+
+        .quick-tips h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .quick-tips ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quick-tips li {
+            padding: 8px 0;
+            color: #333;
+        }
+
+        .quick-tips li:before {
+            content: "→ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .guides {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Sarrafi Collection</h1>
+            <p>How-To Guides & Documentation</p>
+        </div>
+
+        <div class="quick-tips">
+            <h3>💡 Choose Your Guide</h3>
+            <ul>
+                <li><strong>Technical Guide:</strong> For developers, architects, and technical stakeholders who need deep system understanding</li>
+                <li><strong>Business Guide:</strong> For executives, managers, dealers, and stakeholders who want to understand the platform in plain English</li>
+                <li><strong>Both are interactive:</strong> Mermaid diagrams, examples, and comprehensive breakdowns</li>
+            </ul>
+        </div>
+
+        <div class="guides">
+            <!-- Technical Guide -->
+            <a href="HOW_TO_TECHNICAL.html" class="guide-card technical">
+                <div class="guide-icon">🔧</div>
+                <h2>Technical How-To</h2>
+                <p>A deep dive into the architecture, systems, databases, and data flow of Sarrafi Collection.</p>
+                <ul class="guide-features">
+                    <li>System architecture & design</li>
+                    <li>Backend stack (Flask, Python)</li>
+                    <li>Database layers (SQLite, PostgreSQL, pgvector)</li>
+                    <li>Scanner & data pipeline</li>
+                    <li>Enrichment & embeddings</li>
+                    <li>API & frontend integration</li>
+                    <li>Auth & billing systems</li>
+                    <li>Deployment & infrastructure</li>
+                    <li>Development workflows</li>
+                </ul>
+                <button class="cta-button">Read Technical Guide →</button>
+            </a>
+
+            <!-- Business Guide -->
+            <a href="HOW_TO_BUSINESS.html" class="guide-card business">
+                <div class="guide-icon">🎯</div>
+                <h2>Business How-To</h2>
+                <p>Everything you need to know about the platform in plain English, from value prop to metrics.</p>
+                <ul class="guide-features">
+                    <li>What is Sarrafi Collection?</li>
+                    <li>How it works (simplified)</li>
+                    <li>User personas & journeys</li>
+                    <li>Key features overview</li>
+                    <li>Business model & pricing</li>
+                    <li>Performance metrics</li>
+                    <li>Competitive advantages</li>
+                    <li>Product roadmap</li>
+                    <li>Q&A for all users</li>
+                </ul>
+                <button class="cta-button">Read Business Guide →</button>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p><strong>Sarrafi Collection Documentation</strong></p>
+            <p>Updated: June 2026</p>
+            <p>Both guides include interactive Mermaid diagrams and comprehensive breakdowns</p>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #999;">
+                For questions, contact the team at <strong>arman@khash.com</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

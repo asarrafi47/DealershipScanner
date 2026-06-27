@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((GM-CHEV) (FFS)),5.0L V8,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,
-1987,Chevrolet,Camaro,Camaro,2.8L V6 ((FFS)),2.8L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,17,25,20,,,,,
-1987,Chevrolet,Camaro,Camaro,2.8L V6 ((FFS)),2.8L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,15,24,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) 4 barrel carb),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,22,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) 4 barrel carb),5.0L V8,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,23,17,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) fuel injection),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,23,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) fuel injection),5.0L V8,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.7L V8 ((350 V8) (FFS)),5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.7,15,23,17,,,,,

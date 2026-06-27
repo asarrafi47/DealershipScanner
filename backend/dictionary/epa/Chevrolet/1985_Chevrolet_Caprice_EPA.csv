@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1985,Chevrolet,Caprice,Wagon,5.0L V8 ((GM-CHEV) (FFS) CA model),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,14,19,16,,,,,
-1985,Chevrolet,Caprice,Wagon,5.0L V8 ((GM-CHEV) (FFS)),5.0L V8,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,14,20,16,,,,,
-1985,Chevrolet,Caprice,Wagon,Diesel 5.7L V8 ((350 V8)) Diesel,5.7L V8,,Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,8,5.7,18,26,21,,,,,

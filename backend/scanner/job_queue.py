@@ -16,22 +16,65 @@ from backend.db.inventory_pg import is_inventory_postgres, pg_connect, qmarks_to
 
 _log = logging.getLogger(__name__)
 
+# Scanner onboarding: how to scrape each dealer (not OEM vehicle catalog).
+DEALER_SCAN_REGISTRY_TABLE = "dealer_scan_registry"
+_LEGACY_DEALER_CATALOG_TABLE = "dealer_catalog"
+
 
 def _worker_id() -> str:
     return (os.environ.get("SCANNER_WORKER_ID") or "").strip() or f"worker-{uuid.uuid4().hex[:8]}"
 
 
-def ensure_job_tables(conn) -> None:
-    cur = conn.cursor()
+def migrate_dealer_catalog_to_scan_registry(cur) -> bool:
+    """
+    One-time rename ``dealer_catalog`` → ``dealer_scan_registry``.
+
+    Returns True when the legacy table was renamed.
+    """
     cur.execute(
         """
-        CREATE TABLE IF NOT EXISTS dealer_catalog (
+        SELECT EXISTS (
+            SELECT 1 FROM information_schema.tables
+            WHERE table_schema = 'public' AND table_name = %s
+        )
+        """,
+        (_LEGACY_DEALER_CATALOG_TABLE,),
+    )
+    has_old = bool(cur.fetchone()[0])
+    cur.execute(
+        """
+        SELECT EXISTS (
+            SELECT 1 FROM information_schema.tables
+            WHERE table_schema = 'public' AND table_name = %s
+        )
+        """,
+        (DEALER_SCAN_REGISTRY_TABLE,),
+    )
+    has_new = bool(cur.fetchone()[0])
+    if has_old and not has_new:
+        cur.execute(
+            f"ALTER TABLE {_LEGACY_DEALER_CATALOG_TABLE} RENAME TO {DEALER_SCAN_REGISTRY_TABLE}"
+        )
+        cur.execute(
+            "ALTER INDEX IF EXISTS idx_dealer_catalog_next_scan "
+            "RENAME TO idx_dealer_scan_registry_next_scan"
+        )
+        return True
+    return False
+
+
+def ensure_job_tables(conn) -> None:
+    cur = conn.cursor()
+    migrate_dealer_catalog_to_scan_registry(cur)
+    cur.execute(
+        f"""
+        CREATE TABLE IF NOT EXISTS {DEALER_SCAN_REGISTRY_TABLE} (
             dealer_id TEXT PRIMARY KEY,
             registry_id BIGINT,
             provider TEXT,
             inventory_mode TEXT,
             inventory_endpoint TEXT,
-            site_config_json TEXT NOT NULL DEFAULT '{}',
+            site_config_json TEXT NOT NULL DEFAULT '{{}}',
             last_vin_fingerprint TEXT,
             scan_interval_hours INTEGER NOT NULL DEFAULT 24,
             next_scan_at TEXT,
@@ -62,10 +105,44 @@ def ensure_job_tables(conn) -> None:
         "CREATE INDEX IF NOT EXISTS idx_dealer_jobs_status ON dealer_jobs(status, created_at)"
     )
     cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_dealer_catalog_next_scan ON dealer_catalog(next_scan_at)"
+        f"CREATE INDEX IF NOT EXISTS idx_dealer_scan_registry_next_scan "
+        f"ON {DEALER_SCAN_REGISTRY_TABLE}(next_scan_at)"
     )
+    _ensure_dealer_scan_config_view(cur)
     conn.commit()
     cur.close()
+
+
+def _ensure_dealer_scan_config_view(cur) -> None:
+    """Admin-friendly join of scan registry + recovery profile (Postgres only)."""
+    try:
+        from backend.db.inventory_pg import is_inventory_postgres
+
+        if not is_inventory_postgres():
+            return
+    except Exception:
+        return
+    cur.execute(
+        f"""
+        CREATE OR REPLACE VIEW dealer_scan_config AS
+        SELECT
+            r.dealer_id,
+            r.registry_id,
+            r.provider,
+            r.inventory_mode,
+            r.inventory_endpoint,
+            r.scan_interval_hours,
+            r.next_scan_at,
+            r.last_scan_at,
+            r.onboarded_at,
+            r.updated_at AS registry_updated_at,
+            p.last_winning_strategy,
+            p.platform_hints_json,
+            p.updated_at AS profile_updated_at
+        FROM {DEALER_SCAN_REGISTRY_TABLE} r
+        LEFT JOIN dealer_scan_profile p ON p.dealer_id = r.dealer_id
+        """
+    )
 
 
 def init_job_queue_schema() -> None:
@@ -205,14 +282,14 @@ def _default_scan_interval_hours() -> int:
         return 24
 
 
-def record_catalog_after_success(
+def record_dealer_scan_registry(
     *,
     dealer_id: str,
     job_type: str,
     payload: dict[str, Any] | None = None,
     scan_interval_hours: int | None = None,
 ) -> None:
-    """Upsert ``dealer_catalog`` after a successful onboard/refresh job (A3)."""
+    """Upsert ``dealer_scan_registry`` after a successful onboard/refresh job (A3)."""
     if not is_inventory_postgres():
         return
     did = (dealer_id or "").strip()
@@ -227,19 +304,20 @@ def record_catalog_after_success(
     nxt = (now + timedelta(hours=hours)).isoformat()
     pl = payload or {}
     endpoint = (pl.get("url") or pl.get("inventory_endpoint") or "").strip() or None
+    tbl = DEALER_SCAN_REGISTRY_TABLE
     conn = pg_connect()
     try:
         cur = conn.cursor()
         cur.execute(
-            qmarks_to_percent_s("SELECT dealer_id FROM dealer_catalog WHERE dealer_id = ?"),
+            qmarks_to_percent_s(f"SELECT dealer_id FROM {tbl} WHERE dealer_id = ?"),
             (did,),
         )
         exists = cur.fetchone() is not None
         if exists:
             cur.execute(
                 qmarks_to_percent_s(
-                    """
-                    UPDATE dealer_catalog
+                    f"""
+                    UPDATE {tbl}
                     SET last_scan_at = ?, next_scan_at = ?, updated_at = ?,
                         scan_interval_hours = COALESCE(scan_interval_hours, ?),
                         inventory_endpoint = COALESCE(?, inventory_endpoint)
@@ -251,8 +329,8 @@ def record_catalog_after_success(
         else:
             cur.execute(
                 qmarks_to_percent_s(
-                    """
-                    INSERT INTO dealer_catalog (
+                    f"""
+                    INSERT INTO {tbl} (
                         dealer_id, inventory_endpoint, scan_interval_hours,
                         next_scan_at, onboarded_at, last_scan_at, updated_at
                     ) VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -265,21 +343,38 @@ def record_catalog_after_success(
         conn.close()
 
 
+def record_catalog_after_success(
+    *,
+    dealer_id: str,
+    job_type: str,
+    payload: dict[str, Any] | None = None,
+    scan_interval_hours: int | None = None,
+) -> None:
+    """Deprecated alias for :func:`record_dealer_scan_registry`."""
+    record_dealer_scan_registry(
+        dealer_id=dealer_id,
+        job_type=job_type,
+        payload=payload,
+        scan_interval_hours=scan_interval_hours,
+    )
+
+
 def schedule_due_refresh_jobs() -> int:
-    """Enqueue refresh jobs for catalogs past ``next_scan_at`` (no duplicate queued/running)."""
+    """Enqueue refresh jobs for dealers past ``dealer_scan_registry.next_scan_at``."""
     if not is_inventory_postgres():
         return 0
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat()
+    tbl = DEALER_SCAN_REGISTRY_TABLE
     conn = pg_connect()
     enqueued = 0
     try:
         cur = conn.cursor()
         cur.execute(
             qmarks_to_percent_s(
-                """
+                f"""
                 SELECT dealer_id, scan_interval_hours
-                FROM dealer_catalog
+                FROM {tbl}
                 WHERE next_scan_at IS NOT NULL AND next_scan_at <= ?
                 """
             ),
@@ -315,9 +410,7 @@ def schedule_due_refresh_jobs() -> int:
             hours = max(1, int(interval_hours or 24))
             nxt = (now + timedelta(hours=hours)).isoformat()
             cur.execute(
-                qmarks_to_percent_s(
-                    "UPDATE dealer_catalog SET next_scan_at = ? WHERE dealer_id = ?"
-                ),
+                qmarks_to_percent_s(f"UPDATE {tbl} SET next_scan_at = ? WHERE dealer_id = ?"),
                 (nxt, did),
             )
             enqueued += 1
@@ -327,18 +420,19 @@ def schedule_due_refresh_jobs() -> int:
     return enqueued
 
 
-def list_dealer_catalog(*, limit: int = 50) -> list[dict[str, Any]]:
+def list_dealer_scan_registry(*, limit: int = 50) -> list[dict[str, Any]]:
     if not is_inventory_postgres():
         return []
     lim = max(1, min(int(limit), 200))
+    tbl = DEALER_SCAN_REGISTRY_TABLE
     conn = pg_connect()
     try:
         cur = conn.cursor()
         cur.execute(
-            """
+            f"""
             SELECT dealer_id, provider, inventory_mode, scan_interval_hours,
                    next_scan_at, last_scan_at, onboarded_at, updated_at
-            FROM dealer_catalog
+            FROM {tbl}
             ORDER BY updated_at DESC NULLS LAST
             LIMIT %s
             """,
@@ -348,6 +442,11 @@ def list_dealer_catalog(*, limit: int = 50) -> list[dict[str, Any]]:
         return [dict(zip(cols, row)) for row in cur.fetchall()]
     finally:
         conn.close()
+
+
+def list_dealer_catalog(*, limit: int = 50) -> list[dict[str, Any]]:
+    """Deprecated alias for :func:`list_dealer_scan_registry`."""
+    return list_dealer_scan_registry(limit=limit)
 
 
 def get_job(job_id: int) -> dict[str, Any] | None:

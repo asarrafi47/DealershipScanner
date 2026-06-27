@@ -42,26 +42,31 @@ def sort_forced_induction_filter_options(values: list[str]) -> list[str]:
     return ([na] if na in seen else []) + rest
 
 
-def forced_induction_sql_filter_clause(selected: list[str]) -> tuple[str, list[Any]]:
+def forced_induction_sql_filter_clause(
+    selected: list[str],
+    *,
+    expr: str | None = None,
+) -> tuple[str, list[Any]]:
     """Build ``AND (... OR ...)`` SQL for listings forced-induction facet filters."""
     if not selected:
         return "", []
     labels = [forced_induction_filter_label(v) for v in selected if str(v or "").strip()]
     if not labels:
         return "", []
+    fi = f"({expr})" if expr else "forced_induction"
     has_na = any(is_naturally_aspirated_filter_value(v) for v in labels)
     explicit = [v for v in labels if not is_naturally_aspirated_filter_value(v)]
     parts: list[str] = []
     params: list[Any] = []
     if has_na:
         parts.append(
-            "(forced_induction IS NULL OR TRIM(IFNULL(forced_induction, '')) = '' "
-            "OR LOWER(TRIM(forced_induction)) = ?)"
+            f"({fi} IS NULL OR TRIM(COALESCE({fi}, '')) = '' "
+            f"OR LOWER(TRIM({fi})) = ?)"
         )
         params.append(_FI_NA_LOWER)
     if explicit:
         ph = ", ".join("?" * len(explicit))
-        parts.append(f"TRIM(forced_induction) IN ({ph})")
+        parts.append(f"TRIM({fi}) IN ({ph})")
         params.extend(explicit)
     if not parts:
         return "", []

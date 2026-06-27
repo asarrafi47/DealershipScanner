@@ -1,4 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1985,Mazda,626,626,2.0L I4 ((FFS)),2.0L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,26,23,,,,,
-1985,Mazda,626,626,2.0L I4 ((FFS)),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,29,25,,,,,
-1985,Mazda,626,626,Diesel 2.0L I4 Diesel,2.0L I4,,Manual 5-spd,Front-Wheel Drive,Diesel,Compact Cars,4,2.0,31,38,33,,,,,

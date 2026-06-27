@@ -9,6 +9,7 @@ Usage (from repo root):
 from __future__ import annotations
 
 import argparse
+import logging
 import sys
 from pathlib import Path
 
@@ -17,13 +18,15 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 try:
-    from backend.utils.project_env import load_project_dotenv
+    from backend.utils.project_env import bootstrap_inventory_script
 
-    load_project_dotenv()
+    bootstrap_inventory_script()
 except ImportError:
     pass
 
 from backend.db.inventory_db import backfill_car_zip_from_dealerships  # noqa: E402
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
 
 def main() -> int:

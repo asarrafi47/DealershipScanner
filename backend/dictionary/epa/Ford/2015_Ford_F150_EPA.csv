@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2015,Ford,F150,Pickup 2WD,2.7L V6 (SIDI),2.7L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,2.7,19,26,22,,,,,
-2015,Ford,F150,Pickup 2WD,3.5L V6 (SIDI),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.5,17,24,20,,,,,
-2015,Ford,F150,Pickup 2WD FFV,FFV 3.5L V6 (FFV),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,6,3.5,18,24,20,,,,,
-2015,Ford,F150,Pickup 2WD FFV,FFV 5.0L V8 (FFV),5.0L V8,,Automatic (S6),Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,5.0,15,22,18,,,,,
-2015,Ford,F150,Pickup 4WD,2.7L V6 (SIDI),2.7L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,2.7,18,23,20,,,,,
-2015,Ford,F150,Pickup 4WD,3.5L V6 (SIDI),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic (S6),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.5,17,23,19,,,,,
-2015,Ford,F150,Pickup 4WD FFV,FFV 3.5L V6 (FFV),3.5L V6 Twin Turbo,Twin Turbocharged,Automatic 6-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,6,3.5,17,22,19,,,,,
-2015,Ford,F150,Pickup 4WD FFV,FFV 5.0L V8 (FFV),5.0L V8,,Automatic (S6),Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.0,15,21,17,,,,,

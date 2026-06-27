@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1999,Toyota,Celica,Convertible,2.2L I4,2.2L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,2.2,20,27,23,,,,,
-1999,Toyota,Celica,Convertible,2.2L I4,2.2L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,2.2,19,26,22,,,,,
-1999,Toyota,Celica,Celica,2.2L I4,2.2L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.2,20,26,22,,,,,
-1999,Toyota,Celica,Celica,2.2L I4,2.2L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.2,19,26,22,,,,,

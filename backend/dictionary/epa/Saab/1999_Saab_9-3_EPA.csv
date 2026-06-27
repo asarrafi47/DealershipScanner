@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1999,Saab,9-3,Convertible,2.0L I4 (B204L3),2.0L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,17,23,19,,,,,
-1999,Saab,9-3,Convertible,2.0L I4 (B2O4L3),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,18,25,21,,,,,
-1999,Saab,9-3,Convertible,2.0L I4 (B2O4R3),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,17,25,20,,,,,
-1999,Saab,9-3,9-3,2.0L I4 (B204L3),2.0L I4,,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,17,23,19,,,,,
-1999,Saab,9-3,9-3,2.0L I4 (B2O4L3),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,18,25,21,,,,,
-1999,Saab,9-3,9-3,2.0L I4 (B2O4R3),2.0L I4,,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,17,25,20,,,,,
-1999,Saab,9-3,Viggen,"2.3L I4 (B235E5 FFS,TURBO)",2.3L I4 Turbo,Turbocharged,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,24,19,,,,,

@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1990,Nissan,Sentra,Sentra,1.6L I4 ((FFS)),1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,28,25,,,,,
-1990,Nissan,Sentra,Sentra,1.6L I4 ((FFS)),1.6L I4,,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,25,33,28,,,,,
-1990,Nissan,Sentra,Sentra,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,33,27,,,,,
-1990,Nissan,Sentra,Coupe,1.6L I4 ((FFS)),1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,28,25,,,,,
-1990,Nissan,Sentra,Coupe,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,24,33,27,,,,,
-1990,Nissan,Sentra,Wagon,1.6L I4 ((FFS)),1.6L I4,,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,23,28,25,,,,,
-1990,Nissan,Sentra,Wagon,1.6L I4 ((FFS)),1.6L I4,,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,23,33,27,,,,,

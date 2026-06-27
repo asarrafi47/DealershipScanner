@@ -163,6 +163,31 @@ def tier_a_trim_and_epa(car: dict[str, Any]) -> tuple[dict[str, Any], dict[str, 
     return found, prov
 
 
+def tier_hd_truck_mpg(car: dict[str, Any]) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    """
+    EPA-exempt HD trucks (Ram/Ford/GM 2500+): listing text → manufacturer reference.
+
+    Skips fueleconomy.gov — EPA does not publish ratings for these vehicles.
+    """
+    from backend.enrichment.hd_truck_mpg import is_epa_exempt_hd_truck, resolve_hd_truck_mpg
+
+    if not is_epa_exempt_hd_truck(car.get("make"), car.get("model")):
+        return {}, {}
+    if car.get("mpg_city") is not None and car.get("mpg_highway") is not None:
+        return {}, {}
+
+    resolved = resolve_hd_truck_mpg(car)
+    if not resolved:
+        return {}, {}
+    city, hwy, src = resolved
+    found: dict[str, Any] = {"mpg_city": city, "mpg_highway": hwy}
+    prov = {
+        "mpg_city": {"source": src, "detail": "EPA-exempt HD truck"},
+        "mpg_highway": {"source": src, "detail": "EPA-exempt HD truck"},
+    }
+    return found, prov
+
+
 def tier_a_master_catalog(car: dict[str, Any]) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
     """Optional pgvector EPA catalog (heavy import — skipped when collection missing)."""
     found: dict[str, Any] = {}
@@ -356,6 +381,11 @@ def run_spec_backfill_for_car(
     if f1b:
         tiers.append("a_master_catalog")
 
+    f1c, p1c = tier_hd_truck_mpg(car)
+    _merge_found(merged, prov_all, f1c, p1c)
+    if f1c:
+        tiers.append("a_hd_truck_mpg")
+
     def _virtual_row() -> dict[str, Any]:
         v = dict(car)
         for k, val in merged.items():
@@ -369,7 +399,10 @@ def run_spec_backfill_for_car(
             tiers.append("b_vdp")
             _merge_found(merged, prov_all, fv, pv)
 
-    if use_search and car_needs_spec_backfill(_virtual_row()):
+    from backend.enrichment.hd_truck_mpg import is_epa_exempt_hd_truck
+
+    skip_fe_search = is_epa_exempt_hd_truck(car.get("make"), car.get("model"))
+    if use_search and car_needs_spec_backfill(_virtual_row()) and not skip_fe_search:
         fs, ps = tier_c_search(car, pause_s=search_pause_s)
         if fs:
             tiers.append("c_search")

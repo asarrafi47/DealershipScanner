@@ -46,3 +46,29 @@ def load_project_dotenv(*, override: bool = False) -> None:
                 if dot_val and len(shell_val) < 40 < len(dot_val):
                     os.environ[key] = dot_val
     ensure_backend_on_sys_path()
+
+
+def bootstrap_inventory_script(*, init_db: bool = True) -> None:
+    """
+    Load ``.env`` / vault secrets, then optionally ``init_inventory_db()``.
+
+    Use at the top of CLI scripts that need Postgres inventory.
+    """
+    load_project_dotenv()
+    import os
+
+    # Prefer explicit inventory DSN; fall back to DATABASE_URL when it is Postgres.
+    if not (os.environ.get("INVENTORY_DATABASE_URL") or "").strip():
+        db_url = (os.environ.get("DATABASE_URL") or "").strip()
+        if db_url.startswith(("postgresql://", "postgres://")):
+            os.environ["INVENTORY_DATABASE_URL"] = db_url
+    try:
+        from backend.utils.kmac_vault import load_kmac_vault_secrets
+
+        load_kmac_vault_secrets()
+    except Exception:
+        pass
+    if init_db:
+        from backend.db.inventory_db import init_inventory_db
+
+        init_inventory_db()

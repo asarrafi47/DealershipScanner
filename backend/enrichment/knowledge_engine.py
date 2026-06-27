@@ -14,6 +14,15 @@ from typing import Any
 from backend.db.inventory_db import DB_PATH
 
 
+def _epa_dict_cell(val: Any) -> str:
+    """String form of an EPA CSV / ``epa_master`` row cell (``Year`` may be int)."""
+    if val is None:
+        return ""
+    if isinstance(val, str):
+        return val.strip()
+    return str(val).strip()
+
+
 def _conn():
     return sqlite3.connect(DB_PATH)
 
@@ -608,25 +617,34 @@ def _lookup_epa_from_dictionary_csv(
     model: str | None,
     trim: str | None,
 ) -> dict[str, Any]:
-    """Fallback when epa_master is empty or missing a row: read dictionary *_EPA.csv."""
+    """Fallback when epa_master aggregate lookup misses: trim-level rows from epa_master (or legacy CSV)."""
     if not year or not make or not model:
         return {}
-    from backend.enrichment.trim_ladder import _find_epa_csv
-
-    path = _find_epa_csv(make, model, year)
-    if not path:
-        return {}
     trim_clean = (trim or "").strip()
+    rows: list[dict[str, Any]] = []
     try:
-        with path.open(encoding="utf-8", newline="") as fh:
-            rows = list(csv.DictReader(fh))
-    except OSError:
-        return {}
+        from backend.enrichment.epa_master_store import fetch_epa_rows
 
-    def _row_matches(row: dict[str, str]) -> bool:
+        rows = list(fetch_epa_rows(int(year), make, model))
+    except (ImportError, TypeError, ValueError):
+        rows = []
+
+    if not rows:
+        from backend.enrichment.trim_ladder import _find_epa_csv
+
+        path = _find_epa_csv(make, model, year)
+        if not path:
+            return {}
+        try:
+            with path.open(encoding="utf-8", newline="") as fh:
+                rows = list(csv.DictReader(fh))
+        except OSError:
+            return {}
+
+    def _row_matches(row: dict[str, Any]) -> bool:
         if not trim_clean:
             return True
-        row_trim = (row.get("Trim") or "").strip()
+        row_trim = _epa_dict_cell(row.get("Trim"))
         if not row_trim:
             return False
         tl = trim_clean.lower()
@@ -639,22 +657,24 @@ def _lookup_epa_from_dictionary_csv(
     if not candidates:
         candidates = rows
 
-    def _score(row: dict[str, str]) -> tuple[int, int]:
+    def _score(row: dict[str, Any]) -> tuple[int, int]:
         try:
-            row_year = int((row.get("Year") or "").strip())
+            row_year = int(_epa_dict_cell(row.get("Year")))
         except (TypeError, ValueError):
             row_year = year or 0
         year_dist = abs(row_year - int(year))
-        trim_exact = 0 if trim_clean and (row.get("Trim") or "").strip().lower() == trim_clean.lower() else 1
+        trim_exact = 0 if trim_clean and _epa_dict_cell(row.get("Trim")).lower() == trim_clean.lower() else 1
         return (trim_exact, year_dist)
 
     best = min(candidates, key=_score)
+    city_raw = _epa_dict_cell(best.get("mpg_city"))
+    hwy_raw = _epa_dict_cell(best.get("mpg_highway"))
     try:
-        city = float((best.get("mpg_city") or "").strip()) if (best.get("mpg_city") or "").strip() else None
+        city = float(city_raw) if city_raw else None
     except (TypeError, ValueError):
         city = None
     try:
-        hwy = float((best.get("mpg_highway") or "").strip()) if (best.get("mpg_highway") or "").strip() else None
+        hwy = float(hwy_raw) if hwy_raw else None
     except (TypeError, ValueError):
         hwy = None
 
@@ -663,32 +683,34 @@ def _lookup_epa_from_dictionary_csv(
         out["city08"] = city
     if hwy is not None and hwy > 0:
         out["highway08"] = hwy
+    cyl_raw = _epa_dict_cell(best.get("cylinders"))
     try:
-        cyl = int((best.get("cylinders") or "").strip()) if (best.get("cylinders") or "").strip() else None
+        cyl = int(cyl_raw) if cyl_raw else None
         if cyl is not None:
             out["cylinders"] = cyl
     except (TypeError, ValueError):
         pass
+    disp_raw = _epa_dict_cell(best.get("displacement"))
     try:
-        disp = float((best.get("displacement") or "").strip()) if (best.get("displacement") or "").strip() else None
+        disp = float(disp_raw) if disp_raw else None
         if disp is not None:
             out["displacement"] = disp
     except (TypeError, ValueError):
         pass
-    drive = (best.get("drivetrainOptions") or "").strip()
+    drive = _epa_dict_cell(best.get("drivetrainOptions"))
     if drive:
         out["drivetrain"] = _norm_drive_epa(drive)
-    trany = (best.get("transmissionOptions") or "").strip()
+    trany = _epa_dict_cell(best.get("transmissionOptions"))
     if trany:
         out["transmission"] = trany
         out["gears"] = _gears_from_trany(trany)
-    fuel = (best.get("fuelType") or "").strip()
+    fuel = _epa_dict_cell(best.get("fuelType"))
     if fuel:
         out["fuel_type"] = fuel
-    body = (best.get("bodyStyle") or "").strip()
+    body = _epa_dict_cell(best.get("bodyStyle"))
     if body:
         out["body_style"] = body
-    engine = (best.get("engineOptions") or best.get("engineDisplay") or "").strip()
+    engine = _epa_dict_cell(best.get("engineOptions") or best.get("engineDisplay"))
     if engine:
         out["engine_description"] = engine
     return out

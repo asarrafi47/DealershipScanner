@@ -1,5 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,Mazda,Navajo,Navajo,4.0L V6 ((FFS)),4.0L V6,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,16,22,18,,,,,
-1994,Mazda,Navajo,Navajo,4.0L V6 ((FFS)),4.0L V6,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,19,16,,,,,
-1994,Mazda,Navajo,4x4,4.0L V6 ((FFS)),4.0L V6,,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,15,20,17,,,,,
-1994,Mazda,Navajo,4x4,4.0L V6 ((FFS)),4.0L V6,,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,18,15,,,,,

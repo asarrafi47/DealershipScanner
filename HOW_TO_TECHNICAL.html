@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarrafi Collection - Technical How-To Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .toc {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .toc h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 10px 0;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .section {
+            background: white;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.4em;
+            margin: 30px 0 15px 0;
+        }
+
+        .section p, .section li {
+            margin-bottom: 15px;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        .section ul, .section ol {
+            margin-left: 20px;
+        }
+
+        .diagram-container {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .info-box strong {
+            color: #1565c0;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box strong {
+            color: #e65100;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .success-box strong {
+            color: #2e7d32;
+        }
+
+        .tech-spec {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .tech-spec strong {
+            color: #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .back-to-top {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-to-top:hover {
+            background: #764ba2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .diagram-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 Sarrafi Collection - Technical How-To Guide</h1>
+            <p>A comprehensive breakdown of the architecture, systems, and data flow</p>
+        </header>
+
+        <div class="toc">
+            <h2>📑 Table of Contents</h2>
+            <ul>
+                <li><a href="#overview">System Overview</a></li>
+                <li><a href="#architecture">Overall Architecture</a></li>
+                <li><a href="#backend">Backend Stack</a></li>
+                <li><a href="#databases">Database Layer</a></li>
+                <li><a href="#scanner">Scanner & Data Ingestion</a></li>
+                <li><a href="#enrichment">Data Enrichment</a></li>
+                <li><a href="#vector-search">Vector Search & Postgres</a></li>
+                <li><a href="#api-frontend">API & Frontend</a></li>
+                <li><a href="#auth-billing">Authentication & Billing</a></li>
+                <li><a href="#data-flow">Complete Data Flow</a></li>
+                <li><a href="#deployment">Deployment & Infrastructure</a></li>
+                <li><a href="#development">Development Workflow</a></li>
+            </ul>
+        </div>
+
+        <!-- OVERVIEW SECTION -->
+        <div class="section" id="overview">
+            <h2>System Overview</h2>
+            <p><strong>Sarrafi Collection</strong> is a sophisticated dealership intelligence platform that:</p>
+            <ul>
+                <li>🚗 Crawls dealership websites and OEM platforms to discover and ingest vehicle listings</li>
+                <li>📊 Enriches raw listing data with EPA specs, market intelligence, and semantic embeddings</li>
+                <li>🔍 Provides hybrid search (SQL + pgvector semantic search) to users</li>
+                <li>💳 Manages user subscriptions and feature access via a billing system</li>
+                <li>📱 Serves web and mobile (iOS) interfaces for end users</li>
+                <li>🏢 Includes admin dashboards for dealers and platform operators</li>
+            </ul>
+
+            <div class="tech-spec">
+                <strong>Core Tech Stack:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Backend: Flask (Python) + async scanner (Node.js/Crawl4AI)</li>
+                    <li>Databases: SQLite (local dev), PostgreSQL (production), pgvector (embeddings)</li>
+                    <li>Frontend: Jinja2 templates, JavaScript (interactive features)</li>
+                    <li>Mobile: SwiftUI (iOS)</li>
+                    <li>AI/ML: OpenAI embeddings, Claude API for intelligent features</li>
+                    <li>Authentication: OAuth 2.0 (Google, Apple), MFA support</li>
+                    <li>Deployment: Railway, Docker, Cloud infrastructure</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ARCHITECTURE SECTION -->
+        <div class="section" id="architecture">
+            <h2>Overall Architecture</h2>
+
+            <h3>System Architecture Diagram</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TB
+                        subgraph External["External Data Sources"]
+                            OEM["OEM Websites<br/>(BMW, etc.)"]
+                            Dealer["Dealership Websites"]
+                            EPA["EPA Database<br/>(fueleconomy.gov)"]
+                            NHTSA["NHTSA Wikipedia<br/>(Specs)"]
+                        end
+
+                        subgraph Scanner["Scanner Layer"]
+                            Crawl4AI["Crawl4AI Engine<br/>(Node.js)"]
+                            Discovery["Discovery Module<br/>(Algolia, etc.)"]
+                        end
+
+                        subgraph Backend["Flask Backend<br/>(Python)"]
+                            Parser["Parsers<br/>(VDP, Listing)"]
+                            Enrich["Enrichment Service<br/>(EPA, specs)"]
+                            Vision["Vision Module<br/>(Image analysis)"]
+                            Vectors["Vector Engine<br/>(Embeddings)"]
+                        end
+
+                        subgraph Databases["Data Layer"]
+                            SQLite["SQLite<br/>(Local Dev)"]
+                            Postgres["PostgreSQL<br/>(Production)"]
+                            pgVector["pgvector Extension<br/>(Semantic Search)"]
+                        end
+
+                        subgraph Interfaces["User Interfaces"]
+                            Web["Flask Web App<br/>(Jinja2 + JS)"]
+                            iOS["iOS App<br/>(SwiftUI)"]
+                            Admin["Admin Dashboard<br/>(Dealers)"]
+                        end
+
+                        subgraph Features["Feature Layer"]
+                            Search["Hybrid Search<br/>(SQL + Vector)"]
+                            Chat["AI Chat<br/>(Claude API)"]
+                            Billing["Billing Engine<br/>(Subscriptions)"]
+                            Auth["Auth Layer<br/>(OAuth 2.0)"]
+                        end
+
+                        OEM --> Crawl4AI
+                        Dealer --> Crawl4AI
+                        EPA --> Enrich
+                        NHTSA --> Enrich
+
+                        Crawl4AI --> Parser
+                        Discovery --> Parser
+                        Parser --> Enrich
+                        Enrich --> Vision
+                        Vision --> Vectors
+
+                        Vectors --> SQLite
+                        Vectors --> Postgres
+                        Postgres --> pgVector
+
+                        Postgres -.->|Live Data| Web
+                        Postgres -.->|Live Data| iOS
+                        Postgres -.->|Admin Data| Admin
+
+                        Web --> Auth
+                        Web --> Billing
+                        Web --> Search
+                        Web --> Chat
+
+                        iOS --> Auth
+                        iOS --> Billing
+                        iOS --> Search
+
+                        style External fill:#e1f5ff
+                        style Scanner fill:#f3e5f5
+                        style Backend fill:#e8f5e9
+                        style Databases fill:#fff3e0
+                        style Interfaces fill:#fce4ec
+                        style Features fill:#f1f8e9
+                </div>
+            </div>
+
+            <p>The architecture follows a <span class="highlight">layered approach</span>:</p>
+            <ol>
+                <li><strong>Data Ingestion Layer:</strong> Scanner crawls dealers and OEM sites, discovers listings</li>
+                <li><strong>Processing Layer:</strong> Parsers extract structured data, enrichment service adds intelligence</li>
+                <li><strong>Storage Layer:</strong> Multiple database backends with different purposes</li>
+                <li><strong>Feature Layer:</strong> Search, AI, billing, auth services built on top of data</li>
+                <li><strong>Presentation Layer:</strong> Web, iOS, admin interfaces consume features</li>
+            </ol>
+        </div>
+
+        <!-- BACKEND SECTION -->
+        <div class="section" id="backend">
+            <h2>Backend Stack (Python/Flask)</h2>
+
+            <h3>Key Modules</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Purpose</th>
+                        <th>Key Files</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>backend/scanner/</code></td>
+                        <td>Crawls dealership & OEM sites, discovers listings</td>
+                        <td>orchestrator.py, crawl4ai_*.py, vdp.py</td>
+                    </tr>
+                    <tr>
+                        <td><code>backend/enrichment/</code></td>
+                        <td>EPA specs, trim data, MPG lookup, vehicle intelligence</td>
+                        <td>service.py, knowledge_engine.py</td>
+                    </tr>
+                    <tr>
+                        <td><code>backend/vector/</code></td>
+                        <td>Embedding generation and pgvector integration</td>
+                        <td>embeddings.py, pgvector_client.py</td>
+                    </tr>
+                    <tr>
+                        <td><code>backend/listings/</code></td>
+                        <td>Listing data models, queries, search logic</td>
+                        <td>db.py, queries.py, search.py</td>
+                    </tr>
+                    <tr>
+                        <td><code>backend/auth/</code></td>
+                        <td>OAuth 2.0 (Google, Apple), session management</td>
+                        <td>google_oauth.py, apple_oauth.py, decorators.py</td>
+                    </tr>
+                    <tr>
+                        <td><code>backend/billing/</code></td>
+                        <td>Subscription management, feature entitlements</td>
+                        <td>catalog.py, entitlements.py, routes.py</td>
+                    </tr>
+                    <tr>
+                        <td><code>backend/intelligence/</code></td>
+                        <td>AI features (Chat, compare, market intel)</td>
+                        <td>ai/agent.py, ai/prompts.py</td>
+                    </tr>
+                    <tr>
+                        <td><code>backend/dealer/</code></td>
+                        <td>Dealer portal, admin dashboard</td>
+                        <td>routes.py, admin.py, admin_users_db.py</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Flask App Structure</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                        A["Flask App Entry<br/>(backend/main.py)"]
+                        B["Load Environment & Vault Secrets"]
+                        C["Initialize Core Components"]
+                        D["Register Blueprints"]
+                        E["Setup Database Connections"]
+
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> E
+
+                        D --> D1["Auth Blueprints<br/>(Google, Apple OAuth)"]
+                        D --> D2["API Routes<br/>(Listings, Search, Chat)"]
+                        D --> D3["Dealer Portal<br/>(Admin, Users)"]
+                        D --> D4["Developer Console<br/>(Scanner, Debug)"]
+                        D --> D5["Billing Routes<br/>(Subscriptions)"]
+
+                        E --> E1["SQLite Connection<br/>(Inventory, Users)"]
+                        E --> E2["PostgreSQL Connection<br/>(Production Inventory)"]
+                        E --> E3["pgvector Connection<br/>(Embeddings)"]
+
+                        style A fill:#667eea,color:#fff
+                        style D1 fill:#e8f5e9
+                        style D2 fill:#e8f5e9
+                        style D3 fill:#e8f5e9
+                        style D4 fill:#e8f5e9
+                        style D5 fill:#e8f5e9
+                        style E1 fill:#fff3e0
+                        style E2 fill:#fff3e0
+                        style E3 fill:#fff3e0
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Key Concept:</strong> Flask uses Blueprints to organize routes into logical modules. Each major feature (auth, billing, dealer portal) is a separate Blueprint that can be independently tested and modified.
+            </div>
+        </div>
+
+        <!-- DATABASES SECTION -->
+        <div class="section" id="databases">
+            <h2>Database Layer</h2>
+
+            <h3>Multi-Database Strategy</h3>
+            <p>Sarrafi Collection uses multiple specialized databases for different purposes:</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph LR
+                        subgraph SQLite["SQLite<br/>(Local Development)"]
+                            sqlite_inv["inventory.db<br/>(Listings)"]
+                            sqlite_users["users.db<br/>(User Accounts)"]
+                            sqlite_dev["dev_users.db<br/>(Dev Only)"]
+                            sqlite_dealer["dealer_portal.db<br/>(Dealer Accounts)"]
+                            sqlite_incomplete["incomplete_listings.db<br/>(Orphaned Data)"]
+                        end
+
+                        subgraph Postgres["PostgreSQL<br/>(Production)"]
+                            pg_inv["inventory_table<br/>(Main Listings)"]
+                            pg_users["users_table<br/>(Account Data)"]
+                            pg_admin["admin_accounts<br/>(Admin Users)"]
+                            pg_vector["pgvector Extension<br/>(Embedding Vectors)"]
+                        end
+
+                        Flask["Flask Backend"]
+                        Environment["Environment Variable:<br/>DATABASE_URL<br/>or<br/>INVENTORY_DB_PATH"]
+
+                        Flask --> Environment
+                        Environment -->|Local Dev| SQLite
+                        Environment -->|Production| Postgres
+
+                        style SQLite fill:#e8f5e9
+                        style Postgres fill:#fff3e0
+                        style Flask fill:#667eea,color:#fff
+                        style Environment fill:#f3e5f5
+                </div>
+            </div>
+
+            <h3>Database Schemas</h3>
+
+            <h4>Inventory/Listings Schema</h4>
+            <div class="code-block">
+-- Core listing record
+CREATE TABLE listings (
+    id INTEGER PRIMARY KEY,
+    vin VARCHAR UNIQUE,
+    dealer_id INTEGER,
+    title VARCHAR,
+    price DECIMAL,
+    mileage INTEGER,
+    year INTEGER,
+    make VARCHAR,
+    model VARCHAR,
+    trim VARCHAR,
+    body_type VARCHAR,
+    exterior_color VARCHAR,
+    interior_color VARCHAR,
+    images TEXT,  -- JSON array of image URLs
+    description TEXT,
+    market_status VARCHAR,  -- new, used, in-transit
+    mpg_city DECIMAL,
+    mpg_highway DECIMAL,
+    mpg_combined DECIMAL,
+    features TEXT,  -- JSON array
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    scan_id INTEGER  -- Reference to scanner run
+);
+
+-- Embedding vectors (PostgreSQL only)
+CREATE TABLE listing_embeddings (
+    id INTEGER PRIMARY KEY,
+    listing_id INTEGER REFERENCES listings(id),
+    embedding vector(1536),  -- OpenAI embedding dimension
+    created_at TIMESTAMP
+);
+            </div>
+
+            <h4>User Accounts Schema</h4>
+            <div class="code-block">
+-- User account
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    email VARCHAR UNIQUE,
+    password_hash VARCHAR,
+    oauth_provider VARCHAR,  -- google, apple, etc.
+    oauth_id VARCHAR,
+    created_at TIMESTAMP,
+    last_login TIMESTAMP
+);
+
+-- User subscription/billing
+CREATE TABLE user_billing (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    plan VARCHAR,  -- free, premium, enterprise
+    stripe_customer_id VARCHAR,
+    active BOOLEAN,
+    trial_until TIMESTAMP,
+    next_billing_date TIMESTAMP
+);
+
+-- Feature entitlements
+CREATE TABLE user_features (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    feature_key VARCHAR,
+    enabled BOOLEAN
+);
+            </div>
+
+            <div class="tech-spec">
+                <strong>📊 Data Dimensions:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Listings:</strong> 100K+ vehicles (grows continuously)</li>
+                    <li><strong>Embeddings:</strong> Stored in pgvector, one per listing</li>
+                    <li><strong>Users:</strong> Ranges from 10s-1000s depending on environment</li>
+                    <li><strong>Dealers:</strong> Multiple account tiers (free, premium, enterprise)</li>
+                </ul>
+            </div>
+
+            <h3>Database Connection Logic</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                        Start["Request Arrives"]
+                        CheckEnv{"Check Environment<br/>Variable"}
+                        LocalDev["INVENTORY_DB_PATH<br/>set?"]
+                        UseSQLite["Use SQLite<br/>(Development)"]
+                        UsePostgres["Use PostgreSQL<br/>(Production)<br/>via DATABASE_URL"]
+                        ConnPool["Connection Pool"]
+                        Query["Execute Query"]
+                        Cache["Cache Results<br/>(if applicable)"]
+                        Response["Return Data"]
+
+                        Start --> CheckEnv
+                        CheckEnv -->|Yes| LocalDev
+                        CheckEnv -->|No| UsePostgres
+                        LocalDev -->|True| UseSQLite
+                        LocalDev -->|False| UsePostgres
+                        UseSQLite --> ConnPool
+                        UsePostgres --> ConnPool
+                        ConnPool --> Query
+                        Query --> Cache
+                        Cache --> Response
+
+                        style Start fill:#667eea,color:#fff
+                        style UseSQLite fill:#e8f5e9
+                        style UsePostgres fill:#fff3e0
+                        style Response fill:#4caf50,color:#fff
+                </div>
+            </div>
+        </div>
+
+        <!-- SCANNER SECTION -->
+        <div class="section" id="scanner">
+            <h2>Scanner & Data Ingestion Pipeline</h2>
+
+            <h3>How the Scanner Works</h3>
+            <p>The scanner is the <span class="highlight">data backbone</span> of the entire system. It continuously discovers and crawls dealership websites.</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                        A["Scanner Orchestrator<br/>(orchestrator.py)"]
+                        B["Discovery Phase<br/>(Find dealers & URLs)"]
+                        C["Crawl4AI Engine<br/>(Node.js crawler)"]
+                        D["Parse Vehicle Listings<br/>(VDP Parser)"]
+                        E["Extract Structured Data<br/>(Title, Price, Specs)"]
+                        F["Deduplicate by VIN"]
+                        G["Store in Database<br/>(Temporary Storage)"]
+                        H["Post-Processing<br/>(Enrichment Queue)"]
+
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> E
+                        E --> F
+                        F --> G
+                        G --> H
+
+                        B1["Algolia Index<br/>(Dealer Search)"]
+                        B2["OEM URLs<br/>(BMW, etc.)"]
+                        B --> B1
+                        B --> B2
+
+                        C1["JavaScript Rendering<br/>(Handles SPA)"]
+                        C2["Image Scraping<br/>(Gallery URLs)"]
+                        C3["Screenshot Capture<br/>(Window Sticker)"]
+                        C --> C1
+                        C --> C2
+                        C --> C3
+
+                        D1["Listing Parser"]
+                        D2["Inventory Grid Parser"]
+                        D --> D1
+                        D --> D2
+
+                        H1["Enrichment Service"]
+                        H2["Vision Analysis"]
+                        H3["Vector Embedding"]
+                        H --> H1
+                        H --> H2
+                        H --> H3
+
+                        style A fill:#667eea,color:#fff
+                        style B fill:#e1f5ff
+                        style C fill:#f3e5f5
+                        style D fill:#e8f5e9
+                        style G fill:#fff3e0
+                        style H fill:#ffe0b2
+                </div>
+            </div>
+
+            <h3>Scanner Phases</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Duration</th>
+                        <th>Purpose</th>
+                        <th>Input</th>
+                        <th>Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Discovery</td>
+                        <td>~5 min</td>
+                        <td>Find dealers & listing URLs</td>
+                        <td>Dealer database, Algolia</td>
+                        <td>Queue of URLs to scan</td>
+                    </tr>
+                    <tr>
+                        <td>Crawl</td>
+                        <td>~30-60 min</td>
+                        <td>Fetch & render dealer pages</td>
+                        <td>URL queue</td>
+                        <td>Raw HTML + screenshots</td>
+                    </tr>
+                    <tr>
+                        <td>Parse</td>
+                        <td>~10 min</td>
+                        <td>Extract structured listing data</td>
+                        <td>Raw HTML</td>
+                        <td>Structured JSON listings</td>
+                    </tr>
+                    <tr>
+                        <td>Deduplicate</td>
+                        <td>~2 min</td>
+                        <td>Remove duplicates by VIN</td>
+                        <td>Parsed listings</td>
+                        <td>Unique listing set</td>
+                    </tr>
+                    <tr>
+                        <td>Store</td>
+                        <td>~3 min</td>
+                        <td>Insert/update database</td>
+                        <td>Unique listings</td>
+                        <td>Listings in DB</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Crawl4AI Integration</h3>
+            <p>Crawl4AI is a Node.js-based browser automation tool that handles JavaScript-heavy websites:</p>
+            <div class="code-block">
+// backend/scanner/crawl4ai_*.py
+// Handles:
+// - Rendering JavaScript (SPA, dynamic content)
+// - Executing clicks/scrolls
+// - Waiting for network idle
+// - Screenshot capture (for window stickers, gallery images)
+// - Cookie/session management
+// - User-agent rotation
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> Scanner runs asynchronously on a schedule (cron job or manual trigger). It doesn't block user requests. Failed scans are logged and can be retried.
+            </div>
+
+            <h3>Scan Orchestration Flow</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant User
+                        participant Flask
+                        participant Scanner
+                        participant Crawl4AI
+                        participant DB
+                        participant Enrichment
+
+                        User->>Flask: Trigger scan (or cron)
+                        Flask->>Scanner: Start orchestrator
+                        Scanner->>Scanner: Discover dealers & URLs
+                        Scanner->>Crawl4AI: Queue batch crawl
+                        Crawl4AI->>Crawl4AI: Render pages (JS)
+                        Crawl4AI->>Crawl4AI: Extract HTML + screenshots
+                        Crawl4AI->>Scanner: Return raw data
+                        Scanner->>Scanner: Parse to structured data
+                        Scanner->>DB: Upsert listings (by VIN)
+                        DB->>DB: Deduplicate
+                        Scanner->>Enrichment: Queue listings for enrichment
+                        Enrichment->>Enrichment: Add EPA data, embeddings
+                        Enrichment->>DB: Update listings with enrichment
+                        Scanner->>Flask: Report completion
+                        Flask->>User: Scan complete (email/dashboard)
+                </div>
+            </div>
+
+            <h3>Running the Scanner</h3>
+            <div class="code-block">
+# Full scan (discovery + crawl + parse)
+python scanner.py --scan-only
+
+# Trigger enrichment only (use recent scans)
+python post_scan.py --enrich-only
+
+# Manual dealer scan
+python scanner.py --dealer-id=123 --vin=WBADT43452JE75234
+
+# Discovery debug
+python discovery.py --list-dealers
+
+# With verbose logging
+python scanner.py --debug --verbose
+            </div>
+        </div>
+
+        <!-- ENRICHMENT SECTION -->
+        <div class="section" id="enrichment">
+            <h2>Data Enrichment Service</h2>
+
+            <h3>Enrichment Pipeline</h3>
+            <p>After raw listing data is crawled and parsed, the <span class="highlight">enrichment service</span> adds intelligence:</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph LR
+                        Raw["Raw Listing<br/>(from crawler)"]
+                        EPA["EPA Knowledge<br/>Engine"]
+                        Specs["Spec Dictionary<br/>(NHTSA, Wikipedia)"]
+                        Images["Image Analysis<br/>(Vision)"]
+                        Embeddings["Vector Embeddings<br/>(OpenAI)"]
+                        Final["Enriched Listing<br/>(in database)"]
+
+                        Raw --> EPA
+                        Raw --> Specs
+                        Raw --> Images
+                        Raw --> Embeddings
+
+                        EPA --> Final
+                        Specs --> Final
+                        Images --> Final
+                        Embeddings --> Final
+
+                        EPA1["MPG Data<br/>(City/Hwy)"]
+                        EPA2["Trim Info<br/>(Features, Build)"]
+                        EPA3["Window Sticker<br/>(MSRP, etc.)"]
+                        EPA --> EPA1
+                        EPA --> EPA2
+                        EPA --> EPA3
+
+                        style Raw fill:#f3e5f5
+                        style EPA fill:#e8f5e9
+                        style Specs fill:#e8f5e9
+                        style Images fill:#e8f5e9
+                        style Embeddings fill:#fce4ec
+                        style Final fill:#fff3e0
+                </div>
+            </div>
+
+            <h3>EPA Knowledge Engine</h3>
+            <p>The EPA engine is the brain of enrichment. It uses vehicle specs (year, make, model, trim) to look up detailed EPA data:</p>
+
+            <div class="tech-spec">
+                <strong>EPA Lookup Process:</strong>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Parse vehicle trim from listing (e.g., "2024 BMW i7 xDrive50")</li>
+                    <li>Match against EPA master index (database table)</li>
+                    <li>Retrieve MPG, CO2, fuel type, engine specs</li>
+                    <li>Generate window sticker (MSRP, ratings)</li>
+                    <li>Cache results for 30 days</li>
+                </ol>
+            </div>
+
+            <div class="code-block">
+# backend/enrichment/knowledge_engine.py
+class KnowledgeEngine:
+    def lookup_epa_data(self, year, make, model, trim):
+        # Query epa_master table (indexed for speed)
+        # Returns: MPG, CO2, features, MSRP range, certifications
+
+    def generate_window_sticker(self, vehicle_specs, epa_data):
+        # Formats EPA data into official window sticker JSON
+        # Used by frontend for display
+
+    def get_trim_ladder(self, year, make, model):
+        # Returns available trims + feature progression
+        # Powers trim comparison UX
+            </div>
+
+            <h3>Image Analysis (Vision Module)</h3>
+            <p>Extracts features from dealer photos:</p>
+            <ul>
+                <li>Detect condition indicators (scratches, dents, cleanliness)</li>
+                <li>Identify interior/exterior colors (verify against metadata)</li>
+                <li>Extract text (license plates, odometer for mileage hints)</li>
+                <li>Filter low-quality or irrelevant images</li>
+            </ul>
+
+            <h3>Embedding Generation</h3>
+            <p>Raw listing text is converted to embeddings using OpenAI's API:</p>
+            <div class="code-block">
+# backend/vector/embeddings.py
+def generate_listing_embedding(listing: dict) -> np.array:
+    # Build text: title + description + specs + features
+    text = f"{listing['title']} {listing['description']} {listing['specs']}"
+
+    # Call OpenAI API
+    response = openai.Embedding.create(
+        input=text,
+        model="text-embedding-3-small",  # 1536 dimensions
+        dimensions=1536
+    )
+
+    # Returns 1536-dimensional vector
+    # Stored in pgvector table for similarity search
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Embeddings:</strong> Convert text into numerical vectors that capture semantic meaning. Similar vehicles (e.g., "red sports car" and "red sports sedan") have similar embeddings, enabling intelligent search without exact keyword matching.
+            </div>
+
+            <h3>Enrichment Workflow</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    stateDiagram-v2
+                        [*] --> Queued
+                        Queued --> EnrichmentInProgress: Dequeue job
+                        EnrichmentInProgress --> LookupEPA: Extract trim
+                        LookupEPA --> Success: EPA found
+                        LookupEPA --> FallbackDict: No EPA match
+                        FallbackDict --> AnalyzeImages
+                        Success --> AnalyzeImages
+                        AnalyzeImages --> GenerateEmbedding
+                        GenerateEmbedding --> UpdateDB
+                        UpdateDB --> Complete: Success
+                        EnrichmentInProgress --> Failed: API error/timeout
+                        Failed --> Retry: Exponential backoff
+                        Retry --> EnrichmentInProgress
+                        Complete --> [*]
+
+                        style Complete fill:#4caf50,color:#fff
+                        style Failed fill:#f44336,color:#fff
+                        style Queued fill:#2196F3,color:#fff
+                    </div>
+            </div>
+        </div>
+
+        <!-- VECTOR SEARCH SECTION -->
+        <div class="section" id="vector-search">
+            <h2>Vector Search & PostgreSQL pgvector</h2>
+
+            <h3>Hybrid Search Strategy</h3>
+            <p>Sarrafi Collection uses a <span class="highlight">hybrid approach</span>: combining traditional SQL queries with vector similarity search for powerful results:</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                        User["User Search Query<br/>(e.g., 'red sports cars')"]
+                        ParseQuery["Parse Query Intent"]
+                        SplitPath["Route to Search Path"]
+
+                        KeywordPath["Keyword Path<br/>(SQL)"]
+                        Vector["Build Query Vector<br/>(Embedding)"]
+                        SimilarSearch["Find Similar Listings<br/>(pgvector)"]
+
+                        KeywordSearch["SQL WHERE Clause<br/>(price, year, color)"]
+                        KeywordResults["Keyword Results"]
+
+                        Combine["Combine & Rank Results"]
+                        Filter["Apply User Filters<br/>(price range, etc.)"]
+                        Final["Return Ranked Listings"]
+
+                        User --> ParseQuery
+                        ParseQuery --> SplitPath
+                        SplitPath --> KeywordPath
+                        SplitPath --> Vector
+                        KeywordPath --> KeywordSearch
+                        Vector --> SimilarSearch
+                        KeywordSearch --> KeywordResults
+                        SimilarSearch --> SimilarResults["Semantic Results<br/>(top 100)"]
+                        KeywordResults --> Combine
+                        SimilarResults --> Combine
+                        Combine --> Filter
+                        Filter --> Final
+
+                        style User fill:#667eea,color:#fff
+                        style KeywordPath fill:#e8f5e9
+                        style Vector fill:#fce4ec
+                        style Final fill:#fff3e0
+                </div>
+            </div>
+
+            <h3>How pgvector Works</h3>
+            <p>PostgreSQL extension that stores and queries vectors (embeddings):</p>
+
+            <div class="code-block">
+-- Create pgvector extension (one-time setup)
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Listings table with embedding column
+CREATE TABLE listings (
+    id BIGINT PRIMARY KEY,
+    vin VARCHAR UNIQUE,
+    title VARCHAR,
+    price DECIMAL,
+    year INTEGER,
+    make VARCHAR,
+    model VARCHAR,
+    embedding vector(1536),  -- 1536-dim OpenAI embedding
+    created_at TIMESTAMP
+);
+
+-- Create HNSW index for fast similarity search
+CREATE INDEX ON listings
+USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+
+-- Similarity search query
+SELECT id, title, price,
+       (embedding <-> query_embedding) AS distance
+FROM listings
+WHERE (embedding <-> query_embedding) < 0.5  -- similarity threshold
+ORDER BY embedding <-> query_embedding
+LIMIT 20;
+            </div>
+
+            <h3>Reindexing Workflow</h3>
+            <p>Embeddings must be kept in sync with listings as they change:</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph LR
+                        A["Scan Completes"]
+                        B["New Listings<br/>in DB"]
+                        C["Identify Missing<br/>Embeddings"]
+                        D["Batch Generate<br/>Embeddings"]
+                        E["Call OpenAI API<br/>(1536 dims)"]
+                        F["Upsert into<br/>pgvector Table"]
+                        G["Update Index"]
+                        H["Search Ready"]
+
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> E
+                        E --> F
+                        F --> G
+                        G --> H
+
+                        D1["Batch Size: 100<br/>per API call"]
+                        D --> D1
+
+                        E1["Cost: $0.02 per<br/>1M embeddings"]
+                        E --> E1
+
+                        style A fill:#667eea,color:#fff
+                        style H fill:#4caf50,color:#fff
+                        style E fill:#ff9800,color:#fff
+                </div>
+            </div>
+
+            <div class="code-block">
+# Reindex vectors
+python backend/scripts/reindex_vectors.py
+
+# Inventory-only reindex (faster)
+python backend/scripts/reindex_vectors.py --inventory-only
+
+# Check embedding status
+python -c "
+from backend.vector.pgvector_client import PgVectorClient
+client = PgVectorClient()
+missing = client.count_missing_embeddings()
+print(f'Missing embeddings: {missing}')
+"
+            </div>
+        </div>
+
+        <!-- API & FRONTEND SECTION -->
+        <div class="section" id="api-frontend">
+            <h2>API & Frontend Layer</h2>
+
+            <h3>Flask Routes & API Endpoints</h3>
+            <p>The Flask backend exposes RESTful endpoints consumed by the web and mobile frontends:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Method</th>
+                        <th>Purpose</th>
+                        <th>Returns</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/api/listings/search</code></td>
+                        <td>POST</td>
+                        <td>Hybrid search (SQL + vector)</td>
+                        <td>JSON list of listings</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/listings/{id}</code></td>
+                        <td>GET</td>
+                        <td>Fetch listing detail</td>
+                        <td>JSON listing + enrichment</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/dealers/{id}/inventory</code></td>
+                        <td>GET</td>
+                        <td>Get dealer's listings</td>
+                        <td>Paginated JSON</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/chat/car</code></td>
+                        <td>POST</td>
+                        <td>AI chat about a car</td>
+                        <td>Chat response (Claude API)</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/chat/compare</code></td>
+                        <td>POST</td>
+                        <td>Compare 2+ vehicles</td>
+                        <td>Comparison analysis</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/user/profile</code></td>
+                        <td>GET</td>
+                        <td>Get user account info</td>
+                        <td>User JSON + entitlements</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Frontend Template Structure</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                        A["Flask Route Handler<br/>(backend/main.py)"]
+                        B["Check Auth & Billing"]
+                        C["Query Database"]
+                        D["Render Template<br/>(Jinja2)"]
+                        E["Pass Context<br/>(data + functions)"]
+                        F["HTML Sent to Client"]
+                        G["Browser Renders"]
+                        H["JavaScript Initialized"]
+
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> E
+                        E --> F
+                        F --> G
+                        G --> H
+
+                        B1["Check session"]
+                        B2["Verify user_id"]
+                        B3["Load plan/features"]
+                        B --> B1
+                        B --> B2
+                        B --> B3
+
+                        C1["Listings"]
+                        C2["Dealer info"]
+                        C3["User history"]
+                        C --> C1
+                        C --> C2
+                        C --> C3
+
+                        H1["Attach event handlers"]
+                        H2["Initialize UI components"]
+                        H3["Load AJAX handlers"]
+                        H --> H1
+                        H --> H2
+                        H --> H3
+
+                        style A fill:#667eea,color:#fff
+                        style F fill:#e8f5e9
+                        style G fill:#fff3e0
+                        style H fill:#4caf50,color:#fff
+                </div>
+            </div>
+
+            <h3>Frontend JavaScript Organization</h3>
+            <p>Frontend interactivity is built with vanilla JavaScript (minimal dependencies):</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Purpose</th>
+                        <th>Key Functions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>main.js</code></td>
+                        <td>Global utilities & helpers</td>
+                        <td>API calls, DOM helpers, event delegation</td>
+                    </tr>
+                    <tr>
+                        <td><code>listings.js</code></td>
+                        <td>Listing search & filters</td>
+                        <td>Search form, filter UI, result pagination</td>
+                    </tr>
+                    <tr>
+                        <td><code>car_page.js</code></td>
+                        <td>Vehicle detail page</td>
+                        <td>Gallery, specs display, comparisons</td>
+                    </tr>
+                    <tr>
+                        <td><code>car_chat.js</code></td>
+                        <td>AI chat about vehicle</td>
+                        <td>Chat UI, message streaming, API calls</td>
+                    </tr>
+                    <tr>
+                        <td><code>compare.js</code></td>
+                        <td>Vehicle comparison</td>
+                        <td>Multi-select, side-by-side view, analysis</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Real-time Interaction Flow</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant User
+                        participant Browser
+                        participant JavaScript
+                        participant Flask
+                        participant Database
+                        participant AI["Claude API"]
+
+                        User->>Browser: Types search query
+                        Browser->>JavaScript: Form submission
+                        JavaScript->>Flask: POST /api/listings/search
+                        Flask->>Database: SQL query (price, year, etc.)
+                        Database->>Flask: Matching listings
+                        Flask->>Database: Get embeddings
+                        JavaScript->>JavaScript: Parse response
+                        JavaScript->>Browser: Update results UI
+                        Browser->>User: Show listings with filters
+
+                        User->>Browser: Click "Chat about this car"
+                        Browser->>JavaScript: Trigger chat
+                        JavaScript->>Flask: POST /api/chat/car
+                        Flask->>AI: Send listing + prompt
+                        AI->>Flask: Stream response
+                        Flask->>JavaScript: Stream text chunks
+                        JavaScript->>Browser: Show AI response in real-time
+                        Browser->>User: Read car analysis
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTH & BILLING SECTION -->
+        <div class="section" id="auth-billing">
+            <h2>Authentication & Billing System</h2>
+
+            <h3>OAuth 2.0 Flow</h3>
+            <p>Users sign in via Google or Apple OAuth, avoiding password management:</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                        A["User Visits Login Page"]
+                        B["Choose Provider<br/>(Google or Apple)"]
+                        C["Redirect to OAuth Provider"]
+                        D["User Authenticates"]
+                        E["Provider Returns Code"]
+                        F["Flask Backend"]
+                        G["Exchange Code for Token"]
+                        H["Get User Info<br/>(email, name)"]
+                        I["Check Existing User"]
+                        J{"User Exists?"}
+                        K["Create New User<br/>Account"]
+                        L["Set Session Cookie"]
+                        M["Redirect to Dashboard"]
+
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> E
+                        E --> F
+                        F --> G
+                        G --> H
+                        H --> I
+                        I --> J
+                        J -->|No| K
+                        J -->|Yes| L
+                        K --> L
+                        L --> M
+
+                        style A fill:#667eea,color:#fff
+                        style M fill:#4caf50,color:#fff
+                </div>
+            </div>
+
+            <div class="code-block">
+# backend/auth/google_oauth.py
+@app.route('/auth/google/callback')
+def google_callback():
+    code = request.args.get('code')
+
+    # Exchange code for token
+    token_response = requests.post(
+        'https://oauth2.googleapis.com/token',
+        data={
+            'code': code,
+            'client_id': GOOGLE_CLIENT_ID,
+            'client_secret': GOOGLE_CLIENT_SECRET,
+            'redirect_uri': REDIRECT_URI,
+            'grant_type': 'authorization_code'
+        }
+    )
+
+    # Get user info from token
+    user_info = requests.get(
+        'https://www.googleapis.com/oauth2/v2/userinfo',
+        headers={'Authorization': f'Bearer {token_response.json()["access_token"]}'}
+    ).json()
+
+    # Create/update user in database
+    user = User.get_or_create(
+        oauth_provider='google',
+        oauth_id=user_info['id'],
+        email=user_info['email']
+    )
+
+    # Create session
+    session['user_id'] = user.id
+    return redirect('/dashboard')
+            </div>
+
+            <h3>Billing & Feature Entitlements</h3>
+            <p>Users subscribe to plans with different feature access:</p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph LR
+                        A["User Subscribes<br/>to Plan"]
+                        B{"Which Plan?"}
+                        C["Free"]
+                        D["Premium"]
+                        E["Enterprise"]
+
+                        B -->|$0| C
+                        B -->|$9.99/mo| D
+                        B -->|Custom| E
+
+                        C1["Search listings"]
+                        C2["View details"]
+                        C3["5 saved cars"]
+                        C --> C1
+                        C --> C2
+                        C --> C3
+
+                        D1["All Free features"]
+                        D2["AI car chat"]
+                        D3["Comparisons"]
+                        D4["Market intel"]
+                        D5["Unlimited saved"]
+                        D --> D1
+                        D --> D2
+                        D --> D3
+                        D --> D4
+                        D --> D5
+
+                        E1["All Premium features"]
+                        E2["API access"]
+                        E3["Custom dealer portal"]
+                        E4["Priority support"]
+                        E --> E1
+                        E --> E2
+                        E --> E3
+                        E --> E4
+
+                        C --> Stripe["Stripe (Payment)"]
+                        D --> Stripe
+                        E --> Stripe
+
+                        Stripe --> DB["Store in<br/>user_billing table"]
+
+                        style C fill:#e8f5e9
+                        style D fill:#fff3e0
+                        style E fill:#f3e5f5
+                        style Stripe fill:#667eea,color:#fff
+                </div>
+            </div>
+
+            <h3>Feature Gating</h3>
+            <p>Before exposing a feature, the app checks entitlements:</p>
+
+            <div class="code-block">
+# backend/billing/entitlements.py
+def check_feature_access(user_id, feature_key):
+    """Check if user has access to a feature"""
+    user = User.get(user_id)
+    entitlements = entitlements_from_session(session)
+
+    if feature_key not in entitlements:
+        raise BillingException(f'Feature {feature_key} not included in your plan')
+
+    return True
+
+# Usage in routes
+from backend.billing.entitlements import require_feature
+
+@app.route('/api/chat/car', methods=['POST'])
+@require_login
+@require_feature(FEATURE_AI_CAR_CHAT)
+def car_chat():
+    # Only accessible if user has chat feature
+    listing_id = request.json['listing_id']
+    return run_car_page_chat(listing_id, session['user_id'])
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Design:</strong> Features are checked at the route level. Unauthorized requests return 403 Forbidden with a message directing users to upgrade.
+            </div>
+        </div>
+
+        <!-- DATA FLOW SECTION -->
+        <div class="section" id="data-flow">
+            <h2>Complete Data Flow (End-to-End)</h2>
+
+            <h3>Full Listing Lifecycle</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TB
+                        A["Dealer Website<br/>(BMW, Tesla, etc.)"]
+                        B["Scanner Discovery<br/>(Find new URLs)"]
+                        C["Crawl4AI<br/>(Render JavaScript)"]
+                        D["HTML Parsing<br/>(Extract listing)"]
+                        E["VDP Parser<br/>(Title, Price, Specs)"]
+                        F["Temporary Storage"]
+                        G["Deduplication<br/>(by VIN)"]
+                        H["Insert to DB<br/>(SQLite or Postgres)"]
+                        I["Enrichment Queue"]
+                        J["EPA Knowledge<br/>Engine"]
+                        K["Vision Analysis<br/>(Images)"]
+                        L["Generate Embedding<br/>(OpenAI)"]
+                        M["Store in pgvector"]
+                        N["Update epa_master<br/>Index"]
+                        O["Search Ready"]
+
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> E
+                        E --> F
+                        F --> G
+                        G --> H
+                        H --> I
+                        I --> J
+                        I --> K
+                        I --> L
+                        J --> N
+                        K --> N
+                        L --> M
+                        M --> N
+                        N --> O
+
+                        O1["User Searches"]
+                        O2["Filters (price, year)"]
+                        O3["Vector similarity"]
+                        O4["Combined results"]
+                        O5["Displayed to user"]
+
+                        O --> O1
+                        O1 --> O2
+                        O1 --> O3
+                        O2 --> O4
+                        O3 --> O4
+                        O4 --> O5
+
+                        style A fill:#f3e5f5
+                        style H fill:#e8f5e9
+                        style M fill:#fff3e0
+                        style O fill:#fce4ec
+                        style O5 fill:#4caf50,color:#fff
+                </div>
+            </div>
+
+            <h3>Data Volumes & Timing</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Typical Duration</th>
+                        <th>Data Volume</th>
+                        <th>Throughput</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Discovery</td>
+                        <td>5 min</td>
+                        <td>1000+ URLs queued</td>
+                        <td>200 URLs/min</td>
+                    </tr>
+                    <tr>
+                        <td>Crawl</td>
+                        <td>60 min</td>
+                        <td>1000 pages</td>
+                        <td>16 concurrent (limited by memory)</td>
+                    </tr>
+                    <tr>
+                        <td>Parse</td>
+                        <td>10 min</td>
+                        <td>1000+ listings</td>
+                        <td>CPU-bound</td>
+                    </tr>
+                    <tr>
+                        <td>Dedup</td>
+                        <td>2 min</td>
+                        <td>900 unique (after dedup)</td>
+                        <td>VIN lookup</td>
+                    </tr>
+                    <tr>
+                        <td>Store</td>
+                        <td>3 min</td>
+                        <td>900 inserts/updates</td>
+                        <td>300/min (batched)</td>
+                    </tr>
+                    <tr>
+                        <td>Enrich</td>
+                        <td>30-60 min</td>
+                        <td>900 listings</td>
+                        <td>API limited (OpenAI)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>~2 hours</strong></td>
+                        <td><strong>900 live listings</strong></td>
+                        <td>N/A</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Database State During Scan</h3>
+            <div class="code-block">
+-- Before scan
+SELECT COUNT(*) FROM listings;  -- 85,000
+
+-- During scan (partial updates)
+SELECT COUNT(*) FROM listings WHERE updated_at > NOW() - INTERVAL '30 minutes';
+-- 450 listings updated so far
+
+-- After scan completes
+SELECT COUNT(*) FROM listings;  -- 85,900 (new + updated)
+
+-- Check enrichment status
+SELECT COUNT(*) FROM listings
+WHERE embedding IS NULL;  -- 450 (waiting for embeddings)
+
+-- After enrichment
+SELECT COUNT(*) FROM listings
+WHERE embedding IS NOT NULL;  -- 85,900 (all enriched)
+            </div>
+        </div>
+
+        <!-- DEPLOYMENT SECTION -->
+        <div class="section" id="deployment">
+            <h2>Deployment & Infrastructure</h2>
+
+            <h3>Local Development Setup</h3>
+            <div class="code-block">
+# Step 1: Clone and setup
+git clone https://github.com/asarrafi47/DealershipScanner.git
+cd DealershipScanner
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Step 2: Environment variables (.env)
+FLASK_ENV=development
+DATABASE_URL=sqlite:///inventory.db
+PGVECTOR_URL=postgresql://user:pass@localhost/vectors
+OPENAI_API_KEY=sk-...
+GOOGLE_OAUTH_CLIENT_ID=...
+
+# Step 3: Initialize databases
+python backend/scripts/build_epa_master.py
+
+# Step 4: Run Flask
+export PYTHONPATH=.
+flask --app backend.main run
+
+# Step 5: Run scanner (separate terminal)
+python scanner.py --scan-only
+            </div>
+
+            <h3>Production Deployment (Railway)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph LR
+                        GitHub["GitHub Repository"]
+                        Railway["Railway Platform"]
+                        Docker["Docker Image<br/>(Python 3.12)"]
+                        PG["PostgreSQL<br/>(pgvector)"]
+                        Cache["Redis Cache<br/>(optional)"]
+                        Vault["Secrets Vault<br/>(KMAC)"]
+                        CloudStorage["Cloud Storage<br/>(Images, backups)"]
+
+                        GitHub -->|Push| Railway
+                        Railway -->|Build| Docker
+                        Docker -->|Connects| PG
+                        Docker -->|Connects| Cache
+                        Docker -->|Loads secrets| Vault
+                        Docker -->|Stores| CloudStorage
+
+                        Docker1["Web Service<br/>:5000"]
+                        Docker2["Cron Jobs<br/>(Scanner, cleanup)"]
+                        Docker --> Docker1
+                        Docker --> Docker2
+
+                        style GitHub fill:#333,color:#fff
+                        style Railway fill:#667eea,color:#fff
+                        style Docker fill:#2196F3,color:#fff
+                        style PG fill:#fff3e0
+                </div>
+            </div>
+
+            <h3>Environment Variables (Production)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>FLASK_ENV</code></td>
+                        <td>App environment</td>
+                        <td>production</td>
+                    </tr>
+                    <tr>
+                        <td><code>DATABASE_URL</code></td>
+                        <td>PostgreSQL connection</td>
+                        <td>postgresql://user:pass@host/db</td>
+                    </tr>
+                    <tr>
+                        <td><code>PGVECTOR_URL</code></td>
+                        <td>pgvector connection</td>
+                        <td>postgresql://user:pass@host/vectors</td>
+                    </tr>
+                    <tr>
+                        <td><code>OPENAI_API_KEY</code></td>
+                        <td>OpenAI embeddings & chat</td>
+                        <td>sk-...</td>
+                    </tr>
+                    <tr>
+                        <td><code>ANTHROPIC_API_KEY</code></td>
+                        <td>Claude API for AI features</td>
+                        <td>sk-ant-...</td>
+                    </tr>
+                    <tr>
+                        <td><code>SECRET_KEY</code></td>
+                        <td>Flask session signing</td>
+                        <td>random 32-char string</td>
+                    </tr>
+                    <tr>
+                        <td><code>STRIPE_API_KEY</code></td>
+                        <td>Payment processing</td>
+                        <td>sk_live_...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>⚠️ Security:</strong> Never commit .env files or API keys. Use Vault for secrets management in production (KMAC vault loaded at startup).
+            </div>
+
+            <h3>Monitoring & Logging</h3>
+            <p>Production deployment includes monitoring and alerting:</p>
+            <ul>
+                <li><strong>Application logs:</strong> Flask request logs, error tracking (Sentry)</li>
+                <li><strong>Scanner logs:</strong> Discovery, crawl, parse success/failure rates</li>
+                <li><strong>Database metrics:</strong> Connection pool utilization, query performance</li>
+                <li><strong>Uptime:</strong> Alerting on service failures</li>
+                <li><strong>Cost tracking:</strong> OpenAI API usage, AWS/Railway bills</li>
+            </ul>
+        </div>
+
+        <!-- DEVELOPMENT SECTION -->
+        <div class="section" id="development">
+            <h2>Development Workflow</h2>
+
+            <h3>Branching & Git Strategy</h3>
+            <p>The project follows a feature-branch workflow:</p>
+            <div class="code-block">
+# Create feature branch
+git checkout -b feature/my-feature
+
+# Make changes, commit often
+git add .
+git commit -m "Clear commit message"
+
+# Push and create pull request
+git push origin feature/my-feature
+# Open PR on GitHub for review
+
+# After approval, merge to main
+# (CI/CD runs tests automatically)
+            </div>
+
+            <h3>Running Tests</h3>
+            <div class="code-block">
+# Run all tests
+pytest backend/tests/ -v
+
+# Run specific test file
+pytest backend/tests/test_enrichment.py
+
+# Run with coverage
+pytest backend/tests/ --cov=backend --cov-report=html
+
+# Run scanner tests only
+pytest backend/tests/test_scanner*.py
+            </div>
+
+            <h3>Common Development Tasks</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Command</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Start Flask dev server</td>
+                        <td><code>flask --app backend.main run</code></td>
+                        <td>Watches for changes, auto-reloads</td>
+                    </tr>
+                    <tr>
+                        <td>Run scanner locally</td>
+                        <td><code>python scanner.py --scan-only</code></td>
+                        <td>Uses INVENTORY_DB_PATH (SQLite)</td>
+                    </tr>
+                    <tr>
+                        <td>Trigger post-processing</td>
+                        <td><code>python post_scan.py --enrich-only</code></td>
+                        <td>Enrichment without crawl</td>
+                    </tr>
+                    <tr>
+                        <td>Reset local database</td>
+                        <td><code>rm *.db && python scanner.py --scan-only</code></td>
+                        <td>Full fresh start</td>
+                    </tr>
+                    <tr>
+                        <td>Build trim ladders</td>
+                        <td><code>python -m backend.scripts.build_trim_ladders</code></td>
+                        <td>Regenerate after dict updates</td>
+                    </tr>
+                    <tr>
+                        <td>Reindex vectors</td>
+                        <td><code>python backend/scripts/reindex_vectors.py</code></td>
+                        <td>Requires PGVECTOR_URL (Postgres)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>💡 Development Tips:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Use <code>PYTHONPATH=. flask --app backend.main run</code> to ensure imports work</li>
+                    <li>SQLite is perfect for local development—no DB setup needed</li>
+                    <li>For Postgres features (pgvector), run a local Postgres instance or use a managed service</li>
+                    <li>Check <code>backend/config/</code> for environment-specific settings</li>
+                </ul>
+            </div>
+
+            <h3>Debugging Tips</h3>
+            <div class="code-block">
+# Enable Flask debug mode
+export FLASK_DEBUG=1
+
+# Verbose logging
+export DEBUG=1
+
+# Inspect database
+sqlite3 inventory.db "SELECT * FROM listings LIMIT 5;"
+
+# Check recent logs
+tail -f /tmp/scanner.log
+
+# Profile a specific function
+python -m cProfile -s cumtime script.py
+
+# Interactive debugging
+python -m pdb script.py  # breakpoint() in code
+            </div>
+
+            <h3>Code Organization Best Practices</h3>
+            <ul>
+                <li><strong>Modules:</strong> Each major feature gets its own directory (auth/, billing/, scanner/)</li>
+                <li><strong>Naming:</strong> Functions and variables use snake_case; classes use PascalCase</li>
+                <li><strong>Database:</strong> SQL queries in db.py, business logic in service.py</li>
+                <li><strong>Error handling:</strong> Use custom exceptions (backend/utils/exceptions.py)</li>
+                <li><strong>Tests:</strong> Place alongside production code in tests/ subdirectories</li>
+                <li><strong>Documentation:</strong> README.md per module, docstrings for public APIs</li>
+            </ul>
+        </div>
+
+        <!-- FOOTER -->
+        <a href="#overview" class="back-to-top">↑ Back to Top</a>
+
+        <footer>
+            <p>Sarrafi Collection Technical Documentation</p>
+            <p>Updated: June 2026 | For questions, contact the development team</p>
+            <p><a href="HOW_TO_BUSINESS.html" style="color: #667eea;">View Business How-To Guide →</a></p>
+        </footer>
+    </div>
+</body>
+</html>

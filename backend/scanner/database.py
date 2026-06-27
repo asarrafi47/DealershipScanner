@@ -193,6 +193,11 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 _eng = infer_engine_l_for_db(v)
                 if _eng is not None:
                     v["engine_l"] = _eng
+            from backend.utils.spec_field_normalize import collect_raw_spec_heuristic_updates
+
+            for _hk, _hv in collect_raw_spec_heuristic_updates({**merged, **v}).items():
+                if _hv is not None:
+                    v[_hk] = _hv
             from backend.utils.dealer_zip import enrich_vehicle_zip_from_dealership
 
             enrich_vehicle_zip_from_dealership(v, cursor)

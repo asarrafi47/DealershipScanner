@@ -1,8 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Honda,Civic,4Dr,1.5L I4 (SIDI),1.5L I4 Turbo,Turbocharged,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,1.5,27,37,31,,,,,
-2026,Honda,Civic,4Dr,2.0L I4 (SIDI),2.0L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,32,41,36,,,,,
-2026,Honda,Civic,4Dr,2.0L I4 (SIDI),2.0L I4,,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,31,39,34,,,,,
-2026,Honda,Civic,4Dr,Hybrid 2.0L I4 (SIDI; Hybrid),2.0L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,50,47,49,,,,,
-2026,Honda,Civic,5Dr,2.0L I4 (SIDI),2.0L I4,,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,30,38,34,,,,,
-2026,Honda,Civic,5Dr,Hybrid 2.0L I4 (SIDI; Hybrid),2.0L I4,,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,50,45,48,,,,,
-2026,Honda,Civic,5Dr,2.0L I4 (SIDI),2.0L I4,,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Large Cars,4,2.0,22,28,24,,,,,

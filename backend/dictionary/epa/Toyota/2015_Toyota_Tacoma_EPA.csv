@@ -1,9 +1,0 @@
-Year,Make,Model,Trim,engineOptions,engineDisplay,forcedInduction,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2015,Toyota,Tacoma,2WD,4.0L V6,4.0L V6,,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,16,21,18,,,,,
-2015,Toyota,Tacoma,2WD,2.7L I4,2.7L I4,,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.7,21,25,22,,,,,
-2015,Toyota,Tacoma,2WD,4.0L V6,4.0L V6,,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,17,21,19,,,,,
-2015,Toyota,Tacoma,2WD,2.7L I4,2.7L I4,,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.7,19,24,21,,,,,
-2015,Toyota,Tacoma,4WD,4.0L V6,4.0L V6,,Manual 6-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,15,19,17,,,,,
-2015,Toyota,Tacoma,4WD,2.7L I4,2.7L I4,,Manual 5-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.7,18,20,19,,,,,
-2015,Toyota,Tacoma,4WD,4.0L V6,4.0L V6,,Automatic 5-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,16,21,18,,,,,
-2015,Toyota,Tacoma,4WD,2.7L I4,2.7L I4,,Automatic 4-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.7,18,21,19,,,,,
