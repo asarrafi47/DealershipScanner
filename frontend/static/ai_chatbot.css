@@ -3,7 +3,9 @@
 
 .ai-chat-toggle {
     position: fixed;
-    left: 14px;
+    /* Just right of the sidebar (aligned with the panel) so it never overlaps the
+       sidebar's account/logout footer. */
+    left: calc(var(--app-sidebar-width, 260px) + 16px);
     bottom: 16px;
     z-index: 1200;
     display: inline-flex;
@@ -43,8 +45,9 @@
    panel can actually close. */
 .ai-chat-panel[hidden] { display: none; }
 
-/* Mobile: sidebar is off-canvas, so use a full-width bottom sheet. */
+/* Mobile: sidebar is off-canvas, so anchor to the screen edge instead. */
 @media (max-width: 860px) {
+    .ai-chat-toggle { left: 12px; }
     .ai-chat-panel {
         left: 10px;
         right: 10px;
