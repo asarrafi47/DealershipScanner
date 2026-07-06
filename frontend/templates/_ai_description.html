@@ -1,0 +1,21 @@
+{# AI-generated vehicle description partial. Include on the car detail page. #}
+<div id="ai-car-description" data-car-id="{{ car.id }}" class="ai-car-description"
+     style="margin:16px 0;padding:14px 16px;border:1px solid rgba(0,0,0,0.08);
+            border-radius:10px;background:rgba(0,0,0,0.02);">
+  <div class="ai-car-description__body">
+    <div class="ai-car-description__label"
+         style="font-size:11px;font-weight:600;letter-spacing:0.04em;
+                text-transform:uppercase;opacity:0.6;margin-bottom:6px;">
+      AI-generated summary
+    </div>
+    <p class="ai-car-description__text" style="margin:0;line-height:1.5;">
+      Generating summary&hellip;
+    </p>
+  </div>
+  <p class="ai-car-description__disclaimer"
+     style="margin:10px 0 0;font-size:11px;opacity:0.55;">
+    This summary is AI-generated from the listing data and may contain errors.
+    Verify details with the dealer.
+  </p>
+</div>
+<script src="{{ url_for('static', filename='car_narrate.js') }}"></script>

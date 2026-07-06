@@ -388,10 +388,15 @@ def run_car_page_chat(
     if not msg:
         return {"reply": "", "error": "empty_message", "discrepancy_flags": []}
 
-    try:
-        import anthropic as _anthropic
-    except ImportError as e:
-        return {"reply": "", "error": f"llm_import:{e}", "discrepancy_flags": []}
+    from backend.utils import llm_client
+
+    provider = llm_client.active_provider()
+    _anthropic = None
+    if provider == "claude":
+        try:
+            import anthropic as _anthropic
+        except ImportError as e:
+            return {"reply": "", "error": f"llm_import:{e}", "discrepancy_flags": []}
 
     c = clean_car_row_dict(car)
     ctx = prepare_car_detail_context(car)
@@ -569,14 +574,27 @@ def run_car_page_chat(
     system = "".join(system_parts)
 
     try:
-        _client = _anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
-        _resp = _client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=1024,
-            system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-            messages=[{"role": "user", "content": msg}],
-        )
-        reply = _resp.content[0].text
+        if provider == "claude":
+            _client = _anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+            _resp = _client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=1024,
+                system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+                messages=[{"role": "user", "content": msg}],
+            )
+            reply = _resp.content[0].text
+        else:
+            # Dev/local path: no ANTHROPIC_API_KEY. Answer from the assembled car
+            # context (blocks 1-5, including any web-research already fetched above)
+            # via the provider layer. Non-tool-use grounded answer; model chosen
+            # inside llm_client.
+            reply = llm_client.complete(
+                msg,
+                system=system,
+                temperature=0.3,
+                max_tokens=1024,
+                provider="local",
+            )
     except Exception as e:
         return {"reply": "", "error": _safe_llm_client_error(e, context="car_page_chat"), "discrepancy_flags": []}
 
