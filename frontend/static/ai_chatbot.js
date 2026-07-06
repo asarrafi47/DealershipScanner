@@ -23,6 +23,19 @@
         var ctxEl = document.getElementById("ai-chat-context");
         if (!toggle || !panel || !form) return;
 
+        // Sit the toggle just above the sidebar's account/logout footer (measured,
+        // so it's robust to the footer's height). On mobile the sidebar is
+        // off-canvas, so fall back to the CSS bottom.
+        function positionToggle() {
+            if (window.innerWidth <= 860) { toggle.style.bottom = ""; return; }
+            var foot = document.querySelector(".app-sidebar__foot");
+            toggle.style.bottom = foot
+                ? (Math.round(foot.getBoundingClientRect().height) + 18) + "px"
+                : "90px";
+        }
+        positionToggle();
+        window.addEventListener("resize", positionToggle);
+
         // Current car context (car detail pages set body[data-car-id]).
         var carId = document.body ? document.body.getAttribute("data-car-id") : null;
         if (carId && ctxEl) {

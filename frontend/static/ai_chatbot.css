@@ -3,9 +3,9 @@
 
 .ai-chat-toggle {
     position: fixed;
-    /* Just right of the sidebar (aligned with the panel) so it never overlaps the
-       sidebar's account/logout footer. */
-    left: calc(var(--app-sidebar-width, 260px) + 16px);
+    /* Inside the sidebar; JS raises `bottom` to sit just above the account/logout
+       footer (.app-sidebar__foot). 16px is the pre-JS fallback. */
+    left: 14px;
     bottom: 16px;
     z-index: 1200;
     display: inline-flex;
