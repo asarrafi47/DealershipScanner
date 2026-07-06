@@ -1,0 +1,29 @@
+{# Sidebar AI assistant — show/hide, persists across pages, car-context aware.
+   Included (gated on has_paid_access) from _nav_public.html so it appears on every
+   app page for paid/dev users only. Self-contained: own CSS + JS. #}
+<link rel="stylesheet" href="{{ url_for('static', filename='ai_chatbot.css') }}?v={{ static_cache_ver }}">
+
+<button type="button" id="ai-chat-toggle" class="ai-chat-toggle" aria-expanded="false"
+        aria-controls="ai-chat-panel" title="AI assistant">
+    <span class="ai-chat-toggle__icon" aria-hidden="true">✦</span>
+    <span class="ai-chat-toggle__label">Assistant</span>
+</button>
+
+<section id="ai-chat-panel" class="ai-chat-panel" aria-label="AI assistant" hidden>
+    <header class="ai-chat-panel__head">
+        <span class="ai-chat-panel__title">✦ Assistant</span>
+        <span id="ai-chat-context" class="ai-chat-panel__context" hidden></span>
+        <button type="button" id="ai-chat-hide" class="ai-chat-panel__hide" aria-label="Hide assistant">&times;</button>
+    </header>
+    <div id="ai-chat-log" class="ai-chat-log" aria-live="polite">
+        <div class="ai-chat-msg ai-chat-msg--bot">Ask me about a car you're viewing, or anything about shopping here.</div>
+    </div>
+    <p class="ai-chat-disclaimer">AI-generated from listing &amp; public data — may be incomplete or wrong. Not from the dealer.</p>
+    <form id="ai-chat-form" class="ai-chat-form" autocomplete="off">
+        <input type="text" id="ai-chat-input" class="ai-chat-input" maxlength="2000"
+               placeholder="Ask the assistant…" aria-label="Message the assistant">
+        <button type="submit" id="ai-chat-send" class="ai-chat-send" aria-label="Send">↑</button>
+    </form>
+</section>
+
+<script src="{{ url_for('static', filename='ai_chatbot.js') }}?v={{ static_cache_ver }}"></script>

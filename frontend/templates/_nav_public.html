@@ -9,3 +9,8 @@
 {% include '_nav_sidebar_guest.html' %}
 
 {% endif %}
+
+{# AI assistant chatbot — paid/dev users only; show/hide persists across pages. #}
+{% if has_paid_access %}
+{% include '_ai_chatbot.html' %}
+{% endif %}
