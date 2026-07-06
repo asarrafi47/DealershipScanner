@@ -8,6 +8,13 @@ import backend.routes.ai_narrate_bp as bp_mod
 from backend.routes.ai_narrate_bp import ai_narrate_bp
 
 
+@pytest.fixture(autouse=True)
+def _clear_narration_cache():
+    bp_mod._cache.clear()
+    yield
+    bp_mod._cache.clear()
+
+
 @pytest.fixture()
 def client(monkeypatch):
     def fake_get_car_by_id(car_id, *, include_inactive=False):
@@ -52,3 +59,18 @@ def test_narrate_error_returns_500(client, monkeypatch):
     data = resp.get_json()
     assert data["ok"] is False
     assert "provider down" in data["error"]
+
+
+def test_narrate_caches_repeat_requests(client, monkeypatch):
+    calls = []
+
+    def counting_narrate(row):
+        calls.append(1)
+        return "A tidy 2022 BMW M3."
+
+    monkeypatch.setattr(bp_mod, "narrate_vehicle", counting_narrate)
+    r1 = client.get("/api/car/1/narrate")
+    r2 = client.get("/api/car/1/narrate")
+    assert r1.status_code == 200 and r2.status_code == 200
+    assert r2.get_json().get("cached") is True
+    assert len(calls) == 1  # generated once; second request served from cache

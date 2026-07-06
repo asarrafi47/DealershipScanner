@@ -14,7 +14,9 @@ Responses:
 """
 from __future__ import annotations
 
+import hashlib
 import logging
+from collections import OrderedDict
 
 from flask import Blueprint, jsonify
 
@@ -24,6 +26,22 @@ from backend.utils.vehicle_narrator import narrate_vehicle
 _log = logging.getLogger(__name__)
 
 ai_narrate_bp = Blueprint("ai_narrate_bp", __name__)
+
+# Per-worker LRU cache: narration is deterministic given the row's content, so we
+# cache by car_id + a hash of the narratable fields — a car edit changes the hash
+# and re-generates; unchanged cars return instantly without hitting the model.
+_CACHE_MAX = 2000
+_cache: "OrderedDict[tuple, str]" = OrderedDict()
+_CACHE_FIELDS = (
+    "year", "make", "model", "trim", "body_style", "price", "msrp", "mileage",
+    "exterior_color", "interior_color", "engine_description", "cylinders",
+    "fuel_type", "transmission", "drivetrain", "mpg_city", "mpg_highway", "is_cpo",
+)
+
+
+def _cache_key(car_id: int, row: dict) -> tuple:
+    blob = "|".join(str(row.get(k)) for k in _CACHE_FIELDS)
+    return (car_id, hashlib.md5(blob.encode("utf-8")).hexdigest()[:16])
 
 
 @ai_narrate_bp.route("/api/car/<int:car_id>/narrate", methods=["GET"])
@@ -40,7 +58,17 @@ def narrate_car(car_id: int):
         except (TypeError, ValueError):
             row_dict = {k: row[k] for k in row.keys()}
 
+        key = _cache_key(car_id, row_dict)
+        cached = _cache.get(key)
+        if cached is not None:
+            _cache.move_to_end(key)
+            return jsonify({"ok": True, "description": cached, "cached": True})
+
         description = narrate_vehicle(row_dict)
+        _cache[key] = description
+        _cache.move_to_end(key)
+        while len(_cache) > _CACHE_MAX:
+            _cache.popitem(last=False)
         return jsonify({"ok": True, "description": description})
     except Exception as exc:  # noqa: BLE001 - surface as JSON 500
         _log.exception("narration failed for car_id=%s", car_id)
