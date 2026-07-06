@@ -13,6 +13,29 @@
     }
 
     ready(function () {
+        // Apply filters handed off from the assistant on a previous page (once the
+        // listings page's inventory has loaded).
+        (function applyHandoff() {
+            var raw;
+            try { raw = sessionStorage.getItem("ds_assistant_search"); } catch (e) { return; }
+            if (!raw) return;
+            try { sessionStorage.removeItem("ds_assistant_search"); } catch (e) {}
+            var payload;
+            try { payload = JSON.parse(raw); } catch (e) { return; }
+            if (!payload || !payload.filters) return;
+            var tries = 0;
+            (function tryApply() {
+                if (typeof window.__DS_applySmartFilters === "function"
+                    && Array.isArray(window.ALL_CARS) && window.ALL_CARS.length) {
+                    var bar = document.getElementById("smart-search-input");
+                    if (bar && payload.q) bar.value = payload.q;
+                    try { window.__DS_applySmartFilters(payload.filters); } catch (e) {}
+                } else if (tries++ < 25) {
+                    setTimeout(tryApply, 200);
+                }
+            })();
+        })();
+
         var toggle = document.getElementById("ai-chat-toggle");
         var panel = document.getElementById("ai-chat-panel");
         var hideBtn = document.getElementById("ai-chat-hide");
@@ -134,13 +157,20 @@
                                 window.__DS_applySmartFilters(s.filters);
                             } catch (e) {}
                         } else if (s && typeof s.url === "string" && s.url.indexOf("/listings") === 0) {
-                            // Elsewhere: link to the filtered listings.
+                            // Elsewhere: link to listings; hand the filters off so the
+                            // controls get selected on arrival too.
                             var d = document.createElement("div");
                             d.className = "ai-chat-msg ai-chat-msg--bot ai-chat-msg--action";
                             var a = document.createElement("a");
                             a.href = s.url;
                             a.className = "ai-chat-cta";
                             a.textContent = "View matching listings →";
+                            a.addEventListener("click", function () {
+                                try {
+                                    sessionStorage.setItem("ds_assistant_search",
+                                        JSON.stringify({ filters: s.filters, q: s.q }));
+                                } catch (e) {}
+                            });
                             d.appendChild(a);
                             log.appendChild(d);
                             log.scrollTop = log.scrollHeight;

@@ -2317,8 +2317,22 @@ document.addEventListener("DOMContentLoaded", () => {
         function setScalarSelect(name, value) {
             if (value == null || value === "") return;
             const v = String(value);
+            const num = Number(value);
             document.querySelectorAll(`#search-form [name="${name}"]`).forEach(el => {
-                el.value = v;
+                const opts = Array.from(el.options || []);
+                if (opts.some(o => o.value === v) || !Number.isFinite(num)) {
+                    el.value = v;  // exact option, or a non-numeric select (condition)
+                    return;
+                }
+                // Numeric bracket select (price/mileage): the exact value isn't an
+                // option, so snap to the smallest bracket that still covers it (so an
+                // "under $X" constraint isn't silently dropped). Above the top bracket
+                // -> Any (no upper bound).
+                const geq = opts
+                    .map(o => ({ v: o.value, n: Number(o.value) }))
+                    .filter(o => Number.isFinite(o.n) && o.n >= num)
+                    .sort((a, b) => a.n - b.n);
+                el.value = geq.length ? geq[0].v : "";
             });
         }
         if (filters.max_price != null) setScalarSelect("max_price", filters.max_price);
