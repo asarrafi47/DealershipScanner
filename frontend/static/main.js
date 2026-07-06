@@ -320,12 +320,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
             return window.REGISTRY_COORDS[String(regId)];
         }
-        let coords = typeof dealerCoordsJS === "function"
+        const coords = typeof dealerCoordsJS === "function"
             ? dealerCoordsJS(car.dealer_url)
             : null;
-        if (!coords && car.zip_code && typeof ZIP_COORDS === "object") {
-            coords = ZIP_COORDS[String(car.zip_code).trim()] || null;
-        }
         return Array.isArray(coords) && coords.length === 2 ? coords : null;
     }
 
@@ -579,6 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!cond) return false;
             return cond !== "new";
         }
+        if (inventoryCondition === "cpo") return !!car.is_cpo;
         return true;
     }
 
@@ -619,6 +617,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const trims  = skip("trim")       ? [] : checked("trim");
         const fuels  = skip("fuel_type")  ? [] : checked("fuel_type");
         const drives = skip("drivetrain") ? [] : checked("drivetrain");
+        const inductions = skip("forced_induction") ? [] : checked("forced_induction");
         const bodies = skip("body_style") ? [] : checked("body_style");
         const cyls   = skip("cylinders")  ? [] : checked("cylinders");
 
@@ -628,6 +627,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (trims.length  && !valueInListCI(trims, r.trim))        return false;
             if (fuels.length  && !fuels.includes(r.fuel))        return false;
             if (drives.length && !drives.includes(r.drive))      return false;
+            if (inductions.length && !inductions.includes(r.induction)) return false;
             if (bodies.length && !valueInListCI(bodies, r.body_style)) return false;
             if (cyls.length   && !cyls.includes(String(r.cyl))) return false;
             return true;
@@ -652,6 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Exclude model from fuel_type compat so selecting an electric model doesn't hide gas options
         cascadeParam("fuel_type",   r => r.fuel,        ["options-fuel_type",   "acc-options-fuel_type"], ["model"]);
         cascadeParam("drivetrain",  r => r.drive,       ["options-drivetrain",  "acc-options-drivetrain"]);
+        cascadeParam("forced_induction", r => r.induction, ["options-forced_induction", "acc-options-forced_induction"]);
         cascadeParam(
             "body_style",
             r => (r.body_style != null && String(r.body_style).trim() !== "" ? String(r.body_style) : ""),
@@ -731,7 +732,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (param === "model") {
             return [normFilterStr(r.make), normFilterStr(r.model)].join("\0");
         }
-        return normFilterStr(r.make ?? r.model ?? r.trim ?? r.fuel ?? r.drive ?? r.body_style ?? r.cyl ?? "");
+        return normFilterStr(r.make ?? r.model ?? r.trim ?? r.fuel ?? r.drive ?? r.induction ?? r.body_style ?? r.cyl ?? "");
     }
 
     function cascadeOptionKey(param, label, cb) {
@@ -858,7 +859,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateAllCounts() {
         ["country", "make", "model", "trim", "fuel_type", "cylinders",
-         "transmission", "drivetrain", "body_style", "exterior_color", "interior_color", "package"]
+         "transmission", "drivetrain", "forced_induction", "body_style", "exterior_color", "interior_color", "package"]
             .forEach(updateCount);
 
         // Sidebar total badge
@@ -931,6 +932,72 @@ document.addEventListener("DOMContentLoaded", () => {
         if (el) el.hidden = true;
     }
 
+    // ── ZIP prompt banner (listings without a location) ────────────────
+    // Shown above the results when no valid ZIP is set, so the blocked
+    // filter state (maybeBlockFilterWithoutZip) is visible and fixable.
+    // Dismissal and the ZIP itself both persist in localStorage, so once
+    // a ZIP is set the banner never comes back.
+
+    const LISTINGS_ZIP_PROMPT_DISMISS_KEY = "ds_listings_zip_prompt_dismissed";
+
+    function listingsZipPromptDismissed() {
+        try {
+            return localStorage.getItem(LISTINGS_ZIP_PROMPT_DISMISS_KEY) === "1";
+        } catch (_) {
+            return false;
+        }
+    }
+
+    function hideListingsZipPromptBanner() {
+        const el = document.getElementById("listings-zip-banner");
+        if (el) el.hidden = true;
+    }
+
+    function maybeShowListingsZipPromptBanner() {
+        const el = document.getElementById("listings-zip-banner");
+        if (!el) return;
+        el.hidden = listingsHasValidZip() || listingsZipPromptDismissed();
+    }
+
+    (function initListingsZipPromptBanner() {
+        const banner = document.getElementById("listings-zip-banner");
+        if (!banner) return;
+        const input = document.getElementById("listings-zip-banner-input");
+        const submitBtn = document.getElementById("listings-zip-banner-submit");
+        const dismissBtn = document.getElementById("listings-zip-banner-dismiss");
+
+        function commitBannerZip() {
+            if (!input) return;
+            if (!isValidUsZip(input.value)) {
+                input.focus();
+                return;
+            }
+            // The shared zip_code input handler runs the full pipeline
+            // (sync inputs, persist, chips, radius refresh); re-dispatch
+            // to cover autofill/paste paths that skip input events.
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+            hideListingsZipPromptBanner();
+        }
+
+        if (submitBtn) submitBtn.addEventListener("click", commitBannerZip);
+        if (input) {
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    commitBannerZip();
+                }
+            });
+        }
+        if (dismissBtn) {
+            dismissBtn.addEventListener("click", () => {
+                try {
+                    localStorage.setItem(LISTINGS_ZIP_PROMPT_DISMISS_KEY, "1");
+                } catch (_) {}
+                hideListingsZipPromptBanner();
+            });
+        }
+    })();
+
     function maybeBlockFilterWithoutZip(e) {
         if (!document.getElementById("ds-listings-car-rows")) return false;
         if (listingsHasValidZip()) {
@@ -939,7 +1006,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const t = e.target;
         if (!t || !t.closest) return false;
-        if (t.closest(".listings-geo-bar, .listings-zip-callout")) return false;
+        if (t.closest(".listings-geo-bar, .listings-zip-callout, .listings-zip-banner")) return false;
         if (t.closest(".smart-search-wrap, #smart-search-input")) return false;
         if (t.closest(".listings-active-chips-wrap, #listings-pagination, #listings-toolbar")) return false;
         if (!t.closest(
@@ -966,6 +1033,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (listingsHasValidZip()) {
                 const zipNow = scalarVal("zip_code");
                 persistListingsZipLocal(zipNow);
+                hideListingsZipPromptBanner();
                 patchListingCarLinkZips(zipNow);
                 scheduleDebouncedZipChips();
                 scheduleListingsZipRefresh();
@@ -1299,8 +1367,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const incompletePill = c.public_incomplete
             ? `<span class="result-incomplete-pill" title="Missing some public-listing fields">Incomplete</span>`
             : "";
+        const cpoBadge = cpoBadgeHtml(c);
         const mkt = c.market;
         const dealBadge = dealBadgeHtml(mkt);
+        const priceDropBadge = priceDropBadgeHtml(c);
         let marketLine = "";
         if (mkt && mkt.avg_price_display) {
             marketLine = `<p class="result-market-sub">Trim avg ${escapeHtml(mkt.avg_price_display)}</p>`;
@@ -1317,11 +1387,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 + `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`
                 + `</svg></button>`
             : "";
-        const compareCb = LISTINGS_LOGGED_IN
-            ? `<label class="result-compare-label" title="Add to compare (max 4)">`
+        const compareCb = `<label class="result-compare-label" title="Add to compare (max 4)">`
             + `<input type="checkbox" class="result-compare-cb" data-car-id="${idStr}"${inCompare ? " checked" : ""}>`
-            + `<span>Compare</span></label>`
-            : "";
+            + `<span>Compare</span></label>`;
         const zipForUrl = typeof scalarVal === "function" ? scalarVal("zip_code") : "";
         const carHref = zipForUrl && /^\d{5}$/.test(String(zipForUrl).trim())
             ? `/car/${idStr}?zip_code=${encodeURIComponent(String(zipForUrl).trim())}`
@@ -1337,10 +1405,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="result-content">
                         <div class="result-title-row">
                             <h2>${escapeHtml(c.title)}</h2>
+                            ${cpoBadge}
                             ${incompletePill}
                         </div>
                         <p class="result-trim">${escapeHtml(c.trim || "")}</p>
-                        <p class="result-price">${fmtUSD(c.price)}</p>
+                        <p class="result-price">${fmtUSD(c.price)}${priceDropBadge}</p>
                         ${marketLine}
                         <p class="result-meta">
                             ${fmt(c.mileage)} mi
@@ -1501,6 +1570,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const text = labels[vs] || "At market";
         return `<span class="result-deal-badge result-deal-badge--${escapeHtml(vs)}">`
             + `${escapeHtml(text)} <span class="result-deal-badge-pct">${sign}${escapeHtml(String(mkt.delta_pct))}%</span>`
+            + `</span>`;
+    }
+
+    function cpoBadgeHtml(c) {
+        if (!c.is_cpo) return "";
+        return `<span class="result-cpo-badge" title="Certified Pre-Owned">Certified Pre-Owned</span>`;
+    }
+
+    function priceDropBadgeHtml(c) {
+        const amt = Number(c.price_drop_amount);
+        if (!amt || !Number.isFinite(amt) || amt <= 0) return "";
+        const days = Number(c.price_drop_days_ago);
+        const when = Number.isFinite(days) ? (days <= 0 ? "today" : days === 1 ? "1 day ago" : `${days} days ago`) : "";
+        return `<span class="result-price-drop-badge">`
+            + `▼ $${Math.round(amt).toLocaleString()}${when ? ` <span class="result-price-drop-badge-when">${escapeHtml(when)}</span>` : ""}`
             + `</span>`;
     }
 
@@ -1754,7 +1838,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function syncUrl() {
         const params = new URLSearchParams();
         const multiParams = ["make", "model", "trim", "fuel_type", "cylinders", "transmission",
-                             "drivetrain", "body_style", "exterior_color", "interior_color", "country", "package"];
+                             "drivetrain", "forced_induction", "body_style", "exterior_color", "interior_color", "country", "package", "cpo_only"];
         for (const name of multiParams) {
             const seen = new Set();
             document.querySelectorAll(`input[name="${name}"]:checked`).forEach(cb => {
@@ -1827,6 +1911,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const cyls = checked("cylinders");
         const trans = checked("transmission");
         const drives = checked("drivetrain");
+        const inductions = checked("forced_induction");
         const bodies = checked("body_style");
         const extColors = checked("exterior_color");
         const intColors = checked("interior_color");
@@ -1836,6 +1921,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const maxMileageRaw = scalarVal("max_mileage");
         const maxMileage = maxMileageRaw !== "" ? parseInt(maxMileageRaw, 10) : null;
         const inventoryCondition = scalarVal("inventory_condition");
+        const cpoOnly = checked("cpo_only").length > 0;
         const pkgs = checked("package");
 
         let makesFilter = makes.slice();
@@ -1854,12 +1940,14 @@ document.addEventListener("DOMContentLoaded", () => {
             cyls,
             trans,
             drives,
+            inductions,
             bodies,
             extColors,
             intColors,
             maxPrice,
             maxMileage,
             inventoryCondition,
+            cpoOnly,
             pkgs,
         };
     }
@@ -1872,6 +1960,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (state.cyls.length && !state.cyls.includes(String(c.cylinders))) return false;
         if (state.trans.length && !valueInListCI(state.trans, c.transmission)) return false;
         if (state.drives.length && !valueInListCI(state.drives, c.drivetrain)) return false;
+        if (state.inductions.length && !valueInListCI(state.inductions, c.forced_induction)) return false;
         if (state.bodies.length && !valueInListCI(state.bodies, c.body_style)) return false;
         if (state.extColors.length && !carMatchesPaintFamilyBuckets(c, "exterior_color", state.extColors)) return false;
         if (state.intColors.length && !carMatchesPaintFamilyBuckets(c, "interior_color", state.intColors)) return false;
@@ -1882,6 +1971,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (state.maxPrice != null && Number.isFinite(state.maxPrice) && c.price > state.maxPrice) return false;
         if (state.maxMileage != null && Number.isFinite(state.maxMileage) && c.mileage > state.maxMileage) return false;
         if (!passesInventoryConditionFilter(c, state.inventoryCondition)) return false;
+        if (state.cpoOnly && !c.is_cpo) return false;
         if (!carMatchesDealerFilter(c, dealerFilterSet)) return false;
         return true;
     }
@@ -2015,9 +2105,11 @@ document.addEventListener("DOMContentLoaded", () => {
             c.model,
             c.fuel_type,
             c.drivetrain,
+            c.forced_induction,
             c.exterior_color,
             c.interior_color,
             c.body_style,
+            c.is_cpo ? "certified pre-owned cpo" : null,
         ]
             .filter(Boolean)
             .join(" ")
@@ -2080,6 +2172,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (driveList.length && !valueInListCISmart(driveList, c.drivetrain)) return false;
 
         if (filters.fuel_type && !valueInListCISmart([filters.fuel_type], c.fuel_type)) return false;
+
+        if (filters.forced_induction && !valueInListCISmart([filters.forced_induction], c.forced_induction)) return false;
+
+        if (filters.cpo_only && !c.is_cpo) return false;
 
         if (filters.cylinders != null && String(c.cylinders) !== String(filters.cylinders)) return false;
 
@@ -2200,6 +2296,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (filters.drivetrain) checkFilter("drivetrain", filters.drivetrain);
         if (filters.fuel_type) checkFilter("fuel_type", filters.fuel_type);
+        if (filters.forced_induction) checkFilter("forced_induction", filters.forced_induction);
+        if (filters.cpo_only) checkFilter("cpo_only", "1");
         if (filters.cylinders != null) checkFilter("cylinders", String(filters.cylinders));
         if (filters.body_style) {
             const bs = filters.body_style;
@@ -2255,7 +2353,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const rows = [];
         for (const c of cars) {
             const key = [c.make, c.model, c.trim, c.fuel_type,
-                         c.cylinders, c.drivetrain, c.body_style].join("\x00");
+                         c.cylinders, c.drivetrain, c.body_style, c.forced_induction].join("\x00");
             if (seen.has(key)) continue;
             seen.add(key);
             rows.push({
@@ -2266,6 +2364,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 cyl:        c.cylinders != null ? Number(c.cylinders) : null,
                 drive:      c.drivetrain  || null,
                 body_style: c.body_style  || null,
+                induction:  c.forced_induction || null,
             });
         }
         return rows;
@@ -2616,7 +2715,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const FILTER_CHIP_LABELS = {
         make: "Make", model: "Model", trim: "Trim", fuel_type: "Fuel",
         cylinders: "Cylinders", transmission: "Trans.", drivetrain: "Drive",
-        body_style: "Body", exterior_color: "Exterior", interior_color: "Interior",
+        forced_induction: "Engine", body_style: "Body", exterior_color: "Exterior", interior_color: "Interior",
         country: "Country", package: "Package",
         max_price: "Price", max_mileage: "Mileage", inventory_condition: "Condition",
         zip_code: "ZIP", radius: "Radius", q: "Search",
@@ -2634,6 +2733,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (name === "inventory_condition" && val) {
             if (val === "new") return "New";
             if (val === "pre_owned") return "Pre-owned";
+            if (val === "cpo") return "Certified Pre-Owned";
         }
         if (name === "radius" && val) return `${val} mi radius`;
         if (name === "zip_code" && val) return val;
@@ -2653,7 +2753,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const chips = [];
         const seen = new Set();
         const multiParams = ["make", "model", "trim", "fuel_type", "cylinders", "transmission",
-            "drivetrain", "body_style", "exterior_color", "interior_color", "country", "package"];
+            "drivetrain", "forced_induction", "body_style", "exterior_color", "interior_color", "country", "package", "cpo_only"];
         for (const name of multiParams) {
             document.querySelectorAll(`input[name="${name}"]:checked`).forEach((cb) => {
                 if (!filterOptionVisible(cb)) return;
@@ -2884,6 +2984,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.value = z;
         });
         persistListingsZipLocal(z);
+        hideListingsZipPromptBanner();
         patchListingCarLinkZips(z);
         syncUrl();
     }
@@ -2894,7 +2995,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? "Getting your location… Allow access or enter your ZIP below."
                 : "Enter your ZIP to filter inventory near you."
         );
-        if (kind !== "loading") showListingsZipCallout();
+        if (kind !== "loading") {
+            showListingsZipCallout();
+            maybeShowListingsZipPromptBanner();
+        }
     }
 
     function hideListingsGeoPrompt() {
@@ -2961,6 +3065,18 @@ document.addEventListener("DOMContentLoaded", () => {
             markListingsGeoReady();
             return;
         }
+        // Restore the last ZIP saved on this device before falling back to
+        // geolocation; the input event runs the full existing zip pipeline
+        // (sync, persist, chips, radius refresh, dealer picker reload).
+        const savedZip = readListingsZipLocal();
+        const zipEl = document.getElementById("listings-zip-input");
+        if (savedZip && zipEl) {
+            zipEl.value = savedZip;
+            zipEl.dispatchEvent(new Event("input", { bubbles: true }));
+            markListingsGeoReady();
+            return;
+        }
+        maybeShowListingsZipPromptBanner();
         showListingsGeoPrompt("loading");
         requestListingsGeolocation()
             .then(({ lat, lon }) => fetch(

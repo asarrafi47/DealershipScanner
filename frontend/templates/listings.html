@@ -166,6 +166,7 @@
                         <option value="" {% if not active or not active.inventory_condition %}selected{% endif %}>New &amp; pre-owned</option>
                         <option value="new" {% if active and active.inventory_condition == 'new' %}selected{% endif %}>New</option>
                         <option value="pre_owned" {% if active and active.inventory_condition == 'pre_owned' %}selected{% endif %}>Pre-owned</option>
+                        <option value="cpo" {% if active and active.inventory_condition == 'cpo' %}selected{% endif %}>Certified Pre-Owned</option>
                     </select>
                 </div>
                 </div>
@@ -288,6 +289,20 @@
                 </div>
                 {% endcall %}
 
+                {% if options.forced_inductions %}
+                {% call acc("Engine type", "forced_induction") %}
+                <div class="acc-options" id="options-forced_induction">
+                    {% for fi in options.forced_inductions %}
+                    <label class="filter-option">
+                        <input type="checkbox" name="forced_induction" value="{{ fi }}"
+                            {% if active is defined and fi in active.get('forced_induction', []) %}checked{% endif %}>
+                        <span>{{ fi }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endcall %}
+                {% endif %}
+
                 {% call acc("Body style", "body_style") %}
                 <div class="acc-options" id="options-body_style">
                     {% for b in options.body_styles %}
@@ -352,6 +367,24 @@
 
             <main class="listings-main-column" id="listings-results">
                 <div class="dash-content listings-main" id="dash-content">
+                    <div class="listings-zip-banner" id="listings-zip-banner" hidden>
+                        <div class="listings-zip-banner__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/><circle cx="12" cy="11" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="listings-zip-banner__body">
+                            <p class="listings-zip-banner__title">Set your location to unlock filters</p>
+                            <p class="listings-zip-banner__text">Results and filters are based on inventory near a ZIP code. Enter yours once — we'll remember it.</p>
+                        </div>
+                        <div class="listings-zip-banner__controls">
+                            <input type="text" name="zip_code" id="listings-zip-banner-input" class="listings-zip-banner__input"
+                                placeholder="ZIP code" maxlength="5" inputmode="numeric" autocomplete="postal-code"
+                                aria-label="ZIP code" value="{{ active.zip_code if active else '' }}">
+                            <button type="button" class="primary-button listings-zip-banner__submit" id="listings-zip-banner-submit">Set location</button>
+                        </div>
+                        <button type="button" class="listings-zip-banner__dismiss" id="listings-zip-banner-dismiss" aria-label="Dismiss location prompt">&#x2715;</button>
+                    </div>
                     <div class="listings-toolbar" id="listings-toolbar">
                         <div class="listings-toolbar__start">
                             <button type="button" class="listings-filters-mobile-btn" id="listings-filters-open" aria-expanded="false" aria-controls="listings-sidebar-panel">
@@ -548,6 +581,20 @@
                     </div>
                     {% endcall %}
 
+                    {% if options.forced_inductions %}
+                    {% call acc("Engine type", "forced_induction") %}
+                    <div class="acc-options" id="acc-options-forced_induction">
+                        {% for fi in options.forced_inductions %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="forced_induction" value="{{ fi }}"
+                                {% if active is defined and fi in active.get('forced_induction', []) %}checked{% endif %}>
+                            <span>{{ fi }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+                    {% endif %}
+
                     {% call acc("Body style", "body_style") %}
                     <div class="acc-options" id="acc-options-body_style">
                         {% for b in options.body_styles %}
@@ -624,6 +671,7 @@
                             <option value="" {% if not active or not active.inventory_condition %}selected{% endif %}>New &amp; pre-owned</option>
                             <option value="new" {% if active and active.inventory_condition == 'new' %}selected{% endif %}>New</option>
                             <option value="pre_owned" {% if active and active.inventory_condition == 'pre_owned' %}selected{% endif %}>Pre-owned</option>
+                            <option value="cpo" {% if active and active.inventory_condition == 'cpo' %}selected{% endif %}>Certified Pre-Owned</option>
                         </select>
                     </div>
                 </div>
@@ -667,8 +715,19 @@
         hasPaid = el && JSON.parse(el.textContent || "false");
     } catch (_) {}
 
-    let activeIds = new Set({{ (active.dealer_registry_ids or []) | tojson }});
+    // URL params arrive as strings; the picker compares numeric registry ids.
+    let activeIds = new Set(
+        ({{ (active.dealer_registry_ids or []) | tojson }})
+            .map(function (v) { return parseInt(v, 10); })
+            .filter(function (n) { return Number.isFinite(n) && n > 0; })
+    );
     let activeIdsGeoKey = "";
+    if (activeIds.size) {
+        // Keep URL-provided dealer ids alive through the initial load:
+        // loadDealers clears activeIds whenever the geo key changes.
+        const bootGeo = getZipAndRadius();
+        activeIdsGeoKey = String(bootGeo.zip || "").trim() + "|" + String(bootGeo.radius || "");
+    }
     const metaEl = document.getElementById("dealer-filter-meta");
     let lastKey = "";
     let dealerReloadTimer = null;
@@ -890,6 +949,9 @@
                 });
                 listEl.innerHTML = html;
                 wireDealerCheckboxes();
+                // A pre-checked subset (e.g. dealer_registry_id in the URL)
+                // must filter the grid as soon as the checkboxes exist.
+                if (activeIds.size) notifyFilterChange();
             })
             .catch(function () {
                 listEl.innerHTML = '<p class="dealer-filter-empty">Could not load dealerships.</p>';

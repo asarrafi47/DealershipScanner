@@ -141,14 +141,9 @@ select option {
     pointer-events: none;
 }
 
-/* Marketing topbar replaced by guest app-sidebar */
-.topbar--marketing {
-    display: none;
-}
-
-/* Marketing + legacy public topbar */
+/* Marketing + legacy public topbar (guest marketing pages, e.g. landing) */
 .topbar--public,
-.topbar--marketing.topbar--legacy {
+.topbar--marketing {
     flex-wrap: wrap;
     gap: 12px 20px;
     row-gap: 14px;
@@ -1959,7 +1954,7 @@ body.listings-page .listings-layout {
     display: grid;
     grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
     grid-template-areas: "sidebar main";
-    gap: clamp(24px, 3vw, 40px) clamp(28px, 4vw, 56px);
+    gap: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 32px);
     width: 100%;
     max-width: none;
     margin: 0;
@@ -2004,14 +1999,14 @@ body.listings-page .listings-main-column {
 
 body.listings-page .listings-sidebar {
     position: sticky;
-    top: 88px;
+    top: 16px;
     align-self: start;
     min-width: 0;
 }
 
 @media (min-width: 961px) {
     body.listings-page .listings-sidebar {
-        max-height: calc(100dvh - 96px);
+        max-height: calc(100dvh - 32px);
         overflow-y: auto;
         overscroll-behavior: contain;
         padding-right: 0;
@@ -2039,7 +2034,8 @@ body.listings-page .listings-filter-inner {
     background: #fff;
     border: 1px solid var(--border-light);
     border-radius: 12px;
-    padding: 16px 0 0;
+    /* Horizontal + bottom breathing room (children add their own 16px → ~26px inset). */
+    padding: 16px 10px 14px;
     box-shadow: 0 2px 12px rgba(20, 36, 54, 0.05);
 }
 
@@ -2838,6 +2834,20 @@ body.listings-page .result-image {
     line-height: 1.2;
 }
 
+.result-cpo-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--navy);
+    background: rgba(28, 53, 82, 0.1);
+    border: 1px solid rgba(28, 53, 82, 0.3);
+    border-radius: 6px;
+    padding: 3px 7px;
+    line-height: 1.2;
+}
+
 .result-card--incomplete {
     border-color: rgba(232, 184, 106, 0.2);
 }
@@ -2854,6 +2864,24 @@ body.listings-page .result-image {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 6px;
+}
+
+.result-price-drop-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+    background: var(--deal-below-bg);
+    color: var(--deal-below);
+}
+
+.result-price-drop-badge-when {
+    font-weight: 600;
+    opacity: 0.85;
 }
 
 .result-meta {
@@ -8380,7 +8408,9 @@ details[open] > .listing-package-summary::before {
 }
 
 body:has(.app-sidebar) {
-    overflow-x: hidden;
+    /* `clip` (not `hidden`) prevents horizontal overflow WITHOUT making body a
+       scroll container — otherwise it breaks position:sticky (the filter sidebar). */
+    overflow-x: clip;
 }
 
 .page:has(.app-sidebar),
@@ -9869,6 +9899,115 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     border-right: 1px solid var(--accent, #2563eb);
     border-bottom: 1px solid var(--accent, #2563eb);
     transform: rotate(45deg);
+}
+
+/* ZIP prompt banner — shown above results until a location is set */
+.listings-zip-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin: 0 0 18px;
+    padding: 16px 44px 16px 18px;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--accent, #2563eb);
+    border-left-width: 4px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(26, 39, 68, 0.1);
+}
+
+.listings-zip-banner__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--accent, #2563eb);
+    background: rgba(37, 99, 235, 0.08);
+}
+
+.listings-zip-banner__body {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+.listings-zip-banner__title {
+    margin: 0 0 3px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary, #1a2744);
+}
+
+.listings-zip-banner__text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-secondary, #4a5568);
+}
+
+.listings-zip-banner__controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 1 auto;
+}
+
+.listings-zip-banner__input {
+    width: 7.5rem;
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    background: var(--bg-card, #fff);
+    color: var(--text-primary, #1a2744);
+}
+
+.listings-zip-banner__submit {
+    min-height: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.listings-zip-banner__dismiss {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 6px;
+    line-height: 1;
+}
+
+.listings-zip-banner__dismiss:hover {
+    color: var(--text-primary, #1a2744);
+}
+
+@media (max-width: 700px) {
+    .listings-zip-banner {
+        padding: 14px 40px 14px 14px;
+    }
+
+    .listings-zip-banner__icon {
+        display: none;
+    }
+
+    .listings-zip-banner__controls {
+        flex: 1 1 100%;
+    }
+
+    .listings-zip-banner__input {
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+    }
 }
 
 .listings-geo-bar-label {
@@ -12262,4 +12401,259 @@ body.listings-page .listings-filter-inner .listings-acc-trigger {
     padding: 12px 16px;
     box-sizing: border-box;
     align-items: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Premium page (premium.html)
+   Moved from the template's inline <style> block. Includes the in-app
+   WebView embed mode (?embed=1 → body.premium-embed): no site nav,
+   tighter single-column layout. Keep the body.premium-embed rules — the
+   embed WebView depends on them.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.premium-page { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+.premium-hero { text-align: center; padding: 72px 0 56px; }
+/* In-app WebView (?embed=1): no site nav, tighter layout */
+body.premium-embed { background: var(--bg-page); }
+body.premium-embed .topbar { display: none !important; }
+body.premium-embed .premium-page { padding: 0 16px 32px; max-width: 100%; }
+body.premium-embed .premium-hero { padding: 8px 0 20px; }
+body.premium-embed .premium-hero h1 { font-size: 24px; margin-bottom: 10px; }
+body.premium-embed .premium-hero p { font-size: 15px; margin-bottom: 20px; }
+body.premium-embed .premium-features { grid-template-columns: 1fr; gap: 10px; margin-top: 0; }
+body.premium-embed .premium-feature-card { padding: 14px 16px; }
+body.premium-embed .premium-feature-card h3 { font-size: 15px; }
+body.premium-embed .premium-feature-card p { font-size: 13px; line-height: 1.45; }
+body.premium-embed .premium-divider,
+body.premium-embed .premium-section-header,
+body.premium-embed .premium-compare,
+body.premium-embed .premium-welcome { display: none !important; }
+body.premium-embed .premium-cta-row .secondary-button { display: none; }
+body.premium-embed .premium-price-note { margin-top: 8px; font-size: 12px; }
+.premium-hero .eyebrow { margin-bottom: 14px; }
+.premium-hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 16px; color: var(--text-primary); }
+.premium-hero p { font-size: 17px; color: var(--text-secondary); max-width: 540px; margin: 0 auto 36px; line-height: 1.65; }
+.premium-cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.premium-price-note { font-size: 13px; color: var(--text-muted); margin-top: 14px; }
+.premium-welcome {
+    background: linear-gradient(135deg, rgba(28, 53, 82, 0.08) 0%, rgba(28, 53, 82, 0.03) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 0 0 40px;
+    text-align: center;
+}
+.premium-welcome h2 { font-size: 22px; font-weight: 700; margin: 0 0 10px; color: var(--text-primary); }
+.premium-welcome p { font-size: 15px; color: var(--text-secondary); margin: 0 auto 18px; max-width: 560px; line-height: 1.6; }
+.premium-welcome-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.premium-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 8px; }
+.premium-feature-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 28px 24px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.premium-feature-card:hover { border-color: var(--accent); box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+.premium-feature-icon { display: flex; align-items: center; justify-content: flex-start; width: 40px; height: 40px; margin-bottom: 14px; color: var(--navy); }
+.premium-feature-icon .sc-icon { width: 32px; height: 32px; stroke-width: 1.5; }
+.premium-compare .icon-check-wrap { display: inline-flex; color: #22c55e; }
+.premium-compare .icon-dash { color: var(--text-faint); font-size: 18px; line-height: 1; }
+.premium-feature-card h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; color: var(--text-primary); }
+.premium-feature-card p { font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+.premium-feature-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-top: 10px;
+}
+.premium-feature-badge--soon { background: var(--text-muted); }
+
+.premium-divider { border: none; border-top: 1px solid var(--border-light); margin: 56px 0; }
+.premium-section-header { text-align: center; margin-bottom: 32px; }
+.premium-section-header h2 { font-size: 24px; font-weight: 700; margin: 0 0 8px; color: var(--text-primary); }
+.premium-section-header p { font-size: 15px; color: var(--text-secondary); margin: 0; }
+
+.premium-compare { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); }
+.premium-compare th, .premium-compare td { padding: 14px 20px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-light); }
+.premium-compare th { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); background: var(--surface-raised); }
+.premium-compare tr:last-child td { border-bottom: none; }
+.premium-compare .col-free { text-align: center; }
+.premium-compare .col-premium { text-align: center; color: var(--accent); font-weight: 600; }
+
+.premium-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 8px; }
+.premium-plan-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.premium-plan-card--highlight { border-color: var(--accent); box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
+.premium-plan-card__badge {
+    align-self: flex-start;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    padding: 3px 8px;
+}
+.premium-plan-card h3 { font-size: 20px; font-weight: 700; margin: 0; color: var(--text-primary); }
+.premium-plan-price { font-size: 32px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.premium-plan-price span { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+.premium-plan-desc { font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.55; }
+.premium-plan-features { list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--text-secondary); }
+.premium-plan-features li { padding: 4px 0 4px 20px; position: relative; }
+.premium-plan-features li::before { content: "✓"; position: absolute; left: 0; color: #22c55e; font-weight: 700; }
+.premium-plan-cta { margin-top: auto; }
+.premium-plan-current { font-size: 13px; color: var(--accent); font-weight: 600; }
+body.premium-embed .premium-plans { grid-template-columns: 1fr; }
+
+/* ===== 360 spin + interior pano viewers (car detail hero) ===== */
+
+.car-spin-viewer,
+.car-pano-viewer {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--bg-subtle);
+}
+
+.car-spin-viewer[hidden],
+.car-pano-viewer[hidden] {
+    display: none !important;
+}
+
+.car-spin-viewer {
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.car-spin-viewer:focus {
+    outline: none;
+}
+
+.car-spin-viewer.car-spin-viewer--dragging {
+    cursor: grabbing;
+}
+
+.car-spin-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    pointer-events: none;
+}
+
+.car-spin-affordance {
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: rgba(20, 36, 54, 0.72);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    white-space: nowrap;
+}
+
+.car-spin-affordance-arrows {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.car-spin-affordance--fade {
+    opacity: 0;
+}
+
+.car-spin-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    background: rgba(20, 36, 54, 0.15);
+    z-index: 2;
+    transition: opacity 0.3s ease;
+}
+
+.car-spin-progress-bar {
+    height: 100%;
+    width: 0;
+    background: var(--navy);
+    transition: width 0.2s ease;
+}
+
+.car-spin-progress--done {
+    opacity: 0;
+}
+
+/* Hide the photo arrows/counter overlay while a 360 viewer is active */
+.car-gallery-hero--alt-media .car-gallery-arrow,
+.car-gallery-hero--alt-media .car-gallery-badge {
+    display: none;
+}
+
+.car-media-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.car-media-switch-btn {
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border-medium);
+    background: var(--chrome-face);
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.car-media-switch-btn:hover {
+    border-color: var(--navy);
+}
+
+.car-media-switch-btn.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+}
+
+/* Pannellum chrome tweaks inside the pano viewer */
+.car-pano-viewer .pnlm-about-msg {
+    display: none !important;
 }
