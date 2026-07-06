@@ -1635,6 +1635,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderCarGrid(cars, opts) {
         if (!resultsGrid) return;
         window.__DS_lastResultCount = Array.isArray(cars) ? cars.length : 0;
+        window.__DS_lastResults = Array.isArray(cars) ? cars.slice(0, 12) : [];
         const preserveOrder = opts && opts.preserveOrder;
         if (opts && opts.resetPage) {
             resetListingsPage();

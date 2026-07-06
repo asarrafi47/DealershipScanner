@@ -122,6 +122,40 @@
             return m && m.content ? m.content : "";
         }
 
+        // Mini result cards (top few matches) shown inline after a search applies.
+        function addResultCards(cars) {
+            if (!Array.isArray(cars) || !cars.length) return;
+            var wrap = document.createElement("div");
+            wrap.className = "ai-chat-msg ai-chat-msg--bot ai-chat-msg--cards";
+            cars.slice(0, 3).forEach(function (c) {
+                if (!c || c.id == null) return;
+                var card = document.createElement("a");
+                card.className = "ai-chat-card";
+                card.href = "/car/" + c.id;
+                var img = document.createElement("img");
+                img.className = "ai-chat-card__img";
+                img.src = c.image_url || "/static/placeholder.svg";
+                img.alt = "";
+                img.loading = "lazy";
+                var body = document.createElement("div");
+                body.className = "ai-chat-card__body";
+                var title = document.createElement("div");
+                title.className = "ai-chat-card__title";
+                title.textContent = [c.year, c.make, c.model].filter(Boolean).join(" ");
+                var price = document.createElement("div");
+                price.className = "ai-chat-card__price";
+                price.textContent = (c.price != null && Number(c.price) > 0)
+                    ? "$" + Number(c.price).toLocaleString() : "";
+                body.appendChild(title);
+                body.appendChild(price);
+                card.appendChild(img);
+                card.appendChild(body);
+                wrap.appendChild(card);
+            });
+            log.appendChild(wrap);
+            log.scrollTop = log.scrollHeight;
+        }
+
         var busy = false;
         form.addEventListener("submit", function (ev) {
             ev.preventDefault();
@@ -162,6 +196,7 @@
                                     + " (" + n + (n === 1 ? " match)." : " matches).");
                             }
                             addMsg(reply, "bot");
+                            try { addResultCards(window.__DS_lastResults); } catch (e) {}
                         } else if (s && typeof s.url === "string" && s.url.indexOf("/listings") === 0) {
                             // Elsewhere: link to listings; hand the filters off so the
                             // controls get selected on arrival too.
