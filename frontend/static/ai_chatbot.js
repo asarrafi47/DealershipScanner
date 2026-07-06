@@ -29,9 +29,10 @@
         function positionToggle() {
             if (window.innerWidth <= 860) { toggle.style.bottom = ""; return; }
             var foot = document.querySelector(".app-sidebar__foot");
+            // Clear the footer AND its top divider line with breathing room.
             toggle.style.bottom = foot
-                ? (Math.round(foot.getBoundingClientRect().height) + 18) + "px"
-                : "90px";
+                ? (Math.round(foot.getBoundingClientRect().height) + 40) + "px"
+                : "110px";
         }
         positionToggle();
         window.addEventListener("resize", positionToggle);
