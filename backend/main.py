@@ -50,6 +50,8 @@ import backend.dealer.admin.scanner_ops_hub  # noqa: F401
 
 from backend.dealer.routes import bp as dealer_portal_bp
 from backend.dev.console import register_dev_console
+from backend.routes.ai_narrate_bp import ai_narrate_bp
+from backend.routes.ai_chat_bp import ai_chat_bp
 from backend.dev.routes import dev_bp
 from backend.db.admin_users_db import init_admin_db
 from backend.db.dealer_portal_db import init_dealer_portal_db
@@ -282,6 +284,8 @@ app.register_blueprint(dealer_portal_bp)
 app.register_blueprint(billing_bp)
 app.register_blueprint(google_oauth_bp)
 app.register_blueprint(apple_oauth_bp)
+app.register_blueprint(ai_narrate_bp)
+app.register_blueprint(ai_chat_bp)
 register_dev_console(app)
 
 
@@ -742,12 +746,11 @@ def app_home():
 
 @app.route("/compare")
 def compare_page():
-    if not session.get("user_id"):
-        return redirect(url_for("login_page"))
+    """Side-by-side specs; public (ids in query string), history recorded for signed-in users."""
     from backend.utils.compare_specs import build_compare_context, parse_compare_car_ids
 
     ids = parse_compare_car_ids(request.args.get("ids"))
-    if ids:
+    if ids and session.get("user_id"):
         try:
             record_compare_session(int(session["user_id"]), ids)
         except (TypeError, ValueError):
@@ -827,7 +830,7 @@ def register_page():
             session["email_verify_notice"] = True
         if wants_premium:
             return _post_login_redirect()
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("listings"))
     return render_template("register.html")
 
 
@@ -1562,6 +1565,7 @@ def api_listings_filter_options():
             "cylinders": opts.get("cylinders") or [],
             "transmissions": opts.get("transmissions") or [],
             "drivetrains": opts.get("drivetrains") or [],
+            "forced_inductions": opts.get("forced_inductions") or [],
             "body_styles": opts.get("body_styles") or [],
             "exterior_colors": opts.get("exterior_colors") or [],
             "interior_colors": opts.get("interior_colors") or [],
