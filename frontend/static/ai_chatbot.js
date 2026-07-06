@@ -146,19 +146,26 @@
                 .then(function (data) {
                     pending.remove();
                     if (data && data.ok && data.reply) {
-                        addMsg(data.reply, "bot");
                         var s = data.search;
                         if (s && s.filters && typeof window.__DS_applySmartFilters === "function") {
-                            // On the listings page: select the matching filter
-                            // controls (and re-render results) as if typed in the bar.
+                            // On the listings page: select the matching filter controls
+                            // (and re-render), then report the live match count.
                             try {
                                 var bar = document.getElementById("smart-search-input");
                                 if (bar && s.q) bar.value = s.q;
                                 window.__DS_applySmartFilters(s.filters);
                             } catch (e) {}
+                            var reply = data.reply;
+                            var n = window.__DS_lastResultCount;
+                            if (typeof n === "number") {
+                                reply = reply.replace(/[.\s]*$/, "")
+                                    + " (" + n + (n === 1 ? " match)." : " matches).");
+                            }
+                            addMsg(reply, "bot");
                         } else if (s && typeof s.url === "string" && s.url.indexOf("/listings") === 0) {
                             // Elsewhere: link to listings; hand the filters off so the
                             // controls get selected on arrival too.
+                            addMsg(data.reply, "bot");
                             var d = document.createElement("div");
                             d.className = "ai-chat-msg ai-chat-msg--bot ai-chat-msg--action";
                             var a = document.createElement("a");
@@ -174,6 +181,8 @@
                             d.appendChild(a);
                             log.appendChild(d);
                             log.scrollTop = log.scrollHeight;
+                        } else {
+                            addMsg(data.reply, "bot");
                         }
                     } else {
                         var e = (data && data.error) || "unavailable";
