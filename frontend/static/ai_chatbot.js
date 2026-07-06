@@ -4,6 +4,8 @@
 (function () {
     "use strict";
     var OPEN_KEY = "ds_ai_chat_open";
+    var HIST_KEY = "ds_ai_chat_history";
+    var HIST_MAX = 24;
 
     function ready(fn) {
         if (document.readyState !== "loading") fn();
@@ -44,15 +46,39 @@
 
         toggle.addEventListener("click", function () { setOpen(true); });
         if (hideBtn) hideBtn.addEventListener("click", function () { setOpen(false); });
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && !panel.hidden) setOpen(false);
+        });
 
-        function addMsg(text, cls) {
+        // Conversation persists across page navigation (full-page loads).
+        function saveHistory() {
+            try {
+                var msgs = [];
+                log.querySelectorAll(".ai-chat-msg--user, .ai-chat-msg--bot").forEach(function (el) {
+                    msgs.push({ t: el.textContent, u: el.classList.contains("ai-chat-msg--user") });
+                });
+                localStorage.setItem(HIST_KEY, JSON.stringify(msgs.slice(-HIST_MAX)));
+            } catch (e) {}
+        }
+
+        function addMsg(text, cls, persist) {
             var d = document.createElement("div");
             d.className = "ai-chat-msg ai-chat-msg--" + cls;
             d.textContent = text;
             log.appendChild(d);
             log.scrollTop = log.scrollHeight;
+            if (persist !== false && (cls === "user" || cls === "bot")) saveHistory();
             return d;
         }
+
+        // Restore prior conversation (skip the seeded greeting if we have history).
+        try {
+            var hist = JSON.parse(localStorage.getItem(HIST_KEY) || "[]");
+            if (hist.length) {
+                log.innerHTML = "";
+                hist.forEach(function (m) { addMsg(m.t, m.u ? "user" : "bot", false); });
+            }
+        } catch (e) {}
 
         function csrf() {
             var m = document.querySelector('meta[name="csrf-token"]');

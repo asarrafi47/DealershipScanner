@@ -17,6 +17,11 @@ from flask import Blueprint, jsonify, request, session
 
 from backend.billing.catalog import FEATURE_AI_CAR_CHAT
 from backend.billing.entitlements import require_feature
+from backend.utils.car_chat_policy import (
+    car_chat_rate_limits,
+    car_chat_user_daily_limit,
+    web_research_playwright_allowed,
+)
 from backend.utils.ip_rate_limit import allow_request
 
 logger = logging.getLogger("ai_chat")
@@ -45,9 +50,19 @@ def api_ai_chat():
     if not ok:
         return jsonify({"ok": False, "error": err or "feature_unavailable"}), 403
 
+    # Rate limits mirror the car-page chat: global, per-IP, and per-user/day.
     ip = _client_ip()
-    if not allow_request(f"aichat:ip:{ip}", max_events=20, window_seconds=60.0):
+    rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()
+    if rpm_global > 0 and not allow_request("aichat:global", max_events=rpm_global, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
+    if not allow_request(f"aichat:ip:{ip}", max_events=rpm_ip, window_seconds=60.0):
+        return jsonify({"ok": False, "error": "rate_limited"}), 429
+    daily_limit = car_chat_user_daily_limit()
+    if daily_limit > 0:
+        uid = session.get("user_id")
+        daily_key = f"aichat:daily:user:{int(uid)}" if uid else f"aichat:daily:ip:{ip}"
+        if not allow_request(daily_key, max_events=daily_limit, window_seconds=86400.0):
+            return jsonify({"ok": False, "error": "user_chat_limit_reached"}), 429
 
     body = request.get_json(silent=True) or {}
     message = (body.get("message") or "").strip()
@@ -60,19 +75,27 @@ def api_ai_chat():
     context_car = None
     if car_id not in (None, "", "null"):
         try:
-            from backend.db.inventory_db import get_car_by_id
+            cid = int(car_id)
+        except (TypeError, ValueError):
+            cid = None
+        if cid is not None:
+            try:
+                from backend.db.inventory_db import get_car_by_id
 
-            row = get_car_by_id(int(car_id), include_inactive=False)
-            if row:
-                context_car = dict(row)
-        except (TypeError, ValueError, Exception):
-            context_car = None
+                row = get_car_by_id(cid, include_inactive=False)
+                if row:
+                    context_car = dict(row)
+            except Exception as e:
+                logger.warning("ai chat car lookup failed (id=%s): %s", cid, str(e)[:150])
 
     try:
         if context_car is not None:
             from backend.intelligence.ai.agent import run_car_page_chat
 
-            out = run_car_page_chat(context_car, message, allow_web_research=False)
+            # Honor the same web-research policy as the car-page chat: when the row
+            # doesn't answer it, look it up (the "go find out" fallback).
+            allow_web = web_research_playwright_allowed(session.get("user_id"))
+            out = run_car_page_chat(context_car, message, allow_web_research=allow_web)
             reply = (out.get("reply") or "").strip()
             if out.get("error") and not reply:
                 return jsonify({"ok": False, "error": out["error"]}), 502
