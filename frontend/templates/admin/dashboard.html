@@ -9,6 +9,9 @@
         {% if is_store_admin %}
         <p class="admin-lead"><a href="{{ url_for('store_admin.admin_site_hub') }}">Site admin console</a> — dealers, users, and scrape jobs.</p>
         {% endif %}
+        {% if show_dealer_inventory_nav %}
+        <p class="admin-lead"><a href="{{ url_for('dealer_portal.inventory_dashboard') }}">Dealer inventory portal</a> — your own listings, VIN intake, and photos.</p>
+        {% endif %}
     </div>
     <div class="admin-kpi-grid">
         <div class="admin-kpi-card">

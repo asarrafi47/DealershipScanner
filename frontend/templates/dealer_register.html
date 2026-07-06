@@ -1,22 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register dealership — My inventory</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
     {% include "_head_perf.html" %}
 </head>
-<body>
+<body class="lp-body">
 
-    <div class="page page-dealer-auth">
+    <div class="page">
 
-        <nav class="topbar">
-            <div class="logo">My inventory (dealers)</div>
-            <div class="nav-links">
-                <a href="{{ url_for('listings') }}">Public listings</a>
-                <a href="{{ url_for('dealer_portal.dealer_login') }}">Dealership sign in</a>
-                <a href="/register">Create a general account</a>
-            </div>
-        </nav>
+        {% set nav_active = "register" %}
+        {% include "_nav_public.html" %}
 
         <section class="auth-section">
             <div class="auth-card auth-card--dealer">
@@ -31,23 +27,21 @@
                 <form method="POST" action="{{ url_for('dealer_portal.dealer_register') }}" class="auth-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="field-group">
-                        <label>Username</label>
-                        <input type="text" name="username" required>
+                        <label for="dealer-register-user">Username</label>
+                        <input id="dealer-register-user" type="text" name="username" required autocomplete="username">
                     </div>
 
                     <div class="field-group">
-                        <label>Email</label>
-                        <input type="text" name="email" required>
+                        <label for="dealer-register-email">Email</label>
+                        <input id="dealer-register-email" type="email" name="email" required autocomplete="email">
                     </div>
 
-                    <div class="field-group">
-                        <label>Password</label>
-                        <input type="password" name="password" required>
-                    </div>
+                    {% from '_password_field.html' import password_field %}
+                    {{ password_field('password', id='dealer-register-pass', label='Password', autocomplete='new-password') }}
 
                     <div class="field-group">
-                        <label>Organization (dealership / company) name</label>
-                        <input type="text" name="org_name" placeholder="e.g. Westside Auto Group" required>
+                        <label for="dealer-register-org">Organization (dealership / company) name</label>
+                        <input id="dealer-register-org" type="text" name="org_name" placeholder="e.g. Westside Auto Group" autocomplete="organization" required>
                         <p class="field-hint">This identifies your business for subscription billing and future team invites.</p>
                     </div>
 
@@ -55,10 +49,12 @@
                 </form>
 
                 <p class="auth-footer">Already have an account? <a href="{{ url_for('dealer_portal.dealer_login') }}">Sign in</a></p>
+                <p class="auth-footer">Not a dealer? <a href="/register">Create a general account</a></p>
             </div>
         </section>
 
     </div>
 
+    <script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

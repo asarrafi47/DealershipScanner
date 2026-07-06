@@ -100,8 +100,15 @@
             show();
         }
 
+        // car_spin.js sets window.__DS_MEDIA_MODE while the 360 spin /
+        // interior pano viewers are active; the photo gallery yields then.
+        function altMediaActive() {
+            return !!(window.__DS_MEDIA_MODE && window.__DS_MEDIA_MODE !== "photos");
+        }
+
         if (heroEl) {
             heroEl.addEventListener("click", function (e) {
+                if (altMediaActive()) return;
                 if (e.target.closest("button")) return;
                 const rect = heroEl.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -133,6 +140,7 @@
         }
 
         document.addEventListener("keydown", function (e) {
+            if (altMediaActive()) return;
             if (e.target.matches("input, textarea")) return;
             if (gallery.length <= 1) return;
             if (e.key === "ArrowLeft") {

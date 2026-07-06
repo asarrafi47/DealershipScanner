@@ -47,7 +47,7 @@
         </a>
         {% elif store_staff %}
         <p class="app-sidebar__group-label">Store</p>
-        <a href="{{ url_for('store_admin.admin_home', store=1) }}" class="app-sidebar__link{% if ep == 'store_admin.admin_home' %} app-sidebar__link--active{% endif %}"
+        <a href="{{ url_for('store_admin.admin_home') }}" class="app-sidebar__link{% if ep == 'store_admin.admin_home' %} app-sidebar__link--active{% endif %}"
             {% if ep == 'store_admin.admin_home' %}aria-current="page"{% endif %}>
             {{ icon('dashboard', 17, 'app-sidebar__icon') }}<span>Dashboard</span>
         </a>
@@ -70,9 +70,17 @@
             {% if nav_active == 'home' %}aria-current="page"{% endif %}>
             {{ icon('home', 17, 'app-sidebar__icon') }}<span>For you</span>
         </a>
+        <a href="{{ url_for('dashboard') }}" class="app-sidebar__link{% if nav_active == 'dashboard' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'dashboard' %}aria-current="page"{% endif %}>
+            {{ icon('chart', 17, 'app-sidebar__icon') }}<span>Dashboard</span>
+        </a>
         <a href="{{ url_for('listings') }}" class="app-sidebar__link{% if nav_active == 'listings' %} app-sidebar__link--active{% endif %}"
             {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
             {{ icon('inventory', 17, 'app-sidebar__icon') }}<span>Browse</span>
+        </a>
+        <a href="{{ url_for('compare_page') }}" id="sidebar-compare-link" class="app-sidebar__link{% if nav_active == 'compare' %} app-sidebar__link--active{% endif %}"
+            {% if nav_active == 'compare' %}aria-current="page"{% endif %} hidden>
+            {{ icon('compare', 17, 'app-sidebar__icon') }}<span>Compare</span>
         </a>
         <a href="{{ url_for('find_dealers_page') }}" class="app-sidebar__link{% if nav_active == 'dealers' %} app-sidebar__link--active{% endif %}"
             {% if nav_active == 'dealers' %}aria-current="page"{% endif %}>
@@ -111,30 +119,4 @@
     <span class="app-sidebar-toggle__bar"></span>
 </button>
 <div class="app-sidebar-backdrop" id="app-sidebar-backdrop" hidden></div>
-<script nonce="{{ csp_nonce }}">
-(function () {
-    var sidebar = document.getElementById("app-sidebar");
-    var toggle = document.getElementById("app-sidebar-toggle");
-    var backdrop = document.getElementById("app-sidebar-backdrop");
-    var closeBtn = document.getElementById("app-sidebar-close");
-    if (!sidebar || !toggle) return;
-    function openMenu() {
-        document.body.classList.add("app-sidebar-open");
-        toggle.setAttribute("aria-expanded", "true");
-        if (backdrop) backdrop.hidden = false;
-        if (closeBtn) closeBtn.hidden = false;
-    }
-    function closeMenu() {
-        document.body.classList.remove("app-sidebar-open");
-        toggle.setAttribute("aria-expanded", "false");
-        if (backdrop) backdrop.hidden = true;
-        if (closeBtn) closeBtn.hidden = true;
-    }
-    toggle.addEventListener("click", function () {
-        if (document.body.classList.contains("app-sidebar-open")) closeMenu();
-        else openMenu();
-    });
-    if (backdrop) backdrop.addEventListener("click", closeMenu);
-    if (closeBtn) closeBtn.addEventListener("click", closeMenu);
-})();
-</script>
+<script src="{{ url_for('static', filename='sidebar.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

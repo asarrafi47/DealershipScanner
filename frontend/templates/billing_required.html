@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Subscription Required</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Subscription Required — Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
 </head>
-<body>
-    <div class="page">
-        <nav class="topbar">
-            <div class="logo">Sarrafi Cars</div>
-            <div class="nav-links">
-                {% include "_app_logout.html" %}
-            </div>
-        </nav>
+<body class="app-layout-body">
+<div class="page page--app-layout">
+    {% include "_nav_sidebar.html" %}
 
+    <main class="app-layout-main">
         <section class="auth-section">
             <div class="auth-card">
                 <p class="eyebrow">Billing</p>
@@ -26,9 +25,12 @@
                 <p class="auth-footer" style="margin-top: 14px;">
                     If you already subscribed, refresh this page after a few seconds.
                 </p>
+                <p class="auth-footer">
+                    Not ready yet? <a href="{{ url_for('listings') }}">Browse listings</a> or <a href="{{ url_for('find_dealers_page') }}">find dealers</a> — no subscription needed.
+                </p>
             </div>
         </section>
-    </div>
+    </main>
+</div>
 </body>
 </html>
-

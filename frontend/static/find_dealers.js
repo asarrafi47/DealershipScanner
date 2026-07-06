@@ -200,8 +200,9 @@
                 lines.push('<a href="' + escapeAttr(href) + '" target="_blank" rel="noopener noreferrer">Website</a>');
             }
         }
-        if (d.registry_id && d.listing_count > 0) {
-            lines.push('<a href="/listings?dealer_registry_id=' + encodeURIComponent(d.registry_id) + '">View inventory</a>');
+        const inventoryHref = d.listing_count > 0 ? dealerInventoryHref(d) : "";
+        if (inventoryHref) {
+            lines.push('<a href="' + escapeAttr(inventoryHref) + '">View inventory</a>');
         }
         const adminBtn = adminScrapeButtonHtml(d);
         if (adminBtn) lines.push(adminBtn);
@@ -222,6 +223,24 @@
         const u = String(url || "").trim();
         if (/^https?:\/\//i.test(u)) return u;
         return "";
+    }
+
+    /**
+     * Link into /listings filtered to this dealer. main.js reads the
+     * repeatable `dealer_registry_id` param, but only applies it alongside
+     * a valid ZIP + radius <= 50 mi — so center the search on the dealer's
+     * own ZIP to guarantee it falls inside the radius.
+     */
+    function dealerInventoryHref(d) {
+        if (!d || !d.in_database || !d.registry_id) return "";
+        const params = new URLSearchParams();
+        const zip = String(d.zip_code || "").trim();
+        if (/^\d{5}$/.test(zip)) {
+            params.set("zip_code", zip);
+            params.set("radius", "25");
+        }
+        params.set("dealer_registry_id", String(d.registry_id));
+        return "/listings?" + params.toString();
     }
 
     function formatAddress(d) {
@@ -326,8 +345,9 @@
             : '<span class="find-dealers-list-badge find-dealers-list-badge--google">Google</span>';
         const dist = d.distance_miles != null ? d.distance_miles.toFixed(1) + " mi" : "";
         const scrapeStatus = scrapeStatusLabel(d);
-        const stock = d.in_database && d.listing_count > 0
-            ? '<a class="find-dealers-list-link" href="/listings?dealer_registry_id=' + encodeURIComponent(d.registry_id) + '">View ' + d.listing_count + " listings</a>"
+        const inventoryHref = d.listing_count > 0 ? dealerInventoryHref(d) : "";
+        const stock = inventoryHref
+            ? '<a class="find-dealers-list-link" href="' + escapeAttr(inventoryHref) + '">View ' + d.listing_count + " listings</a>"
             : (d.in_database ? '<span class="find-dealers-list-muted">No live listings yet</span>' : "");
         const scrapeMeta = scrapeStatus
             ? '<span class="find-dealers-list-scraped">' + escapeHtml(scrapeStatus) + "</span>"

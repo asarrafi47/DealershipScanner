@@ -7,15 +7,6 @@
     const STORAGE_KEY = "ds_compare_ids";
     const MAX_COMPARE = 4;
 
-    function isLoggedIn() {
-        return document.body && document.body.getAttribute("data-logged-in") === "1";
-    }
-
-    function requireCompareLogin() {
-        window.location.href = "/login";
-        return false;
-    }
-
     function normalizeEntry(raw) {
         if (raw == null) return null;
         if (typeof raw === "number" || typeof raw === "string") {
@@ -258,10 +249,6 @@
     }
 
     function toggleId(carId, on) {
-        if (on && !isLoggedIn()) {
-            requireCompareLogin();
-            return readIds();
-        }
         const id = parseInt(carId, 10);
         if (!Number.isFinite(id) || id <= 0) return readIds();
 
@@ -405,10 +392,6 @@
     }
 
     function init() {
-        if (!isLoggedIn() && !document.body.classList.contains("compare-page")) {
-            writeEntries([]);
-            return;
-        }
         wireTray();
         wireGridCheckboxes();
         wireCompareToggleButtons();

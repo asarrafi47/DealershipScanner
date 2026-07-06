@@ -37,6 +37,13 @@
                 <p>Edit titles, pricing, mileage, notes, and upload photos for each vehicle.</p>
                 <a href="{{ url_for('dealer_portal.inventory_listings') }}" class="secondary-button" style="margin-top: 16px; display: inline-block;">Open listings</a>
             </div>
+            {% if is_admin or show_store_ops_nav %}
+            <div class="info-card">
+                <h2>Store admin console</h2>
+                <p>Scraped inventory health, scan history, and store operations for your assigned dealer(s).</p>
+                <a href="{{ url_for('store_admin.admin_home') }}" class="secondary-button" style="margin-top: 16px; display: inline-block;">Open store admin</a>
+            </div>
+            {% endif %}
         </div>
     </section>
 
