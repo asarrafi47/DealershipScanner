@@ -28,14 +28,11 @@ from backend.scanner.phases.nav import (
     pagination_debug_enabled,
     pagination_response_wait_ms,
     playwright_inventory_json_predicate,
-    truncate_url,
     try_apply_location_filter,
 )
+from backend.scanner.network_observer import NetworkObserver
 from backend.scanner.scrapers.scanner_intercept_filter import (
     effective_lot_total_from_intercepts,
-    intercept_url_allowed,
-    payload_qualifies_for_inventory_intercept,
-    response_content_type_looks_json,
 )
 from backend.scanner.scan_efficiency import (
     inventory_idle_loop_sec,
@@ -61,10 +58,12 @@ async def scrape_inventory_path(
     dealer_city: str = "",
     dealer_state: str = "",
     site_profile: "SiteProfile | None" = None,
-) -> tuple[list[tuple[str, Any]], str | None, int, dict[str, str]]:
+) -> tuple[list[tuple[str, Any]], str | None, int, dict[str, str], list[Any]]:
     """
     Scrape one inventory path on a dedicated page within ``context``.
-    Returns ``(intercept_records, page_html, url_denied_count, card_locations)``.
+    Returns ``(intercept_records, page_html, url_denied_count, card_locations,
+    captured_endpoints)`` — the last is the observer's endpoint records for
+    replay-recipe promotion.
     Opens and closes its own page; does not touch the warmup/VDP page.
     Structured JSON interception is primary: qualifying payloads skip saving HTML for this path.
     When no Next/Load-more control is visible, a scroll-to-bottom loop pulls lazy-loaded batches.
@@ -96,7 +95,6 @@ async def scrape_inventory_path(
         )
     local_records: list[tuple[str, Any]] = []
     found_data = {"value": False}
-    url_denied = 0
     card_locations: dict[str, str] = {}
     resp_err = DealerResponseErrorBudget()
 
@@ -135,39 +133,16 @@ async def scrape_inventory_path(
 
     page.on("request", handle_request)
 
-    async def handle_response(response: Any) -> None:
-        nonlocal url_denied
-        try:
-            ct = response.headers.get("content-type") or ""
-            if not response_content_type_looks_json(ct):
-                return
-            rurl = str(getattr(response, "url", "") or "")
-            if not intercept_url_allowed(rurl, base_url):
-                url_denied += 1
-                logger.debug("Intercept URL denied [%s] path=%s: %s", dealer_name, path, truncate_url(rurl))
-                return
-            body = await response.json()
-            if not payload_qualifies_for_inventory_intercept(body):
-                return
-            local_records.append((rurl, body))
-            found_data["value"] = True
-            logger.info(
-                "Intercepting: %s%s — structured inventory JSON (%s)",
-                dealer_name,
-                path,
-                truncate_url(rurl, 80),
-            )
-        except Exception as e:
-            if resp_err.should_log():
-                logger.debug(
-                    "Intercept handler [%s] path=%s: %s %s",
-                    dealer_name,
-                    path,
-                    type(e).__name__,
-                    str(e)[:200],
-                )
-
-    page.on("response", handle_response)
+    observer = NetworkObserver(
+        dealer_base_url=base_url,
+        dealer_id=dealer_id,
+        dealer_name=dealer_name,
+        path=path,
+        records=local_records,
+        found_data=found_data,
+        resp_err=resp_err,
+    )
+    page.on("response", observer.on_response)
     html: str | None = None
     full_url = base_url + path
     try:
@@ -210,6 +185,7 @@ async def scrape_inventory_path(
                 # Clear any intercepts captured before the filter applied and wait for fresh data.
                 local_records.clear()
                 found_data["value"] = False
+                observer.capture_event.clear()
                 post_template = None
                 api_post_url = None
                 try:
@@ -219,11 +195,14 @@ async def scrape_inventory_path(
                 await asyncio.sleep(1.0)
 
         idle_cap = inventory_idle_loop_sec(found_data["value"])
-        for _ in range(idle_cap):
-            await asyncio.sleep(1)
-            if found_data["value"]:
-                break
+        if idle_cap > 0 and not found_data["value"]:
+            # Event-driven: returns the instant a capture lands instead of polling in 1s steps.
+            try:
+                await asyncio.wait_for(observer.capture_event.wait(), timeout=idle_cap)
+            except asyncio.TimeoutError:
+                pass
         await asyncio.sleep(0.5)
+        await observer.drain(2.0)
         await _capture_card_locations()
 
         if dealer_com_bulk_fetch_enabled() and not post_template and not found_data["value"]:
@@ -251,6 +230,7 @@ async def scrape_inventory_path(
                 )
                 if bulk_bodies:
                     local_records = [(api_post_url, body) for body in bulk_bodies]
+                    observer.records = local_records
                     found_data["value"] = True
                     bulk_complete = True
                     logger.info(
@@ -340,7 +320,7 @@ async def scrape_inventory_path(
                     len(by_vin),
                 )
             html = await page.content()
-            return local_records, html, url_denied, card_locations
+            return local_records, html, observer.url_denied, card_locations, list(observer.ledger.endpoints.values())
 
         from backend.scanner.scrapers.autowall import _is_autowall_html
 
@@ -370,7 +350,7 @@ async def scrape_inventory_path(
                 found_data["value"] = True
                 logger.info("autoWALL: %s — %d vehicle(s)", dealer_name, len(aw_vehicles))
             html = await page.content()
-            return local_records, html, url_denied, card_locations
+            return local_records, html, observer.url_denied, card_locations, list(observer.ledger.endpoints.values())
 
         from backend.scanner.scrapers.shopperexpress import _is_shopperexpress_html
 
@@ -407,7 +387,7 @@ async def scrape_inventory_path(
                 found_data["value"] = True
                 logger.info("ShopperExpress: %s — %d vehicle(s)", dealer_name, len(se_vehicles))
             html = await page.content()
-            return local_records, html, url_denied, card_locations
+            return local_records, html, observer.url_denied, card_locations, list(observer.ledger.endpoints.values())
 
         # Pagination loop — uses only this path's own intercept records
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
@@ -477,6 +457,9 @@ async def scrape_inventory_path(
                                 except Exception:
                                     pass
                                 await asyncio.sleep(0.35)
+                                # Let in-flight body reads land so the next iteration's
+                                # by_vin/total_count sees this page's payload.
+                                await observer.drain(2.0)
                                 await _capture_card_locations()
                                 clicked = True
                                 break
@@ -537,9 +520,20 @@ async def scrape_inventory_path(
         logger.warning("Path scrape failed [%s] %s: %s", dealer_name, full_url, e)
     finally:
         try:
+            # Body reads still in flight would be killed by page.close() below,
+            # dropping their payloads (typically the last batch).
+            await observer.drain(5.0)
+        except Exception:
+            pass
+        try:
+            observer.log_summary()
+            observer.save_ledger()
+        except Exception:
+            pass
+        try:
             await page.close()
         except Exception:
             pass
-    return local_records, html, url_denied, card_locations
+    return local_records, html, observer.url_denied, card_locations, list(observer.ledger.endpoints.values())
 
 __all__ = ['scrape_inventory_path']

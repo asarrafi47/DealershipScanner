@@ -29,6 +29,7 @@ _FALLBACK_ALLOW_SUBSTRINGS = frozenset(
         "algolianet",
         "dealer.com",
         "dealerinspire",
+        "typesense",
         "cdk",
     )
 )

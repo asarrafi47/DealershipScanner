@@ -9,6 +9,8 @@
     "algolianet",
     "dealer.com",
     "dealerinspire",
+    "carscommerce",
+    "typesense",
     "cdk"
   ],
   "notes": "Used by backend/scrapers/scanner_intercept_filter.py and scanner.js (require ./scanner_intercept). SCANNER_INTERCEPT_URL_ALLOW / SCANNER_INTERCEPT_URL_DENY still merge at runtime."

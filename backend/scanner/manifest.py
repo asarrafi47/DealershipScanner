@@ -90,6 +90,8 @@ def _default_skip_dealer_substrings() -> tuple[str, ...]:
 
 def filter_skip_dealers(dealers: list) -> list:
     raw = (os.environ.get("SCANNER_SKIP_DEALER_SUBSTRINGS") or "").strip()
+    if raw.lower() in ("none", "-"):
+        return list(dealers)  # explicit full coverage — disable even the built-in skips
     if raw:
         needles = tuple(s.strip().lower() for s in raw.split(",") if s.strip())
     else:

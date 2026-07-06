@@ -2,7 +2,7 @@
 Scanner orchestration: browser pool, dealer concurrency, optional post-scan pipeline.
 
 Inventory capture lives in ``backend.scanner.phases.dealer_run``; post-scan enrichment can run
-inline or via ``backend.scanner.post_scan_job`` when ``scan_only=True``.
+inline or via ``backend.scanner.post_scan.job`` when ``scan_only=True``.
 """
 from __future__ import annotations
 
@@ -66,6 +66,19 @@ def _max_vdp_concurrency() -> int:
     from backend.scanner.vdp import _max_vdp_concurrency as vdp_conc
 
     return vdp_conc()
+
+
+def _dealer_timeout_sec() -> float:
+    """
+    Hard cap on one dealer's full run (warmup → VDP → upsert); 0 disables.
+    Default is deliberately generous — a 2000-vehicle store with VDP visits runs
+    for hours legitimately; this only exists to unstick hung awaits.
+    """
+    raw = (os.environ.get("SCANNER_DEALER_TIMEOUT_SEC") or "10800").strip()
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return 10800.0
 
 
 async def _run_post_scan_tail(
@@ -233,6 +246,7 @@ async def main(
     total_upserted = 0
     sem = asyncio.Semaphore(dealer_conc)
     outcomes: list[Any] = []
+    dealer_timeout = _dealer_timeout_sec()
 
     async def run_dealers_with_browser(p) -> list[Any]:
         browser = await p.chromium.launch(
@@ -245,13 +259,29 @@ async def main(
             if dealer.get("optimize_for") == "bmw":
                 logger.info("Applying BMW-specific optimization for %s", dealer.get("name"))
             try:
-                return await run_dealer(
+                coro = run_dealer(
                     browser,
                     dealer,
                     write_coordinator,
                     gallery_vision_filter=gallery_vision_filter,
                     monroney_vision=monroney_vision,
                 )
+                if dealer_timeout > 0:
+                    # A dealer hung mid-phase (e.g. a stuck warmup goto) would otherwise
+                    # hold its semaphore slot forever and block the final gather.
+                    return await asyncio.wait_for(coro, timeout=dealer_timeout)
+                return await coro
+            except asyncio.TimeoutError:
+                logger.error(
+                    "Dealer %s timed out after %.0fs (SCANNER_DEALER_TIMEOUT_SEC) — skipping.",
+                    did, dealer_timeout,
+                )
+                return {
+                    "dealer_id": did,
+                    "dealer_name": dealer.get("name", ""),
+                    "upserted": 0,
+                    "error": f"dealer_timeout_{int(dealer_timeout)}s",
+                }
             except asyncio.CancelledError:
                 raise
             except Exception as e:

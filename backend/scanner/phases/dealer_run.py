@@ -52,6 +52,34 @@ from backend.scanner import scan_log
 logger = logging.getLogger("scanner")
 
 
+def _warmup_phase_timeout_sec() -> float:
+    """Hard cap on the whole warmup phase (goto → settle → cookie banner); 0 disables."""
+    raw = (os.environ.get("SCANNER_WARMUP_PHASE_TIMEOUT_SEC") or "240").strip()
+    try:
+        val = float(raw)
+    except ValueError:
+        return 240.0
+    return val if val > 0 else 86400.0
+
+
+def _vdp_phase_timeout_sec(n_vehicles: int) -> float:
+    """
+    Hard cap on the whole VDP enrichment phase, so a wedged renderer can't block the
+    dealer's inventory upsert. Scales with lot size (VDP visits N pages) around a base
+    budget; ``SCANNER_VDP_PHASE_TIMEOUT_SEC`` overrides the base, 0 disables.
+    """
+    raw = (os.environ.get("SCANNER_VDP_PHASE_TIMEOUT_SEC") or "").strip()
+    if raw:
+        try:
+            v = float(raw)
+            return v if v > 0 else 86400.0
+        except ValueError:
+            pass
+    # ~4s/vehicle budget over a 300s floor, capped at 2h — generous for real VDP,
+    # far below the 3h dealer timeout so a wedge is caught at the phase, not the dealer.
+    return max(300.0, min(7200.0, 300.0 + 4.0 * max(0, n_vehicles)))
+
+
 def log_gallery_bins(dealer_name: str, phase: str, vehicles: list[dict[str, Any]]) -> None:
     bins = gallery_https_bin_histogram(vehicles)
     if bins:
@@ -162,6 +190,7 @@ async def run_dealer(
         ctx_opts: dict[str, Any] = {"viewport": {"width": 1920, "height": 1080}}
         _ua = (os.environ.get("SCANNER_USER_AGENT") or "").strip() or get_rotating_ua()
         ctx_opts["user_agent"] = _ua
+        logger.info("Warmup UA [%s]: %s", name, _ua[:130])
         context = await browser.new_context(**ctx_opts)
         page = await context.new_page()
         warm_pred = playwright_inventory_json_predicate(url)
@@ -173,58 +202,80 @@ async def run_dealer(
             "ERR_INTERNET_DISCONNECTED",
         )
         _warmup_403_bypass = False
-        try:
-            await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
-        except Exception as _warmup_exc:
-            _exc_str = str(_warmup_exc)
-            if any(e in _exc_str for e in _dead_domain_errors):
-                logger.warning("Warmup: %s — dead domain (%s), attempting URL discovery", name, _exc_str.split("\n")[0])
-                _discovered = await discover_dealer_url(
-                    name, url, browser,
-                    city=str(dealer.get("city") or "").strip(),
-                    state=str(dealer.get("state") or "").strip(),
-                )
-                if _discovered:
-                    logger.info("Warmup: %s — discovered URL: %s (was: %s)", name, _discovered, url)
-                    url = _discovered
-                    warm_pred = playwright_inventory_json_predicate(url)
-                    await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
+
+        async def _warmup_phase() -> None:
+            nonlocal page, url, warm_pred, _warmup_403_bypass
+            try:
+                await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
+            except Exception as _warmup_exc:
+                _exc_str = str(_warmup_exc)
+                if any(e in _exc_str for e in _dead_domain_errors):
+                    logger.warning("Warmup: %s — dead domain (%s), attempting URL discovery", name, _exc_str.split("\n")[0])
+                    _discovered = await discover_dealer_url(
+                        name, url, browser,
+                        city=str(dealer.get("city") or "").strip(),
+                        state=str(dealer.get("state") or "").strip(),
+                    )
+                    if _discovered:
+                        logger.info("Warmup: %s — discovered URL: %s (was: %s)", name, _discovered, url)
+                        url = _discovered
+                        warm_pred = playwright_inventory_json_predicate(url)
+                        await goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
+                    else:
+                        logger.error("Warmup: %s — URL discovery failed, skipping dealer", name)
+                        raise
+                elif "403" in _exc_str and provider == "dealer_inspire":
+                    logger.warning(
+                        "Warmup: %s — HTTP 403 (Cloudflare block) but provider=dealer_inspire; "
+                        "bypassing warmup and attempting Algolia recovery directly",
+                        name,
+                    )
+                    _warmup_403_bypass = True
+                    try:
+                        await page.close()
+                    except Exception:
+                        pass
+                    page = await context.new_page()
                 else:
-                    logger.error("Warmup: %s — URL discovery failed, skipping dealer", name)
                     raise
-            elif "403" in _exc_str and provider == "dealer_inspire":
-                logger.warning(
-                    "Warmup: %s — HTTP 403 (Cloudflare block) but provider=dealer_inspire; "
-                    "bypassing warmup and attempting Algolia recovery directly",
-                    name,
+            if not _warmup_403_bypass:
+                w_post, w_scroll = warmup_delays()
+                await warmup_settle_after_base_goto(
+                    page,
+                    warm_pred,
+                    dealer_name=name,
+                    max_idle_sec=w_post,
+                    scroll_sec=w_scroll,
                 )
-                _warmup_403_bypass = True
+                from backend.scanner.scrapers.pixel_motion import _dismiss_cookie_banner
+                await asyncio.sleep(1.0)
+                # Bounded: on some DealerOn sites the stealth scroll trips anti-bot JS
+                # that pins the renderer, and the cookie-banner locator query then hangs.
+                # Cap it so a wedge here fails the phase fast instead of at the phase cap.
                 try:
-                    await page.close()
-                except Exception:
-                    pass
-                page = await context.new_page()
-            else:
-                raise
-        if not _warmup_403_bypass:
-            w_post, w_scroll = warmup_delays()
-            await warmup_settle_after_base_goto(
-                page,
-                warm_pred,
-                dealer_name=name,
-                max_idle_sec=w_post,
-                scroll_sec=w_scroll,
-            )
-            from backend.scanner.scrapers.pixel_motion import _dismiss_cookie_banner
-            await asyncio.sleep(1.0)
-            await _dismiss_cookie_banner(page)
-            logger.info("Warmup: %s — done (signal race cap=%.1fs + scroll %.1fs)", name, w_post, w_scroll)
+                    await asyncio.wait_for(_dismiss_cookie_banner(page), timeout=20.0)
+                except asyncio.TimeoutError:
+                    logger.warning("Warmup: %s — cookie-banner probe wedged (renderer pinned); skipping", name)
+                logger.info("Warmup: %s — done (signal race cap=%.1fs + scroll %.1fs)", name, w_post, w_scroll)
+
+        # Hard cap on the whole warmup phase. Some sites (DealerOn: ggkia, tustinkia,
+        # robinsford, …) serve pages whose JS pins the renderer at 100% CPU forever;
+        # a wedged renderer can stall even Playwright's own navigation timeout, so a
+        # per-call timeout is not enough — the phase gets one as a whole.
+        _warmup_cap = _warmup_phase_timeout_sec()
+        try:
+            await asyncio.wait_for(_warmup_phase(), timeout=_warmup_cap)
+        except asyncio.TimeoutError:
+            raise RuntimeError(
+                f"warmup_phase_timeout_{int(_warmup_cap)}s: page wedged "
+                "(renderer JS loop — known on DealerOn sites)"
+            ) from None
             # Detect permanent maintenance pages that resolve DNS but serve no inventory
             # (e.g. S3/Ceph bucket static 503 — goto succeeds but page is a placeholder).
             # Use specific downtime phrases only — bare "maintenance" fires on every dealer
             # service-menu nav item ("Oil Change & Maintenance", "Maintenance Schedule", etc.).
             try:
-                _warmup_html = (await page.content()).lower()
+                _warmup_html = (await asyncio.wait_for(page.content(), timeout=15.0)).lower()
                 _maintenance_markers = (
                     "under maintenance", "down for maintenance", "performing maintenance",
                     "site is currently",
@@ -329,6 +380,36 @@ async def run_dealer(
                     result["provider"] = _site_profile.detected_provider
 
         inv_paths = choose_inventory_paths(_site_profile, dealer)
+
+        # Recipe pre-flight: replay endpoints captured on a previous scan over plain
+        # HTTP. The browser scrape is skipped only when the yield is near the dealer's
+        # last-known lot size — a recipe saved from one listing config can be
+        # type-filtered and cover only part of the inventory. Partial yields are still
+        # merged (VIN dedup downstream) but the browser scrape runs too.
+        recipe_records: list[tuple[str, Any]] | None = None
+        try:
+            from backend.scanner.recipes import last_known_vin_count, try_fetch_via_recipes
+
+            _recipe_hit = await try_fetch_via_recipes(dealer_id, provider, url, name)
+            if _recipe_hit:
+                recipe_records, _recipe_vins = _recipe_hit
+                _known = await asyncio.to_thread(last_known_vin_count, dealer_id)
+                if _known > 0 and _recipe_vins >= int(0.7 * _known):
+                    result["recipe_fetch"] = "full"
+                    inv_paths = []
+                    logger.info(
+                        "Recipe fetch [%s]: %d/%d known VIN(s) — skipping browser inventory",
+                        name, _recipe_vins, _known,
+                    )
+                else:
+                    result["recipe_fetch"] = "partial"
+                    logger.info(
+                        "Recipe fetch [%s]: %d VIN(s) vs %d known — merging and still scraping",
+                        name, _recipe_vins, _known,
+                    )
+        except Exception as _rec_e:
+            logger.debug("Recipe fetch skipped [%s]: %s", name, str(_rec_e)[:200])
+
         logger.info("Inventory paths: %s — launching %d parallel scrapers", name, len(inv_paths))
         t_inv0 = time.perf_counter()
         dealer_city = str(dealer.get("city") or "").strip()
@@ -365,12 +446,25 @@ async def run_dealer(
         # Merge results from all paths
         path_htmls: list[str | None] = []
         merged_card_locations: dict[str, str] = {}
-        for path_records, path_html, path_denied, path_card_locs in path_results:
+        captured_endpoints: list[Any] = []
+        if recipe_records:
+            intercept_records.extend(recipe_records)
+        for path_records, path_html, path_denied, path_card_locs, path_endpoints in path_results:
             intercept_records.extend(path_records)
             gate_stats["url_denied"] += path_denied
             path_htmls.append(path_html)
             if isinstance(path_card_locs, dict):
                 merged_card_locations.update(path_card_locs)
+            if path_endpoints:
+                captured_endpoints.extend(path_endpoints)
+
+        if captured_endpoints:
+            try:
+                from backend.scanner.recipes import promote_from_ledger
+
+                promote_from_ledger(dealer_id, provider, captured_endpoints)
+            except Exception as _rec_e:
+                logger.debug("Recipe promotion skipped [%s]: %s", name, _rec_e)
 
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
 
@@ -545,10 +639,24 @@ async def run_dealer(
 
             vdp_stats: dict[str, Any] = {}
             t_vdp0 = time.perf_counter()
+            _vdp_cap = _vdp_phase_timeout_sec(len(all_vehicles))
             try:
-                vdp_stats = await enrich_vehicles_vdp(
-                    page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile,
-                    provider=provider,
+                # Phase-level timeout: a wedged renderer (DealerOn anti-bot tarpit) hangs
+                # rather than raises, so per-page timeouts don't fire and VDP would block
+                # the dealer's inventory upsert forever. On timeout we keep the listing
+                # data already captured and proceed to upsert.
+                vdp_stats = await asyncio.wait_for(
+                    enrich_vehicles_vdp(
+                        page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile,
+                        provider=provider,
+                    ),
+                    timeout=_vdp_cap,
+                )
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "VDP enrichment timed out for %s after %.0fs (renderer wedge?) — "
+                    "upserting %d listing-only rows",
+                    name, _vdp_cap, len(all_vehicles),
                 )
             except Exception as e:
                 logger.warning("VDP enrichment failed for %s (continuing with listing data only): %s", name, e)
@@ -622,6 +730,14 @@ async def run_dealer(
                     logger.warning("Monroney vision failed for %s: %s", name, e)
                     result["monroney_vision"] = {"error": str(e)[:200]}
             reg_id = dealer.get("dealership_registry_id")
+            if not reg_id:
+                try:
+                    from backend.listings.dealer_registry_match import resolve_car_dealership_registry_id
+
+                    reg_id = resolve_car_dealership_registry_id({"dealer_url": url}) or None
+                except Exception as e:
+                    logger.debug("dealership_registry_id fallback resolution failed for %s: %s", url, e)
+                    reg_id = None
             if reg_id:
                 for v in all_vehicles:
                     v.setdefault("dealership_registry_id", reg_id)

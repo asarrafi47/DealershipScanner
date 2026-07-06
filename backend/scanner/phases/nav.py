@@ -146,11 +146,12 @@ async def goto_with_retries(page: Any, target: str, *, log_label: str, timeout_m
                 break
             delay = 0.6 * (2 ** min(i, 8)) + random.random() * 0.35
             logger.warning(
-                "%s: goto retry %s/%s (%s, sleep %.2fs)",
+                "%s: goto retry %s/%s (%s: %s, sleep %.2fs)",
                 log_label,
                 i + 1,
                 max_total,
                 type(e).__name__,
+                str(e).split("\n")[0][:160],
                 delay,
             )
             await asyncio.sleep(delay)
@@ -412,7 +413,13 @@ async def warmup_settle_after_base_goto(
         except BaseException:
             continue
 
-    await page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
+    # Bounded: page.evaluate has no timeout of its own, and a wedged renderer
+    # (anti-bot JS loop) would otherwise hang the dealer's warmup forever.
+    with contextlib.suppress(BaseException):
+        await asyncio.wait_for(
+            page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)"),
+            timeout=10.0,
+        )
     if scroll_sec:
         await asyncio.sleep(scroll_sec)
 
