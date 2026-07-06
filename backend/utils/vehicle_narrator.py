@@ -74,26 +74,44 @@ _BANNED = re.compile(
 )
 
 
-def _has_unverifiable_claim(text: str) -> bool:
-    return bool(_BANNED.search(text or ""))
+def _has_unverifiable_claim(text: str, allowed_values: Any = ()) -> bool:
+    """
+    True if *text* contains a banned/hype word the model introduced itself.
+
+    Grounded field VALUES (a color "Pristine White", a trim) are removed from the
+    text before checking, so repeating them is fine — but an invented "pristine
+    condition" survives the removal and is still caught.
+    """
+    residual = text or ""
+    for val in allowed_values or ():
+        v = str(val).strip()
+        if len(v) >= 3:
+            residual = re.sub(re.escape(v), " ", residual, flags=re.I)
+    return bool(_BANNED.search(residual))
 
 
 _HTML_TAG = re.compile(r"<[^>]+>")
-_LABELED_LINE = re.compile(r"(?im)^\s*(year|make|model|trim|price|mileage|engine|"
-                           r"body style|exterior color|interior color|fuel type|"
-                           r"transmission|drivetrain|mpg)\b\s*[:\-]")
+_FIELD_LABEL = (r"year|make|model|trim|price|mileage|engine|body ?style|"
+                r"exterior ?colou?r|interior ?colou?r|fuel ?type|transmission|"
+                r"drivetrain|mpg( city| highway)?|cylinders|msrp")
+_LABELED_LINE = re.compile(rf"(?im)^\s*({_FIELD_LABEL})\b\s*[:\-]")
+# Same labels as inline "Label: value" segments (catches single-line semicolon dumps).
+_LABELED_SEG = re.compile(rf"(?i)\b({_FIELD_LABEL})\b\s*:")
 
 
 def _is_degenerate(text: str) -> bool:
     """
-    True when a weak model echoed the fact list instead of writing prose:
-    HTML break tags, or 3+ 'Label: value' lines (a listing, not a description).
+    True when a weak model echoed the fact list instead of writing prose: HTML
+    break tags/bullets, 3+ 'Label:' lines, or a single-line run of 4+ 'Label:'
+    segments (a semicolon/comma listing, not sentences).
     """
     if not text:
         return True
     if "<br" in text.lower() or "•" in text:
         return True
-    return len(_LABELED_LINE.findall(text)) >= 3
+    if len(_LABELED_LINE.findall(text)) >= 3:
+        return True
+    return len(_LABELED_SEG.findall(text)) >= 4
 
 
 def _sanitize(text: str) -> str:
@@ -167,9 +185,11 @@ def narrate_vehicle(row: dict[str, Any], *, model: str | None = None) -> str:
     if len(facts) < 2:
         return _template_fallback(row, facts) or "Vehicle details unavailable."
     prompt = build_prompt(row)
+    # Grounded field values (colors, trims) must not trip the hype guard.
+    allowed_values = [str(v) for v in row.values() if v is not None and str(v).strip()]
 
     def _bad(t: str) -> bool:
-        return (not t) or _has_unverifiable_claim(t) or _is_degenerate(t)
+        return (not t) or _has_unverifiable_claim(t, allowed_values) or _is_degenerate(t)
 
     out = _sanitize(generate(prompt, system=_SYSTEM, model=model, temperature=0.2, max_tokens=180))
     if _bad(out):

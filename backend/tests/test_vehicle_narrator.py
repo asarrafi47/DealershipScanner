@@ -27,6 +27,25 @@ def test_claim_and_degenerate_detectors():
     assert not vn._is_degenerate("This 2026 BMW 228i is finished in Black Sapphire.")
 
 
+def test_banned_word_allowed_when_in_facts():
+    # "Pristine White" is a real color value we handed the model — must NOT be flagged.
+    values = ["Pristine White", "Navigator", "Reserve"]
+    assert not vn._has_unverifiable_claim("A sedan in Pristine White paint.", values)
+    # but an invented "pristine condition" (the value phrase isn't there) is still caught.
+    assert vn._has_unverifiable_claim("In pristine condition throughout.", values)
+    # bare call (no values) still catches hype
+    assert vn._has_unverifiable_claim("This immaculate one-owner gem.")
+
+
+def test_degenerate_catches_single_line_semicolon_dump():
+    dump = ("Year: 2025; Make: Honda; Model: CR-V; Trim: LX; Body style: SUV; "
+            "Price: $31,542; Mileage: 18,852")
+    assert vn._is_degenerate(dump)
+    assert not vn._is_degenerate(
+        "This 2025 Honda CR-V LX is an SUV priced at $31,542 with 18,852 miles."
+    )
+
+
 def test_narrate_regenerates_on_claim(monkeypatch):
     calls = []
 
