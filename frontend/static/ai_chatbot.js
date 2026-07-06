@@ -124,6 +124,18 @@
                     pending.remove();
                     if (data && data.ok && data.reply) {
                         addMsg(data.reply, "bot");
+                        if (data.search && typeof data.search.url === "string"
+                            && data.search.url.indexOf("/listings") === 0) {
+                            var d = document.createElement("div");
+                            d.className = "ai-chat-msg ai-chat-msg--bot ai-chat-msg--action";
+                            var a = document.createElement("a");
+                            a.href = data.search.url;
+                            a.className = "ai-chat-cta";
+                            a.textContent = "View matching listings →";
+                            d.appendChild(a);
+                            log.appendChild(d);
+                            log.scrollTop = log.scrollHeight;
+                        }
                     } else {
                         var e = (data && data.error) || "unavailable";
                         addMsg(

@@ -60,3 +60,23 @@ def test_rate_limited(client, monkeypatch):
     monkeypatch.setattr(bp, "allow_request", lambda *a, **k: False)
     r = client.post("/api/ai/chat", json={"message": "hi"})
     assert r.status_code == 429
+
+
+def test_search_intent_returns_listings_link(client, monkeypatch):
+    _allow_feature(monkeypatch)
+    monkeypatch.setattr("backend.utils.query_parser.parse_natural_query",
+                        lambda m: {"make": "BMW", "max_price": 50000})
+    r = client.post("/api/ai/chat", json={"message": "BMW under 50k"})
+    data = r.get_json()
+    assert data["ok"] and data["context"] == "search"
+    assert data["search"]["url"].startswith("/listings?q=")
+    assert "$50,000" in data["reply"]
+
+
+def test_question_not_treated_as_search(client, monkeypatch):
+    _allow_feature(monkeypatch)
+    monkeypatch.setattr("backend.utils.query_parser.parse_natural_query", lambda m: {})
+    monkeypatch.setattr("backend.utils.llm_client.complete", lambda *a, **k: "Financing works via a loan.")
+    r = client.post("/api/ai/chat", json={"message": "how does financing work?"})
+    data = r.get_json()
+    assert data["ok"] and data["context"] == "general" and "search" not in data

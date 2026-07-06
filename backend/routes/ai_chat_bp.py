@@ -44,6 +44,64 @@ def _client_ip() -> str:
     return fwd or (request.remote_addr or "unknown")
 
 
+# Filter keys that signal the user is searching inventory (not asking a question).
+_SEARCH_SIGNAL_KEYS = frozenset({
+    "make", "model", "max_price", "max_mileage", "body_style", "drivetrain",
+    "fuel_type", "min_year", "max_year", "exterior_color", "cylinders", "transmission",
+})
+_QUESTION_STARTS = ("how ", "what ", "why ", "is ", "are ", "does ", "do ", "can ",
+                    "should ", "which ", "who ", "when ", "tell me", "explain")
+
+
+def _looks_like_search(filters: dict, message: str) -> bool:
+    """Non-empty structured filters + not phrased purely as a question → a search."""
+    if not any(k in filters for k in _SEARCH_SIGNAL_KEYS):
+        return False
+    m = message.strip().lower()
+    if any(k in filters for k in ("max_price", "max_mileage")) or m.startswith(
+        ("show", "find", "list", "search", "looking for", "i want", "i need")
+    ):
+        return True
+    return not m.startswith(_QUESTION_STARTS)
+
+
+def _summarize_filters(filters: dict) -> str:
+    """Human phrase of what was understood, e.g. 'BMW X5, under $50,000, AWD'."""
+    parts: list[str] = []
+
+    def _first(v):
+        return v[0] if isinstance(v, list) and v else v
+
+    yr_lo, yr_hi = filters.get("min_year"), filters.get("max_year")
+    if yr_lo and yr_hi and yr_lo == yr_hi:
+        parts.append(str(yr_lo))
+    elif yr_lo:
+        parts.append(f"{yr_lo}+")
+    if filters.get("make"):
+        parts.append(str(_first(filters["make"])))
+    if filters.get("model"):
+        parts.append(str(_first(filters["model"])))
+    if filters.get("body_style"):
+        parts.append(str(_first(filters["body_style"])).split("/")[0])
+    if filters.get("drivetrain"):
+        parts.append(str(_first(filters["drivetrain"])))
+    if filters.get("fuel_type"):
+        parts.append(str(filters["fuel_type"]))
+    if filters.get("exterior_color"):
+        parts.append(str(_first(filters["exterior_color"])))
+    if filters.get("max_price"):
+        try:
+            parts.append(f"under ${int(float(filters['max_price'])):,}")
+        except (TypeError, ValueError):
+            pass
+    if filters.get("max_mileage"):
+        try:
+            parts.append(f"under {int(float(filters['max_mileage'])):,} mi")
+        except (TypeError, ValueError):
+            pass
+    return ", ".join(parts)
+
+
 @ai_chat_bp.route("/api/ai/chat", methods=["POST"])
 def api_ai_chat():
     ok, err = require_feature(session, FEATURE_AI_CAR_CHAT)
@@ -101,7 +159,24 @@ def api_ai_chat():
                 return jsonify({"ok": False, "error": out["error"]}), 502
             return jsonify({"ok": True, "reply": reply, "context": "car",
                             "car_id": context_car.get("id")})
-        # No car in view — general assistant answer.
+        # No car in view — search intent first (proven local parser), else a general answer.
+        try:
+            from backend.utils.query_parser import parse_natural_query
+
+            filters = parse_natural_query(message) or {}
+        except Exception:
+            filters = {}
+        if _looks_like_search(filters, message):
+            from urllib.parse import quote
+
+            summary = _summarize_filters(filters)
+            reply = (f"Here are matching listings — {summary}." if summary
+                     else "Here are matching listings.")
+            return jsonify({
+                "ok": True, "context": "search", "reply": reply,
+                "search": {"url": "/listings?q=" + quote(message), "summary": summary},
+            })
+
         from backend.utils.llm_client import complete
 
         reply = complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=400).strip()

@@ -109,6 +109,18 @@
 .ai-chat-msg--bot { align-self: flex-start; background: #fff; border: 1px solid #e3e8ef; color: #1a2433; }
 .ai-chat-msg--user { align-self: flex-end; background: #274b78; color: #fff; }
 .ai-chat-msg--pending { opacity: 0.6; font-style: italic; }
+.ai-chat-msg--action { background: none; padding: 0; }
+.ai-chat-cta {
+    display: inline-block;
+    padding: 9px 16px;
+    background: #274b78;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+.ai-chat-cta:hover { background: #1f3a5f; }
 .ai-chat-msg--error { align-self: flex-start; background: #fdecec; border: 1px solid #f5c2c2; color: #a12b2b; }
 
 .ai-chat-disclaimer {
