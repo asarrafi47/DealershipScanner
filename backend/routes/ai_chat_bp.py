@@ -38,6 +38,24 @@ _GENERAL_SYSTEM = (
     "inventory you have not been shown."
 )
 
+# Narrow task the local model handles reliably: rewrite a fuzzy shopping request
+# into a concrete search phrase, or NONE. The phrase is re-parsed by the local
+# parser, so no hallucinated filter ever reaches results; NONE routes to a normal
+# conversational answer (so questions are never misclassified as searches).
+_REWRITE_PROMPT = (
+    'A car shopper said: "{msg}"\n\n'
+    "If they are looking for a vehicle, rewrite it as a short concrete search "
+    "phrase using standard filters: make, model, body type "
+    "(SUV/sedan/coupe/truck/van/convertible/hatchback/wagon/minivan), drivetrain "
+    "(AWD/FWD/RWD), fuel (gas/hybrid/electric/diesel), a max price like "
+    "'under $30,000', a max mileage, or a year. Translate lifestyle to filters: "
+    "family -> SUV or minivan; sporty/fast -> coupe or convertible; good on gas -> "
+    "hybrid; cheap / first car / budget -> a low max price.\n"
+    "If it is NOT a car search (a question, greeting, or chit-chat), reply with "
+    "exactly NONE.\n\n"
+    "Output only the rewritten phrase, or NONE."
+)
+
 
 def _client_ip() -> str:
     fwd = (request.headers.get("X-Forwarded-For") or "").split(",")[0].strip()
@@ -177,9 +195,30 @@ def api_ai_chat():
                 "search": {"url": "/listings?q=" + quote(message), "summary": summary},
             })
 
+        # Parser found nothing concrete. Try to rewrite fuzzy intent into a search
+        # phrase (narrow task); only if that yields real filters is it a search —
+        # otherwise answer conversationally, so questions are never mis-routed.
         from backend.utils.llm_client import complete
 
-        reply = complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=400).strip()
+        rewrite = complete(_REWRITE_PROMPT.format(msg=message[:500]),
+                           temperature=0.0, max_tokens=48).strip().strip('"').strip()
+        if rewrite and not rewrite.upper().startswith("NONE"):
+            try:
+                rf = parse_natural_query(rewrite) or {}
+            except Exception:
+                rf = {}
+            if any(k in rf for k in _SEARCH_SIGNAL_KEYS):
+                from urllib.parse import quote
+
+                summary = _summarize_filters(rf)
+                reply = (f"Here are matching listings — {summary}." if summary
+                         else "Here are matching listings.")
+                return jsonify({
+                    "ok": True, "context": "search", "reply": reply,
+                    "search": {"url": "/listings?q=" + quote(rewrite), "summary": summary},
+                })
+
+        reply = complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=300).strip()
         return jsonify({"ok": True, "reply": reply, "context": "general"})
     except Exception as e:
         logger.warning("ai chat failed: %s", str(e)[:200])
