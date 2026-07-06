@@ -192,7 +192,8 @@ def api_ai_chat():
                      else "Here are matching listings.")
             return jsonify({
                 "ok": True, "context": "search", "reply": reply,
-                "search": {"url": "/listings?q=" + quote(message), "summary": summary},
+                "search": {"url": "/listings?q=" + quote(message), "summary": summary,
+                           "filters": filters, "q": message},
             })
 
         # Parser found nothing concrete. Try to rewrite fuzzy intent into a search
@@ -215,7 +216,8 @@ def api_ai_chat():
                          else "Here are matching listings.")
                 return jsonify({
                     "ok": True, "context": "search", "reply": reply,
-                    "search": {"url": "/listings?q=" + quote(rewrite), "summary": summary},
+                    "search": {"url": "/listings?q=" + quote(rewrite), "summary": summary,
+                               "filters": rf, "q": rewrite},
                 })
 
         reply = complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=300).strip()

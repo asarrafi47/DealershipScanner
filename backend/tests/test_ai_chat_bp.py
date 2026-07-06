@@ -70,6 +70,7 @@ def test_search_intent_returns_listings_link(client, monkeypatch):
     data = r.get_json()
     assert data["ok"] and data["context"] == "search"
     assert data["search"]["url"].startswith("/listings?q=")
+    assert data["search"]["filters"] == {"make": "BMW", "max_price": 50000}
     assert "$50,000" in data["reply"]
 
 

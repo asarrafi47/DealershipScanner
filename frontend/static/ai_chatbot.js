@@ -124,12 +124,21 @@
                     pending.remove();
                     if (data && data.ok && data.reply) {
                         addMsg(data.reply, "bot");
-                        if (data.search && typeof data.search.url === "string"
-                            && data.search.url.indexOf("/listings") === 0) {
+                        var s = data.search;
+                        if (s && s.filters && typeof window.__DS_applySmartFilters === "function") {
+                            // On the listings page: select the matching filter
+                            // controls (and re-render results) as if typed in the bar.
+                            try {
+                                var bar = document.getElementById("smart-search-input");
+                                if (bar && s.q) bar.value = s.q;
+                                window.__DS_applySmartFilters(s.filters);
+                            } catch (e) {}
+                        } else if (s && typeof s.url === "string" && s.url.indexOf("/listings") === 0) {
+                            // Elsewhere: link to the filtered listings.
                             var d = document.createElement("div");
                             d.className = "ai-chat-msg ai-chat-msg--bot ai-chat-msg--action";
                             var a = document.createElement("a");
-                            a.href = data.search.url;
+                            a.href = s.url;
                             a.className = "ai-chat-cta";
                             a.textContent = "View matching listings →";
                             d.appendChild(a);
