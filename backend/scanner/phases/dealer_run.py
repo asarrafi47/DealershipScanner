@@ -270,10 +270,12 @@ async def run_dealer(
                 f"warmup_phase_timeout_{int(_warmup_cap)}s: page wedged "
                 "(renderer JS loop — known on DealerOn sites)"
             ) from None
-            # Detect permanent maintenance pages that resolve DNS but serve no inventory
-            # (e.g. S3/Ceph bucket static 503 — goto succeeds but page is a placeholder).
-            # Use specific downtime phrases only — bare "maintenance" fires on every dealer
-            # service-menu nav item ("Oil Change & Maintenance", "Maintenance Schedule", etc.).
+
+        # Detect permanent maintenance pages that resolve DNS but serve no inventory
+        # (e.g. S3/Ceph bucket static 503 — goto succeeds but page is a placeholder).
+        # Use specific downtime phrases only — bare "maintenance" fires on every dealer
+        # service-menu nav item ("Oil Change & Maintenance", "Maintenance Schedule", etc.).
+        if not _warmup_403_bypass:
             try:
                 _warmup_html = (await asyncio.wait_for(page.content(), timeout=15.0)).lower()
                 _maintenance_markers = (

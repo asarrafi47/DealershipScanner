@@ -309,12 +309,21 @@ async def try_fetch_via_recipes(
             body = _mutate_for_page(recipe, template, page_i) if template is not None else None
             status, parsed = await asyncio.to_thread(_replay_request, recipe, body, base_url)
             if status in (401, 403):
-                mark_stale(dealer_id, recipe, f"http_{status}")
-                logger.info(
-                    "Recipe stale [%s] %s — HTTP %d (auth rotated?); browser scan will re-capture",
-                    dealer_name, recipe.url[:80], status,
-                )
-                auth_dead = True
+                if not vins:
+                    # Failed before collecting anything — the recipe's auth is dead.
+                    mark_stale(dealer_id, recipe, f"http_{status}")
+                    logger.info(
+                        "Recipe stale [%s] %s — HTTP %d (auth rotated?); browser scan will re-capture",
+                        dealer_name, recipe.url[:80], status,
+                    )
+                    auth_dead = True
+                else:
+                    # Mid-pagination — likely a rate limit / page boundary, not dead
+                    # auth. Keep the VINs already collected instead of discarding them.
+                    logger.info(
+                        "Recipe [%s] %s — HTTP %d after %d page(s); keeping %d VIN(s)",
+                        dealer_name, recipe.url[:80], status, page_i, len(vins),
+                    )
                 break
             if parsed is None:
                 break
