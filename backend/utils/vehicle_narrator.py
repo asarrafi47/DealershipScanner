@@ -11,7 +11,21 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from backend.utils.local_llm import generate
+from backend.utils.llm_client import complete as _complete
+
+
+def generate(prompt: str, *, system: str | None = None, model: str | None = None,
+             temperature: float = 0.3, max_tokens: int | None = None) -> str:
+    """Provider-routed completion (Claude in prod, local Ollama in dev).
+
+    ``model`` forces a specific local model tag (benchmarks/tests); ignored on the
+    Claude path where the model is set by env.
+    """
+    if model is not None:
+        from backend.utils.local_llm import generate as _local_generate
+        return _local_generate(prompt, system=system, model=model,
+                               temperature=temperature, max_tokens=max_tokens)
+    return _complete(prompt, system=system, temperature=temperature, max_tokens=max_tokens)
 
 # Fields worth narrating, in a sensible order, with human labels.
 _NARRATABLE: tuple[tuple[str, str], ...] = (
