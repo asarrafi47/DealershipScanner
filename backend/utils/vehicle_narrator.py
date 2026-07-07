@@ -85,7 +85,10 @@ def _has_unverifiable_claim(text: str, allowed_values: Any = ()) -> bool:
     residual = text or ""
     for val in allowed_values or ():
         v = str(val).strip()
-        if len(v) >= 3:
+        # Never let a field value that is ITSELF a banned word disarm the guard
+        # (e.g. a scraped color "Pristine" or trim "one-owner"); a real descriptor
+        # that merely contains one ("Pristine White") is still stripped safely.
+        if len(v) >= 3 and not _BANNED.fullmatch(v):
             residual = re.sub(re.escape(v), " ", residual, flags=re.I)
     return bool(_BANNED.search(residual))
 
@@ -185,8 +188,12 @@ def narrate_vehicle(row: dict[str, Any], *, model: str | None = None) -> str:
     if len(facts) < 2:
         return _template_fallback(row, facts) or "Vehicle details unavailable."
     prompt = build_prompt(row)
-    # Grounded field values (colors, trims) must not trip the hype guard.
-    allowed_values = [str(v) for v in row.values() if v is not None and str(v).strip()]
+    # Only descriptive free-text fields may legitimately echo a hype-ish word in
+    # the prose; restrict the strip-set to those so an arbitrary attacker-controlled
+    # field (e.g. a scraped value) can't neutralize the hype guard.
+    _DESCRIPTIVE_FIELDS = ("exterior_color", "interior_color", "trim")
+    allowed_values = [str(row[k]) for k in _DESCRIPTIVE_FIELDS
+                      if row.get(k) is not None and str(row[k]).strip()]
 
     def _bad(t: str) -> bool:
         return (not t) or _has_unverifiable_claim(t, allowed_values) or _is_degenerate(t)

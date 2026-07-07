@@ -7,7 +7,9 @@ Works from any page (unlike the car-page-only /api/car/<id>/chat). When the user
 is viewing a car, the frontend passes its id so the assistant answers with that
 car as context ("is this a good deal?"); otherwise it answers general car-shopping
 questions. Gated to paid/dev users via the ai_car_chat entitlement, same as the
-existing car chat. CSRF is enforced globally by main.py's before_request.
+existing car chat. CSRF is not enforced on this endpoint: main.py's before_request
+only validates a fixed endpoint allowlist, which this route is not part of; the
+JSON content-type requirement is the practical cross-site guard here.
 """
 from __future__ import annotations
 

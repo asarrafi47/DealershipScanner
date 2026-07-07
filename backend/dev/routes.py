@@ -77,6 +77,21 @@ scanner_lock = threading.Lock()
 
 import_queues: dict[str, dict[str, Any]] = {}
 
+# Cap the in-memory job/queue stores so full scan logs don't grow worker RSS
+# without bound. Oldest entries are evicted first (dicts preserve insert order).
+_MAX_SCANNER_JOBS = max(1, int(os.environ.get("DEV_MAX_SCANNER_JOBS", "500")))
+_MAX_IMPORT_QUEUES = max(1, int(os.environ.get("DEV_MAX_IMPORT_QUEUES", "100")))
+
+
+def _evict_old_entries(store: dict[str, Any], max_entries: int) -> None:
+    """Trim an insertion-ordered job store to its most recent ``max_entries``.
+
+    Callers must hold ``scanner_lock`` while mutating ``store``.
+    """
+    while len(store) > max_entries:
+        del store[next(iter(store))]
+
+
 SCANNER_PROFILES = ("default", "resilient", "bare")
 
 LAST_SCRAPE_SAMPLES_PATH = PROJECT_ROOT / "debug" / "last_scrape_samples.json"
@@ -876,6 +891,7 @@ def api_test_scanner():
             "insert_error": None,
             "smart_error": None,
         }
+        _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
 
     thread = threading.Thread(
         target=_run_scanner_job,
@@ -907,6 +923,7 @@ def api_smart_import():
             "smart_error": None,
             "cars_linked": None,
         }
+        _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
 
     threading.Thread(
         target=_run_smart_import_job,
@@ -989,11 +1006,14 @@ def api_smart_import_bulk():
                 "cars_linked": None,
                 "queue_id": queue_id,
             }
+            _evict_old_entries(scanner_jobs, _MAX_SCANNER_JOBS)
     if not items:
         return jsonify({"ok": False, "error": "no valid urls"}), 400
 
     headed = bool(data.get("headed"))
-    import_queues[queue_id] = {"items": items, "done": False, "headed": headed}
+    with scanner_lock:
+        import_queues[queue_id] = {"items": items, "done": False, "headed": headed}
+        _evict_old_entries(import_queues, _MAX_IMPORT_QUEUES)
     threading.Thread(target=_run_bulk_import_queue, args=(queue_id,), daemon=True).start()
     return jsonify({"ok": True, "queue_id": queue_id, "items": items})
 

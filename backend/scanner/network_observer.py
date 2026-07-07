@@ -70,6 +70,15 @@ def network_ledger_enabled() -> bool:
     return _env_flag("SCANNER_NETWORK_LEDGER", True)
 
 
+def ledger_auth_plaintext_enabled() -> bool:
+    """Opt-in: write live auth/api-key header values to the on-disk ledger in the
+    clear. Off by default so credentials captured for endpoint-replay recipes are
+    redacted before landing in workspace/debug unless an operator explicitly asks
+    for the plaintext values.
+    """
+    return _env_flag("SCANNER_NETWORK_LEDGER_AUTH", False)
+
+
 def sniff_max_bytes() -> int:
     try:
         return max(65536, int(os.environ.get("SCANNER_SNIFF_MAX_BYTES") or 3_000_000))
@@ -324,6 +333,24 @@ def extract_auth_headers(headers: dict[str, str], *, max_headers: int = 8) -> di
     return out
 
 
+def _redact_secret(value: str) -> str:
+    """Non-reversible marker for a captured auth value: a length + short hash so
+    the same key can be recognised across records without persisting the secret."""
+    digest = hashlib.sha256(value.encode("utf-8", "replace")).hexdigest()[:12]
+    return f"REDACTED:len={len(value)}:sha256={digest}"
+
+
+def _redact_auth_headers(headers: dict[str, str]) -> dict[str, str]:
+    return {k: _redact_secret(v) for k, v in (headers or {}).items()}
+
+
+def _endpoint_to_json(ep: "CapturedEndpoint", plaintext_auth: bool) -> dict[str, Any]:
+    d = vars(ep).copy()
+    if not plaintext_auth:
+        d["auth_headers"] = _redact_auth_headers(ep.auth_headers)
+    return d
+
+
 @dataclass
 class ObserverLedger:
     dealer_id: str = ""
@@ -364,11 +391,14 @@ class ObserverLedger:
         return not (self.endpoints or self.fingerprints or self.denied_hosts)
 
     def to_json(self) -> dict[str, Any]:
+        plaintext_auth = ledger_auth_plaintext_enabled()
         return {
             "dealer_id": self.dealer_id,
             "dealer_name": self.dealer_name,
             "inventory_path": self.inv_path,
-            "endpoints": [vars(e) for e in self.endpoints.values()],
+            "endpoints": [
+                _endpoint_to_json(e, plaintext_auth) for e in self.endpoints.values()
+            ],
             "fingerprints": [vars(f) for f in self.fingerprints.values()],
             "denied_hosts": dict(self.denied_hosts),
             "ignored": self.ignored,

@@ -434,6 +434,7 @@ def _csrf_mutating_requests():
         "api_admin_dealer_onboard",
         "api_admin_dealer_job_retry",
         "api_admin_dealer_job_smart_retry",
+        "api_admin_dealer_job_diagnose",
     ) or (ep and str(ep).startswith("api_admin_operator_")):
         validate_csrf_header()
     return None

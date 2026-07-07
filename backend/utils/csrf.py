@@ -22,7 +22,7 @@ def validate_csrf_form() -> Response | None:
     """Return a redirect response on login CSRF failure; otherwise abort(403) or return None."""
     expected = session.get(_SESSION_KEY)
     supplied = (request.form.get("csrf_token") or "").strip()
-    if not expected or not supplied or not secrets.compare_digest(supplied, expected):
+    if not expected or not supplied or not secrets.compare_digest(supplied.encode(), expected.encode()):
         ep = request.endpoint or ""
         if ep in ("dev.admin_login", "dev.admin_register"):
             return redirect(url_for("dev.admin_login", _error="session_expired"))
@@ -38,5 +38,5 @@ def validate_csrf_header(*_args: object, **_kwargs: object) -> None:
     supplied = (request.headers.get("X-CSRF-Token") or "").strip()
     if not expected or not supplied:
         abort(403)
-    if not secrets.compare_digest(supplied, expected):
+    if not secrets.compare_digest(supplied.encode(), expected.encode()):
         abort(403)
