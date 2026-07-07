@@ -618,26 +618,36 @@ async def run_dealer(
 
             result["vins"] = sorted({(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()})
 
+            # Per-dealer VDP caps, passed to enrich_vehicles_vdp as arguments. These
+            # MUST NOT be written back to os.environ: dealers are scanned concurrently
+            # in one process (asyncio.gather), so a process-global write races — one
+            # dealer's lot-size cap would clobber another's. An operator's global env
+            # override, when set, is honored read-only downstream (arg left None).
             _ep_raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "").strip()
             _completeness_pass = (
                 os.environ.get("SCANNER_VDP_COMPLETENESS_PASS") or ""
             ).strip().lower() in ("1", "true", "yes", "on")
             if not _ep_raw or (_completeness_pass and _ep_raw == "0"):
-                os.environ["SCANNER_VDP_EP_MAX"] = str(effective_vdp_ep_max(len(all_vehicles)))
+                _ep_max_arg: int | None = effective_vdp_ep_max(len(all_vehicles))
                 logger.info(
                     "VDP cap: %s — EP max=%s (completeness_pass=%s)",
                     name,
-                    os.environ["SCANNER_VDP_EP_MAX"],
+                    _ep_max_arg,
                     _completeness_pass,
                 )
+            else:
+                _ep_max_arg = None  # honor operator's global SCANNER_VDP_EP_MAX
             if not (os.environ.get("SCANNER_VDP_PRICE_MAX") or "").strip():
                 # When EP VDP is explicitly disabled, also disable price/description VDP by default.
-                if _ep_raw == "0":
-                    os.environ["SCANNER_VDP_PRICE_MAX"] = "0"
-                else:
-                    os.environ["SCANNER_VDP_PRICE_MAX"] = str(effective_vdp_price_max(len(all_vehicles)))
+                _price_max_arg: int | None = (
+                    0 if _ep_raw == "0" else effective_vdp_price_max(len(all_vehicles))
+                )
+            else:
+                _price_max_arg = None  # honor operator's global SCANNER_VDP_PRICE_MAX
             if _ep_raw == "0" and not (os.environ.get("SCANNER_VDP_DESCRIPTION_MAX") or "").strip():
-                os.environ["SCANNER_VDP_DESCRIPTION_MAX"] = "0"
+                _desc_max_arg: int | None = 0
+            else:
+                _desc_max_arg = None  # honor operator's global SCANNER_VDP_DESCRIPTION_MAX
 
             vdp_stats: dict[str, Any] = {}
             t_vdp0 = time.perf_counter()
@@ -651,6 +661,7 @@ async def run_dealer(
                     enrich_vehicles_vdp(
                         page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile,
                         provider=provider,
+                        ep_max=_ep_max_arg, price_max=_price_max_arg, description_max=_desc_max_arg,
                     ),
                     timeout=_vdp_cap,
                 )

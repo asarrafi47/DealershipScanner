@@ -273,7 +273,9 @@ def _vdp_public_incomplete_gap_score(vehicle: dict[str, Any]) -> int:
         return 0
 
 
-def _vdp_max_per_dealer() -> int:
+def _vdp_max_per_dealer(override: int | None = None) -> int:
+    if override is not None:
+        return max(0, int(override))
     raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "10").strip()
     try:
         return max(0, int(raw))
@@ -281,8 +283,10 @@ def _vdp_max_per_dealer() -> int:
         return 10
 
 
-def _vdp_price_max_per_dealer() -> int:
+def _vdp_price_max_per_dealer(override: int | None = None) -> int:
     """Extra unique listing URLs for rows still missing price after inventory JSON (aligned with Node ``scanner.js``)."""
+    if override is not None:
+        return max(0, min(5000, int(override)))
     raw = (os.environ.get("SCANNER_VDP_PRICE_MAX") or "400").strip()
     try:
         return max(0, min(5000, int(raw)))
@@ -318,7 +322,9 @@ def _vehicle_needs_description_vdp(vehicle: dict[str, Any]) -> bool:
     return len(desc) < 40
 
 
-def _vdp_description_max_per_dealer() -> int:
+def _vdp_description_max_per_dealer(override: int | None = None) -> int:
+    if override is not None:
+        return max(0, min(2000, int(override)))
     raw = (os.environ.get("SCANNER_VDP_DESCRIPTION_MAX") or "120").strip()
     try:
         return max(0, min(2000, int(raw)))
@@ -3087,6 +3093,9 @@ async def enrich_vehicles_vdp(
     dealer_id: str = "",
     site_profile: Any = None,
     provider: str = "",
+    ep_max: int | None = None,
+    price_max: int | None = None,
+    description_max: int | None = None,
 ) -> dict[str, Any]:
     """
     Mutates vehicles in place: runs VDP extraction and merge_analytics_ep_into_vehicle.
@@ -3102,10 +3111,12 @@ async def enrich_vehicles_vdp(
         "skipped_no_detail_url": False,
         "gallery_phase_bins": {},
     }
-    ep_cap = _vdp_max_per_dealer()
-    price_cap = _vdp_price_max_per_dealer()
+    # Caps come from the caller as arguments (per-dealer, race-free); when omitted
+    # they fall back to the process env for standalone callers (scripts/tests).
+    ep_cap = _vdp_max_per_dealer(ep_max)
+    price_cap = _vdp_price_max_per_dealer(price_max)
     spec_gap_cap = _vdp_spec_gap_max_per_dealer()
-    description_cap = _vdp_description_max_per_dealer()
+    description_cap = _vdp_description_max_per_dealer(description_max)
     if ep_cap == 0 and price_cap == 0 and spec_gap_cap == 0 and description_cap == 0:
         log.info(
             "VDP: %s — enrichment skipped (SCANNER_VDP_EP_MAX=0, SCANNER_VDP_PRICE_MAX=0, SCANNER_VDP_SPEC_GAP_MAX=0)",
