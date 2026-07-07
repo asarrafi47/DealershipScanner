@@ -65,6 +65,11 @@ def _parse_listings_car_id_query(q: str) -> list[int] | None:
         return [n] if n > 0 else None
     if s.isdigit() and 1 <= len(s) <= 10:
         n = int(s)
+        # A bare 4-digit value in the plausible model-year range (e.g. "2020") is
+        # almost always a year filter, not a listing id. Require a '#'/'id:' prefix
+        # for those; anything else digits-only is still treated as an id.
+        if len(s) == 4 and 1900 <= n <= 2100:
+            return None
         return [n] if n > 0 else None
     return None
 

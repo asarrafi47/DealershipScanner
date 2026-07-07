@@ -29,7 +29,17 @@ DISPLAY_DASH = "—"
 
 # Omitted from public JSON and redacted in /dev debug endpoints (SEC-087).
 SENSITIVE_CAR_ROW_KEYS = frozenset(
-    {"kbb_snapshot_json", "internal_notes", "marked_for_review", "price_provenance_json"}
+    {
+        "internal_notes",
+        "marked_for_review",
+        "price_provenance_json",
+        "spec_source_json",
+        "recovery_notes",
+        "recovery_source",
+        "recovery_status",
+        "recoverability_score",
+        "missing_field_count",
+    }
 )
 
 

@@ -769,7 +769,7 @@ def _extract_fuel_type(text: str) -> str | None:
 _ENGINE_L_RE = re.compile(
     r"\b(\d+\.\d+)\s*[lL](?:iter)?s?\b"               # 5.0L, 3.5 liter
     r"|\b(\d+\.\d+)\s*(?=\s+(?:engine|liter|motor))"  # 5.0 engine
-    r"|\b([1-9]\.\d)\b",                               # bare 5.0 / 3.5 (displacement shorthand)
+    r"|\b([1-9]\.\d)\b(?!\s*(?:k|thousand|grand|grands|million|mil|dollars?|bucks?)\b)",  # bare 5.0 / 3.5 (displacement shorthand), not a price/number phrase
     re.I,
 )
 
@@ -1151,7 +1151,7 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
     Parse a free-text vehicle query into structured filters.
     Returns a dict with only applicable keys (omit unset/null).
     """
-    raw = (query_text or "").strip()
+    raw = (query_text or "").strip()[:200]
     if not raw:
         return {}
 
