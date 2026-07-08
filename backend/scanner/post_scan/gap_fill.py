@@ -359,7 +359,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
         html: str | None = None
 
         need_page = "condition" in missing or (
-            {"transmission", "drivetrain", "fuel_type", "body_style", "cylinders",
+            {"price", "transmission", "drivetrain", "fuel_type", "body_style", "cylinders",
              "mpg_city", "mpg_highway", "exterior_color", "interior_color"} & set(missing)
         )
         if url and need_page:
@@ -368,6 +368,12 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 stats["web_fetch_ok"] += 1
 
         if html:
+            if "price" in missing:
+                from backend.scanner.utils.vdp_spec_parse import parse_price_from_listing_html
+
+                page_price = parse_price_from_listing_html(html)
+                if page_price:
+                    proposed["price"] = int(round(page_price))
             if "condition" in missing:
                 cond = parse_condition_from_listing_html(html)
                 if cond:

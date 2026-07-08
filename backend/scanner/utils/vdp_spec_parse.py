@@ -402,3 +402,58 @@ def parse_color_from_listing_html(html: str) -> dict[str, str | None]:
             out["interior_color"] = m.group(1).strip() or None
 
     return out
+
+
+def parse_price_from_listing_html(html: str) -> float | None:
+    """
+    Vehicle price from structured page data ONLY — schema.org JSON-LD offers
+    and price meta tags. Never free-text regex over the page: footers and
+    finance disclaimers are full of dollar amounts that are not the price.
+    """
+    from backend.scanner.utils.vdp_price_merge import _clamp_vehicle_price
+
+    if not html:
+        return None
+
+    for m in re.finditer(
+        r'<script[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        html[:1_500_000],
+        re.S | re.I,
+    ):
+        try:
+            data = json.loads(m.group(1))
+        except (ValueError, TypeError):
+            continue
+        for item in data if isinstance(data, list) else [data]:
+            if not isinstance(item, dict):
+                continue
+            types = item.get("@type", "")
+            types_set = {t.lower() for t in types} if isinstance(types, list) else {str(types).lower()}
+            if not (types_set & {"car", "vehicle", "product"}):
+                continue
+            offers = item.get("offers")
+            for offer in offers if isinstance(offers, list) else [offers]:
+                if not isinstance(offer, dict):
+                    continue
+                raw = offer.get("price")
+                try:
+                    price = _clamp_vehicle_price(float(raw)) if raw not in (None, "") else None
+                except (TypeError, ValueError):
+                    price = None
+                if price:
+                    return price
+
+    for pat in (
+        r'<meta[^>]+itemprop=["\']price["\'][^>]+content=["\']([\d.,]+)["\']',
+        r'<meta[^>]+property=["\'](?:og|product):price:amount["\'][^>]+content=["\']([\d.,]+)["\']',
+        r'itemprop=["\']price["\'][^>]+content=["\']([\d.,]+)["\']',
+    ):
+        m2 = re.search(pat, html[:1_500_000], re.I)
+        if m2:
+            try:
+                price = _clamp_vehicle_price(float(m2.group(1).replace(",", "")))
+            except (TypeError, ValueError):
+                price = None
+            if price:
+                return price
+    return None

@@ -766,6 +766,18 @@ async def run_dealer(
             if all_vehicles:
                 _cov = compute_dealer_coverage(list(all_vehicles), dealer_id=dealer_id)
                 logger.info("%s", format_coverage_log(_cov))
+                # Quality loop: when key fields are still thin after every
+                # scan-time layer, go back per-car via the gap-fill methods.
+                try:
+                    from backend.scanner.post_scan.auto_heal import run_auto_heal_for_dealer
+
+                    _heal = await asyncio.to_thread(
+                        run_auto_heal_for_dealer, dealer_id, name, _cov, list(all_vehicles)
+                    )
+                    if _heal:
+                        result["auto_heal"] = _heal
+                except Exception as _heal_e:
+                    logger.warning("Auto-heal failed [%s]: %s", name, _heal_e)
             if reg_id and url:
                 try:
                     from backend.db.inventory_db import link_cars_to_dealership_registry
