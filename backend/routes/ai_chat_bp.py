@@ -24,6 +24,7 @@ from backend.utils.car_chat_policy import (
     car_chat_user_daily_limit,
     web_research_playwright_allowed,
 )
+from backend.utils.client_ip import client_ip
 from backend.utils.ip_rate_limit import allow_request
 
 logger = logging.getLogger("ai_chat")
@@ -60,8 +61,7 @@ _REWRITE_PROMPT = (
 
 
 def _client_ip() -> str:
-    fwd = (request.headers.get("X-Forwarded-For") or "").split(",")[0].strip()
-    return fwd or (request.remote_addr or "unknown")
+    return client_ip(request)
 
 
 # Filter keys that signal the user is searching inventory (not asking a question).

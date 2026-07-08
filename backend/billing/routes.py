@@ -17,6 +17,10 @@ from backend.billing.stripe_billing import (
     unix_to_iso,
     verify_premium_checkout_session,
 )
+from backend.billing.entitlements import (
+    invalidate_billing_cache,
+    invalidate_org_billing_cache,
+)
 from backend.db.users_db import (
     get_org,
     grant_user_premium,
@@ -153,6 +157,7 @@ def stripe_webhook():
             status=str(status) if status else None,
             current_period_end_iso=str(cpe) if cpe else None,
         )
+        invalidate_org_billing_cache(org_id)
 
     return jsonify({"ok": True})
 
@@ -246,6 +251,7 @@ def premium_webhook():
                 subscription_id=str(subscription_id) if subscription_id else None,
                 plan_id=plan_id,
             )
+            invalidate_billing_cache(user_id)
             _log.info("premium granted to user_id=%d via webhook plan=%s", user_id, plan_id)
 
     elif etype in ("customer.subscription.updated", "customer.subscription.deleted"):
@@ -257,6 +263,7 @@ def premium_webhook():
         status = obj.get("status")
         if etype == "customer.subscription.deleted" or not stripe_subscription_active(status):
             revoke_user_premium(user_id)
+            invalidate_billing_cache(user_id)
             _log.info("premium revoked for user_id=%d (status=%s)", user_id, status)
         else:
             md = obj.get("metadata") or {}
@@ -267,6 +274,7 @@ def premium_webhook():
                 subscription_id=str(subscription_id) if subscription_id else None,
                 plan_id=plan_id,
             )
+            invalidate_billing_cache(user_id)
             _log.info("premium renewed for user_id=%d (status=%s plan=%s)", user_id, status, plan_id)
 
     return jsonify({"ok": True})

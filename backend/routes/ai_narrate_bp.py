@@ -22,6 +22,7 @@ from flask import Blueprint, jsonify, request
 
 from backend.db.inventory_db import get_car_by_id
 from backend.utils.car_chat_policy import car_chat_rate_limits
+from backend.utils.client_ip import client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.vehicle_narrator import narrate_vehicle
 
@@ -31,8 +32,7 @@ ai_narrate_bp = Blueprint("ai_narrate_bp", __name__)
 
 
 def _client_ip() -> str:
-    fwd = (request.headers.get("X-Forwarded-For") or "").split(",")[0].strip()
-    return fwd or (request.remote_addr or "unknown")
+    return client_ip(request)
 
 # Per-worker LRU cache: narration is deterministic given the row's content, so we
 # cache by car_id + a hash of the narratable fields — a car edit changes the hash

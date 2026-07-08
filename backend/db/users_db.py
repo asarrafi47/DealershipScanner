@@ -601,7 +601,7 @@ def get_user_profile(user_id: int) -> dict | None:
     cursor.execute("PRAGMA table_info(users)")
     cols = [r[1] for r in cursor.fetchall()]
     want = ["id", "username", "email"]
-    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "mfa_phone", "is_premium", "subscription_plan_id"):
+    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "mfa_phone", "is_premium", "subscription_plan_id", "is_active"):
         if extra in cols:
             want.append(extra)
     cursor.execute(f"SELECT {', '.join(want)} FROM users WHERE id = ?", (uid,))
@@ -869,9 +869,12 @@ def check_user(login_input, password):
         return False
     conn = get_conn()
     cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users)")
+    has_is_active = any(r[1] == "is_active" for r in cursor.fetchall())
+    active_col = ", is_active" if has_is_active else ""
     cursor.execute(
-        """
-        SELECT id, username, email, password FROM users
+        f"""
+        SELECT id, username, email, password{active_col} FROM users
         WHERE lower(username) = lower(?) OR lower(email) = lower(?)
         """,
         (li, li),
@@ -880,7 +883,9 @@ def check_user(login_input, password):
     conn.close()
     if not row:
         return False
-    uid, _u, _e, stored = row
+    uid, _u, _e, stored = row[0], row[1], row[2], row[3]
+    if has_is_active and not bool(row[4]):
+        return False
     ok = verify_or_legacy(password, stored)
     if ok and password_needs_rehash(stored):
         _schedule_password_rehash(int(uid), password, stored)
