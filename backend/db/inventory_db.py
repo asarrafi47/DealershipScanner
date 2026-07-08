@@ -171,6 +171,7 @@ def ensure_cars_table_columns(cursor) -> None:
         ("forced_induction", "TEXT"),
         ("spin_frames", "TEXT"),
         ("interior_pano", "TEXT"),
+        ("zip_code", "TEXT"),
     ]:
         if col not in existing:
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
