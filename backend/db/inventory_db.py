@@ -163,19 +163,14 @@ def ensure_cars_table_columns(cursor) -> None:
         ("listing_active", "INTEGER"),
         ("listing_removed_at", "TEXT"),
         ("interior_color_buckets", "TEXT"),
-        ("kbb_fetched_at", "TEXT"),
-        ("kbb_snapshot_json", "TEXT"),
-        ("kbb_fair_purchase", "REAL"),
-        ("kbb_range_low", "REAL"),
-        ("kbb_range_high", "REAL"),
-        ("kbb_private_party", "REAL"),
-        ("kbb_trade_in", "REAL"),
         ("first_seen_at", "TEXT"),
         ("last_price_change_at", "TEXT"),
         ("internal_notes", "TEXT"),
         ("marked_for_review", "INTEGER"),
         ("price_provenance_json", "TEXT"),
         ("forced_induction", "TEXT"),
+        ("spin_frames", "TEXT"),
+        ("interior_pano", "TEXT"),
     ]:
         if col not in existing:
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
@@ -192,7 +187,6 @@ LISTINGS_GRID_CAR_COLUMNS: tuple[str, ...] = (
     "trim",
     "price",
     "mileage",
-    "zip_code",
     "fuel_type",
     "cylinders",
     "transmission",
@@ -224,12 +218,6 @@ LISTINGS_GRID_CAR_COLUMNS: tuple[str, ...] = (
     "first_seen_at",
     "window_sticker_url",
     "history_highlights",
-    "kbb_fetched_at",
-    "kbb_fair_purchase",
-    "kbb_range_low",
-    "kbb_range_high",
-    "kbb_private_party",
-    "kbb_trade_in",
 )
 
 
@@ -251,8 +239,6 @@ def ensure_cars_listings_indexes(cursor) -> None:
         f"CREATE INDEX IF NOT EXISTS idx_cars_active_registry "
         f"ON cars(dealership_registry_id) WHERE {active} "
         f"AND dealership_registry_id IS NOT NULL",
-        f"CREATE INDEX IF NOT EXISTS idx_cars_active_zip "
-        f"ON cars(zip_code) WHERE {active} AND zip_code IS NOT NULL",
         f"CREATE INDEX IF NOT EXISTS idx_cars_active_packages "
         f"ON cars(make, model) WHERE {active} AND packages IS NOT NULL "
         f"AND packages NOT IN ('{{}}', '[]', 'null', '')",
@@ -422,6 +408,23 @@ def _parse_car_gallery(car_dict):
         car_dict["gallery"] = []
 
 
+def _parse_car_spin_frames(car_dict):
+    """Ensure car_dict['spin_frames'] is a list (parse from JSON string if needed)."""
+    if not car_dict:
+        return
+    s = car_dict.get("spin_frames")
+    if isinstance(s, list):
+        return
+    if s is None or s == "":
+        car_dict["spin_frames"] = []
+        return
+    try:
+        parsed = json.loads(s) if isinstance(s, str) else []
+        car_dict["spin_frames"] = parsed if isinstance(parsed, list) else []
+    except (TypeError, ValueError):
+        car_dict["spin_frames"] = []
+
+
 def _parse_car_history_highlights(car_dict):
     """Ensure car_dict['history_highlights'] is a list (parse from JSON string if needed)."""
     if not car_dict:
@@ -531,7 +534,6 @@ def init_inventory_db():
             trim             TEXT,
             price            REAL,
             mileage          INTEGER,
-            zip_code         TEXT,
             fuel_type        TEXT,
             cylinders        INTEGER,
             transmission     TEXT,
@@ -643,10 +645,10 @@ def seed_cars() -> None:
     cursor.executemany(
         """
         INSERT OR IGNORE INTO cars
-            (vin, title, year, make, model, trim, price, mileage, zip_code,
+            (vin, title, year, make, model, trim, price, mileage,
              fuel_type, cylinders, transmission, drivetrain,
              exterior_color, interior_color, image_url, dealer_name, dealer_url)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         SEED_DATA,
     )
@@ -846,13 +848,14 @@ def get_dealership_issue_stats(limit: int = 10) -> list[dict[str, Any]]:
                 COUNT(*) as total_cars,
                 SUM(CASE WHEN il.car_id IS NOT NULL THEN 1 ELSE 0 END) as incomplete_count,
                 SUM(CASE WHEN c.marked_for_review = 1 THEN 1 ELSE 0 END) as flagged_count,
-                ROUND(AVG(COALESCE(c.data_quality_score, 0)), 2) as avg_quality_score,
+                ROUND(CAST(AVG(COALESCE(c.data_quality_score, 0)) AS numeric), 2) as avg_quality_score,
                 SUM(CASE WHEN c.price IS NULL OR c.price = 0 THEN 1 ELSE 0 END) as no_price_count
             FROM cars c
             LEFT JOIN {inc_table} il ON il.car_id = c.id
             WHERE c.dealer_name IS NOT NULL AND TRIM(c.dealer_name) != ''
             GROUP BY c.dealer_id, c.dealer_name
-            HAVING incomplete_count > 0 OR flagged_count > 0
+            HAVING SUM(CASE WHEN il.car_id IS NOT NULL THEN 1 ELSE 0 END) > 0
+                OR SUM(CASE WHEN c.marked_for_review = 1 THEN 1 ELSE 0 END) > 0
             ORDER BY incomplete_count DESC, flagged_count DESC
             LIMIT ?
         """
@@ -1087,6 +1090,7 @@ def _equipment_needle_params(needle: str) -> list[str]:
 
 def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 cylinders=None, transmissions=None, drivetrains=None,
+                forced_inductions=None,
                 body_styles=None,
                 exterior_colors=None, interior_colors=None,
                 interior_color_bucket_filters=None,
@@ -1095,6 +1099,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 countries=None,
                 min_year=None, max_year=None,
                 max_price=None, max_mileage=None,
+                cpo_only=None,
                 zip_code=None, radius_miles=None,
                 dealership_registry_id=None,
                 dealer_registry_ids=None,
@@ -1257,6 +1262,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     add_multi("fuel_type", fuel_types)
     add_multi("cylinders", [int(c) for c in cylinders] if cylinders else None)
     add_multi("transmission", transmissions)
+    add_multi("forced_induction", forced_inductions)
     add_multi("drivetrain", drivetrains)
     add_multi_ci("body_style", body_styles)
 
@@ -1315,6 +1321,8 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         else:
             query += " AND (mileage IS NULL OR mileage <= ? OR mileage = 0)"
             params.append(mm)
+    if cpo_only:
+        query += " AND is_cpo = 1"
 
     with db_conn(row_factory=sqlite3.Row) as conn:
         if dealer_registry_filter_ids:
@@ -1383,8 +1391,6 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         filtered = []
         for car in results:
             dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
-            if not dest:
-                dest = zip_to_coords(car.get("zip_code", "") or "")
             if dest:
                 dist = haversine(origin[0], origin[1], dest[0], dest[1])
                 if dist <= radius_miles:
@@ -1468,8 +1474,6 @@ def search_cars_by_make_model_pairs(
         filtered = []
         for car in results:
             dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
-            if not dest:
-                dest = zip_to_coords(car.get("zip_code", "") or "")
             if dest:
                 dist = haversine(origin[0], origin[1], dest[0], dest[1])
                 if dist <= radius_miles:
@@ -1530,19 +1534,27 @@ def is_car_saved(user_id: int, car_id: int) -> bool:
 
 
 def get_car_by_id(car_id, *, include_inactive: bool = True):
-    with db_conn(row_factory=sqlite3.Row) as conn:
-        cursor = conn.cursor()
-        if include_inactive:
-            cursor.execute("SELECT * FROM cars WHERE id = ?", (car_id,))
-        else:
-            cursor.execute(
-                "SELECT * FROM cars WHERE id = ? AND (COALESCE(listing_active, 1) = 1)",
-                (car_id,),
-            )
-        row = cursor.fetchone()
+    try:
+        with db_conn(row_factory=sqlite3.Row) as conn:
+            cursor = conn.cursor()
+            if include_inactive:
+                cursor.execute("SELECT * FROM cars WHERE id = ?", (car_id,))
+            else:
+                cursor.execute(
+                    "SELECT * FROM cars WHERE id = ? AND (COALESCE(listing_active, 1) = 1)",
+                    (car_id,),
+                )
+            row = cursor.fetchone()
+    except sqlite3.OperationalError as ex:
+        # Uninitialized SQLite file (e.g. tests pointing DB_PATH at an empty db):
+        # no cars table means no car. Anything else is a real error.
+        if "no such table" not in str(ex).lower():
+            raise
+        row = None
     car = dict(row) if row else None
     if car:
         _parse_car_gallery(car)
+        _parse_car_spin_frames(car)
         _parse_car_history_highlights(car)
     return car
 
@@ -1575,6 +1587,7 @@ def get_cars_by_ids(car_ids: list[int]) -> list[dict]:
         if not row:
             continue
         _parse_car_gallery(row)
+        _parse_car_spin_frames(row)
         _parse_car_history_highlights(row)
         out.append(row)
     return out
@@ -1588,6 +1601,7 @@ def get_car_by_vin(vin):
     car = dict(row) if row else None
     if car:
         _parse_car_gallery(car)
+        _parse_car_spin_frames(car)
         _parse_car_history_highlights(car)
     return car
 
@@ -1601,7 +1615,6 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "trim",
         "price",
         "mileage",
-        "zip_code",
         "fuel_type",
         "cylinders",
         "transmission",
@@ -1642,13 +1655,6 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "listing_active",
         "listing_removed_at",
         "interior_color_buckets",
-        "kbb_fetched_at",
-        "kbb_snapshot_json",
-        "kbb_fair_purchase",
-        "kbb_range_low",
-        "kbb_range_high",
-        "kbb_private_party",
-        "kbb_trade_in",
         "first_seen_at",
         "last_price_change_at",
         "internal_notes",
@@ -1896,15 +1902,16 @@ def listings_geo_coords_maps() -> dict[str, Any]:
 
     ensure_dealership_registry_backfill()
 
-    active = "(COALESCE(listing_active, 1) = 1)"
     from backend.db.dealer_geo import (
         dealer_coords_client_map,
         load_dealer_geo_index,
         load_registry_coords_map,
     )
-    from backend.db.geo import zip_to_coords
     from backend.listings.dealer_registry_match import registry_id_by_dealer_host
 
+    # cars.zip_code was dropped (superseded by dealer_geo-based radius search, which is
+    # what the client actually uses); zip_coords is kept in the response for API-contract
+    # stability but is always empty now.
     zip_coords: dict[str, list[float]] = {}
     registry_id_by_host: dict[str, int] = {}
     registry_coords: dict[str, list[float]] = {}
@@ -1913,14 +1920,6 @@ def listings_geo_coords_maps() -> dict[str, Any]:
         registry_coords = load_registry_coords_map(conn)
         raw_host_map = registry_id_by_dealer_host(conn)
         registry_id_by_host = {h: rid for h, rid in raw_host_map.items()}
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT DISTINCT zip_code FROM cars WHERE {active} AND zip_code IS NOT NULL")
-        unique_zips = {row[0] for row in cursor.fetchall()}
-    for zip_code in unique_zips:
-        if zip_code and str(zip_code).strip():
-            coords = zip_to_coords(str(zip_code).strip())
-            if coords:
-                zip_coords[str(zip_code).strip()] = [float(coords[0]), float(coords[1])]
     out = {
         "zip_coords": zip_coords,
         "dealer_coords": dealer_coords,
@@ -1978,6 +1977,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         cylinders       = distinct("cylinders")
         transmissions   = [t for t in distinct("transmission") if _facet_transmission_sane(t)]
         drivetrains     = distinct("drivetrain")
+        forced_inductions = distinct("forced_induction")
         cursor.execute(
             f"""
             SELECT exterior_color, interior_color, interior_color_buckets
@@ -2039,7 +2039,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         # The frontend embeds these as data-* on each checkbox so it can filter
         # any dropdown based on any combination of other active filters.
         cursor.execute(f"""
-            SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style
+            SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style, forced_induction
             FROM cars
             WHERE {active}
               AND make IS NOT NULL AND TRIM(make) != ''
@@ -2048,7 +2048,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         raw_car_rows = cursor.fetchall()
         car_rows: list = []
         for row in raw_car_rows:
-            make, model, trim, fuel_type, cyl, drive, body_st = (
+            make, model, trim, fuel_type, cyl, drive, body_st, induction = (
                 row[0],
                 row[1],
                 row[2],
@@ -2056,6 +2056,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 row[4],
                 row[5],
                 row[6],
+                row[7],
             )
             if is_effectively_empty(make) or is_effectively_empty(model):
                 continue
@@ -2073,7 +2074,9 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 body_st = None
             else:
                 body_st = coerce_body_style_stored(body_st)
-            car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st))
+            if is_effectively_empty(induction):
+                induction = None
+            car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st, induction))
 
     # Derive distinct makes/models/trims with normalized keys (one UI option per logical value).
     make_variants: dict[str, list[str]] = {}
@@ -2138,6 +2141,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
         "cylinders":       cylinders,
         "transmissions":   transmissions,
         "drivetrains":     drivetrains,
+        "forced_inductions": forced_inductions,
         "body_styles":     body_styles_list,
         "exterior_colors": exterior_colors,
         "interior_colors": interior_colors,
@@ -2155,6 +2159,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
                 "cyl": r[4],
                 "drive": r[5],
                 "body_style": r[6] if len(r) > 6 else None,
+                "induction": r[7] if len(r) > 7 else None,
             }
             for r in car_rows
         ],

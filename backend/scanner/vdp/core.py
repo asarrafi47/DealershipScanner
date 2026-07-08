@@ -605,6 +605,19 @@ def _vdp_image_download_dir() -> Path:
     return Path(__file__).resolve().parents[2] / "vdp_images"
 
 
+def _vdp_spin_capture_enabled() -> bool:
+    """Default: capture 360-spin assets (Impel/SpinCar/WebRotate); ``SCANNER_VDP_SPIN_CAPTURE=0`` to skip."""
+    raw = (os.environ.get("SCANNER_VDP_SPIN_CAPTURE") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off", "")
+
+
+def _vdp_spin_max_sec() -> float:
+    try:
+        return max(2.0, float(os.environ.get("SCANNER_VDP_SPIN_MAX_SEC") or 12.0))
+    except (TypeError, ValueError):
+        return 12.0
+
+
 def _response_maybe_gallery_image_url(url: str, content_type: str) -> bool:
     """
     True when a response is likely a vehicle-gallery image. Prefer ``Content-Type`` (many CDNs
@@ -2409,6 +2422,134 @@ async def _download_vdp_gallery_images(wp: Any, vehicle: dict[str, Any], urls: l
     return manifest
 
 
+async def _vdp_spin_capture(
+    wp: Any,
+    *,
+    spin_asset_urls: list[str],
+    spin_config_urls: list[str],
+    pending: list[asyncio.Task[Any]],
+) -> dict[str, Any]:
+    """
+    Resolve the 360-spin assets for the current VDP into
+    ``{"spin_frames": [...>=8 ordered URLs], "interior_pano": str|None, "spin_source": str}``
+    (empty dict when no spin viewer / no confident capture). Strategy, cheapest first:
+
+    1. observed network frames already form a numbered sequence — use them;
+    2. Impel manifest (``api.impel.io/spin/{customer}/{vin}``) — URL observed in the viewer's
+       own traffic or derived from any ``swipetospin-viewers/...`` asset / iframe hash; frames
+       are built from ``cdn_image_prefix`` + ``numImgEC`` and the first/last frame is validated
+       with a cookie-carrying request before trusting;
+    3. light nudge — scroll the viewer iframe into view and drag across it with the page mouse
+       (frames load lazily on rotation for some embeds), then re-read observed URLs.
+    """
+    from backend.scanner.vdp.spin_capture import (
+        SPIN_PROVIDER_TOKENS,
+        build_impel_manifest_url_candidates,
+        extract_spin_assets,
+        parse_impel_spin_manifest,
+    )
+
+    if not _vdp_spin_capture_enabled():
+        return {}
+    deadline = asyncio.get_running_loop().time() + _vdp_spin_max_sec()
+
+    iframe_urls: list[str] = []
+    for fr in list(getattr(wp, "frames", None) or []):
+        fu = getattr(fr, "url", "") or ""
+        if fu and any(t in fu.lower() for t in SPIN_PROVIDER_TOKENS):
+            iframe_urls.append(fu)
+
+    if not spin_asset_urls and not spin_config_urls and not iframe_urls:
+        return {}
+
+    assets = extract_spin_assets(spin_asset_urls)
+    if len(assets.get("spin_frames") or []) >= 8:
+        assets["spin_source"] = "network_observed"
+        return assets
+
+    # Manifest route (Impel).
+    req = wp.context.request
+    for murl in build_impel_manifest_url_candidates(spin_config_urls, spin_asset_urls, iframe_urls):
+        if asyncio.get_running_loop().time() >= deadline:
+            break
+        try:
+            resp = await req.get(murl, timeout=8000)
+            if resp.status != 200:
+                continue
+            data = json.loads(await resp.text())
+        except Exception:
+            continue
+        parsed = parse_impel_spin_manifest(data)
+        frames = parsed.get("spin_frames") or []
+        if len(frames) < 8:
+            continue
+        ok = True
+        for probe_u in (frames[0], frames[-1]):
+            try:
+                r2 = await req.get(probe_u, timeout=8000)
+                ct2 = (r2.headers.get("content-type") or "").lower()
+                if r2.status != 200 or "image/" not in ct2:
+                    ok = False
+                    break
+            except Exception:
+                ok = False
+                break
+        if ok:
+            out: dict[str, Any] = {
+                "spin_frames": frames,
+                "spin_source": "impel_manifest",
+                "spin_manifest_url": murl[:300],
+            }
+            if assets.get("interior_pano"):
+                out["interior_pano"] = assets["interior_pano"]
+            return out
+
+    # Nudge route: scroll the viewer iframe into view and drag across it.
+    if iframe_urls and asyncio.get_running_loop().time() < deadline:
+        box = None
+        try:
+            loc = wp.locator(
+                'iframe[src*="impel"], iframe[src*="spincar"], '
+                'iframe[src*="swipetospin"], iframe[src*="webrotate"]'
+            ).first
+            if await loc.count() > 0:
+                try:
+                    await loc.scroll_into_view_if_needed(timeout=3000)
+                except Exception:
+                    pass
+                await asyncio.sleep(0.6)
+                box = await loc.bounding_box()
+        except Exception:
+            box = None
+        if box and box.get("width", 0) >= 120 and box.get("height", 0) >= 90:
+            cy = box["y"] + box["height"] / 2
+            for _ in range(2):
+                if asyncio.get_running_loop().time() >= deadline:
+                    break
+                try:
+                    await wp.mouse.move(box["x"] + box["width"] * 0.72, cy, steps=3)
+                    await wp.mouse.down()
+                    await wp.mouse.move(box["x"] + box["width"] * 0.28, cy, steps=14)
+                    await wp.mouse.up()
+                except Exception:
+                    break
+                await asyncio.sleep(1.0)
+                await _drain_pending_tasks(pending, timeout_sec=4.0)
+                assets = extract_spin_assets(spin_asset_urls)
+                if len(assets.get("spin_frames") or []) >= 8:
+                    break
+        else:
+            # iframe present but not interactable — wait for any passive loads to settle
+            await asyncio.sleep(0.5)
+            await _drain_pending_tasks(pending, timeout_sec=4.0)
+            assets = extract_spin_assets(spin_asset_urls)
+
+    if len(assets.get("spin_frames") or []) >= 8 or assets.get("interior_pano"):
+        assets["spin_source"] = "interaction"
+        return assets
+    return {}
+
+
 async def _vdp_visit_one(
     wp: Any,
     dealer_name: str,
@@ -2435,7 +2576,15 @@ async def _vdp_visit_one(
     visit_epoch = [0]
     network_rows: list[dict[str, Any]] = []
     response_image_urls: list[str] = []
+    # 360-spin viewer traffic (Impel/SpinCar/WebRotate): images and config/manifest JSON URLs.
+    spin_asset_urls: list[str] = []
+    spin_config_urls: list[str] = []
     pending: list[asyncio.Task[Any]] = []
+    from backend.scanner.vdp.spin_capture import (
+        is_spin_provider_url as _is_spin_provider_url,
+        is_spin_reserved_url as _is_spin_reserved_url,
+        spin_url_key as _spin_url_key,
+    )
 
     async def capture_response(response) -> None:
         my_epoch = visit_epoch[0]
@@ -2448,10 +2597,21 @@ async def _vdp_visit_one(
                 if visit_epoch[0] != my_epoch:
                     return
                 if url.lower().startswith("https://"):
-                    response_image_urls.append(url[:900])
+                    if _is_spin_provider_url(url):
+                        # All spin-provider images feed spin-frame detection; frame/pano
+                        # assets (reserved paths) are kept OUT of the gallery stream, while
+                        # closeups etc. keep flowing to the gallery as today.
+                        spin_asset_urls.append(url[:900])
+                        if not _is_spin_reserved_url(url):
+                            response_image_urls.append(url[:900])
+                    else:
+                        response_image_urls.append(url[:900])
                 return
             if not _vdp_wants_json_network_capture(ct):
                 return
+            if _is_spin_provider_url(url) and len(spin_config_urls) < 12:
+                if visit_epoch[0] == my_epoch and url.lower().startswith("https://"):
+                    spin_config_urls.append(url[:900])
             try:
                 text = await asyncio.wait_for(
                     response.text(),
@@ -2572,6 +2732,8 @@ async def _vdp_visit_one(
             visit_epoch[0] += 1
             network_rows.clear()
             response_image_urls.clear()
+            spin_asset_urls.clear()
+            spin_config_urls.clear()
             out["visited"] = int(out.get("visited") or 0) + 1
 
             log.info("VDP: %s — visiting %s", dealer_name, try_url[:200])
@@ -2744,6 +2906,29 @@ async def _vdp_visit_one(
             )
             return out
 
+        # 360-spin capture (Impel/SpinCar/WebRotate): resolve exterior frame sequence + interior
+        # pano from the viewer's own traffic/manifest. Runs before gallery assembly so the frame
+        # URLs can be excluded from the gallery candidates.
+        spin_info: dict[str, Any] = {}
+        try:
+            spin_info = await _vdp_spin_capture(
+                wp,
+                spin_asset_urls=spin_asset_urls,
+                spin_config_urls=spin_config_urls,
+                pending=pending,
+            )
+        except Exception as _spin_err:
+            log.debug("VDP spin capture failed for %s: %s", vin[:17], _spin_err)
+        spin_frames_found = [
+            u for u in (spin_info.get("spin_frames") or []) if isinstance(u, str) and u
+        ]
+        interior_pano_found = spin_info.get("interior_pano")
+        spin_gallery_exclude: set[str] = {
+            _spin_url_key(u) for u in spin_frames_found
+        }
+        if isinstance(interior_pano_found, str) and interior_pano_found:
+            spin_gallery_exclude.add(_spin_url_key(interior_pano_found))
+
         filled: list[str] = []
         if combined_ep:
             log_exterior_downgrade_skip(v, combined_ep, log, "vdp_combined")
@@ -2775,6 +2960,15 @@ async def _vdp_visit_one(
         carousel_only = vdp_gallery_carousel_only()
 
         def _push_g(batch: list[str]) -> None:
+            # Keep 360-spin viewer assets (numbered frame sequences, panos) out of the gallery;
+            # spin-provider closeups still pass (they are regular photos).
+            batch = [
+                b
+                for b in batch
+                if isinstance(b, str)
+                and _spin_url_key(b) not in spin_gallery_exclude
+                and not _is_spin_reserved_url(b)
+            ]
             merge_https_url_batches(cand_gallery, gseen, batch, max_total=mx_cap)
 
         if isinstance(last_bundle, dict):
@@ -2863,6 +3057,36 @@ async def _vdp_visit_one(
         )
         out["gallery_added"] = int(gmerge.get("added") or 0)
         out["gallery_merge_action"] = gmerge.get("action")
+
+        # Attach 360-spin assets per contract: ordered exterior frames (>=8) and single
+        # equirect interior pano. Each scan overwrites with freshly observed URLs — the Impel
+        # {stamp} path segment rotates on re-shoots, so stale frames must not be merged.
+        if len(spin_frames_found) >= 8:
+            v["spin_frames"] = [u[:900] for u in spin_frames_found]
+            out["spin_frames"] = len(spin_frames_found)
+        if isinstance(interior_pano_found, str) and interior_pano_found:
+            v["interior_pano"] = interior_pano_found[:900]
+            out["interior_pano"] = True
+        if len(spin_frames_found) >= 8 or (isinstance(interior_pano_found, str) and interior_pano_found):
+            v["spec_source_json"] = merge_spec_source_json(
+                v.get("spec_source_json"),
+                {
+                    "vdp_spin": {
+                        "source": str(spin_info.get("spin_source") or "vdp_scan")[:60],
+                        "frames": len(spin_frames_found),
+                        "pano": bool(interior_pano_found),
+                        "manifest_url": str(spin_info.get("spin_manifest_url") or "")[:300],
+                    }
+                },
+            )
+            log.info(
+                "VDP: %s — 360 spin captured for VIN %s: %d frame(s), pano=%s (source=%s)",
+                dealer_name,
+                vin[:17],
+                len(spin_frames_found),
+                bool(interior_pano_found),
+                spin_info.get("spin_source"),
+            )
 
         dom_carfax_updated = False
         if isinstance(last_bundle, dict):
@@ -3027,7 +3251,14 @@ async def _vdp_visit_one(
                 gmerge.get("added"),
                 gmerge.get("final_len"),
             )
-        if filled or int(out.get("gallery_added") or 0) > 0 or out.get("price_updated") or dom_carfax_updated:
+        if (
+            filled
+            or int(out.get("gallery_added") or 0) > 0
+            or out.get("price_updated")
+            or dom_carfax_updated
+            or int(out.get("spin_frames") or 0) > 0
+            or out.get("interior_pano")
+        ):
             out["enriched"] = True
         return out
     except Exception as e:
