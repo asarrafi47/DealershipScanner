@@ -200,7 +200,9 @@ def recovery_strategy_names(
 
     selected: list[str] = []
     for name in RECOVERY_STRATEGY_ORDER:
-        if name == "html_next_data":
+        # Generic strategies that only read already-captured page HTML — always
+        # in the chain regardless of platform hints.
+        if name in ("html_next_data", "jsonld_listing_html"):
             selected.append(name)
             continue
         need = _STRATEGY_PLATFORM_HINTS.get(name, frozenset())
@@ -260,6 +262,20 @@ class RecoveryResult:
     replaced: bool = False
 
 
+def _price_coverage(vehicles: list[dict[str, Any]]) -> float:
+    """Share of rows carrying a positive price (0.0 on an empty list)."""
+    if not vehicles:
+        return 0.0
+    priced = 0
+    for v in vehicles:
+        try:
+            if float(v.get("price") or 0) > 0:
+                priced += 1
+        except (TypeError, ValueError):
+            continue
+    return priced / len(vehicles)
+
+
 def should_run_platform_recovery(ctx: RecoveryContext) -> bool:
     """True when intercept-only data is missing or likely incomplete."""
     if not _recovery_enabled():
@@ -274,6 +290,12 @@ def should_run_platform_recovery(ctx: RecoveryContext) -> bool:
 
     n = unique_vin_count(ctx.vehicles)
     if n == 0:
+        return True
+    # Row count alone can lie: some platforms render cards the generic path
+    # scrapes into plausible-looking rows with no price at all (e.g. dealer-group
+    # sites misclassified as dealer_dot_com). Near-zero price coverage on a
+    # non-trivial lot means the primary capture was junk — try recovery.
+    if n >= 10 and _price_coverage(ctx.vehicles) < 0.2:
         return True
     if not ctx.intercept_records:
         return True
@@ -314,12 +336,37 @@ def _tag_vehicles(vehicles: list[dict[str, Any]], ctx: RecoveryContext) -> list[
     return out
 
 
+def _fill_rows_by_vin(
+    primary: list[dict[str, Any]],
+    secondary: list[dict[str, Any]],
+) -> int:
+    """Fill empty fields in *primary* rows from same-VIN *secondary* rows."""
+    from backend.scanner.scrapers.inventory_vin_merge import merge_inventory_rows_same_vin
+
+    by_vin: dict[str, dict[str, Any]] = {}
+    for row in secondary:
+        vin = str(row.get("vin") or "").strip().upper()
+        if vin and vin not in by_vin:
+            by_vin[vin] = row
+    filled = 0
+    for dst in primary:
+        src = by_vin.get(str(dst.get("vin") or "").strip().upper())
+        if src is not None:
+            merge_inventory_rows_same_vin(dst, src)
+            filled += 1
+    return filled
+
+
 def _prefer_new_vehicles(
     current: list[dict[str, Any]],
     candidate: list[dict[str, Any]],
     strategy: str,
 ) -> tuple[list[dict[str, Any]], bool]:
-    """Keep whichever set has more unique VINs (replace only when strictly better)."""
+    """
+    Keep whichever set has more unique VINs (replace only when strictly better),
+    then backfill the winner's empty fields from the loser by VIN — a smaller
+    candidate (e.g. JSON-LD with prices) still improves a larger price-less set.
+    """
     cur_n = unique_vin_count(current)
     new_n = unique_vin_count(candidate)
     if new_n > cur_n:
@@ -329,9 +376,18 @@ def _prefer_new_vehicles(
             new_n,
             cur_n,
         )
+        _fill_rows_by_vin(candidate, current)
         return candidate, True
     if new_n > 0 and cur_n == 0:
         return candidate, True
+    filled = _fill_rows_by_vin(current, candidate)
+    if filled:
+        logger.info(
+            "Inventory recovery: %s — kept %d row(s), filled gaps on %d via VIN merge",
+            strategy,
+            cur_n,
+            filled,
+        )
     return current, False
 
 
@@ -429,7 +485,9 @@ def _parse_jsonld_listing_html(ctx: RecoveryContext) -> list[dict[str, Any]]:
                 continue
             seen_vins.add(vin)
 
-            name = data.get("name", "")
+            offers = data.get("offers") or {}
+            item_offered = offers.get("itemOffered") if isinstance(offers.get("itemOffered"), dict) else {}
+            name = data.get("name") or item_offered.get("name") or ""
             year, make, model, trim = None, None, None, None
             nm = _re.match(r"(\d{4})\s+(\S+)\s+([\w\s]+?)(?:\s*\((.+)\))?\s*$", name.strip())
             if nm:
@@ -440,15 +498,26 @@ def _parse_jsonld_listing_html(ctx: RecoveryContext) -> list[dict[str, Any]]:
                 make = nm.group(2) or None
                 model = (nm.group(3) or "").strip() or None
                 trim = nm.group(4) or None
+            # Structured schema.org fields win over name parsing when present
+            # (dealer-group platforms emit model/brand/vehicleModelDate directly).
+            try:
+                year = int(data.get("vehicleModelDate")) or year
+            except (TypeError, ValueError):
+                pass
+            brand = data.get("brand")
+            if isinstance(brand, dict):
+                brand = brand.get("name")
+            make = (str(brand).strip() if brand else None) or make
+            model = (str(data.get("model") or "").strip() or None) or model
 
-            offers = data.get("offers") or {}
             price = offers.get("price")
             try:
-                price = int(price) if price is not None else None
+                # e.g. "162113.0" — int() alone rejects float strings
+                price = int(float(price)) if price not in (None, "") else None
             except (ValueError, TypeError):
                 price = None
             source_url = offers.get("url") or None
-            cond_raw = (offers.get("itemCondition") or "").lower()
+            cond_raw = str(offers.get("itemCondition") or data.get("itemCondition") or "").lower()
             if "used" in cond_raw or "preowned" in cond_raw:
                 condition = "Used"
             elif "new" in cond_raw:
@@ -467,6 +536,8 @@ def _parse_jsonld_listing_html(ctx: RecoveryContext) -> list[dict[str, Any]]:
             image_url = data.get("image") or ""
             if isinstance(image_url, list):
                 image_url = image_url[0] if image_url else ""
+            if isinstance(image_url, dict):
+                image_url = image_url.get("contentUrl") or image_url.get("url") or ""
             image_url = str(image_url).strip() or None
 
             vehicles.append({
@@ -527,6 +598,12 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
         return RecoveryResult(vehicles=vehicles, strategies_tried=tried, winning_strategy=None)
 
     if not should_run_platform_recovery(ctx):
+        logger.info(
+            "Inventory recovery: %s — skipped (feed looks sufficient: %d unique VIN(s), %.0f%% priced)",
+            ctx.dealer_name,
+            unique_vin_count(ctx.vehicles),
+            _price_coverage(ctx.vehicles) * 100,
+        )
         return RecoveryResult(vehicles=vehicles, strategies_tried=tried, winning_strategy=None)
 
     logger.info(
@@ -636,7 +713,9 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
         if replaced:
             any_replaced = True
             winner = step_winner
-        # Stop early when feed looks complete after a strong win.
+        # Stop early when feed looks complete after a strong win — but only if
+        # the rows also carry prices; a big price-less set is why we're here
+        # (same quality bar as should_run_platform_recovery).
         uv = unique_vin_count(vehicles)
         if (
             vehicles
@@ -644,6 +723,7 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
                 ctx.intercept_records, ctx.base_url, len(vehicles), unique_vin_count=uv
             )
             and uv >= _min_rows_for_recovery()
+            and _price_coverage(vehicles) >= 0.2
         ):
             break
 

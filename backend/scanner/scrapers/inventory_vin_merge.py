@@ -34,13 +34,14 @@ _MERGE_INT_KEYS: tuple[str, ...] = (
     "mpg_city",
     "mpg_highway",
     "msrp",
+    "price",
     "mileage",
     "year",
 )
 
 # For these, 0 is never a useful listing value — allow fill from src when dst is null or <= 0.
 _MERGE_INT_NONPOS_IS_MISSING: frozenset[str] = frozenset(
-    {"cylinders", "mpg_city", "mpg_highway", "msrp", "year"}
+    {"cylinders", "mpg_city", "mpg_highway", "msrp", "price", "year"}
 )
 
 

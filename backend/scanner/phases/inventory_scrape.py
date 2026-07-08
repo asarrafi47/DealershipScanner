@@ -512,10 +512,11 @@ async def scrape_inventory_path(
                 pag_wait_ms=pag_wait_ms,
             )
 
-        if found_data["value"]:
-            html = None
-        else:
-            html = await page.content()
+        # Always keep the page HTML: "captured JSON exists" does not mean the
+        # JSON was real inventory (some platforms emit junk VIN-list APIs the
+        # observer captures), and the HTML-based recovery strategies
+        # (jsonld_listing_html, html_next_data) can only run on what we return.
+        html = await page.content()
     except Exception as e:
         logger.warning("Path scrape failed [%s] %s: %s", dealer_name, full_url, e)
     finally:
