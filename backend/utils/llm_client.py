@@ -106,7 +106,20 @@ def complete(
         p = prompt
         if json_schema is not None:
             p = f"{prompt}\n\nRespond with JSON only, matching this schema:\n{json_schema}"
-        return _complete_claude(p, system=system, temperature=temperature, max_tokens=max_tokens)
+        try:
+            return _complete_claude(p, system=system, temperature=temperature, max_tokens=max_tokens)
+        except Exception:
+            # A stale/placeholder ANTHROPIC_API_KEY on a dev box (or a Claude
+            # outage) shouldn't kill AI features when a local model is up.
+            from backend.utils.local_llm import server_reachable
+
+            if provider is None and server_reachable():
+                logger.warning(
+                    "claude completion failed; falling back to local provider",
+                    exc_info=True,
+                )
+            else:
+                raise
     return _complete_local(
         prompt, system=system, temperature=temperature,
         max_tokens=max_tokens, json_schema=json_schema,

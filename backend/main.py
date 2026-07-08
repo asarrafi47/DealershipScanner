@@ -754,6 +754,7 @@ def compare_page():
     if ids and session.get("user_id"):
         try:
             record_compare_session(int(session["user_id"]), ids)
+            _invalidate_reco_cache(int(session["user_id"]))
         except (TypeError, ValueError):
             pass
     raw_cars = get_cars_by_ids(ids)
@@ -1318,7 +1319,40 @@ def _make_model_pairs_from_cars(cars: list[dict]) -> list[tuple[str, str]]:
     return seen_mm
 
 
+# Recommendation scoring walks recent views/compares against live inventory
+# (~1s+); Home and Dashboard both need it on every visit, so cache per
+# (user, geo) briefly and invalidate on new view/compare signals.
+_RECO_CACHE_TTL_S = 120.0
+_reco_cache: dict[tuple, tuple[float, list, dict]] = {}
+
+
+def _invalidate_reco_cache(user_id: int) -> None:
+    for key in [k for k in _reco_cache if k[0] == int(user_id)]:
+        _reco_cache.pop(key, None)
+
+
 def _recommendations_for_user(
+    user_id: int,
+    limit: int = 20,
+    *,
+    serialize: bool = True,
+    **geo_kw: object,
+) -> tuple[list[dict] | int, dict[str, str]]:
+    """Cached wrapper: serialized rows (or their count) + heading copy."""
+    key = (int(user_id), int(limit), tuple(sorted((k, str(v)) for k, v in geo_kw.items())))
+    now = time.monotonic()
+    hit = _reco_cache.get(key)
+    if hit is not None and hit[0] > now:
+        rows, heading = hit[1], hit[2]
+        return (list(rows) if serialize else len(rows)), dict(heading)
+    rows, heading = _recommendations_for_user_uncached(user_id, limit, serialize=True, **geo_kw)
+    if len(_reco_cache) >= 500:
+        _reco_cache.clear()
+    _reco_cache[key] = (now + _RECO_CACHE_TTL_S, rows, heading)
+    return (list(rows) if serialize else len(rows)), dict(heading)
+
+
+def _recommendations_for_user_uncached(
     user_id: int,
     limit: int = 20,
     *,
@@ -1940,6 +1974,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     if uid:
         try:
             record_car_view(int(uid), car_id)
+            _invalidate_reco_cache(int(uid))
         except Exception:
             pass
         try:

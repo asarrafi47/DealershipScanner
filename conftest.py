@@ -27,6 +27,27 @@ if _backend not in sys.path:
     sys.path.insert(0, _backend)
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _ensure_default_inventory_schema() -> None:
+    """
+    Fresh clones ship no dev ``inventory.db``; tests that read the default
+    sqlite path (filter options, listings perf/etag, public counts) need the
+    schema to exist — empty tables are fine, a missing ``cars`` table is not.
+    """
+    mp = pytest.MonkeyPatch()
+    # Tests run against sqlite (the per-test fixture clears the Postgres URL);
+    # blank it here too so this init targets the same sqlite file, not prod.
+    mp.setenv("INVENTORY_DATABASE_URL", "")
+    mp.setenv("INVENTORY_SQLITE_TESTS", "1")
+    try:
+        import backend.db.inventory_db as inv_db
+
+        inv_db.DB_PATH = inv_db._default_inventory_db_path()
+        inv_db.init_inventory_db()
+    finally:
+        mp.undo()
+
+
 @pytest.fixture(autouse=True)
 def _isolate_listings_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """Prevent ``FLASK_ENV=production`` and strict listings flags leaking across tests."""

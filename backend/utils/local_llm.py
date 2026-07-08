@@ -180,3 +180,88 @@ def generate_json(prompt: str, schema: dict, *, system: str | None = None, model
     except (json.JSONDecodeError, ValueError):
         logger.warning("local_llm generate_json: non-JSON output: %s", raw[:200])
         return None
+
+
+# ── Managed server lifecycle (dev) ───────────────────────────────────────────
+# The webapp owns the Ollama server in local dev so assistant search always has
+# its LLM fallback: started with the app, stopped with it. A server that was
+# already running (started by hand or by another app) is left alone on exit.
+
+_managed_proc: subprocess.Popen | None = None
+
+
+def server_reachable(timeout_s: float = 1.5) -> bool:
+    import requests
+
+    try:
+        requests.get(f"{_base_url()}/api/version", timeout=timeout_s).raise_for_status()
+        return True
+    except Exception:
+        return False
+
+
+def ensure_server_running(wait_s: float = 15.0) -> bool:
+    """Start ``ollama serve`` if the server isn't reachable. True when usable.
+
+    Set ``LOCAL_LLM_AUTOSTART=0`` to opt out. Only a locally-hosted default
+    base URL is autostarted — a remote LOCAL_LLM_BASE_URL is just probed.
+    """
+    global _managed_proc
+    if (os.environ.get("LOCAL_LLM_AUTOSTART") or "1").strip().lower() in ("0", "false", "no", "off"):
+        return server_reachable()
+    if server_reachable():
+        return True
+    if "localhost" not in _base_url() and "127.0.0.1" not in _base_url():
+        logger.warning("local_llm: remote server %s unreachable; not autostarting", _base_url())
+        return False
+
+    import shutil
+    import time
+
+    binary = shutil.which("ollama")
+    if not binary:
+        logger.warning("local_llm: ollama binary not found; assistant search LLM fallback disabled")
+        return False
+    try:
+        _managed_proc = subprocess.Popen(
+            [binary, "serve"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+    except OSError as exc:
+        logger.warning("local_llm: failed to start ollama serve: %s", exc)
+        return False
+    deadline = time.monotonic() + wait_s
+    while time.monotonic() < deadline:
+        if server_reachable(timeout_s=1.0):
+            logger.info("local_llm: started managed ollama serve (pid %s)", _managed_proc.pid)
+            import atexit
+
+            atexit.register(shutdown_managed_server)
+            return True
+        if _managed_proc.poll() is not None:
+            logger.warning("local_llm: ollama serve exited immediately (code %s)", _managed_proc.returncode)
+            _managed_proc = None
+            return False
+        time.sleep(0.3)
+    logger.warning("local_llm: ollama serve did not become reachable within %.0fs", wait_s)
+    return False
+
+
+def shutdown_managed_server() -> None:
+    """Stop the ollama we spawned. A pre-existing external server is untouched."""
+    global _managed_proc
+    proc = _managed_proc
+    _managed_proc = None
+    if proc is None or proc.poll() is not None:
+        return
+    try:
+        proc.terminate()
+        try:
+            proc.wait(timeout=8)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+        logger.info("local_llm: stopped managed ollama serve")
+    except OSError:
+        pass

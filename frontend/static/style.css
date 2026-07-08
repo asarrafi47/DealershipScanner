@@ -695,6 +695,8 @@ button.secondary-button {
 }
 
 .secondary-button {
+    display: inline-block;
+    text-align: center;
     background: var(--bg-card);
     color: var(--navy);
     border: 1px solid var(--border-medium);
@@ -3237,14 +3239,17 @@ body.car-detail-page .car-detail {
 }
 
 @media (min-width: 901px) {
-    body.car-detail-page .car-vdp-tabs-wrap {
+    /* Stick the tab ROW, not the wrap — the wrap also contains the panels, so
+       a sticky wrap can never pin and the row just floats mid-content. The
+       up-shadow is a page-colored mask so scrolling content doesn't peek out
+       above the pinned pill. */
+    body.car-detail-page .car-vdp-tabs {
         position: sticky;
         top: 0;
         z-index: 12;
-        padding: 10px 0 14px;
-        margin-bottom: 8px;
-        background: var(--bg-page);
-        box-shadow: 0 8px 16px -12px rgba(20, 36, 54, 0.2);
+        box-shadow:
+            0 -18px 0 8px var(--bg-page),
+            0 10px 18px -12px rgba(20, 36, 54, 0.25);
     }
 }
 
@@ -3564,7 +3569,10 @@ body.car-detail-page .car-detail {
 @media (min-width: 640px) {
     .car-vdp-panel .car-specs.car-spec-sheet {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        /* Panel width ≠ viewport width (sidebar, padding): auto-fill drops to
+           one column when a 2-up layout would crush the values into a letter
+           stack. */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 0;
         padding: 4px 0;
     }
@@ -5528,7 +5536,14 @@ body.hub-page {
 }
 
 .find-cars-card--banner {
-    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 42%, #ffffff 42%);
+    /* The dark zone must always cover the white copy: at narrow widths 42%
+       shrinks below the text, so floor the stop — the card degrades to fully
+       dark instead of white-on-white. */
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) max(42%, 30rem), #ffffff max(42%, 30rem));
+    /* Keep the gradient out of the translucent 1px border ring — painted
+       under it (border-box default) it shows as navy hairlines on the card
+       edges. */
+    background-clip: padding-box;
     border: 1px solid var(--border-light);
     border-radius: 22px;
     padding: clamp(22px, 3vw, 32px) clamp(24px, 3vw, 36px);
@@ -5579,9 +5594,11 @@ body.hub-page {
 }
 
 .find-cars-card--banner .find-cars-arrow {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.28);
-    color: #f7f5f0;
+    /* Solid chip: legible whether it lands on the navy or the white half. */
+    background: #ffffff;
+    border-color: var(--border-medium);
+    color: var(--navy);
+    box-shadow: 0 4px 14px rgba(20, 36, 54, 0.18);
 }
 
 .find-cars-card-inner {
@@ -6259,7 +6276,9 @@ a.is-car-nav-pending,
 
 .tco-metrics-dashboard {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    /* Panel width ≠ viewport width: auto-fill wraps tiles instead of crushing
+       labels/values when the VDP column narrows. */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: clamp(10px, 2vw, 16px);
     margin-bottom: 16px;
 }
@@ -8822,6 +8841,7 @@ body:has(.app-sidebar) {
     body:has(.app-sidebar) .db-shell,
     body:has(.app-sidebar) .hub-shell,
     body:has(.app-sidebar) .find-dealers-section,
+    body:has(.app-sidebar) .car-detail,
     body.admin-shell-body .admin-main {
         padding-top: 56px;
     }

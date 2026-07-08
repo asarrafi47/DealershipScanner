@@ -139,7 +139,6 @@
             {% set listing_link_is_vdp = listing_vdp_url and car.dealer_url and listing_vdp_url.rstrip('/') != car.dealer_url.rstrip('/') %}
             {% set show_premium_features = has_paid_access or (logged_in and not billing_stripe_enabled) %}
             {% set show_options_tab = logged_in or has_paid_access %}
-            {% set show_ask_tab = show_premium_features %}
             {% set has_pricing_insights = market_intel %}
             {% set car_is_electrified = car.fuel_type in ['Electric', 'Plug-in Hybrid', 'Plug-In Hybrid', 'EV'] %}
             {% set show_ev_battery = car_is_electrified and show_premium_features %}
@@ -364,13 +363,14 @@
                     <button type="button" class="car-vdp-tab" role="tab" id="car-tab-options" aria-selected="false" aria-controls="car-panel-options" data-tab="options">Options</button>
                     {% endif %}
                     <button type="button" class="car-vdp-tab" role="tab" id="car-tab-history" aria-selected="false" aria-controls="car-panel-history" data-tab="history">History</button>
-                    {% if show_ask_tab %}
-                    <button type="button" class="car-vdp-tab" role="tab" id="car-tab-ask" aria-selected="false" aria-controls="car-panel-ask" data-tab="ask">Ask AI</button>
-                    {% endif %}
+                    {# Ask AI tab removed: the sidebar Assistant covers per-car chat. #}
                 </div>
 
                 <div class="car-vdp-panels">
                     <section class="car-vdp-panel car-vdp-panel--active" id="car-panel-overview" role="tabpanel" aria-labelledby="car-tab-overview" data-panel="overview">
+                        {% if show_premium_features %}
+                        {% include '_ai_description.html' %}
+                        {% endif %}
                         <div id="negotiation-radar-widget"
                             class="negotiation-radar-widget"
                             data-created-at="{{ car.created_at or car.first_seen_at or car.scraped_at or '' }}"
@@ -1086,24 +1086,6 @@
                         {% endif %}
                     </section>
 
-                    {% if show_ask_tab %}
-                    <section class="car-vdp-panel" id="car-panel-ask" role="tabpanel" aria-labelledby="car-tab-ask" data-panel="ask" hidden>
-                        {% include '_ai_description.html' %}
-                        <section class="car-chat-section car-chat-section--tab" id="car-chat-section" data-car-id="{{ car.id }}">
-                            <h2 class="car-vdp-panel-title">Ask about this car</h2>
-                            <p class="car-chat-hint">Answers are generated from this listing and public reference data. They may be incomplete or wrong — do not use them alone for VIN verification, pricing, financing, or legal decisions. They are not from the dealer or government records.</p>
-                            <details class="car-chat-disclaimer-details">
-                                <summary>Important limitations</summary>
-                                <p>Do not rely on AI replies for purchases, compliance, or safety-critical decisions. Confirm details on the window sticker, CARFAX, and with the dealership.</p>
-                            </details>
-                            <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
-                            <div class="car-chat-input-row">
-                                <input type="text" id="car-chat-input" class="car-chat-input" placeholder="e.g. Is this AWD? What should I check at the lot?" autocomplete="off" />
-                                <button type="button" id="car-chat-send" class="car-chat-send primary-button">Send</button>
-                            </div>
-                        </section>
-                    </section>
-                    {% endif %}
                 </div>
             </div>
 
@@ -1144,9 +1126,6 @@
         </div>
     </div>
 
-    {% if show_ask_tab %}
-    <script src="{{ url_for('static', filename='car_chat.js') }}" defer nonce="{{ csp_nonce }}"></script>
-    {% endif %}
     <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
     {% if dealer_map and dealer_map.has_pin %}
     <script nonce="{{ csp_nonce }}">

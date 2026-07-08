@@ -18,4 +18,4 @@
     Verify details with the dealer.
   </p>
 </div>
-<script src="{{ url_for('static', filename='car_narrate.js') }}"></script>
+<script src="{{ url_for('static', filename='car_narrate.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

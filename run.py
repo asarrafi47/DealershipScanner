@@ -24,6 +24,22 @@ if __name__ == "__main__":
     except Exception:
         pass
 
+    # Dev: the webapp owns the local LLM lifecycle (assistant-search fallback)
+    # — started here, stopped on exit via atexit. Opt out: LOCAL_LLM_AUTOSTART=0.
+    if not is_production_env():
+        try:
+            from backend.utils.local_llm import ensure_server_running
+
+            if ensure_server_running():
+                print("Local LLM (Ollama) ready for assistant search")
+            else:
+                print(
+                    "WARNING: local LLM unavailable — assistant search runs parser-only",
+                    file=sys.stderr,
+                )
+        except Exception as exc:
+            print(f"WARNING: local LLM autostart failed: {exc}", file=sys.stderr)
+
     public = os.environ.get("PUBLIC", "0") not in ("0", "false", "no")
     host = "0.0.0.0" if public else "localhost"
     port = int(os.environ.get("PORT", 5001))
