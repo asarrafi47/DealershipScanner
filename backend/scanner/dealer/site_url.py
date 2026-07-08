@@ -36,6 +36,11 @@ def dealer_inventory_base_url(manifest_url: str) -> tuple[str, bool]:
     if parts.scheme not in ("http", "https") or not parts.netloc:
         return candidate.rstrip("/"), False
 
+    # Strip query string and fragment — they must never appear in the base URL
+    # that inventory paths are appended to (e.g. ?utm_medium=social/new-inventory/).
+    candidate = f"{parts.scheme}://{parts.netloc}{parts.path or ''}"
+    parts = urlparse(candidate)
+
     path_clean = (parts.path or "").strip().rstrip("/")
     if path_clean:
         suf = PurePosixPath(path_clean).suffix.lower()
