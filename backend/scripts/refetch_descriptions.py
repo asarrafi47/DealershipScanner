@@ -37,8 +37,6 @@ except ImportError:
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 logger = logging.getLogger("refetch_desc")
 
-DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
-
 DESCRIPTION_SELECTORS = [
     ".vehicle-description", ".vehicleDescription", ".vehicle_description",
     ".dealer-comments", ".dealerComments", ".dealer_comments",
@@ -132,7 +130,7 @@ async def _run_batch(cars: list[dict], workers: int, dry_run: bool):
     return results
 
 
-def _apply_descriptions_and_parse(descriptions: dict[str, str], conn: sqlite3.Connection, dry_run: bool):
+def _apply_descriptions_and_parse(descriptions: dict[str, str], conn: Any, dry_run: bool):
     from backend.utils.listing_description_persist import process_listing_description_for_row
 
     conn.row_factory = sqlite3.Row
@@ -191,7 +189,9 @@ def main():
     ap.add_argument("--vin", help="Process a single VIN")
     args = ap.parse_args()
 
-    conn = sqlite3.connect(DB_PATH)
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
     conn.row_factory = sqlite3.Row
 
     if args.vin:

@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import sqlite3
 import sys
 from pathlib import Path
 
@@ -34,24 +33,19 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-DB_PATH = os.environ.get("INVENTORY_DB_PATH", str(ROOT / "inventory.db"))
-
 
 def run_backfill_unknown_transmission_type(*, dry_run: bool, limit: int | None) -> int:
     """Set ``transmission_type`` when it is unset/unknown but ``transmission`` normalizes confidently."""
     from backend.db.inventory_db import (
         ensure_cars_table_columns,
         get_car_by_id,
+        get_conn,
         refresh_car_data_quality_score,
         update_car_row_partial,
     )
     from backend.utils.transmission_normalize import normalize_transmission_standard
 
-    if not os.path.isfile(DB_PATH):
-        print(f"Database not found: {DB_PATH}", file=sys.stderr)
-        return 1
-
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_conn()
     try:
         cur = conn.cursor()
         ensure_cars_table_columns(cur)
@@ -121,6 +115,7 @@ def main() -> int:
     from backend.db.inventory_db import (
         ensure_cars_table_columns,
         get_car_by_id,
+        get_conn,
         refresh_car_data_quality_score,
         update_car_row_partial,
     )
@@ -147,11 +142,7 @@ def main() -> int:
     if args.backfill_unknown_transmission_type:
         return run_backfill_unknown_transmission_type(dry_run=args.dry_run, limit=args.limit)
 
-    if not os.path.isfile(DB_PATH):
-        print(f"Database not found: {DB_PATH}", file=sys.stderr)
-        return 1
-
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_conn()
     try:
         cur = conn.cursor()
         ensure_cars_table_columns(cur)

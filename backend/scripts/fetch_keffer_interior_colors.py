@@ -24,8 +24,9 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+from typing import Any
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
@@ -41,8 +42,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger("fetch_interior_colors")
-
-DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
 
 _HEADERS = {
     "User-Agent": (
@@ -166,7 +165,7 @@ def _build_provenance(existing_json: str | None, new_fields: dict) -> str:
     return json.dumps(base)
 
 
-async def _process_cars(cars: list, conn: sqlite3.Connection) -> tuple[int, int]:
+async def _process_cars(cars: list, conn: Any) -> tuple[int, int]:
     updated = 0
     skipped = 0
 
@@ -232,8 +231,18 @@ async def _process_cars(cars: list, conn: sqlite3.Connection) -> tuple[int, int]
 def main() -> None:
     import asyncio
 
-    conn = sqlite3.connect(DB_PATH)
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
     conn.row_factory = sqlite3.Row
+    try:
+        _run(conn)
+    finally:
+        conn.close()
+
+
+def _run(conn: Any) -> None:
+    import asyncio
 
     cars = conn.execute(
         """
@@ -317,7 +326,6 @@ def main() -> None:
 
     loop.close()
     logger.info(f"Done. Updated {updated}, skipped {skipped}")
-    conn.close()
 
 
 if __name__ == "__main__":

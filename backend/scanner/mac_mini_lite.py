@@ -148,15 +148,11 @@ def run_mac_mini_cli_entry() -> None:
 
 
 def dealers_with_inventory_rows() -> set[str]:
-    """Dealer ids that already have active rows in the local inventory DB."""
+    """Dealer ids that already have active rows in the inventory DB."""
     try:
-        import sqlite3
+        from backend.db.inventory_db import get_conn
 
-        from backend.db.inventory_db import DB_PATH
-
-        if not Path(DB_PATH).is_file():
-            return set()
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_conn()
         try:
             rows = conn.execute(
                 """

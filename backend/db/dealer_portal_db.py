@@ -15,7 +15,9 @@ from typing import Any
 
 _log = logging.getLogger(__name__)
 
-DB_PATH = os.environ.get("DEALER_PORTAL_DB_PATH", "dealer_portal.db")
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+
+DB_PATH = os.environ.get("DEALER_PORTAL_DB_PATH", os.path.join(_REPO_ROOT, "dealer_portal.db"))
 
 
 def delete_vehicles_for_user(user_id: int) -> None:

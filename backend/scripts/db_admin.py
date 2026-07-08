@@ -15,9 +15,9 @@ from __future__ import annotations
 
 import hmac
 import os
-import sqlite3
 import sys
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 os.chdir(ROOT)
@@ -226,19 +226,36 @@ def db_admin_ui():
 
 @app.route("/model-specs-admin/api/specs", methods=["GET"])
 def get_specs():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    cur.execute(
-        "SELECT ROWID AS id, make, model, transmission, drivetrain, cylinders "
-        "FROM model_specs ORDER BY make, model"
-    )
-    specs = [dict(row) for row in cur.fetchall()]
-    conn.close()
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT make, model, transmission, drivetrain, cylinders "
+            "FROM model_specs ORDER BY make, model"
+        )
+        rows = cur.fetchall()
+    finally:
+        conn.close()
+    # 1-based position in this ordering — matches _row_by_display_id's OFFSET lookup below
+    # (model_specs has no surrogate id column; ``ROWID`` is SQLite-only and doesn't exist
+    # in Postgres, so this display id was always positional, not a real row identifier).
+    specs = [
+        {
+            "id": i,
+            "make": make,
+            "model": model,
+            "transmission": transmission,
+            "drivetrain": drivetrain,
+            "cylinders": cylinders,
+        }
+        for i, (make, model, transmission, drivetrain, cylinders) in enumerate(rows, start=1)
+    ]
     return jsonify({"specs": specs})
 
 
-def _row_by_display_id(conn: sqlite3.Connection, spec_id: int) -> tuple[str, str] | None:
+def _row_by_display_id(conn: Any, spec_id: int) -> tuple[str, str] | None:
     cur = conn.cursor()
     cur.execute(
         "SELECT make, model FROM model_specs ORDER BY make, model LIMIT 1 OFFSET ?",
@@ -261,7 +278,9 @@ def add_spec():
         cylinders = int(data.get("cylinders") or 0)
     except (TypeError, ValueError):
         cylinders = 0
-    conn = sqlite3.connect(DB_PATH)
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
     try:
         conn.execute(
             """
@@ -278,7 +297,7 @@ def add_spec():
         )
         conn.commit()
         return jsonify({"ok": True})
-    except sqlite3.Error as e:
+    except Exception as e:
         return jsonify({"error": str(e)}), 400
     finally:
         conn.close()
@@ -297,7 +316,9 @@ def update_spec(spec_id: int):
         except (TypeError, ValueError):
             value = 0
 
-    conn = sqlite3.connect(DB_PATH)
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
     try:
         pair = _row_by_display_id(conn, spec_id)
         if not pair:
@@ -309,7 +330,7 @@ def update_spec(spec_id: int):
         )
         conn.commit()
         return jsonify({"ok": True})
-    except sqlite3.Error as e:
+    except Exception as e:
         return jsonify({"error": str(e)}), 400
     finally:
         conn.close()
@@ -317,7 +338,9 @@ def update_spec(spec_id: int):
 
 @app.route("/model-specs-admin/api/specs/<int:spec_id>", methods=["DELETE"])
 def delete_spec(spec_id: int):
-    conn = sqlite3.connect(DB_PATH)
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
     try:
         pair = _row_by_display_id(conn, spec_id)
         if not pair:
@@ -326,7 +349,7 @@ def delete_spec(spec_id: int):
         conn.execute("DELETE FROM model_specs WHERE make = ? AND model = ?", (make, model))
         conn.commit()
         return jsonify({"ok": True})
-    except sqlite3.Error as e:
+    except Exception as e:
         return jsonify({"error": str(e)}), 400
     finally:
         conn.close()
@@ -349,7 +372,9 @@ def _startup_checks() -> None:
 
 if __name__ == "__main__":
     _startup_checks()
-    print(f"Database: {DB_PATH}")
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    print(f"Database: {'Postgres' if is_inventory_postgres() else DB_PATH}")
     print("Open: http://127.0.0.1:5001/model-specs-admin")
     debug = os.environ.get("DB_ADMIN_DEBUG", "").strip().lower() in ("1", "true", "yes", "on")
     app.run(host="127.0.0.1", port=5001, debug=debug)

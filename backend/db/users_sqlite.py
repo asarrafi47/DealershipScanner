@@ -22,7 +22,9 @@ from backend.utils.credential_db_encryption import (
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.environ.get("USERS_DB_PATH", "users.db")
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+
+DB_PATH = os.environ.get("USERS_DB_PATH", os.path.join(_REPO_ROOT, "users.db"))
 
 _PLAIN_SQLITE_FALLBACK_WARNED = False
 

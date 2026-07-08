@@ -7,15 +7,14 @@ from __future__ import annotations
 import csv
 import os
 import re
-import sqlite3
 from functools import lru_cache
 from typing import Any
 
-from backend.db.inventory_db import DB_PATH
+from backend.db.inventory_db import get_conn
 
 
 def _conn():
-    return sqlite3.connect(DB_PATH)
+    return get_conn()
 
 
 def _bmw_has_30i_suffix(blob: str) -> bool:
@@ -431,28 +430,6 @@ def _gears_from_trany(trany: str | None) -> int | None:
     return None
 
 
-def _ensure_epa_columns(conn: sqlite3.Connection) -> None:
-    cur = conn.cursor()
-    cur.execute("PRAGMA table_info(epa_master)")
-    have = {row[1] for row in cur.fetchall()}
-    for col, typ in [
-        ("city08", "REAL"),
-        ("highway08", "REAL"),
-        ("city_e", "REAL"),
-        ("highway_e", "REAL"),
-        ("atv_type", "TEXT"),
-        ("trim", "TEXT"),
-        ("body_style", "TEXT"),
-        ("engine_description", "TEXT"),
-    ]:
-        if col not in have:
-            try:
-                cur.execute(f"ALTER TABLE epa_master ADD COLUMN {col} {typ}")
-            except sqlite3.OperationalError:
-                pass
-    conn.commit()
-
-
 def _epa_trim_lookup_key(
     year: int | None,
     make: str | None,
@@ -508,9 +485,9 @@ def _lookup_epa_by_trim_uncached(
     model: str,
     trim_clean: str,
 ) -> dict[str, Any]:
+    conn = None
     try:
         conn = _conn()
-        _ensure_epa_columns(conn)
         cur = conn.cursor()
         # Exact trim match
         cur.execute(
@@ -569,11 +546,13 @@ def _lookup_epa_by_trim_uncached(
                     row = cur.fetchone()
                 if row:
                     break
-        conn.close()
         if row:
             return _epa_row_to_dict(row)
-    except sqlite3.OperationalError:
+    except Exception:
         pass
+    finally:
+        if conn is not None:
+            conn.close()
     return _lookup_epa_from_dictionary_csv(year, make, model, trim_clean)
 
 
@@ -600,6 +579,100 @@ def _epa_row_to_dict(row: tuple) -> dict[str, Any]:
     if engine_desc:
         out["engine_description"] = engine_desc
     return out
+
+
+_EXTENDED_SPECS_COLUMNS = (
+    "horsepower",
+    "torque_lb_ft",
+    "torque_nm",
+    "curb_weight_lb",
+    "curb_weight_kg",
+    "zero_to_60_sec",
+    "fuel_tank_gal",
+    "ev_range_miles",
+    "battery_kwh",
+    "tow_capacity_lb",
+)
+
+
+def _extended_specs_row_to_dict(row: tuple) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for key, val in zip(_EXTENDED_SPECS_COLUMNS, row):
+        if val is not None:
+            out[key] = val
+    return out
+
+
+@lru_cache(maxsize=16384)
+def _lookup_epa_extended_specs_cached(key: tuple[int, str, str, str]) -> frozenset[tuple[str, Any]]:
+    year, make, model, trim_clean = key
+    result = _lookup_epa_extended_specs_uncached(year, make, model, trim_clean)
+    return frozenset(result.items())
+
+
+def clear_epa_extended_specs_lookup_cache() -> None:
+    _lookup_epa_extended_specs_cached.cache_clear()
+
+
+def lookup_epa_extended_specs(
+    year: int | None,
+    make: str | None,
+    model: str | None,
+    trim: str | None,
+) -> dict[str, Any]:
+    """
+    Horsepower/torque/curb weight/0-60/tow capacity/EV range from ``epa_extended_specs``
+    (populated 2026-07-06 from an imported dump; see ``backend/db/inventory_pg.py``).
+
+    Exact (year, make, model, trim) match first, falling back to any row for the same
+    (year, make, model) when no trim-level match exists. Returns {} when nothing found.
+    """
+    key = _epa_trim_lookup_key(year, make, model, trim)
+    if key is None:
+        return {}
+    return dict(_lookup_epa_extended_specs_cached(key))
+
+
+def _lookup_epa_extended_specs_uncached(
+    year: int,
+    make: str,
+    model: str,
+    trim_clean: str,
+) -> dict[str, Any]:
+    cols = ", ".join(_EXTENDED_SPECS_COLUMNS)
+    conn = None
+    try:
+        conn = _conn()
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT {cols}
+            FROM epa_extended_specs
+            WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) AND lower(trim)=lower(?)
+            LIMIT 1
+            """,
+            (year, make.strip(), model.strip(), trim_clean),
+        )
+        row = cur.fetchone()
+        if not row:
+            cur.execute(
+                f"""
+                SELECT {cols}
+                FROM epa_extended_specs
+                WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)
+                LIMIT 1
+                """,
+                (year, make.strip(), model.strip()),
+            )
+            row = cur.fetchone()
+        if row:
+            return _extended_specs_row_to_dict(row)
+    except Exception:
+        pass
+    finally:
+        if conn is not None:
+            conn.close()
+    return {}
 
 
 def _lookup_epa_from_dictionary_csv(
@@ -1094,17 +1167,21 @@ def lookup_vpic_from_cache(vin: str | None) -> dict[str, Any]:
     }
     if not vin:
         return out
+    conn = None
     try:
         import json as _json
-        with _conn() as conn:
-            row = conn.execute(
-                "SELECT response_json FROM nhtsa_vpic_cache WHERE vin=?", (vin,)
-            ).fetchone()
+        conn = _conn()
+        row = conn.execute(
+            "SELECT response_json FROM nhtsa_vpic_cache WHERE vin=?", (vin,)
+        ).fetchone()
         if not row:
             return out
         r = _json.loads(row[0]).get("Results", [{}])[0]
     except Exception:
         return out
+    finally:
+        if conn is not None:
+            conn.close()
 
     ts = (r.get("TransmissionStyle") or "").strip()
     speeds = (r.get("TransmissionSpeeds") or "").strip()
@@ -1185,9 +1262,9 @@ def lookup_epa_aggregate(
     }
     if not year or not make or not model:
         return out
+    conn = None
     try:
         conn = _conn()
-        _ensure_epa_columns(conn)
         cur = conn.cursor()
         sql_mode = """
             SELECT cylinders, drive, trany, COUNT(*) AS n,
@@ -1247,7 +1324,6 @@ def lookup_epa_aggregate(
                 row = cur.fetchone()
                 if row:
                     break
-        conn.close()
         if not row:
             return out
         cyl, drive, trany, _n, disp, c08, h08, ce, he, atv_cat, fuel_cat = row
@@ -1270,7 +1346,10 @@ def lookup_epa_aggregate(
             out["atv_type"] = atv_cat.split(",")[0].strip() or None
         if fuel_cat:
             out["fuel_type"] = fuel_cat.split(",")[0].strip() or None
-    except sqlite3.OperationalError:
+    except Exception:
+        if conn is not None:
+            conn.close()
+            conn = None
         try:
             conn = _conn()
             cur = conn.cursor()
@@ -1301,7 +1380,6 @@ def lookup_epa_aggregate(
                         (year, make.strip(), like_pat),
                     )
                     row = cur.fetchone()
-            conn.close()
             if row:
                 cyl, drive, trany, _ = row
                 if cyl is not None:
@@ -1309,8 +1387,11 @@ def lookup_epa_aggregate(
                 out["drivetrain"] = _norm_drive_epa(drive)
                 out["transmission"] = trany
                 out["gears"] = _gears_from_trany(trany)
-        except sqlite3.OperationalError:
+        except Exception:
             pass
+    finally:
+        if conn is not None:
+            conn.close()
     return out
 
 
@@ -1409,6 +1490,7 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     epa = lookup_epa_aggregate(y, make, model, title=title_for_decode, trim=trim)
     # Merge: per-trim values win over aggregate for any key they provide
     epa = {**epa, **{k: v for k, v in epa_trim.items() if v is not None}}
+    epa_extended = lookup_epa_extended_specs(y, make, model, trim)
 
     from backend.enrichment.model_specs_dictionary import lookup_model_specs_dictionary
 
@@ -1632,6 +1714,15 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         "epa_engine_description": epa_trim.get("engine_description"),
         "epa_city08": epa.get("city08"),
         "epa_highway08": epa.get("highway08"),
+        # Extended specs (populated 2026-07-06 from an imported dump; see epa_extended_specs)
+        "horsepower": epa_extended.get("horsepower"),
+        "torque_lb_ft": epa_extended.get("torque_lb_ft"),
+        "curb_weight_lb": epa_extended.get("curb_weight_lb"),
+        "zero_to_60_sec": epa_extended.get("zero_to_60_sec"),
+        "fuel_tank_gal": epa_extended.get("fuel_tank_gal"),
+        "ev_range_miles": epa_extended.get("ev_range_miles"),
+        "battery_kwh": epa_extended.get("battery_kwh"),
+        "tow_capacity_lb": epa_extended.get("tow_capacity_lb"),
     }
 
 

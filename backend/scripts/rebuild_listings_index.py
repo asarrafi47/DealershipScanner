@@ -40,8 +40,6 @@ logger = logging.getLogger("rebuild_index")
 
 
 def main():
-    import sqlite3 as _sqlite3
-
     ap = argparse.ArgumentParser(
         description="Rebuild incomplete/complete listings index.",
     )
@@ -58,9 +56,9 @@ def main():
         fast_rebuild_incomplete_listings_index,
     )
 
-    inv_db = os.environ.get("INVENTORY_DB_PATH", str(_REPO_ROOT / "inventory.db"))
+    from backend.db.inventory_db import get_conn as _inventory_get_conn
 
-    conn_inv = _sqlite3.connect(inv_db)
+    conn_inv = _inventory_get_conn()
     try:
         total_cars = int(conn_inv.execute("SELECT COUNT(*) FROM cars").fetchone()[0])
     finally:
@@ -78,7 +76,7 @@ def main():
         logger.info("Using full rebuild (with knowledge engine)...")
         incomplete_returned = rebuild_incomplete_listings_index()
 
-    conn_inc = _sqlite3.connect(_ild.DB_PATH)
+    conn_inc = _ild.get_conn()
     try:
         incomplete_table_rows = int(
             conn_inc.execute("SELECT COUNT(*) FROM incomplete_listings").fetchone()[0]

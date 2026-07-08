@@ -17,9 +17,16 @@ def _fresh_app(monkeypatch, tmp_path: Path):
         "backend.db.inventory_pg.is_inventory_postgres",
         lambda: False,
     )
+    from backend.db import inventory_db
     from backend.db.inventory_db import init_inventory_db
     from backend.db.users_db import init_users_db, save_user
     from backend.main import app
+
+    # inventory_db.DB_PATH is resolved once at import time, so the env var above has no
+    # effect on it post-import — patch the module attribute directly (matches the pattern
+    # in root conftest.py's _isolate_listings_env fixture) or this test silently reuses
+    # whatever real sqlite file DB_PATH already pointed to.
+    monkeypatch.setattr(inventory_db, "DB_PATH", str(tmp_path / "inventory.db"))
 
     init_users_db()
     init_inventory_db()
@@ -38,9 +45,9 @@ def _insert_test_car() -> int:
             INSERT INTO cars (
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                zip_code, fuel_type, transmission, drivetrain,
+                fuel_type, transmission, drivetrain,
                 exterior_color, interior_color, gallery, listing_active
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 "1HGBH41JXMN109186",
@@ -56,7 +63,6 @@ def _insert_test_car() -> int:
                 "https://dealer.test/",
                 "t-dealer",
                 "2026-01-01T00:00:00Z",
-                "90210",
                 "Gas",
                 "Automatic",
                 "FWD",

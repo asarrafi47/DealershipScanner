@@ -4,13 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Iterator, Literal
 
-from backend.db.inventory_pg import (
-    _INVENTORY_POSTGRES_REQUIRED_MSG,
-    adapt_sql_for_postgres_execute,
-    assert_inventory_backend_configured,
-    inventory_sqlite_tests_allowed,
-    is_inventory_postgres,
-)
+from backend.db import inventory_pg
 
 
 class InventoryCursor:
@@ -26,7 +20,7 @@ class InventoryCursor:
     def execute(self, sql: str, params: tuple | list | None = None) -> InventoryCursor:
         params = tuple(params) if params is not None else ()
         if self._backend == "postgres":
-            adapted = adapt_sql_for_postgres_execute(sql)
+            adapted = inventory_pg.adapt_sql_for_postgres_execute(sql)
             if adapted is None:
                 self._noop = True
                 return self
@@ -39,7 +33,7 @@ class InventoryCursor:
 
     def executemany(self, sql: str, seq_of_params: Iterator[tuple]) -> InventoryCursor:
         if self._backend == "postgres":
-            adapted = adapt_sql_for_postgres_execute(sql)
+            adapted = inventory_pg.adapt_sql_for_postgres_execute(sql)
             if adapted is None:
                 self._noop = True
                 return self
@@ -103,13 +97,11 @@ class InventoryConnection:
 
 
 def open_inventory_connection() -> InventoryConnection:
-    if is_inventory_postgres():
-        from backend.db.inventory_pg import pg_connect
-
-        return InventoryConnection(pg_connect(), backend="postgres")
-    assert_inventory_backend_configured()
-    if inventory_sqlite_tests_allowed():
+    if inventory_pg.is_inventory_postgres():
+        return InventoryConnection(inventory_pg.pg_connect(), backend="postgres")
+    inventory_pg.assert_inventory_backend_configured()
+    if inventory_pg.inventory_sqlite_tests_allowed():
         from backend.db import inventory_db as invdb
 
         return InventoryConnection(invdb._sqlite_connect_raw(), backend="sqlite")
-    raise RuntimeError(_INVENTORY_POSTGRES_REQUIRED_MSG)
+    raise RuntimeError(inventory_pg._INVENTORY_POSTGRES_REQUIRED_MSG)

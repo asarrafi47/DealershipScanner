@@ -15,7 +15,7 @@ import time
 from datetime import datetime, timezone
 
 from backend.db.inventory_db import DB_PATH as _INVENTORY_DB_PATH
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db import inventory_pg
 from backend.utils.listing_completeness import listing_missing_field_codes
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ _bootstrap_lock = threading.Lock()
 
 def incomplete_index_db_mtime() -> float:
     """Modification time for cache invalidation (sidecar SQLite or 60s bucket on Postgres)."""
-    if is_inventory_postgres():
+    if inventory_pg.is_inventory_postgres():
         return float(int(time.time()) // 60)
     try:
         return os.path.getmtime(DB_PATH)
@@ -41,7 +41,7 @@ def incomplete_index_db_mtime() -> float:
 
 def get_conn():
     """Incomplete-listings index: same PostgreSQL DB as inventory when configured; else sidecar SQLite."""
-    if is_inventory_postgres():
+    if inventory_pg.is_inventory_postgres():
         from backend.db.inventory_db import get_conn as inv_get_conn
 
         return inv_get_conn()
@@ -182,7 +182,7 @@ def fast_rebuild_incomplete_listings_index() -> int:
     conn_inc = get_conn()
     _ensure_schema(conn_inc)
     try:
-        if is_inventory_postgres():
+        if inventory_pg.is_inventory_postgres():
             conn_inc.execute("BEGIN")
         else:
             conn_inc.execute("BEGIN IMMEDIATE")

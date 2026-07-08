@@ -6,16 +6,15 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from backend.db.inventory_db import DB_PATH
 from backend.enrichment.trim_ladder import (
     _ladder_steps_plausible_for_model,
     _load_json_ladders,
@@ -74,7 +73,7 @@ def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", (s or "").lower())
 
 
-def _sample_cars(conn: sqlite3.Connection) -> list[dict]:
+def _sample_cars(conn: Any) -> list[dict]:
     cur = conn.execute(
         """
         SELECT c.id, c.make, c.model, c.year, c.trim, c.n AS model_count
@@ -240,9 +239,13 @@ def main() -> int:
 
     _load_json_ladders.cache_clear()
 
-    conn = sqlite3.connect(DB_PATH)
-    cars = _sample_cars(conn)
-    conn.close()
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    try:
+        cars = _sample_cars(conn)
+    finally:
+        conn.close()
 
     flagged: list[dict] = []
     issue_counts: dict[str, int] = defaultdict(int)
@@ -279,7 +282,10 @@ def main() -> int:
         print(json.dumps(payload, indent=2))
         return 1 if flagged else 0
 
-    print(f"Audited {len(cars)} make/model pairs from inventory ({DB_PATH})")
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    backend_name = "Postgres" if is_inventory_postgres() else "SQLite"
+    print(f"Audited {len(cars)} make/model pairs from inventory ({backend_name})")
     print()
     print("Ladder sources:")
     for src, n in sorted(source_counts.items(), key=lambda x: (-x[1], x[0])):

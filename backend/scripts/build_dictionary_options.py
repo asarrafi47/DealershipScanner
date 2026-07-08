@@ -21,7 +21,7 @@ sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.dictionary_schema import ensure_dictionary_tables
 from backend.db.inventory_db import get_conn, init_inventory_db
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db import inventory_pg
 from backend.enrichment.dictionary_catalog import iter_dictionary_csv_paths, options_status
 
 logging.basicConfig(
@@ -101,7 +101,7 @@ def main(argv: list[str] | None = None) -> None:
     init_inventory_db()
     conn = get_conn()
     try:
-        ensure_dictionary_tables(conn.cursor(), postgres=is_inventory_postgres())
+        ensure_dictionary_tables(conn.cursor(), postgres=inventory_pg.is_inventory_postgres())
         conn.commit()
 
         if args.rebuild:

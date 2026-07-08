@@ -73,10 +73,14 @@ def test_compare_page_renders_spec_rows(monkeypatch, tmp_path):
     monkeypatch.setenv("USERS_DB_PATH", str(tmp_path / "users.db"))
     monkeypatch.setenv("INVENTORY_DB_PATH", str(tmp_path / "inventory.db"))
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
+    from backend.db import inventory_db as inv_db
     from backend.db.inventory_db import init_inventory_db
     from backend.db.users_db import init_users_db, save_user
     from backend.main import app
 
+    # inv_db.DB_PATH is resolved once at import time, so the env var above has no
+    # effect on it post-import — patch the module attribute directly.
+    monkeypatch.setattr(inv_db, "DB_PATH", str(tmp_path / "inventory.db"))
     init_users_db()
     init_inventory_db()
     app.config["TESTING"] = True

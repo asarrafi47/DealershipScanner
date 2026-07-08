@@ -8,10 +8,9 @@ from __future__ import annotations
 
 import os
 import re
-import sqlite3
 from typing import Any
 
-from backend.db.inventory_db import DB_PATH
+from backend.db.inventory_db import get_conn
 
 # Static fallbacks keyed by (make_lower, model_lower). Drivetrain uses short tokens
 # (FWD/RWD/AWD/4WD) consistent with ``decode_trim_logic`` / EPA merge.
@@ -194,8 +193,9 @@ def iter_model_lookup_variants(model: str) -> list[str]:
 
 
 def _query_sqlite_row(canonical_make: str, model_variant: str) -> dict[str, Any] | None:
+    conn = None
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute(
             """
@@ -207,7 +207,6 @@ def _query_sqlite_row(canonical_make: str, model_variant: str) -> dict[str, Any]
             (canonical_make.strip(), model_variant.strip()),
         )
         row = cur.fetchone()
-        conn.close()
         if not row:
             return None
         cyl, trans, drv, body, fuel = row
@@ -224,8 +223,11 @@ def _query_sqlite_row(canonical_make: str, model_variant: str) -> dict[str, Any]
         if fuel and str(fuel).strip():
             d["fuel_type"] = str(fuel).strip()
         return d if d else None
-    except sqlite3.Error:
+    except Exception:
         return None
+    finally:
+        if conn is not None:
+            conn.close()
 
 
 _SHORT_DRIVE_MAP = {

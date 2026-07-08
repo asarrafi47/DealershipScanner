@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import sqlite3
 from collections import defaultdict
 
 import pytest
 
-from backend.db.inventory_db import DB_PATH
+from backend.db.inventory_db import get_conn
 from backend.scripts.audit_trim_ladders import _audit_car, _sample_cars
 
 
@@ -31,7 +30,7 @@ _SOFT_ISSUE_MAX = {
 
 
 def _run_inventory_audit() -> tuple[list[dict], dict[str, int]]:
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_conn()
     try:
         cars = _sample_cars(conn)
     finally:

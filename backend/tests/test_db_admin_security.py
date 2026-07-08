@@ -26,6 +26,18 @@ def db_admin_app(monkeypatch: pytest.MonkeyPatch, tmp_path):
     conn.commit()
     conn.close()
     monkeypatch.setenv("INVENTORY_DB_PATH", str(db_path))
+    # db_admin.py now routes through the Postgres-aware get_conn(); its module-level
+    # load_project_dotenv() call re-runs on reload below and (with override=False)
+    # re-populates INVENTORY_DATABASE_URL from the real .env if it's merely *absent* —
+    # set it to an explicit empty string so it stays isolated from live Postgres.
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
+    monkeypatch.setenv("DATABASE_URL", "")
+    # inventory_db.DB_PATH is resolved once at import time, so the env var above has no
+    # effect on it post-import — patch the module attribute directly (same pattern as
+    # test_home_dashboard_routes.py and others fixed earlier this week).
+    from backend.db import inventory_db as inv_db
+
+    monkeypatch.setattr(inv_db, "DB_PATH", str(db_path))
 
     import backend.scripts.db_admin as mod
 

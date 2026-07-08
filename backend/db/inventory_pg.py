@@ -119,6 +119,14 @@ def adapt_sqlite_functions_to_pg(sql: str) -> str:
     s = re.sub(r"\bexcluded\.", "EXCLUDED.", s, flags=re.IGNORECASE)
     s = re.sub(r"\bdatetime\s*\(\s*['\"]now['\"]\s*\)", "CURRENT_TIMESTAMP", s, flags=re.IGNORECASE)
     s = re.sub(r"\bINSTR\s*\(", "strpos(", s, flags=re.IGNORECASE)
+    # SQLite GROUP_CONCAT(DISTINCT col) / GROUP_CONCAT(col) -> Postgres STRING_AGG(..., ',')
+    s = re.sub(
+        r"\bGROUP_CONCAT\s*\(\s*DISTINCT\s+([^)]+?)\s*\)",
+        r"STRING_AGG(DISTINCT \1, ',')",
+        s,
+        flags=re.IGNORECASE,
+    )
+    s = re.sub(r"\bGROUP_CONCAT\s*\(\s*([^)]+?)\s*\)", r"STRING_AGG(\1, ',')", s, flags=re.IGNORECASE)
     # SQLite ORDER BY datetime(col) — ISO text sorts lexicographically; drop wrapper for PG compatibility.
     s = re.sub(r"\bdatetime\s*\(\s*([a-zA-Z_][a-zA-Z0-9_.]*)\s*\)", r"\1", s)
     return s
@@ -169,6 +177,13 @@ def adapt_insert_or_replace_pg(sql: str) -> str | None:
         return (
             f"INSERT INTO dealer_geopoints ({', '.join(cols)}) VALUES ({vals}) "
             f"ON CONFLICT (dealer_url) DO UPDATE SET {set_clause}"
+        )
+    if table == "model_specs" and "make" in cols and "model" in cols:
+        update_cols = [c for c in cols if c not in ("make", "model")]
+        set_clause = ", ".join(f"{c} = EXCLUDED.{c}" for c in update_cols)
+        return (
+            f"INSERT INTO model_specs ({', '.join(cols)}) VALUES ({vals}) "
+            f"ON CONFLICT (make, model) DO UPDATE SET {set_clause}"
         )
     return None
 
@@ -235,7 +250,6 @@ def init_postgres_inventory(conn: Any) -> None:
             trim TEXT,
             price DOUBLE PRECISION,
             mileage INTEGER,
-            zip_code TEXT,
             fuel_type TEXT,
             cylinders INTEGER,
             transmission TEXT,
@@ -276,18 +290,13 @@ def init_postgres_inventory(conn: Any) -> None:
             listing_active INTEGER DEFAULT 1,
             listing_removed_at TEXT,
             interior_color_buckets TEXT,
-            kbb_fetched_at TEXT,
-            kbb_snapshot_json TEXT,
-            kbb_fair_purchase DOUBLE PRECISION,
-            kbb_range_low DOUBLE PRECISION,
-            kbb_range_high DOUBLE PRECISION,
-            kbb_private_party DOUBLE PRECISION,
-            kbb_trade_in DOUBLE PRECISION,
             first_seen_at TEXT,
             last_price_change_at TEXT,
             internal_notes TEXT,
             marked_for_review INTEGER,
-            price_provenance_json TEXT
+            price_provenance_json TEXT,
+            spin_frames TEXT,
+            interior_pano TEXT
         )
         """
     )
@@ -304,6 +313,8 @@ def init_postgres_inventory(conn: Any) -> None:
             ("recoverability_score", "DOUBLE PRECISION"),
             ("price_provenance_json", "TEXT"),
             ("window_sticker_url", "TEXT"),
+            ("spin_frames", "TEXT"),
+            ("interior_pano", "TEXT"),
         ],
     )
     cur.execute(
@@ -343,10 +354,50 @@ def init_postgres_inventory(conn: Any) -> None:
             ("city_e", "DOUBLE PRECISION"),
             ("highway_e", "DOUBLE PRECISION"),
             ("atv_type", "TEXT"),
+            ("trim", "TEXT"),
+            ("body_style", "TEXT"),
+            ("engine_description", "TEXT"),
+            ("engine_display", "TEXT"),
+            ("forced_induction", "TEXT"),
         ],
     )
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_epa_master_lookup ON epa_master(year, make, model)"
+    )
+    cur.execute(
+        'CREATE INDEX IF NOT EXISTS idx_epa_master_trim ON epa_master(year, make, model, "trim")'
+    )
+
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS epa_extended_specs (
+            epa_master_id BIGINT PRIMARY KEY REFERENCES epa_master(id) ON DELETE CASCADE,
+            year INTEGER NOT NULL,
+            make TEXT NOT NULL,
+            model TEXT NOT NULL,
+            trim TEXT,
+            horsepower INTEGER,
+            torque_lb_ft INTEGER,
+            torque_nm INTEGER,
+            curb_weight_lb INTEGER,
+            curb_weight_kg INTEGER,
+            zero_to_60_sec DOUBLE PRECISION,
+            fuel_tank_gal DOUBLE PRECISION,
+            ev_range_miles INTEGER,
+            battery_kwh DOUBLE PRECISION,
+            body_style_detail TEXT,
+            specs_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+            source_url TEXT,
+            source_host TEXT,
+            scrape_status TEXT NOT NULL DEFAULT 'pending',
+            scraped_at TIMESTAMPTZ,
+            last_error TEXT,
+            tow_capacity_lb INTEGER
+        )
+        """
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_epa_extended_specs_ymm ON epa_extended_specs(year, make, model)"
     )
 
     cur.execute(

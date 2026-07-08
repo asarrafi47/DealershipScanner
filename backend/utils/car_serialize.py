@@ -1203,6 +1203,10 @@ def serialize_car_for_api(
             else:
                 out[k] = v
             continue
+        if k in ("spin_frames", "interior_pano"):
+            # Handled explicitly after the loop (contract defaults: [] / null);
+            # must not fall through to format_display_value (None -> em-dash).
+            continue
         if k == "history_highlights":
             out[k] = v
             continue
@@ -1243,6 +1247,18 @@ def serialize_car_for_api(
     for url_key in ("image_url", "source_url", "carfax_url", "dealer_url"):
         if url_key in c:
             out[url_key] = normalize_optional_url(c.get(url_key))
+
+    # 360 spin assets: always emitted with contract defaults ([] / null).
+    _spin = c.get("spin_frames")
+    if isinstance(_spin, str):
+        try:
+            _spin = json.loads(_spin)
+        except (TypeError, ValueError):
+            _spin = None
+    out["spin_frames"] = (
+        [u for u in _spin if isinstance(u, str) and u.strip()] if isinstance(_spin, list) else []
+    )
+    out["interior_pano"] = normalize_optional_url(c.get("interior_pano"))
 
     from backend.parsers.vdp_urls import resolve_vehicle_source_url
 
@@ -1367,6 +1383,31 @@ def serialize_car_for_api(
         fe = _format_mpg_city_highway(c.get("mpg_city"), c.get("mpg_highway"))
     out["fuel_economy_display"] = format_display_value(fe) if fe else DISPLAY_DASH
 
+    # Extended specs (epa_extended_specs, model-level match — not necessarily this exact
+    # trim; pass through as-is, no dealer field to reconcile against).
+    out["horsepower"] = vs.get("horsepower")
+    out["torque_lb_ft"] = vs.get("torque_lb_ft")
+    out["curb_weight_lb"] = vs.get("curb_weight_lb")
+    out["zero_to_60_sec"] = vs.get("zero_to_60_sec")
+    out["fuel_tank_gal"] = vs.get("fuel_tank_gal")
+    out["ev_range_miles"] = vs.get("ev_range_miles")
+    out["battery_kwh"] = vs.get("battery_kwh")
+    out["tow_capacity_lb"] = vs.get("tow_capacity_lb")
+
+    # Factory catalog packages / standalone options (catalog_trims/_options/_packages),
+    # matched on this row's own year/make/model/trim — independent of dealer window
+    # sticker data above. Most trims have no catalog rows; None when no match.
+    try:
+        from backend.enrichment.catalog_lookup import lookup_catalog_options_and_packages
+
+        _catalog = lookup_catalog_options_and_packages(
+            c.get("year"), c.get("make"), c.get("model"), c.get("trim")
+        )
+    except Exception:
+        _catalog = {}
+    out["catalog_packages"] = _catalog.get("packages") or None
+    out["catalog_options"] = _catalog.get("options") or None
+
     bsd = vs.get("body_style_display")
     if bsd and (is_effectively_empty(c.get("body_style")) or out.get("body_style") == DISPLAY_DASH):
         out["body_style"] = format_display_value(bsd)
@@ -1477,6 +1518,55 @@ def _price_history_json_for_vdp(car: dict[str, Any]) -> str:
                 except (TypeError, ValueError):
                     continue
     return json.dumps(events)
+
+
+_PRICE_DROP_RECENT_DAYS = max(1, int(os.environ.get("PRICE_DROP_RECENT_DAYS", "14")))
+
+
+def _latest_price_drop_for_grid(car: dict[str, Any]) -> tuple[float | None, int | None]:
+    """
+    ``(amount, days_ago)`` for the most recent price drop within
+    :data:`_PRICE_DROP_RECENT_DAYS`, else ``(None, None)``.
+
+    Cheap grid-card signal — compares only the last two ``price_provenance_json``
+    snapshots (scanner appends chronologically, so ``[-1]`` is newest). Does not
+    parse/expose the full history array; see ``_price_history_json_for_vdp`` for that.
+    """
+    raw = car.get("price_provenance_json")
+    if not raw or not str(raw).strip():
+        return None, None
+    try:
+        history = json.loads(raw) if isinstance(raw, str) else raw
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return None, None
+    if not isinstance(history, list) or len(history) < 2:
+        return None, None
+    prev, latest = history[-2], history[-1]
+    if not isinstance(prev, dict) or not isinstance(latest, dict):
+        return None, None
+    try:
+        prev_price = float(prev.get("price"))
+        latest_price = float(latest.get("price"))
+    except (TypeError, ValueError):
+        return None, None
+    if latest_price >= prev_price:
+        return None, None
+    when = latest.get("date")
+    if not when:
+        return None, None
+    import re as _re
+    from datetime import datetime, timezone
+
+    try:
+        when_dt = datetime.fromisoformat(_re.sub(r"Z$", "+00:00", str(when)))
+        if when_dt.tzinfo is None:
+            when_dt = when_dt.replace(tzinfo=timezone.utc)
+        days_ago = (datetime.now(timezone.utc) - when_dt).days
+    except (TypeError, ValueError):
+        return None, None
+    if days_ago < 0 or days_ago > _PRICE_DROP_RECENT_DAYS:
+        return None, None
+    return round(prev_price - latest_price, 2), days_ago
 
 
 _LISTINGS_GRID_GALLERY_MAX = max(1, int(os.environ.get("LISTINGS_GRID_GALLERY_MAX", "4")))
@@ -1608,7 +1698,6 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
         "photo_count": _public_gallery_photo_count(c.get("gallery"), image_url=c.get("image_url")),
         "dealer_name": format_display_value(c.get("dealer_name")),
         "dealer_url": normalize_optional_url(c.get("dealer_url")),
-        "zip_code": c.get("zip_code"),
         "dealership_registry_id": num("dealership_registry_id"),
         "dealer_id": c.get("dealer_id"),
         "package_names": _package_names_from_raw(c.get("packages")),
@@ -1616,6 +1705,13 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
     }
     out["condition"] = format_display_value(c.get("condition"))
     fill_derived_condition_for_display(c, out)
+    # Raw column, matching exactly what search_cars(cpo_only=True) filters on server-side —
+    # NOT derived from out["condition"], which can read "Certified" (no "Pre-Owned") for some
+    # rows even when is_cpo=1, which would disagree with the SQL-side filter.
+    out["is_cpo"] = c.get("is_cpo") in (1, True, "1")
+    price_drop_amount, price_drop_days_ago = _latest_price_drop_for_grid(c)
+    out["price_drop_amount"] = price_drop_amount
+    out["price_drop_days_ago"] = price_drop_days_ago
     return out
 
 

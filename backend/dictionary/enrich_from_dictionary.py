@@ -551,7 +551,9 @@ def main():
     )
     args = ap.parse_args()
 
-    conn = sqlite3.connect(DB_PATH)
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
     conn.row_factory = sqlite3.Row
 
     if args.all:
@@ -592,7 +594,12 @@ def main():
     stats = {"total": len(cars), "updated": 0, "no_epa": 0}
     updated_ids: list[int] = []
 
-    logger.info("inventory.db path: %s", os.path.abspath(DB_PATH))
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    logger.info(
+        "inventory backend: %s",
+        "Postgres" if is_inventory_postgres() else os.path.abspath(DB_PATH),
+    )
 
     for car in cars:
         updates = enrich_car(car, dry_run=args.dry_run, fill_all=args.all, use_vpic=not args.no_vpic)

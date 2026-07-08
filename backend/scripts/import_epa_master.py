@@ -13,46 +13,37 @@ from __future__ import annotations
 
 import csv
 import os
-import sqlite3
 import sys
 import urllib.request
+from pathlib import Path
+from typing import Any
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DB_PATH = os.environ.get("INVENTORY_DB_PATH", os.path.join(ROOT, "inventory.db"))
+ROOT = Path(__file__).resolve().parents[2]
+os.chdir(ROOT)
+sys.path.insert(0, str(ROOT))
+
+try:
+    from backend.utils.project_env import load_project_dotenv
+
+    load_project_dotenv()
+except ImportError:
+    pass
+
 EPA_URL = "https://www.fueleconomy.gov/feg/epadata/vehicles.csv"
 
 
-def ensure_table(conn: sqlite3.Connection) -> None:
-    conn.execute(
-        """
-        CREATE TABLE IF NOT EXISTS epa_master (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            epa_vehicle_id INTEGER,
-            year INTEGER,
-            make TEXT,
-            model TEXT,
-            cylinders INTEGER,
-            displacement REAL,
-            trany TEXT,
-            drive TEXT,
-            fuel_type TEXT
-        )
-        """
-    )
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_epa_master_lookup ON epa_master(year, make, model)")
-    cur = conn.cursor()
-    cur.execute("PRAGMA table_info(epa_master)")
-    have = {row[1] for row in cur.fetchall()}
-    for col, typ in [
-        ("city08", "REAL"),
-        ("highway08", "REAL"),
-        ("city_e", "REAL"),
-        ("highway_e", "REAL"),
-        ("atv_type", "TEXT"),
-    ]:
-        if col not in have:
-            conn.execute(f"ALTER TABLE epa_master ADD COLUMN {col} {typ}")
-    conn.commit()
+def ensure_table(conn: Any) -> None:
+    # epa_master's full schema (including columns this script doesn't know about —
+    # trim/body_style/engine_description/forced_induction/etc.) is centrally managed
+    # in backend/db/inventory_pg.py's init_postgres_inventory(). A local ad-hoc
+    # CREATE TABLE + PRAGMA-based column check here would be redundant against
+    # Postgres and actively dangerous (PRAGMA becomes a no-op via the SQL adapter,
+    # so ``have`` would always be empty, and the un-guarded ALTER TABLE ADD COLUMN
+    # calls would crash on Postgres's "column already exists" error on any run
+    # after the first).
+    from backend.db.inventory_db import init_inventory_db
+
+    init_inventory_db()
 
 
 def norm_float(s: str) -> float | None:
@@ -69,7 +60,7 @@ def norm_int(s: str) -> int | None:
         return None
 
 
-def import_csv(path: str, conn: sqlite3.Connection) -> int:
+def import_csv(path: str, conn: Any) -> int:
     ensure_table(conn)
     conn.execute("DELETE FROM epa_master")
     rows = 0
@@ -192,8 +183,38 @@ def import_csv(path: str, conn: sqlite3.Connection) -> int:
     return rows
 
 
-def main() -> None:
+def main() -> int:
+    import argparse
     import tempfile
+
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "--yes",
+        action="store_true",
+        help="Required: this replaces ALL of epa_master with the downloaded government CSV "
+        "(DELETE FROM epa_master, then reimport) — including this project's own curated/merged "
+        "rows built by build_epa_master_pg.py and the 2026-07-06 dump import.",
+    )
+    args = ap.parse_args()
+
+    from backend.db.inventory_db import get_conn
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    if not args.yes:
+        conn = get_conn()
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) FROM epa_master")
+            n = cur.fetchone()[0]
+        finally:
+            conn.close()
+        backend_name = "Postgres" if is_inventory_postgres() else "SQLite"
+        print(
+            f"Refusing to replace {n} existing row(s) in the {backend_name} epa_master table "
+            "without --yes. This deletes everything currently in epa_master (including data "
+            "from other sources) and replaces it with the fueleconomy.gov download."
+        )
+        return 1
 
     tmp = tempfile.NamedTemporaryFile(mode="w+b", suffix=".csv", delete=False)
     tmp.close()
@@ -201,12 +222,14 @@ def main() -> None:
     try:
         print(f"Downloading {EPA_URL} ...")
         urllib.request.urlretrieve(EPA_URL, path)
-        print(f"Importing into {DB_PATH} ...")
-        conn = sqlite3.connect(DB_PATH)
-        ensure_table(conn)
-        n = import_csv(path, conn)
-        conn.close()
+        conn = get_conn()
+        try:
+            ensure_table(conn)
+            n = import_csv(path, conn)
+        finally:
+            conn.close()
         print(f"Imported {n} EPA vehicle rows into epa_master.")
+        return 0
     finally:
         try:
             os.unlink(path)
@@ -215,4 +238,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

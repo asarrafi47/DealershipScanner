@@ -299,11 +299,11 @@ def test_search_cars_engine_displacement_range(
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, stock_number, gallery,
             engine_l, engine_description,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
 
     def row(vin: str, eng_l: str | None, desc: str | None) -> tuple:
@@ -321,7 +321,6 @@ def test_search_cars_engine_displacement_range(
             "https://dealer.test/",
             "d1",
             now,
-            "90210",
             "Gas",
             8,
             "Automatic",
