@@ -284,6 +284,7 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
     radius = scalar("radius")
     max_price = scalar("max_price")
     max_mileage = scalar("max_mileage")
+    cpo_only = scalar("cpo_only").lower() in ("1", "true", "yes", "on")
     reg_id_raw = scalar("dealership_registry_id")
     dealership_registry_id = None
     if reg_id_raw:
@@ -342,6 +343,7 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
         "cylinders": g("cylinders") or None,
         "transmissions": g("transmission") or None,
         "drivetrains": g("drivetrain") or None,
+        "forced_inductions": g("forced_induction") or None,
         "body_styles": g("body_style") or None,
         "exterior_colors": g("exterior_color") or None,
         "interior_colors": g("interior_color") or None,
@@ -349,6 +351,7 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
         "countries": g("country") or None,
         "max_price": _safe_float(max_price),
         "max_mileage": _safe_int(max_mileage),
+        "cpo_only": cpo_only or None,
         "zip_code": zip_code or None,
         "radius_miles": _safe_float(radius),
         "dealership_registry_id": dealership_registry_id,
@@ -456,9 +459,11 @@ _STRUCTURED_FILTER_KEYS = frozenset(
         "max_year",
         "max_price",
         "max_mileage",
+        "cpo_only",
         "drivetrain",
         "body_style",
         "fuel_type",
+        "forced_induction",
         "exterior_color",
         "interior_color",
         "interior_color_buckets",
@@ -495,6 +500,7 @@ _FACET_SQL_KWARG_KEYS = frozenset(
         "cylinders",
         "transmissions",
         "drivetrains",
+        "forced_inductions",
         "body_styles",
         "exterior_colors",
         "interior_colors",
@@ -502,6 +508,7 @@ _FACET_SQL_KWARG_KEYS = frozenset(
         "countries",
         "max_price",
         "max_mileage",
+        "cpo_only",
         "dealership_registry_id",
         "dealer_registry_ids",
         "engine_displacement_l_min",

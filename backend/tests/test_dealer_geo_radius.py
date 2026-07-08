@@ -75,10 +75,10 @@ def test_search_cars_radius_excludes_hawaii_dealer_from_california_zip(
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, interior_color_buckets, stock_number, gallery,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             "HAWAIIHIHIHIHIHIHI",
@@ -94,7 +94,6 @@ def test_search_cars_radius_excludes_hawaii_dealer_from_california_zip(
             "https://tonychevrolethilo.com",
             "tonychevrolethilo-com",
             now,
-            None,
             "Gas",
             8,
             "Automatic",
@@ -113,10 +112,10 @@ def test_search_cars_radius_excludes_hawaii_dealer_from_california_zip(
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, interior_color_buckets, stock_number, gallery,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             "CACACACACACACACACA",
@@ -132,7 +131,6 @@ def test_search_cars_radius_excludes_hawaii_dealer_from_california_zip(
             "https://www.toyotaoforange.com",
             "toyotaoforange-com",
             now,
-            "92868",
             "Gas",
             4,
             "Automatic",

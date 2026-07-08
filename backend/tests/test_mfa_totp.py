@@ -40,7 +40,7 @@ def test_app_register_login_password_only(monkeypatch, tmp_path):
             follow_redirects=False,
         )
         assert r.status_code in (302, 303)
-        assert r.headers["Location"].endswith("/dashboard")
+        assert r.headers["Location"].endswith("/listings")
         assert int(session.get("user_id") or 0) > 0
         assert session.get("mfa_ok") is True
         assert not session.get("mfa_pending_user_id")

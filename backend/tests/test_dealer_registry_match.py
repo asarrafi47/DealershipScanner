@@ -77,10 +77,10 @@ def test_search_cars_dealer_filter_matches_host_only(
             INSERT INTO cars (
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                zip_code, fuel_type, cylinders, transmission, drivetrain,
+                fuel_type, cylinders, transmission, drivetrain,
                 exterior_color, interior_color, stock_number, gallery,
                 listing_active, dealership_registry_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 vid,
@@ -96,7 +96,6 @@ def test_search_cars_dealer_filter_matches_host_only(
                 "https://www.testtoyota.com/inventory/" + vid[-1],
                 "test-toyota",
                 now,
-                "28173",
                 "G",
                 4,
                 "A",

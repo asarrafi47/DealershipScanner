@@ -11,7 +11,7 @@ from backend.main import app
 
 def test_request_dealer_onboard_requires_postgres(monkeypatch) -> None:
     monkeypatch.setattr(
-        "backend.dealer.admin.onboard_api.is_inventory_postgres",
+        "backend.db.inventory_pg.is_inventory_postgres",
         lambda: False,
     )
     ok, err, _data = request_dealer_onboard(url="https://www.example-dealer.com")
@@ -21,7 +21,7 @@ def test_request_dealer_onboard_requires_postgres(monkeypatch) -> None:
 
 def test_request_dealer_onboard_invalid_url(monkeypatch) -> None:
     monkeypatch.setattr(
-        "backend.dealer.admin.onboard_api.is_inventory_postgres",
+        "backend.db.inventory_pg.is_inventory_postgres",
         lambda: True,
     )
     ok, err, _data = request_dealer_onboard(url="javascript:alert(1)")
@@ -31,7 +31,7 @@ def test_request_dealer_onboard_invalid_url(monkeypatch) -> None:
 
 def test_request_dealer_onboard_enqueues(monkeypatch) -> None:
     monkeypatch.setattr(
-        "backend.dealer.admin.onboard_api.is_inventory_postgres",
+        "backend.db.inventory_pg.is_inventory_postgres",
         lambda: True,
     )
     monkeypatch.setattr(
@@ -50,7 +50,7 @@ def test_request_dealer_onboard_enqueues(monkeypatch) -> None:
 
 def test_api_admin_dealer_onboard_forbidden_without_admin(monkeypatch) -> None:
     monkeypatch.setattr(
-        "backend.dealer.admin.onboard_api.is_inventory_postgres",
+        "backend.db.inventory_pg.is_inventory_postgres",
         lambda: True,
     )
     client = app.test_client()
@@ -69,7 +69,7 @@ def test_api_admin_dealer_onboard_ok(monkeypatch, tmp_path) -> None:
     init_users_db()
     uid = save_user("admin1", "admin1@example.com", "password123", role="admin")
     monkeypatch.setattr(
-        "backend.dealer.admin.onboard_api.is_inventory_postgres",
+        "backend.db.inventory_pg.is_inventory_postgres",
         lambda: True,
     )
     monkeypatch.setattr(

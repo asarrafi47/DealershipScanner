@@ -17,6 +17,11 @@ def _fresh_app(monkeypatch, tmp_path):
     monkeypatch.setenv("INVENTORY_DB_PATH", str(tmp_path / "inv_test.db"))
     monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
     monkeypatch.delenv("DATABASE_URL", raising=False)
+    # inventory_db.DB_PATH is resolved once at import time, so the env var above has no
+    # effect on it post-import — patch the module attribute directly.
+    from backend.db import inventory_db as inv_db
+
+    monkeypatch.setattr(inv_db, "DB_PATH", str(tmp_path / "inv_test.db"))
     import backend.main as main
 
     importlib.reload(main)

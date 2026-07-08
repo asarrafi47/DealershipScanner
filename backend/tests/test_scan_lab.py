@@ -61,9 +61,12 @@ def test_get_scan_lab_car_by_id_uses_lab_db_not_production(
     prod_db = tmp_path / "production_inventory.db"
     monkeypatch.setenv("SCAN_LAB_INVENTORY_DB_PATH", str(lab_db))
     monkeypatch.setenv("INVENTORY_DB_PATH", str(lab_db))
-    inv_db.DB_PATH = str(lab_db)
+    # inv_db.DB_PATH is resolved once at import time, so the env var above has no effect
+    # on it post-import — patch the module attribute directly (via monkeypatch so it's
+    # restored after the test, rather than leaking into whichever test runs next).
+    monkeypatch.setattr(inv_db, "DB_PATH", str(lab_db))
     inv_db.init_inventory_db()
-    inv_db.DB_PATH = str(prod_db)
+    monkeypatch.setattr(inv_db, "DB_PATH", str(prod_db))
     with sl.scan_lab_db_conn() as conn:
         conn.execute(
             """

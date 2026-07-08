@@ -78,6 +78,9 @@ def test_inventory_scale(tmp_path, monkeypatch) -> None:
 
     monkeypatch.delenv("INVENTORY_DATABASE_URL", raising=False)
     monkeypatch.setenv("INVENTORY_DB_PATH", str(tmp_path / "inv_plat.db"))
+    # inv.DB_PATH is resolved once at import time, so the env var above has no effect
+    # on it post-import — patch the module attribute directly.
+    monkeypatch.setattr(inv, "DB_PATH", str(tmp_path / "inv_plat.db"))
     inv.init_inventory_db()
     conn = inv.get_conn()
     conn.execute("DELETE FROM cars")

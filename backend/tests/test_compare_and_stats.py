@@ -9,22 +9,20 @@ def test_public_listings_count_non_negative():
     assert public_listings_count() >= 0
 
 
-def test_compare_page_requires_login():
+def test_compare_page_public_when_anonymous():
     from backend import main
 
     client = main.app.test_client()
     r = client.get("/compare")
-    assert r.status_code == 302
-    assert "/login" in (r.headers.get("Location") or "")
+    assert r.status_code == 200
 
 
-def test_compare_page_with_ids_requires_login():
+def test_compare_page_with_ids_public_when_anonymous():
     from backend import main
 
     client = main.app.test_client()
     r = client.get("/compare?ids=1,2,abc,999999999")
-    assert r.status_code == 302
-    assert "/login" in (r.headers.get("Location") or "")
+    assert r.status_code == 200
 
 
 def test_record_compare_session():

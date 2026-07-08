@@ -110,10 +110,10 @@ def test_search_cars_exterior_color_uses_paint_family_not_raw_string(
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, interior_color_buckets, stock_number, gallery,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             "TTTTTTTTTTTTTTTTT",
@@ -129,7 +129,6 @@ def test_search_cars_exterior_color_uses_paint_family_not_raw_string(
             "https://dealer.test/",
             "t-dealer",
             now,
-            "90210",
             "Gas",
             4,
             "Automatic",
@@ -183,7 +182,6 @@ def test_search_cars_max_price_zero_is_not_ignored(
             "https://d.test/",
             "acme",
             now,
-            "90210",
             "Gas",
             4,
             "Automatic",
@@ -203,10 +201,10 @@ def test_search_cars_max_price_zero_is_not_ignored(
             INSERT INTO cars (
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                zip_code, fuel_type, cylinders, transmission, drivetrain,
+                fuel_type, cylinders, transmission, drivetrain,
                 exterior_color, interior_color, interior_color_buckets, stock_number, gallery,
                 listing_active, listing_removed_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             r,
         )
@@ -232,10 +230,10 @@ def test_search_cars_packages_substring_is_literal_not_like_wildcard(
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, packages, stock_number, gallery,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             "PPPPPPPPPPPPPPPPP",
@@ -251,7 +249,6 @@ def test_search_cars_packages_substring_is_literal_not_like_wildcard(
             "https://d.test/",
             "d1",
             now,
-            "90210",
             "G",
             4,
             "A",
@@ -301,10 +298,10 @@ def test_search_cars_packages_json_contains_list_or(
             INSERT INTO cars (
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                zip_code, fuel_type, cylinders, transmission, drivetrain,
+                fuel_type, cylinders, transmission, drivetrain,
                 exterior_color, interior_color, packages, stock_number, gallery,
                 listing_active, listing_removed_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 vin,
@@ -320,7 +317,6 @@ def test_search_cars_packages_json_contains_list_or(
                 "https://d.test/",
                 "d1",
                 now,
-                "90210",
                 "G",
                 4,
                 "A",
@@ -380,10 +376,10 @@ def test_search_cars_packages_json_contains_all_and_fields(
             INSERT INTO cars (
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                zip_code, fuel_type, cylinders, transmission, drivetrain,
+                fuel_type, cylinders, transmission, drivetrain,
                 exterior_color, interior_color, packages, stock_number, gallery,
                 description, listing_active, listing_removed_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 vin,
@@ -399,7 +395,6 @@ def test_search_cars_packages_json_contains_all_and_fields(
                 "https://d.test/",
                 "d1",
                 now,
-                "90210",
                 "G",
                 4,
                 "A",
@@ -444,10 +439,10 @@ def test_link_cars_falls_back_to_dealer_id_slug(
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, stock_number, gallery,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             "QQQQQQQQQQQQQQQQQ",
@@ -463,7 +458,6 @@ def test_link_cars_falls_back_to_dealer_id_slug(
             "https://unrelated-wrong.example/",
             "hendrick-example-com",
             now,
-            "28027",
             "G",
             4,
             "A",

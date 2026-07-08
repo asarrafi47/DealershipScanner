@@ -160,7 +160,7 @@ def _load_inventory_keywords(cache_key: str) -> tuple[tuple[tuple[str, str], ...
     body_styles = [r[0] for r in cur.fetchall()]
     cur.execute(
         """
-        SELECT DISTINCT TRIM(trim) FROM cars
+        SELECT DISTINCT TRIM(trim), LENGTH(TRIM(trim)) FROM cars
         WHERE trim IS NOT NULL AND LENGTH(TRIM(trim)) >= 3
         ORDER BY LENGTH(TRIM(trim)) DESC, TRIM(trim)
         """

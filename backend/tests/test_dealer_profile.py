@@ -46,7 +46,9 @@ def test_record_and_read_winning_strategy(tmp_path, monkeypatch):
     monkeypatch.setenv("INVENTORY_DB_PATH", str(db_path))
     from backend.db import inventory_db as inv
 
-    inv._INVENTORY_DB_PATH = None
+    # inv.DB_PATH is resolved once at import time, so the env var above has no effect
+    # on it post-import — patch the module attribute directly.
+    monkeypatch.setattr(inv, "DB_PATH", str(db_path))
     with inv.db_conn() as conn:
         conn.execute(
             "CREATE TABLE IF NOT EXISTS cars (id INTEGER PRIMARY KEY, vin TEXT)"

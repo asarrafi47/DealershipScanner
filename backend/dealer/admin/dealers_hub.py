@@ -5,7 +5,7 @@ from __future__ import annotations
 from flask import flash, redirect, render_template, request, url_for
 
 from backend.dealer.admin.routes import _session_profile, store_admin_bp
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db import inventory_pg
 from backend.scanner.job_queue import enqueue_job, list_dealer_catalog, list_recent_jobs
 from backend.scanner.scrape_confidence import job_display_status
 from backend.utils.csrf import validate_csrf_form
@@ -26,7 +26,7 @@ def admin_dealers_hub():
         flash("Dealer onboarding hub requires a site admin account.", "error")
         return redirect(url_for("store_admin.admin_site_hub"))
 
-    postgres_ok = is_inventory_postgres()
+    postgres_ok = inventory_pg.is_inventory_postgres()
     if request.method == "POST":
         validate_csrf_form()
         if not postgres_ok:

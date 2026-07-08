@@ -6,7 +6,7 @@ import re
 from typing import Any
 
 from backend.dev.dealers import slug_from_url
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db import inventory_pg
 from backend.scanner.job_queue import enqueue_job
 from backend.utils.safe_listing_url import normalize_safe_http_url
 
@@ -31,7 +31,7 @@ def request_dealer_onboard(
 
     Returns ``(ok, error_code, payload)`` where payload may include ``job_id`` and ``dealer_id``.
     """
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return False, "postgres_required", {}
 
     inv_url = normalize_safe_http_url((url or "").strip())

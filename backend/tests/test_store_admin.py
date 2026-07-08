@@ -86,11 +86,11 @@ def isolated_inventory_db(monkeypatch, tmp_path):
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, stock_number, gallery, listing_active, first_seen_at, last_price_change_at
+            stock_number, gallery, listing_active, first_seen_at, last_price_change_at
         ) VALUES (
             '1HGBH41JXMN109186', 'Test', 2020, 'Honda', 'Accord', 'EX', 24000, 1000,
             'https://images.unsplash.com/photo-1?w=10', 'D', 'https://dealer.example', 'dealer-a',
-            datetime('now'), '28202', 'S1',
+            datetime('now'), 'S1',
             '["https://x/a.jpg","https://x/b.jpg","https://x/c.jpg"]', 1,
             datetime('now', '-60 days'), datetime('now', '-60 days')
         )
