@@ -13,7 +13,10 @@ def test_upsert_persists_inventory_lot_location(tmp_path, monkeypatch):
     monkeypatch.setenv("INVENTORY_DB_PATH", str(db_path))
     from backend.db import inventory_db as inv
 
-    inv.DB_PATH = str(db_path)
+    # inv.DB_PATH is resolved once at import time, so the env var above has no effect
+    # on it post-import — patch the module attribute directly (via monkeypatch so it's
+    # restored after the test, rather than leaking into whichever test runs next).
+    monkeypatch.setattr(inv, "DB_PATH", str(db_path))
 
     vin = "1" * 17
     upsert_vehicles(

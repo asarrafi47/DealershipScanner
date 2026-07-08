@@ -12,7 +12,8 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from backend.db.inventory_pg import is_inventory_postgres, pg_connect, qmarks_to_percent_s
+from backend.db import inventory_pg
+from backend.db.inventory_pg import pg_connect, qmarks_to_percent_s
 
 _log = logging.getLogger(__name__)
 
@@ -69,7 +70,7 @@ def ensure_job_tables(conn) -> None:
 
 
 def init_job_queue_schema() -> None:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         _log.warning("Job queue requires INVENTORY_DATABASE_URL (Postgres); skipping schema init.")
         return
     conn = pg_connect()
@@ -85,7 +86,7 @@ def enqueue_job(
     job_type: str,
     payload: dict[str, Any] | None = None,
 ) -> int | None:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return None
     did = (dealer_id or "").strip()
     jt = (job_type or "").strip().lower()
@@ -113,7 +114,7 @@ def enqueue_job(
 
 
 def claim_next_job() -> dict[str, Any] | None:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return None
     wid = _worker_id()
     now = datetime.now(timezone.utc).isoformat()
@@ -170,7 +171,7 @@ def finish_job(
     error: str | None = None,
     result: dict[str, Any] | None = None,
 ) -> None:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return
     now = datetime.now(timezone.utc).isoformat()
     status = "done" if ok else "failed"
@@ -213,7 +214,7 @@ def record_catalog_after_success(
     scan_interval_hours: int | None = None,
 ) -> None:
     """Upsert ``dealer_catalog`` after a successful onboard/refresh job (A3)."""
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return
     did = (dealer_id or "").strip()
     if not did:
@@ -267,7 +268,7 @@ def record_catalog_after_success(
 
 def schedule_due_refresh_jobs() -> int:
     """Enqueue refresh jobs for catalogs past ``next_scan_at`` (no duplicate queued/running)."""
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return 0
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat()
@@ -328,7 +329,7 @@ def schedule_due_refresh_jobs() -> int:
 
 
 def list_dealer_catalog(*, limit: int = 50) -> list[dict[str, Any]]:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return []
     lim = max(1, min(int(limit), 200))
     conn = pg_connect()
@@ -351,7 +352,7 @@ def list_dealer_catalog(*, limit: int = 50) -> list[dict[str, Any]]:
 
 
 def get_job(job_id: int) -> dict[str, Any] | None:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return None
     try:
         jid = int(job_id)
@@ -424,7 +425,7 @@ def _job_retry_eligible(row: dict[str, Any]) -> tuple[bool, str]:
 
 def retry_failed_job(job_id: int) -> tuple[bool, str, dict[str, Any]]:
     """Re-queue a failed job with the same dealer_id, job_type, and payload."""
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return False, "postgres_required", {}
     row = get_job(job_id)
     if not row:
@@ -492,7 +493,7 @@ def diagnose_job_row(row: dict[str, Any], *, use_llm: bool = True) -> dict[str, 
 
 
 def _merge_result_diagnosis(job_id: int, diagnosis: dict[str, Any]) -> None:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return
     row = get_job(job_id)
     if not row:
@@ -517,7 +518,7 @@ def _merge_result_diagnosis(job_id: int, diagnosis: dict[str, Any]) -> None:
 
 def smart_retry_failed_job(job_id: int, *, use_llm: bool = True) -> tuple[bool, str, dict[str, Any]]:
     """Diagnose a failed job, then re-queue with AI/rule-guided retry hints."""
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return False, "postgres_required", {}
     row = get_job(job_id)
     if not row:
@@ -562,7 +563,7 @@ def smart_retry_failed_job(job_id: int, *, use_llm: bool = True) -> tuple[bool, 
 
 
 def list_recent_jobs(*, limit: int = 30) -> list[dict[str, Any]]:
-    if not is_inventory_postgres():
+    if not inventory_pg.is_inventory_postgres():
         return []
     lim = max(1, min(int(limit), 100))
     conn = pg_connect()

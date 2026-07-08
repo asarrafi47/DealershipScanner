@@ -34,7 +34,7 @@ try:
 except ImportError:
     pass
 
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db import inventory_pg
 from backend.scanner.post_scan.pipeline import (
     post_dealer_google_ratings_env_enabled,
     post_dict_enrich_env_enabled,
@@ -73,7 +73,7 @@ def _default_lookback_hours() -> int:
 def vins_scraped_within_hours(hours: int) -> list[str]:
     """Distinct VINs upserted/scraped within the last *hours*."""
     cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
-    if is_inventory_postgres():
+    if inventory_pg.is_inventory_postgres():
         from backend.db.inventory_db import db_conn
 
         with db_conn() as conn:
@@ -242,7 +242,7 @@ def run_cli_entry() -> None:
     ap.add_argument("--no-post-dealer-ratings", action="store_true")
     args = ap.parse_args()
 
-    if is_inventory_postgres():
+    if inventory_pg.is_inventory_postgres():
         from backend.db.inventory_db import init_inventory_db
 
         init_inventory_db()

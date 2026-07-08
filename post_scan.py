@@ -2,7 +2,7 @@
 """
 Post-scan repair and enrichment (decoupled from inventory capture).
 
-Run: ``python post_scan.py`` (same as ``python -m backend.scanner.post_scan_job``).
+Run: ``python post_scan.py`` (same as ``python -m backend.scanner.post_scan.job``).
 """
 from pathlib import Path
 
@@ -21,7 +21,7 @@ try:
 except ImportError:
     pass
 
-from backend.scanner.post_scan_job import run_cli_entry
+from backend.scanner.post_scan.job import run_cli_entry
 
 if __name__ == "__main__":
     run_cli_entry()

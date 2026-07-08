@@ -195,10 +195,10 @@ def test_search_cars_excludes_inactive_rows(monkeypatch: pytest.MonkeyPatch, tmp
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, stock_number, gallery,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             "CCCCCCCCCCCCCCCCC",
@@ -214,7 +214,6 @@ def test_search_cars_excludes_inactive_rows(monkeypatch: pytest.MonkeyPatch, tmp
             "https://dealer.test/",
             "t-dealer",
             now,
-            "90210",
             "Gas",
             4,
             "Automatic",
@@ -232,10 +231,10 @@ def test_search_cars_excludes_inactive_rows(monkeypatch: pytest.MonkeyPatch, tmp
         INSERT INTO cars (
             vin, title, year, make, model, trim, price, mileage,
             image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-            zip_code, fuel_type, cylinders, transmission, drivetrain,
+            fuel_type, cylinders, transmission, drivetrain,
             exterior_color, interior_color, stock_number, gallery,
             listing_active, listing_removed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             "DDDDDDDDDDDDDDDDD",
@@ -251,7 +250,6 @@ def test_search_cars_excludes_inactive_rows(monkeypatch: pytest.MonkeyPatch, tmp
             "https://dealer.test/",
             "t-dealer",
             now,
-            "90210",
             "Gas",
             4,
             "Automatic",

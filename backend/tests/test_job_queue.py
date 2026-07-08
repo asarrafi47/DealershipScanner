@@ -15,12 +15,12 @@ def test_default_scan_interval_hours(monkeypatch) -> None:
 
 
 def test_record_catalog_skips_without_postgres(monkeypatch) -> None:
-    monkeypatch.setattr(jq, "is_inventory_postgres", lambda: False)
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: False)
     jq.record_catalog_after_success(dealer_id="test-dealer", job_type="onboard", payload={"url": "https://x.com"})
 
 
 def test_retry_failed_job_not_found(monkeypatch) -> None:
-    monkeypatch.setattr(jq, "is_inventory_postgres", lambda: True)
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
     monkeypatch.setattr(jq, "get_job", lambda _jid: None)
     ok, err, _data = jq.retry_failed_job(99)
     assert ok is False
@@ -28,7 +28,7 @@ def test_retry_failed_job_not_found(monkeypatch) -> None:
 
 
 def test_retry_failed_job_not_failed(monkeypatch) -> None:
-    monkeypatch.setattr(jq, "is_inventory_postgres", lambda: True)
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
     monkeypatch.setattr(
         jq,
         "get_job",
@@ -48,7 +48,7 @@ def test_retry_failed_job_not_failed(monkeypatch) -> None:
 
 
 def test_retry_done_low_confidence_enqueues(monkeypatch) -> None:
-    monkeypatch.setattr(jq, "is_inventory_postgres", lambda: True)
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
     monkeypatch.setattr(
         jq,
         "get_job",
@@ -71,7 +71,7 @@ def test_retry_done_low_confidence_enqueues(monkeypatch) -> None:
 
 
 def test_retry_failed_job_enqueues(monkeypatch) -> None:
-    monkeypatch.setattr(jq, "is_inventory_postgres", lambda: True)
+    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: True)
     monkeypatch.setattr(
         jq,
         "get_job",

@@ -11,7 +11,7 @@ Implementation is split across:
 - ``phases/inventory_scrape`` — single inventory path JSON intercept
 - ``phases/nav`` — Playwright navigation helpers
 - ``manifest`` — dealers.json loading and filters
-- ``post_scan_job`` — standalone repair/enrichment (``python post_scan.py``)
+- ``post_scan/job`` — standalone repair/enrichment (``python post_scan.py``)
 
 Run from project root: ``python scanner.py``
 """
@@ -36,7 +36,7 @@ try:
 except ImportError:
     pass
 
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db import inventory_pg
 from backend.scanner.constants import DEBUG_DIR, MANIFEST_PATH
 from backend.scanner.manifest import (
     filter_manifest_by_dealer_id,
@@ -215,7 +215,7 @@ def run_cli_entry() -> None:
             mp = (ROOT / mp).resolve()
         MANIFEST_PATH = mp
         os.environ["DEALERS_MANIFEST_PATH"] = str(mp)
-    if is_inventory_postgres():
+    if inventory_pg.is_inventory_postgres():
         from backend.db.inventory_db import init_inventory_db
 
         init_inventory_db()

@@ -7,7 +7,7 @@ import asyncio
 import logging
 import os
 
-from backend.db.inventory_pg import is_inventory_postgres
+from backend.db import inventory_pg
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def scanner_parallel_upsert_enabled() -> bool:
         return False
     if raw in ("1", "true", "yes", "on"):
         return True
-    return is_inventory_postgres()
+    return inventory_pg.is_inventory_postgres()
 
 
 def default_max_dealer_concurrency() -> int:

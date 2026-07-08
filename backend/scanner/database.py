@@ -12,11 +12,46 @@ from backend.db.inventory_db import ensure_cars_table_columns
 from backend.utils.analytics_ep import apply_ep_from_scanner_dict
 from backend.utils.car_serialize import infer_engine_l_for_db
 from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score, is_effectively_empty
+from backend.utils.forced_induction import classify_forced_induction_from_car_row
 from backend.utils.interior_color_buckets import interior_color_buckets_json
 from backend.utils.in_transit import availability_spec_source_patch
 from backend.utils.spec_provenance import merge_spec_source_json
 
 logger = logging.getLogger(__name__)
+
+_PRICE_HISTORY_MAX_ENTRIES = 24
+
+
+def _build_price_history_json(
+    existing_raw: Any, prev_price: Any, new_price: Any, scraped_at: str
+) -> str | None:
+    """Append a ``{date, price}`` snapshot when price changes (or seed on first sight).
+
+    Read-modify-write against the row's own previous JSON; safe for the common case of
+    one scan process per VIN. A rare concurrent-write race could drop a snapshot, which
+    is acceptable since this is a nice-to-have history, not authoritative price data.
+    """
+    try:
+        history = json.loads(existing_raw) if existing_raw else []
+        if not isinstance(history, list):
+            history = []
+    except (TypeError, ValueError):
+        history = []
+    try:
+        np = float(new_price) if new_price is not None else None
+    except (TypeError, ValueError):
+        np = None
+    if np is None:
+        return json.dumps(history) if history else None
+    try:
+        pp = float(prev_price) if prev_price is not None else None
+    except (TypeError, ValueError):
+        pp = None
+    if not history or (pp is not None and np != pp):
+        history.append({"date": scraped_at, "price": np})
+    if len(history) > _PRICE_HISTORY_MAX_ENTRIES:
+        history = history[-_PRICE_HISTORY_MAX_ENTRIES:]
+    return json.dumps(history) if history else None
 
 
 def get_conn():
@@ -46,7 +81,6 @@ def _ensure_schema(conn):
             trim             TEXT,
             price            REAL,
             mileage          INTEGER,
-            zip_code         TEXT,
             fuel_type        TEXT,
             cylinders        INTEGER,
             transmission     TEXT,
@@ -219,6 +253,25 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     gallery_json = "[]"
             else:
                 gallery_json = "[]"
+            # 360 spin frames: stored as JSON string like gallery (None when absent
+            # so the ON CONFLICT keep-if-nonempty clause preserves prior captures).
+            spin = v.get("spin_frames")
+            if isinstance(spin, list):
+                _spin_urls = [str(u).strip() for u in spin if u and str(u).strip().startswith("http")]
+                spin_frames_json = json.dumps(_spin_urls) if _spin_urls else None
+            elif isinstance(spin, str) and spin.strip():
+                try:
+                    _parsed_spin = json.loads(spin)
+                    spin_frames_json = spin if isinstance(_parsed_spin, list) and _parsed_spin else None
+                except (TypeError, ValueError):
+                    spin_frames_json = None
+            else:
+                spin_frames_json = None
+            # Interior panorama: single URL string or None.
+            interior_pano = v.get("interior_pano")
+            interior_pano = interior_pano.strip() if isinstance(interior_pano, str) else None
+            if not interior_pano or not interior_pano.startswith("http"):
+                interior_pano = None
             highlights = v.get("history_highlights")
             highlights_json = json.dumps(highlights) if isinstance(highlights, list) else (highlights if isinstance(highlights, str) else "[]")
             img = v.get("image_url")
@@ -263,20 +316,33 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 packages_json = pkg_raw.strip()
             else:
                 packages_json = None
+            fi = v.get("forced_induction") or classify_forced_induction_from_car_row(v)
+            try:
+                cursor.execute("SELECT price, price_provenance_json FROM cars WHERE vin = ?", (vin,))
+                _prev_row = cursor.fetchone()
+            except Exception:
+                _prev_row = None
+            price_history_json = _build_price_history_json(
+                _prev_row[1] if _prev_row else None,
+                _prev_row[0] if _prev_row else None,
+                price,
+                now,
+            )
             cursor.execute(
                 """
                 INSERT INTO cars (
                     vin, title, year, make, model, trim, price, mileage,
                     image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                    zip_code, fuel_type, cylinders, transmission, transmission_type, drivetrain,
+                    fuel_type, cylinders, transmission, transmission_type, drivetrain,
                     exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
                     dealership_registry_id,
                     source_url, body_style, engine_description, engine_l, condition, description, data_quality_score,
                     mpg_city, mpg_highway, is_cpo, model_full_raw,
                     packages,
                     listing_active, listing_removed_at, spec_source_json,
-                    first_seen_at, last_price_change_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    first_seen_at, last_price_change_at, forced_induction, price_provenance_json,
+                    spin_frames, interior_pano
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(vin) DO UPDATE SET
                     title=CASE
                         WHEN NULLIF(TRIM(excluded.title),'') IS NOT NULL AND excluded.title != 'Unknown vehicle'
@@ -296,7 +362,6 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     END,
                     dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
                     dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
-                    zip_code=excluded.zip_code,
                     fuel_type=COALESCE(excluded.fuel_type, cars.fuel_type),
                     cylinders=COALESCE(excluded.cylinders, cars.cylinders),
                     transmission=COALESCE(excluded.transmission, cars.transmission),
@@ -341,7 +406,11 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                         ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
                     END,
                     internal_notes=cars.internal_notes,
-                    marked_for_review=cars.marked_for_review
+                    marked_for_review=cars.marked_for_review,
+                    forced_induction=COALESCE(excluded.forced_induction, cars.forced_induction),
+                    price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
+                    spin_frames=COALESCE(NULLIF(NULLIF(TRIM(excluded.spin_frames), ''), '[]'), cars.spin_frames),
+                    interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano)
                 """,
                 (
                     vin,
@@ -357,7 +426,6 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     v.get("dealer_url"),
                     v.get("dealer_id") or "",
                     now,
-                    v.get("zip_code"),
                     v.get("fuel_type"),
                     v.get("cylinders"),
                     v.get("transmission"),
@@ -389,6 +457,10 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     spec_src,
                     now,
                     now,
+                    fi,
+                    price_history_json,
+                    spin_frames_json,
+                    interior_pano,
                 ),
             )
             count += 1
