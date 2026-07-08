@@ -618,6 +618,18 @@ async def run_dealer(
 
             result["vins"] = sorted({(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()})
 
+            # Prefetch cheap knowledge BEFORE the browser queue is built: prior-scan
+            # immutable fields by VIN + HTTP detail-page structured data. The queue's
+            # emptiness gates run after this, so it can only shrink browser work.
+            try:
+                from backend.scanner.vdp.prefetch import prefetch_before_vdp
+
+                _pf = await prefetch_before_vdp(all_vehicles, dealer_id, name)
+                if _pf:
+                    result["vdp_prefetch"] = _pf
+            except Exception as _pf_e:
+                logger.warning("VDP prefetch failed [%s] (continuing): %s", name, _pf_e)
+
             # Per-dealer VDP caps, passed to enrich_vehicles_vdp as arguments. These
             # MUST NOT be written back to os.environ: dealers are scanned concurrently
             # in one process (asyncio.gather), so a process-global write races — one
