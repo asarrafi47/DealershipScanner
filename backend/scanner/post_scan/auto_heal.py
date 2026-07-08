@@ -18,12 +18,16 @@ from backend.scanner.post_scan.coverage_report import _has_value
 logger = logging.getLogger("scanner")
 
 # A field triggers healing when its lot-wide coverage drops below this floor.
+# Only fields the gap-fill layers can actually re-acquire belong here (price,
+# colors, and page-parseable specs) — mileage/trim aren't in its repertoire,
+# so tripping on them just burns fetches patching nothing.
 _KEY_FIELD_MIN_PCT: dict[str, float] = {
     "price": 60.0,
     "exterior_color": 60.0,
     "interior_color": 50.0,
-    "mileage": 60.0,
-    "trim": 50.0,
+    "transmission": 40.0,
+    "fuel_type": 40.0,
+    "body_style": 40.0,
 }
 _MIN_LOT_SIZE = 10
 

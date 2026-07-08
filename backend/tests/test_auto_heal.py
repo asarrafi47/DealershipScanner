@@ -14,13 +14,13 @@ from backend.scanner.utils.vdp_spec_parse import parse_price_from_listing_html
 
 
 def _lot(n_priced: int, n_unpriced: int) -> list[dict]:
+    base = {"exterior_color": "Blue", "interior_color": "Black", "transmission": "Automatic",
+            "fuel_type": "Gasoline", "body_style": "Sedan"}
     rows = []
     for i in range(n_priced):
-        rows.append({"vin": f"1HGBH41JXMN1{i:05d}", "price": 25000, "exterior_color": "Blue",
-                     "interior_color": "Black", "mileage": 100 + i, "trim": "EX"})
+        rows.append({"vin": f"1HGBH41JXMN1{i:05d}", "price": 25000, **base})
     for i in range(n_unpriced):
-        rows.append({"vin": f"2HGBH41JXMN1{i:05d}", "price": None, "exterior_color": "Blue",
-                     "interior_color": "Black", "mileage": 100 + i, "trim": "EX"})
+        rows.append({"vin": f"2HGBH41JXMN1{i:05d}", "price": None, **base})
     return rows
 
 
