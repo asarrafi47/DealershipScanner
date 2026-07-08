@@ -31,9 +31,11 @@ def _fresh_app(
             "http://localhost/auth/google/callback",
         )
     else:
-        monkeypatch.delenv("GOOGLE_OAUTH_CLIENT_ID", raising=False)
-        monkeypatch.delenv("GOOGLE_OAUTH_CLIENT_SECRET", raising=False)
-        monkeypatch.delenv("GOOGLE_OAUTH_REDIRECT_URI", raising=False)
+        # setenv("") not delenv: reload(main) re-runs load_project_dotenv(override=False),
+        # which would re-populate deleted vars from .env; empty values survive.
+        monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_ID", "")
+        monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_SECRET", "")
+        monkeypatch.setenv("GOOGLE_OAUTH_REDIRECT_URI", "")
     if show_button:
         monkeypatch.setenv("GOOGLE_OAUTH_SHOW_BUTTON", "1")
     import backend.main as main

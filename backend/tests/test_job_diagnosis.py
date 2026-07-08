@@ -8,7 +8,13 @@ from backend.scanner.job_diagnosis import (
 )
 
 
-def test_diagnose_browser_arch_mismatch() -> None:
+def test_diagnose_browser_arch_mismatch(monkeypatch) -> None:
+    # retry_recommended / retry_with_env require a native Playwright Chromium on
+    # the worker host; stub the filesystem probe so the test is machine-independent.
+    monkeypatch.setattr(
+        "backend.scanner.job_diagnosis._playwright_chromium_path",
+        lambda: "/root/.cache/ms-playwright/chromium-1234/chrome-linux/chrome",
+    )
     log = "qemu-x86_64: Could not open '/lib64/ld-linux-x86-64.so.2'\nFailed to launch the browser process"
     d = diagnose_failed_job(
         error="exit_1",

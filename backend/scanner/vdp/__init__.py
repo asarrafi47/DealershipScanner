@@ -20,6 +20,7 @@ from backend.scanner.vdp.core import (
     _vehicle_needs_description_vdp,
     _vehicle_needs_spec_gap_vdp,
     _vdp_gallery_loop_max_sec,
+    _vdp_queue_sort_key,
     _vdp_response_text_timeout_sec,
     _vdp_visit_one,
 )

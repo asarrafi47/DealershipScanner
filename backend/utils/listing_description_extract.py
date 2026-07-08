@@ -292,7 +292,11 @@ def _is_plausible_feature_clause(s: str) -> bool:
 
 def strip_dealer_description_intro(text: str) -> str:
     """Remove marketing lead-ins like 'This 2023 … well equipped and includes these features…'."""
-    t = " ".join(str(text or "").split()).strip()
+    # Collapse whitespace per line but keep newlines: package/bullet extraction
+    # (``_split_package_blocks``) depends on line structure surviving this pass.
+    t = "\n".join(
+        " ".join(line.split()) for line in str(text or "").splitlines()
+    ).strip()
     if not t:
         return t
     t = _DEALER_INTRO_SENTENCE.sub("", t).strip()

@@ -2362,6 +2362,17 @@ def show_window_sticker_panel(car: dict[str, Any], ctx: dict[str, Any] | None = 
     if cdjr_oem_window_sticker_eligible(car):
         return True
 
+    if car_listing_may_have_sticker(car):
+        if car_has_listing_sticker_signal(car):
+            urls = car_listing_sticker_urls(car)
+            if any(listing_sticker_direct_image_url(u) for u in urls):
+                return True
+        listing_url = str(
+            car.get("source_url") or car.get("_detail_url") or car.get("listing_vdp_url") or ""
+        ).strip()
+        if listing_url.lower().startswith("http"):
+            return True
+
     from backend.enrichment.window_sticker_service import window_sticker_has_visual
 
     ctx = ctx or {}

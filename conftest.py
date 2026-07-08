@@ -14,7 +14,9 @@ PROD_TEST_DEV_USERS_DB_KEY = "pytest-dev-users-db-enc-key-32c!"
 
 def apply_production_credential_encryption_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """Wire SQLCipher keys for tests that import backend.main with FLASK_ENV=production."""
-    monkeypatch.delenv("ALLOW_UNENCRYPTED_USER_DB", raising=False)
+    # setenv("") not delenv: reload(main) re-runs load_project_dotenv(override=False),
+    # which re-populates a deleted var from .env; an empty value survives and is falsy.
+    monkeypatch.setenv("ALLOW_UNENCRYPTED_USER_DB", "")
     monkeypatch.setenv("USERS_DB_ENCRYPTION_KEY", PROD_TEST_USERS_DB_KEY)
     monkeypatch.setenv("DEV_USERS_DB_ENCRYPTION_KEY", PROD_TEST_DEV_USERS_DB_KEY)
 

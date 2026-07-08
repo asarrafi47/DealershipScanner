@@ -14,16 +14,28 @@ from backend.scanner.post_pipeline import (
 )
 
 
-def test_vision_toggles_default_on(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_vision_toggles_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
     for key in (
         "SCANNER_GALLERY_VISION_FILTER",
+        "SCANNER_GALLERY_VISION_INLINE",
+        "SCANNER_GALLERY_VISION_POST",
         "SCANNER_MONRONEY_VISION",
         "SCANNER_POST_INTERIOR_VISION",
     ):
         monkeypatch.delenv(key, raising=False)
-    assert gallery_vision_filter_env_enabled() is True
+    # Gallery vision is opt-in (inline blocks upsert; post rides --enable-gallery-vision);
+    # Monroney and interior vision stay default-on.
+    assert gallery_vision_filter_env_enabled() is False
     assert monroney_vision_env_enabled() is True
     assert post_interior_vision_env_enabled() is True
+
+
+def test_gallery_vision_filter_explicit_enable(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SCANNER_GALLERY_VISION_FILTER", "1")
+    assert gallery_vision_filter_env_enabled() is True
+    monkeypatch.setenv("SCANNER_GALLERY_VISION_FILTER", "")
+    monkeypatch.setenv("SCANNER_GALLERY_VISION_POST", "1")
+    assert gallery_vision_filter_env_enabled() is True
 
 
 def test_vision_toggles_opt_out_zero(monkeypatch: pytest.MonkeyPatch) -> None:

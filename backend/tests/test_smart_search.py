@@ -2,12 +2,175 @@
 
 from __future__ import annotations
 
+import json
+import sqlite3
+
+import pytest
+
+import backend.db.inventory_db as inventory_db
+from backend.db.inventory_db import init_inventory_db
 from backend.utils.hybrid_search import (
+    _expand_inventory_models_cached,
     expand_inventory_models,
     filters_dict_to_search_cars_kwargs,
     hybrid_smart_search,
 )
 from backend.utils.query_parser import parse_natural_query
+
+# parse_natural_query() learns makes/models/trims/body styles/colors/packages from the
+# inventory DB, so these tests seed a small fixture inventory instead of depending on
+# whatever the developer's local inventory.db happens to contain.
+_X5_PACKAGES = json.dumps(
+    {
+        "packages_normalized": [
+            {"name": "M Sport Package"},
+            {"name": "Bowers & Wilkins Diamond Surround Sound"},
+        ],
+        "detected_adas": ["head_up_display", "360_cameras"],
+    }
+)
+
+_SEED_CARS: list[dict] = [
+    {
+        "vin": "5UXCR6C05N9A00001",
+        "title": "2023 BMW X5 xDrive40i",
+        "year": 2023,
+        "make": "BMW",
+        "model": "X5",
+        "trim": "xDrive40i",
+        "price": 62500,
+        "mileage": 12000,
+        "cylinders": 6,
+        "drivetrain": "AWD",
+        "exterior_color": "Alpine White",
+        "interior_color": "Black",
+        "body_style": "Sport Utility Vehicle",
+        "packages": _X5_PACKAGES,
+    },
+    {
+        "vin": "5UXCR6C05N9A00002",
+        "title": "2022 BMW X5 xDrive40i",
+        "year": 2022,
+        "make": "BMW",
+        "model": "X5",
+        "trim": "xDrive40i",
+        "price": 58990,
+        "mileage": 24000,
+        "cylinders": 6,
+        "drivetrain": "AWD",
+        "exterior_color": "Alpine White",
+        "interior_color": "Black",
+        "body_style": "Sport Utility Vehicle",
+        "packages": _X5_PACKAGES,
+    },
+    {
+        "vin": "5UX43DP05N9B00003",
+        "title": "2022 BMW X3 sDrive30i",
+        "year": 2022,
+        "make": "BMW",
+        "model": "X3",
+        "trim": "sDrive30i",
+        "price": 41000,
+        "mileage": 18000,
+        "cylinders": 4,
+        "drivetrain": "RWD",
+        "exterior_color": "Phytonic Blue",
+        "interior_color": "White",
+        "body_style": "Sport Utility Vehicle",
+    },
+    {
+        "vin": "1HGCV1F55MA000004",
+        "title": "2021 Honda Accord EX-L",
+        "year": 2021,
+        "make": "Honda",
+        "model": "Accord",
+        "trim": "EX-L",
+        "price": 27500,
+        "mileage": 30000,
+        "cylinders": 4,
+        "drivetrain": "FWD",
+        "exterior_color": "Platinum White Pearl",
+        "interior_color": "Black",
+        "body_style": "Sedan",
+    },
+    {
+        "vin": "W1K6G7GB5NA000005",
+        "title": "2022 Mercedes-Benz S-Class S 580 4MATIC",
+        "year": 2022,
+        "make": "Mercedes-Benz",
+        "model": "S-Class",
+        "trim": "S 580",
+        "price": 114900,
+        "mileage": 9000,
+        "cylinders": 8,
+        "drivetrain": "AWD",
+        "exterior_color": "Obsidian Black Metallic",
+        "interior_color": "Macchiato Beige",
+        "body_style": "Sedan",
+    },
+    {
+        "vin": "3GCUDDED5PG000006",
+        "title": "2023 Chevrolet Silverado 1500 LT Crew Cab",
+        "year": 2023,
+        "make": "Chevrolet",
+        "model": "Silverado 1500",
+        "trim": "LT",
+        "price": 48990,
+        "mileage": 15000,
+        "cylinders": 8,
+        "drivetrain": "4WD",
+        "exterior_color": "Summit White",
+        "interior_color": "Jet Black",
+        "body_style": "Crew Cab Pickup",
+    },
+]
+
+
+@pytest.fixture(scope="module")
+def _smart_search_inventory_db(tmp_path_factory: pytest.TempPathFactory) -> str:
+    """Build one seeded SQLite inventory for the whole module."""
+    dbp = str(tmp_path_factory.mktemp("smart_search_inv") / "inventory.db")
+    with pytest.MonkeyPatch.context() as mp:
+        # Module-scoped: runs before the function-scoped sqlite-mode fixture in conftest.
+        mp.delenv("INVENTORY_DATABASE_URL", raising=False)
+        mp.delenv("DATABASE_URL", raising=False)
+        mp.setenv("INVENTORY_SQLITE_TESTS", "1")
+        mp.setattr(inventory_db, "DB_PATH", dbp)
+        init_inventory_db()
+    conn = sqlite3.connect(dbp)
+    for car in _SEED_CARS:
+        row = {
+            "fuel_type": "Gasoline",
+            "transmission": "Automatic",
+            "image_url": "https://example.com/car.jpg",
+            "dealer_name": "Test Dealer",
+            "dealer_url": "https://example.com",
+            "dealer_id": "test-dealer",
+            "scraped_at": "2026-07-01T00:00:00Z",
+            "stock_number": car["vin"][-6:],
+            "gallery": '["https://example.com/car.jpg"]',
+            "listing_active": 1,
+            **car,
+        }
+        cols = list(row)
+        conn.execute(
+            f"INSERT INTO cars ({', '.join(cols)}) VALUES ({', '.join('?' for _ in cols)})",
+            [row[c] for c in cols],
+        )
+    conn.commit()
+    conn.close()
+    return dbp
+
+
+@pytest.fixture(autouse=True)
+def _use_seeded_inventory(
+    _smart_search_inventory_db: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Point inventory reads at the seeded fixture DB (root conftest resets DB_PATH per test)."""
+    monkeypatch.setattr(inventory_db, "DB_PATH", _smart_search_inventory_db)
+    _expand_inventory_models_cached.cache_clear()
+    yield
+    _expand_inventory_models_cached.cache_clear()
 
 
 def test_expand_inventory_models_x5_prefix() -> None:

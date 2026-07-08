@@ -1084,7 +1084,7 @@ TRIM_YEAR_WINDOWS: dict[tuple[str, str, str], tuple[int, ...]] = {
     # --- Jeep Grand Cherokee WK2 / WL ---
     ("jeep", "grandcherokee", "trackhawk"): (2018, 2021),
     ("jeep", "grandcherokee", "srt"): (2012, 2021),
-    ("jeep", "grandcherokee", "limitedx"): (2020, 2021),
+    ("jeep", "grandcherokee", "limitedx"): (2019, 2021),
     ("jeep", "grandcherokee", "summitreserve"): (2022, 2030),
     # --- BMW X5 (G05) ---
     ("bmw", "x5", "m60ixdrive"): (2024, 2030),

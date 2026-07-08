@@ -20,7 +20,9 @@ def test_run_window_sticker_for_vins(monkeypatch) -> None:
 
     def fake_get_car(vin: str):
         if vin == "1C4RJHBG9SC340097":
-            return {"id": 99, "vin": vin, "dealer_id": "test-dealer-com"}
+            # ``year`` required since 7d3c76e1c: OEM sticker auto-fetch is gated to
+            # CDJR/Stellantis model year >= 2018 (cdjr_oem_window_sticker_eligible).
+            return {"id": 99, "vin": vin, "dealer_id": "test-dealer-com", "year": 2025}
         return None
 
     def fake_available(car):

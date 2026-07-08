@@ -674,7 +674,11 @@ def test_bmw_i4_uses_epa_motor_trims_not_package_lines() -> None:
         trim="eDrive40",
     )
     assert result is not None
-    assert "EPA" in str(result.get("source") or "")
+    # EPA motor trims or the tracked per-year spec-sheet catalog (added with the
+    # brochure pipeline; supersedes EPA for model-years it covers) — never the
+    # raw package/options lines.
+    source = str(result.get("source") or "")
+    assert "EPA" in source or "Complete_Options" in source
     names = [s["name"] for s in result["steps"]]
     assert "eDrive40" in names
     assert "M Competition" not in names
@@ -775,11 +779,11 @@ def test_audi_make_fallback_not_generic_toyota_trims() -> None:
 
 
 def test_bmw_3_series_2016_28i_typo_matches_curated_ladder() -> None:
-    from backend.enrichment.brochure_extract import load_brochure_trim_overlay
-
-    assert load_brochure_trim_overlay(2016, "BMW", "3 Series") is None
+    # A brochure overlay for this model-year now ships in the repo
+    # (trim_adds_by_year, commit 7d3c76e1c); the curated ladder must still win.
     result = resolve_trim_ladder(make="BMW", model="3 Series", year=2016, trim="28i xDrive")
     assert result is not None
+    assert str(result.get("source") or "") == "curated"
     names = [s["name"] for s in result["steps"]]
     assert "330i" in names
     assert "Na" not in names and "Bmw" not in names
@@ -1222,9 +1226,31 @@ def test_volvo_ex90_no_placeholder_trim_adds() -> None:
             assert not any(p in line for p in placeholders)
 
 
-def test_brochure_overlay_fuzzy_matches_inventory_trim_names() -> None:
+def test_brochure_overlay_fuzzy_matches_inventory_trim_names(monkeypatch, tmp_path) -> None:
+    # _ladder_from_inventory reads the inventory DB; seed a private one so the
+    # test doesn't depend on whatever the local dev DB happens to contain.
+    import sqlite3
+
+    from backend.db import inventory_db
+    from backend.db.inventory_db import init_inventory_db
     from backend.enrichment.brochure_extract import load_brochure_trim_overlay
     from backend.enrichment.trim_ladder import _build_ladder_result, _ladder_from_inventory
+
+    dbp = tmp_path / "inv_palisade.db"
+    monkeypatch.setattr(inventory_db, "DB_PATH", str(dbp))
+    init_inventory_db()
+    conn = sqlite3.connect(str(dbp))
+    cur = conn.cursor()
+    for i, (trim, price) in enumerate(
+        [("SEL", 40000), ("Limited", 48000), ("Calligraphy", 55000)]
+    ):
+        cur.execute(
+            "INSERT INTO cars (vin, year, make, model, trim, price, listing_active)"
+            " VALUES (?, ?, ?, ?, ?, ?, 1)",
+            (f"KM8R{i}DHE{i}SU00000{i}", 2025, "Hyundai", "Palisade", trim, price),
+        )
+    conn.commit()
+    conn.close()
 
     overlay = load_brochure_trim_overlay(2025, "Hyundai", "Palisade")
     assert overlay is not None
