@@ -315,6 +315,8 @@ def init_postgres_inventory(conn: Any) -> None:
             ("window_sticker_url", "TEXT"),
             ("spin_frames", "TEXT"),
             ("interior_pano", "TEXT"),
+            ("forced_induction", "TEXT"),
+            ("zip_code", "TEXT"),
         ],
     )
     cur.execute(

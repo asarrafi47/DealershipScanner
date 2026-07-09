@@ -639,7 +639,10 @@ class NetworkObserver:
             if method != "GET":
                 pd = req.post_data
                 if pd:
-                    post_sample = str(pd)[:2000]
+                    # Full JSON body needed: recipes replay this as the POST
+                    # template, and a truncated body is unparseable — every
+                    # POST recipe becomes silently unreplayable.
+                    post_sample = str(pd)[:20000]
         except Exception:
             pass
         return method, post_sample

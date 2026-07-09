@@ -308,6 +308,25 @@ def _try_window_sticker_enrich(vin: str, raw: dict[str, Any], proposed: dict[str
         logger.debug("Window sticker enrich failed for %s: %s", vin, e)
 
 
+def _heal_workers() -> int:
+    try:
+        return max(1, min(12, int((os.environ.get("SCANNER_HEAL_WORKERS") or "4").strip())))
+    except ValueError:
+        return 4
+
+
+def _ddg_max_per_run() -> int:
+    try:
+        return max(0, min(2000, int((os.environ.get("LISTING_GAP_FILL_DDG_MAX") or "60").strip())))
+    except ValueError:
+        return 60
+
+
+# Spec fields the DDG snippet fallback is able to fill; skip the (slow,
+# rate-limited) search entirely when none of these are still missing.
+_DDG_FILLABLE = frozenset({"transmission", "drivetrain", "fuel_type", "body_style", "cylinders"})
+
+
 def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
     stats: dict[str, Any] = {
         "vins_input": len(vins),
@@ -326,33 +345,49 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
         "no",
         "off",
     )
+    work = vins[:cap]
+    stats["skipped_cap"] = max(0, len(vins) - cap)
 
-    for idx, vin in enumerate(vins):
-        if idx >= cap:
-            stats["skipped_cap"] = max(0, len(vins) - cap)
-            break
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    lock = threading.Lock()
+    ddg_budget = {"left": _ddg_max_per_run() if allow_ddg else 0}
+
+    def _bump(key: str, n: int = 1) -> None:
+        with lock:
+            stats[key] += n
+
+    def _take_ddg_slot() -> bool:
+        with lock:
+            if ddg_budget["left"] <= 0:
+                return False
+            ddg_budget["left"] -= 1
+            return True
+
+    def _heal_one(vin: str) -> None:
         raw = get_car_by_vin(vin)
         if not raw:
-            continue
+            return
         cid = int(raw["id"])
         missing = listing_missing_field_codes(raw, for_public_filter=False)
         if not missing:
-            stats["skipped_complete"] += 1
-            continue
-        stats["rows_examined"] += 1
+            _bump("skipped_complete")
+            return
+        _bump("rows_examined")
 
         res = apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
         if res.applied:
-            stats["structured_backfill_applied"] += 1
+            _bump("structured_backfill_applied")
 
         raw = get_car_by_id(cid, include_inactive=True)
         if not raw:
-            continue
+            return
         missing = listing_missing_field_codes(raw, for_public_filter=False)
         if not missing:
             refresh_car_data_quality_score(cid)
-            stats["skipped_complete"] += 1
-            continue
+            _bump("skipped_complete")
+            return
 
         url = (raw.get("source_url") or "").strip()
         proposed: dict[str, Any] = {}
@@ -365,7 +400,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
         if url and need_page:
             html = fetch_listing_html(url)
             if html:
-                stats["web_fetch_ok"] += 1
+                _bump("web_fetch_ok")
 
         if html:
             if "price" in missing:
@@ -416,9 +451,10 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
 
         raw = get_car_by_id(cid, include_inactive=True)
         if not raw:
-            continue
+            return
 
-        if allow_ddg:
+        remaining = set(listing_missing_field_codes(raw, for_public_filter=False)) - set(proposed)
+        if allow_ddg and (remaining & _DDG_FILLABLE) and _take_ddg_slot():
             ddg_patch = _ddg_html_search_specs(dict(raw))
             for k, v in ddg_patch.items():
                 if k in proposed:
@@ -426,13 +462,13 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 if not is_effectively_empty(raw.get(k)):
                     continue
                 proposed[k] = v
-                stats["ddg_patch_fields"] += 1
+                _bump("ddg_patch_fields")
 
         # OEM window sticker: store URL + parse options into packages if not already present
         _try_window_sticker_enrich(vin, dict(raw), proposed)
 
         if not proposed:
-            continue
+            return
 
         merged = clean_car_row_dict({**dict(raw), **proposed})
         diff: dict[str, Any] = {}
@@ -440,7 +476,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
             if merged.get(k) != raw.get(k):
                 diff[k] = merged[k]
         if not diff:
-            continue
+            return
 
         diff["spec_source_json"] = _merge_provenance(
             raw.get("spec_source_json"),
@@ -450,6 +486,11 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
         )
         update_car_row_partial(cid, diff)
         refresh_car_data_quality_score(cid)
-        stats["rows_patched"] += 1
+        _bump("rows_patched")
+
+    if work:
+        with ThreadPoolExecutor(max_workers=min(_heal_workers(), len(work))) as pool:
+            for _ in pool.map(_heal_one, work):
+                pass
 
     return stats

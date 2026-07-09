@@ -273,6 +273,8 @@ async def try_fetch_via_recipes(
     provider: str,
     base_url: str,
     dealer_name: str,
+    *,
+    union: bool = False,
 ) -> tuple[list[tuple[str, Any]], int] | None:
     """
     Replay this dealer's stored recipes over plain HTTP (pre-Playwright).
@@ -283,6 +285,12 @@ async def try_fetch_via_recipes(
     is complete enough to skip the browser scrape (a recipe captured on one listing
     config can be type-filtered and cover only part of the lot).
     401/403 responses mark the recipe stale so the browser pass re-captures auth.
+
+    ``union=True`` replays EVERY non-stale recipe and returns the combined
+    yield: a dealer's recipes are often per-listing-config (new / used / CPO
+    pages), so the first passing recipe alone can cover only part of the lot.
+    Delta scans want the union; the pre-browser scan fast path keeps the
+    cheaper first-hit behavior.
     """
     if not recipe_fetch_enabled():
         return None
@@ -292,6 +300,8 @@ async def try_fetch_via_recipes(
     from backend.parsers import parse
 
     min_vehicles = recipe_min_vehicles()
+    union_records: list[tuple[str, Any]] = []
+    union_vins: set[str] = set()
     for recipe in recipes:
         template: Any = None
         if recipe.post_template:
@@ -300,7 +310,16 @@ async def try_fetch_via_recipes(
             except ValueError:
                 template = None
         if recipe.method != "GET" and template is None:
-            continue  # truncated/unparseable POST sample — can't replay safely
+            # Truncated/unparseable POST sample — can't replay safely. Mark it
+            # stale so the next browser scan re-captures a full body instead of
+            # this recipe silently never working.
+            mark_stale(dealer_id, recipe, "unreplayable_post_template")
+            logger.info(
+                "Recipe stale [%s] %s — POST template unparseable (truncated capture?); "
+                "browser scan will re-capture",
+                dealer_name, recipe.url[:80],
+            )
+            continue
         records: list[tuple[str, Any]] = []
         vins: set[str] = set()
         pages = 1 if recipe.pagination == PAGINATION_NONE else _MAX_REPLAY_PAGES
@@ -352,5 +371,14 @@ async def try_fetch_via_recipes(
                 "Recipe fetch [%s]: %d unique VIN(s) from %d page(s) via %s",
                 dealer_name, len(vins), len(records), recipe.url[:80],
             )
-            return records, len(vins)
+            if not union:
+                return records, len(vins)
+            union_records.extend(records)
+            union_vins |= vins
+    if union and len(union_vins) >= min_vehicles:
+        logger.info(
+            "Recipe fetch [%s]: %d unique VIN(s) combined across %d recipe replay(s)",
+            dealer_name, len(union_vins), len(union_records),
+        )
+        return union_records, len(union_vins)
     return None

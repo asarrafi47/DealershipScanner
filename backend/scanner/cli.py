@@ -207,6 +207,15 @@ def run_cli_entry() -> None:
         action="store_true",
         help="Skip dealer Google rating backfill cadence after scan (default: on).",
     )
+    ap.add_argument(
+        "--delta",
+        action="store_true",
+        help=(
+            "Recipe-driven HTTP delta refresh (no browser): replay each dealer's "
+            "saved JSON endpoints to update prices / new arrivals / sold cars. "
+            "Dealers without a passing recipe yield are skipped."
+        ),
+    )
     args = ap.parse_args()
     global MANIFEST_PATH
     if args.manifest:
@@ -233,6 +242,15 @@ def run_cli_entry() -> None:
     apply_scan_only_env_defaults()
 
     to_run = filter_manifest_skip_flag(filter_skip_dealers(load_manifest()))
+    if args.delta:
+        from backend.scanner.delta_scan import run_delta_scan
+
+        if args.dealer_id:
+            to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
+        if args.limit:
+            to_run = to_run[: args.limit]
+        summary = asyncio.run(run_delta_scan(to_run))
+        sys.exit(0 if summary["refreshed"] or not summary["dealers"] else 1)
     if args.dealer_id:
         to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
         if not to_run:
