@@ -87,9 +87,18 @@ def assert_production_security_config() -> None:
             "ALLOW_DEV_PUBLIC_REGISTER=1 allows self-serve /dev/register operator accounts."
         )
 
-    if (os.environ.get("TRUST_PROXY_HEADERS") or "").strip().lower() in ("1", "true", "yes", "on"):
+    from backend.utils.client_ip import trust_proxy_headers, trusted_proxy_hops
+
+    if trust_proxy_headers():
         _log.warning(
-            "TRUST_PROXY_HEADERS=1: rate limits trust X-Forwarded-For — use only behind a trusted reverse proxy."
+            "TRUST_PROXY_HEADERS=1: rate limits read X-Forwarded-For %d hop(s) from the right. "
+            "TRUSTED_PROXY_HOPS must equal the number of proxies in front of this app.",
+            trusted_proxy_hops(),
+        )
+    else:
+        _log.warning(
+            "TRUST_PROXY_HEADERS is unset: per-IP rate limits key on remote_addr. Behind a reverse "
+            "proxy every request shares one bucket — set TRUST_PROXY_HEADERS=1 and TRUSTED_PROXY_HOPS."
         )
 
     from backend.db.inventory_pg import assert_inventory_backend_configured

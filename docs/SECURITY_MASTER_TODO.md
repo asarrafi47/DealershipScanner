@@ -90,7 +90,8 @@
 | `CAR_CHAT_WEB_RESEARCH` | Optional | `auto` (default when unset): dev allows Playwright; **production** allows Playwright only for signed-in users unless `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`. `0`/`1` = force off/on for all. |
 | `CAR_CHAT_WEB_RESEARCH_PUBLIC` | Optional | When `1` and `CAR_CHAT_WEB_RESEARCH` is `auto` in **production**, anonymous users may trigger Playwright (higher cost/abuse risk). |
 | `WEB_RESEARCH_ALLOWED_HOSTS` | Optional | Comma-separated hostnames; when set, Brave result links must match (exact or `*.domain`). Always applies blocklist + private-IP/localhost guard. Unset = blocklist + private guard only. |
-| `TRUST_PROXY_HEADERS` | Optional (`1` / `true`) | When set, rate limits use first `X-Forwarded-For` hop (use only behind a trusted proxy) |
+| `TRUST_PROXY_HEADERS` | Required behind a proxy (`1` / `true`) | When set, rate limits read `X-Forwarded-For` `TRUSTED_PROXY_HOPS` entries from the right. Unset behind a proxy collapses every per-IP limit into one shared bucket. |
+| `TRUSTED_PROXY_HOPS` | Optional (default `1`) | Number of trusted proxies in front of the app (Railway edge = 1; Cloudflare → Railway = 2). Only read when `TRUST_PROXY_HEADERS` is truthy. |
 | `RATE_LIMIT_LOGIN_PER_MIN` | Optional | Default 30 (`/login` POST) |
 | `RATE_LIMIT_REGISTER_PER_MIN` | Optional | Default 10 (`/register` POST) |
 | `RATE_LIMIT_MFA_VERIFY_PER_MIN` | Optional | Default 20 (`POST /mfa/verify` per IP) |
@@ -607,9 +608,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/utils/client_ip.py`, `backend/main.py`, `backend/dev_routes.py` |
-| **Outcome** | `X-Forwarded-For` is honored only when `TRUST_PROXY_HEADERS` is truthy; otherwise `request.remote_addr` is used for smart search, car chat, `/login`, `/register`, and `/dev` auth rate limits. |
-| **Validation** | `python -m pytest tests/test_client_ip.py`. |
-| **Last verified** | 2026-04-18 |
+| **Outcome** | `X-Forwarded-For` is honored only when `TRUST_PROXY_HEADERS` is truthy; otherwise `request.remote_addr` is used for smart search, car chat, `/login`, `/register`, and `/dev` auth rate limits. Hardened 2026-07-08: the client IP is taken `TRUSTED_PROXY_HOPS` entries from the **right** (not the first hop), so a client-supplied `X-Forwarded-For` can never become the rate-limit key. Entries are validated as IPs and ports stripped; a chain shorter than the hop count falls back to `remote_addr`. |
+| **Validation** | `python -m pytest backend/tests/test_client_ip.py`. |
+| **Last verified** | 2026-07-08 |
 
 ### SEC-056 — KBB IDWS API key & outbound valuation
 
