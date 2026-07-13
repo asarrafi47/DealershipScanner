@@ -458,6 +458,72 @@ def normalize_body_style_for_car(
     return coerce_body_style_stored(body_style)
 
 
+# Dealer DMS stock codes: 1-3 leading letters, a run of 3-6 digits, optional
+# 1-2 letter suffix (e.g. R1111, FR040, T0386, UK0005, U0113A). Requiring a
+# 3+ digit run keeps legit spec values ('4WD', '4x4', '6MT', 'PW7') unmatched.
+_STOCK_CODE_SHAPE_RE = re.compile(r"^[A-Za-z]{1,3}\d{3,6}[A-Za-z]{0,2}$")
+
+# Values that must NEVER be treated as stock codes even if a future shape
+# change would match them (drivetrain abbreviations and axle configs).
+_STOCK_CODE_EXEMPT_UPPER: frozenset[str] = frozenset(
+    {"4WD", "AWD", "FWD", "RWD", "2WD", "4X4", "4X2", "6X2", "6X4", "6X6", "8X4"}
+)
+
+# cars.* spec fields a leaked stock code contaminates (PixelMotion-style bugs).
+_STOCK_CODE_GUARDED_FIELDS: tuple[str, ...] = (
+    "drivetrain",
+    "transmission",
+    "exterior_color",
+    "interior_color",
+)
+
+
+def looks_like_stock_code(val: Any) -> bool:
+    """
+    True when ``val`` is a single stock-code-shaped token (letters+digits, no
+    real word), e.g. ``R1111``, ``FR040``, ``T0386`` — never a valid
+    drivetrain/transmission/color.
+
+    Deliberately conservative: multi-word values (paint codes WITH color words
+    like ``PW7 Bright White``), hyphenated values (``9-Speed``), and canonical
+    drivetrain values (``4WD``, ``AWD``, ``4x4``, ``FWD``) are never matched.
+    """
+    if is_effectively_empty(val):
+        return False
+    s = str(val).strip()
+    if re.search(r"[\s/\-]", s):
+        return False
+    if s.upper() in _STOCK_CODE_EXEMPT_UPPER:
+        return False
+    return bool(_STOCK_CODE_SHAPE_RE.match(s))
+
+
+def _apply_stock_code_guard(out: dict[str, Any]) -> None:
+    """
+    Defense-in-depth for scraper leaks that stamp the vehicle's stock code
+    into spec fields (see backend/scanner/scrapers/pixel_motion.py history).
+
+    1. When all four guarded fields carry the IDENTICAL stock-code token,
+       treat it as the stock number: clear the four fields and fill
+       ``stock_number`` if it is empty.
+    2. Any remaining stock-code-shaped value in a guarded field is rejected.
+    """
+    present = [k for k in _STOCK_CODE_GUARDED_FIELDS if k in out]
+    vals = [out.get(k) for k in _STOCK_CODE_GUARDED_FIELDS]
+    tokens = [str(v).strip() for v in vals if isinstance(v, str) and str(v).strip()]
+    if len(tokens) == len(_STOCK_CODE_GUARDED_FIELDS) and len({t.upper() for t in tokens}) == 1:
+        tok = tokens[0]
+        if looks_like_stock_code(tok):
+            for k in _STOCK_CODE_GUARDED_FIELDS:
+                out[k] = None
+            if is_effectively_empty(out.get("stock_number")):
+                out["stock_number"] = tok
+            return
+    for k in present:
+        if looks_like_stock_code(out.get(k)):
+            out[k] = None
+
+
 def normalize_optional_str(val: Any, *, max_len: int | None = None) -> str | None:
     """
     Return a clean string or None. Never returns placeholder tokens.
@@ -538,6 +604,9 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             )
         else:
             out[k] = normalize_optional_str(out.get(k))
+
+    # Reject leaked stock codes in spec fields (and recover stock_number).
+    _apply_stock_code_guard(out)
 
     # Some feeds store boolean-ish junk in ``condition`` (not a real listing value).
     _cv = out.get("condition")

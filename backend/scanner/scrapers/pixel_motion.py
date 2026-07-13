@@ -26,6 +26,9 @@ _ROW_RE = re.compile(
     re.I | re.S,
 )
 _DOLLAR_RE = re.compile(r"&dollar;([\d,]+)|\$\s*([\d,]+)")
+# pm-motors-plugin cards ship a commented-out legacy <ul> whose first
+# ``</strong><span>...</span>`` pair is the STOCK NUMBER; never read inside comments.
+_COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
 
 
 def _is_pixel_motion_html(html: str) -> bool:
@@ -40,21 +43,35 @@ def _is_pixel_motion_html(html: str) -> bool:
 
 
 def _extract_span(block: str, class_name: str) -> str | None:
+    """
+    Extract one labeled value (``<strong>Label</strong>`` + value) from the card.
+
+    The value may be wrapped in a ``<span>`` OR appear as bare text after
+    ``</strong>``. The search is bounded to the matching element's inner HTML —
+    an unbounded ``.*?</strong>\\s*<span>`` gap under ``re.S`` used to scan past
+    the element boundary and capture the stock number from the commented-out
+    legacy ``<ul>`` that pm-motors-plugin leaves in every card (stamping the
+    stock code into exterior/interior color, drivetrain, transmission, engine
+    and mileage). HTML comments are stripped first for the same reason.
+    """
+    block = _COMMENT_RE.sub("", block)
     m = re.search(
-        rf'class="{re.escape(class_name)}"[^>]*>.*?</strong>\s*<span>([^<]+)</span>',
+        rf'class="{re.escape(class_name)}"[^>]*>(.*?)</(?:div|li)>',
         block,
         re.I | re.S,
     )
     if not m:
-        m = re.search(
-            rf'class="{re.escape(class_name)}"[^>]*>\s*<strong>[^<]*</strong>\s*([^<]+)',
-            block,
-            re.I | re.S,
-        )
-    if not m:
         return None
-    s = re.sub(r"\s+", " ", m.group(1)).strip()
-    return s if s else None
+    inner = m.group(1)
+    vm = re.search(
+        r"</strong>\s*(?:<span[^>]*>([^<]+)</span>|([^<]+))",
+        inner,
+        re.I | re.S,
+    )
+    if not vm:
+        return None
+    s = re.sub(r"\s+", " ", (vm.group(1) or vm.group(2) or "")).strip()
+    return s or None
 
 
 def _parse_title(title: str) -> tuple[str | None, int | None, str | None, str | None]:
@@ -113,6 +130,10 @@ def _parse_price(block: str) -> int | None:
 def _parse_mileage(raw: str | None) -> int | None:
     if not raw:
         return None
+    # A stock-code-shaped token (e.g. "T0147", "UK0005") is not a mileage;
+    # extracting its digits would fabricate odometer readings.
+    if re.search(r"[A-Za-z]\d|\d[A-Za-z]", raw):
+        return None
     m = re.search(r"([\d,]+)", raw.replace(",", ""))
     if not m:
         return None
@@ -151,7 +172,7 @@ def parse_pixel_motion_inventory_html(
         else:
             model, trim = model_trim, None
 
-        href_m = re.search(r'class="view-vehicle[^"]*" href="([^"]+)"', block, re.I)
+        href_m = re.search(r'class="view-vehicle[^"]*"[^>]*\bhref="([^"]+)"', block, re.I)
         detail_path = href_m.group(1).strip() if href_m else ""
         detail_url = urljoin(base_url.rstrip("/") + "/", detail_path.lstrip("/")) if detail_path else ""
 

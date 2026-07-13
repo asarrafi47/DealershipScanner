@@ -665,14 +665,109 @@ def _lookup_epa_extended_specs_uncached(
                 (year, make.strip(), model.strip()),
             )
             row = cur.fetchone()
-        if row:
-            return _extended_specs_row_to_dict(row)
+        result = _extended_specs_row_to_dict(row) if row else {}
+        # Drop implausible scraped values (e.g. a mis-scraped 40-hp Porsche) so no
+        # garbage reaches a page and the AI fallback can fill them instead. Ceiling
+        # 1600 keeps real hypercars (Bugatti 1500); torque band keeps HD diesels.
+        if result.get("horsepower") is not None and not (60 <= result["horsepower"] <= 1600):
+            result.pop("horsepower")
+        if result.get("torque_lb_ft") is not None and not (40 <= result["torque_lb_ft"] <= 1500):
+            result.pop("torque_lb_ft")
+        # AI-researched fallback (ai_model_specs, provenance-tagged) fills ONLY the
+        # fields still missing after real EPA/scraped data — real values always win.
+        if len(result) < len(_EXTENDED_SPECS_COLUMNS):
+            result = _merge_ai_model_specs(cur, year, make, model, result)
+        return result
     except Exception:
         pass
     finally:
         if conn is not None:
             conn.close()
     return {}
+
+
+#: Columns ai_model_specs supplies (subset of _EXTENDED_SPECS_COLUMNS).
+_AI_SPEC_COLUMNS = (
+    "horsepower", "torque_lb_ft", "torque_nm", "curb_weight_lb",
+    "curb_weight_kg", "zero_to_60_sec", "fuel_tank_gal", "tow_capacity_lb",
+)
+
+
+#: Engine-specific columns (ai_engine_specs). hp/torque/tow/0-60 are engine-critical.
+_ENGINE_SPEC_COLUMNS = (
+    "horsepower", "torque_lb_ft", "tow_capacity_lb",
+    "zero_to_60_sec", "fuel_tank_gal", "curb_weight_lb",
+)
+
+
+@lru_cache(maxsize=16384)
+def _lookup_engine_specs_cached(key: tuple) -> frozenset:
+    year, make, model, eng, cyl, fuel = key
+    conn = None
+    try:
+        conn = _conn()
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT {", ".join(_ENGINE_SPEC_COLUMNS)}
+            FROM ai_engine_specs
+            WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)
+              AND lower(btrim(engine_description))=lower(btrim(?))
+              AND COALESCE(cylinders,-1)=COALESCE(?,-1)
+              AND lower(btrim(fuel_type))=lower(btrim(?))
+            LIMIT 1
+            """,
+            (year, make, model, eng, cyl, fuel),
+        )
+        row = cur.fetchone()
+    except Exception:
+        return frozenset()
+    finally:
+        if conn is not None:
+            conn.close()
+    if not row:
+        return frozenset()
+    return frozenset((k, v) for k, v in zip(_ENGINE_SPEC_COLUMNS, row) if v is not None)
+
+
+def lookup_engine_specs(
+    year: int | None, make: str | None, model: str | None,
+    engine_description: str | None, cylinders: int | None, fuel_type: str | None,
+) -> dict[str, Any]:
+    """Engine-matched specs from ``ai_engine_specs`` (empty dict when no exact-engine row)."""
+    if not year or not make or not model:
+        return {}
+    key = (int(year), str(make).strip(), str(model).strip(),
+           str(engine_description or "").strip(),
+           int(cylinders) if cylinders not in (None, "") else None,
+           str(fuel_type or "").strip())
+    return dict(_lookup_engine_specs_cached(key))
+
+
+def clear_engine_specs_lookup_cache() -> None:
+    _lookup_engine_specs_cached.cache_clear()
+
+
+def _merge_ai_model_specs(cur, year: int, make: str, model: str, result: dict[str, Any]) -> dict[str, Any]:
+    """Fill still-missing fields from ai_model_specs; existing keys are never overwritten."""
+    try:
+        cur.execute(
+            f"""
+            SELECT {", ".join(_AI_SPEC_COLUMNS)}
+            FROM ai_model_specs
+            WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)
+            LIMIT 1
+            """,
+            (year, make.strip(), model.strip()),
+        )
+        ai_row = cur.fetchone()
+    except Exception:
+        return result  # table absent or query failed — real data still returned
+    if ai_row:
+        for key, val in zip(_AI_SPEC_COLUMNS, ai_row):
+            if val is not None:
+                result.setdefault(key, val)
+    return result
 
 
 def _lookup_epa_from_dictionary_csv(

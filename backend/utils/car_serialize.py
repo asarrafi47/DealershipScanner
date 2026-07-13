@@ -1394,6 +1394,39 @@ def serialize_car_for_api(
     out["battery_kwh"] = vs.get("battery_kwh")
     out["tow_capacity_lb"] = vs.get("tow_capacity_lb")
 
+    # EV range / battery are ONLY real for battery-electric and plug-in hybrids. The
+    # model-level spec match can pull an EV trim's row onto a gas car of the same
+    # nameplate (e.g. gas Kona matching Kona Electric), so gate on the car's own fuel
+    # type and drop these fields for anything that can't be plugged in.
+    _ft = str(out.get("fuel_type") or c.get("fuel_type") or "").strip().lower()
+    _ev_capable = ("plug-in" in _ft) or ("plug in" in _ft) or _ft in ("electric", "ev") or (
+        "electric" in _ft and "gas" not in _ft and "hybrid" not in _ft
+    )
+    if not _ev_capable:
+        out["ev_range_miles"] = None
+        out["battery_kwh"] = None
+
+    # Engine-specific override (ai_engine_specs, currently trucks/HD): the model-level
+    # match above can hand a diesel a gas engine's numbers. When we have specs for this
+    # car's EXACT engine, the engine-critical fields (hp/torque/tow/0-60) win outright;
+    # fuel_tank/curb only fill when the model-level value is missing.
+    try:
+        from backend.enrichment.knowledge_engine import lookup_engine_specs
+
+        _es = lookup_engine_specs(
+            c.get("year"), c.get("make"), c.get("model"),
+            c.get("engine_description"), c.get("cylinders"), c.get("fuel_type"),
+        )
+    except Exception:
+        _es = {}
+    if _es:
+        for _f in ("horsepower", "torque_lb_ft", "tow_capacity_lb", "zero_to_60_sec"):
+            if _es.get(_f) is not None:
+                out[_f] = _es[_f]
+        for _f in ("fuel_tank_gal", "curb_weight_lb"):
+            if out.get(_f) is None and _es.get(_f) is not None:
+                out[_f] = _es[_f]
+
     # Factory catalog packages / standalone options (catalog_trims/_options/_packages),
     # matched on this row's own year/make/model/trim — independent of dealer window
     # sticker data above. Most trims have no catalog rows; None when no match.

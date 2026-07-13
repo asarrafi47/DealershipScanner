@@ -475,38 +475,54 @@
                         <div class="car-specs-split__col car-specs-split__col--specs">
                         <h2 class="car-vdp-panel-title">Full specifications</h2>
                         <div class="car-specs car-spec-sheet">
+                        {% if car.year %}
                         <div class="spec-row">
                             <span class="spec-label">Year</span>
                             <span class="spec-value">{{ car.year | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.make %}
                         <div class="spec-row">
                             <span class="spec-label">Make</span>
                             <span class="spec-value">{{ car.make | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.model %}
                         <div class="spec-row">
                             <span class="spec-label">Model</span>
                             <span class="spec-value">{{ car.model | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.trim and car.trim != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Trim</span>
                             <span class="spec-value">{{ car.trim | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.mileage is not none and car.mileage != '' %}
                         <div class="spec-row">
                             <span class="spec-label">Mileage</span>
-                            <span class="spec-value">{% if car.mileage is not none and car.mileage != '' %}{{ "{:,}".format(car.mileage) }} mi{% else %}—{% endif %}</span>
+                            <span class="spec-value">{{ "{:,}".format(car.mileage) }} mi</span>
                         </div>
+                        {% endif %}
+                        {% if car.engine_display and car.engine_display != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Engine</span>
                             <span class="spec-value">{{ car.engine_display }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.transmission_display and car.transmission_display != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Transmission</span>
                             <span class="spec-value">{{ car.transmission_display }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.drivetrain_display and car.drivetrain_display != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Drivetrain</span>
                             <span class="spec-value">{{ car.drivetrain_display }}</span>
                         </div>
+                        {% endif %}
                         {% if car.horsepower %}
                         <div class="spec-row">
                             <span class="spec-label">Horsepower</span>
@@ -525,22 +541,30 @@
                             <span class="spec-value">{{ car.zero_to_60_sec }} sec</span>
                         </div>
                         {% endif %}
+                        {% if car.body_style and car.body_style != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Body style</span>
                             <span class="spec-value">{{ car.body_style | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.fuel_type and car.fuel_type != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Fuel type</span>
                             <span class="spec-value">{{ car.fuel_type | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.condition and car.condition != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Condition</span>
                             <span class="spec-value">{{ car.condition | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.fuel_economy_display and car.fuel_economy_display != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Efficiency</span>
                             <span class="spec-value">{{ car.fuel_economy_display }}</span>
                         </div>
+                        {% endif %}
                         {% if car.ev_range_miles %}
                         <div class="spec-row">
                             <span class="spec-label">EV range</span>
@@ -565,18 +589,30 @@
                             <span class="spec-value">{{ "{:,}".format(car.tow_capacity_lb) }} lbs</span>
                         </div>
                         {% endif %}
+                        {% if car.curb_weight_lb %}
+                        <div class="spec-row">
+                            <span class="spec-label">Curb weight</span>
+                            <span class="spec-value">{{ "{:,}".format(car.curb_weight_lb) }} lbs</span>
+                        </div>
+                        {% endif %}
+                        {% if car.exterior_color and car.exterior_color != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Exterior</span>
                             <span class="spec-value">{{ car.exterior_color | fmt_spec }}</span>
                         </div>
+                        {% endif %}
+                        {% if car.interior_color and car.interior_color != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Interior</span>
                             <span class="spec-value">{{ car.interior_color | fmt_spec }}{% if interior_from_listing_description %} <span class="spec-source-badge" title="Inferred from dealer listing text">From listing description</span>{% endif %}{% if interior_from_llava_vision %} <span class="spec-source-badge" title="Inferred from vehicle photos (Ollama LLaVA)">Vision assist</span>{% endif %}</span>
                         </div>
+                        {% endif %}
+                        {% if car.vin %}
                         <div class="spec-row">
                             <span class="spec-label">VIN</span>
                             <span class="spec-value">{{ car.vin | fmt_spec }}</span>
                         </div>
+                        {% endif %}
                         {% if car.stock_number and car.stock_number != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Stock #</span>
