@@ -96,36 +96,104 @@ def _playwright_fetch_html(url: str, timeout_ms: int = 65000) -> str | None:
         return None
 
 
+def _listing_html_is_sufficient(raw: str) -> bool:
+    """Acceptance heuristic for the lightweight HTTP fetch (thin-SPA-shell guard)."""
+    low = raw.lower()
+    has_signals = (
+        "vehiclecondition" in low
+        or "itemcondition" in low
+        or "application/ld+json" in low
+        or "condition" in low and ("inventory" in low or "vehicle" in low)
+    )
+    return len(raw) > 8000 and has_signals
+
+
+def _fetch_listing_html_via_chain(url: str) -> str | None:
+    """ScraperChain-backed fetch: requests (with acceptance heuristic) -> Playwright.
+
+    Delegates to the module-level ``_requests_fetch_html`` / ``_playwright_fetch_html``
+    helpers (looked up at call time so monkeypatching stays effective) and preserves
+    the legacy return-None-on-total-failure contract.
+    """
+    from backend.scanner.chain import Fetcher, FetchError, ScraperChain
+
+    class _RequestsListingFetcher(Fetcher):
+        name = "requests"
+
+        def fetch(self, u: str) -> str:
+            raw = _requests_fetch_html(u)
+            if raw and _listing_html_is_sufficient(raw):
+                return raw
+            # Empty string -> chain records "requests: empty" and falls through
+            # to Playwright, matching the legacy inline behavior.
+            return ""
+
+    class _PlaywrightListingFetcher(Fetcher):
+        name = "playwright"
+
+        def fetch(self, u: str) -> str:
+            return _playwright_fetch_html(u) or ""
+
+    chain = ScraperChain(
+        fetchers=[_RequestsListingFetcher(), _PlaywrightListingFetcher()],
+        extractors=[],
+    )
+    try:
+        html, _strategy = chain.fetch(url)
+        return html
+    except FetchError:
+        return None
+
+
+def _fetch_listing_html_legacy(url: str) -> str | None:
+    """Pre-ScraperChain inline fallback chain (kept as a safety net)."""
+    raw = _requests_fetch_html(url)
+    if raw and _listing_html_is_sufficient(raw):
+        return raw
+    return _playwright_fetch_html(url)
+
+
 def fetch_listing_html(url: str) -> str | None:
     """
     Prefer lightweight HTTP GET; use Playwright when the body looks like a thin SPA shell
     or condition/spec signals are missing.
+
+    Backed by ``backend.scanner.chain.ScraperChain`` (set
+    ``SCANNER_LISTING_FETCH_CHAIN=0`` to force the legacy inline path); on any
+    unexpected chain failure it falls back to the legacy path.
     """
     if not url or not url.lower().startswith("http"):
         return None
-    raw = _requests_fetch_html(url)
-    if raw:
-        low = raw.lower()
-        has_signals = (
-            "vehiclecondition" in low
-            or "itemcondition" in low
-            or "application/ld+json" in low
-            or "condition" in low and ("inventory" in low or "vehicle" in low)
-        )
-        if len(raw) > 8000 and has_signals:
-            return raw
-    # Retry with Playwright for JS-rendered inventory/VDP pages.
+
+    use_chain = (os.environ.get("SCANNER_LISTING_FETCH_CHAIN") or "1").strip().lower() not in (
+        "0",
+        "false",
+        "no",
+    )
+
+    def _run() -> str | None:
+        if use_chain:
+            try:
+                return _fetch_listing_html_via_chain(url)
+            except Exception:
+                logger.warning(
+                    "scraper-chain listing fetch failed for %s; using legacy path",
+                    url[:80],
+                    exc_info=True,
+                )
+        return _fetch_listing_html_legacy(url)
+
     try:
         import asyncio
 
         asyncio.get_running_loop()
     except RuntimeError:
-        return _playwright_fetch_html(url)
+        return _run()
     # Post-scan runs inside scanner's asyncio loop — sync Playwright must run in a thread.
     import concurrent.futures
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-        return pool.submit(_playwright_fetch_html, url).result()
+        return pool.submit(_run).result()
 
 
 def _ddg_html_search_specs(car: dict[str, Any]) -> dict[str, Any]:

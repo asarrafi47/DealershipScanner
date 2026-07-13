@@ -116,6 +116,11 @@ def _connect():
     except ImportError as e:
         conn.close()
         raise RuntimeError("pip install pgvector psycopg[binary]") from e
+    except BaseException:
+        # e.g. psycopg.ProgrammingError when the server lacks the vector
+        # extension — never let the just-opened connection escape unclosed.
+        conn.close()
+        raise
     return conn
 
 
