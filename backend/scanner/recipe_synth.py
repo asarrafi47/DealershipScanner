@@ -266,13 +266,29 @@ def _synth_carscommerce(dealer_id: str, dealer_url: str, html: str) -> EndpointR
     api_key = _extract_carscommerce_key(html) or (ref.auth_headers or {}).get("x-api-key")
     if not api_key:
         return None
+    # Full-lot body: (1) drop the reference recipe's Used/CPO type restriction so
+    # new inventory is included (mirrors carscommerce_harvest include_new — the
+    # delta replay honors facetFilters and would silently exclude every new car);
+    # (2) raise perPage to 100 (the harvester's _PER_PAGE; API max is 200) so the
+    # bounded page walk reaches large accounts — at perPage 20 the 40-page cap
+    # tops out at 800, short of dealers like Bill Luke (~1,979).
+    try:
+        body = json.loads(ref.post_template)
+    except ValueError:
+        body = None
+    if isinstance(body, dict):
+        body.pop("facetFilters", None)
+        body["perPage"] = 100
+        post_template = json.dumps(body)
+    else:
+        post_template = ref.post_template
     url = f"https://{_CARSCOMMERCE_HOST}/api/v1/listings/{ccid}/search"
     return EndpointRecipe(
         dealer_id=dealer_id,
         url=url,
         method="POST",
         content_type="application/json; charset=utf-8",
-        post_template=ref.post_template,
+        post_template=post_template,
         auth_headers={"x-api-key": api_key},
         pagination=PAGINATION_CARSCOMMERCE,
         provider_hint="dealer_dot_com",  # CarsCommerce payloads route through the generic dealer_dot_com mapper
@@ -480,14 +496,18 @@ def _detect_sister_tv(html: str, dealer_url: str) -> bool:
 
 # Team Velocity (Right Honda, Right Toyota, Mark Kia) hydrates its SRP from a Vue
 # SPA whose XHR endpoint (/api/Inventory/getinventorymultiselectionfilters) only
-# returns filter FACETS — NOT the vehicle list. BUT the platform also publishes a
-# plain same-origin paginated JSON feed (linked from inventorysitemap.xml):
-#   https://{domain}/inventory-used.json   (also -cpo.json / -new.json)
+# returns filter FACETS — NOT the vehicle list. BUT the platform also publishes
+# plain same-origin paginated JSON feeds (linked from inventorysitemap.xml), one
+# per condition:
+#   https://{domain}/inventory-used.json   (used; CPO is a subset of used)
+#   https://{domain}/inventory-new.json    (new — a separate feed, disjoint VINs)
 # shape: {totalVehicles, totalPages, nextPage, pageSize, vehicles:[...]}, walked
-# via ?page=N. It is parameterized by the dealer DOMAIN alone and the generic
-# dealer_dot_com parser maps its vehicle objects. validate_recipe walks the
-# ?page=N pages for this feed.
+# via ?page=N. There is NO combined feed, so we emit one recipe per feed to cover
+# the FULL lot (used + new). Parameterized by the dealer DOMAIN alone; the generic
+# dealer_dot_com parser maps its vehicle objects; validate_recipe walks ?page=N.
 _TEAM_VELOCITY_FEED = "/inventory-used.json"
+# Used already contains CPO (verified: cpo VINs ⊆ used), so used + new = full lot.
+_TEAM_VELOCITY_FEEDS = ("/inventory-used.json", "/inventory-new.json")
 
 
 def _detect_team_velocity(html: str, dealer_url: str) -> bool:
@@ -495,10 +515,9 @@ def _detect_team_velocity(html: str, dealer_url: str) -> bool:
     return "teamvelocityportal" in low or "inventoryapibaseurl" in low
 
 
-def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
-    url = _origin(dealer_url) + _TEAM_VELOCITY_FEED
-    # Probe page 1 to confirm the feed exists and read totalVehicles so replay can
-    # bound its ?page=N walk. (A missing feed → None; the dealer needs a browser.)
+def _tv_feed_recipe(dealer_id: str, origin: str, feed_path: str) -> EndpointRecipe | None:
+    """Build one Team Velocity feed recipe, probing page 1 for existence + total."""
+    url = origin + feed_path
     first = _cosmos_get_json(url)
     if not isinstance(first, dict) or not first.get("vehicles"):
         return None
@@ -520,6 +539,14 @@ def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> Endpoint
     )
 
 
+def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
+    """Emit a recipe per condition feed (used + new) — no combined feed exists."""
+    origin = _origin(dealer_url)
+    recipes = [r for fp in _TEAM_VELOCITY_FEEDS
+               if (r := _tv_feed_recipe(dealer_id, origin, fp)) is not None]
+    return recipes
+
+
 # ── Platform registry ─────────────────────────────────────────────────────────
 
 
@@ -528,8 +555,10 @@ class PlatformTemplate:
     name: str
     detect: Callable[[str, str], bool]
     # ``None`` synth => platform is recognized but not synthesizable yet
-    # (browser still required); still useful to report *why*.
-    synth: Callable[[str, str, str], EndpointRecipe | None] | None
+    # (browser still required); still useful to report *why*. A synth may return
+    # a single recipe, ``None``, or a list (a platform that needs several
+    # endpoints for full coverage, e.g. Team Velocity's used + new feeds).
+    synth: Callable[[str, str, str], "EndpointRecipe | list[EndpointRecipe] | None"] | None
 
 
 # Ordered most-specific-first; :func:`fingerprint_platform` returns the first hit.
@@ -564,26 +593,39 @@ def is_synthesizable(platform: str | None) -> bool:
     return bool(t and t.synth)
 
 
-def synthesize_recipe(
+def synthesize_recipes(
     dealer_id: str, dealer_url: str, html: str, platform: str | None = None
-) -> EndpointRecipe | None:
-    """Build a candidate :class:`EndpointRecipe` for *dealer_id* from *html*.
+) -> list[EndpointRecipe]:
+    """Build ALL candidate recipes for *dealer_id* from *html*.
 
-    *platform* may be supplied (from a prior :func:`fingerprint_platform`) or
-    left ``None`` to fingerprint here. Returns ``None`` when the platform is
-    unrecognized, has no template, or the per-dealer params can't be extracted.
-    The returned recipe is a *candidate*: validate it (:func:`validate_recipe`)
-    before saving.
+    Most platforms yield one recipe; some (Team Velocity) yield several to cover
+    the full lot. Returns ``[]`` when the platform is unrecognized, has no
+    template, or the per-dealer params can't be extracted. Each recipe is a
+    *candidate*: validate it (:func:`validate_recipe`) before saving.
     """
     platform = platform or fingerprint_platform(html, dealer_url)
     tmpl = _TEMPLATES_BY_NAME.get(platform or "")
     if not tmpl or not tmpl.synth:
-        return None
+        return []
     try:
-        return tmpl.synth(dealer_id, dealer_url, html)
+        result = tmpl.synth(dealer_id, dealer_url, html)
     except Exception as e:
         logger.debug("recipe_synth synth failed [%s/%s]: %s", dealer_id, platform, str(e)[:150])
-        return None
+        return []
+    if result is None:
+        return []
+    return list(result) if isinstance(result, list) else [result]
+
+
+def synthesize_recipe(
+    dealer_id: str, dealer_url: str, html: str, platform: str | None = None
+) -> EndpointRecipe | None:
+    """Build the primary candidate recipe (first of :func:`synthesize_recipes`).
+
+    Kept for single-recipe callers; returns ``None`` when nothing is synthesized.
+    """
+    recipes = synthesize_recipes(dealer_id, dealer_url, html, platform)
+    return recipes[0] if recipes else None
 
 
 # ── Validation (replay over HTTP, count real VINs) ────────────────────────────

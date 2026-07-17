@@ -50,7 +50,7 @@ from backend.scanner.recipe_synth import (
     fetch_dealer_html,
     fingerprint_platform,
     is_synthesizable,
-    synthesize_recipe,
+    synthesize_recipes,
     validate_recipe,
 )
 from backend.scanner.recipes import EndpointRecipe, load_recipes, save_recipes
@@ -149,32 +149,43 @@ def _process_dealer(
             row["note"] = "needs browser (platform unknown — logged to registry)"
         return row
 
-    recipe = synthesize_recipe(dealer_id, dealer_url, html, platform)
-    if recipe is None:
+    recipes = synthesize_recipes(dealer_id, dealer_url, html, platform)
+    if not recipes:
         row["note"] = "needs browser (params not extractable from HTML)"
         return row
     row["synthesized"] = True
 
-    vins = validate_recipe(recipe, dealer_url.rstrip("/"), dealer_id, dealer_name or dealer_id)
-    row["vins"] = vins
-    if vins < min_vins:
-        row["note"] = f"synthesized but failed validation ({vins} < {min_vins} VINs)"
+    # A platform may emit several recipes (e.g. Team Velocity used + new feeds);
+    # validate each and keep the ones that yield real VINs. The reported VIN count
+    # is the combined total across kept recipes (feeds are disjoint by condition).
+    kept: list[EndpointRecipe] = []
+    total_vins = 0
+    for recipe in recipes:
+        n = validate_recipe(recipe, dealer_url.rstrip("/"), dealer_id, dealer_name or dealer_id)
+        if n <= 0:
+            continue
+        recipe.vehicle_rows = n
+        if not recipe.total_count:
+            recipe.total_count = n
+        recipe.saved_at = time.time()
+        recipe.last_ok_at = time.time()
+        kept.append(recipe)
+        total_vins += n
+    row["vins"] = total_vins
+    if total_vins < min_vins or not kept:
+        row["note"] = f"synthesized but failed validation ({total_vins} < {min_vins} VINs)"
         return row
-
-    recipe.vehicle_rows = vins
-    recipe.total_count = vins
-    recipe.saved_at = time.time()
-    recipe.last_ok_at = time.time()
 
     if not force and _healthy_recipe_exists(dealer_id):
         row["note"] = "healthy recipe already exists — not overwritten"
         return row
     if dry_run:
-        row["note"] = "dry-run (would save)"
+        row["note"] = f"dry-run (would save {len(kept)} recipe(s))"
         return row
-    _upsert_recipe(dealer_id, recipe)
+    for recipe in kept:
+        _upsert_recipe(dealer_id, recipe)
     row["saved"] = True
-    row["note"] = "browser-free"
+    row["note"] = f"browser-free ({len(kept)} recipe(s))" if len(kept) > 1 else "browser-free"
     return row
 
 

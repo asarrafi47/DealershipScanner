@@ -103,7 +103,11 @@ def _carscommerce_ref() -> EndpointRecipe:
         url="https://websites-search.api.carscommerce.inc/api/v1/listings/23658/search",
         method="POST",
         content_type="application/json; charset=utf-8",
-        post_template=json.dumps({"page": 1, "perPage": 20, "requestedFields": ["vin"]}),
+        post_template=json.dumps({
+            "page": 1, "perPage": 20,
+            "facetFilters": {"type_slug": ["Used", "Certified Used"]},
+            "requestedFields": ["vin"],
+        }),
         auth_headers={"x-api-key": "SHAREDKEYshared0000"},
         pagination=PAGINATION_CARSCOMMERCE,
     )
@@ -211,6 +215,11 @@ def test_synthesize_carscommerce_extracts_ccid_and_key(_inject_refs):
     assert r.pagination == PAGINATION_CARSCOMMERCE
     # Prefer the key shipped in the dealer's own HTML.
     assert r.auth_headers["x-api-key"] == "ABCDEF0123456789ABCD"
+    # Full-lot body: the Used/CPO facet restriction is dropped (new included) and
+    # perPage is raised so the bounded page walk reaches large accounts.
+    body = json.loads(r.post_template)
+    assert "facetFilters" not in body
+    assert body["perPage"] == 100
 
 
 def test_synthesize_carscommerce_falls_back_to_shared_key(_inject_refs):
@@ -285,21 +294,35 @@ def test_synthesize_typesense_needs_collection(_inject_refs):
 
 
 def test_synthesize_team_velocity_feed(monkeypatch):
-    # synth probes page 1 to confirm the feed + read totalVehicles.
-    monkeypatch.setattr(
-        recipe_synth, "_cosmos_get_json",
-        lambda url: {"totalVehicles": 196, "totalPages": 4, "vehicles": [{"vin": "V1"}]},
-    )
-    r = recipe_synth.synthesize_recipe(
+    # synth probes page 1 of each feed to confirm existence + read totalVehicles.
+    totals = {"used": 196, "new": 377}
+
+    def fake_feed(url):
+        kind = "new" if "-new.json" in url else "used"
+        return {"totalVehicles": totals[kind], "totalPages": 4, "vehicles": [{"vin": f"V-{kind}"}]}
+
+    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", fake_feed)
+    # Full lot => TWO recipes: used + new (CPO ⊆ used, no combined feed exists).
+    recipes = recipe_synth.synthesize_recipes(
         "righthonda-com", "https://www.righthonda.com", _TEAM_VELOCITY_HTML, "team_velocity"
     )
-    assert r is not None
-    assert r.url == "https://www.righthonda.com/inventory-used.json"
-    assert r.method == "GET"
-    assert r.provider_hint == "dealer_dot_com"
-    # ?page=N pagination so replay/delta walk the whole lot, not just page 1.
-    assert r.pagination == "page_query"
-    assert r.total_count == 196
+    assert len(recipes) == 2
+    by_url = {r.url: r for r in recipes}
+    assert set(by_url) == {
+        "https://www.righthonda.com/inventory-used.json",
+        "https://www.righthonda.com/inventory-new.json",
+    }
+    for r in recipes:
+        assert r.method == "GET"
+        assert r.provider_hint == "dealer_dot_com"
+        assert r.pagination == "page_query"  # replay/delta walk every page
+    assert by_url["https://www.righthonda.com/inventory-used.json"].total_count == 196
+    assert by_url["https://www.righthonda.com/inventory-new.json"].total_count == 377
+    # singular wrapper still returns the primary (used) recipe.
+    r0 = recipe_synth.synthesize_recipe(
+        "righthonda-com", "https://www.righthonda.com", _TEAM_VELOCITY_HTML, "team_velocity"
+    )
+    assert r0.url == "https://www.righthonda.com/inventory-used.json"
 
 
 def test_synthesize_team_velocity_missing_feed_returns_none(monkeypatch):
