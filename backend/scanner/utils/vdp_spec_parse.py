@@ -364,7 +364,10 @@ def parse_color_from_listing_html(html: str) -> dict[str, str | None]:
         val = m.group(1).strip()
         if val and out["exterior_color"] is None:
             out["exterior_color"] = val
-    for m in re.finditer(r'"interiorColor"\s*:\s*"([^"]{2,80})"', html[:800000], re.I):
+    # schema.org uses "vehicleInteriorColor"; some feeds use "interiorColor".
+    for m in re.finditer(
+        r'"(?:vehicleInteriorColor|interiorColor)"\s*:\s*"([^"]{2,80})"', html[:800000], re.I
+    ):
         val = m.group(1).strip()
         if val and out["interior_color"] is None:
             out["interior_color"] = val
