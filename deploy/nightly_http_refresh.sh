@@ -7,7 +7,10 @@
 #      over plain HTTP: upserts fresh prices/inventory, marks sold cars inactive.
 #   2. harvest_carscommerce — bulk field fill from the shared CarsCommerce API.
 #   3. heal_from_recipes    — fill remaining gaps from other captured recipes.
-#   4. rebuild_listings_index — recompute the incomplete-listings index.
+#   4. harvest_html_jsonld  — fill gaps on the server-rendered JSON-LD platform
+#      (Honda of El Cajon, Pacific VW, ...). Honors SCANNER_HTTP_PROXY when set,
+#      which is how the Cloudflare-walled dealers get through.
+#   5. rebuild_listings_index — recompute the incomplete-listings index.
 #
 # Design:
 #   * Idempotent and safe to run repeatedly.
@@ -134,11 +137,18 @@ run_step "2/4 harvest-carscommerce" \
   "$PYTHON" backend/scripts/harvest_carscommerce.py || FAILS=$((FAILS+1))
 
 # --- Step 3: heal from other captured recipes ------------------------------
-run_step "3/4 heal-from-recipes" \
+run_step "3/5 heal-from-recipes" \
   "$PYTHON" backend/scripts/heal_from_recipes.py || FAILS=$((FAILS+1))
 
-# --- Step 4: rebuild incomplete-listings index -----------------------------
-run_step "4/4 rebuild-listings-index" \
+# --- Step 4: HTML/JSON-LD platform (server-rendered; no API) ----------------
+# Fetches each incomplete car's VDP over plain HTTP and fills from JSON-LD.
+# Cloudflare-walled dealers only get through when SCANNER_HTTP_PROXY is set;
+# without it, blocked fetches are logged and skipped (best-effort, no crash).
+run_step "4/5 harvest-html-jsonld" \
+  "$PYTHON" backend/scripts/harvest_html_jsonld.py || FAILS=$((FAILS+1))
+
+# --- Step 5: rebuild incomplete-listings index -----------------------------
+run_step "5/5 rebuild-listings-index" \
   "$PYTHON" backend/scripts/rebuild_listings_index.py || FAILS=$((FAILS+1))
 
 # ---------------------------------------------------------------------------
@@ -149,7 +159,7 @@ OVERALL_END=$(date +%s)
 
 log "-------------------------------------------------------------------"
 log "incomplete_listings AFTER:  ${INC_AFTER:-<unavailable>}  (before: ${INC_BEFORE:-?})"
-log "steps failed: ${FAILS}/4"
+log "steps failed: ${FAILS}/5"
 log "total elapsed: $((OVERALL_END - OVERALL_START))s"
 log "NIGHTLY HTTP REFRESH DONE  pid=$$"
 log "==================================================================="
