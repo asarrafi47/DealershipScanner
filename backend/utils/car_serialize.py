@@ -775,6 +775,17 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
     except Exception:
         pass
 
+    # Pure EV / fuel cell: merged specs force cylinders_display to 0, but dealer
+    # rows sometimes carry a bogus count (e.g. 4 on a BEV), which
+    # _effective_cylinder_count would prefer — so check the merged value first.
+    if str(c.get("fuel_type") or "").strip().lower() == "hydrogen":
+        return "Hydrogen Fuel Cell"
+    try:
+        if int(vs.get("cylinders_display")) == 0:
+            return "Electric"
+    except (TypeError, ValueError):
+        pass
+
     cyl_i = _effective_cylinder_count(c, vs)
     if cyl_i == 0:
         return "Electric"

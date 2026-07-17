@@ -1067,6 +1067,16 @@ def _ford_epa_pickup_like_pattern(make: str | None, model: str | None) -> str | 
     return f"F{m.group(1)} Pickup%"
 
 
+# Body-style / drivetrain / cab-config tokens dealers append to model names;
+# EPA model strings never carry these.
+_EPA_MODEL_NOISE_SUFFIX_RE = re.compile(
+    r"\s+(?:Sedan|Coupe|Hatchback|Wagon|Convertible|Cabriolet|Roadster|SUV|Minivan|"
+    r"Van|Cargo(?:\s+Van)?|Passenger(?:\s+Van)?|Crew\s+Cab|Cutaway|Chassis(?:\s+Cab)?|"
+    r"2WD|4WD|AWD|RWD|FWD|4X4|4X2|4xe|Max)\s*$",
+    re.I,
+)
+
+
 def _model_epa_fallbacks(make: str | None, model: str | None) -> list[str]:
     """
     Alternative EPA model strings to try when exact model match fails.
@@ -1172,6 +1182,12 @@ def _model_epa_fallbacks(make: str | None, model: str | None) -> list[str]:
             epa_cls = seg_map.get(m2.group(1))
             if epa_cls:
                 fallbacks.append(epa_cls)
+        # Bare series ("GLC", "GLE") — dealer feeds often omit the number entirely
+        m3 = re.match(r"^([A-Z]{1,3})\b", mo_u)
+        if m3:
+            epa_cls = seg_map.get(m3.group(1))
+            if epa_cls and epa_cls.lower() != mo.lower():
+                fallbacks.append(epa_cls)
 
     # --- Mitsubishi: Outlander Phev / Outlander Sport → Outlander ---
     if mk == "MITSUBISHI":
@@ -1227,6 +1243,39 @@ def _model_epa_fallbacks(make: str | None, model: str | None) -> list[str]:
         stripped = re.sub(r"\s+(Sportback|Sedan|Coupe|allroad)\s*$", "", mo, flags=re.I).strip()
         if stripped and stripped.lower() != mo.lower():
             fallbacks.append(stripped)
+
+    # --- Generic (all makes): dealer feeds decorate models with sale status
+    # ("New 2026 Hyundai IONIQ 5 SEL"), body style ("Accord Sedan"), and
+    # drivetrain ("Tacoma 2WD") tokens EPA never uses. Candidates go most→least
+    # specific; the caller stops at the first hit, so shorter (riskier) forms
+    # only fire when everything longer missed. ---
+    generic: list[str] = []
+    cleaned = re.sub(
+        r"^(?:New|Used|Certified(?:\s+Pre[-\s]?Owned)?)\s+(?:\d{4}\s+)?", "", mo, flags=re.I
+    ).strip()
+    if mk and cleaned.upper().startswith(mk + " "):
+        cleaned = cleaned[len(mk):].strip()
+    if cleaned:
+        generic.append(cleaned)
+        cur = cleaned
+        while True:
+            stripped = _EPA_MODEL_NOISE_SUFFIX_RE.sub("", cur).strip()
+            if not stripped or stripped.lower() == cur.lower():
+                break
+            cur = stripped
+            generic.append(cur)
+        # Last resort: shed trailing words (trim levels like "SEL" / "Limited"),
+        # at most three, never below one word.
+        words = cur.split()
+        for i in range(len(words) - 1, max(0, len(words) - 4), -1):
+            generic.append(" ".join(words[:i]))
+
+    seen = {mo.lower()} | {f.lower() for f in fallbacks}
+    for cand in generic:
+        c = cand.strip()
+        if len(c) >= 2 and c.lower() not in seen:
+            seen.add(c.lower())
+            fallbacks.append(c)
 
     return fallbacks
 
@@ -1336,11 +1385,14 @@ def lookup_epa_aggregate(
     *,
     title: str | None = None,
     trim: str | None = None,
+    prefer_cylinders: int | None = None,
 ) -> dict[str, Any]:
     """
     Mode row from epa_master: cylinders, drive, transmission, MPG, displacement, atv_type.
 
     *title* / *trim* refine BMW I-series and similar short-model EPA matches (e.g. eDrive40).
+    *prefer_cylinders* (dealer-reported count) picks the matching engine family when a
+    model spans several (e.g. GLE 350 2.0L I4 vs GLE 450 3.0L I6) instead of the mode row.
     """
     out: dict[str, Any] = {
         "cylinders": None,
@@ -1374,13 +1426,23 @@ def lookup_epa_aggregate(
             WHERE year = ? AND lower(make) = lower(?) AND {model_clause}
             GROUP BY cylinders, drive, trany
             ORDER BY n DESC
-            LIMIT 1
             """
+
+        def _pick(rows: list) -> tuple | None:
+            """Group matching the dealer cylinder count when one exists, else the mode row."""
+            if not rows:
+                return None
+            if prefer_cylinders is not None:
+                for r in rows:
+                    if r[0] is not None and int(r[0]) == prefer_cylinders:
+                        return r
+            return rows[0]
+
         cur.execute(
             sql_mode.format(model_clause="lower(model) = lower(?)"),
             (year, make.strip(), model.strip()),
         )
-        row = cur.fetchone()
+        row = _pick(cur.fetchall())
         if not row:
             like_pat = _ford_epa_pickup_like_pattern(make, model)
             if like_pat:
@@ -1388,7 +1450,7 @@ def lookup_epa_aggregate(
                     sql_mode.format(model_clause="model LIKE ?"),
                     (year, make.strip(), like_pat),
                 )
-                row = cur.fetchone()
+                row = _pick(cur.fetchall())
         # BMW fuzzy fallback: dealer stores 'X3' but EPA has 'X3 xDrive30i'; I-series
         # short codes need optional trim/title (e.g. eDrive40 on ``i4``).
         if not row and (make or "").strip().upper() == "BMW":
@@ -1402,13 +1464,13 @@ def lookup_epa_aggregate(
                         ),
                         (year, make.strip(), bmw_pat, f"%{extra}%"),
                     )
-                    row = cur.fetchone()
+                    row = _pick(cur.fetchall())
                 if not row:
                     cur.execute(
                         sql_mode.format(model_clause="model LIKE ?"),
                         (year, make.strip(), bmw_pat),
                     )
-                    row = cur.fetchone()
+                    row = _pick(cur.fetchall())
         # Generic model-name normalization fallbacks (Silverado 1500 → Silverado, GLC 300 → GLC-Class, etc.)
         if not row:
             for fallback_model in _model_epa_fallbacks(make, model):
@@ -1416,7 +1478,7 @@ def lookup_epa_aggregate(
                     sql_mode.format(model_clause="lower(model) = lower(?)"),
                     (year, make.strip(), fallback_model),
                 )
-                row = cur.fetchone()
+                row = _pick(cur.fetchall())
                 if row:
                     break
         if not row:
@@ -1438,7 +1500,13 @@ def lookup_epa_aggregate(
             if val is not None and (isinstance(val, (int, float)) and val > 0):
                 out[key] = float(val)
         if atv_cat:
-            out["atv_type"] = atv_cat.split(",")[0].strip() or None
+            cats = [a.strip() for a in atv_cat.split(",") if a.strip()]
+            # A blended group (gas GLC 300 + 350e PHEV rows concat to "EV,Hybrid")
+            # must not report EV/FCV when any member burns fuel.
+            fuels_lower = (fuel_cat or "").lower()
+            if "gas" in fuels_lower or "diesel" in fuels_lower:
+                cats = [c for c in cats if c.upper() not in ("EV", "FCV")]
+            out["atv_type"] = cats[0] if cats else None
         if fuel_cat:
             out["fuel_type"] = fuel_cat.split(",")[0].strip() or None
     except Exception:
@@ -1582,7 +1650,10 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     regex = decode_trim_logic(make, model, trim, title_for_decode)
     # Per-trim lookup first (exact match from build_epa_master.py data), then aggregate fallback
     epa_trim = lookup_epa_by_trim(y, make, model, trim) if trim else {}
-    epa = lookup_epa_aggregate(y, make, model, title=title_for_decode, trim=trim)
+    epa = lookup_epa_aggregate(
+        y, make, model, title=title_for_decode, trim=trim,
+        prefer_cylinders=_int_or_none(dealer_cyl),
+    )
     # Merge: per-trim values win over aggregate for any key they provide
     epa = {**epa, **{k: v for k, v in epa_trim.items() if v is not None}}
     epa_extended = lookup_epa_extended_specs(y, make, model, trim)
@@ -1665,11 +1736,15 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         "electric" in _dealer_ft_lower
         and not any(x in _dealer_ft_lower for x in ("gas", "gasoline", "hybrid", "plug"))
     )
+    # Fuel-cell vehicles (Mirai, NEXO) are electric-drive: no cylinders, MPGe.
+    # EPA dual-fuel strings ("Premium Gasoline / Electricity" = PHEV) must not count.
+    _epa_fuel_lower = (epa.get("fuel_type") or "").lower()
     is_bev = (
         regex.get("cylinders") == 0
         or (regex.get("fuel_type_hint") or "").strip().lower() == "electric"
-        or (epa.get("atv_type") or "").strip().upper() == "EV"
-        or "electric" in (epa.get("fuel_type") or "").lower()
+        or (epa.get("atv_type") or "").strip().upper() in ("EV", "FCV")
+        or ("electric" in _epa_fuel_lower and "gas" not in _epa_fuel_lower)
+        or "hydrogen" in _dealer_ft_lower
         or _dealer_is_pure_ev
     )
     try:
