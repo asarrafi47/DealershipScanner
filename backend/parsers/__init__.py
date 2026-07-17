@@ -11,9 +11,25 @@ def _parse_autowall(raw_data, *, base_url="", dealer_id="", dealer_name="", deal
     return []
 
 
+def _parse_cosmos_cards(raw_data, *, base_url="", dealer_id="", dealer_name="", dealer_url=""):
+    """DealerOn cosmos SRP bodies ({"DisplayCards": [{"VehicleCard": ...}]}).
+
+    Dealers on this platform are often provider-hinted "dealer_dot_com", so this
+    shape must be reachable through auto-detect, not just the declared parser.
+    """
+    if not (isinstance(raw_data, dict) and isinstance(raw_data.get("DisplayCards"), list)):
+        return []
+    from backend.scanner.scrapers.dealer_on import _extract_vehicles_from_srp_body
+
+    return _extract_vehicles_from_srp_body(
+        raw_data, base_url, dealer_id, dealer_name or dealer_id, dealer_url or base_url
+    )
+
+
 PARSERS = {
     "dealer_dot_com": parse_dealer_dot_com,
     "dealer_on": parse_dealer_on,
+    "dealer_on_cosmos": _parse_cosmos_cards,
     "autowall": _parse_autowall,
 }
 
