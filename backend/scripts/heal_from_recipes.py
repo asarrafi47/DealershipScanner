@@ -85,6 +85,8 @@ def _clean_value(field: str, value: Any) -> Any:
 def _http_get_json(url: str) -> dict | None:
     import urllib.request
 
+    from backend.scanner.http_fetch import open_url
+
     req = urllib.request.Request(
         url,
         headers={
@@ -96,7 +98,8 @@ def _http_get_json(url: str) -> dict | None:
         },
     )
     try:
-        with urllib.request.urlopen(req, timeout=25) as resp:
+        # open_url honors the optional SCANNER_HTTP_PROXY (no-op when unset).
+        with open_url(req, timeout=25) as resp:
             return json.loads(resp.read().decode("utf-8", errors="replace"))
     except Exception as exc:
         log.debug("GET %s failed: %s", url[:100], exc)

@@ -25,6 +25,8 @@ import time
 import urllib.request
 from typing import Any
 
+from backend.scanner.http_fetch import open_url
+
 logger = logging.getLogger("scanner")
 
 CARSCOMMERCE_HOST = "websites-search.api.carscommerce.inc"
@@ -113,7 +115,8 @@ def _post_json(url: str, body: dict, api_key: str) -> dict | None:
         },
     )
     try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        # open_url honors the optional SCANNER_HTTP_PROXY (no-op when unset).
+        with open_url(req, timeout=30) as resp:
             return json.loads(resp.read().decode("utf-8", errors="replace"))
     except Exception as exc:
         logger.debug("CarsCommerce POST failed: %s", exc)

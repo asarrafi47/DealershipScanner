@@ -64,6 +64,42 @@ launchctl unload ~/Library/LaunchAgents/com.sarraficars.nightly-http-refresh.pli
 rm ~/Library/LaunchAgents/com.sarraficars.nightly-http-refresh.plist   # optional: remove entirely
 ```
 
+## Optional: route harvesters through an HTTP proxy (Cloudflare-walled dealers)
+
+Some dealers (e.g. `hondaofelcajon.com`, `pacificvolkswagen.com`) sit behind a
+Cloudflare challenge that rejects datacenter IPs — the HTML harvester logs those
+as `cloudflare_challenge` blocks. Routing the browser-free harvesters through a
+**residential / rotating proxy** lets those requests through.
+
+Set one env var to a full proxy URL and every plain-HTTP harvester
+(`harvest_html_jsonld.py`, `carscommerce_harvest.py`, `heal_from_recipes.py`)
+routes through it — no code changes, no per-script flags:
+
+```bash
+export SCANNER_HTTP_PROXY='http://user:pass@residential.proxy.example:8000'
+
+# Clear the Cloudflare-walled HTML dealers through the proxy:
+set -a; source .env >/dev/null 2>&1; set +a
+SCANNER_HTTP_PROXY="$SCANNER_HTTP_PROXY" PYTHONPATH=. \
+  python3 backend/scripts/harvest_html_jsonld.py \
+    --dealer-id hondaofelcajon-com --dealer-id pacificvolkswagen-com
+```
+
+Details:
+
+- **Var name:** `SCANNER_HTTP_PROXY` (preferred). If unset, the shared helper
+  (`backend/scanner/http_fetch.py`) falls back to the standard `HTTPS_PROXY` /
+  `HTTP_PROXY` vars. The scanner-specific var wins when both are set.
+- **Strict no-op when unset:** with no proxy var set, harvesters make the exact
+  same direct connection as before. Nothing about the default path changes.
+- **Value format:** a full proxy URL, `http://user:pass@host:port` (credentials
+  optional).
+- **Failure handling:** an unreachable proxy is caught by each harvester's
+  existing fetch-error handling — the VDP is logged and skipped (the HTML
+  harvester counts it under `block_notes` as `error:ProxyError`), never a crash.
+- To make it permanent for the nightly job, add the export to `.env` (loaded by
+  every step) or to the launchd plist's environment.
+
 ## Notes
 
 - Uses system `python3` (Homebrew `python@3.14`), which the pipeline was verified

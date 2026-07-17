@@ -102,11 +102,17 @@ def _harvested_value(field: str, harvest: dict[str, Any]) -> Any:
 
 
 def _fetch(url: str, timeout: float) -> tuple[str, str | None, str]:
-    """Return (url, html_or_None, status_note). Marks Cloudflare/edge blocks."""
+    """Return (url, html_or_None, status_note). Marks Cloudflare/edge blocks.
+
+    Routes through the optional ``SCANNER_HTTP_PROXY`` (see
+    ``backend.scanner.http_fetch``); a no-op direct connection when unset.
+    """
     import requests
 
+    from backend.scanner.http_fetch import requests_proxies
+
     try:
-        resp = requests.get(url, headers=_HEADERS, timeout=timeout)
+        resp = requests.get(url, headers=_HEADERS, timeout=timeout, proxies=requests_proxies())
     except Exception as exc:  # noqa: BLE001 — network errors are expected/logged
         return url, None, f"error:{type(exc).__name__}"
     ct = resp.headers.get("content-type") or ""
