@@ -38,11 +38,13 @@ from backend.scanner.recipes import (
     PAGINATION_CARSCOMMERCE,
     PAGINATION_DEALER_COM,
     PAGINATION_NONE,
+    PAGINATION_PAGE_QUERY,
     PAGINATION_TYPESENSE,
     EndpointRecipe,
     _mutate_for_page,
     _replay_request,
     _unique_vins,
+    _url_for_page,
     load_recipes,
 )
 
@@ -495,6 +497,15 @@ def _detect_team_velocity(html: str, dealer_url: str) -> bool:
 
 def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
     url = _origin(dealer_url) + _TEAM_VELOCITY_FEED
+    # Probe page 1 to confirm the feed exists and read totalVehicles so replay can
+    # bound its ?page=N walk. (A missing feed → None; the dealer needs a browser.)
+    first = _cosmos_get_json(url)
+    if not isinstance(first, dict) or not first.get("vehicles"):
+        return None
+    try:
+        total = int(first.get("totalVehicles") or 0) or None
+    except (TypeError, ValueError):
+        total = None
     return EndpointRecipe(
         dealer_id=dealer_id,
         url=url,
@@ -502,8 +513,9 @@ def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> Endpoint
         content_type="application/json",
         post_template=None,
         auth_headers={},
-        # Single-shot stored (page 1); validate_recipe + delta walk ?page=N.
-        pagination=PAGINATION_NONE,
+        # GET ?page=N feed — replay + delta walk every page (see PAGINATION_PAGE_QUERY).
+        pagination=PAGINATION_PAGE_QUERY,
+        total_count=total,
         provider_hint="dealer_dot_com",
     )
 
@@ -600,7 +612,11 @@ def validate_recipe(
     if _COSMOS_PATH.split("/api")[-1] in recipe.url or "cosmos/srp/vehicles" in recipe.url:
         return _validate_cosmos(recipe, base_url, dealer_id, dealer_name, max_pages)
     # Team Velocity same-origin JSON feed paginates via ?page=N (nextPage/totalPages).
-    if _TEAM_VELOCITY_FEED in recipe.url or recipe.url.endswith(("-used.json", "-cpo.json", "-new.json")):
+    if (
+        recipe.pagination == PAGINATION_PAGE_QUERY
+        or _TEAM_VELOCITY_FEED in recipe.url
+        or recipe.url.endswith(("-used.json", "-cpo.json", "-new.json"))
+    ):
         return _validate_json_feed(recipe, base_url, dealer_id, dealer_name, max_pages)
 
     template: Any = None
@@ -616,7 +632,7 @@ def validate_recipe(
     vins: set[str] = set()
     for page_i in range(pages):
         body = _mutate_for_page(recipe, template, page_i) if template is not None else None
-        status, parsed = _replay_request(recipe, body, base_url)
+        status, parsed = _replay_request(recipe, body, base_url, _url_for_page(recipe, page_i))
         if status != 200 or parsed is None:
             break
         page_vehicles = list(parse(

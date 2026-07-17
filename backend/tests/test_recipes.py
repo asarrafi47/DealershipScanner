@@ -120,7 +120,7 @@ def test_replay_paginates_and_returns_records(monkeypatch):
              3: [_vehicle(40 + i) for i in range(5)]}
     calls = []
 
-    def fake_request(recipe, body, base_url):
+    def fake_request(recipe, body, base_url, url=None):
         page = body["page"]
         calls.append((page, dict(recipe.auth_headers)))
         return 200, {"inventory": pages.get(page, [])}
@@ -187,3 +187,23 @@ def test_mutate_for_page_shapes():
                         content_type="", post_template=None, pagination=PAGINATION_DEALER_COM)
     out = _mutate_for_page(dc, {"preferences": {"pageSize": "24"}, "inventoryParameters": {}}, 2)
     assert out["inventoryParameters"]["start"] == ["48"]
+
+
+def test_url_for_page_page_query():
+    from backend.scanner.recipes import PAGINATION_PAGE_QUERY, _url_for_page
+
+    # page_query mutates the URL: sets ?page=N (1-based), replacing any existing page.
+    tv = EndpointRecipe(dealer_id="d", url="https://x.example/inventory-used.json", method="GET",
+                        content_type="", post_template=None, pagination=PAGINATION_PAGE_QUERY)
+    assert _url_for_page(tv, 0) == "https://x.example/inventory-used.json?page=1"
+    assert _url_for_page(tv, 3) == "https://x.example/inventory-used.json?page=4"
+
+    tv2 = EndpointRecipe(dealer_id="d", url="https://x.example/inv.json?page=9&x=1", method="GET",
+                         content_type="", post_template=None, pagination=PAGINATION_PAGE_QUERY)
+    got = _url_for_page(tv2, 1)
+    assert "page=2" in got and "x=1" in got and "page=9" not in got
+
+    # Non page_query paginations leave the URL untouched (no regression).
+    cc = EndpointRecipe(dealer_id="d", url="https://x.carscommerce.inc/s", method="POST",
+                        content_type="", post_template=None, pagination=PAGINATION_CARSCOMMERCE)
+    assert _url_for_page(cc, 5) == "https://x.carscommerce.inc/s"

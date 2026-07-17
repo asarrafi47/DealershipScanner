@@ -284,7 +284,12 @@ def test_synthesize_typesense_needs_collection(_inject_refs):
 # ── synthesize_recipe: Team Velocity (same-origin JSON feed) ───────────────────
 
 
-def test_synthesize_team_velocity_feed():
+def test_synthesize_team_velocity_feed(monkeypatch):
+    # synth probes page 1 to confirm the feed + read totalVehicles.
+    monkeypatch.setattr(
+        recipe_synth, "_cosmos_get_json",
+        lambda url: {"totalVehicles": 196, "totalPages": 4, "vehicles": [{"vin": "V1"}]},
+    )
     r = recipe_synth.synthesize_recipe(
         "righthonda-com", "https://www.righthonda.com", _TEAM_VELOCITY_HTML, "team_velocity"
     )
@@ -292,6 +297,16 @@ def test_synthesize_team_velocity_feed():
     assert r.url == "https://www.righthonda.com/inventory-used.json"
     assert r.method == "GET"
     assert r.provider_hint == "dealer_dot_com"
+    # ?page=N pagination so replay/delta walk the whole lot, not just page 1.
+    assert r.pagination == "page_query"
+    assert r.total_count == 196
+
+
+def test_synthesize_team_velocity_missing_feed_returns_none(monkeypatch):
+    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", lambda url: None)
+    assert recipe_synth.synthesize_recipe(
+        "x-com", "https://x.com", _TEAM_VELOCITY_HTML, "team_velocity"
+    ) is None
 
 
 # ── synthesize_recipe: unsynthesizable platforms ──────────────────────────────

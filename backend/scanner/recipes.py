@@ -28,7 +28,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 logger = logging.getLogger("scanner")
 
@@ -38,6 +38,7 @@ RECIPES_DIR = Path("workspace") / "recipes"
 PAGINATION_CARSCOMMERCE = "carscommerce_page"   # POST body {"page": N, "perPage": M}
 PAGINATION_TYPESENSE = "typesense_page"          # POST body searches[].page / per_page
 PAGINATION_DEALER_COM = "dealer_com_start"       # POST body inventoryParameters.start
+PAGINATION_PAGE_QUERY = "page_query"             # GET URL ?page=N (Team Velocity JSON feed)
 PAGINATION_NONE = "none"                         # single-shot GET/POST
 
 
@@ -210,10 +211,32 @@ def _mutate_for_page(recipe: EndpointRecipe, template: Any, page_index: int) -> 
     return body
 
 
-def _replay_request(recipe: EndpointRecipe, body: Any, base_url: str) -> tuple[int, Any | None]:
-    """One synchronous HTTP call. Returns (status, parsed_json_or_None)."""
+def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
+    """Per-page request URL for 0-based *page_index*.
+
+    Only ``PAGINATION_PAGE_QUERY`` mutates the URL (sets ``?page=N``, 1-based);
+    every other pagination shape paginates via the request body, so the URL is
+    returned unchanged.
+    """
+    if recipe.pagination != PAGINATION_PAGE_QUERY:
+        return recipe.url
+    parts = urlparse(recipe.url)
+    query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k != "page"]
+    query.append(("page", str(page_index + 1)))
+    return urlunparse(parts._replace(query=urlencode(query)))
+
+
+def _replay_request(
+    recipe: EndpointRecipe, body: Any, base_url: str, url: str | None = None
+) -> tuple[int, Any | None]:
+    """One synchronous HTTP call. Returns (status, parsed_json_or_None).
+
+    *url* overrides ``recipe.url`` for this call (used to walk ``?page=N``
+    pagination); defaults to ``recipe.url``.
+    """
     import requests
 
+    req_url = url or recipe.url
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -226,11 +249,11 @@ def _replay_request(recipe: EndpointRecipe, body: Any, base_url: str) -> tuple[i
     }
     try:
         if recipe.method == "GET":
-            resp = requests.get(recipe.url, headers=headers, timeout=_REPLAY_TIMEOUT_S)
+            resp = requests.get(req_url, headers=headers, timeout=_REPLAY_TIMEOUT_S)
         else:
             headers["Content-Type"] = "application/json"
             resp = requests.request(
-                recipe.method, recipe.url, headers=headers,
+                recipe.method, req_url, headers=headers,
                 data=json.dumps(body) if body is not None else None,
                 timeout=_REPLAY_TIMEOUT_S,
             )
@@ -326,7 +349,8 @@ async def try_fetch_via_recipes(
         auth_dead = False
         for page_i in range(pages):
             body = _mutate_for_page(recipe, template, page_i) if template is not None else None
-            status, parsed = await asyncio.to_thread(_replay_request, recipe, body, base_url)
+            page_url = _url_for_page(recipe, page_i)
+            status, parsed = await asyncio.to_thread(_replay_request, recipe, body, base_url, page_url)
             if status in (401, 403):
                 if not vins:
                     # Failed before collecting anything — the recipe's auth is dead.
