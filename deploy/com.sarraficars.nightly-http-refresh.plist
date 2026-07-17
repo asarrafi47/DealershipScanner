@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd job: nightly browser-free HTTP inventory refresh.
+
+  This file is kept in the repo as a template. It is NOT installed automatically.
+  To install/uninstall, see deploy/NIGHTLY_REFRESH.md.
+
+  Runs deploy/nightly_http_refresh.sh every night at 03:30 local time.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.sarraficars.nightly-http-refresh</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/asarrafi/Projects/DealershipScanner/deploy/nightly_http_refresh.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner</string>
+
+    <!-- Run once a day at 03:30 local time. If the Mac was asleep at 03:30,
+         launchd runs the job at the next wake. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <!-- launchd-level stdout/stderr. The wrapper also writes its own dated,
+         timestamped log at workspace/scanlogs/nightly_<YYYYMMDD>.log -->
+    <key>StandardOutPath</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner/workspace/scanlogs/launchd.nightly-http-refresh.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner/workspace/scanlogs/launchd.nightly-http-refresh.err.log</string>
+
+    <!-- Do not relaunch on exit; this is a scheduled batch job, not a daemon. -->
+    <key>RunAtLoad</key>
+    <false/>
+    <key>KeepAlive</key>
+    <false/>
+
+    <!-- Keep PATH sane so `python3`, `psql`, `pgrep` resolve under launchd,
+         which starts with a minimal environment. Adjust if Homebrew lives
+         elsewhere (Apple Silicon default shown). -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/opt/homebrew/opt/python@3.14/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <!-- Be a good citizen: run at reduced I/O/CPU priority. -->
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>LowPriorityIO</key>
+    <true/>
+    <key>Nice</key>
+    <integer>5</integer>
+</dict>
+</plist>
