@@ -462,7 +462,27 @@ def _synth_typesense(dealer_id: str, dealer_url: str, html: str) -> EndpointReci
     key = _extract_ts_key(html) or _ts_ref_key()
     if not host or not key:
         return None
-    post_template = ref.post_template.replace(_TYPESENSE_REF_COLLECTION, collection)
+    # Full-lot body: point every search at this dealer's collection AND drop the
+    # reference recipe's `filter_by: "condition:Used"` so the recipe replays the
+    # whole collection (new + used) — otherwise new inventory is excluded (same
+    # defect fixed for CarsCommerce). Verified: dropping the filter takes Toyota
+    # of Orange from 98 used to ~971 total.
+    try:
+        body = json.loads(ref.post_template)
+    except ValueError:
+        body = None
+    if isinstance(body, dict) and isinstance(body.get("searches"), list):
+        for s in body["searches"]:
+            if isinstance(s, dict):
+                s["collection"] = collection
+                s.pop("filter_by", None)
+                # Raise per_page to the Typesense max (250) so the bounded 40-page
+                # walk reaches large collections instead of capping at 40*24=960.
+                s["per_page"] = 250
+        post_template = json.dumps(body)
+    else:
+        # Fallback: at least swap the collection so the recipe targets this dealer.
+        post_template = ref.post_template.replace(_TYPESENSE_REF_COLLECTION, collection)
     url = f"https://{host}/multi_search?x-typesense-api-key={key}"
     return EndpointRecipe(
         dealer_id=dealer_id,

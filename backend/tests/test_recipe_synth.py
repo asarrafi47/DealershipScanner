@@ -281,8 +281,13 @@ def test_synthesize_typesense(_inject_refs):
         "?x-typesense-api-key=eQUa8iq30l8Tu908Drz9WKqar6tCJGd4"
     )
     body = json.loads(r.post_template)
-    assert body["searches"][0]["collection"] == "vehicles-HON208436"
+    search = body["searches"][0]
+    assert search["collection"] == "vehicles-HON208436"
     assert "vehicles-TOY04247" not in r.post_template
+    # Full-lot body: the condition:Used filter is dropped (new included) and
+    # per_page is raised to the Typesense max so the page walk reaches large lots.
+    assert "filter_by" not in search
+    assert search["per_page"] == 250
 
 
 def test_synthesize_typesense_needs_collection(_inject_refs):
