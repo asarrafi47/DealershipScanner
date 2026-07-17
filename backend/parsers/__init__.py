@@ -2,6 +2,7 @@ import logging
 
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_on import parse as parse_dealer_on
+from backend.parsers.typesense import parse as parse_typesense
 
 
 def _parse_autowall(raw_data, *, base_url="", dealer_id="", dealer_name="", dealer_url=""):
@@ -30,6 +31,7 @@ PARSERS = {
     "dealer_dot_com": parse_dealer_dot_com,
     "dealer_on": parse_dealer_on,
     "dealer_on_cosmos": _parse_cosmos_cards,
+    "typesense": parse_typesense,
     "autowall": _parse_autowall,
 }
 
