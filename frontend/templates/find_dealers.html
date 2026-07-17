@@ -134,5 +134,6 @@
 </script>
 <script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='find_dealers.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+{% include "_footer_version.html" %}
 </body>
 </html>

@@ -145,5 +145,6 @@
     "manifest_path": lab.manifest_path
 } | tojson }}</script>
 <script src="{{ url_for('static', filename='dev_scan_lab.js') }}?v={{ static_cache_ver }}"></script>
+{% include "_footer_version.html" %}
 </body>
 </html>

@@ -359,6 +359,7 @@ def _gzip_large_json(resp):
 @app.context_processor
 def inject_csrf_and_flags():
     role = (session.get("user_role") or "").strip().lower()
+    from backend.routes.site_misc import _app_version
     from backend.utils.roles import is_dealer_portal_role
 
     static_ver = "1"
@@ -402,6 +403,7 @@ def inject_csrf_and_flags():
         "apple_signin_enabled": apple_oauth_configured(),
         "apple_signin_visible": apple_signin_visible(),
         "password_reset_enabled": _password_reset_enabled(),
+        "app_version": _app_version(),
     }
 
 

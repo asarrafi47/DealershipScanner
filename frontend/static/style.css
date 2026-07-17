@@ -9727,6 +9727,16 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
     color: var(--navy);
 }
 
+/* App version stamp — bottom of every page (see _footer_version.html) */
+.app-version-footer {
+    text-align: center;
+    padding: 14px 16px 18px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    opacity: 0.75;
+}
+
 /* ── Responsive ── */
 
 @media (max-width: 1100px) {
