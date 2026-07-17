@@ -31,12 +31,13 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
 from backend.scanner.http_fetch import open_url
 from backend.scanner.recipes import (
     PAGINATION_CARSCOMMERCE,
     PAGINATION_DEALER_COM,
+    PAGINATION_NONE,
     EndpointRecipe,
     _mutate_for_page,
     _replay_request,
@@ -275,6 +276,94 @@ def _synth_carscommerce(dealer_id: str, dealer_url: str, html: str) -> EndpointR
     )
 
 
+# ── Platform: DealerOn cosmos (ws/vhcliaa SRP) ────────────────────────────────
+
+# DealerOn cosmos SRP endpoint:
+#   https://{domain}/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/{account}/{pagecfg}
+# parameterized by two ids, both recoverable over plain HTTP:
+#   account  — the dealer id, in the homepage HTML (site-provider="dealeron",
+#              data-website-id="do-{account}", "dealerId":"{account}").
+#   pagecfg  — the SRP page config id, NOT on the homepage but embedded in the
+#              used-inventory SRP page as an itemlist page config
+#              ({"dealerId":...,"pageId":{pagecfg},"pageType":"itemlist"...}).
+#              The cosmos endpoint accepts the SRP page's pageId as the pagecfg
+#              (verified live), so no browser capture is needed.
+# The endpoint paginates session-free via ?pg=N&pn=96 (same as heal's
+# _cosmos_pages); validate_recipe walks it that way for cosmos URLs.
+_COSMOS_PATH = "/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles"
+_COSMOS_PAGE_SIZE = 96
+# SRP pages that carry a Used-scoped itemlist page config.
+_COSMOS_SRP_PATHS = ("/used-inventory/", "/searchused.aspx", "/used-vehicles/", "/inventory/used")
+
+_COSMOS_ACCOUNT_RES = (
+    re.compile(r'data-website-id="do-(\d+)"'),
+    re.compile(r'"dealerId"\s*:\s*"?(\d+)"?'),
+    re.compile(r'/static/dealer-(\d+)/'),
+)
+# {"dealerId":"25003","pageId":2483381,"pageType":"itemlist"...}
+_COSMOS_ITEMLIST_RE = re.compile(
+    r'"dealerId"\s*:\s*"?(\d+)"?\s*,\s*"pageId"\s*:\s*(\d+)\s*,\s*"pageType"\s*:\s*"itemlist"'
+)
+
+
+def _detect_dealer_on_cosmos(html: str, dealer_url: str) -> bool:
+    low = html.lower()
+    markers = ('site-provider="dealeron"', 'data-website-id="do-', "vhcliaa", "cosmos/srp/vehicles")
+    if not any(m in low for m in markers):
+        return False
+    return bool(_extract_cosmos_account(html))
+
+
+def _extract_cosmos_account(html: str) -> str | None:
+    for rx in _COSMOS_ACCOUNT_RES:
+        m = rx.search(html)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _extract_cosmos_pagecfg(html: str) -> tuple[str, str] | None:
+    """(account, pagecfg) from a Used SRP itemlist page config, or ``None``."""
+    m = _COSMOS_ITEMLIST_RE.search(html)
+    if m:
+        return m.group(1), m.group(2)
+    return None
+
+
+def _synth_dealer_on_cosmos(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    account = _extract_cosmos_account(html)
+    # The pagecfg lives on the Used SRP page, not the homepage — fetch one.
+    origin = _origin(dealer_url)
+    pair: tuple[str, str] | None = _extract_cosmos_pagecfg(html)
+    if pair is None:
+        for path in _COSMOS_SRP_PATHS:
+            srp = fetch_dealer_html(origin + path)
+            if not srp:
+                continue
+            pair = _extract_cosmos_pagecfg(srp)
+            if pair:
+                break
+    if pair is None:
+        return None
+    srp_account, pagecfg = pair
+    account = account or srp_account
+    if not account or not pagecfg:
+        return None
+    url = f"{origin}{_COSMOS_PATH}/{account}/{pagecfg}"
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="application/json",
+        post_template=None,
+        auth_headers={},
+        # Stored single-shot (like browser-captured cosmos recipes); the cosmos
+        # ?pg=N&pn=96 walk is handled by validate_recipe and heal's _cosmos_pages.
+        pagination=PAGINATION_NONE,
+        provider_hint="dealer_on_cosmos",
+    )
+
+
 # ── Platform: Team Velocity (stretch — endpoint not derivable from HTML) ───────
 
 
@@ -283,12 +372,15 @@ def _detect_team_velocity(html: str, dealer_url: str) -> bool:
     return "teamvelocityportal" in low or "inventoryapibaseurl" in low
 
 
-# TODO(team_velocity): the HTML exposes inventoryApiBaseUrl
-# ('https://websites.api.teamvelocityportal.com/') and accountId, but the
-# endpoint path + POST body shape can't be derived from the HTML alone — it
-# needs one browser capture to record the request shape. Until then Team
-# Velocity is recognized (so we report it precisely) but not synthesizable, and
-# those dealers still need the browser. Register with ``synth=None``.
+# TODO(team_velocity): recognized but NOT synthesizable over plain HTTP.
+# Investigated live (righthonda.com, secureoffersites/p961 platform): the HTML
+# exposes accountId + window.ApiBaseUrl='https://{domain}/api', and the SRP JS
+# bundle's only inventory endpoint that replays over HTTP is
+# /api/Inventory/getinventorymultiselectionfilters/v2 — but that returns only
+# filter FACETS ({filters, selectedFilters, selectedFiltersUrl}), never the
+# vehicle list. The vehicle grid is hydrated by a Vue SPA with no derivable
+# list-JSON endpoint (SRP paths return the SPA shell, no server-rendered VINs).
+# So Team Velocity still needs a browser capture. Registered with synth=None.
 
 
 # ── Platform registry ─────────────────────────────────────────────────────────
@@ -306,6 +398,7 @@ class PlatformTemplate:
 # Ordered most-specific-first; :func:`fingerprint_platform` returns the first hit.
 PLATFORM_TEMPLATES: list[PlatformTemplate] = [
     PlatformTemplate("carscommerce", _detect_carscommerce, _synth_carscommerce),
+    PlatformTemplate("dealer_on_cosmos", _detect_dealer_on_cosmos, _synth_dealer_on_cosmos),
     PlatformTemplate("dealer_dot_com", _detect_dealer_com, _synth_dealer_com),
     PlatformTemplate("team_velocity", _detect_team_velocity, None),
 ]
@@ -375,6 +468,11 @@ def validate_recipe(
     """
     from backend.parsers import parse
 
+    # DealerOn cosmos GETs paginate session-free via ?pg=N&pn=96 (not a POST-body
+    # shape), so they need their own walk — same mechanism as heal's _cosmos_pages.
+    if _COSMOS_PATH.split("/api")[-1] in recipe.url or "cosmos/srp/vehicles" in recipe.url:
+        return _validate_cosmos(recipe, base_url, dealer_id, dealer_name, max_pages)
+
     template: Any = None
     if recipe.post_template:
         try:
@@ -383,8 +481,6 @@ def validate_recipe(
             template = None
     if recipe.method != "GET" and template is None:
         return 0
-
-    from backend.scanner.recipes import PAGINATION_NONE
 
     pages = 1 if recipe.pagination == PAGINATION_NONE else max_pages
     vins: set[str] = set()
@@ -403,5 +499,45 @@ def validate_recipe(
             break
         vins |= new
         if recipe.total_count and len(vins) >= recipe.total_count:
+            break
+    return len(vins)
+
+
+def _cosmos_get_json(url: str) -> Any | None:
+    """Proxy-aware GET returning parsed JSON (or ``None``)."""
+    import urllib.request
+
+    req = urllib.request.Request(url, headers={**_browser_headers(), "Accept": "application/json"})
+    try:
+        resp = open_url(req, timeout=25.0)
+        return json.loads(resp.read().decode("utf-8", "replace"))
+    except Exception as e:
+        logger.debug("cosmos GET failed %s: %s", url[:80], str(e)[:120])
+        return None
+
+
+def _validate_cosmos(
+    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
+) -> int:
+    """Walk a cosmos SRP endpoint via ``?pg=N&pn=96`` and count unique VINs."""
+    from backend.parsers import parse
+
+    clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
+    vins: set[str] = set()
+    for pg in range(1, max_pages + 1):
+        body = _cosmos_get_json(f"{clean}?pg={pg}&pn={_COSMOS_PAGE_SIZE}")
+        if not isinstance(body, dict) or not body.get("DisplayCards"):
+            break
+        page_vehicles = list(parse(
+            recipe.provider_hint or "dealer_on_cosmos", body,
+            base_url=base_url, dealer_id=dealer_id,
+            dealer_name=dealer_name, dealer_url=base_url,
+        ))
+        new = _unique_vins(page_vehicles) - vins
+        if not new:
+            break
+        vins |= new
+        total = int(((body.get("Paging") or {}).get("PaginationDataModel") or {}).get("TotalCount") or 0)
+        if total and len(vins) >= total:
             break
     return len(vins)

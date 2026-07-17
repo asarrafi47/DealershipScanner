@@ -35,6 +35,24 @@ _CARSCOMMERCE_HTML = """
 </script></head><body>carscommerce powered</body></html>
 """
 
+_COSMOS_HOME_HTML = """
+<html><head><script type="application/json">{"dealerId":25003,"sincrowebId":"toyd-25003"}</script>
+</head><body>
+<navigation-bar-search dealer-id='25003'></navigation-bar-search>
+<img src="/static/dealer-25003/logo.png">
+<script data-website-provider="dealeron" data-website-id="do-25003"></script>
+</body></html>
+"""
+
+# A Used SRP page carrying the itemlist page config (the pagecfg source).
+_COSMOS_SRP_HTML = """
+<html><body><script type="application/json">
+{"dealerId":"25003","pageId":2483381,"pageType":"itemlist","items":["VIN1"]}
+</script>
+<script src="/resources/vhcliaa/components/navbarSearch/navbarSearchBundle.min.js"></script>
+</body></html>
+"""
+
 _TEAM_VELOCITY_HTML = """
 <html><head><script>
   var inventoryApiBaseUrl = 'https://websites.api.teamvelocityportal.com/';
@@ -93,6 +111,15 @@ def test_fingerprint_carscommerce():
     assert recipe_synth.fingerprint_platform(_CARSCOMMERCE_HTML, "https://www.courtesychev.com") == "carscommerce"
 
 
+def test_fingerprint_dealer_on_cosmos():
+    assert recipe_synth.fingerprint_platform(_COSMOS_HOME_HTML, "https://www.bellroadtoyota.com") == "dealer_on_cosmos"
+
+
+def test_cosmos_not_misread_as_dealer_com():
+    # cosmos pages can carry stray ddc/widget tokens; must classify as cosmos.
+    assert recipe_synth.fingerprint_platform(_COSMOS_HOME_HTML, "x") == "dealer_on_cosmos"
+
+
 def test_fingerprint_team_velocity():
     assert recipe_synth.fingerprint_platform(_TEAM_VELOCITY_HTML, "https://www.righthonda.com") == "team_velocity"
 
@@ -149,6 +176,41 @@ def test_synthesize_carscommerce_falls_back_to_shared_key(_inject_refs):
     r = recipe_synth.synthesize_recipe("d-com", "https://d.com", html, "carscommerce")
     assert r is not None
     assert r.auth_headers["x-api-key"] == "SHAREDKEYshared0000"  # reference recipe's shared key
+
+
+# ── synthesize_recipe: DealerOn cosmos ────────────────────────────────────────
+
+
+def test_synthesize_cosmos_from_srp_in_html():
+    # itemlist blob already present in the passed html → no extra fetch needed.
+    r = recipe_synth.synthesize_recipe(
+        "bellroadtoyota-com", "https://www.bellroadtoyota.com", _COSMOS_SRP_HTML, "dealer_on_cosmos"
+    )
+    assert r is not None
+    assert r.url == (
+        "https://www.bellroadtoyota.com/api/vhcliaa/vehicle-pages/cosmos/srp/vehicles/25003/2483381"
+    )
+    assert r.method == "GET"
+    assert r.provider_hint == "dealer_on_cosmos"
+    assert r.post_template is None
+
+
+def test_synthesize_cosmos_fetches_srp_for_pagecfg(monkeypatch):
+    # Homepage has the account but not the pagecfg; synth must fetch an SRP page.
+    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url, **k: _COSMOS_SRP_HTML)
+    r = recipe_synth.synthesize_recipe(
+        "bellroadtoyota-com", "https://www.bellroadtoyota.com", _COSMOS_HOME_HTML, "dealer_on_cosmos"
+    )
+    assert r is not None
+    assert r.url.endswith("/cosmos/srp/vehicles/25003/2483381")
+
+
+def test_synthesize_cosmos_needs_pagecfg(monkeypatch):
+    # No itemlist config anywhere → cannot synthesize.
+    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url, **k: None)
+    assert recipe_synth.synthesize_recipe(
+        "x-com", "https://x.com", _COSMOS_HOME_HTML, "dealer_on_cosmos"
+    ) is None
 
 
 # ── synthesize_recipe: unsynthesizable platforms ──────────────────────────────
