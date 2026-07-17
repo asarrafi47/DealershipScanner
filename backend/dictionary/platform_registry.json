@@ -1,0 +1,14 @@
+{
+  "_comment": "Learnable platform-registry overrides, layered on top of the built-in seed in backend/scanner/platform_registry.py. Each item under 'platforms' is merged by 'name': an existing name updates that entry's fields, a new name appends a new platform. Add ONE entry here to teach the classifier a new dealer platform (no code edit needed) — set cname_patterns (substrings found in the DNS CNAME chain) and/or html_markers, plus strategy ('synthesize' | 'html_harvest' | 'browser'), synthesizable, cloudflare, notes. See workspace/unclassified_platforms.json for captured signals of platforms we have not named yet.",
+  "platforms": [
+    {
+      "name": "space_auto",
+      "cname_patterns": ["space-auto.com", "space.auto"],
+      "html_markers": ["search-api.space-auto.com", "space-auto.com", "galaxy.space.auto"],
+      "strategy": "browser",
+      "synthesizable": false,
+      "cloudflare": false,
+      "notes": "Space Auto. Discovered from unclassified signals on countrysideautogroup.com (Squarespace-fronted site whose inventory is served by search-api.space-auto.com / inventory.galaxy.space.auto). Site chrome CNAMEs to Squarespace, so identified by HTML markers. No recipe template yet -> browser until an API template is captured."
+    }
+  ]
+}

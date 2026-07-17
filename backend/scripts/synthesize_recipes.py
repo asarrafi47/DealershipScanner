@@ -45,6 +45,7 @@ from backend.utils.project_env import load_project_dotenv
 
 load_project_dotenv()
 
+from backend.scanner.platform_registry import classify_dealer
 from backend.scanner.recipe_synth import (
     fetch_dealer_html,
     fingerprint_platform,
@@ -112,18 +113,40 @@ def _process_dealer(
         "saved": False,
         "note": "",
     }
+    # DNS CNAME pre-identification: works even when the site is HTTP-walled
+    # (Cloudflare doesn't hide DNS), and names html_harvest / browser platforms
+    # that HTML fingerprinting alone can't. Cheap (DNS only, no HTTP here).
+    dns = classify_dealer(dealer_url, do_http=False, log_unknown=False)
+
     html, platform = _gather_html(dealer_url)
     if not html:
-        row["note"] = "needs browser (fetch blocked / JS-shell)"
+        # HTTP blocked / JS-shell — but DNS may still tell us the platform.
+        if dns.get("platform"):
+            row["platform"] = dns["platform"]
+            if dns.get("strategy") == "html_harvest":
+                hint = " (+proxy: set SCANNER_HTTP_PROXY)" if dns.get("cloudflare") else ""
+                row["note"] = f"use HTML harvester (harvest_html_jsonld){hint} [platform via DNS]"
+            elif dns.get("synthesizable"):
+                row["note"] = f"{dns['platform']} via DNS but HTTP walled — needs proxy to read params"
+            else:
+                row["note"] = f"needs browser ({dns['platform']} via DNS, no template)"
+        else:
+            classify_dealer(dealer_url)  # capture signals to the unclassified log
+            row["note"] = "needs browser (fetch blocked / JS-shell, platform unknown)"
         return row
     platform = platform or fingerprint_platform(html, dealer_url)
-    row["platform"] = platform or "unknown"
+    row["platform"] = platform or dns.get("platform") or "unknown"
     if not is_synthesizable(platform):
-        row["note"] = (
-            "needs browser (platform recognized, no template yet)"
-            if platform
-            else "needs browser (platform unknown)"
-        )
+        # Route server-rendered-HTML platforms (e.g. Jazel/McKenna family) to the
+        # HTML harvester instead of a bare "unknown"; log true unknowns.
+        if dns.get("strategy") == "html_harvest":
+            hint = " (+proxy: set SCANNER_HTTP_PROXY)" if dns.get("cloudflare") else ""
+            row["note"] = f"use HTML harvester (harvest_html_jsonld){hint}"
+        elif platform or dns.get("platform"):
+            row["note"] = "needs browser (platform recognized, no template yet)"
+        else:
+            classify_dealer(dealer_url)  # log signals for later naming
+            row["note"] = "needs browser (platform unknown — logged to registry)"
         return row
 
     recipe = synthesize_recipe(dealer_id, dealer_url, html, platform)
