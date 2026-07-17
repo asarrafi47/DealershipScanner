@@ -675,7 +675,10 @@ class NetworkObserver:
                 total = None
         self.ledger.add_endpoint(
             CapturedEndpoint(
-                url=rurl[:500],
+                # Full URL needed: recipes replay this verbatim. Long GET queries
+                # (e.g. sister.tv VIN-list searches) exceed 500 chars and a
+                # truncated URL 400s on replay — the recipe never works.
+                url=rurl[:8000],
                 method=method,
                 content_type=ct[:100],
                 post_data_sample=post_sample,

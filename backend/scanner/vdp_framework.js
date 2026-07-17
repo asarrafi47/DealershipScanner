@@ -802,7 +802,9 @@ async function runVdpExtraction(page, vdpUrl, options = {}) {
       appendPriceHintsFromNetworkJson(parsed, hintProbe);
       if (score < 6 && epObjects.length === 0 && hintProbe.length === 0) return;
       networkCandidates.push({
-        url: url.slice(0, 500),
+        // Full URL: recipes replay it verbatim; long GET queries (VIN-list
+        // searches) exceed 500 chars and a truncated URL 400s on replay.
+        url: url.slice(0, 8000),
         score,
         keyHits: keyHits.slice(0, 25),
         epObjects,
