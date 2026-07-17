@@ -122,7 +122,9 @@ def sync_incomplete_listing_for_car_id(car_id: int) -> None:
     _ensure_schema(conn)
     cur = conn.cursor()
     car = get_car_by_id(car_id, include_inactive=True)
-    if not car:
+    # Delisted cars (listing_active = 0) are invisible to every public query,
+    # so they don't belong in the incomplete queue either.
+    if not car or not int(car.get("listing_active") if car.get("listing_active") is not None else 1):
         cur.execute("DELETE FROM incomplete_listings WHERE car_id = ?", (car_id,))
         conn.commit()
         conn.close()
@@ -166,7 +168,8 @@ def fast_rebuild_incomplete_listings_index() -> int:
     inv = inv_get_conn()
     inv.row_factory = sqlite3.Row
     cur = inv.cursor()
-    cur.execute("SELECT * FROM cars")
+    # Match the public queries: delisted rows never render, so never queue them.
+    cur.execute("SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)")
     all_cars = [dict(r) for r in cur.fetchall()]
     inv.close()
 

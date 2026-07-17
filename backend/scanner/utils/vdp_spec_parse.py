@@ -424,7 +424,16 @@ def parse_price_from_listing_html(html: str) -> float | None:
             data = json.loads(m.group(1))
         except (ValueError, TypeError):
             continue
-        for item in data if isinstance(data, list) else [data]:
+        items = data if isinstance(data, list) else [data]
+        # schema.org @graph wrapper: {"@graph": [WebSite, Vehicle{offers}]}
+        # (dealer.com VDPs) — the priced Vehicle lives one level down.
+        expanded: list = []
+        for it in items:
+            if isinstance(it, dict) and isinstance(it.get("@graph"), list):
+                expanded.extend(g for g in it["@graph"] if isinstance(g, dict))
+            else:
+                expanded.append(it)
+        for item in expanded:
             if not isinstance(item, dict):
                 continue
             types = item.get("@type", "")

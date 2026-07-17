@@ -192,7 +192,8 @@ def test_fast_rebuild_is_atomic_on_failure(monkeypatch: pytest.MonkeyPatch, tmp_
             body_style TEXT,
             engine_description TEXT,
             condition TEXT,
-            cylinders INTEGER
+            cylinders INTEGER,
+            listing_active INTEGER
         )
         """
     )
