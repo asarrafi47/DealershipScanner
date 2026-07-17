@@ -290,7 +290,9 @@ def test_synthesize_typesense(_inject_refs):
     assert search["per_page"] == 250
 
 
-def test_synthesize_typesense_needs_collection(_inject_refs):
+def test_synthesize_typesense_needs_collection(_inject_refs, monkeypatch):
+    # No collection in the homepage and the SRP-config fallback finds nothing.
+    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda url, **k: None)
     html = '<script>var __tsHost="x.a1.typesense.net";var __tsApiKey="k00000000000000000";</script>'
     assert recipe_synth.synthesize_recipe("x-com", "https://x.com", html, "typesense") is None
 
@@ -389,3 +391,270 @@ def test_fetch_accepts_real_html(monkeypatch):
 
 def test_fetch_rejects_non_http_url():
     assert recipe_synth.fetch_dealer_html("ftp://x.com") is None
+
+
+# ── New platform fixtures ─────────────────────────────────────────────────────
+
+# Motive: RSC state carries the env creds + per-dealer dealer.id (quotes escaped).
+_MOTIVE_HTML = (
+    '<html><body><img src="https://images.app.ridemotive.com/abc"><script>'
+    'self.__next_f.push([1,"x\\"env\\":{\\"ALGOLIA_APP_ID\\":\\"G58LKO3ETJ\\",'
+    '\\"ALGOLIA_API_KEY\\":\\"cc3dce06acb2d9fc715bc10c9a624d80\\",'
+    '\\"ALGOLIA_INVENTORY_INDEX\\":\\"production-inventory-\\"},'
+    '\\"dealer\\":{\\"id\\":1192,\\"name\\":\\"North Park Lexus\\"}y"])'
+    '</script></body></html>'
+)
+
+# dealer_alchemist: dv-framework theme, TypesenseInstantSearchAdapter config.
+_DEALER_ALCHEMIST_HTML = (
+    '<html><head><script src="https://bucket.dealervenom.com/dv-framework.js"></script>'
+    '</head><body>dealeralchemist<script>'
+    'var a = new TypesenseInstantSearchAdapter({ server: {'
+    ' apiKey: "eQUa8iq30l8Tu908Drz9WKqar6tCJGd4",'
+    " nodes: [{ host: 'hjnrb3s21408ezpfp.a1.typesense.net', port: 443, protocol: 'https' }] } });"
+    ' var indexName = "vehicles-TOY42087";'
+    '</script></body></html>'
+)
+
+_OVERFUEL_HTML = '<html><body><meta name="generator" content="Overfuel"><p>overfuel</p></body></html>'
+
+# Overfuel SSR page: __NEXT_DATA__ with inventory.results + meta.total.
+_OVERFUEL_SRP = (
+    '<html><body><script id="__NEXT_DATA__" type="application/json">'
+    '{"props":{"pageProps":{"inventory":{"meta":{"total":2},"results":['
+    '{"vin":"1FTFW1E50NFA00001","year":2022,"make":"Ford","model":"F-150",'
+    '"price":55000,"stocknumber":"A1","url":"/inventory/1FTFW1E50NFA00001"},'
+    '{"vin":"1FTFW1E50NFA00002","year":2023,"make":"Ford","model":"F-150",'
+    '"price":57000,"stocknumber":"A2","url":"/inventory/1FTFW1E50NFA00002"}]}}}}'
+    '</script></body></html>'
+)
+
+_NABTHAT_HTML = '<html><body>powered by nabthat.com<p>hi</p></body></html>'
+
+# nabthat SRP: schema.org Vehicle JSON-LD (same shape as Dealer eProcess).
+_NABTHAT_SRP = (
+    '<html><body>nabthat.com'
+    '<script type="application/ld+json">{"@type":"Vehicle",'
+    '"vehicleIdentificationNumber":"5TDKZ3DC0LS000001","vehicleModelDate":"2020",'
+    '"brand":{"name":"Toyota"},"model":"Sienna","offers":{"price":0,"sku":"N1"}}</script>'
+    '<script type="application/ld+json">{"@type":"Vehicle",'
+    '"vehicleIdentificationNumber":"5TDKZ3DC0LS000002","vehicleModelDate":"2021",'
+    '"brand":{"name":"Toyota"},"model":"Sienna","offers":{"price":0,"sku":"N2"}}</script>'
+    '</body></html>'
+)
+
+_CHAPMAN_HTML = (
+    '<html><body><img src="https://assets.chapmanchoice.com/img/dealers/cau.webp">'
+    'chapmanapps.com</body></html>'
+)
+
+_CHAPMAN_ROWS = [
+    {"vin": "1FA6P8TH0N5000001", "year": 2022, "make": "Ford", "model": "Mustang",
+     "type": "N", "stockNumber": "C1", "pricing": {"msrp": 40000, "markupsTotal": 0,
+     "discountsTotal": 1500, "rebatesAppliedTotal": 500}, "imageUrls": ["https://photos.chapmanchoice.com/1.jpg"]},
+    {"vin": "1FA6P8TH0N5000002", "year": 2023, "make": "Ford", "model": "Bronco",
+     "type": "U", "stockNumber": "C2", "pricing": {"msrp": 0}},
+]
+
+_JAZEL_HTML = (
+    '<html><body><script>window.jzla5p={accountId:"6,7,8"};</script>'
+    '<a href="https://jazelc.com">x</a>936 vehicles</body></html>'
+)
+
+# Jazel SSR SRP: per-card jzlSetVehicleInfoContext('VIN', {...}) calls.
+_JAZEL_SRP = (
+    '<html><body>2 vehicles'
+    "<script>window.jzlSetVehicleInfoContext('1FTFW1E50NFB00001', "
+    '{"vin":"1FTFW1E50NFB00001","year":2022,"make":"Ford","model":"F-150",'
+    '"displayPrice":55000,"newOrUsed":"New","vdpLink":"/new/f150/1.htm",'
+    '"image":"https://media-cdn-tango.jazelc.com/media/1"});</script>'
+    "<script>window.jzlSetVehicleInfoContext('1FTFW1E50NFB00002', "
+    '{"vin":"1FTFW1E50NFB00002","year":2023,"make":"Ford","model":"F-150",'
+    '"displayPrice":57000,"newOrUsed":"Used","vdpLink":"/used/f150/2.htm",'
+    '"image":"https://media-cdn-tango.jazelc.com/media/2"});</script>'
+    '</body></html>'
+)
+
+
+# ── fingerprint: new platforms ────────────────────────────────────────────────
+
+
+def test_fingerprint_motive():
+    assert recipe_synth.fingerprint_platform(_MOTIVE_HTML, "https://www.northparklexus.com") == "motive_ridemotive"
+
+
+def test_fingerprint_overfuel():
+    assert recipe_synth.fingerprint_platform(_OVERFUEL_HTML, "https://x.com") == "overfuel"
+
+
+def test_fingerprint_nabthat():
+    assert recipe_synth.fingerprint_platform(_NABTHAT_HTML, "https://www.mossytoyota.com") == "nabthat"
+
+
+def test_fingerprint_chapman():
+    assert recipe_synth.fingerprint_platform(_CHAPMAN_HTML, "https://www.chapmanfordaz.com") == "chapman"
+
+
+def test_fingerprint_jazel():
+    assert recipe_synth.fingerprint_platform(_JAZEL_HTML, "https://www.5starford.com") == "jazel"
+
+
+def test_dealer_alchemist_fingerprints_as_typesense():
+    # dealer_alchemist shares the Typesense cluster, so it fingerprints as typesense.
+    assert recipe_synth.fingerprint_platform(_DEALER_ALCHEMIST_HTML, "https://www.donmcgilltoyota.com") == "typesense"
+
+
+# ── synthesize: Motive (Algolia) ──────────────────────────────────────────────
+
+
+def test_synthesize_motive():
+    from backend.scanner.recipes import PAGINATION_ALGOLIA
+
+    r = recipe_synth.synthesize_recipe(
+        "northparklexus-com", "https://www.northparklexus.com", _MOTIVE_HTML, "motive_ridemotive"
+    )
+    assert r is not None
+    assert r.method == "POST"
+    assert r.provider_hint == "motive_ridemotive"
+    assert r.pagination == PAGINATION_ALGOLIA
+    assert r.url == (
+        "https://G58LKO3ETJ-dsn.algolia.net/1/indexes/production-inventory-global_price_desc/query"
+    )
+    assert r.auth_headers["X-Algolia-Application-Id"] == "G58LKO3ETJ"
+    assert r.auth_headers["X-Algolia-API-Key"] == "cc3dce06acb2d9fc715bc10c9a624d80"
+    body = json.loads(r.post_template)
+    assert body["filters"] == 'is_active:true AND dealer_ids:"1192"'
+    assert body["hitsPerPage"] == 1000
+    assert body["page"] == 0
+
+
+def test_synthesize_motive_needs_dealer_id():
+    html = _MOTIVE_HTML.replace('\\"id\\":1192', '\\"nope\\":1')
+    assert recipe_synth.synthesize_recipe("x-com", "https://x.com", html, "motive_ridemotive") is None
+
+
+# ── synthesize: dealer_alchemist via the typesense template ───────────────────
+
+
+def test_synthesize_dealer_alchemist_via_typesense():
+    # No reference recipe injected: host/key/collection all come from the page's
+    # TypesenseInstantSearchAdapter config via the extended _TS_* regexes.
+    r = recipe_synth.synthesize_recipe(
+        "donmcgilltoyota-com", "https://www.donmcgilltoyota.com", _DEALER_ALCHEMIST_HTML
+    )
+    assert r is not None
+    assert r.provider_hint == "typesense"
+    assert r.url == (
+        "https://hjnrb3s21408ezpfp.a1.typesense.net/multi_search"
+        "?x-typesense-api-key=eQUa8iq30l8Tu908Drz9WKqar6tCJGd4"
+    )
+    body = json.loads(r.post_template)
+    # Falls back to a fresh single-search body when no reference recipe exists;
+    # either way the collection must be this dealer's.
+    dumped = r.post_template
+    assert "vehicles-TOY42087" in dumped
+
+
+# ── synthesize: Overfuel (HTML page-walk) ─────────────────────────────────────
+
+
+def test_synthesize_overfuel(monkeypatch):
+    from backend.scanner.recipes import PAGINATION_HTML_PAGE
+
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", lambda url: _OVERFUEL_SRP)
+    r = recipe_synth.synthesize_recipe(
+        "autoboutiqueflorida-com", "https://www.autoboutiqueflorida.com", _OVERFUEL_HTML, "overfuel"
+    )
+    assert r is not None
+    assert r.method == "GET"
+    assert r.provider_hint == "overfuel"
+    assert r.pagination == PAGINATION_HTML_PAGE
+    assert r.url == "https://www.autoboutiqueflorida.com/inventory"
+    assert r.total_count == 2
+
+
+def test_synthesize_overfuel_no_vehicles(monkeypatch):
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", lambda url: "<html><body>empty</body></html>")
+    assert recipe_synth.synthesize_recipe(
+        "x-com", "https://x.com", _OVERFUEL_HTML, "overfuel"
+    ) is None
+
+
+# ── synthesize: nabthat (HTML page-walk, dealer_eprocess parser) ──────────────
+
+
+def test_synthesize_nabthat(monkeypatch):
+    from backend.scanner.recipes import PAGINATION_HTML_PAGE
+
+    def fake(url):
+        # used path has vehicles; new path is empty -> single used recipe.
+        return _NABTHAT_SRP if url.endswith("/inventory/used") else "<html>nabthat.com</html>"
+
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", fake)
+    recipes = recipe_synth.synthesize_recipes(
+        "mossytoyota-com", "https://www.mossytoyota.com", _NABTHAT_HTML, "nabthat"
+    )
+    assert len(recipes) == 1
+    r = recipes[0]
+    assert r.url == "https://www.mossytoyota.com/inventory/used"
+    assert r.pagination == PAGINATION_HTML_PAGE
+    assert r.provider_hint == "dealer_eprocess"
+
+
+# ── synthesize: Chapman (flat JSON arrays, new + used) ────────────────────────
+
+
+def test_synthesize_chapman(monkeypatch):
+    from backend.scanner.recipes import PAGINATION_NONE
+
+    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", lambda url: list(_CHAPMAN_ROWS))
+    recipes = recipe_synth.synthesize_recipes(
+        "chapmanfordaz-com", "https://www.chapmanfordaz.com", _CHAPMAN_HTML, "chapman"
+    )
+    assert len(recipes) == 2
+    urls = {r.url for r in recipes}
+    assert urls == {
+        "https://apiv2.chapmanapps.com/inventory/cau/new",
+        "https://apiv2.chapmanapps.com/inventory/cau/used",
+    }
+    for r in recipes:
+        assert r.method == "GET"
+        assert r.provider_hint == "chapman"
+        assert r.pagination == PAGINATION_NONE
+        assert r.total_count == 2
+
+
+def test_synthesize_chapman_needs_arkona(monkeypatch):
+    monkeypatch.setattr(recipe_synth, "_cosmos_get_json", lambda url: list(_CHAPMAN_ROWS))
+    html = "<html><body>chapmanapps.com but no arkona asset</body></html>"
+    assert recipe_synth.synthesize_recipes("x-com", "https://x.com", html, "chapman") == []
+
+
+# ── synthesize: Jazel (SSR path-walk) ─────────────────────────────────────────
+
+
+def test_synthesize_jazel(monkeypatch):
+    from backend.scanner.recipes import PAGINATION_JAZEL_SRP
+
+    monkeypatch.setattr(recipe_synth, "_dep_fetch_html", lambda url: _JAZEL_SRP)
+    r = recipe_synth.synthesize_recipe(
+        "5starford-com", "https://www.5starford.com", _JAZEL_HTML, "jazel"
+    )
+    assert r is not None
+    assert r.method == "GET"
+    assert r.provider_hint == "jazel"
+    assert r.pagination == PAGINATION_JAZEL_SRP
+    assert r.url == "https://www.5starford.com/inventory/all-vehicles/"
+
+
+def test_jazel_url_for_page_path_walk():
+    from backend.scanner.recipes import PAGINATION_JAZEL_SRP, EndpointRecipe, _url_for_page
+
+    r = EndpointRecipe(
+        dealer_id="d", url="https://www.5starford.com/inventory/all-vehicles/",
+        method="GET", content_type="text/html", post_template=None,
+        pagination=PAGINATION_JAZEL_SRP,
+    )
+    assert _url_for_page(r, 0) == "https://www.5starford.com/inventory/all-vehicles/"
+    assert _url_for_page(r, 1) == "https://www.5starford.com/inventory/all-vehicles/srp-page-2/"
+    assert _url_for_page(r, 2) == "https://www.5starford.com/inventory/all-vehicles/srp-page-3/"

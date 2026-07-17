@@ -35,9 +35,12 @@ from urllib.parse import urlparse, urlunparse
 
 from backend.scanner.http_fetch import open_url
 from backend.scanner.recipes import (
+    PAGINATION_ALGOLIA,
     PAGINATION_CARSCOMMERCE,
     PAGINATION_DEALER_COM,
     PAGINATION_DEP_SRP,
+    PAGINATION_HTML_PAGE,
+    PAGINATION_JAZEL_SRP,
     PAGINATION_NONE,
     PAGINATION_PAGE_QUERY,
     PAGINATION_TYPESENSE,
@@ -398,14 +401,21 @@ _TYPESENSE_REF_COLLECTION = "vehicles-TOY04247"
 
 _TS_HOST_RES = (
     re.compile(r'__tsHost\s*=\s*["\']([^"\']+)["\']'),
+    # dealer_alchemist nodes:[{ host: 'hjnrb3s21408ezpfp.a1.typesense.net' }]
+    re.compile(r'host["\']?\s*:\s*["\']([a-z0-9.-]+\.typesense\.net)["\']'),
     re.compile(r'([a-z0-9]+\.a1\.typesense\.net)'),
 )
 _TS_KEY_RES = (
     re.compile(r'__tsApiKey\s*=\s*["\']([A-Za-z0-9]{16,})["\']'),
     re.compile(r'x-typesense-api-key=([A-Za-z0-9]{16,})'),
+    # dealer_alchemist (dv-framework / TypesenseInstantSearchAdapter) config:
+    #   server: { apiKey: "…", nodes: [{ host: '…' }] }
+    re.compile(r'apiKey["\']?\s*:\s*["\']([A-Za-z0-9]{16,})["\']'),
 )
 _TS_COLLECTION_RES = (
     re.compile(r'currentIndex\s*=\s*["\'](vehicles-[A-Za-z0-9]{3,})["\']'),
+    # dealer_alchemist per-dealer collection:  indexName = "vehicles-TOY42087"
+    re.compile(r'indexName["\']?\s*[:=]\s*["\'](vehicles-[A-Za-z0-9]{3,})["\']'),
     re.compile(r'["\'](vehicles-[A-Z0-9]{5,10})["\']'),
 )
 
@@ -434,6 +444,19 @@ def _extract_ts_collection(html: str) -> str | None:
     return None
 
 
+# SRP paths that carry the TypesenseInstantSearchAdapter config when the homepage
+# doesn't (dealer_alchemist inlines it on the inventory SRP, not the homepage).
+_TS_SRP_PATHS = ("/new-vehicles/", "/inventory/", "/new-inventory/", "/used-vehicles/")
+
+# query_by covering the getauto/Typesense document flavor — used to build a fresh
+# multi_search body when no captured reference recipe is available (e.g.
+# dealer_alchemist rooftops, which are self-describing from their adapter config).
+_TS_DEFAULT_QUERY_BY = (
+    "vin,stockNumber,lastEight,year,make,model,trim,exteriorColor,body,features,"
+    "engine,transmission,drivetrain,fuel,genericColor,dealertag"
+)
+
+
 def _detect_typesense(html: str, dealer_url: str) -> bool:
     if "typesense.net" not in html.lower():
         return False
@@ -449,29 +472,54 @@ def _ts_ref_key() -> str | None:
     return m.group(1) if m else None
 
 
+def _ts_default_body(collection: str) -> str:
+    """A fresh full-collection multi_search body (no captured reference needed)."""
+    return json.dumps({
+        "searches": [{
+            "collection": collection,
+            "q": "*",
+            "query_by": _TS_DEFAULT_QUERY_BY,
+            "page": 1,
+            "per_page": 250,
+        }]
+    })
+
+
 def _synth_typesense(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    # The per-dealer collection + adapter config live on the homepage for some
+    # rooftops (currentIndex) and only on the inventory SRP for others
+    # (dealer_alchemist inlines the TypesenseInstantSearchAdapter config there),
+    # so fall back to fetching an SRP page when the homepage lacks the collection.
     collection = _extract_ts_collection(html)
+    if not collection:
+        origin = _origin(dealer_url)
+        for path in _TS_SRP_PATHS:
+            srp = fetch_dealer_html(origin + path)
+            if srp and _extract_ts_collection(srp):
+                html = srp  # re-extract host/key/collection from the SRP config
+                collection = _extract_ts_collection(html)
+                break
     if not collection:
         return None
     ref = _load_reference_recipe(_TYPESENSE_REF_ID, "multi_search")
-    if not ref or not ref.post_template:
-        logger.warning("recipe_synth: Typesense reference template unavailable (%s)", _TYPESENSE_REF_ID)
-        return None
-    host = _extract_ts_host(html) or urlparse(ref.url).hostname
-    # Key is shared across all dealers on this host; prefer the page's, fall back
-    # to the reference recipe's.
+    host = _extract_ts_host(html) or (urlparse(ref.url).hostname if ref else None)
+    # Key is shared across all dealers on a host; prefer the page's, fall back to
+    # the reference recipe's.
     key = _extract_ts_key(html) or _ts_ref_key()
     if not host or not key:
         return None
-    # Full-lot body: point every search at this dealer's collection AND drop the
-    # reference recipe's `filter_by: "condition:Used"` so the recipe replays the
-    # whole collection (new + used) — otherwise new inventory is excluded (same
-    # defect fixed for CarsCommerce). Verified: dropping the filter takes Toyota
-    # of Orange from 98 used to ~971 total.
-    try:
-        body = json.loads(ref.post_template)
-    except ValueError:
-        body = None
+    # Full-lot body: point every search at this dealer's collection AND drop any
+    # `filter_by: "condition:Used"` so the recipe replays the whole collection
+    # (new + used) — otherwise new inventory is excluded (same defect fixed for
+    # CarsCommerce). Verified: dropping the filter takes Toyota of Orange from 98
+    # used to ~971 total. When no captured reference recipe exists, build a fresh
+    # body — the adapter config is self-describing.
+    body = None
+    if ref and ref.post_template:
+        try:
+            body = json.loads(ref.post_template)
+        except ValueError:
+            body = None
     if isinstance(body, dict) and isinstance(body.get("searches"), list):
         for s in body["searches"]:
             if isinstance(s, dict):
@@ -482,8 +530,7 @@ def _synth_typesense(dealer_id: str, dealer_url: str, html: str) -> EndpointReci
                 s["per_page"] = 250
         post_template = json.dumps(body)
     else:
-        # Fallback: at least swap the collection so the recipe targets this dealer.
-        post_template = ref.post_template.replace(_TYPESENSE_REF_COLLECTION, collection)
+        post_template = _ts_default_body(collection)
     url = f"https://{host}/multi_search?x-typesense-api-key={key}"
     return EndpointRecipe(
         dealer_id=dealer_id,
@@ -661,6 +708,286 @@ def _synth_dealer_eprocess(dealer_id: str, dealer_url: str, html: str) -> list[E
     return [r for r, _ in built]
 
 
+# ── Platform: Motive (ridemotive Algolia hosted search) ───────────────────────
+
+# Motive dealers serve inventory from ONE shared Algolia index across the whole
+# network, reachable over plain HTTP (the query hits the Algolia CDN, not the
+# dealer origin, so it bypasses the dealer's Cloudflare). Only the per-dealer
+# numeric dealer.id varies; the Algolia app id / search key / index prefix are the
+# same network-wide (read from the dealer HTML env object, with known-good
+# constants as a fallback). Body filter MUST use the dealer_ids array attribute as
+# a quoted string (scalar dealer_id returns 0 for dealer-group members).
+_MOTIVE_APP_ID = "G58LKO3ETJ"
+_MOTIVE_API_KEY = "cc3dce06acb2d9fc715bc10c9a624d80"
+_MOTIVE_INDEX_PREFIX = "production-inventory-"
+_MOTIVE_SORT = "price_desc"
+_MOTIVE_HITS_PER_PAGE = 1000
+
+_MOTIVE_APPID_RE = re.compile(r'ALGOLIA_APP_ID\\?["\']?\s*:\s*\\?["\']([A-Za-z0-9]{6,})')
+_MOTIVE_APIKEY_RE = re.compile(r'ALGOLIA_API_KEY\\?["\']?\s*:\s*\\?["\']([A-Za-z0-9]{16,})')
+_MOTIVE_INDEX_RE = re.compile(r'ALGOLIA_INVENTORY_INDEX\\?["\']?\s*:\s*\\?["\']([A-Za-z0-9_.-]+?)\\?["\']')
+_MOTIVE_DEALER_RES = (
+    re.compile(r'\\?["\']dealer\\?["\']\s*:\s*\{[^{}]*?\\?["\']id\\?["\']\s*:\s*(\d+)'),
+    re.compile(r'\\?["\']dealer_id\\?["\']\s*:\s*\\?["\']?(\d+)'),
+)
+
+
+def _detect_motive(html: str, dealer_url: str) -> bool:
+    low = html.lower()
+    if "ridemotive" not in low:
+        return False
+    return bool(_extract_motive_dealer_id(html))
+
+
+def _extract_motive_dealer_id(html: str) -> str | None:
+    for rx in _MOTIVE_DEALER_RES:
+        m = rx.search(html)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _synth_motive(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    motive_dealer = _extract_motive_dealer_id(html)
+    if not motive_dealer:
+        return None
+    m = _MOTIVE_APPID_RE.search(html)
+    app_id = m.group(1) if m else _MOTIVE_APP_ID
+    m = _MOTIVE_APIKEY_RE.search(html)
+    api_key = m.group(1) if m else _MOTIVE_API_KEY
+    m = _MOTIVE_INDEX_RE.search(html)
+    prefix = m.group(1) if m else _MOTIVE_INDEX_PREFIX
+    index = f"{prefix}global_{_MOTIVE_SORT}"
+    url = f"https://{app_id}-dsn.algolia.net/1/indexes/{index}/query"
+    body = {
+        "filters": f'is_active:true AND dealer_ids:"{motive_dealer}"',
+        "hitsPerPage": _MOTIVE_HITS_PER_PAGE,
+        "page": 0,
+    }
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="POST",
+        content_type="application/json",
+        post_template=json.dumps(body),
+        auth_headers={
+            "X-Algolia-Application-Id": app_id,
+            "X-Algolia-API-Key": api_key,
+        },
+        pagination=PAGINATION_ALGOLIA,
+        provider_hint="motive_ridemotive",
+    )
+
+
+# ── Platform: Overfuel (Next.js SSR, __NEXT_DATA__ inventory) ──────────────────
+
+# Overfuel SSR SRP embeds full per-vehicle records in <script id="__NEXT_DATA__">
+# at props.pageProps.inventory.results (25/page, ?page=N). Parameterized by the
+# dealer DOMAIN alone. The recipe is an HTML page-walk whose parser (overfuel)
+# extracts __NEXT_DATA__ and walks inventory.results.
+_OVERFUEL_SRP_PATH = "/inventory"
+
+
+def _detect_overfuel(html: str, dealer_url: str) -> bool:
+    return "overfuel" in html.lower()
+
+
+def _synth_overfuel(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    origin = _origin(dealer_url)
+    url = origin + _OVERFUEL_SRP_PATH
+    page1 = _dep_fetch_html(url)
+    if not page1:
+        return None
+    from backend.parsers.overfuel import parse as _of_parse
+    from backend.scanner.scrapers.next_data_inventory import parse_next_data_json_from_html
+
+    vins = _unique_vins(_of_parse(page1, base_url=origin, dealer_id=dealer_id, dealer_url=origin))
+    if not vins:
+        return None
+    total: int | None = None
+    nd = parse_next_data_json_from_html(page1)
+    try:
+        meta = nd["props"]["pageProps"]["inventory"]["meta"]
+        total = int(meta.get("total")) or None
+    except (KeyError, TypeError, ValueError):
+        total = None
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="text/html",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_HTML_PAGE,
+        total_count=total,
+        provider_hint="overfuel",
+    )
+
+
+# ── Platform: nabthat (Angular SSR SRP + schema.org Vehicle JSON-LD) ───────────
+
+# nabthat SSR SRP returns text/html with 16 schema.org @type:Vehicle JSON-LD
+# nodes per page, ?page=N honored server-side. Parameterized by the dealer DOMAIN
+# alone. Same JSON-LD shape as Dealer eProcess, so it reuses the dealer_eprocess
+# parser; the /inventory.json feed the platform advertises is a broken (502)
+# Lambda route, so the SRP page-walk is the real path. Full lot = used + new.
+_NABTHAT_SRP_PATHS = ("/inventory/used", "/inventory/new")
+
+
+def _detect_nabthat(html: str, dealer_url: str) -> bool:
+    return "nabthat.com" in html.lower()
+
+
+def _nabthat_page_vins(html: str, dealer_id: str, origin: str) -> set[str]:
+    from backend.parsers.dealer_eprocess import parse as _dep_parse
+
+    return _unique_vins(_dep_parse(html, base_url=origin, dealer_id=dealer_id, dealer_url=origin))
+
+
+def _nabthat_recipe(dealer_id: str, origin: str, path: str) -> tuple[EndpointRecipe, set[str]] | None:
+    url = origin + path
+    html = _dep_fetch_html(url)
+    if not html:
+        return None
+    vins = _nabthat_page_vins(html, dealer_id, origin)
+    if not vins:
+        return None
+    recipe = EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="text/html",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_HTML_PAGE,
+        provider_hint="dealer_eprocess",
+    )
+    return recipe, vins
+
+
+def _synth_nabthat(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
+    origin = _origin(dealer_url)
+    built: list[tuple[EndpointRecipe, set[str]]] = [
+        r for p in _NABTHAT_SRP_PATHS if (r := _nabthat_recipe(dealer_id, origin, p)) is not None
+    ]
+    if not built:
+        return []
+    if len(built) == 2:
+        (r_used, v_used), (r_new, v_new) = built
+        overlap = len(v_used & v_new)
+        smaller = min(len(v_used), len(v_new)) or 1
+        if overlap / smaller >= 0.5:
+            return [r_used]
+    return [r for r, _ in built]
+
+
+# ── Platform: Chapman (apiv2.chapmanapps.com flat JSON arrays) ─────────────────
+
+# Chapman Auto Group runs an in-house Nuxt SSR SPA whose inventory is served by a
+# clean REST API at apiv2.chapmanapps.com. GET /inventory/{arkona}/new and
+# /inventory/{arkona}/used each return the dealer's full inventory as a single
+# flat JSON array (no pagination). The only per-dealer input is the lowercase
+# 'arkona' store code, extracted from the homepage HTML. Full lot = new + used.
+_CHAPMAN_API_HOST = "apiv2.chapmanapps.com"
+_CHAPMAN_ARKONA_RES = (
+    re.compile(r'assets\.chapmanchoice\.com/img/dealers/([a-z0-9]+)\.webp', re.IGNORECASE),
+    re.compile(r'\\?["\']arkona\\?["\']\s*:\s*\\?["\']([A-Za-z0-9]{2,8})\\?["\']'),
+)
+_CHAPMAN_CONDITIONS = ("new", "used")
+
+
+def _detect_chapman(html: str, dealer_url: str) -> bool:
+    low = html.lower()
+    if "chapmanapps.com" not in low and "chapmanchoice.com" not in low:
+        return False
+    return bool(_extract_chapman_arkona(html))
+
+
+def _extract_chapman_arkona(html: str) -> str | None:
+    for rx in _CHAPMAN_ARKONA_RES:
+        m = rx.search(html)
+        if m:
+            return m.group(1).lower()
+    return None
+
+
+def _chapman_recipe(dealer_id: str, arkona: str, condition: str) -> EndpointRecipe | None:
+    url = f"https://{_CHAPMAN_API_HOST}/inventory/{arkona}/{condition}"
+    body = _cosmos_get_json(url)
+    if not isinstance(body, list) or not body:
+        return None
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="application/json",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_NONE,
+        total_count=len(body),
+        provider_hint="chapman",
+    )
+
+
+def _synth_chapman(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
+    arkona = _extract_chapman_arkona(html)
+    if not arkona:
+        return []
+    return [r for c in _CHAPMAN_CONDITIONS
+            if (r := _chapman_recipe(dealer_id, arkona, c)) is not None]
+
+
+# ── Platform: Jazel (SSR Angular SRP, jzlSetVehicleInfoContext) ────────────────
+
+# Jazel serves a fully server-rendered SRP whose per-card vehicle JSON is embedded
+# as window.jzlSetVehicleInfoContext('VIN', {...}) inline calls. Parameterized by
+# the dealer DOMAIN alone; paginated by a path segment (.../srp-page-N/). The
+# recipe is an HTML page-walk whose parser (jazel) regexes the calls. Note: Jazel
+# is a dealer-GROUP platform (one SRP can mix rooftops), like mazdariverside.
+_JAZEL_SRP_PATH = "/inventory/all-vehicles/"
+
+
+def _detect_jazel(html: str, dealer_url: str) -> bool:
+    low = html.lower()
+    return (
+        "jzlsetvehicleinfocontext" in low
+        or "window.jzla5p" in low
+        or "jazelc.com" in low
+        or "jazel-cdn" in low
+    )
+
+
+def _synth_jazel(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    origin = _origin(dealer_url)
+    url = origin + _JAZEL_SRP_PATH
+    page1 = _dep_fetch_html(url)
+    if not page1:
+        return None
+    from backend.parsers.jazel import parse as _jazel_parse
+
+    vins = _unique_vins(_jazel_parse(page1, base_url=origin, dealer_id=dealer_id, dealer_url=origin))
+    if not vins:
+        return None
+    total: int | None = None
+    m = re.search(r'([\d,]{1,7})\s+vehicles', page1, re.IGNORECASE)
+    if m:
+        try:
+            total = int(m.group(1).replace(",", "")) or None
+        except ValueError:
+            total = None
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="text/html",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_JAZEL_SRP,
+        total_count=total,
+        provider_hint="jazel",
+    )
+
+
 # ── Platform registry ─────────────────────────────────────────────────────────
 
 
@@ -678,12 +1005,20 @@ class PlatformTemplate:
 # Ordered most-specific-first; :func:`fingerprint_platform` returns the first hit.
 PLATFORM_TEMPLATES: list[PlatformTemplate] = [
     PlatformTemplate("carscommerce", _detect_carscommerce, _synth_carscommerce),
+    # typesense also fingerprints dealer_alchemist (dv-framework theme): same
+    # shared Typesense host/key, same multi_search shape + parser, only the
+    # per-dealer collection differs — extracted by the extended _TS_* regexes.
     PlatformTemplate("typesense", _detect_typesense, _synth_typesense),
     PlatformTemplate("dealer_on_cosmos", _detect_dealer_on_cosmos, _synth_dealer_on_cosmos),
     PlatformTemplate("dealer_dot_com", _detect_dealer_com, _synth_dealer_com),
     PlatformTemplate("sister_tv", _detect_sister_tv, None),
     PlatformTemplate("team_velocity", _detect_team_velocity, _synth_team_velocity),
     PlatformTemplate("dealer_eprocess", _detect_dealer_eprocess, _synth_dealer_eprocess),
+    PlatformTemplate("motive_ridemotive", _detect_motive, _synth_motive),
+    PlatformTemplate("overfuel", _detect_overfuel, _synth_overfuel),
+    PlatformTemplate("nabthat", _detect_nabthat, _synth_nabthat),
+    PlatformTemplate("chapman", _detect_chapman, _synth_chapman),
+    PlatformTemplate("jazel", _detect_jazel, _synth_jazel),
 ]
 
 _TEMPLATES_BY_NAME = {t.name: t for t in PLATFORM_TEMPLATES}
@@ -778,6 +1113,11 @@ def validate_recipe(
     # Dealer eProcess SRP: HTML page-walk (?p=N) with JSON-LD vehicles.
     if recipe.pagination == PAGINATION_DEP_SRP:
         return _validate_dep(recipe, base_url, dealer_id, dealer_name, max_pages)
+    # Server-rendered HTML page-walks reached with browser-navigation headers:
+    #   PAGINATION_HTML_PAGE  — GET ?page=N (Overfuel __NEXT_DATA__, nabthat JSON-LD)
+    #   PAGINATION_JAZEL_SRP  — GET path .../srp-page-N/ (Jazel inline JS objects)
+    if recipe.pagination in (PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
+        return _validate_html_walk(recipe, base_url, dealer_id, dealer_name, max_pages)
 
     template: Any = None
     if recipe.post_template:
@@ -870,6 +1210,38 @@ def _validate_dep(
             break
         page_vehicles = list(parse(
             recipe.provider_hint or "dealer_eprocess", html,
+            base_url=base_url, dealer_id=dealer_id,
+            dealer_name=dealer_name, dealer_url=base_url,
+        ))
+        new = _unique_vins(page_vehicles) - vins
+        if not new:
+            break
+        vins |= new
+        if recipe.total_count and len(vins) >= recipe.total_count:
+            break
+    return len(vins)
+
+
+def _validate_html_walk(
+    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
+) -> int:
+    """Walk a server-rendered HTML page-walk recipe and count unique VINs.
+
+    Uses the proxy-aware, browser-navigation-header fetch (:func:`_dep_fetch_html`)
+    so paced requests get real HTML rather than a Cloudflare challenge, and the
+    per-page URL from :func:`_url_for_page` (``?page=N`` for ``PAGINATION_HTML_PAGE``,
+    ``.../srp-page-N/`` for ``PAGINATION_JAZEL_SRP``). Each page's HTML is handed
+    to the provider parser (which accepts the raw HTML string).
+    """
+    from backend.parsers import parse
+
+    vins: set[str] = set()
+    for page_i in range(max_pages):
+        html = _dep_fetch_html(_url_for_page(recipe, page_i))
+        if not html:
+            break
+        page_vehicles = list(parse(
+            recipe.provider_hint or "", html,
             base_url=base_url, dealer_id=dealer_id,
             dealer_name=dealer_name, dealer_url=base_url,
         ))

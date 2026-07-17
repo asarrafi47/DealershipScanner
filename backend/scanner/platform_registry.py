@@ -197,15 +197,100 @@ SEED_PLATFORMS: list[PlatformEntry] = [
     PlatformEntry(
         name="jazel",
         cname_patterns=["jazelc.com", "jazel-cdn.com"],
-        html_markers=["jazel", "jazelc.com", "jazel-cdn"],
+        html_markers=["jzlsetvehicleinfocontext", "window.jzla5p", "jazelc.com", "jazel-cdn"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=True,
+        notes="Jazel platform (SSR Angular SRP). Browser-free via a server-rendered SRP page-walk: "
+        "GET /inventory/all-vehicles/ then .../srp-page-N/, per-card vehicle JSON embedded as "
+        "window.jzlSetVehicleInfoContext('VIN', {...}). recipe_synth _synth_jazel (jazel parser). "
+        "Parameterized by domain only. Dealer-GROUP platform (one SRP can mix rooftops, "
+        "accountId group) -> needs group attribution/dedupe like mazdariverside. Cloudflare-fronted: "
+        "paced browser-navigation headers reach real HTML; bursts get challenged.",
+    ),
+    PlatformEntry(
+        name="motive_ridemotive",
+        cname_patterns=[],
+        html_markers=["ridemotive", "images.app.ridemotive.com"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="Motive (ridemotive / Roadster-Motive express-checkout). Inventory served by ONE "
+        "shared Algolia index network-wide (POST {app_id}-dsn.algolia.net/1/indexes/"
+        "production-inventory-global_price_desc/query). Only the per-dealer numeric dealer.id "
+        "varies; app id / search key / index prefix are shared (read from HTML env, known-good "
+        "constants as fallback). Body filter MUST use dealer_ids:\"<id>\" (quoted array attr). "
+        "recipe_synth _synth_motive (motive_ridemotive parser). Query hits the Algolia CDN, not the "
+        "dealer origin, so it bypasses the dealer's Cloudflare.",
+    ),
+    PlatformEntry(
+        name="dealer_alchemist",
+        cname_patterns=[],
+        html_markers=["dealeralchemist", "bucket.dealervenom.com", "dv-framework",
+                      "typesenseinstantsearchadapter"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="dealer_alchemist (WordPress dv-framework theme). SRP inventory served client-side by "
+        "the SAME hosted Typesense cluster as the typesense platform (shared host + search key; only "
+        "the per-dealer collection differs). Fingerprints as 'typesense' via recipe_synth "
+        "(typesense.net present) and is synthesized by _synth_typesense — the extended _TS_* regexes "
+        "read the TypesenseInstantSearchAdapter config (host/apiKey/indexName). Existing typesense "
+        "parser, no new parser needed.",
+    ),
+    PlatformEntry(
+        name="overfuel",
+        cname_patterns=[],
+        html_markers=["overfuel", "api.overfuel.com"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="Overfuel (Next.js SSR SPA, meta generator=Overfuel). Browser-free via the SSR-HTML "
+        "path: GET /inventory?page=N, full per-vehicle records in <script id=__NEXT_DATA__> at "
+        "props.pageProps.inventory.results (25/page, meta.total). recipe_synth _synth_overfuel "
+        "(overfuel parser, reuses the html_next_data recovery strategy). Parameterized by domain only.",
+    ),
+    PlatformEntry(
+        name="nabthat",
+        cname_patterns=["nabthat.com"],
+        html_markers=["nabthat.com"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=False,
+        notes="nabthat (Angular-Universal SSR on Express behind API Gateway + per-rooftop "
+        "CloudFront). Browser-free via SSR SRP page-walk: GET /inventory/{used|new}?page=N, 16 "
+        "schema.org @type:Vehicle JSON-LD nodes per page. Reuses the dealer_eprocess parser. "
+        "recipe_synth _synth_nabthat. The advertised /inventory.json feed is a broken (502) Lambda "
+        "route. Caveat: offer.price is 0 for most rows (price is a heal-pass/VDP gap).",
+    ),
+    PlatformEntry(
+        name="chapman",
+        cname_patterns=["chapmanapps.com"],
+        html_markers=["chapmanapps.com", "chapmanchoice.com"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=True,
+        notes="Chapman Auto Group in-house Nuxt SSR SPA. Clean REST API at apiv2.chapmanapps.com: "
+        "GET /inventory/{arkona}/new and /used each return the full inventory as a single flat JSON "
+        "array (no pagination). Per-dealer input = lowercase 'arkona' store code from homepage HTML "
+        "(assets.chapmanchoice.com/img/dealers/{arkona}.webp). recipe_synth _synth_chapman emits "
+        "new+used recipes (chapman parser). Selling price computed msrp+markups-discounts-rebates. "
+        "The dealer HTML sites are Cloudflare-fronted; the API host is not.",
+    ),
+    PlatformEntry(
+        name="shopperexpress",
+        cname_patterns=[],
+        html_markers=["wp-content/themes/shopperexpress", "shopperexpress-child", "shopperexpress"],
         strategy=STRATEGY_HTML_HARVEST,
         synthesizable=False,
-        cloudflare=True,
-        notes="Jazel platform (identified purely from DNS on Sanderson Ford: "
-        "www.sandersonford.com -> client-sandersonford.jazelc.com -> jazel-cdn.com). No JSON "
-        "inventory API; server-rendered HTML with VDP URLs like /new-inventory/vin-XXX.htm (same "
-        "family as the McKenna dealer-group platform) -> use html_jsonld_harvest. Fronted by "
-        "Cloudflare: plain HTTP needs SCANNER_HTTP_PROXY to reach real HTML.",
+        cloudflare=False,
+        notes="ShopperExpress (WordPress + Serti DMS). Browser-free via the existing two-stage "
+        "scraper (backend/scanner/scrapers/shopperexpress.py::fetch_shopperexpress_inventory, wired "
+        "as the shopperexpress_api recovery strategy): GET /wp-json/v1/vehicles lists every vehicle "
+        "(title+link embed the VIN) in one call, then per-VDP JSON-LD Vehicle schema over aiohttp "
+        "for full detail. Two-stage VDP flow doesn't fit the single-endpoint recipe replay model, so "
+        "it is registered for recognition and scanned by the existing scraper, not a recipe_synth "
+        "template.",
     ),
 ]
 

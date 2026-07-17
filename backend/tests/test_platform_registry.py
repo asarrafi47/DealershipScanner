@@ -22,11 +22,13 @@ def test_seed_has_expected_platforms():
             "team_velocity", "sister_tv", "jazel"} <= names
 
 
-def test_jazel_seed_is_html_harvest_cloudflare():
+def test_jazel_seed_is_synthesize_cloudflare():
+    # Jazel is now browser-free via an SSR SRP page-walk (jzlSetVehicleInfoContext),
+    # so it synthesizes a recipe rather than needing html_harvest.
     jazel = next(e for e in pr.SEED_PLATFORMS if e.name == "jazel")
-    assert jazel.strategy == pr.STRATEGY_HTML_HARVEST
+    assert jazel.strategy == pr.STRATEGY_SYNTHESIZE
     assert jazel.cloudflare is True
-    assert jazel.synthesizable is False
+    assert jazel.synthesizable is True
     assert any("jazelc.com" in p for p in jazel.cname_patterns)
 
 
@@ -97,7 +99,7 @@ def test_classify_via_dns(monkeypatch):
     res = pr.classify_dealer("https://www.sandersonford.com", do_http=False)
     assert res["platform"] == "jazel"
     assert res["source"] == "dns"
-    assert res["strategy"] == pr.STRATEGY_HTML_HARVEST
+    assert res["strategy"] == pr.STRATEGY_SYNTHESIZE
     assert res["cloudflare"] is True
 
 

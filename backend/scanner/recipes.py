@@ -39,6 +39,10 @@ PAGINATION_CARSCOMMERCE = "carscommerce_page"   # POST body {"page": N, "perPage
 PAGINATION_TYPESENSE = "typesense_page"          # POST body searches[].page / per_page
 PAGINATION_DEALER_COM = "dealer_com_start"       # POST body inventoryParameters.start
 PAGINATION_PAGE_QUERY = "page_query"             # GET URL ?page=N (Team Velocity JSON feed)
+PAGINATION_DEP_SRP = "dep_srp_page"              # GET URL ?p=N (Dealer eProcess server-rendered SRP w/ JSON-LD)
+PAGINATION_ALGOLIA = "algolia_page"              # POST body {"page": N (0-based), "hitsPerPage": M} (Motive/ridemotive Algolia)
+PAGINATION_HTML_PAGE = "html_page_query"         # GET URL ?page=N returning HTML (Overfuel __NEXT_DATA__, nabthat JSON-LD SRP)
+PAGINATION_JAZEL_SRP = "jazel_srp_page"          # GET path-walk .../srp-page-N/ returning HTML (Jazel SSR SRP)
 PAGINATION_NONE = "none"                         # single-shot GET/POST
 
 
@@ -208,21 +212,33 @@ def _mutate_for_page(recipe: EndpointRecipe, template: Any, page_index: int) -> 
         params = body.setdefault("inventoryParameters", {})
         if isinstance(params, dict):
             params["start"] = [str(page_index * page_size)]
+    elif recipe.pagination == PAGINATION_ALGOLIA and isinstance(body, dict):
+        # Algolia pages are 0-based (page 0 is the first page of results).
+        body["page"] = page_index
     return body
 
 
 def _url_for_page(recipe: EndpointRecipe, page_index: int) -> str:
     """Per-page request URL for 0-based *page_index*.
 
-    Only ``PAGINATION_PAGE_QUERY`` mutates the URL (sets ``?page=N``, 1-based);
-    every other pagination shape paginates via the request body, so the URL is
-    returned unchanged.
+    ``PAGINATION_PAGE_QUERY`` / ``PAGINATION_HTML_PAGE`` set ``?page=N`` and
+    ``PAGINATION_DEP_SRP`` sets ``?p=N`` (all 1-based); ``PAGINATION_JAZEL_SRP``
+    walks a path segment ``.../srp-page-N/`` (page 1 is the bare SRP URL); every
+    other pagination shape paginates via the request body, so the URL is returned
+    unchanged.
     """
-    if recipe.pagination != PAGINATION_PAGE_QUERY:
+    if recipe.pagination == PAGINATION_JAZEL_SRP:
+        # Page 1 is the bare all-vehicles SRP; page N>=2 is .../srp-page-N/.
+        if page_index == 0:
+            return recipe.url
+        base = recipe.url.rstrip("/")
+        return f"{base}/srp-page-{page_index + 1}/"
+    if recipe.pagination not in (PAGINATION_PAGE_QUERY, PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE):
         return recipe.url
+    page_param = "p" if recipe.pagination == PAGINATION_DEP_SRP else "page"
     parts = urlparse(recipe.url)
-    query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k != "page"]
-    query.append(("page", str(page_index + 1)))
+    query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k != page_param]
+    query.append((page_param, str(page_index + 1)))
     return urlunparse(parts._replace(query=urlencode(query)))
 
 
@@ -262,6 +278,12 @@ def _replay_request(
         return 0, None
     if resp.status_code != 200:
         return resp.status_code, None
+    # Some platforms serve inventory as server-rendered HTML (no JSON API): Dealer
+    # eProcess / nabthat embed per-vehicle JSON-LD, Overfuel embeds __NEXT_DATA__,
+    # and Jazel embeds per-card jzlSetVehicleInfoContext() calls. Hand the raw HTML
+    # text to the provider parser instead of attempting resp.json().
+    if recipe.pagination in (PAGINATION_DEP_SRP, PAGINATION_HTML_PAGE, PAGINATION_JAZEL_SRP):
+        return resp.status_code, resp.text or None
     try:
         parsed = resp.json()
     except ValueError:

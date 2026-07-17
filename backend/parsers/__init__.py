@@ -1,8 +1,12 @@
 import logging
 
+from backend.parsers.chapman import parse as parse_chapman
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
 from backend.parsers.dealer_on import parse as parse_dealer_on
+from backend.parsers.jazel import parse as parse_jazel
+from backend.parsers.motive_ridemotive import parse as parse_motive_ridemotive
+from backend.parsers.overfuel import parse as parse_overfuel
 from backend.parsers.sister_tv import parse as parse_sister_tv
 from backend.parsers.typesense import parse as parse_typesense
 
@@ -37,6 +41,10 @@ PARSERS = {
     "sister_tv": parse_sister_tv,
     "dealer_eprocess": parse_dealer_eprocess,
     "autowall": _parse_autowall,
+    "motive_ridemotive": parse_motive_ridemotive,
+    "overfuel": parse_overfuel,
+    "chapman": parse_chapman,
+    "jazel": parse_jazel,
 }
 
 _log = logging.getLogger(__name__)
