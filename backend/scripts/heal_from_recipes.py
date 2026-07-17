@@ -147,10 +147,15 @@ def _vehicles_from_body(
 
 
 def collect_vehicles_for_dealer(dealer_id: str) -> dict[str, dict[str, Any]]:
-    """Replay all non-stale recipes; return VIN → merged field dict."""
+    """Replay all non-stale recipes; return VIN → merged field dict.
+
+    Pagination: ``try_fetch_via_recipes(union=True)`` walks the POST-template
+    shapes (dealer.com start-offset, Typesense, CarsCommerce pages); cosmos GET
+    endpoints paginate session-free here via ``?pg=N&pn=96``.
+    """
     import asyncio
 
-    from backend.scanner.recipes import _replay_request, load_recipes
+    from backend.scanner.recipes import load_recipes, try_fetch_via_recipes
 
     by_vin: dict[str, dict[str, Any]] = {}
 
@@ -165,26 +170,23 @@ def collect_vehicles_for_dealer(dealer_id: str) -> dict[str, dict[str, Any]]:
                 if val is not None and slot.get(field) is None:
                     slot[field] = val
 
-    for recipe in load_recipes(dealer_id):
-        if recipe.stale:
-            continue
-        base_url = f"https://{urlparse(recipe.url).netloc}"
+    recipes = [r for r in load_recipes(dealer_id) if not r.stale]
+    if not recipes:
+        return by_vin
+    base_url = f"https://{urlparse(recipes[0].url).netloc}"
+    provider_hint = recipes[0].provider_hint or "unknown"
+
+    fetched = asyncio.run(
+        try_fetch_via_recipes(dealer_id, provider_hint, base_url, dealer_id, union=True)
+    )
+    for _url, body in (fetched[0] if fetched else []):
+        _absorb(_vehicles_from_body(body, provider_hint, base_url, dealer_id))
+
+    # cosmos GETs are stored with pagination "none"; walk their pages directly.
+    for recipe in recipes:
         if "cosmos/srp/vehicles" in recipe.url:
             for body in _cosmos_pages(recipe.url):
                 _absorb(_vehicles_from_body(body, recipe.provider_hint, base_url, dealer_id))
-            continue
-        template = None
-        if recipe.post_template:
-            try:
-                template = json.loads(recipe.post_template)
-            except ValueError:
-                continue
-        if recipe.method != "GET" and template is None:
-            continue
-        _status, parsed = _replay_request(recipe, template, base_url)
-        if parsed is None:
-            continue
-        _absorb(_vehicles_from_body(parsed, recipe.provider_hint, base_url, dealer_id))
     return by_vin
 
 
