@@ -37,6 +37,7 @@ from backend.scanner.http_fetch import open_url
 from backend.scanner.recipes import (
     PAGINATION_CARSCOMMERCE,
     PAGINATION_DEALER_COM,
+    PAGINATION_DEP_SRP,
     PAGINATION_NONE,
     PAGINATION_PAGE_QUERY,
     PAGINATION_TYPESENSE,
@@ -567,6 +568,99 @@ def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> list[End
     return recipes
 
 
+# ── Platform: Dealer eProcess (server-rendered SRP + JSON-LD) ─────────────────
+
+# Dealer eProcess ("Phoenix") dealers have NO JSON inventory API. Each SRP is a
+# server-rendered HTML page carrying one JSON-LD @type:"Vehicle" block per card
+# (12/page), paginated over plain HTTP with ?p=N. The recipe is therefore an HTML
+# page-walk (PAGINATION_DEP_SRP) whose parser (dealer_eprocess) extracts VINs +
+# prices from the embedded JSON-LD. The endpoint is parameterized by the dealer
+# DOMAIN alone — no per-dealer account id / api key is needed.
+#
+# The friendly /used-inventory/ and /new-inventory/ paths usually filter by
+# condition, so the FULL lot is the union of both feeds (mirrors Team Velocity's
+# used+new). Some dealers configure BOTH paths to show the entire lot; we detect
+# that (near-identical page-1 VINs) and emit a single recipe to avoid double work.
+_DEP_SRP_PATHS = ("/used-inventory/", "/new-inventory/")
+_DEP_COUNT_RE = re.compile(r'data-vehicle_count="(\d+)"')
+
+
+def _detect_dealer_eprocess(html: str, dealer_url: str) -> bool:
+    return "dealereprocess" in html.lower()
+
+
+def _dep_fetch_html(url: str) -> str | None:
+    """Proxy-aware GET returning the raw SRP HTML text (or ``None`` on failure).
+
+    Unlike :func:`fetch_dealer_html` this does NOT reject "thin" bodies — an SRP
+    page past the last result is a valid (short) page, and the caller stops when
+    the parser extracts no more VINs.
+    """
+    import urllib.request
+
+    try:
+        resp = open_url(urllib.request.Request(url, headers=_browser_headers()), timeout=25.0)
+        return resp.read().decode(resp.headers.get_content_charset() or "utf-8", "replace")
+    except Exception as e:
+        logger.debug("dep fetch failed %s: %s", url[:80], str(e)[:120])
+        return None
+
+
+def _dep_page_vins(html: str, dealer_id: str, dealer_url: str) -> set[str]:
+    from backend.parsers.dealer_eprocess import parse as _dep_parse
+
+    return _unique_vins(_dep_parse(html, base_url=dealer_url, dealer_id=dealer_id, dealer_url=dealer_url))
+
+
+def _dep_srp_recipe(
+    dealer_id: str, origin: str, path: str
+) -> tuple[EndpointRecipe, set[str]] | None:
+    """Build one DEP SRP recipe, probing page 1 for real vehicles + total count.
+
+    Returns ``(recipe, page1_vins)`` or ``None`` when page 1 yields no vehicles.
+    """
+    url = origin + path
+    html = _dep_fetch_html(url)
+    if not html or "dealereprocess" not in html.lower():
+        return None
+    vins = _dep_page_vins(html, dealer_id, origin)
+    if not vins:
+        return None
+    m = _DEP_COUNT_RE.search(html)
+    total = int(m.group(1)) if m else None
+    recipe = EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="text/html",
+        post_template=None,
+        auth_headers={},
+        pagination=PAGINATION_DEP_SRP,
+        total_count=total,
+        provider_hint="dealer_eprocess",
+    )
+    return recipe, vins
+
+
+def _synth_dealer_eprocess(dealer_id: str, dealer_url: str, html: str) -> list[EndpointRecipe]:
+    """Emit DEP SRP recipes — used + new, deduped when both show the whole lot."""
+    origin = _origin(dealer_url)
+    built: list[tuple[EndpointRecipe, set[str]]] = [
+        r for p in _DEP_SRP_PATHS if (r := _dep_srp_recipe(dealer_id, origin, p)) is not None
+    ]
+    if not built:
+        return []
+    if len(built) == 2:
+        (r_used, v_used), (r_new, v_new) = built
+        # If the two friendly paths surface the same lot (page-1 VINs overlap
+        # heavily and totals match), one recipe already covers everything.
+        overlap = len(v_used & v_new)
+        smaller = min(len(v_used), len(v_new)) or 1
+        if overlap / smaller >= 0.5 and (r_used.total_count == r_new.total_count):
+            return [r_used]
+    return [r for r, _ in built]
+
+
 # ── Platform registry ─────────────────────────────────────────────────────────
 
 
@@ -589,6 +683,7 @@ PLATFORM_TEMPLATES: list[PlatformTemplate] = [
     PlatformTemplate("dealer_dot_com", _detect_dealer_com, _synth_dealer_com),
     PlatformTemplate("sister_tv", _detect_sister_tv, None),
     PlatformTemplate("team_velocity", _detect_team_velocity, _synth_team_velocity),
+    PlatformTemplate("dealer_eprocess", _detect_dealer_eprocess, _synth_dealer_eprocess),
 ]
 
 _TEMPLATES_BY_NAME = {t.name: t for t in PLATFORM_TEMPLATES}
@@ -680,6 +775,9 @@ def validate_recipe(
         or recipe.url.endswith(("-used.json", "-cpo.json", "-new.json"))
     ):
         return _validate_json_feed(recipe, base_url, dealer_id, dealer_name, max_pages)
+    # Dealer eProcess SRP: HTML page-walk (?p=N) with JSON-LD vehicles.
+    if recipe.pagination == PAGINATION_DEP_SRP:
+        return _validate_dep(recipe, base_url, dealer_id, dealer_name, max_pages)
 
     template: Any = None
     if recipe.post_template:
@@ -754,6 +852,32 @@ def _validate_json_feed(
         except (TypeError, ValueError):
             total_pages = 0
         if not body.get("nextPage") or (total_pages and pg >= total_pages):
+            break
+    return len(vins)
+
+
+def _validate_dep(
+    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
+) -> int:
+    """Walk a Dealer eProcess SRP via ``?p=N`` and count unique JSON-LD VINs."""
+    from backend.parsers import parse
+
+    clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
+    vins: set[str] = set()
+    for pg in range(1, max_pages + 1):
+        html = _dep_fetch_html(f"{clean}?p={pg}")
+        if not html:
+            break
+        page_vehicles = list(parse(
+            recipe.provider_hint or "dealer_eprocess", html,
+            base_url=base_url, dealer_id=dealer_id,
+            dealer_name=dealer_name, dealer_url=base_url,
+        ))
+        new = _unique_vins(page_vehicles) - vins
+        if not new:
+            break
+        vins |= new
+        if recipe.total_count and len(vins) >= recipe.total_count:
             break
     return len(vins)
 

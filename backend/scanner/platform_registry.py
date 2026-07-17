@@ -172,6 +172,18 @@ SEED_PLATFORMS: list[PlatformEntry] = [
         "recipe_synth _synth_team_velocity. CNAME target is teamvelocitymarketing.map.fastly.net.",
     ),
     PlatformEntry(
+        name="dealer_eprocess",
+        cname_patterns=["dealereprocess"],
+        html_markers=["dealereprocess", "cdn.dealereprocess.org", "dealerimages.dealereprocess.com"],
+        strategy=STRATEGY_SYNTHESIZE,
+        synthesizable=True,
+        cloudflare=True,
+        notes="Dealer eProcess ('Phoenix'). No JSON API: server-rendered SRP with per-card "
+        "JSON-LD @type:Vehicle, paginated ?p=N (12/page). recipe_synth _synth_dealer_eprocess "
+        "emits used+new SRP page-walk recipes (dealer_eprocess parser). Parameterized by domain "
+        "only. Cloudflare-fronted: plain HTTP needs browser-navigation headers (UA + Sec-Fetch-*).",
+    ),
+    PlatformEntry(
         name="sister_tv",
         cname_patterns=["sister.tv"],
         html_markers=["es-data-v2.sister.tv", "sister.tv/vehicles"],

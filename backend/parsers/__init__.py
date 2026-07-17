@@ -1,6 +1,7 @@
 import logging
 
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
+from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
 from backend.parsers.dealer_on import parse as parse_dealer_on
 from backend.parsers.sister_tv import parse as parse_sister_tv
 from backend.parsers.typesense import parse as parse_typesense
@@ -34,6 +35,7 @@ PARSERS = {
     "dealer_on_cosmos": _parse_cosmos_cards,
     "typesense": parse_typesense,
     "sister_tv": parse_sister_tv,
+    "dealer_eprocess": parse_dealer_eprocess,
     "autowall": _parse_autowall,
 }
 
