@@ -22,6 +22,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 os.chdir(_REPO_ROOT)
@@ -39,6 +40,17 @@ from backend.scanner.carscommerce_harvest import HARVEST_FIELDS, harvest_dealer,
 
 # Columns we fill (drop image_url's synthetic handling — treat like the rest).
 _FILL = tuple(f for f in HARVEST_FIELDS)
+
+
+def _is_fillable(field: str, cur_val: Any) -> bool:
+    """A column is fillable when empty; image_url is also fillable when it holds a
+    placeholder / non-HTTP path (e.g. /static/placeholder.svg) — the feed's real
+    image should replace it."""
+    if cur_val is None or str(cur_val).strip() == "":
+        return True
+    if field == "image_url" and not str(cur_val).strip().startswith("http"):
+        return True
+    return False
 
 
 def _carscommerce_dealer_ids() -> list[str]:
@@ -75,8 +87,7 @@ def patch_dealer(dealer_id: str, *, dry_run: bool, include_new: bool) -> dict:
                 updates = {
                     f: fields[f]
                     for f, cur_val in zip(_FILL, current)
-                    if fields.get(f) is not None
-                    and (cur_val is None or str(cur_val).strip() == "")
+                    if fields.get(f) is not None and _is_fillable(f, cur_val)
                 }
                 if not updates:
                     continue
