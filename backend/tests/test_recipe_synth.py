@@ -60,6 +60,21 @@ _TEAM_VELOCITY_HTML = """
 </script></head><body></body></html>
 """
 
+_TYPESENSE_HTML = """
+<html><head><script>
+  var __tsHost = "hjnrb3s21408ezpfp.a1.typesense.net";
+  var __tsApiKey = "eQUa8iq30l8Tu908Drz9WKqar6tCJGd4";
+  function boot(){ let currentIndex = "vehicles-HON208436"; return currentIndex; }
+</script></head><body>typesense multi_search</body></html>
+"""
+
+_SISTER_TV_HTML = """
+<html><body><script>
+  var esUrl = "https://es-data-v2.sister.tv/vehicles/inventory/_search";
+  var library_id = "202405220922";
+</script></body></html>
+"""
+
 _UNKNOWN_HTML = "<html><body><h1>Welcome to Our Dealership</h1><p>Cars for sale.</p></body></html>"
 
 
@@ -94,9 +109,28 @@ def _carscommerce_ref() -> EndpointRecipe:
     )
 
 
+def _typesense_ref() -> EndpointRecipe:
+    from backend.scanner.recipes import PAGINATION_TYPESENSE
+
+    body = {"searches": [{"collection": "vehicles-TOY04247", "q": "*",
+                          "filter_by": "condition:Used", "page": 1, "per_page": 24}]}
+    return EndpointRecipe(
+        dealer_id="toyotaoforange-com",
+        url="https://hjnrb3s21408ezpfp.a1.typesense.net/multi_search?x-typesense-api-key=REFKEY0000000000",
+        method="POST",
+        content_type="application/json; charset=utf-8",
+        post_template=json.dumps(body),
+        pagination=PAGINATION_TYPESENSE,
+    )
+
+
 @pytest.fixture
 def _inject_refs(monkeypatch):
-    refs = {"camelbacktoyota-com": [_dealer_com_ref()], "courtesychev-com": [_carscommerce_ref()]}
+    refs = {
+        "camelbacktoyota-com": [_dealer_com_ref()],
+        "courtesychev-com": [_carscommerce_ref()],
+        "toyotaoforange-com": [_typesense_ref()],
+    }
     monkeypatch.setattr(recipe_synth, "load_recipes", lambda did: list(refs.get(did, [])))
 
 
@@ -122,6 +156,14 @@ def test_cosmos_not_misread_as_dealer_com():
 
 def test_fingerprint_team_velocity():
     assert recipe_synth.fingerprint_platform(_TEAM_VELOCITY_HTML, "https://www.righthonda.com") == "team_velocity"
+
+
+def test_fingerprint_typesense():
+    assert recipe_synth.fingerprint_platform(_TYPESENSE_HTML, "https://www.freewayhonda.com") == "typesense"
+
+
+def test_fingerprint_sister_tv():
+    assert recipe_synth.fingerprint_platform(_SISTER_TV_HTML, "https://x.com") == "sister_tv"
 
 
 def test_fingerprint_unknown_returns_none():
@@ -213,12 +255,53 @@ def test_synthesize_cosmos_needs_pagecfg(monkeypatch):
     ) is None
 
 
+# ── synthesize_recipe: Typesense ──────────────────────────────────────────────
+
+
+def test_synthesize_typesense(_inject_refs):
+    r = recipe_synth.synthesize_recipe(
+        "freewayhonda-com", "https://www.freewayhonda.com", _TYPESENSE_HTML, "typesense"
+    )
+    assert r is not None
+    assert r.method == "POST"
+    assert r.provider_hint == "typesense"
+    assert r.pagination == "typesense_page"
+    # host + shared key taken from the page; collection swapped to this dealer's.
+    assert r.url == (
+        "https://hjnrb3s21408ezpfp.a1.typesense.net/multi_search"
+        "?x-typesense-api-key=eQUa8iq30l8Tu908Drz9WKqar6tCJGd4"
+    )
+    body = json.loads(r.post_template)
+    assert body["searches"][0]["collection"] == "vehicles-HON208436"
+    assert "vehicles-TOY04247" not in r.post_template
+
+
+def test_synthesize_typesense_needs_collection(_inject_refs):
+    html = '<script>var __tsHost="x.a1.typesense.net";var __tsApiKey="k00000000000000000";</script>'
+    assert recipe_synth.synthesize_recipe("x-com", "https://x.com", html, "typesense") is None
+
+
+# ── synthesize_recipe: Team Velocity (same-origin JSON feed) ───────────────────
+
+
+def test_synthesize_team_velocity_feed():
+    r = recipe_synth.synthesize_recipe(
+        "righthonda-com", "https://www.righthonda.com", _TEAM_VELOCITY_HTML, "team_velocity"
+    )
+    assert r is not None
+    assert r.url == "https://www.righthonda.com/inventory-used.json"
+    assert r.method == "GET"
+    assert r.provider_hint == "dealer_dot_com"
+
+
 # ── synthesize_recipe: unsynthesizable platforms ──────────────────────────────
 
 
-def test_team_velocity_recognized_but_not_synthesizable():
-    assert recipe_synth.is_synthesizable("team_velocity") is False
-    assert recipe_synth.synthesize_recipe("rh-com", "https://x.com", _TEAM_VELOCITY_HTML, "team_velocity") is None
+def test_sister_tv_recognized_but_not_synthesizable():
+    # sister.tv is detected but has no HTML-extractable library_id on live
+    # dealers (they migrated to CarsCommerce), so it stays unsynthesizable.
+    assert recipe_synth.is_synthesizable("sister_tv") is False
+    assert recipe_synth.synthesize_recipe("x-com", "https://x.com", _SISTER_TV_HTML, "sister_tv") is None
 
 
 def test_unknown_platform_not_synthesizable():

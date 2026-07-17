@@ -38,6 +38,7 @@ from backend.scanner.recipes import (
     PAGINATION_CARSCOMMERCE,
     PAGINATION_DEALER_COM,
     PAGINATION_NONE,
+    PAGINATION_TYPESENSE,
     EndpointRecipe,
     _mutate_for_page,
     _replay_request,
@@ -364,7 +365,127 @@ def _synth_dealer_on_cosmos(dealer_id: str, dealer_url: str, html: str) -> Endpo
     )
 
 
-# ── Platform: Team Velocity (stretch — endpoint not derivable from HTML) ───────
+# ── Platform: Typesense (multi_search) ────────────────────────────────────────
+
+# Typesense dealers (Toyota of Orange, Toyota Place, Freeway Honda) serve SRP
+# inventory from a hosted Typesense collection. All three share one host + one
+# search-only api key; only the collection is per-dealer. Every param the recipe
+# needs is embedded client-side in the page JS:
+#   __tsHost   = "hjnrb3s21408ezpfp.a1.typesense.net"
+#   __tsApiKey = "<shared search-only key>"
+#   currentIndex = "vehicles-<DEALER>"     (per-dealer collection)
+_TYPESENSE_REF_ID = "toyotaoforange-com"
+_TYPESENSE_REF_COLLECTION = "vehicles-TOY04247"
+
+_TS_HOST_RES = (
+    re.compile(r'__tsHost\s*=\s*["\']([^"\']+)["\']'),
+    re.compile(r'([a-z0-9]+\.a1\.typesense\.net)'),
+)
+_TS_KEY_RES = (
+    re.compile(r'__tsApiKey\s*=\s*["\']([A-Za-z0-9]{16,})["\']'),
+    re.compile(r'x-typesense-api-key=([A-Za-z0-9]{16,})'),
+)
+_TS_COLLECTION_RES = (
+    re.compile(r'currentIndex\s*=\s*["\'](vehicles-[A-Za-z0-9]{3,})["\']'),
+    re.compile(r'["\'](vehicles-[A-Z0-9]{5,10})["\']'),
+)
+
+
+def _extract_ts_host(html: str) -> str | None:
+    for rx in _TS_HOST_RES:
+        m = rx.search(html)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _extract_ts_key(html: str) -> str | None:
+    for rx in _TS_KEY_RES:
+        m = rx.search(html)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _extract_ts_collection(html: str) -> str | None:
+    for rx in _TS_COLLECTION_RES:
+        m = rx.search(html)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _detect_typesense(html: str, dealer_url: str) -> bool:
+    if "typesense.net" not in html.lower():
+        return False
+    return bool(_extract_ts_collection(html))
+
+
+def _ts_ref_key() -> str | None:
+    """Shared search-only key parsed from the reference recipe URL."""
+    ref = _load_reference_recipe(_TYPESENSE_REF_ID, "multi_search")
+    if not ref:
+        return None
+    m = re.search(r'x-typesense-api-key=([A-Za-z0-9]+)', ref.url)
+    return m.group(1) if m else None
+
+
+def _synth_typesense(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    collection = _extract_ts_collection(html)
+    if not collection:
+        return None
+    ref = _load_reference_recipe(_TYPESENSE_REF_ID, "multi_search")
+    if not ref or not ref.post_template:
+        logger.warning("recipe_synth: Typesense reference template unavailable (%s)", _TYPESENSE_REF_ID)
+        return None
+    host = _extract_ts_host(html) or urlparse(ref.url).hostname
+    # Key is shared across all dealers on this host; prefer the page's, fall back
+    # to the reference recipe's.
+    key = _extract_ts_key(html) or _ts_ref_key()
+    if not host or not key:
+        return None
+    post_template = ref.post_template.replace(_TYPESENSE_REF_COLLECTION, collection)
+    url = f"https://{host}/multi_search?x-typesense-api-key={key}"
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="POST",
+        content_type="application/json; charset=utf-8",
+        post_template=post_template,
+        auth_headers={},
+        pagination=PAGINATION_TYPESENSE,
+        provider_hint="typesense",
+    )
+
+
+# ── Platform: sister.tv (Elasticsearch) — detected, not synthesizable ──────────
+
+# TODO(sister_tv): recognized but NOT synthesizable from current dealer HTML.
+# The es-data-v2.sister.tv/vehicles/inventory/_search GET replays fine (a
+# library-scoped q=library_id:<id> returns vehicles), but the library_id is not
+# in the live HTML of the two known dealers (audiofcostamesa/audifletcherjones,
+# fjmercedes) — both have MIGRATED to CarsCommerce (ccid 5379783 / 2924) and are
+# already browser-free via the CarsCommerce template. No current dealer embeds a
+# sister.tv library_id to extract/validate against, so per the guardrail
+# ("only register a template that REPLAYS and yields VINs") sister.tv stays
+# synth=None. If a dealer resurfaces exposing library_id, add extraction here.
+def _detect_sister_tv(html: str, dealer_url: str) -> bool:
+    low = html.lower()
+    return "es-data-v2.sister.tv" in low or "sister.tv/vehicles" in low
+
+
+# ── Platform: Team Velocity (same-origin JSON inventory feed) ──────────────────
+
+# Team Velocity (Right Honda, Right Toyota, Mark Kia) hydrates its SRP from a Vue
+# SPA whose XHR endpoint (/api/Inventory/getinventorymultiselectionfilters) only
+# returns filter FACETS — NOT the vehicle list. BUT the platform also publishes a
+# plain same-origin paginated JSON feed (linked from inventorysitemap.xml):
+#   https://{domain}/inventory-used.json   (also -cpo.json / -new.json)
+# shape: {totalVehicles, totalPages, nextPage, pageSize, vehicles:[...]}, walked
+# via ?page=N. It is parameterized by the dealer DOMAIN alone and the generic
+# dealer_dot_com parser maps its vehicle objects. validate_recipe walks the
+# ?page=N pages for this feed.
+_TEAM_VELOCITY_FEED = "/inventory-used.json"
 
 
 def _detect_team_velocity(html: str, dealer_url: str) -> bool:
@@ -372,15 +493,19 @@ def _detect_team_velocity(html: str, dealer_url: str) -> bool:
     return "teamvelocityportal" in low or "inventoryapibaseurl" in low
 
 
-# TODO(team_velocity): recognized but NOT synthesizable over plain HTTP.
-# Investigated live (righthonda.com, secureoffersites/p961 platform): the HTML
-# exposes accountId + window.ApiBaseUrl='https://{domain}/api', and the SRP JS
-# bundle's only inventory endpoint that replays over HTTP is
-# /api/Inventory/getinventorymultiselectionfilters/v2 — but that returns only
-# filter FACETS ({filters, selectedFilters, selectedFiltersUrl}), never the
-# vehicle list. The vehicle grid is hydrated by a Vue SPA with no derivable
-# list-JSON endpoint (SRP paths return the SPA shell, no server-rendered VINs).
-# So Team Velocity still needs a browser capture. Registered with synth=None.
+def _synth_team_velocity(dealer_id: str, dealer_url: str, html: str) -> EndpointRecipe | None:
+    url = _origin(dealer_url) + _TEAM_VELOCITY_FEED
+    return EndpointRecipe(
+        dealer_id=dealer_id,
+        url=url,
+        method="GET",
+        content_type="application/json",
+        post_template=None,
+        auth_headers={},
+        # Single-shot stored (page 1); validate_recipe + delta walk ?page=N.
+        pagination=PAGINATION_NONE,
+        provider_hint="dealer_dot_com",
+    )
 
 
 # ── Platform registry ─────────────────────────────────────────────────────────
@@ -398,9 +523,11 @@ class PlatformTemplate:
 # Ordered most-specific-first; :func:`fingerprint_platform` returns the first hit.
 PLATFORM_TEMPLATES: list[PlatformTemplate] = [
     PlatformTemplate("carscommerce", _detect_carscommerce, _synth_carscommerce),
+    PlatformTemplate("typesense", _detect_typesense, _synth_typesense),
     PlatformTemplate("dealer_on_cosmos", _detect_dealer_on_cosmos, _synth_dealer_on_cosmos),
     PlatformTemplate("dealer_dot_com", _detect_dealer_com, _synth_dealer_com),
-    PlatformTemplate("team_velocity", _detect_team_velocity, None),
+    PlatformTemplate("sister_tv", _detect_sister_tv, None),
+    PlatformTemplate("team_velocity", _detect_team_velocity, _synth_team_velocity),
 ]
 
 _TEMPLATES_BY_NAME = {t.name: t for t in PLATFORM_TEMPLATES}
@@ -472,6 +599,9 @@ def validate_recipe(
     # shape), so they need their own walk — same mechanism as heal's _cosmos_pages.
     if _COSMOS_PATH.split("/api")[-1] in recipe.url or "cosmos/srp/vehicles" in recipe.url:
         return _validate_cosmos(recipe, base_url, dealer_id, dealer_name, max_pages)
+    # Team Velocity same-origin JSON feed paginates via ?page=N (nextPage/totalPages).
+    if _TEAM_VELOCITY_FEED in recipe.url or recipe.url.endswith(("-used.json", "-cpo.json", "-new.json")):
+        return _validate_json_feed(recipe, base_url, dealer_id, dealer_name, max_pages)
 
     template: Any = None
     if recipe.post_template:
@@ -512,8 +642,42 @@ def _cosmos_get_json(url: str) -> Any | None:
         resp = open_url(req, timeout=25.0)
         return json.loads(resp.read().decode("utf-8", "replace"))
     except Exception as e:
-        logger.debug("cosmos GET failed %s: %s", url[:80], str(e)[:120])
+        logger.debug("json GET failed %s: %s", url[:80], str(e)[:120])
         return None
+
+
+def _validate_json_feed(
+    recipe: EndpointRecipe, base_url: str, dealer_id: str, dealer_name: str, max_pages: int
+) -> int:
+    """Walk a same-origin ``?page=N`` JSON inventory feed and count unique VINs.
+
+    Team Velocity's ``/inventory-used.json`` feed carries ``totalPages`` /
+    ``nextPage``; we page until those run out (or a page adds no new VINs).
+    """
+    from backend.parsers import parse
+
+    clean = urlunparse(urlparse(recipe.url)._replace(query="", fragment=""))
+    vins: set[str] = set()
+    for pg in range(1, max_pages + 1):
+        body = _cosmos_get_json(f"{clean}?page={pg}")
+        if not isinstance(body, dict) or not body.get("vehicles"):
+            break
+        page_vehicles = list(parse(
+            recipe.provider_hint or "dealer_dot_com", body,
+            base_url=base_url, dealer_id=dealer_id,
+            dealer_name=dealer_name, dealer_url=base_url,
+        ))
+        new = _unique_vins(page_vehicles) - vins
+        if not new:
+            break
+        vins |= new
+        try:
+            total_pages = int(body.get("totalPages") or 0)
+        except (TypeError, ValueError):
+            total_pages = 0
+        if not body.get("nextPage") or (total_pages and pg >= total_pages):
+            break
+    return len(vins)
 
 
 def _validate_cosmos(
