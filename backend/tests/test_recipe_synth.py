@@ -658,3 +658,76 @@ def test_jazel_url_for_page_path_walk():
     assert _url_for_page(r, 0) == "https://www.5starford.com/inventory/all-vehicles/"
     assert _url_for_page(r, 1) == "https://www.5starford.com/inventory/all-vehicles/srp-page-2/"
     assert _url_for_page(r, 2) == "https://www.5starford.com/inventory/all-vehicles/srp-page-3/"
+
+
+# ── Universal browser-free fallback: generic schema.org Vehicle JSON-LD ────────
+
+# A bespoke/luxury standalone SRP: no API-platform fingerprint, but it
+# server-renders schema.org Vehicle JSON-LD with real VINs.
+_CUSTOM_SRP_HTML = """
+<html><head><title>Bespoke Motors</title>
+<script type="application/ld+json">
+{"@type":"Vehicle","vehicleIdentificationNumber":"1HGCM82633A004352",
+ "brand":"Honda","model":"Accord","offers":{"@type":"Offer","price":"28995"}}
+</script>
+<script type="application/ld+json">
+{"@type":"Car","vin":"5XYKTCA69FG566472","brand":"Kia","model":"Sorento",
+ "offers":{"@type":"Offer","price":"14500"}}
+</script>
+</head><body>custom standalone site, no known platform markers</body></html>
+"""
+
+# Homepage with no vehicle JSON-LD — the fallback must probe SRP paths.
+_CUSTOM_HOME_HTML = "<html><body>" + "welcome to bespoke motors " * 200 + "</body></html>"
+
+
+def test_custom_srp_does_not_fingerprint_any_platform():
+    # Precondition for the fallback: no API template claims this page.
+    assert recipe_synth.fingerprint_platform(_CUSTOM_SRP_HTML, "https://bespokemotors.com") is None
+
+
+def test_detect_html_harvest_from_supplied_html():
+    n, src = recipe_synth.detect_html_harvest(
+        "https://bespokemotors.com", _CUSTOM_SRP_HTML, min_vins=2
+    )
+    assert n == 2
+    assert src == "https://bespokemotors.com"
+
+
+def test_detect_html_harvest_probes_srp_when_home_bare(monkeypatch):
+    # Homepage has no vehicles; the first probed SRP path yields them.
+    def fake_fetch(url, **kwargs):
+        return _CUSTOM_SRP_HTML if url.endswith("/inventory") else None
+
+    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", fake_fetch)
+    n, src = recipe_synth.detect_html_harvest(
+        "https://bespokemotors.com", _CUSTOM_HOME_HTML, min_vins=2
+    )
+    assert n == 2
+    assert src == "https://bespokemotors.com/inventory"
+
+
+def test_detect_html_harvest_no_vehicles_returns_zero(monkeypatch):
+    monkeypatch.setattr(recipe_synth, "fetch_dealer_html", lambda *a, **k: None)
+    n, src = recipe_synth.detect_html_harvest(
+        "https://bespokemotors.com", _CUSTOM_HOME_HTML, min_vins=2
+    )
+    assert n == 0
+    assert src is None
+
+
+def test_detect_html_harvest_no_probe_when_disabled():
+    n, src = recipe_synth.detect_html_harvest(
+        "https://bespokemotors.com", _CUSTOM_HOME_HTML, min_vins=2, probe_srp=False
+    )
+    assert n == 0
+    assert src is None
+
+
+def test_pace_is_noop_by_default():
+    # With SCANNER_SYNTH_FETCH_DELAY unset (module default 0) pacing must not sleep.
+    import time as _t
+
+    t0 = _t.monotonic()
+    recipe_synth._pace()
+    assert _t.monotonic() - t0 < 0.5

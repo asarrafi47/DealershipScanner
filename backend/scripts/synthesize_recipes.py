@@ -47,6 +47,7 @@ load_project_dotenv()
 
 from backend.scanner.platform_registry import classify_dealer
 from backend.scanner.recipe_synth import (
+    detect_html_harvest,
     fetch_dealer_html,
     fingerprint_platform,
     is_synthesizable,
@@ -102,12 +103,34 @@ def _gather_html(dealer_url: str) -> tuple[str | None, str | None]:
     return home, home_platform
 
 
+def _try_html_harvest(row: dict, dealer_url: str, html: str, min_vins: int) -> bool:
+    """Universal browser-free fallback: if the reachable site server-renders
+    schema.org Vehicle JSON-LD, the generic harvester lists the lot over plain
+    HTTP — no per-platform template needed. On success, marks *row* as
+    browser-free (strategy ``html_harvest``) and returns True."""
+    try:
+        n, src = detect_html_harvest(dealer_url, html, min_vins=min_vins)
+    except Exception:  # a bad page must not abort the dealer
+        log.debug("html_harvest fallback failed for %s", dealer_url, exc_info=True)
+        return False
+    if n < min_vins:
+        return False
+    row["strategy"] = "html_harvest"
+    row["synthesized"] = False
+    row["saved"] = False
+    row["vins"] = n
+    where = " (SRP)" if src and src != dealer_url else ""
+    row["note"] = f"browser-free (html_harvest{where}, {n} vehicles via JSON-LD)"
+    return True
+
+
 def _process_dealer(
     dealer_id: str, dealer_name: str, dealer_url: str, *, min_vins: int, dry_run: bool, force: bool
 ) -> dict:
     row = {
         "dealer": dealer_name or dealer_id,
         "platform": "-",
+        "strategy": "",  # "synthesize" | "html_harvest" | "" (needs browser)
         "synthesized": False,
         "vins": 0,
         "saved": False,
@@ -137,6 +160,11 @@ def _process_dealer(
     platform = platform or fingerprint_platform(html, dealer_url)
     row["platform"] = platform or dns.get("platform") or "unknown"
     if not is_synthesizable(platform):
+        # No API template. Before declaring "needs browser", try the UNIVERSAL
+        # browser-free fallback: if the reachable site server-renders schema.org
+        # Vehicle JSON-LD, the generic harvester lists the lot over plain HTTP.
+        if _try_html_harvest(row, dealer_url, html, min_vins):
+            return row
         # Route server-rendered-HTML platforms (e.g. Jazel/McKenna family) to the
         # HTML harvester instead of a bare "unknown"; log true unknowns.
         if dns.get("strategy") == "html_harvest":
@@ -151,9 +179,12 @@ def _process_dealer(
 
     recipes = synthesize_recipes(dealer_id, dealer_url, html, platform)
     if not recipes:
+        if _try_html_harvest(row, dealer_url, html, min_vins):
+            return row
         row["note"] = "needs browser (params not extractable from HTML)"
         return row
     row["synthesized"] = True
+    row["strategy"] = "synthesize"
 
     # A platform may emit several recipes (e.g. Team Velocity used + new feeds);
     # validate each and keep the ones that yield real VINs. The reported VIN count
@@ -173,6 +204,11 @@ def _process_dealer(
         total_vins += n
     row["vins"] = total_vins
     if total_vins < min_vins or not kept:
+        if _try_html_harvest(row, dealer_url, html, min_vins):
+            return row
+        row["synthesized"] = True  # a recipe WAS built; it just didn't validate
+        row["strategy"] = ""
+        row["vins"] = total_vins
         row["note"] = f"synthesized but failed validation ({total_vins} < {min_vins} VINs)"
         return row
 
@@ -200,7 +236,7 @@ def _print_table(rows: list[dict]) -> None:
     cols = [
         ("dealer", 26),
         ("platform", 15),
-        ("synth", 6),
+        ("strategy", 13),
         ("vins", 5),
         ("saved", 6),
         ("note", 44),
@@ -212,7 +248,7 @@ def _print_table(rows: list[dict]) -> None:
         cells = [
             str(r["dealer"])[:26].ljust(26),
             str(r["platform"])[:15].ljust(15),
-            ("yes" if r["synthesized"] else "no").ljust(6),
+            str(r.get("strategy") or ("synthesize" if r["synthesized"] else "-"))[:13].ljust(13),
             str(r["vins"]).ljust(5),
             ("yes" if r["saved"] else "no").ljust(6),
             str(r["note"])[:44].ljust(44),
@@ -267,10 +303,16 @@ def main(argv: list[str] | None = None) -> int:
 
     print()
     _print_table(rows)
-    browser_free = [r for r in rows if r["vins"] >= args.min_vins and r["synthesized"]]
+    # Browser-free = a validated synthesized recipe OR the universal JSON-LD
+    # harvest fallback, both reaching the VIN floor.
+    browser_free = [r for r in rows
+                    if r["vins"] >= args.min_vins and r.get("strategy") in ("synthesize", "html_harvest")]
+    synth_free = [r for r in browser_free if r.get("strategy") == "synthesize"]
+    harvest_free = [r for r in browser_free if r.get("strategy") == "html_harvest"]
     need_browser = [r for r in rows if r not in browser_free]
     print()
-    print(f"SUMMARY: {len(browser_free)} browser-free (synthesized + validated), "
+    print(f"SUMMARY: {len(browser_free)} browser-free "
+          f"({len(synth_free)} synthesized-API, {len(harvest_free)} html_harvest JSON-LD), "
           f"{len(need_browser)} still need a browser  [of {len(rows)} dealers]")
     if args.dry_run:
         print("(dry-run: no recipes written)")

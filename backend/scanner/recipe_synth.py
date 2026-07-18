@@ -27,7 +27,10 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
+import threading
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -77,6 +80,35 @@ def _browser_headers() -> dict[str, str]:
     }
 
 
+# ── Global fetch pacing (rate-limit / Cloudflare defense) ─────────────────────
+#
+# Our egress IP is rate-limited from heavy scraping and bursts trigger a
+# Cloudflare "Just a moment" challenge; paced requests succeed. When
+# ``SCANNER_SYNTH_FETCH_DELAY`` (seconds) is set, every HTTP fetch in this module
+# (homepage, SRP probes, replay walks) waits so that consecutive requests are at
+# least that far apart. Default 0 => no pacing, so unit tests and callers that
+# stub the network are unaffected. The synthesis sweep sets it to ~4s.
+try:
+    _MIN_FETCH_INTERVAL = float(os.environ.get("SCANNER_SYNTH_FETCH_DELAY", "0") or 0)
+except ValueError:
+    _MIN_FETCH_INTERVAL = 0.0
+_pace_lock = threading.Lock()
+_last_fetch_at = 0.0
+
+
+def _pace() -> None:
+    """Block until at least ``_MIN_FETCH_INTERVAL`` has elapsed since the last
+    fetch, so a sequential sweep never bursts. No-op when the delay is 0."""
+    global _last_fetch_at
+    if _MIN_FETCH_INTERVAL <= 0:
+        return
+    with _pace_lock:
+        wait = _last_fetch_at + _MIN_FETCH_INTERVAL - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        _last_fetch_at = time.monotonic()
+
+
 # Markers that mean "this is a JS challenge / anti-bot shell, not real HTML".
 _CHALLENGE_MARKERS = (
     "just a moment",
@@ -117,6 +149,7 @@ def fetch_dealer_html(url: str, *, timeout: float = 25.0, retries: int = 2) -> s
         return None
     html: str | None = None
     for attempt in range(retries + 1):
+        _pace()
         req = urllib.request.Request(url, headers=_browser_headers())
         try:
             resp = open_url(req, timeout=timeout)
@@ -645,6 +678,7 @@ def _dep_fetch_html(url: str) -> str | None:
     """
     import urllib.request
 
+    _pace()
     try:
         resp = open_url(urllib.request.Request(url, headers=_browser_headers()), timeout=25.0)
         return resp.read().decode(resp.headers.get_content_charset() or "utf-8", "replace")
@@ -1078,6 +1112,81 @@ def synthesize_recipe(
     return recipes[0] if recipes else None
 
 
+# ── Universal browser-free fallback: generic schema.org Vehicle JSON-LD ────────
+#
+# The template path above is preferred: a replayable API/SRP recipe covers the
+# WHOLE lot and paginates cleanly. But it only fires for platforms we have a
+# template for. For the untemplated long tail — bespoke ``custom_standalone`` /
+# luxury rooftops where a per-platform template has no ROI — there is still an
+# elegant browser-free path IF the site server-renders schema.org Vehicle
+# JSON-LD: the generic harvester (:func:`harvest_vehicles_from_html`) lists the
+# lot straight from the HTML. This fallback detects that and confirms it yields
+# real VINs, so such dealers are reported browser-free (strategy html_harvest)
+# instead of "needs a browser". It is strictly additive — only consulted when no
+# API template fingerprints/synthesizes.
+
+# Inventory / SRP paths probed for embedded Vehicle JSON-LD when the page we were
+# handed (usually the homepage) carries none. Ordered most-common-first. Both
+# slashed and unslashed forms appear in the wild (dealer_eprocess/nabthat use a
+# trailing slash; some CMSes 404 the other form rather than redirecting).
+_HTML_HARVEST_SRP_PATHS = (
+    "/used-inventory/",
+    "/inventory",
+    "/inventory/used",
+    "/used-vehicles/",
+    "/new-inventory/",
+    "/vehicles/",
+    "/all-inventory/",
+    "/pre-owned/",
+)
+
+
+def harvest_html_vehicles(html: str) -> list[dict[str, Any]]:
+    """Thin wrapper over :func:`html_jsonld_harvest.harvest_vehicles_from_html`
+    (imported lazily to avoid a heavy import at module load)."""
+    from backend.scanner.html_jsonld_harvest import harvest_vehicles_from_html
+
+    return harvest_vehicles_from_html(html or "")
+
+
+def detect_html_harvest(
+    dealer_url: str,
+    html: str | None,
+    *,
+    min_vins: int = 1,
+    probe_srp: bool = True,
+    max_srp_paths: int = 6,
+) -> tuple[int, str | None]:
+    """Universal browser-free fallback for untemplated-but-reachable dealers.
+
+    Returns ``(vin_count, source_url)`` when *html* — or a server-rendered
+    inventory / SRP page reachable over plain HTTP — embeds schema.org Vehicle
+    JSON-LD carrying real VINs, else ``(0, None)``.
+
+    First checks the HTML we already have (the caller's homepage/inventory
+    fetch). If that carries fewer than *min_vins* distinct VINs and *probe_srp*
+    is set, it fetches a short, ordered list of common inventory paths
+    SEQUENTIALLY (paced by :func:`_pace`, with browser-navigation headers) and
+    stops at the first page that clears the bar. Never launches a browser.
+    """
+    best_vins: set[str] = {v["vin"] for v in harvest_html_vehicles(html or "") if v.get("vin")}
+    best_url: str | None = dealer_url if best_vins else None
+    if len(best_vins) >= min_vins or not probe_srp:
+        return len(best_vins), best_url
+
+    origin = _origin(dealer_url)
+    for path in _HTML_HARVEST_SRP_PATHS[:max_srp_paths]:
+        page = fetch_dealer_html(origin + path)
+        if not page:
+            continue
+        page_vins = {v["vin"] for v in harvest_html_vehicles(page) if v.get("vin")}
+        if len(page_vins) > len(best_vins):
+            best_vins, best_url = page_vins, origin + path
+        if len(best_vins) >= min_vins:
+            break
+    return (len(best_vins), best_url) if best_vins else (0, None)
+
+
 # ── Validation (replay over HTTP, count real VINs) ────────────────────────────
 
 _VALIDATE_MAX_PAGES = 40
@@ -1153,6 +1262,7 @@ def _cosmos_get_json(url: str) -> Any | None:
     """Proxy-aware GET returning parsed JSON (or ``None``)."""
     import urllib.request
 
+    _pace()
     req = urllib.request.Request(url, headers={**_browser_headers(), "Accept": "application/json"})
     try:
         resp = open_url(req, timeout=25.0)

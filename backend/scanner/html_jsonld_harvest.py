@@ -10,6 +10,14 @@ body_style). It REUSES the structured parsers in
 and adds JSON-LD extraction for the fields those helpers don't cover — VIN,
 mileage, trim, and the image gallery.
 
+Given an SRP / inventory-listing page, :func:`harvest_vehicles_from_html`
+returns ONE normalized dict per distinct VIN found in the page's schema.org
+Vehicle JSON-LD (year / make / model / vin / price / trim / mileage / colors /
+images). This is the browser-free universal fallback for the untemplated long
+tail (bespoke ``custom_standalone`` / luxury rooftops with no replayable API):
+if the dealer server-renders vehicle JSON-LD we can list its inventory over
+plain HTTP with no per-platform template.
+
 JSON-LD shapes handled:
   * a bare object, a top-level list, or a ``{"@graph": [...]}`` wrapper
     (dealer.com VDPs nest the priced Vehicle one level down inside @graph);
@@ -200,4 +208,128 @@ def harvest_fields_from_html(html: str) -> dict[str, Any]:
         out["engine_description"] = specs["engine_description"]
 
     out["images"] = images
+    return out
+
+
+# ── Multi-vehicle SRP / inventory-listing harvest ──────────────────────────────
+
+
+def _vin_from_node(node: dict) -> str | None:
+    vin = _clean_str(node.get("vehicleIdentificationNumber") or node.get("vin"), 20)
+    if vin and len(vin) == 17:
+        return vin.upper()
+    return None
+
+
+def _year_from_node(node: dict) -> int | None:
+    for key in ("modelDate", "vehicleModelDate", "productionDate", "releaseDate"):
+        raw = node.get(key)
+        if raw in (None, ""):
+            continue
+        m = re.search(r"(19|20)\d{2}", str(raw))
+        if m:
+            return int(m.group(0))
+    return None
+
+
+def _make_from_node(node: dict) -> str | None:
+    for key in ("brand", "manufacturer", "make"):
+        val = node.get(key)
+        if isinstance(val, dict):
+            val = val.get("name")
+        s = _clean_str(val, 60)
+        if s:
+            return s
+    return None
+
+
+def _model_from_node(node: dict) -> str | None:
+    val = node.get("model")
+    if isinstance(val, dict):
+        val = val.get("name")
+    return _clean_str(val, 80)
+
+
+def _price_from_node(node: dict) -> float | None:
+    """First positive numeric price in the node's ``offers`` (schema.org Offer /
+    AggregateOffer, possibly nested in ``priceSpecification``)."""
+    offers = node.get("offers")
+    for offer in offers if isinstance(offers, list) else [offers]:
+        if not isinstance(offer, dict):
+            continue
+        for cand in (
+            offer.get("price"),
+            offer.get("lowPrice"),
+            (offer.get("priceSpecification") or {}).get("price")
+            if isinstance(offer.get("priceSpecification"), dict)
+            else None,
+        ):
+            if cand in (None, ""):
+                continue
+            try:
+                p = float(str(cand).replace(",", "").replace("$", "").strip())
+            except (TypeError, ValueError):
+                continue
+            if p > 0:
+                return p
+    return None
+
+
+def _vehicle_fields_from_node(node: dict) -> dict[str, Any]:
+    """Normalized fields for ONE schema.org Vehicle JSON-LD node. Keys are only
+    present when a value was found; ``images`` is always present (may be empty)."""
+    out: dict[str, Any] = {}
+    vin = _vin_from_node(node)
+    if vin:
+        out["vin"] = vin
+    for key, val in (
+        ("year", _year_from_node(node)),
+        ("make", _make_from_node(node)),
+        ("model", _model_from_node(node)),
+        ("trim", _trim_from_node(node)),
+        ("price", _price_from_node(node)),
+        ("engine_description", _engine_from_node(node)),
+        ("mileage", _mileage_from_value(node.get("mileageFromOdometer"))),
+    ):
+        if val is not None and val != "":
+            out[key] = val
+    ec = _clean_str(node.get("color"), 120)
+    if ec:
+        out["exterior_color"] = ec
+    ic = _clean_str(node.get("vehicleInteriorColor") or node.get("interiorColor"), 120)
+    if ic:
+        out["interior_color"] = ic
+    imgs: list[str] = []
+    _images_from_value(node.get("image"), imgs)
+    offers = node.get("offers")
+    for offer in offers if isinstance(offers, list) else [offers]:
+        if isinstance(offer, dict):
+            _images_from_value(offer.get("image"), imgs)
+    seen: set[str] = set()
+    out["images"] = [u for u in imgs if not (u in seen or seen.add(u))]
+    return out
+
+
+def harvest_vehicles_from_html(html: str) -> list[dict[str, Any]]:
+    """Every VIN-bearing schema.org Vehicle JSON-LD node in *html*, as a list of
+    normalized field dicts (one per distinct VIN, in document order).
+
+    Unlike :func:`harvest_fields_from_html` — which collapses a VDP page to a
+    single vehicle — this keeps each vehicle separate, so a server-rendered SRP /
+    inventory page that embeds many Vehicle nodes yields the whole visible lot.
+    Nodes without a valid 17-char VIN are skipped (a VIN is what makes a listing
+    real and dedupe-able). Never fetches the network.
+    """
+    if not html:
+        return []
+    out: list[dict[str, Any]] = []
+    seen_vins: set[str] = set()
+    for node in _iter_jsonld_nodes(html):
+        if not _is_vehicle_node(node):
+            continue
+        vin = _vin_from_node(node)
+        if not vin or vin in seen_vins:
+            continue
+        seen_vins.add(vin)
+        out.append(_vehicle_fields_from_node(node))
     return out
