@@ -206,6 +206,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     dealer_map = build_dealer_map_for_car(car_raw, dealer_info)
     market_intel = None
     trim_ladder = None
+    deal_score_detail = None
     if main._session_has_paid_access():
         from backend.utils.market_price import market_price_for_car
 
@@ -215,6 +216,14 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
             zip_code=geo.get("zip_code"),
             radius_miles=geo.get("radius_miles"),
         )
+        # Detailed market-price-band breakdown (median/p25/p75, N listings across
+        # M dealers) — gated behind FEATURE_MARKET_INTEL like the market intel above.
+        try:
+            from backend.intelligence.deal_score_cache import detailed_deal_score
+
+            deal_score_detail = detailed_deal_score(car_raw)
+        except Exception:
+            deal_score_detail = None
     if main._viewer_sees_premium_features():
         try:
             ladder_year = int(car_raw.get("year") or 0)
@@ -233,6 +242,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     return {
         "car": car,
         "market_intel": market_intel,
+        "deal_score_detail": deal_score_detail,
         "trim_ladder": trim_ladder,
         "car_is_saved": car_is_saved,
         "logged_in": bool(uid),

@@ -1369,7 +1369,9 @@ document.addEventListener("DOMContentLoaded", () => {
             : "";
         const cpoBadge = cpoBadgeHtml(c);
         const mkt = c.market;
-        const dealBadge = dealBadgeHtml(mkt);
+        // Premium trim-avg badge takes precedence; otherwise fall back to the
+        // free coarse market deal score attached during serialization.
+        const dealBadge = dealBadgeHtml(mkt) || dealScoreBadgeHtml(c.deal_score);
         const priceDropBadge = priceDropBadgeHtml(c);
         let marketLine = "";
         if (mkt && mkt.avg_price_display) {
@@ -1571,6 +1573,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<span class="result-deal-badge result-deal-badge--${escapeHtml(vs)}">`
             + `${escapeHtml(text)} <span class="result-deal-badge-pct">${sign}${escapeHtml(String(mkt.delta_pct))}%</span>`
             + `</span>`;
+    }
+
+    function dealScoreBadgeHtml(ds) {
+        if (!ds || !ds.label || ds.label === "insufficient_data") return "";
+        const cls = ds.label === "at_market" ? "near_market" : ds.label;
+        const labels = {
+            below_market: "Below market",
+            above_market: "Above market",
+            at_market: "Fair price",
+        };
+        const text = labels[ds.label] || "Fair price";
+        let pctStr = "";
+        if (ds.pct_from_median != null && ds.label !== "at_market") {
+            const p = Math.abs(Number(ds.pct_from_median));
+            if (Number.isFinite(p)) {
+                pctStr = ` <span class="result-deal-badge-pct">${ds.label === "below_market" ? "-" : "+"}${Math.round(p)}%</span>`;
+            }
+        }
+        return `<span class="result-deal-badge result-deal-badge--${escapeHtml(cls)}">${escapeHtml(text)}${pctStr}</span>`;
     }
 
     function cpoBadgeHtml(c) {

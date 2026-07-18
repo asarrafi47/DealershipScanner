@@ -3491,6 +3491,39 @@ body.car-detail-page .car-detail {
     color: var(--text-faint);
 }
 
+/* Coarse market deal badge shown next to the VDP price. */
+.deal-badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 10px 0 0;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.deal-badge__detail {
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.deal-badge--below_market {
+    background: var(--deal-below-bg);
+    color: var(--deal-below);
+}
+
+.deal-badge--above_market {
+    background: var(--deal-above-bg);
+    color: var(--deal-above);
+}
+
+.deal-badge--at_market {
+    background: var(--deal-near-bg);
+    color: var(--deal-near);
+}
+
 .car-quick-specs {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));

@@ -139,7 +139,9 @@
             {% set listing_link_is_vdp = listing_vdp_url and car.dealer_url and listing_vdp_url.rstrip('/') != car.dealer_url.rstrip('/') %}
             {% set show_premium_features = has_paid_access or (logged_in and not billing_stripe_enabled) %}
             {% set show_options_tab = logged_in or has_paid_access %}
-            {% set has_pricing_insights = market_intel %}
+            {% set show_deal_detail = deal_score_detail %}
+            {% set show_deal_upsell = car.deal_score and car.deal_score.label and car.deal_score.label != 'insufficient_data' and not show_deal_detail and billing_stripe_enabled and not show_premium_features %}
+            {% set has_pricing_insights = market_intel or show_deal_detail or show_deal_upsell %}
             {% set car_is_electrified = car.fuel_type in ['Electric', 'Plug-in Hybrid', 'Plug-In Hybrid', 'EV'] %}
             {% set show_ev_battery = car_is_electrified and show_premium_features %}
             {% set show_ev_battery_upsell = car_is_electrified and billing_stripe_enabled and not show_premium_features %}
@@ -257,6 +259,23 @@
                             <span class="compare-toggle-btn__label">Compare</span>
                         </button>
                     </div>
+                    {% if car.deal_score and car.deal_score.label and car.deal_score.label != 'insufficient_data' %}
+                    {% set ds = car.deal_score %}
+                    {% set ds_pct = (ds.pct_from_median | abs) if ds.pct_from_median is not none else none %}
+                    {% set ds_delta = (ds.delta | abs) if ds.delta is not none else none %}
+                    <div class="deal-badge deal-badge--{{ ds.label }}" role="note" aria-label="Market price assessment">
+                        {% if ds.label == 'below_market' %}
+                        <span class="deal-badge__label">Below market</span>
+                        {% if ds_delta %}<span class="deal-badge__detail">&minus;${{ "{:,.0f}".format(ds_delta) }}{% if ds_pct %} ({{ "{:.0f}".format(ds_pct) }}% under){% endif %}</span>{% endif %}
+                        {% elif ds.label == 'above_market' %}
+                        <span class="deal-badge__label">Above market</span>
+                        {% if ds_delta %}<span class="deal-badge__detail">+${{ "{:,.0f}".format(ds_delta) }}{% if ds_pct %} ({{ "{:.0f}".format(ds_pct) }}% over){% endif %}</span>{% endif %}
+                        {% else %}
+                        <span class="deal-badge__label">Fair price</span>
+                        <span class="deal-badge__detail">at market</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
                     {% if car.price and car.price > 0 %}
                     <div class="car-finance-estimate" id="car-finance-calculator" data-vehicle-price="{{ car.price | int }}">
                         <div class="car-finance-estimate-card">
@@ -406,6 +425,40 @@
                         {% if has_pricing_insights %}
                         <div class="car-pricing-insights" role="region" aria-label="Pricing insights">
                             <h2 class="car-vdp-panel-title">Pricing insights</h2>
+                            {% if show_deal_detail %}
+                            {% set dd = deal_score_detail %}
+                            <div class="car-pricing-block car-pricing-block--deal">
+                                <p class="car-pricing-block-label">Market price band
+                                    {% if dd.mileage_band_label %}<span class="car-market-samples">({{ dd.mileage_band_label }} mi &middot; {{ dd.condition | capitalize }})</span>{% endif %}
+                                </p>
+                                <p class="car-market-line">
+                                    <span class="car-market-label">Market median</span>
+                                    <strong>${{ "{:,.0f}".format(dd.band_median) }}</strong>
+                                </p>
+                                <p class="car-market-line">
+                                    <span class="car-market-label">Typical range (25th&ndash;75th pct)</span>
+                                    <strong>${{ "{:,.0f}".format(dd.band_p25) }} &ndash; ${{ "{:,.0f}".format(dd.band_p75) }}</strong>
+                                </p>
+                                {% if car.price and car.price > 0 %}
+                                <p class="car-market-line">
+                                    <span class="car-market-label">This listing</span>
+                                    <strong>${{ "{:,.0f}".format(car.price) }}</strong>
+                                </p>
+                                {% endif %}
+                                <p class="car-market-vs car-market-vs--{{ dd.label }}">
+                                    {% if dd.label == 'below_market' %}Priced ${{ "{:,.0f}".format(dd.delta | abs) }} below the market median ({{ "{:.0f}".format(dd.pct_from_median | abs) }}% under).
+                                    {% elif dd.label == 'above_market' %}Priced ${{ "{:,.0f}".format(dd.delta | abs) }} above the market median ({{ "{:.0f}".format(dd.pct_from_median | abs) }}% over).
+                                    {% else %}Priced within {{ "{:.0f}".format(dd.pct_from_median | abs) }}% of the market median &mdash; a fair price.{% endif %}
+                                </p>
+                                <p class="car-market-cohort">Based on {{ dd.sample_count }} similar listing{{ 's' if dd.sample_count != 1 else '' }} across {{ dd.dealer_count }} dealer{{ 's' if dd.dealer_count != 1 else '' }}.</p>
+                            </div>
+                            {% elif show_deal_upsell %}
+                            <div class="car-pricing-block car-premium-upsell car-premium-upsell--inline" aria-labelledby="deal-upsell-heading">
+                                <p class="car-pricing-block-label" id="deal-upsell-heading">Market price band</p>
+                                <p class="car-packages-hint">See the full market breakdown for this vehicle &mdash; median price, the typical 25th&ndash;75th percentile range, and how many similar listings across how many dealers set the market &mdash; with <a href="{{ url_for('premium_page') }}">Market Intelligence</a>.</p>
+                                <p><a href="{{ url_for('premium_page') }}" class="primary-button">View plans</a></p>
+                            </div>
+                            {% endif %}
                             {% if market_intel %}
                             <div class="car-pricing-block car-pricing-block--market">
                                 <p class="car-pricing-block-label">Market comparison</p>

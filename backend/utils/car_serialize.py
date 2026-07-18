@@ -1526,6 +1526,16 @@ def serialize_car_for_api(
     out["factory_range"] = resolve_factory_epa_range(c)
     out["fuel_tank_gallons"] = round(resolve_fuel_tank_gallons(c), 1)
 
+    # Coarse market deal score (free consumer hook). Scored offline against the
+    # in-process market_price_stats cache — no per-car DB round-trip. The detailed
+    # band breakdown is gated behind FEATURE_MARKET_INTEL in the route/template.
+    try:
+        from backend.intelligence.deal_score_cache import public_deal_score
+
+        out["deal_score"] = public_deal_score(c)
+    except Exception:
+        out["deal_score"] = None
+
     return out
 
 
@@ -1756,6 +1766,13 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
     price_drop_amount, price_drop_days_ago = _latest_price_drop_for_grid(c)
     out["price_drop_amount"] = price_drop_amount
     out["price_drop_days_ago"] = price_drop_days_ago
+    # Coarse deal score for grid cards (in-memory band cache; no per-card DB hit).
+    try:
+        from backend.intelligence.deal_score_cache import public_deal_score
+
+        out["deal_score"] = public_deal_score(c)
+    except Exception:
+        out["deal_score"] = None
     return out
 
 
