@@ -27,8 +27,37 @@ logger = logging.getLogger(__name__)
 NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby"
 FIELD_MASK = (
     "places.id,places.displayName,places.websiteUri,places.formattedAddress,"
-    "places.addressComponents,places.location,places.rating,places.userRatingCount"
+    "places.addressComponents,places.location,places.rating,places.userRatingCount,"
+    # Basic-tier fields — no billing increase over the website/rating fields above.
+    # primaryType/types feed the non-dealer filter (Google's own category beats
+    # name-guessing); businessStatus lets us skip permanently-closed dealers.
+    "places.primaryType,places.types,places.businessStatus,"
+    # nationalPhoneNumber — same Contact field-tier as websiteUri (already paid),
+    # useful for dealer records/dedup.
+    "places.nationalPhoneNumber"
 )
+
+# OEM brands to tag from the dealer name (the coverage gap tracks brand -> platform,
+# so this makes per-brand analysis/prioritization free). Order matters: check
+# multi-word / luxury sub-brands before their parent where ambiguous.
+_OEM_BRANDS = (
+    "Mercedes-Benz", "Mercedes", "Land Rover", "Alfa Romeo", "Aston Martin",
+    "Rolls-Royce", "Chevrolet", "Chrysler", "Cadillac", "Lincoln", "Genesis",
+    "Infiniti", "Mitsubishi", "Volkswagen", "Maserati", "Bentley", "Lamborghini",
+    "Porsche", "Toyota", "Honda", "Lexus", "Acura", "Nissan", "Hyundai", "Kia",
+    "Subaru", "Mazda", "Ford", "GMC", "Buick", "Jeep", "Dodge", "Ram", "BMW",
+    "Audi", "Volvo", "Jaguar", "Tesla", "Rivian", "Ferrari", "McLaren", "Mini",
+    "Fiat", "Polestar", "Lucid",
+)
+
+
+def _oem_brand_from_name(name: str) -> str:
+    low = f" {(name or '').lower()} "
+    for brand in _OEM_BRANDS:
+        b = brand.lower()
+        if f" {b} " in low or f" {b}," in low or low.strip().startswith(b + " ") or f"{b}-" in low:
+            return brand
+    return ""
 
 # searchNearby hard cap per Google docs
 _MAX_RADIUS_M = 50_000.0
@@ -203,6 +232,11 @@ def _parse_place(place: dict[str, Any]) -> DealerCandidate | None:
         google_place_id=rating_fields.place_id if rating_fields else None,
         google_rating=rating_fields.rating if rating_fields else None,
         google_review_count=rating_fields.review_count if rating_fields else None,
+        google_primary_type=(place.get("primaryType") or "").strip(),
+        google_types=[t for t in (place.get("types") or []) if isinstance(t, str)],
+        business_status=(place.get("businessStatus") or "").strip(),
+        oem_brand=_oem_brand_from_name(name),
+        phone=(place.get("nationalPhoneNumber") or "").strip(),
     )
 
 

@@ -77,7 +77,12 @@ def discover() -> list[dict]:
             if did in seen:
                 continue
             seen[did] = {"dealer_id": did, "name": d.get("name"), "url": url,
-                         "city": d.get("city"), "state": d.get("state"), "seed_city": city}
+                         "city": d.get("city"), "state": d.get("state"), "seed_city": city,
+                         "oem_brand": d.get("oem_brand", ""),
+                         "business_status": d.get("business_status", ""),
+                         "google_primary_type": d.get("google_primary_type", ""),
+                         "latitude": d.get("latitude"), "longitude": d.get("longitude"),
+                         "zip_code": d.get("zip_code", ""), "phone": d.get("phone", "")}
             n += 1
         print(f"[discover] {city:<20} ({zc}): +{n} dealers (total {len(seen)})", flush=True)
     return list(seen.values())

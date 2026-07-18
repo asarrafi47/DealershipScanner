@@ -152,8 +152,22 @@ def run_discovery(
     before_nd = len(merged)
     kept: list[DealerCandidate] = []
     dropped_nd: list[str] = []
+    dropped_closed: list[str] = []
     for c in merged:
-        if is_probable_non_dealer(c.name, c.dealer_website_url or c.website_url):
+        # Skip permanently-closed dealers (Google businessStatus) — dead sites,
+        # not worth scanning. TEMPORARILY_CLOSED is kept (may reopen).
+        if getattr(c, "business_status", "") == "CLOSED_PERMANENTLY":
+            c.is_dealer = False
+            dropped_closed.append(c.name)
+            continue
+        # Non-dealer filter now uses Google's own category (primaryType/types)
+        # as the strongest signal, falling back to name/URL heuristics.
+        if is_probable_non_dealer(
+            c.name,
+            c.dealer_website_url or c.website_url,
+            place_primary_type=getattr(c, "google_primary_type", "") or None,
+            place_types=getattr(c, "google_types", None),
+        ):
             c.is_dealer = False
             dropped_nd.append(c.name)
         else:
@@ -164,6 +178,12 @@ def run_discovery(
             len(dropped_nd),
             before_nd,
             ", ".join(dropped_nd[:12]) + ("…" if len(dropped_nd) > 12 else ""),
+        )
+    if dropped_closed:
+        logger.info(
+            "Closed-dealer filter: dropped %d permanently-closed (%s)",
+            len(dropped_closed),
+            ", ".join(dropped_closed[:8]) + ("…" if len(dropped_closed) > 8 else ""),
         )
     merged = kept
 

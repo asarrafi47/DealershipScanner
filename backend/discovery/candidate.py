@@ -24,6 +24,13 @@ class DealerCandidate:
     source_osm: bool = False
     source_web: bool = False
     is_dealer: bool = True
+    # Google Places metadata (Basic-tier fields — no extra billing beyond the
+    # website/rating fields we already request).
+    google_primary_type: str = ""          # e.g. "car_dealer", "restaurant"
+    google_types: list[str] | None = None  # full category list
+    business_status: str = ""              # OPERATIONAL / CLOSED_PERMANENTLY / CLOSED_TEMPORARILY
+    oem_brand: str = ""                    # derived from name, e.g. "Toyota"
+    phone: str = ""                        # nationalPhoneNumber
 
     def to_db_dict(self) -> dict[str, Any]:
         url = (self.dealer_website_url or self.website_url or "").strip()
