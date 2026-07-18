@@ -83,7 +83,9 @@ def discover() -> list[dict]:
                          "business_status": d.get("business_status", ""),
                          "google_primary_type": d.get("google_primary_type", ""),
                          "latitude": d.get("latitude"), "longitude": d.get("longitude"),
-                         "zip_code": d.get("zip_code", ""), "phone": d.get("phone", "")}
+                         "zip_code": d.get("zip_code", ""), "phone": d.get("phone", ""),
+                         "google_rating": d.get("google_rating"),
+                         "google_review_count": d.get("google_review_count")}
             n += 1
         print(f"[discover] {city:<20} ({zc}): +{n} dealers (total {len(seen)})", flush=True)
     return list(seen.values())
@@ -128,6 +130,10 @@ def _roster_row_to_db(d: dict) -> dict:
         "phone": d.get("phone") or "",
         "platform": d.get("platform") or "",
         "strategy": d.get("strategy") or "",
+        # Google reputation — collected at discovery, feeds dealer_score's
+        # reputation term. Persisted here so a scan populates it.
+        "google_rating": d.get("google_rating"),
+        "google_review_count": d.get("google_review_count"),
         # Discovered via Google Places / DDG (web tier). No Google API call here —
         # we only persist already-collected roster data.
         "source_web": True,
