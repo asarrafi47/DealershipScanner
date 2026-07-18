@@ -31,10 +31,26 @@ import argparse
 import json
 import logging
 import os
+import signal
 import sys
 import time
 from dataclasses import asdict
 from pathlib import Path
+
+# Hard per-dealer wall-clock cap so one dead/slow-loris site can't stall the
+# whole sweep (a socket that accepts but never responds hangs past urllib's
+# per-op timeout). SIGALRM interrupts the blocked read -> _DealerTimeout ->
+# caught by the loop -> next dealer. Main-thread only (this script is). Env
+# override for large paced validations.
+_PER_DEALER_TIMEOUT = int(os.environ.get("SYNTH_PER_DEALER_TIMEOUT", "180"))
+
+
+class _DealerTimeout(Exception):
+    pass
+
+
+def _on_alarm(signum, frame):
+    raise _DealerTimeout()
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 os.chdir(_REPO_ROOT)
@@ -276,6 +292,11 @@ def main(argv: list[str] | None = None) -> int:
     else:
         dealers = _load_manifest(args.manifest)
 
+    try:
+        signal.signal(signal.SIGALRM, _on_alarm)
+    except (ValueError, AttributeError):
+        pass  # not main thread / unsupported platform — per-dealer cap disabled
+
     rows: list[dict] = []
     for d in dealers:
         dealer_url = d.get("url") or d.get("website") or ""
@@ -290,14 +311,21 @@ def main(argv: list[str] | None = None) -> int:
             host = (urlparse(dealer_url).hostname or dealer_url).replace("www.", "")
             dealer_id = host.replace(".", "-")
         try:
+            signal.alarm(_PER_DEALER_TIMEOUT)  # hard cap; 0 disables
             row = _process_dealer(
                 dealer_id, dealer_name, dealer_url,
                 min_vins=args.min_vins, dry_run=args.dry_run, force=args.force,
             )
+        except _DealerTimeout:
+            log.warning("dealer %s timed out after %ds — skipping", dealer_id, _PER_DEALER_TIMEOUT)
+            row = {"dealer": dealer_name, "platform": "-", "synthesized": False,
+                   "vins": 0, "saved": False, "note": f"timeout>{_PER_DEALER_TIMEOUT}s"}
         except Exception as e:  # never let one dealer abort the sweep
             log.exception("dealer %s failed", dealer_id)
             row = {"dealer": dealer_name, "platform": "-", "synthesized": False,
                    "vins": 0, "saved": False, "note": f"error: {str(e)[:40]}"}
+        finally:
+            signal.alarm(0)
         rows.append(row)
         print(f"  processed {dealer_name}: {row['platform']} / {row['vins']} VINs / {row['note']}")
 
