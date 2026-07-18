@@ -19,6 +19,13 @@ from collections import Counter
 from dataclasses import asdict, is_dataclass
 from pathlib import Path
 
+# Pace every browser-free fetch (the HTTP classification fallback below shares
+# recipe_synth's global clock) so a sweep of unknown dealers stays SEQUENTIAL
+# with a >=4s gap. Our egress IP is rate-limited; bursts trip the Cloudflare
+# "Just a moment" challenge, paced requests succeed. Set BEFORE any backend
+# import so recipe_synth reads it at import time. Operator-overridable.
+os.environ.setdefault("SCANNER_SYNTH_FETCH_DELAY", "4")
+
 _ROOT = Path(__file__).resolve().parents[2]
 os.chdir(_ROOT)
 sys.path.insert(0, str(_ROOT))
@@ -75,7 +82,11 @@ def classify_all(dealers: list[dict]) -> list[dict]:
 
     for i, d in enumerate(dealers, 1):
         try:
-            res = classify_dealer(d["url"], do_http=False)  # DNS-only: fast, works behind Cloudflare
+            # DNS-first, then a single paced HTTP fingerprint fallback when DNS is
+            # inconclusive (do_http defaults True). Cheap for the DNS-identifiable
+            # majority; only the unknowns pay the paced HTTP cost, which catches
+            # DNS-invisible known platforms and untemplated-but-JSON-LD dealers.
+            res = classify_dealer(d["url"])
         except Exception as exc:
             res = {"platform": None, "strategy": "error", "source": "error", "error": str(exc)}
         d["platform"] = res.get("platform")
@@ -92,7 +103,7 @@ def main() -> None:
     dealers = discover()
     print(f"\nTotal unique dealers across {len(CITIES)} cities: {len(dealers)}\n", flush=True)
 
-    print("=== PHASE 2: platform classification (DNS-first, browser-free) ===", flush=True)
+    print("=== PHASE 2: platform classification (DNS-first, paced HTTP fallback) ===", flush=True)
     dealers = classify_all(dealers)
 
     out = _ROOT / "workspace" / "national_dealers.json"

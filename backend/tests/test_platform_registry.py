@@ -146,6 +146,36 @@ def test_classify_html_uses_recipe_synth_fingerprint(monkeypatch):
     assert res["source"] == "html"
 
 
+def test_classify_html_harvest_fallback_when_jsonld_present(monkeypatch):
+    # DNS blank, no template fingerprints, but the fetched page server-renders
+    # schema.org Vehicle JSON-LD -> route to html_harvest (browser-free via the
+    # generic harvester), NOT to 'unknown'. Composes with the JSON-LD fallback.
+    monkeypatch.setattr(pr, "cname_chain", lambda host: [])
+    html = "<html>" + "x" * 3000 + "</html>"
+    monkeypatch.setattr(pr, "_http_probe", lambda url, **k: _probe(html))
+    monkeypatch.setattr(pr, "_recipe_synth_fingerprint", lambda h, u: None)
+    monkeypatch.setattr(pr, "_jsonld_vin_count", lambda h: 12)
+    res = pr.classify_dealer("https://www.customluxuryrooftop.com")
+    assert res["platform"] == pr.HTML_JSONLD_PLATFORM
+    assert res["strategy"] == pr.STRATEGY_HTML_HARVEST
+    assert res["synthesizable"] is False
+    assert res["source"] == "html_harvest"
+    assert res["signals"]["jsonld_vins"] == 12
+
+
+def test_classify_no_jsonld_still_unknown(monkeypatch, tmp_path):
+    # DNS blank, no template, and NO JSON-LD VINs -> still unknown+logged
+    # (the harvest fallback is strictly additive and must not swallow unknowns).
+    log = tmp_path / "u.json"
+    monkeypatch.setattr(pr, "cname_chain", lambda host: [])
+    monkeypatch.setattr(pr, "_http_probe", lambda url, **k: _probe("<html>" + "x" * 3000 + "</html>"))
+    monkeypatch.setattr(pr, "_recipe_synth_fingerprint", lambda h, u: None)
+    monkeypatch.setattr(pr, "_jsonld_vin_count", lambda h: 0)
+    res = pr.classify_dealer("https://www.trulyunknown.com", unclassified_path=log)
+    assert res["platform"] is None
+    assert res["source"] == "unknown"
+
+
 # ── classify_dealer: unknown -> logged ────────────────────────────────────────
 
 

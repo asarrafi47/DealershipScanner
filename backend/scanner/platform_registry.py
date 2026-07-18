@@ -412,6 +412,22 @@ _CHALLENGE_MARKERS = (
 _HOST_RE = re.compile(r"https?://([a-z0-9.-]+)", re.I)
 
 
+def _pace_http() -> None:
+    """Delegate to ``recipe_synth``'s global fetch pacing so a classification
+    HTTP probe shares ONE paced clock with every other browser-free fetch in a
+    sweep (homepage/SRP/replay). This is what keeps our rate-limited egress IP
+    out of the Cloudflare "Just a moment" challenge: consecutive fetches stay at
+    least ``SCANNER_SYNTH_FETCH_DELAY`` seconds apart (the national sweep sets 4).
+    No-op when the delay is unset (default 0), so unit tests and stubbed callers
+    are unaffected. Never raises — pacing is best-effort, not correctness."""
+    try:
+        from backend.scanner.recipe_synth import _pace
+
+        _pace()
+    except Exception:
+        pass
+
+
 @dataclass
 class HttpProbe:
     status: int | None = None
@@ -429,13 +445,22 @@ def _http_probe(url: str, *, timeout: float = 20.0) -> HttpProbe:
     fetch, this NEVER discards the body — the whole point is to capture what a
     walled/unknown site looks like so a human can name its platform later."""
     probe = HttpProbe()
+    # ALWAYS send a real browser first-visit navigation header set. Plain GETs
+    # with only a UA get 403/429'd or served a "Just a moment" shell by these
+    # dealer platforms; UA + Sec-Fetch-* (navigate/document) + text/html Accept
+    # get the same HTML a browser navigation would.
     headers = {
         "User-Agent": _BROWSER_UA,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",
         "Accept-Encoding": "identity",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Upgrade-Insecure-Requests": "1",
     }
     body = ""
+    _pace_http()  # sequential-with-delay so a classification sweep never bursts
     try:
         req = urllib.request.Request(url, headers=headers)
         resp = open_url(req, timeout=timeout)
@@ -526,19 +551,31 @@ def classify_dealer(
 ) -> dict[str, Any]:
     """Classify *dealer_url*'s platform, cheapest signal first.
 
+    ``do_http`` defaults to True, making the default path a two-stage
+    DNS-first-then-HTTP fallback: DNS is cheap and Cloudflare-proof, so the vast
+    majority of dealers classify on the CNAME alone and never pay the HTTP cost;
+    only the DNS-inconclusive unknowns fall through to a SINGLE paced HTTP
+    fingerprint. That single fetch is what catches DNS-invisible known platforms
+    (Typesense/Overfuel/Motive/dealer_alchemist have no distinctive CNAME) and
+    untemplated-but-JSON-LD dealers. Pass ``do_http=False`` for a fast DNS-only
+    pass when the HTTP cost isn't wanted.
+
     Steps:
       (a) DNS CNAME lookup -> match ``cname_patterns`` (works behind Cloudflare);
-      (b) if inconclusive and *do_http*, fetch the page over proxy-aware plain
-          HTTP and match ``html_markers`` (delegating to
-          ``recipe_synth.fingerprint_platform`` first for its richer detection);
+      (b) if inconclusive and *do_http*, fetch the page ONCE over proxy-aware
+          plain HTTP (paced, browser-navigation headers) and, in order:
+          (b1) match a known platform via ``recipe_synth.fingerprint_platform``
+               (richer) then our own ``html_markers`` substrings; else
+          (b2) if the page server-renders schema.org Vehicle JSON-LD, route it
+               to ``html_harvest`` (browser-free via the generic harvester);
       (c) if nothing matches, return ``platform=None`` and (when *log_unknown*)
           append every gathered signal to the unclassified-platforms log so the
           platform can be named later with a one-line registry entry.
 
     Returns a dict: ``platform``, ``strategy``, ``synthesizable``, ``cloudflare``,
-    ``source`` (``"dns"`` | ``"html"`` | ``"unknown"``), ``signals`` (the raw
-    evidence), and ``logged_new`` (True when this call added a NEW host to the
-    unclassified log).
+    ``source`` (``"dns"`` | ``"html"`` | ``"html_harvest"`` | ``"unknown"``),
+    ``signals`` (the raw evidence), and ``logged_new`` (True when this call added
+    a NEW host to the unclassified log).
     """
     reg = registry if registry is not None else load_registry()
     host = _host_of(dealer_url)
@@ -573,6 +610,15 @@ def classify_dealer(
             for entry in reg:
                 if entry.matches_html(html_low):
                     return _result(entry, "html", signals)
+            # No template fingerprints, but the page may still be browser-free:
+            # if it server-renders schema.org Vehicle JSON-LD, the generic
+            # harvester lists the lot. Count VINs on the HTML we already have
+            # (no extra fetch) and route to html_harvest. Composes with the
+            # JSON-LD fallback so untemplated-but-JSON-LD dealers aren't 'unknown'.
+            vins = _jsonld_vin_count(probe.html)
+            if vins > 0:
+                signals["jsonld_vins"] = vins
+                return _html_harvest_result(signals, vins)
 
     # (c) Unknown — record the evidence for the learning loop.
     logged_new = False
@@ -611,6 +657,43 @@ def _recipe_synth_fingerprint(html: str, url: str) -> str | None:
         return fingerprint_platform(html, url)
     except Exception:
         return None
+
+
+def _jsonld_vin_count(html: str) -> int:
+    """Distinct schema.org Vehicle JSON-LD VINs embedded in *html* (0 on any
+    error). This is the composition seam with the universal browser-free
+    fallback from ``recipe_synth`` / ``html_jsonld_harvest``: a dealer that no
+    template fingerprints, but that server-renders Vehicle JSON-LD, is scannable
+    browser-free by the generic harvester. We count VINs on the HTML we ALREADY
+    fetched — no extra network — so the HTTP fallback stays a single paced fetch."""
+    try:
+        from backend.scanner.recipe_synth import harvest_html_vehicles
+
+        return len({v["vin"] for v in harvest_html_vehicles(html) if v.get("vin")})
+    except Exception:
+        return 0
+
+
+# Synthetic platform name for the untemplated-but-JSON-LD case (no registry
+# entry — it is recognized by shape, not vendor).
+HTML_JSONLD_PLATFORM = "html_jsonld"
+
+
+def _html_harvest_result(signals: dict[str, Any], vins: int) -> dict[str, Any]:
+    """Result for an untemplated dealer that server-renders Vehicle JSON-LD:
+    strategy ``html_harvest`` (scannable browser-free by the generic harvester),
+    so it composes with the JSON-LD fallback instead of falling to 'unknown'."""
+    return {
+        "platform": HTML_JSONLD_PLATFORM,
+        "strategy": STRATEGY_HTML_HARVEST,
+        "synthesizable": False,
+        "cloudflare": bool(signals.get("cloudflare_challenge")),
+        "source": "html_harvest",
+        "signals": signals,
+        "notes": f"no template, but server-renders schema.org Vehicle JSON-LD "
+        f"({vins} VINs) -> browser-free via the generic HTML harvester",
+        "logged_new": False,
+    }
 
 
 def entry_to_dict(entry: PlatformEntry) -> dict[str, Any]:
