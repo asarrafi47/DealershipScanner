@@ -26,6 +26,12 @@ from pathlib import Path
 # import so recipe_synth reads it at import time. Operator-overridable.
 os.environ.setdefault("SCANNER_SYNTH_FETCH_DELAY", "4")
 
+# Billing guardrail: cap total billable Google Places searchNearby calls for a
+# nationwide run (~1 call per metro at our radius). 200 covers a large metro
+# list; the run stops calling Places past this so it can't silently overspend.
+# Operator-overridable; also set a per-day quota in the Google Cloud console.
+os.environ.setdefault("GOOGLE_PLACES_MAX_CALLS", "200")
+
 _ROOT = Path(__file__).resolve().parents[2]
 os.chdir(_ROOT)
 sys.path.insert(0, str(_ROOT))

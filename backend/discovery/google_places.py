@@ -34,6 +34,49 @@ FIELD_MASK = (
 _MAX_RADIUS_M = 50_000.0
 _MAX_RESULTS = 20
 
+# ── Billing guardrail ────────────────────────────────────────────────────────
+# Each searchNearby is a BILLABLE Places API call. This process-wide budget is a
+# hard fail-safe so a runaway/nationwide sweep can't silently rack up charges:
+# once GOOGLE_PLACES_MAX_CALLS is reached, further calls are skipped (return no
+# results) and a loud warning is logged. Default 0 = unlimited (preserves
+# single-city behavior); nationwide entry points (national_scan.py) set a
+# conservative cap. This is a code-side backstop — also set a per-day quota on
+# the Places API in the Google Cloud console for a Google-enforced hard limit.
+_call_count = 0
+_budget_warned = False
+
+
+def _call_budget() -> int:
+    try:
+        return max(0, int(os.environ.get("GOOGLE_PLACES_MAX_CALLS", "0")))
+    except ValueError:
+        return 0
+
+
+def reset_places_call_count() -> None:
+    global _call_count, _budget_warned
+    _call_count = 0
+    _budget_warned = False
+
+
+def places_call_count() -> int:
+    return _call_count
+
+
+def _budget_exhausted() -> bool:
+    global _budget_warned
+    budget = _call_budget()
+    if budget and _call_count >= budget:
+        if not _budget_warned:
+            logger.warning(
+                "Google Places call budget reached (GOOGLE_PLACES_MAX_CALLS=%d, made=%d) — "
+                "skipping further searchNearby calls to avoid billing. Raise the env var to continue.",
+                budget, _call_count,
+            )
+            _budget_warned = True
+        return True
+    return False
+
 # UTM / tracking params to strip from dealer website URLs
 _STRIP_PARAMS = frozenset({
     "utm_source", "utm_medium", "utm_campaign", "utm_content",
@@ -187,6 +230,10 @@ def _query_nearby(
         },
         "maxResultCount": _MAX_RESULTS,
     }
+    global _call_count
+    if _budget_exhausted():
+        return []
+    _call_count += 1
     try:
         r = session.post(NEARBY_URL, headers=headers, json=body, timeout=timeout_s)
         r.raise_for_status()
