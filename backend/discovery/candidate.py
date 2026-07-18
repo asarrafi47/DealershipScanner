@@ -23,6 +23,7 @@ class DealerCandidate:
     source_dmv: bool = False
     source_osm: bool = False
     source_web: bool = False
+    is_dealer: bool = True
 
     def to_db_dict(self) -> dict[str, Any]:
         url = (self.dealer_website_url or self.website_url or "").strip()
@@ -39,6 +40,7 @@ class DealerCandidate:
             "source_dmv": self.source_dmv,
             "source_osm": self.source_osm,
             "source_web": self.source_web,
+            "is_dealer": self.is_dealer,
             "osm_id": self.osm_id or "",
             "google_place_id": (self.google_place_id or "").strip() or None,
             "google_rating": self.google_rating,

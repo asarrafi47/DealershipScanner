@@ -18,6 +18,7 @@ from backend.discovery.dmv.schema import DMVRecord
 from backend.discovery.coordinate_enrich import enrich_candidate_location_fields
 from backend.discovery.google_places import fetch_google_places_dealerships
 from backend.discovery.merge import merge_and_dedupe
+from backend.discovery.non_dealer_filter import is_probable_non_dealer
 from backend.discovery.normalize import (
     looks_like_dealer_website,
     normalize_address,
@@ -144,6 +145,27 @@ def run_discovery(
     logger.info("Google Places tier: %d dealers in radius", n_gp)
 
     merged = merge_and_dedupe(combined)
+
+    # Drop Google-Places-mislabeled non-dealers (salvage/u-pull yards, car rental,
+    # RV dealers, restaurants, D2C brands with no franchise dealers, auction/wholesale)
+    # so they don't dilute franchise-dealer coverage numbers.
+    before_nd = len(merged)
+    kept: list[DealerCandidate] = []
+    dropped_nd: list[str] = []
+    for c in merged:
+        if is_probable_non_dealer(c.name, c.dealer_website_url or c.website_url):
+            c.is_dealer = False
+            dropped_nd.append(c.name)
+        else:
+            kept.append(c)
+    if dropped_nd:
+        logger.info(
+            "Non-dealer filter: dropped %d of %d candidates (%s)",
+            len(dropped_nd),
+            before_nd,
+            ", ".join(dropped_nd[:12]) + ("…" if len(dropped_nd) > 12 else ""),
+        )
+    merged = kept
 
     for c in merged:
         enrich_candidate_location_fields(c)
