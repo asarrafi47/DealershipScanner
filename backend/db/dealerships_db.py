@@ -18,10 +18,27 @@ from backend.db.inventory_db import DB_PATH, get_conn
 _DEDUPE_THRESHOLD = 88
 
 
+# New discovery/classification columns collected by the Google Places tier and
+# the platform classifier. Kept in one list so the sqlite and Postgres schema
+# paths stay in sync.
+_DISCOVERY_EXTRA_COLUMNS: list[tuple[str, str]] = [
+    ("oem_brand", "TEXT"),
+    ("business_status", "TEXT"),
+    ("google_primary_type", "TEXT"),
+    ("phone", "TEXT"),
+    ("platform", "TEXT"),
+    ("strategy", "TEXT"),
+]
+
+
 def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
-    from backend.db.inventory_pg import is_inventory_postgres
+    from backend.db.inventory_pg import is_inventory_postgres, pg_add_columns
 
     if is_inventory_postgres():
+        # Base table + google_* columns are created by init_postgres_inventory;
+        # here we additively add the newer discovery/classification columns
+        # (idempotent — pg_add_columns skips columns that already exist).
+        pg_add_columns(cursor, "dealerships", _DISCOVERY_EXTRA_COLUMNS)
         return
     cursor.execute(
         """
@@ -66,6 +83,7 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
         ("google_rating",         "REAL"),
         ("google_review_count",   "INTEGER"),
         ("google_rating_fetched_at", "TEXT"),
+        *_DISCOVERY_EXTRA_COLUMNS,
     ]
     for col, coltype in additive:
         if col not in dcols:
@@ -186,6 +204,12 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 google_rating      = COALESCE(?, google_rating),
                 google_review_count = COALESCE(?, google_review_count),
                 google_rating_fetched_at = COALESCE(?, google_rating_fetched_at),
+                oem_brand          = COALESCE(NULLIF(TRIM(oem_brand), ''),           NULLIF(TRIM(?), '')),
+                business_status    = COALESCE(NULLIF(TRIM(?), ''),                   NULLIF(TRIM(business_status), '')),
+                google_primary_type = COALESCE(NULLIF(TRIM(google_primary_type),''), NULLIF(TRIM(?), '')),
+                phone              = COALESCE(NULLIF(TRIM(phone), ''),               NULLIF(TRIM(?), '')),
+                platform           = COALESCE(NULLIF(TRIM(?), ''),                   NULLIF(TRIM(platform), '')),
+                strategy           = COALESCE(NULLIF(TRIM(?), ''),                   NULLIF(TRIM(strategy), '')),
                 source_dmv         = source_dmv | ?,
                 source_osm         = source_osm | ?,
                 source_web         = source_web | ?
@@ -203,6 +227,12 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 row.get("google_rating"),
                 row.get("google_review_count"),
                 rating_fetched_at,
+                row.get("oem_brand") or "",
+                row.get("business_status") or "",
+                row.get("google_primary_type") or "",
+                row.get("phone") or "",
+                row.get("platform") or "",
+                row.get("strategy") or "",
                 int(bool(row.get("source_dmv"))),
                 int(bool(row.get("source_osm"))),
                 int(bool(row.get("source_web"))),
@@ -237,6 +267,12 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
         row.get("google_rating"),
         row.get("google_review_count"),
         rating_fetched_at,
+        (row.get("oem_brand") or "").strip() or None,
+        (row.get("business_status") or "").strip() or None,
+        (row.get("google_primary_type") or "").strip() or None,
+        (row.get("phone") or "").strip() or None,
+        (row.get("platform") or "").strip() or None,
+        (row.get("strategy") or "").strip() or None,
     )
     from backend.db.inventory_pg import is_inventory_postgres
 
@@ -247,8 +283,9 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 (name, website_url, city, state, latitude, longitude, created_at,
                  street_address, zip_code, dealer_website_url,
                  source_dmv, source_osm, source_web, osm_id, is_active,
-                 google_place_id, google_rating, google_review_count, google_rating_fetched_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
+                 google_place_id, google_rating, google_review_count, google_rating_fetched_at,
+                 oem_brand, business_status, google_primary_type, phone, platform, strategy)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?,?,?,?,?,?,?)
             RETURNING id
             """,
             insert_params,
@@ -264,8 +301,9 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
                 (name, website_url, city, state, latitude, longitude, created_at,
                  street_address, zip_code, dealer_website_url,
                  source_dmv, source_osm, source_web, osm_id, is_active,
-                 google_place_id, google_rating, google_review_count, google_rating_fetched_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
+                 google_place_id, google_rating, google_review_count, google_rating_fetched_at,
+                 oem_brand, business_status, google_primary_type, phone, platform, strategy)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?,?,?,?,?,?,?)
             """,
             insert_params,
         )

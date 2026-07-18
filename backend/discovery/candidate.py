@@ -52,4 +52,9 @@ class DealerCandidate:
             "google_place_id": (self.google_place_id or "").strip() or None,
             "google_rating": self.google_rating,
             "google_review_count": self.google_review_count,
+            # Newer Google Places / derived classification fields.
+            "oem_brand": (self.oem_brand or "").strip(),
+            "business_status": (self.business_status or "").strip(),
+            "google_primary_type": (self.google_primary_type or "").strip(),
+            "phone": (self.phone or "").strip(),
         }

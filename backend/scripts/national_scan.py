@@ -12,6 +12,7 @@ synthesis + inventory load are separate follow-up steps.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -109,7 +110,66 @@ def classify_all(dealers: list[dict]) -> list[dict]:
     return dealers
 
 
+def _roster_row_to_db(d: dict) -> dict:
+    """Map an in-memory national-roster dealer dict onto the dealerships upsert schema."""
+    url = d.get("url") or d.get("website_url") or d.get("dealer_website_url") or ""
+    return {
+        "name": d.get("name") or "",
+        "city": d.get("city") or "",
+        "state": d.get("state") or "",
+        "zip_code": d.get("zip_code") or "",
+        "latitude": d.get("latitude"),
+        "longitude": d.get("longitude"),
+        "website_url": url,
+        "dealer_website_url": url,
+        "oem_brand": d.get("oem_brand") or "",
+        "business_status": d.get("business_status") or "",
+        "google_primary_type": d.get("google_primary_type") or "",
+        "phone": d.get("phone") or "",
+        "platform": d.get("platform") or "",
+        "strategy": d.get("strategy") or "",
+        # Discovered via Google Places / DDG (web tier). No Google API call here —
+        # we only persist already-collected roster data.
+        "source_web": True,
+    }
+
+
+def persist_roster(dealers: list[dict], *, only_dealers: bool = True) -> int:
+    """
+    Upsert each roster dealer into the local Postgres ``dealerships`` table via
+    ``upsert_discovery_row``. Does NOT hit Google Places — it persists data the
+    discovery phase already collected. Returns the number of rows upserted.
+    """
+    from backend.db.dealerships_db import upsert_discovery_row
+
+    persisted = 0
+    for d in dealers:
+        if only_dealers and not d.get("is_dealer", True):
+            continue
+        if not (d.get("url") or d.get("website_url") or d.get("dealer_website_url")):
+            continue
+        upsert_discovery_row(_roster_row_to_db(d))
+        persisted += 1
+    return persisted
+
+
 def main() -> None:
+    ap = argparse.ArgumentParser(description="National browser-free dealer scan (discovery + classification).")
+    ap.add_argument(
+        "--persist-db",
+        dest="persist_db",
+        action="store_true",
+        default=True,
+        help="Upsert discovered dealers into the local dealerships table (default: on). No Google calls.",
+    )
+    ap.add_argument(
+        "--no-persist-db",
+        dest="persist_db",
+        action="store_false",
+        help="Skip persisting the roster into the dealerships table.",
+    )
+    args = ap.parse_args()
+
     print("=== PHASE 1: discovery ===", flush=True)
     dealers = discover()
     print(f"\nTotal unique dealers across {len(CITIES)} cities: {len(dealers)}\n", flush=True)
@@ -119,6 +179,11 @@ def main() -> None:
 
     out = _ROOT / "workspace" / "national_dealers.json"
     json.dump(dealers, open(out, "w"), indent=1)
+
+    if args.persist_db:
+        print("\n=== PHASE 3: persist roster -> dealerships table (no Google calls) ===", flush=True)
+        n_persisted = persist_roster(dealers)
+        print(f"persisted {n_persisted} dealers into dealerships table", flush=True)
 
     plat = Counter(d.get("platform") or "UNKNOWN" for d in dealers)
     strat = Counter(d.get("strategy") or "none" for d in dealers)
