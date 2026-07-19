@@ -163,6 +163,55 @@ def _resolve_dealer(dealer_key: str) -> tuple[dict | None, str | None]:
     return _find_dealership_by_dealer_id(key), key
 
 
+def _attach_lease_matches(conn, dealer_id: str, offers: list[dict]) -> None:
+    """Attach cached LLM-extracted terms + qualifying cars to each lease offer.
+
+    Reads only from the ``lease_offer_matches`` cache so the page stays fast and
+    never blocks on the model. The cache is populated out of band (the
+    ``refresh_lease_matches`` script or :func:`refresh_dealer_lease_matches`),
+    keyed by the content-derived ``offer_hash`` so stale offers self-invalidate.
+    Optionally computes-if-missing when ``DEALERSHIP_LEASE_MATCH_ON_VIEW=1``.
+    """
+    import os
+
+    lease_offers = [o for o in offers if (o.get("type") or "").lower() == "lease"]
+    if not lease_offers:
+        return
+
+    compute_on_view = (os.environ.get("DEALERSHIP_LEASE_MATCH_ON_VIEW") or "0").strip().lower() in (
+        "1", "true", "yes", "on",
+    )
+    try:
+        from backend.scanner.specials.lease_matches_store import get_matches_for_dealer
+
+        cached = get_matches_for_dealer(conn, dealer_id)
+    except Exception:
+        cached = {}
+
+    for off in lease_offers:
+        h = off.get("offer_hash")
+        row = cached.get(h) if h else None
+        if row is None and compute_on_view:
+            try:
+                from backend.intelligence.lease_matcher import compute_offer_matches
+                from backend.scanner.specials.lease_matches_store import upsert_offer_match
+
+                res = compute_offer_matches(conn, dealer_id, off)
+                if h:
+                    upsert_offer_match(
+                        conn, dealer_id, h, offer_id=off.get("id"),
+                        extracted=res["extracted"], summary=res["summary"],
+                        matches=res["matches"], confidence=res["confidence"],
+                    )
+                row = res
+            except Exception:
+                row = None
+        if row:
+            off["lease_summary"] = row.get("summary")
+            off["lease_matches"] = row.get("matches") or []
+            off["lease_extracted"] = row.get("extracted")
+
+
 def _dealer_specials(dealer_id: str) -> dict:
     """Read stored specials for a dealer and group them by offer type for render."""
     from backend.db.inventory_db import get_conn
@@ -171,6 +220,7 @@ def _dealer_specials(dealer_id: str) -> dict:
     conn = get_conn()
     try:
         offers = get_specials_for_dealer(conn, dealer_id)
+        _attach_lease_matches(conn, dealer_id, offers)
     except Exception:
         offers = []
     finally:

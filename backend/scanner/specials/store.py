@@ -148,7 +148,7 @@ def get_specials_for_dealer(conn: Any, dealer_id: str) -> list[dict]:
             SELECT id, dealer_id, title, type, vehicle_year, vehicle_make,
                    vehicle_model, vehicle_trim, payment, term_months,
                    due_at_signing, mileage_per_year, msrp, expires, fine_print,
-                   source_url, scraped_at
+                   source_url, offer_hash, scraped_at
             FROM dealer_specials
             WHERE dealer_id = ?
             ORDER BY

@@ -63,6 +63,25 @@
             max-height: 220px; overflow-y: auto; }
         .dr-offer__src { font-size: .72rem; }
         .dr-offer__src a { color: inherit; opacity: .65; }
+        /* LLM lease-match: qualifying inventory under a lease offer */
+        .dr-qual { margin-top: .55rem; border-top: 1px dashed rgba(128,128,128,.28); padding-top: .55rem; }
+        .dr-qual__summary { font-size: .78rem; font-weight: 600; line-height: 1.35; margin: 0 0 .5rem;
+            display: flex; align-items: flex-start; gap: .35rem; }
+        .dr-qual__ai { flex: none; font-size: .6rem; text-transform: uppercase; letter-spacing: .05em;
+            font-weight: 700; padding: .1rem .35rem; border-radius: 5px; background: rgba(120,90,255,.16);
+            opacity: .85; margin-top: .1rem; }
+        .dr-qual__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
+        .dr-qual__car { display: block; text-decoration: none; color: inherit; border: 1px solid rgba(128,128,128,.22);
+            border-radius: 9px; padding: .45rem .6rem; }
+        .dr-qual__car:hover { border-color: rgba(120,90,255,.5); background: rgba(120,90,255,.05); }
+        .dr-qual__car-head { display: flex; justify-content: space-between; gap: .5rem; font-size: .82rem; font-weight: 600; }
+        .dr-qual__price { flex: none; }
+        .dr-qual__conf { font-size: .66rem; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+        .dr-qual__conf--high { color: #2e9e5b; }
+        .dr-qual__conf--medium { color: #c98a1a; }
+        .dr-qual__conf--low { color: #a15; opacity: .8; }
+        .dr-qual__note { font-size: .7rem; opacity: .65; line-height: 1.35; margin: .2rem 0 0; }
+        .dr-qual__none { font-size: .72rem; opacity: .55; margin: 0; }
     </style>
 </head>
 <body class="dealership-research-page app-layout-body">
@@ -170,6 +189,29 @@
                                 </details>
                                 {% endif %}
                                 {% if o.source_url %}<div class="dr-offer__src"><a href="{{ o.source_url }}" target="_blank" rel="noopener noreferrer">View on dealer site</a></div>{% endif %}
+                                {% if o.type == 'lease' and o.lease_summary %}
+                                <div class="dr-qual">
+                                    <p class="dr-qual__summary"><span class="dr-qual__ai">AI match</span><span>{{ o.lease_summary }}</span></p>
+                                    {% if o.lease_matches %}
+                                    <ul class="dr-qual__list">
+                                        {% for m in o.lease_matches %}
+                                        <li>
+                                            <a class="dr-qual__car" href="/car/{{ m.car_id }}">
+                                                <span class="dr-qual__car-head">
+                                                    <span>{{ m.display or ([m.year, m.make, m.model, m.trim] | select | join(' ')) }}</span>
+                                                    {% if m.price %}<span class="dr-qual__price">${{ '{:,.0f}'.format(m.price) }}</span>{% endif %}
+                                                </span>
+                                                <span class="dr-qual__conf dr-qual__conf--{{ m.confidence_label }}">{{ m.confidence_label }} confidence</span>
+                                                {% if m.note %}<p class="dr-qual__note">{{ m.note }}</p>{% endif %}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% else %}
+                                    <p class="dr-qual__none">No matching in-stock vehicle found for this offer right now.</p>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
                             </article>
                             {% endfor %}
                         </div>
