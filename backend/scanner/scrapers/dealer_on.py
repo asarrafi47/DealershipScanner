@@ -96,6 +96,71 @@ def _parse_condition(vc: dict) -> str:
     return ""
 
 
+# Real per-car vehicle-history REPORT links embedded in the cosmos card HTML
+# anchors (VehicleCarHistoryReport / *MxSrp / *MxVdp). Matches the Carfax report
+# URL and the AutoCheck equivalent — never the static badge SVGs.
+_HISTORY_HREF_RE = re.compile(
+    r"https?://(?:www\.)?(?:carfax\.com/vehiclehistory|autocheck\.com/vehiclehistory)[^\s\"'<>]+",
+    re.IGNORECASE,
+)
+
+
+def _extract_cosmos_carfax(vc: dict) -> str | None:
+    """Browser-free Carfax/AutoCheck report URL from the cosmos card HTML anchors.
+
+    The cosmos feed embeds the real per-car report link inside the
+    ``VehicleCarHistoryReport`` anchor markup (plus MxSrp/MxVdp variants). This is
+    the same link the VDP would surface, so no browser visit is needed.
+    """
+    for key in ("VehicleCarHistoryReport", "VehicleCarHistoryReportMxVdp", "VehicleCarHistoryReportMxSrp"):
+        html = vc.get(key)
+        if not isinstance(html, str) or not html:
+            continue
+        m = _HISTORY_HREF_RE.search(html)
+        if m:
+            return m.group(0).replace("&amp;", "&")
+    return None
+
+
+def _extract_cosmos_packages(vc: dict) -> dict | None:
+    """Factory features + highlights blob from the cosmos card → cars.packages.
+
+    The cosmos feed carries a flat ``Features`` list and a
+    ``VehicleHighlightsModel.Highlights`` list (factory/equipment highlights) —
+    both browser-free. Mirrors the CarsCommerce ``packages`` JSON convention.
+    """
+    blob: dict = {}
+
+    feats = vc.get("Features")
+    if isinstance(feats, list):
+        cleaned = [s for s in (str(x).strip() for x in feats if isinstance(x, str)) if s]
+        if cleaned:
+            blob["features"] = cleaned[:120]
+
+    hi_model = vc.get("VehicleHighlightsModel")
+    if isinstance(hi_model, dict):
+        highs = hi_model.get("Highlights")
+        if isinstance(highs, list):
+            cleaned = [s for s in (str(x).strip() for x in highs if isinstance(x, str)) if s]
+            # Only record highlights that add beyond the flat feature list.
+            extra = [s for s in cleaned if s not in set(blob.get("features") or [])]
+            if extra:
+                blob["highlights"] = extra[:120]
+
+    return blob or None
+
+
+def _extract_cosmos_description(vc: dict) -> str | None:
+    """Dealer comments / listing copy from the cosmos card (plain text, no VDP)."""
+    for key in ("VehicleComments",):
+        s = vc.get(key)
+        if isinstance(s, str):
+            s = s.strip()
+            if len(s) >= 40:
+                return s[:4000]
+    return None
+
+
 def _build_gallery(vc: dict, base_url: str, vin: str) -> list[str]:
     img_model = vc.get("VehicleImageModel") or {}
     carousel = img_model.get("VehicleImageCarouselModel") or {}
@@ -144,8 +209,11 @@ def _map_vehicle_card(
     condition = _parse_condition(vc)
     gallery = _build_gallery(vc, base_url, vin)
     detail_url = str(vc.get("VehicleDetailUrl") or "").strip() or None
+    carfax_url = _extract_cosmos_carfax(vc)
+    packages = _extract_cosmos_packages(vc)
+    description = _extract_cosmos_description(vc)
 
-    return {
+    row: dict[str, Any] = {
         "vin": vin,
         "year": int(vc.get("VehicleYear") or 0) or None,
         "make": str(vc.get("VehicleMake") or "").strip() or None,
@@ -172,6 +240,13 @@ def _map_vehicle_card(
         "dealer_url": dealer_url,
         "dealer_id": dealer_id,
     }
+    if carfax_url:
+        row["carfax_url"] = carfax_url
+    if packages:
+        row["packages"] = packages
+    if description:
+        row["description"] = description
+    return row
 
 
 def _extract_vehicles_from_srp_body(

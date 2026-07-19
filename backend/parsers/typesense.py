@@ -149,6 +149,70 @@ def _cylinders(engine: str | None) -> int | None:
     return n if 0 < n <= 16 else None
 
 
+def _carfax_url(doc: dict) -> str | None:
+    """Browser-free Carfax report URL from the Typesense ``carfax`` object.
+
+    getauto/Typesense docs carry ``carfax: {url, snapshotKey, iconUrl}`` where
+    ``url`` is the real ``carfax.com/vehiclehistory/...`` report link — no VDP
+    visit needed. New cars simply omit it.
+    """
+    cf = doc.get("carfax")
+    if isinstance(cf, dict):
+        u = _opt_str(cf.get("url"))
+        if u and u.lower().startswith("http") and "carfax" in u.lower():
+            return u
+    return None
+
+
+def _packages_blob(doc: dict) -> dict | None:
+    """Factory features / packages / options blob → cars.packages (JSON).
+
+    The Typesense doc carries three flat lists straight from the feed:
+    ``features`` (equipment), ``packages`` (factory package names) and
+    ``options`` (added options). Mirrors the CarsCommerce packages convention.
+    """
+    blob: dict = {}
+
+    def _clean_list(val) -> list[str]:
+        if not isinstance(val, list):
+            return []
+        out: list[str] = []
+        seen: set[str] = set()
+        for x in val:
+            s = _opt_str(x) if not isinstance(x, str) else norm_str(x)
+            s = s.strip() if isinstance(s, str) else ""
+            if s and s.lower() not in seen:
+                seen.add(s.lower())
+                out.append(s)
+        return out[:150]
+
+    feats = _clean_list(doc.get("features"))
+    if feats:
+        blob["features"] = feats
+    pkgs = _clean_list(doc.get("packages"))
+    if pkgs:
+        blob["factory_packages"] = pkgs
+    opts = _clean_list(doc.get("options"))
+    if opts:
+        blob["options"] = opts
+    return blob or None
+
+
+def _history_highlights(doc: dict) -> list[str]:
+    """Vehicle-history badge phrases (e.g. 'CARFAX 1-Owner') from the feed."""
+    vh = doc.get("vehicleHistory")
+    out: list[str] = []
+    seen: set[str] = set()
+    if isinstance(vh, list):
+        for x in vh:
+            s = norm_str(x) if isinstance(x, str) else ""
+            s = s.strip()
+            if s and s.lower() not in seen:
+                seen.add(s.lower())
+                out.append(s)
+    return out
+
+
 def _dealer_name_from_doc(doc: dict) -> str | None:
     got = _first(doc, "dealerName")
     if got:
@@ -215,6 +279,16 @@ def _map_document(doc: dict, base_url: str, dealer_id: str, dealer_name: str, de
         "engine_l": _engine_liters(engine),
         "cylinders": _cylinders(engine),
     }
+
+    carfax = _carfax_url(doc)
+    if carfax:
+        row["carfax_url"] = carfax
+    packages = _packages_blob(doc)
+    if packages:
+        row["packages"] = packages
+    highlights = _history_highlights(doc)
+    if highlights:
+        row["history_highlights"] = highlights
 
     du = _detail_url(doc, dealer_url, base_url)
     if du:
