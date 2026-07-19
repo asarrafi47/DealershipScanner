@@ -135,14 +135,35 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def _delta_dealer_timeout() -> int:
+    """Hard per-dealer wall-clock cap (seconds). A slow/walled dealer whose
+    recipe replay drags (huge paced pagination, slow-loris) must not stall the
+    whole sweep — bound it and move on. 0 disables. Default 300s."""
+    try:
+        return max(0, int(os.environ.get("SCANNER_DELTA_DEALER_TIMEOUT", "300")))
+    except ValueError:
+        return 300
+
+
 async def run_delta_scan(dealers: list[dict[str, Any]]) -> dict[str, Any]:
     """Delta-refresh every manifest dealer that has a usable recipe."""
     sem = asyncio.Semaphore(_delta_concurrency())
+    per_dealer_timeout = _delta_dealer_timeout()
 
     async def _one(d: dict[str, Any]) -> dict[str, Any]:
         async with sem:
             try:
-                return await delta_scan_dealer(d)
+                coro = delta_scan_dealer(d)
+                if per_dealer_timeout:
+                    return await asyncio.wait_for(coro, timeout=per_dealer_timeout)
+                return await coro
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "Delta scan timed out for %s after %ds — skipping",
+                    d.get("dealer_id"), per_dealer_timeout,
+                )
+                return {"dealer_id": d.get("dealer_id"),
+                        "skipped": f"timeout>{per_dealer_timeout}s", "upserted": 0}
             except Exception as e:
                 logger.warning("Delta scan failed for %s: %s", d.get("dealer_id"), e)
                 return {"dealer_id": d.get("dealer_id"), "skipped": f"error: {e}", "upserted": 0}
