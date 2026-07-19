@@ -163,11 +163,50 @@ def _resolve_dealer(dealer_key: str) -> tuple[dict | None, str | None]:
     return _find_dealership_by_dealer_id(key), key
 
 
+def _dealer_specials(dealer_id: str) -> dict:
+    """Read stored specials for a dealer and group them by offer type for render."""
+    from backend.db.inventory_db import get_conn
+    from backend.scanner.specials.store import get_specials_for_dealer
+
+    conn = get_conn()
+    try:
+        offers = get_specials_for_dealer(conn, dealer_id)
+    except Exception:
+        offers = []
+    finally:
+        conn.close()
+
+    order = ["lease", "finance", "manager", "cash", "other"]
+    labels = {
+        "lease": "Lease Specials",
+        "finance": "Finance & APR Offers",
+        "manager": "Manager Specials",
+        "cash": "Cash & Rebates",
+        "other": "Other Offers",
+    }
+    buckets: dict[str, list] = {}
+    for off in offers:
+        key = (off.get("type") or "other").lower()
+        if key not in labels:
+            key = "other"
+        buckets.setdefault(key, []).append(off)
+
+    groups = [
+        {"type": t, "label": labels[t], "offers": buckets[t]}
+        for t in order
+        if buckets.get(t)
+    ]
+    scraped_at = offers[0].get("scraped_at") if offers else None
+    return {"total": len(offers), "groups": groups, "scraped_at": scraped_at}
+
+
 def dealership_research_page(dealer_key: str):
     dealership, dealer_id = _resolve_dealer(dealer_key)
 
     inventory = _dealer_inventory(dealer_id) if dealer_id else None
     has_inventory = bool(inventory and inventory["total"])
+
+    specials = _dealer_specials(dealer_id) if dealer_id else {"total": 0, "groups": [], "scraped_at": None}
 
     # Require *something* to show: a registry row or real inventory. Otherwise 404
     # rather than render an empty shell.
@@ -231,6 +270,7 @@ def dealership_research_page(dealer_key: str):
         nav_apple_url=apple_url,
         nav_waze_url=waze_url,
         inventory=inventory or {"total": 0, "new_count": 0, "used_count": 0, "cars": [], "capped": False},
+        specials=specials,
     )
 
 
