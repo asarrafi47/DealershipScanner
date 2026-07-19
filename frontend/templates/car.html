@@ -193,7 +193,7 @@
                 </div>
 
                 <div class="car-detail-info car-detail-info--hero">
-                    <p class="eyebrow car-detail-dealer-eyebrow">{{ car.dealer_name }}</p>
+                    <p class="eyebrow car-detail-dealer-eyebrow">{% if car.dealer_id %}<a href="/dealership/{{ car.dealer_id }}" class="car-detail-dealer-link">{{ car.dealer_name }}</a>{% else %}{{ car.dealer_name }}{% endif %}</p>
                     {% set dealer_rep_rating = car.dealer_rating if car.dealer_rating is defined else (dealer_info.google_rating if dealer_info and dealer_info.google_rating is defined else none) %}
                     {% set dealer_rep_reviews = car.dealer_reviews if car.dealer_reviews is defined else (dealer_info.google_review_count if dealer_info and dealer_info.google_review_count is defined else none) %}
                     {% if not dealer_map %}

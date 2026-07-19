@@ -294,6 +294,7 @@ register_dev_console(app)
 from backend.routes import admin_dealer_api as _admin_dealer_api_routes  # noqa: E402
 from backend.routes import cars_pages as _cars_pages_routes  # noqa: E402
 from backend.routes import dealers_recalls as _dealers_recalls_routes  # noqa: E402
+from backend.routes import dealership_page as _dealership_page_routes  # noqa: E402
 from backend.routes import fuel_api as _fuel_api_routes  # noqa: E402
 from backend.routes import home_dashboard as _home_dashboard_routes  # noqa: E402
 from backend.routes import listings_api as _listings_api_routes  # noqa: E402
@@ -304,6 +305,7 @@ _home_dashboard_routes.register(app)
 _listings_api_routes.register(app)
 _cars_pages_routes.register(app)
 _dealers_recalls_routes.register(app)
+_dealership_page_routes.register(app)
 _fuel_api_routes.register(app)
 _admin_dealer_api_routes.register(app)
 

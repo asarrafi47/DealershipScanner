@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ name }} — Dealership research — Sarrafi Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    {% include "_head_perf.html" %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}?v={{ static_cache_ver }}">
+    <style nonce="{{ csp_nonce }}">
+        .dealer-research { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+        .dealer-research__hero { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: flex-start;
+            justify-content: space-between; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(128,128,128,.25); }
+        .dealer-research__eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem;
+            opacity: .6; margin: 0 0 .35rem; }
+        .dealer-research__title { font-size: 1.9rem; line-height: 1.15; margin: 0 0 .5rem; }
+        .dealer-research__brand { display: inline-block; font-size: .8rem; padding: .15rem .55rem; border-radius: 999px;
+            background: rgba(80,120,255,.14); color: inherit; margin-right: .5rem; }
+        .dealer-research__rating { font-size: .95rem; opacity: .85; }
+        .dealer-research__stars { color: #f5a623; letter-spacing: .05em; }
+        .dealer-research section { margin-top: 2.25rem; }
+        .dealer-research__h2 { font-size: 1.15rem; margin: 0 0 .35rem; }
+        .dealer-research__counts { display: flex; gap: 1.5rem; margin: .25rem 0 1rem; flex-wrap: wrap; }
+        .dealer-research__count b { font-size: 1.35rem; display: block; line-height: 1; }
+        .dealer-research__count span { font-size: .78rem; opacity: .65; text-transform: uppercase; letter-spacing: .05em; }
+        .dealer-research__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+        .dealer-research-map { height: 360px; width: 100%; border-radius: 12px; overflow: hidden; }
+        .dealer-research__contact { display: grid; gap: .5rem; font-size: .95rem; }
+        .dealer-research__contact a { color: inherit; }
+        .dealer-research__nav { display: flex; flex-wrap: wrap; gap: .6rem; }
+        .dealer-research__nav a { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1rem;
+            border-radius: 10px; border: 1px solid rgba(128,128,128,.35); text-decoration: none; color: inherit;
+            font-weight: 600; font-size: .9rem; }
+        .dealer-research__nav a:hover { background: rgba(128,128,128,.12); }
+        .dealer-research__placeholder { border: 1px dashed rgba(128,128,128,.5); border-radius: 12px;
+            padding: 1.75rem; text-align: center; opacity: .7; }
+        .dealer-research__empty { opacity: .7; font-style: italic; }
+        .dealer-research__cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; }
+        @media (max-width: 820px) { .dealer-research__cols { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body class="dealership-research-page app-layout-body">
+
+<div class="page page--app-layout">
+
+    {% set nav_active = "dealers" %}
+    {% include "_nav_public.html" %}
+
+    <main class="dealer-research">
+
+        <header class="dealer-research__hero">
+            <div>
+                <p class="dealer-research__eyebrow">Dealership research</p>
+                <h1 class="dealer-research__title">{{ name }}</h1>
+                <div>
+                    {% if oem_brand %}<span class="dealer-research__brand">{{ oem_brand }}</span>{% endif %}
+                    {% if google_rating is not none %}
+                    <span class="dealer-research__rating">
+                        <span class="dealer-research__stars" aria-hidden="true">★</span>
+                        {{ '%.1f'|format(google_rating|float) }}
+                        {% if google_review_count %}<span> ({{ '{:,}'.format(google_review_count|int) }} reviews)</span>{% endif %}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        <div class="dealer-research__cols">
+            <div>
+                <!-- INVENTORY -->
+                <section aria-labelledby="dr-inventory-h">
+                    <h2 class="dealer-research__h2" id="dr-inventory-h">Inventory</h2>
+                    <div class="dealer-research__counts">
+                        <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.total) }}</b><span>Total</span></span>
+                        <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.new_count) }}</b><span>New</span></span>
+                        <span class="dealer-research__count"><b>{{ '{:,}'.format(inventory.used_count) }}</b><span>Pre-owned</span></span>
+                    </div>
+                    {% if inventory.cars %}
+                    {% if inventory.capped %}
+                    <p class="dealer-research__empty">Showing {{ inventory.cars|length }} of {{ '{:,}'.format(inventory.total) }} listings.</p>
+                    {% endif %}
+                    <div class="dealer-research__grid">
+                        {% for c in inventory.cars %}
+                        <article class="result-card">
+                            <a href="/car/{{ c.id }}" class="result-card-link">
+                                <div class="result-image-wrap">
+                                    <img class="result-image" src="{{ c.image_url or '/static/placeholder.svg' }}" alt=""
+                                         loading="lazy" decoding="async"
+                                         onerror="this.onerror=null;this.src='/static/placeholder.svg';">
+                                    {% if c.photo_count %}<span class="result-photo-count">{{ c.photo_count }} photos</span>{% endif %}
+                                </div>
+                                <div class="result-content">
+                                    <div class="result-title-row">
+                                        <h2>{{ c.title }}</h2>
+                                    </div>
+                                    <p class="result-trim">{{ c.trim or '' }}</p>
+                                    <p class="result-price">
+                                        {% if c.price %}${{ '{:,.0f}'.format(c.price|float) }}{% else %}Call for price{% endif %}
+                                    </p>
+                                    <p class="result-meta">
+                                        {% if c.mileage %}{{ '{:,}'.format(c.mileage|int) }} mi{% endif %}
+                                        {% if c.fuel_type %}&middot; {{ c.fuel_type }}{% endif %}
+                                        {% if c.drivetrain %}&middot; {{ c.drivetrain }}{% endif %}
+                                    </p>
+                                    {% if c.condition %}<p class="result-dealer-row"><span class="result-dealer">{{ c.condition }}</span></p>{% endif %}
+                                </div>
+                            </a>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="dealer-research__empty">No active listings for this dealer right now.</p>
+                    {% endif %}
+                </section>
+
+                <!-- CURRENT DEALS & SPECIALS (placeholder for a later phase) -->
+                <section aria-labelledby="dr-specials-h" id="dealer-specials-section">
+                    <h2 class="dealer-research__h2" id="dr-specials-h">Current Deals &amp; Specials</h2>
+                    <div class="dealer-research__placeholder">
+                        <p>Deals &amp; specials for this dealership will appear here soon.</p>
+                    </div>
+                </section>
+            </div>
+
+            <aside>
+                <!-- LOCATION MAP -->
+                <section aria-labelledby="dr-location-h">
+                    <h2 class="dealer-research__h2" id="dr-location-h">Location</h2>
+                    {% if has_geo %}
+                    <div id="dealer-research-map" class="dealer-research-map" role="application" aria-label="Dealer location map"></div>
+                    {% else %}
+                    <p class="dealer-research__empty">No map location on file for this dealer.</p>
+                    {% endif %}
+                </section>
+
+                <!-- CONTACT -->
+                <section aria-labelledby="dr-contact-h">
+                    <h2 class="dealer-research__h2" id="dr-contact-h">Contact</h2>
+                    <div class="dealer-research__contact">
+                        {% if website_url %}<div>Website: <a href="{{ website_url }}" target="_blank" rel="noopener noreferrer">{{ website_url }}</a></div>{% endif %}
+                        {% if phone %}<div>Phone: <a href="tel:{{ phone | replace(' ', '') | replace('(', '') | replace(')', '') | replace('-', '') }}">{{ phone }}</a></div>{% endif %}
+                        {% if full_address %}<div>Address: {{ full_address }}</div>{% endif %}
+                        {% if not website_url and not phone and not full_address %}
+                        <p class="dealer-research__empty">No contact details on file.</p>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <!-- NAVIGATE THERE -->
+                {% if nav_gmaps_url %}
+                <section aria-labelledby="dr-nav-h">
+                    <h2 class="dealer-research__h2" id="dr-nav-h">Navigate there</h2>
+                    <div class="dealer-research__nav">
+                        <a href="{{ nav_gmaps_url }}" target="_blank" rel="noopener noreferrer">Google Maps</a>
+                        <a href="{{ nav_apple_url }}" target="_blank" rel="noopener noreferrer">Apple Maps</a>
+                        <a href="{{ nav_waze_url }}" target="_blank" rel="noopener noreferrer">Waze</a>
+                    </div>
+                </section>
+                {% endif %}
+            </aside>
+        </div>
+
+    </main>
+
+</div>
+
+{% if has_geo %}
+<script nonce="{{ csp_nonce }}">
+    window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";
+    window.__DS_DEALER_GEO = { lat: {{ lat }}, lon: {{ lon }}, name: {{ name | tojson }} };
+</script>
+<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+<script nonce="{{ csp_nonce }}">
+    (function () {
+        function initMap() {
+            if (typeof L === "undefined") { setTimeout(initMap, 60); return; }
+            var g = window.__DS_DEALER_GEO;
+            if (!g) return;
+            if (window.__DS_LEAFLET_ICON_BASE && L.Icon && L.Icon.Default) {
+                L.Icon.Default.imagePath = window.__DS_LEAFLET_ICON_BASE;
+            }
+            var map = L.map("dealer-research-map", { scrollWheelZoom: false }).setView([g.lat, g.lon], 14);
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+            L.marker([g.lat, g.lon]).addTo(map).bindPopup(g.name || "Dealer");
+        }
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initMap);
+        } else {
+            initMap();
+        }
+    })();
+</script>
+{% endif %}
+{% include "_footer_version.html" %}
+</body>
+</html>
