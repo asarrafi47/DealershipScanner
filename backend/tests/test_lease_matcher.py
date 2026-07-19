@@ -1,5 +1,5 @@
-"""Tests for the lease-offer matcher (extraction parsing + inventory matching +
-match cache). The LLM call is stubbed so these run offline and deterministically.
+"""Tests for the lease-offer matcher (deterministic term parsing + inventory
+matching + match cache). No model or network — parsing is pure regex.
 """
 from __future__ import annotations
 
@@ -41,41 +41,52 @@ def _seed_cars(conn, rows):
     conn.commit()
 
 
-# ── Extraction parsing (no live model) ───────────────────────────────────────
+# ── Deterministic term parsing (pure regex, no model) ────────────────────────
 
 
-def test_extract_parses_json_and_coerces(monkeypatch):
-    raw = (
-        '{"year": 2026, "make": "Mercedes-Benz", "model": "GLE", '
-        '"trim": "GLE 350 4MATIC\\u00ae SUV", "payment": "$399", '
-        '"term_months": 24, "due_at_signing": 4999, "mileage_per_year": 7500, '
-        '"msrp_or_price": 69965, "credit_tier": null, "expiration": "07/31/2026", '
-        '"stock_or_vin_specific": "Applies to stock NL497846"}'
-    )
-    monkeypatch.setattr(lm, "llm_client", None, raising=False)
-    monkeypatch.setattr("backend.utils.llm_client.complete", lambda *a, **k: raw)
-    terms = lm.extract_lease_terms({"title": "t", "fine_print": "fp"})
+def test_parse_maps_scraped_offer_fields():
+    offer = {
+        "title": "New 2026 Mercedes-Benz GLE 350 4MATIC® SUV",
+        "vehicle_year": 2026, "vehicle_make": "Mercedes-Benz",
+        "vehicle_model": "GLE", "vehicle_trim": "GLE 350 4MATIC® SUV",
+        "payment": 399.0, "term_months": 24, "due_at_signing": 4999.0,
+        "mileage_per_year": 7500, "msrp": 69965.0, "expires": "07/31/2026",
+        "fine_print": "Applies to stock NL497846.",
+    }
+    terms = lm.parse_lease_terms(offer)
     assert terms["year"] == 2026
     assert terms["make"] == "Mercedes-Benz"
-    assert terms["payment"] == 399.0  # "$399" coerced
+    assert terms["payment"] == 399.0
+    assert terms["term_months"] == 24
     assert terms["mileage_per_year"] == 7500
-    assert terms["stock_or_vin_specific"] == "Applies to stock NL497846"
+    assert terms["msrp_or_price"] == 69965.0
+    assert terms["expiration"] == "07/31/2026"
+    # Stock number recovered from the fine print.
+    assert terms["stock_or_vin_specific"] == "NL497846"
 
 
-def test_extract_recovers_json_from_prose(monkeypatch):
-    raw = 'Sure! Here are the terms:\n```json\n{"make":"Kia","model":"K4"}\n```'
-    monkeypatch.setattr("backend.utils.llm_client.complete", lambda *a, **k: raw)
-    terms = lm.extract_lease_terms({"title": "t", "fine_print": ""})
-    assert terms["make"] == "Kia"
-    assert terms["model"] == "K4"
+def test_parse_derives_mileage_from_total_cap_over_term():
+    # "over 15,000 miles" on a 24-month lease → 7,500/yr; no scraped mileage.
+    offer = {
+        "title": "Lease", "vehicle_make": "Toyota", "vehicle_model": "Camry",
+        "term_months": 24, "mileage_per_year": None,
+        "fine_print": "Lessee responsible for $0.25/mile over 15,000 miles.",
+    }
+    assert lm.parse_lease_terms(offer)["mileage_per_year"] == 7500
 
 
-def test_extract_returns_none_on_failure(monkeypatch):
-    def boom(*a, **k):
-        raise RuntimeError("model down")
+def test_parse_extracts_full_vin_over_stock():
+    offer = {
+        "title": "Lease", "vehicle_make": "Mercedes-Benz", "vehicle_model": "GLE",
+        "fine_print": "Offer applies to VIN 4JGFB4FB5TB497846, stock NL497846.",
+    }
+    assert lm.parse_lease_terms(offer)["stock_or_vin_specific"] == "4JGFB4FB5TB497846"
 
-    monkeypatch.setattr("backend.utils.llm_client.complete", boom)
-    assert lm.extract_lease_terms({"title": "t", "fine_print": "x"}) is None
+
+def test_parse_no_stock_when_absent():
+    offer = {"title": "Lease", "vehicle_make": "Kia", "vehicle_model": "K4",
+             "fine_print": "See dealer for details. Expires soon."}
+    assert lm.parse_lease_terms(offer)["stock_or_vin_specific"] is None
 
 
 # ── Stock/VIN tail matching ──────────────────────────────────────────────────

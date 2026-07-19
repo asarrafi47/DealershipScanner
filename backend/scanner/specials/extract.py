@@ -11,9 +11,10 @@ several platforms SoCal dealers run:
   the title, "Lease for $X per month", MSRP breakdown, VIN and expiry (ggkia).
 * a generic **disclaimer-anchored** fallback for other card markups.
 
-The FULL fine-print text is captured verbatim (a later LLM phase consumes it),
-plus a raw HTML snippet of the card. Monetary/term fields are parsed with
-tolerant regexes and left ``None`` when absent — never guessed.
+The FULL fine-print text is captured verbatim (the lease matcher later parses it
+with regex for a pinned stock#/VIN and mileage allowance), plus a raw HTML
+snippet of the card. Monetary/term fields are parsed with tolerant regexes and
+left ``None`` when absent — never guessed.
 """
 from __future__ import annotations
 

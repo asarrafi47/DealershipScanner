@@ -7,6 +7,7 @@ import argparse
 import json
 import logging
 import os
+import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -24,11 +25,26 @@ def is_oem_manufacturer_url(url: str) -> bool:
     return any(domain in url_lower for domain in OEM_MANUFACTURER_DOMAINS)
 
 
+def _host_to_dealer_id(url: str) -> str:
+    """Canonical dealer_id from a website URL — the hostname with the scheme and
+    leading ``www.`` stripped and dots turned to dashes (``longotoyota-com``).
+
+    This MUST match how the rest of the system keys a dealer (the ``cars`` table,
+    specials, the dealership page): a scan sourced from the registry has to land
+    its inventory under the same ``dealer_id`` the hostname produces, or the
+    registry row, its inventory and its specials never line up.
+    """
+    return re.sub(r"^https?://(www\.)?", "", (url or "").strip(), flags=re.I).split("/")[0].replace(".", "-")
+
+
 def _load_dealers_from_db() -> list[dict]:
     from backend.db.dealerships_db import ensure_dealerships_table, get_conn
 
+    # NB: don't set ``conn.row_factory = sqlite3.Row`` here — the inventory conn
+    # is a Postgres compat wrapper whose rows are positionally indexable, and the
+    # sqlite-only factory poisons the cursor so ``ensure_dealerships_table``'s
+    # ``r[0]`` column probe crashes. Select a fixed column order and index it.
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     ensure_dealerships_table(cur)
     cur.execute(
@@ -47,17 +63,22 @@ def _load_dealers_from_db() -> list[dict]:
     conn.close()
     out: list[dict] = []
     for r in rows:
-        url = (r["dealer_website_url"] or r["website_url"] or "").strip()
+        r_id, r_name, r_dealer_url, r_site_url, r_city, r_state, _r_zip = (
+            r[0], r[1], r[2], r[3], r[4], r[5], r[6]
+        )
+        url = (r_dealer_url or r_site_url or "").strip()
         if not url:
             continue
-        slug = str(r["id"])
+        dealer_id = _host_to_dealer_id(url)
+        if not dealer_id:
+            continue
         out.append({
-            "name": r["name"] or "",
+            "name": r_name or "",
             "url": url,
-            "dealer_id": "db-" + slug,
-            "dealership_registry_id": r["id"],
-            "city": r["city"] or "",
-            "state": r["state"] or "",
+            "dealer_id": dealer_id,
+            "dealership_registry_id": r_id,
+            "city": r_city or "",
+            "state": r_state or "",
         })
     return out
 

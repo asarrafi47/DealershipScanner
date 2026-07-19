@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Compute + cache LLM lease-offer matches for one or more dealers.
+"""Compute + cache lease-offer matches for one or more dealers.
 
-The dealership research page renders lease qualifying-cars from the
-``lease_offer_matches`` cache; this script populates it out of band so page
-views never block on the model.
+Matching is deterministic (regex over the offer fine print + an inventory join,
+no model). The page computes on view by default; this script pre-populates the
+``lease_offer_matches`` cache in bulk (e.g. right after a specials rescan).
 
 Usage:
     python3 scripts/refresh_lease_matches.py --dealer fjmercedes-com
@@ -35,7 +35,6 @@ def main() -> int:
     ap.add_argument("--dealer", action="append", default=[], help="dealer_id (repeatable)")
     ap.add_argument("--all", action="store_true", help="all dealers with lease offers")
     ap.add_argument("--force", action="store_true", help="recompute cached offers too")
-    ap.add_argument("--provider", default=None, help="override LLM provider (claude|local)")
     args = ap.parse_args()
 
     conn = get_conn()
@@ -47,9 +46,7 @@ def main() -> int:
             print("no dealers given (use --dealer <id> or --all)", file=sys.stderr)
             return 2
         for d in dealers:
-            stats = refresh_dealer_lease_matches(
-                conn, d, provider=args.provider, force=args.force,
-            )
+            stats = refresh_dealer_lease_matches(conn, d, force=args.force)
             print(
                 f"{d}: {stats['lease_offers']} lease offers, "
                 f"computed={stats['computed']} skipped={stats['skipped']} "

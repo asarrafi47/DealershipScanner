@@ -1,15 +1,18 @@
-"""Read a lease special's fine print with the LLM, then tell the buyer which
-inventory cars actually qualify for the advertised payment.
+"""Read a lease special's fine print, then tell the buyer which inventory cars
+actually qualify for the advertised payment.
 
 This is the differentiating feature of the dealership research surface. A lease
 ad ("$399/mo") is only meaningful against a *specific* car — trim, MSRP, and
-often a single stock/VIN buried in the disclaimer. The card scrape catches the
-headline fields; the verbatim ``fine_print`` carries the rest (mileage
-allowance, credit tier, the exact stock number). So we:
+often a single stock/VIN buried in the disclaimer. We already have the car
+(the dealer's own inventory rows) and the deal (parsed from the specials page),
+so this is a matching problem, not a language problem — no LLM required. We:
 
-  1. Extract structured lease terms from ``title + fine_print`` with the shared
-     LLM client (:mod:`backend.utils.llm_client` — Claude Haiku in prod, local
-     Ollama on a keyless dev box; no new dependency).
+  1. Read structured lease terms straight off the offer: the specials scraper
+     (:mod:`backend.scanner.specials.extract`) already parses the vehicle,
+     payment, term, due, MSRP and expiry from the card. The only extras the
+     matcher needs — a stock#/VIN the payment is pinned to, and a mileage
+     allowance stated only in prose — are recovered from the verbatim
+     ``fine_print`` with plain regex (:func:`parse_lease_terms`).
   2. Match those terms against the dealer's active ``cars`` rows — first on
      year+make+model+trim, falling back to year+make+model, and narrowing to a
      single car when the offer names a stock#/VIN or a distinctive MSRP.
@@ -18,11 +21,10 @@ allowance, credit tier, the exact stock number). So we:
      over-promising a VIN-exact guarantee.
 
 Results are cached per offer (:mod:`backend.scanner.specials.lease_matches_store`)
-so the page never re-runs the model on every request.
+so the page never recomputes on every request.
 """
 from __future__ import annotations
 
-import json
 import logging
 import re
 import sqlite3
@@ -33,116 +35,83 @@ logger = logging.getLogger("lease_matcher")
 # Top-N qualifying cars surfaced per offer.
 _MAX_MATCHES = 6
 
-_EXTRACTION_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "year": {"type": ["integer", "null"]},
-        "make": {"type": ["string", "null"]},
-        "model": {"type": ["string", "null"]},
-        "trim": {"type": ["string", "null"]},
-        "model_code": {"type": ["string", "null"]},
-        "payment": {"type": ["number", "null"]},
-        "term_months": {"type": ["integer", "null"]},
-        "due_at_signing": {"type": ["number", "null"]},
-        "mileage_per_year": {"type": ["integer", "null"]},
-        "msrp_or_price": {"type": ["number", "null"]},
-        "credit_tier": {"type": ["string", "null"]},
-        "expiration": {"type": ["string", "null"]},
-        "stock_or_vin_specific": {"type": ["string", "null"]},
-    },
-}
-
-_SYSTEM = (
-    "You are a meticulous auto-lease analyst. You read a dealer's advertised "
-    "lease special and its verbatim legal fine print and extract the exact "
-    "lease terms. Only report values that are actually stated; use null for "
-    "anything not present. Do not guess or round. Return JSON only."
+# A 17-char VIN (no I/O/Q), and a dealer stock number ("stock #NL497846").
+_RE_VIN = re.compile(r"\b([A-HJ-NPR-Z0-9]{17})\b")
+_RE_STOCK = re.compile(
+    r"(?:stock|stk)\s*(?:#|number|no\.?|num)?\s*[:#\-]?\s*([A-Z0-9]{4,})", re.I
+)
+_RE_MILES_PER_YR = re.compile(
+    r"([\d,]+)\s*miles?\s*(?:per\s*year|/\s*year|/\s*yr|a\s*year|annually)", re.I
+)
+# A total mileage cap over the lease term, e.g. "$0.25/mile over 15,000 miles".
+_RE_TOTAL_MILES = re.compile(
+    r"(?:over|excess of|based on)\s+([\d,]{4,})\s*(?:total\s+)?miles\b", re.I
 )
 
 
-def _extraction_prompt(offer: dict) -> str:
-    title = (offer.get("title") or "").strip()
-    fine = (offer.get("fine_print") or "").strip()
-    # Hand the model the card's structured fields as hints — it should trust the
-    # fine print over these when they conflict, and it fills the gaps the scrape
-    # left (mileage allowance, stock/VIN, credit tier).
-    hints = {
-        k: offer.get(k)
-        for k in (
-            "vehicle_year", "vehicle_make", "vehicle_model", "vehicle_trim",
-            "payment", "term_months", "due_at_signing", "mileage_per_year",
-            "msrp", "expires",
-        )
-        if offer.get(k) is not None
-    }
-    return (
-        "Extract the lease terms for this advertised special.\n\n"
-        f"TITLE: {title}\n\n"
-        f"SCRAPED FIELDS (hints, may be incomplete): {json.dumps(hints)}\n\n"
-        f"FINE PRINT (verbatim, authoritative):\n{fine[:6000]}\n\n"
-        "Return JSON with these keys:\n"
-        "- year, make, model, trim: the advertised vehicle\n"
-        "- model_code: manufacturer model/option code if stated (e.g. '4JGFB'), else null\n"
-        "- payment: monthly payment in dollars (number)\n"
-        "- term_months: lease length in months\n"
-        "- due_at_signing: cash due at signing in dollars (exclude items the "
-        "fine print says are NOT included)\n"
-        "- mileage_per_year: annual mileage allowance (e.g. if the fine print "
-        "says '$0.25/mile over 15,000 miles' over a 24-month term, that is "
-        "7500/yr; if it states miles per year directly, use that)\n"
-        "- msrp_or_price: the MSRP or capitalized cost the payment is based on\n"
-        "- credit_tier: required credit tier/approval language if any, else null\n"
-        "- expiration: offer expiration date as written\n"
-        "- stock_or_vin_specific: the exact stock number or VIN if the offer "
-        "applies to specific stock (e.g. 'Applies to stock NL497846'), else null\n"
-    )
-
-
-def extract_lease_terms(offer: dict, *, provider: str | None = None) -> dict | None:
-    """LLM-extract structured lease terms from an offer's title + fine print.
-
-    Returns the parsed dict (schema keys above) or None if the model produced
-    nothing usable. Never raises — a model/transport failure degrades to no
-    extraction, and the offer still renders without qualifying cars.
-    """
-    from backend.utils import llm_client
-
-    prompt = _extraction_prompt(offer)
-    try:
-        raw = llm_client.complete(
-            prompt,
-            system=_SYSTEM,
-            temperature=0.0,
-            max_tokens=600,
-            json_schema=_EXTRACTION_SCHEMA,
-            provider=provider,
-        )
-    except Exception:
-        logger.warning("lease term extraction failed", exc_info=True)
+def _extract_stock_or_vin(text: str) -> str | None:
+    """Pull a specific stock#/VIN the offer restricts the advertised payment to,
+    if the fine print names one. A full 17-char VIN wins over a stock token."""
+    if not text:
         return None
-    terms = _parse_json(raw)
-    if not isinstance(terms, dict):
-        logger.warning("lease extraction returned non-object: %s", str(raw)[:200])
-        return None
-    return _coerce_terms(terms)
-
-
-def _parse_json(raw: str | None) -> Any:
-    if not raw:
-        return None
-    s = str(raw).strip()
-    try:
-        return json.loads(s)
-    except (json.JSONDecodeError, ValueError):
-        pass
-    # Claude may wrap JSON in prose or a ```json fence — recover the first object.
-    m = re.search(r"\{.*\}", s, re.DOTALL)
+    m = _RE_VIN.search(text)
     if m:
-        try:
-            return json.loads(m.group(0))
-        except (json.JSONDecodeError, ValueError):
-            return None
+        return m.group(1)
+    m = _RE_STOCK.search(text)
+    if m:
+        tok = m.group(1)
+        # A bare 4-digit run after "stock" is usually a year/qty, not a stock#.
+        if not tok.isdigit() or len(tok) >= 5:
+            return tok
     return None
+
+
+def _derive_mileage_per_year(offer: dict) -> int | None:
+    """Annual mileage allowance: the scraped field first, else parse the fine
+    print — a direct 'X miles per year', else a total cap ('over 15,000 miles')
+    divided by the term in years ('over 15,000 miles' on a 24-mo lease → 7,500)."""
+    direct = _intval(offer.get("mileage_per_year"))
+    if direct:
+        return direct
+    fine = f"{offer.get('fine_print') or ''} {offer.get('title') or ''}"
+    m = _RE_MILES_PER_YR.search(fine)
+    if m:
+        return _intval(m.group(1))
+    m = _RE_TOTAL_MILES.search(fine)
+    if m:
+        total = _intval(m.group(1))
+        term = _intval(offer.get("term_months"))
+        if total and term and term >= 12:
+            return int(round(total / (term / 12.0)))
+        if total:
+            return total
+    return None
+
+
+def parse_lease_terms(offer: dict) -> dict:
+    """Deterministically derive structured lease terms from an offer.
+
+    Sources the vehicle/payment/term/due/MSRP/expiry the specials scraper already
+    parsed off the card, and recovers the stock#/VIN and mileage allowance from
+    the verbatim fine print with plain regex. No model, no network, never raises.
+    Returns the same schema :func:`match_cars` and :func:`summarize_deal` consume.
+    """
+    fine = f"{offer.get('fine_print') or ''} {offer.get('title') or ''}"
+    return _coerce_terms({
+        "year": offer.get("vehicle_year"),
+        "make": offer.get("vehicle_make"),
+        "model": offer.get("vehicle_model"),
+        "trim": offer.get("vehicle_trim"),
+        "model_code": None,
+        "payment": offer.get("payment"),
+        "term_months": offer.get("term_months"),
+        "due_at_signing": offer.get("due_at_signing"),
+        "mileage_per_year": _derive_mileage_per_year(offer),
+        "msrp_or_price": offer.get("msrp"),
+        "credit_tier": None,
+        "expiration": offer.get("expires"),
+        "stock_or_vin_specific": _extract_stock_or_vin(fine),
+    })
 
 
 def _num(v: Any) -> float | None:
@@ -463,14 +432,12 @@ def summarize_deal(offer: dict, terms: dict | None, matches: list[dict]) -> str:
     return f"{head} — {tail}" if head else tail
 
 
-def compute_offer_matches(
-    conn: Any, dealer_id: str, offer: dict, *, provider: str | None = None,
-) -> dict:
-    """Extract terms + match inventory for a single lease offer (no caching).
+def compute_offer_matches(conn: Any, dealer_id: str, offer: dict) -> dict:
+    """Parse terms + match inventory for a single lease offer (no caching).
 
     Returns {extracted, matches, summary, confidence}.
     """
-    terms = extract_lease_terms(offer, provider=provider)
+    terms = parse_lease_terms(offer)
     matches = match_cars(conn, dealer_id, terms, offer)
     summary = summarize_deal(offer, terms, matches)
     confidence = matches[0]["confidence"] if matches else None
@@ -486,7 +453,6 @@ def refresh_dealer_lease_matches(
     conn: Any,
     dealer_id: str,
     *,
-    provider: str | None = None,
     force: bool = False,
     only_missing: bool = True,
 ) -> dict:
@@ -512,7 +478,7 @@ def refresh_dealer_lease_matches(
         if only_missing and not force and h and h in cached:
             skipped += 1
             continue
-        result = compute_offer_matches(conn, dealer_id, off, provider=provider)
+        result = compute_offer_matches(conn, dealer_id, off)
         if h:
             upsert_offer_match(
                 conn,
