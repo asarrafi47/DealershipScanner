@@ -321,7 +321,8 @@ def test_synthesize_team_velocity_feed(monkeypatch):
     }
     for r in recipes:
         assert r.method == "GET"
-        assert r.provider_hint == "dealer_dot_com"
+        # Dedicated TV parser owns these rows (feed field mapping + VDP completion).
+        assert r.provider_hint == "team_velocity"
         assert r.pagination == "page_query"  # replay/delta walk every page
     assert by_url["https://www.righthonda.com/inventory-used.json"].total_count == 196
     assert by_url["https://www.righthonda.com/inventory-new.json"].total_count == 377

@@ -604,8 +604,9 @@ def _detect_sister_tv(html: str, dealer_url: str) -> bool:
 #   https://{domain}/inventory-new.json    (new — a separate feed, disjoint VINs)
 # shape: {totalVehicles, totalPages, nextPage, pageSize, vehicles:[...]}, walked
 # via ?page=N. There is NO combined feed, so we emit one recipe per feed to cover
-# the FULL lot (used + new). Parameterized by the dealer DOMAIN alone; the generic
-# dealer_dot_com parser maps its vehicle objects; validate_recipe walks ?page=N.
+# the FULL lot (used + new). Parameterized by the dealer DOMAIN alone; the dedicated
+# team_velocity parser maps its vehicle objects (and owns VDP image/carfax
+# completion); validate_recipe walks ?page=N.
 _TEAM_VELOCITY_FEED = "/inventory-used.json"
 # Used already contains CPO (verified: cpo VINs ⊆ used), so used + new = full lot.
 _TEAM_VELOCITY_FEEDS = ("/inventory-used.json", "/inventory-new.json")
@@ -636,7 +637,7 @@ def _tv_feed_recipe(dealer_id: str, origin: str, feed_path: str) -> EndpointReci
         # GET ?page=N feed — replay + delta walk every page (see PAGINATION_PAGE_QUERY).
         pagination=PAGINATION_PAGE_QUERY,
         total_count=total,
-        provider_hint="dealer_dot_com",
+        provider_hint="team_velocity",
     )
 
 

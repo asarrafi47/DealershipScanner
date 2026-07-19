@@ -10,6 +10,8 @@ from backend.parsers.jazel import parse as parse_jazel
 from backend.parsers.motive_ridemotive import parse as parse_motive_ridemotive
 from backend.parsers.overfuel import parse as parse_overfuel
 from backend.parsers.sister_tv import parse as parse_sister_tv
+from backend.parsers.team_velocity import detect as detect_team_velocity
+from backend.parsers.team_velocity import parse as parse_team_velocity
 from backend.parsers.typesense import parse as parse_typesense
 
 
@@ -42,6 +44,7 @@ PARSERS = {
     "dealer_on_cosmos": _parse_cosmos_cards,
     "typesense": parse_typesense,
     "sister_tv": parse_sister_tv,
+    "team_velocity": parse_team_velocity,
     "dealer_eprocess": parse_dealer_eprocess,
     "autowall": _parse_autowall,
     "motive_ridemotive": parse_motive_ridemotive,
@@ -65,6 +68,16 @@ def parse(provider: str, raw_data, base_url: str, dealer_id: str, dealer_name: s
         cc_rows = list(parse_carscommerce(raw_data, **_kwargs))
         if cc_rows:
             return cc_rows
+
+    # Team Velocity feeds are provider-hinted "dealer_dot_com", but the generic
+    # parser drops the feed's distinct field names (sellingPrice, driveTrain,
+    # engineCylinders, city/highwayMpg) and never seeds the image-completion
+    # placeholder. Route by shape BEFORE the declared provider so the dedicated
+    # handler owns TV rows (its VDP image/carfax completion runs post-scan).
+    if provider != "team_velocity" and detect_team_velocity(raw_data):
+        tv_rows = list(parse_team_velocity(raw_data, **_kwargs))
+        if tv_rows:
+            return tv_rows
 
     fn = PARSERS.get(provider)
     if fn:

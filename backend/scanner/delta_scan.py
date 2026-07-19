@@ -111,6 +111,24 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     count = await coordinator.upsert_vehicles(vehicles)
     out["upserted"] = count
 
+    # Team Velocity feeds carry imageUrls:null — photos (and the per-car Carfax
+    # link) live only on the VDP. Run the platform's own completion step for this
+    # dealer so delta-refreshed rows get real images, not just the placeholder.
+    try:
+        from backend.parsers.team_velocity import detect as _detect_tv
+        from backend.parsers.team_velocity import recover_dealer as _tv_recover_dealer
+
+        if any(_detect_tv(body) for _u, body in records):
+            tv_stats = await asyncio.to_thread(_tv_recover_dealer, dealer_id)
+            out["tv_image_completion"] = tv_stats
+            logger.info(
+                "Delta [%s]: TV image completion — %d patched (%d imgs, %d carfax) of %d candidates",
+                name, tv_stats.get("rows_patched", 0), tv_stats.get("with_images", 0),
+                tv_stats.get("with_carfax", 0), tv_stats.get("candidates", 0),
+            )
+    except Exception as e:
+        logger.warning("Delta [%s]: TV image completion failed: %s", name, e)
+
     if vin_cov >= _RECONCILE_VIN_COVERAGE:
         try:
             from backend.scanner.inventory_reconcile import (
