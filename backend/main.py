@@ -294,6 +294,7 @@ register_dev_console(app)
 from backend.routes import admin_dealer_api as _admin_dealer_api_routes  # noqa: E402
 from backend.routes import cars_pages as _cars_pages_routes  # noqa: E402
 from backend.routes import dealers_recalls as _dealers_recalls_routes  # noqa: E402
+from backend.routes import dealer_reviews as _dealer_reviews_routes  # noqa: E402
 from backend.routes import dealership_page as _dealership_page_routes  # noqa: E402
 from backend.routes import fuel_api as _fuel_api_routes  # noqa: E402
 from backend.routes import home_dashboard as _home_dashboard_routes  # noqa: E402
@@ -306,6 +307,7 @@ _listings_api_routes.register(app)
 _cars_pages_routes.register(app)
 _dealers_recalls_routes.register(app)
 _dealership_page_routes.register(app)
+_dealer_reviews_routes.register(app)
 _fuel_api_routes.register(app)
 _admin_dealer_api_routes.register(app)
 
@@ -458,6 +460,8 @@ def _csrf_mutating_requests():
         "dev.admin_login",
         "dev.admin_register",
         "dev.admin_logout",
+        "dealership_submit_review",
+        "dealership_report_review",
     ):
         csrf_resp = validate_csrf_form()
         if csrf_resp is not None:

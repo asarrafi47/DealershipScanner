@@ -17,7 +17,7 @@ from __future__ import annotations
 import sqlite3
 from urllib.parse import urlparse
 
-from flask import abort, render_template
+from flask import abort, render_template, request, session
 
 # Cap for the server-rendered inventory grid. The true total count is shown
 # separately; this only bounds how many cards we render on the page.
@@ -164,13 +164,14 @@ def _resolve_dealer(dealer_key: str) -> tuple[dict | None, str | None]:
 
 
 def _attach_lease_matches(conn, dealer_id: str, offers: list[dict]) -> None:
-    """Attach cached LLM-extracted terms + qualifying cars to each lease offer.
+    """Attach parsed lease terms + qualifying cars to each lease offer.
 
-    Reads only from the ``lease_offer_matches`` cache so the page stays fast and
-    never blocks on the model. The cache is populated out of band (the
-    ``refresh_lease_matches`` script or :func:`refresh_dealer_lease_matches`),
-    keyed by the content-derived ``offer_hash`` so stale offers self-invalidate.
-    Optionally computes-if-missing when ``DEALERSHIP_LEASE_MATCH_ON_VIEW=1``.
+    Matching is deterministic (regex over the offer's fine print + a plain
+    inventory join — no model, no network), so it's cheap enough to run on view.
+    A ``lease_offer_matches`` cache keyed by the content-derived ``offer_hash``
+    is used as the fast path (stale offers self-invalidate); anything missing is
+    computed on first view and cached. Set ``DEALERSHIP_LEASE_MATCH_ON_VIEW=0``
+    to read cache-only (e.g. if population is handled entirely out of band).
     """
     import os
 
@@ -178,7 +179,7 @@ def _attach_lease_matches(conn, dealer_id: str, offers: list[dict]) -> None:
     if not lease_offers:
         return
 
-    compute_on_view = (os.environ.get("DEALERSHIP_LEASE_MATCH_ON_VIEW") or "0").strip().lower() in (
+    compute_on_view = (os.environ.get("DEALERSHIP_LEASE_MATCH_ON_VIEW") or "1").strip().lower() in (
         "1", "true", "yes", "on",
     )
     try:
@@ -250,6 +251,41 @@ def _dealer_specials(dealer_id: str) -> dict:
     return {"total": len(offers), "groups": groups, "scraped_at": scraped_at}
 
 
+def _dealer_reviews(dealer_id: str) -> dict:
+    """Read published reviews + aggregate summary for a dealer (defensive)."""
+    from backend.db.inventory_db import get_conn
+    from backend.reviews.store import (
+        ensure_reviews_table,
+        get_reviews_for_dealer,
+        review_summary,
+    )
+
+    empty = {
+        "summary": {"count": 0, "avg_rating": None, "addon_fee_count": 0, "addon_fees": []},
+        "reviews": [],
+    }
+    conn = get_conn()
+    try:
+        # Idempotent + additive; guarantees reads run against an existing table
+        # (no scanner creates it) and avoids an aborted-transaction cascade.
+        try:
+            cur = conn.cursor()
+            ensure_reviews_table(cur)
+            conn.commit()
+        except Exception:
+            conn.rollback()
+        summary = review_summary(conn, dealer_id)
+        reviews = get_reviews_for_dealer(conn, dealer_id, limit=100)
+        return {"summary": summary, "reviews": reviews}
+    except Exception:
+        return empty
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+
 def dealership_research_page(dealer_key: str):
     dealership, dealer_id = _resolve_dealer(dealer_key)
 
@@ -257,6 +293,15 @@ def dealership_research_page(dealer_key: str):
     has_inventory = bool(inventory and inventory["total"])
 
     specials = _dealer_specials(dealer_id) if dealer_id else {"total": 0, "groups": [], "scraped_at": None}
+
+    try:
+        reviews_data = (
+            _dealer_reviews(dealer_id)
+            if dealer_id
+            else {"summary": {"count": 0, "avg_rating": None, "addon_fee_count": 0, "addon_fees": []}, "reviews": []}
+        )
+    except Exception:
+        reviews_data = {"summary": {"count": 0, "avg_rating": None, "addon_fee_count": 0, "addon_fees": []}, "reviews": []}
 
     # Require *something* to show: a registry row or real inventory. Otherwise 404
     # rather than render an empty shell.
@@ -321,6 +366,10 @@ def dealership_research_page(dealer_key: str):
         nav_waze_url=waze_url,
         inventory=inventory or {"total": 0, "new_count": 0, "used_count": 0, "cars": [], "capped": False},
         specials=specials,
+        review_summary=reviews_data["summary"],
+        reviews=reviews_data["reviews"],
+        logged_in=bool(session.get("user_id")),
+        review_error=request.args.get("review_error"),
     )
 
 

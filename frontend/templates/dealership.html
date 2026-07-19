@@ -63,7 +63,7 @@
             max-height: 220px; overflow-y: auto; }
         .dr-offer__src { font-size: .72rem; }
         .dr-offer__src a { color: inherit; opacity: .65; }
-        /* LLM lease-match: qualifying inventory under a lease offer */
+        /* Lease-match: qualifying in-stock inventory under a lease offer */
         .dr-qual { margin-top: .55rem; border-top: 1px dashed rgba(128,128,128,.28); padding-top: .55rem; }
         .dr-qual__summary { font-size: .78rem; font-weight: 600; line-height: 1.35; margin: 0 0 .5rem;
             display: flex; align-items: flex-start; gap: .35rem; }
@@ -82,6 +82,61 @@
         .dr-qual__conf--low { color: #a15; opacity: .8; }
         .dr-qual__note { font-size: .7rem; opacity: .65; line-height: 1.35; margin: .2rem 0 0; }
         .dr-qual__none { font-size: .72rem; opacity: .55; margin: 0; }
+
+        /* Reviews */
+        .dr-reviews { margin-top: 2.25rem; }
+        .dr-reviews__agg { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin: .1rem 0 .35rem; }
+        .dr-reviews__score { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+        .dr-reviews__stars { color: #f5a623; letter-spacing: .05em; font-size: 1.15rem; }
+        .dr-reviews__count { font-size: .85rem; opacity: .7; }
+        .dr-reviews__none { opacity: .7; font-style: italic; font-size: .9rem; margin: .25rem 0 0; }
+        .dr-feewarn { border: 1px solid rgba(245,166,35,.55); background: rgba(245,166,35,.12);
+            border-radius: 12px; padding: .85rem 1rem; margin: .75rem 0 1.25rem; }
+        .dr-feewarn__head { font-weight: 700; font-size: .95rem; color: #b7791f; display: flex; align-items: center; gap: .4rem; }
+        .dr-feewarn__list { list-style: none; margin: .5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .3rem; }
+        .dr-feewarn__list li { font-size: .82rem; opacity: .9; }
+        .dr-feewarn__amt { font-weight: 700; }
+        .dr-review { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; padding: .85rem 1rem;
+            margin-bottom: .85rem; display: flex; flex-direction: column; gap: .35rem; }
+        .dr-review__head { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+        .dr-review__who { font-weight: 650; font-size: .92rem; }
+        .dr-review__stars { color: #f5a623; letter-spacing: .05em; font-size: .9rem; }
+        .dr-review__date { font-size: .72rem; opacity: .55; }
+        .dr-review__body { font-size: .9rem; line-height: 1.5; margin: 0; white-space: pre-wrap; }
+        .dr-review__fee { font-size: .78rem; color: #b7791f; background: rgba(245,166,35,.14);
+            border-radius: 7px; padding: .3rem .5rem; align-self: flex-start; }
+        .dr-review__report { align-self: flex-start; }
+        .dr-review__report button { background: none; border: none; color: inherit; opacity: .5;
+            font-size: .72rem; cursor: pointer; text-decoration: underline; padding: 0; }
+        .dr-review__report button:hover { opacity: .85; }
+        .dr-reviewform { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; padding: 1rem 1.15rem; margin-top: 1.25rem; }
+        .dr-reviewform__h3 { font-size: .95rem; margin: 0 0 .75rem; }
+        .dr-reviewform label { display: block; font-size: .8rem; font-weight: 600; margin: 0 0 .3rem; }
+        .dr-reviewform textarea, .dr-reviewform input[type=number] { width: 100%; box-sizing: border-box;
+            border: 1px solid rgba(128,128,128,.4); border-radius: 8px; padding: .5rem .6rem; font: inherit;
+            background: transparent; color: inherit; }
+        .dr-reviewform textarea { min-height: 5.5rem; resize: vertical; }
+        .dr-reviewform__row { margin-bottom: .85rem; }
+        .dr-reviewform__check { display: flex; align-items: flex-start; gap: .5rem; font-size: .82rem; font-weight: 500; }
+        .dr-reviewform__check input { margin-top: .15rem; }
+        .dr-reviewform__togglewrap { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .5rem; }
+        .dr-reviewform__togglewrap label { font-weight: 500; font-size: .82rem; margin: 0; flex: 1 1 auto; }
+        .dr-reviewform__toggle { margin-top: .15rem; }
+        .dr-reviewform__fee { flex-basis: 100%; margin: .6rem 0 .25rem; padding-left: 1.6rem; display: none; gap: .6rem; }
+        .dr-reviewform__toggle:checked ~ .dr-reviewform__fee { display: grid; }
+        .dr-reviewform__stars { display: inline-flex; flex-direction: row-reverse; gap: .1rem; font-size: 1.6rem; }
+        .dr-reviewform__stars input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .dr-reviewform__stars label { color: rgba(128,128,128,.45); cursor: pointer; margin: 0; font-weight: 400; font-size: 1.6rem; }
+        .dr-reviewform__stars input:checked ~ label,
+        .dr-reviewform__stars label:hover, .dr-reviewform__stars label:hover ~ label { color: #f5a623; }
+        .dr-reviewform__submit { background: #111; color: #fff; border: none; border-radius: 8px;
+            padding: .55rem 1.2rem; font: inherit; font-weight: 600; cursor: pointer; }
+        .dr-reviewform__submit:hover { opacity: .9; }
+        .dr-reviewform__error { color: #c0392b; font-size: .82rem; background: rgba(192,57,43,.1);
+            border-radius: 8px; padding: .5rem .7rem; margin: 0 0 .85rem; }
+        .dr-reviewform__signin { border: 1px dashed rgba(128,128,128,.5); border-radius: 12px;
+            padding: 1rem 1.15rem; margin-top: 1.25rem; font-size: .9rem; }
+        .dr-reviewform__signin a { font-weight: 600; color: inherit; }
     </style>
 </head>
 <body class="dealership-research-page app-layout-body">
@@ -191,7 +246,7 @@
                                 {% if o.source_url %}<div class="dr-offer__src"><a href="{{ o.source_url }}" target="_blank" rel="noopener noreferrer">View on dealer site</a></div>{% endif %}
                                 {% if o.type == 'lease' and o.lease_summary %}
                                 <div class="dr-qual">
-                                    <p class="dr-qual__summary"><span class="dr-qual__ai">AI match</span><span>{{ o.lease_summary }}</span></p>
+                                    <p class="dr-qual__summary"><span class="dr-qual__ai">In&#8209;stock</span><span>{{ o.lease_summary }}</span></p>
                                     {% if o.lease_matches %}
                                     <ul class="dr-qual__list">
                                         {% for m in o.lease_matches %}
@@ -220,6 +275,102 @@
                     {% else %}
                     <div class="dealer-research__placeholder">
                         <p>No current deals &amp; specials on file for this dealership.</p>
+                    </div>
+                    {% endif %}
+                </section>
+
+                <!-- USER-SUBMITTED REVIEWS -->
+                <section class="dr-reviews" aria-labelledby="dr-reviews-h" id="reviews">
+                    <h2 class="dealer-research__h2" id="dr-reviews-h">Reviews</h2>
+
+                    {% if review_summary and review_summary.count %}
+                    <div class="dr-reviews__agg">
+                        <span class="dr-reviews__score">{{ '%.1f'|format(review_summary.avg_rating) if review_summary.avg_rating is not none else '—' }}</span>
+                        {% set full = (review_summary.avg_rating or 0) | round(0, 'common') | int %}
+                        <span class="dr-reviews__stars" aria-hidden="true">{{ '★' * full }}{{ '☆' * (5 - full) }}</span>
+                        <span class="dr-reviews__count">{{ review_summary.count }} review{{ 's' if review_summary.count != 1 else '' }}</span>
+                    </div>
+                    {% else %}
+                    <p class="dr-reviews__none">No reviews yet. Be the first to share your experience.</p>
+                    {% endif %}
+
+                    {% if review_summary and review_summary.addon_fee_count %}
+                    <div class="dr-feewarn" role="alert">
+                        <div class="dr-feewarn__head"><span aria-hidden="true">⚠</span> {{ review_summary.addon_fee_count }} visitor{{ 's' if review_summary.addon_fee_count != 1 else '' }} reported mandatory add-on fees</div>
+                        {% if review_summary.addon_fees %}
+                        <ul class="dr-feewarn__list">
+                            {% for f in review_summary.addon_fees %}
+                            <li>
+                                {% if f.amount is not none %}<span class="dr-feewarn__amt">${{ '{:,.0f}'.format(f.amount) }}</span>{% endif %}
+                                {% if f.amount is not none and f.desc %} — {% endif %}
+                                {% if f.desc %}&ldquo;{{ f.desc }}&rdquo;{% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% for r in reviews %}
+                    <article class="dr-review">
+                        <div class="dr-review__head">
+                            <span class="dr-review__who">{{ 'Anonymous' if r.is_anonymous else (r.display_name or 'Verified user') }}</span>
+                            <span class="dr-review__stars" aria-label="{{ r.rating }} out of 5 stars">{{ '★' * (r.rating or 0) }}{{ '☆' * (5 - (r.rating or 0)) }}</span>
+                        </div>
+                        {% if r.created_at %}<span class="dr-review__date">{{ r.created_at[:10] }}</span>{% endif %}
+                        <p class="dr-review__body">{{ r.body }}</p>
+                        {% if r.addon_fee_reported %}
+                        <span class="dr-review__fee">Reported add-on fee{% if r.addon_fee_amount is not none %}: ${{ '{:,.0f}'.format(r.addon_fee_amount) }}{% endif %}{% if r.addon_fee_desc %} — {{ r.addon_fee_desc }}{% endif %}</span>
+                        {% endif %}
+                        <form class="dr-review__report" method="post" action="{{ url_for('dealership_report_review', dealer_key=dealer_key, review_id=r.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button type="submit" title="Report this review">Report</button>
+                        </form>
+                    </article>
+                    {% endfor %}
+
+                    {% if logged_in %}
+                    <form class="dr-reviewform" method="post" action="{{ url_for('dealership_submit_review', dealer_key=dealer_key) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <h3 class="dr-reviewform__h3">Write a review</h3>
+                        {% if review_error %}<p class="dr-reviewform__error">{{ review_error }}</p>{% endif %}
+                        <div class="dr-reviewform__row">
+                            <label>Your rating</label>
+                            <span class="dr-reviewform__stars">
+                                <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
+                                <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
+                                <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
+                                <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
+                                <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
+                            </span>
+                        </div>
+                        <div class="dr-reviewform__row">
+                            <label for="review_body">Your review</label>
+                            <textarea id="review_body" name="body" maxlength="4000" placeholder="Share your experience with this dealership (10–4000 characters, no links)."></textarea>
+                        </div>
+                        <div class="dr-reviewform__row dr-reviewform__togglewrap">
+                            <input class="dr-reviewform__toggle" type="checkbox" id="addon_fee_reported" name="addon_fee_reported" value="1">
+                            <label for="addon_fee_reported">Were you charged mandatory add-on fees not in the advertised price?</label>
+                            <div class="dr-reviewform__fee">
+                                <div>
+                                    <label for="addon_fee_amount">Fee amount (USD, optional)</label>
+                                    <input type="number" id="addon_fee_amount" name="addon_fee_amount" min="0" step="1" placeholder="1995">
+                                </div>
+                                <div>
+                                    <label for="addon_fee_desc">What was the fee for?</label>
+                                    <input type="text" id="addon_fee_desc" name="addon_fee_desc" maxlength="200" placeholder="e.g. protection package, dealer prep">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dr-reviewform__row">
+                            <label class="dr-reviewform__check"><input type="checkbox" name="is_anonymous" value="1"> Post anonymously (your name won't be shown)</label>
+                        </div>
+                        <button type="submit" class="dr-reviewform__submit">Post review</button>
+                    </form>
+                    {% else %}
+                    <div class="dr-reviewform__signin">
+                        {% if review_error %}<p class="dr-reviewform__error">{{ review_error }}</p>{% endif %}
+                        <a href="{{ url_for('login_page', next=('/dealership/' ~ dealer_key ~ '#reviews')) }}">Sign in to write a review</a>
                     </div>
                     {% endif %}
                 </section>
