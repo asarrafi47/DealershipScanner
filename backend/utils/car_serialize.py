@@ -1763,6 +1763,11 @@ def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
     # NOT derived from out["condition"], which can read "Certified" (no "Pre-Owned") for some
     # rows even when is_cpo=1, which would disagree with the SQL-side filter.
     out["is_cpo"] = c.get("is_cpo") in (1, True, "1")
+    # Whether this listing has a vehicle-history (Carfax/AutoCheck) report linked.
+    # We only know a report EXISTS (the URL) — not its contents (owners/accidents),
+    # which aren't parsed — so a card chip should say "Carfax", not "1-owner".
+    _carfax = c.get("carfax_url")
+    out["has_carfax"] = bool(_carfax and str(_carfax).strip())
     price_drop_amount, price_drop_days_ago = _latest_price_drop_for_grid(c)
     out["price_drop_amount"] = price_drop_amount
     out["price_drop_days_ago"] = price_drop_days_ago

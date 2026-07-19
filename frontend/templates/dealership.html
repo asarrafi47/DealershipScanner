@@ -24,6 +24,14 @@
         .dealer-research__count b { font-size: 1.35rem; display: block; line-height: 1; }
         .dealer-research__count span { font-size: .78rem; opacity: .65; text-transform: uppercase; letter-spacing: .05em; }
         .dealer-research__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+        .dr-chips { display: flex; flex-wrap: wrap; gap: .3rem; margin: .1rem 0 .15rem; }
+        .dr-chip { font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+            padding: .1rem .42rem; border-radius: 999px; border: 1px solid rgba(128,128,128,.3); line-height: 1.6; }
+        .dr-chip--cpo { background: rgba(80,120,255,.14); border-color: rgba(80,120,255,.32); }
+        .dr-chip--carfax { background: rgba(128,128,128,.12); }
+        .dr-chip--drop { background: rgba(52,199,120,.16); border-color: rgba(52,199,120,.35); color: #2e9e5b; }
+        .dr-chip--deal-good { background: rgba(52,199,120,.16); border-color: rgba(52,199,120,.35); color: #2e9e5b; }
+        .dr-chip--deal-high { background: rgba(230,90,90,.12); border-color: rgba(230,90,90,.32); color: #b3453f; }
         .dealer-research-map { height: 360px; width: 100%; border-radius: 12px; overflow: hidden; }
         .dealer-research__contact { display: grid; gap: .5rem; font-size: .95rem; }
         .dealer-research__contact a { color: inherit; }
@@ -197,6 +205,16 @@
                                     <p class="result-price">
                                         {% if c.price %}${{ '{:,.0f}'.format(c.price|float) }}{% else %}Call for price{% endif %}
                                     </p>
+                                    {% set ds = c.deal_score %}
+                                    {% if c.is_cpo or c.has_carfax or c.price_drop_amount or (ds and ds.label in ('below_market', 'above_market')) %}
+                                    <div class="dr-chips">
+                                        {% if ds and ds.label == 'below_market' %}<span class="dr-chip dr-chip--deal-good">Below market</span>
+                                        {% elif ds and ds.label == 'above_market' %}<span class="dr-chip dr-chip--deal-high">Above market</span>{% endif %}
+                                        {% if c.price_drop_amount %}<span class="dr-chip dr-chip--drop">&#9660; ${{ '{:,.0f}'.format(c.price_drop_amount|float) }}</span>{% endif %}
+                                        {% if c.is_cpo %}<span class="dr-chip dr-chip--cpo">Certified</span>{% endif %}
+                                        {% if c.has_carfax %}<span class="dr-chip dr-chip--carfax">Carfax</span>{% endif %}
+                                    </div>
+                                    {% endif %}
                                     <p class="result-meta">
                                         {% if c.mileage %}{{ '{:,}'.format(c.mileage|int) }} mi{% endif %}
                                         {% if c.fuel_type %}&middot; {{ c.fuel_type }}{% endif %}
