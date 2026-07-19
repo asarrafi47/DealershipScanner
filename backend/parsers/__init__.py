@@ -1,5 +1,7 @@
 import logging
 
+from backend.parsers.carscommerce import detect as detect_carscommerce
+from backend.parsers.carscommerce import parse as parse_carscommerce
 from backend.parsers.chapman import parse as parse_chapman
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
@@ -34,6 +36,7 @@ def _parse_cosmos_cards(raw_data, *, base_url="", dealer_id="", dealer_name="", 
 
 
 PARSERS = {
+    "carscommerce": parse_carscommerce,
     "dealer_dot_com": parse_dealer_dot_com,
     "dealer_on": parse_dealer_on,
     "dealer_on_cosmos": _parse_cosmos_cards,
@@ -53,6 +56,16 @@ _warned_unknown_providers: set[str] = set()
 
 def parse(provider: str, raw_data, base_url: str, dealer_id: str, dealer_name: str = "", dealer_url: str = ""):
     _kwargs = dict(base_url=base_url, dealer_id=dealer_id, dealer_name=dealer_name, dealer_url=dealer_url)
+
+    # CarsCommerce search payloads are provider-hinted "dealer_dot_com" /
+    # "dealer_inspire", but the generic parser drops colors, carfax, features,
+    # packages and warranty. Route by shape BEFORE the declared provider so the
+    # rich fields the feed returns are actually captured.
+    if provider != "carscommerce" and detect_carscommerce(raw_data):
+        cc_rows = list(parse_carscommerce(raw_data, **_kwargs))
+        if cc_rows:
+            return cc_rows
+
     fn = PARSERS.get(provider)
     if fn:
         result = list(fn(raw_data, **_kwargs))
