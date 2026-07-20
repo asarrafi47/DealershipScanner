@@ -131,6 +131,7 @@ def listing_missing_field_codes(
     *,
     for_public_filter: bool,
     detail_ctx: dict[str, Any] | None = None,
+    include_non_actionable: bool = False,
 ) -> list[str]:
     """
     Ordered-ish stable labels for missing spec-sheet fields.
@@ -203,8 +204,26 @@ def listing_missing_field_codes(
     elif _dash(car.get("vin")):
         missing.append("vin")
 
-    if vehicle_is_in_transit(car_raw):
+    in_transit = vehicle_is_in_transit(car_raw)
+    if in_transit:
         missing.append("on_lot")
+
+    # Distinguish "we failed to capture it" from "the data doesn't exist at the
+    # source." These codes are not capture failures and must not flag a car
+    # incomplete (they inflated the queue with un-actionable rows, 2026-07-20):
+    #   - interior_color: dealer-discretionary; many dealers never publish it
+    #     (e.g. High Country Toyota lists it for 0% of inventory), so a blank is
+    #     the dealer's, not ours.
+    #   - on_lot: an in-transit delivery status, not missing spec data.
+    #   - images while in-transit: an incoming car simply isn't photographed yet.
+    # ``include_non_actionable=True`` restores the full list (admin detail view).
+    if not include_non_actionable:
+        missing = [
+            m for m in missing
+            if m != "interior_color"
+            and m != "on_lot"
+            and not (m == "images" and in_transit)
+        ]
 
     if for_public_filter:
         missing = [m for m in missing if m in _PUBLIC_INCOMPLETE_KEYS]
