@@ -552,6 +552,38 @@ def normalize_optional_url(val: Any) -> str | None:
     return None
 
 
+# Drivetrain descriptors some feeds mis-file into the trim field — never a grade.
+_DRIVETRAIN_AS_TRIM = {
+    "all-wheel drive", "awd", "front-wheel drive", "fwd",
+    "rear-wheel drive", "rwd", "4wd", "2wd", "4x4",
+}
+
+
+def split_bz_woodland_model_trim(out: dict[str, Any]) -> None:
+    """Recover the trim for Toyota's ``bZ Woodland`` (model absorbed the grade).
+
+    Toyota's 2026 ``bZ`` (formerly bZ4X) has a rugged **Woodland** grade. Many
+    dealer feeds pack the grade into the MODEL field ("bZ Woodland") and leave
+    ``trim`` blank — or duplicate it ("bZ Woodland" / "bZ Woodland Premium") —
+    which then flags the car incomplete for a missing trim. Split it back so
+    ``model="bZ"`` and ``trim="Woodland"`` (plus any real sub-grade like
+    "Premium"). Drivetrain tokens ("All-Wheel Drive") a feed mis-files into trim
+    are dropped — they are not a grade. Mutates *out* in place.
+    """
+    if str(out.get("make") or "").strip().lower() != "toyota":
+        return
+    model = str(out.get("model") or "").strip()
+    if not re.match(r"(?i)^bz\s+woodland\b", model):
+        return
+    out["model"] = "bZ"
+    t = str(out.get("trim") or "").strip()
+    # Strip a redundant model prefix the feed may have copied into the trim.
+    t = re.sub(r"(?i)^bz(\s+woodland)?\s*", "", t).strip()
+    if t.lower() in _DRIVETRAIN_AS_TRIM:
+        t = ""
+    out["trim"] = f"Woodland {t}".strip() if t else "Woodland"
+
+
 def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
     """
     Apply normalization to typical cars.* string columns in-place copy.
@@ -604,6 +636,9 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             )
         else:
             out[k] = normalize_optional_str(out.get(k))
+
+    # Split known compound models where the feed packed the grade into `model`.
+    split_bz_woodland_model_trim(out)
 
     # Reject leaked stock codes in spec fields (and recover stock_number).
     _apply_stock_code_guard(out)
