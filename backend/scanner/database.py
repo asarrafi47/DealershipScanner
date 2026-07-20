@@ -187,6 +187,22 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
         _ensure_schema(conn)
         cursor = conn.cursor()
         now = datetime.utcnow().isoformat() + "Z"
+        # Existing enrichment provenance per VIN: the ON CONFLICT clause keeps
+        # column values via COALESCE but would replace spec_source_json wholesale,
+        # orphaning the provenance of every surviving enriched value. Merge the
+        # incoming provenance into the stored one instead.
+        existing_spec_src: dict[str, str] = {}
+        vin_keys = list(by_vin.keys())
+        for i in range(0, len(vin_keys), 500):
+            chunk = vin_keys[i : i + 500]
+            placeholders = ",".join("?" * len(chunk))
+            cursor.execute(
+                f"SELECT vin, spec_source_json FROM cars WHERE vin IN ({placeholders})",
+                chunk,
+            )
+            for row in cursor.fetchall():
+                if row[1] is not None and str(row[1]).strip():
+                    existing_spec_src[str(row[0])] = str(row[1])
         for raw in vehicles:
             merged = apply_ep_from_scanner_dict(dict(raw))
             from backend.parsers.vdp_urls import apply_vehicle_source_url
@@ -309,6 +325,14 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 spec_src = json.dumps(spec_src, ensure_ascii=False)
             elif spec_src is not None and not isinstance(spec_src, str):
                 spec_src = str(spec_src)
+            prior_spec_src = existing_spec_src.get(vin)
+            if prior_spec_src and spec_src and str(spec_src).strip():
+                try:
+                    _new_prov = json.loads(spec_src)
+                except (json.JSONDecodeError, TypeError):
+                    _new_prov = None
+                if isinstance(_new_prov, dict):
+                    spec_src = merge_spec_source_json(prior_spec_src, _new_prov)
             pkg_raw = v.get("packages")
             if isinstance(pkg_raw, dict):
                 packages_json = json.dumps(pkg_raw, ensure_ascii=False)
@@ -520,6 +544,15 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             apply_model_specs_corrections(vins=list(by_vin.keys()))
         except Exception:
             logger.exception("model_specs correction after upsert failed")
+
+        # --- catalog link (cars.epa_master_id) so new scans join the catalog
+        #     immediately instead of waiting for the batch linker ---
+        try:
+            from backend.catalog.linker import link_cars_by_vins
+
+            link_cars_by_vins(list(by_vin.keys()))
+        except Exception:
+            logger.exception("catalog linking after upsert failed")
 
     return count
 

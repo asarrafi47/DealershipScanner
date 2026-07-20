@@ -86,6 +86,11 @@ def enrich_car_and_persist(car_id: int) -> dict[str, Any]:
 
         value = _coerce(db_col, value)
         if value is not None and not (isinstance(value, str) and is_effectively_empty(value)):
+            if db_col == "cylinders":
+                from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
+
+                if cylinders_conflicts_with_engine_text(value, car.get("engine_description")):
+                    continue
             updates[db_col] = value
 
     # Persist condition inferred from title/mileage/URL (fill_derived_condition_for_display)

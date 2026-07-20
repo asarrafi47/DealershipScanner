@@ -89,10 +89,16 @@ def collect_merge_spec_storage_updates(raw: dict[str, Any]) -> dict[str, Any]:
         if cyl is not None:
             try:
                 ci = int(cyl)
-                if ci >= 0:
-                    out["cylinders"] = ci
             except (TypeError, ValueError):
-                pass
+                ci = None
+            if ci is not None and ci >= 0:
+                # Trim-decoded cylinder counts are year-collision-prone
+                # ("E 350" → modern turbo-four); never contradict the engine
+                # text the listing already carries.
+                from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
+
+                if not cylinders_conflicts_with_engine_text(ci, c.get("engine_description")):
+                    out["cylinders"] = ci
 
     if is_effectively_empty(c.get("fuel_type")):
         ft = vs.get("fuel_type_hint")

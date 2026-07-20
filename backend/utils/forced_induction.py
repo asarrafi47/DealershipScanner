@@ -121,6 +121,21 @@ def _classify_by_make_model(
     cyl = cylinders or 0
     el = engine_l or 0.0
 
+    # Nameplates whose forced induction is inherent in the badge itself,
+    # regardless of model year — safe to classify before the era guard below.
+    if _has(full, "hellcat", "hell cat", "redeye", "demon 170", "trackhawk"):
+        return "Supercharged"
+    if _has(full, "kompressor"):
+        return "Supercharged"
+
+    # Era inference below assumes the modern "everything is boosted" lineups.
+    # Older fleets mix NA and forced-induction engines under the same model
+    # names (2011 E350 = NA V6, 2024 E350 = 2.0T; E9x M3 = NA V8), so without
+    # an explicit marker (handled by the earlier text/trim tiers) stay silent
+    # rather than guess wrong.
+    if not yr or yr < 2016:
+        return None
+
     # ── BMW ──────────────────────────────────────────────────────────────────
     if m == "bmw":
         if re.search(r"\bi[3x]\b|\bi[4-9]\b", mo) or _has(tr, "electric"):
@@ -148,7 +163,10 @@ def _classify_by_make_model(
     if m == "audi":
         if re.search(r"e-tron|etron\b", mo):
             return None
-        if re.search(r"\brs\s*[3-9]\b|\brs\s*q[0-9]\b|\br8\b", full):
+        # R8 is naturally aspirated (V8/V10) across its entire run
+        if re.search(r"\br8\b", full):
+            return None
+        if re.search(r"\brs\s*[3-9]\b|\brs\s*q[0-9]\b", full):
             return "Twin Turbocharged"
         # S6/S7/S8 with V8
         if re.search(r"\bs[6-8]\b", mo) and (cyl == 8 or el >= 3.9):

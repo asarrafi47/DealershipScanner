@@ -502,10 +502,13 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
             if "cylinders" in missing and cyl is not None:
                 try:
                     ci = int(cyl)
-                    if ci >= 0:
-                        proposed["cylinders"] = ci
                 except (TypeError, ValueError):
-                    pass
+                    ci = None
+                if ci is not None and ci >= 0:
+                    from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
+
+                    if not cylinders_conflicts_with_engine_text(ci, raw.get("engine_description")):
+                        proposed["cylinders"] = ci
             if "mpg_city" in missing and specs.get("mpg_city") is not None:
                 try:
                     proposed["mpg_city"] = int(specs["mpg_city"])
@@ -523,11 +526,19 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
 
         remaining = set(listing_missing_field_codes(raw, for_public_filter=False)) - set(proposed)
         if allow_ddg and (remaining & _DDG_FILLABLE) and _take_ddg_slot():
+            from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
+
             ddg_patch = _ddg_html_search_specs(dict(raw))
             for k, v in ddg_patch.items():
                 if k in proposed:
                     continue
                 if not is_effectively_empty(raw.get(k)):
+                    continue
+                # Search snippets routinely describe the wrong model year —
+                # never accept a cylinder count that contradicts the engine text.
+                if k == "cylinders" and cylinders_conflicts_with_engine_text(
+                    v, raw.get("engine_description")
+                ):
                     continue
                 proposed[k] = v
                 _bump("ddg_patch_fields")
