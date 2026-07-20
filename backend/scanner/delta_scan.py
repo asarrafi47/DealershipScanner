@@ -49,12 +49,28 @@ def _write_hint_note(dealer_id: str, note: str, extra: dict[str, Any] | None = N
 
 
 def _complete_prices_from_vdp(vehicles: list[dict[str, Any]], name: str) -> int:
-    """Fill missing prices by fetching each car's own VDP page over HTTP."""
+    """
+    Fill missing prices by fetching each car's own VDP page over HTTP.
+
+    Hard-bounded regardless of how it was invoked (the price_source=vdp hint is
+    auto-written for ANY priceless feed, including huge ones): at most
+    ``_VDP_PRICE_COMPLETE_MAX`` fetch attempts and a wall-clock deadline well
+    inside the per-dealer timeout, so a slow dealer can't strand the worker
+    thread past the sweep's 300s cap.
+    """
     from backend.scanner.post_scan.gap_fill import fetch_listing_html
     from backend.scanner.utils.vdp_spec_parse import parse_price_from_listing_html
 
+    deadline = time.monotonic() + 120.0
+    attempts = 0
     filled = 0
     for v in vehicles:
+        if attempts >= _VDP_PRICE_COMPLETE_MAX or time.monotonic() > deadline:
+            logger.info(
+                "Delta [%s]: VDP price completion stopped at cap (%d attempts)",
+                name, attempts,
+            )
+            break
         try:
             price = v.get("price")
             if price and float(price) > 0:
@@ -64,6 +80,7 @@ def _complete_prices_from_vdp(vehicles: list[dict[str, Any]], name: str) -> int:
         vdp_url = (v.get("source_url") or v.get("url") or "").strip()
         if not vdp_url.startswith("http"):
             continue
+        attempts += 1
         try:
             html = fetch_listing_html(vdp_url)
             page_price = parse_price_from_listing_html(html) if html else None
@@ -215,14 +232,19 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     except Exception as e:
         logger.warning("Delta [%s]: TV image completion failed: %s", name, e)
 
-    if vin_cov >= _RECONCILE_VIN_COVERAGE:
+    from backend.scanner.inventory_reconcile import normalized_vin_set_from_vehicles
+
+    scraped_norm = normalized_vin_set_from_vehicles(vehicles)
+    # Retirement compares VALID normalized VINs, so its authorization gate must
+    # too — raw row count includes placeholder/unknown VINs that would let a
+    # junk-heavy feed retire real inventory it never actually covered.
+    valid_cov = (len(scraped_norm) / known) if known else 1.0
+    if valid_cov >= _RECONCILE_VIN_COVERAGE:
         try:
             from backend.scanner.inventory_reconcile import (
-                normalized_vin_set_from_vehicles,
                 reconcile_dealer_inventory_after_scan,
             )
 
-            scraped_norm = normalized_vin_set_from_vehicles(vehicles)
             # Reconcile's safety gate reads stats["deduped_rows"]; the delta
             # path never set it, so every dealer failed below_min_rows and no
             # car was EVER marked inactive (found 2026-07-19: listing_removed_at
@@ -235,7 +257,7 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         except Exception as e:
             logger.warning("Delta reconcile failed for %s: %s", name, e)
     else:
-        out["reconcile"] = {"ran": False, "skipped_reason": f"vin_coverage {vin_cov:.0%} < 80%"}
+        out["reconcile"] = {"ran": False, "skipped_reason": f"valid_vin_coverage {valid_cov:.0%} < 80%"}
 
     out["seconds"] = round(time.perf_counter() - t0, 1)
     logger.info(

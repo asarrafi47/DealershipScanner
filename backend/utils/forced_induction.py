@@ -127,6 +127,11 @@ def _classify_by_make_model(
         return "Supercharged"
     if _has(full, "kompressor"):
         return "Supercharged"
+    if re.search(r"\btrx\b|\bgt500\b|\bzl1\b|\bgt 500\b", full):
+        return "Supercharged"
+    if re.search(r"\braptor\b", full) and yr >= 2017:
+        # 2017+ Raptor = 3.5TT (2010-2014 was NA 6.2 V8, guarded below)
+        return "Twin Turbocharged"
 
     # Era inference below assumes the modern "everything is boosted" lineups.
     # Older fleets mix NA and forced-induction engines under the same model

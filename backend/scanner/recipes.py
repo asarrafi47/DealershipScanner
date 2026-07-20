@@ -395,7 +395,10 @@ async def try_fetch_via_recipes(
     """
     if not recipe_fetch_enabled():
         return None
-    recipes = [r for r in load_recipes(dealer_id) if not r.stale]
+    # load_recipes may consult Postgres (recipe_store sync) — keep that
+    # blocking I/O off the event loop this coroutine runs on.
+    loaded = await asyncio.to_thread(load_recipes, dealer_id)
+    recipes = [r for r in loaded if not r.stale]
     if not recipes:
         return None
     from backend.parsers import parse
@@ -414,7 +417,7 @@ async def try_fetch_via_recipes(
             # Truncated/unparseable POST sample — can't replay safely. Mark it
             # stale so the next browser scan re-captures a full body instead of
             # this recipe silently never working.
-            mark_stale(dealer_id, recipe, "unreplayable_post_template")
+            await asyncio.to_thread(mark_stale, dealer_id, recipe, "unreplayable_post_template")
             logger.info(
                 "Recipe stale [%s] %s — POST template unparseable (truncated capture?); "
                 "browser scan will re-capture",
@@ -432,7 +435,7 @@ async def try_fetch_via_recipes(
             if status in (401, 403):
                 if not vins:
                     # Failed before collecting anything — the recipe's auth is dead.
-                    mark_stale(dealer_id, recipe, f"http_{status}")
+                    await asyncio.to_thread(mark_stale, dealer_id, recipe, f"http_{status}")
                     logger.info(
                         "Recipe stale [%s] %s — HTTP %d (auth rotated?); browser scan will re-capture",
                         dealer_name, recipe.url[:80], status,

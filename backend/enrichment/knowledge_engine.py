@@ -1808,6 +1808,7 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     except Exception:
         _generation = None
     epa_trim = lookup_epa_master_by_id(linked_id) if linked_id else {}
+    linked_exact = bool(epa_trim)  # True only when the by-id row actually resolved
     if not epa_trim:
         # Per-trim lookup (exact match from build_epa_master.py data), then aggregate fallback
         epa_trim = lookup_epa_by_trim(y, make, model, trim) if trim else {}
@@ -1828,8 +1829,9 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
 
     # Resolved catalog row beats the regex trim decoder for cylinders — the
     # decoder is era-blind ("E 350" decodes to the modern turbo-four) while the
-    # link was scored against this car's own engine data.
-    cyl_ver = _int_or_none(epa_trim.get("cylinders")) if linked_id else None
+    # link was scored against this car's own engine data. Only when the by-id
+    # row actually resolved: a fuzzy fallback must not inherit this authority.
+    cyl_ver = _int_or_none(epa_trim.get("cylinders")) if linked_exact else None
     if cyl_ver is None:
         cyl_ver = regex.get("cylinders")
     if cyl_ver is None:

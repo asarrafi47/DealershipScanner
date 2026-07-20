@@ -43,7 +43,10 @@ def main() -> None:
             stats["unparsable"] += 1
             continue
         dealer_id = path.stem
-        file_saved = max(float(r.get("saved_at") or 0) for r in rows if isinstance(r, dict))
+        file_saved = max(
+            (float(r.get("saved_at") or 0) for r in rows if isinstance(r, dict)),
+            default=0.0,
+        )
         existing = db_load_recipes(dealer_id)
         if existing is not None and existing[1] >= file_saved:
             stats["kept_db"] += 1

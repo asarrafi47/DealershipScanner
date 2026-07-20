@@ -125,10 +125,16 @@ def ensure_model_generations_table(conn=None) -> None:
     if owns:
         conn = get_conn()
     cur = conn.cursor()
+    # Pick DDL by backend, not by exception: SQLite silently ACCEPTS
+    # "BIGSERIAL PRIMARY KEY" (as a NUMERIC-affinity non-rowid column that
+    # allows NULL ids), so try/except would never fall back.
     try:
-        cur.execute(_DDL)
-    except Exception:
-        cur.execute(_DDL_SQLITE)
+        from backend.db.inventory_pg import is_inventory_postgres
+
+        ddl = _DDL if is_inventory_postgres() else _DDL_SQLITE
+    except ImportError:
+        ddl = _DDL
+    cur.execute(ddl)
     if owns:
         conn.commit()
         conn.close()
@@ -157,6 +163,8 @@ def seed_model_generations(*, dry_run: bool = False) -> int:
         )
     if not dry_run:
         conn.commit()
+        # The lookup cache may hold pre-seed empty results — drop them.
+        clear_generation_cache()
     conn.close()
     return inserted
 

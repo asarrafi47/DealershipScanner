@@ -317,6 +317,9 @@ def init_postgres_inventory(conn: Any) -> None:
             ("interior_pano", "TEXT"),
             ("forced_induction", "TEXT"),
             ("zip_code", "TEXT"),
+            ("epa_master_id", "BIGINT"),
+            ("epa_match_confidence", "DOUBLE PRECISION"),
+            ("epa_match_method", "TEXT"),
         ],
     )
     cur.execute(

@@ -23,10 +23,13 @@ from __future__ import annotations
 import json
 import logging
 import os
+import threading
 from datetime import datetime, timezone
 from typing import Any
 
 logger = logging.getLogger("scanner")
+
+_table_lock = threading.Lock()
 
 _DDL_PG = """
 CREATE TABLE IF NOT EXISTS dealer_recipes (
@@ -81,20 +84,33 @@ def _ensure_table(conn) -> None:
     global _table_ready
     if _table_ready:
         return
-    cur = conn.cursor()
-    try:
-        cur.execute(_DDL_PG)
-    except Exception:
-        cur.execute(_DDL_SQLITE)
-    try:
-        cur.execute("ALTER TABLE dealer_recipes ADD COLUMN IF NOT EXISTS scan_hints TEXT")
-    except Exception:
+    # Serialize first-use DDL: concurrent CREATEs from parallel scan threads
+    # would abort each other's transactions on Postgres.
+    with _table_lock:
+        if _table_ready:
+            return
+        cur = conn.cursor()
         try:
-            cur.execute("SELECT scan_hints FROM dealer_recipes LIMIT 1")
+            cur.execute(_DDL_PG)
         except Exception:
-            cur.execute("ALTER TABLE dealer_recipes ADD COLUMN scan_hints TEXT")
-    conn.commit()
-    _table_ready = True
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            cur.execute(_DDL_SQLITE)
+        try:
+            cur.execute("ALTER TABLE dealer_recipes ADD COLUMN IF NOT EXISTS scan_hints TEXT")
+        except Exception:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            try:
+                cur.execute("SELECT scan_hints FROM dealer_recipes LIMIT 1")
+            except Exception:
+                cur.execute("ALTER TABLE dealer_recipes ADD COLUMN scan_hints TEXT")
+        conn.commit()
+        _table_ready = True
 
 
 def _derive_meta(rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -219,7 +235,20 @@ def set_scan_hints(dealer_id: str, hints: dict[str, Any], *, merge: bool = True)
         try:
             _ensure_table(conn)
             cur = conn.cursor()
-            base: dict[str, Any] = get_scan_hints(dealer_id) if merge else {}
+            # Read on the SAME connection the write happens on — a separate
+            # get_scan_hints() connection widens the read-modify-write window
+            # for concurrent writers to drop each other's keys.
+            base: dict[str, Any] = {}
+            if merge:
+                cur.execute("SELECT scan_hints FROM dealer_recipes WHERE dealer_id = ?", (dealer_id,))
+                row0 = cur.fetchone()
+                if row0 and row0[0]:
+                    try:
+                        parsed0 = json.loads(row0[0])
+                        if isinstance(parsed0, dict):
+                            base = parsed0
+                    except (TypeError, ValueError):
+                        base = {}
             for k, v in hints.items():
                 if v is None:
                     base.pop(k, None)

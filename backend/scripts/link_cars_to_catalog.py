@@ -63,10 +63,10 @@ def link_fleet(*, dry_run: bool, only_missing: bool) -> dict:
         where += " AND epa_master_id IS NULL"
     cur.execute(
         "SELECT id, year, make, model, trim, cylinders, engine_l, engine_description, "
-        f"drivetrain, fuel_type FROM cars WHERE {where}"
+        f"drivetrain, fuel_type, title FROM cars WHERE {where}"
     )
     cols = ("id", "year", "make", "model", "trim", "cylinders", "engine_l",
-            "engine_description", "drivetrain", "fuel_type")
+            "engine_description", "drivetrain", "fuel_type", "title")
     rows = [dict(zip(cols, r)) for r in cur.fetchall()]
 
     cand_cache: dict[tuple, list] = {}

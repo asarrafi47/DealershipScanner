@@ -97,10 +97,15 @@ def _model_variants(make: str, model: str) -> list[str]:
 
 def _query_year_make(cur, year: int, make: str) -> list[dict[str, Any]]:
     cols = ", ".join(_CANDIDATE_COLS)
-    cur.execute(
-        f"SELECT {cols} FROM epa_master WHERE year=? AND lower(make)=lower(?)",
-        (year, make.strip()),
-    )
+    try:
+        cur.execute(
+            f"SELECT {cols} FROM epa_master WHERE year=? AND lower(make)=lower(?)",
+            (year, make.strip()),
+        )
+    except Exception:
+        # SQLite dev DBs may lack the extended epa_master columns — a car that
+        # can't be resolved just stays unlinked (dealer data only).
+        return []
     return [dict(zip(_CANDIDATE_COLS, r)) for r in cur.fetchall()]
 
 
@@ -240,15 +245,20 @@ def score_candidate(car: dict[str, Any], cand: dict[str, Any]) -> tuple[float, s
             score -= 0.10
             reasons.append("drive_conflict")
 
-    fb_ = _fuel_bucket(car.get("fuel_type"))
-    cf = _fuel_bucket(cand.get("fuel_type"))
-    if fb_ and cf:
-        if fb_ == cf:
-            score += 0.10
-            reasons.append("fuel")
-        else:
-            score -= 0.25
-            reasons.append("fuel_conflict")
+    # Fuel bucket comparison only for conventional cars: EPA stores hybrids'
+    # fuel_type as "Regular"/"Premium" (bucket "gas") while dealers say
+    # "Hybrid", so hybrids would ALWAYS fuel-conflict and sink below the link
+    # floor. Electrification agreement above already scored that dimension.
+    if not car_e and not cand_e:
+        fb_ = _fuel_bucket(car.get("fuel_type"))
+        cf = _fuel_bucket(cand.get("fuel_type"))
+        if fb_ and cf:
+            if fb_ == cf:
+                score += 0.10
+                reasons.append("fuel")
+            else:
+                score -= 0.25
+                reasons.append("fuel_conflict")
 
     if cand.get("_prev_year"):
         score -= 0.08

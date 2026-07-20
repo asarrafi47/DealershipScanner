@@ -65,9 +65,11 @@ def parse(provider: str, raw_data, base_url: str, dealer_id: str, dealer_name: s
     # packages and warranty. Route by shape BEFORE the declared provider so the
     # rich fields the feed returns are actually captured.
     if provider != "carscommerce" and detect_carscommerce(raw_data):
-        cc_rows = list(parse_carscommerce(raw_data, **_kwargs))
-        if cc_rows:
-            return cc_rows
+        # Once the CarsCommerce shape is detected, its parser OWNS the payload —
+        # even an empty result must not fall through to generic parsers, or the
+        # group-feed sibling-store guard would be silently bypassed (the exact
+        # all-rows-dropped case it exists for).
+        return list(parse_carscommerce(raw_data, **_kwargs))
 
     # Team Velocity feeds are provider-hinted "dealer_dot_com", but the generic
     # parser drops the feed's distinct field names (sellingPrice, driveTrain,

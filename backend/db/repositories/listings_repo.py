@@ -256,12 +256,25 @@ def _build_grid_cars_uncached() -> list[dict[str, Any]]:
 
 
 _grid_cars_rebuild_thread: threading.Thread | None = None
+_grid_cars_rebuild_lock = threading.Lock()
 
 
 def _spawn_grid_cars_rebuild(token: tuple[float, float]) -> None:
     global _grid_cars_rebuild_thread
-    if _grid_cars_rebuild_thread is not None and _grid_cars_rebuild_thread.is_alive():
+    # check-then-act must be atomic: gunicorn gthreads all see the stale cache
+    # at a token rollover and would each spawn a ~10s full-fleet rebuild.
+    if not _grid_cars_rebuild_lock.acquire(blocking=False):
         return
+    try:
+        if _grid_cars_rebuild_thread is not None and _grid_cars_rebuild_thread.is_alive():
+            return
+        _spawn_grid_cars_rebuild_locked(token)
+    finally:
+        _grid_cars_rebuild_lock.release()
+
+
+def _spawn_grid_cars_rebuild_locked(token: tuple[float, float]) -> None:
+    global _grid_cars_rebuild_thread
 
     def _run() -> None:
         global _grid_cars_cache_token, _grid_cars_cache_value
@@ -307,17 +320,33 @@ def landing_featured_cars(limit: int = 4) -> list[dict[str, Any]]:
         rows = [dict(r) for r in cur.fetchall()]
     for c in rows:
         _parse_car_gallery(c)
-    out = [_serialize_car_for_listings_grid(c) for c in rows]
+    # Same public-incompleteness rule as every other guest surface — a car the
+    # listings grid hides must not headline the landing page.
+    inc = listings_include_incomplete_cars()
+    snapshot = _incomplete_index_snapshot_for_listings()
+    out = [
+        _serialize_car_for_listings_grid(c)
+        for c in rows
+        if inc or not _car_is_publicly_incomplete(c, snapshot)
+    ]
     _featured_cars_cache = (time.time(), out)
     return out[:lim]
 
 
 def listings_grid_cache_etag() -> str:
-    """Cheap cache validator for ``GET /api/listings/cars`` (If-None-Match / 304)."""
-    token = _listings_cache_token()
-    if _grid_cars_cache_value is not None and _grid_cars_cache_token == token:
+    """
+    Cheap cache validator for ``GET /api/listings/cars`` (If-None-Match / 304).
+
+    Must describe the data the endpoint will actually SERVE: under
+    stale-while-revalidate that is the cached copy (tagged with the token it
+    was built for), not the current time bucket — otherwise a stale body ships
+    under the fresh ETag and clients 304 on it after the rebuild lands.
+    """
+    if _grid_cars_cache_value is not None:
+        token = _grid_cars_cache_token
         n = len(_grid_cars_cache_value)
     else:
+        token = _listings_cache_token()
         with db_conn() as conn:
             row = conn.execute(
                 "SELECT COUNT(*) FROM cars WHERE (COALESCE(listing_active, 1) = 1)"

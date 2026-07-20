@@ -13921,3 +13921,9 @@ body.premium-embed .premium-plans { grid-template-columns: 1fr; }
 .lps-landing .topbar .nav-search {
     display: none;
 }
+
+/* The shared .lp-footer-copy class carries the light-page slate color; on the
+   navy landing close band it must inherit the band's warm-white instead. */
+.lps-foot-links .lp-footer-copy {
+    color: inherit;
+}

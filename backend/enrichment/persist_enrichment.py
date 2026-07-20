@@ -93,6 +93,17 @@ def enrich_car_and_persist(car_id: int) -> dict[str, Any]:
                     continue
             updates[db_col] = value
 
+    # Cross-check the PROPOSED pair too: when both cylinders and
+    # engine_description were blank and get filled in this same pass, the two
+    # values come from different vs keys and can disagree — never persist a
+    # contradicting pair.
+    if "cylinders" in updates:
+        from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
+
+        proposed_desc = updates.get("engine_description") or car.get("engine_description")
+        if cylinders_conflicts_with_engine_text(updates["cylinders"], proposed_desc):
+            updates.pop("cylinders")
+
     # Persist condition inferred from title/mileage/URL (fill_derived_condition_for_display)
     if _is_blank(car, "condition"):
         derived_cond = serialized.get("condition")
