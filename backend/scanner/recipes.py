@@ -46,6 +46,41 @@ PAGINATION_JAZEL_SRP = "jazel_srp_page"          # GET path-walk .../srp-page-N/
 PAGINATION_NONE = "none"                         # single-shot GET/POST
 
 
+def _recipe_section_discriminator(post_template: Any) -> str:
+    """A stable tag distinguishing inventory *sections* served by the SAME
+    endpoint URL.
+
+    Dealer.com calls one ``ws-inv-data`` URL with different POST bodies for
+    new / used / certified inventory (``pageAlias`` /
+    ``preferences["listing.config.id"]``). Without this tag in the recipe key,
+    those bodies collapse to a single recipe and every section but one is
+    silently dropped at promotion — the HTTP replay then misses whole slices of
+    the lot (e.g. all NEW cars), which shows up downstream as a permanently
+    partial delta feed. Returns "" for platforms that do not split inventory by
+    request body (CarsCommerce, Typesense, GET feeds), so their keys are
+    unchanged and there is no regression.
+
+    Only section-stable fields are used (never the per-page ``start``/``page``
+    params), so every page of one section shares a key.
+    """
+    if not post_template:
+        return ""
+    body = post_template
+    if isinstance(body, str):
+        try:
+            body = json.loads(body)
+        except (TypeError, ValueError):
+            return ""
+    if not isinstance(body, dict):
+        return ""
+    alias = str(body.get("pageAlias") or "").strip()
+    if not alias:
+        prefs = body.get("preferences")
+        if isinstance(prefs, dict):
+            alias = str(prefs.get("listing.config.id") or "").strip()
+    return f"#{alias}" if alias else ""
+
+
 @dataclass
 class EndpointRecipe:
     dealer_id: str
@@ -65,7 +100,10 @@ class EndpointRecipe:
 
     def key(self) -> tuple[str, str]:
         p = urlparse(self.url)
-        return (self.method, f"{(p.hostname or '').lower()}{p.path}")
+        base = f"{(p.hostname or '').lower()}{p.path}"
+        # Dealer.com serves new/used/certified from ONE URL via different bodies;
+        # discriminate them so all sections persist as distinct recipes.
+        return (self.method, f"{base}{_recipe_section_discriminator(self.post_template)}")
 
 
 def infer_pagination(url: str, post_template: str | None) -> str:
@@ -178,7 +216,7 @@ def promote_from_ledger(
     ledger_endpoints: list[Any],
     *,
     min_vehicle_rows: int = 3,
-    max_recipes: int = 4,
+    max_recipes: int = 8,
 ) -> int:
     """
     Merge qualifying ``CapturedEndpoint``s into the dealer's recipe file.

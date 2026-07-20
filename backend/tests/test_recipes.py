@@ -77,6 +77,59 @@ def test_promote_refreshes_stale_and_caps():
     assert again and not again[0].stale
 
 
+def _dealercom_body(page_alias, config_id, start="0"):
+    return (
+        '{"siteId":"d","pageAlias":"%s","widgetName":"ws-inv-data",'
+        '"inventoryParameters":{"start":["%s"]},'
+        '"preferences":{"pageSize":"100","listing.config.id":"%s"}}'
+        % (page_alias, start, config_id)
+    )
+
+
+def test_key_discriminates_dealercom_sections():
+    """Same ws-inv-data URL, different section bodies -> distinct recipe keys."""
+    url = "https://www.d.com/api/widget/ws-inv-data/getInventory"
+    used = EndpointRecipe(dealer_id="x", url=url, method="POST", content_type="",
+                          post_template=_dealercom_body("INVENTORY_LISTING_DEFAULT_AUTO_CERTIFIED_USED", "auto-certified-used"))
+    new = EndpointRecipe(dealer_id="x", url=url, method="POST", content_type="",
+                         post_template=_dealercom_body("INVENTORY_LISTING_DEFAULT_AUTO_NEW", "auto-new"))
+    assert used.key() != new.key()
+    # Different pages of the SAME section still share a key (start param ignored).
+    new_pg2 = EndpointRecipe(dealer_id="x", url=url, method="POST", content_type="",
+                             post_template=_dealercom_body("INVENTORY_LISTING_DEFAULT_AUTO_NEW", "auto-new", start="100"))
+    assert new.key() == new_pg2.key()
+
+
+def test_key_unchanged_for_bodyless_recipes():
+    """CarsCommerce/Typesense have no pageAlias -> key stays URL-only (no regression)."""
+    url = "https://x.example/api/v1/listings/1/search"
+    a = EndpointRecipe(dealer_id="x", url=url, method="POST", content_type="", post_template='{"page":1}')
+    b = EndpointRecipe(dealer_id="x", url=url, method="POST", content_type="", post_template='{"page":2}')
+    assert a.key() == b.key() == ("POST", "x.example/api/v1/listings/1/search")
+
+
+def test_promote_keeps_all_dealercom_sections():
+    """Regression: new + used + certified bodies on ONE URL must all persist,
+    not collapse to a single recipe (which dropped whole slices of the lot)."""
+    url = "https://www.d.com/api/widget/ws-inv-data/getInventory"
+    eps = [
+        _ep(url, post=_dealercom_body("INVENTORY_LISTING_DEFAULT_AUTO_NEW", "auto-new"), total=734, rows=100),
+        _ep(url, post=_dealercom_body("INVENTORY_LISTING_DEFAULT_AUTO_USED", "auto-used"), total=226, rows=100),
+        _ep(url, post=_dealercom_body("INVENTORY_LISTING_DEFAULT_AUTO_CERTIFIED_USED", "auto-certified-used"), total=90, rows=90),
+    ]
+    n = promote_from_ledger("dsec", "dealer_dot_com", eps)
+    assert n == 3
+    aliases = {
+        __import__("json").loads(r.post_template)["pageAlias"]
+        for r in load_recipes("dsec")
+    }
+    assert aliases == {
+        "INVENTORY_LISTING_DEFAULT_AUTO_NEW",
+        "INVENTORY_LISTING_DEFAULT_AUTO_USED",
+        "INVENTORY_LISTING_DEFAULT_AUTO_CERTIFIED_USED",
+    }
+
+
 def test_load_ignores_corrupt_file(tmp_path):
     import backend.scanner.recipes as rec
 
