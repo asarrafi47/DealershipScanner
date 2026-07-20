@@ -259,13 +259,62 @@ def _map(listing: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_
     return clean_car_row_dict(row)
 
 
+def _row_belongs_to_dealer(listing: dict, dealer_name: str, dealer_url: str) -> bool:
+    """
+    Group-account guard: one CarsCommerce ``ccid`` serves an entire dealer
+    group, so a store's recipe can replay sibling stores' inventory. When the
+    listing's own ``dealer`` block declares an identity clearly different from
+    the target store, drop the row. Listings without identity are kept.
+    """
+    import re as _re
+    from urllib.parse import urlparse as _urlparse
+
+    dealer = listing.get("dealer")
+    if not isinstance(dealer, dict):
+        return True
+
+    def _host(u: str) -> str:
+        try:
+            h = (_urlparse((u or "").strip()).netloc or "").lower()
+            return h[4:] if h.startswith("www.") else h
+        except ValueError:
+            return ""
+
+    def _nrm(s: str) -> str:
+        return _re.sub(r"[^a-z0-9]+", "", (s or "").lower())
+
+    row_site = _s(dealer.get("website")) or _s(dealer.get("url")) or _s(dealer.get("domain")) or ""
+    target_host = _host(dealer_url)
+    if row_site and target_host:
+        row_host = _host(row_site if row_site.startswith("http") else f"https://{row_site}")
+        if row_host and row_host != target_host:
+            return False
+    row_name = _s(dealer.get("name")) or ""
+    if row_name and dealer_name and not row_site:
+        rn, tn = _nrm(row_name), _nrm(dealer_name)
+        if rn and tn and rn != tn and rn not in tn and tn not in rn:
+            return False
+    return True
+
+
 def parse(raw_data, base_url: str, dealer_id: str, dealer_name: str = "", dealer_url: str = ""):
     listings = _listings(raw_data)
     if not listings:
         return []
     out: list[dict] = []
+    dropped = 0
     for listing in listings:
+        if not _row_belongs_to_dealer(listing, dealer_name, dealer_url):
+            dropped += 1
+            continue
         mapped = _map(listing, base_url, dealer_id, dealer_name, dealer_url)
         if mapped:
             out.append(mapped)
+    if dropped:
+        import logging
+
+        logging.getLogger("scanner").info(
+            "carscommerce parse [%s]: dropped %d sibling-store row(s) from group feed",
+            dealer_id or dealer_name or "?", dropped,
+        )
     return out

@@ -297,6 +297,43 @@ def _map_document(doc: dict, base_url: str, dealer_id: str, dealer_name: str, de
     return row
 
 
+def _row_belongs_to_dealer(doc: dict, dealer_name: str, dealer_url: str) -> bool:
+    """
+    Group-account guard: dealer groups share ONE Typesense collection, so a
+    store's recipe replays the whole group's inventory. When the document
+    declares its own dealer identity and it clearly differs from the target
+    store, the row belongs to a sibling store — drop it. Documents without
+    identity are always kept (single-store feeds unaffected).
+    """
+    import re as _re
+    from urllib.parse import urlparse as _urlparse
+
+    def _host(u: str) -> str:
+        try:
+            h = (_urlparse((u or "").strip()).netloc or "").lower()
+            return h[4:] if h.startswith("www.") else h
+        except ValueError:
+            return ""
+
+    def _nrm(s: str) -> str:
+        return _re.sub(r"[^a-z0-9]+", "", (s or "").lower())
+
+    doc_url = _dealer_url_from_doc(doc) or ""
+    target_host = _host(dealer_url)
+    if doc_url and target_host:
+        doc_host = _host(doc_url)
+        if doc_host and doc_host != target_host:
+            return False
+    doc_name = _dealer_name_from_doc(doc) or ""
+    if doc_name and dealer_name:
+        dn, tn = _nrm(doc_name), _nrm(dealer_name)
+        if dn and tn and dn != tn and dn not in tn and tn not in dn:
+            # Only trust a name mismatch when no URL evidence exists either way
+            if not doc_url:
+                return False
+    return True
+
+
 def parse(raw_data, *, base_url: str = "", dealer_id: str = "", dealer_name: str = "", dealer_url: str = "") -> list[dict]:
     """Map a Typesense multi_search response to standard vehicle rows.
 
@@ -304,8 +341,19 @@ def parse(raw_data, *, base_url: str = "", dealer_id: str = "", dealer_name: str
     anything else so it is safe in the shared auto-detect fallback.
     """
     out: list[dict] = []
+    dropped = 0
     for doc in _iter_documents(raw_data):
+        if not _row_belongs_to_dealer(doc, dealer_name, dealer_url):
+            dropped += 1
+            continue
         mapped = _map_document(doc, base_url, dealer_id, dealer_name, dealer_url)
         if mapped:
             out.append(clean_car_row_dict(mapped))
+    if dropped:
+        import logging
+
+        logging.getLogger("scanner").info(
+            "typesense parse [%s]: dropped %d sibling-store row(s) from group feed",
+            dealer_id or dealer_name or "?", dropped,
+        )
     return out

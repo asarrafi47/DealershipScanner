@@ -30,6 +30,51 @@ logger = logging.getLogger("scanner")
 _MIN_VIN_COVERAGE = 0.5      # of known active inventory — gate for upserting at all
 _RECONCILE_VIN_COVERAGE = 0.8  # gate for allowing mark-inactive
 _MIN_PRICE_COVERAGE = 0.5
+# Priceless feeds up to this size get per-car VDP price completion over HTTP
+# (cosmos SRP teaser feeds return 12-24 VINs, so this stays cheap).
+_VDP_PRICE_COMPLETE_MAX = 40
+
+
+def _write_hint_note(dealer_id: str, note: str, extra: dict[str, Any] | None = None) -> None:
+    """Record what this run learned about a dealer (best-effort, merge semantics)."""
+    try:
+        from backend.scanner.recipe_store import set_scan_hints
+
+        hints: dict[str, Any] = {"notes": note[:300], "hint_source": "delta_scan_auto"}
+        if extra:
+            hints.update(extra)
+        set_scan_hints(dealer_id, hints)
+    except Exception:
+        pass
+
+
+def _complete_prices_from_vdp(vehicles: list[dict[str, Any]], name: str) -> int:
+    """Fill missing prices by fetching each car's own VDP page over HTTP."""
+    from backend.scanner.post_scan.gap_fill import fetch_listing_html
+    from backend.scanner.utils.vdp_spec_parse import parse_price_from_listing_html
+
+    filled = 0
+    for v in vehicles:
+        try:
+            price = v.get("price")
+            if price and float(price) > 0:
+                continue
+        except (TypeError, ValueError):
+            pass
+        vdp_url = (v.get("source_url") or v.get("url") or "").strip()
+        if not vdp_url.startswith("http"):
+            continue
+        try:
+            html = fetch_listing_html(vdp_url)
+            page_price = parse_price_from_listing_html(html) if html else None
+            if page_price and page_price > 0:
+                v["price"] = int(round(page_price))
+                filled += 1
+        except Exception:
+            continue
+    if filled:
+        logger.info("Delta [%s]: VDP price completion fetched %d price(s)", name, filled)
+    return filled
 
 
 def _delta_concurrency() -> int:
@@ -62,12 +107,34 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     out: dict[str, Any] = {"dealer_id": dealer_id, "skipped": None, "upserted": 0}
     if not dealer_id or not url:
         out["skipped"] = "bad_manifest_entry"
+        logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
+        return out
+
+    # Per-dealer scan instructions (dealer_recipes.scan_hints) — consulted
+    # before any work so hinted skips/conditions are honored and logged.
+    hints: dict[str, Any] = {}
+    try:
+        from backend.scanner.recipe_store import get_scan_hints
+
+        hints = await asyncio.to_thread(get_scan_hints, dealer_id)
+    except Exception:
+        hints = {}
+    if hints.get("skip_reason"):
+        out["skipped"] = f"hinted_skip: {hints['skip_reason']}"
+        logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
         return out
 
     t0 = time.perf_counter()
     fetched = await try_fetch_via_recipes(dealer_id, provider, url, name, union=True)
     if not fetched:
-        out["skipped"] = "no_recipe_yield"
+        if hints.get("requires_browser"):
+            out["skipped"] = "no_recipe (requires_browser hinted)"
+        elif hints.get("needs_http_proxy"):
+            out["skipped"] = "no_recipe (needs_http_proxy hinted — rerun with SCANNER_HTTP_PROXY)"
+        else:
+            out["skipped"] = "no_recipe_yield"
+            _write_hint_note(dealer_id, "no recipe yield on delta replay; needs synth (full scan) or browser")
+        logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
         return out
     records, _vin_yield = fetched
 
@@ -92,9 +159,28 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
         return out
     if price_cov < _MIN_PRICE_COVERAGE:
-        out["skipped"] = f"low_price_coverage ({price_cov:.0%})"
-        logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
-        return out
+        # Cosmos-style SRP feeds carry VINs but keep price on the VDP. When
+        # hinted (price_source=vdp) — or on any small priceless feed — fetch
+        # each car's own VDP over HTTP and parse the price before giving up.
+        completed = 0
+        if hints.get("price_source") == "vdp" or n <= _VDP_PRICE_COMPLETE_MAX:
+            completed = await asyncio.to_thread(_complete_prices_from_vdp, vehicles, name)
+            price_cov = _price_coverage(vehicles)
+            out["vdp_price_completed"] = completed
+        if price_cov < _MIN_PRICE_COVERAGE:
+            out["skipped"] = f"low_price_coverage ({price_cov:.0%})"
+            logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
+            if hints.get("price_source") != "vdp":
+                _write_hint_note(
+                    dealer_id,
+                    f"feed priced {price_cov:.0%} on delta replay; price likely lives on VDP/second endpoint",
+                    extra={"price_source": "vdp"},
+                )
+            return out
+        logger.info(
+            "Delta [%s]: VDP price completion filled %d price(s) → %.0f%% priced, proceeding",
+            name, completed, price_cov * 100,
+        )
 
     # Same enrichment-carry as full scans (immutable fields only; never price).
     try:
@@ -137,6 +223,12 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
             )
 
             scraped_norm = normalized_vin_set_from_vehicles(vehicles)
+            # Reconcile's safety gate reads stats["deduped_rows"]; the delta
+            # path never set it, so every dealer failed below_min_rows and no
+            # car was EVER marked inactive (found 2026-07-19: listing_removed_at
+            # was NULL on all 58k rows). Unique scraped VINs is the deduped
+            # row count for a delta run.
+            out["deduped_rows"] = len(scraped_norm)
             out["reconcile"] = await asyncio.to_thread(
                 reconcile_dealer_inventory_after_scan, dealer_id, url, scraped_norm, out
             )
