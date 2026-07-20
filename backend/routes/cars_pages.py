@@ -239,8 +239,38 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
                 trim=car_raw.get("trim"),
             )
     listings_geo = main.listings_geo_kwargs_from_session(session)
+    # Synthesized build sheet from the data we hold (listing row + verified EPA
+    # specs + best-effort catalog options) — but ONLY when this car has no real
+    # window sticker. When a genuine OEM/listing sticker exists (or is being
+    # fetched), that is authoritative and we never fabricate our own alongside it.
+    has_real_sticker = bool(
+        show_sticker_ui
+        and (
+            sticker_ready
+            or sticker_visual
+            or sticker_preview_embed_url
+            or window_sticker_pdf_url
+            or window_sticker_oem_url
+            or listing_sticker_urls
+            or cdjr_sticker_eligible
+            or sticker_fetch_pending
+            or ctx.get("listing_sticker_options")
+            or ctx.get("listing_sticker_option_sections")
+        )
+    )
+    generated_spec_sheet = None
+    if not has_real_sticker:
+        try:
+            from backend.enrichment.generated_spec_sheet import build_generated_spec_sheet
+
+            generated_spec_sheet = build_generated_spec_sheet(
+                car_raw, ctx.get("verified_specs") or {}
+            )
+        except Exception:
+            generated_spec_sheet = None
     return {
         "car": car,
+        "generated_spec_sheet": generated_spec_sheet,
         "market_intel": market_intel,
         "deal_score_detail": deal_score_detail,
         "trim_ladder": trim_ladder,

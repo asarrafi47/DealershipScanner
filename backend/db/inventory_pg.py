@@ -569,6 +569,64 @@ def init_postgres_inventory(conn: Any) -> None:
         "CREATE INDEX IF NOT EXISTS idx_incomplete_listings_updated ON incomplete_listings(updated_at DESC)"
     )
 
+    # Package / option value registry. Append-only observations (every sticker or
+    # listing sighting) feed a deduped canonical table of observed prices, so we
+    # can reproduce a window sticker's package-value breakdown. Reference data —
+    # never written back onto cars rows.
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS package_observations (
+            id BIGSERIAL PRIMARY KEY,
+            vin TEXT,
+            year INTEGER,
+            make TEXT,
+            model TEXT,
+            trim TEXT,
+            kind TEXT NOT NULL,
+            code TEXT,
+            raw_name TEXT,
+            name_norm TEXT NOT NULL,
+            price DOUBLE PRECISION,
+            category TEXT,
+            source TEXT NOT NULL,
+            seen_at TEXT NOT NULL,
+            UNIQUE (vin, kind, name_norm, source)
+        )
+        """
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_package_obs_ymm ON package_observations(year, make, model, trim)"
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS package_values (
+            id BIGSERIAL PRIMARY KEY,
+            year INTEGER,
+            make TEXT NOT NULL,
+            model TEXT NOT NULL,
+            trim TEXT NOT NULL DEFAULT '',
+            kind TEXT NOT NULL,
+            match_key TEXT NOT NULL,
+            name_display TEXT NOT NULL,
+            name_norm TEXT NOT NULL,
+            code TEXT,
+            msrp DOUBLE PRECISION,
+            msrp_source TEXT,
+            msrp_authority INTEGER NOT NULL DEFAULT 0,
+            category TEXT,
+            observation_count INTEGER NOT NULL DEFAULT 0,
+            sticker_count INTEGER NOT NULL DEFAULT 0,
+            confidence DOUBLE PRECISION NOT NULL DEFAULT 0,
+            first_seen_at TEXT,
+            last_seen_at TEXT,
+            UNIQUE (year, make, model, trim, kind, match_key)
+        )
+        """
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_package_values_ymm ON package_values(year, make, model, trim)"
+    )
+
     conn.commit()
     cur.close()
     _PG_INV_SCHEMA_OK = True

@@ -11,8 +11,12 @@
 *.db-shm
 
 # Local image cache (mounted from PVC)
+# dockerignore patterns only match at the context root, so nested copies
+# must be listed explicitly (backend/vdp_images alone is ~27GB)
 vdp_images/
 car_images/
+**/vdp_images/
+**/car_images/
 
 # Node modules (rebuilt in image)
 node_modules/

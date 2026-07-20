@@ -594,6 +594,12 @@
                             <span class="spec-value">{{ car.zero_to_60_sec }} sec</span>
                         </div>
                         {% endif %}
+                        {% if car.generation_code %}
+                        <div class="spec-row">
+                            <span class="spec-label">Generation</span>
+                            <span class="spec-value">{{ car.generation_code }}{% if car.generation_years %} · {{ car.generation_years }}{% endif %}</span>
+                        </div>
+                        {% endif %}
                         {% if car.body_style and car.body_style != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Body style</span>
@@ -910,7 +916,7 @@
                             <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
                         </div>
                         {% else %}
-                        <div class="car-packages-section car-packages-section--tab" id="car-packages-section" data-car-id="{{ car.id }}" data-show-sticker="{% if show_window_sticker_ui %}1{% else %}0{% endif %}" data-sticker-local="{% if window_sticker_available %}1{% else %}0{% endif %}" data-panel-has-content="{% if packages_panel_has_content %}1{% else %}0{% endif %}" data-oem-sticker-url="{{ window_sticker_oem_url or '' }}">
+                        <div class="car-packages-section car-packages-section--tab" id="car-packages-section" data-car-id="{{ car.id }}" data-show-sticker="{% if show_window_sticker_ui %}1{% else %}0{% endif %}" data-sticker-local="{% if window_sticker_available %}1{% else %}0{% endif %}" data-panel-has-content="{% if packages_panel_has_content %}1{% else %}0{% endif %}" data-build-sheet="{% if generated_spec_sheet %}1{% else %}0{% endif %}" data-oem-sticker-url="{{ window_sticker_oem_url or '' }}">
                             <h2 class="car-vdp-panel-title">{% if show_window_sticker_ui %}Packages &amp; window sticker{% else %}Packages &amp; equipment{% endif %}</h2>
             {% if hide_photo_analysis %}
             <p class="car-packages-hint">Options and colors from the OEM window sticker (when available), listing data, and equipment visible in listing photos.</p>
@@ -918,9 +924,82 @@
             <p class="car-packages-hint">Options and colors from the OEM window sticker (when available), listing data, and photo analysis.</p>
             {% endif %}
 
-            <div id="car-packages-loading" class="car-packages-loading" {% if window_sticker_preview_url or packages_panel_has_content %}hidden{% endif %} aria-live="polite">
+            <div id="car-packages-loading" class="car-packages-loading" {% if window_sticker_preview_url or packages_panel_has_content or generated_spec_sheet %}hidden{% endif %} aria-live="polite">
                 Loading factory equipment data…
             </div>
+
+            {% if generated_spec_sheet %}
+            <section class="build-sheet" aria-label="Vehicle build sheet">
+                <div class="build-sheet-head">
+                    <h3 class="build-sheet-title">Build sheet</h3>
+                    <p class="build-sheet-sub">{{ generated_spec_sheet.title }}{% if generated_spec_sheet.vin %} · VIN {{ generated_spec_sheet.vin }}{% endif %}</p>
+                </div>
+
+                {% if generated_spec_sheet.has_pricing %}
+                <div class="build-sheet-pricing">
+                    {% if generated_spec_sheet.pricing.msrp_display %}
+                    <div class="build-sheet-price-item"><span class="build-sheet-price-label">MSRP</span><span class="build-sheet-price-value">{{ generated_spec_sheet.pricing.msrp_display }}</span></div>
+                    {% endif %}
+                    {% if generated_spec_sheet.pricing.price_display %}
+                    <div class="build-sheet-price-item"><span class="build-sheet-price-label">Listed price</span><span class="build-sheet-price-value">{{ generated_spec_sheet.pricing.price_display }}</span></div>
+                    {% endif %}
+                    {% if generated_spec_sheet.pricing.savings_display %}
+                    <div class="build-sheet-price-item build-sheet-price-item--save"><span class="build-sheet-price-label">Below MSRP</span><span class="build-sheet-price-value">{{ generated_spec_sheet.pricing.savings_display }}</span></div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="build-sheet-grid">
+                    {% for section in generated_spec_sheet.sections %}
+                    <div class="build-sheet-section">
+                        <h4 class="build-sheet-section-title">{{ section.title }}</h4>
+                        <dl class="build-sheet-specs">
+                            {% for row in section.rows %}
+                            <div class="build-sheet-spec-row"><dt>{{ row.label }}</dt><dd>{{ row.value }}</dd></div>
+                            {% endfor %}
+                        </dl>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if generated_spec_sheet.has_catalog %}
+                <div class="build-sheet-equip">
+                    <h4 class="build-sheet-section-title">Packages on this vehicle</h4>
+                    <p class="build-sheet-equip-note">Packages this listing names, priced from our window-sticker data where we have it. Prices marked <span class="build-sheet-src build-sheet-src--sticker">sticker</span> come from a real OEM window sticker for this make/model; blank means we have no priced sighting yet.</p>
+                    {% if generated_spec_sheet.catalog.packages %}
+                    <h5 class="build-sheet-equip-sub">Packages</h5>
+                    <div class="car-window-sticker-opt-list build-sheet-opt-list">
+                        {% for pkg in generated_spec_sheet.catalog.packages %}
+                        <div class="car-sticker-opt-row">
+                            <span class="car-sticker-opt-name">{{ pkg.name }}{% if pkg.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% endif %}</span>
+                            {% if pkg.price_display %}<span class="car-sticker-opt-price">{{ pkg.price_display }}</span>{% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if generated_spec_sheet.catalog.options %}
+                    <h5 class="build-sheet-equip-sub">Standalone options</h5>
+                    <div class="car-window-sticker-opt-list build-sheet-opt-list">
+                        {% for opt in generated_spec_sheet.catalog.options %}
+                        <div class="car-sticker-opt-row">
+                            <span class="car-sticker-opt-name">{{ opt.name }}{% if opt.from_sticker %} <span class="build-sheet-src build-sheet-src--sticker">sticker</span>{% endif %}</span>
+                            {% if opt.price_display %}<span class="car-sticker-opt-price">{{ opt.price_display }}</span>{% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if generated_spec_sheet.catalog.priced_total_display %}
+                    <div class="car-sticker-opt-row build-sheet-opt-total">
+                        <span class="car-sticker-opt-name">Priced packages subtotal</span>
+                        <span class="car-sticker-opt-price">{{ generated_spec_sheet.catalog.priced_total_display }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <p class="build-sheet-disclaimer">Assembled from listing data, EPA reference specs, and observed window-sticker pricing. Not an official Monroney label.</p>
+            </section>
+            {% endif %}
 
             {% if show_window_sticker_ui %}
             <div class="car-window-sticker-embed-wrap" id="car-window-sticker-wrap">
@@ -1131,7 +1210,7 @@
                 {% endif %}
             </div>
 
-            <p class="listing-packages-empty" id="car-packages-empty" {% if packages_panel_has_content or window_sticker_preview_url or window_sticker_oem_url or listing_sticker_options %}hidden{% endif %}>
+            <p class="listing-packages-empty" id="car-packages-empty" {% if packages_panel_has_content or window_sticker_preview_url or window_sticker_oem_url or listing_sticker_options or generated_spec_sheet %}hidden{% endif %}>
                 {% if show_window_sticker_ui %}No package data yet. If an OEM window sticker exists for this VIN, we will fetch and analyze it automatically.{% else %}No package data yet for this listing.{% endif %}
             </p>
                         </div>

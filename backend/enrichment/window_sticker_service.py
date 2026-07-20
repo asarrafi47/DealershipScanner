@@ -548,6 +548,32 @@ def _analyze_sticker_text_and_merge(
     ):
         return False
 
+    # Self-improving loop: fold this sticker's priced options into the package-
+    # value registry. Real OEM prices are ground truth and teach the value of
+    # each package/option for every future car of the same configuration.
+    try:
+        _priced = pkg_patch.get("sticker_options_priced")
+        if _priced:
+            from backend.enrichment.package_registry import (
+                classify_kind,
+                record_package_observations,
+            )
+
+            _items = [
+                {
+                    "kind": classify_kind(e.get("name")),
+                    "name": str(e.get("name") or "").strip(),
+                    "code": e.get("code"),
+                    "price": e.get("price") if isinstance(e.get("price"), (int, float)) else None,
+                }
+                for e in _priced
+                if isinstance(e, dict) and str(e.get("name") or "").strip()
+            ]
+            if _items:
+                record_package_observations(car, "oem_sticker", _items)
+    except Exception:
+        pass
+
     merged_packages = _merge_packages(car.get("packages"), pkg_patch)
     fields: dict[str, Any] = {
         "packages": merged_packages,

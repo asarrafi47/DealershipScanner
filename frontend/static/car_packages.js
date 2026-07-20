@@ -24,6 +24,9 @@
     const showStickerUi = section.getAttribute("data-show-sticker") !== "0";
     const stickerLocal = section.getAttribute("data-sticker-local") === "1";
     const panelHasContent = section.getAttribute("data-panel-has-content") === "1";
+    // A generated build sheet is always rendered server-side for every car, so
+    // the "no package data" empty state must never win over it.
+    const buildSheetPresent = section.getAttribute("data-build-sheet") === "1";
     const stickerPreviewApi =
         (stickerPreview && stickerPreview.getAttribute("data-sticker-preview-api")) || "";
     const stickerPdfApi =
@@ -610,7 +613,7 @@
                 hideWindowStickerBlock();
             }
             let hasContent =
-                shown || stickerIsVisible() || serverRenderedPanelHasContent();
+                shown || stickerIsVisible() || serverRenderedPanelHasContent() || buildSheetPresent;
             if (data && data.packages_panel_has_content && panel) {
                 panel.hidden = false;
                 hasContent = true;
@@ -697,7 +700,7 @@
                 hideStickerLoading();
                 ensurePanelVisible();
                 const oemUrl = (section.getAttribute("data-oem-sticker-url") || "").trim();
-                if (empty && !oemUrl && !serverRenderedPanelHasContent()) {
+                if (empty && !oemUrl && !serverRenderedPanelHasContent() && !buildSheetPresent) {
                     empty.textContent = "Could not load package data. Try refreshing the page.";
                     empty.hidden = false;
                 }
