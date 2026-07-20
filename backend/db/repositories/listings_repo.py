@@ -329,8 +329,26 @@ def landing_featured_cars(limit: int = 4) -> list[dict[str, Any]]:
         for c in rows
         if inc or not _car_is_publicly_incomplete(c, snapshot)
     ]
+    # The landing template interpolates image_url into a CSS `url('...')`
+    # context, where Jinja's HTML-entity escaping of a quote is decoded back to
+    # a real quote by the CSS parser — a scraped dealer image_url containing a
+    # quote could break out and inject CSS. Real image URLs never contain
+    # quotes/parens/whitespace; drop the image to the placeholder if one does.
+    for car in out:
+        if not _css_url_safe(car.get("image_url")):
+            car["image_url"] = None
+        gal = car.get("gallery")
+        if isinstance(gal, list):
+            car["gallery"] = [g for g in gal if _css_url_safe(g)]
     _featured_cars_cache = (time.time(), out)
     return out[:lim]
+
+
+def _css_url_safe(url: Any) -> bool:
+    """A URL that cannot break out of a CSS ``url('...')`` string context."""
+    if not url or not isinstance(url, str):
+        return False
+    return not any(ch in url for ch in ("'", '"', "(", ")", "\\", " ", "\t", "\n", "\r"))
 
 
 def listings_grid_cache_etag() -> str:
