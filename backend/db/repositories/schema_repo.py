@@ -51,6 +51,9 @@ def ensure_cars_table_columns(cursor) -> None:
         ("spin_frames", "TEXT"),
         ("interior_pano", "TEXT"),
         ("zip_code", "TEXT"),
+        ("epa_master_id", "INTEGER"),
+        ("epa_match_confidence", "REAL"),
+        ("epa_match_method", "TEXT"),
     ]:
         if col not in existing:
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")

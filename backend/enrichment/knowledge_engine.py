@@ -479,6 +479,115 @@ def lookup_epa_by_trim(
     return dict(_lookup_epa_by_trim_cached(key))
 
 
+@lru_cache(maxsize=4096)
+def _lookup_epa_master_by_id_cached(epa_master_id: int) -> frozenset:
+    conn = None
+    try:
+        conn = _conn()
+        cur = conn.cursor()
+        cur.execute(
+            """
+            SELECT cylinders, drive, trany, displacement,
+                   city08, highway08, fuel_type, atv_type, body_style, engine_description
+            FROM epa_master WHERE id=? LIMIT 1
+            """,
+            (int(epa_master_id),),
+        )
+        row = cur.fetchone()
+        if row:
+            return frozenset(_epa_row_to_dict(row).items())
+    except Exception:
+        pass
+    finally:
+        if conn is not None:
+            conn.close()
+    return frozenset()
+
+
+def lookup_epa_master_by_id(epa_master_id: Any) -> dict[str, Any]:
+    """
+    Catalog row for a resolved ``cars.epa_master_id`` link — the authoritative
+    per-trim source (same shape as :func:`lookup_epa_by_trim`, but no fuzzy
+    matching; the resolver already picked the row).
+    """
+    try:
+        mid = int(epa_master_id)
+    except (TypeError, ValueError):
+        return {}
+    if mid <= 0:
+        return {}
+    return dict(_lookup_epa_master_by_id_cached(mid))
+
+
+def _extended_family_suspicious(cur, year: int, make: str, model: str) -> bool:
+    """
+    True when EVERY trim of a (year, make, model) family scraped to the same
+    horsepower — a scrape bug fingerprint (e.g. 2011 E-Class: E350, E550 and
+    the 518-hp E63 all stored as 375). Such hp/torque must not be displayed;
+    the AI-researched per-trim fallback fills instead.
+    """
+    try:
+        cur.execute(
+            "SELECT COUNT(*), COUNT(DISTINCT horsepower) FROM epa_extended_specs "
+            "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?) AND horsepower IS NOT NULL",
+            (year, make.strip(), model.strip()),
+        )
+        n, distinct = cur.fetchone()
+        return int(n or 0) >= 4 and int(distinct or 0) == 1
+    except Exception:
+        return False
+
+
+@lru_cache(maxsize=4096)
+def _lookup_extended_by_master_id_cached(epa_master_id: int) -> frozenset:
+    cols = ", ".join(_EXTENDED_SPECS_COLUMNS)
+    conn = None
+    try:
+        conn = _conn()
+        cur = conn.cursor()
+        cur.execute(
+            f"SELECT {cols} FROM epa_extended_specs WHERE epa_master_id=? LIMIT 1",
+            (int(epa_master_id),),
+        )
+        row = cur.fetchone()
+        result = _extended_specs_row_to_dict(row) if row else {}
+        if result.get("horsepower") is not None and not (60 <= result["horsepower"] <= 1600):
+            result.pop("horsepower")
+        if result.get("torque_lb_ft") is not None and not (40 <= result["torque_lb_ft"] <= 1500):
+            result.pop("torque_lb_ft")
+        cur.execute("SELECT year, make, model, trim FROM epa_master WHERE id=?", (int(epa_master_id),))
+        ymm = cur.fetchone()
+        if ymm and (result.get("horsepower") is not None or result.get("torque_lb_ft") is not None):
+            if _extended_family_suspicious(cur, int(ymm[0]), str(ymm[1] or ""), str(ymm[2] or "")):
+                result.pop("horsepower", None)
+                result.pop("torque_lb_ft", None)
+        if ymm and len(result) < len(_EXTENDED_SPECS_COLUMNS):
+            y_, mk_, md_, tr_ = int(ymm[0]), str(ymm[1] or ""), str(ymm[2] or ""), str(ymm[3] or "")
+            result = _merge_ai_model_specs(cur, y_, mk_, md_, result)
+            if result.get("horsepower") is None and tr_:
+                # ai_model_specs keys some models by variant name ("E 350"
+                # rather than "E-Class") — retry matching by normalized name.
+                result = _merge_ai_model_specs_normed(cur, y_, mk_, (md_, tr_, f"{md_} {tr_}"), result)
+        return frozenset(result.items())
+    except Exception:
+        pass
+    finally:
+        if conn is not None:
+            conn.close()
+    return frozenset()
+
+
+def lookup_epa_extended_specs_by_master_id(epa_master_id: Any) -> dict[str, Any]:
+    """hp/tq/0-60 joined directly on the resolved catalog link (exact FK, no guessing)."""
+    try:
+        mid = int(epa_master_id)
+    except (TypeError, ValueError):
+        return {}
+    if mid <= 0:
+        return {}
+    return dict(_lookup_extended_by_master_id_cached(mid))
+
+
 def _lookup_epa_by_trim_uncached(
     year: int,
     make: str,
@@ -673,6 +782,11 @@ def _lookup_epa_extended_specs_uncached(
             result.pop("horsepower")
         if result.get("torque_lb_ft") is not None and not (40 <= result["torque_lb_ft"] <= 1500):
             result.pop("torque_lb_ft")
+        # Same-hp-for-every-trim families are scrape garbage — drop, let AI fill.
+        if result.get("horsepower") is not None or result.get("torque_lb_ft") is not None:
+            if _extended_family_suspicious(cur, year, make, model):
+                result.pop("horsepower", None)
+                result.pop("torque_lb_ft", None)
         # AI-researched fallback (ai_model_specs, provenance-tagged) fills ONLY the
         # fields still missing after real EPA/scraped data — real values always win.
         if len(result) < len(_EXTENDED_SPECS_COLUMNS):
@@ -746,6 +860,40 @@ def lookup_engine_specs(
 
 def clear_engine_specs_lookup_cache() -> None:
     _lookup_engine_specs_cached.cache_clear()
+
+
+def _merge_ai_model_specs_normed(
+    cur, year: int, make: str, name_targets: tuple[str, ...], result: dict[str, Any]
+) -> dict[str, Any]:
+    """
+    Like :func:`_merge_ai_model_specs` but matches ai_model_specs.model against
+    any of *name_targets* alphanumeric-normalized ("E350" == "E 350").
+    """
+    def _n(s: str) -> str:
+        return "".join(ch for ch in s.lower() if ch.isalnum())
+
+    targets = {_n(t) for t in name_targets if t}
+    if not targets:
+        return result
+    try:
+        cur.execute(
+            f"""
+            SELECT model, {", ".join(_AI_SPEC_COLUMNS)}
+            FROM ai_model_specs
+            WHERE year=? AND lower(make)=lower(?)
+            """,
+            (year, make.strip()),
+        )
+        rows = cur.fetchall()
+    except Exception:
+        return result
+    for row in rows:
+        if _n(str(row[0] or "")) in targets:
+            for key, val in zip(_AI_SPEC_COLUMNS, row[1:]):
+                if val is not None:
+                    result.setdefault(key, val)
+            break
+    return result
 
 
 def _merge_ai_model_specs(cur, year: int, make: str, model: str, result: dict[str, Any]) -> dict[str, Any]:
@@ -1648,22 +1796,42 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     if (make or "").strip().upper() == "BMW" and dealer_ft:
         title_for_decode = f"{title_for_decode} {dealer_ft}".strip()
     regex = decode_trim_logic(make, model, trim, title_for_decode)
-    # Per-trim lookup first (exact match from build_epa_master.py data), then aggregate fallback
-    epa_trim = lookup_epa_by_trim(y, make, model, trim) if trim else {}
+    # Resolved catalog link first (cars.epa_master_id, written by the one
+    # resolver in backend.catalog): exact row + exact extended-specs FK, no
+    # fuzzy re-matching. Fuzzy per-trim/aggregate lookups remain the fallback
+    # for unlinked cars.
+    linked_id = car.get("epa_master_id")
+    try:
+        from backend.catalog.generations import generation_for
+
+        _generation = generation_for(make, model, y)
+    except Exception:
+        _generation = None
+    epa_trim = lookup_epa_master_by_id(linked_id) if linked_id else {}
+    if not epa_trim:
+        # Per-trim lookup (exact match from build_epa_master.py data), then aggregate fallback
+        epa_trim = lookup_epa_by_trim(y, make, model, trim) if trim else {}
     epa = lookup_epa_aggregate(
         y, make, model, title=title_for_decode, trim=trim,
         prefer_cylinders=_int_or_none(dealer_cyl),
     )
     # Merge: per-trim values win over aggregate for any key they provide
     epa = {**epa, **{k: v for k, v in epa_trim.items() if v is not None}}
-    epa_extended = lookup_epa_extended_specs(y, make, model, trim)
+    epa_extended = lookup_epa_extended_specs_by_master_id(linked_id) if linked_id else {}
+    if not epa_extended:
+        epa_extended = lookup_epa_extended_specs(y, make, model, trim)
 
     from backend.enrichment.model_specs_dictionary import lookup_model_specs_dictionary
 
     dict_specs = lookup_model_specs_dictionary(make, model)
     vpic = lookup_vpic_from_cache(car.get("vin"))
 
-    cyl_ver = regex.get("cylinders")
+    # Resolved catalog row beats the regex trim decoder for cylinders — the
+    # decoder is era-blind ("E 350" decodes to the modern turbo-four) while the
+    # link was scored against this car's own engine data.
+    cyl_ver = _int_or_none(epa_trim.get("cylinders")) if linked_id else None
+    if cyl_ver is None:
+        cyl_ver = regex.get("cylinders")
     if cyl_ver is None:
         cyl_ver = epa.get("cylinders")
     if cyl_ver is None:
@@ -1893,6 +2061,13 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         "ev_range_miles": epa_extended.get("ev_range_miles"),
         "battery_kwh": epa_extended.get("battery_kwh"),
         "tow_capacity_lb": epa_extended.get("tow_capacity_lb"),
+        # Catalog link + generation (backend.catalog; see docs/data_architecture_plan.md)
+        "epa_master_id": linked_id,
+        "generation_code": _generation.get("generation") if _generation else None,
+        "generation_years": (
+            f"{_generation['year_start']}–{_generation['year_end'] or 'present'}" if _generation else None
+        ),
+        "generation_notes": _generation.get("notes") if _generation else None,
     }
 
 

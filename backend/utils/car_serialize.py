@@ -1405,6 +1405,10 @@ def serialize_car_for_api(
     out["battery_kwh"] = vs.get("battery_kwh")
     out["tow_capacity_lb"] = vs.get("tow_capacity_lb")
 
+    # Model generation (backend.catalog model_generations — read-time join)
+    out["generation_code"] = vs.get("generation_code")
+    out["generation_years"] = vs.get("generation_years")
+
     # EV range / battery are ONLY real for battery-electric and plug-in hybrids. The
     # model-level spec match can pull an EV trim's row onto a gas car of the same
     # nameplate (e.g. gas Kona matching Kona Electric), so gate on the car's own fuel
