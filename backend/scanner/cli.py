@@ -238,11 +238,12 @@ def run_cli_entry() -> None:
         from backend.db.inventory_db import init_inventory_db
 
         init_inventory_db()
-    if not MANIFEST_PATH.is_file() and (os.environ.get("DEALERS_FROM_DB") or "").strip().lower() not in (
-        "1",
-        "true",
-        "yes",
-    ):
+    _truthy = ("1", "true", "yes")
+    _roster_from_env = (
+        (os.environ.get("DEALERS_FROM_DB") or "").strip().lower() in _truthy
+        or (os.environ.get("DEALERS_FROM_ACTIVE_INVENTORY") or "").strip().lower() in _truthy
+    )
+    if not MANIFEST_PATH.is_file() and not _roster_from_env:
         logger.error("Manifest not found: %s", MANIFEST_PATH.resolve())
         sys.exit(1)
 

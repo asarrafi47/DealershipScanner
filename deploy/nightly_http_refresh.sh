@@ -118,8 +118,16 @@ BROWSERS_BEFORE="$(count_browsers)"
 log "browser processes before delta step: ${BROWSERS_BEFORE}"
 
 # --- Step 1: HTTP delta refresh (HTTP-only by design) ----------------------
+# Roster from ACTIVE INVENTORY, not a single regional manifest. The old
+# "--manifest $MANIFEST" scoped the nightly delta to one region (92694 SoCal
+# 25mi), so every dealer scanned in another region went stale (stale/partial
+# inventory + stale prices). DEALERS_FROM_ACTIVE_INVENTORY=1 rosters the delta
+# from every dealer with live rows in `cars` (all of which have stored recipes);
+# no-recipe dealers skip fast. Per-dealer timeout raised to 900s so the biggest
+# lots (2000+ VIN replays) finish instead of timing out at the 300s default.
 run_step "1/4 http-delta-refresh" \
-  "$PYTHON" scanner.py --manifest "$MANIFEST" --delta || FAILS=$((FAILS+1))
+  env DEALERS_FROM_ACTIVE_INVENTORY=1 SCANNER_DELTA_DEALER_TIMEOUT=900 SCANNER_DELTA_CONCURRENCY=8 \
+  "$PYTHON" scanner.py --delta || FAILS=$((FAILS+1))
 
 # Browser snapshot after — flag any NEW browser processes this job may have spawned.
 BROWSERS_AFTER="$(count_browsers)"

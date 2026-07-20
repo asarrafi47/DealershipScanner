@@ -83,7 +83,61 @@ def _load_dealers_from_db() -> list[dict]:
     return out
 
 
+def _load_active_inventory_dealers() -> list[dict]:
+    """Roster of every dealer that has ACTIVE inventory in ``cars`` — the set a
+    delta refresh should actually cover.
+
+    This is deliberately distinct from :func:`_load_dealers_from_db` (the
+    dealership *registry*, mostly never-scanned discovery candidates that is
+    nearly disjoint from the dealers we have actually scanned). Using the
+    registry for a delta sweep touches only the handful of dealers that happen
+    to appear in both lists; the correct roster for "refresh what we have" is the
+    distinct ``dealer_id`` set from live inventory. The base URL is derived from
+    a stored listing URL; recipe eligibility is left to the delta path (a dealer
+    with no stored recipe simply skips fast).
+    """
+    from urllib.parse import urlparse
+
+    from backend.db.inventory_db import get_conn
+
+    # NB: no ``row_factory`` — the Postgres compat rows are positionally indexed
+    # (see the note in ``_load_dealers_from_db``).
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT dealer_id, MAX(dealer_name) AS name, MAX(source_url) AS any_url
+        FROM cars
+        WHERE COALESCE(listing_active, 1) = 1
+          AND dealer_id IS NOT NULL AND TRIM(dealer_id) != ''
+        GROUP BY dealer_id
+        """
+    )
+    rows = cur.fetchall()
+    conn.close()
+    out: list[dict] = []
+    for r in rows:
+        did = str(r[0] or "").strip()
+        if not did:
+            continue
+        name = str(r[1] or "").strip()
+        any_url = str(r[2] or "").strip()
+        u = urlparse(any_url)
+        base = f"{u.scheme}://{u.netloc}" if u.scheme and u.netloc else ""
+        out.append({"dealer_id": did, "url": base, "name": name or did})
+    return out
+
+
 def load_manifest() -> list[dict]:
+    if (os.environ.get("DEALERS_FROM_ACTIVE_INVENTORY") or "").strip().lower() in (
+        "1", "true", "yes",
+    ):
+        dealers = _load_active_inventory_dealers()
+        logger.info(
+            "Loaded %d dealers from active inventory (DEALERS_FROM_ACTIVE_INVENTORY=1)",
+            len(dealers),
+        )
+        return dealers
     use_db = (os.environ.get("DEALERS_FROM_DB") or "").strip().lower() in ("1", "true", "yes")
     if use_db:
         dealers = _load_dealers_from_db()
