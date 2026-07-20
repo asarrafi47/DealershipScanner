@@ -7,6 +7,8 @@ and is reset via :func:`clear_incomplete_snapshot_cache`.
 import json
 import re
 import sqlite3
+import threading
+import time
 from typing import Any
 
 from backend.db.repositories.base_repo import db_conn
@@ -189,6 +191,8 @@ def clear_inventory_listings_cache() -> None:
     _geo_coords_cache_value = None
     _grid_cars_cache_token = None
     _grid_cars_cache_value = None
+    global _featured_cars_cache
+    _featured_cars_cache = None
     clear_incomplete_snapshot_cache()
 
 
@@ -207,12 +211,27 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
     """
     Per-car JSON for the listings grid (``options.all_cars`` and ``GET /api/listings/cars``).
     Honors :func:`listings_include_incomplete_cars` and :func:`serialize_car_for_listings_grid`.
+
+    Stale-while-revalidate: on Postgres the cache token is a 60s time bucket, so
+    a synchronous rebuild (~10s on a large fleet) would stall one request every
+    minute. When a stale copy exists it is served immediately and the rebuild
+    runs on a daemon thread; only the true cold start builds inline.
     """
     global _grid_cars_cache_token, _grid_cars_cache_value
     token = _listings_cache_token()
     if _grid_cars_cache_value is not None and _grid_cars_cache_token == token:
         return _grid_cars_cache_value
+    if _grid_cars_cache_value is not None:
+        _spawn_grid_cars_rebuild(token)
+        return _grid_cars_cache_value
 
+    out = _build_grid_cars_uncached()
+    _grid_cars_cache_token = token
+    _grid_cars_cache_value = out
+    return out
+
+
+def _build_grid_cars_uncached() -> list[dict[str, Any]]:
     active = "(COALESCE(listing_active, 1) = 1)"
     inc = listings_include_incomplete_cars()
     cols = ", ".join(LISTINGS_GRID_CAR_COLUMNS)
@@ -233,9 +252,64 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
     from backend.utils.listings_sort import listing_sort_key_by_price
 
     out.sort(key=listing_sort_key_by_price)
-    _grid_cars_cache_token = token
-    _grid_cars_cache_value = out
     return out
+
+
+_grid_cars_rebuild_thread: threading.Thread | None = None
+
+
+def _spawn_grid_cars_rebuild(token: tuple[float, float]) -> None:
+    global _grid_cars_rebuild_thread
+    if _grid_cars_rebuild_thread is not None and _grid_cars_rebuild_thread.is_alive():
+        return
+
+    def _run() -> None:
+        global _grid_cars_cache_token, _grid_cars_cache_value
+        try:
+            out = _build_grid_cars_uncached()
+        except Exception:
+            return
+        _grid_cars_cache_token = token
+        _grid_cars_cache_value = out
+
+    t = threading.Thread(target=_run, name="grid-cars-refresh", daemon=True)
+    _grid_cars_rebuild_thread = t
+    t.start()
+
+
+_featured_cars_cache: tuple[float, list[dict[str, Any]]] | None = None
+_FEATURED_CARS_TTL_S = 300.0
+
+
+def landing_featured_cars(limit: int = 4) -> list[dict[str, Any]]:
+    """
+    A few photo+price cards for the marketing landing. Deliberately a tiny direct
+    query — must never trigger the full grid build (the landing page is the first
+    thing a guest sees).
+    """
+    global _featured_cars_cache
+    try:
+        lim = max(1, min(int(limit), 12))
+    except (TypeError, ValueError):
+        lim = 4
+    if _featured_cars_cache is not None and time.time() - _featured_cars_cache[0] < _FEATURED_CARS_TTL_S:
+        return _featured_cars_cache[1][:lim]
+
+    active = "(COALESCE(listing_active, 1) = 1)"
+    cols = ", ".join(LISTINGS_GRID_CAR_COLUMNS)
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cur = conn.cursor()
+        cur.execute(
+            f"SELECT {cols} FROM cars WHERE {active} "
+            "AND COALESCE(price, 0) > 0 AND COALESCE(image_url, '') != '' "
+            "ORDER BY id DESC LIMIT 12"
+        )
+        rows = [dict(r) for r in cur.fetchall()]
+    for c in rows:
+        _parse_car_gallery(c)
+    out = [_serialize_car_for_listings_grid(c) for c in rows]
+    _featured_cars_cache = (time.time(), out)
+    return out[:lim]
 
 
 def listings_grid_cache_etag() -> str:

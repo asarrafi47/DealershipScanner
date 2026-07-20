@@ -28,6 +28,16 @@ def _inventory_count_display() -> str:
     return "Live"
 
 
+def _landing_featured_cars(limit: int = 4) -> list[dict]:
+    """A few photo+price listings for the landing page's "on the lot" strip."""
+    from backend.db.repositories.listings_repo import landing_featured_cars
+
+    try:
+        return landing_featured_cars(limit=limit)
+    except Exception:
+        return []
+
+
 def home():
     """Public marketing landing; signed-in users go to ``/home``."""
     if session.get("user_id"):
@@ -38,6 +48,7 @@ def home():
         "landing.html",
         now=datetime.utcnow(),
         inventory_count_display=_inventory_count_display(),
+        featured_cars=_landing_featured_cars(),
     )
 
 
