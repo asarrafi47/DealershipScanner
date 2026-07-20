@@ -187,10 +187,21 @@ def get_cars_by_ids(car_ids: list[int]) -> list[dict]:
 
 
 def get_car_by_vin(vin):
+    v = str(vin).strip() if vin is not None else ""
     with db_conn(row_factory=sqlite3.Row) as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM cars WHERE vin = ?", (vin,))
+        cursor.execute("SELECT * FROM cars WHERE vin = ?", (v,))
         row = cursor.fetchone()
+        if row is None and v:
+            # VINs are canonically uppercase, but the write path stores them as
+            # received (scanner/database.py strips but does not upper-case). A
+            # normalized feed VIN (always upper — normalize_scanner_vin) must
+            # still match a raw lower/mixed-case DB row, else delta gap-fill
+            # silently no-ops for such rows. Fall back to a case-insensitive
+            # match only on miss, so the common exact-match path keeps using
+            # the vin index.
+            cursor.execute("SELECT * FROM cars WHERE UPPER(TRIM(vin)) = ?", (v.upper(),))
+            row = cursor.fetchone()
     car = dict(row) if row else None
     if car:
         _parse_car_gallery(car)

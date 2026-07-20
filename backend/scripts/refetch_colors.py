@@ -86,7 +86,7 @@ def _get_color_missing_cars(dealer_filter: str | None = None) -> list[dict]:
 
     result = []
     for car in cars:
-        missing = listing_missing_field_codes(car, for_public_filter=True)
+        missing = listing_missing_field_codes(car, for_public_filter=True, include_non_actionable=True)
         if "exterior_color" in missing or "interior_color" in missing:
             result.append(car)
     return result
@@ -515,7 +515,7 @@ async def _run(
                     continue
                 found = srp_results[vin]
                 patch: dict[str, str] = {}
-                missing = listing_missing_field_codes(car, for_public_filter=True)
+                missing = listing_missing_field_codes(car, for_public_filter=True, include_non_actionable=True)
                 if "exterior_color" in missing and found.get("exterior_color"):
                     patch["exterior_color"] = found["exterior_color"]
                     stats["srp_ext"] += 1
@@ -533,7 +533,7 @@ async def _run(
             su = (car.get("source_url") or "").strip()
             if not su.startswith("http"):
                 continue
-            missing = listing_missing_field_codes(car, for_public_filter=True)
+            missing = listing_missing_field_codes(car, for_public_filter=True, include_non_actionable=True)
             # Skip if already resolved by SRP
             cid = car["id"]
             already = updates.get(cid, {})
@@ -551,7 +551,7 @@ async def _run(
         async def fetch_one_vdp(car: dict, url: str):
             async with sem:
                 colors = await _fetch_vdp_colors(browser, url)
-                missing = listing_missing_field_codes(car, for_public_filter=True)
+                missing = listing_missing_field_codes(car, for_public_filter=True, include_non_actionable=True)
                 cid = car["id"]
                 patch = dict(updates.get(cid, {}))
                 if "exterior_color" in missing and colors.get("exterior_color") and "exterior_color" not in patch:

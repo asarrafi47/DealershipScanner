@@ -184,7 +184,17 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         # browser renders) can never reach the coverage bar this way and should
         # be deferred to the full browser scan instead of burning the cap.
         completed = 0
-        missing_price = sum(1 for _v in vehicles if not (_v.get("price") and float(_v.get("price") or 0) > 0))
+
+        def _priced(_v: dict) -> bool:
+            # Same semantics as _price_coverage: a non-numeric price ("Call",
+            # "N/A") is not a positive price and must not raise (an unguarded
+            # float() here aborted the whole dealer delta scan).
+            try:
+                return float(_v.get("price") or 0) > 0
+            except (TypeError, ValueError):
+                return False
+
+        missing_price = sum(1 for _v in vehicles if not _priced(_v))
         if missing_price <= _VDP_PRICE_COMPLETE_MAX:
             completed = await asyncio.to_thread(_complete_prices_from_vdp, vehicles, name)
             price_cov = _price_coverage(vehicles)

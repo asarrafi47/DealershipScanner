@@ -1886,13 +1886,18 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     if cyl_ver is None:
         # Last resort: the answer is often sitting in the listing's own text —
         # e.g. an Infiniti Q70L whose trim reads "Sedan V-6 cyl". Read the
-        # layout token from title/trim/engine text (skipping BEVs, which have
+        # layout token from trim/engine text only (skipping BEVs, which have
         # no cylinders and never carry a V-N badge).
+        #
+        # The TITLE is deliberately excluded: it carries the model designator,
+        # and BMW "i8"/"i4"/"i7" and Hummer "H2"/"H3" collide with the V/I/H/W
+        # layout pattern ("i8" -> 8 cyl, "H2" -> 2 cyl). A genuine cylinder
+        # badge lives in the trim or engine description, not the model name.
         from backend.utils.engine_consistency import cylinders_from_engine_text, is_bev_fuel
 
         if not is_bev_fuel(dealer_ft or epa.get("fuel_type")):
             cyl_ver = cylinders_from_engine_text(
-                " ".join(x for x in (title, trim, car.get("engine_description")) if x)
+                " ".join(x for x in (trim, car.get("engine_description")) if x)
             )
 
     drive_ver = regex.get("drivetrain") or epa.get("drivetrain")

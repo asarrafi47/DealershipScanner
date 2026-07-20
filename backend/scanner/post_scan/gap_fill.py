@@ -457,6 +457,15 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
             _bump("skipped_complete")
             return
 
+        # Interior color is excluded from the actionable gap list (dealer-
+        # discretionary; see listing_completeness._NON_ACTIONABLE), so it never
+        # appears in `missing` and never triggers a page fetch on its own. But
+        # when we ARE fetching the page for a real gap, patch interior color
+        # opportunistically from what we already parsed — hence the full list.
+        missing_all = listing_missing_field_codes(
+            raw, for_public_filter=False, include_non_actionable=True
+        )
+
         url = (raw.get("source_url") or "").strip()
         proposed: dict[str, Any] = {}
         html: str | None = None
@@ -487,7 +496,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 colors = parse_color_from_listing_html(html)
                 if "exterior_color" in missing and colors.get("exterior_color"):
                     proposed["exterior_color"] = str(colors["exterior_color"])[:120]
-                if "interior_color" in missing and colors.get("interior_color"):
+                if "interior_color" in missing_all and colors.get("interior_color"):
                     proposed["interior_color"] = str(colors["interior_color"])[:120]
             specs = parse_html_for_vehicle_specs(html)
             if "transmission" in missing and specs.get("transmission"):
