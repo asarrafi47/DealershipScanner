@@ -10140,6 +10140,12 @@ body.listings-page .page:has(.app-sidebar) .listings-layout {
 }
 
 /* ZIP prompt banner — shown above results until a location is set */
+/* The [hidden] attribute (set by the ×, ZIP entry, and geolocation handlers)
+   must win over the display rule below — otherwise the banner never hides. */
+.listings-zip-banner[hidden] {
+    display: none !important;
+}
+
 .listings-zip-banner {
     position: relative;
     display: flex;

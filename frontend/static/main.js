@@ -972,10 +972,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 input.focus();
                 return;
             }
-            // The shared zip_code input handler runs the full pipeline
-            // (sync inputs, persist, chips, radius refresh); re-dispatch
-            // to cover autofill/paste paths that skip input events.
-            input.dispatchEvent(new Event("input", { bubbles: true }));
+            // Route through the real sidebar zip input (id=listings-zip-input),
+            // which is bound to the full pipeline (sync, persist, hide banner,
+            // chips, radius refresh). The banner's own input isn't in
+            // #search-form, so dispatching on it alone would hide the banner
+            // without ever applying the ZIP.
+            const z = input.value.trim();
+            const mainZip = document.getElementById("listings-zip-input");
+            if (mainZip) {
+                mainZip.value = z;
+                mainZip.dispatchEvent(new Event("input", { bubbles: true }));
+            }
             hideListingsZipPromptBanner();
         }
 
