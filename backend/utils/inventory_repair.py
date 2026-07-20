@@ -97,7 +97,9 @@ def collect_merge_spec_storage_updates(raw: dict[str, Any]) -> dict[str, Any]:
                 # text the listing already carries.
                 from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
 
-                if not cylinders_conflicts_with_engine_text(ci, c.get("engine_description")):
+                if not cylinders_conflicts_with_engine_text(
+                    ci, c.get("engine_description"), c.get("fuel_type")
+                ):
                     out["cylinders"] = ci
 
     if is_effectively_empty(c.get("fuel_type")):

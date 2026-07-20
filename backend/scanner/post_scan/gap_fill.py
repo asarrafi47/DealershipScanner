@@ -507,7 +507,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 if ci is not None and ci >= 0:
                     from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
 
-                    if not cylinders_conflicts_with_engine_text(ci, raw.get("engine_description")):
+                    if not cylinders_conflicts_with_engine_text(ci, raw.get("engine_description"), raw.get("fuel_type")):
                         proposed["cylinders"] = ci
             if "mpg_city" in missing and specs.get("mpg_city") is not None:
                 try:
@@ -537,7 +537,7 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 # Search snippets routinely describe the wrong model year —
                 # never accept a cylinder count that contradicts the engine text.
                 if k == "cylinders" and cylinders_conflicts_with_engine_text(
-                    v, raw.get("engine_description")
+                    v, raw.get("engine_description"), raw.get("fuel_type")
                 ):
                     continue
                 proposed[k] = v
