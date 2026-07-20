@@ -80,17 +80,15 @@ def infer_pagination(url: str, post_template: str | None) -> str:
     return PAGINATION_NONE
 
 
+def _recipe_slug(dealer_id: str) -> str:
+    return re.sub(r"[^a-z0-9_-]+", "-", (dealer_id or "unknown").lower()).strip("-") or "unknown"
+
+
 def _recipe_path(dealer_id: str) -> Path:
-    slug = re.sub(r"[^a-z0-9_-]+", "-", (dealer_id or "unknown").lower()).strip("-") or "unknown"
-    return RECIPES_DIR / f"{slug}.json"
+    return RECIPES_DIR / f"{_recipe_slug(dealer_id)}.json"
 
 
-def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
-    path = _recipe_path(dealer_id)
-    try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return []
+def _rows_to_recipes(raw: Any) -> list[EndpointRecipe]:
     out: list[EndpointRecipe] = []
     for row in raw if isinstance(raw, list) else []:
         try:
@@ -101,10 +99,68 @@ def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
     return out
 
 
+def load_recipes(dealer_id: str) -> list[EndpointRecipe]:
+    """
+    Local file first, reconciled against the shared ``dealer_recipes`` table
+    (see ``backend.scanner.recipe_store``): a newer DB copy (captured on
+    another machine) wins and re-materializes the file; a newer file (written
+    by a scan that predates the DB store) is lazily pushed up. Either side
+    being unavailable degrades to the other.
+    """
+    path = _recipe_path(dealer_id)
+    file_rows: list[dict] = []
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(raw, list):
+            file_rows = raw
+    except (OSError, ValueError):
+        pass
+
+    db_rows: list[dict] = []
+    db_saved = -1.0
+    try:
+        from backend.scanner.recipe_store import db_load_recipes
+
+        found = db_load_recipes(_recipe_slug(dealer_id))
+        if found is not None:
+            db_rows, db_saved = found
+    except Exception:  # noqa: BLE001 — DB is optional here
+        pass
+
+    def _max_saved(rows: list[dict]) -> float:
+        vals = [float(r.get("saved_at") or 0) for r in rows if isinstance(r, dict)]
+        return max(vals) if vals else 0.0
+
+    file_saved = _max_saved(file_rows) if file_rows else -1.0
+    if db_rows and db_saved > file_saved:
+        # Another machine captured fresher recipes — adopt and cache locally.
+        try:
+            RECIPES_DIR.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(db_rows, indent=1), encoding="utf-8")
+        except OSError:
+            pass
+        return _rows_to_recipes(db_rows)
+    if file_rows and file_saved > db_saved:
+        try:
+            from backend.scanner.recipe_store import db_save_recipes
+
+            db_save_recipes(_recipe_slug(dealer_id), file_rows)
+        except Exception:  # noqa: BLE001
+            pass
+    return _rows_to_recipes(file_rows or db_rows)
+
+
 def save_recipes(dealer_id: str, recipes: list[EndpointRecipe]) -> None:
     RECIPES_DIR.mkdir(parents=True, exist_ok=True)
     path = _recipe_path(dealer_id)
-    path.write_text(json.dumps([asdict(r) for r in recipes], indent=1), encoding="utf-8")
+    rows = [asdict(r) for r in recipes]
+    path.write_text(json.dumps(rows, indent=1), encoding="utf-8")
+    try:
+        from backend.scanner.recipe_store import db_save_recipes
+
+        db_save_recipes(_recipe_slug(dealer_id), rows)
+    except Exception:  # noqa: BLE001 — file write is the contract; DB is best-effort
+        pass
 
 
 def mark_stale(dealer_id: str, recipe: EndpointRecipe, reason: str) -> None:
