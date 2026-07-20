@@ -176,7 +176,20 @@ def listing_missing_field_codes(
     if _dash(car.get("model")):
         missing.append("model")
     if _dash(car.get("trim")):
-        missing.append("trim")
+        # A blank trim is only "missing" when the model actually has trim
+        # variants. Standalone models (BMW XM/M6/i8, base F-250) have no trim —
+        # the catalog shows a single trim equal to the model name — so a blank
+        # is correct, not a gap.
+        try:
+            from backend.enrichment.knowledge_engine import catalog_model_is_trimless
+
+            trimless = catalog_model_is_trimless(
+                car_raw.get("year"), car_raw.get("make") or "", car_raw.get("model") or ""
+            )
+        except Exception:
+            trimless = False
+        if not trimless:
+            missing.append("trim")
     if _mileage_blank(car_raw):
         missing.append("mileage")
     if _dash(car.get("engine_display")):

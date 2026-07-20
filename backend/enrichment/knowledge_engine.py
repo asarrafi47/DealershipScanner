@@ -17,6 +17,42 @@ def _conn():
     return get_conn()
 
 
+@lru_cache(maxsize=8192)
+def catalog_model_is_trimless(year: int, make: str, model: str) -> bool:
+    """
+    True when the catalog shows this (year, make, model) has no meaningful trim
+    variants — a standalone model (BMW XM/M6/i8, base F-250) whose only
+    ``epa_master`` trim is the model name or where there is a single trim. Such
+    a car with a blank dealer trim is NOT missing data; the model has no trim to
+    capture. Returns False when the model isn't in the catalog (can't tell).
+    """
+    if not year or not make or not model:
+        return False
+    conn = None
+    try:
+        conn = _conn()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT DISTINCT trim FROM epa_master "
+            "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)",
+            (int(year), str(make).strip(), str(model).strip()),
+        )
+        trims = [(r[0] or "").strip() for r in cur.fetchall()]
+    except Exception:
+        return False
+    finally:
+        if conn is not None:
+            conn.close()
+    trims = [t for t in trims if t]
+    if not trims:
+        return False
+    # Standalone signal: every catalog trim IS the model name (BMW XM→"XM",
+    # i8→"i8", Mirai→"Mirai"). A model with a distinctly-named single trim
+    # (Land Cruiser→"1958") is NOT trimless — a blank there is a real gap.
+    mnorm = "".join(ch for ch in str(model).lower() if ch.isalnum())
+    return all("".join(ch for ch in t.lower() if ch.isalnum()) == mnorm for t in trims)
+
+
 def _bmw_has_30i_suffix(blob: str) -> bool:
     """
     330i / 530i / xDrive30i / sDrive30i — ``\\d30I`` matches three-series sedans;
