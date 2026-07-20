@@ -1502,7 +1502,22 @@ document.addEventListener("DOMContentLoaded", () => {
         return c.image_url ? 1 : 0;
     }
 
+    // True when the car has a genuine dealer photo (not the placeholder). A
+    // truthy image_url can be "/static/placeholder.svg", so string-truthiness
+    // isn't enough — require an http image on image_url or in the gallery.
+    function listingHasRealImage(c) {
+        const isReal = (u) => typeof u === "string" && u.indexOf("http") === 0;
+        if (isReal(c.image_url)) return true;
+        const gallery = Array.isArray(c.gallery) ? c.gallery : [];
+        return gallery.some(isReal);
+    }
+
     function listingDepriorityCompare(a, b) {
+        // Strongest tier: placeholder-image cars (no real dealer photo — mostly
+        // unphotographed new inventory) sink below everything, in every sort.
+        const aNoImg = listingHasRealImage(a) ? 0 : 1;
+        const bNoImg = listingHasRealImage(b) ? 0 : 1;
+        if (aNoImg !== bNoImg) return aNoImg - bNoImg;
         const aCall = listingCallForPrice(a) ? 1 : 0;
         const bCall = listingCallForPrice(b) ? 1 : 0;
         if (aCall !== bCall) return aCall - bCall;

@@ -33,9 +33,33 @@ def listing_has_single_photo(car: dict[str, Any]) -> bool:
     return listing_photo_count(car) <= 1
 
 
-def listing_sort_depriority(car: dict[str, Any]) -> tuple[int, int]:
-    """Lower is better. (call_for_price, single_photo)."""
+def listing_has_real_image(car: dict[str, Any]) -> bool:
+    """True when the car has a genuine http dealer photo (not the placeholder)."""
+    iu = car.get("image_url")
+    if isinstance(iu, str) and iu.startswith("http"):
+        return True
+    gal = car.get("gallery")
+    if isinstance(gal, str):
+        try:
+            import json
+
+            gal = json.loads(gal)
+        except (TypeError, ValueError):
+            gal = []
+    if isinstance(gal, list):
+        return any(isinstance(u, str) and u.startswith("http") for u in gal)
+    return False
+
+
+def listing_sort_depriority(car: dict[str, Any]) -> tuple[int, int, int]:
+    """Lower is better. (no_real_image, call_for_price, single_photo).
+
+    Placeholder-image cars (no real dealer photo — mostly unphotographed new
+    inventory) are the strongest depriority so they sort to the bottom by
+    default in every mode.
+    """
     return (
+        0 if listing_has_real_image(car) else 1,
         1 if listing_is_call_for_price(car) else 0,
         1 if listing_has_single_photo(car) else 0,
     )
