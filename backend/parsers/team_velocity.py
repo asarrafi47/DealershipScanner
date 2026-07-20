@@ -353,9 +353,13 @@ def recover_dealer(
     *,
     dry_run: bool = False,
     limit: int | None = None,
-    workers: int = 8,
+    workers: int = 3,
 ) -> dict:
     """DB-driven completion pass for one Team Velocity dealer.
+
+    ``workers`` is intentionally low (3): these dealers throttle a burst of
+    concurrent VDP fetches into gallery-less/challenge pages (observed
+    2026-07-20 — 10 workers yielded ~28% galleries; 3 workers recovers them).
 
     Fills ``cars.image_url`` / ``cars.gallery`` (from the VDP gallery) and
     ``cars.carfax_url`` (from the VDP's per-car Carfax report link) for every car
