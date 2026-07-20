@@ -215,15 +215,15 @@ def listing_missing_field_codes(
     #     (e.g. High Country Toyota lists it for 0% of inventory), so a blank is
     #     the dealer's, not ours.
     #   - on_lot: an in-transit delivery status, not missing spec data.
-    #   - images while in-transit: an incoming car simply isn't photographed yet.
+    #   - images: a photo-less car isn't a missing-DATA problem — the dealer
+    #     often hasn't shot it yet (esp. new inventory). It's handled by sorting
+    #     such cars to the bottom of listings, not by flagging them incomplete.
+    #     (Whether OUR scraper is dropping photos it should get is a separate
+    #     scanner-health signal, tracked per-dealer, not per-listing here.)
     # ``include_non_actionable=True`` restores the full list (admin detail view).
+    _NON_ACTIONABLE = {"interior_color", "on_lot", "images"}
     if not include_non_actionable:
-        missing = [
-            m for m in missing
-            if m != "interior_color"
-            and m != "on_lot"
-            and not (m == "images" and in_transit)
-        ]
+        missing = [m for m in missing if m not in _NON_ACTIONABLE]
 
     if for_public_filter:
         missing = [m for m in missing if m in _PUBLIC_INCOMPLETE_KEYS]
