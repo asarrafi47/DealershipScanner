@@ -176,18 +176,32 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
         return out
     if price_cov < _MIN_PRICE_COVERAGE:
-        # Cosmos-style SRP feeds carry VINs but keep price on the VDP. When
-        # hinted (price_source=vdp) — or on any small priceless feed — fetch
-        # each car's own VDP over HTTP and parse the price before giving up.
+        # Small SRP feeds (cosmos teaser: ~12-24 VINs) keep price on the VDP;
+        # per-car VDP fetch can plausibly cover them. But per-VDP completion is
+        # only viable when the WHOLE feed fits under the fetch cap — a large
+        # priceless feed (e.g. a Sonic/Akamai Dealer.com store whose getInventory
+        # omits price and whose pricing API + VDP are bot-walled to 40x slow
+        # browser renders) can never reach the coverage bar this way and should
+        # be deferred to the full browser scan instead of burning the cap.
         completed = 0
-        if hints.get("price_source") == "vdp" or n <= _VDP_PRICE_COMPLETE_MAX:
+        missing_price = sum(1 for _v in vehicles if not (_v.get("price") and float(_v.get("price") or 0) > 0))
+        if missing_price <= _VDP_PRICE_COMPLETE_MAX:
             completed = await asyncio.to_thread(_complete_prices_from_vdp, vehicles, name)
             price_cov = _price_coverage(vehicles)
             out["vdp_price_completed"] = completed
         if price_cov < _MIN_PRICE_COVERAGE:
             out["skipped"] = f"low_price_coverage ({price_cov:.0%})"
             logger.info("Delta [%s]: skipped — %s", name, out["skipped"])
-            if hints.get("price_source") != "vdp":
+            if missing_price > _VDP_PRICE_COMPLETE_MAX:
+                # Too many priceless rows for VDP completion — needs the full
+                # browser scan to price at scale.
+                _write_hint_note(
+                    dealer_id,
+                    f"{missing_price} priceless rows on delta replay (feed carries no price, "
+                    f"pricing API/VDP bot-walled); needs full browser scan to price",
+                    extra={"price_requires_full_scan": True, "price_source": None},
+                )
+            elif hints.get("price_source") != "vdp":
                 _write_hint_note(
                     dealer_id,
                     f"feed priced {price_cov:.0%} on delta replay; price likely lives on VDP/second endpoint",
