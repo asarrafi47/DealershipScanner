@@ -346,12 +346,41 @@ _COLOR_RE_INT = re.compile(
 )
 
 
+# Placeholder / non-color tokens dealers put in a color field — must never be
+# stored as a real color (they read as legitimate on the page but aren't).
+_COLOR_JUNK = frozenset({
+    "n/a", "na", "n\\a", "null", "none", "nil", "other", "unknown", "unspecified",
+    "not specified", "not available", "tbd", "-", "--", "—", "see dealer",
+    "call for details", "call dealer", "call", "select", "choose", "0", "00",
+})
+
+
+def _valid_color(val: str | None) -> str | None:
+    """Return a cleaned color, or None if it's a junk/placeholder/non-color token."""
+    if not val:
+        return None
+    v = str(val).strip().strip(".").strip()
+    if not v or len(v) > 60:
+        return None
+    low = v.lower()
+    if low in _COLOR_JUNK:
+        return None
+    # Bare numeric codes (e.g. Tesla "46") are not human colors.
+    if v.replace(" ", "").isdigit():
+        return None
+    # Must contain at least one letter to be a color name.
+    if not any(c.isalpha() for c in v):
+        return None
+    return v
+
+
 def parse_color_from_listing_html(html: str) -> dict[str, str | None]:
     """
     Best-effort exterior/interior color from full listing/VDP HTML.
 
     Priority: JSON-LD color fields → labeled DOM pairs → regex in text.
     Returns a dict with keys ``exterior_color`` and ``interior_color`` (values may be None).
+    Placeholder tokens (N/A, null, Other, numeric codes) are rejected as None.
     """
     out: dict[str, str | None] = {"exterior_color": None, "interior_color": None}
     if not html:
@@ -362,15 +391,15 @@ def parse_color_from_listing_html(html: str) -> dict[str, str | None]:
         r'"(?:color|vehicleColor|exteriorColor)"\s*:\s*"([^"]{2,80})"', html[:800000], re.I
     ):
         val = m.group(1).strip()
-        if val and out["exterior_color"] is None:
-            out["exterior_color"] = val
+        if out["exterior_color"] is None and _valid_color(val):
+            out["exterior_color"] = _valid_color(val)
     # schema.org uses "vehicleInteriorColor"; some feeds use "interiorColor".
     for m in re.finditer(
         r'"(?:vehicleInteriorColor|interiorColor)"\s*:\s*"([^"]{2,80})"', html[:800000], re.I
     ):
         val = m.group(1).strip()
-        if val and out["interior_color"] is None:
-            out["interior_color"] = val
+        if out["interior_color"] is None and _valid_color(val):
+            out["interior_color"] = _valid_color(val)
 
     # Labeled DOM pairs: dl/table (via _dom_specs_from_soup) + autoWALL div.row>div.col pattern
     if not (out["exterior_color"] and out["interior_color"]):
@@ -388,9 +417,9 @@ def parse_color_from_listing_html(html: str) -> dict[str, str | None]:
             for label, val in pairs.items():
                 label_s = label.strip()
                 if out["exterior_color"] is None and _COLOR_LABEL_EXT.match(label_s):
-                    out["exterior_color"] = val.strip() or None
+                    out["exterior_color"] = _valid_color(val)
                 if out["interior_color"] is None and _COLOR_LABEL_INT.match(label_s):
-                    out["interior_color"] = val.strip() or None
+                    out["interior_color"] = _valid_color(val)
         except Exception:
             pass
 
@@ -398,11 +427,11 @@ def parse_color_from_listing_html(html: str) -> dict[str, str | None]:
     if out["exterior_color"] is None:
         m = _COLOR_RE_EXT.search(html[:500000])
         if m:
-            out["exterior_color"] = m.group(1).strip() or None
+            out["exterior_color"] = _valid_color(m.group(1))
     if out["interior_color"] is None:
         m = _COLOR_RE_INT.search(html[:500000])
         if m:
-            out["interior_color"] = m.group(1).strip() or None
+            out["interior_color"] = _valid_color(m.group(1))
 
     return out
 

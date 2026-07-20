@@ -273,12 +273,38 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     else:
         out["reconcile"] = {"ran": False, "skipped_reason": f"valid_vin_coverage {valid_cov:.0%} < 80%"}
 
+    # Autostart post-scan enrichment for the VINs this dealer just refreshed:
+    # EPA/vPIC structured backfill + listing-page (VDP) recovery for still-missing
+    # specs/colors. Full scans run this via the post-scan pipeline; the delta
+    # path did not, so delta-refreshed cars stayed incomplete. Gated by
+    # SCANNER_POST_LISTING_GAP_FILL (default on); skipped when 0.
+    if _delta_gap_fill_enabled() and scraped_norm:
+        try:
+            from backend.scanner.post_scan.gap_fill import run_listing_gap_fill_for_vins
+
+            gf = await asyncio.to_thread(run_listing_gap_fill_for_vins, list(scraped_norm))
+            out["gap_fill"] = gf
+            if gf.get("rows_patched"):
+                logger.info(
+                    "Delta [%s]: post-scan enrichment patched %d row(s)",
+                    name, gf.get("rows_patched", 0),
+                )
+        except Exception as e:
+            logger.warning("Delta [%s]: post-scan enrichment failed: %s", name, e)
+
     out["seconds"] = round(time.perf_counter() - t0, 1)
     logger.info(
         "Delta [%s]: %d vehicle(s) upserted (%.0f%% of known lot, %.0f%% priced) in %.1fs",
         name, count, vin_cov * 100, price_cov * 100, out["seconds"],
     )
     return out
+
+
+def _delta_gap_fill_enabled() -> bool:
+    """Post-scan enrichment on delta runs (default on; SCANNER_POST_LISTING_GAP_FILL=0 to disable)."""
+    return (os.environ.get("SCANNER_POST_LISTING_GAP_FILL") or "1").strip().lower() not in (
+        "0", "false", "no", "off",
+    )
 
 
 def _delta_dealer_timeout() -> int:

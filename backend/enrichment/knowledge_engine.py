@@ -1847,6 +1847,17 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
             cyl_ver = None
     if cyl_ver is None and vpic.get("cylinders") is not None:
         cyl_ver = vpic["cylinders"]
+    if cyl_ver is None:
+        # Last resort: the answer is often sitting in the listing's own text —
+        # e.g. an Infiniti Q70L whose trim reads "Sedan V-6 cyl". Read the
+        # layout token from title/trim/engine text (skipping BEVs, which have
+        # no cylinders and never carry a V-N badge).
+        from backend.utils.engine_consistency import cylinders_from_engine_text, is_bev_fuel
+
+        if not is_bev_fuel(dealer_ft or epa.get("fuel_type")):
+            cyl_ver = cylinders_from_engine_text(
+                " ".join(x for x in (title, trim, car.get("engine_description")) if x)
+            )
 
     drive_ver = regex.get("drivetrain") or epa.get("drivetrain")
     if not drive_ver and dealer_drive and not _is_na_spec(dealer_drive):
