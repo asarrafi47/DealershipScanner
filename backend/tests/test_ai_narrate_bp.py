@@ -58,7 +58,9 @@ def test_narrate_error_returns_500(client, monkeypatch):
     assert resp.status_code == 500
     data = resp.get_json()
     assert data["ok"] is False
-    assert "provider down" in data["error"]
+    # The raw exception detail must NOT leak to the client (it is logged instead).
+    assert data["error"] == "narration_failed"
+    assert "provider down" not in data["error"]
 
 
 def test_narrate_caches_repeat_requests(client, monkeypatch):

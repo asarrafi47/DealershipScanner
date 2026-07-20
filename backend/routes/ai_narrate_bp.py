@@ -10,12 +10,14 @@ narrates fields present on the row -- it never invents specs or prices.
 Responses:
     200 -> {"ok": true,  "description": "<prose>"}
     404 -> {"ok": false, "error": "car not found"}
-    500 -> {"ok": false, "error": "<message>"}
+    429 -> {"ok": false, "error": "rate_limited"}
+    500 -> {"ok": false, "error": "narration_failed"}   # detail is logged, not returned
 """
 from __future__ import annotations
 
 import hashlib
 import logging
+import os
 from collections import OrderedDict
 
 from flask import Blueprint, jsonify, request
@@ -51,13 +53,32 @@ def _cache_key(car_id: int, row: dict) -> tuple:
     return (car_id, hashlib.md5(blob.encode("utf-8")).hexdigest()[:16])
 
 
+def _narrate_global_rpm() -> int:
+    """Global (all-IPs) cap on paid narration calls per minute.
+
+    This endpoint is an unauthenticated GET that triggers a billable model call.
+    The per-IP bucket alone does not bound total spend — an attacker can iterate
+    distinct ``car_id`` values to defeat the per-car cache and rotate source IPs
+    to defeat the per-IP limit. A non-zero DEFAULT global cap bounds worst-case
+    cost regardless. ``RATE_LIMIT_NARRATE_GLOBAL_PER_MIN=0`` disables it.
+    """
+    raw = os.environ.get("RATE_LIMIT_NARRATE_GLOBAL_PER_MIN")
+    if raw is None or not str(raw).strip():
+        return 300
+    try:
+        return max(0, int(raw))
+    except (TypeError, ValueError):
+        return 300
+
+
 @ai_narrate_bp.route("/api/car/<int:car_id>/narrate", methods=["GET"])
 def narrate_car(car_id: int):
     """Return an AI-generated description for the car with ``car_id``."""
     # Rate-limit: this triggers a paid model call in prod, so cap per-IP and
     # globally to prevent cost-amplification / DoS on an otherwise public GET.
     ip = _client_ip()
-    _pair, rpm_ip, rpm_global = car_chat_rate_limits()
+    _pair, rpm_ip, _rpm_global = car_chat_rate_limits()
+    rpm_global = _narrate_global_rpm()
     if rpm_global > 0 and not allow_request(
         "narrate:global", max_events=rpm_global, window_seconds=60.0
     ):
@@ -87,6 +108,8 @@ def narrate_car(car_id: int):
         while len(_cache) > _CACHE_MAX:
             _cache.popitem(last=False)
         return jsonify({"ok": True, "description": description})
-    except Exception as exc:  # noqa: BLE001 - surface as JSON 500
+    except Exception:  # noqa: BLE001 - surface as generic JSON 500
+        # Log the detail server-side; never return the raw exception message to
+        # an unauthenticated client (it can leak internal/provider details).
         _log.exception("narration failed for car_id=%s", car_id)
-        return jsonify({"ok": False, "error": str(exc)}), 500
+        return jsonify({"ok": False, "error": "narration_failed"}), 500

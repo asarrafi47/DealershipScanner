@@ -125,6 +125,33 @@ def test_report_increment_and_auto_flag(sqlite_inventory):
         conn.close()
 
 
+def test_report_dedup_by_reporter_hash(sqlite_inventory):
+    """A single reporter (IP hash) counts once — cannot flag a review alone."""
+    conn = sqlite_inventory.get_conn()
+    try:
+        upsert_review(conn, "d-com", 1, rating=5, body="Suspiciously glowing review.")
+        rid = get_reviews_for_dealer(conn, "d-com")[0]["id"]
+
+        # Same actor reports three times: only the first counts.
+        for _ in range(3):
+            r = increment_report(conn, rid, reporter_hash="hashAAA")
+            assert r["report_count"] == 1 and r["status"] == "published"
+
+        # Still published — one actor can't reach the flag threshold.
+        assert len(get_reviews_for_dealer(conn, "d-com")) == 1
+
+        # Two more DISTINCT reporters push it over the threshold.
+        increment_report(conn, rid, reporter_hash="hashBBB")
+        r5 = increment_report(conn, rid, reporter_hash="hashCCC")
+        assert r5["report_count"] == 3 and r5["status"] == "flagged"
+        assert get_reviews_for_dealer(conn, "d-com") == []
+
+        # A report for a missing review is still a 404-style None.
+        assert increment_report(conn, 999999, reporter_hash="hashDDD") is None
+    finally:
+        conn.close()
+
+
 # ---------------------------------------------------------------------------
 # Guards
 # ---------------------------------------------------------------------------

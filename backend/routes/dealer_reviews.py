@@ -115,17 +115,33 @@ def submit_review(dealer_key: str):
 
 
 def report_review(dealer_key: str, review_id: int):
-    """Increment a review's report count (light IP-hash rate limit, no login)."""
+    """Increment a review's report count (per-IP-hash dedup + rate limit, no login).
+
+    Reporting is anonymous, so two abuse vectors are guarded here: (1) each
+    reporter (IP hash) counts at most once per review — enforced in
+    ``increment_report`` via the ``review_reports`` UNIQUE constraint — so a
+    single actor cannot reach the auto-flag threshold alone; (2) a per-IP volume
+    cap bounds report spam / DB-write load.
+    """
     from backend.db.inventory_db import get_conn
     from backend.reviews.store import increment_report
+    from backend.utils.ip_rate_limit import allow_request
 
     wants_json = request.accept_mimetypes.best_match(
         ["application/json", "text/html"]
     ) == "application/json"
 
+    reporter = _client_ip_hash()
+    if reporter and not allow_request(
+        f"review_report:{reporter}", max_events=20, window_seconds=60.0
+    ):
+        if wants_json:
+            return jsonify({"ok": False, "error": "rate_limited"}), 429
+        return _back_to_reviews(dealer_key)
+
     conn = get_conn()
     try:
-        result = increment_report(conn, int(review_id))
+        result = increment_report(conn, int(review_id), reporter_hash=reporter)
     except Exception:
         result = None
     finally:

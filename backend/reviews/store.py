@@ -63,6 +63,28 @@ CREATE TABLE IF NOT EXISTS dealer_reviews (
 """
 
 
+# One row per (review, reporter) so a single actor's repeated reports count
+# once — three reports flip a review to 'flagged', so without this dedup one
+# unauthenticated client could hide any review by itself.
+_DDL_REPORTS_PG = """
+CREATE TABLE IF NOT EXISTS review_reports (
+    review_id BIGINT NOT NULL,
+    ip_hash TEXT NOT NULL,
+    created_at TEXT,
+    UNIQUE (review_id, ip_hash)
+)
+"""
+
+_DDL_REPORTS_SQLITE = """
+CREATE TABLE IF NOT EXISTS review_reports (
+    review_id INTEGER NOT NULL,
+    ip_hash TEXT NOT NULL,
+    created_at TEXT,
+    UNIQUE (review_id, ip_hash)
+)
+"""
+
+
 def ensure_reviews_table(cur: Any) -> None:
     """Create the ``dealer_reviews`` table + index if absent (idempotent).
 
@@ -79,6 +101,12 @@ def ensure_reviews_table(cur: Any) -> None:
         "CREATE INDEX IF NOT EXISTS idx_dealer_reviews_user "
         "ON dealer_reviews(user_id, created_at)"
     )
+
+
+def ensure_review_reports_table(cur: Any) -> None:
+    """Create the ``review_reports`` dedup table if absent (idempotent)."""
+    ddl = _DDL_REPORTS_PG if inventory_pg.is_inventory_postgres() else _DDL_REPORTS_SQLITE
+    cur.execute(ddl)
 
 
 def _now_iso() -> str:
@@ -232,13 +260,50 @@ def review_summary(conn: Any, dealer_id: str) -> dict:
         return empty
 
 
-def increment_report(conn: Any, review_id: int) -> dict | None:
+def _review_state(conn: Any, review_id: int) -> dict | None:
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, report_count, status FROM dealer_reviews WHERE id = ?",
+        (int(review_id),),
+    )
+    row = cur.fetchone()
+    if not row:
+        return None
+    return {"report_count": int(row["report_count"] or 0), "status": row["status"]}
+
+
+def increment_report(conn: Any, review_id: int, reporter_hash: str | None = None) -> dict | None:
     """Bump ``report_count`` for a review; auto-flag at the threshold.
 
-    Returns ``{report_count, status}`` for the row, or ``None`` if it is absent.
+    When *reporter_hash* is given, a given reporter counts at most once per
+    review (``review_reports`` UNIQUE (review_id, ip_hash)): a repeat report by
+    the same actor is idempotent and does NOT bump the count, so no single actor
+    can reach ``REPORT_FLAG_THRESHOLD`` alone. Returns ``{report_count, status}``
+    for the row, or ``None`` if it is absent.
     """
     cur = conn.cursor()
     ensure_reviews_table(cur)
+
+    if reporter_hash:
+        ensure_review_reports_table(cur)
+        # First confirm the review exists (a report for a missing review is a 404,
+        # not a silent no-op that would still record a dedup row).
+        state = _review_state(conn, int(review_id))
+        if state is None:
+            conn.commit()
+            return None
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO review_reports (review_id, ip_hash, created_at) "
+            "VALUES (?, ?, ?) ON CONFLICT (review_id, ip_hash) DO NOTHING",
+            (int(review_id), reporter_hash, _now_iso()),
+        )
+        if not cur.rowcount:
+            # Already reported by this actor — return current state, no bump.
+            conn.commit()
+            return state
+
     cur.execute(
         "UPDATE dealer_reviews SET report_count = report_count + 1, updated_at = ? "
         "WHERE id = ?",
