@@ -81,8 +81,12 @@ _HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 
-# <oem-gallery-component ... :photoUrls="'url,url,...'">
-_GALLERY_RE = re.compile(r"<oem-gallery-component[^>]*?:photoUrls=\"'([^\"]*?)'\"", re.S)
+# The VDP gallery is a Vue attribute :photoUrls="'url,url,...'". It historically
+# lived on <oem-gallery-component>, but TV renamed that element (2026-07), so the
+# extractor anchors on the attribute itself, not the tag name. The old
+# tag-anchored form is kept as a stricter fallback.
+_GALLERY_RE = re.compile(r""":photoUrls="'([^"]*?)'\"""", re.S)
+_GALLERY_RE_LEGACY = re.compile(r"<oem-gallery-component[^>]*?:photoUrls=\"'([^\"]*?)'\"", re.S)
 # The real per-car Carfax vehicle-history REPORT link (not the badge SVGs). Token
 # is url-safe base64 (letters, digits, '_' and '-').
 _CARFAX_REPORT_RE = re.compile(
@@ -245,7 +249,7 @@ def parse(
 
 def extract_gallery(html: str) -> list[str]:
     """Ordered, de-duplicated http photo list from the VDP ``:photoUrls`` attr."""
-    m = _GALLERY_RE.search(html or "")
+    m = _GALLERY_RE.search(html or "") or _GALLERY_RE_LEGACY.search(html or "")
     if not m:
         return []
     seen: set[str] = set()

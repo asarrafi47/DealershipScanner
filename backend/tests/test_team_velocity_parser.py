@@ -116,6 +116,21 @@ def test_extract_gallery_from_vdp_html():
     assert tv.extract_gallery("<html>no gallery</html>") == []
 
 
+def test_extract_gallery_renamed_element_2026_07():
+    # TV renamed <oem-gallery-component> but kept the :photoUrls attribute; the
+    # extractor anchors on the attribute, not the tag name (Toyota of Riverside
+    # et al. — 4 dealers, ~3,867 placeholder-image cars).
+    html = (
+        "<vdp-gallery-widget :vin=\"'X'\" "
+        ":photoUrls=\"'https://content.homenetiol.com/1/2/0x0/a.jpg,"
+        "https://content.homenetiol.com/1/2/0x0/b.jpg'\"></vdp-gallery-widget>"
+    )
+    assert tv.extract_gallery(html) == [
+        "https://content.homenetiol.com/1/2/0x0/a.jpg",
+        "https://content.homenetiol.com/1/2/0x0/b.jpg",
+    ]
+
+
 def test_extract_carfax_report_url_ignores_badges():
     html = (
         "<img src='https://partnerstatic.carfax.com/img/valuebadge/1own.svg'>"
