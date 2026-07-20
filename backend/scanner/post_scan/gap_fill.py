@@ -507,7 +507,11 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 if ci is not None and ci >= 0:
                     from backend.utils.engine_consistency import cylinders_conflicts_with_engine_text
 
-                    if not cylinders_conflicts_with_engine_text(ci, raw.get("engine_description"), raw.get("fuel_type")):
+                    # Use the fuel_type PROPOSED earlier in this same pass (it's
+                    # set above before cylinders) so a VDP that reveals "Electric"
+                    # blocks a bogus cylinder count on a BEV whose DB row was blank.
+                    fuel_now = proposed.get("fuel_type") or raw.get("fuel_type")
+                    if not cylinders_conflicts_with_engine_text(ci, raw.get("engine_description"), fuel_now):
                         proposed["cylinders"] = ci
             if "mpg_city" in missing and specs.get("mpg_city") is not None:
                 try:

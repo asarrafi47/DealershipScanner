@@ -1506,7 +1506,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // truthy image_url can be "/static/placeholder.svg", so string-truthiness
     // isn't enough — require an http image on image_url or in the gallery.
     function listingHasRealImage(c) {
-        const isReal = (u) => typeof u === "string" && u.indexOf("http") === 0;
+        // Real photo = remote http(s) OR a locally-cached /car-images/ path
+        // (served by Flask), not the /static/placeholder.svg fallback.
+        const isReal = (u) => typeof u === "string" && (u.indexOf("http") === 0 || u.indexOf("/car-images/") === 0);
         if (isReal(c.image_url)) return true;
         const gallery = Array.isArray(c.gallery) ? c.gallery : [];
         return gallery.some(isReal);

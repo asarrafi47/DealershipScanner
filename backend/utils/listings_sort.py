@@ -33,10 +33,16 @@ def listing_has_single_photo(car: dict[str, Any]) -> bool:
     return listing_photo_count(car) <= 1
 
 
+def _is_real_image_url(u: Any) -> bool:
+    # Real photo = remote http(s) OR a locally-downloaded /car-images/ path
+    # (served by Flask, same rule as listing_completeness._is_valid_image_url).
+    # NOT the /static/placeholder.svg fallback.
+    return isinstance(u, str) and (u.startswith("http") or u.startswith("/car-images/"))
+
+
 def listing_has_real_image(car: dict[str, Any]) -> bool:
-    """True when the car has a genuine http dealer photo (not the placeholder)."""
-    iu = car.get("image_url")
-    if isinstance(iu, str) and iu.startswith("http"):
+    """True when the car has a genuine dealer photo (remote or locally cached)."""
+    if _is_real_image_url(car.get("image_url")):
         return True
     gal = car.get("gallery")
     if isinstance(gal, str):
@@ -47,7 +53,7 @@ def listing_has_real_image(car: dict[str, Any]) -> bool:
         except (TypeError, ValueError):
             gal = []
     if isinstance(gal, list):
-        return any(isinstance(u, str) and u.startswith("http") for u in gal)
+        return any(_is_real_image_url(u) for u in gal)
     return False
 
 
