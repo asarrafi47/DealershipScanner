@@ -186,3 +186,16 @@ def test_request_pacer_zero_interval_is_noop():
 def test_known_tv_dealer_registry():
     assert tv.is_team_velocity_dealer("markkia-com") is True
     assert tv.is_team_velocity_dealer("some-other-com") is False
+
+
+def test_detect_accepts_raw_json_feed_body():
+    """The delta replay passes the UNPARSED feed body to detect(); it must parse
+    raw JSON text/bytes, else every TV dealer fails detection and its photos are
+    never recovered (only 3 of 18 were in the hardcoded registry)."""
+    body = '{"vehicles":[{"vin":"X","imageUrls":null,"sellingPrice":100,"vdpUrl":"u","engineCylinders":4}]}'
+    assert tv.detect(body) is True
+    assert tv.detect(body.encode()) is True
+    assert tv.detect(tv.json.loads(body)) is True
+    # Non-TV / garbage must still be rejected.
+    assert tv.detect("not json at all") is False
+    assert tv.detect('{"vehicles":[{"foo":"bar"}]}') is False

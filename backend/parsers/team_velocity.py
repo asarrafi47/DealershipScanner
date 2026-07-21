@@ -113,7 +113,18 @@ def _looks_like_tv_vehicle(v: Any) -> bool:
 
 
 def _iter_vehicles(raw_data: Any) -> Iterable[dict]:
-    """Yield vehicle dicts from a TV feed page ({vehicles:[…]}) or a bare list."""
+    """Yield vehicle dicts from a TV feed page ({vehicles:[…]}) or a bare list.
+
+    Also accepts the raw JSON text/bytes of a feed body: the delta replay passes
+    the UNPARSED response to ``detect``, and without parsing here every Team
+    Velocity dealer failed detection — so their photos were never recovered
+    unless the dealer was in the hardcoded registry (only 3 of 18 were).
+    """
+    if isinstance(raw_data, (str, bytes, bytearray)):
+        try:
+            raw_data = json.loads(raw_data)
+        except (ValueError, TypeError):
+            return
     if isinstance(raw_data, dict):
         vehicles = raw_data.get("vehicles")
         if isinstance(vehicles, list):
