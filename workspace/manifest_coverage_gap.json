@@ -1,0 +1,487 @@
+[
+ {
+  "name": "Audi Mission Viejo",
+  "url": "https://www.audimv.com",
+  "provider": "unknown",
+  "dealer_id": "audimv-com",
+  "city": "Mission Viejo",
+  "state": "CA"
+ },
+ {
+  "name": "Audi Fletcher Jones",
+  "url": "https://audiofcostamesa.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "audiofcostamesa-com",
+  "city": "Costa Mesa",
+  "state": "CA"
+ },
+ {
+  "name": "SJC Pre-Owned Center",
+  "url": "https://capistranoford.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "capistranoford-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Claremont Toyota",
+  "url": "https://www.claremonttoyota.com",
+  "provider": "unknown",
+  "dealer_id": "claremonttoyota-com",
+  "city": "Claremont",
+  "state": "CA"
+ },
+ {
+  "name": "Classic Auto Sales",
+  "url": "https://classicautosalesoc.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "classicautosalesoc-com",
+  "city": "San Clemente",
+  "state": "CA"
+ },
+ {
+  "name": "Coastline Chrysler Dodge Jeep Ram",
+  "url": "https://www.coastlinecdjr.com",
+  "provider": "dealer_inspire",
+  "dealer_id": "coastlinecdjr-com"
+ },
+ {
+  "name": "Day Family Classic Cars",
+  "url": "https://dayfamilyclassiccars.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "dayfamilyclassiccars-com",
+  "city": "Corona",
+  "state": "CA"
+ },
+ {
+  "name": "DCH Tustin Acura",
+  "url": "https://www.dchtustinacura.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "dchtustinacura-com",
+  "city": "Tustin",
+  "state": "CA"
+ },
+ {
+  "name": "Gardena Honda",
+  "url": "https://www.gardenahonda.com",
+  "provider": "unknown",
+  "dealer_id": "gardenahonda-com",
+  "city": "Gardena",
+  "state": "CA"
+ },
+ {
+  "name": "Hemborg Ford",
+  "url": "https://www.hemborgford.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "hemborgford-com",
+  "city": "Norco",
+  "state": "CA"
+ },
+ {
+  "name": "Honda",
+  "url": "https://hondaofelcajon.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "hondaofelcajon-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Porsche NOW Laguna Beach",
+  "url": "https://irvine.porsche.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "irvine-porsche-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Irvine Subaru",
+  "url": "https://www.irvinesubaru.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "irvinesubaru-com",
+  "city": "Lake Forest",
+  "state": "CA"
+ },
+ {
+  "name": "Irvine Kia",
+  "url": "https://kiaofirvine.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "kiaofirvine-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Lamborghini Newport Beach",
+  "url": "https://www.lambonb.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "lambonb-com",
+  "city": "Irvine",
+  "state": "CA"
+ },
+ {
+  "name": "Larry H. Miller Nissan Corona",
+  "url": "https://www.lhmnissancorona.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "lhmnissancorona-com",
+  "city": "Corona",
+  "state": "CA"
+ },
+ {
+  "name": "Larry H. Miller Toyota Corona",
+  "url": "https://www.lhmtoyotacorona.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "lhmtoyotacorona-com",
+  "city": "Corona",
+  "state": "CA"
+ },
+ {
+  "name": "Lincoln Experience Center",
+  "url": "https://www.lincolnexperiencecenter.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "lincolnexperiencecenter-com",
+  "city": "Newport Beach",
+  "state": "CA"
+ },
+ {
+  "name": "Mazda",
+  "url": "https://mazdariverside.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "mazdariverside-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Mercedes-Benz of Foothill Ranch",
+  "url": "https://mbfoothill.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "mbfoothill-com",
+  "city": "Foothill Ranch",
+  "state": "CA"
+ },
+ {
+  "name": "Mckenna Subaru",
+  "url": "https://mckennasubaru.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "mckennasubaru-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "McLaren",
+  "url": "https://mclarennb.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "mclarennb-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "McPeek's Chrysler Dodge Jeep Ram Anaheim",
+  "url": "https://www.mcpeeks.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "mcpeeks-com"
+ },
+ {
+  "name": "Metro Auto",
+  "url": "https://www.metroautooc.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "metroautooc-com",
+  "state": "CA"
+ },
+ {
+  "name": "Porsche Newport Beach",
+  "url": "https://newportbeach.porsche.com/en",
+  "provider": "unknown",
+  "dealer_id": "newportbeach-porsche-com",
+  "city": "Newport Beach",
+  "state": "CA"
+ },
+ {
+  "name": "Imperio Nissan",
+  "url": "https://nissanofirvine.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "nissanofirvine-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Stadium Nissan",
+  "url": "https://nissanorange.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "nissanorange-com",
+  "city": "Orange",
+  "state": "CA"
+ },
+ {
+  "name": "Norm Reeves Acura of Mission Viejo",
+  "url": "http://www.normreevesacura.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "normreevesacura-com",
+  "city": "Mission Viejo",
+  "state": "CA"
+ },
+ {
+  "name": "North County Ford",
+  "url": "https://www.northcountyford.com",
+  "provider": "unknown",
+  "dealer_id": "northcountyford-com",
+  "city": "Vista",
+  "state": "CA"
+ },
+ {
+  "name": "Ocean Auto Sales",
+  "url": "https://oceanautosalesinc.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "oceanautosalesinc-com",
+  "city": "San Clemente",
+  "state": "CA"
+ },
+ {
+  "name": "Volkswagen",
+  "url": "https://pacificvolkswagen.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "pacificvolkswagen-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Penske Honda Ontario",
+  "url": "https://www.penskehondaontario.com",
+  "provider": "unknown",
+  "dealer_id": "penskehondaontario-com",
+  "city": "Ontario",
+  "state": "CA"
+ },
+ {
+  "name": "Phillips Auto",
+  "url": "https://phillipsauto.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "phillipsauto-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Plug In Auto",
+  "url": "https://pluginauto.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "pluginauto-com",
+  "city": "Costa Mesa",
+  "state": "CA"
+ },
+ {
+  "name": "Premium Autos",
+  "url": "https://premiumautosinc.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "premiumautosinc-com",
+  "city": "Norco",
+  "state": "CA"
+ },
+ {
+  "name": "Quantum Auto Sales",
+  "url": "https://quantumautosales.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "quantumautosales-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "South Coast Subaru",
+  "url": "https://southcoastsubaru.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "southcoastsubaru-com",
+  "city": "Costa Mesa",
+  "state": "CA"
+ },
+ {
+  "name": "Bell's Auto Sales",
+  "url": "https://themotoring.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "themotoring-com",
+  "city": "",
+  "state": "CA"
+ },
+ {
+  "name": "Toyota Carlsbad",
+  "url": "https://toyotacarlsbad.com",
+  "provider": "unknown",
+  "dealer_id": "toyotacarlsbad-com",
+  "city": "Carlsbad",
+  "state": "CA"
+ },
+ {
+  "name": "Tustin Kia",
+  "url": "https://www.tustinkia.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "tustinkia-com",
+  "city": "Tustin",
+  "state": "CA"
+ },
+ {
+  "name": "Tustin Mazda",
+  "url": "https://www.tustinmazda.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "tustinmazda-com",
+  "city": "Tustin",
+  "state": "CA"
+ },
+ {
+  "name": "Tuttle-Click Chrysler Jeep Dodge Ram Irvine",
+  "url": "https://www.tuttleclickjeep.com",
+  "provider": "dealer_inspire",
+  "dealer_id": "tuttleclickjeep-com"
+ },
+ {
+  "name": "Tuttle-Click Mazda",
+  "url": "https://tuttleclickmazda.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "tuttleclickmazda-com",
+  "city": "Irvine",
+  "state": "CA"
+ },
+ {
+  "name": "Volkswagen of Garden Grove",
+  "url": "https://vwofgg.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "vwofgg-com",
+  "city": "Garden Grove",
+  "state": "CA"
+ },
+ {
+  "name": "Wondries Toyota",
+  "url": "https://www.wondriestoyota.com",
+  "provider": "unknown",
+  "dealer_id": "wondriestoyota-com",
+  "city": "Alhambra",
+  "state": "CA"
+ },
+ {
+  "name": "Honda of Cleveland",
+  "url": "https://www.hondaofcleveland.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "hondaofcleveland-com"
+ },
+ {
+  "name": "Kia of Chattanooga",
+  "url": "https://www.kiaofchattanooga.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "kiaofchattanooga-com"
+ },
+ {
+  "name": "Thompson Truck Group",
+  "url": "https://www.thompsontruckgroup.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "thompsontruckgroup-com"
+ },
+ {
+  "name": "Ride and Drive Cookeville",
+  "url": "https://rideanddrivellc.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "rideanddrivellc-com"
+ },
+ {
+  "name": "Jerrys We Say Yes Auto Sales Inc",
+  "url": "https://www.jerryswesayyes.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "jerryswesayyes-com"
+ },
+ {
+  "name": "Long Chevrolet Buick GMC",
+  "url": "https://longofathens.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "longofathens-com"
+ },
+ {
+  "name": "East Tennessee Auto Outlet",
+  "url": "https://www.easttennesseeautooutlet.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "easttennesseeautooutlet-com"
+ },
+ {
+  "name": "Easy Auto - Rome",
+  "url": "https://easyautoonline.com/buy-here-pay-here-used-car-dealer-rome-georgia",
+  "provider": "dealer_dot_com",
+  "dealer_id": "easyautoonline-com"
+ },
+ {
+  "name": "L & M Motors Inc - RAM",
+  "url": "https://www.lmmotors.net",
+  "provider": "dealer_dot_com",
+  "dealer_id": "lmmotors-net"
+ },
+ {
+  "name": "Amigos Used Cars",
+  "url": "https://amigosusedcars.net",
+  "provider": "dealer_dot_com",
+  "dealer_id": "amigosusedcars-net"
+ },
+ {
+  "name": "Southern Wholesale",
+  "url": "https://www.southernwholesale.org",
+  "provider": "dealer_dot_com",
+  "dealer_id": "southernwholesale-org"
+ },
+ {
+  "name": "Shottenkirk Ford Jasper",
+  "url": "https://shottenkirkfordjasper.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "shottenkirkfordjasper-com"
+ },
+ {
+  "name": "Welborn CDJR of Cartersville",
+  "url": "https://www.welborncdjrofcartersville.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "welborncdjrofcartersville-com"
+ },
+ {
+  "name": "CIRCLE C AUTO SALES",
+  "url": "https://circlecautosales.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "circlecautosales-com"
+ },
+ {
+  "name": "Trinity Motorcar Company",
+  "url": "https://www.honestcardeal.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "honestcardeal-com"
+ },
+ {
+  "name": "Premier Auto Center",
+  "url": "https://premierauto.center",
+  "provider": "dealer_dot_com",
+  "dealer_id": "premierauto-center"
+ },
+ {
+  "name": "North Country Ford",
+  "url": "https://www.northcountryfordofarab.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "northcountryfordofarab-com"
+ },
+ {
+  "name": "Wholesalecars.com",
+  "url": "https://www.wholesalecars.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "wholesalecars-com"
+ },
+ {
+  "name": "DriveTime Used Cars",
+  "url": "https://www.drivetime.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "drivetime-com"
+ },
+ {
+  "name": "Ford of Murfreesboro",
+  "url": "https://www.fordofmurfreesboro.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "fordofmurfreesboro-com"
+ },
+ {
+  "name": "Auto Collection Of Murfreesboro",
+  "url": "https://www.autocollectionofmurfreesboro.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "autocollectionofmurfreesboro-com"
+ },
+ {
+  "name": "Zeke's Automotive Group",
+  "url": "https://www.zekesautomotive.com",
+  "provider": "dealer_dot_com",
+  "dealer_id": "zekesautomotive-com"
+ }
+]
