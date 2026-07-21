@@ -35,6 +35,7 @@ import logging
 import os
 import re
 import sys
+import time
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -181,8 +182,11 @@ def rooftop_name(rt: dict, geo: dict, storefront: str) -> str:
     """
     if rt["name"]:
         return rt["name"]
-    if geo.get("display_name"):
-        return geo["display_name"]
+    display = (geo.get("display_name") or "").strip()
+    # When Places resolves a bare ZIP it answers with the street itself, whose
+    # displayName is "18500 Studebaker Rd" -- an address, not a dealership.
+    if display and not display[:1].isdigit():
+        return display
     where = ", ".join(p for p in (geo.get("city") or rt["city"], geo.get("state") or rt["state"]) if p)
     if storefront and where:
         return f"{storefront} ({where})"
@@ -214,10 +218,10 @@ def process_dealer(dealer_id: str, dealer_url: str, dealer_name: str, apply: boo
         )
     except Exception as exc:
         log.warning("%s: feed fetch failed: %s", dealer_name, exc)
-        return {}
+        return {"fetch_failed": 1}
     if not res:
         log.info("%s: no recipe", dealer_name)
-        return {}
+        return {"fetch_failed": 1}
 
     listings = _listing_nodes(res[0])
     by_roof: dict[tuple, dict] = {}
@@ -285,11 +289,14 @@ def process_dealer(dealer_id: str, dealer_url: str, dealer_name: str, apply: boo
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--dealer", help="dealer_id to process")
+    group.add_argument("--dealer", help="dealer_id, or a comma-separated list")
     group.add_argument("--all", action="store_true", help="every active dealer")
     parser.add_argument("--apply", action="store_true", help="write (default: dry run)")
     parser.add_argument("--min-cars", type=int, default=50,
                         help="with --all, skip storefronts below this size")
+    parser.add_argument("--pace", type=float, default=3.0,
+                        help="seconds between storefronts; fetching ~150 feeds "
+                             "back to back gets the endpoints to stop answering")
     args = parser.parse_args(argv)
 
     with db_conn() as conn:
@@ -300,23 +307,34 @@ def main(argv: list[str] | None = None) -> None:
             GROUP BY dealer_url ORDER BY COUNT(*) DESC
         """).fetchall()
 
+    wanted = {d.strip() for d in (args.dealer or "").split(",") if d.strip()}
     targets = [
         (r[0], r[1], r[2])
         for r in rows
-        if (args.all and r[3] >= args.min_cars) or (r[0] == args.dealer)
+        if (args.all and r[3] >= args.min_cars) or (r[0] in wanted)
     ]
     if not targets:
         log.error("no matching dealer")
         return
 
     total: Counter = Counter()
-    for dealer_id, dealer_url, dealer_name in targets:
+    for i, (dealer_id, dealer_url, dealer_name) in enumerate(targets):
+        if i and args.pace > 0:
+            time.sleep(args.pace)
         total.update(process_dealer(dealer_id, dealer_url, dealer_name or dealer_id, args.apply))
 
     log.info("")
     log.info("=== Summary (%s) ===", "applied" if args.apply else "dry run")
     for k, v in sorted(total.items()):
         log.info("  %-16s %d", k, v)
+
+    # A throttled run reads exactly like a clean no-op: every storefront reports
+    # "no recipe" and the summary comes back empty. Say so instead.
+    failed = total.get("fetch_failed", 0)
+    if failed and failed >= max(3, 0.3 * len(targets)):
+        log.error("%d of %d storefronts returned no feed — endpoints are refusing us, "
+                  "not a clean run. Re-run later or raise --pace.", failed, len(targets))
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

@@ -114,3 +114,15 @@ def test_rooftop_name_prefers_the_feeds_own_name():
           "site": "", "address": ""}
     geo = {"city": "Carson", "state": "CA", "display_name": "Nissan Dealer"}
     assert afr.rooftop_name(rt, geo, "Nissan of Costa Mesa") == "Carson Nissan"
+
+
+def test_street_address_is_not_accepted_as_a_rooftop_name():
+    """
+    Resolving a bare ZIP returns the street, and its displayName is the address.
+    "18500 Studebaker Rd" is not a dealership name.
+    """
+    rt = {"name": "", "city": "Cerritos", "state": "CA", "zip": "90703",
+          "site": "", "address": ""}
+    geo = {"city": "Cerritos", "state": "CA", "display_name": "18500 Studebaker Rd"}
+    assert afr.rooftop_name(rt, geo, "Norm Reeves Buick/GMC") == \
+        "Norm Reeves Buick/GMC (Cerritos, CA)"
