@@ -6,8 +6,30 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # No requirements-dev.txt in this repo, and ruff must not land in
+      # requirements.txt (that file is the runtime/deploy image). Pin it here so a
+      # new ruff release cannot turn a green PR red on its own.
+      - name: Install ruff
+        run: pip install ruff==0.15.22
+
+      - name: Lint
+        run: ruff check .
+
   pytest:
     runs-on: ubuntu-latest
+    # Gate the (slow) test job on the (fast) lint job so a syntax error or an
+    # undefined name fails in seconds instead of after the full requirements
+    # install.
+    needs: lint
     steps:
       - uses: actions/checkout@v4
 
