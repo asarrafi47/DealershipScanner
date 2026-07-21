@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """
-Geocode each unique dealership using OSM Nominatim, with domain-based fallback.
+Geocode each unique dealership, preferring Google Places over OSM Nominatim.
 
-Pass 1: Nominatim by dealer name + location hint from domain.
-Pass 2: pgeocode zip centroid using domain → zip mapping for known fails.
+Pass 1: Google Places (New) searchText, accepted only when the place's own
+        websiteUri host matches dealer_url's host. Name-only geocoding has no
+        such check and silently placed South Bay BMW in San Francisco and
+        Mtn. View Chevrolet 2,200 miles from Chattanooga.
+Pass 2: Nominatim by dealer name + location hint from domain.
+Pass 3: pgeocode zip centroid using domain → zip mapping for known fails.
 
 Results stored in dealer_geopoints table. Re-running skips cached entries
 unless --force is passed.
@@ -16,14 +20,19 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import logging
+import os
 import sys
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
+from backend.db.dealer_geo import normalize_dealer_host
 from backend.db.inventory_db import db_conn
 
 logging.basicConfig(
@@ -36,6 +45,15 @@ log = logging.getLogger("geocode_dealers")
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 USER_AGENT = "SarrafiCollection/1.0 (arman@khash.com)"
 RATE_LIMIT_SEC = 1.1  # OSM Nominatim: max 1 req/sec
+
+# Places API (New). The legacy Places endpoints and the Geocoding API are not
+# enabled on our GCP project; this one is.
+PLACES_URL = "https://places.googleapis.com/v1/places:searchText"
+PLACES_FIELDS = (
+    "places.displayName,places.formattedAddress,places.location,"
+    "places.addressComponents,places.websiteUri"
+)
+PLACES_PACE_SEC = 0.15
 
 # Domain-fragment → (city, state, zip) for dealers Nominatim can't find.
 # Keyed by lowercase domain with dots/dashes stripped.
@@ -116,6 +134,80 @@ _KNOWN_BAD_GEOCODES: set[str] = {
     "https://www.hixsonchevrolet.com",
 }
 
+
+
+def _places_search(query: str, api_key: str) -> list[dict]:
+    req = urllib.request.Request(
+        PLACES_URL,
+        data=json.dumps({"textQuery": query, "maxResultCount": 5}).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": api_key,
+            "X-Goog-FieldMask": PLACES_FIELDS,
+        },
+    )
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return json.loads(resp.read()).get("places", []) or []
+        except urllib.error.HTTPError as exc:
+            if exc.code in (429, 500, 503) and attempt < 2:
+                time.sleep(2 * (attempt + 1))
+                continue
+            log.warning("Places error for %r: HTTP %s", query, exc.code)
+            return []
+        except Exception as exc:
+            if attempt < 2:
+                time.sleep(2)
+                continue
+            log.warning("Places error for %r: %s", query, exc)
+            return []
+    return []
+
+
+def _places_component(place: dict, kind: str) -> str | None:
+    for comp in place.get("addressComponents") or []:
+        if kind in (comp.get("types") or []):
+            return comp.get("shortText") or comp.get("longText") or None
+    return None
+
+
+def _google_places_geocode(dealer_name: str, dealer_url: str) -> dict | None:
+    """
+    Resolve via Places, accepting a hit only when its website host matches
+    ``dealer_url``. Without that check a query like "Lexus" or "South Bay BMW"
+    happily returns a same-named store in another state.
+    """
+    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+    host = normalize_dealer_host(dealer_url)
+    if not api_key or not host:
+        return None
+
+    queries = [q for q in (f"{dealer_name} {host}".strip(), dealer_name, host) if q]
+    seen: set[str] = set()
+    for query in queries:
+        if query in seen:
+            continue
+        seen.add(query)
+        log.info("  Places: %r", query)
+        for place in _places_search(query, api_key):
+            if normalize_dealer_host(place.get("websiteUri") or "") != host:
+                continue
+            loc = place.get("location") or {}
+            try:
+                lat, lon = float(loc["latitude"]), float(loc["longitude"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            return {
+                "lat": lat,
+                "lon": lon,
+                "zip_code": _places_component(place, "postal_code"),
+                "city": _places_component(place, "locality"),
+                "state": _places_component(place, "administrative_area_level_1"),
+                "source": "google_places",
+            }
+        time.sleep(PLACES_PACE_SEC)
+    return None
 
 
 def _nominatim_search(query: str) -> dict | None:
@@ -229,7 +321,20 @@ def _location_hint(dealer_url: str) -> str | None:
     return None
 
 
-def geocode_dealer(dealer_name: str, dealer_url: str) -> dict | None:
+def geocode_dealer(
+    dealer_name: str, dealer_url: str, skip_nominatim: bool = False
+) -> dict | None:
+    """
+    Places (verified) → Nominatim → domain zip fallback.
+
+    ``skip_nominatim`` is for dealers whose names Nominatim resolves to the
+    wrong city (see ``_KNOWN_BAD_GEOCODES``); they go straight to the curated
+    domain → zip table when Places can't confirm a match.
+    """
+    verified = _google_places_geocode(dealer_name or "", dealer_url or "")
+    if verified:
+        return verified
+
     hint = _location_hint(dealer_url)
     dom_key = _domain_key(dealer_url)
 
@@ -239,7 +344,7 @@ def geocode_dealer(dealer_name: str, dealer_url: str) -> dict | None:
         queries.append(f"{dealer_name}, {hint}")
     queries.append(dealer_name)
 
-    for query in queries:
+    for query in [] if skip_nominatim else queries:
         log.info("  Nominatim: %r", query)
         result = _nominatim_search(query)
         time.sleep(RATE_LIMIT_SEC)
@@ -249,8 +354,12 @@ def geocode_dealer(dealer_name: str, dealer_url: str) -> dict | None:
             except (KeyError, TypeError, ValueError):
                 continue
             zc, city, state = _extract_addr(result)
+            # Unverified: nothing ties this point to the dealer's own site, so
+            # a same-named store in another state looks identical to a hit.
+            log.warning("  UNVERIFIED nominatim hit for %s → %s, %s — spot-check it",
+                        dealer_url, city or "?", state or "?")
             return {"lat": lat, "lon": lon, "zip_code": zc,
-                    "city": city, "state": state, "source": "nominatim"}
+                    "city": city, "state": state, "source": "nominatim_unverified"}
 
     # Nominatim failed — try domain-based zip fallback
     fb = _DOMAIN_ZIP_FALLBACK.get(dom_key)
@@ -306,18 +415,16 @@ def main(argv: list[str] | None = None) -> None:
 
             log.info("Geocoding [%d cars]: %s", car_count, dealer_name)
 
-            # For known-bad Nominatim results: skip Nominatim, use domain fallback directly
-            if (args.fix_bad or args.force) and is_known_bad:
-                dom_key = _domain_key(dealer_url)
-                fb = _DOMAIN_ZIP_FALLBACK.get(dom_key)
-                if fb:
-                    city, state, zip_code = fb
-                    log.info("  Domain fallback (forced): %s, %s %s", city, state, zip_code)
-                    geo = _pgeocode_fallback(zip_code, city, state)
-                else:
-                    geo = geocode_dealer(dealer_name or "", dealer_url or "")
-            else:
-                geo = geocode_dealer(dealer_name or "", dealer_url or "")
+            geo = geocode_dealer(
+                dealer_name or "", dealer_url or "", skip_nominatim=is_known_bad
+            )
+
+            # Never let an unverified re-run overwrite a website-verified point.
+            if (geo and geo["source"] != "google_places"
+                    and existing.get(dealer_url) == "google_places"):
+                log.info("KEEP  %s (verified point beats %s)", dealer_name, geo["source"])
+                skipped += 1
+                continue
 
             if not geo:
                 log.warning("FAIL  %s", dealer_name)
