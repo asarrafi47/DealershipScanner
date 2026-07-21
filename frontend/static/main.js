@@ -621,7 +621,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const bodies = skip("body_style") ? [] : checked("body_style");
         const cyls   = skip("cylinders")  ? [] : checked("cylinders");
 
-        const rows = (RADIUS_CAR_ROWS !== null && RADIUS_CAR_ROWS.length > 0 ? RADIUS_CAR_ROWS : CAR_ROWS).filter(r => {
+        // null => radius inactive (use all cars). An EMPTY array => radius is
+        // active but nothing is in range — must show 0, NOT silently fall back
+        // to the full national inventory (that produced the "flash of unrelated
+        // results" while coords were still loading).
+        const rows = (RADIUS_CAR_ROWS !== null ? RADIUS_CAR_ROWS : CAR_ROWS).filter(r => {
             if (makes.length  && !valueInListCI(makes, r.make))        return false;
             if (models.length && !valueInListCI(models, r.model))      return false;
             if (trims.length  && !valueInListCI(trims, r.trim))        return false;
@@ -2443,7 +2447,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const nearby = filterCarsInRadius(source, origin, radiusMi);
         _radiusFilterKey = key;
         _radiusFilteredCars = nearby;
-        RADIUS_CAR_ROWS = nearby.length > 0 ? _buildCarRowsFromCars(nearby) : null;
+        // Always an array when radius is active (empty when nothing is in range)
+        // so the cascade shows 0 instead of falling back to all national cars.
+        // null is reserved for "radius inactive" (see clearListingsRadiusCache).
+        RADIUS_CAR_ROWS = _buildCarRowsFromCars(nearby);
         return nearby;
     }
 

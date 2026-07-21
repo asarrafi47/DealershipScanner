@@ -114,6 +114,11 @@ def api_listings_geo_coords():
                 "ok": True,
                 "zip_coords": maps.get("zip_coords") or {},
                 "dealer_coords": maps.get("dealer_coords") or {},
+                # registry_coords is built server-side and read by the client
+                # (carGeoCoords → REGISTRY_COORDS[regId]); it was omitted here, so
+                # the by-registry-id coordinate path was dead and those dealers'
+                # cars were dropped from radius search.
+                "registry_coords": maps.get("registry_coords") or {},
                 "registry_id_by_host": maps.get("registry_id_by_host") or {},
             }
         )
