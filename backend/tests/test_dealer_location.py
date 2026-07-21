@@ -88,3 +88,38 @@ def test_build_profile_uses_registry_city(monkeypatch) -> None:
     )
     assert p.city == "Monroe"
     assert p.state == "NC"
+
+
+def test_group_feed_domain_is_not_a_location_label() -> None:
+    """
+    Dealer.com group feeds put the storefront's own domain on every row, so
+    sweeping it into the location text made the host check match a sister
+    store's car. Real case: nissanofcostamesa.com serves seven rooftops.
+    """
+    from backend.scanner.dealer.location import extract_location_from_inventory_object
+
+    row = {
+        "dealerName": "Nissan of Van Nuys",
+        "dealerCity": "Van Nuys",
+        "dealerState": "CA",
+        "dealerZip": "91401",
+        "dealerDomain": "https://www.nissanofcostamesa.com",
+    }
+    loc = extract_location_from_inventory_object(row)
+    assert "nissanofcostamesa.com" not in loc
+    assert "Van Nuys" in loc
+
+    prof = DealerSiteProfile(
+        dealer_id="nissanofcostamesa-com",
+        name="Nissan of Costa Mesa",
+        url="https://www.nissanofcostamesa.com",
+        city="",
+        state="",
+    )
+    assert classify_vehicle_location(loc, prof) != "match"
+
+    own = extract_location_from_inventory_object(
+        {"dealerName": "Nissan of Costa Mesa", "dealerCity": "Costa Mesa",
+         "dealerState": "CA", "dealerZip": "92626"}
+    )
+    assert classify_vehicle_location(own, prof) == "match"

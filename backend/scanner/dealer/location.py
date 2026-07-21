@@ -133,6 +133,21 @@ def _pick_str(*vals: Any) -> str:
     return ""
 
 
+_URL_LIKE_RE = re.compile(r"^\s*(?:https?://|www\.)|\.(?:com|net|org)\b", re.I)
+
+
+def _is_url_like(value: str) -> bool:
+    """
+    A URL is not a lot label.
+
+    Group feeds carry the storefront domain on every row (Dealer.com's
+    ``dealerDomain``), so sweeping it into the location text made the host check
+    in ``classify_vehicle_location`` fire for every vehicle -- a sister store's
+    car read as a match for the store hosting the feed.
+    """
+    return bool(_URL_LIKE_RE.search(value or ""))
+
+
 def extract_location_from_inventory_object(obj: dict[str, Any]) -> str:
     """Best-effort lot / selling dealer label from a raw inventory vehicle object."""
     if not isinstance(obj, dict):
@@ -193,7 +208,7 @@ def extract_location_from_inventory_object(obj: dict[str, Any]) -> str:
     for k, v in obj.items():
         if not isinstance(k, str) or not _LOCATION_KEY_RE.search(k):
             continue
-        if isinstance(v, str) and len(v) > 2:
+        if isinstance(v, str) and len(v) > 2 and not _is_url_like(v):
             parts.append(v.strip())
 
     seen: set[str] = set()
