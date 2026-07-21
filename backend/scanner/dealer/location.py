@@ -87,6 +87,14 @@ def build_dealer_site_profile(dealer: dict[str, Any]) -> DealerSiteProfile:
                 state = state or _norm_state(row.get("state") or "")
         except Exception:
             pass
+    # NOT wired to dealer_geopoints on purpose, though the city/state is there
+    # (see backend.db.dealer_geo.dealer_locality_for_url). Giving this profile a
+    # city turns "unknown" verdicts into "mismatch", and filter_sister_store_vehicles
+    # DROPS a mismatch. Measured 2026-07-21: that would delete 96% of Nissan of
+    # Costa Mesa's rows, and every one of those VINs exists only under that
+    # storefront -- the sibling rooftops are not scanned separately, so the drop
+    # is data loss, not dedupe. These cars need re-attributing to the store that
+    # actually holds them, not deleting.
     return DealerSiteProfile(
         dealer_id=(dealer.get("dealer_id") or "").strip(),
         name=name,

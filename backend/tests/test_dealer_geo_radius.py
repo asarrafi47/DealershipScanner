@@ -213,3 +213,32 @@ def test_load_dealer_geo_index_from_connection(tmp_path: Path) -> None:
     geo = load_dealer_geo_index(conn)
     conn.close()
     assert lookup_dealer_coords("https://example-dealer.com", geo) == (40.0, -75.0)
+
+
+def test_dealer_locality_only_trusts_verified_geocode_sources() -> None:
+    """
+    A name-matched geocode can sit close enough while naming a neighboring
+    town, and a wrong city would make the sister-store filter drop real cars.
+    """
+    import sqlite3
+
+    from backend.db.dealer_geo import dealer_locality_for_url
+
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        "CREATE TABLE dealer_geopoints (dealer_url TEXT, city TEXT, state TEXT, "
+        "geocode_source TEXT)"
+    )
+    conn.executemany(
+        "INSERT INTO dealer_geopoints VALUES (?, ?, ?, ?)",
+        [
+            ("https://www.southbaybmw.com", "Torrance", "CA", "google_places"),
+            ("https://www.guessed.com", "Roseville", "CA", "nominatim"),
+            ("https://www.alsoguessed.com", "Somewhere", "CA", "pgeocode_zip"),
+        ],
+    )
+
+    assert dealer_locality_for_url(conn, "http://southbaybmw.com/") == ("Torrance", "CA")
+    assert dealer_locality_for_url(conn, "https://www.guessed.com") is None
+    assert dealer_locality_for_url(conn, "https://www.alsoguessed.com") is None
+    conn.close()

@@ -122,6 +122,42 @@ def load_dealer_geo_index(conn: Any) -> dict[str, tuple[float, float]]:
     return build_dealer_geo_index(rows)
 
 
+# Geocode sources whose city/state came from an identity check (the place's own
+# website, or the dealer's own feed). Name-matched sources are excluded on
+# purpose: their coordinates can be close enough while the city label is a
+# neighboring town, and a wrong city makes the sister-store filter drop real cars.
+TRUSTED_LOCALITY_SOURCES = ("google_places", "registry", "nominatim_corroborated", "feed_zip")
+
+
+def dealer_locality_for_url(conn: Any, dealer_url: str) -> tuple[str, str] | None:
+    """
+    ``(city, state)`` for a dealer URL from ``dealer_geopoints``, or None.
+
+    Only rows whose ``geocode_source`` is in :data:`TRUSTED_LOCALITY_SOURCES`
+    qualify -- see the note there on why a name-matched city is not good enough.
+    """
+    host = normalize_dealer_host(dealer_url)
+    if not host:
+        return None
+    placeholders = ",".join("?" for _ in TRUSTED_LOCALITY_SOURCES)
+    try:
+        rows = conn.execute(
+            "SELECT dealer_url, city, state FROM dealer_geopoints "
+            "WHERE city IS NOT NULL AND TRIM(city) != '' "
+            f"AND geocode_source IN ({placeholders})",
+            tuple(TRUSTED_LOCALITY_SOURCES),
+        ).fetchall()
+    except Exception:
+        return None
+    for row_url, city, state in rows:
+        if normalize_dealer_host(str(row_url or "")) == host:
+            c = (city or "").strip()
+            s = (state or "").strip().upper()
+            if c:
+                return (c, s)
+    return None
+
+
 def load_registry_coords_map(conn: Any) -> dict[str, list[float]]:
     """Dealership registry id → [lat, lon] for listings radius (cars often lack zip_code)."""
     out: dict[str, list[float]] = {}
