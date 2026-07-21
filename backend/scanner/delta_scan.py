@@ -243,9 +243,13 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     # dealer so delta-refreshed rows get real images, not just the placeholder.
     try:
         from backend.parsers.team_velocity import detect as _detect_tv
+        from backend.parsers.team_velocity import is_team_velocity_dealer as _is_tv_dealer
         from backend.parsers.team_velocity import recover_dealer as _tv_recover_dealer
 
-        if any(_detect_tv(body) for _u, body in records):
+        # Fire for a KNOWN TV dealer even when feed-shape detection misses (its
+        # `.json` feed body can arrive as raw text that detect() won't parse) —
+        # otherwise these dealers' images never get recovered on the delta path.
+        if _is_tv_dealer(dealer_id) or any(_detect_tv(body) for _u, body in records):
             tv_stats = await asyncio.to_thread(_tv_recover_dealer, dealer_id)
             out["tv_image_completion"] = tv_stats
             logger.info(

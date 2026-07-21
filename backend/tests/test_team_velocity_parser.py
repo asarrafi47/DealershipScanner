@@ -159,3 +159,30 @@ def test_complete_from_vdp_uses_fetched_html(monkeypatch):
     data = tv.complete_from_vdp("https://dealer/vdp")
     assert data["gallery"] == ["https://cdn/a.jpg", "https://cdn/b.jpg"]
     assert data["carfax_url"] == "https://www.carfax.com/vehiclehistory/ar20/tok123"
+
+
+def test_request_pacer_enforces_min_interval():
+    """The pacer spaces consecutive request starts by >= min_interval even when
+    called from a tight loop (Team Velocity throttles un-paced bursts)."""
+    import time
+    pacer = tv._RequestPacer(0.05)
+    starts = []
+    for _ in range(4):
+        pacer.wait()
+        starts.append(time.monotonic())
+    gaps = [b - a for a, b in zip(starts, starts[1:])]
+    assert all(g >= 0.05 for g in gaps), gaps
+
+
+def test_request_pacer_zero_interval_is_noop():
+    pacer = tv._RequestPacer(0.0)
+    import time
+    t0 = time.monotonic()
+    for _ in range(5):
+        pacer.wait()
+    assert time.monotonic() - t0 < 0.05
+
+
+def test_known_tv_dealer_registry():
+    assert tv.is_team_velocity_dealer("markkia-com") is True
+    assert tv.is_team_velocity_dealer("some-other-com") is False

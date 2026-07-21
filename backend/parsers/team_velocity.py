@@ -47,7 +47,11 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import random
 import re
+import threading
+import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -348,18 +352,58 @@ def _rows_needing_completion(dealer_id: str, limit: int | None):
         return cur.fetchall()
 
 
+class _RequestPacer:
+    """Enforce a minimum interval between the START of consecutive VDP fetches,
+    shared across worker threads. Team Velocity dealers throttle by request
+    RATE (not just concurrency): even a single worker firing back-to-back gets
+    served gallery-less challenge pages, while the same URLs spaced a few seconds
+    apart return full galleries (observed 2026-07-20). Pacing — not worker count
+    — is what keeps the gallery."""
+
+    def __init__(self, min_interval: float, jitter: float = 0.3) -> None:
+        self._min = max(0.0, min_interval)
+        self._jitter = max(0.0, jitter)
+        self._lock = threading.Lock()
+        self._next = 0.0
+
+    def wait(self) -> None:
+        if self._min <= 0:
+            return
+        with self._lock:
+            now = time.monotonic()
+            due = max(now, self._next)
+            # Fold jitter INTO the reservation, not the sleep — so the next slot
+            # only ever moves forward. (Jittering the sleep alone can make two
+            # actual request starts closer than _min, defeating the pacing.)
+            self._next = due + self._min + random.uniform(0, self._jitter)
+        sleep_for = due - time.monotonic()
+        if sleep_for > 0:
+            time.sleep(sleep_for)
+
+
+def _default_tv_pace_seconds() -> float:
+    """Min seconds between VDP fetches (SCANNER_TV_FETCH_DELAY, default 2.0)."""
+    try:
+        return max(0.0, float(os.environ.get("SCANNER_TV_FETCH_DELAY", "2.0")))
+    except (TypeError, ValueError):
+        return 2.0
+
+
 def recover_dealer(
     dealer_id: str,
     *,
     dry_run: bool = False,
     limit: int | None = None,
     workers: int = 3,
+    pace_seconds: float | None = None,
 ) -> dict:
     """DB-driven completion pass for one Team Velocity dealer.
 
-    ``workers`` is intentionally low (3): these dealers throttle a burst of
-    concurrent VDP fetches into gallery-less/challenge pages (observed
-    2026-07-20 — 10 workers yielded ~28% galleries; 3 workers recovers them).
+    These dealers throttle by request RATE, serving gallery-less challenge pages
+    to bursts. ``workers`` is kept low (3) AND requests are paced at least
+    ``pace_seconds`` apart (default from ``SCANNER_TV_FETCH_DELAY``, 2.0s) — low
+    concurrency alone is not enough; without pacing even one worker firing
+    back-to-back loses the gallery (observed 2026-07-20).
 
     Fills ``cars.image_url`` / ``cars.gallery`` (from the VDP gallery) and
     ``cars.carfax_url`` (from the VDP's per-car Carfax report link) for every car
@@ -370,6 +414,7 @@ def recover_dealer(
     from backend.db.incomplete_listings_db import sync_incomplete_listing_for_car_id
     from backend.db.inventory_db import db_conn
 
+    pacer = _RequestPacer(_default_tv_pace_seconds() if pace_seconds is None else pace_seconds)
     rows = _rows_needing_completion(dealer_id, limit)
     stats = {
         "candidates": len(rows),
@@ -387,6 +432,7 @@ def recover_dealer(
     def _job(row):
         car_id, vin, source_url, image_url, gallery, carfax_url = row
         try:
+            pacer.wait()  # rate-pace across workers so the VDP keeps its gallery
             data = complete_from_vdp(source_url)
             return car_id, image_url, gallery, carfax_url, data, None
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
