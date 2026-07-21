@@ -3,8 +3,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# SCRAPING/ lives at repo root; parent is project root
-ROOT = Path(__file__).resolve().parent.parent
+# This file is backend/scraping/paths.py, so the repo root is three parents up.
+# It used to say "SCRAPING/ lives at repo root" and take two, which was true
+# before the package moved under backend/ -- since then every path here has
+# resolved inside backend/, which is how backend/inventory.db came to exist and
+# collect a stale copy of dealer_recipes alongside the real Postgres table.
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 DEFAULT_DB = ROOT / "inventory.db"
 MANIFEST_DEFAULT = ROOT / "dealers.json"

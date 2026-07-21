@@ -122,3 +122,24 @@ debug/*
 
 # Virtualenv — never track
 .venv/
+
+# Scan scratch: throwaway manifests, discovery/OSM dumps, scanlogs, one-off probe
+# scripts. Dozens of these appear per scan session and none are inputs to the app.
+# The ~47 manifests already tracked here stay tracked (gitignore doesn't untrack);
+# to add a new deliberate one: git add -f workspace/<file>
+workspace/
+
+# Generated knowledge-graph output (~36MB, rebuilt by the graphify skill)
+graphify-out/
+
+# Dated pg_dump snapshots, e.g. dump-dealership_scanner-202607012302.sql
+dump-*.sql
+
+# Chroma master-catalog index: 12MB chroma.sqlite3 + 5MB data_level0.bin per
+# collection, regenerated wholesale by backend/vector/ingest_master_specs.py.
+# Dead weight since the pgvector migration — catalog_service.master_catalog_
+# persist_dir() resolves to data/vectors/ and nothing reads this directory.
+# NB it is only ~9MB of the 694MB .git, not the main cause: debug/ scanner
+# failure PNGs are 141MB and backend/dictionary 31MB. Untrack those first if
+# the goal is a smaller clone.
+backend/vector/chroma_master_catalog/
