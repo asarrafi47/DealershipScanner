@@ -95,3 +95,22 @@ def test_rooftop_resolves_on_site_match_and_takes_its_real_name(monkeypatch):
     assert geo["verified_by"] == "site"
     # Without this the rooftop registers as "7300 W Sahara Ave".
     assert geo["display_name"] == "Fletcher Jones Imports"
+
+
+def test_unnamed_rooftop_is_named_after_the_group_not_the_zip():
+    """
+    Norm Reeves' feed gives a lot only a city and ZIP. "Cerritos 90703" is a
+    placeholder that will not dedupe against the real store found later.
+    """
+    rt = {"name": "", "city": "Cerritos", "state": "CA", "zip": "90703",
+          "site": "", "address": ""}
+    geo = {"city": "Cerritos", "state": "CA", "display_name": ""}
+    assert afr.rooftop_name(rt, geo, "Norm Reeves Buick/GMC") == \
+        "Norm Reeves Buick/GMC (Cerritos, CA)"
+
+
+def test_rooftop_name_prefers_the_feeds_own_name():
+    rt = {"name": "Carson Nissan", "city": "Carson", "state": "CA", "zip": "90745",
+          "site": "", "address": ""}
+    geo = {"city": "Carson", "state": "CA", "display_name": "Nissan Dealer"}
+    assert afr.rooftop_name(rt, geo, "Nissan of Costa Mesa") == "Carson Nissan"

@@ -169,11 +169,31 @@ def resolve_rooftop(rt: dict) -> dict | None:
     return None
 
 
-def _register(rt: dict, geo: dict) -> int:
+def rooftop_name(rt: dict, geo: dict, storefront: str) -> str:
+    """
+    A registry row needs a name a human can recognize.
+
+    Some feeds (Norm Reeves, Welborn) give a lot only a city and ZIP. Registering
+    that as "Cerritos 90703" puts a placeholder in the dealer registry and will
+    not dedupe against the same store found later under its real name, so fall
+    back to the group that published the feed: "Norm Reeves Buick/GMC (Cerritos,
+    CA)" says what we actually know -- this group has a lot there.
+    """
+    if rt["name"]:
+        return rt["name"]
+    if geo.get("display_name"):
+        return geo["display_name"]
+    where = ", ".join(p for p in (geo.get("city") or rt["city"], geo.get("state") or rt["state"]) if p)
+    if storefront and where:
+        return f"{storefront} ({where})"
+    return where or f"{rt['city']} {rt['zip']}".strip()
+
+
+def _register(rt: dict, geo: dict, storefront: str = "") -> int:
     from backend.db.dealerships_db import upsert_discovery_row
 
     return upsert_discovery_row({
-        "name": rt["name"] or geo.get("display_name") or f"{rt['city']} {rt['zip']}".strip(),
+        "name": rooftop_name(rt, geo, storefront),
         "city": geo["city"],
         "state": geo["state"],
         "zip_code": geo["zip_code"],
@@ -239,12 +259,13 @@ def process_dealer(dealer_id: str, dealer_url: str, dealer_name: str, apply: boo
             log.warning("   %-38s %3d cars — UNRESOLVED, left as-is", label[:38], len(mine))
             stats["unresolved_cars"] += len(mine)
             continue
-        log.info("   %-38s %3d cars -> %.4f,%.4f %s [%s]", label[:38], len(mine),
-                 geo["lat"], geo["lon"], geo["city"], geo["verified_by"])
+        log.info("   %-38s %3d cars -> %.4f,%.4f %s [%s] as %r", label[:38], len(mine),
+                 geo["lat"], geo["lon"], geo["city"], geo["verified_by"],
+                 rooftop_name(rt, geo, dealer_name))
         if not apply:
             stats["would_link"] += len(mine)
             continue
-        reg_id = _register(rt, geo)
+        reg_id = _register(rt, geo, dealer_name)
         vins = sorted(mine)
         with db_conn() as conn:
             for i in range(0, len(vins), 200):
