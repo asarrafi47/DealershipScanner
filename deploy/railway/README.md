@@ -51,7 +51,8 @@ This sets:
 | `VAULT_TOKEN` | Copied from local kmac vault token (must match Railway vault) |
 | `VAULT_LOAD_RETRIES` | `8` (vault may cold-start after deploy) |
 | `FLASK_ENV` | `production` |
-| DB paths | `/data/*.db` |
+| `TRUST_PROXY_HEADERS` / `TRUSTED_PROXY_HOPS` | `1` / `1` (use hops `2` when Cloudflare fronts the Railway domain) |
+| DB paths | `/data/*.db` (users/dev_users/dealer_portal only — inventory is Postgres) |
 
 If your vault service uses a different name or port, set `VAULT_ADDR` explicitly:
 
@@ -91,17 +92,37 @@ Only if vault is temporarily unavailable:
 
 App secrets (`GOOGLE_MAPS_API_KEY`, `SECRET_KEY`, SQLCipher keys, etc.) live in vault under `Dealer:*` — **do not** duplicate unless using `--mirror-secrets`.
 
-## 4. Persistent data (SQLite)
+## 4. Persistent data
 
-Attach a **Volume** on the web service mounted at `/data`:
+**Inventory is Postgres-only in production (SEC-102).** The app refuses to boot unless
+`INVENTORY_DATABASE_URL` (or `DATABASE_URL`) is a `postgresql://` DSN — there is no SQLite
+inventory fallback on Railway. Provision the Railway Postgres plugin on the project, then
+reference it from the web service:
 
 ```
-INVENTORY_DB_PATH=/data/inventory.db
+INVENTORY_DATABASE_URL=${{Postgres.DATABASE_URL}}
+```
+
+Apply the schema before first boot (from a machine that can reach the Railway DB):
+
+```bash
+INVENTORY_DATABASE_URL=... python3 -m backend.scripts.migrate --apply
+```
+
+The user-account databases have not yet moved to Postgres. Attach a **Volume** on the web
+service mounted at `/data` for them:
+
+```
 USERS_DB_PATH=/data/users.db
 DEV_USERS_DB_PATH=/data/dev_users.db
 DEALER_PORTAL_DB_PATH=/data/dealer_portal.db
-SCANNER_VDP_IMAGE_DOWNLOAD_DIR=/data/vdp_images
+SCANNER_VDP_DOWNLOAD_IMAGES=0
 ```
+
+The volume holds databases only. Vehicle photos are served from the dealer's own CDN via the
+URLs in `cars.gallery`, so the scanner does not save image bytes. If an earlier deploy set
+`SCANNER_VDP_IMAGE_DOWNLOAD_DIR` or `INVENTORY_DB_PATH`, delete those variables — nothing
+reads them.
 
 Upload initial DBs or run discovery/scans after first deploy.
 

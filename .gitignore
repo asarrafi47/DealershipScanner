@@ -94,6 +94,11 @@ backend/dictionary/csv_out_needs_cleaning_main/
 # Brochure PDF staging (moved from backend/dictionary/tmp_brochures)
 backend/data/brochures/
 backend/dictionary/tmp_brochures/
+# Archive-tier siblings. Same reason as above -- these are OEM marketing PDFs kept
+# locally as verification substrate for the citation checker, not project source.
+# Left untracked they were 114 MB of binaries heading into a commit.
+backend/data/brochures_archive_comparison/
+backend/data/brochures_archive_quarantine/
 
 # Dictionary catalog artifacts (regenerated)
 backend/dictionary/index/manifest.json
@@ -143,3 +148,31 @@ dump-*.sql
 # failure PNGs are 141MB and backend/dictionary 31MB. Untrack those first if
 # the goal is a smaller clone.
 backend/vector/chroma_master_catalog/
+
+# Investigation / scratch outputs. These are run artifacts, not source, and one of
+# them carried a live Google API key into 20 public commits (2026-04 -> 2026-08).
+# Secrets belong in .env, which is ignored at line 3. Never in a committed file.
+workspace/*_investigation.json
+workspace/*_report.json
+workspace/brochure_acquisition_*.json
+workspace/coverage_sweep_*.json
+workspace/oem_discovery_report.json
+# Derived brochure quarantine trees (binary/text run artifacts, tens of MB).
+backend/dictionary/derived/brochure_text_quarantine/
+backend/dictionary/derived/brochure_text_slim_quarantine/
+backend/dictionary/derived/trim_candidates_quarantine/
+backend/dictionary/derived/trim_adds_by_year_quarantine/
+# Fetch run logs (append-only jsonl, local run artifacts).
+backend/dictionary/derived/brochure_fetch_log.jsonl
+backend/dictionary/derived/html_spec_fetch_log.jsonl
+backend/data/spec_pages/
+
+# Compiled OCR helper — build locally from tools/ocr/macocr.swift; the Mach-O
+# binary itself never belongs in git.
+tools/ocr/bin/
+
+# User-uploaded comment photos (backend/utils/comment_images.py). Run data, not
+# source: the bytes are re-encoded uploads referenced by comment_attachments
+# rows, and the directory grows without bound. Anchored to the repo root, so it
+# lands here regardless of where the app was started from.
+comment_uploads/
