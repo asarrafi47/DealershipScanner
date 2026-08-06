@@ -10,6 +10,14 @@ if [ "${KMAC_VAULT_AUTO}" != "0" ]; then
     || echo "WARN: kmac vault preload skipped (vault unreachable or token missing)" >&2
 fi
 
+# Converge the schema before serving: the versioned chain in migrations/ is the
+# authoritative schema source; runtime CREATE TABLE passes only re-assert it.
+# Idempotent (checksummed schema_migrations tracking). Opt out: MIGRATE_ON_BOOT=0.
+if [ "${MIGRATE_ON_BOOT:-1}" != "0" ]; then
+  python3 -m backend.scripts.migrate --apply \
+    || echo "WARN: migration apply FAILED — booting on the existing schema" >&2
+fi
+
 python3 scripts/bootstrap_site_admin.py \
   || echo "WARN: site admin bootstrap skipped" >&2
 
