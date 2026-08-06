@@ -17,6 +17,7 @@ from backend.db.users_db import (
     reset_user_password,
     set_user_password_reset_token,
 )
+from backend.config import Config
 from backend.utils.mfa_delivery import send_transactional_email
 from backend.utils.runtime_env import is_production_env
 
@@ -35,10 +36,13 @@ def password_reset_enabled() -> bool:
 
 
 def _reset_pepper() -> str:
+    # Fall back through Config.secret_key_raw() (SECRET_KEY or legacy
+    # FLASK_SECRET_KEY) — a deploy that sets only SECRET_KEY must not end up
+    # signing reset tokens with the dev literal.
     return (
         (os.environ.get("PASSWORD_RESET_PEPPER") or "").strip()
         or (os.environ.get("EMAIL_VERIFY_PEPPER") or "").strip()
-        or (os.environ.get("FLASK_SECRET_KEY") or "").strip()
+        or Config.secret_key_raw()
         or "dev-password-reset-pepper"
     )
 
