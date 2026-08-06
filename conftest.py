@@ -34,6 +34,10 @@ if _backend not in sys.path:
 # Both sets start empty on purpose: no existing module is force-tagged — decorate
 # individual tests with ``@pytest.mark.integration`` / ``@pytest.mark.regression``
 # or add module basenames/prefixes here as tiers are classified.
+#
+# CI runs two jobs: ``-m "not integration"`` (offline) and ``-m integration``
+# (pytest-integration in ci.yml). Tag integration tests ONLY with the
+# stack_up self-skip pattern below, so they pass on a bare runner.
 REGRESSION_MODULES: frozenset = frozenset()
 REGRESSION_PREFIXES: tuple = ()
 
