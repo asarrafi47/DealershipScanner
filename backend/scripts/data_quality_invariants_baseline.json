@@ -1,0 +1,186 @@
+{
+  "generated_at": "2026-08-02T20:27:16+00:00",
+  "invariants": {
+    "car_trim_not_named_by_listing": {
+      "count": 1853,
+      "denominator": 72797,
+      "tier": "stored",
+      "title": "a car claims a trim its own listing text never names"
+    },
+    "curb_equals_tow": {
+      "count": 7767,
+      "denominator": 23803,
+      "tier": "stored",
+      "title": "curb weight identical to tow rating"
+    },
+    "curb_kg_lb_disagree": {
+      "count": 267,
+      "denominator": 23803,
+      "tier": "stored",
+      "title": "curb weight in kg and lb disagree by more than 5%"
+    },
+    "curb_over_light_duty_ceiling": {
+      "count": 1978,
+      "denominator": 23803,
+      "tier": "stored",
+      "title": "curb weight over 8,000 lb on a light-duty vehicle"
+    },
+    "cylinders_not_a_real_layout": {
+      "count": 71,
+      "denominator": 72943,
+      "tier": "stored",
+      "title": "a cylinder count no engine has been built with"
+    },
+    "electric_car_with_cylinders": {
+      "count": 354,
+      "denominator": 3676,
+      "tier": "stored",
+      "title": "an electric car with a non-zero cylinder count"
+    },
+    "epa_link_dangling": {
+      "count": 0,
+      "denominator": 60489,
+      "tier": "stored",
+      "title": "cars.epa_master_id points at a row that no longer exists"
+    },
+    "epa_link_make_mismatch": {
+      "count": 0,
+      "denominator": 60489,
+      "tier": "stored",
+      "title": "cars.epa_master_id points at a different make"
+    },
+    "epa_link_year_mismatch": {
+      "count": 525,
+      "denominator": 60489,
+      "tier": "stored",
+      "title": "cars.epa_master_id points at a different model year"
+    },
+    "ladder_bullet_without_citation": {
+      "count": 0,
+      "denominator": 1883,
+      "tier": "rendered",
+      "title": "a rendered trim bullet with no citation quoting its own text"
+    },
+    "ladder_citation_source_missing": {
+      "count": 0,
+      "denominator": 1883,
+      "tier": "rendered",
+      "title": "a trim bullet citing a document that is not on disk"
+    },
+    "mileage_out_of_range": {
+      "count": 2,
+      "denominator": 73389,
+      "tier": "stored",
+      "title": "an odometer reading below zero or above 600,000"
+    },
+    "mpg_out_of_physical_range": {
+      "count": 4,
+      "denominator": 58610,
+      "tier": "stored",
+      "title": "an EPA mpg figure outside 5-150"
+    },
+    "msrp_far_below_price": {
+      "count": 3,
+      "denominator": 17028,
+      "tier": "stored",
+      "title": "MSRP less than half the asking price"
+    },
+    "nameplate_constant_battery_kwh": {
+      "count": 9,
+      "denominator": 9,
+      "tier": "stored",
+      "title": "one battery_kwh value stamped across every trim of a nameplate"
+    },
+    "nameplate_constant_curb_weight_lb": {
+      "count": 282,
+      "denominator": 311,
+      "tier": "stored",
+      "title": "one curb_weight_lb value stamped across every trim of a nameplate"
+    },
+    "nameplate_constant_ev_range_miles": {
+      "count": 197,
+      "denominator": 211,
+      "tier": "stored",
+      "title": "one ev_range_miles value stamped across every trim of a nameplate"
+    },
+    "nameplate_constant_fuel_tank_gal": {
+      "count": 409,
+      "denominator": 642,
+      "tier": "stored",
+      "title": "one fuel_tank_gal value stamped across every trim of a nameplate"
+    },
+    "nameplate_constant_horsepower": {
+      "count": 343,
+      "denominator": 399,
+      "tier": "stored",
+      "title": "one horsepower value stamped across every trim of a nameplate"
+    },
+    "nameplate_constant_torque_lb_ft": {
+      "count": 312,
+      "denominator": 370,
+      "tier": "stored",
+      "title": "one torque_lb_ft value stamped across every trim of a nameplate"
+    },
+    "nameplate_constant_tow_capacity_lb": {
+      "count": 105,
+      "denominator": 115,
+      "tier": "stored",
+      "title": "one tow_capacity_lb value stamped across every trim of a nameplate"
+    },
+    "nameplate_constant_zero_to_60_sec": {
+      "count": 268,
+      "denominator": 294,
+      "tier": "stored",
+      "title": "one zero_to_60_sec value stamped across every trim of a nameplate"
+    },
+    "price_out_of_range": {
+      "count": 2,
+      "denominator": 71747,
+      "tier": "stored",
+      "title": "an asking price at or below zero, or above $2,000,000"
+    },
+    "rendered_ai_sourced_spec": {
+      "count": 9288,
+      "denominator": 14606,
+      "tier": "rendered",
+      "title": "a shopper-visible spec figure traceable only to an AI-researched table"
+    },
+    "rendered_curb_equals_tow": {
+      "count": 3401,
+      "denominator": 14606,
+      "tier": "rendered",
+      "title": "the car page shows a curb weight identical to the tow rating"
+    },
+    "rendered_curb_over_ceiling": {
+      "count": 0,
+      "denominator": 14606,
+      "tier": "rendered",
+      "title": "the car page shows over 8,000 lb curb weight on a light-duty vehicle"
+    },
+    "rendered_ev_field_on_non_ev": {
+      "count": 0,
+      "denominator": 14606,
+      "tier": "rendered",
+      "title": "battery capacity or electric range on a car that cannot be plugged in"
+    },
+    "rendered_fuel_type_card_vs_filter": {
+      "count": 37,
+      "denominator": 14606,
+      "tier": "rendered",
+      "title": "the card's fuel type differs from the value the search filter matches"
+    },
+    "rendered_sub_four_zero_to_60": {
+      "count": 118,
+      "denominator": 14606,
+      "tier": "rendered",
+      "title": "the car page shows a sub-4.0s 0-60 on an unbadged car"
+    },
+    "zero_to_60_sub_four_no_badge": {
+      "count": 2818,
+      "denominator": 22763,
+      "tier": "stored",
+      "title": "sub-4.0s 0-60 with no performance badge in the trim"
+    }
+  },
+  "note": "Recorded 2026-08-02 from a full run (stored + rendered tiers, 14,606 active cohorts) on the live inventory. These are a KNOWN BACKLOG, not a clean state: every nonzero count here is an open data defect. Lower them deliberately and re-record; never raise one to make a run green."
+}

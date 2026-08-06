@@ -12,7 +12,8 @@ data:
   DEALER_PORTAL_DB_PATH: "/data/dealer_portal.db"
   USERS_DB_PATH: "/data/users.db"
   DEALERS_MANIFEST_PATH: "/data/dealers.json"
-  SCANNER_VDP_IMAGE_DOWNLOAD_DIR: "/data/vdp_images"
+  # Serving reads the dealer's remote URLs from cars.gallery, so local copies buy nothing.
+  SCANNER_VDP_DOWNLOAD_IMAGES: "0"
 
   # Database Connection (Postgres)
   # Using the Service name 'postgres-service' defined in your postgres.yaml

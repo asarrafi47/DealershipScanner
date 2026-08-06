@@ -14,7 +14,8 @@ x-scanner-env: &scanner-env
   USERS_DB_PATH: /data/users.db
   DEV_USERS_DB_PATH: /data/dev_users.db
   INCOMPLETE_LISTINGS_DB_PATH: /data/incomplete_listings.db
-  SCANNER_VDP_IMAGE_DOWNLOAD_DIR: /data/vdp_images
+  # Serving reads the dealer's remote URLs from cars.gallery, so local copies buy nothing.
+  SCANNER_VDP_DOWNLOAD_IMAGES: "0"
 
 services:
   postgres:

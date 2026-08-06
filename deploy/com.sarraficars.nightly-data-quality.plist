@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd job: nightly data-quality invariant suite.
+
+  Kept in the repo as a template; NOT installed automatically. Install/uninstall
+  exactly as described in deploy/NIGHTLY_REFRESH.md, substituting this Label.
+
+  Runs at 06:00, deliberately AFTER the 03:30 nightly_http_refresh job, so it
+  grades the inventory that refresh just wrote rather than yesterday's. The
+  measured full run (stored + rendered tiers over 14,606 active cohorts) took
+  about 11 minutes; 06:00 leaves the refresh well over two hours of headroom.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.sarraficars.nightly-data-quality</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/asarrafi/Projects/DealershipScanner/deploy/nightly_data_quality_invariants.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner</string>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>6</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!-- The wrapper also writes a dated, timestamped log at
+         workspace/scanlogs/data_quality_<YYYYMMDD>.log and a machine-readable
+         report at workspace/data_quality/invariants_<YYYYMMDD>.json -->
+    <key>StandardOutPath</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner/workspace/scanlogs/launchd.nightly-data-quality.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/asarrafi/Projects/DealershipScanner/workspace/scanlogs/launchd.nightly-data-quality.err.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/opt/homebrew/opt/python@3.14/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>LowPriorityIO</key>
+    <true/>
+    <key>Nice</key>
+    <integer>5</integer>
+</dict>
+</plist>

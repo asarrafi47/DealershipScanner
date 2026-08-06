@@ -2,7 +2,15 @@
 #
 # nightly_http_refresh.sh — browser-free nightly inventory freshness pass.
 #
-# Runs four HTTP-only steps in order (NO Chrome/Playwright is ever launched):
+# Runs five steps in order. All five are HTTP-only ONLY BECAUSE this script now
+# exports SCANNER_LISTING_FETCH_CHAIN=0 (see below). The header used to claim
+# "NO Chrome/Playwright is ever launched" unconditionally; that was false. On
+# 2026-08-02 a run of this script logged 1,656 "fetched via playwright" lines
+# against 1,574 "fetched via requests", because post-scan gap-fill routes through
+# backend/scanner/chain.py::ScraperChain, whose fetcher list includes Playwright,
+# and gap_fill.py defaults SCANNER_LISTING_FETCH_CHAIN to "1" (enabled). The
+# chrome-process assertion below did not catch it: it snapshots only around the
+# delta step, and the browsers are launched later, during gap-fill.
 #   1. HTTP delta refresh   (scanner.py --delta) — replays captured API recipes
 #      over plain HTTP: upserts fresh prices/inventory, marks sold cars inactive.
 #   2. harvest_carscommerce — bulk field fill from the shared CarsCommerce API.
@@ -23,6 +31,13 @@
 # Install as a launchd job — see deploy/NIGHTLY_REFRESH.md.
 
 set -u
+
+# Force every listing fetch down the plain-HTTP path. gap_fill.py defaults this to
+# "1", which routes through ScraperChain and lets a Playwright fetcher pick up
+# anything requests could not get. That is reasonable for an ad-hoc heal, but this
+# job is the browser-free one, so the switch is set explicitly here rather than
+# relied upon. Unset it if you deliberately want browser fallback.
+export SCANNER_LISTING_FETCH_CHAIN=0
 
 # ---------------------------------------------------------------------------
 # Paths / environment
@@ -125,8 +140,14 @@ log "browser processes before delta step: ${BROWSERS_BEFORE}"
 # from every dealer with live rows in `cars` (all of which have stored recipes);
 # no-recipe dealers skip fast. Per-dealer timeout raised to 900s so the biggest
 # lots (2000+ VIN replays) finish instead of timing out at the 300s default.
+# DEALERS_FROM_SCANNABLE=1 rosters active inventory UNION dealers holding a
+# usable stored recipe. DEALERS_FROM_ACTIVE_INVENTORY=1 (the previous setting)
+# was self-limiting: a dealer whose rows had all gone inactive was never scanned
+# again, so it could never come back — audiofcostamesa-com sat at 274 rows, every
+# one inactive. A dealer with no usable recipe still skips fast, so the wider
+# roster costs a no-op per extra dealer rather than a scan.
 run_step "1/4 http-delta-refresh" \
-  env DEALERS_FROM_ACTIVE_INVENTORY=1 SCANNER_DELTA_DEALER_TIMEOUT=900 SCANNER_DELTA_CONCURRENCY=8 \
+  env DEALERS_FROM_SCANNABLE=1 SCANNER_DELTA_DEALER_TIMEOUT=900 SCANNER_DELTA_CONCURRENCY=8 \
   "$PYTHON" scanner.py --delta || FAILS=$((FAILS+1))
 
 # Browser snapshot after — flag any NEW browser processes this job may have spawned.
