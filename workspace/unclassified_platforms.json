@@ -1,1 +1,1626 @@
-{}
+{
+  "amigosusedcars.net": {
+    "dealer_url": "https://amigosusedcars.net",
+    "first_seen": "2026-07-20T01:52:31Z",
+    "host": "amigosusedcars.net",
+    "last_seen": "2026-07-20T01:52:31Z",
+    "signals": {
+      "api_hosts": [
+        "api.whatsapp.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "amigosusedcars.net",
+      "http_status": 200,
+      "page_size": 631067
+    }
+  },
+  "burnshonda.com": {
+    "dealer_url": "https://burnshonda.com",
+    "first_seen": "2026-07-17T20:22:50Z",
+    "host": "burnshonda.com",
+    "last_seen": "2026-07-17T20:22:50Z",
+    "signals": {
+      "cname_chain": [],
+      "host": "burnshonda.com"
+    }
+  },
+  "capitalfordcharlotte.com": {
+    "dealer_url": "https://capitalfordcharlotte.com",
+    "first_seen": "2026-07-18T16:32:13Z",
+    "host": "capitalfordcharlotte.com",
+    "last_seen": "2026-07-18T16:32:13Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "capitalfordcharlotte.com",
+      "http_status": 403,
+      "page_size": 784
+    }
+  },
+  "circlecautosales.com": {
+    "dealer_url": "https://circlecautosales.com",
+    "first_seen": "2026-07-20T01:54:12Z",
+    "host": "circlecautosales.com",
+    "last_seen": "2026-07-20T01:54:12Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "circlecautosales.com",
+      "http_status": 200,
+      "page_size": 108281
+    }
+  },
+  "dirtcheapcarrental.com": {
+    "dealer_url": "https://dirtcheapcarrental.com",
+    "first_seen": "2026-07-17T20:22:56Z",
+    "host": "dirtcheapcarrental.com",
+    "last_seen": "2026-07-18T15:54:00Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "dirtcheapcarrental.com",
+      "http_status": 403,
+      "page_size": 9674
+    }
+  },
+  "doggetthondamedcenter.com": {
+    "dealer_url": "https://doggetthondamedcenter.com",
+    "first_seen": "2026-07-17T20:22:48Z",
+    "host": "doggetthondamedcenter.com",
+    "last_seen": "2026-07-17T20:22:48Z",
+    "signals": {
+      "cname_chain": [],
+      "host": "doggetthondamedcenter.com"
+    }
+  },
+  "downeastautonc.com": {
+    "dealer_url": "https://downeastautonc.com/",
+    "first_seen": "2026-08-05T21:43:08Z",
+    "host": "downeastautonc.com",
+    "last_seen": "2026-08-05T21:43:08Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org",
+        "api.follow.it"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "downeastautonc.com",
+      "http_status": 200,
+      "page_size": 221059
+    }
+  },
+  "easyautoonline.com": {
+    "dealer_url": "https://easyautoonline.com/buy-here-pay-here-used-car-dealer-rome-georgia",
+    "first_seen": "2026-07-20T01:52:21Z",
+    "host": "easyautoonline.com",
+    "last_seen": "2026-07-20T01:52:21Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org",
+        "interfaces.zapier.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "easyautoonline.com",
+      "http_status": 200,
+      "page_size": 316757
+    }
+  },
+  "gardenahonda.com": {
+    "dealer_url": "https://gardenahonda.com",
+    "first_seen": "2026-07-18T16:31:01Z",
+    "host": "gardenahonda.com",
+    "last_seen": "2026-07-18T16:31:01Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "gardenahonda.com",
+      "http_status": 200,
+      "page_size": 750341
+    }
+  },
+  "gmdirectautomotive.com": {
+    "dealer_url": "http://gmdirectautomotive.com",
+    "first_seen": "2026-08-05T21:44:26Z",
+    "host": "gmdirectautomotive.com",
+    "last_seen": "2026-08-05T21:44:26Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "gmdirectautomotive.com",
+      "http_status": 200,
+      "page_size": 644976
+    }
+  },
+  "gopullit.com": {
+    "dealer_url": "https://gopullit.com/jacksonville-fl",
+    "first_seen": "2026-07-17T20:22:57Z",
+    "host": "gopullit.com",
+    "last_seen": "2026-07-18T15:54:18Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com",
+        "api.w.org"
+      ],
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "gopullit.com",
+      "http_status": 200,
+      "page_size": 110350
+    }
+  },
+  "joinbuggy.com": {
+    "dealer_url": "https://joinbuggy.com",
+    "first_seen": "2026-07-18T16:32:39Z",
+    "host": "joinbuggy.com",
+    "last_seen": "2026-07-18T16:32:39Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "joinbuggy.com",
+      "http_status": 200,
+      "page_size": 368757
+    }
+  },
+  "longofathens.com": {
+    "dealer_url": "https://longofathens.com",
+    "first_seen": "2026-07-20T01:51:48Z",
+    "host": "longofathens.com",
+    "last_seen": "2026-07-20T01:51:48Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "longofathens.com",
+      "http_status": 200,
+      "page_size": 184403
+    }
+  },
+  "majorworld.com": {
+    "dealer_url": "https://majorworld.com",
+    "first_seen": "2026-07-17T20:22:42Z",
+    "host": "majorworld.com",
+    "last_seen": "2026-07-17T20:22:42Z",
+    "signals": {
+      "cname_chain": [],
+      "host": "majorworld.com"
+    }
+  },
+  "mclarennb.com": {
+    "dealer_url": "https://mclarennb.com",
+    "first_seen": "2026-08-05T21:48:52Z",
+    "host": "mclarennb.com",
+    "last_seen": "2026-08-05T21:48:52Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "mclarennb.com",
+      "http_status": 200,
+      "page_size": 147218
+    }
+  },
+  "newportbeach.porsche.com": {
+    "dealer_url": "https://newportbeach.porsche.com/en",
+    "first_seen": "2026-07-18T21:46:38Z",
+    "host": "newportbeach.porsche.com",
+    "last_seen": "2026-07-18T21:46:38Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "0c67b2dc443e4824.vercel-dns-013.com"
+      ],
+      "host": "newportbeach.porsche.com",
+      "http_status": 200,
+      "page_size": 653061
+    }
+  },
+  "oldorchardnissan.com": {
+    "dealer_url": "https://oldorchardnissan.com",
+    "first_seen": "2026-07-18T16:31:25Z",
+    "host": "oldorchardnissan.com",
+    "last_seen": "2026-07-18T16:31:25Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com",
+        "maps.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "oldorchardnissan.com",
+      "http_status": 200,
+      "page_size": 370636
+    }
+  },
+  "pacificvolkswagen.com": {
+    "dealer_url": "https://pacificvolkswagen.com",
+    "first_seen": "2026-08-05T21:59:21Z",
+    "host": "pacificvolkswagen.com",
+    "last_seen": "2026-08-05T21:59:21Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "pacificvolkswagen.com",
+      "http_status": 200,
+      "page_size": 330954
+    }
+  },
+  "premierauto.center": {
+    "dealer_url": "https://premierauto.center",
+    "first_seen": "2026-07-20T01:54:35Z",
+    "host": "premierauto.center",
+    "last_seen": "2026-07-20T01:54:35Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "premierauto.center",
+      "http_status": 200,
+      "page_size": 136702
+    }
+  },
+  "rideanddrivellc.com": {
+    "dealer_url": "https://rideanddrivellc.com",
+    "first_seen": "2026-07-20T01:49:53Z",
+    "host": "rideanddrivellc.com",
+    "last_seen": "2026-07-20T01:49:53Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "rideanddrivellc.com",
+      "http_status": 200,
+      "page_size": 153790
+    }
+  },
+  "rivian.com": {
+    "dealer_url": "https://rivian.com/en-CA/spaces/el-segundo-service-demo-center",
+    "first_seen": "2026-07-17T20:22:44Z",
+    "host": "rivian.com",
+    "last_seen": "2026-07-18T15:51:42Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "rivian.com",
+      "http_status": 200,
+      "page_size": 212352
+    }
+  },
+  "route27automall.com": {
+    "dealer_url": "https://route27automall.com",
+    "first_seen": "2026-07-18T16:32:21Z",
+    "host": "route27automall.com",
+    "last_seen": "2026-07-18T16:32:21Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "route27automall.com",
+      "http_status": 200,
+      "page_size": 76587
+    }
+  },
+  "rv.campingworld.com": {
+    "dealer_url": "https://rv.campingworld.com/dealer/greenwood-indiana",
+    "first_seen": "2026-07-17T20:23:09Z",
+    "host": "rv.campingworld.com",
+    "last_seen": "2026-07-18T16:22:10Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com",
+        "api.segment.io"
+      ],
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "rv.campingworld.com",
+      "http_status": 200,
+      "page_size": 472365
+    }
+  },
+  "site.manheim.com": {
+    "dealer_url": "https://site.manheim.com/en/locations/us-locations/manheim-phoenix.html",
+    "first_seen": "2026-07-17T20:22:49Z",
+    "host": "site.manheim.com",
+    "last_seen": "2026-07-17T20:22:49Z",
+    "signals": {
+      "cname_chain": [
+        "manheim.go-vip.net"
+      ],
+      "host": "site.manheim.com"
+    }
+  },
+  "sojax.com": {
+    "dealer_url": "https://sojax.com",
+    "first_seen": "2026-07-18T16:32:29Z",
+    "host": "sojax.com",
+    "last_seen": "2026-07-18T16:32:29Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "sojax.com",
+      "http_status": 200,
+      "page_size": 415853
+    }
+  },
+  "toyotacarlsbad.com": {
+    "dealer_url": "https://toyotacarlsbad.com",
+    "first_seen": "2026-07-18T21:38:00Z",
+    "host": "toyotacarlsbad.com",
+    "last_seen": "2026-07-18T21:38:00Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "toyotacarlsbad.com",
+      "http_error": "<urlopen error timed out>",
+      "http_status": null,
+      "page_size": 0
+    }
+  },
+  "toyotasunnyvale.com": {
+    "dealer_url": "https://toyotasunnyvale.com",
+    "first_seen": "2026-07-17T20:23:05Z",
+    "host": "toyotasunnyvale.com",
+    "last_seen": "2026-07-18T16:19:44Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "toyotasunnyvale.com",
+      "http_error": "[Errno 54] Connection reset by peer",
+      "http_status": null,
+      "page_size": 0
+    }
+  },
+  "upullandpay.com": {
+    "dealer_url": "https://upullandpay.com/locations/houston-tx",
+    "first_seen": "2026-07-17T20:22:48Z",
+    "host": "upullandpay.com",
+    "last_seen": "2026-07-18T15:52:47Z",
+    "signals": {
+      "api_hosts": [
+        "inventoryservice.pullapart.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "upullandpay.com",
+      "http_status": 200,
+      "page_size": 141672
+    }
+  },
+  "www.5starford.com": {
+    "dealer_url": "https://www.5starford.com",
+    "first_seen": "2026-07-17T20:23:03Z",
+    "host": "www.5starford.com",
+    "last_seen": "2026-07-17T20:23:03Z",
+    "signals": {
+      "cname_chain": [],
+      "host": "www.5starford.com"
+    }
+  },
+  "www.adesa.com": {
+    "dealer_url": "https://www.adesa.com/auction_location/adesa-dallas",
+    "first_seen": "2026-07-17T20:22:57Z",
+    "host": "www.adesa.com",
+    "last_seen": "2026-07-17T20:22:57Z",
+    "signals": {
+      "cname_chain": [
+        "wp.wpenginepowered.com"
+      ],
+      "host": "www.adesa.com"
+    }
+  },
+  "www.arlingtontoyota.com": {
+    "dealer_url": "https://www.arlingtontoyota.com",
+    "first_seen": "2026-07-17T20:22:57Z",
+    "host": "www.arlingtontoyota.com",
+    "last_seen": "2026-07-17T20:22:57Z",
+    "signals": {
+      "cname_chain": [
+        "arlingtontoyota.com"
+      ],
+      "host": "www.arlingtontoyota.com"
+    }
+  },
+  "www.autoboutiqueflorida.com": {
+    "dealer_url": "https://www.autoboutiqueflorida.com",
+    "first_seen": "2026-07-17T20:22:58Z",
+    "host": "www.autoboutiqueflorida.com",
+    "last_seen": "2026-07-17T20:22:58Z",
+    "signals": {
+      "cname_chain": [
+        "autoboutiqueflorida.com"
+      ],
+      "host": "www.autoboutiqueflorida.com"
+    }
+  },
+  "www.autoboutiqueohio.com": {
+    "dealer_url": "https://www.autoboutiqueohio.com",
+    "first_seen": "2026-07-17T20:23:07Z",
+    "host": "www.autoboutiqueohio.com",
+    "last_seen": "2026-07-17T20:23:07Z",
+    "signals": {
+      "cname_chain": [
+        "autoboutiqueohio.com"
+      ],
+      "host": "www.autoboutiqueohio.com"
+    }
+  },
+  "www.autocollectionofmurfreesboro.com": {
+    "dealer_url": "https://www.autocollectionofmurfreesboro.com",
+    "first_seen": "2026-07-20T02:00:02Z",
+    "host": "www.autocollectionofmurfreesboro.com",
+    "last_seen": "2026-07-20T02:00:02Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org",
+        "fonts.googleapis.com",
+        "auto-digital-retail.capitalone.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "autocollectionofmurfreesboro.com"
+      ],
+      "host": "www.autocollectionofmurfreesboro.com",
+      "http_status": 200,
+      "page_size": 99318
+    }
+  },
+  "www.automartkannapolis.com": {
+    "dealer_url": "https://www.automartkannapolis.com/",
+    "first_seen": "2026-08-05T21:36:29Z",
+    "host": "www.automartkannapolis.com",
+    "last_seen": "2026-08-05T21:40:28Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "automartkannapolis.com"
+      ],
+      "host": "www.automartkannapolis.com",
+      "http_status": 200,
+      "page_size": 60386
+    }
+  },
+  "www.bankstonmotorhomes.com": {
+    "dealer_url": "https://www.bankstonmotorhomes.com",
+    "first_seen": "2026-07-20T01:58:40Z",
+    "host": "www.bankstonmotorhomes.com",
+    "last_seen": "2026-07-20T01:58:40Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com",
+        "ajax.googleapis.com"
+      ],
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "origin.irv-ldv-cf.live"
+      ],
+      "host": "www.bankstonmotorhomes.com",
+      "http_status": 200,
+      "page_size": 209736
+    }
+  },
+  "www.bergetoyota.com": {
+    "dealer_url": "https://www.bergetoyota.com",
+    "first_seen": "2026-07-17T20:22:50Z",
+    "host": "www.bergetoyota.com",
+    "last_seen": "2026-07-17T20:22:50Z",
+    "signals": {
+      "cname_chain": [
+        "bergetoyota.com"
+      ],
+      "host": "www.bergetoyota.com"
+    }
+  },
+  "www.bmwofbloomfield.com": {
+    "dealer_url": "https://www.bmwofbloomfield.com",
+    "first_seen": "2026-07-17T20:22:42Z",
+    "host": "www.bmwofbloomfield.com",
+    "last_seen": "2026-07-17T20:22:42Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.bmwofbloomfield.com"
+    }
+  },
+  "www.burientoyota.com": {
+    "dealer_url": "https://www.burientoyota.com",
+    "first_seen": "2026-07-17T20:23:13Z",
+    "host": "www.burientoyota.com",
+    "last_seen": "2026-07-17T20:23:13Z",
+    "signals": {
+      "cname_chain": [
+        "burientoyota.com"
+      ],
+      "host": "www.burientoyota.com"
+    }
+  },
+  "www.capitalfordcharlotte.com": {
+    "dealer_url": "https://www.capitalfordcharlotte.com",
+    "first_seen": "2026-07-17T20:23:09Z",
+    "host": "www.capitalfordcharlotte.com",
+    "last_seen": "2026-07-18T19:15:57Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "capitalfordcharlotte.com"
+      ],
+      "host": "www.capitalfordcharlotte.com",
+      "http_status": 403,
+      "page_size": 784
+    }
+  },
+  "www.carbeeco.com": {
+    "dealer_url": "https://www.carbeeco.com",
+    "first_seen": "2026-07-18T21:44:20Z",
+    "host": "www.carbeeco.com",
+    "last_seen": "2026-07-18T21:44:20Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org",
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "alpha.dcdws.net",
+        "dealers.dealercenterwebsite.net.cdn.cloudflare.net"
+      ],
+      "host": "www.carbeeco.com",
+      "http_status": 200,
+      "page_size": 494068
+    }
+  },
+  "www.cartersubaruballard.com": {
+    "dealer_url": "https://www.cartersubaruballard.com",
+    "first_seen": "2026-07-17T20:23:13Z",
+    "host": "www.cartersubaruballard.com",
+    "last_seen": "2026-07-17T20:23:13Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.cartersubaruballard.com"
+    }
+  },
+  "www.carvana.com": {
+    "dealer_url": "https://www.carvana.com",
+    "first_seen": "2026-07-17T20:22:49Z",
+    "host": "www.carvana.com",
+    "last_seen": "2026-08-05T21:41:54Z",
+    "signals": {
+      "api_hosts": [
+        "apik.carvana.io"
+      ],
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "www.carvana.com",
+      "http_status": 200,
+      "page_size": 728986
+    }
+  },
+  "www.carvision.com": {
+    "dealer_url": "https://www.carvision.com",
+    "first_seen": "2026-07-17T20:22:51Z",
+    "host": "www.carvision.com",
+    "last_seen": "2026-07-17T20:22:51Z",
+    "signals": {
+      "cname_chain": [
+        "carvision.com"
+      ],
+      "host": "www.carvision.com"
+    }
+  },
+  "www.chapmanbmwchandler.com": {
+    "dealer_url": "https://www.chapmanbmwchandler.com",
+    "first_seen": "2026-07-17T20:22:50Z",
+    "host": "www.chapmanbmwchandler.com",
+    "last_seen": "2026-07-17T20:22:50Z",
+    "signals": {
+      "cname_chain": [
+        "dealer-caw.azurewebsites.net",
+        "waws-prod-bay-235.sip.azurewebsites.windows.net",
+        "waws-prod-bay-235-155a.westus.cloudapp.azure.com"
+      ],
+      "host": "www.chapmanbmwchandler.com"
+    }
+  },
+  "www.chapmanfordaz.com": {
+    "dealer_url": "https://www.chapmanfordaz.com",
+    "first_seen": "2026-07-17T20:22:50Z",
+    "host": "www.chapmanfordaz.com",
+    "last_seen": "2026-07-17T20:22:50Z",
+    "signals": {
+      "cname_chain": [
+        "dealer-cau.azurewebsites.net",
+        "waws-prod-bay-235.sip.azurewebsites.windows.net",
+        "waws-prod-bay-235-155a.westus.cloudapp.azure.com"
+      ],
+      "host": "www.chapmanfordaz.com"
+    }
+  },
+  "www.copart.com": {
+    "dealer_url": "https://www.copart.com/locations/houston-tx-11",
+    "first_seen": "2026-07-17T20:22:48Z",
+    "host": "www.copart.com",
+    "last_seen": "2026-07-17T20:22:48Z",
+    "signals": {
+      "cname_chain": [
+        "www-inc.copart.com",
+        "855g4.x.incapdns.net"
+      ],
+      "host": "www.copart.com"
+    }
+  },
+  "www.darcarshondatenafly.com": {
+    "dealer_url": "https://www.darcarshondatenafly.com",
+    "first_seen": "2026-07-17T20:22:43Z",
+    "host": "www.darcarshondatenafly.com",
+    "last_seen": "2026-07-17T20:22:43Z",
+    "signals": {
+      "cname_chain": [
+        "darcarshondatenafly.com"
+      ],
+      "host": "www.darcarshondatenafly.com"
+    }
+  },
+  "www.donmcgilltoyota.com": {
+    "dealer_url": "https://www.donmcgilltoyota.com",
+    "first_seen": "2026-07-17T20:22:47Z",
+    "host": "www.donmcgilltoyota.com",
+    "last_seen": "2026-07-17T20:22:47Z",
+    "signals": {
+      "cname_chain": [
+        "donmcgilltoyota.com"
+      ],
+      "host": "www.donmcgilltoyota.com"
+    }
+  },
+  "www.downeyhyundai.com": {
+    "dealer_url": "https://www.downeyhyundai.com",
+    "first_seen": "2026-07-17T20:22:44Z",
+    "host": "www.downeyhyundai.com",
+    "last_seen": "2026-07-17T20:22:44Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.downeyhyundai.com"
+    }
+  },
+  "www.dreyerreinboldbmwnorth.com": {
+    "dealer_url": "https://www.dreyerreinboldbmwnorth.com",
+    "first_seen": "2026-07-17T20:23:10Z",
+    "host": "www.dreyerreinboldbmwnorth.com",
+    "last_seen": "2026-07-17T20:23:10Z",
+    "signals": {
+      "cname_chain": [
+        "dreyerreinboldbmwnorth.com"
+      ],
+      "host": "www.dreyerreinboldbmwnorth.com"
+    }
+  },
+  "www.drivetime.com": {
+    "dealer_url": "https://www.drivetime.com",
+    "first_seen": "2026-07-20T01:59:17Z",
+    "host": "www.drivetime.com",
+    "last_seen": "2026-07-20T01:59:17Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.drivetime.com",
+      "http_status": 200,
+      "page_size": 634856
+    }
+  },
+  "www.easttennesseeautooutlet.com": {
+    "dealer_url": "https://www.easttennesseeautooutlet.com",
+    "first_seen": "2026-07-20T01:52:04Z",
+    "host": "www.easttennesseeautooutlet.com",
+    "last_seen": "2026-07-20T01:52:04Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org",
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "alpha.dcdws.net",
+        "dealers.dealercenterwebsite.net.cdn.cloudflare.net"
+      ],
+      "host": "www.easttennesseeautooutlet.com",
+      "http_status": 200,
+      "page_size": 432186
+    }
+  },
+  "www.easyhonda.com": {
+    "dealer_url": "https://www.easyhonda.com",
+    "first_seen": "2026-07-17T20:22:47Z",
+    "host": "www.easyhonda.com",
+    "last_seen": "2026-07-17T20:22:47Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.easyhonda.com"
+    }
+  },
+  "www.ecmcars.com": {
+    "dealer_url": "https://www.ecmcars.com/",
+    "first_seen": "2026-08-05T21:43:42Z",
+    "host": "www.ecmcars.com",
+    "last_seen": "2026-08-05T21:43:42Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.ecmcars.com",
+      "http_status": 200,
+      "page_size": 89952
+    }
+  },
+  "www.fivestarforddallas.com": {
+    "dealer_url": "https://www.fivestarforddallas.com",
+    "first_seen": "2026-07-17T20:22:57Z",
+    "host": "www.fivestarforddallas.com",
+    "last_seen": "2026-07-17T20:22:57Z",
+    "signals": {
+      "cname_chain": [],
+      "host": "www.fivestarforddallas.com"
+    }
+  },
+  "www.fremonttoyota.com": {
+    "dealer_url": "https://www.fremonttoyota.com",
+    "first_seen": "2026-07-17T20:23:06Z",
+    "host": "www.fremonttoyota.com",
+    "last_seen": "2026-07-17T20:23:06Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.fremonttoyota.com"
+    }
+  },
+  "www.gardenahonda.com": {
+    "dealer_url": "https://www.gardenahonda.com",
+    "first_seen": "2026-07-17T20:22:44Z",
+    "host": "www.gardenahonda.com",
+    "last_seen": "2026-07-18T21:49:30Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "d21d501pwnwux5.cloudfront.net"
+      ],
+      "host": "www.gardenahonda.com",
+      "http_status": 200,
+      "page_size": 750341
+    }
+  },
+  "www.groovesubaru.com": {
+    "dealer_url": "https://www.groovesubaru.com",
+    "first_seen": "2026-07-17T20:23:14Z",
+    "host": "www.groovesubaru.com",
+    "last_seen": "2026-07-17T20:23:14Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.groovesubaru.com"
+    }
+  },
+  "www.groovetoyota.com": {
+    "dealer_url": "https://www.groovetoyota.com",
+    "first_seen": "2026-07-17T20:23:13Z",
+    "host": "www.groovetoyota.com",
+    "last_seen": "2026-07-17T20:23:13Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.groovetoyota.com"
+    }
+  },
+  "www.group1chevroletnorthwest.com": {
+    "dealer_url": "https://www.group1chevroletnorthwest.com",
+    "first_seen": "2026-07-17T20:22:54Z",
+    "host": "www.group1chevroletnorthwest.com",
+    "last_seen": "2026-07-18T15:15:44Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "group1chevroletnorthwest.com"
+      ],
+      "host": "www.group1chevroletnorthwest.com",
+      "http_status": 403,
+      "page_size": 236699
+    }
+  },
+  "www.group1fordofsouthaustin.com": {
+    "dealer_url": "https://www.group1fordofsouthaustin.com",
+    "first_seen": "2026-07-17T20:23:02Z",
+    "host": "www.group1fordofsouthaustin.com",
+    "last_seen": "2026-07-18T15:16:58Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "group1fordofsouthaustin.com"
+      ],
+      "host": "www.group1fordofsouthaustin.com",
+      "http_status": 403,
+      "page_size": 236698
+    }
+  },
+  "www.group1hondagreenbelt.com": {
+    "dealer_url": "https://www.group1hondagreenbelt.com",
+    "first_seen": "2026-07-17T20:23:17Z",
+    "host": "www.group1hondagreenbelt.com",
+    "last_seen": "2026-07-18T15:18:43Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "group1hondagreenbelt.com"
+      ],
+      "host": "www.group1hondagreenbelt.com",
+      "http_status": 403,
+      "page_size": 236695
+    }
+  },
+  "www.group1toyotanorthaustin.com": {
+    "dealer_url": "https://www.group1toyotanorthaustin.com",
+    "first_seen": "2026-07-17T20:23:00Z",
+    "host": "www.group1toyotanorthaustin.com",
+    "last_seen": "2026-07-18T15:16:50Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "group1toyotanorthaustin.com"
+      ],
+      "host": "www.group1toyotanorthaustin.com",
+      "http_status": 403,
+      "page_size": 236698
+    }
+  },
+  "www.group1toyotasouthwesthouston.com": {
+    "dealer_url": "https://www.group1toyotasouthwesthouston.com",
+    "first_seen": "2026-07-17T20:22:47Z",
+    "host": "www.group1toyotasouthwesthouston.com",
+    "last_seen": "2026-07-18T15:14:36Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "group1toyotasouthwesthouston.com"
+      ],
+      "host": "www.group1toyotasouthwesthouston.com",
+      "http_status": 403,
+      "page_size": 236724
+    }
+  },
+  "www.hillsidetoyota.nyc": {
+    "dealer_url": "https://www.hillsidetoyota.nyc",
+    "first_seen": "2026-07-17T20:22:42Z",
+    "host": "www.hillsidetoyota.nyc",
+    "last_seen": "2026-07-17T20:22:42Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.hillsidetoyota.nyc"
+    }
+  },
+  "www.hondaofelcajon.com": {
+    "dealer_url": "https://www.hondaofelcajon.com",
+    "first_seen": "2026-07-17T20:22:54Z",
+    "host": "www.hondaofelcajon.com",
+    "last_seen": "2026-07-17T20:22:54Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.hondaofelcajon.com"
+    }
+  },
+  "www.hondaofpasadena.com": {
+    "dealer_url": "https://www.hondaofpasadena.com",
+    "first_seen": "2026-07-17T20:22:45Z",
+    "host": "www.hondaofpasadena.com",
+    "last_seen": "2026-07-17T20:22:45Z",
+    "signals": {
+      "cname_chain": [
+        "hondaofpasadena.com"
+      ],
+      "host": "www.hondaofpasadena.com"
+    }
+  },
+  "www.honestcardeal.com": {
+    "dealer_url": "https://www.honestcardeal.com",
+    "first_seen": "2026-07-20T01:54:25Z",
+    "host": "www.honestcardeal.com",
+    "last_seen": "2026-07-20T01:54:25Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "site-dns.bolt.host"
+      ],
+      "host": "www.honestcardeal.com",
+      "http_status": 200,
+      "page_size": 1515
+    }
+  },
+  "www.indyautoman.com": {
+    "dealer_url": "https://www.indyautoman.com",
+    "first_seen": "2026-07-17T20:23:10Z",
+    "host": "www.indyautoman.com",
+    "last_seen": "2026-07-17T20:23:10Z",
+    "signals": {
+      "cname_chain": [
+        "indyautoman.com"
+      ],
+      "host": "www.indyautoman.com"
+    }
+  },
+  "www.jerryswesayyes.com": {
+    "dealer_url": "https://www.jerryswesayyes.com",
+    "first_seen": "2026-07-20T01:49:55Z",
+    "host": "www.jerryswesayyes.com",
+    "last_seen": "2026-07-20T01:49:55Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "jerryswesayyes.com"
+      ],
+      "host": "www.jerryswesayyes.com",
+      "http_status": 200,
+      "page_size": 81348
+    }
+  },
+  "www.joinbuggy.com": {
+    "dealer_url": "https://www.joinbuggy.com",
+    "first_seen": "2026-07-17T20:22:42Z",
+    "host": "www.joinbuggy.com",
+    "last_seen": "2026-08-05T21:46:23Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.joinbuggy.com",
+      "http_status": 200,
+      "page_size": 368757
+    }
+  },
+  "www.lexusofsilverspring.com": {
+    "dealer_url": "https://www.lexusofsilverspring.com",
+    "first_seen": "2026-07-17T20:23:15Z",
+    "host": "www.lexusofsilverspring.com",
+    "last_seen": "2026-07-17T20:23:15Z",
+    "signals": {
+      "cname_chain": [
+        "lexusofsilverspring.com"
+      ],
+      "host": "www.lexusofsilverspring.com"
+    }
+  },
+  "www.lexussandiego.com": {
+    "dealer_url": "https://www.lexussandiego.com",
+    "first_seen": "2026-07-17T20:22:55Z",
+    "host": "www.lexussandiego.com",
+    "last_seen": "2026-07-17T20:22:55Z",
+    "signals": {
+      "cname_chain": [
+        "lexussandiego.com"
+      ],
+      "host": "www.lexussandiego.com"
+    }
+  },
+  "www.lindsaylexusofalexandria.com": {
+    "dealer_url": "https://www.lindsaylexusofalexandria.com",
+    "first_seen": "2026-07-17T20:23:15Z",
+    "host": "www.lindsaylexusofalexandria.com",
+    "last_seen": "2026-07-17T20:23:15Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.lindsaylexusofalexandria.com"
+    }
+  },
+  "www.manheim.com": {
+    "dealer_url": "https://www.manheim.com/locations/THAA/events",
+    "first_seen": "2026-07-17T20:22:47Z",
+    "host": "www.manheim.com",
+    "last_seen": "2026-07-17T20:22:47Z",
+    "signals": {
+      "cname_chain": [
+        "www-prod.awsmdotcom.manheim.com"
+      ],
+      "host": "www.manheim.com"
+    }
+  },
+  "www.mbmanhattan.com": {
+    "dealer_url": "https://www.mbmanhattan.com",
+    "first_seen": "2026-07-17T20:22:42Z",
+    "host": "www.mbmanhattan.com",
+    "last_seen": "2026-07-18T15:12:49Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "www.mbmanhattan.com",
+      "http_status": 403,
+      "page_size": 236642
+    }
+  },
+  "www.mbofbrooklyn.com": {
+    "dealer_url": "https://www.mbofbrooklyn.com",
+    "first_seen": "2026-07-17T20:22:43Z",
+    "host": "www.mbofbrooklyn.com",
+    "last_seen": "2026-07-17T20:22:43Z",
+    "signals": {
+      "cname_chain": [
+        "mbofbrooklyn.com"
+      ],
+      "host": "www.mbofbrooklyn.com"
+    }
+  },
+  "www.mcgrathcityhonda.com": {
+    "dealer_url": "https://www.mcgrathcityhonda.com",
+    "first_seen": "2026-07-17T20:22:46Z",
+    "host": "www.mcgrathcityhonda.com",
+    "last_seen": "2026-07-17T20:22:46Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.mcgrathcityhonda.com"
+    }
+  },
+  "www.mcgrathlexusofchicago.com": {
+    "dealer_url": "https://www.mcgrathlexusofchicago.com",
+    "first_seen": "2026-07-17T20:22:47Z",
+    "host": "www.mcgrathlexusofchicago.com",
+    "last_seen": "2026-07-17T20:22:47Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.mcgrathlexusofchicago.com"
+    }
+  },
+  "www.mossyhondalemongrove.com": {
+    "dealer_url": "https://www.mossyhondalemongrove.com",
+    "first_seen": "2026-07-17T20:22:56Z",
+    "host": "www.mossyhondalemongrove.com",
+    "last_seen": "2026-07-17T20:22:56Z",
+    "signals": {
+      "cname_chain": [
+        "d1hpd0hpna5lyo.cloudfront.net"
+      ],
+      "host": "www.mossyhondalemongrove.com"
+    }
+  },
+  "www.mossytoyota.com": {
+    "dealer_url": "https://www.mossytoyota.com",
+    "first_seen": "2026-07-17T20:22:55Z",
+    "host": "www.mossytoyota.com",
+    "last_seen": "2026-07-17T20:22:55Z",
+    "signals": {
+      "cname_chain": [
+        "d3graxdr6j5ejx.cloudfront.net"
+      ],
+      "host": "www.mossytoyota.com"
+    }
+  },
+  "www.mymetrohonda.com": {
+    "dealer_url": "https://www.mymetrohonda.com",
+    "first_seen": "2026-07-17T20:22:42Z",
+    "host": "www.mymetrohonda.com",
+    "last_seen": "2026-07-17T20:22:42Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.mymetrohonda.com"
+    }
+  },
+  "www.napletonhondamortongrove.com": {
+    "dealer_url": "https://www.napletonhondamortongrove.com",
+    "first_seen": "2026-07-17T20:22:47Z",
+    "host": "www.napletonhondamortongrove.com",
+    "last_seen": "2026-07-18T15:14:28Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "napletonhondamortongrove.com"
+      ],
+      "host": "www.napletonhondamortongrove.com",
+      "http_status": 403,
+      "page_size": 236699
+    }
+  },
+  "www.northitalia.com": {
+    "dealer_url": "https://www.northitalia.com/locations/tempe-az",
+    "first_seen": "2026-07-17T20:22:49Z",
+    "host": "www.northitalia.com",
+    "last_seen": "2026-08-05T21:58:40Z",
+    "signals": {
+      "api_hosts": [
+        "maps.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.northitalia.com",
+      "http_status": 200,
+      "page_size": 283900
+    }
+  },
+  "www.northparklexus.com": {
+    "dealer_url": "https://www.northparklexus.com",
+    "first_seen": "2026-07-17T20:22:52Z",
+    "host": "www.northparklexus.com",
+    "last_seen": "2026-07-17T20:22:52Z",
+    "signals": {
+      "cname_chain": [
+        "northparklexus.com"
+      ],
+      "host": "www.northparklexus.com"
+    }
+  },
+  "www.oldorchardnissan.com": {
+    "dealer_url": "https://www.oldorchardnissan.com",
+    "first_seen": "2026-07-17T20:22:45Z",
+    "host": "www.oldorchardnissan.com",
+    "last_seen": "2026-07-18T19:14:04Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com",
+        "maps.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.oldorchardnissan.com",
+      "http_status": 200,
+      "page_size": 370636
+    }
+  },
+  "www.ourismanhondaoftysonscorner.com": {
+    "dealer_url": "https://www.ourismanhondaoftysonscorner.com",
+    "first_seen": "2026-07-17T20:23:17Z",
+    "host": "www.ourismanhondaoftysonscorner.com",
+    "last_seen": "2026-07-17T20:23:17Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.ourismanhondaoftysonscorner.com"
+    }
+  },
+  "www.picknpull.com": {
+    "dealer_url": "https://www.picknpull.com/locations/64/summit-il",
+    "first_seen": "2026-07-17T20:22:45Z",
+    "host": "www.picknpull.com",
+    "last_seen": "2026-07-18T15:51:56Z",
+    "signals": {
+      "api_hosts": [
+        "ajax.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.picknpull.com",
+      "http_status": 200,
+      "page_size": 1140
+    }
+  },
+  "www.prioritytoyotaspringfield.com": {
+    "dealer_url": "https://www.prioritytoyotaspringfield.com",
+    "first_seen": "2026-07-17T20:23:15Z",
+    "host": "www.prioritytoyotaspringfield.com",
+    "last_seen": "2026-07-17T20:23:15Z",
+    "signals": {
+      "cname_chain": [],
+      "host": "www.prioritytoyotaspringfield.com"
+    }
+  },
+  "www.roushhonda.com": {
+    "dealer_url": "https://www.roushhonda.com",
+    "first_seen": "2026-07-17T20:23:06Z",
+    "host": "www.roushhonda.com",
+    "last_seen": "2026-07-17T20:23:06Z",
+    "signals": {
+      "cname_chain": [
+        "roushhonda.com"
+      ],
+      "host": "www.roushhonda.com"
+    }
+  },
+  "www.route27automall.com": {
+    "dealer_url": "https://www.route27automall.com",
+    "first_seen": "2026-07-17T20:22:43Z",
+    "host": "www.route27automall.com",
+    "last_seen": "2026-08-05T22:02:37Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "www.route27automall.com",
+      "http_status": 200,
+      "page_size": 79459
+    }
+  },
+  "www.rtwestsideautosales.com": {
+    "dealer_url": "https://www.rtwestsideautosales.com/",
+    "first_seen": "2026-08-05T22:02:48Z",
+    "host": "www.rtwestsideautosales.com",
+    "last_seen": "2026-08-05T22:02:48Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "rtwestsideautosales.com"
+      ],
+      "host": "www.rtwestsideautosales.com",
+      "http_status": 200,
+      "page_size": 80268
+    }
+  },
+  "www.schompbmw.com": {
+    "dealer_url": "https://www.schompbmw.com",
+    "first_seen": "2026-07-17T20:23:14Z",
+    "host": "www.schompbmw.com",
+    "last_seen": "2026-07-17T20:23:14Z",
+    "signals": {
+      "cname_chain": [
+        "schompbmw.com"
+      ],
+      "host": "www.schompbmw.com"
+    }
+  },
+  "www.schomphonda.com": {
+    "dealer_url": "https://www.schomphonda.com",
+    "first_seen": "2026-07-17T20:23:14Z",
+    "host": "www.schomphonda.com",
+    "last_seen": "2026-07-17T20:23:14Z",
+    "signals": {
+      "cname_chain": [
+        "schomphonda.com"
+      ],
+      "host": "www.schomphonda.com"
+    }
+  },
+  "www.schompsubaru.com": {
+    "dealer_url": "https://www.schompsubaru.com",
+    "first_seen": "2026-07-17T20:23:13Z",
+    "host": "www.schompsubaru.com",
+    "last_seen": "2026-07-17T20:23:13Z",
+    "signals": {
+      "cname_chain": [
+        "schompsubaru.com"
+      ],
+      "host": "www.schompsubaru.com"
+    }
+  },
+  "www.sheehyhonda.com": {
+    "dealer_url": "https://www.sheehyhonda.com",
+    "first_seen": "2026-07-17T20:23:17Z",
+    "host": "www.sheehyhonda.com",
+    "last_seen": "2026-07-17T20:23:17Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.sheehyhonda.com"
+    }
+  },
+  "www.shermandodge.com": {
+    "dealer_url": "https://www.shermandodge.com",
+    "first_seen": "2026-07-17T20:22:46Z",
+    "host": "www.shermandodge.com",
+    "last_seen": "2026-07-17T20:22:46Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.shermandodge.com"
+    }
+  },
+  "www.shottenkirktoyotasanantonio.com": {
+    "dealer_url": "https://www.shottenkirktoyotasanantonio.com",
+    "first_seen": "2026-07-17T20:22:52Z",
+    "host": "www.shottenkirktoyotasanantonio.com",
+    "last_seen": "2026-07-17T20:22:52Z",
+    "signals": {
+      "cname_chain": [
+        "shottenkirktoyotasanantonio.com"
+      ],
+      "host": "www.shottenkirktoyotasanantonio.com"
+    }
+  },
+  "www.sloansmotorcycle.com": {
+    "dealer_url": "https://www.sloansmotorcycle.com",
+    "first_seen": "2026-07-20T01:59:40Z",
+    "host": "www.sloansmotorcycle.com",
+    "last_seen": "2026-07-20T01:59:40Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "w1.arisite.net"
+      ],
+      "host": "www.sloansmotorcycle.com",
+      "http_status": 200,
+      "page_size": 132658
+    }
+  },
+  "www.sojax.com": {
+    "dealer_url": "https://www.sojax.com",
+    "first_seen": "2026-07-17T20:22:58Z",
+    "host": "www.sojax.com",
+    "last_seen": "2026-07-18T19:15:26Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": true,
+      "cname_chain": [],
+      "host": "www.sojax.com",
+      "http_status": 200,
+      "page_size": 415911
+    }
+  },
+  "www.southernwholesale.org": {
+    "dealer_url": "https://www.southernwholesale.org",
+    "first_seen": "2026-07-20T01:52:38Z",
+    "host": "www.southernwholesale.org",
+    "last_seen": "2026-07-20T01:52:38Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org",
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "alpha.dcdws.net",
+        "dealers.dealercenterwebsite.net.cdn.cloudflare.net"
+      ],
+      "host": "www.southernwholesale.org",
+      "http_status": 200,
+      "page_size": 832119
+    }
+  },
+  "www.southoccarsandcoffee.com": {
+    "dealer_url": "https://www.southoccarsandcoffee.com",
+    "first_seen": "2026-07-18T21:33:21Z",
+    "host": "www.southoccarsandcoffee.com",
+    "last_seen": "2026-07-18T21:33:21Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "ext-sq.squarespace.com"
+      ],
+      "host": "www.southoccarsandcoffee.com",
+      "http_status": 200,
+      "page_size": 880746
+    }
+  },
+  "www.subaruofspringfield.com": {
+    "dealer_url": "https://www.subaruofspringfield.com",
+    "first_seen": "2026-07-17T20:23:17Z",
+    "host": "www.subaruofspringfield.com",
+    "last_seen": "2026-07-17T20:23:17Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.subaruofspringfield.com"
+    }
+  },
+  "www.thetruckpeople.com": {
+    "dealer_url": "https://www.thetruckpeople.com",
+    "first_seen": "2026-07-20T01:49:21Z",
+    "host": "www.thetruckpeople.com",
+    "last_seen": "2026-07-20T01:49:21Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "ws12.dealersites.dealerspike.com",
+        "origin.dsp-ldv-cf.live"
+      ],
+      "host": "www.thetruckpeople.com",
+      "http_status": 403,
+      "page_size": 5882
+    }
+  },
+  "www.thompsontruckgroup.com": {
+    "dealer_url": "https://www.thompsontruckgroup.com",
+    "first_seen": "2026-07-20T01:47:48Z",
+    "host": "www.thompsontruckgroup.com",
+    "last_seen": "2026-07-20T01:47:48Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "sites.sandhillshosted.com"
+      ],
+      "host": "www.thompsontruckgroup.com",
+      "http_status": 200,
+      "page_size": 176191
+    }
+  },
+  "www.toyotadirect.com": {
+    "dealer_url": "https://www.toyotadirect.com",
+    "first_seen": "2026-07-17T20:23:07Z",
+    "host": "www.toyotadirect.com",
+    "last_seen": "2026-07-17T20:23:07Z",
+    "signals": {
+      "cname_chain": [
+        "toyotadirect.com"
+      ],
+      "host": "www.toyotadirect.com"
+    }
+  },
+  "www.toyotalincolnwood.com": {
+    "dealer_url": "https://www.toyotalincolnwood.com",
+    "first_seen": "2026-07-17T20:22:46Z",
+    "host": "www.toyotalincolnwood.com",
+    "last_seen": "2026-07-18T15:14:16Z",
+    "signals": {
+      "cloudflare_challenge": true,
+      "cname_chain": [
+        "toyotalincolnwood.com"
+      ],
+      "host": "www.toyotalincolnwood.com",
+      "http_status": 403,
+      "page_size": 236671
+    }
+  },
+  "www.toyotamarin.com": {
+    "dealer_url": "https://www.toyotamarin.com",
+    "first_seen": "2026-07-17T20:23:11Z",
+    "host": "www.toyotamarin.com",
+    "last_seen": "2026-07-17T20:23:11Z",
+    "signals": {
+      "cname_chain": [
+        "toyotamarin.com"
+      ],
+      "host": "www.toyotamarin.com"
+    }
+  },
+  "www.toyotaofbayridge.com": {
+    "dealer_url": "https://www.toyotaofbayridge.com",
+    "first_seen": "2026-07-17T20:22:43Z",
+    "host": "www.toyotaofbayridge.com",
+    "last_seen": "2026-07-17T20:22:43Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.toyotaofbayridge.com"
+    }
+  },
+  "www.toyotaofelcajon.com": {
+    "dealer_url": "https://www.toyotaofelcajon.com",
+    "first_seen": "2026-07-17T20:22:55Z",
+    "host": "www.toyotaofelcajon.com",
+    "last_seen": "2026-07-17T20:22:55Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.toyotaofelcajon.com"
+    }
+  },
+  "www.toyotaofhackensack.com": {
+    "dealer_url": "https://www.toyotaofhackensack.com",
+    "first_seen": "2026-07-17T20:22:43Z",
+    "host": "www.toyotaofhackensack.com",
+    "last_seen": "2026-07-17T20:22:43Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.toyotaofhackensack.com"
+    }
+  },
+  "www.toyotauniverse.com": {
+    "dealer_url": "https://www.toyotauniverse.com",
+    "first_seen": "2026-07-17T20:22:42Z",
+    "host": "www.toyotauniverse.com",
+    "last_seen": "2026-07-17T20:22:42Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.toyotauniverse.com"
+    }
+  },
+  "www.welborncdjrofcartersville.com": {
+    "dealer_url": "https://www.welborncdjrofcartersville.com",
+    "first_seen": "2026-07-20T01:53:34Z",
+    "host": "www.welborncdjrofcartersville.com",
+    "last_seen": "2026-07-20T01:53:34Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.welborncdjrofcartersville.com",
+      "http_error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>",
+      "http_status": null,
+      "page_size": 0
+    }
+  },
+  "www.wholesalecars.com": {
+    "dealer_url": "https://www.wholesalecars.com",
+    "first_seen": "2026-07-20T01:57:58Z",
+    "host": "www.wholesalecars.com",
+    "last_seen": "2026-07-20T01:57:58Z",
+    "signals": {
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.wholesalecars.com",
+      "http_status": 200,
+      "page_size": 106889
+    }
+  },
+  "www.wondriestoyota.com": {
+    "dealer_url": "https://www.wondriestoyota.com",
+    "first_seen": "2026-07-17T20:22:44Z",
+    "host": "www.wondriestoyota.com",
+    "last_seen": "2026-07-17T20:22:44Z",
+    "signals": {
+      "cname_chain": [
+        "saas.www.dealereprocess.org"
+      ],
+      "host": "www.wondriestoyota.com"
+    }
+  },
+  "www.wrenchapart.com": {
+    "dealer_url": "https://www.wrenchapart.com",
+    "first_seen": "2026-07-17T20:22:52Z",
+    "host": "www.wrenchapart.com",
+    "last_seen": "2026-07-18T15:53:29Z",
+    "signals": {
+      "api_hosts": [
+        "fonts.googleapis.com",
+        "ajax.googleapis.com",
+        "maps.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [],
+      "host": "www.wrenchapart.com",
+      "http_status": 200,
+      "page_size": 27157
+    }
+  },
+  "www.zekesautomotive.com": {
+    "dealer_url": "https://www.zekesautomotive.com",
+    "first_seen": "2026-07-20T02:00:10Z",
+    "host": "www.zekesautomotive.com",
+    "last_seen": "2026-07-20T02:00:10Z",
+    "signals": {
+      "api_hosts": [
+        "api.w.org",
+        "fonts.googleapis.com"
+      ],
+      "cloudflare_challenge": false,
+      "cname_chain": [
+        "alpha.dcdws.net",
+        "dealers.dealercenterwebsite.net.cdn.cloudflare.net"
+      ],
+      "host": "www.zekesautomotive.com",
+      "http_status": 200,
+      "page_size": 485532
+    }
+  }
+}
