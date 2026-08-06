@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import logging
 import os
+
+from backend.config import Config
 import re
 import secrets
 import sqlite3
@@ -63,7 +65,7 @@ _MAX_FILES_PER_REQUEST = int(os.environ.get("DEALER_UPLOAD_MAX_FILES", "8"))
 _MAX_GALLERY_IMAGES = int(os.environ.get("DEALER_GALLERY_MAX_IMAGES", "24"))
 _DEALER_VIN_RPM = int(os.environ.get("RATE_LIMIT_DEALER_VIN_PER_MIN", "20"))
 _DEALER_AUTH_RPM = int(os.environ.get("RATE_LIMIT_DEALER_AUTH_PER_MIN", "20"))
-_MIN_DEALER_PASSWORD = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
+_MIN_DEALER_PASSWORD = Config.MIN_PASSWORD_LENGTH
 
 
 @bp.route("/dealer/login", methods=["GET", "POST"])

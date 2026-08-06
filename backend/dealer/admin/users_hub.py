@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import os
 
+from backend.config import Config
+
 from flask import flash, redirect, render_template, request, session, url_for
 
 from backend.dealer.admin.routes import _session_profile, store_admin_bp
@@ -20,7 +22,7 @@ from backend.db.users_db import (
 from backend.utils.csrf import validate_csrf_form
 from backend.utils.roles import is_admin_role
 
-_MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
+_MIN_PASSWORD_LEN = Config.MIN_PASSWORD_LENGTH
 
 _ROLE_LABELS = {
     "admin": "Site administrator",

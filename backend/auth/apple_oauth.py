@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import logging
 import os
+
+from backend.config import Config
 import secrets
 import sqlite3
 import time
@@ -67,7 +69,7 @@ def _redirect_uri() -> str:
 
 
 def _login_rpm() -> int:
-    return int(os.environ.get("RATE_LIMIT_LOGIN_PER_MIN", "30"))
+    return Config.RATE_LIMIT_LOGIN_PER_MIN
 
 
 def _client_ip() -> str:

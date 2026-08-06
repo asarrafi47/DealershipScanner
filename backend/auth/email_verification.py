@@ -64,7 +64,7 @@ def user_needs_email_verification(user_id: int) -> bool:
 
 def _public_base_url() -> str:
     base = (
-        (os.environ.get("PUBLIC_BASE_URL") or os.environ.get("MFA_QR_BASE_URL") or "").strip().rstrip("/")
+        (Config.public_base_url() or Config.mfa_qr_base_url()).rstrip("/")
     )
     if base:
         return base

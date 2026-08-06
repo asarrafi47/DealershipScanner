@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+
+from backend.config import Config
 from datetime import datetime, timezone
 from typing import Any
 
@@ -8,7 +10,7 @@ from backend.utils.runtime_env import is_production_env
 
 
 def billing_enabled() -> bool:
-    return (os.environ.get("BILLING_STRIPE_ENABLED") or "").strip().lower() in ("1", "true", "yes", "on")
+    return Config.billing_stripe_enabled()
 
 
 def _require_env(name: str) -> str:
@@ -43,7 +45,7 @@ def stripe_subscription_active(status: str | None) -> bool:
 
 
 def base_url_from_request(request) -> str:
-    forced = (os.environ.get("PUBLIC_BASE_URL") or "").strip().rstrip("/")
+    forced = Config.public_base_url().rstrip("/")
     if forced:
         return forced
     # Best-effort for local usage. For reverse proxies, set PUBLIC_BASE_URL.

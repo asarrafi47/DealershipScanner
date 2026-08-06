@@ -10,6 +10,8 @@ import ipaddress
 import json
 import logging
 import os
+
+from backend.config import Config
 import posixpath
 import re
 import shutil
@@ -98,7 +100,7 @@ LAST_SCRAPE_SAMPLES_PATH = PROJECT_ROOT / "debug" / "last_scrape_samples.json"
 
 logger = logging.getLogger(__name__)
 
-_MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
+_MIN_PASSWORD_LEN = Config.MIN_PASSWORD_LENGTH
 _DEV_LOGIN_RPM = int(os.environ.get("RATE_LIMIT_DEV_LOGIN_PER_MIN", "20"))
 _DEV_REGISTER_RPM = int(os.environ.get("RATE_LIMIT_DEV_REGISTER_PER_MIN", "5"))
 def _vector_reindex_background() -> None:
